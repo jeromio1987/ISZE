@@ -1,0 +1,72 @@
+# ISZE map registry — machine-readable index of all navigation maps
+# Human diagram: 00_docs/MAPS.md | Agent sync: 2026-06-13
+
+version: 2
+
+bootstrap:
+  index: INDEX.md
+  rules: AGENTS.md
+  claude_pointer: CLAUDE.md
+  paths: paths.yaml
+  tasks: 00_docs/ROUTING.yaml
+
+reference:
+  topics: 00_docs/REFERENCE.md
+  artifacts: 00_docs/CANONICAL.md
+  human_readme: 00_docs/README.md
+  ui_stack: 00_docs/UI_STACK.md
+  map_diagram: 00_docs/MAPS.md
+  scheduled_ops: 00_docs/agent/NOTES.md
+  ai_stack: 00_docs/agent/AI_STACK.md
+
+roadmaps:
+  hub: 00_docs/ISZE_ROADMAP.md
+  html: 00_docs/roadmaps/html.md
+  scrapers: 00_docs/roadmaps/scrapers.md
+  gps: 00_docs/roadmaps/gps.md
+  tools: 00_docs/roadmaps/tools.md
+
+memory:
+  projects: 05_memory/projects/
+  glossary: 05_memory/glossary.md
+  briefs: 05_memory/briefs/
+
+deploy:
+  html_source: 02_dashboards/
+  html_sync: 02_dashboards/sync_to_deploys.ps1
+  context_whitelist: 00_docs/context_sync_whitelist.txt
+  context_sync: 02_dashboards/sync_context_to_github.ps1
+  github_mirror: 07_deploy/Master Dashboard/context/
+
+data_spine:
+  manifest: 01_data/DATA_MANIFEST.md
+  derived: 01_data/derived/
+  metrics: 01_data/derived/metrics_snapshot.json
+  verify: 01_data/derived/_verification_report.json
+  facts: FACTS.md
+
+code_spine:
+  prism: 03_analytics/Isuzu/prism/
+  pms_pilot: 03_analytics/Isuzu/pms-pilot/
+
+scripts:
+  workspace: 04_tools/workspace/
+
+stubs:
+  - path: 02_dashboards/ROADMAP.md
+    canonical: 00_docs/roadmaps/html.md
+  - path: 04_tools/SCRAPERS_ROADMAP.md
+    canonical: 00_docs/roadmaps/scrapers.md
+  - path: 03_analytics/Isuzu/gps_dashboard/GPS_Dashboard_Roadmap.md
+    canonical: 00_docs/roadmaps/gps.md
+  - path: 04_tools/isze-tools/ROADMAP.md
+    canonical: 00_docs/roadmaps/tools.md
+  - path: README.md
+    canonical: 00_docs/README.md
+
+deprecated:
+  - 90_archive/versioned_docs/
+  - 91_legacy/Isuzu/Divers/
+  - isze-prism-analytics/
+  - Dashboards/
+  - Projects/

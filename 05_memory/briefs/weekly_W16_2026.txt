@@ -1,0 +1,121 @@
+ISZE MEMORY REVIEW — Week 16, 2026
+Generated: 2026-04-13
+
+## Memory Health
+
+### Staleness
+All project files show "Last validated: 2026-03-24" — 20 days ago, just under the 3-week threshold.
+No files are technically stale yet, but all will cross the 3-week mark by mid-week.
+If no sessions occur this week, run a targeted update on lubricants.md and competitiveness.md first.
+
+### ⚠️ CRITICAL: CLAUDE.md contains wrong data that has been corrected in project files
+
+1. **ITUK PMS oil filter capture rate — STILL WRONG in CLAUDE.md**
+   CLAUDE.md "Key confirmed data" section says:
+     "Oil filter capture rate very low (actual vs expected)"
+   This was explicitly marked ⚠️ CORRECTED in pms-coverage.md on 23 Mar 2026.
+   Correct figures:
+     - CY2024: 3,288 units → 9.8% capture rate (vs 33,584 expected)
+     - CY2025: 5,815 units → 17.3% capture rate (vs 33,584 expected)
+   The very low figure must be removed from CLAUDE.md. It is incorrect and will corrupt any
+   analysis or conversation that relies on it.
+
+2. **Lubricants project status — CLAUDE.md is materially misleading**
+   CLAUDE.md "Active Projects" table says:
+     Status: "Awaiting IML go-ahead" | Key risk: "BC v2 corrects volume (137,520L). Margin % still unverified."
+   But lubricants.md (Last validated 2026-03-24) documents:
+     - UMI/Shell channel is LIVE with a signed MOU — not "awaiting go-ahead"
+     - GP margin is confirmed at ~13% (Jerome confirmed 14 Mar 2026) — not "unverified"
+     - CY2025 actual volume: 133,760L (not 137,520L)
+     - The "Awaiting IML go-ahead" correctly refers only to the BESCO broader pilot, not the existing live channel
+   CLAUDE.md conflates two different tracks. This needs correcting.
+
+3. **AIM status — partially stale in CLAUDE.md**
+   CLAUDE.md says: "VKWRT + CY2024 still needed"
+   AIM project file clarifies:
+     - CY2024 cross-validation is DONE (95% revenue coverage confirmed 15 Mar 2026)
+     - VKWRT is still needed (still correct)
+   CLAUDE.md should read: "VKWRT still needed. CY2024 cross-validated ✅"
+
+---
+
+## Open Items Still Unresolved
+
+These questions were open as of 24 Mar 2026 and are likely still live:
+
+**Pricing-2026:**
+- What is ITUK's formal response to the position paper sent ~15 Mar 2026?
+- Is there a next meeting scheduled with James Marsh?
+- Have other DBs (non-ITUK) accepted the +5.3% without pushback?
+- CY2025 ITUK actuals from SAP — was the login issue resolved (BVDB)?
+
+**Lubricants:**
+- Jerome still owes Yoshimoto-san (IML) a reply with the GP figure (~€57K gross / ~€37K net).
+  This has been open since 4 Mar 2026. Six weeks with no reply is getting long.
+- What is IML's formal position post Feb 2026 meeting? BESCO pilot — go/no-go?
+- Which DB would be first BESCO pilot (if sanctioned)?
+
+**PMS Coverage:**
+- Full PMS basket gap revalidation using CY2025 data — flagged as pending in pms-coverage.md.
+  Oil filter done (17.3% CY2025), rest of basket still unvalidated.
+- EQ-HIT access / PN-to-service-schedule mapping — still waiting on ITUK.
+
+**AIM:**
+- CY2025 sell-out through Parts Sales Classification engine — pending.
+- VKWRT (net revenue / SPA-adjusted scoring) — still not loaded.
+- Sell-out data from other DBs — needed for FY2027 KPI (20% condition).
+
+**FY2027 Action Plan:**
+- File ISZE_FY2027_ActionPlan_VP.xlsx exists but content has never been reviewed.
+- No formal FY2027 plan structure confirmed as of 24 Mar 2026.
+- FY2026 year-end actuals still needed to assess target vs actual gap.
+
+**UIO Refresh:**
+- April 2026 refresh is due NOW (per uio.md). Has FY2026 shipment data been added?
+- Updated ITUK car park request to ITUK — was this sent?
+
+---
+
+## Suggested Updates
+
+1. **Fix CLAUDE.md — PMS capture rate (HIGH PRIORITY)**
+   In the "Key confirmed data" block, replace:
+     "ITUK PMS gap: a material amount | Oil filter capture rate very low (actual vs expected)"
+   With:
+     "ITUK PMS gap: a material amount | Oil filter capture rate: 9.8% CY2024 (3,288 / 33,584 expected), 17.3% CY2025 (5,815 / 33,584). Full basket revalidation pending."
+
+2. **Fix CLAUDE.md — Lubricants project status (HIGH PRIORITY)**
+   In the "Active Projects" table, replace lubricants row with:
+     Status: "Live (UMI/Shell) + Awaiting IML sanction (BESCO pilot)" |
+     Key risk: "GP ~13% confirmed. Yoshimoto reply overdue (since 4 Mar). BESCO go-ahead not yet received."
+
+3. **Fix CLAUDE.md — AIM status**
+   Replace: "VKWRT + CY2024 still needed"
+   With: "VKWRT still needed. CY2024 cross-validated ✅ (15 Mar 2026, 95% revenue coverage)"
+
+4. **lubricants.md — Add follow-up urgency flag**
+   The Yoshimoto reply (GP figure) has been open since 4 Mar 2026. Add a note to the open
+   questions section flagging this as overdue (>6 weeks). If still unresolved, this risks
+   IML losing interest or drawing the wrong conclusions from silence.
+
+5. **action-plan-fy2027.md — Review the file content**
+   ISZE_FY2027_ActionPlan_VP.xlsx exists but has never been opened. Now that FY2027 has
+   started (April 2026), review the file and update action-plan-fy2027.md with actual content.
+
+6. **uio.md — Trigger FY2027 refresh**
+   The file explicitly flags "Next refresh: April 2026." That is now. If the refresh has
+   not started, it should be initiated this week.
+
+---
+
+## No Action Needed
+
+- competitiveness.md** — Comprehensive and internally consistent. Defence stack is complete.
+  Open questions are normal commercial follow-ups, not memory gaps.
+- **pms-coverage.md** — Well-maintained. The entity mapping correction (Cust 2574/2575) is
+  properly documented. UIO denominators clearly split. No inconsistencies found.
+- **aftermarket-intelligence.md** — Accurate and detailed. Data integrity flags are correctly
+  noted. CY2025 ITUK sell-out is loaded and documented.
+- **competitiveness.md** — Current. Confidence levels per segment are correctly flagged.
+- **action-plan-fy2026.md** — Appropriate status ("year-end review") given FY2026 closed
+  March 2026. No inconsistencies.

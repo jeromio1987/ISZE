@@ -1,0 +1,109 @@
+============================================================
+  ISZE TENDER MONITOR — SETUP INSTRUCTIONS
+  Version 3  |  March 2026
+============================================================
+
+WHAT THIS DOES
+--------------
+Scrapes public procurement portals across Europe, the UK,
+and Israel every week. Finds tenders for pickup trucks,
+light commercial vehicles, and fleet maintenance contracts.
+Scores each opportunity and builds a clickable HTML dashboard.
+
+FILES IN THIS FOLDER
+--------------------
+  tender_scraper_v3.py        — fetches tenders from all sources
+  isze_core_v3.py             — scoring engine (do not edit)
+  build_dashboard_v2.py       — builds the HTML dashboard
+  run_tender_monitor.bat      — double-click to run everything
+  ISZE_TenderMonitor_WeeklyTask.xml — auto-schedule (optional)
+  SETUP.txt                   — this file
+
+
+STEP 1 — INSTALL PYTHON
+------------------------
+Download Python 3.10 or newer from: https://www.python.org/downloads/
+During install, check the box: "Add Python to PATH"
+
+
+STEP 2 — INSTALL REQUIRED LIBRARIES
+-------------------------------------
+Open Command Prompt (Win key, type cmd, press Enter).
+Copy and paste this line, then press Enter:
+
+  pip install requests openpyxl beautifulsoup4 lxml
+
+Wait for it to finish. You only need to do this once.
+
+
+STEP 3 — COPY THIS FOLDER TO YOUR LAPTOP
+-----------------------------------------
+Put this entire folder somewhere stable, e.g.:
+  C:\Users\<your name>\Desktop\ISZE_Tender_Monitor\
+
+Do NOT move individual files out of the folder.
+All three Python scripts must be in the same folder.
+
+
+STEP 4 — RUN IT
+----------------
+Double-click: run_tender_monitor.bat
+
+It will:
+  1. Fetch tenders from the last 30 days (takes 2-5 minutes)
+  2. Build the dashboard HTML file
+  3. Open-ready: isze_dashboard_v2.html
+
+Open isze_dashboard_v2.html in Chrome or Edge when done.
+
+
+STEP 5 — SCHEDULE WEEKLY (OPTIONAL)
+-------------------------------------
+To run automatically every Monday at 07:30:
+  1. Open Task Scheduler (search in Start menu)
+  2. Click "Import Task" on the right panel
+  3. Select: ISZE_TenderMonitor_WeeklyTask.xml
+  4. Edit the path inside the XML if your folder location
+     is different from C:\Users\jerom\Desktop\claude\...
+
+     To change the path: open the XML in Notepad, find the
+     line with "run_tender_monitor.bat" and update the path.
+
+
+OPTIONAL API KEYS (free — more coverage)
+-----------------------------------------
+Norway (Doffin) and Finland (HILMA) need free API keys.
+Without them the script skips those two countries silently.
+
+  Norway:  https://docs.doffin.no  — register, get key
+  Finland: https://www.hankintailmoitukset.fi/en/docs/api
+
+Once you have a key, open tender_scraper_v3.py in Notepad.
+Find these lines near the top and paste your key inside "":
+
+  DOFFIN_API_KEY = ""     <- paste Norway key here
+  HILMA_API_KEY  = ""     <- paste Finland key here
+
+Save and close. Next run will include those countries.
+
+
+TROUBLESHOOTING
+---------------
+Script crashes immediately:
+  → Python not installed, or not added to PATH.
+  → Re-install Python and tick "Add Python to PATH".
+
+"ModuleNotFoundError: requests":
+  → Libraries not installed. Repeat Step 2.
+
+Dashboard shows 0 results:
+  → Check tender_monitor_log.txt in the same folder.
+  → If TED shows errors, it may be rate-limiting — try again.
+
+"UnicodeEncodeError" in the log:
+  → Fixed in this version. If it still appears, run from
+  → the .bat file rather than double-clicking the .py file.
+
+============================================================
+Questions: jerome.van.der.pluym@isuzu-e.com
+============================================================

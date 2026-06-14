@@ -1,0 +1,69 @@
+---
+name: isze-verify-pipeline
+description: >-
+  Verify ISZE sales analytics builds (P0-P5) after Cursor or Claude changes.
+  Run deterministic checks, read the report, and only sign off when green.
+---
+
+# ISZE pipeline — build, verify, Claude in the loop
+
+Use this skill whenever you touch:
+
+- `01_data/derived/*` (workspace root: `ISZE/`)
+- `prism/scripts/build_*.py`
+- `prism/modules/bvp_*.py`, `pms_engine.py`, `data_prep.py`
+- BVP / PMS / GPS Streamlit pages
+
+## Roles
+
+| Role | Who | Job |
+|------|-----|-----|
+| **Builder** | Cursor agent (or you) | Edit code, run builds |
+| **Verifier** | `verify_derived_pipeline.py` | Deterministic gates (row counts, schema, ITUK UIO anchor, capture bands, GPS/AIM content, UIO consistency cross-check, build manifest) |
+| **Reviewer** | Claude (this session) | Read `_verification_report.md`, challenge failures, update fixtures if refresh was intentional |
+
+Cursor must **not** claim “build succeeded” or quote ITUK capture % without a green verification report.
+
+## One-shot command
+
+Set `$env:ISZE_ROOT` to your ISZE workspace root if not running from the default tree, then:
+
+```powershell
+cd $env:ISZE_ROOT\03_analytics\Isuzu\prism
+.\scripts\run_pipeline_and_verify.ps1
+```
+
+Or verify only (no rebuild):
+
+```powershell
+cd $env:ISZE_ROOT\03_analytics\Isuzu\prism
+python scripts/verify_derived_pipeline.py
+```
+
+## After every build
+
+1. Open `01_data/derived/_verification_report.md`
+2. If any **fail** — fix root cause, re-run builds, re-verify
+3. If **warn** only — explain to user (e.g. row count drift after new CY file)
+4. If all **pass** — safe to cite numbers in PRISM UI, memory docs, or GPT-safe exports
+
+## Updating golden values
+
+When billing or UIO intentionally changes, edit:
+
+`prism/data/verification_fixtures.yaml`
+
+Then re-run verify. Do not weaken bands without user confirmation.
+
+## ITUK pilot anchors (do not regress silently)
+
+- UIO denominator: **22,389** (DVLA March 2026, `UIO_OVERRIDES["ITUK"]` in `bvp_analytics.py`)
+- Oil filter total capture bands (UIO × 0.5 svc/yr × 70% addressable, registry + BVP-catalog actuals):
+  - CY2024: **95–125%** uncapped (~121% observed)
+  - CY2025: **130–165%** uncapped (~162% observed)
+- These are NOT comparable to legacy dealer-level single-PN rates (~10% / ~17%)
+- `verify_derived_pipeline.py` cross-checks `UIO_OVERRIDES` vs `verification_fixtures.yaml` on every run
+
+## GPT / external tools
+
+Never upload `raw/sales/*.XLSX`. After verify passes, aggregates may go to `01_data/gpt_safe/` only.

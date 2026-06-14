@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>UTI Meeting — INTERNAL prep</title>
+<style>
+:root {
+  --red: #CC0E1E;
+  --red-light: #DC606E;
+  --bg: #f7f7f8;
+  --card: #fff;
+  --text: #1a1a1a;
+  --muted: #5a5a5a;
+  --border: #e4e4e7;
+  --ok: #0d7a4a;
+  --warn: #b45309;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Calibri, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.45;
+}
+header {
+  background: linear-gradient(135deg, var(--red) 0%, #9a0b17 100%);
+  color: #fff;
+  padding: 1.75rem 2rem 1.5rem;
+}
+header h1 { margin: 0 0 0.35rem; font-size: 1.75rem; font-weight: 700; }
+header p { margin: 0; opacity: 0.92; font-size: 0.95rem; }
+.badge {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.badge.ext { background: rgba(255,255,255,0.2); }
+.badge.int { background: #1a1a1a; color: #fbbf24; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+nav.toc {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+nav.toc a { color: var(--red); text-decoration: none; margin-right: 1rem; font-size: 0.9rem; }
+section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  color: var(--red);
+  border-bottom: 3px solid var(--red);
+  padding-bottom: 0.35rem;
+}
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } }
+.kpi-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+.kpi {
+  flex: 1 1 140px;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  border-left: 4px solid var(--red);
+}
+.kpi .val { font-size: 1.5rem; font-weight: 700; }
+.kpi .lbl { font-size: 0.8rem; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th { background: var(--red); color: #fff; text-align: left; padding: 0.55rem 0.65rem; }
+td { padding: 0.5rem 0.65rem; border-bottom: 1px solid var(--border); }
+tr:nth-child(even) td { background: #fafafa; }
+.bar-chart { margin: 0.5rem 0; }
+.bar-row { display: flex; align-items: center; gap: 0.5rem; margin: 0.35rem 0; font-size: 0.85rem; }
+.bar-label { width: 110px; flex-shrink: 0; color: var(--muted); }
+.bar-track { flex: 1; height: 22px; background: #eee; border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--red); border-radius: 4px; }
+.bar-fill.alt { background: var(--red-light); }
+.bar-fill.good { background: var(--ok); }
+.bar-val { width: 52px; text-align: right; font-weight: 600; }
+.callout {
+  background: #fff8f8;
+  border-left: 4px solid var(--red);
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+  font-size: 0.92rem;
+}
+.callout.warn { background: #fffbeb; border-color: var(--warn); }
+.callout.ok { background: #f0fdf4; border-color: var(--ok); }
+.internal-only {
+  background: #1a1a1a;
+  color: #f4f4f5;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  font-size: 0.88rem;
+}
+.internal-only h3 { color: #fbbf24; margin-top: 0; font-size: 0.95rem; }
+.internal-only ul { margin: 0.5rem 0 0; padding-left: 1.2rem; }
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding: 1rem;
+}
+.steps { counter-reset: step; list-style: none; padding: 0; margin: 0; }
+.steps li {
+  position: relative;
+  padding: 0.65rem 0 0.65rem 2.5rem;
+  border-bottom: 1px dashed var(--border);
+}
+.steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  background: var(--red);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media print {
+  body { background: #fff; }
+  section { break-inside: avoid; box-shadow: none; }
+  nav.toc { display: none; }
+}
+</style>
+</head>
+<body>
+<header style="background:linear-gradient(135deg,#1a1a1a,#333)">
+  <div style="font-weight:800;font-size:0.85rem;letter-spacing:0.08em;color:#fbbf24">INTERNAL ONLY</div>
+  <h1>UTI Meeting prep · data audit &amp; sparring</h1>
+  <p>Pair with <a href="UTI_Meeting_Show_UTI.html" style="color:#fca5a5">UTI_Meeting_Show_UTI.html</a> for the UTI-facing view · Generated 2026-06-02</p>
+  <span class="badge int">Do not share</span>
+</header>
+<div class="wrap">
+  <nav class="toc">
+    <strong>Sections:</strong>
+    <a href="#audit">Audit</a>
+    <a href="#safe">Safe numbers</a>
+    <a href="#dead">Do not quote</a>
+    <a href="#ask">Questions</a>
+    <a href="#aim">AIM</a>
+    <a href="#raw">Raw metrics JSON</a>
+  </nav>
+
+  <section id="audit">
+    <h2>Data audit (2026-06-02)</h2>
+    <div class="internal-only">
+      <h3>Bug fixed in pipeline</h3>
+      <ul>
+        <li><code>bvp_dimension.py</code> tagged all <code>PMS_PN_REGISTRY</code> PNs as <code>genuine</code>, ignoring <code>type: bvp</code>.</li>
+        <li>Example: <code>1876102890</code> (3,793 UTI oil-filter units) → fake “76% genuine oil” narrative.</li>
+        <li>Fix: registry <code>type</code> respected; P0/P2 rebuilt. <strong>Still classify from <code>genuine_bvp_crossref.csv</code> for meetings.</strong></li>
+      </ul>
+    </div>
+    <div class="callout warn">
+      <strong>Three metrics — never conflate:</strong><br/>
+      (1) Overall billing: UTI 88.9% non-BVP-catalogue / 11.1% BVP-catalogue<br/>
+      (2) Contestable basket: UTI 81.7% BVP units vs ITUK 21.5%<br/>
+      (3) <code>mix_genuine_bvp_pms.csv</code> = substitution only — not overall genuine share
+    </div>
+  </section>
+
+  <section id="safe">
+    <h2>Safe to show UTI (in external HTML)</h2>
+    <ul>
+      <li>Filter table UTI vs ITUK (crossref + billing)</li>
+      <li>Revenue uplift fuel + air ≈ €65,197 (excl. oil)</li>
+      <li>GPS €/vehicle 2023–25, BP FY27 Apr–May table</li>
+      <li>Brake pads already ~100% genuine — not a gap</li>
+      <li>UIO ask + SPA NOx park</li>
+    </ul>
+    <p>External file: <strong><a href="UTI_Meeting_Show_UTI.html">UTI_Meeting_Show_UTI.html</a></strong> · Deck backup: <code>UTI_Meeting_June2026.pptx</code></p>
+  </section>
+
+  <section id="dead">
+    <h2>Do not quote (deprecated / wrong)</h2>
+    <table>
+      <tr><th>Claim</th><th>Why wrong</th></tr>
+      <tr><td>“UTI 87% BVP overall”</td><td>Inverted contestable rate; overall is ~88.9% non-BVP</td></tr>
+      <tr><td>“0% genuine filters” / “oil 76% genuine”</td><td>Dimension bug; oil stable ~100% BVP</td></tr>
+      <tr><td>€221K capture gap</td><td>N75-only + soft brake intervals</td></tr>
+      <tr><td>€45K GP from bvp_downtrade_gp</td><td>Built on broken dimension unless re-derived</td></tr>
+      <tr><td>ITUK “86% genuine” benchmark</td><td>Never valid</td></tr>
+      <tr><td>AIM € at risk</td><td>No external AM feed; ~€11K network noise</td></tr>
+    </table>
+  </section>
+
+  <section id="ask">
+    <h2>Questions to ask UTI</h2>
+    <ul>
+      <li>Active parc 31/12/2025 — N/F split, source, scrap rate</li>
+      <li>FY27 softness drivers; is May intake recovery real?</li>
+      <li>SPA: line vs total; 6-month OK? NOx warranty volume split</li>
+      <li>Real brake pad interval &amp; annual km on 7.5t urban (model assumes ~80k — too slack)</li>
+      <li>Will you join FY27 GPS exercise? Category sales outside ISZE billing?</li>
+    </ul>
+  </section>
+
+  <section id="aim">
+    <h2>AIM &amp; capture model (internal)</h2>
+    <ul>
+      <li>Verify report: 3 fails — ITUK oil capture &gt;100%, capture cap rows</li>
+      <li>Demand/capture model = filters only (23 BVP categories unmodelled — see BVP_FINDING.md)</li>
+      <li>Lead meeting with filter mix + €65,197 revenue story, not AIM</li>
+    </ul>
+  </section>
+
+  <section id="raw">
+    <h2>Computed metrics (reproducible)</h2>
+    <pre style="background:#f4f4f5;padding:1rem;border-radius:8px;overflow:auto;font-size:0.75rem">{
+  "generated": "2026-06-02",
+  "year": 2025,
+  "UTI": {
+    "total_eur": 3337117,
+    "bvp_pct": 11.1,
+    "non_bvp_pct": 88.9,
+    "contestable_bvp_pct": 81.7,
+    "filters": {
+      "fuel_filter": {
+        "genuine_pct": 0,
+        "bvp_units": 11414,
+        "bvp_eur_per_unit": 8.69,
+        "genuine_eur_per_unit": 65.6
+      },
+      "air_filter": {
+        "genuine_pct": 0,
+        "bvp_units": 5895,
+        "bvp_eur_per_unit": 20.44,
+        "genuine_eur_per_unit": 103.32
+      },
+      "oil_filter": {
+        "genuine_pct": 0,
+        "bvp_units": 5000,
+        "bvp_eur_per_unit": 9.94,
+        "genuine_eur_per_unit": 0
+      },
+      "brake_pad": {
+        "genuine_pct": 100,
+        "bvp_units": 0,
+        "bvp_eur_per_unit": 0,
+        "genuine_eur_per_unit": 69.57
+      }
+    }
+  },
+  "ITUK": {
+    "total_eur": 5575757,
+    "bvp_pct": 2.7,
+    "non_bvp_pct": 97.3,
+    "contestable_bvp_pct": 21.5,
+    "filters": {
+      "fuel_filter": {
+        "genuine_pct": 80,
+        "bvp_units": 3260,
+        "bvp_eur_per_unit": 8.51,
+        "genuine_eur_per_unit": 12.89
+      },
+      "air_filter": {
+        "genuine_pct": 85,
+        "bvp_units": 606,
+        "bvp_eur_per_unit": 22.19,
+        "genuine_eur_per_unit": 30.72
+      },
+      "oil_filter": {
+        "genuine_pct": 71,
+        "bvp_units": 3368,
+        "bvp_eur_per_unit": 9.58,
+        "genuine_eur_per_unit": 5.47
+      },
+      "brake_pad": {
+        "genuine_pct": 100,
+        "bvp_units": 0,
+        "bvp_eur_per_unit": 0,
+        "genuine_eur_per_unit": 81.77
+      }
+    }
+  },
+  "uplifts": {
+    "fuel_filter": {
+      "network_genuine_eur": 13.44,
+      "network_bvp_eur": 8.26,
+      "uti_bvp_units": 11414,
+      "uti_bvp_eur": 8.69,
+      "revenue_uplift_eur": 54147
+    },
+    "air_filter": {
+      "network_genuine_eur": 22.31,
+      "network_bvp_eur": 17.18,
+      "uti_bvp_units": 5895,
+      "uti_bvp_eur": 20.44,
+      "revenue_uplift_eur": 11050
+    },
+    "oil_filter": {
+      "uti_bvp_units": 5000,
+      "network_genuine_eur": 5.31,
+      "uti_bvp_eur": 9.94,
+      "revenue_if_converted_eur": -23171
+    }
+  },
+  "uplift_total_ex_oil": 65197,
+  "gps_ut": [
+    {
+      "year": 2023,
+      "spu": 331,
+      "sales": 3644311,
+      "uio": 11019
+    },
+    {
+      "year": 2024,
+      "spu": 249,
+      "sales": 2651202,
+      "uio": 10668
+    },
+    {
+      "year": 2025,
+      "spu": 313,
+      "sales": 3337117,
+      "uio": 10668
+    }
+  ],
+  "spu_rank_2025": [
+    {
+      "code": "IRELAND",
+      "spu": 437
+    },
+    {
+      "code": "UTI",
+      "spu": 313
+    },
+    {
+      "code": "ICELAND",
+      "spu": 255
+    },
+    {
+      "code": "ITUK",
+      "spu": 249
+    },
+    {
+      "code": "BELGIUM",
+      "spu": 227
+    },
+    {
+      "code": "FINLAND",
+      "spu": 227
+    },
+    {
+      "code": "PORTUGAL",
+      "spu": 214
+    },
+    {
+      "code": "CYPRUS",
+      "spu": 207
+    }
+  ]
+}</pre>
+    <p style="font-size:0.85rem;color:var(--muted)">Rebuild: <code>python _build/_build_uti_meeting_html.py</code></p>
+  </section>
+</div>
+<footer>ISZE internal · Not for UTI distribution</footer>
+</body>
+</html>

@@ -1,0 +1,42 @@
+# ISZE folder layout — single source for path constants
+# Code: 03_analytics/Isuzu/prism/config.py reads this file
+# Agent sync: 2026-06-13
+
+version: 1
+
+folders:
+  docs: "00_docs"
+  data: "01_data"
+  dashboards: "02_dashboards"
+  analytics: "03_analytics"
+  tools: "04_tools"
+  memory: "05_memory"
+  uio: "06_uio"
+  deploy: "07_deploy"
+  gpt: "08_gpt"
+  meetings: "09_meetings"
+  archive: "90_archive"
+  legacy: "91_legacy"
+
+bootstrap:
+  # Only these stay at ISZE root (agents + code entry)
+  root_md:
+    - INDEX.md
+    - AGENTS.md
+    - CLAUDE.md
+    - FACTS.md
+    - README.md
+  root_config:
+    - paths.yaml
+
+scripts:
+  workspace: "04_tools/workspace"
+
+deploy:
+  master_dashboard: "07_deploy/Master Dashboard"
+  publish_site: "07_deploy/publish-site"
+  context_mirror: "07_deploy/Master Dashboard/context"
+
+analytics:
+  prism: "03_analytics/Isuzu/prism"
+  pms_pilot: "03_analytics/Isuzu/pms-pilot"

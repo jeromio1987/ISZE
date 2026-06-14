@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ISZE – UTI Meeting · June 2026</title>
+<style>
+:root {
+  --red: #CC0E1E;
+  --red-light: #DC606E;
+  --bg: #f7f7f8;
+  --card: #fff;
+  --text: #1a1a1a;
+  --muted: #5a5a5a;
+  --border: #e4e4e7;
+  --ok: #0d7a4a;
+  --warn: #b45309;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", Calibri, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.45;
+}
+header {
+  background: linear-gradient(135deg, var(--red) 0%, #9a0b17 100%);
+  color: #fff;
+  padding: 1.75rem 2rem 1.5rem;
+}
+header h1 { margin: 0 0 0.35rem; font-size: 1.75rem; font-weight: 700; }
+header p { margin: 0; opacity: 0.92; font-size: 0.95rem; }
+.badge {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.badge.ext { background: rgba(255,255,255,0.2); }
+.badge.int { background: #1a1a1a; color: #fbbf24; }
+.wrap { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+nav.toc {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+nav.toc a { color: var(--red); text-decoration: none; margin-right: 1rem; font-size: 0.9rem; }
+section {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+section h2 {
+  margin: 0 0 1rem;
+  font-size: 1.15rem;
+  color: var(--red);
+  border-bottom: 3px solid var(--red);
+  padding-bottom: 0.35rem;
+}
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 800px) { .grid2 { grid-template-columns: 1fr; } }
+.kpi-row { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem; }
+.kpi {
+  flex: 1 1 140px;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 0.85rem 1rem;
+  border-left: 4px solid var(--red);
+}
+.kpi .val { font-size: 1.5rem; font-weight: 700; }
+.kpi .lbl { font-size: 0.8rem; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th { background: var(--red); color: #fff; text-align: left; padding: 0.55rem 0.65rem; }
+td { padding: 0.5rem 0.65rem; border-bottom: 1px solid var(--border); }
+tr:nth-child(even) td { background: #fafafa; }
+.bar-chart { margin: 0.5rem 0; }
+.bar-row { display: flex; align-items: center; gap: 0.5rem; margin: 0.35rem 0; font-size: 0.85rem; }
+.bar-label { width: 110px; flex-shrink: 0; color: var(--muted); }
+.bar-track { flex: 1; height: 22px; background: #eee; border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--red); border-radius: 4px; }
+.bar-fill.alt { background: var(--red-light); }
+.bar-fill.good { background: var(--ok); }
+.bar-val { width: 52px; text-align: right; font-weight: 600; }
+.callout {
+  background: #fff8f8;
+  border-left: 4px solid var(--red);
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 0;
+  font-size: 0.92rem;
+}
+.callout.warn { background: #fffbeb; border-color: var(--warn); }
+.callout.ok { background: #f0fdf4; border-color: var(--ok); }
+.internal-only {
+  background: #1a1a1a;
+  color: #f4f4f5;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  font-size: 0.88rem;
+}
+.internal-only h3 { color: #fbbf24; margin-top: 0; font-size: 0.95rem; }
+.internal-only ul { margin: 0.5rem 0 0; padding-left: 1.2rem; }
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding: 1rem;
+}
+.steps { counter-reset: step; list-style: none; padding: 0; margin: 0; }
+.steps li {
+  position: relative;
+  padding: 0.65rem 0 0.65rem 2.5rem;
+  border-bottom: 1px dashed var(--border);
+}
+.steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 1.6rem;
+  height: 1.6rem;
+  background: var(--red);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media print {
+  body { background: #fff; }
+  section { break-inside: avoid; box-shadow: none; }
+  nav.toc { display: none; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div style="font-weight:800;font-size:0.85rem;letter-spacing:0.08em">ISUZU · ISZE</div>
+  <h1>UTI Meeting · Parts, UIO &amp; Genuine Parts Share</h1>
+  <p>June 2026 · CY2025 billing &amp; FY27 year-to-date context</p>
+  <span class="badge ext">For discussion with UTI</span>
+</header>
+<div class="wrap">
+  <section id="story">
+    <h2>How the topics connect</h2>
+    <ol class="steps">
+      <li><strong>Market softness</strong> — FY27 YTD sales below budget and prior year; May order intake improved.</li>
+      <li><strong>SPA flexibility</strong> — 53-line basket; 6-month option; NOx line to align on warranty volume first.</li>
+      <li><strong>Filter mix vs peers</strong> — UTI buys filters as BVP where ITUK buys genuine; ~€65,197 revenue upside on fuel + air (excl. oil).</li>
+      <li><strong>UIO confirmation</strong> — Active parc 31/12/2025 needed to size capture and spend per vehicle.</li>
+    </ol>
+  </section>
+
+  <section id="bp">
+    <h2>BP FY27 — where the year stands (Apr–May)</h2>
+    <table>
+      <tr><th></th><th>Apr</th><th>May</th><th>YTD</th></tr>
+      <tr><td>Sales (€K)</td><td>211</td><td>191</td><td>402</td></tr>
+      <tr><td>Budget (€K)</td><td>247</td><td>235</td><td>482</td></tr>
+      <tr><td>vs Budget</td><td>−14%</td><td>−19%</td><td><strong>−17%</strong></td></tr>
+      <tr><td>vs Prior year</td><td>−28%</td><td>−33%</td><td><strong>−31%</strong></td></tr>
+      <tr><td>Order intake (€K)</td><td>182</td><td>238</td><td>420</td></tr>
+    </table>
+    <div class="callout ok">May order intake (€238K) was above April (€182K) — worth confirming whether the pipeline is recovering.</div>
+  </section>
+
+  <section id="account">
+    <h2>UTI parts account — overall vs filter mix</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="val">€3,337,117</div><div class="lbl">Parts sales CY2025</div></div>
+      <div class="kpi"><div class="val">89%</div><div class="lbl">Non–BVP-catalogue spend (mostly OE genuine)</div></div>
+      <div class="kpi"><div class="val">11%</div><div class="lbl">BVP-catalogue part numbers</div></div>
+      <div class="kpi"><div class="val">82%</div><div class="lbl">BVP share where a BVP alternative exists</div></div>
+    </div>
+    <div class="callout">
+      <strong>UTI is a genuine-dominant account.</strong> The commercial conversation is about
+      <em>filters inside the BVP offer</em> — not about “UTI not buying genuine” overall.
+    </div>
+  </section>
+
+  <section id="filters">
+    <h2>Filters — UTI vs ITUK (genuine share by units, CY2025)</h2>
+    <div class="grid2">
+      <div>
+        <p style="margin-top:0;font-weight:600">UTI</p>
+        <div class="bar-chart"><div class="bar-row"><span class="bar-label">Fuel</span><div class="bar-track"><div class="bar-fill " style="width:0.0%"></div></div><span class="bar-val">0%</span></div><div class="bar-row"><span class="bar-label">Air</span><div class="bar-track"><div class="bar-fill " style="width:0.0%"></div></div><span class="bar-val">0%</span></div><div class="bar-row"><span class="bar-label">Oil</span><div class="bar-track"><div class="bar-fill " style="width:0.0%"></div></div><span class="bar-val">0%</span></div><div class="bar-row"><span class="bar-label">Brake pad</span><div class="bar-track"><div class="bar-fill good" style="width:100.0%"></div></div><span class="bar-val">100%</span></div></div>
+      </div>
+      <div>
+        <p style="margin-top:0;font-weight:600">ITUK (peer)</p>
+        <div class="bar-chart"><div class="bar-row"><span class="bar-label">Fuel</span><div class="bar-track"><div class="bar-fill good" style="width:80.0%"></div></div><span class="bar-val">80%</span></div><div class="bar-row"><span class="bar-label">Air</span><div class="bar-track"><div class="bar-fill good" style="width:85.0%"></div></div><span class="bar-val">85%</span></div><div class="bar-row"><span class="bar-label">Oil</span><div class="bar-track"><div class="bar-fill good" style="width:71.0%"></div></div><span class="bar-val">71%</span></div><div class="bar-row"><span class="bar-label">Brake pad</span><div class="bar-track"><div class="bar-fill good" style="width:100.0%"></div></div><span class="bar-val">100%</span></div></div>
+      </div>
+    </div>
+    <table style="margin-top:1rem">
+      <tr><th>Category</th><th>UTI genuine</th><th>ITUK genuine</th></tr>
+      <tr><td>Fuel filter</td><td>0%</td><td>80%</td></tr>
+      <tr><td>Air filter</td><td>0%</td><td>85%</td></tr>
+      <tr><td>Oil filter</td><td>0%</td><td>71%</td></tr>
+      <tr><td>Brake pad</td><td>100%</td><td>100%</td></tr>
+    </table>
+    <div class="callout">
+      <strong>Opportunity (revenue, CY2025 run-rate):</strong>
+      Fuel filter ~€54,147 + Air filter ~€11,050
+      ≈ <strong>€65,197/yr</strong> if UTI BVP filter volumes moved to network genuine pricing.<br/>
+      <strong>Exclude oil filter</strong> — genuine element is lower unit price (~€5.31/u vs UTI BVP ~€9.94/u); converting would reduce revenue ~€23,171.
+    </div>
+  </section>
+
+  <section id="gps">
+    <h2>GPS — parts spend per vehicle (UTI)</h2>
+    <div class="bar-chart"><div class="bar-row"><span class="bar-label">2023</span><div class="bar-track"><div class="bar-fill" style="width:95%"></div></div><span class="bar-val">€331</span></div><div class="bar-row"><span class="bar-label">2024</span><div class="bar-track"><div class="bar-fill" style="width:71%"></div></div><span class="bar-val">€249</span></div><div class="bar-row"><span class="bar-label">2025</span><div class="bar-track"><div class="bar-fill" style="width:89%"></div></div><span class="bar-val">€313</span></div></div>
+    <p style="font-size:0.88rem;color:var(--muted)">
+      Spend per unit = parts sales ÷ UIO. 2025 uses prior-year UIO proxy (~10,668 units) — treat YoY as indicative until parc is confirmed.
+    </p>
+  </section>
+
+  <section id="uio">
+    <h2>UIO — what we need from UTI</h2>
+    <ul>
+      <li>Active parc as of <strong>31/12/2025</strong> — operating vehicles only</li>
+      <li>N- and F-series, by tonnage if possible</li>
+      <li>Source (registration, internal records, estimate) and any scrap / de-registration rate</li>
+      <li>Our model starting point: <strong>N 6,444 + F 4,809</strong> (shipment × survival curve) — we want to reconcile with your view</li>
+    </ul>
+  </section>
+
+  <section id="spa">
+    <h2>SPA — lines to align</h2>
+    <ul>
+      <li>53-part basket — flexibility: 6-month term; line-by-line or total</li>
+      <li><strong>NOx sensor 8983528481</strong> — largest line; reconcile warranty vs retail volume before fixing programme price</li>
+      <li>EGR cooler / valve — genuine-only; programme defends against parallel imports</li>
+    </ul>
+  </section>
+
+  <section id="next">
+    <h2>Proposed next steps</h2>
+    <ul>
+      <li><strong>UIO</strong> — UTI data by beginning of next week</li>
+      <li><strong>SPA</strong> — confirm straightforward lines; joint NOx warranty review; agree term structure</li>
+      <li><strong>GPS / filters</strong> — confirm category volumes; discuss fuel &amp; air genuine mix vs ITUK benchmark</li>
+    </ul>
+  </section>
+</div>
+<footer>ISZE internal · Generated 2026-06-02 · Sources: billing CY2025, BVP catalog cross-reference</footer>
+</body>
+</html>

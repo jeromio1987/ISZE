@@ -1,0 +1,45 @@
+﻿# ISZE .cursorignore — keep agents out of vendor noise, binaries, and huge dumps.
+# Cursor-only: does NOT affect Claude Desktop or GitHub context sync.
+
+# --- Deploy mirrors — edit 02_dashboards/ only ---
+07_deploy/**
+
+# --- Duplicate PRISM repo copy ---
+isze-prism-analytics/**
+
+# --- Vendor / build noise ---
+**/node_modules/**
+**/.evidence/**
+**/build/**
+**/__pycache__/**
+**/*.pyc
+**/.git/**
+
+# --- Huge / binary data (use derived CSV/parquet instead) ---
+01_data/raw/**
+**/*sales_detailed*.tsv
+**/*.parquet
+91_legacy/new files/**
+
+# --- Raw billing workbooks ---
+01_data/raw/sales/*.XLSX
+
+# --- Archives & cold storage ---
+90_archive/**
+**/_archive/**
+
+# --- Historical / narrative ---
+AUDIT_*.md
+91_legacy/Isuzu/Divers/**
+
+# --- GPT upload pack ---
+08_gpt/**
+
+# --- Personal context ---
+05_memory/people/**
+
+# --- Logs ---
+**/*.log
+
+# --- Legacy clutter ---
+91_legacy/**

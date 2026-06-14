@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ISZE Monthly Sales Tracker</title>
+<style>
+  :root {
+    --navy: #CC0E1E; --blue: #CC0E1E; --ltblue: #FFE8EA;
+    --green: #70AD47; --ltgreen: #E2EFDA;
+    --amber: #FFB900; --ltamber: #FFF2CC;
+    --red: #C00000; --ltred: #FFE0E0;
+    --gray: #F5F5F5; --border: #CCCCCC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f0f2f5; color: #333; font-size: 13px; }
+
+  /* HEADER */
+  .header { background: linear-gradient(135deg, #CC0E1E 0%, #9A0B16 100%); color: white; padding: 18px 28px; display: flex; justify-content: space-between; align-items: center; }
+  .header h1 { font-size: 20px; font-weight: 600; letter-spacing: 0.3px; }
+  .header .meta { font-size: 11px; color: #F4A0A7; text-align: right; }
+  .header .badge { background: #CC0E1E; padding: 4px 10px; border-radius: 12px; font-size: 11px; margin-top: 4px; display: inline-block; }
+
+  /* BANNER */
+  .update-banner { background: #FFF5F5; border-left: 4px solid #CC0E1E; padding: 10px 18px; font-size: 12px; color: #CC0E1E; }
+  .update-banner strong { color: #CC0E1E; }
+
+  /* KPI ROW */
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; padding: 16px 20px 8px; }
+  .kpi { background: white; border-radius: 6px; padding: 14px 16px; border-top: 3px solid #CC0E1E; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .kpi .label { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .kpi .value { font-size: 22px; font-weight: 700; color: #CC0E1E; }
+  .kpi .sub { font-size: 11px; color: #888; margin-top: 2px; }
+  .kpi.green { border-top-color: var(--green); }
+  .kpi.amber { border-top-color: var(--amber); }
+  .kpi.red { border-top-color: var(--red); }
+
+  /* TABS */
+  .tabs { display: flex; background: white; border-bottom: 2px solid var(--border); padding: 0 20px; margin-top: 8px; }
+  .tab { padding: 10px 18px; cursor: pointer; font-size: 12px; font-weight: 500; color: #666; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+  .tab.active { color: #CC0E1E; border-bottom-color: #CC0E1E; font-weight: 600; }
+  .tab:hover:not(.active) { color: #CC0E1E; }
+
+  /* CONTENT */
+  .content { display: none; padding: 16px 20px; }
+  .content.active { display: block; }
+
+  /* SECTIONS */
+  .section-title { font-size: 13px; font-weight: 700; color: #CC0E1E; margin-bottom: 10px; padding-bottom: 4px; border-bottom: 2px solid #FFE8EA; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .card { background: white; border-radius: 6px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th { background: #CC0E1E; color: white; padding: 7px 10px; text-align: left; font-weight: 600; font-size: 11px; }
+  th.r { text-align: right; }
+  td { padding: 6px 10px; border-bottom: 1px solid #f0f0f0; }
+  td.r { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:hover td { background: var(--gray); }
+  tr.total td { background: #FFE8EA; font-weight: 700; border-top: 2px solid #CC0E1E; }
+  tr.hl td { background: #EBF3FB; }
+
+  /* CHART CONTAINER */
+  .chart-wrap { position: relative; height: 220px; }
+  .bar-chart { display: flex; align-items: flex-end; height: 180px; gap: 6px; padding: 0 4px; }
+  .bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .bar { width: 100%; border-radius: 3px 3px 0 0; transition: opacity 0.2s; cursor: pointer; }
+  .bar:hover { opacity: 0.8; }
+  .bar-label { font-size: 9px; color: #888; margin-top: 4px; text-align: center; }
+  .bar-val { font-size: 9px; color: #555; text-align: center; }
+  .chart-legend { display: flex; gap: 16px; margin-top: 8px; font-size: 11px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; margin-right: 4px; vertical-align: middle; }
+
+  /* DELTA BADGES */
+  .up { color: var(--green); font-weight: 700; }
+  .dn { color: var(--red); font-weight: 700; }
+  .neu { color: #888; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+  .tag.green { background: var(--ltgreen); color: #375623; }
+  .tag.amber { background: var(--ltamber); color: #7F6000; }
+  .tag.red { background: var(--ltred); color: #9C0006; }
+
+  /* HOW TO UPDATE BOX */
+  .howto { background: #F0F7FF; border: 1px solid #FFE8EA; border-radius: 6px; padding: 14px 18px; }
+  .howto h4 { color: #CC0E1E; margin-bottom: 8px; }
+  .howto ol { margin-left: 18px; line-height: 2; font-size: 12px; }
+  .howto code { background: #e8e8e8; padding: 1px 6px; border-radius: 3px; font-size: 11px; font-family: Consolas, monospace; }
+
+  /* FOOTER */
+  .footer { text-align: center; padding: 16px; font-size: 10px; color: #aaa; border-top: 1px solid #eee; margin-top: 20px; }
+
+/* ═══════════════════════════════════════════════════
+   ISZE BRAND OVERRIDE — Isuzu Red #CC0E1E · Arial
+   ═══════════════════════════════════════════════════ */
+
+/* Custom properties reset */
+:root {
+  --brand-red:    #CC0E1E;
+  --brand-dark:   #9A0B16;
+  --brand-light:  #FFE8EA;
+  --brand-xlight: #FFF5F5;
+  --black:        #1A1A1A;
+  --gray:         #5A5A5A;
+  --ltgray:       #F5F5F5;
+  --border:       #E0E0E0;
+  --white:        #FFFFFF;
+}
+
+/* Body + font */
+body { font-family: Arial, sans-serif !important; background: #F5F5F5 !important; color: #1A1A1A !important; }
+
+/* ── Header ── */
+.header, .top-bar, .hdr {
+  background: linear-gradient(135deg, #CC0E1E 0%, #9A0B16 100%);
+  border-bottom: none !important;
+  color: #FFFFFF !important;
+}
+.header h1, .top-bar h1, .hdr-title, .hdr h1 { color: #FFFFFF !important; }
+.header .sub, .top-bar .meta, .hdr-sub { color: rgba(255,255,255,0.8) !important; }
+.hdr-logo { color: #FFFFFF !important; font-family: Arial Black, Arial, sans-serif !important; }
+
+/* ── Sub-bar / control bar ── */
+.sub-bar, .ctrl-bar, .tabs, .nav {
+  background: #1A1A1A !important;
+  border-bottom-color: #CC0E1E !important;
+}
+.sub-bar span, .ctrl-bar .ctrl-label { color: #E0E0E0 !important; }
+.tab, .nav-tab { color: rgba(255,255,255,0.7) !important; font-family: Arial, sans-serif !important; }
+.tab.active, .nav-tab.active { color: #FFFFFF !important; border-bottom-color: #CC0E1E !important; }
+.tab:hover:not(.active), .nav-tab:hover { color: #FFFFFF !important; }
+
+/* ── KPI cards ── */
+.kpi-card, .kpi { background: #FFFFFF !important; border: 1px solid #E0E0E0 !important; box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important; }
+.kpi-card { border-left: 4px solid #CC0E1E !important; border-top: none !important; }
+.kpi { border-left: 4px solid #CC0E1E !important; border-top: none !important; }
+.kpi.red, .kpi-card.red { border-left-color: #CC0E1E !important; }
+.kpi.green, .kpi-card.green { border-left-color: #2E7D32 !important; }
+.kpi.orange, .kpi-card.orange, .kpi.amber, .kpi-card.amber { border-left-color: #E65100 !important; }
+.kpi.blue, .kpi-card.blue { border-left-color: #CC0E1E !important; }
+.kpi-val, .kpi-value, .value { color: #1A1A1A !important; }
+.kpi-label, .kpi_label, .label { color: #5A5A5A !important; }
+.kpi-sub, .sub { color: #888888 !important; }
+
+/* ── Cards ── */
+.card { background: #FFFFFF !important; border: 1px solid #E0E0E0 !important; border-radius: 8px !important; box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important; }
+.card h3, .section-title, .sec-title, .card-title { color: #1A1A1A !important; border-bottom-color: #CC0E1E !important; font-family: Arial Black, Arial, sans-serif !important; }
+
+/* ── Tables ── */
+th { background: #CC0E1E !important; color: #FFFFFF !important; font-family: Arial, sans-serif !important; }
+tr.total td, tfoot td { background: #FFE8EA !important; border-top-color: #CC0E1E !important; }
+tr:hover td { background: #FFF5F5 !important; }
+
+/* ── Badges ── */
+.badge { background: #CC0E1E !important; color: #FFFFFF !important; }
+.badge-internal { background: #FFE8EA !important; color: #CC0E1E !important; }
+
+/* ── Section titles ── */
+.section-title, .sec-title { color: #1A1A1A !important; border-bottom-color: #CC0E1E !important; }
+
+/* ── Links ── */
+a { color: #CC0E1E !important; }
+.nav-links a { color: rgba(255,255,255,0.8) !important; }
+.nav-links a.active { color: #FFFFFF !important; background: rgba(255,255,255,0.2) !important; }
+
+/* ── Verdict / alert bars ── */
+.verdict-bar, .update-banner {
+  background: #FFF5F5 !important;
+  border-left-color: #CC0E1E !important;
+  color: #1A1A1A !important;
+  border-color: #FFE8EA !important;
+}
+.verdict-bar h2 { color: #CC0E1E !important; }
+.verdict-bar p, .verdict-bar strong { color: #1A1A1A !important; }
+
+/* ── Year-end box / summary panels ── */
+.year-end-box {
+  background: #FFF5F5 !important;
+  border-color: #FFE8EA !important;
+}
+.ye-label { color: #5A5A5A !important; }
+
+/* ── Footer ── */
+footer, .footer {
+  background: #1A1A1A !important;
+  color: #AAAAAA !important;
+  border-top: 3px solid #CC0E1E !important;
+  padding: 14px 28px !important;
+  text-align: center !important;
+}
+footer a, .footer a { color: #FFE8EA !important; }
+
+/* ── Progress bars ── */
+.prog-bar-bg { background: #F0F0F0 !important; }
+.prog-label, .prog-val { color: #5A5A5A !important; }
+
+/* ── Status pills light theme ── */
+.sp-active { background: #e8f5e9 !important; color: #2e7d32 !important; border-color: #a5d6a7 !important; }
+.sp-risk { background: #fff3e0 !important; color: #e65100 !important; border-color: #ffcc80 !important; }
+.sp-hot { background: #FFE8EA !important; color: #CC0E1E !important; border-color: #FFAAB0 !important; }
+.sp-plan { background: #e8eaf6 !important; color: #283593 !important; border-color: #9fa8da !important; }
+
+/* ── Connection map nodes ── */
+.conn-map { background: #FFFFFF !important; border-color: #E0E0E0 !important; }
+.conn-node { background: #F5F5F5 !important; border-color: #E0E0E0 !important; }
+.conn-node-name { color: #CC0E1E !important; }
+.conn-arrow { color: #CC0E1E !important; }
+
+/* ── Project cards ── */
+.proj-card { background: #FFFFFF !important; border-color: #E0E0E0 !important; }
+.proj-card:hover { border-color: #CC0E1E !important; background: #FFF5F5 !important; }
+.proj-name { color: #1A1A1A !important; }
+.proj-sub, .proj-desc { color: #5A5A5A !important; }
+.file-link { background: #F5F5F5 !important; color: #CC0E1E !important; border-color: #E0E0E0 !important; }
+.file-link:hover { background: #FFE8EA !important; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar-track { background: #F5F5F5; }
+::-webkit-scrollbar-thumb { background: #CC0E1E; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #9A0B16; }
+
+</style>
+  <link rel="stylesheet" href="_ui/editorial.css">
+  <link rel="stylesheet" href="_ui/editorial-full.css">
+  <script src="_ui/editorial-charts.js"></script>
+  <script src="_ui/isze-shell.js" defer></script>
+</head>
+<body>
+<div data-isze-stamp style="background:#1F2937;color:#F3F4F6;font:11px/1.5 Arial,sans-serif;padding:5px 14px;text-align:right;letter-spacing:.3px;border-bottom:2px solid #CC0E1E"><span style="opacity:.65">📅 File last updated:</span> <strong>2026-05-22</strong> <span style="opacity:.55">— verify underlying data freshness before sharing externally</span></div>
+<div id="isze-offline-banner" style="display:none;position:sticky;top:0;z-index:9999;background:#7f1d1d;color:#fecaca;padding:12px 24px;text-align:center;font-size:13px;font-weight:600;letter-spacing:.02em;">⚠&nbsp; Data unavailable — open from SharePoint or reload when connected.</div>
+<div style="background:#1A1A1A;padding:7px 24px;display:flex;align-items:center;gap:20px;font-size:11px;font-family:Arial,sans-serif;border-bottom:2px solid #CC0E1E">
+  <a href="index.html" style="color:#CC0E1E;text-decoration:none;font-weight:700;white-space:nowrap">⬛ ISZE Hub</a>
+  <span style="color:#555">|</span>
+  <a href="MASTER_DASHBOARD.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Master Dashboard</a>
+  <a href="AIM_Dashboard_CY2025.html" style="color:#aaa;text-decoration:none;white-space:nowrap">AIM</a>
+  <a href="ISZE_Competitiveness_Dashboard.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Competitiveness</a>
+  <a href="ISZE_Monthly_Sales_Tracker.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Sales Tracker</a>
+  <a href="ITUK_ZEV_Golden_Window_Dashboard.html" style="color:#aaa;text-decoration:none;white-space:nowrap">ZEV / Golden Window</a>
+  <a href="ISUZU_UIO_Dashboard_2026_v18.html" style="color:#aaa;text-decoration:none;white-space:nowrap">UIO</a>
+  <a href="ISZE_Business Plan_Gap_Internal.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Business Plan Gap</a>
+  <a href="ISZE_FY2026_YearEnd_Review.html" style="color:#aaa;text-decoration:none;white-space:nowrap">FY2026 Review</a>
+  <a href="ISZE_Tender_Monitor_v2.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Tender Monitor</a>
+</div>
+
+
+<div class="header">
+  <div>
+    <h1>📊 ISZE Monthly Sales Tracker</h1>
+    <div style="font-size:12px;color:#F4A0A7;margin-top:4px;">IE40 Branch — Vehicle Parts &amp; Accessories</div>
+  </div>
+  <div class="meta">
+    <div>Baseline Year: <strong>CY2025</strong></div>
+    <div>Last data load: <span class="badge" id="lastLoad">CY2025 full year</span></div>
+    <div style="margin-top:6px;">Update this page when new monthly data arrives</div>
+  </div>
+</div>
+
+<div class="update-banner">
+  ℹ  <strong>How to use:</strong> This tracker shows CY2025 as the baseline. When new monthly data is available, run the Python update script (see <em>How to Update</em> tab) and regenerate this file. All charts and tables update automatically.
+</div>
+
+<!-- KPI ROW -->
+<div class="kpi-row">
+  <div class="kpi">
+    <div class="label">CY2025 Total Revenue</div>
+    <div class="value">€32.4M</div>
+    <div class="sub">26 distributors · 4,509 SKUs</div>
+  </div>
+  <div class="kpi green">
+    <div class="label">CY2025 Gross Profit</div>
+    <div class="value">€14.6M</div>
+    <div class="sub">45.0% GP margin</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Monthly Average</div>
+    <div class="value">€2.70M</div>
+    <div class="sub">Revenue per month</div>
+  </div>
+  <div class="kpi amber">
+    <div class="label">Best Month</div>
+    <div class="value">Jul 2025</div>
+    <div class="sub">€3.03M revenue</div>
+  </div>
+  <div class="kpi">
+    <div class="label">Weakest Month</div>
+    <div class="value">Apr 2025</div>
+    <div class="sub">€2.27M revenue</div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="showTab('monthly')">📅 Monthly Trend</div>
+  <div class="tab" onclick="showTab('distributors')">🌍 Distributors</div>
+  <div class="tab" onclick="showTab('compare')">📈 Period Comparison</div>
+  <div class="tab" onclick="showTab('update')">🔄 How to Update</div>
+</div>
+
+<!-- TAB: MONTHLY TREND -->
+<div id="tab-monthly" class="content active">
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title">Monthly Revenue — CY2025 (€)</div>
+      <div class="chart-wrap">
+        <div class="bar-chart" id="revenueChart"></div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:#CC0E1E"></span>Revenue</span>
+          <span><span class="legend-dot" style="background:#70AD47"></span>Gross Profit</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">Monthly Detail</div>
+      <table>
+        <thead><tr>
+          <th>Month</th><th class="r">Revenue</th><th class="r">GP</th><th class="r">GP%</th><th class="r">MoM</th>
+        </tr></thead>
+        <tbody id="monthlyTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="margin-top:14px;">
+    <div class="card">
+      <div class="section-title">H1 vs H2 Split — CY2025</div>
+      <div class="grid-3" style="margin-top:10px;">
+        <div>
+          <div class="label" style="font-size:11px;color:#666;margin-bottom:4px;">H1 (Jan–Jun)</div>
+          <div style="font-size:18px;font-weight:700;color:#CC0E1E;">€15.96M</div>
+          <div style="font-size:11px;color:#888;">49.3% of full year</div>
+        </div>
+        <div>
+          <div class="label" style="font-size:11px;color:#666;margin-bottom:4px;">H2 (Jul–Dec)</div>
+          <div style="font-size:18px;font-weight:700;color:#CC0E1E;">€16.44M</div>
+          <div style="font-size:11px;color:#888;">50.7% of full year</div>
+        </div>
+        <div>
+          <div class="label" style="font-size:11px;color:#666;margin-bottom:4px;">H2 vs H1</div>
+          <div style="font-size:18px;font-weight:700;color:var(--green);">+3.0%</div>
+          <div style="font-size:11px;color:#888;">Mild seasonal uplift</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: DISTRIBUTORS -->
+<div id="tab-distributors" class="content">
+  <div class="grid-2">
+    <div class="card">
+      <div class="section-title">Distributor Ranking — CY2025 Revenue</div>
+      <table>
+        <thead><tr>
+          <th>#</th><th>Distributor</th><th>Region</th><th class="r">Revenue</th><th class="r">GP%</th><th class="r">Share</th>
+        </tr></thead>
+        <tbody id="distTableBody"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="section-title">Revenue Concentration</div>
+      <div style="margin-top:10px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;">
+          <span>Top 2 (UK)</span><span style="font-weight:700;">€11.6M — 35.9%</span>
+        </div>
+        <div style="background:#eee;border-radius:4px;overflow:hidden;height:14px;margin-bottom:12px;">
+          <div style="background:#CC0E1E;height:100%;width:35.9%;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;">
+          <span>Top 4 (UK + Israel)</span><span style="font-weight:700;">€17.9M — 55.4%</span>
+        </div>
+        <div style="background:#eee;border-radius:4px;overflow:hidden;height:14px;margin-bottom:12px;">
+          <div style="background:#CC0E1E;height:100%;width:55.4%;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;font-size:12px;">
+          <span>Top 6</span><span style="font-weight:700;">€22.6M — 69.8%</span>
+        </div>
+        <div style="background:#eee;border-radius:4px;overflow:hidden;height:14px;margin-bottom:16px;">
+          <div style="background:#FFE8EA;height:100%;width:69.8%;border:1px solid #CC0E1E;"></div>
+        </div>
+        <div class="tag amber" style="font-size:11px;padding:6px 12px;">
+          ⚠ Top 2 = 36% of revenue — UK concentration risk
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <div class="section-title">Key Flags — CY2025</div>
+        <table style="margin-top:6px;">
+          <thead><tr><th>Distributor</th><th>Flag</th><th>Action</th></tr></thead>
+          <tbody>
+            <tr><td>ITUK</td><td><span class="tag red">Pricing dispute</span></td><td>€299K impact — SPA review pending</td></tr>
+            <tr><td>UMI</td><td><span class="tag amber">Shell channel</span></td><td>137,520L oils — formalize contract</td></tr>
+            <tr><td>Ireland</td><td><span class="tag amber">5% pushback</span></td><td>~€60K impact — SPA review by Jun-26</td></tr>
+            <tr><td>Benelux</td><td><span class="tag amber">5% pushback</span></td><td>~€106K impact — SPA review by Jun-26</td></tr>
+            <tr><td>ITUK</td><td><span class="tag green">PMS pilot</span></td><td>~€2.5M capture gap — campaign active</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: PERIOD COMPARISON -->
+<div id="tab-compare" class="content">
+  <div class="card" style="margin-bottom:14px;">
+    <div class="section-title">Period Comparison — Select Range</div>
+    <div style="display:flex;gap:16px;margin-top:10px;align-items:center;flex-wrap:wrap;">
+      <div>
+        <label style="font-size:11px;color:#666;display:block;margin-bottom:3px;">Period A (current)</label>
+        <select id="periodA" onchange="updateComparison()" style="padding:5px 10px;border:1px solid #ccc;border-radius:4px;font-size:12px;">
+          <option value="h1_2025">H1 2025 (Jan–Jun)</option>
+          <option value="h2_2025" selected>H2 2025 (Jul–Dec)</option>
+          <option value="q4_2025">Q4 2025 (Oct–Dec)</option>
+          <option value="full_2025">Full Year 2025</option>
+        </select>
+      </div>
+      <div style="font-size:18px;color:#ccc;">vs</div>
+      <div>
+        <label style="font-size:11px;color:#666;display:block;margin-bottom:3px;">Period B (prior)</label>
+        <select id="periodB" onchange="updateComparison()" style="padding:5px 10px;border:1px solid #ccc;border-radius:4px;font-size:12px;">
+          <option value="h1_2025" selected>H1 2025 (Jan–Jun)</option>
+          <option value="h2_2025">H2 2025 (Jul–Dec)</option>
+          <option value="q4_2025">Q4 2025 (Oct–Dec)</option>
+          <option value="full_2025">Full Year 2025</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-title">Comparison Result</div>
+    <div id="comparisonResult" style="margin-top:10px;"></div>
+  </div>
+  <div class="card" style="margin-top:14px;">
+    <div class="section-title">📝 Add New Year Data</div>
+    <p style="font-size:12px;color:#555;line-height:1.7;margin-top:8px;">
+      Once CY2026 monthly data is available (from SAP export), the comparison will extend to CY2025 vs CY2026 year-over-year.
+      See the <strong>How to Update</strong> tab for instructions on regenerating this page with new data.
+    </p>
+    <div style="margin-top:12px;background:var(--ltamber);border-radius:6px;padding:12px;font-size:12px;">
+      <strong>Next update milestone:</strong> When April 2026 data is available (first month of FY2027),
+      update the tracker to show Jan–Mar 2026 vs Jan–Mar 2025 — first YoY comparison with the 2026 price list active.
+    </div>
+  </div>
+</div>
+
+<!-- TAB: HOW TO UPDATE -->
+<div id="tab-update" class="content">
+  <div class="howto" style="margin-bottom:16px;">
+    <h4>🔄 Updating This Tracker With New Monthly Data</h4>
+    <p style="font-size:12px;color:#555;margin-bottom:10px;line-height:1.6;">
+      When a new monthly SAP export is available (same format as <code>data(20).xlsx</code> — IE40 billing data),
+      run the Python script below. It regenerates this HTML file with updated data automatically.
+    </p>
+    <ol>
+      <li>Export SAP billing data for the new period (BillT=F2, SOrg IE40) — same format as CY2025</li>
+      <li>Save the file to your <code>Isuzu/</code> folder (e.g., <code>data_jan2026.xlsx</code>)</li>
+      <li>Open Claude Cowork and say: <em>"Update the monthly sales tracker with [filename]"</em></li>
+      <li>Claude will merge the new data, recalculate all metrics, and regenerate this file</li>
+      <li>Copy the updated <code>ISZE_Monthly_Sales_Tracker.html</code> to your hosting space</li>
+    </ol>
+  </div>
+
+  <div class="card" style="margin-bottom:14px;">
+    <div class="section-title">What Changes Each Update</div>
+    <table>
+      <thead><tr><th>Element</th><th>Updates Automatically</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Monthly bar chart</td><td><span class="tag green">✓ Auto</span></td><td>New bars added for new months</td></tr>
+        <tr><td>Monthly table</td><td><span class="tag green">✓ Auto</span></td><td>New rows appended</td></tr>
+        <tr><td>KPI row (YTD)</td><td><span class="tag green">✓ Auto</span></td><td>Recalculated from full data</td></tr>
+        <tr><td>Distributor ranking</td><td><span class="tag green">✓ Auto</span></td><td>Re-sorted by period revenue</td></tr>
+        <tr><td>H1/H2 split</td><td><span class="tag green">✓ Auto</span></td><td>Calculated from month data</td></tr>
+        <tr><td>Period comparison</td><td><span class="tag green">✓ Auto</span></td><td>All periods recalculated</td></tr>
+        <tr><td>Flags / alerts</td><td><span class="tag amber">⚠ Manual</span></td><td>Review and update flags per new context</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="section-title">Data Requirements</div>
+    <table>
+      <thead><tr><th>Column</th><th>Required</th><th>Used For</th></tr></thead>
+      <tbody>
+        <tr><td>Material / MATERIAL10</td><td><span class="tag green">✓</span></td><td>PN lookup in IE40 price list</td></tr>
+        <tr><td>Billing Date</td><td><span class="tag green">✓</span></td><td>Month/period assignment</td></tr>
+        <tr><td>Billed Quantity</td><td><span class="tag green">✓</span></td><td>Volume tracking</td></tr>
+        <tr><td>main (customer code)</td><td><span class="tag green">✓</span></td><td>Distributor assignment</td></tr>
+        <tr><td>ISZJ CLASSIFICATION</td><td><span class="tag green">✓</span></td><td>Category breakdown</td></tr>
+        <tr><td>CATEGORY</td><td><span class="tag amber">Recommended</span></td><td>Sub-category analysis</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="footer">
+  ISZE Vehicle Parts Sales · IE40 Branch · CY2025 Baseline · Generated March 2026 · Confidential — Internal Use Only
+</div>
+
+<script>
+// Module-level data vars (populated by async loader)
+let monthlyData, distributors, periods;
+
+const fmt = (n) => '€' + (n >= 1e6 ? (n/1e6).toFixed(2)+'M' : (n/1e3).toFixed(0)+'K');
+const fmtFull = (n) => '€' + n.toLocaleString('en-EU', {maximumFractionDigits:0});
+const pctDelta = (a, b) => b === 0 ? '—' : ((a-b)/b*100).toFixed(1) + '%';
+const arrow = (v) => parseFloat(v) >= 0 ? `<span class="up">▲ ${v}</span>` : `<span class="dn">▼ ${Math.abs(parseFloat(v))}%</span>`;
+
+// ── MONTHLY TABLE ──────────────────────────────────────────────
+function buildMonthlyTable() {
+  const tbody = document.getElementById('monthlyTableBody');
+  let rows = '';
+  monthlyData.forEach((d, i) => {
+    const mom = i === 0 ? '—' : pctDelta(d.rev, monthlyData[i-1].rev);
+    const momHtml = i === 0 ? '<span class="neu">—</span>' : arrow(mom);
+    rows += `<tr>
+      <td><strong>${d.m}</strong></td>
+      <td class="r">${fmt(d.rev)}</td>
+      <td class="r">${fmt(d.gp)}</td>
+      <td class="r">${d.gpPct.toFixed(1)}%</td>
+      <td class="r">${momHtml}</td>
+    </tr>`;
+  });
+  // Total
+  const totRev = monthlyData.reduce((s,d) => s+d.rev, 0);
+  const totGP  = monthlyData.reduce((s,d) => s+d.gp, 0);
+  rows += `<tr class="total">
+    <td><strong>FULL YEAR</strong></td>
+    <td class="r"><strong>${fmt(totRev)}</strong></td>
+    <td class="r"><strong>${fmt(totGP)}</strong></td>
+    <td class="r"><strong>${(totGP/totRev*100).toFixed(1)}%</strong></td>
+    <td class="r">—</td>
+  </tr>`;
+  tbody.innerHTML = rows;
+}
+
+// ── REVENUE BAR CHART ──────────────────────────────────────────
+function buildBarChart() {
+  const container = document.getElementById('revenueChart');
+  const maxRev = Math.max(...monthlyData.map(d => d.rev));
+  const chartH = 160;
+  let html = '';
+  monthlyData.forEach(d => {
+    const h1 = Math.round((d.rev / maxRev) * chartH);
+    const h2 = Math.round((d.gp  / maxRev) * chartH);
+    html += `<div class="bar-group">
+      <div class="bar-val" style="min-height:14px;">${(d.rev/1e6).toFixed(2)}</div>
+      <div style="display:flex;align-items:flex-end;height:${chartH}px;gap:2px;">
+        <div class="bar" style="width:14px;height:${h1}px;background:#CC0E1E;" title="${d.m}: ${fmtFull(d.rev)}"></div>
+        <div class="bar" style="width:14px;height:${h2}px;background:#70AD47;" title="${d.m} GP: ${fmtFull(d.gp)}"></div>
+      </div>
+      <div class="bar-label">${d.m.split('-')[0]}</div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+// ── DISTRIBUTOR TABLE ──────────────────────────────────────────
+function buildDistTable() {
+  const tbody = document.getElementById('distTableBody');
+  let rows = '';
+  distributors.forEach((d, i) => {
+    const gpClass = d.gpPct >= 46 ? 'tag green' : d.gpPct >= 43 ? 'tag amber' : 'tag red';
+    rows += `<tr ${i < 2 ? 'class="hl"' : ''}>
+      <td style="color:#999;font-size:11px;">${i+1}</td>
+      <td><strong>${d.name}</strong></td>
+      <td>${d.region}</td>
+      <td class="r"><strong>${fmt(d.rev)}</strong></td>
+      <td class="r"><span class="${gpClass}">${d.gpPct}%</span></td>
+      <td class="r">${d.share}%</td>
+    </tr>`;
+  });
+  tbody.innerHTML = rows;
+}
+
+// ── COMPARISON ────────────────────────────────────────────────
+function updateComparison() {
+  const pA = periods[document.getElementById('periodA').value];
+  const pB = periods[document.getElementById('periodB').value];
+  const sumRev = p => p.reduce((s,d) => s+d.rev, 0);
+  const sumGP  = p => p.reduce((s,d) => s+d.gp, 0);
+  const rA = sumRev(pA), rB = sumRev(pB);
+  const gA = sumGP(pA),  gB = sumGP(pB);
+  const revDelta = ((rA-rB)/rB*100).toFixed(1);
+  const gpDelta  = ((gA-gB)/gB*100).toFixed(1);
+  const revClass = parseFloat(revDelta) >= 0 ? 'up' : 'dn';
+  const gpClass  = parseFloat(gpDelta)  >= 0 ? 'up' : 'dn';
+  document.getElementById('comparisonResult').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;">
+      <div style="text-align:center;padding:14px;background:var(--gray);border-radius:6px;">
+        <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:6px;">Period A Revenue</div>
+        <div style="font-size:22px;font-weight:700;color:#CC0E1E;">${fmt(rA)}</div>
+        <div style="font-size:11px;color:#888;">${pA.length} months</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:var(--gray);border-radius:6px;">
+        <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:6px;">Period B Revenue</div>
+        <div style="font-size:22px;font-weight:700;color:#CC0E1E;">${fmt(rB)}</div>
+        <div style="font-size:11px;color:#888;">${pB.length} months</div>
+      </div>
+      <div style="text-align:center;padding:14px;background:${parseFloat(revDelta)>=0?'var(--ltgreen)':'var(--ltred)'};border-radius:6px;">
+        <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:6px;">Revenue Delta</div>
+        <div style="font-size:22px;font-weight:700;" class="${revClass}">${parseFloat(revDelta)>=0?'▲':'▼'} ${Math.abs(parseFloat(revDelta))}%</div>
+        <div style="font-size:11px;color:#888;">${fmtFull(Math.abs(rA-rB))} difference</div>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Metric</th><th class="r">Period A</th><th class="r">Period B</th><th class="r">Delta</th></tr></thead>
+      <tbody>
+        <tr><td>Revenue</td><td class="r">${fmtFull(rA)}</td><td class="r">${fmtFull(rB)}</td><td class="r"><span class="${revClass}">${revDelta}%</span></td></tr>
+        <tr><td>Gross Profit</td><td class="r">${fmtFull(gA)}</td><td class="r">${fmtFull(gB)}</td><td class="r"><span class="${gpClass}">${gpDelta}%</span></td></tr>
+        <tr><td>GP Margin</td><td class="r">${(gA/rA*100).toFixed(1)}%</td><td class="r">${(gB/rB*100).toFixed(1)}%</td><td class="r">${((gA/rA-gB/rB)*100).toFixed(1)} pp</td></tr>
+        <tr><td>Monthly avg revenue</td><td class="r">${fmt(rA/pA.length)}</td><td class="r">${fmt(rB/pB.length)}</td><td class="r">—</td></tr>
+      </tbody>
+    </table>`;
+}
+
+// ── TAB SWITCHING ──────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ── INIT ──────────────────────────────────────────────────────
+buildMonthlyTable();
+buildBarChart();
+buildDistTable();
+updateComparison();
+
+function initDashboard(d) {
+  monthlyData = d.monthlyData;
+  distributors = d.distributors;
+  periods = {
+    h1_2025: monthlyData.slice(0, 6),
+    h2_2025: monthlyData.slice(6, 12),
+    q4_2025: monthlyData.slice(9, 12),
+    full_2025: monthlyData,
+  };
+  buildMonthlyTable();
+  buildBarChart();
+  buildDistTable();
+  updateComparison();
+}
+
+(async function() {
+  try {
+    const resp = await fetch('../Data/dashboards/isze_data.json');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const j = await resp.json();
+    initDashboard(j.monthly_sales);
+  } catch(e) {
+    document.getElementById('isze-offline-banner').style.display = 'block';
+  }
+})();
+</script>
+</body>
+</html>

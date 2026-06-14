@@ -1,0 +1,2092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISZE — Jerome's Mission Control</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family: Arial, sans-serif;background:#F5F5F5;color:#1A1A1A;font-size:13px;min-height:100vh}
+
+.hdr{background: linear-gradient(135deg, #CC0E1E 0%, #9A0B16 100%);padding:20px 32px;border-bottom:1px solid #E0E0E0}
+.hdr-top{display:flex;align-items:center;gap:16px;margin-bottom:4px}
+.hdr-logo{font-size:28px;font-weight:900;color:#CC0E1E;letter-spacing:-1px}
+.hdr-name{font-size:18px;font-weight:700;color:#1A1A1A}
+.hdr-role{font-size:12px;color:#5A5A5A;margin-top:2px}
+.hdr-date{margin-left:auto;font-size:12px;color:#5A5A5A;text-align:right}
+
+.nav{background:#FFFFFF;border-bottom:1px solid #E0E0E0;padding:0 32px;display:flex;gap:0}
+.nav-tab{padding:12px 18px;font-size:12px;font-weight:600;color:#5A5A5A;cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;text-transform:uppercase;letter-spacing:.5px}
+.nav-tab:hover{color:#1A1A1A;background:#E0E0E0}
+.nav-tab.active{color:#CC0E1E;border-bottom-color:#CC0E1E}
+
+.page{display:none;padding:28px 32px}
+.page.active{display:block}
+
+/* ── GRID LAYOUT ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin-bottom:20px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+
+/* ── CARDS ── */
+.card{background:#FFFFFF;border:1px solid #E0E0E0;border-radius:8px;padding:18px;transition:border-color .2s}
+.card:hover{border-color:#D0D0D0}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#5A5A5A;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.card-title .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot-green{background:#3fb950}
+.dot-amber{background:#e3b341}
+.dot-red{background:#f85149}
+.dot-blue{background:#CC0E1E}
+.dot-gray{background:#666666}
+
+/* ── KPI ROW ── */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px}
+.kpi{background:#FFFFFF;border:1px solid #E0E0E0;border-radius:8px;padding:14px 16px}
+.kpi-lbl{font-size:10px;color:#5A5A5A;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.kpi-val{font-size:22px;font-weight:800;margin-top:4px;line-height:1.1}
+.kpi-sub{font-size:10px;color:#666666;margin-top:3px}
+.kv-blue{color:#CC0E1E}
+.kv-green{color:#3fb950}
+.kv-amber{color:#e3b341}
+.kv-red{color:#f85149}
+.kv-white{color:#1A1A1A}
+
+/* ── PROJECT CARD ── */
+.proj-card{background:#FFFFFF;border:1px solid #E0E0E0;border-radius:8px;padding:18px;cursor:pointer;transition:all .2s}
+.proj-card:hover{border-color:#CC0E1E;background:#FFF5F5}
+.proj-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+.proj-icon{font-size:22px;flex-shrink:0}
+.proj-name{font-size:14px;font-weight:700;color:#1A1A1A;line-height:1.2}
+.proj-sub{font-size:11px;color:#5A5A5A;margin-top:2px}
+.status-pill{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:12px;font-size:10.5px;font-weight:700;margin-top:8px}
+.sp-active{background:#e8f5e9;color:#3fb950;border:1px solid #a5d6a7}
+.sp-risk{background:#fff3e0;color:#e3b341;border:1px solid #ffcc80}
+.sp-hot{background:#FFE8EA;color:#f85149;border:1px solid #ef9a9a}
+.sp-plan{background:#e8eaf6;color:#CC0E1E;border:1px solid #90caf9}
+.proj-desc{font-size:11.5px;color:#5A5A5A;line-height:1.5;margin-top:8px}
+.proj-links{margin-top:10px;display:flex;flex-wrap:wrap;gap:5px}
+.file-link{display:inline-block;padding:2px 8px;background:#E0E0E0;border-radius:4px;font-size:10.5px;color:#CC0E1E;text-decoration:none;border:1px solid #D0D0D0}
+.file-link:hover{background:#D0D0D0;color:#E04050}
+
+/* ── CONNECTION MAP ── */
+.conn-map{background:#FFFFFF;border:1px solid #E0E0E0;border-radius:8px;padding:24px;margin-bottom:20px}
+.conn-title{font-size:13px;font-weight:700;color:#1A1A1A;margin-bottom:18px}
+.conn-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.conn-node{background:#F5F5F5;border:1px solid #E0E0E0;border-radius:6px;padding:12px;text-align:center}
+.conn-node-name{font-size:12px;font-weight:700;color:#CC0E1E;margin-bottom:6px}
+.conn-feeds{font-size:10.5px;color:#5A5A5A;line-height:1.5}
+.conn-arrow{color:#3fb950;font-weight:900}
+
+/* ── SPARRING PANEL ── */
+.spar-intro{background:#FFF5F5;border:1px solid #FFAAB0;border-radius:8px;padding:20px;margin-bottom:20px}
+.spar-intro h3{font-size:14px;font-weight:700;color:#CC0E1E;margin-bottom:8px}
+.spar-intro p{font-size:12px;color:#5A5A5A;line-height:1.6}
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.topic-card{background:#FFFFFF;border:1px solid #E8E8E8;border-radius:8px;padding:16px;cursor:pointer;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,0.05)}
+.topic-card:hover{border-color:#CC0E1E;background:#FFF5F5;box-shadow:0 4px 12px rgba(204,14,30,0.10)}
+.tc-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;margin-bottom:6px}
+.tag-price{background:#FFF8E1;color:#7A5200;border:1px solid #FFD54F}
+.tag-strat{background:#E8F5E9;color:#1B5E20;border:1px solid #A5D6A7}
+.tag-ops{background:#E8EAF6;color:#283593;border:1px solid #9FA8DA}
+.tag-risk{background:#FFE8EA;color:#CC0E1E;border:1px solid #FFAAB0}
+.tc-title{font-size:13px;font-weight:700;color:#1A1A1A;margin-bottom:5px}
+.tc-hook{font-size:11.5px;color:#5A5A5A;line-height:1.5}
+.tc-tension{font-size:11px;color:#e3b341;margin-top:6px;font-style:italic}
+
+/* ── TABLE ── */
+.data-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.data-tbl th{background:#E0E0E0;color:#5A5A5A;padding:8px 12px;text-align:left;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.data-tbl td{padding:8px 12px;border-bottom:1px solid #E0E0E0;color:#1A1A1A;vertical-align:top}
+.data-tbl tr:hover td{background:#FFF5F5}
+.tbl-badge{display:inline-block;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700}
+.tb-green{background:#e8f5e9;color:#3fb950}
+.tb-amber{background:#fff3e0;color:#e3b341}
+.tb-red{background:#FFE8EA;color:#f85149}
+.tb-blue{background:#e8eaf6;color:#CC0E1E}
+.tb-gray{background:#E0E0E0;color:#5A5A5A}
+
+/* ── SECTION HEADER ── */
+.sec-hdr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#CC0E1E;margin:0 0 12px;padding:7px 10px;border-left:3px solid #CC0E1E;background:linear-gradient(to right,rgba(204,14,30,0.05),transparent);border-radius:0 4px 4px 0}
+
+/* ── ALERT BOX ── */
+.alert{padding:12px 16px;border-radius:6px;margin-bottom:16px;font-size:12px;line-height:1.5}
+.alert-amber{background:#FFFBF0;border-left:4px solid #e3b341;color:#5C3B00}
+.alert-red{background:#FFF2F2;border-left:4px solid #CC0E1E;color:#7A0A12}
+.alert-green{background:#F2FBF3;border-left:4px solid #3fb950;color:#1A5C2A}
+.alert-blue{background:#F5F7FF;border-left:4px solid #4472C4;color:#1E2A5E}
+
+
+/* ═══════════════════════════════════════════════════
+   ISZE BRAND OVERRIDE — Isuzu Red #CC0E1E · Arial
+   ═══════════════════════════════════════════════════ */
+
+/* Custom properties reset */
+:root {
+  --brand-red:    #CC0E1E;
+  --brand-dark:   #9A0B16;
+  --brand-light:  #FFE8EA;
+  --brand-xlight: #FFF5F5;
+  --black:        #1A1A1A;
+  --gray:         #5A5A5A;
+  --ltgray:       #F5F5F5;
+  --border:       #E0E0E0;
+  --white:        #FFFFFF;
+}
+
+/* Body + font */
+body { font-family: Arial, sans-serif !important; background: #F5F5F5 !important; color: #1A1A1A !important; }
+
+/* ── Header ── */
+.header, .top-bar, .hdr {
+  background: linear-gradient(135deg, #CC0E1E 0%, #9A0B16 100%);
+  border-bottom: none !important;
+  color: #FFFFFF !important;
+}
+.header h1, .top-bar h1, .hdr-title, .hdr h1 { color: #FFFFFF !important; }
+.header .sub, .top-bar .meta, .hdr-sub { color: rgba(255,255,255,0.8) !important; }
+.hdr-logo { color: #FFFFFF !important; font-family: Arial Black, Arial, sans-serif !important; }
+
+/* ── Sub-bar / control bar ── */
+.sub-bar, .ctrl-bar, .tabs, .nav {
+  background: #1A1A1A !important;
+  border-bottom-color: #CC0E1E !important;
+}
+.sub-bar span, .ctrl-bar .ctrl-label { color: #E0E0E0 !important; }
+.tab, .nav-tab { color: rgba(255,255,255,0.7) !important; font-family: Arial, sans-serif !important; }
+.tab.active, .nav-tab.active { color: #FFFFFF !important; border-bottom-color: #CC0E1E !important; }
+.tab:hover:not(.active), .nav-tab:hover { color: #FFFFFF !important; }
+
+/* ── KPI cards ── */
+.kpi-card, .kpi { background: #FFFFFF !important; border: 1px solid #E8E8E8 !important; box-shadow: 0 2px 6px rgba(0,0,0,0.06) !important; }
+.kpi-card { border-top: 3px solid #CC0E1E !important; border-left: none !important; }
+.kpi { border-top: 3px solid #CC0E1E !important; border-left: none !important; }
+.kpi.red, .kpi-card.red { border-top-color: #CC0E1E !important; }
+.kpi.green, .kpi-card.green { border-top-color: #2E7D32 !important; }
+.kpi.orange, .kpi-card.orange, .kpi.amber, .kpi-card.amber { border-top-color: #E65100 !important; }
+.kpi.blue, .kpi-card.blue { border-top-color: #CC0E1E !important; }
+.kpi-val, .kpi-value, .value { color: #1A1A1A !important; }
+.kpi-label, .kpi_label, .label { color: #5A5A5A !important; }
+.kpi-sub, .sub { color: #888888 !important; }
+
+/* ── Cards ── */
+.card { background: #FFFFFF !important; border: 1px solid #E8E8E8 !important; border-radius: 8px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important; transition: box-shadow .2s, border-color .2s !important; }
+.card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.10) !important; border-color: #D0D0D0 !important; }
+.card h3, .section-title, .sec-title, .card-title { color: #1A1A1A !important; border-bottom-color: #CC0E1E !important; font-family: Arial Black, Arial, sans-serif !important; }
+
+/* ── Tables ── */
+th { background: #CC0E1E !important; color: #FFFFFF !important; font-family: Arial, sans-serif !important; }
+tr.total td, tfoot td { background: #FFE8EA !important; border-top-color: #CC0E1E !important; }
+tr:hover td { background: #FFF5F5 !important; }
+
+/* ── Badges ── */
+.badge { background: #CC0E1E !important; color: #FFFFFF !important; }
+.badge-internal { background: #FFE8EA !important; color: #CC0E1E !important; }
+
+/* ── Section titles ── */
+.section-title, .sec-title { color: #1A1A1A !important; border-bottom-color: #CC0E1E !important; }
+
+/* ── Links ── */
+a { color: #CC0E1E !important; }
+.nav-links a { color: rgba(255,255,255,0.8) !important; }
+.nav-links a.active { color: #FFFFFF !important; background: rgba(255,255,255,0.2) !important; }
+
+/* ── Verdict / alert bars ── */
+.verdict-bar, .update-banner {
+  background: #FFF5F5 !important;
+  border-left-color: #CC0E1E !important;
+  color: #1A1A1A !important;
+  border-color: #FFE8EA !important;
+}
+.verdict-bar h2 { color: #CC0E1E !important; }
+.verdict-bar p, .verdict-bar strong { color: #1A1A1A !important; }
+
+/* ── Year-end box / summary panels ── */
+.year-end-box {
+  background: #FFF5F5 !important;
+  border-color: #FFE8EA !important;
+}
+.ye-label { color: #5A5A5A !important; }
+
+/* ── Footer ── */
+footer, .footer {
+  background: #1A1A1A !important;
+  color: #AAAAAA !important;
+  border-top: 3px solid #CC0E1E !important;
+  padding: 14px 28px !important;
+  text-align: center !important;
+}
+footer a, .footer a { color: #FFE8EA !important; }
+
+/* ── Progress bars ── */
+.prog-bar-bg { background: #F0F0F0 !important; }
+.prog-label, .prog-val { color: #5A5A5A !important; }
+
+/* ── Status pills light theme ── */
+.sp-active { background: #e8f5e9 !important; color: #2e7d32 !important; border-color: #a5d6a7 !important; }
+.sp-risk { background: #fff3e0 !important; color: #e65100 !important; border-color: #ffcc80 !important; }
+.sp-hot { background: #FFE8EA !important; color: #CC0E1E !important; border-color: #FFAAB0 !important; }
+.sp-plan { background: #e8eaf6 !important; color: #283593 !important; border-color: #9fa8da !important; }
+
+/* ── Connection map nodes ── */
+.conn-map { background: #FFFFFF !important; border-color: #E0E0E0 !important; }
+.conn-node { background: #F5F5F5 !important; border-color: #E0E0E0 !important; }
+.conn-node-name { color: #CC0E1E !important; }
+.conn-arrow { color: #CC0E1E !important; }
+
+/* ── Project cards ── */
+.proj-card { background: #FFFFFF !important; border-color: #E8E8E8 !important; box-shadow: 0 1px 4px rgba(0,0,0,0.05) !important; }
+.proj-card:hover { border-color: #CC0E1E !important; background: #FFF5F5 !important; box-shadow: 0 4px 12px rgba(204,14,30,0.10) !important; }
+.proj-name { color: #1A1A1A !important; }
+.proj-sub, .proj-desc { color: #5A5A5A !important; }
+.file-link { background: #F5F5F5 !important; color: #CC0E1E !important; border-color: #E0E0E0 !important; }
+.file-link:hover { background: #FFE8EA !important; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar-track { background: #F5F5F5; }
+::-webkit-scrollbar-thumb { background: #CC0E1E; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #9A0B16; }
+
+</style>
+  <link rel="stylesheet" href="_ui/editorial.css">
+  <link rel="stylesheet" href="_ui/editorial-full.css">
+  <script src="_ui/editorial-charts.js"></script>
+  <script src="_ui/isze-shell.js" defer></script>
+</head>
+<body>
+<div data-isze-stamp style="background:#1F2937;color:#F3F4F6;font:11px/1.5 Arial,sans-serif;padding:5px 14px;text-align:right;letter-spacing:.3px;border-bottom:2px solid #CC0E1E"><span style="opacity:.65">📅 File last updated:</span> <strong>2026-05-22</strong> <span style="opacity:.55">— verify underlying data freshness before sharing externally</span></div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div>
+    <div class="hdr-top">
+      <div class="hdr-logo">ISZE</div>
+      <div>
+        <div class="hdr-name">Jérôme Van der Pluym — Mission Control</div>
+        <div class="hdr-role">VP Sales · Vehicle Parts &amp; Accessories · Branch IE40</div>
+      </div>
+    </div>
+  </div>
+  <div class="hdr-date" id="hdr-date"></div>
+</div>
+
+<!-- NAV -->
+<div style="background:#1A1A1A;padding:5px 24px;border-bottom:1px solid #333;font-size:11px">
+  <a href="PROJECT_HUB.html" style="color:#CC0E1E;text-decoration:none;font-weight:700">⬛ ← Project Hub</a>
+  <span style="color:#555;margin:0 8px">|</span>
+  <a href="AI_Operations_Explorer.html" style="color:#E85D04;text-decoration:none;font-weight:700">🗂 AI Ops Explorer</a>
+  <span style="color:#555;margin:0 8px">|</span>
+  <span style="color:#777">Master Dashboard — all projects &amp; files</span>
+</div>
+<div class="nav">
+  <div class="nav-tab active" onclick="showPage('overview')">Overview</div>
+  <div class="nav-tab" onclick="showPage('projects')">Projects</div>
+  <div class="nav-tab" onclick="showPage('salesintel')">📊 Sales Intel</div>
+  <div class="nav-tab" onclick="showPage('dataintegrity')">🔍 Data Integrity</div>
+  <div class="nav-tab" onclick="showPage('connections')">How It Connects</div>
+  <div class="nav-tab" onclick="showPage('sparring')">⚔ Sparring Topics</div>
+  <div class="nav-tab" onclick="showPage('files')">Files &amp; Tools</div>
+  <div class="nav-tab" onclick="showPage('aistack')">🤖 AI Stack</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 1 — OVERVIEW
+═══════════════════════════════════════════════════ -->
+<div class="page active" id="page-overview">
+
+  <div class="alert alert-blue">
+    📅 <strong>FY2026 ends March 2026</strong> — you are in the final month. FY2027 planning and IML alignment is the next horizon.
+  </div>
+  <div class="alert alert-amber">
+    🟡 <strong>Lubricants BC v2 corrects volume error</strong> — original showed 1,428L; reality 137,520L via Shell/UMI (96× gap). v2 rebuilt and corrected. <strong>Still open before IML:</strong> 35% margin assumption unverified · 100% UMI concentration not modelled · IML not yet informed. Use <em>ISZE_Lubricants_BC_Rebuilt_v2.xlsx</em> only.
+  </div>
+
+  <!-- KPIs -->
+  <div class="sec-hdr">Business at a glance — CY2025 actuals (IE40 PR00 prices, 14 Mar 2026)</div>
+  <div class="kpi-row" style="grid-template-columns:repeat(5,1fr)">
+    <div class="kpi">
+      <div class="kpi-lbl">CY2025 IE40 Revenue</div>
+      <div class="kpi-val kv-blue">€30.4M</div>
+      <div class="kpi-sub">148,769 billing lines · PR00 list price proxy</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">ITUK 2025 (basket)</div>
+      <div class="kpi-val kv-white">€5.2M</div>
+      <div class="kpi-sub">17% of total · #2 customer</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">ITUK 2026 price impact</div>
+      <div class="kpi-val kv-amber">+€299k</div>
+      <div class="kpi-sub">+5.3% on same basket · line-by-line confirmed</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">PMS gap ITUK (PRISM)</div>
+      <div class="kpi-val kv-red" id="kpi-pms-gap-val">€457K</div>
+      <div class="kpi-sub" id="kpi-pms-gap-sub">Registry gap · 22,389 DVLA · May 2026</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Customer concentration</div>
+      <div class="kpi-val kv-amber">36%</div>
+      <div class="kpi-sub">IUK + ITUK = €11M · top-2 risk</div>
+    </div>
+  </div>
+
+  <div class="kpi-row" style="grid-template-columns:repeat(5,1fr);margin-top:-4px">
+    <div class="kpi">
+      <div class="kpi-lbl">Active projects</div>
+      <div class="kpi-val kv-blue">7</div>
+      <div class="kpi-sub">across VP + ACC + cross-functional</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Open disputes</div>
+      <div class="kpi-val kv-red">1</div>
+      <div class="kpi-sub">ITUK pricing methodology (James Marsh)</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Shell/UMI lubricants</div>
+      <div class="kpi-val kv-green">137k L</div>
+      <div class="kpi-sub">CY2025 actual · ~€582k est. revenue</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">ITUK car park (actual)</div>
+      <div class="kpi-val kv-white">22,389</div>
+      <div class="kpi-sub">N: 21,167 · F: 805 · Source: ITUK car park file</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">IE40 price list</div>
+      <div class="kpi-val kv-white">164k</div>
+      <div class="kpi-sub">parts, PR00, 13 Mar 2026</div>
+    </div>
+  </div>
+
+  <!-- Project status summary -->
+  <div class="sec-hdr" style="margin-top:8px">Project status</div>
+  <div class="card" style="margin-bottom:20px">
+    <table class="data-tbl">
+      <thead>
+        <tr><th>Project</th><th>Status</th><th>Priority</th><th>Key risk / open item</th><th>Next action</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>FY2026 VP Action Plan</strong></td>
+          <td><span class="tbl-badge tb-amber">FY end</span></td>
+          <td><span class="tbl-badge tb-red">HIGH</span></td>
+          <td>FY closing — did you hit targets?</td>
+          <td>Prepare FY2027 transition brief for IML</td>
+        </tr>
+        <tr>
+          <td><strong>2026 Pricing / ITUK dispute</strong></td>
+          <td><span class="tbl-badge tb-red">Active dispute</span></td>
+          <td><span class="tbl-badge tb-red">HIGH</span></td>
+          <td>James Marsh pushing part-by-part methodology. ITUK basket impact now confirmed: +€298,911 (+5.3%) on 2025 actual volumes.</td>
+          <td>Use itemised pricing impact file to rebut. Line-by-line data ready.</td>
+        </tr>
+        <tr>
+          <td><strong>PMS Coverage (ITUK pilot)</strong></td>
+          <td><span class="tbl-badge tb-blue">In pilot</span></td>
+          <td><span class="tbl-badge tb-amber">MEDIUM</span></td>
+          <td>EQ-HIT gap partially bridged via Maintenance Matrix. 13 PNs show zero ITUK purchases. N-Series oil filter: 0.4% capture vs UIO. AdBlue filter: 0.2% capture.</td>
+          <td>Share PMS gap analysis with ITUK. Use drain plug gasket (26.8%) as capture rate benchmark.</td>
+        </tr>
+        <tr>
+          <td><strong>Lubricants project</strong></td>
+          <td><span class="tbl-badge tb-red">🔴 BC wrong</span></td>
+          <td><span class="tbl-badge tb-red">URGENT</span></td>
+          <td>Business case shows 1,428L for FY2026. CY2025 actuals: 137,520L via Shell/UMI already. Model is 96× understated. Reframe as scaling existing channel, not new project.</td>
+          <td>Fix BC FY2026 actuals row before sharing with IML. Add Shell/UMI as existing revenue channel.</td>
+        </tr>
+        <tr>
+          <td><strong>Competitiveness Dashboard</strong></td>
+          <td><span class="tbl-badge tb-green">Live</span></td>
+          <td><span class="tbl-badge tb-blue">SUPPORT</span></td>
+          <td>N/F-Series = estimated (no EQ-HIT)</td>
+          <td>Share with DBs? Use internally for ITUK case? Request EQ-HIT access?</td>
+        </tr>
+        <tr>
+          <td><strong>UIO Tool (v9)</strong></td>
+          <td><span class="tbl-badge tb-green">Stable</span></td>
+          <td><span class="tbl-badge tb-blue">SUPPORT</span></td>
+          <td>Data freshness — needs FY2027 shipment update in April</td>
+          <td>Schedule annual data refresh post FY-end</td>
+        </tr>
+        <tr>
+          <td><strong>EV Readiness</strong></td>
+          <td><span class="tbl-badge tb-gray">Planning</span></td>
+          <td><span class="tbl-badge tb-gray">LOW/NOW</span></td>
+          <td>D-Max EV launch timeline uncertain</td>
+          <td>Build parts stocking proposal when IMIE confirms launch date</td>
+        </tr>
+        <tr>
+          <td><strong><a href="AIM_Dashboard_CY2025.html" style="color:inherit">Aftermarket Intelligence (AIM)</a></strong></td>
+          <td><span class="tbl-badge tb-green">Live — CY2025</span></td>
+          <td><span class="tbl-badge tb-red">HIGH</span></td>
+          <td>✅ Classification improved 84% → <strong>93.5%</strong> (14 Mar). +154 parts / +€3.1M recovered. Residual 6.5% (€2.1M) needs manual review. ✅ CY2024 actuals loaded (15 Mar) — €32.6M actual SAP billing, 42.9% margin, 95% AIM coverage confirmed. ⚠ YoY not yet possible — CY2025 file missing ZPR1 + surcharges.</td>
+          <td>Manual review of residual Unknown PNs · Pull actual CY2025 SAP billing from BVDB for true YoY</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Top issues -->
+  <div class="sec-hdr">Issues requiring attention</div>
+  <div class="grid-2">
+    <div class="alert alert-red">
+      <strong>🔥 ITUK pricing dispute — now data-armed</strong><br>
+      James Marsh is challenging methodology. You now have the counter: €298,911 (+5.3%) itemised line-by-line on his actual 2025 basket. That's harder to argue with than a % figure. File: <em>ISZE_CY2025_Analysis_v1.xlsx → Sheet 3</em>.
+    </div>
+    <div class="alert alert-amber">
+      <strong>🟡 Lubricants BC — v2 corrects volume error</strong><br>
+      Original showed 1,428L (96× wrong). v2 rebuilt: 137,520L actuals, 43.3% retention, exceeds base case. <strong>Still open:</strong> 35% margin assumption unverified, 100% UMI concentration not modelled, IML not yet informed. Use v2 only.
+    </div>
+    <div class="alert alert-amber" id="alert-pms-gap">
+      <strong>⚠ PMS — PRISM registry view (ITUK 22,389 DVLA · 0.5×70% expected demand)</strong><br>
+      Oil filter registry capture <strong>100%+</strong> (11,074 vs 7,836 expected). Largest € gaps: air filter (28%), clutch disc/plate. Sum registry revenue gap <strong>~€457K</strong> across PMS categories — not the old dealer-basket €3.5M estimate. Source: <code>Data/derived/pms_capture_by_db_year.csv</code> · <code>metric_dictionary.md</code>.
+    </div>
+    <div class="alert alert-amber">
+      <strong>⚠ Revenue data quality</strong><br>
+      CY2025 values are Qty × PR00 list price — not actual invoiced revenue. SPAs and DLOD discounts mean real net is lower. Request VKWRT field from BVDB/SAP for true revenue. ✅ CY2024 actuals now available — €32.6M actual SAP billing at 42.9% margin (see ISZE_CY2024_Sales_Analysis.xlsx).
+    </div>
+    <div class="alert alert-blue">
+      <strong>💡 Shell/UMI — strategic decision needed</strong><br>
+      137,520L of Shell engine oil sold to UMI in CY2025. Entire lubricants revenue concentrated in one customer, with a batch-order pattern (huge September spike). What happens if UMI goes direct to Shell?
+    </div>
+    <div class="alert alert-green">
+      <strong>✅ AIM classification improved — 14 Mar 2026</strong><br>
+      Keyword rules expanded. Classification: 84% → <strong>93.5%</strong>. €3.1M of revenue now visible in category scoring. ✅ CY2024 actuals loaded — AIM coverage confirmed at 95% of CY2024 revenue (€32.6M actual billing). ⚠ YoY not yet possible — CY2025 data missing ZPR1 and surcharges, not comparable. Need actual CY2025 SAP billing extract. See <em>ISZE_CY2024_Sales_Analysis.xlsx → AIM Validation tab</em>.
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 2 — PROJECTS
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-projects">
+
+  <div class="grid-2">
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <div class="proj-icon">📊</div>
+        <div>
+          <div class="proj-name">Competitiveness Dashboard</div>
+          <div class="proj-sub">IE40-based · D-Max / N-Series / F-Series · UK/DE/FR</div>
+          <span class="status-pill sp-active">● Live — Mar 2026</span>
+        </div>
+      </div>
+      <div class="proj-desc">Streamlit dashboard (KS International + Autodoc + Eucon). <strong>KS/Autodoc comparisons use dealer buy price (DB Price = PR00 ÷ (1−DB margin)) — not PR00 directly</strong>, so the competitive gap reflects what a dealer actually sees. Eucon tab remains list-vs-list (directional only). Key finding: PMS genuinely competitive; brakes heavily exposed at DB/DLR level. EGR valve D-Max = €235.55 (ABC:A confirmed).</div>
+      <div class="proj-links">
+        <a class="file-link" href="ISZE_Competitiveness_Dashboard.html">Open Dashboard →</a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <div class="proj-icon">⚖️</div>
+        <div>
+          <div class="proj-name">2026 Pricing & ITUK Dispute</div>
+          <div class="proj-sub">+5.3% PR00 · James Marsh challenge · €299k itemised impact</div>
+          <span class="status-pill sp-hot">● Active dispute — data ready</span>
+        </div>
+      </div>
+      <div class="proj-desc">ISZE applied +5.3% average using BP÷FX×discount formula (consistent, fully auditable). ITUK (James Marsh) insists on part-by-part actual cost. Position paper sent. <strong>Three-layer defence (v2, 15 Mar):</strong> (1) Formula transparent &amp; consistent across all DBs. (2) JPY weakening = FX in ISZE's favour — the +5.3% comes from IML raising BP_JPY, not ISZE adding margin. (3) <strong>IML Business Plan (Jan 2026)</strong> mandates VP sales growth to €52M by FY2031 — pricing is IML strategy implementation, not ISZE's choice. ⚠ GP compression in Business Plan: Parts GP% already projected to fall from 37.4% (FY2025) to 26.1% (FY2028). Any concession accelerates this.</div>
+      <div class="proj-links">
+        <a class="file-link" href="../Isuzu/ISZE_CY2025_Analysis_v1.xlsx">📊 Pricing Impact (Sheet 3)</a>
+        <a class="file-link" href="../Isuzu/Divers/ISZE_ITUK_Pricing_Position_Paper.docx">Position Paper</a>
+        <a class="file-link" href="../Isuzu/ISZE_Strategic_Position_2026.md">Strategic Position v2 ★</a>
+        <a class="file-link" href="../Isuzu/Divers/ISZE PL Plan FY2026 2027 2028 20260130.xlsx">IML Business Plan</a>
+        <a class="file-link" href="../Isuzu/Divers/pricing simulation 2026 5%.xlsx">Simulation</a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <div class="proj-icon">🔧</div>
+        <div>
+          <div class="proj-name">PMS Coverage Project</div>
+          <div class="proj-sub" id="proj-pms-sub">ISZJ+ISZE joint · ITUK pilot · €457K registry gap (PRISM · DVLA 22,389)</div>
+          <span class="status-pill sp-risk">⚠ In pilot — PRISM + Maintenance Matrix</span>
+        </div>
+      </div>
+      <div class="proj-desc" id="proj-pms-desc">Joint project with IML to improve genuine PMS penetration. ITUK as first market. <strong>PRISM (May 2026):</strong> Registry sell-in vs expected demand (UIO 22,389 × 0.5 svc/yr × 70%). Oil filter already at <strong>100%+</strong> registry capture; air filter ~28%; clutch categories drive most of the <strong>€457K</strong> revenue-gap sum. Maintenance Matrix priced from IE40. Dealer-file “13 PNs at zero” analysis remains in CY2025 workbook — different lens from PRISM registry totals. See PRISM page 3 / <code>pms_capture_by_db_year.csv</code>.</div>
+      <div class="proj-links">
+        <a class="file-link" href="../Isuzu/ISZE_CY2025_Analysis_v1.xlsx">📊 PMS Gap Analysis (Sheet 1)</a>
+        <a class="file-link" href="../Isuzu/Maintenance_Matrix_IE40_Priced_v1.xlsx">Maintenance Matrix (priced)</a>
+        <a class="file-link" href="../Isuzu/Divers/ISZE_PMS_Coverage_Calculator.xlsx">PMS Calculator</a>
+        <a class="file-link" href="../Isuzu/Divers/PMS sales promotion ISZE_ISZJ.pptx">Joint Presentation</a>
+        <a class="file-link" href="../Projects/Isuzu/prism/README.md" title="Run: cd prism &amp;&amp; streamlit run app.py">PRISM Streamlit →</a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <div class="proj-icon">🛰️</div>
+        <div>
+          <div class="proj-name">PRISM — Parts Revenue Intelligence</div>
+          <div class="proj-sub">GPS · PMS · BVP · AIM × GPS matrix · verified pipeline</div>
+          <span class="status-pill sp-active">● Live — Jun 2026</span>
+        </div>
+      </div>
+      <div class="proj-desc">Canonical analytics app: <code>Projects/Isuzu/prism/</code>. Run <code>streamlit run app.py</code> from that folder. Derived data in <code>Data/derived/</code>; sign-off via <code>verify_derived_pipeline.py</code>.</div>
+      <div class="proj-links">
+        <a class="file-link" href="../Projects/Isuzu/prism/README.md">PRISM README →</a>
+        <a class="file-link" href="../Projects/Isuzu/gps_dashboard/GPS_Dashboard_Roadmap.md">GPS Roadmap</a>
+        <a class="file-link" href="ISZE_ROADMAP.md">ISZE Roadmap</a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <div class="proj-icon">🛢️</div>
+        <div>
+          <div class="proj-name">Lubricants Project</div>
+          <div class="proj-sub">Shell/UMI channel live · BC needs urgent rewrite · 137,520L CY2025</div>
+          <span class="status-pill sp-hot">🔴 Business case materially wrong</span>
+        </div>
+      </div>
+      <div class="proj-desc">Centralised lubricant purchasing for EU DBs. Target €2.5M revenue at 30% retention. <strong>Critical finding (14 Mar):</strong> ISZE already sold 137,520L of Shell engine oil to UMI in CY2025 (PN 550047337, 15L drums × 9,168 units). Business case models 1,428L for FY2026 actuals — a 96× understatement. The channel is already live through UMI. Reframe narrative from "new project" to "scaling existing channel." Highly seasonal: Sep spike = 45,900L in one month. 100% customer concentration in UMI = structural risk.</div>
+      <div class="proj-links">
+        <a class="file-link" href="../Isuzu/Divers/ISZE_Lubricants_Business_Case.xlsx">⚠ Business Case (needs update)</a>
+        <a class="file-link" href="../Isuzu/ISZE_CY2025_Analysis_v1.xlsx">CY2025 Sales (Shell volumes)</a>
+        <a class="file-link" href="../Isuzu/Divers/★ISZE-IML Lubricants MTG_20260223.pdf">IML Meeting Feb 2026</a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <div class="proj-icon">🚗</div>
+        <div>
+          <div class="proj-name">UIO Analysis Tool</div>
+          <div class="proj-sub">Units In Operation · IML Hasegawa methodology · v18</div>
+          <span class="status-pill sp-active">● Stable</span>
+        </div>
+      </div>
+      <div class="proj-desc">Python+Excel tool calculating vehicle fleet in service by country/segment. Feeds market sizing for PMS, lubricants, and action plan targets. Based on shipment volumes + survival rates. UK = largest UIO market.</div>
+      <div class="proj-links">
+        <a class="file-link" href="ISUZU_UIO_Dashboard_2026_v18.html">UIO Dashboard v18 →</a>
+        <a class="file-link" href="ISZE_GPS_Dashboard_v9.html">GPS Dashboard v9 →</a>
+        <a class="file-link" href="../Data/ISUZU_UIO_Overview_2026_v18.xlsx">UIO workbook v18</a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <div class="proj-icon">📋</div>
+        <div>
+          <div class="proj-name">FY2026 VPACC Action Plan</div>
+          <div class="proj-sub">Annual plan · VP + ACC · February 2026 update</div>
+          <span class="status-pill sp-risk">⚠ FY end — review needed</span>
+        </div>
+      </div>
+      <div class="proj-desc">Annual VP+ACC sales plan. Latest = February 2026 update. FY ends March 2026. Need to assess actual vs target and begin FY2027 planning. Key pillars: revenue targets, PMS campaigns, pricing, training (IIF), KPI governance.</div>
+      <div class="proj-links">
+        <a class="file-link" href="../Isuzu/Divers/Action plan FY2026 VPACC_November update.xlsx">Feb 2026 Update</a>
+        <a class="file-link" href="../Isuzu/Divers/ISZE_DB_KPI_Scorecard.xlsx">KPI Scorecard</a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-top">
+        <div class="proj-icon">⚡</div>
+        <div>
+          <div class="proj-name">EV Readiness</div>
+          <div class="proj-sub">D-Max EV · Parts stocking · DB readiness</div>
+          <span class="status-pill sp-plan">◆ Planning</span>
+        </div>
+      </div>
+      <div class="proj-desc">D-Max EV launch in Europe — preparing parts coverage strategy. Different parts profile vs diesel (no EGR, no DPD, different filters). Need IMIE launch timeline to build stocking proposal. Checklist built.</div>
+      <div class="proj-links">
+        <a class="file-link" href="../Isuzu/Divers/ISZE_EV_Readiness_Checklist.xlsx">EV Checklist</a>
+      </div>
+    </div>
+
+    <div class="proj-card" onclick="window.location='AIM_Dashboard_CY2025.html'" style="cursor:pointer">
+      <div class="proj-top">
+        <div class="proj-icon">🧠</div>
+        <div>
+          <div class="proj-name">Aftermarket Intelligence (AIM)</div>
+          <div class="proj-sub">Strategic scoring · Pricing risk · Distributor opportunity</div>
+          <span class="status-pill sp-active">● Live — CY2025 data loaded</span>
+        </div>
+      </div>
+      <div class="proj-desc">AIM framework applied to CY2025 IE40 sales data. €32.4M revenue · 45% GP · 4,509 SKUs · 26 distributors. 96 Strategic parts identified. 21 Must-Review pricing risks flagged. Classification rate <strong>93.5%</strong> (updated 14 Mar). <strong>New (15 Mar):</strong> CY2024 actuals loaded — actual SAP billing €32.6M at 42.9% margin. AIM coverage validated at 95% of CY2024 revenue. YoY comparison now possible.</div>
+      <div class="proj-links">
+        <a class="file-link" href="AIM_Dashboard_CY2025.html">📊 AIM Dashboard</a>
+        <a class="file-link" href="../Isuzu/AIM_CY2025_Analysis.xlsx">📥 CY2025 Workbook</a>
+        <a class="file-link" href="../Isuzu/ISZE_CY2024_Sales_Analysis.xlsx">📥 CY2024 Actuals</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 3 — SALES INTEL
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-salesintel">
+
+  <div class="alert alert-blue">
+    ⚠ <strong>CY2025 data is a planning estimate only — not comparable to CY2024 actual.</strong> Built from 2025 quantities × IE40 PR00 prices (Mar 2026). Missing: (1) ZPR1 Israel pricing — UMI/UTI figures are systematically wrong; (2) urgent order surcharges; (3) any non-PR00 condition types. <strong>Do not use for YoY revenue comparison.</strong> Use for ITUK PMS gap analysis and pricing impact only. &nbsp;|&nbsp; ✅ <strong>CY2024 actual SAP billing</strong> — €32.6M, 42.9% margin, 153K lines. Real invoiced prices incl. ZPR1 and order-type conditions. See <em>ISZE_CY2024_Sales_Analysis.xlsx</em>.
+  </div>
+
+  <!-- Top customer table -->
+  <div class="sec-hdr">CY2025 — Top customers by estimated value (PR00)</div>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Customer ranking — full year</div>
+      <table class="data-tbl">
+        <thead><tr><th>#</th><th>Customer</th><th>Est. Value (€)</th><th>% of Total</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>IUK</strong></td><td>€5,817,007</td><td>19.1%</td><td></td></tr>
+          <tr><td>2</td><td><strong>ITUK</strong></td><td>€5,194,125</td><td>17.1%</td><td>Pricing dispute active</td></tr>
+          <tr><td>3</td><td><strong>UTI</strong></td><td>€3,455,132</td><td>11.4%</td><td>Israel</td></tr>
+          <tr><td>4</td><td><strong>UMI</strong></td><td>€2,572,892</td><td>8.5%</td><td>Incl. Shell lubricants</td></tr>
+          <tr><td>5</td><td><strong>ISD</strong></td><td>€2,100,477</td><td>6.9%</td><td></td></tr>
+          <tr><td>6</td><td><strong>IBX</strong></td><td>€1,886,415</td><td>6.2%</td><td>Benelux</td></tr>
+          <tr><td>7</td><td><strong>IMOTORS</strong></td><td>€1,615,820</td><td>5.3%</td><td>Portugal</td></tr>
+          <tr><td>8</td><td><strong>RSA</strong></td><td>€1,327,669</td><td>4.4%</td><td></td></tr>
+          <tr><td colspan="2"><strong>Top 2 combined</strong></td><td><strong>€11,011,132</strong></td><td><strong style="color:#f85149">36.2%</strong></td><td>Concentration risk</td></tr>
+          <tr><td colspan="2"><strong>GRAND TOTAL</strong></td><td><strong>€30,374,311</strong></td><td>100%</td><td>98.2% rows priced</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-amber"></span>ITUK deep-dive — CY2025</div>
+      <table class="data-tbl">
+        <thead><tr><th>Metric</th><th>Value</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>ITUK 2025 basket (at 2025 prices)</td><td><strong>€5,644,572</strong></td><td>Sim-priced PNs only</td></tr>
+          <tr><td>Same basket at 2026 prices</td><td><strong>€5,943,483</strong></td><td>PR00 as of 13.03.2026</td></tr>
+          <tr><td>Net price increase on basket</td><td><strong style="color:#e3b341">+€298,911</strong></td><td>+5.3% effective</td></tr>
+          <tr><td>ITUK car park (actual, N+F Series)</td><td><strong>21,972 vehicles</strong></td><td>N35: 10,900 · N75: 9,359 · N50/55: 651 · N62/65: 257 · F: 805 · Source: Parts Sales Calc FY26</td></tr>
+          <tr><td>PMS PNs with ZERO purchases</td><td><strong style="color:#f85149">13 of 28</strong></td><td>Maintenance Matrix scope</td></tr>
+          <tr><td>ITUK oil filter capture (PRISM registry)</td><td><strong style="color:#3fb950">100%+</strong></td><td>11,074 actual vs 7,836 expected · 0.5×70% denominator</td></tr>
+          <tr><td>ITUK air filter capture (PRISM)</td><td><strong style="color:#e3b341">28.1%</strong></td><td>2,205 vs 7,836 expected · €170K registry gap</td></tr>
+          <tr><td>PMS registry revenue gap (sum)</td><td><strong style="color:#f85149">€457K</strong></td><td>PRISM <code>pms_capture_by_db_year.csv</code> · ITUK 2025</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Revenue history section -->
+  <div class="sec-hdr">ISZE revenue history — actual billing (IE40)</div>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-green"></span>Network billing trend — IE40 actual SAP extracts</div>
+      <table class="data-tbl">
+        <thead><tr><th>Period</th><th>Source file</th><th>Total revenue</th><th>GP%</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td><strong>FY2023 base</strong><br><span style="font-size:10px;color:#666666">Aug 2022 – Aug 2023</span></td><td>preliminary_impact_Study2024.xlsx</td><td><strong>~€29.5M</strong></td><td><strong style="color:#e3b341">34.9%</strong></td><td>Pricing simulation input for 2024 round. Low margin = pre-2024 price structure.</td></tr>
+          <tr><td><strong>FY2024 base</strong><br><span style="font-size:10px;color:#666666">Oct 2023 – Oct 2024</span></td><td>Simulation_2025.xlsx (L12 + Israel)</td><td><strong>~€36.6M</strong></td><td><strong style="color:#3fb950">43.2%</strong></td><td>Non-Israel €31.4M + Israel €5.2M. 2024 pricing round delivered +8.3pp GP uplift.</td></tr>
+          <tr><td><strong>CY2024 actual ✅</strong><br><span style="font-size:10px;color:#666666">Jan 2024 – Dec 2024</span></td><td>Sales2024.XLSX (154K lines)</td><td><strong>€32.6M</strong></td><td><strong style="color:#3fb950">42.9%</strong></td><td>Real invoiced prices incl. ZPR1 and order-type conditions. Primary reference for AIM.</td></tr>
+          <tr style="background:#F5F5F5"><td colspan="5" style="font-size:10.5px;color:#5A5A5A;padding:6px 8px">⚠ Periods overlap — FY and CY windows differ. Not a clean YoY. CY2025 actual pending (SAP login required). FY2023 total using full IE40 extract may differ from context — use ITUK figures (below) as consistent cross-check.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>ITUK billing trajectory (ISZE → ITUK, EUR)</div>
+      <table class="data-tbl">
+        <thead><tr><th>Period</th><th>ISZE billed to ITUK</th><th>GP%</th><th>Signal</th></tr></thead>
+        <tbody>
+          <tr><td><strong>FY2023 base</strong><br><span style="font-size:10px;color:#666666">Aug 2022 – Aug 2023</span></td><td><strong>€6.37M</strong></td><td style="color:#e3b341">36.4%</td><td>Pre-2024 pricing. Low margin reflecting old price structure.</td></tr>
+          <tr><td><strong>FY2024 base</strong><br><span style="font-size:10px;color:#666666">Oct 2023 – Oct 2024</span></td><td><strong>€6.73M</strong></td><td style="color:#3fb950">46.2%</td><td>+5.6% revenue · +9.8pp margin. 2024 pricing round clearly working.</td></tr>
+          <tr><td><strong>CY2024 actual ✅</strong><br><span style="font-size:10px;color:#666666">Jan – Dec 2024</span></td><td><strong>€6.75M</strong></td><td style="color:#3fb950">45.7%</td><td>Consistent with FY2024. Volume essentially flat — margin held.</td></tr>
+          <tr><td><strong>2026 pricing impact</strong><br><span style="font-size:10px;color:#666666">James Marsh dispute</span></td><td><strong style="color:#e3b341">+€299K (+5.3%)</strong></td><td>—</td><td>If volumes flat → CY2026 ITUK billings ~€7.05M. ITUK disputing methodology.</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-blue" style="margin-top:10px;font-size:11px">
+        <strong>ITUK own target:</strong> FY26 = £13.13M retail (~€15.5M). True Sales avg £580.65/vehicle/yr × 17,959 parc = £10.43M. Target implies ITUK expects significant volume + capture rate growth — they can absorb a 5.3% ISZE price increase while still hitting their own target.
+      </div>
+    </div>
+  </div>
+
+  <!-- Shell lubricants section -->
+  <div class="sec-hdr">Shell / UMI lubricants channel — CY2025 actuals</div>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-red"></span>Key facts</div>
+      <table class="data-tbl">
+        <thead><tr><th>Item</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Main product</td><td>550047337 — Shell engine oil, 15L drum</td></tr>
+          <tr><td>CY2025 units sold</td><td><strong>9,168 drums</strong></td></tr>
+          <tr><td>CY2025 volume</td><td><strong>137,520 litres</strong></td></tr>
+          <tr><td>Est. revenue (at BC €4.23/L)</td><td><strong>~€582k</strong></td></tr>
+          <tr><td>Est. gross profit (35% margin)</td><td><strong>~€204k</strong></td></tr>
+          <tr><td>Customer concentration</td><td style="color:#f85149"><strong>100% UMI</strong></td></tr>
+          <tr><td>Classification in SAP</td><td style="color:#e3b341">OTHERS / OTHERS (invisible in reports)</td></tr>
+          <tr><td>BC FY2026 model assumption</td><td style="color:#f85149">1,428L (96× understated)</td></tr>
+          <tr><td>BC base case steady-state</td><td>95,193L/yr (already exceeded 44%)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-amber"></span>Monthly pattern — 550047337 (units)</div>
+      <table class="data-tbl">
+        <thead><tr><th>Month</th><th>Units</th><th>Litres</th><th>Pattern</th></tr></thead>
+        <tbody>
+          <tr><td>January</td><td>800</td><td>12,000</td><td></td></tr>
+          <tr><td>February</td><td>1,600</td><td>24,000</td><td></td></tr>
+          <tr><td>March</td><td>1,200</td><td>18,000</td><td></td></tr>
+          <tr><td>April–August</td><td style="color:#5A5A5A">0</td><td style="color:#5A5A5A">0</td><td style="color:#5A5A5A">Dormant</td></tr>
+          <tr><td>September</td><td style="color:#e3b341"><strong>3,060</strong></td><td style="color:#e3b341"><strong>45,900</strong></td><td style="color:#e3b341">Batch spike</td></tr>
+          <tr><td>October</td><td>1,308</td><td>19,620</td><td></td></tr>
+          <tr><td>November</td><td style="color:#5A5A5A">—</td><td style="color:#5A5A5A">—</td><td style="color:#5A5A5A">None</td></tr>
+          <tr><td>December</td><td style="color:#5A5A5A">—</td><td style="color:#5A5A5A">—</td><td style="color:#5A5A5A">None</td></tr>
+          <tr><td><strong>TOTAL</strong></td><td><strong>9,168</strong></td><td><strong>137,520</strong></td><td>Batch, not pull-through</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Data quality -->
+  <div class="sec-hdr">Data integrity — session summary (14 Mar 2026)</div>
+  <div class="card">
+    <div class="alert alert-blue" style="margin-bottom:12px;font-size:11.5px">
+      Summary view only. For full model integrity analysis, formula chains, assumption register, and action log — see the <strong><a href="#" onclick="showPage('dataintegrity');return false;" style="color:#CC0E1E">🔍 Data Integrity tab</a></strong>.
+    </div>
+    <table class="data-tbl">
+      <thead><tr><th>Dataset</th><th>RAG</th><th>Top gap</th><th>Priority action</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Lubricants Business Case</strong></td><td><span class="tbl-badge tb-red">🔴 ERROR</span></td><td>FY2026 actuals 96× understated (1,428L vs 137,520L). v2 corrects this.</td><td>Use v2 only. Archive original.</td></tr>
+        <tr><td><strong>CY2025 Sales Data</strong></td><td><span class="tbl-badge tb-red">🔴 NOT COMPARABLE</span></td><td>Qty × PR00 only. Missing ZPR1 (Israel pricing) and urgent order surcharges. Israel customer figures are systematically wrong. Not usable for YoY revenue comparison. Use for ITUK PMS gap and pricing impact analysis only.</td><td>Pull actual CY2025 SAP billing extract from BVDB — same format as Sales2024.XLSX</td></tr>
+        <tr><td><strong>CY2024 Sales Data (actual)</strong></td><td><span class="tbl-badge tb-green">🟢 GOOD</span></td><td>✅ Actual SAP billing loaded 15 Mar. €32.6M, 42.9% margin. EUR Amount = real invoiced price incl. ZPR1/order-type conditions. Lubricant PN SAP cost wrong (kickback not in COGS — only gap).</td><td>No action needed on revenue · Fix lubricant PN cost separately</td></tr>
+        <tr><td><strong>Maintenance Matrix</strong></td><td><span class="tbl-badge tb-amber">🟡 GAPS</span></td><td>Fluid costs blank. N-Series label error. D-Max 2023+ not mapped.</td><td>Fix label, add fluids, add D-Max 2023+</td></tr>
+        <tr><td><strong>UIO Dashboard v9</strong></td><td><span class="tbl-badge tb-green">🟢 VALIDATED</span></td><td>✅ ITUK car park file received Mar 2026. DVLA-sourced actual registration data: 22,389 total (N: 21,167 · F: 805). No scrap-rate logic applied. Hasegawa model retired for ITUK calculations. Needs FY2027 refresh in April.</td><td>Annual refresh April 2026 with FY2026 shipment data</td></tr>
+        <tr><td><strong>IE40 Price List</strong></td><td><span class="tbl-badge tb-green">🟢 GOOD</span></td><td>Shell 550* codes not in IE40. Some ABC codes missing.</td><td>Add Shell price list as separate reference</td></tr>
+        <tr><td><strong>Pricing Simulation 2026</strong></td><td><span class="tbl-badge tb-amber">🟡 GAPS</span></td><td>Qty2025 base not formally confirmed. Class 0 anomaly. FX rate undocumented.</td><td>Confirm base with BVDB. Document FX rate.</td></tr>
+        <tr><td><strong>AIM Framework</strong></td><td><span class="tbl-badge tb-green">🟢 GOOD</span></td><td>✅ 93.5% classified (14 Mar). CY2024 cross-validated: 95% coverage confirmed. YoY now possible. Residual 5% (~€1.6M) needs manual classification.</td><td>Manual review of residual · Load VKWRT for net revenue</td></tr>
+        <tr><td><strong>Competitiveness Dashboard</strong></td><td><span class="tbl-badge tb-amber">🟡 GAPS</span></td><td>N/F-Series IAM benchmarks estimated. No data-as-of date stamp.</td><td>Date-stamp before any external sharing.</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <a class="file-link" href="../Isuzu/ISZE_DataIntegrity_Dashboard.xlsx">📋 Data Integrity Excel →</a>
+      <a class="file-link" href="#" onclick="showPage('dataintegrity');return false;">🔍 Full Data Integrity Tab →</a>
+    </div>
+  </div>
+
+  <hr style="border:none;border-top:2px solid #d4dcea;margin:28px 0 20px">
+
+  <!-- CY2024 ACTUALS SECTION -->
+  <div class="sec-hdr">CY2024 — Actual SAP billing (loaded 15 Mar 2026)</div>
+  <div class="alert alert-green" style="margin-bottom:16px">
+    ✅ <strong>Actual SAP billing — real invoiced prices.</strong> 153,217 billing lines, Jan–Dec 2024, 24 customers. EUR Amount = actual billed price including order-type and customer-specific pricing conditions (ZPR1 for Israel, etc.) — not a list-price proxy. Revenue figures are reliable. ⚠ One exception: lubricant PN 550047337 SAP <em>cost</em> is understated (kickback/support not in COGS) — margin for that PN only is unreliable.
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>CY2024 network KPIs</div>
+      <table class="data-tbl">
+        <thead><tr><th>Metric</th><th>Value</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Total revenue</td><td><strong>€32.6M</strong></td><td>Actual SAP billing</td></tr>
+          <tr><td>Gross profit</td><td><strong>€14.0M</strong></td><td>SAP cost basis</td></tr>
+          <tr><td>GP margin</td><td><strong>42.9%</strong></td><td>CY2025 PR00-est: ~45% (not comparable)</td></tr>
+          <tr><td>Billing lines</td><td><strong>153,217</strong></td><td>Excl. transport &amp; late payment interest</td></tr>
+          <tr><td>Unique PNs</td><td><strong>16,338</strong></td><td>Active part numbers sold</td></tr>
+          <tr><td>Customers (payers)</td><td><strong>24</strong></td><td></td></tr>
+          <tr><td>AIM coverage</td><td><strong style="color:#2ea043">95% of revenue</strong></td><td>15,510 PNs matched by description</td></tr>
+          <tr><td>Jan 2024 margin</td><td><strong style="color:#e3b341">33.6%</strong></td><td>KOMTRANSKOMPLEKT overstock returns (-€85K GP)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-amber"></span>CY2024 customer ranking — actual revenue</div>
+      <table class="data-tbl">
+        <thead><tr><th>#</th><th>Customer</th><th>Revenue (€)</th><th>GP%</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>IM Parts (IUK)</strong></td><td>€6,893,544</td><td>42.5%</td><td></td></tr>
+          <tr><td>2</td><td><strong>ITUK</strong></td><td>€6,749,454</td><td>45.7%</td><td>⚠ Pricing dispute</td></tr>
+          <tr><td>3</td><td><strong>UMI (1797)</strong></td><td>~€3,154K</td><td>~40%</td><td>Incl. €384K lubricants</td></tr>
+          <tr><td>4</td><td><strong>UTI (1799)</strong></td><td>€2,591,202</td><td>40.9%</td><td>Both billed via UMI payer</td></tr>
+          <tr><td>5</td><td><strong>ISD (Germany)</strong></td><td>€2,707,180</td><td>47.3%</td><td></td></tr>
+          <tr><td>6</td><td><strong>IBX (Benelux)</strong></td><td>€2,058,338</td><td>44.8%</td><td></td></tr>
+          <tr><td colspan="2"><strong>Israel total (UMI+UTI)</strong></td><td><strong>€5,744,921</strong></td><td>40.8%</td><td>17.6% of network</td></tr>
+          <tr><td colspan="2"><strong>KOMTRANSKOMPLEKT</strong></td><td>€898,340</td><td style="color:#e3b341">27.4%</td><td>CIS · low margin</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-red"></span>ITUK CY2024 actuals — dispute context</div>
+      <table class="data-tbl">
+        <thead><tr><th>Metric</th><th>Value</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>ITUK actual revenue CY2024</td><td><strong>€6,749,454</strong></td><td>Actual SAP billing</td></tr>
+          <tr><td>ITUK GP margin CY2024</td><td><strong>45.7%</strong></td><td>Above network avg (42.9%)</td></tr>
+          <tr><td>ITUK share of network</td><td><strong>20.7%</strong></td><td>vs CY2025 PR00-est 17.1%</td></tr>
+          <tr><td>Late payment interest billed</td><td><strong>€266,765</strong></td><td>Deliberate commercial decision — excl. from parts revenue</td></tr>
+          <tr><td>#1 ITUK PN by revenue</td><td><strong>8982447940 — €239,980</strong></td><td>PAD KIT brake, 26.8% margin ← low</td></tr>
+          <tr><td>Unique PNs purchased</td><td><strong>4,063</strong></td><td></td></tr>
+          <tr><td>ITUK vs network margin delta</td><td><strong style="color:#2ea043">+2.8pp</strong></td><td>ITUK margin above average — dispute position strengthened</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>CY2024 top PNs — key signals</div>
+      <table class="data-tbl">
+        <thead><tr><th>PN</th><th>Description</th><th>Revenue</th><th>Margin</th></tr></thead>
+        <tbody>
+          <tr><td>8978808270</td><td>SENSOR; PM (DPF)</td><td>€630,518</td><td style="color:#2ea043">69.3%</td></tr>
+          <tr><td>8983767550</td><td>ROTOR; DISC BRK,FRT</td><td>€612,291</td><td>43.1%</td></tr>
+          <tr><td>8978808250</td><td>SENSOR; PM (DPF)</td><td>€567,688</td><td style="color:#2ea043">57.7%</td></tr>
+          <tr><td>550047337</td><td>Lubricant 15L drum ⚠</td><td>€383,952</td><td style="color:#e3b341">73.4% SAP*</td></tr>
+          <tr><td>8975056801</td><td>PAD KIT; CALIPER BRK</td><td>€349,887</td><td style="color:#e3b341">30.6%</td></tr>
+          <tr><td>8982447940</td><td>PAD KIT; CALIPER BRK</td><td>€346,264</td><td style="color:#e3b341">28.4%</td></tr>
+          <tr><td>8982705240</td><td>ELEMENT; OIL FILTER</td><td>€231,215</td><td style="color:#f85149">19.2%</td></tr>
+          <tr><td colspan="4" style="font-size:10px;color:#5A5A5A">* Lubricant margin: SAP cost wrong — actual ~13% (kickback not in COGS)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Israel / ZPR1 section -->
+  <div class="sec-hdr" style="margin-top:20px">Israel pricing — ZPR1 2026 (UTI 1799)</div>
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>ZPR1 2026 price list — UTI (sold-to 1799)</div>
+      <table class="data-tbl">
+        <thead><tr><th>Metric</th><th>Value</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Total PNs in ZPR1 2026</td><td><strong>127,437</strong></td><td>Full UTI price list (ZPR1 price file2026.xlsx)</td></tr>
+          <tr><td>Average list price</td><td><strong>€271.53</strong></td><td>Range €0.12 – €20,725</td></tr>
+          <tr><td>UTI actual CY2024 revenue</td><td><strong>€2,591,202</strong></td><td>40.9% GP · billed via UMI payer</td></tr>
+          <tr><td>UMI actual CY2024 revenue</td><td><strong>~€3,154K</strong></td><td>~40% GP · incl. €384K lubricants</td></tr>
+          <tr><td>Israel total CY2024</td><td><strong>€5,744,921</strong></td><td>17.6% of ISZE network</td></tr>
+          <tr><td>ZPR1 catalog vs actual spend</td><td><strong style="color:#f85149">127K PNs listed · very few bought</strong></td><td>Large untapped catalog — opportunity to expand share of wallet</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-amber"></span>Israel pricing context</div>
+      <div class="alert alert-blue" style="margin-bottom:10px;font-size:11px">
+        <strong>CY2025 Israel data NOT comparable:</strong> UMI/UTI figures in CY2025 SAP estimate use PR00, not ZPR1. Israel actual billing is only visible in CY2024 (Sales2024.XLSX) and simulation files (raw data Israel sheet). For 2026 UTI pricing, use ZPR1 price file2026.xlsx.
+      </div>
+      <table class="data-tbl">
+        <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>ZPR1 condition type</td><td>SAP Israel-specific pricing condition — applies to UTI (1799). UMI (1797) may use different condition.</td></tr>
+          <tr><td>ZPR1 file source</td><td>ZPR1 price file2026.xlsx (sheet: 1799) — contains P/N, Newest P/N, Description, Sales price 2026</td></tr>
+          <tr><td>CY2024 Israel GP</td><td>40.8% combined (UTI: 40.9% / UMI: ~40%) — below network avg 42.9%</td></tr>
+          <tr><td>Comparability risk</td><td>Any YoY Israel comparison using CY2025 PR00 data is wrong — ZPR1 prices differ from PR00</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quick links -->
+  <div class="sec-hdr" style="margin-top:20px">Analysis files</div>
+  <div class="card">
+    <table class="data-tbl">
+      <thead><tr><th>File</th><th>Sheet(s)</th><th>What it answers</th></tr></thead>
+      <tbody>
+        <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2024_Sales_Analysis.xlsx">ISZE_CY2024_Sales_Analysis.xlsx</a></td><td>Dashboard</td><td>CY2024 actual SAP billing — KPIs, monthly trend, top customers</td></tr>
+        <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2024_Sales_Analysis.xlsx">ISZE_CY2024_Sales_Analysis.xlsx</a></td><td>ITUK Deep Dive</td><td>ITUK monthly vs network, top 50 PNs, pricing risk flags</td></tr>
+        <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2024_Sales_Analysis.xlsx">ISZE_CY2024_Sales_Analysis.xlsx</a></td><td>Low Margin Alert</td><td>All PNs &lt;35% margin with &gt;€30K revenue — competitiveness watchlist</td></tr>
+        <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2024_Sales_Analysis.xlsx">ISZE_CY2024_Sales_Analysis.xlsx</a></td><td>AIM Validation</td><td>95% AIM revenue coverage confirmed · top unmatched PNs for classification</td></tr>
+        <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2025_Analysis_v1.xlsx">ISZE_CY2025_Analysis_v1.xlsx</a></td><td>PMS Gap — ITUK</td><td>PN-level workbook view — use PRISM registry gap <span data-pms-gap-sum>€457K</span> (not legacy dealer-basket totals)</td></tr>
+        <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2025_Analysis_v1.xlsx">ISZE_CY2025_Analysis_v1.xlsx</a></td><td>ITUK Pricing Impact</td><td>Line-by-line 2025→2026 price impact on ITUK's actual basket (+€299k)</td></tr>
+        <tr><td><a class="file-link" href="../Isuzu/Maintenance_Matrix_IE40_Priced_v1.xlsx">Maintenance_Matrix_IE40_Priced_v1.xlsx</a></td><td>Cost Matrix</td><td>PMS PN → IE40 price mapping for D-Max, N-Series, F-Series, TF</td></tr>
+        <tr><td><a class="file-link" href="../Isuzu/ISZE_DataIntegrity_Dashboard.xlsx">ISZE_DataIntegrity_Dashboard.xlsx</a></td><td>Data Integrity</td><td>Datasets scored — gaps, actions, owners</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     BETTER SALES ANALYSIS MODULE (end of Sales Intel tab)
+═══════════════════════════════════════════════════════ -->
+<div class="sec-hdr" style="margin-top:24px">Getting closer to real demand — the data improvement roadmap</div>
+
+<div class="alert alert-amber">
+  <strong>Current limitation:</strong> Every AIM score, customer ranking, and PMS capture rate in this dashboard is built on ISZE→DB sell-in (L2). This is a supply signal, not a demand signal — distorted by distributor MOS cycles, campaign loading, year-end stocking, and promotional buys. The two actions below are the highest-leverage fixes. Both are requests to BVDB. Neither requires IT integration.
+</div>
+
+<div class="grid-2" style="margin-bottom:20px;align-items:start">
+
+  <!-- ── Pyramid ── -->
+  <div class="card">
+    <div class="card-title"><span class="dot dot-blue"></span>The Demand Signal Pyramid</div>
+    <div style="display:flex;flex-direction:column;gap:8px;padding:4px 0">
+
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="width:26px;flex-shrink:0;font-size:9px;font-weight:800;color:#1B5E20;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:3px;padding:3px 4px;text-align:center;margin-top:2px">L4</div>
+        <div style="flex:1;padding:7px 10px;background:#E8F5E9;border:1px solid #A5D6A7;border-radius:4px">
+          <div style="font-size:11px;font-weight:700;color:#1B5E20">Dealer → End Customer</div>
+          <div style="font-size:10px;color:#2E7D32;margin-top:2px">True demand. VIN-level service records.</div>
+          <div style="font-size:10px;color:#888;margin-top:2px">Needs dealer DMS access or workshop MOU. Years away — don't start here.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="width:26px;flex-shrink:0;font-size:9px;font-weight:800;color:#7A5200;background:#FFF8E1;border:2px solid #FFD54F;border-radius:3px;padding:3px 4px;text-align:center;margin-top:2px">L3</div>
+        <div style="flex:1;padding:7px 10px;background:#FFF8E1;border:2px solid #FFD54F;border-radius:4px">
+          <div style="font-size:11px;font-weight:700;color:#7A5200">DB → Dealer sell-out &nbsp;<span style="color:#E65100;font-size:10px">⭐ Near-demand — Target</span></div>
+          <div style="font-size:10px;color:#5C3B00;margin-top:2px">What dealers actually order from the distributor. No bulk-stocking distortion.</div>
+          <div style="font-size:10px;color:#888;margin-top:2px">ITUK: already partial (quarterly pivot file). Others: distributor MOU needed.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="width:26px;flex-shrink:0;font-size:9px;font-weight:800;color:#CC0E1E;background:#FFE8EA;border:2px solid #FFAAB0;border-radius:3px;padding:3px 4px;text-align:center;margin-top:2px">L2</div>
+        <div style="flex:1;padding:7px 10px;background:#FFE8EA;border:2px solid #FFAAB0;border-radius:4px">
+          <div style="font-size:11px;font-weight:700;color:#CC0E1E">ISZE → DB sell-in &nbsp;<span style="font-weight:400;color:#7A0A12;font-size:10px">← what AIM uses today</span></div>
+          <div style="font-size:10px;color:#7A0A12;margin-top:2px">⚠ Distorted by: MOS policy cycles · promotional campaign loading · year-end stocking · bulk orders</div>
+          <div style="font-size:10px;color:#5A5A5A;margin-top:2px;font-style:italic">Shortcut: L3 ≈ L2 − ΔDB inventory. Two stock snapshots (Jan + Dec) = sell-out proxy.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;align-items:flex-start">
+        <div style="width:26px;flex-shrink:0;font-size:9px;font-weight:700;color:#888;background:#F0F0F0;border:1px solid #DDD;border-radius:3px;padding:3px 4px;text-align:center;margin-top:2px">L1</div>
+        <div style="flex:1;padding:7px 10px;background:#F5F5F5;border:1px solid #E0E0E0;border-radius:4px">
+          <div style="font-size:11px;font-weight:700;color:#888">IML → ISZE shipments</div>
+          <div style="font-size:10px;color:#AAA;margin-top:2px">Supply-side only. No demand signal. Not used in AIM.</div>
+        </div>
+      </div>
+
+      <div style="background:#F5F7FF;border:1px solid #9FA8DA;border-radius:4px;padding:8px 10px;margin-top:2px;font-size:11px;color:#283593;line-height:1.5">
+        <strong>Key insight:</strong> The inventory snapshot ask is the single highest-leverage action. It converts your existing L2 data into an L3 sell-out proxy — without any new collection infrastructure, without a dealer MOU, and without asking BVDB for anything they don't already have in Power BI.
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Priority table ── -->
+  <div class="card">
+    <div class="card-title"><span class="dot dot-amber"></span>Priority data requests — effort vs impact</div>
+    <table class="data-tbl">
+      <thead><tr><th>Data</th><th>Source</th><th>Effort</th><th>Impact</th></tr></thead>
+      <tbody>
+        <tr style="background:#FFFBF0">
+          <td><strong>⭐ DB inventory snapshots (Jan + Dec)</strong></td>
+          <td>BVDB Power BI</td>
+          <td><span class="tbl-badge tb-green">Low</span></td>
+          <td>Converts L2→L3 for all markets. No MOU needed.</td>
+        </tr>
+        <tr style="background:#FFFBF0">
+          <td><strong>⭐ VKWRT net revenue (CY2024 + CY2025)</strong></td>
+          <td>SAP via BVDB</td>
+          <td><span class="tbl-badge tb-green">Low</span></td>
+          <td>Fixes SPA distortion. Israel AIM scores change.</td>
+        </tr>
+        <tr>
+          <td>Monthly sell-in breakdown (not annual)</td>
+          <td>Same SAP extract</td>
+          <td><span class="tbl-badge tb-green">Near zero</span></td>
+          <td>Seasonality + campaign loading visible</td>
+        </tr>
+        <tr>
+          <td>Backorder duration by PN</td>
+          <td>SAP MD04 / BVDB</td>
+          <td><span class="tbl-badge tb-green">Low</span></td>
+          <td>Reveals suppressed demand in AIM scores</td>
+        </tr>
+        <tr>
+          <td>Returns + credit notes by PN</td>
+          <td>VKWRT extract (add RE filter)</td>
+          <td><span class="tbl-badge tb-green">Low</span></td>
+          <td>Converts gross sell-in to net demand</td>
+        </tr>
+        <tr>
+          <td>Eucon systematic IAM feed</td>
+          <td>Eucon subscription / BVDB</td>
+          <td><span class="tbl-badge tb-amber">Medium</span></td>
+          <td>IAM capture rate visible at PN level</td>
+        </tr>
+        <tr>
+          <td>ITUK dealer sell-out MOU</td>
+          <td>ITUK negotiation</td>
+          <td><span class="tbl-badge tb-amber">Medium</span></td>
+          <td>True L3 for largest market</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:10.5px;color:#5A5A5A;margin-top:8px;line-height:1.5">
+      The ⭐ rows are the two concrete actions below. Both are emails to BVDB. Both use data BVDB already has in SAP or Power BI. Both can be actioned this week.
+    </p>
+  </div>
+</div>
+
+<!-- ── Action 1: BVDB Power BI CSV ── -->
+<div class="sec-hdr">Action 1 of 2 — Email BVDB: Power BI CSV export (3 datasets)</div>
+<div class="card" style="margin-bottom:16px">
+  <div style="display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start">
+
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#1A1A1A;margin-bottom:8px">What this is and why</div>
+      <table class="data-tbl" style="font-size:11px">
+        <tr><td style="font-weight:700;width:90px">Ask</td><td>BVDB exports 3 Power BI datasets as CSV and sends monthly</td></tr>
+        <tr><td style="font-weight:700">What it replaces</td><td>You screenshotting / manually downloading PBI reports</td></tr>
+        <tr><td style="font-weight:700">Format needed</td><td>Flat CSV, semicolon-separated, UTF-8</td></tr>
+        <tr><td style="font-weight:700">Delivery</td><td>Email attachment, or drop to SharePoint link</td></tr>
+        <tr><td style="font-weight:700">Frequency</td><td>Monthly (1st of month) + Jan/Dec for inventory snapshot</td></tr>
+        <tr><td style="font-weight:700">Constraint</td><td>No live API — BVDB manually exports or schedules a report subscription in PBI</td></tr>
+      </table>
+      <div style="margin-top:10px;background:#F5F7FF;border:1px solid #9FA8DA;border-radius:4px;padding:8px 10px;font-size:10.5px;color:#283593;line-height:1.5">
+        <strong>If BVDB asks why:</strong> "I'm feeding it into local analytics (AIM model) to see distributor sell-through vs sell-in. Power BI doesn't have the cross-model we need. CSV export is the simplest bridge."
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#1A1A1A;margin-bottom:6px">Three datasets — copy this into the email body</div>
+      <div style="background:#F8F8F8;border:1px solid #DDD;border-radius:4px;padding:12px 14px;font-size:11px;font-family:monospace;line-height:1.8;color:#1A1A1A;white-space:pre-wrap">Dataset 1 — Monthly sell-in by PN by distributor
+Columns: year_month, distributor_code, material_number, qty_ordered, value_eur
+Period: full CY2023 + CY2024 + CY2025 (3 years of history)
+Refresh: monthly, 1st working day of each month
+
+Dataset 2 — Distributor stock on hand by PN (inventory snapshot)
+Columns: snapshot_date, distributor_code, material_number, qty_on_hand
+Period: snapshot at 01.01.2025 AND 31.12.2025
+(Two snapshots = one ΔInventory = distributor sell-out proxy for CY2025)
+Refresh: twice a year — January snapshot + July snapshot going forward
+
+Dataset 3 — Open backorders by PN
+Columns: material_number, total_open_qty, oldest_order_date
+Period: current snapshot at time of extract
+Refresh: monthly (same delivery as Dataset 1)</div>
+      <div style="margin-top:8px;background:#F2FBF3;border:1px solid #A5D6A7;border-radius:4px;padding:8px 10px;font-size:10.5px;color:#1A5C2A;line-height:1.5">
+        ✅ <strong>Once received:</strong> On work laptop, open <strong>claude.ai</strong>, drag the CSV file into the chat window, then type: <em>"Join this sell-in file to the AIM parts master on material_number. Show me month-by-month trend and flag any PN where Q4 volume is &gt;40% of the annual total (campaign loading signal)."</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Action 2: VKWRT SAP Extract ── -->
+<div class="sec-hdr">Action 2 of 2 — Email BVDB: VKWRT net revenue extract from SAP</div>
+<div class="card" style="margin-bottom:24px">
+  <div style="display:grid;grid-template-columns:280px 1fr;gap:20px;align-items:start">
+
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#1A1A1A;margin-bottom:8px">Why VKWRT — not just PR00</div>
+      <div style="background:#FFF2F2;border:1px solid #FFAAB0;border-radius:4px;padding:10px;font-size:11px;color:#7A0A12;line-height:1.6">
+        AIM today uses <strong>Qty × PR00</strong> as a revenue proxy.<br><br>
+        For Israel (UMI + UTI), this is wrong in two directions:<br>
+        • <strong>ZPR1 surcharge</strong> adds on top of PR00 (inflates up)<br>
+        • <strong>SPA rebate</strong> is a separate credit reducing what ISZE actually receives (deflates down)<br><br>
+        <strong>VKWRT</strong> = the single field in SAP that reflects the real net amount after all pricing conditions. It is already calculated on every invoice line. BVDB just needs to include it in the extract.<br><br>
+        Without it: Israel is probably over-scored in AIM. Campaign budgets and priority lists are based on a number that isn't real.
+      </div>
+      <div style="margin-top:10px;font-size:11px;font-weight:700;color:#1A1A1A">Ask BVDB first (before the extract)</div>
+      <div style="background:#FFFBF0;border:1px solid #FFD54F;border-radius:4px;padding:8px 10px;font-size:11px;color:#5C3B00;margin-top:4px;line-height:1.5">
+        <em>"Are SPA rebates posted as adjustments to VKWRT on the invoice line, or do they come through as separate credit note documents?"</em><br><br>
+        If credit notes: the extract needs invoice lines AND the credit memo lines joined (billing type G2 in addition to F2).
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size:11px;font-weight:700;color:#1A1A1A;margin-bottom:6px">Exact SAP specification — forward this to BVDB as-is</div>
+      <div style="background:#F8F8F8;border:1px solid #DDD;border-radius:4px;padding:12px 14px;font-size:11px;font-family:monospace;line-height:1.8;color:#1A1A1A;white-space:pre-wrap">Transaction: VF05N (billing document list)
+Alternative: SE16N on table VBRP joined to VBRK and KONV
+
+FILTERS:
+  Sales Organisation : ISZE (IE40)
+  Billing type       : F2 only (standard invoices)
+  Exclude            : RE (returns), G2 (credit memos), F5 (pro formas)
+  Currency           : EUR
+  Period             : 01.01.2024–31.12.2024
+                       01.01.2025–31.12.2025
+
+FIELDS TO EXTRACT:
+  billing_date       ← VBRK-FKDAT
+  sold_to            ← VBRK-KUNRG  (customer/distributor code)
+  material_number    ← VBRP-MATNR  (part number)
+  qty                ← VBRP-FKIMG  (billed quantity)
+  pr00_eur           ← KONV-KWERT where KSCHL = 'PR00'
+  zpr1_eur           ← KONV-KWERT where KSCHL = 'ZPR1'
+  vkwrt_eur          ← VBRP-VKWRT  ← THE KEY FIELD
+
+OUTPUT:
+  Flat CSV, one row per invoice line
+  Expected volume: ~150,000–200,000 rows per year</div>
+      <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:#F2FBF3;border:1px solid #A5D6A7;border-radius:4px;padding:8px 10px;font-size:10.5px;color:#1A5C2A;line-height:1.5">
+          ✅ <strong>Once received:</strong> On work laptop — open <strong>claude.ai</strong>, click the paperclip / file upload icon, attach the CSV. Then type: <em>"This is VKWRT net revenue from SAP. For each distributor, calculate: (1) total PR00 revenue, (2) total VKWRT revenue, (3) delta and delta%. Flag any distributor where the gap is &gt;5%."</em>
+        </div>
+        <div style="background:#FFFBF0;border:1px solid #FFD54F;border-radius:4px;padding:8px 10px;font-size:10.5px;color:#5C3B00;line-height:1.5">
+          ⚠ <strong>File size note:</strong> ~150K rows as CSV = ~15–20MB. Claude browser handles this fine. If the file is larger, ask BVDB to split by year (CY2024 + CY2025 as two separate files).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 4 — DATA INTEGRITY
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-dataintegrity">
+
+  <div class="alert alert-blue">
+    <strong>🔍 Data Integrity — Session baseline 14 Mar 2026.</strong> This tab tracks the reliability of every dataset and model in use. A decision is only as good as the data behind it. Where confidence is low, conclusions are flagged. Where models have known errors, they are documented here — not buried.
+  </div>
+
+  <!-- ── SECTION 1: DATASET SCORECARD ── -->
+  <div class="sec-hdr">1. Dataset scorecard — RAG status (14 Mar 2026)</div>
+  <div class="card" style="margin-bottom:20px">
+    <table class="data-tbl">
+      <thead>
+        <tr><th>Dataset</th><th>RAG</th><th>Confidence</th><th>Core gap</th><th>Impact if wrong</th><th>Priority fix</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>CY2025 IE40 Sales Data</strong><br><span style="font-size:10.5px;color:#666666">148,769 lines · Jan–Dec 2025 · 25 customers</span></td>
+          <td><span class="tbl-badge tb-amber">🟡 GAPS</span></td>
+          <td>Medium</td>
+          <td>Qty × PR00 only. Missing ZPR1 Israel pricing and urgent order surcharges. Israel customer revenue is systematically wrong. 1.8% rows unpriced.</td>
+          <td>Not usable for network-level revenue or YoY comparison. Israel figures (UMI/UTI = ~18% of network) are wrong price list. Valid only for ITUK PMS gap and pricing impact analysis.</td>
+          <td>Pull actual CY2025 SAP billing extract from BVDB — same format as Sales2024.XLSX, all pricing conditions</td>
+        </tr>
+        <tr>
+          <td><strong>CY2024 Sales Data (actual SAP)</strong><br><span style="font-size:10.5px;color:#666666">153,217 lines · Jan–Dec 2024 · 24 customers</span></td>
+          <td><span class="tbl-badge tb-green">🟢 GOOD</span></td>
+          <td>High</td>
+          <td>Actual SAP invoiced revenue. EUR Amount = real billed price incl. ZPR1 and order-type conditions — not a list-price proxy. Lubricant PN 550047337 SAP <em>cost</em> wrong (kickback not in COGS — only known gap).</td>
+          <td>Most reliable revenue source available. CY2025 comparison possible directionally (CY2025 = PR00 estimate, not actual billing).</td>
+          <td>Manual classify residual 5% AIM gap · No revenue fix needed</td>
+        </tr>
+        <tr>
+          <td><strong>Lubricants Business Case</strong><br><span style="font-size:10.5px;color:#666666">ISZE_Lubricants_BC_Rebuilt_v2.xlsx</span></td>
+          <td><span class="tbl-badge tb-red">🔴 ERROR</span></td>
+          <td>Low (original) / High (v2)</td>
+          <td><strong>Original BC: 1,428L FY2026 actual. Reality: 137,520L already sold via Shell/UMI. 96× understatement.</strong> v2 rebuilt and corrects this.</td>
+          <td>If shared with IML using original: destroys credibility. Entire lubricants strategy narrative wrong. Use v2 only.</td>
+          <td>DONE — use v2 exclusively. Archive original with warning label.</td>
+        </tr>
+        <tr>
+          <td><strong>ITUK Pricing Simulation (2026)</strong><br><span style="font-size:10.5px;color:#666666">ISZE_CY2025_Analysis_v1.xlsx · Sheet 3</span></td>
+          <td><span class="tbl-badge tb-green">🟢 GOOD</span></td>
+          <td>High</td>
+          <td>Qty2025 base period not formally confirmed. Class 0 anomaly (non-standard class code). ~2% PNs unmatched between price lists.</td>
+          <td>+€298,911 / +5.3% impact figure is reliable. Small variance possible from unmatched PNs — unlikely to change conclusion.</td>
+          <td>Confirm Qty2025 base with BVDB. Investigate Class 0 PNs.</td>
+        </tr>
+        <tr>
+          <td><strong>IE40 Price List</strong><br><span style="font-size:10.5px;color:#666666">PR00 · 164k parts · 13 Mar 2026</span></td>
+          <td><span class="tbl-badge tb-green">🟢 GOOD</span></td>
+          <td>High</td>
+          <td>Shell 550* codes not in IE40 (sold via separate channel). Some ABC codes missing for newer PNs.</td>
+          <td>Shell/lubricant parts invisible to IE40-based analysis. Minor coverage gap for newest model PNs.</td>
+          <td>Add Shell price list as separate tab in analysis files. Flag missing ABC codes.</td>
+        </tr>
+        <tr>
+          <td><strong>Maintenance Matrix</strong><br><span style="font-size:10.5px;color:#666666">Maintenance_Matrix_IE40_Priced_v1.xlsx</span></td>
+          <td><span class="tbl-badge tb-amber">🟡 GAPS</span></td>
+          <td>Medium</td>
+          <td>Fluid costs blank. N-Series label error (confirmed). D-Max 2023+ models not included. EQ-HIT not used — manual mapping only.</td>
+          <td>PMS demand estimates for D-Max 2023+ unreliable. Fluid revenue gap understates full PMS opportunity.</td>
+          <td>Fix N-Series label. Add fluids. Add D-Max 2023+ from ISZJ service docs.</td>
+        </tr>
+        <tr>
+          <td><strong>UIO Dashboard v18</strong><br><span style="font-size:10.5px;color:#666666">Data/ISUZU_UIO_Overview_2026_v18.xlsx · ITUK DVLA + network</span></td>
+          <td><span class="tbl-badge tb-green">🟢 VALIDATED</span></td>
+          <td>Medium</td>
+          <td>✅ ITUK car park DVLA 22,389 (Mar 2026). Hasegawa retired for UK. Needs FY2027 refresh April 2026.</td>
+          <td>PMS uses PRISM registry denominator (0.5 svc/yr × 70% addressable). Registry revenue gap <span data-pms-gap-sum>€457K</span>; oil filter registry capture <span data-pms-oil-cap>100%+</span> — see <code>pms_capture_by_db_year.csv</code>.</td>
+          <td>Schedule annual data refresh post FY-end. Add ITUK car park refresh request to April 2026 calendar.</td>
+        </tr>
+        <tr>
+          <td><strong>AIM Framework</strong><br><span style="font-size:10.5px;color:#666666">AIM_Dashboard_CY2025.html · AIM_CY2025_Analysis.xlsx · ISZE_CY2024_Sales_Analysis.xlsx</span></td>
+          <td><span class="tbl-badge tb-green">🟢 GOOD</span></td>
+          <td>High</td>
+          <td>✅ Classification rate <strong>93.5%</strong> (updated 14 Mar — was 75.6%). CY2024 actuals cross-validated: 95% revenue coverage confirmed. Residual 5% (~€1.6M) needs manual review. VKWRT not loaded.</td>
+          <td>Strategic scoring, pricing risk map, and distributor opportunity engine are reliable. Residual may contain mid-tier parts not yet prioritised.</td>
+          <td>Manual classify residual 5% · Load VKWRT for net revenue · Build CY2024 vs CY2025 YoY trend</td>
+        </tr>
+        <tr>
+          <td><strong>Competitiveness Dashboard</strong><br><span style="font-size:10.5px;color:#666666">ISZE_Competitiveness_Dashboard.html · IE40 based</span></td>
+          <td><span class="tbl-badge tb-amber">🟡 GAPS</span></td>
+          <td>Medium</td>
+          <td>N/F-Series IAM benchmarks are estimated (no EQ-HIT PN-to-model mapping). D-Max data is solid. IAM price scraping not dated — may be stale.</td>
+          <td>N/F-Series competitiveness conclusions are indicative only. D-Max conclusions are reliable. Do not share N/F-Series breakdown externally.</td>
+          <td>Request EQ-HIT access. Refresh IAM price scrape quarterly.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── SECTION 2: MODELING INTEGRITY ── -->
+  <div class="sec-hdr">2. Modeling integrity — formula chains, assumptions, known flaws</div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+
+    <div class="card">
+      <div class="card-title"><span class="dot dot-red"></span>IE40 Pricing Formula — BP × Discount × FX</div>
+      <div class="alert alert-amber" style="margin-bottom:12px;font-size:11.5px">
+        <strong>Core formula:</strong> FOB_EUR = (BP_JPY ÷ FX_EUR_JPY) × source_discount<br>
+        Source J (Japan/IML): discount = 0.62 · Source T (Thailand/IMIT): discount = 0.611
+      </div>
+      <table class="data-tbl">
+        <thead><tr><th>Step</th><th>Input</th><th>Confidence</th><th>Risk</th></tr></thead>
+        <tbody>
+          <tr><td>Base Price (BP)</td><td>BP_JPY from IML master list</td><td><span class="tbl-badge tb-green">High</span></td><td>IML updates BP periodically — lag risk</td></tr>
+          <tr><td>FX Rate</td><td>EUR/JPY — applied at calculation date</td><td><span class="tbl-badge tb-amber">Medium</span></td><td>Not hedged forward. Significant JPY moves (±10%) change list price materially without triggering a formal review</td></tr>
+          <tr><td>Source Discount</td><td>0.62 (J) / 0.611 (T)</td><td><span class="tbl-badge tb-green">Confirmed</span></td><td>Discount factors confirmed correct. Source classification per PN must be maintained</td></tr>
+          <tr><td>Class Factor</td><td>C/D/F/J/M/P/V/T class codes</td><td><span class="tbl-badge tb-amber">Partial</span></td><td>Some new PNs have Class 0 (undefined). Class 0 PNs priced incorrectly until classified</td></tr>
+          <tr><td>PR00 Output</td><td>EUR list price applied to all EU DBs</td><td><span class="tbl-badge tb-green">High</span></td><td>Israel (ZPR1) and CIS (ZPR2) have separate conditions — ensure not cross-contaminated in analysis</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-red" style="margin-top:10px;font-size:11.5px">
+        <strong>James Marsh challenge:</strong> ITUK argues the formula systematically over-inflates slow-moving parts with weak FX coverage. This is <em>not entirely wrong</em> — the formula applies a uniform discount regardless of demand velocity. A slow-moving JP-sourced part with a weak JPY will take a disproportionate price hit. The model's strength is transparency; its weakness is bluntness.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot dot-red"></span>Lubricants Model — Rebuilt v2</div>
+      <div class="alert alert-red" style="margin-bottom:12px;font-size:11.5px">
+        <strong>Original model error (now corrected in v2):</strong> FY2026 actuals row showed 1,428L. CY2025 actuals (SAP): 137,520L sold via Shell PN 550047337 to UMI alone. 96× understatement.
+      </div>
+      <table class="data-tbl">
+        <thead><tr><th>Assumption</th><th>Original BC</th><th>v2 Corrected</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>FY2026 actual volume</td><td>1,428 L</td><td>137,520 L</td><td><span class="tbl-badge tb-green">Fixed</span></td></tr>
+          <tr><td>Revenue/litre</td><td>€4.23</td><td>€4.23 (unchanged)</td><td><span class="tbl-badge tb-green">OK</span></td></tr>
+          <tr><td>Margin %</td><td>35%</td><td>35% (unchanged)</td><td><span class="tbl-badge tb-amber">Unverified</span></td></tr>
+          <tr><td>Retention rate</td><td>Built from scratch</td><td>43.3% (actuals-derived)</td><td><span class="tbl-badge tb-green">Fixed</span></td></tr>
+          <tr><td>Customer distribution</td><td>Multi-DB assumed</td><td>100% UMI (reality)</td><td><span class="tbl-badge tb-red">Structural risk</span></td></tr>
+          <tr><td>Demand pattern</td><td>Steady-state monthly</td><td>Batch (Sep spike = 33% annual)</td><td><span class="tbl-badge tb-red">Model doesn't capture seasonality</span></td></tr>
+          <tr><td>IML BESCO volumes</td><td>Primary channel</td><td>Not yet active — Shell/UMI only</td><td><span class="tbl-badge tb-amber">Channel confusion risk</span></td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-amber" style="margin-top:10px;font-size:11.5px">
+        <strong>Residual model risk:</strong> v2 corrects the volume error but doesn't fix the structural issues — 100% UMI concentration, batch ordering, unconfirmed margin, and no model for DB roll-out mechanics. Do not present v2 as a robust financial model — it's a corrected baseline that still needs a demand/channel chapter.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot dot-amber"></span>PMS Gap Model — ITUK Capture Rate Methodology</div>
+      <div class="alert alert-blue" style="margin-bottom:12px;font-size:11.5px">
+        <strong>Method:</strong> Expected_annual_demand = UIO × services_per_year × parts_per_service. Gap = Expected − Actual ITUK purchases (CY2025 SAP).
+      </div>
+      <table class="data-tbl">
+        <thead><tr><th>Assumption</th><th>Source</th><th>Confidence</th><th>Risk if wrong</th></tr></thead>
+        <tbody>
+          <tr><td>ITUK car park = 22,389 (N+F: 21,972)</td><td>ITUK car park file — Parts Sales Calc FY26.xlsx (Mar 2026) · Source: DVLA government registration data</td><td><span class="tbl-badge tb-green">✅ Actual / Primary</span></td><td>No scrap-rate logic applied. ITUK pulls from DVLA — exact registered vehicle count. N-series: 21,167 · F: 805. Supersedes Hasegawa model for ITUK.</td></tr>
+          <tr><td>Services per year per vehicle</td><td>Maintenance Matrix (manual)</td><td><span class="tbl-badge tb-amber">Estimated</span></td><td>Interval assumption is from ISZJ service docs — UK actual service frequency may differ. Older vehicles may miss services entirely</td></tr>
+          <tr><td>Parts per service</td><td>Maintenance Matrix (IE40 priced)</td><td><span class="tbl-badge tb-green">Good for mapped PNs</span></td><td>Fluid costs blank — understates full PMS bill. D-Max 2023+ not mapped</td></tr>
+          <tr><td>ITUK purchases (actual)</td><td>CY2025 SAP billing lines</td><td><span class="tbl-badge tb-green">High</span></td><td>Reliable — this is the actual invoice data. Risk: ITUK may source via sub-dealers not visible in IE40 data</td></tr>
+          <tr><td>Drain plug gasket baseline (26.8%)</td><td>Derived from above</td><td><span class="tbl-badge tb-amber">Best available</span></td><td>Used as calibration ceiling. Assumes drain plug is the highest-capture PMS item — may not be true for all models</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-amber" style="margin-top:10px;font-size:11.5px" id="alert-pms-model-verdict">
+        <strong>Model verdict (PRISM):</strong> ITUK UIO 22,389 (DVLA). Registry sum gap <span data-pms-gap-sum>€457K</span> across PMS categories; largest € leaks in air filter / clutch (not oil filter at registry level). Legacy dealer-pivot / 1.5×UIO basket estimates are retired — use <code>metric_dictionary.md</code>.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot dot-amber"></span>UIO Model — Hasegawa Survival Methodology</div>
+      <div class="alert alert-blue" style="margin-bottom:12px;font-size:11.5px">
+        <strong>Method:</strong> UIO = Σ(annual shipments × survival_rate_by_age). Survival rates from IML Hasegawa model. Applied to ISZE IE40 shipment data by country and model.
+      </div>
+      <table class="data-tbl">
+        <thead><tr><th>Assumption</th><th>Confidence</th><th>Known gap</th></tr></thead>
+        <tbody>
+          <tr><td>Shipment history completeness</td><td><span class="tbl-badge tb-green">High</span></td><td>Data goes back to earliest ISZE records — unlikely material gaps</td></tr>
+          <tr><td>Survival rates (Hasegawa curves)</td><td><span class="tbl-badge tb-amber">Medium</span></td><td>Japan-derived curves. European truck lifecycle may differ — UK trucks often work longer. Could understate UK UIO.</td></tr>
+          <tr><td>Model-level split (N/F/D-Max)</td><td><span class="tbl-badge tb-green">Good</span></td><td>Shipment data has model codes — split is derived from actuals</td></tr>
+          <tr><td>Post-2024 vehicles</td><td><span class="tbl-badge tb-green">Included</span></td><td>Needs April 2026 refresh with FY2026 shipments</td></tr>
+          <tr><td>Exports / re-registrations</td><td><span class="tbl-badge tb-red">Unknown</span></td><td>Vehicles shipped to UK but re-exported to Ireland, Channel Islands etc not tracked. Small but non-zero</td></tr>
+          <tr><td>ITUK car park validation</td><td><span class="tbl-badge tb-green">✅ Done (Mar 2026)</span></td><td>✅ Parts Sales Calculation FY26.xlsx received. ITUK DVLA actual = 22,389 total (N35: 10,900 · N75: 9,359 · N50/55: 651 · N62/65: 257 · F-series: 805 · Unspec: 417). Source: DVLA government registration data. No scrap-rate or survival logic applied. Hasegawa (17,135) retired for ITUK.</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-green" style="margin-top:10px;font-size:11.5px;background:#1a3a2a;border-color:#238636">
+        <strong>✅ Validated Mar 2026:</strong> ITUK car park file received (DVLA actual). Primary figure: 22,389 vehicles — no scrap-rate or survival logic applied. Breakdown: N35: 10,900 · N75: 9,359 · N50/55: 651 · N62/65: 257 · F: 805 · Unspec: 417. ITUK own 10-yr parc calc (2015–2024): 17,959 — informational only, not used as denominator. Hasegawa 17,135 retired. ITUK FY26 parts target: £13.13M. True Sales avg: £580.65/vehicle/yr.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot dot-amber"></span>AIM Strategic Scoring Model</div>
+      <div class="alert alert-blue" style="margin-bottom:12px;font-size:11.5px">
+        <strong>Method:</strong> Each SKU scored on revenue concentration, volume stability, ABC class, competitiveness signal, and cross-sell linkage. Scores aggregated to distributor and category level.
+      </div>
+      <table class="data-tbl">
+        <thead><tr><th>Component</th><th>Status</th><th>Integrity risk</th></tr></thead>
+        <tbody>
+          <tr><td>Revenue data input (CY2024)</td><td><span class="tbl-badge tb-green">Actual billing</span></td><td>✅ CY2024 EUR Amount = real invoiced price incl. ZPR1 and order-type conditions. Revenue-weighted scoring is reliable for CY2024 data.</td></tr>
+          <tr><td>Revenue data input (CY2025)</td><td><span class="tbl-badge tb-amber">PR00 estimate</span></td><td>CY2025 = Qty × PR00 list price applied manually — not actual billing. High-SPA customers may be over-scored on CY2025 data specifically.</td></tr>
+          <tr><td>Classification layer</td><td><span class="tbl-badge tb-green">93.5% classified</span></td><td>✅ Updated 14 Mar. Residual 5% (~€1.6M) is unclassified. CY2024 cross-validation confirms 95% revenue coverage. Pricing risk map now materially complete.</td></tr>
+          <tr><td>Competitiveness signal</td><td><span class="tbl-badge tb-red">Not yet live</span></td><td>AIM uses IE40 prices — no IAM benchmark loaded yet. Competitiveness score is a placeholder until linked to Competitiveness Dashboard data</td></tr>
+          <tr><td>Distributor gap scores</td><td><span class="tbl-badge tb-red">CY2024 only</span></td><td>CY2025 data is not comparable — missing ZPR1 Israel pricing and urgent order surcharges. YoY trend analysis not possible until actual CY2025 SAP billing is available. CY2024 actuals are reliable baseline.</td></tr>
+          <tr><td>Pricing risk map (21 flagged)</td><td><span class="tbl-badge tb-green">Directionally valid</span></td><td>Based on ABC:A + high-revenue + no IAM validation. Directionally right but needs external price check before actioning</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-amber" style="margin-top:10px;font-size:11.5px">
+        <strong>Next step to unlock full value:</strong> Pull actual CY2025 SAP billing extract from BVDB — same format as Sales2024.XLSX, must include ZPR1 and all order types (not PR00-only). CY2025 PR00 estimate cannot be used for YoY: Israel figures are wrong (missing ZPR1) and surcharge revenue is absent. CY2024 baseline is solid. Also link competitiveness IAM benchmarks when available.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Competitiveness Dashboard — Pricing Benchmarks</div>
+      <div class="alert alert-blue" style="margin-bottom:12px;font-size:11.5px">
+        <strong>Method:</strong> Scraped KS International / Autodoc vs <strong>DB Price (PR00 ÷ (1−DB margin))</strong> — the price the dealer actually pays, not PR00 directly. Eucon tab = PR00 vs retail aftermarket list (directional only). 4 chain levels: PR00 (ISZE→DB) → DB Price (→dealer) → DLR retail (→customer) · configurable margins in sidebar.
+      </div>
+      <table class="data-tbl">
+        <thead><tr><th>Segment</th><th>Data quality</th><th>Can be shared externally?</th><th>Key caveat</th></tr></thead>
+        <tbody>
+          <tr><td>D-Max — PMS parts</td><td><span class="tbl-badge tb-green">High</span></td><td>Yes — with caveats</td><td>IAM prices scraped from web — may not reflect volume trade prices. Genuine parts story is solid here.</td></tr>
+          <tr><td>D-Max — Wear parts (brakes, EGR)</td><td><span class="tbl-badge tb-green">High</span></td><td>Internal only</td><td>EGR €235.55 vs IAM ~€185 — 2× exposure confirmed. Sharing externally invites challenge.</td></tr>
+          <tr><td>N-Series</td><td><span class="tbl-badge tb-amber">Estimated</span></td><td>No — internal indicative only</td><td>IAM prices estimated — no EQ-HIT PN mapping. N-Series results are directional, not factual.</td></tr>
+          <tr><td>F-Series</td><td><span class="tbl-badge tb-amber">Estimated</span></td><td>No — internal indicative only</td><td>Same limitation as N-Series. Very small parc — results statistically thin.</td></tr>
+          <tr><td>IAM price freshness</td><td><span class="tbl-badge tb-amber">Point-in-time</span></td><td>Date-stamp required</td><td>No automated refresh. IAM prices change quarterly. Dashboard should show data-as-of date whenever shared.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ── SECTION 3: ASSUMPTIONS REGISTER ── -->
+  <div class="sec-hdr">3. Key assumptions register — confirmed vs estimated</div>
+  <div class="card" style="margin-bottom:20px">
+    <table class="data-tbl">
+      <thead>
+        <tr><th>Assumption</th><th>Used in</th><th>Status</th><th>Source</th><th>If wrong by 20%…</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ITUK car park = 22,389 vehicles (DVLA actual) · N+F: 21,972</td>
+          <td>PMS gap, lubricants demand</td>
+          <td><span class="tbl-badge tb-green">Validated</span></td>
+          <td>UIO v18 / ITUK DVLA car park (22,389)</td>
+          <td>PRISM registry gap scales ~±20% with UIO; conclusion on under-penetration in air/clutch unchanged.</td>
+        </tr>
+        <tr>
+          <td>N75 services/yr = 0.5 × 70% addressable (PRISM)</td>
+          <td>PMS capture rate denominator</td>
+          <td><span class="tbl-badge tb-green">PRISM canonical</span></td>
+          <td><code>metric_dictionary.md</code></td>
+          <td>Replaces legacy 1.5×UIO dealer-pivot math. Oil filter shows high registry capture; other categories drive € gap.</td>
+        </tr>
+        <tr>
+          <td>PR00 list price = revenue proxy (CY2025)</td>
+          <td>All revenue analysis, customer ranking, ITUK impact</td>
+          <td><span class="tbl-badge tb-amber">Proxy</span></td>
+          <td>IE40 PR00 × billing qty (no net revenue)</td>
+          <td>If ITUK has deep SPAs (e.g. 10–15% off list), the +€299k impact figure is overstated on paper but ITUK's actual cost increase is still +5.3% on their negotiated base — methodology is still defensible.</td>
+        </tr>
+        <tr>
+          <td>Shell lubricant margin = 35%</td>
+          <td>Lubricants BC v2 gross profit estimate</td>
+          <td><span class="tbl-badge tb-amber">Unverified</span></td>
+          <td>Carried from original BC — source unclear</td>
+          <td>At 20% margin: GP drops from ~€204k to ~€116k. At 40%: GP = ~€233k. Meaningful range — needs confirmation from ISZE finance.</td>
+        </tr>
+        <tr>
+          <td>EGR valve D-Max ABC:A = €235.55 (PN 8983320160, TH)</td>
+          <td>Competitiveness dashboard, pricing dispute context</td>
+          <td><span class="tbl-badge tb-green">Confirmed</span></td>
+          <td>IE40 PR00 direct lookup, 13 Mar 2026</td>
+          <td>N/A — confirmed. Note: PN 8982705240 (JP variant) = €124.98. These are different parts. Do not conflate.</td>
+        </tr>
+        <tr>
+          <td>ITUK basket 2025 → 2026 impact = +€298,911 (+5.3%)</td>
+          <td>Pricing dispute rebuttal</td>
+          <td><span class="tbl-badge tb-green">Confirmed</span></td>
+          <td>Line-by-line PN match · ISZE_CY2025_Analysis_v1.xlsx Sheet 3</td>
+          <td>N/A — confirmed. ~2% PNs unmatched. If those PNs had zero increase, total impact drops to ~€292k. Immaterial to the argument.</td>
+        </tr>
+        <tr>
+          <td>FX rate (JPY/EUR) used in 2026 pricing</td>
+          <td>PR00 2026 price list</td>
+          <td><span class="tbl-badge tb-amber">Point-in-time</span></td>
+          <td>Rate at time of simulation — not disclosed in pricing files</td>
+          <td>JPY strengthened sharply in H2 2025. If pricing was calculated on a weaker JPY, some part prices may need revision in FY2027. Document the exact FX rate used.</td>
+        </tr>
+        <tr>
+          <td>Drain plug gasket capture rate = 26.8% = ceiling benchmark</td>
+          <td>PMS gap calibration</td>
+          <td><span class="tbl-badge tb-amber">Derived</span></td>
+          <td>CY2025 SAP vs ITUK DVLA denominator</td>
+          <td>If another PN has higher capture and it isn't visible (e.g. sourced via sub-dealer), the ceiling is higher and the gap smaller. Treat 26.8% as a floor benchmark, not a ceiling.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── SECTION 4: ACTION LOG ── -->
+  <div class="sec-hdr">4. Data integrity action log — priority fixes</div>
+  <div class="card">
+    <table class="data-tbl">
+      <thead>
+        <tr><th>Action</th><th>Priority</th><th>Owner</th><th>Deadline</th><th>Status</th><th>Blocks</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Request VKWRT net revenue field from BVDB</strong><br><span style="font-size:10.5px;color:#666666">Replace list-price proxy with actual invoiced revenue across all analysis</span></td>
+          <td><span class="tbl-badge tb-red">Critical</span></td>
+          <td>Jerome → BVDB</td>
+          <td>ASAP</td>
+          <td><span class="tbl-badge tb-amber">Not started</span></td>
+          <td>AIM scores, customer ranking, ITUK net impact</td>
+        </tr>
+        <tr>
+          <td><strong>Archive original Lubricants BC with warning label</strong><br><span style="font-size:10.5px;color:#666666">Make clear v2 supersedes original. Prevent accidental use of 1,428L figure.</span></td>
+          <td><span class="tbl-badge tb-red">Urgent</span></td>
+          <td>Jerome</td>
+          <td>Before IML meeting</td>
+          <td><span class="tbl-badge tb-amber">Not started</span></td>
+          <td>IML lubricants narrative</td>
+        </tr>
+        <tr>
+          <td><strong>Request ITUK car park file</strong><br><span style="font-size:10.5px;color:#666666">✅ Parts Sales Calculation FY26.xlsx received Mar 2026. 17,959 (10-yr parc) / 22,389 (full). All denominators updated.</span></td>
+          <td><span class="tbl-badge tb-green">Done</span></td>
+          <td>Jerome → James Marsh / ITUK</td>
+          <td>Mar 2026 ✅</td>
+          <td><span class="tbl-badge tb-green">✅ Complete</span></td>
+          <td>PMS gap model, lubricants demand</td>
+        </tr>
+        <tr>
+          <td><strong>Document FX rate used in 2026 PR00 simulation</strong><br><span style="font-size:10.5px;color:#666666">Add the exact JPY/EUR rate to pricing simulation file header. Required for ITUK dispute audit trail.</span></td>
+          <td><span class="tbl-badge tb-amber">High</span></td>
+          <td>Jerome</td>
+          <td>This week</td>
+          <td><span class="tbl-badge tb-amber">Not started</span></td>
+          <td>Pricing dispute defensibility</td>
+        </tr>
+        <tr>
+          <td><strong>Fix Maintenance Matrix: N-Series label error + add fluids + D-Max 2023+</strong><br><span style="font-size:10.5px;color:#666666">Label error confirmed. Fluid costs blank. Newer D-Max variants not mapped.</span></td>
+          <td><span class="tbl-badge tb-amber">Medium</span></td>
+          <td>Jerome (+Ling?)</td>
+          <td>Before ITUK PMS presentation</td>
+          <td><span class="tbl-badge tb-amber">Not started</span></td>
+          <td>PMS gap model accuracy</td>
+        </tr>
+        <tr>
+          <td><strong>Confirm Shell/UMI lubricant margin (35% assumption)</strong><br><span style="font-size:10.5px;color:#666666">Source of 35% margin in BC is unknown. Get actual GP from finance or Shell cost invoice.</span></td>
+          <td><span class="tbl-badge tb-amber">Medium</span></td>
+          <td>Jerome → Finance / DW</td>
+          <td>Before IML meeting</td>
+          <td><span class="tbl-badge tb-amber">Not started</span></td>
+          <td>Lubricants BC GP figures</td>
+        </tr>
+        <tr>
+          <td><strong>Expand AIM keyword classification rules</strong><br><span style="font-size:10.5px;color:#666666">Manual review of Unknown PNs (24.4% of revenue). Add ISZE-specific part description terms.</span></td>
+          <td><span class="tbl-badge tb-gray">Normal</span></td>
+          <td>Jerome (or Claude)</td>
+          <td>Next session</td>
+          <td><span class="tbl-badge tb-amber">Not started</span></td>
+          <td>AIM classification rate, pricing risk completeness</td>
+        </tr>
+        <tr>
+          <td><strong>Refresh IAM price scrape and date-stamp Competitiveness Dashboard</strong><br><span style="font-size:10.5px;color:#666666">Dashboard has no data-as-of date. IAM prices may be stale. Add timestamp before any external sharing.</span></td>
+          <td><span class="tbl-badge tb-gray">Normal</span></td>
+          <td>Jerome</td>
+          <td>Before sharing externally</td>
+          <td><span class="tbl-badge tb-amber">Not started</span></td>
+          <td>Competitiveness dashboard credibility</td>
+        </tr>
+        <tr>
+          <td><strong>Investigate Class 0 PNs in pricing simulation</strong><br><span style="font-size:10.5px;color:#666666">Unknown class code — may be priced incorrectly. How many PNs affected? What volume?</span></td>
+          <td><span class="tbl-badge tb-gray">Normal</span></td>
+          <td>Jerome → BVDB / IML</td>
+          <td>FY2027 pricing cycle</td>
+          <td><span class="tbl-badge tb-amber">Not started</span></td>
+          <td>Pricing formula accuracy for affected PNs</td>
+        </tr>
+        <tr>
+          <td><strong>UIO v8 annual data refresh</strong><br><span style="font-size:10.5px;color:#666666">Add FY2026 shipment data. Rebuild survival curves with updated inputs.</span></td>
+          <td><span class="tbl-badge tb-gray">Normal</span></td>
+          <td>Jerome</td>
+          <td>April 2026 (post FY-end)</td>
+          <td><span class="tbl-badge tb-blue">Scheduled</span></td>
+          <td>All UIO-dependent models</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 5 — CONNECTIONS
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-connections">
+
+  <!-- ── ECOSYSTEM DIAGRAM ── -->
+  <div style="background:#FFFFFF;border:1px solid #E0E0E0;border-radius:8px;margin-bottom:20px;overflow:hidden">
+    <div style="padding:14px 20px;border-bottom:1px solid #E0E0E0;display:flex;align-items:center;gap:12px">
+      <span style="font-size:13px;font-weight:700;color:#1A1A1A">🗺 ISZE Project Ecosystem — how data flows to Genuine Parts Share</span>
+      <span style="font-size:11px;color:#5A5A5A;margin-left:auto">4 layers: Data → Analysis → Projects → Outcome</span>
+    </div>
+    <div style="overflow-x:auto;background:#F5F5F5;padding:4px 0">
+<svg viewBox="0 0 1000 524" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:900px;display:block;font-family: Arial, sans-serif; filters = story)</td><td><span class="tbl-badge tb-green">Direct</span></td></tr>
+        <tr><td><strong>UIO Tool</strong></td><td>PMS Coverage project</td><td>Vehicle population → addressable volume calculation</td><td><span class="tbl-badge tb-green">Strong</span></td></tr>
+        <tr><td><strong>UIO Tool</strong></td><td>Lubricants project</td><td>Vehicle population × service interval = lubricant demand estimate</td><td><span class="tbl-badge tb-green">Strong</span></td></tr>
+        <tr><td><strong>UIO Tool</strong></td><td>Action Plan target-setting</td><td>Market size denominator for capture rate KPIs</td><td><span class="tbl-badge tb-green">Direct</span></td></tr>
+        <tr><td><strong>2026 Pricing simulation</strong></td><td>Competitiveness Dashboard</td><td>PR00 = what goes into the heatmap as ISZE's price</td><td><span class="tbl-badge tb-green">Direct</span></td></tr>
+        <tr><td><strong>2026 Pricing simulation</strong></td><td>ITUK dispute</td><td>The methodology that James Marsh disputes</td><td><span class="tbl-badge tb-red">Source of conflict</span></td></tr>
+        <tr><td><strong>Action Plan (VPACC)</strong></td><td>KPI Scorecard (BVDB)</td><td>Sets the targets that BVDB monitors in Power BI</td><td><span class="tbl-badge tb-green">Direct</span></td></tr>
+        <tr><td><strong>PMS Coverage</strong></td><td>Lubricants project</td><td>Same dealer relationship — lube + PMS = "full service" bundle</td><td><span class="tbl-badge tb-amber">Strategic synergy</span></td></tr>
+        <tr><td><strong>CY2025 Sales Data</strong></td><td>ITUK Pricing Dispute</td><td>Actual volumes per PN → line-by-line EUR impact of 2026 increase (+€299k confirmed)</td><td><span class="tbl-badge tb-green">Direct — now ready</span></td></tr>
+        <tr><td><strong>CY2025 Sales Data</strong></td><td>PMS Gap Analysis</td><td>ITUK actual PMS purchases vs Maintenance Matrix expected demand → capture rates per PN</td><td><span class="tbl-badge tb-green">Direct — now ready</span></td></tr>
+        <tr><td><strong>CY2025 Sales Data</strong></td><td>Lubricants Business Case</td><td>Shell/UMI 137,520L actuals → BC FY2026 row correction (from 1,428L)</td><td><span class="tbl-badge tb-red">Correction required</span></td></tr>
+        <tr><td><strong>CY2025 Sales Data</strong></td><td>AIM Framework</td><td>Real transaction data replaces estimates → recalibrate opportunity scores</td><td><span class="tbl-badge tb-amber">Now unblocked</span></td></tr>
+        <tr><td><strong>Maintenance Matrix</strong></td><td>PMS Gap Analysis</td><td>PN → service interval mapping → expected annual demand per model</td><td><span class="tbl-badge tb-green">Active (EQ-HIT workaround)</span></td></tr>
+        <tr><td><strong>UIO Tool</strong></td><td>PMS Gap Analysis</td><td>ITUK 22,389 car park (DVLA) → denominator for capture rate calculation</td><td><span class="tbl-badge tb-green">Direct</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div>
+
+  <div class="sec-hdr">The master argument chain (for ITUK / IML)</div>
+  <div class="card">
+    <div style="display:flex;gap:0;align-items:stretch;flex-wrap:wrap">
+      <div style="flex:1;min-width:150px;padding:12px 16px;border-right:1px solid #E0E0E0;text-align:center">
+        <div style="font-size:20px;margin-bottom:6px">🚗</div>
+        <div style="font-size:11px;font-weight:700;color:#CC0E1E">UIO Tool</div>
+        <div style="font-size:10.5px;color:#5A5A5A;margin-top:4px">How many Isuzu vehicles are in service? Where?</div>
+      </div>
+      <div style="flex-shrink:0;padding:12px 8px;display:flex;align-items:center;font-size:18px;color:#3fb950">→</div>
+      <div style="flex:1;min-width:150px;padding:12px 16px;border-right:1px solid #E0E0E0;text-align:center">
+        <div style="font-size:20px;margin-bottom:6px">📉</div>
+        <div style="font-size:11px;font-weight:700;color:#CC0E1E">PMS Coverage</div>
+        <div style="font-size:10.5px;color:#5A5A5A;margin-top:4px">What % of those services use genuine parts?</div>
+      </div>
+      <div style="flex-shrink:0;padding:12px 8px;display:flex;align-items:center;font-size:18px;color:#3fb950">→</div>
+      <div style="flex:1;min-width:150px;padding:12px 16px;border-right:1px solid #E0E0E0;text-align:center">
+        <div style="font-size:20px;margin-bottom:6px">💰</div>
+        <div style="font-size:11px;font-weight:700;color:#CC0E1E">Competitiveness</div>
+        <div style="font-size:10.5px;color:#5A5A5A;margin-top:4px">Are genuine parts priced competitively vs IAM?</div>
+      </div>
+      <div style="flex-shrink:0;padding:12px 8px;display:flex;align-items:center;font-size:18px;color:#3fb950">→</div>
+      <div style="flex:1;min-width:150px;padding:12px 16px;border-right:1px solid #E0E0E0;text-align:center">
+        <div style="font-size:20px;margin-bottom:6px">📋</div>
+        <div style="font-size:11px;font-weight:700;color:#CC0E1E">Pricing (PR00)</div>
+        <div style="font-size:10.5px;color:#5A5A5A;margin-top:4px">What methodology produces this pricing?</div>
+      </div>
+      <div style="flex-shrink:0;padding:12px 8px;display:flex;align-items:center;font-size:18px;color:#3fb950">→</div>
+      <div style="flex:1;min-width:150px;padding:12px 16px;text-align:center">
+        <div style="font-size:20px;margin-bottom:6px">🎯</div>
+        <div style="font-size:11px;font-weight:700;color:#3fb950">Action Plan</div>
+        <div style="font-size:10.5px;color:#5A5A5A;margin-top:4px">Campaign on the right categories, defend pricing model</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 4 — SPARRING TOPICS
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-sparring">
+
+  <div class="spar-intro">
+    <h3>⚔ Sparring Mode — How to use this</h3>
+    <p>Each topic below has a <strong>tension</strong> — the uncomfortable question or assumption that needs to be stress-tested. Pick a topic and say "let's go on [topic]." I will argue the other side, push back on your assumptions, and tell you where I think you're wrong or optimistic. You push back on me. We iterate until the argument is tight enough to survive contact with James Marsh, IML, or your management.</p>
+  </div>
+
+  <div class="topic-grid">
+
+    <div class="topic-card">
+      <span class="tc-tag tag-price">Pricing</span>
+      <div class="tc-title">ITUK Pricing Dispute — The three-layer defence</div>
+      <div class="tc-hook">Layer 1: formula (BP÷FX×discount) is transparent and consistent. Layer 2: JPY weakened +11.7% — FX softened the increase, it didn't cause it. The +5.3% comes from IML raising BP_JPY base prices. ISZE is a pass-through. Layer 3: IML raised prices to implement the 2030 Vision. James Marsh is arguing with Tokyo, not Brussels. But: cross-distributor consistency (Israel/CIS) is the weak flank — if treatment diverged, the "mechanical" claim breaks.</div>
+      <div class="tc-tension">⚡ Tension: If you're a pass-through of IML pricing, why didn't you brief IML before ITUK escalated? And can you prove Israel got the same treatment?</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-strat">Strategy</span>
+      <div class="tc-title">Lubricants — Is the business case realistic?</div>
+      <div class="tc-hook">€2.5M revenue at 30% retention sounds clean in Excel. But BESCO is unknown in Europe, Castrol and Shell have deep dealer relationships, and you'd need DBs to actively push it. What's the real sales mechanism here?</div>
+      <div class="tc-tension">⚡ Tension: Why would a UK mechanic switch to BESCO when his Castrol rep visits weekly and gives him margins?</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-ops">Operations</span>
+      <div class="tc-title">PMS Coverage — Are you fixing the right problem?</div>
+      <div class="tc-hook">You're targeting +1% filter and +3% clutch/brake penetration. But without EQ-HIT, do you actually know what the current penetration is? Is the problem price, availability, or dealer indifference?</div>
+      <div class="tc-tension">⚡ Tension: If the dealer can get an IAM filter in 2 hours and your genuine takes 3 days, price doesn't matter.</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-risk">Risk</span>
+      <div class="tc-title">EGR Valve — The €235 problem</div>
+      <div class="tc-hook">D-Max EGR at €235.55 (PR00 ABC:A confirmed). At DB level that's ~€392, at DLR ~€314. IAM retail is ~€185. The genuine part is 2× the aftermarket. You can't fix this with a campaign. What's the strategic response?</div>
+      <div class="tc-tension">⚡ Tension: Some parts genuinely aren't price-competitive. Are you being honest with IML about which ones?</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-strat">Strategy</span>
+      <div class="tc-title">FY2027 — What do you actually want to change vs FY2026?</div>
+      <div class="tc-hook">FY2026 is ending. What worked? What didn't? If you could only change three things in the FY2027 plan, what would they be — and why haven't you changed them already?</div>
+      <div class="tc-tension">⚡ Tension: Annual plans often repeat themselves. What's structurally different in FY2027?</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-ops">Operations</span>
+      <div class="tc-title">BVDB Power BI — Are you measuring the right things?</div>
+      <div class="tc-hook">Your KPI matrix feeds into BVDB's Power BI dashboards. But KPIs are only useful if they drive decisions. Which of your current KPIs has actually changed a distributor's behaviour in the last 12 months?</div>
+      <div class="tc-tension">⚡ Tension: Measuring things feels like control. It isn't.</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-risk">Risk</span>
+      <div class="tc-title">EQ-HIT access — Is this the biggest strategic gap?</div>
+      <div class="tc-hook">Without EQ-HIT, you can't map PNs to service schedules, can't validate competitiveness by model, can't run proper PMS analysis. You're running a multi-million-euro parts business with a key data gap. Is this a priority fight worth having with IT/IML?</div>
+      <div class="tc-tension">⚡ Tension: You've built workarounds. Are they good enough, or are you normalising a critical weakness?</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-price">Pricing</span>
+      <div class="tc-title">The competitiveness dashboard — Weapon or liability?</div>
+      <div class="tc-hook">The dashboard shows genuines are cheaper than IAM on PMS. That's a weapon. But it also shows brakes are 2× IAM. If you share it with ITUK, they'll read both halves. Are you ready for that conversation?</div>
+      <div class="tc-tension">⚡ Tension: Transparency cuts both ways.</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-strat">Strategy</span>
+      <div class="tc-title">Shell/UMI — One customer, one product, €582k: is this a business or a dependency?</div>
+      <div class="tc-hook">You're selling 137,520L of Shell engine oil per year entirely to UMI. That's an existing lubricants channel generating real revenue. But it's 100% concentrated in one customer with a batch-order pattern (huge September spike). What happens if UMI goes direct to Shell? And why aren't other distributors buying lubricants through ISZE?</div>
+      <div class="tc-tension">⚡ Tension: You're reframing this as proof the lubricants channel works. But a sample of one is not a market.</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-ops">Operations</span>
+      <div class="tc-title">PMS registry gap <span data-pms-gap-sum>€457K</span> — how much is recoverable?</div>
+      <div class="tc-hook">PRISM registry view (22,389 DVLA, 0.5 svc/yr × 70% addressable): oil filter capture is already high at registry level; air filter and clutch lines drive most of the € gap. Dealer-pivot “basket gap” estimates are obsolete. Question: which categories are structurally IAM-owned vs winnable with ITUK?</div>
+      <div class="tc-tension">⚡ Tension: The gap is real. The question is whether it's capturable — or whether it's structurally owned by independent garages and IAM suppliers.</div>
+    </div>
+
+    <div class="topic-card" style="border-color:#FFAAB0;background:#FFF5F5">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span class="tc-tag tag-risk">Risk</span>
+        <span style="background:#FFE8EA;color:#CC0E1E;font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:4px;border:1px solid #FFAAB0;letter-spacing:0.4px">⚠ FOUNDATIONAL — read before using any numbers</span>
+      </div>
+      <div class="tc-title">Revenue data quality — are you making decisions on wrong numbers?</div>
+      <div class="tc-hook">The CY2025 "revenue" of €30.4M is actually Qty × PR00 list price. Actual net revenue after SPAs, DLOD discounts, and customer-specific pricing is lower — possibly materially lower for ITUK. You've built a pricing dispute rebuttal, PMS gap analysis, and customer ranking on list prices. How confident are you in the conclusions if the actual net revenue is 10–15% lower? Note: CY2024 actual SAP billing IS reliable (€32.6M, 42.9% GP) — use that as the reference, not CY2025.</div>
+      <div class="tc-tension">⚡ Tension: You're making strategic decisions on proxy data. How wrong could you be, and does it change any of the conclusions?</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-strat">Strategy</span>
+      <div class="tc-title">AIM Framework — are you building on sand?</div>
+      <div class="tc-hook">The Aftermarket Intelligence Model is classified at 93.5% and cross-validated against CY2024. The opportunity scores, distributor gap rankings, and pricing risk maps are now grounded in real data — not estimates. But the model was originally GPT-built with proxy data, and the calibration has only happened once. The 6.5% unclassified residual (~€2.1M revenue) could contain systematic patterns. And the strategic scores (AIM-SS) feed directly into campaign prioritisation and the pricing dispute rebuttal. How much do you trust outputs that came from a model you didn't audit line by line?</div>
+      <div class="tc-tension">⚡ Tension: The model looks clean. But you accepted the classification because it felt right — not because you verified the logic. What's the one classification error that would change your biggest recommendation?</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-strat">Strategy</span>
+      <div class="tc-title">EV Readiness — are you sleep-walking into a structural transition?</div>
+      <div class="tc-hook">D-Max is an N1 LCV — subject to ZEV mandates from 2026. New ICE D-Max registrations are in structural decline in the UK and EU. The parts revenue window for the current D-Max ICE fleet is 2026–2032 at most. You have a checklist (ISZE_EV_Readiness_Checklist.xlsx) but no D-Max EV launch timeline from IML, no EV-specific parts revenue model, and no distributor readiness assessment. N-Series trucks are not under the same ZEV pressure — their window extends to 2033+. Are you treating EV as a project or as a background risk? And when IML eventually asks you for an EV parts revenue plan, what will you show them?</div>
+      <div class="tc-tension">⚡ Tension: Every month you delay building an EV revenue model is a month closer to the end of the ICE window. The urgency for D-Max is 2026 — not someday.</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-strat">Strategy</span>
+      <div class="tc-title">Isuzu 2030 Vision — are you actually aligned with it?</div>
+      <div class="tc-hook">You're using the 2030 Vision as a pricing shield. But do you actually know what the 2030 Vision parts revenue targets are for Europe? If IML Japan asked you to quantify how ISZE's 2026 pricing implements their 2030 targets, could you answer? And if ITUK asks IML directly, will IML back ISZE or ask for a review?</div>
+      <div class="tc-tension">⚡ Tension: "IML endorsed it" is only as strong as your relationship with the IML contact who would confirm that under pressure.</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-strat">Strategy</span>
+      <div class="tc-title">AI spar findings — which of the 7 weaknesses matter most?</div>
+      <div class="tc-hook">GPT-5 + Claude reviewed the full ISZE strategic logic (15 Mar 2026). Consensus weaknesses: the brief is advocacy not analysis, causality on flat billing is asserted not proven, PMS gap root cause is unresolved. Blind spots: fill-rate/availability absent, dealer economics ignored, no downside modelling if ITUK resists. Full output: AI_Briefs/20260315_0247_spar_session.txt. Revised position: ISZE_Strategic_Position_2026.md.</div>
+      <div class="tc-tension">⚡ Tension: The spar said the paper looks like it was written to defend a predetermined outcome. Is that true — and if so, what does that mean for how IML will read it?</div>
+    </div>
+
+    <div class="topic-card">
+      <span class="tc-tag tag-price">Pricing</span>
+      <div class="tc-title">D-Max vs N-Series — two different Golden Windows</div>
+      <div class="tc-hook">The original Golden Window narrative treated 22,389 vehicles as one fleet. They're not. D-Max (N1 LCV) is ZEV-mandated from 2026 — ICE new registrations in structural decline. The window is urgent: 2026–2030. N-Series trucks (~21,167 of the fleet) are NOT subject to the same mandate. Their window extends to 2033+. Urgency level, campaign targeting, and investment priority should differ by model line.</div>
+      <div class="tc-tension">⚡ Tension: Are your FY2027 action plan priorities split by D-Max vs N-Series, or are you still treating the fleet as one number?</div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 5 — FILES & TOOLS
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-files">
+
+  <div class="sec-hdr">📁 All files — by category</div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-red"></span>New — 14 Mar 2026 session (batch 3)</div>
+      <table class="data-tbl">
+        <thead><tr><th>File</th><th>Format</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td><a class="file-link" href="../Isuzu/ITUK_Dealer_Network_Analysis.xlsx">ITUK Dealer Network Analysis ★</a></td><td>.xlsx</td><td>86,597 rows · 66 dealers · Executive Summary, Rankings, Categories, Top 100 PNs, Lubricants Risk, ZEV Model</td></tr>
+          <tr><td><a class="file-link" href="ITUK_ZEV_Golden_Window_Dashboard.html">ZEV &amp; Golden Window Dashboard ★</a></td><td>.html</td><td>5 tabs: Dealer Network · Lubricants Risk (TX Delo £309K) · ZEV Mandate · Golden Window · Action Plan</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:8px;">
+      <div class="card-title" style="margin-top:12px;"><span class="dot dot-red"></span>New — 14 Mar 2026 session (batch 2)</div>
+      <table class="data-tbl">
+        <thead><tr><th>File</th><th>Format</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td><a class="file-link" href="../Isuzu/ISZE_2026_Pricing_Position_Paper.docx">2026 Pricing Position Paper ★</a></td><td>.docx</td><td>Full DB FAQ — 26.5mo/2% history · distributor impact table · SPAs · IX context</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_Lubricants_BC_Rebuilt_v2.xlsx">Lubricants BC v2 (rebuilt) ★</a></td><td>.xlsx</td><td>Actuals: 137,520L = 43.3% retention · EXCEEDS base case · 96× original model error</td></tr>
+          <tr><td><a class="file-link" href="ISZE_Monthly_Sales_Tracker.html">Monthly Sales Tracker</a></td><td>.html</td><td>CY2025 baseline · monthly trend · distributor ranking · period comparison · update guide</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:8px;">
+      <div class="card-title" style="margin-top:12px;"><span class="dot dot-red"></span>New — 14 Mar 2026 session (batch 1)</div>
+      <table class="data-tbl">
+        <thead><tr><th>File</th><th>Format</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2025_Analysis_v1.xlsx">CY2025 Analysis v1 ★</a></td><td>.xlsx</td><td>PMS gap ITUK · CY2025 dashboard · ITUK pricing impact (+€299k)</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Maintenance_Matrix_IE40_Priced_v1.xlsx">Maintenance Matrix (priced)</a></td><td>.xlsx</td><td>PMS PN→service mapping, Cost Matrix filled from IE40 PR00</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/ISZE_DataIntegrity_Dashboard.xlsx">Data Integrity Dashboard</a></td><td>.xlsx</td><td>9 datasets RAG-scored — gaps, actions, owners</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/CY2025_Sales_Priced.xlsx">CY2025 Sales Priced (pivot)</a></td><td>.xlsx</td><td>Customer × month · by classification · unpriced PNs</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-red"></span>New — 24 Mar 2026 session</div>
+      <table class="data-tbl">
+        <thead><tr><th>File</th><th>Format</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td><a class="file-link" href="../Isuzu/ITUK_Parts_Sales_Classification_CY2025.xlsx">ITUK Parts Sales Classification CY2025 ★</a></td><td>.xlsx</td><td>5,560 PNs · 223,897 units · 5 tabs: Parts Master, Segment Summary, PMS Focus, Not in Master (1,441 PNs), Dealer Ranking</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Sales to Dealers_ITUK_CY2025.xlsx">ITUK Sell-Out CY2025 (raw)</a></td><td>.xlsx</td><td>64 dealers · 5,587 PNs · 223,897 units · pivot format · source data for classification</td></tr>
+          <tr><td><a class="file-link" href="Dealer_Sellout_UTI_vs_ITUK.html">Dealer sell-out UTI vs ITUK ★</a></td><td>.html</td><td>UTI PartSales YTD vs ITUK CY25 · PMS category · billing sell-through</td></tr>
+          <tr><td><a class="file-link" href="Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html">Sell-out AIM · ITUK vs UTI (network) ★</a></td><td>.html</td><td>BVP / genuine mix · PMS &amp; subgroup · no dealer grain · CY2025</td></tr>
+          <tr><td><a class="file-link" href="../Data/raw/dealer_sales/UTI/UTIPartSales_2025-12_YTD.xlsx">UTI PartSales Dec 2025 YTD</a></td><td>.xlsx</td><td>793 PNs · 92,660 YTD units · no dealer dimension</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/ISZE_DealerData_Initiative_FY2027.docx">Dealer Data Initiative FY2027 ★</a></td><td>.docx</td><td>Internal briefing note — dealer sell-out data as FY2027 20% KPI condition · Python normalization plan</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-green"></span>Live tools / dashboards</div>
+      <table class="data-tbl">
+        <thead><tr><th>File</th><th>Format</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td><a class="file-link" href="ISZE_Competitiveness_Dashboard.html">Competitiveness Dashboard</a></td><td>.html</td><td>IE40-based heatmap, 3 segments, 4 AM modes</td></tr>
+          <tr><td><a class="file-link" href="ISZE_GPS_Dashboard_v9.html">GPS Dashboard v9 ★</a></td><td>.html</td><td>Network GPS · CY2025 warranty ex-adjustment · UIO v18 max-spend</td></tr>
+          <tr><td><a class="file-link" href="ISUZU_UIO_Dashboard_2026_v18.html">UIO Dashboard v18 ★</a></td><td>.html</td><td>Vehicle fleet by country/segment · Jun 2026</td></tr>
+          <tr><td><a class="file-link" href="../Data/ISUZU_UIO_Overview_2026_v18.xlsx">UIO Overview v18</a></td><td>.xlsx</td><td>Master UIO data · PRISM canonical via config.py</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/UIO/Script/Parts Sales Calculation FY26.xlsx">Parts Sales Calc FY26 ★</a></td><td>.xlsx</td><td>✅ ITUK DVLA car park actual · 22,389 vehicles · FY26 target £13.13M · True Sales avg £580.65/vehicle</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_PMS_Coverage_Calculator.xlsx">PMS Calculator</a></td><td>.xlsx</td><td>PMS coverage + revenue impact</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_Lubricants_Business_Case.xlsx">Lubricants BC (original)</a></td><td>.xlsx</td><td>⚠ SUPERSEDED — use rebuilt v2 instead</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_Lubricants_BC_Rebuilt_v2.xlsx">✓ Lubricants BC v2 (rebuilt)</a></td><td>.xlsx</td><td>137,520L actuals · 43.3% retention · 96× correction</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-amber"></span>Pricing & commercial</div>
+      <table class="data-tbl">
+        <thead><tr><th>File</th><th>Format</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/pricing simulation 2026 5%.xlsx">Pricing Simulation 2026</a></td><td>.xlsx</td><td>Full PR00/Israel/CIS simulation (+5.3%)</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_PriceCalc_2026_v3.xlsx">Price Calc v3</a></td><td>.xlsx</td><td>Per-part price calculation tool</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_ITUK_Pricing_Position_Paper.docx">ITUK Position Paper</a></td><td>.docx</td><td>Response to James Marsh dispute</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_Pricing_Strategy_Framework.docx">Pricing Strategy Framework</a></td><td>.docx</td><td>Pricing governance doc</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/pricing_logic_2026.md">Pricing Logic 2026</a></td><td>.md</td><td>Formula and methodology notes</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Planning & governance</div>
+      <table class="data-tbl">
+        <thead><tr><th>File</th><th>Format</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/Action plan FY2026 VPACC_November update.xlsx">Action Plan Feb 2026</a></td><td>.xlsx</td><td>Latest FY2026 VP+ACC plan</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_DB_KPI_Scorecard.xlsx">DB KPI Scorecard</a></td><td>.xlsx</td><td>Distributor KPI matrix</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_DB_Network_Segmentation.xlsx">Network Segmentation</a></td><td>.xlsx</td><td>DB/DLR network structure</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_GPS_Calculator.xlsx">GPS Calculator</a></td><td>.xlsx</td><td>GP$ calculator</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_DB_Incentive_Programme.docx">DB Incentive Programme</a></td><td>.docx</td><td>Distributor incentive framework</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_EV_Readiness_Checklist.xlsx">EV Readiness Checklist</a></td><td>.xlsx</td><td>D-Max EV parts prep</td></tr>
+          <tr><td><a class="file-link" href="AIM_Dashboard_CY2025.html">AIM Dashboard — CY2025</a></td><td>.html</td><td>Aftermarket intelligence — strategic scoring, pricing risk, distributor view</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/AIM_CY2025_Analysis.xlsx">AIM Analysis Workbook — CY2025</a></td><td>.xlsx</td><td>7-sheet Excel: parts master, strategic parts, pricing risk, distributor view, monthly trend</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-gray"></span>Reference & source docs</div>
+      <table class="data-tbl">
+        <thead><tr><th>File</th><th>Format</th><th>What</th></tr></thead>
+        <tbody>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/PMS sales promotion ISZE_ISZJ.pptx">PMS ISZJ Presentation</a></td><td>.pptx</td><td>IML-ISZE joint PMS project deck</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/★ISZE-IML Lubricants MTG_20260223.pdf">Lubricants IML MTG Feb 26</a></td><td>.pdf</td><td>Feb 2026 IML meeting materials</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/Introduction of Best Practice.pdf">Best Practice (ASEAN)</a></td><td>.pdf</td><td>Lubricants ASEAN model reference</td></tr>
+          <tr><td><a class="file-link" href="../Isuzu/Divers/RE_ Preliminary price file 2026.eml">James Marsh email</a></td><td>.eml</td><td>Original ITUK pricing challenge</td></tr>
+          <tr><td><a class="file-link" href="technical_operational_handbook_jerome_van_der_pluym_isze(3).md">Operational Bible</a></td><td>.md</td><td>Full ISZE parts function doctrine</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 6 — AI STACK (Claude + GPT Enterprise architecture)
+═══════════════════════════════════════════════════ -->
+<div class="page" id="page-aistack">
+
+  <div class="alert alert-blue" style="margin-bottom:16px;">
+    <strong>🗂 Interactive map — all projects</strong> ·
+    <a class="file-link" href="AI_Operations_Explorer.html" style="font-weight:700">Open AI Operations Explorer →</a>
+    · Click any branch to drill down — Isuzu Europe / ISZE only. Works in any browser.
+  </div>
+
+  <div class="alert alert-amber">
+    <strong>Honest framing.</strong> Neither Claude (via Cowork) nor GPT Enterprise is an officially sanctioned ISZE tool.
+    Neither has direct access to SAP, Power BI, or the ISZE shared network drive.
+    Both are fed curated MD files. This page documents the actual architecture, the routing rules between the two tools, and the governance boundaries that keep this compliant.
+  </div>
+
+  <div class="sec-hdr">TL;DR — Five Rules</div>
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>1 · Access reality</div>
+      <div style="font-size:12px;color:#1A1A1A;line-height:1.55;">
+        Claude/Cowork reads <code>C:\Users\jerom\Desktop\claude\</code> <strong>live</strong>.
+        GPT Enterprise sees <strong>only what you manually upload</strong> as Knowledge.
+        The ISZE shared drive, Power BI, and SAP are out of reach for both.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>2 · Use each for its strength</div>
+      <div style="font-size:12px;color:#1A1A1A;line-height:1.55;">
+        <strong>Claude</strong>: multi-file local work, dashboards, xlsx/docx, Python, long memos.<br>
+        <strong>GPT Enterprise</strong>: portable sparring, quick calcs on uploaded files, on-the-go email, offline-from-laptop.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>3 · Don't integrate them</div>
+      <div style="font-size:12px;color:#1A1A1A;line-height:1.55;">
+        Claude and GPT cannot talk to each other from your position. <strong>You are the bridge.</strong>
+        That's also the only compliant posture given neither is sanctioned.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>4 · Single sync point: Context Pack</div>
+      <div style="font-size:12px;color:#1A1A1A;line-height:1.55;">
+        The 6 MD files in <code>GPT_Enterprise/2_KNOWLEDGE_FILES/</code> are canonical.
+        Claude edits them. You upload to GPT monthly. That's the whole sync protocol.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-amber"></span>5 · Power BI integration = don't</div>
+      <div style="font-size:12px;color:#1A1A1A;line-height:1.55;">
+        Live PBI ↔ GPT needs Azure admin + IML sign-off you don't have.
+        Ask BVDB for a scheduled CSV export into your folder instead. 5% of effort, 80% of benefit.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-red"></span>Not sanctioned — know the boundary</div>
+      <div style="font-size:12px;color:#1A1A1A;line-height:1.55;">
+        No SAP/Power BI trade actions. No upload of restricted content (Kosha internals, personnel, active disputes) to GPT.
+        Paper trail: CHANGELOG.md, AI_Briefs/, git commits via deploy.sh.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-hdr">Four-Tier Data Architecture</div>
+  <div class="card" style="margin-bottom:20px;">
+    <div style="font-family:'Courier New',monospace;font-size:11.5px;line-height:1.7;color:#1A1A1A;background:#F5F5F5;padding:16px;border-radius:6px;overflow-x:auto;">
+<strong style="color:#CC0E1E;">TIER 0 · ISZE secure zone</strong> — <em>never touched by Claude or GPT</em><br>
+&nbsp;&nbsp;SAP (PR00/ZPR1) · Power BI (BVDB) · ISZE shared network drive<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓ &nbsp;<em>you export — manual or scheduled</em><br>
+<strong style="color:#CC0E1E;">TIER 1 · Local working folder</strong> — <code>C:\Users\jerom\Desktop\claude\</code><br>
+&nbsp;&nbsp;Exported Excel/CSV · Dashboards · Python · memory/ · GPT_Enterprise/ · ISZE/ · Isuzu/<br>
+&nbsp;&nbsp;<strong style="color:#3fb950;">→ Claude/Cowork reads &amp; writes HERE directly</strong><br>
+&nbsp;&nbsp;<strong style="color:#f85149;">→ GPT Enterprise cannot reach this</strong><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓ &nbsp;<em>you upload — monthly + on change</em><br>
+<strong style="color:#CC0E1E;">TIER 2 · GPT Enterprise Knowledge</strong><br>
+&nbsp;&nbsp;6 Context Pack MDs + 2 templates · small CSVs only (never 164k-row price list)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓ &nbsp;<em>deploy.sh → git push</em><br>
+<strong style="color:#CC0E1E;">TIER 3 · Published layer</strong> — web dashboards, shareable links<br>
+&nbsp;&nbsp;MASTER_DASHBOARD.html + other HTML views · shareable URLs
+    </div>
+  </div>
+
+  <div class="sec-hdr">Routing — Which Tool for Which Task</div>
+  <div class="card" style="margin-bottom:20px;">
+    <table class="data-tbl">
+      <thead><tr><th style="width:38%">Task</th><th style="width:18%">Use</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Multi-file Excel work (formulas, pivots, 164k-row price list)</td><td><span class="tbl-badge tb-blue">Claude</span></td><td>Reads Desktop directly · xlsx skill · produces real .xlsx output</td></tr>
+        <tr><td>HTML dashboards (build, update, debug)</td><td><span class="tbl-badge tb-blue">Claude</span></td><td>Can read/edit 1,500+ line HTML files in place</td></tr>
+        <tr><td>Python scripts · Tender scraper · Automation</td><td><span class="tbl-badge tb-blue">Claude</span></td><td>Writes, tests in sandbox, saves to local folder</td></tr>
+        <tr><td>Long memos (position papers, IML briefings)</td><td><span class="tbl-badge tb-blue">Claude</span></td><td>Long context · xlsx/docx skills · file output</td></tr>
+        <tr><td>Strategic sparring, devil's advocate</td><td><span class="tbl-badge tb-gray">Either</span></td><td>GPT for mobile/offline · Claude when local context matters</td></tr>
+        <tr><td>Pricing calc · single PN quick check</td><td><span class="tbl-badge tb-amber">GPT</span></td><td>Fast · works against uploaded subset · mobile-friendly</td></tr>
+        <tr><td>Pricing calc · full basket / FX decomposition</td><td><span class="tbl-badge tb-blue">Claude</span></td><td>Handles full PR00 file · repeatable</td></tr>
+        <tr><td>Email drafting in Jerome's style</td><td><span class="tbl-badge tb-gray">Either</span></td><td>Both calibrated via <code>Jerome_Working_Style.md</code></td></tr>
+        <tr><td>SPA anomaly flagging · quick scan</td><td><span class="tbl-badge tb-amber">GPT</span></td><td>Data Analysis GPT · uploaded SPA file · self-contained</td></tr>
+        <tr><td>Meeting prep from scratch</td><td><span class="tbl-badge tb-blue">Claude</span></td><td>Pulls memory/ + recent briefs + project files in one pass</td></tr>
+        <tr><td>Weekly AI Brief (AI_Briefs/)</td><td><span class="tbl-badge tb-blue">Claude</span></td><td>Scheduled task · reads live memory/ + active projects</td></tr>
+        <tr><td>Reading a PDF / contract / paste-in doc</td><td><span class="tbl-badge tb-gray">Either</span></td><td>No local access needed</td></tr>
+        <tr><td>Sensitive content (Kosha internal framing, personnel)</td><td><span class="tbl-badge tb-red">Claude local only</span></td><td>Never upload to external AI · GPT is still external to ISZE</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:10px;font-size:11px;color:#5A5A5A;font-style:italic;">
+      Rule of thumb: if the task reads &gt;1 local file or produces a file, use Claude. If it's self-contained in chat and you're not at the laptop, use GPT.
+    </div>
+  </div>
+
+  <div class="sec-hdr">Context Pack Sync Protocol</div>
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-green"></span>What syncs</div>
+      <table class="data-tbl">
+        <thead><tr><th>File</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>Active_Projects_Apr2026.md</td><td><code>GPT_Enterprise/2_KNOWLEDGE_FILES/</code></td></tr>
+          <tr><td>Pricing_Logic.md</td><td><code>2_KNOWLEDGE_FILES/</code></td></tr>
+          <tr><td>ISZE_Company_Context.md</td><td><code>2_KNOWLEDGE_FILES/</code></td></tr>
+          <tr><td>Glossary_and_Terms.md</td><td><code>2_KNOWLEDGE_FILES/</code></td></tr>
+          <tr><td>Jerome_Working_Style.md</td><td><code>2_KNOWLEDGE_FILES/</code></td></tr>
+          <tr><td>UIO_V13_File_Guide.md</td><td><code>2_KNOWLEDGE_FILES/</code></td></tr>
+          <tr><td>Email_Templates.md</td><td><code>3_TEMPLATES/</code></td></tr>
+          <tr><td>Analysis_Frameworks.md</td><td><code>3_TEMPLATES/</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-amber"></span>Cadence &amp; triggers</div>
+      <div style="font-size:12px;line-height:1.65;color:#1A1A1A;">
+        <strong>Monthly:</strong> first working Monday — Claude regenerates from memory/ + current projects.<br><br>
+        <strong>Ad-hoc triggers:</strong><br>
+        · FX or BP_JPY change<br>
+        · Project status shift (Active Projects table)<br>
+        · New confirmed data point (UIO · AIM · dispute update)<br>
+        · Kosha plan revision<br><br>
+        <strong>FY boundary:</strong> full audit in April + October.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-blue"></span>Monthly workflow (15–20 min)</div>
+      <div style="font-size:12px;line-height:1.65;color:#1A1A1A;">
+        1 · In Cowork: <em>"refresh context pack from latest memory/"</em><br>
+        2 · Claude proposes diff per MD file<br>
+        3 · You approve<br>
+        4 · Claude writes <code>GPT_Enterprise/CHANGELOG.md</code> entry<br>
+        5 · In ChatGPT: Configure → Knowledge → replace files per Custom GPT<br>
+        6 · (Optional) Claude snapshots to <code>GPT_Enterprise_Kit_YYYYMM.zip</code>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-gray"></span>Drift risk to watch</div>
+      <div style="font-size:12px;line-height:1.65;color:#1A1A1A;">
+        <code>GPT_VectorStore/</code> (older) has diverged from <code>GPT_Enterprise/</code> (current).
+        Recommend: pick <code>GPT_Enterprise/</code> as canonical, archive the rest, or consolidate in one session.
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-hdr">Governance — Non-Negotiable Rules</div>
+  <div class="card" style="margin-bottom:20px;">
+    <table class="data-tbl">
+      <thead><tr><th style="width:30%">Rule</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Content review before upload</strong></td><td>Before anything hits GPT Enterprise Knowledge: is this fine if screenshotted externally? If unsure, don't upload.</td></tr>
+        <tr><td><strong>Never upload to GPT</strong></td><td>Full 164k-row PR00 list · distributor-identifiable SPA line items · unreleased IML Kosha plans · personnel/salary · active legal/dispute correspondence</td></tr>
+        <tr><td><strong>Sensitivity tag in MDs</strong></td><td>YAML front-matter: <code>sensitivity: internal | confidential | restricted</code> and <code>upload-to-gpt: true/false</code>. Requires a line in CLAUDE.md to enforce.</td></tr>
+        <tr><td><strong>No trade actions</strong></td><td>Neither tool sends emails, changes SAP prices, or publishes to distributors without you clicking send. Already your pattern — just make it explicit.</td></tr>
+        <tr><td><strong>Audit trail</strong></td><td>CHANGELOG.md · AI_Briefs/ weekly logs · git commits via deploy.sh · context-pack snapshots. This is your paper trail.</td></tr>
+        <tr><td><strong>If IT or IML asks</strong></td><td>Honest answer: ChatGPT Enterprise + Anthropic Claude via Cowork, both running against MDs you maintain, no direct access to ISZE systems. Defensible posture.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-hdr">Automation Backlog (ranked)</div>
+  <div class="card" style="margin-bottom:20px;">
+    <table class="data-tbl">
+      <thead><tr><th>#</th><th>Item</th><th>Effort</th><th>Value</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>CHANGELOG.md + context-pack regen script</td><td><span class="tbl-badge tb-green">Low</span></td><td><span class="tbl-badge tb-green">High</span></td><td>Formalises the sync · one Claude session</td></tr>
+        <tr><td>2</td><td>Sensitivity YAML front-matter on Knowledge MDs</td><td><span class="tbl-badge tb-green">Low</span></td><td><span class="tbl-badge tb-amber">Med</span></td><td>Prevents accidental upload of restricted content</td></tr>
+        <tr><td>3</td><td>Weekly brief scheduled (via scheduled-tasks MCP)</td><td><span class="tbl-badge tb-green">Low</span></td><td><span class="tbl-badge tb-amber">Med</span></td><td>Every Monday morning · writes to AI_Briefs/</td></tr>
+        <tr><td>4</td><td>BVDB-maintained CSV drop from Power BI</td><td><span class="tbl-badge tb-amber">Med</span></td><td><span class="tbl-badge tb-green">High</span></td><td>Needs BVDB buy-in · biggest unlock for Claude</td></tr>
+        <tr><td>5</td><td>Enhanced deploy.sh with content review</td><td><span class="tbl-badge tb-amber">Med</span></td><td><span class="tbl-badge tb-amber">Med</span></td><td>Prevents internal-only content in published dashboards</td></tr>
+        <tr><td>6</td><td>Consolidate GPT_VectorStore into GPT_Enterprise</td><td><span class="tbl-badge tb-green">Low</span></td><td><span class="tbl-badge tb-amber">Med</span></td><td>Drift fix · pick one · archive the rest</td></tr>
+        <tr><td>7</td><td>Monthly context-pack calendar reminder</td><td><span class="tbl-badge tb-green">Low</span></td><td><span class="tbl-badge tb-gray">Low</span></td><td>Routine discipline</td></tr>
+      </tbody>
+    </table>
+    <div style="margin-top:10px;font-size:11px;color:#5A5A5A;">
+      <strong>Explicit non-goals:</strong> live PBI↔GPT pipeline · auto-upload to GPT Knowledge (OpenAI doesn't expose it for Custom GPTs) · Claude↔GPT handoff · internal sanctioning campaign (risk-reward wrong for your role).
+    </div>
+  </div>
+
+  <div class="sec-hdr">Source Memo &amp; Key Files</div>
+  <div class="card">
+    <table class="data-tbl">
+      <thead><tr><th>File</th><th>Format</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><a class="file-link" href="../AI_Stack_Architecture_Apr2026.md">AI Stack Architecture — full memo ★</a></td><td>.md</td><td>This dashboard's source doc — assumptions, open questions, full rationale</td></tr>
+        <tr><td><a class="file-link" href="../../GPT_Enterprise/README.md">GPT Enterprise Starter Kit README</a></td><td>.md</td><td>Setup guide for the 4 Custom GPTs · knowledge upload priority</td></tr>
+        <tr><td><a class="file-link" href="../../GPT_Enterprise_ContextBriefing_Apr2026.md">GPT Context Briefing (current)</a></td><td>.md</td><td>Single-file briefing · abbreviations · confirmed data points</td></tr>
+        <tr><td><a class="file-link" href="../../GPT_Enterprise/2_KNOWLEDGE_FILES/">Knowledge Files folder</a></td><td>folder</td><td>The 6 canonical MDs — edit these, upload on refresh</td></tr>
+        <tr><td><a class="file-link" href="../../GPT_Enterprise/1_CUSTOM_GPT_SKILLS/">Custom GPT skill prompts</a></td><td>folder</td><td>System prompts for the 4 GPTs</td></tr>
+        <tr><td><a class="file-link" href="../../GPT_Enterprise_DataMap_Apr2026.xlsx">Data Map</a></td><td>.xlsx</td><td>Which files exist, what they contain, where they live</td></tr>
+        <tr><td><a class="file-link" href="../Master Dashboard/deploy.sh">deploy.sh — web publish</a></td><td>.sh</td><td>Tier 3 publishing pipeline</td></tr>
+        <tr><td><a class="file-link" href="../memory/">memory/ folder</a></td><td>folder</td><td>Claude's live memory — source for context-pack regeneration</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert alert-blue" style="margin-top:20px;">
+    <strong>Last audit: 21 April 2026.</strong> If any of these assumptions shift — GPT Enterprise tier changes, BVDB agrees to CSV drop, ISZE IT sanctions Claude/GPT, or the sensitivity tagging gets enforced in CLAUDE.md — update this page and the source memo.
+  </div>
+
+</div>
+
+<script>
+document.getElementById('hdr-date').innerHTML =
+  `${new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}<br>
+   <span style="color:#CC0E1E">FY2026 · Final Month</span><br>
+   <span style="color:#e3b341;font-size:11px" id="hdr-data-as-of">Loading PRISM data…</span>`;
+
+function fmtEurK(v) {
+  if (v == null || isNaN(v)) return '—';
+  if (v >= 1e6) return '€' + (v / 1e6).toFixed(1) + 'M';
+  if (v >= 1e3) return '€' + Math.round(v / 1e3) + 'K';
+  return '€' + Math.round(v);
+}
+
+async function loadPrismPms() {
+  try {
+    const resp = await fetch('../Data/dashboards/isze_data.json');
+    if (!resp.ok) return;
+    const data = await resp.json();
+    const pms = data.pms && data.pms.ituk;
+    const gps = data.gps && data.gps.ituk;
+    if (!pms) return;
+    const gap = pms.revenue_gap_eur_sum;
+    const oil = pms.oil_filter;
+    const elVal = document.getElementById('kpi-pms-gap-val');
+    const elSub = document.getElementById('kpi-pms-gap-sub');
+    if (elVal) elVal.textContent = fmtEurK(gap);
+    if (elSub) {
+      let sub = `Registry gap · ${pms.uio_dvla.toLocaleString()} DVLA · PRISM ${pms.year}`;
+      if (gps && gps.spend_per_unit_ex_warranty_eur) {
+        sub += ` · GPS ex-warr €${Math.round(gps.spend_per_unit_ex_warranty_eur)}/unit`;
+      }
+      elSub.textContent = sub;
+    }
+    const hdr = document.getElementById('hdr-data-as-of');
+    if (hdr && data._meta && data._meta.prism_refreshed) {
+      hdr.textContent = 'PRISM data: ' + data._meta.prism_refreshed.slice(0, 10)
+        + (data.pms.distributor_count ? ` · PMS ${data.pms.distributor_count} DBs` : '');
+    }
+    if (oil) {
+      const capLabel = oil.capture_rate_pct >= 100 ? '100%+' : oil.capture_rate_pct + '%';
+      document.querySelectorAll('[data-pms-gap-sum]').forEach(el => { el.textContent = fmtEurK(gap); });
+      document.querySelectorAll('[data-pms-oil-cap]').forEach(el => { el.textContent = capLabel; });
+      const alertEl = document.getElementById('alert-pms-gap');
+      if (alertEl) {
+        alertEl.innerHTML = `<strong>⚠ PMS — PRISM registry view (ITUK ${pms.uio_dvla.toLocaleString()} DVLA)</strong><br>` +
+          `Oil filter registry capture <strong>${oil.capture_rate_pct >= 100 ? '100%+' : oil.capture_rate_pct + '%'}</strong> ` +
+          `(${Math.round(oil.actual_qty).toLocaleString()} vs ${Math.round(oil.expected_qty).toLocaleString()} expected). ` +
+          `Sum registry revenue gap <strong>${fmtEurK(gap)}</strong> across PMS categories. Source: PRISM derived CSV.`;
+      }
+    }
+  } catch (e) { /* offline / file:// — static HTML fallback */ }
+}
+
+loadPrismPms();
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  var tab = document.querySelector('.nav-tab[onclick*="\''+id+'\'"]');
+  if(tab) tab.classList.add('active');
+}
+</script>
+</body>
+</html>

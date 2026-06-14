@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTI SPA — Run Rate Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --navy:   #0d2d52;
+    --blue:   #1a5276;
+    --mid:    #2980b9;
+    --light:  #d6eaf8;
+    --green:  #1e8449;
+    --amber:  #d4ac0d;
+    --red:    #c0392b;
+    --bg:     #f4f6f9;
+    --card:   #ffffff;
+    --border: #d5d8dc;
+    --text:   #1a1a2e;
+    --muted:  #7f8c8d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: var(--bg); color: var(--text); font-size: 13px; }
+
+  /* ── Header ── */
+  header { background: var(--navy); color: #fff; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; }
+  header h1 { font-size: 17px; font-weight: 700; letter-spacing: .4px; }
+  header span { font-size: 11px; opacity: .65; }
+
+  /* ── Layout ── */
+  main { max-width: 1400px; margin: 0 auto; padding: 16px 20px; }
+  .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin-bottom: 10px; }
+
+  /* ── Sliders ── */
+  .slider-panel { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin-bottom: 16px; }
+  .slider-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .slider-item label { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .slider-item label span { font-weight: 400; color: var(--mid); font-size: 12px; }
+  input[type=range] { width: 100%; accent-color: var(--mid); cursor: pointer; }
+  .slider-hint { font-size: 10px; color: var(--muted); margin-top: 3px; }
+
+  /* ── KPI cards ── */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; border-left: 4px solid var(--mid); }
+  .kpi.green { border-left-color: var(--green); }
+  .kpi.amber { border-left-color: var(--amber); }
+  .kpi.red   { border-left-color: var(--red); }
+  .kpi-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin-bottom: 6px; }
+  .kpi-value { font-size: 22px; font-weight: 700; color: var(--navy); }
+  .kpi-delta { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .kpi-delta.pos { color: var(--green); }
+  .kpi-delta.neg { color: var(--red); }
+
+  /* ── Charts ── */
+  .chart-row { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 16px; }
+  .chart-box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .chart-box h3 { font-size: 11px; font-weight: 700; color: var(--navy); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+  .chart-wrap { position: relative; height: 220px; }
+
+  /* ── Table ── */
+  .table-box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .table-box h3 { font-size: 11px; font-weight: 700; color: var(--navy); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .5px; }
+  .tbl-wrap { overflow-x: auto; max-height: 340px; overflow-y: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  th { background: var(--navy); color: #fff; padding: 7px 9px; text-align: right; white-space: nowrap; cursor: pointer; user-select: none; }
+  th:first-child, th:nth-child(2) { text-align: left; }
+  th:hover { background: var(--blue); }
+  td { padding: 5px 9px; text-align: right; border-bottom: 1px solid #eef0f3; white-space: nowrap; }
+  td:first-child, td:nth-child(2) { text-align: left; }
+  tr:hover td { background: #f0f4f8; }
+  .gm-ok   { color: var(--green); font-weight: 700; }
+  .gm-warn { color: var(--amber); font-weight: 700; }
+  .gm-bad  { color: var(--red);   font-weight: 700; }
+  .bar-wrap { display: inline-block; width: 60px; height: 8px; background: #eee; border-radius: 4px; vertical-align: middle; margin-left: 4px; }
+  .bar-fill { height: 100%; border-radius: 4px; background: var(--mid); }
+
+  /* ── Footer ── */
+  footer { text-align: center; padding: 10px; font-size: 10px; color: var(--muted); }
+</style>
+  <link rel="stylesheet" href="_ui/editorial.css">
+  <link rel="stylesheet" href="_ui/editorial-full.css">
+  <script src="_ui/editorial-charts.js"></script>
+  <script src="_ui/isze-shell.js" defer></script>
+</head>
+<body>
+<div data-isze-stamp style="background:#1F2937;color:#F3F4F6;font:11px/1.5 Arial,sans-serif;padding:5px 14px;text-align:right;letter-spacing:.3px;border-bottom:2px solid #CC0E1E"><span style="opacity:.65">📅 File last updated:</span> <strong>2026-04-16</strong> <span style="opacity:.55">— verify underlying data freshness before sharing externally</span></div>
+
+<header>
+  <h1>🚛 UTI SPA — Run Rate Dashboard &nbsp;<span style="color:#aed6f1">v4</span></h1>
+  <span>Isuzu Motors Europe · Parts &amp; Aftersales · CONFIDENTIAL</span>
+</header>
+
+<main>
+
+<!-- ── SLIDERS ── -->
+<div class="slider-panel">
+  <div class="section-title">Scenario Controls</div>
+  <div class="slider-grid">
+    <div class="slider-item">
+      <label>Volume Realisation <span id="lbl-real">100%</span></label>
+      <input type="range" id="sl-real" min="30" max="100" value="100" step="5">
+      <div class="slider-hint">% of committed SPA qty actually purchased</div>
+    </div>
+    <div class="slider-item">
+      <label>IML/IMIT Cut % <span id="lbl-cut">7.0%</span></label>
+      <input type="range" id="sl-cut" min="0" max="15" value="7" step="0.5">
+      <div class="slider-hint">Global supplier purchase price reduction</div>
+    </div>
+    <div class="slider-item">
+      <label>Revenue Target (€K) <span id="lbl-rev">729</span></label>
+      <input type="range" id="sl-rev" min="400" max="1200" value="729" step="10">
+      <div class="slider-hint">Set target — dashboard shows gap vs actual</div>
+    </div>
+    <div class="slider-item">
+      <label>Min Margin Target <span id="lbl-mgn">25%</span></label>
+      <input type="range" id="sl-mgn" min="5" max="50" value="25" step="1">
+      <div class="slider-hint">Portfolio GM% floor for colour coding</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── KPIs ── -->
+<div class="section-title">Run Rate KPIs (adjusted by sliders)</div>
+<div class="kpi-row">
+  <div class="kpi" id="kpi-rev-box">
+    <div class="kpi-label">Run Rate Revenue</div>
+    <div class="kpi-value" id="kpi-rev">€728,880</div>
+    <div class="kpi-delta" id="kpi-rev-d">vs target: —</div>
+  </div>
+  <div class="kpi green" id="kpi-prf-box">
+    <div class="kpi-label">ISZE Profit (w/ IML cut)</div>
+    <div class="kpi-value" id="kpi-prf">—</div>
+    <div class="kpi-delta" id="kpi-prf-d">vs L12: —</div>
+  </div>
+  <div class="kpi" id="kpi-gm-box">
+    <div class="kpi-label">Portfolio GM%</div>
+    <div class="kpi-value" id="kpi-gm">—</div>
+    <div class="kpi-delta" id="kpi-gm-d">L12 avg: 41.8%</div>
+  </div>
+  <div class="kpi amber">
+    <div class="kpi-label">IML/IMIT Sacrifice</div>
+    <div class="kpi-value" id="kpi-sac">—</div>
+    <div class="kpi-delta" id="kpi-sac-d">% of SPA purchase cost</div>
+  </div>
+</div>
+
+<!-- ── CHARTS ── -->
+<div class="chart-row">
+  <div class="chart-box">
+    <h3>Revenue &amp; Profit — L12 vs SPA Run Rate vs Target</h3>
+    <div class="chart-wrap"><canvas id="chart-bar"></canvas></div>
+  </div>
+  <div class="chart-box">
+    <h3>GM% Distribution (53 PNs)</h3>
+    <div class="chart-wrap"><canvas id="chart-gm"></canvas></div>
+  </div>
+</div>
+
+<!-- ── PROFIT BRIDGE ── -->
+<div class="chart-row" style="grid-template-columns: 1fr 1fr;">
+  <div class="chart-box">
+    <h3>Top 10 PNs by Run Rate Revenue</h3>
+    <div class="chart-wrap"><canvas id="chart-top"></canvas></div>
+  </div>
+  <div class="chart-box">
+    <h3>Lines Below Margin Target (colour = GM%)</h3>
+    <div class="chart-wrap"><canvas id="chart-risk"></canvas></div>
+  </div>
+</div>
+
+<!-- ── TABLE ── -->
+<div class="table-box" style="margin-top:0">
+  <h3>PN-Level Run Rate Detail — <span id="tbl-below" style="color:var(--red)">0 lines below target</span></h3>
+  <div class="tbl-wrap">
+    <table id="main-table">
+      <thead>
+        <tr>
+          <th onclick="sortTable(0)">P/N ↕</th>
+          <th onclick="sortTable(1)">Description ↕</th>
+          <th onclick="sortTable(2)">SPA Price ↕</th>
+          <th onclick="sortTable(3)">Run Qty ↕</th>
+          <th onclick="sortTable(4)">Run Revenue ↕</th>
+          <th onclick="sortTable(5)">Adj Cost ↕</th>
+          <th onclick="sortTable(6)">Run Profit ↕</th>
+          <th onclick="sortTable(7)">GM% ↕</th>
+          <th onclick="sortTable(8)">IML Sacrifice ↕</th>
+          <th onclick="sortTable(9)">vs L12 Profit ↕</th>
+        </tr>
+      </thead>
+      <tbody id="tbl-body"></tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+<footer>ISZE Confidential · UTI SPA Optimizer v4 · Data as at file date · Not for distribution</footer>
+
+<script>
+// ── Raw data (from SPA Optimizer v4) ──────────────────────────────────────
+const RAW = {"pns": [{"pn": "1443803030", "desc": "LINK; DRAG", "purchase": 71.92, "list_price": 131.66, "l12_qty": 68.0, "l12_rev": 8952.88, "l12_cost": 4890.56, "l12_profit": 4062.32, "l12_gm": 0.4537, "spa_price": 110.0, "spa_qty": 60.0, "spa_rev": 6600.0, "spa_profit": 2284.8, "spa_gm": 0.3462}, {"pn": "1443803050", "desc": "LINK; DRAG", "purchase": 75.06, "list_price": 137.41, "l12_qty": 44.0, "l12_rev": 6046.04, "l12_cost": 3302.64, "l12_profit": 2743.4, "l12_gm": 0.4538, "spa_price": 110.0, "spa_qty": 55.0, "spa_rev": 6050.0, "spa_profit": 1921.7, "spa_gm": 0.3176}, {"pn": "1476010870", "desc": "EXPANDER", "purchase": 137.96, "list_price": 252.56, "l12_qty": 49.0, "l12_rev": 12375.44, "l12_cost": 6760.04, "l12_profit": 5615.4, "l12_gm": 0.4538, "spa_price": 200.0, "spa_qty": 90.0, "spa_rev": 18000.0, "spa_profit": 5583.6, "spa_gm": 0.3102}, {"pn": "1476012180", "desc": "CYLINDER; WHEEL,RR BRK", "purchase": 114.36, "list_price": 193.68, "l12_qty": 77.0, "l12_rev": 14913.36, "l12_cost": 8805.72, "l12_profit": 6107.64, "l12_gm": 0.4095, "spa_price": 150.0, "spa_qty": 80.0, "spa_rev": 12000.0, "spa_profit": 2851.2, "spa_gm": 0.2376}, {"pn": "1476012190", "desc": "CYLINDER; WHEEL,RR BRK", "purchase": 114.36, "list_price": 193.68, "l12_qty": 101.0, "l12_rev": 19561.68, "l12_cost": 11550.36, "l12_profit": 8011.32, "l12_gm": 0.4095, "spa_price": 150.0, "spa_qty": 70.0, "spa_rev": 10500.0, "spa_profit": 2494.8, "spa_gm": 0.2376}, {"pn": "1876101141", "desc": "FILTER; ACL,INNER", "purchase": 9.46, "list_price": 14.8, "l12_qty": 890.0, "l12_rev": 13172.0, "l12_cost": 8419.4, "l12_profit": 4752.6, "l12_gm": 0.3608, "spa_price": 12.0, "spa_qty": 1200.0, "spa_rev": 14400.0, "spa_profit": 3048.0, "spa_gm": 0.2117}, {"pn": "5876100891", "desc": "PUMP ASM; WATER", "purchase": 24.6, "list_price": 41.66, "l12_qty": 43.0, "l12_rev": 1791.38, "l12_cost": 1057.8, "l12_profit": 733.58, "l12_gm": 0.4095, "spa_price": 50.0, "spa_qty": 35.0, "spa_rev": 1750.0, "spa_profit": 889.0, "spa_gm": 0.508}, {"pn": "5876102200", "desc": "ELEMENT KIT;FUEL FILTER", "purchase": 11.16, "list_price": 17.46, "l12_qty": 2039.0, "l12_rev": 35600.94, "l12_cost": 22755.24, "l12_profit": 12845.7, "l12_gm": 0.3608, "spa_price": 14.0, "spa_qty": 2300.0, "spa_rev": 32200.0, "spa_profit": 6532.0, "spa_gm": 0.2029}, {"pn": "5876102320", "desc": "CLUTCH KIT", "purchase": 107.08, "list_price": 167.52, "l12_qty": 325.0, "l12_rev": 54444.0, "l12_cost": 34801.0, "l12_profit": 19643.0, "l12_gm": 0.3608, "spa_price": 120.0, "spa_qty": 400.0, "spa_rev": 48000.0, "spa_profit": 5168.0, "spa_gm": 0.1077}, {"pn": "5876102820", "desc": "STARTER ASM", "purchase": 87.4, "list_price": 148.01, "l12_qty": 10.0, "l12_rev": 1480.1, "l12_cost": 874.0, "l12_profit": 606.1, "l12_gm": 0.4095, "spa_price": 135.0, "spa_qty": 45.0, "spa_rev": 6075.0, "spa_profit": 2142.0, "spa_gm": 0.3526}, {"pn": "5876102850", "desc": "ABSORBER ASM; SHOCK,FRT", "purchase": 10.56, "list_price": 17.88, "l12_qty": 260.0, "l12_rev": 4648.8, "l12_cost": 2745.6, "l12_profit": 1903.2, "l12_gm": 0.4094, "spa_price": 12.0, "spa_qty": 300.0, "spa_rev": 3600.0, "spa_profit": 432.0, "spa_gm": 0.12}, {"pn": "5878323991", "desc": "KING PIN KIT", "purchase": 39.98, "list_price": 62.55, "l12_qty": 70.0, "l12_rev": 4378.5, "l12_cost": 2798.6, "l12_profit": 1579.9, "l12_gm": 0.3608, "spa_price": 50.0, "spa_qty": 270.0, "spa_rev": 13500.0, "spa_profit": 2705.4, "spa_gm": 0.2004}, {"pn": "7551827563", "desc": "BUMPER ASM; FRT", "purchase": 125.27, "list_price": 218.21, "l12_qty": 20.0, "l12_rev": 4364.2, "l12_cost": 2505.4, "l12_profit": 1858.8, "l12_gm": 0.4259, "spa_price": 199.0, "spa_qty": 20.0, "spa_rev": 3980.0, "spa_profit": 1474.6, "spa_gm": 0.3705}, {"pn": "7552536820", "desc": "SENSOR; SHORT RANGE RADAR", "purchase": 151.76, "list_price": 277.82, "l12_qty": 40.0, "l12_rev": 11112.8, "l12_cost": 6070.4, "l12_profit": 5042.4, "l12_gm": 0.4537, "spa_price": 250.0, "spa_qty": 50.0, "spa_rev": 12500.0, "spa_profit": 4912.0, "spa_gm": 0.39296}, {"pn": "8972785830", "desc": "LAMP ASM; RR COMB", "purchase": 225.48, "list_price": 381.87, "l12_qty": 50.0, "l12_rev": 19093.5, "l12_cost": 11274.0, "l12_profit": 7819.5, "l12_gm": 0.4095, "spa_price": 250.0, "spa_qty": 50.0, "spa_rev": 12500.0, "spa_profit": 1226.0, "spa_gm": 0.09808}, {"pn": "8973871590", "desc": "ROTOR; SENSOR", "purchase": 24.12, "list_price": 44.16, "l12_qty": 25.0, "l12_rev": 1104.0, "l12_cost": 603.0, "l12_profit": 501.0, "l12_gm": 0.4538, "spa_price": 35.0, "spa_qty": 110.0, "spa_rev": 3850.0, "spa_profit": 1196.8, "spa_gm": 0.3109}, {"pn": "8976097887", "desc": "NOZZLE ASM; INJ", "purchase": 97.1, "list_price": 164.44, "l12_qty": 20.0, "l12_rev": 3288.8, "l12_cost": 1942.0, "l12_profit": 1346.8, "l12_gm": 0.4095, "spa_price": 150.0, "spa_qty": 70.0, "spa_rev": 10500.0, "spa_profit": 3703.0, "spa_gm": 0.3527}, {"pn": "8978416290", "desc": "PLATE; STEP", "purchase": 39.88, "list_price": 73.0, "l12_qty": 37.0, "l12_rev": 2701.0, "l12_cost": 1475.56, "l12_profit": 1225.44, "l12_gm": 0.4537, "spa_price": 250.0, "spa_qty": 50.0, "spa_rev": 12500.0, "spa_profit": 10506.0, "spa_gm": 0.84048}, {"pn": "8978757421", "desc": "LAMP ASM; HEAD", "purchase": 252.71, "list_price": 427.97, "l12_qty": 41.0, "l12_rev": 17546.77, "l12_cost": 10361.11, "l12_profit": 7185.66, "l12_gm": 0.4095, "spa_price": 300.0, "spa_qty": 40.0, "spa_rev": 12000.0, "spa_profit": 1891.6, "spa_gm": 0.1576}, {"pn": "8978757431", "desc": "LAMP ASM; HEAD", "purchase": 252.71, "list_price": 427.97, "l12_qty": 40.0, "l12_rev": 17118.8, "l12_cost": 10108.4, "l12_profit": 7010.4, "l12_gm": 0.4095, "spa_price": 300.0, "spa_qty": 40.0, "spa_rev": 12000.0, "spa_profit": 1891.6, "spa_gm": 0.1576}, {"pn": "8978862230", "desc": "BUMPER; FRT,LWR", "purchase": 21.71, "list_price": 37.81, "l12_qty": 40.0, "l12_rev": 1512.4, "l12_cost": 868.4, "l12_profit": 644.0, "l12_gm": 0.4258, "spa_price": 30.0, "spa_qty": 20.0, "spa_rev": 600.0, "spa_profit": 165.8, "spa_gm": 0.2763}, {"pn": "8980023462", "desc": "ELEMENT KIT; PCV", "purchase": 6.15, "list_price": 11.25, "l12_qty": 600.0, "l12_rev": 6750.0, "l12_cost": 3690.0, "l12_profit": 3060.0, "l12_gm": 0.4533, "spa_price": 5.0, "spa_qty": 1200.0, "spa_rev": 6000.0, "spa_profit": -1380.0, "spa_gm": -0.23}, {"pn": "8980067942", "desc": "LINK; DRAG", "purchase": 31.45, "list_price": 57.58, "l12_qty": 380.0, "l12_rev": 21880.4, "l12_cost": 11951.0, "l12_profit": 9929.4, "l12_gm": 0.4538, "spa_price": 40.0, "spa_qty": 460.0, "spa_rev": 18400.0, "spa_profit": 3933.0, "spa_gm": 0.21375}, {"pn": "8980252486", "desc": "COOLER ASM; EGR", "purchase": 121.61, "list_price": 222.62, "l12_qty": 145.0, "l12_rev": 32279.9, "l12_cost": 17633.45, "l12_profit": 14646.45, "l12_gm": 0.4537, "spa_price": 145.0, "spa_qty": 200.0, "spa_rev": 29000.0, "spa_profit": 4678.0, "spa_gm": 0.1613}, {"pn": "8980253080", "desc": "CYLINDER ASM; CLUTCH MASTER", "purchase": 19.05, "list_price": 32.26, "l12_qty": 10.0, "l12_rev": 322.6, "l12_cost": 190.5, "l12_profit": 132.1, "l12_gm": 0.4095, "spa_price": 25.0, "spa_qty": 50.0, "spa_rev": 1250.0, "spa_profit": 297.5, "spa_gm": 0.238}, {"pn": "8980435960", "desc": "CHAMBER; POWER", "purchase": 20.19, "list_price": 36.96, "l12_qty": 85.0, "l12_rev": 3141.6, "l12_cost": 1716.15, "l12_profit": 1425.45, "l12_gm": 0.4537, "spa_price": 26.0, "spa_qty": 100.0, "spa_rev": 2600.0, "spa_profit": 581.0, "spa_gm": 0.2235}, {"pn": "8980896771", "desc": "CYLINDER; SLAVE,CLU", "purchase": 14.92, "list_price": 25.27, "l12_qty": 110.0, "l12_rev": 2779.7, "l12_cost": 1641.2, "l12_profit": 1138.5, "l12_gm": 0.4096, "spa_price": 20.0, "spa_qty": 120.0, "spa_rev": 2400.0, "spa_profit": 609.6, "spa_gm": 0.254}, {"pn": "8980982575", "desc": "VALVE; EGR", "purchase": 40.42, "list_price": 73.99, "l12_qty": 180.0, "l12_rev": 13318.2, "l12_cost": 7275.6, "l12_profit": 6042.6, "l12_gm": 0.4537, "spa_price": 68.0, "spa_qty": 200.0, "spa_rev": 13600.0, "spa_profit": 5516.0, "spa_gm": 0.4056}, {"pn": "8981065790", "desc": "ELEMENT KIT; PCV", "purchase": 4.23, "list_price": 7.74, "l12_qty": 4220.0, "l12_rev": 32662.8, "l12_cost": 17850.6, "l12_profit": 14812.2, "l12_gm": 0.4535, "spa_price": 4.9, "spa_qty": 2600.0, "spa_rev": 12740.0, "spa_profit": 1742.0, "spa_gm": 0.1367}, {"pn": "8981454841", "desc": "OVERHAUL KIT; SUPPLY PUMP", "purchase": 44.34, "list_price": 81.17, "l12_qty": 4.0, "l12_rev": 324.68, "l12_cost": 177.36, "l12_profit": 147.32, "l12_gm": 0.4537, "spa_price": 70.0, "spa_qty": 40.0, "spa_rev": 2800.0, "spa_profit": 1026.4, "spa_gm": 0.3666}, {"pn": "8981455011", "desc": "OVERHAUL KIT; SUPPLY PUMP", "purchase": 27.78, "list_price": 50.86, "l12_qty": 260.0, "l12_rev": 13223.6, "l12_cost": 7222.8, "l12_profit": 6000.8, "l12_gm": 0.4538, "spa_price": 40.0, "spa_qty": 310.0, "spa_rev": 12400.0, "spa_profit": 3788.2, "spa_gm": 0.3055}, {"pn": "8982127181", "desc": "COOLER ASM; EGR", "purchase": 121.61, "list_price": 222.62, "l12_qty": 55.0, "l12_rev": 12244.1, "l12_cost": 6688.55, "l12_profit": 5555.55, "l12_gm": 0.4537, "spa_price": 145.0, "spa_qty": 200.0, "spa_rev": 29000.0, "spa_profit": 4678.0, "spa_gm": 0.1613}, {"pn": "8982236150", "desc": "LAMP ASM; RR COMB", "purchase": 19.51, "list_price": 33.03, "l12_qty": 140.0, "l12_rev": 4624.2, "l12_cost": 2731.4, "l12_profit": 1892.8, "l12_gm": 0.4093, "spa_price": 25.0, "spa_qty": 110.0, "spa_rev": 2750.0, "spa_profit": 603.9, "spa_gm": 0.2196}, {"pn": "8982236160", "desc": "LAMP ASM; RR COMB", "purchase": 19.51, "list_price": 33.03, "l12_qty": 102.0, "l12_rev": 3369.06, "l12_cost": 1990.02, "l12_profit": 1379.04, "l12_gm": 0.4093, "spa_price": 25.0, "spa_qty": 100.0, "spa_rev": 2500.0, "spa_profit": 549.0, "spa_gm": 0.2196}, {"pn": "8982263230", "desc": "REPAIR KIT; AIR DRYER", "purchase": 51.54, "list_price": 87.29, "l12_qty": 115.0, "l12_rev": 10038.35, "l12_cost": 5927.1, "l12_profit": 4111.25, "l12_gm": 0.4096, "spa_price": 78.0, "spa_qty": 330.0, "spa_rev": 25740.0, "spa_profit": 8731.8, "spa_gm": 0.3392}, {"pn": "8982263280", "desc": "REPAIR KIT; AIR DRYER", "purchase": 59.52, "list_price": 100.8, "l12_qty": 60.0, "l12_rev": 6048.0, "l12_cost": 3571.2, "l12_profit": 2476.8, "l12_gm": 0.4095, "spa_price": 90.0, "spa_qty": 230.0, "spa_rev": 20700.0, "spa_profit": 7010.4, "spa_gm": 0.3387}, {"pn": "8982447940", "desc": "PAD KIT; CALIPER,DISC BRK,FRT", "purchase": 49.01, "list_price": 76.68, "l12_qty": 530.0, "l12_rev": 40640.4, "l12_cost": 25975.3, "l12_profit": 14665.1, "l12_gm": 0.3609, "spa_price": 65.0, "spa_qty": 780.0, "spa_rev": 50700.0, "spa_profit": 12472.2, "spa_gm": 0.246}, {"pn": "8982605971", "desc": "DOOR ASM; FRT,WO/TRIM", "purchase": 209.83, "list_price": 365.5, "l12_qty": 21.0, "l12_rev": 7675.5, "l12_cost": 4406.43, "l12_profit": 3269.07, "l12_gm": 0.4259, "spa_price": 280.0, "spa_qty": 30.0, "spa_rev": 8400.0, "spa_profit": 2105.1, "spa_gm": 0.2506}, {"pn": "8982605980", "desc": "DOOR ASM; FRT,WO/TRIM", "purchase": 209.83, "list_price": 365.5, "l12_qty": 19.0, "l12_rev": 6944.5, "l12_cost": 3986.77, "l12_profit": 2957.73, "l12_gm": 0.4259, "spa_price": 280.0, "spa_qty": 30.0, "spa_rev": 8400.0, "spa_profit": 2105.1, "spa_gm": 0.2506}, {"pn": "8982606011", "desc": "DOOR ASM; FRT,WO/TRIM", "purchase": 118.1, "list_price": 205.72, "l12_qty": 36.0, "l12_rev": 7405.92, "l12_cost": 4251.6, "l12_profit": 3154.32, "l12_gm": 0.4259, "spa_price": 165.0, "spa_qty": 50.0, "spa_rev": 8250.0, "spa_profit": 2345.0, "spa_gm": 0.2842}, {"pn": "8982606020", "desc": "DOOR ASM; FRT,WO/TRIM", "purchase": 118.1, "list_price": 205.72, "l12_qty": 33.0, "l12_rev": 6788.76, "l12_cost": 3897.3, "l12_profit": 2891.46, "l12_gm": 0.4259, "spa_price": 165.0, "spa_qty": 45.0, "spa_rev": 7425.0, "spa_profit": 2110.5, "spa_gm": 0.2842}, {"pn": "8982885020", "desc": "GASKET; CYL HD", "purchase": 16.88, "list_price": 28.59, "l12_qty": 7.0, "l12_rev": 200.13, "l12_cost": 118.16, "l12_profit": 81.97, "l12_gm": 0.4096, "spa_price": 22.0, "spa_qty": 65.0, "spa_rev": 1430.0, "spa_profit": 332.8, "spa_gm": 0.2327}, {"pn": "8982885030", "desc": "GASKET; CYL HD", "purchase": 16.88, "list_price": 28.59, "l12_qty": 10.0, "l12_rev": 285.9, "l12_cost": 168.8, "l12_profit": 117.1, "l12_gm": 0.4096, "spa_price": 22.0, "spa_qty": 60.0, "spa_rev": 1320.0, "spa_profit": 307.2, "spa_gm": 0.2327}, {"pn": "8982979331", "desc": "NOZZLE ASM; INJ", "purchase": 102.7, "list_price": 173.93, "l12_qty": 138.0, "l12_rev": 24002.34, "l12_cost": 14172.6, "l12_profit": 9829.74, "l12_gm": 0.4095, "spa_price": 145.0, "spa_qty": 130.0, "spa_rev": 18850.0, "spa_profit": 5499.0, "spa_gm": 0.2917}, {"pn": "8982984040", "desc": "ELEMENT; OIL FILTER", "purchase": 7.84, "list_price": 12.26, "l12_qty": 4640.0, "l12_rev": 56886.4, "l12_cost": 36377.6, "l12_profit": 20508.8, "l12_gm": 0.3605, "spa_price": 10.0, "spa_qty": 4200.0, "spa_rev": 42000.0, "spa_profit": 9072.0, "spa_gm": 0.216}, {"pn": "8982987510", "desc": "SWITCH; POWER WINDOW", "purchase": 29.57, "list_price": 54.13, "l12_qty": 32.0, "l12_rev": 1732.16, "l12_cost": 946.24, "l12_profit": 785.92, "l12_gm": 0.4537, "spa_price": 42.0, "spa_qty": 100.0, "spa_rev": 4200.0, "spa_profit": 1243.0, "spa_gm": 0.2960}, {"pn": "8983034650", "desc": "CALIPER; FRT DISC BRK", "purchase": 99.6, "list_price": 182.33, "l12_qty": 6.0, "l12_rev": 1093.98, "l12_cost": 597.6, "l12_profit": 496.38, "l12_gm": 0.4537, "spa_price": 135.0, "spa_qty": 20.0, "spa_rev": 2700.0, "spa_profit": 708.0, "spa_gm": 0.2622}, {"pn": "8983034660", "desc": "CALIPER; FRT DISC BRK", "purchase": 99.6, "list_price": 182.33, "l12_qty": 6.0, "l12_rev": 1093.98, "l12_cost": 597.6, "l12_profit": 496.38, "l12_gm": 0.4537, "spa_price": 135.0, "spa_qty": 20.0, "spa_rev": 2700.0, "spa_profit": 708.0, "spa_gm": 0.2622}, {"pn": "8983034670", "desc": "CALIPER; RR DISC BRK", "purchase": 97.69, "list_price": 178.83, "l12_qty": 32.0, "l12_rev": 5722.56, "l12_cost": 3126.08, "l12_profit": 2596.48, "l12_gm": 0.4537, "spa_price": 148.0, "spa_qty": 65.0, "spa_rev": 9620.0, "spa_profit": 3270.15, "spa_gm": 0.3399}, {"pn": "8983034680", "desc": "CALIPER; RR DISC BRK", "purchase": 97.69, "list_price": 178.83, "l12_qty": 55.0, "l12_rev": 9835.65, "l12_cost": 5372.95, "l12_profit": 4462.7, "l12_gm": 0.4537, "spa_price": 148.0, "spa_qty": 50.0, "spa_rev": 7400.0, "spa_profit": 2515.5, "spa_gm": 0.3399}, {"pn": "8983064750", "desc": "NOZZLE ASM; INJ", "purchase": 102.7, "list_price": 173.93, "l12_qty": 117.0, "l12_rev": 20349.81, "l12_cost": 12015.9, "l12_profit": 8333.91, "l12_gm": 0.4095, "spa_price": 150.0, "spa_qty": 60.0, "spa_rev": 9000.0, "spa_profit": 2838.0, "spa_gm": 0.3153}, {"pn": "8983487480", "desc": "CHAMBER; POWER", "purchase": 32.83, "list_price": 60.1, "l12_qty": 328.0, "l12_rev": 19712.8, "l12_cost": 10768.24, "l12_profit": 8944.56, "l12_gm": 0.4537, "spa_price": 55.0, "spa_qty": 350.0, "spa_rev": 19250.0, "spa_profit": 7759.5, "spa_gm": 0.4031}, {"pn": "8983528481", "desc": "SENSOR; NOX", "purchase": 121.42, "list_price": 222.27, "l12_qty": 630.0, "l12_rev": 140030.1, "l12_cost": 76494.6, "l12_profit": 63535.5, "l12_gm": 0.4537, "spa_price": 205.0, "spa_qty": 450.0, "spa_rev": 92250.0, "spa_profit": 37611.0, "spa_gm": 0.4077}]};
+
+const L12_TOT_REV    = 768615.47;
+const L12_TOT_PROFIT = 321115.54;
+
+// ── State ────────────────────────────────────────────────────────────────────
+let sortCol = -1, sortAsc = true;
+let computed = [];
+let barChart, gmChart, topChart, riskChart;
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+const fEuro = v => '€' + v.toLocaleString('en-GB', {minimumFractionDigits:0, maximumFractionDigits:0});
+const fPct  = v => (v*100).toFixed(1) + '%';
+const fPctR = v => v.toFixed(1) + '%';
+const gmClass = (gm, tgt) => gm >= tgt ? 'gm-ok' : gm >= tgt * 0.8 ? 'gm-warn' : 'gm-bad';
+
+// ── Core recalculation ───────────────────────────────────────────────────────
+function recalc() {
+  const real   = parseFloat(document.getElementById('sl-real').value) / 100;
+  const cut    = parseFloat(document.getElementById('sl-cut').value)  / 100;
+  const revTgt = parseFloat(document.getElementById('sl-rev').value)  * 1000;
+  const mgnTgt = parseFloat(document.getElementById('sl-mgn').value)  / 100;
+
+  // Update labels
+  document.getElementById('lbl-real').textContent = (real*100).toFixed(0) + '%';
+  document.getElementById('lbl-cut').textContent  = (cut*100).toFixed(1)  + '%';
+  document.getElementById('lbl-rev').textContent  = (revTgt/1000).toFixed(0);
+  document.getElementById('lbl-mgn').textContent  = (mgnTgt*100).toFixed(0) + '%';
+
+  let totRev=0, totProfit=0, totSac=0, totL12P=0;
+
+  computed = RAW.pns.map(p => {
+    const adjCost  = p.purchase * (1 - cut);
+    const runQty   = p.spa_qty  * real;
+    const runRev   = p.spa_price * runQty;
+    const runProfit= (p.spa_price - adjCost) * runQty;
+    const runGM    = runRev > 0 ? runProfit / runRev : 0;
+    const runSac   = p.purchase * cut * runQty;
+
+    totRev    += runRev;
+    totProfit += runProfit;
+    totSac    += runSac;
+    totL12P   += p.l12_profit;
+
+    return {...p, adjCost, runQty, runRev, runProfit, runGM, runSac};
+  });
+
+  const totGM   = totRev > 0 ? totProfit / totRev : 0;
+  const revDelta = totRev - revTgt;
+  const prdDelta = totProfit - L12_TOT_PROFIT;
+
+  // ── KPI cards ──
+  document.getElementById('kpi-rev').textContent  = fEuro(totRev);
+  const revDEl = document.getElementById('kpi-rev-d');
+  revDEl.textContent  = (revDelta >= 0 ? '▲ +' : '▼ ') + fEuro(Math.abs(revDelta)) + ' vs target';
+  revDEl.className    = 'kpi-delta ' + (revDelta >= 0 ? 'pos' : 'neg');
+  document.getElementById('kpi-rev-box').className = 'kpi ' + (revDelta >= 0 ? 'green' : 'red');
+
+  document.getElementById('kpi-prf').textContent  = fEuro(totProfit);
+  const prfDEl = document.getElementById('kpi-prf-d');
+  prfDEl.textContent  = (prdDelta >= 0 ? '▲ +' : '▼ ') + fEuro(Math.abs(prdDelta)) + ' vs L12';
+  prfDEl.className    = 'kpi-delta ' + (prdDelta >= 0 ? 'pos' : 'neg');
+
+  document.getElementById('kpi-gm').textContent   = fPct(totGM);
+  const gmDEl  = document.getElementById('kpi-gm-d');
+  gmDEl.textContent   = 'target: ' + (mgnTgt*100).toFixed(0) + '% | ' + (totGM >= mgnTgt ? '✔ above' : '✖ below');
+  gmDEl.className     = 'kpi-delta ' + (totGM >= mgnTgt ? 'pos' : 'neg');
+  document.getElementById('kpi-gm-box').className = 'kpi ' + (totGM >= mgnTgt ? 'green' : 'red');
+
+  document.getElementById('kpi-sac').textContent  = fEuro(totSac);
+  const sacPct = totRev > 0 ? totSac / totRev : 0;
+  document.getElementById('kpi-sac-d').textContent = fPct(sacPct) + ' of run-rate revenue';
+
+  // ── Charts ──
+  updateBarChart(totRev, totProfit, revTgt);
+  updateGMChart(mgnTgt);
+  updateTopChart();
+  updateRiskChart(mgnTgt);
+  renderTable(mgnTgt);
+}
+
+// ── Bar Chart ────────────────────────────────────────────────────────────────
+function updateBarChart(totRev, totProfit, revTgt) {
+  const data = {
+    labels: ['Revenue', 'Profit'],
+    datasets: [
+      { label: 'L12 Actual',    data: [L12_TOT_REV,    L12_TOT_PROFIT], backgroundColor: '#85929e', borderRadius: 4 },
+      { label: 'SPA Run Rate',  data: [totRev,          totProfit],      backgroundColor: '#2980b9', borderRadius: 4 },
+      { label: 'Target',        data: [revTgt,          null],           backgroundColor: '#e74c3c', borderRadius: 4 },
+    ]
+  };
+  if (barChart) { barChart.data = data; barChart.update(); return; }
+  barChart = new Chart(document.getElementById('chart-bar'), {
+    type: 'bar',
+    data,
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { font: { size: 10 }, boxWidth: 12 } } },
+      scales: { y: { ticks: { callback: v => '€' + (v/1000).toFixed(0) + 'K', font: { size: 10 } }, grid: { color: '#ecf0f1' } }, x: { ticks: { font: { size: 10 } } } }
+    }
+  });
+}
+
+// ── GM% Distribution Chart ───────────────────────────────────────────────────
+function updateGMChart(mgnTgt) {
+  const bins  = [[-1,0,'<0%'], [0,0.1,'0–10%'], [0.1,0.2,'10–20%'], [0.2,0.25,'20–25%'], [0.25,0.3,'25–30%'], [0.3,0.4,'30–40%'], [0.4,0.5,'40–50%'], [0.5,1,'50%+']];
+  const counts = bins.map(([lo,hi]) => computed.filter(p => p.runGM > lo && p.runGM <= hi).length);
+  const colors = bins.map(([lo,hi]) => hi <= mgnTgt ? '#e74c3c' : hi <= mgnTgt + 0.05 ? '#f39c12' : '#27ae60');
+
+  const data = { labels: bins.map(b=>b[2]), datasets: [{ data: counts, backgroundColor: colors, borderRadius: 4 }] };
+  if (gmChart) { gmChart.data = data; gmChart.update(); return; }
+  gmChart = new Chart(document.getElementById('chart-gm'), {
+    type: 'bar',
+    data,
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { ticks: { font: { size: 10 } }, title: { display: true, text: 'No. of PNs', font: { size: 10 } } }, x: { ticks: { font: { size: 10 } } } }
+    }
+  });
+}
+
+// ── Top 10 Revenue ───────────────────────────────────────────────────────────
+function updateTopChart() {
+  const top10 = [...computed].sort((a,b) => b.runRev - a.runRev).slice(0,10);
+  const data = {
+    labels: top10.map(p => p.pn.slice(-6)),
+    datasets: [{ label: 'Revenue', data: top10.map(p => p.runRev), backgroundColor: '#2980b9', borderRadius: 4 },
+               { label: 'Profit',  data: top10.map(p => Math.max(0, p.runProfit)), backgroundColor: '#27ae60', borderRadius: 4 }]
+  };
+  if (topChart) { topChart.data = data; topChart.update(); return; }
+  topChart = new Chart(document.getElementById('chart-top'), {
+    type: 'bar',
+    data,
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { font: { size: 10 }, boxWidth: 12 } } },
+      scales: { y: { ticks: { callback: v => '€' + (v/1000).toFixed(0) + 'K', font: { size: 10 } } }, x: { ticks: { font: { size: 9 } } } }
+    }
+  });
+}
+
+// ── Risk Chart (lines below target GM%) ─────────────────────────────────────
+function updateRiskChart(mgnTgt) {
+  const risk = [...computed].filter(p => p.runGM < mgnTgt).sort((a,b) => a.runGM - b.runGM).slice(0,15);
+  const data = {
+    labels: risk.map(p => p.pn.slice(-6)),
+    datasets: [{ label: 'GM%', data: risk.map(p => +(p.runGM*100).toFixed(1)),
+                 backgroundColor: risk.map(p => p.runGM < 0 ? '#c0392b' : p.runGM < mgnTgt*0.8 ? '#e74c3c' : '#f39c12'), borderRadius: 4 }]
+  };
+  if (riskChart) { riskChart.data = data; riskChart.update(); return; }
+  riskChart = new Chart(document.getElementById('chart-risk'), {
+    type: 'bar',
+    data,
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { callback: v => v+'%', font: { size: 10 } }, title: { display: true, text: 'GM%', font: { size: 10 } } },
+        y: { ticks: { font: { size: 9 } } }
+      }
+    }
+  });
+}
+
+// ── Table ────────────────────────────────────────────────────────────────────
+function renderTable(mgnTgt) {
+  let rows = [...computed];
+  if (sortCol >= 0) {
+    const keys = ['pn','desc','spa_price','runQty','runRev','adjCost','runProfit','runGM','runSac','_l12d'];
+    rows.sort((a,b) => {
+      const aV = sortCol === 9 ? a.runProfit - a.l12_profit : (typeof a[keys[sortCol]] === 'string' ? a[keys[sortCol]].localeCompare(b[keys[sortCol]]) : a[keys[sortCol]] - b[keys[sortCol]]);
+      const bV = sortCol === 9 ? b.runProfit - b.l12_profit : 0;
+      return sortCol === 9 ? (sortAsc ? aV - bV : bV - aV) : (sortAsc ? (typeof aV === 'number' ? aV : 0) : -(typeof aV === 'number' ? aV : 0));
+    });
+    if (sortCol !== 9) rows.sort((a,b) => {
+      const k = keys[sortCol];
+      const aV = typeof a[k] === 'string' ? a[k] : a[k];
+      const bV = typeof b[k] === 'string' ? b[k] : b[k];
+      if (typeof aV === 'string') return sortAsc ? aV.localeCompare(bV) : bV.localeCompare(aV);
+      return sortAsc ? aV - bV : bV - aV;
+    });
+  }
+
+  let below = 0;
+  const tbody = document.getElementById('tbl-body');
+  tbody.innerHTML = rows.map(p => {
+    const l12d = p.runProfit - p.l12_profit;
+    if (p.runGM < mgnTgt) below++;
+    const gmCls = gmClass(p.runGM, mgnTgt);
+    const barW  = Math.max(0, Math.min(100, p.runGM * 100));
+    return `<tr>
+      <td>${p.pn}</td>
+      <td>${p.desc}</td>
+      <td>${fEuro(p.spa_price)}</td>
+      <td>${p.runQty.toFixed(0)}</td>
+      <td>${fEuro(p.runRev)}</td>
+      <td>${fEuro(p.adjCost)}</td>
+      <td>${fEuro(p.runProfit)}</td>
+      <td class="${gmCls}">${fPct(p.runGM)}<span class="bar-wrap"><span class="bar-fill" style="width:${barW}%;background:${gmCls==='gm-ok'?'#27ae60':gmCls==='gm-warn'?'#f39c12':'#e74c3c'}"></span></span></td>
+      <td>${fEuro(p.runSac)}</td>
+      <td class="${l12d>=0?'gm-ok':'gm-bad'}">${l12d>=0?'▲ +':'▼ '}${fEuro(Math.abs(l12d))}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('tbl-below').textContent = `${below} of 53 lines below ${(mgnTgt*100).toFixed(0)}% target`;
+}
+
+// ── Sort ─────────────────────────────────────────────────────────────────────
+function sortTable(col) {
+  if (sortCol === col) sortAsc = !sortAsc; else { sortCol = col; sortAsc = col > 1; }
+  const mgnTgt = parseFloat(document.getElementById('sl-mgn').value) / 100;
+  renderTable(mgnTgt);
+}
+
+// ── Wire sliders ─────────────────────────────────────────────────────────────
+['sl-real','sl-cut','sl-rev','sl-mgn'].forEach(id => document.getElementById(id).addEventListener('input', recalc));
+
+// ── Init ─────────────────────────────────────────────────────────────────────
+recalc();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+---
+description: Tender Monitor v3 scraper and tender_data.json publish
+globs: Tools/ISZE_Tender_Monitor_Install/**
+alwaysApply: false
+---
+
+# ISZE Tender Monitor (v3)
+
+- **Live feed:** `Data/dashboards/tender_data.json` only.
+- **Pipeline:** `Tools/ISZE_Tender_Monitor_Install/` → `publish_tender.ps1`.
+- **Do not use:** root `tender scraper/` (v2) — deprecated; see `docs/REFERENCE.md`.
+- **Scheduled:** `isze-weekly-tender-scrape` under `Documents\Claude\Scheduled\`.

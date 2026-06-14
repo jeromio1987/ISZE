@@ -1,0 +1,154 @@
+================================================================================
+ISZE MEMORY REVIEW — Week 14, 2026
+Generated: 2026-03-30 (Monday)
+================================================================================
+
+## Memory Health
+
+No files are stale by the 3-week threshold. All project files show "Last validated:
+2026-03-24" — 6 days ago. The files are current, but two real inconsistencies exist
+between CLAUDE.md and the project files.
+
+INCONSISTENCY 1 — Oil filter capture rate (CLAUDE.md vs pms-coverage.md):
+CLAUDE.md still states: "N-series oil filter capture rate = very low (actual vs expected)." This figure was formally corrected in pms-coverage.md on 23 Mar
+2026 following the entity mapping fix (Cust 2574 = IUK, not ITUK).
+
+Correct figures now:
+  - CY2024 ITUK capture rate: 9.8% (~3,288 units / ~33,584 expected)
+  - CY2025 ITUK capture rate: 17.3% (~5,815 units / ~33,584 expected)
+
+The very low figure in CLAUDE.md is wrong and must be updated. It also appears verbatim
+in the W13 brief (22 Mar), which means the error has propagated into the
+market intelligence file too — flag only, do not auto-correct archived briefs.
+
+INCONSISTENCY 2 — Lubricants status (CLAUDE.md vs lubricants.md):
+CLAUDE.md states the Lubricants project is "Awaiting IML go-ahead." This is
+partially wrong. lubricants.md clarifies there are two distinct tracks:
+  - UMI/Shell channel: LIVE, recurring, signed MOU, included in FY26/27 plans
+  - BESCO/broader pilot: Awaiting IML formal sanction
+
+The CLAUDE.md entry conflates both tracks under a single "Awaiting" status, which
+undersells the existing live channel and may cause confusion in downstream work.
+
+INCONSISTENCY 3 — EV Readiness entry in CLAUDE.md:
+CLAUDE.md states "D-Max EV launch timeline unknown." W13 brief (23 Mar 2026)
+confirmed D-Max EV deliveries began in March 2026 in the UK. This is no longer
+unknown — it is live. The CLAUDE.md entry should be updated.
+
+INCONSISTENCY 4 — AIM CLAUDE.md note says "VKWRT + CY2024 still needed."
+CY2024 cross-validation is now confirmed (95% revenue coverage, 15 Mar 2026) per
+aftermarket-intelligence.md. The "CY2024" part of this note is outdated. VKWRT
+(SPA-adjusted scoring) is still genuinely needed. The note should read "VKWRT still
+needed" only.
+
+================================================================================
+
+## Open Items Still Unresolved
+
+CRITICAL — Lubricants / Yoshimoto reply (open since 4 Mar 2026 — 26 days):
+Yoshimoto-san (IML) explicitly asked: "How much profit does this €20K support bring
+to ISZE?" Jerome's reply on 4 Mar gave revenue/volume but NOT the GP answer.
+The answer is documented in memory: ~€57K gross / ~€37K net. This reply is
+overdue. If Yoshimoto is waiting for this before advancing the MOU review, the
+delay is compounding. There is no recorded update in lubricants.md since 24 Mar.
+
+Pricing 2026 / ITUK pricing discussion:
+  - No recorded response from James Marsh to the position paper
+  - No meeting scheduled with James Marsh
+  - "SAP login fix — available Monday from BVDB" was noted in competitiveness.md — if
+    written ~22 Mar, that Monday (23 Mar) has passed. No confirmation the CY2025
+    ITUK actuals were actually retrieved. Status unknown.
+  - Cross-distributor consistency check (Israel/CIS vs PR00 methodology) still
+    listed as needed but not confirmed done.
+  - Whether other DBs have formally accepted the +5.3% — no update.
+
+AIM (Aftermarket Intelligence):
+  - CY2025 sell-out not yet run through Parts Sales Classification engine — the
+    data is loaded (24 Mar) but the classification run is listed as "pending."
+  - Residual 5% of CY2024 (~€1.6M revenue) still not manually classified.
+  - VKWRT (net revenue field for SPA-adjusted scoring) still not loaded.
+  - IAM benchmark data not yet linked to competitiveness scoring.
+
+PMS Coverage:
+  - Full PMS basket gap revalidation using CY2025 data: pending.
+    Only the oil filter has been updated; the other PMS categories (fuel filter,
+    air filter, clutch, brake) have not been re-baselined on CY2025 actuals.
+  - ITUK PN-to-service-schedule mapping (EQ-HIT): still blocked. No update.
+
+FY2026 Year-End:
+  - FY2026 closes TODAY (31 Mar 2026). Actual VP sales vs target unknown.
+    ISZE_ActionPlan_FY2026_YearEndReview.docx exists on disk but its content
+    has not been reviewed or captured in memory. Kosha FY2026 target = €32.3M.
+    FY2025 actual = €32.5M. Whether FY2026 met, exceeded, or missed target is
+    not recorded.
+
+================================================================================
+
+## Suggested Updates
+
+1. CLAUDE.md — fix oil filter capture rate:
+   Replace:
+     "ITUK PMS gap = a material amount (recalculated 15 Mar — was ~€2.5M using Hasegawa
+      17,135). N-series oil filter capture rate = very low (actual vs expected)."
+   With:
+     "ITUK PMS gap = a material amount total basket (estimate — full revalidation pending).
+      Oil filter (PN 8982705240) ITUK capture rate: CY2024 = 9.8% (3,288 / 33,584
+      expected); CY2025 = 17.3% (5,815 / 33,584 expected). Improving but only 1 in
+      6 vehicles covered. Earlier very low figure was wrong (entity mapping error —
+      see pms-coverage.md correction 23 Mar 2026)."
+
+2. CLAUDE.md — fix Lubricants status:
+   Replace: "Lubricants project | Awaiting IML go-ahead | No formal sanction post
+   Feb 2026 MTG. BC v2 corrects volume (137,520L). Margin % still unverified."
+   With: "Lubricants project | UMI/Shell live; BESCO pilot awaiting IML | UMI/Shell
+   channel live (MOU signed, ~133,760L CY2025, ~13% GM, ~€57K gross / ~€37K net).
+   BESCO/broader pilot awaiting formal IML sanction post Feb 2026 MTG. Yoshimoto
+   GP reply overdue."
+
+3. CLAUDE.md — fix EV Readiness entry:
+   Replace: "D-Max EV launch timeline unknown"
+   With: "D-Max EV customer deliveries started UK March 2026 (dual-motor, 66.9kWh,
+   from £59,995). EV PNs in IE40 / EQ-HIT coverage: status unknown — verify with
+   IML."
+
+4. CLAUDE.md — fix AIM note:
+   Replace: "VKWRT + CY2024 still needed"
+   With: "VKWRT (SPA-adjusted scoring) still needed. CY2024 cross-validation done
+   (95% revenue coverage confirmed 15 Mar). CY2025 sell-out loaded but
+   classification run pending."
+
+5. Action item for Jerome — reply to Yoshimoto:
+   Draft and send reply with GP data: ~€57K gross / ~€37K net after €20K support.
+   This is already documented in lubricants.md. The reply is a 2-line email. Do it.
+
+6. FY2026 year-end — capture actuals:
+   Once the year-end VP sales figure is confirmed (BVDB / SAP), update CLAUDE.md
+   and action-plan-fy2026.md with: FY2026 actual vs €32.3M Kosha target.
+
+================================================================================
+
+## No Action Needed
+
+competitiveness.md — ITUK pricing discussion logic and FX documentation are solid and current.
+  Position paper complete. Defence stack documented. No update needed until ITUK
+  responds formally.
+
+pms-coverage.md — Cover ratio table (oil filter CY2025: 17.3% / 9.8%) is current
+  and consistent with aftermarket-intelligence.md. Dual-denominator logic (12,010
+  mapped fleet vs 22,389 DVLA) is clearly explained. No inconsistency.
+
+competitiveness.md — Dashboard v1 complete and calibrated. Findings consistent with
+  referenced data points in CLAUDE.md. No update needed.
+
+uio.md — DVLA data (22,389) correctly documented, Hasegawa model retirement noted.
+  FY2027 refresh is scheduled for April — appropriate timing.
+
+action-plan-fy2027.md — Correctly flagged as planning phase. April urgency noted in
+  the file. No factual errors. Jerome should review it now that FY2027 starts in 2 days.
+
+aftermarket-intelligence.md — Entity mapping correction (Cust 2574 = IUK) is clearly
+  documented and consistent with pms-coverage.md. No contradictions.
+
+================================================================================
+END — W14 2026 | Next run: Mon 6 Apr 2026
+================================================================================

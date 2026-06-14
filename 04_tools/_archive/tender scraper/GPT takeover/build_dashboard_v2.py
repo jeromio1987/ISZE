@@ -1,0 +1,1518 @@
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import sys
+from pathlib import Path
+from typing import Any, Dict, List
+
+# Windows fix: force UTF-8 output so special chars don't crash cmd.exe
+if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if sys.stderr.encoding and sys.stderr.encoding.lower() not in ("utf-8", "utf8"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+import openpyxl
+
+from isze_core_v3 import (
+    aggregate_opportunities,
+    meta_summary,
+    normalize_raw_row,
+    row_to_export,
+    source_label_from_sheet,
+)
+
+
+def load_rows_from_html(path: Path) -> List[Dict[str, Any]]:
+    text = path.read_text(encoding="utf-8")
+    match = re.search(r"const\s+ALL_ROWS\s*=\s*(\[.*?\]);\s*const\s+SCORE_STARS", text, re.S)
+    if not match:
+        raise ValueError("Could not find embedded ALL_ROWS data in HTML file.")
+    return json.loads(match.group(1))
+
+
+def load_rows_from_xlsx(path: Path) -> List[Dict[str, Any]]:
+    wb = openpyxl.load_workbook(path, data_only=True)
+    rows: List[Dict[str, Any]] = []
+    for sheet_name in wb.sheetnames:
+        ws = wb[sheet_name]
+        values = list(ws.iter_rows(values_only=True))
+        if not values:
+            continue
+        headers = [str(h).strip() if h is not None else "" for h in values[0]]
+        for raw_row in values[1:]:
+            if not any(raw_row):
+                continue
+            row = {headers[i]: raw_row[i] for i in range(min(len(headers), len(raw_row)))}
+            if len(headers) == 1 and isinstance(raw_row[0], str) and raw_row[0].lower().startswith("no "):
+                continue
+            if str(row.get("Title", "")).lower().startswith("no "):
+                continue
+            row["_source"] = source_label_from_sheet(sheet_name)
+            rows.append(row)
+    return rows
+
+
+def load_input_rows(path: Path) -> List[Dict[str, Any]]:
+    suffix = path.suffix.lower()
+    if suffix == ".html":
+        return load_rows_from_html(path)
+    if suffix == ".xlsx":
+        return load_rows_from_xlsx(path)
+    raise ValueError(f"Unsupported input format: {suffix}")
+
+
+HTML_TEMPLATE = r'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISZE Tender OS v2</title>
+<style>
+  :root {
+    --bg: #f3f5f8;
+    --panel: #ffffff;
+    --ink: #172033;
+    --muted: #697386;
+    --line: #e7ebf0;
+    --brand: #123a6d;
+    --brand2: #1a73e8;
+    --green: #15803d;
+    --amber: #c77a00;
+    --red: #c2410c;
+    --gray: #6b7280;
+    --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  a { color: var(--brand2); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  header {
+    background: linear-gradient(135deg, #152441 0%, #123a6d 52%, #1f5ca8 100%);
+    color: white;
+    padding: 24px 30px;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 15;
+  }
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .title-wrap h1 { margin: 0; font-size: 1.75rem; }
+  .title-wrap p { margin: 6px 0 0; opacity: 0.82; font-size: 0.92rem; }
+  .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  button, select, input, textarea {
+    font: inherit;
+  }
+  .btn {
+    border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(255,255,255,0.12);
+    color: white;
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .btn.secondary {
+    background: white;
+    color: var(--brand);
+    border-color: transparent;
+  }
+  .btn:hover { filter: brightness(1.03); }
+  .toolbar {
+    padding: 18px 30px 0;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tab {
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: white;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .tab.active {
+    background: var(--brand);
+    color: white;
+    border-color: var(--brand);
+  }
+  .toolbar .spacer { flex: 1; }
+  .toolbar .inline-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .toolbar select, .toolbar input {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: var(--ink);
+  }
+  main {
+    padding: 20px 30px 34px;
+  }
+  .view { display: none; }
+  .view.active { display: block; }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+  .card, .panel {
+    background: var(--panel);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(15,23,42,0.04);
+  }
+  .card {
+    padding: 18px 18px 16px;
+  }
+  .card .eyebrow {
+    color: var(--muted);
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .card .big {
+    margin-top: 6px;
+    font-size: 1.9rem;
+    font-weight: 800;
+  }
+  .card .sub {
+    margin-top: 6px;
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.95fr);
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .panel {
+    padding: 16px 18px;
+    overflow: hidden;
+  }
+  .panel h2, .panel h3 {
+    margin: 0 0 12px;
+    font-size: 1rem;
+  }
+  .panel .subtle {
+    color: var(--muted);
+    font-size: 0.84rem;
+    margin-bottom: 10px;
+  }
+  .panel-inner-scroll {
+    max-height: 420px;
+    overflow: auto;
+  }
+  .bars { display: grid; gap: 10px; }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 132px 1fr 48px;
+    gap: 10px;
+    align-items: center;
+    font-size: 0.86rem;
+  }
+  .bar-track {
+    height: 10px;
+    background: #eef2f7;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand), var(--brand2));
+    border-radius: 999px;
+  }
+  .quadrant-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .quad {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    background: #fbfcfe;
+  }
+  .quad strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .quad p { margin: 0; color: var(--muted); font-size: 0.84rem; }
+  .matrix-wrap {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    background: linear-gradient(180deg, rgba(18,58,109,0.02), rgba(26,115,232,0.02));
+  }
+  .matrix-labels {
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin: 4px 4px 8px;
+  }
+  .list-clean {
+    display: grid;
+    gap: 10px;
+  }
+  .item {
+    display: grid;
+    gap: 4px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: #fcfdff;
+  }
+  .item .line-1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .item .line-2 {
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 0.74rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  .pill.decision-Attack { background: #e7f6ed; color: #126936; }
+  .pill.decision-Selective { background: #fff6db; color: #9a6400; }
+  .pill.decision-Watch { background: #eaf2ff; color: #1f5ca8; }
+  .pill.decision-Ignore { background: #f3f4f6; color: #6b7280; }
+  .pill.urgency-critical { background: #ffede8; color: #b93815; }
+  .pill.urgency-soon { background: #fff3df; color: #b66a00; }
+  .pill.urgency-ok { background: #eaf6ee; color: #19713d; }
+  .pill.urgency-none, .pill.urgency-expired { background: #f3f4f6; color: #6b7280; }
+  .pill.evidence-High { background: #eaf6ee; color: #19713d; }
+  .pill.evidence-Medium { background: #fff3df; color: #b66a00; }
+  .pill.evidence-Low { background: #ffede8; color: #b93815; }
+  .pill.tier-large { background: #e7f6ed; color: #126936; }
+  .pill.tier-medium { background: #fff3df; color: #b66a00; }
+  .pill.tier-small { background: #eaf2ff; color: #1f5ca8; }
+  .pill.tier-micro, .pill.tier-unknown { background: #f3f4f6; color: #6b7280; }
+  .pill.lifecycle-competition { background: #edf4ff; color: #1f5ca8; }
+  .pill.lifecycle-planning { background: #efe9ff; color: #6d28d9; }
+  .pill.lifecycle-result { background: #fff1f2; color: #be123c; }
+  .pill.lifecycle-completion { background: #e8fff8; color: #0f766e; }
+  .pill.lifecycle-change { background: #fff7ed; color: #c2410c; }
+  .filter-panel {
+    margin-bottom: 14px;
+    padding: 14px;
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .filter-panel input, .filter-panel select {
+    width: 100%;
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .filter-wide { grid-column: span 2; }
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .table-wrap {
+    overflow: auto;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: white;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #f8fafc;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.7rem;
+    padding: 11px 12px;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+    white-space: nowrap;
+  }
+  td {
+    padding: 11px 12px;
+    border-bottom: 1px solid #eef2f7;
+    vertical-align: top;
+  }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover td { background: #fbfdff; }
+  .title-cell {
+    min-width: 300px;
+    max-width: 420px;
+  }
+  .muted { color: var(--muted); }
+  .tiny { font-size: 0.74rem; }
+  .score-stack {
+    display: grid;
+    gap: 4px;
+    min-width: 84px;
+  }
+  .mini-bar {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+  .mini-track {
+    height: 7px;
+    background: #eef2f7;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .mini-fill { height: 100%; background: linear-gradient(90deg, var(--brand), var(--brand2)); }
+  .notice-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f3f6fa;
+    border-radius: 999px;
+    padding: 4px 8px;
+    font-size: 0.74rem;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(520px, 100%);
+    height: 100vh;
+    background: white;
+    box-shadow: -10px 0 24px rgba(15,23,42,0.12);
+    transform: translateX(100%);
+    transition: transform 0.18s ease;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-head {
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .drawer-body {
+    padding: 18px;
+    overflow: auto;
+    display: grid;
+    gap: 16px;
+  }
+  .drawer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .kv {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px;
+    background: #fbfcfe;
+  }
+  .kv .k { color: var(--muted); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.05em; }
+  .kv .v { margin-top: 4px; font-weight: 700; }
+  .edit-grid {
+    display: grid;
+    gap: 10px;
+  }
+  .edit-grid label { display: grid; gap: 6px; font-size: 0.84rem; }
+  .edit-grid select, .edit-grid input, .edit-grid textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: white;
+  }
+  .edit-grid textarea { min-height: 98px; resize: vertical; }
+  .help {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+  .drawer-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn-dark {
+    background: var(--brand);
+    color: white;
+    border: 1px solid var(--brand);
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .btn-ghost {
+    background: white;
+    color: var(--brand);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .note {
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #f8fbff;
+    border: 1px dashed #cfe0fa;
+    color: var(--muted);
+    font-size: 0.84rem;
+  }
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.28);
+    z-index: 25;
+  }
+  .overlay.open { display: block; }
+  @media (max-width: 1180px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .filter-panel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 760px) {
+    header, .toolbar, main { padding-left: 16px; padding-right: 16px; }
+    .filter-panel { grid-template-columns: 1fr; }
+    .filter-wide { grid-column: span 1; }
+    .bar-row { grid-template-columns: 90px 1fr 36px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <div class="title-wrap">
+      <h1>🚛 ISZE Tender OS v2</h1>
+      <p>Decision-ready tender intelligence with opportunity families, fit/win/economics scoring, action queue, and local workflow notes.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn secondary" onclick="exportCurrentView()">⬇ Export current view</button>
+      <button class="btn" onclick="downloadData()">⬇ Export JSON</button>
+    </div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="tabs">
+    <button class="tab active" data-view="executive" onclick="switchView('executive')">Executive</button>
+    <button class="tab" data-view="bidDesk" onclick="switchView('bidDesk')">Bid Desk</button>
+    <button class="tab" data-view="pipeline" onclick="switchView('pipeline')">Opportunity Pipeline</button>
+    <button class="tab" data-view="scoring" onclick="switchView('scoring')">📖 Scoring Guide</button>
+  </div>
+  <div class="spacer"></div>
+  <div class="inline-group">
+    <label class="muted tiny">Dataset</label>
+    <select id="datasetMode" onchange="setDatasetMode(this.value)">
+      <option value="opportunities">Opportunity families</option>
+      <option value="notices">Raw notices</option>
+    </select>
+  </div>
+  <div class="inline-group">
+    <label class="muted tiny">Sort</label>
+    <select id="sortMode" onchange="updatePipeline()">
+      <option value="priority">Priority</option>
+      <option value="deadline">Nearest deadline</option>
+      <option value="value">Highest value</option>
+      <option value="fit">Strategic fit</option>
+      <option value="win">Win feasibility</option>
+      <option value="econ">Economic attractiveness</option>
+      <option value="evidence">Evidence confidence</option>
+      <option value="buyer">Buyer A–Z</option>
+    </select>
+  </div>
+</div>
+
+<main>
+  <section class="view active" id="view-executive"></section>
+  <section class="view" id="view-bidDesk"></section>
+  <section class="view" id="view-scoring"></section>
+  <section class="view" id="view-pipeline">
+    <div class="panel filter-panel">
+      <input id="qSearch" class="filter-wide" type="text" placeholder="Search title, buyer, country, CPV, note..." oninput="updatePipeline()">
+      <select id="fDecision" onchange="updatePipeline()"></select>
+      <select id="fSource" onchange="updatePipeline()"></select>
+      <select id="fCountry" onchange="updatePipeline()"></select>
+      <select id="fOwner" onchange="updatePipeline()"></select>
+      <select id="fStatus" onchange="updatePipeline()"></select>
+      <select id="fUrgency" onchange="updatePipeline()">
+        <option value="active" selected>Active only (hide expired)</option>
+        <option value="">All urgency incl. expired</option>
+        <option value="critical">Critical (&lt;7 days)</option>
+        <option value="soon">Soon (7–21 days)</option>
+        <option value="ok">Later (&gt;21 days)</option>
+        <option value="none">No deadline</option>
+        <option value="expired">Expired only</option>
+      </select>
+      <select id="fTier" onchange="updatePipeline()">
+        <option value="">All value tiers</option>
+        <option value="large">Large</option>
+        <option value="medium">Medium</option>
+        <option value="small">Small</option>
+        <option value="micro">Micro</option>
+        <option value="unknown">Unknown</option>
+      </select>
+      <select id="fLifecycle" onchange="updatePipeline()">
+        <option value="">All lifecycle</option>
+        <option value="planning">Planning</option>
+        <option value="competition">Competition</option>
+        <option value="change">Change</option>
+        <option value="result">Result</option>
+        <option value="completion">Completion</option>
+      </select>
+      <select id="fEvidence" onchange="updatePipeline()">
+        <option value="">All evidence</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+      <select id="fPartsSignal" onchange="updatePipeline()">
+        <option value="">All types</option>
+        <option value="1">⚙️ Parts / Maintenance signal</option>
+        <option value="0">Vehicle procurement only</option>
+      </select>
+      <select id="fRmContract" onchange="updatePipeline()">
+        <option value="">All contracts</option>
+        <option value="1">🔧 R&amp;M contracts only</option>
+      </select>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <h2 style="margin-bottom:4px">Opportunity pipeline</h2>
+          <div class="subtle" id="pipelineMeta"></div>
+        </div>
+        <div class="note">Edits to owner, status, next action, internal due date, and notes are stored locally in your browser.</div>
+      </div>
+      <div class="table-wrap"><table id="pipelineTable"></table></div>
+    </div>
+  </section>
+</main>
+
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer"></aside>
+
+<script>
+const DATA = __DATA__;
+const STORAGE_KEY = 'iszeTenderOSv2Overrides';
+// Raw notices are not embedded in this HTML to keep file size manageable.
+// They are fetched from the companion JSON file when the user switches to
+// "Raw notices" mode. This fetch only works when the files are served (not
+// opened directly as file://). For local use, keep both files in the same folder
+// and open via a local server, or just use the XLSX output from the scraper.
+let _noticesLoaded = false;
+async function ensureNoticesLoaded() {
+  if (_noticesLoaded || DATA.notices.length > 0) { _noticesLoaded = true; return true; }
+  try {
+    const resp = await fetch('isze_dashboard_v2_data.json');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const full = await resp.json();
+    DATA.notices = full.notices || [];
+    _noticesLoaded = true;
+    return true;
+  } catch(e) {
+    console.warn('Could not load notices from JSON file:', e.message);
+    return false;
+  }
+}
+let overrides = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+let state = {
+  view: 'executive',
+  datasetMode: 'opportunities',
+  selectedId: null,
+};
+
+const DECISION_RANK = {Attack: 0, Selective: 1, Watch: 2, Ignore: 3};
+const URGENCY_RANK = {critical: 0, soon: 1, ok: 2, none: 3, expired: 4};
+const TIER_RANK = {large: 0, medium: 1, small: 2, micro: 3, unknown: 4};
+
+function esc(v) {
+  return String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function n(v) { return Number(v || 0); }
+function fmtCount(v) { return new Intl.NumberFormat('en-GB').format(v || 0); }
+function fmtDate(s) { return s ? s : '—'; }
+function fmtMoney(v, ccy) {
+  if (v === null || v === undefined || v === '') return '—';
+  const currency = ccy || 'EUR';
+  try {
+    return new Intl.NumberFormat('en-GB', {style:'currency', currency, maximumFractionDigits:0}).format(v);
+  } catch (err) {
+    return `${currency} ${new Intl.NumberFormat('en-GB', {maximumFractionDigits:0}).format(v)}`;
+  }
+}
+function pill(text, cls) { return `<span class="pill ${cls}">${esc(text)}</span>`; }
+function decisionPill(v) { return pill(v, `decision-${v}`); }
+function urgencyPill(v) { return pill(v === 'ok' ? 'later' : v, `urgency-${v}`); }
+function evidencePill(v) { return pill(v, `evidence-${v}`); }
+function tierPill(v) { return pill(v, `tier-${v}`); }
+function lifecyclePill(v) { return pill(v, `lifecycle-${v}`); }
+
+function currentOverrides(id) {
+  return overrides[id] || {};
+}
+function saveOverrides() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+}
+function mergeOpportunity(row) {
+  const ov = currentOverrides(row.opportunity_id);
+  return {
+    ...row,
+    owner: ov.owner || row.owner_suggested || 'Unassigned',
+    status: ov.status || row.status_suggested || 'Watch',
+    next_action: ov.next_action || row.next_action_suggested || '',
+    internal_due: ov.internal_due || '',
+    notes: ov.notes || '',
+  };
+}
+function mergeNotice(row) {
+  const ov = currentOverrides(row.opportunity_id);
+  return {
+    ...row,
+    country: row.Country,
+    title: row['Title Compact'] || row.Title,
+    buyer: row.Buyer,
+    sources: [row.Source].filter(Boolean),
+    source_count: row.Source ? 1 : 0,
+    notice_count: 1,
+    decision: row.decision,
+    fit_score: row.fit_score,
+    win_score: row.win_score,
+    econ_score: row.econ_score,
+    opportunity_score: Math.round((n(row.fit_score) * 0.4) + (n(row.win_score) * 0.3) + (n(row.econ_score) * 0.3)),
+    urgency: row.urgency,
+    tier: row.tier,
+    evidence_label: row.evidence_label,
+    value_amount: row.value_amount,
+    currency: row.Currency,
+    lifecycle: row.Lifecycle,
+    published_latest: row['Published Date'],
+    deadline_date: row['Deadline Date'],
+    owner: ov.owner || row.owner_suggested || 'Unassigned',
+    status: ov.status || row.status_suggested || 'Watch',
+    next_action: ov.next_action || row.next_action_suggested || '',
+    internal_due: ov.internal_due || '',
+    notes: ov.notes || '',
+    data_gaps: row.data_gaps || [],
+    score_drivers: row.score_drivers || [],
+    duplicate_count: 0,
+    url: row.URL,
+    source_notice_ids: [row['Source Notice ID']].filter(Boolean),
+    notices: [{
+      source: row.Source,
+      source_notice_id: row['Source Notice ID'],
+      title: row.Title,
+      buyer: row.Buyer,
+      published_date: row['Published Date'],
+      deadline_date: row['Deadline Date'],
+      urgency: row.urgency,
+      value_amount: row.value_amount,
+      currency: row.Currency,
+      lifecycle: row.Lifecycle,
+      notice_type: row['Notice Type'],
+      url: row.URL,
+    }],
+  };
+}
+function getOpportunities() { return DATA.opportunities.map(mergeOpportunity); }
+function getNotices() { return DATA.notices.map(mergeNotice); }
+function currentRows() { return state.datasetMode === 'opportunities' ? getOpportunities() : getNotices(); }
+
+function optionHtml(values, firstLabel) {
+  const opts = [`<option value="">${esc(firstLabel)}</option>`];
+  values.forEach(v => opts.push(`<option value="${esc(v)}">${esc(v)}</option>`));
+  return opts.join('');
+}
+function populateFilters() {
+  const opps = getOpportunities();
+  const decisions = [...new Set(opps.map(r => r.decision))].sort((a,b) => (DECISION_RANK[a] ?? 9) - (DECISION_RANK[b] ?? 9));
+  const sources = [...new Set(DATA.notices.map(r => r.Source).filter(Boolean))].sort();
+  const countries = [...new Set(opps.map(r => r.country).filter(Boolean))].sort();
+  const owners = [...new Set(opps.map(r => r.owner).filter(Boolean))].sort();
+  const statuses = [...new Set(opps.map(r => r.status).filter(Boolean))].sort();
+  document.getElementById('fDecision').innerHTML = optionHtml(decisions, 'All decisions');
+  document.getElementById('fSource').innerHTML = optionHtml(sources, 'All sources');
+  document.getElementById('fCountry').innerHTML = optionHtml(countries, 'All countries');
+  document.getElementById('fOwner').innerHTML = optionHtml(owners, 'All owners');
+  document.getElementById('fStatus').innerHTML = optionHtml(statuses, 'All statuses');
+}
+function setDatasetMode(mode) {
+  state.datasetMode = mode;
+  updatePipeline();
+}
+function switchView(view) {
+  state.view = view;
+  document.querySelectorAll('.tab').forEach(el => el.classList.toggle('active', el.dataset.view === view));
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById(`view-${view}`).classList.add('active');
+  if (view === 'executive') renderExecutive();
+  if (view === 'bidDesk') renderBidDesk();
+  if (view === 'pipeline') updatePipeline();
+  if (view === 'scoring') renderScoringGuide();
+}
+
+function filterRows(rows) {
+  const q = document.getElementById('qSearch').value.trim().toLowerCase();
+  const fDecision = document.getElementById('fDecision').value;
+  const fSource = document.getElementById('fSource').value;
+  const fCountry = document.getElementById('fCountry').value;
+  const fOwner = document.getElementById('fOwner').value;
+  const fStatus = document.getElementById('fStatus').value;
+  const fUrgency = document.getElementById('fUrgency').value;
+  const fTier = document.getElementById('fTier').value;
+  const fLifecycle = document.getElementById('fLifecycle').value;
+  const fEvidence = document.getElementById('fEvidence').value;
+  const fPartsSignal = document.getElementById('fPartsSignal').value;
+  const fRmContract = document.getElementById('fRmContract').value;
+  return rows.filter(r => {
+    const hay = [
+      r.title, r.title_raw, r.buyer, r.country, r.cpv_code, r.cpv_desc,
+      ...(r.sources || []), ...(r.score_drivers || []), ...(r.data_gaps || []),
+      r.notes, r.next_action, r.owner, r.status,
+    ].join(' ').toLowerCase();
+    if (q && !hay.includes(q)) return false;
+    if (fDecision && r.decision !== fDecision) return false;
+    if (fSource && !(r.sources || []).includes(fSource)) return false;
+    if (fCountry && r.country !== fCountry) return false;
+    if (fOwner && r.owner !== fOwner) return false;
+    if (fStatus && r.status !== fStatus) return false;
+    if (fUrgency === 'active' && r.urgency === 'expired') return false;
+    else if (fUrgency && fUrgency !== 'active' && r.urgency !== fUrgency) return false;
+    if (fTier && r.tier !== fTier) return false;
+    if (fLifecycle && r.lifecycle !== fLifecycle) return false;
+    if (fEvidence && r.evidence_label !== fEvidence) return false;
+    if (fPartsSignal === '1' && !r.parts_signal) return false;
+    if (fPartsSignal === '0' && r.parts_signal) return false;
+    if (fRmContract === '1' && !r.rm_contract) return false;
+    return true;
+  });
+}
+function sortRows(rows) {
+  const mode = document.getElementById('sortMode').value;
+  return [...rows].sort((a, b) => {
+    if (mode === 'deadline') {
+      const ad = a.days_to_deadline === null || a.days_to_deadline === undefined ? 99999 : a.days_to_deadline;
+      const bd = b.days_to_deadline === null || b.days_to_deadline === undefined ? 99999 : b.days_to_deadline;
+      return ad - bd;
+    }
+    if (mode === 'value') return n(b.value_amount) - n(a.value_amount);
+    if (mode === 'fit') return n(b.fit_score) - n(a.fit_score);
+    if (mode === 'win') return n(b.win_score) - n(a.win_score);
+    if (mode === 'econ') return n(b.econ_score) - n(a.econ_score);
+    if (mode === 'evidence') return n(b.evidence_score) - n(a.evidence_score);
+    if (mode === 'buyer') return String(a.buyer || '').localeCompare(String(b.buyer || ''));
+    return ((DECISION_RANK[a.decision] ?? 9) - (DECISION_RANK[b.decision] ?? 9))
+      || ((URGENCY_RANK[a.urgency] ?? 9) - (URGENCY_RANK[b.urgency] ?? 9))
+      || (n(b.opportunity_score) - n(a.opportunity_score))
+      || (n(b.evidence_score) - n(a.evidence_score));
+  });
+}
+
+function renderScoreStack(row) {
+  const blocks = [
+    ['Fit', row.fit_score],
+    ['Win', row.win_score],
+    ['Eco', row.econ_score],
+  ];
+  return `<div class="score-stack">${blocks.map(([label, val]) => `
+    <div class="mini-bar"><span>${label}</span><div class="mini-track"><div class="mini-fill" style="width:${Math.max(0, Math.min(100, n(val)))}%"></div></div></div>
+  `).join('')}</div>`;
+}
+function renderOpportunityTable(rows) {
+  const head = `
+    <thead><tr>
+      <th>Decision</th><th>Scores</th><th>Opportunity</th><th>Buyer</th><th>Country</th>
+      <th>Value</th><th>Deadline</th><th>Lifecycle</th><th>Evidence</th><th>Owner</th><th>Status</th><th>Next action</th>
+    </tr></thead>`;
+  if (!rows.length) {
+    return `${head}<tbody><tr><td colspan="12"><div class="note" style="margin:10px">No rows match the current filters.</div></td></tr></tbody>`;
+  }
+  const body = rows.map(r => `
+    <tr onclick="openDrawer('${esc(r.opportunity_id)}')">
+      <td>${decisionPill(r.decision)}<div style="margin-top:6px">${urgencyPill(r.urgency)}</div></td>
+      <td>${renderScoreStack(r)}</td>
+      <td class="title-cell">
+        <div style="font-weight:700">${esc(r.title)}</div>
+        <div class="tiny muted" style="margin-top:4px">${(r.score_drivers || []).slice(0,3).map(esc).join(' · ') || 'No explicit drivers yet'}</div>
+        <div style="margin-top:6px">${tierPill(r.tier)} ${r.rm_contract ? '<span class="pill" style="background:#fef9c3;color:#713f12;font-weight:700">🔧 R&amp;M contract</span>' : (r.parts_signal ? '<span class="pill" style="background:#dcfce7;color:#166534">⚙️ parts/maint</span>' : '')} ${r.duplicate_count > 0 ? `<span class="notice-count">${r.notice_count} notices</span>` : ''}</div>
+      </td>
+      <td>${esc(r.buyer || '—')}</td>
+      <td>${esc(r.country || '—')}<div class="tiny muted" style="margin-top:4px">${(r.sources || []).join(', ')}</div></td>
+      <td>${fmtMoney(r.value_amount, r.currency)}</td>
+      <td>${r.deadline_date ? `${esc(r.deadline_date)}<div class="tiny muted" style="margin-top:4px">${r.days_to_deadline} days</div>` : '—'}</td>
+      <td>${lifecyclePill(r.lifecycle)}</td>
+      <td>${evidencePill(r.evidence_label)}<div class="tiny muted" style="margin-top:4px">${r.evidence_score || 0}/100</div></td>
+      <td>${esc(r.owner || '—')}</td>
+      <td>${esc(r.status || '—')}</td>
+      <td>${esc(r.next_action || '—')}</td>
+    </tr>
+  `).join('');
+  return `${head}<tbody>${body}</tbody>`;
+}
+
+function topRows(rows, nMax) { return rows.slice(0, Math.min(rows.length, nMax)); }
+function renderBars(entries, total) {
+  return `<div class="bars">${entries.map(([label, value]) => `
+    <div class="bar-row"><div>${esc(label)}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.max(8, Math.round((value / Math.max(total, 1)) * 100))}%"></div></div><div style="text-align:right">${fmtCount(value)}</div></div>
+  `).join('')}</div>`;
+}
+function renderQuadrants(opps) {
+  const q = {
+    sweet: opps.filter(o => o.fit_score >= 65 && o.win_score >= 55),
+    strategic: opps.filter(o => o.fit_score >= 65 && o.win_score < 55),
+    tactical: opps.filter(o => o.fit_score < 65 && o.win_score >= 55),
+    low: opps.filter(o => o.fit_score < 65 && o.win_score < 55),
+  };
+  return `
+    <div class="quadrant-grid">
+      <div class="quad"><strong>Sweet spot · ${fmtCount(q.sweet.length)}</strong><p>High fit and winnable. Attack first.</p></div>
+      <div class="quad"><strong>Strategic but hard · ${fmtCount(q.strategic.length)}</strong><p>Good fit, but data/runway/route-to-market needs work.</p></div>
+      <div class="quad"><strong>Tactical wins · ${fmtCount(q.tactical.length)}</strong><p>Potentially winnable, but weaker long-term fit.</p></div>
+      <div class="quad"><strong>Low priority · ${fmtCount(q.low.length)}</strong><p>Monitor or ignore unless buyer/account context changes.</p></div>
+    </div>`;
+}
+function renderMatrix(opps) {
+  const width = 620, height = 320, pad = 28;
+  const circles = opps.slice(0, 260).map(o => {
+    const x = pad + Math.round((n(o.fit_score) / 100) * (width - (pad * 2)));
+    const y = height - pad - Math.round((n(o.win_score) / 100) * (height - (pad * 2)));
+    const radius = o.tier === 'large' ? 10 : o.tier === 'medium' ? 8 : o.tier === 'small' ? 6 : 5;
+    const color = o.urgency === 'critical' ? '#c2410c' : o.urgency === 'soon' ? '#c77a00' : o.urgency === 'ok' ? '#15803d' : '#64748b';
+    return `<circle cx="${x}" cy="${y}" r="${radius}" fill="${color}" fill-opacity="0.72"><title>${esc(o.title)} | Fit ${o.fit_score} | Win ${o.win_score}</title></circle>`;
+  }).join('');
+  return `
+    <div class="matrix-wrap">
+      <div class="matrix-labels"><span>Lower fit</span><span>Higher fit</span></div>
+      <svg viewBox="0 0 ${width} ${height}" style="width:100%;height:auto;display:block">
+        <rect x="0" y="0" width="${width}" height="${height}" fill="transparent"></rect>
+        <line x1="${pad}" y1="${height - pad}" x2="${width - pad}" y2="${height - pad}" stroke="#cfd8e3"></line>
+        <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${height - pad}" stroke="#cfd8e3"></line>
+        <line x1="${Math.round(width/2)}" y1="${pad}" x2="${Math.round(width/2)}" y2="${height-pad}" stroke="#e4e8ef" stroke-dasharray="5 5"></line>
+        <line x1="${pad}" y1="${Math.round(height/2)}" x2="${width-pad}" y2="${Math.round(height/2)}" stroke="#e4e8ef" stroke-dasharray="5 5"></line>
+        <text x="${width - pad}" y="${height - 8}" text-anchor="end" font-size="11" fill="#6b7280">Strategic fit</text>
+        <text x="16" y="18" font-size="11" fill="#6b7280">Win feasibility</text>
+        ${circles}
+      </svg>
+    </div>`;
+}
+function renderScoringGuide() {
+  document.getElementById('view-scoring').innerHTML = `
+  <div style="max-width:900px;margin:0 auto;padding:8px 0 40px;display:grid;gap:24px;">
+
+    <div class="panel">
+      <h2 style="margin-bottom:4px">How tenders are scored</h2>
+      <div class="subtle">Every tender goes through the same three-score model. The scores drive the final decision (Attack / Selective / Watch / Ignore) and the order you see in the pipeline.</div>
+    </div>
+
+    <!-- Composite formula -->
+    <div class="panel" style="background:#f8fafc">
+      <h3 style="margin-bottom:12px">Overall opportunity score</h3>
+      <div style="font-family:monospace;font-size:1.05rem;background:#1e293b;color:#f1f5f9;padding:14px 18px;border-radius:10px;margin-bottom:12px">
+        Opportunity Score = Fit × 0.4 &nbsp;+&nbsp; Win × 0.3 &nbsp;+&nbsp; Econ × 0.3
+      </div>
+      <div class="subtle">Fit carries the most weight because a tender that is the wrong product type is worthless regardless of size or timing. Win and Econ share the remaining 60% equally.</div>
+    </div>
+
+    <!-- Fit -->
+    <div class="panel">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span style="background:#dbeafe;color:#1d4ed8;font-weight:800;padding:6px 14px;border-radius:8px;font-size:1rem">FIT</span>
+        <div>
+          <div style="font-weight:700;font-size:1rem">Strategic Fit &nbsp;<span style="font-weight:400;color:#64748b">0 – 100</span></div>
+          <div class="subtle">How well this tender matches the ISZE product portfolio (D-Max, N-Series, F-Series, genuine parts &amp; service).</div>
+        </div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+        <thead><tr style="background:#f1f5f9">
+          <th style="text-align:left;padding:8px 10px;border-radius:6px 0 0 6px">Signal detected</th>
+          <th style="text-align:center;padding:8px 10px">Points</th>
+          <th style="text-align:left;padding:8px 10px;border-radius:0 6px 6px 0">What triggers it</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">ISZE brand signal</td><td style="text-align:center;padding:8px 10px;color:#1d4ed8;font-weight:700">+40</td><td style="padding:8px 10px;color:#475569">"isuzu", "d-max", "n-series", "f-series" in title or description</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Service / parts signal</td><td style="text-align:center;padding:8px 10px;color:#1d4ed8;font-weight:700">+25</td><td style="padding:8px 10px;color:#475569">CPV 501xx service codes or service / parts terminology detected</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Target CPV match</td><td style="text-align:center;padding:8px 10px;color:#1d4ed8;font-weight:700">+20</td><td style="padding:8px 10px;color:#475569">Exact CPV hit on ISZE target list (34131000 pickups, 34136xxx vans, 50110000 R&amp;M…)</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Vehicle procurement</td><td style="text-align:center;padding:8px 10px;color:#1d4ed8;font-weight:700">+15</td><td style="padding:8px 10px;color:#475569">Generic vehicle CPV <em>plus</em> brand or service qualifier — vehicle alone is not enough</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Pickup / light truck relevance</td><td style="text-align:center;padding:8px 10px;color:#1d4ed8;font-weight:700">+12</td><td style="padding:8px 10px;color:#475569">Pickup-specific vocabulary: "pickup", "pritschenwagen", "camionnette bâchée"…</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Framework route</td><td style="text-align:center;padding:8px 10px;color:#1d4ed8;font-weight:700">+8</td><td style="padding:8px 10px;color:#475569">Multi-lot framework agreement detected — recurring call-off potential</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;padding:10px 12px;background:#eff6ff;border-radius:8px;font-size:0.82rem;color:#1d4ed8">
+        <strong>Design intent:</strong> a tender that only mentions "vehicles" without any secondary qualifier scores ≤5 and goes straight to Ignore. Two signals are required before the tender appears in Watch or above.
+      </div>
+    </div>
+
+    <!-- Win -->
+    <div class="panel">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span style="background:#dcfce7;color:#166534;font-weight:800;padding:6px 14px;border-radius:8px;font-size:1rem">WIN</span>
+        <div>
+          <div style="font-weight:700;font-size:1rem">Win Feasibility &nbsp;<span style="font-weight:400;color:#64748b">0 – 100</span></div>
+          <div class="subtle">Can the distributor realistically act before this closes? Based on timing, data completeness, and tender stage.</div>
+        </div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+        <thead><tr style="background:#f1f5f9">
+          <th style="text-align:left;padding:8px 10px;border-radius:6px 0 0 6px">Factor</th>
+          <th style="text-align:center;padding:8px 10px">Points</th>
+          <th style="text-align:left;padding:8px 10px;border-radius:0 6px 6px 0">Notes</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Base score</td><td style="text-align:center;padding:8px 10px;color:#166534;font-weight:700">20</td><td style="padding:8px 10px;color:#475569">Every tender starts here</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Deadline &gt; 21 days away</td><td style="text-align:center;padding:8px 10px;color:#166534;font-weight:700">+25</td><td style="padding:8px 10px;color:#475569">Good runway — distributor has time to qualify and respond</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Deadline 7–21 days</td><td style="text-align:center;padding:8px 10px;color:#166534;font-weight:700">+15</td><td style="padding:8px 10px;color:#475569">Decision window open but tightening</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Deadline &lt; 7 days</td><td style="text-align:center;padding:8px 10px;color:#166534;font-weight:700">+5</td><td style="padding:8px 10px;color:#475569">Urgent — act immediately or pass</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Deadline not available</td><td style="text-align:center;padding:8px 10px;color:#64748b;font-weight:700">±0</td><td style="padding:8px 10px;color:#475569">No penalty — TED search API routinely omits deadlines. Check full notice.</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Deadline passed</td><td style="text-align:center;padding:8px 10px;color:#dc2626;font-weight:700">−30</td><td style="padding:8px 10px;color:#475569">Tender closed — only useful for award monitoring (R&amp;M contract approach)</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Buyer identified</td><td style="text-align:center;padding:8px 10px;color:#166534;font-weight:700">+10</td><td style="padding:8px 10px;color:#475569">We know who to call</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Country confirmed</td><td style="text-align:center;padding:8px 10px;color:#166534;font-weight:700">+8</td><td style="padding:8px 10px;color:#475569">Routes to the right distributor</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">High evidence quality</td><td style="text-align:center;padding:8px 10px;color:#166534;font-weight:700">+20</td><td style="padding:8px 10px;color:#475569">All key data fields present (buyer, CPV, value, deadline, URL)</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Medium evidence quality</td><td style="text-align:center;padding:8px 10px;color:#166534;font-weight:700">+10</td><td style="padding:8px 10px;color:#475569">Some fields missing but enough to qualify</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Early stage (planning)</td><td style="text-align:center;padding:8px 10px;color:#166534;font-weight:700">+10</td><td style="padding:8px 10px;color:#475569">Pre-tender — maximum time to build relationship with buyer</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Award / result stage</td><td style="text-align:center;padding:8px 10px;color:#dc2626;font-weight:700">−15</td><td style="padding:8px 10px;color:#475569">Already awarded — only actionable for R&amp;M contract approach to winner</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Econ -->
+    <div class="panel">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span style="background:#fef9c3;color:#713f12;font-weight:800;padding:6px 14px;border-radius:8px;font-size:1rem">ECON</span>
+        <div>
+          <div style="font-weight:700;font-size:1rem">Economic Attractiveness &nbsp;<span style="font-weight:400;color:#64748b">0 – 100</span></div>
+          <div class="subtle">What is this worth commercially? Contract size, recurring revenue potential, fleet scale.</div>
+        </div>
+      </div>
+      <table style="width:100%;border-collapse:collapse;font-size:0.85rem">
+        <thead><tr style="background:#f1f5f9">
+          <th style="text-align:left;padding:8px 10px;border-radius:6px 0 0 6px">Factor</th>
+          <th style="text-align:center;padding:8px 10px">Points</th>
+          <th style="text-align:left;padding:8px 10px;border-radius:0 6px 6px 0">Notes</th>
+        </tr></thead>
+        <tbody>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Base score</td><td style="text-align:center;padding:8px 10px;color:#713f12;font-weight:700">10</td><td style="padding:8px 10px;color:#475569">Every tender starts here</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Large value (≥ €500k)</td><td style="text-align:center;padding:8px 10px;color:#713f12;font-weight:700">+40</td><td style="padding:8px 10px;color:#475569">Major fleet or long-term maintenance contract</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Medium value (€100k–€500k)</td><td style="text-align:center;padding:8px 10px;color:#713f12;font-weight:700">+25</td><td style="padding:8px 10px;color:#475569">Material opportunity worth distributor time</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Small value (€20k–€100k)</td><td style="text-align:center;padding:8px 10px;color:#713f12;font-weight:700">+12</td><td style="padding:8px 10px;color:#475569">Worth flagging, lower priority</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Micro (&lt; €20k)</td><td style="text-align:center;padding:8px 10px;color:#713f12;font-weight:700">+6</td><td style="padding:8px 10px;color:#475569">Background intelligence only</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Value not disclosed</td><td style="text-align:center;padding:8px 10px;color:#713f12;font-weight:700">+8</td><td style="padding:8px 10px;color:#475569">Common on TED — check full notice for lot values</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Service / R&amp;M signal</td><td style="text-align:center;padding:8px 10px;color:#713f12;font-weight:700">+24</td><td style="padding:8px 10px;color:#475569">Parts revenue is recurring over contract life — higher lifetime value than one-off purchase</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Framework agreement</td><td style="text-align:center;padding:8px 10px;color:#713f12;font-weight:700">+20</td><td style="padding:8px 10px;color:#475569">Multi-year call-offs — one win covers multiple years of parts revenue</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Fleet ≥ 20 units</td><td style="text-align:center;padding:8px 10px;color:#713f12;font-weight:700">+15</td><td style="padding:8px 10px;color:#475569">Material parts demand — benchmark ~€650/unit/year</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Fleet 5–19 units</td><td style="text-align:center;padding:8px 10px;color:#713f12;font-weight:700">+10</td><td style="padding:8px 10px;color:#475569">Solid opportunity for a single distributor branch</td></tr>
+          <tr style="border-top:1px solid #f1f5f9"><td style="padding:8px 10px;font-weight:600">Brand signal</td><td style="text-align:center;padding:8px 10px;color:#713f12;font-weight:700">+10</td><td style="padding:8px 10px;color:#475569">Isuzu mention confirms genuine parts demand (not generic vehicle)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Decision thresholds -->
+    <div class="panel">
+      <h3 style="margin-bottom:14px">Decision thresholds</h3>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+        <div style="background:#fee2e2;border-radius:10px;padding:14px;border:1px solid #fecaca">
+          <div style="font-weight:800;color:#991b1b;font-size:1rem;margin-bottom:6px">⚡ Attack</div>
+          <div style="font-size:0.82rem;color:#7f1d1d;line-height:1.5">Fit ≥ 60<br>Win ≥ 55<br>Econ ≥ 45<br><br><em>All three thresholds must be met.</em> Assign immediately, bid or engage distributor.</div>
+        </div>
+        <div style="background:#fff7ed;border-radius:10px;padding:14px;border:1px solid #fed7aa">
+          <div style="font-weight:800;color:#9a3412;font-size:1rem;margin-bottom:6px">🎯 Selective</div>
+          <div style="font-size:0.82rem;color:#7c2d12;line-height:1.5">Fit ≥ 52<br>Win ≥ 45 <em>or</em> Econ ≥ 50<br><br><em>Strong fit but one dimension weaker.</em> Qualify before committing distributor resource.</div>
+        </div>
+        <div style="background:#fefce8;border-radius:10px;padding:14px;border:1px solid #fef08a">
+          <div style="font-weight:800;color:#713f12;font-size:1rem;margin-bottom:6px">👁 Watch</div>
+          <div style="font-size:0.82rem;color:#78350f;line-height:1.5">Fit ≥ 38 <em>or</em> Econ ≥ 32<br><br><em>Partial signal.</em> Monitor for updates, award announcement, or follow-on tenders. Low distributor effort required.</div>
+        </div>
+        <div style="background:#f8fafc;border-radius:10px;padding:14px;border:1px solid #e2e8f0">
+          <div style="font-weight:800;color:#64748b;font-size:1rem;margin-bottom:6px">— Ignore</div>
+          <div style="font-size:0.82rem;color:#64748b;line-height:1.5">Below all thresholds<br><br><em>Wrong product type, too generic, or already closed.</em> Filtered out by default.</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;padding:10px 12px;background:#f0fdf4;border-radius:8px;font-size:0.82rem;color:#166534">
+        <strong>Special case:</strong> R&amp;M contracts and awarded tenders in the "result" stage are always set to Watch regardless of score — the opportunity is not a bid, it is an approach to the contract winner. Use the 📋 DB brief button for those.
+      </div>
+    </div>
+
+    <!-- Evidence -->
+    <div class="panel">
+      <h3 style="margin-bottom:12px">Evidence confidence label</h3>
+      <div class="subtle" style="margin-bottom:12px">Separate from the three scores. Measures how complete the data is for this opportunity — not how relevant it is.</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+        <div style="background:#f0fdf4;border-radius:10px;padding:12px;border:1px solid #bbf7d0">
+          <div style="font-weight:700;color:#166534;margin-bottom:4px">High (≥ 75)</div>
+          <div style="font-size:0.82rem;color:#14532d">Buyer, CPV, country, published date, deadline, value, URL all present. Ready to brief a distributor.</div>
+        </div>
+        <div style="background:#fff7ed;border-radius:10px;padding:12px;border:1px solid #fed7aa">
+          <div style="font-weight:700;color:#9a3412;margin-bottom:4px">Medium (50–74)</div>
+          <div style="font-size:0.82rem;color:#7c2d12">Most fields present. Missing deadline or value — verify via the source link before briefing.</div>
+        </div>
+        <div style="background:#fef2f2;border-radius:10px;padding:12px;border:1px solid #fecaca">
+          <div style="font-weight:700;color:#991b1b;margin-bottom:4px">Low (&lt; 50)</div>
+          <div style="font-size:0.82rem;color:#7f1d1d">Multiple fields missing. Open the source notice to enrich before passing to a distributor.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>`;
+}
+
+function renderExecutive() {
+  const opps = getOpportunities();
+  const stats = {
+    raw_notices: DATA.meta.stats.raw_notices,
+    opportunities: opps.length,
+    attack: opps.filter(o => o.decision === 'Attack').length,
+    selective: opps.filter(o => o.decision === 'Selective').length,
+    action_queue: opps.filter(o => ['Attack','Selective'].includes(o.decision) && (['critical','soon'].includes(o.urgency) || o.evidence_label === 'Low' || ['Needs owner','Bid / No-Bid','Enrich'].includes(o.status))).length,
+    due_14d: opps.filter(o => o.days_to_deadline !== null && o.days_to_deadline !== undefined && o.days_to_deadline >= 0 && o.days_to_deadline <= 14).length,
+    low_evidence: opps.filter(o => o.evidence_label === 'Low').length,
+    duplicate_families: opps.filter(o => o.duplicate_count > 0).length,
+  };
+  const actionRows = sortRows(opps.filter(o => ['Attack','Selective'].includes(o.decision))).slice(0, 12);
+  const countries = Object.entries(DATA.meta.country_counts).sort((a,b) => b[1]-a[1]).slice(0, 10);
+  const lifecycle = Object.entries(DATA.meta.lifecycle_counts).sort((a,b) => b[1]-a[1]);
+  const qualityRows = [
+    ['Missing deadlines', DATA.meta.stats.missing_deadline],
+    ['Missing value', DATA.meta.stats.missing_value],
+    ['Low evidence families', stats.low_evidence],
+    ['Duplicate families', stats.duplicate_families],
+  ];
+  const el = document.getElementById('view-executive');
+  el.innerHTML = `
+    <div class="cards">
+      <div class="card"><div class="eyebrow">Raw notices</div><div class="big">${fmtCount(stats.raw_notices)}</div><div class="sub">Original published notices captured.</div></div>
+      <div class="card"><div class="eyebrow">Opportunity families</div><div class="big">${fmtCount(stats.opportunities)}</div><div class="sub">Deduplicated buyer-title-country families.</div></div>
+      <div class="card"><div class="eyebrow">Attack targets</div><div class="big">${fmtCount(stats.attack)}</div><div class="sub">High-fit, winnable, economically relevant.</div></div>
+      <div class="card"><div class="eyebrow">Action queue</div><div class="big">${fmtCount(stats.action_queue)}</div><div class="sub">Needs triage, enrichment, or go / no-go now.</div></div>
+      <div class="card"><div class="eyebrow">Due in 14 days</div><div class="big">${fmtCount(stats.due_14d)}</div><div class="sub">Deadline risk visible to the bid desk.</div></div>
+      <div class="card"><div class="eyebrow">Low evidence</div><div class="big">${fmtCount(stats.low_evidence)}</div><div class="sub">Rows needing better data before decisions.</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h2>Fit vs win feasibility</h2>
+        <div class="subtle">Bubble size reflects value tier and color reflects deadline pressure.</div>
+        ${renderMatrix(sortRows(opps))}
+        ${renderQuadrants(opps)}
+      </div>
+      <div class="panel">
+        <h2>Action queue</h2>
+        <div class="subtle">Top priorities for the weekly tender review.</div>
+        <div class="list-clean">${actionRows.map(r => `
+          <div class="item" onclick="openDrawer('${esc(r.opportunity_id)}')">
+            <div class="line-1"><strong>${esc(r.title)}</strong>${decisionPill(r.decision)}</div>
+            <div class="line-2">${esc(r.buyer || '—')} · ${esc(r.country || '—')} · ${r.deadline_date ? `${esc(r.deadline_date)} (${r.days_to_deadline}d)` : 'No deadline'} · ${esc(r.next_action || '')}</div>
+          </div>`).join('') || '<div class="note">No actionable rows right now.</div>'}</div>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h2>Coverage by country</h2>
+        <div class="subtle">Opportunity families, not raw notices.</div>
+        ${renderBars(countries, countries[0] ? countries[0][1] : 0)}
+      </div>
+      <div class="panel">
+        <h2>Data quality and lifecycle</h2>
+        <div class="subtle">Expose what is missing, not just what looks good.</div>
+        <div class="bars" style="margin-bottom:14px">${qualityRows.map(([label, value]) => `
+          <div class="item"><div class="line-1"><strong>${esc(label)}</strong><span>${fmtCount(value)}</span></div></div>`).join('')}</div>
+        <div class="list-clean">${lifecycle.map(([label, value]) => `
+          <div class="item"><div class="line-1">${lifecyclePill(label)}<strong>${fmtCount(value)}</strong></div><div class="line-2">${label === 'competition' ? 'Live procurement pursuit window.' : label === 'planning' ? 'Early market signal.' : label === 'result' ? 'Award intelligence.' : 'Downstream lifecycle visibility.'}</div></div>`).join('')}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderBidDesk() {
+  const opps = sortRows(getOpportunities().filter(o => ['Attack', 'Selective'].includes(o.decision))).filter(o =>
+    ['critical','soon'].includes(o.urgency) ||
+    o.status === 'Needs owner' ||
+    o.status === 'Bid / No-Bid' ||
+    o.status === 'Enrich' ||
+    o.evidence_label === 'Low'
+  );
+  const lanes = {
+    owner: opps.filter(o => o.status === 'Needs owner'),
+    desk: opps.filter(o => o.status === 'Bid / No-Bid' || ['critical','soon'].includes(o.urgency)),
+    enrich: opps.filter(o => o.status === 'Enrich' || o.evidence_label === 'Low'),
+  };
+  const el = document.getElementById('view-bidDesk');
+  el.innerHTML = `
+    <div class="cards">
+      <div class="card"><div class="eyebrow">Needs owner</div><div class="big">${fmtCount(lanes.owner.length)}</div><div class="sub">Assign a regional lead before it disappears into the queue.</div></div>
+      <div class="card"><div class="eyebrow">Bid / No-Bid now</div><div class="big">${fmtCount(lanes.desk.length)}</div><div class="sub">Deadline pressure or top-priority attack target.</div></div>
+      <div class="card"><div class="eyebrow">Needs enrichment</div><div class="big">${fmtCount(lanes.enrich.length)}</div><div class="sub">Missing value/deadline/buyer data blocks a real decision.</div></div>
+      <div class="card"><div class="eyebrow">Visible queue</div><div class="big">${fmtCount(opps.length)}</div><div class="sub">Working set for the next review cycle.</div></div>
+    </div>
+    <div class="grid-3">
+      <div class="panel"><h3>Assign owner</h3><div class="panel-inner-scroll">${(lanes.owner.slice(0,12).map(r => `<div class="item" onclick="openDrawer('${esc(r.opportunity_id)}')"><div class="line-1"><strong>${esc(r.title)}</strong>${decisionPill(r.decision)}</div><div class="line-2">${esc(r.country)} · ${esc(r.next_action)}</div></div>`).join('')) || '<div class="note">No rows in this lane.</div>'}</div></div>
+      <div class="panel"><h3>Bid desk</h3><div class="panel-inner-scroll">${(lanes.desk.slice(0,12).map(r => `<div class="item" onclick="openDrawer('${esc(r.opportunity_id)}')"><div class="line-1"><strong>${esc(r.title)}</strong>${urgencyPill(r.urgency)}</div><div class="line-2">${r.deadline_date ? `${esc(r.deadline_date)} (${r.days_to_deadline}d)` : 'No deadline'} · ${esc(r.buyer)}</div></div>`).join('')) || '<div class="note">No rows in this lane.</div>'}</div></div>
+      <div class="panel"><h3>Enrich</h3><div class="panel-inner-scroll">${(lanes.enrich.slice(0,12).map(r => `<div class="item" onclick="openDrawer('${esc(r.opportunity_id)}')"><div class="line-1"><strong>${esc(r.title)}</strong>${evidencePill(r.evidence_label)}</div><div class="line-2">Gaps: ${(r.data_gaps || []).slice(0,3).map(esc).join(', ') || '—'}</div></div>`).join('')) || '<div class="note">No rows in this lane.</div>'}</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div><h2 style="margin-bottom:4px">Bid desk queue</h2><div class="subtle">This list is intentionally shorter and more operational than the full pipeline.</div></div></div>
+      <div class="table-wrap"><table>${renderOpportunityTable(opps)}</table></div>
+    </div>
+  `;
+}
+
+function updatePipeline() {
+  const rows = sortRows(filterRows(currentRows()));
+  document.getElementById('pipelineMeta').textContent = `${fmtCount(rows.length)} ${state.datasetMode === 'opportunities' ? 'opportunity families' : 'raw notices'} after filters`;
+  document.getElementById('pipelineTable').innerHTML = renderOpportunityTable(rows);
+}
+
+function findRecord(id) {
+  return getOpportunities().find(r => r.opportunity_id === id) || getNotices().find(r => r.opportunity_id === id);
+}
+function openDrawer(id) {
+  const row = findRecord(id);
+  if (!row) return;
+  state.selectedId = id;
+  const ownerOptions = DATA.meta.owner_options.map(o => `<option value="${esc(o)}" ${row.owner === o ? 'selected' : ''}>${esc(o)}</option>`).join('');
+  const statusOptions = DATA.meta.status_options.map(o => `<option value="${esc(o)}" ${row.status === o ? 'selected' : ''}>${esc(o)}</option>`).join('');
+  const notices = (row.notices || []).map(n => `
+    <div class="item">
+      <div class="line-1"><strong>${esc(n.title || row.title)}</strong><span class="notice-count">${esc(n.source || '')}</span></div>
+      <div class="line-2">${esc(n.source_notice_id || '—')} · ${n.published_date ? esc(n.published_date) : 'No published date'} · ${n.deadline_date ? esc(n.deadline_date) : 'No deadline'} ${n.url ? `· <a href="${esc(n.url)}" target="_blank" onclick="event.stopPropagation()">open</a>` : ''}</div>
+    </div>`).join('') || '<div class="note">No source notices attached.</div>';
+  const drawer = document.getElementById('drawer');
+  drawer.innerHTML = `
+    <div class="drawer-head">
+      <div>
+        <div class="tiny muted">${esc(row.country || '—')} · ${esc((row.sources || []).join(', ') || '—')}</div>
+        <h2 style="margin:6px 0 8px">${esc(row.title)}</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">${decisionPill(row.decision)} ${urgencyPill(row.urgency)} ${evidencePill(row.evidence_label)} ${lifecyclePill(row.lifecycle)} ${row.rm_contract ? '<span class="pill" style="background:#fef9c3;color:#713f12;font-weight:700">🔧 R&amp;M contract</span>' : (row.parts_signal ? '<span class="pill" style="background:#dcfce7;color:#166534">⚙️ parts/maint</span>' : '')}</div>
+      </div>
+      <button class="btn-ghost" onclick="closeDrawer()">Close</button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-grid">
+        <div class="kv"><div class="k">Buyer</div><div class="v">${esc(row.buyer || '—')}</div></div>
+        <div class="kv"><div class="k">Value</div><div class="v">${fmtMoney(row.value_amount, row.currency)}</div></div>
+        <div class="kv"><div class="k">Fleet size</div><div class="v">${row.fleet_size ? `${row.fleet_size} vehicles` : '—'}</div></div>
+        <div class="kv"><div class="k">Deadline</div><div class="v">${row.deadline_date ? esc(row.deadline_date) : '—'}</div></div>
+        <div class="kv"><div class="k">Notices in family</div><div class="v">${fmtCount(row.notice_count || 1)}</div></div>
+        <div class="kv"><div class="k">Scores</div><div class="v">Fit ${row.fit_score} · Win ${row.win_score} · Econ ${row.econ_score}</div></div>
+        <div class="kv"><div class="k">Data gaps</div><div class="v">${(row.data_gaps || []).slice(0,4).map(esc).join(', ') || '—'}</div></div>
+      </div>
+      <div>
+        <h3>Why this scored this way</h3>
+        <div class="note">${(row.score_drivers || []).length ? row.score_drivers.map(esc).join(' · ') : 'No explicit score drivers were captured for this row yet.'}</div>
+        ${row.rm_contract ? `<div style="margin-top:8px;padding:10px 12px;border-radius:10px;background:#fef9c3;border:1px solid #fde047"><strong>🔧 R&amp;M Contract</strong> — fleet operator outsourcing repair &amp; maintenance. <em>Distributor action:</em> approach the tender winner to position as authorised Isuzu parts supplier. ${(row.rm_hits||[]).length ? 'Matched: ' + row.rm_hits.map(esc).join(', ') : 'Triggered by CPV ' + esc(row.cpv_code||'501xx') + ' (fleet management / repair services).'}</div>` : ''}
+      </div>
+      <div>
+        <h3>Workflow</h3>
+        <div class="edit-grid">
+          <label>Owner
+            <select id="editOwner">${ownerOptions}</select>
+          </label>
+          <label>Status
+            <select id="editStatus">${statusOptions}</select>
+          </label>
+          <label>Internal due date
+            <input id="editDue" type="date" value="${esc(row.internal_due || '')}">
+          </label>
+          <label>Next action
+            <input id="editAction" type="text" value="${esc(row.next_action || '')}">
+          </label>
+          <label>Notes
+            <textarea id="editNotes">${esc(row.notes || '')}</textarea>
+          </label>
+        </div>
+        <div class="drawer-actions" style="margin-top:12px">
+          <button class="btn-dark" onclick="saveRowEdits('${esc(row.opportunity_id)}')">Save workflow fields</button>
+          <button class="btn-ghost" onclick="resetRowEdits('${esc(row.opportunity_id)}')">Reset to suggested</button>
+          ${row.url ? `<a class="btn-ghost" href="${esc(row.url)}" target="_blank">Open notice</a>` : ''}
+          <button class="btn-ghost" style="background:#eff6ff;border-color:#bfdbfe;color:#1d4ed8" onclick="generateDbBrief('${esc(row.opportunity_id)}')">📋 Copy DB brief</button>
+        </div>
+        <div class="help" style="margin-top:8px">Suggested owner: ${esc(row.owner_suggested || 'Unassigned')} · Suggested status: ${esc(row.status_suggested || 'Watch')} · Suggested next action: ${esc(row.next_action_suggested || '')}</div>
+      </div>
+      <div>
+        <h3>Source notices</h3>
+        <div class="list-clean">${notices}</div>
+      </div>
+    </div>`;
+  drawer.classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ---------------------------------------------------------------------------
+// DB Lead Brief generator
+// ---------------------------------------------------------------------------
+function generateDbBrief(id) {
+  const row = findRecord(id);
+  if (!row) return;
+
+  const today = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+  const val = row.value_amount ? fmtMoney(row.value_amount, row.currency) : 'Not disclosed';
+  const deadline = row.deadline_date || 'Not specified';
+  const daysLeft = (row.days_to_deadline != null && row.days_to_deadline >= 0)
+    ? ` (${row.days_to_deadline} days remaining)` : '';
+  const fleetLine = row.fleet_size ? `\\nFleet size:      ${row.fleet_size} units` : '';
+  const url = row.url || 'See source system';
+
+  let oppType = '';
+  let actionBlock = '';
+  let whyBlock = '';
+
+  if (row.rm_contract) {
+    oppType = 'FLEET MAINTENANCE CONTRACT (R&M)';
+    actionBlock = `RECOMMENDED ACTION
+1. Monitor for contract award — the winning maintainer will be disclosed on the same portal.
+2. Approach the winning contractor before the contract starts and position as the authorised Isuzu genuine parts supplier for any Isuzu vehicles in the fleet.
+3. Frame the pitch around: availability, warranty protection, correct fitment for D-Max / N-Series, and ISZE account terms.
+4. Log the lead in your CRM and flag to ISZE if SPA pricing is needed to be competitive.`;
+    whyBlock = `WHY THIS MATTERS
+Outsourced fleet maintenance contracts typically run 3–5 years. The winning garage needs a reliable parts supplier from day one. Genuine Isuzu parts protect the warranty and reduce comebacks — that is your commercial argument. Early positioning before contract start is critical.`;
+  } else if (row.lifecycle === 'New Vehicle' || (row.cpv_code && row.cpv_code.startsWith('3413'))) {
+    oppType = 'VEHICLE PURCHASE TENDER';
+    const partsPotential = row.fleet_size
+      ? `\\nEstimated parts potential: ~€${Math.round(row.fleet_size * 650).toLocaleString()} / year (€650 per unit benchmark).`
+      : '';
+    actionBlock = `RECOMMENDED ACTION
+1. Review the tender specification — EU rules prohibit brand naming but functional specs (payload, 4x4, GVW) will indicate if D-Max or N-Series qualifies.
+2. Submit or support a bid before the deadline. Contact your ISZE account manager if a Special Price Agreement (SPA) is needed.
+3. If won: register the new units with ISZE so they are captured in the UIO database and trigger a PMS welcome contact.${partsPotential}`;
+    whyBlock = `WHY THIS MATTERS
+Every vehicle placed in a public fleet is a guaranteed parts customer for 7–10 years. Fleet operators follow service schedules strictly — genuine parts capture rate on public fleets is significantly higher than private.`;
+  } else if (row.parts_signal) {
+    oppType = 'PARTS / MAINTENANCE SIGNAL';
+    actionBlock = `RECOMMENDED ACTION
+1. Identify whether the buyer's fleet includes Isuzu vehicles (DVLA, fleet registration data, or direct contact).
+2. If yes: position as the authorised genuine parts supplier ahead of any contract or framework award.
+3. If unknown: use this as a prospecting trigger — a cold call or email referencing the tender is a legitimate conversation opener.`;
+    whyBlock = `WHY THIS MATTERS
+Public authorities that tender for maintenance services are price-sensitive but also risk-averse. Genuine OEM parts reduce warranty disputes and downtime — a strong selling point for fleet procurement managers.`;
+  } else {
+    oppType = 'FLEET / VEHICLE TENDER';
+    actionBlock = `RECOMMENDED ACTION
+1. Review the full tender specification at the link below.
+2. Assess whether D-Max, N-Series, or F-Series meets the stated requirements.
+3. If relevant: engage your ISZE account manager and consider submitting or supporting a bid.`;
+    whyBlock = `WHY THIS MATTERS
+Public fleet procurement creates long-term parts revenue. Even a single fleet placement of 10 units generates sustained genuine parts demand over the vehicle lifecycle.`;
+  }
+
+  const rmNote = row.rm_hits && row.rm_hits.length
+    ? `\\nDetected terms:  ${row.rm_hits.slice(0,4).join(', ')}` : '';
+
+  const brief = `ISZE TENDER INTELLIGENCE — DISTRIBUTOR LEAD BRIEF
+Generated: ${today}
+${'─'.repeat(55)}
+
+Tender:          ${row.title}
+Buyer:           ${row.buyer || 'Not disclosed'}
+Country:         ${row.country || '—'}${fleetLine}
+Contract value:  ${val}
+Deadline:        ${deadline}${daysLeft}
+Priority:        ${row.decision || '—'} · ${row.evidence_label || '—'} evidence${rmNote}
+Source:          ${url}
+
+${'─'.repeat(55)}
+OPPORTUNITY TYPE: ${oppType}
+${'─'.repeat(55)}
+
+${actionBlock}
+
+${'─'.repeat(55)}
+${whyBlock}
+
+${'─'.repeat(55)}
+This lead was identified by the ISZE Tender Monitor.
+Questions: contact ISZE Vehicle Parts Sales.`;
+
+  navigator.clipboard.writeText(brief).then(() => {
+    showToast('Lead brief copied to clipboard — paste into email to distributor');
+  }).catch(() => {
+    // Fallback: show in a prompt so user can copy manually
+    window.prompt('Copy the brief below (Ctrl+A, Ctrl+C):', brief);
+  });
+}
+
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:12px 20px;border-radius:10px;font-size:0.85rem;z-index:9999;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:opacity 0.4s';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._hide);
+  t._hide = setTimeout(() => { t.style.opacity = '0'; }, 3000);
+}
+function saveRowEdits(id) {
+  overrides[id] = {
+    owner: document.getElementById('editOwner').value,
+    status: document.getElementById('editStatus').value,
+    internal_due: document.getElementById('editDue').value,
+    next_action: document.getElementById('editAction').value,
+    notes: document.getElementById('editNotes').value,
+  };
+  saveOverrides();
+  renderExecutive();
+  renderBidDesk();
+  updatePipeline();
+  openDrawer(id);
+}
+function resetRowEdits(id) {
+  delete overrides[id];
+  saveOverrides();
+  renderExecutive();
+  renderBidDesk();
+  updatePipeline();
+  openDrawer(id);
+}
+function csvEscape(v) {
+  return '"' + String(v ?? '').replace(/"/g, '""') + '"';
+}
+function exportCurrentView() {
+  const rows = state.view === 'pipeline'
+    ? sortRows(filterRows(currentRows()))
+    : state.view === 'bidDesk'
+      ? sortRows(getOpportunities().filter(o => ['Attack', 'Selective'].includes(o.decision)))
+      : sortRows(getOpportunities());
+  const cols = ['decision','title','buyer','country','value_amount','currency','deadline_date','lifecycle','evidence_label','owner','status','next_action','url'];
+  const lines = [cols.map(csvEscape).join(',')];
+  rows.forEach(r => lines.push(cols.map(c => csvEscape(r[c] ?? '')).join(',')));
+  const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `isze_tender_os_${state.view}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+function downloadData() {
+  const data = {
+    meta: DATA.meta,
+    opportunities: getOpportunities(),
+    notices: getNotices(),
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `isze_tender_os_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+(function init() {
+  document.getElementById('datasetMode').value = state.datasetMode;
+  populateFilters();
+  renderExecutive();
+  renderBidDesk();
+  updatePipeline();
+})();
+</script>
+</body>
+</html>
+'''
+
+
+def build_dashboard_html(payload: Dict[str, Any]) -> str:
+    # Slim payload: omit the top-level raw notices array from the HTML embed.
+    # The full dataset (including notices) lives in the companion .json file and
+    # is fetched lazily when the user switches to "Raw notices" mode.
+    slim = {
+        "meta": payload["meta"],
+        "opportunities": payload["opportunities"],
+        "notices": [],   # populated at runtime via fetch()
+    }
+    data_json = json.dumps(slim, ensure_ascii=False, separators=(",", ":"))
+    return HTML_TEMPLATE.replace("__DATA__", data_json)
+
+
+def build_payload(raw_rows: List[Dict[str, Any]]) -> Dict[str, Any]:
+    notices = [normalize_raw_row(row, row.get("_source", "")) for row in raw_rows]
+    opportunities = aggregate_opportunities(notices)
+    payload = {
+        "meta": meta_summary(notices, opportunities),
+        "opportunities": [row_to_export(r) for r in opportunities],
+        "notices": [row_to_export(r) for r in notices],
+    }
+    return payload
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Build ISZE Tender OS v2 HTML dashboard")
+    _here = os.path.dirname(os.path.abspath(__file__))
+    parser.add_argument("--input", default=os.path.join(_here, "isuzu_tenders_v3.xlsx"), help="Input XLSX from tender_scraper_v3.py, or legacy HTML with embedded ALL_ROWS")
+    parser.add_argument("--output", default=os.path.join(_here, "isze_dashboard_v2.html"), help="Output HTML path")
+    parser.add_argument("--json-output", default=os.path.join(_here, "isze_dashboard_v2_data.json"), help="Output JSON path (loaded by dashboard at runtime)")
+    args = parser.parse_args()
+
+    input_path = Path(args.input)
+    if not input_path.exists():
+        raise SystemExit(f"Input not found: {input_path}")
+
+    raw_rows = load_input_rows(input_path)
+    payload = build_payload(raw_rows)
+
+    Path(args.output).write_text(build_dashboard_html(payload), encoding="utf-8")
+    Path(args.json_output).write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    stats = payload["meta"]["stats"]
+    print(f"Built {args.output}")
+    print(f"  Raw notices: {stats['raw_notices']}")
+    print(f"  Opportunities: {stats['opportunities']}")
+    print(f"  Attack targets: {stats['attack']}")
+    print(f"  Action queue: {stats['action_queue']}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ISZE AI Operations Explorer</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --surface2: #243044;
+      --border: #2d3f56;
+      --text: #e8edf4;
+      --muted: #8b9cb3;
+      --accent: #e85d04;
+      --accent-dim: #c44d03;
+      --isze: #3b82f6;
+      --personal: #10b981;
+      --infra: #a78bfa;
+      --archive: #6b7280;
+      --radius: 10px;
+      --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    header {
+      background: linear-gradient(135deg, #1a2332 0%, #0f1419 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 1.25rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    header p {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin-top: 0.75rem;
+    }
+    .search-wrap {
+      flex: 1;
+      min-width: 200px;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+    .search-wrap input:focus {
+      outline: 2px solid var(--accent);
+      border-color: transparent;
+    }
+    .filters { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+    .filter-btn {
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover { border-color: var(--muted); color: var(--text); }
+    .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .filter-btn[data-tag="isze"].active { background: var(--isze); border-color: var(--isze); }
+    .filter-btn[data-tag="personal"].active { background: var(--personal); border-color: var(--personal); }
+    .filter-btn[data-tag="infra"].active { background: var(--infra); border-color: var(--infra); }
+
+    .breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+    }
+    .breadcrumb button {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      padding: 0.15rem 0.25rem;
+      font-size: inherit;
+    }
+    .breadcrumb button:hover { text-decoration: underline; }
+    .breadcrumb span.sep { color: var(--muted); }
+    .breadcrumb span.current { color: var(--text); font-weight: 500; }
+
+    main {
+      display: grid;
+      grid-template-columns: 1fr minmax(280px, 360px);
+      gap: 0;
+      min-height: calc(100vh - 140px);
+    }
+    @media (max-width: 900px) {
+      main { grid-template-columns: 1fr; }
+      .detail-panel { border-left: none; border-top: 1px solid var(--border); }
+    }
+
+    .tree-panel {
+      padding: 1rem 1.25rem 2rem;
+      overflow: auto;
+    }
+    .level-hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .level-hint strong { color: var(--text); }
+
+    .node-list { list-style: none; }
+    .node-item { margin-bottom: 2px; }
+
+    .node-row {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 0.5rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.12s;
+      border: 1px solid transparent;
+    }
+    .node-row:hover { background: var(--surface2); }
+    .node-row.selected {
+      background: var(--surface2);
+      border-color: var(--border);
+    }
+    .node-row.has-children .node-label { font-weight: 500; }
+
+    .toggle {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      border: none;
+      background: var(--surface);
+      border-radius: 4px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .toggle:hover { background: var(--border); color: var(--text); }
+    .toggle.empty { visibility: hidden; }
+
+    .tag {
+      font-size: 0.65rem;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      flex-shrink: 0;
+    }
+    .tag.isze { background: rgba(59, 130, 246, 0.25); color: #93c5fd; }
+    .tag.plan { background: rgba(234, 179, 8, 0.2); color: #fde047; }
+    .tag.data { background: rgba(59, 130, 246, 0.25); color: #93c5fd; }
+    .tag.analytics { background: rgba(200, 16, 46, 0.25); color: #fca5a5; }
+    .tag.tools { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+    .tag.infra { background: rgba(167, 139, 250, 0.25); color: #c4b5fd; }
+    .tag.archive { background: rgba(107, 114, 128, 0.3); color: #d1d5db; }
+    .tag.all { background: rgba(232, 93, 4, 0.2); color: #fdba74; }
+
+    .node-label { flex: 1; font-size: 0.9rem; }
+    .node-meta {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-right: 0.25rem;
+    }
+
+    .drill-btn {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.7rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .drill-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .children {
+      list-style: none;
+      margin-left: 1.25rem;
+      padding-left: 0.75rem;
+      border-left: 1px solid var(--border);
+    }
+    .children.collapsed { display: none; }
+
+    .detail-panel {
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      padding: 1.25rem;
+      overflow: auto;
+    }
+    .detail-panel h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+    }
+    .detail-panel .empty-state {
+      color: var(--muted);
+      font-size: 0.9rem;
+      padding: 2rem 0;
+    }
+    .detail-section {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+    }
+    .detail-section h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .detail-section p, .detail-section ul {
+      color: var(--text);
+    }
+    .detail-section ul { margin-left: 1.1rem; margin-top: 0.25rem; }
+    .detail-section li { margin-bottom: 0.2rem; }
+    .status-pill {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .status-pill.active { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; }
+    .status-pill.closed { background: rgba(107, 114, 128, 0.3); color: #d1d5db; }
+    .status-pill.warn { background: rgba(234, 179, 8, 0.2); color: #fde047; }
+
+    .path-code {
+      display: block;
+      margin-top: 0.35rem;
+      padding: 0.5rem 0.65rem;
+      background: var(--bg);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-family: ui-monospace, monospace;
+      color: var(--muted);
+      word-break: break-all;
+    }
+
+    .actions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .actions-row button {
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius);
+      border: none;
+      font-size: 0.8rem;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-dim); }
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--muted); }
+
+    footer {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .match { background: rgba(232, 93, 4, 0.35); border-radius: 2px; }
+  </style>
+  <link rel="stylesheet" href="_ui/editorial.css">
+  <link rel="stylesheet" href="_ui/editorial-full.css">
+  <script src="_ui/editorial-charts.js"></script>
+  <script src="_ui/isze-shell.js" defer></script>
+</head>
+<body>
+<div data-isze-stamp style="background:#1F2937;color:#F3F4F6;font:11px/1.5 Arial,sans-serif;padding:5px 14px;text-align:right;letter-spacing:.3px;border-bottom:2px solid #CC0E1E"><span style="opacity:.65">📅 File last updated:</span> <strong>2026-05-15</strong> <span style="opacity:.55">— verify underlying data freshness before sharing externally</span></div>
+  <header>
+    <h1>ISZE AI Operations Explorer</h1>
+    <p>Isuzu Europe aftermarket only · click for details · <strong>Drill in</strong> to go deeper</p>
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input type="search" id="search" placeholder="Search ISZE projects, dashboards, tools…" autocomplete="off" />
+      </div>
+      <div class="filters" id="filters">
+        <button type="button" class="filter-btn active" data-tag="all">All</button>
+        <button type="button" class="filter-btn" data-tag="plan">Planning</button>
+        <button type="button" class="filter-btn" data-tag="data">Data</button>
+        <button type="button" class="filter-btn" data-tag="analytics">Analytics</button>
+        <button type="button" class="filter-btn" data-tag="tools">Tools</button>
+        <button type="button" class="filter-btn" data-tag="infra">AI layer</button>
+      </div>
+    </div>
+    <nav class="breadcrumb" id="breadcrumb" aria-label="Location"></nav>
+  </header>
+
+  <main>
+    <section class="tree-panel" aria-label="Project tree">
+      <p class="level-hint" id="levelHint">Level <strong>0</strong> — root · <span id="childCount"></span></p>
+      <ul class="node-list" id="treeRoot"></ul>
+    </section>
+    <aside class="detail-panel" aria-label="Details">
+      <div id="detailContent">
+        <p class="empty-state">Select a node on the left, or drill into a branch to explore.</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    ISZE / Isuzu Europe · Jerome Van der Pluym · May 2026 · Internal reference
+  </footer>
+
+  <script>
+    const TREE = {
+      id: "root",
+      label: "ISZE — Isuzu Europe AI Operations",
+      tag: "all",
+      status: "active",
+      desc: "All aftermarket intelligence, data pipelines, dashboards, and AI tooling for Isuzu Motors Europe (branch IE40). Personal apps excluded.",
+      path: "C:\\Users\\jerom\\Desktop\\claude\\ISZE",
+      ai: ["Claude", "Cursor", "GPT Enterprise"],
+      children: [
+        {
+          id: "gov",
+          label: "Data governance (Tier 0–3)",
+          tag: "infra",
+          status: "active",
+          desc: "Four-tier model: secure zone → local desktop → GPT knowledge → published HTML.",
+          path: "AI_Stack_Architecture_Apr2026.md",
+          ai: ["Policy — you are the bridge"],
+          children: [
+            { id: "t0", label: "Tier 0 — SAP · Power BI · Network", tag: "infra", status: "active", desc: "Never touched by Claude or GPT. You export manually.", path: "SAP / BVDB workspace", ai: [] },
+            { id: "t1", label: "Tier 1 — Local ISZE folder", tag: "infra", status: "active", desc: "Full read/write for Claude and Cursor. ISZE\\Data\\, memory\\, tools.", path: "C:\\Users\\jerom\\Desktop\\claude\\ISZE", ai: ["Claude", "Cursor"] },
+            { id: "t2", label: "Tier 2 — GPT Enterprise Knowledge", tag: "infra", status: "active", desc: "Context Pack MDs + gpt_safe CSVs. Manual upload monthly.", path: "GPT_Enterprise\\2_KNOWLEDGE_FILES\\", ai: ["GPT Enterprise"] },
+            { id: "t3", label: "Tier 3 — Published web dashboards", tag: "infra", status: "active", desc: "MASTER_DASHBOARD and shareable URLs for ITUK/IML.", path: "ISZE\\Master Dashboard\\", ai: ["deploy.sh"] }
+          ]
+        },
+        {
+          id: "agents",
+          label: "AI agents & sync",
+          tag: "infra",
+          status: "active",
+          desc: "Claude/Cursor for files; GPT for sparring. Context Pack syncs both.",
+          path: "GPT_Enterprise + ISZE\\memory\\",
+          ai: ["Claude", "GPT", "Cursor"],
+          children: [
+            { id: "claude", label: "Claude / Cowork / Cursor", tag: "infra", status: "active", desc: "Excel, HTML, Python, long memos, local ISZE files.", path: "Tier 1", ai: ["Primary builder"] },
+            { id: "gpt", label: "GPT Enterprise — 4 Custom GPTs", tag: "infra", status: "active", desc: "Strategic, Pricing, Productivity, Data Analysis.", path: "GPT_Enterprise\\1_CUSTOM_GPT_SKILLS\\", ai: ["Phone / sparring"] },
+            { id: "sync", label: "Context Pack sync", tag: "infra", status: "active", desc: "6 MDs + templates. Monthly ~15 min refresh.", path: "GPT_Enterprise\\CHANGELOG.md", ai: ["Claude writes", "GPT reads"] }
+          ]
+        },
+        {
+          id: "isze-plan",
+          label: "Planning & strategy",
+          tag: "plan",
+              status: "active",
+              desc: "VPACC action plans, KPI master, strategic memos.",
+              path: "ISZE\\Data\\planning\\ · Isuzu\\",
+              ai: ["Claude", "GPT Strategic"],
+              children: [
+                { id: "fy26", label: "FY2026 VPACC", tag: "plan", status: "closed", desc: "Closed — FY2026 complete.", path: "memory\\projects\\action-plan-fy2026.md", ai: [] },
+                { id: "fy27", label: "FY2027 VPACC", tag: "plan", status: "active", desc: "Active planning under Kosha pressure.", path: "Action plan FY2027 VPACC", ai: ["Claude", "GPT"] },
+                { id: "kpi", label: "KPI Master Apr 2026", tag: "plan", status: "active", desc: "Distributor KPIs: parts days, recall, satisfaction.", path: "Data\\planning\\", ai: ["Claude"] },
+                { id: "strat", label: "Strategic Position 2026", tag: "plan", status: "active", desc: "Strategic framing memo.", path: "Isuzu\\ISZE_Strategic_Position_2026.md", ai: [] },
+                { id: "dealer", label: "Dealer Data Initiative FY27", tag: "plan", status: "active", desc: "DB sell-out for AIM.", path: "ISZE_DealerData_Initiative_FY2027.md", ai: [] }
+              ]
+        },
+        {
+          id: "isze-pipe",
+              label: "Sales data pipeline",
+              tag: "data",
+              status: "active",
+              desc: "CY billing → Sales_Fact → Phase 2/3 → derived parquet/CSV.",
+              path: "ISZE\\Data\\",
+              ai: ["Claude", "Cursor scripts"],
+              children: [
+                { id: "cy", label: "CY2023-24 + CY2025 (~435k lines)", tag: "data", status: "active", desc: "Raw SAP billing. Never upload to GPT.", path: "Data\\raw\\sales\\", ai: ["Claude only"] },
+                { id: "p1", label: "Phase 1 — Sales_Fact", tag: "data", status: "active", desc: "DQ, SaTy, column mapping.", path: "Data\\models\\Phase1_*.xlsx", ai: ["Claude", "Excel PQ"] },
+                { id: "p2", label: "Phase 2 — Order behaviour", tag: "data", status: "active", desc: "Customer/SaTy, part criticality.", path: "Phase2_Order_Behaviour_Model.xlsx", ai: ["Claude"] },
+                { id: "p3", label: "Phase 3 — Demand / stocking", tag: "data", status: "active", desc: "PRD, forecast, BVP catalog input.", path: "Phase3_Demand_Stocking_Model.xlsx", ai: ["Claude"] },
+                { id: "bvp", label: "BVP Parts Catalog", tag: "data", status: "active", desc: "~1.5–2.5k PNs, 30 family sheets.", path: "raw\\reference\\BVP PARTS CATALOG.xlsx", ai: ["Claude"] },
+                {
+                  id: "p0p5",
+                  label: "BVP × PMS stack (P0–P5)",
+                  tag: "data",
+                  status: "active",
+                  desc: "Sales-only analytics: dimension, capture, mix, GPS, AIM risk.",
+                  path: "Projects\\Isuzu\\prism\\scripts\\",
+                  ai: ["Claude", "verify pipeline"],
+                  children: [
+                    { id: "p0", label: "P0 — bvp_pn_dimension", tag: "data", status: "active", desc: "PN → family, genuine/bvp, pms_flag.", path: "derived\\bvp_pn_dimension.csv", ai: [] },
+                    { id: "p1b", label: "P1 — pms_capture_by_db_year", tag: "data", status: "active", desc: "ITUK pilot capture % and € gap.", path: "derived\\pms_capture_by_db_year.csv", ai: [] },
+                    { id: "p2b", label: "P2 — mix_genuine_bvp_by_family", tag: "data", status: "active", desc: "Programme mix + YoY.", path: "derived\\mix_genuine_bvp_by_family.csv", ai: [] },
+                    { id: "p4b", label: "P4 — gps_spu_by_distributor", tag: "data", status: "active", desc: "GPS / spend per unit for Power BI.", path: "derived\\gps_spu_by_distributor.csv", ai: [] },
+                    { id: "p5b", label: "P5 — aim_bvp_family_risk", tag: "data", status: "active", desc: "AIM pricing risk × BVP family.", path: "derived\\aim_bvp_family_risk.csv", ai: [] }
+                  ]
+                }
+              ]
+        },
+        {
+          id: "prism",
+          label: "PRISM platform",
+          tag: "analytics",
+              status: "active",
+              desc: "Parts Revenue Intelligence: UIO → GPS | PMS.",
+              path: "Projects\\Isuzu\\prism\\",
+              ai: ["Claude", "Streamlit"],
+              children: [
+                { id: "uio", label: "UIO v18 — fleet denominator", tag: "analytics", status: "active", desc: "ITUK DVLA 22,389 · network v18 workbook.", path: "Data\\ISUZU_UIO_Overview_2026_v18.xlsx", ai: ["Claude xlsx"] },
+                { id: "gps", label: "GPS — € per truck", tag: "analytics", status: "active", desc: "Net sales ÷ UIO by distributor.", path: "prism modules", ai: [] },
+                { id: "pms", label: "PMS — capture rate", tag: "analytics", status: "active", desc: "Actual ÷ expected demand. ITUK pilot.", path: "pms_engine.py", ai: [] },
+                { id: "prism-app", label: "PRISM Streamlit app", tag: "analytics", status: "active", desc: "Multi-lens analytics UI.", path: "prism\\", ai: ["Claude"] },
+                { id: "verify", label: "verify_derived_pipeline", tag: "analytics", status: "active", desc: "Golden fixtures — sign-off before quoting ITUK %.", path: "scripts\\verify_derived_pipeline.py", ai: ["Cursor skill"] }
+              ]
+        },
+        {
+          id: "intel",
+          label: "Intelligence models",
+          tag: "analytics",
+              status: "active",
+              desc: "AIM, competitiveness, PMS coverage, lubricants, IAM threat.",
+              path: "Dashboards\\ · Isuzu\\",
+              ai: ["Claude", "GPT Data"],
+              children: [
+                { id: "aim", label: "AIM CY2025", tag: "analytics", status: "active", desc: "~87% revenue classified. SKU scoring.", path: "AIM_Dashboard_CY2025.html", ai: ["Claude", "GPT"] },
+                { id: "comp", label: "Competitiveness dashboard", tag: "analytics", status: "active", desc: "PR00 vs IAM heatmaps.", path: "ISZE_Competitiveness_Dashboard.html", ai: ["Claude rebuild"] },
+                { id: "pmscov", label: "PMS Coverage ITUK pilot", tag: "analytics", status: "active", desc: "Filters +1%, clutch/brake +3% targets.", path: "PMS project\\", ai: ["Claude"] },
+                { id: "lub", label: "Lubricants BC — UMI/Shell", tag: "analytics", status: "active", desc: "Live channel ~€442K, 13% GP. IML signed.", path: "ISZE_Lubricants_Business_Case.xlsx", ai: ["Claude", "GPT IML pitch"] },
+                { id: "iam", label: "IAM Threat Intelligence Engine", tag: "analytics", status: "active", desc: "IAM vs OE scoring, decision matrix, API/CLI.", path: "iam_threat_engine\\ (Cursor)", ai: ["Cursor"] }
+              ]
+        },
+        {
+          id: "price",
+          label: "Pricing & SPA",
+          tag: "analytics",
+              status: "active",
+              desc: "Pricing logic, SPA optimizer, Parts Price Intelligence.",
+              path: "isuzu pricing engine\\",
+              ai: ["Claude", "GPT Pricing Analyst"],
+              children: [
+                { id: "pl26", label: "pricing_logic_2026", tag: "analytics", status: "active", desc: "FX, class factors, ITUK dispute.", path: "Divers\\pricing_logic_2026.md", ai: [] },
+                { id: "spa", label: "SPA Optimizer ITUK v4", tag: "analytics", status: "active", desc: "SPA viability / break-even.", path: "ISZE_SPA_Optimizer_ITUK_v4.xlsx", ai: ["Claude"] },
+                { id: "ppi", label: "Parts Price Intelligence", tag: "analytics", status: "active", desc: "Streamlit IAM vs OE UI.", path: "files\\app.py", ai: ["Claude"] }
+              ]
+        },
+        {
+          id: "html-dash",
+          label: "HTML dashboards (14)",
+          tag: "tools",
+              status: "active",
+              desc: "Static HTML dashboards; Master Dashboard is the published hub.",
+              path: "ISZE\\Dashboards\\",
+              ai: ["Claude build", "Web publish"],
+              children: [
+                { id: "master", label: "MASTER_DASHBOARD (7 tabs)", tag: "tools", status: "active", desc: "Canonical published hub.", path: "Master Dashboard\\", ai: [] },
+                { id: "uioh", label: "UIO dashboard v18", tag: "tools", status: "active", desc: "Fleet parc visual.", path: "ISUZU_UIO_Dashboard_2026_v18.html", ai: [] },
+                { id: "tenderd", label: "Tender Monitor v2", tag: "tools", status: "active", desc: "EU/UK tender alerts.", path: "ISZE_Tender_Monitor_v2.html", ai: [] },
+                { id: "salesd", label: "Monthly Sales Tracker", tag: "tools", status: "active", desc: "YTD vs budget.", path: "ISZE_Monthly_Sales_Tracker.html", ai: [] },
+                { id: "plan30", label: "Plan Tracker 2030", tag: "tools", status: "active", desc: "Kosha long-range.", path: "ISZE_Plan_Tracker_2030.html", ai: [] },
+                { id: "zev", label: "ITUK ZEV Golden Window", tag: "tools", status: "active", desc: "ICE parc window 2025–2032.", path: "ITUK_ZEV_Golden_Window_Dashboard.html", ai: [] }
+              ]
+        },
+        {
+          id: "streamlit",
+          label: "Streamlit / Python apps",
+          tag: "tools",
+              status: "active",
+              desc: "Multi-page ISZE tools and JARVIS launcher.",
+              path: "ISZE\\Tools\\",
+              ai: ["Claude"],
+              children: [
+                { id: "iszd", label: "ISZE_Dashboard", tag: "tools", status: "active", desc: "Sales, ITUK, AIM, distributors.", path: "ISZE_Dashboard\\", ai: [] },
+                { id: "iztools", label: "isze-tools", tag: "tools", status: "active", desc: "Email drafter, SPA assistant, NOx.", path: "Tools\\isze-tools\\", ai: [] },
+                { id: "jarvis", label: "JARVIS ISZE", tag: "tools", status: "active", desc: "Local multi-tool launcher for ISZE workflows.", path: "Isuzu\\JARVIS\\", ai: ["Claude"] },
+                { id: "gpsd", label: "gps_dashboard (legacy)", tag: "tools", status: "active", desc: "Parallel to PRISM GPS pages.", path: "gps_dashboard\\", ai: [] }
+              ]
+        },
+        {
+          id: "scrapers",
+          label: "Scrapers & monitors",
+          tag: "tools",
+              status: "active",
+              desc: "Tender, Autodoc, competitor prices.",
+              path: "ISZE\\Tools\\",
+              ai: ["Claude scheduled"],
+              children: [
+                { id: "tenscr", label: "Tender scraper v3", tag: "tools", status: "active", desc: "Weekly → tenders_output.xlsx.", path: "ISZE_Tender_Monitor_Install\\", ai: [] },
+                { id: "auto", label: "Autodoc scraper", tag: "tools", status: "active", desc: "~300 PNs monthly.", path: "autodoc_scraper\\", ai: [] },
+                { id: "disc", label: "Discount scanner", tag: "tools", status: "warn", desc: "Stale since Apr 2026.", path: "discount-scanner\\", ai: [] }
+              ]
+        },
+        {
+          id: "mem",
+          label: "Memory & AI briefs",
+          tag: "tools",
+              status: "active",
+              desc: "Claude live context and weekly briefs.",
+              path: "ISZE\\memory\\ · AI_Briefs\\",
+              ai: ["Claude writes"],
+              children: [
+                { id: "memproj", label: "memory/projects (8 MDs)", tag: "tools", status: "active", desc: "sales-analytics, pms, aim, uio, etc.", path: "memory\\projects\\", ai: [] },
+                { id: "briefs", label: "Weekly AI briefs", tag: "tools", status: "active", desc: "weekly_Wxx_2026.txt", path: "AI_Briefs\\", ai: ["GPT reads offline"] }
+              ]
+        },
+        {
+          id: "publish",
+          label: "Publishing",
+          tag: "tools",
+              status: "active",
+              desc: "Publish dashboards and documentation for sharing.",
+              path: "Master Dashboard\\ + deploy.sh",
+              ai: ["deploy.sh"],
+              children: [
+                { id: "pages", label: "Published Master Dashboard", tag: "tools", status: "active", desc: "Tier 3 — live dashboard hub.", path: "ISZE\\Master Dashboard\\", ai: [] },
+                { id: "docclone", label: "Documentation mirror", tag: "tools", status: "active", desc: "ISZE docs sync from Desktop.", path: "isuzu-docs\\", ai: [] }
+              ]
+        },
+        {
+          id: "arch",
+          label: "ISZE archives & duplicates",
+          tag: "archive",
+          status: "warn",
+          desc: "Superseded or duplicate ISZE artefacts — not primary workflow.",
+          path: "ISZE\\",
+          ai: [],
+          children: [
+            { id: "uioa", label: "UIO v8–v17 archive", tag: "archive", status: "closed", desc: "Superseded by v18.", path: "Dashboards\\_archive\\", ai: [] },
+            { id: "tendup", label: "Tender scraper duplicate copies", tag: "archive", status: "warn", desc: "Root tender scraper vs Tools v3.", path: "tender scraper\\", ai: [] },
+            { id: "ghdup", label: "Duplicate dashboard copies", tag: "archive", status: "warn", desc: "Older copies — use Master Dashboard as source of truth.", path: "ISZE\\Tools\\", ai: [] }
+          ]
+        }
+      ]
+    };
+
+    const state = {
+      path: ["root"],
+      expanded: new Set(["root", "gov", "agents", "isze-pipe", "prism"]),
+      selectedId: null,
+      filter: "all",
+      search: ""
+    };
+
+    function findNode(id, node = TREE, trail = []) {
+      if (node.id === id) return { node, trail };
+      for (const c of node.children || []) {
+        const r = findNode(id, c, [...trail, node]);
+        if (r) return r;
+      }
+      return null;
+    }
+
+    function getCurrentRoot() {
+      const id = state.path[state.path.length - 1];
+      if (id === "root") return TREE;
+      return findNode(id)?.node || TREE;
+    }
+
+    function nodeMatchesFilter(node) {
+      if (state.filter === "all") return true;
+      if (node.tag === state.filter) return true;
+      return (node.children || []).some(c => nodeMatchesFilter(c));
+    }
+
+    function nodeMatchesSearch(node) {
+      if (!state.search.trim()) return true;
+      const q = state.search.toLowerCase();
+      const hay = [node.label, node.desc, node.path, ...(node.ai || [])].join(" ").toLowerCase();
+      if (hay.includes(q)) return true;
+      return (node.children || []).some(c => nodeMatchesSearch(c));
+    }
+
+    function countDescendants(node) {
+      const ch = node.children || [];
+      return ch.length + ch.reduce((s, c) => s + countDescendants(c), 0);
+    }
+
+    function renderBreadcrumb() {
+      const el = document.getElementById("breadcrumb");
+      el.innerHTML = "";
+      state.path.forEach((id, i) => {
+        if (i > 0) {
+          const sep = document.createElement("span");
+          sep.className = "sep";
+          sep.textContent = " › ";
+          el.appendChild(sep);
+        }
+        if (i < state.path.length - 1) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          const n = id === "root" ? TREE : findNode(id)?.node;
+          btn.textContent = n?.label || id;
+          btn.addEventListener("click", () => {
+            state.path = state.path.slice(0, i + 1);
+            render();
+          });
+          el.appendChild(btn);
+        } else {
+          const cur = document.createElement("span");
+          cur.className = "current";
+          const n = id === "root" ? TREE : findNode(id)?.node;
+          cur.textContent = n?.label || id;
+          el.appendChild(cur);
+        }
+      });
+    }
+
+    function highlight(text, query) {
+      if (!query.trim()) return escapeHtml(text);
+      const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+      return escapeHtml(text).replace(re, "<span class='match'>$1</span>");
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function renderTreeNode(node, depth = 0) {
+      const children = node.children || [];
+      const hasChildren = children.length > 0;
+      const expanded = state.expanded.has(node.id);
+      const selected = state.selectedId === node.id;
+      const filtered = !nodeMatchesFilter(node) || !nodeMatchesSearch(node);
+      if (filtered && !state.search.trim()) return "";
+
+      const li = document.createElement("li");
+      li.className = "node-item";
+      li.dataset.id = node.id;
+
+      const row = document.createElement("div");
+      row.className = "node-row" + (hasChildren ? " has-children" : "") + (selected ? " selected" : "");
+      row.setAttribute("role", "treeitem");
+      row.setAttribute("aria-expanded", hasChildren ? expanded : undefined);
+
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "toggle" + (hasChildren ? "" : " empty");
+      toggle.textContent = hasChildren ? (expanded ? "▼" : "▶") : "";
+      toggle.setAttribute("aria-label", expanded ? "Collapse" : "Expand");
+      if (hasChildren) {
+        toggle.addEventListener("click", e => {
+          e.stopPropagation();
+          if (state.expanded.has(node.id)) state.expanded.delete(node.id);
+          else state.expanded.add(node.id);
+          render();
+        });
+      }
+
+      const tag = document.createElement("span");
+      tag.className = "tag " + (node.tag || "all");
+      tag.textContent = node.tag || "all";
+
+      const label = document.createElement("span");
+      label.className = "node-label";
+      label.innerHTML = highlight(node.label, state.search);
+
+      if (hasChildren) {
+        const meta = document.createElement("span");
+        meta.className = "node-meta";
+        meta.textContent = children.length + " items";
+        row.appendChild(toggle);
+        row.appendChild(tag);
+        row.appendChild(label);
+        row.appendChild(meta);
+      } else {
+        row.appendChild(toggle);
+        row.appendChild(tag);
+        row.appendChild(label);
+      }
+
+      if (hasChildren) {
+        const drill = document.createElement("button");
+        drill.type = "button";
+        drill.className = "drill-btn";
+        drill.textContent = "Drill in";
+        drill.addEventListener("click", e => {
+          e.stopPropagation();
+          state.path.push(node.id);
+          state.expanded.add(node.id);
+          state.selectedId = node.id;
+          render();
+        });
+        row.appendChild(drill);
+      }
+
+      row.addEventListener("click", () => {
+        state.selectedId = node.id;
+        renderDetail(node);
+        document.querySelectorAll(".node-row.selected").forEach(r => r.classList.remove("selected"));
+        row.classList.add("selected");
+      });
+
+      li.appendChild(row);
+
+      if (hasChildren && expanded) {
+        const ul = document.createElement("ul");
+        ul.className = "children";
+        children.forEach(c => {
+          const html = renderTreeNode(c, depth + 1);
+          if (typeof html === "string" && html) {
+            const tmp = document.createElement("div");
+            tmp.innerHTML = html;
+            if (tmp.firstElementChild) ul.appendChild(tmp.firstElementChild);
+          } else if (html instanceof HTMLElement) {
+            ul.appendChild(html);
+          }
+        });
+        li.appendChild(ul);
+      }
+
+      return li;
+    }
+
+    function renderDetail(node) {
+      const el = document.getElementById("detailContent");
+      const statusClass = node.status === "active" ? "active" : node.status === "closed" ? "closed" : "warn";
+      const childN = (node.children || []).length;
+
+      el.innerHTML = `
+        <h2>${escapeHtml(node.label)}</h2>
+        <span class="tag ${node.tag}">${node.tag}</span>
+        <span class="status-pill ${statusClass}">${node.status || "—"}</span>
+        <div class="detail-section">
+          <h3>Description</h3>
+          <p>${escapeHtml(node.desc || "—")}</p>
+        </div>
+        ${node.path && !/github|\.git/i.test(node.path) ? `
+        <div class="detail-section">
+          <h3>Location</h3>
+          <code class="path-code">${escapeHtml(node.path)}</code>
+        </div>` : ""}
+        ${(node.ai && node.ai.length) ? `
+        <div class="detail-section">
+          <h3>AI tools</h3>
+          <ul>${node.ai.map(a => `<li>${escapeHtml(a)}</li>`).join("")}</ul>
+        </div>` : ""}
+        ${childN ? `<div class="detail-section"><h3>Children</h3><p>${childN} sub-items — expand in tree or drill in.</p></div>` : ""}
+        <div class="actions-row">
+          ${childN ? `<button type="button" class="btn-primary" id="detailDrill">Drill into this branch</button>` : ""}
+          <button type="button" class="btn-secondary" id="detailUp">Go up one level</button>
+        </div>
+      `;
+
+      const drillBtn = document.getElementById("detailDrill");
+      if (drillBtn) {
+        drillBtn.addEventListener("click", () => {
+          if (!state.path.includes(node.id)) state.path.push(node.id);
+          else {
+            const idx = state.path.indexOf(node.id);
+            state.path = state.path.slice(0, idx + 1);
+          }
+          state.expanded.add(node.id);
+          render();
+        });
+      }
+      document.getElementById("detailUp")?.addEventListener("click", () => {
+        if (state.path.length > 1) {
+          state.path.pop();
+          render();
+        }
+      });
+    }
+
+    function render() {
+      const root = getCurrentRoot();
+      const treeEl = document.getElementById("treeRoot");
+      treeEl.innerHTML = "";
+
+      const level = state.path.length - 1;
+      document.getElementById("levelHint").innerHTML =
+        `Level <strong>${level}</strong> — ${escapeHtml(root.label)} · <span id="childCount">${(root.children || []).length} branches at this level</span>`;
+
+      (root.children || []).forEach(child => {
+        if (!nodeMatchesFilter(child) && !state.search.trim()) return;
+        if (!nodeMatchesSearch(child) && state.search.trim()) return;
+        const nodeEl = renderTreeNode(child);
+        if (nodeEl) treeEl.appendChild(nodeEl);
+      });
+
+      if (state.search.trim()) {
+        const expandAll = (n) => {
+          state.expanded.add(n.id);
+          (n.children || []).forEach(expandAll);
+        };
+        expandAll(root);
+      }
+
+      renderBreadcrumb();
+
+      if (state.selectedId) {
+        const found = findNode(state.selectedId);
+        if (found) renderDetail(found.node);
+      }
+    }
+
+    document.getElementById("search").addEventListener("input", e => {
+      state.search = e.target.value;
+      render();
+    });
+
+    document.getElementById("filters").addEventListener("click", e => {
+      const btn = e.target.closest(".filter-btn");
+      if (!btn) return;
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      state.filter = btn.dataset.tag;
+      render();
+    });
+
+    render();
+    const start = findNode("prism");
+    if (start) {
+      state.selectedId = "prism";
+      renderDetail(start.node);
+    }
+  </script>
+</body>
+</html>

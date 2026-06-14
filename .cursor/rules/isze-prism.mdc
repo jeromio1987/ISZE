@@ -1,0 +1,13 @@
+---
+description: PRISM pipeline, Streamlit, Evidence, Dash — metrics and verify
+globs: Projects/Isuzu/prism/**
+alwaysApply: false
+---
+
+# ISZE PRISM
+
+- **Canonical code** lives here only — not `_archive/duplicate_repos/`.
+- **KPIs:** green `Data/derived/_verification_report.json` → `metrics_snapshot.json` → `metric_dictionary.md` for formulas.
+- **Pipeline edits:** run `isze-verify-pipeline` or `scripts/run_pipeline_and_verify.ps1` before citing capture %, GPS, BVP.
+- **Derived output:** `Data/derived/` — all UIs read this; do not fork metric math in page code.
+- **Evidence:** edit `evidence-app/pages/` only — ignore `.evidence/` build clones.

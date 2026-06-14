@@ -1,0 +1,29 @@
+---
+description: PROPERTIQ vastgoed-simulatie — hervat dit project wanneer de gebruiker verder wil
+globs: Projects/Propertiq/**
+alwaysApply: false
+---
+
+# PROPERTIQ
+
+Vastgoed-simulatie UI voor Antwerpen-portfolio (Zurenborg + Eilandje).
+
+## Status
+
+- **Hub:** `Dashboards/PROJECT_HUB.html` — editorial UI voor alle ISZE + PROPERTIQ projecten
+- **Shell:** `Dashboards/_ui/` — injected in alle 16 dashboards via `Tools/apply_editorial_ui.py`
+- Mockup: `Projects/Propertiq/mockups/v01_split_hero.html` (1400px desktop)
+- Tab 1 Simuleren: interactieve equity-grafiek + sliders
+- Tab 2 Portfolio: activa-overzicht
+- Tab 3 Formules: Nederlandse formule-uitleg (V_t, D_t, E_t, λ, ROI, fiscaliteit, bandbreedte)
+- Foto's: lokale Antwerpen assets in `mockups/assets/`
+
+## Stijl
+
+- Editorial / warm — geen fintech-terminal aesthetic
+- Fonts: Fraunces (display) + Inter (UI) + IBM Plex Mono (formules)
+- Taal: Nederlands voor UI en formules
+
+## Bij hervatten
+
+Lees `Projects/Propertiq/REMINDER.md` en vraag de gebruiker welke volgende stap (fiscaliteit, dual-asset model, nieuwe layout, interactiviteit).

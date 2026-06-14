@@ -1,0 +1,161 @@
+# =============================================================================
+# ISZE root .gitignore — agent sync 2026-06-13
+# Contract: paths.yaml · Policy: DECISIONS.md § never commit raw billing
+# =============================================================================
+
+# --- Tier 0: raw billing & ingest (NEVER TRACK) ---
+01_data/raw/**
+01_data/_INBOX/**
+01_data/sales data/**
+
+# Stray billing/reference workbooks at 01_data root (not in raw/)
+01_data/*.XLSX
+01_data/*.xlsx
+01_data/*.XLS
+01_data/*.xls
+01_data/*.pdf
+01_data/*.pptx
+
+# --- Excel living models & planning (off-git; backup separately) ---
+01_data/models/**
+01_data/planning/**
+01_data/_archive/**
+01_data/exports/**
+
+# --- UIO workbooks (canonical in 06_uio; scripts tracked) ---
+06_uio/_CURRENT/*.xlsx
+06_uio/_CURRENT/*.xls
+06_uio/_Archive/**
+06_uio/_SourceData/**
+06_uio/**/_archive/**
+
+# --- Global workbook exclusion (allowlist exceptions below) ---
+*.xlsx
+*.xls
+*.XLSX
+*.XLS
+~$*
+.~lock.*
+
+# Small reference allowlist (explicit only — review before init)
+!03_analytics/Isuzu/prism/data/distributor_master_mapping.csv
+
+# --- Derived data (regenerable; default off) ---
+01_data/derived/**
+!01_data/derived/README.md
+!01_data/derived/_verification_report.json
+!01_data/derived/_verification_report.md
+!01_data/derived/_facts_drift_report.md
+!01_data/derived/_data_integrity_open_issues.md
+!01_data/derived/_gps_integrity_audit.md
+!01_data/derived/_gps_integrity_audit.json
+!01_data/derived/metrics_snapshot.json
+
+# Dashboard JSON (published via isze-dashboard deploy repo)
+01_data/dashboards/**
+!01_data/dashboards/README.md
+
+# Parquet everywhere
+**/*.parquet
+
+# Large derived / scraper / insight dumps
+**/*sales_detailed*.tsv
+01_data/derived/insights/**
+02_dashboards/_archive/**
+04_tools/**/scrape_results/**
+04_tools/**/results/**
+04_tools/autodoc_scraper/**/*_results.csv
+04_tools/**/_HANDOFF_BUNDLE/*_results.csv
+
+# GPS dashboard ./data (junction/symlink stubs only; runtime uses ../data or PRISM)
+03_analytics/Isuzu/gps_dashboard/data/**
+
+# Stray test artifacts at 01_data root
+01_data/.testfile*
+
+# Meeting evaluation workbooks (personal; track changelogs/md only)
+09_meetings/**/*.xlsm
+
+# Large regenerable IE40 export (canonical xlsx gitignored; CSV export off-git)
+03_analytics/Isuzu/data/*ie40_export.csv
+
+# Tender live JSON copies in tools install tree (canonical: 01_data/dashboards/tender_data.json)
+04_tools/**/isze_dashboard_v2_data.json
+
+# PMS pilot Word exports (markdown specs tracked separately)
+03_analytics/Isuzu/pms-pilot/*.docx
+
+# --- Deploy mirror (separate isze-dashboard repo) ---
+07_deploy/**
+
+# --- Cold storage & legacy ---
+90_archive/**
+91_legacy/**
+
+# --- Legacy root compatibility stubs (empty; delete when safe) ---
+/Dashboards/
+/Projects/
+
+# --- GPT pack (optional: track md only) ---
+08_gpt/**
+!08_gpt/*.md
+!08_gpt/CHANGELOG.md
+
+# --- Personal / people memory ---
+05_memory/people/**
+
+# --- Secrets & credentials ---
+.env
+.env.*
+!.env.example
+*.env
+secrets.toml
+**/secrets.toml
+*credentials*
+*secret*
+isze_config.json
+.streamlit/secrets.toml
+
+# --- Binaries & large media ---
+*.exe
+*.dll
+*.zip
+*.7z
+*.tar
+*.gz
+cloudflared.exe
+
+# Meeting decks (track changelogs in 09_meetings; not pptx by default)
+09_meetings/**/*.pptx
+09_meetings/**/*.pdf
+
+# --- Python / Node / Evidence build noise ---
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+node_modules/
+**/.evidence/**
+**/build/
+dist/
+*.egg-info/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+.vscode/
+.idea/
+
+# --- Nested Git repositories (managed separately) ---
+# PRISM: git submodule at root init — see DECISIONS.md § PRISM submodule
+03_analytics/Isuzu/prism/.git/
+
+# --- Cursor local state (optional: track rules/skills explicitly via git add) ---
+# .cursor/ is NOT ignored — rules and verify skill should be tracked

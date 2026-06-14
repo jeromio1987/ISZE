@@ -1,0 +1,172 @@
+ISZE MEMORY REVIEW — Week 17, 2026
+Generated: 2026-04-20
+
+## Memory Health
+
+### Staleness (>3 weeks since "Last validated")
+All project files except UIO are now formally STALE — last validated 2026-03-24
+(27 days ago). Threshold crossed mid last week.
+
+  STALE   competitiveness.md            (2026-03-24)
+  STALE   pms-coverage.md            (2026-03-24)
+  STALE   aftermarket-intelligence.md (2026-03-24)
+  STALE   lubricants.md              (2026-03-24)
+  STALE   action-plan-fy2026.md      (2026-03-24)
+  STALE   action-plan-fy2027.md      (2026-03-24)
+  STALE   competitiveness.md         (2026-03-24)
+  CURRENT uio.md                     (2026-04-17 — v16b refresh complete)
+
+### CLAUDE.md ↔ project-file mismatches (mostly UNCHANGED from W16 brief)
+
+Last week's brief flagged three corrections needed in CLAUDE.md. None have been applied.
+Every day they remain in CLAUDE.md, they risk corrupting any session that relies on the
+top-level summary instead of the detailed project files.
+
+1. ITUK PMS oil filter capture rate — STILL WRONG in CLAUDE.md "Key confirmed data"
+   CLAUDE.md says: "Oil filter capture rate very low (actual vs expected)"
+   pms-coverage.md confirms: 9.8% CY2024 (3,288 / 33,584) and 17.3% CY2025 (5,815 / 33,584).
+   The very low figure is incorrect and was explicitly retracted on 23 Mar 2026.
+
+2. Lubricants project status — STILL MISLEADING in CLAUDE.md "Active Projects" table
+   CLAUDE.md: "Awaiting IML go-ahead | BC v2 corrects volume (137,520L). Margin % still unverified."
+   lubricants.md: UMI/Shell channel is LIVE under signed MOU; GP confirmed at ~13% on
+   14 Mar 2026; CY2025 volume 133,760L (not 137,520L). "Awaiting IML go-ahead" only
+   applies to the BESCO broader pilot, not the running channel.
+
+3. AIM status — STILL PARTIALLY STALE in CLAUDE.md
+   CLAUDE.md: "VKWRT + CY2024 still needed"
+   aftermarket-intelligence.md: CY2024 cross-validation DONE (95% revenue coverage,
+   confirmed 15 Mar 2026). Only VKWRT is still pending.
+
+### NEW mismatch this week — UIO version drift in CLAUDE.md
+CLAUDE.md "Active Projects" still labels the UIO Tool as "v9", with risk "Awaiting new
+data from DBs". As of 17 Apr 2026 the canonical workbook is v16b. The April 2026
+refresh is complete. CLAUDE.md is now 7 versions behind reality. Suggested replacement:
+   Status: "v16b canonical (17 Apr 2026) — Apr 2026 refresh DONE"
+   Key risk: "32-file sprawl pending cleanup; 2026F −3.9% dip needs explanation when shared;
+              Dashboard HTML is still v11 — naming drift."
+
+### Files on disk not yet referenced in memory
+The following deliverables have been created since the last memory validation pass and
+should be linked into the relevant project files:
+
+  Apr 17  ISZE_FY2027_ActionPlan_v1.xlsx       → action-plan-fy2027.md (replaces "VP" file?)
+  Apr 17  ISZE_FY2027_ActionPlan_CoverMemo.docx → action-plan-fy2027.md
+  Apr 17  ISZE_Kosha_Execution_Record_v1.pptx   → directly serves the "credible execution
+                                                   record" strategic objective in CLAUDE.md;
+                                                   not linked anywhere in memory yet
+  Apr 13  ISZE_ITUK_PMS_ConnectedGap_Brief.docx → pms-coverage.md
+  Apr 12  ITUK_PMS_Analysis_Apr2026_v2.xlsx     → pms-coverage.md
+  Mar 30  ISZE_Chain_Pricing_Intelligence.xlsx  → competitiveness.md or competitiveness.md
+  Mar 29  ISZE Vehicle Parts — FY2026 Year-End Review.xlsx → action-plan-fy2026.md
+          (named in the .md but file lives at ISZE root, not Divers/ — path needs updating)
+
+---
+
+## Open Items Still Unresolved
+
+Carried forward from W16. Those that have aged into "should-be-addressed-soon" territory
+are flagged. Items resolved this week are crossed off at the end.
+
+Lubricants — getting urgent
+  - Yoshimoto-san (IML) GP reply: still owed since 4 Mar 2026 = now 47 days / ~6.5 weeks.
+    Last week was already at 6 weeks. Not replying eventually becomes its own message.
+    This is the single most aged unresolved item in the file set.
+  - IML formal position post Feb 2026 meeting: still unknown.
+  - First BESCO pilot DB: not assigned.
+
+Pricing-2026
+  - ITUK formal response to position paper: still no record.
+  - Next James Marsh meeting: not scheduled per the file.
+  - Other DBs' acceptance of +5.3%: not confirmed.
+  - CY2025 ITUK SAP login (BVDB): still flagged as "pending Monday" — that "Monday"
+    was four weeks ago. Either the data has been received and memory wasn't updated,
+    or it's still genuinely stuck.
+
+PMS Coverage
+  - Full PMS basket gap revalidation on CY2025 data: oil filter done, rest of basket
+    still unvalidated. ITUK_PMS_Analysis_Apr2026_v2.xlsx exists and may already address
+    this — needs a 5-min check whether the revalidation is in fact complete.
+  - EQ-HIT access / PN→service-schedule mapping: still pending from ITUK.
+
+AIM
+  - CY2025 sell-out through Parts Sales Classification engine: still pending.
+  - VKWRT (net revenue / SPA-adjusted scoring): still not loaded.
+  - Sell-out collection from other DBs: needed for FY2027 20% KPI condition.
+
+FY2027 Action Plan
+  - File ISZE_FY2027_ActionPlan_v1.xlsx (Apr 17) and CoverMemo.docx (Apr 17) now exist.
+    action-plan-fy2027.md still says "no formal FY2027 plan structure confirmed" and
+    references a different file name (ISZE_FY2027_ActionPlan_VP.xlsx).
+    Memory is materially out of date. Whatever was built on 17 Apr needs to be reflected.
+  - FY2026 year-end actuals roll-in: still flagged as needed.
+
+Resolved since W16 brief:
+  ✅ UIO April 2026 refresh — DONE (v16b promoted 17 Apr 2026, memory updated).
+  ✅ Updated ITUK car park figure — re-confirmed in v16b cohort model.
+
+---
+
+## Suggested Updates
+
+In rough order of impact:
+
+1. CLAUDE.md fixes (HIGH — same as last week, still not done)
+   a. Replace the wrong oil-filter capture line with: "Oil filter capture rate: 9.8% CY2024
+      (3,288 / 33,584), 17.3% CY2025 (5,815 / 33,584). Full basket revalidation pending."
+   b. Replace the lubricants row with: Status "Live (UMI/Shell) + Awaiting IML sanction
+      (BESCO pilot)" | Risk "GP ~13% confirmed. Yoshimoto reply overdue (since 4 Mar).
+      BESCO go-ahead not yet received."
+   c. Replace AIM risk with: "VKWRT still needed. CY2024 cross-validated ✅ (15 Mar 2026,
+      95% revenue coverage)."
+   d. NEW — replace UIO row with: Status "v16b canonical (17 Apr 2026) — Apr 2026 refresh
+      DONE" | Risk "32-file sprawl pending cleanup; 2026F −3.9% dip needs one-line
+      explanation when shared; dashboard HTML still v11."
+
+2. action-plan-fy2027.md — full refresh (HIGH)
+   FY2027 started 19 days ago. Memory still says "no plan structure confirmed" and points
+   to a non-existent file name. Update the Files block to point to ISZE_FY2027_ActionPlan_v1.xlsx
+   and ISZE_FY2027_ActionPlan_CoverMemo.docx, and write a one-paragraph summary of what's
+   actually in v1 (open the file once, capture pillars + targets).
+
+3. lubricants.md — Yoshimoto follow-up flag (MEDIUM, time-sensitive)
+   Add an "Action overdue" line at the top: "GP reply to Yoshimoto-san open since
+   4 Mar 2026 — now >6 weeks. Decide this week: reply, or accept the silence becomes the
+   message." Last week already flagged this. It is now genuinely overdue.
+
+4. pms-coverage.md — link the new April deliverables (MEDIUM)
+   Add ITUK_PMS_Analysis_Apr2026_v2.xlsx (Apr 12) and ISZE_ITUK_PMS_ConnectedGap_Brief.docx
+   (Apr 13) to the file list. Check whether the v2 analysis already contains the full
+   basket revalidation that's still flagged as pending.
+
+5. competitiveness.md — close the SAP login open question (LOW)
+   The "available Monday from BVDB" line is now four weeks stale. Either delete it (if
+   resolved) or escalate it (if still stuck). Add ISZE_Chain_Pricing_Intelligence.xlsx
+   (Mar 30) to the file list if relevant.
+
+6. action-plan-fy2026.md — fix file path (LOW)
+   The .md references the year-end review file at ISZE/Divers/, but it actually lives at
+   ISZE root. Update the path.
+
+7. Refresh "Last validated" dates on every file you touch this week.
+
+---
+
+## No Action Needed
+
+  uio.md       — Current (17 Apr 2026). v16b structure, key figures and open items
+                 documented to a high standard. No corrections required.
+
+  competitiveness.md — Stale by date but content still accurate; no contradictions found.
+                 Could be re-validated with a one-line date bump if no substantive change.
+
+  glossary.md, people/, context/ — Not in scope of this review and not flagged as a
+                 problem upstream.
+
+---
+
+## One-line summary
+UIO is fully refreshed and memory is in good shape there. Everything else is now formally
+stale, the same three CLAUDE.md errors flagged last week are still uncorrected, FY2027
+plan files were created on 17 Apr but memory hasn't caught up, and the Yoshimoto GP
+reply is the most aged unresolved item in the system at 47 days.

@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ISZE | UK Market Intelligence Dashboard</title>
+<style>
+  :root {
+    --navy:#CC0E1E; --blue:#CC0E1E; --mid:#CC0E1E; --light:#FFF5F5;
+    --red:#c0392b; --lred:#fde8e7; --amber:#d97706; --lamber:#fef3c7;
+    --green:#16a34a; --lgreen:#dcfce7; --white:#fff; --grey:#f4f6f9;
+    --border:#E0E0E0; --text:#1A1A1A; --muted:#5A5A5A;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family: Arial, sans-serif; background:#F5F5F5; color:var(--text); font-size:13px; }
+
+  /* ── HEADER ── */
+  .header { background: linear-gradient(135deg, #CC0E1E 0%, #9A0B16 100%);
+    padding:18px 28px; display:flex; align-items:center; justify-content:space-between; }
+  .header-left h1 { color:#fff; font-size:20px; font-weight:700; letter-spacing:.3px; }
+  .header-left p { color:#F4A0A7; font-size:12px; margin-top:3px; }
+  .header-right { color:#F4A0A7; font-size:11px; text-align:right; line-height:1.6; }
+  .badge { display:inline-block; background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.25);
+    border-radius:4px; padding:2px 8px; font-size:11px; color:#fff; margin-left:6px; }
+
+  /* ── TABS ── */
+  .tabs { background:#CC0E1E; display:flex; padding:0 16px; border-bottom:3px solid #9A0B16; }
+  .tab { padding:10px 20px; color:#a0b4cc; font-size:12px; font-weight:600; cursor:pointer;
+    letter-spacing:.4px; text-transform:uppercase; border-bottom:3px solid transparent;
+    margin-bottom:-3px; transition:all .2s; }
+  .tab:hover { color:#fff; }
+  .tab.active { color:#fff; border-bottom-color:#E04050; }
+
+  /* ── LAYOUT ── */
+  .content { display:none; padding:20px 24px; }
+  .content.active { display:block; }
+
+  /* ── KPI CARDS ── */
+  .kpi-row { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:20px; }
+  .kpi { background:#fff; border-radius:8px; padding:14px 16px;
+    border-left:4px solid #CC0E1E; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+  .kpi.red { border-left-color:var(--red); }
+  .kpi.amber { border-left-color:var(--amber); }
+  .kpi.green { border-left-color:var(--green); }
+  .kpi-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; }
+  .kpi-val { font-size:22px; font-weight:700; color:#CC0E1E; margin:4px 0 2px; }
+  .kpi-sub { font-size:11px; color:var(--muted); }
+  .kpi-sub.neg { color:var(--red); font-weight:600; }
+  .kpi-sub.pos { color:var(--green); font-weight:600; }
+
+  /* ── SECTION TITLE ── */
+  .sec-title { font-size:12px; font-weight:700; color:#CC0E1E; text-transform:uppercase;
+    letter-spacing:.6px; border-bottom:2px solid var(--border); padding-bottom:6px; margin-bottom:14px; }
+
+  /* ── GRID LAYOUTS ── */
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+  .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:20px; }
+  .grid-60-40 { display:grid; grid-template-columns:60% 40%; gap:16px; margin-bottom:20px; }
+  .card { background:#fff; border-radius:8px; padding:16px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+
+  /* ── CHARTS ── */
+  .chart-wrap { position:relative; width:100%; }
+  .bar-chart { display:flex; align-items:flex-end; gap:6px; height:160px; padding:0 4px; }
+  .bar-group { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .bar { width:100%; border-radius:3px 3px 0 0; position:relative; transition:opacity .2s; }
+  .bar:hover { opacity:.85; }
+  .bar-label { font-size:9px; color:var(--muted); text-align:center; margin-top:4px; }
+  .bar-val { font-size:8.5px; color:#CC0E1E; font-weight:600; position:absolute;
+    top:-14px; left:50%; transform:translateX(-50%); white-space:nowrap; }
+
+  /* ── TABLES ── */
+  table { width:100%; border-collapse:collapse; font-size:12px; }
+  th { background:#CC0E1E; color:#fff; padding:7px 9px; text-align:left; font-size:11px;
+    font-weight:600; letter-spacing:.3px; }
+  th.r { text-align:right; }
+  td { padding:6px 9px; border-bottom:1px solid var(--border); }
+  td.r { text-align:right; font-variant-numeric:tabular-nums; }
+  tr:nth-child(even) td { background:var(--grey); }
+  tr:hover td { background:#FFE8EA; }
+  .tag-red { background:var(--lred); color:var(--red); border-radius:3px; padding:1px 5px;
+    font-size:10px; font-weight:600; }
+  .tag-amber { background:var(--lamber); color:var(--amber); border-radius:3px; padding:1px 5px;
+    font-size:10px; font-weight:600; }
+  .tag-green { background:var(--lgreen); color:var(--green); border-radius:3px; padding:1px 5px;
+    font-size:10px; font-weight:600; }
+  .tag-blue { background:#FFE8EA; color:#CC0E1E; border-radius:3px; padding:1px 5px;
+    font-size:10px; font-weight:600; }
+
+  /* ── ALERT BOX ── */
+  .alert { border-radius:6px; padding:10px 14px; margin-bottom:16px; font-size:12px; line-height:1.5; }
+  .alert-red { background:var(--lred); border-left:4px solid var(--red); color:#7f1d1d; }
+  .alert-amber { background:var(--lamber); border-left:4px solid var(--amber); color:#78350f; }
+  .alert-blue { background:#FFE8EA; border-left:4px solid #CC0E1E; color:#1e3a5f; }
+  .alert-green { background:var(--lgreen); border-left:4px solid var(--green); color:#14532d; }
+  .alert strong { font-weight:700; }
+
+  /* ── ZEV TIMELINE ── */
+  .zev-timeline { display:flex; align-items:stretch; margin:12px 0; }
+  .zev-yr { flex:1; display:flex; flex-direction:column; align-items:center; position:relative; }
+  .zev-bar-wrap { flex:1; width:100%; display:flex; flex-direction:column; justify-content:flex-end; min-height:120px; }
+  .zev-bar { width:70%; margin:0 auto; border-radius:3px 3px 0 0; }
+  .zev-pct { font-size:9px; font-weight:700; text-align:center; margin-bottom:2px; }
+  .zev-yr-label { font-size:9px; color:var(--muted); margin-top:5px; font-weight:600; }
+  .zev-connector { position:absolute; top:50%; right:-1px; width:2px; height:100%; background:var(--border); z-index:0; }
+
+  /* ── PROGRESS BAR ── */
+  .prog-wrap { background:#e5e7eb; border-radius:99px; height:10px; overflow:hidden; }
+  .prog { height:100%; border-radius:99px; }
+
+  /* ── SCATTER DOTS ── */
+  .scatter-wrap { position:relative; width:100%; height:200px; background:var(--grey);
+    border:1px solid var(--border); border-radius:6px; overflow:hidden; }
+  .scatter-dot { position:absolute; width:8px; height:8px; border-radius:50%; transform:translate(-50%,-50%); cursor:pointer; }
+  .scatter-dot:hover::after { content:attr(data-tip); position:absolute; background:#CC0E1E;
+    color:#fff; padding:3px 7px; border-radius:4px; font-size:10px; white-space:nowrap;
+    top:-26px; left:50%; transform:translateX(-50%); z-index:10; pointer-events:none; }
+  .axis-label { position:absolute; font-size:9px; color:var(--muted); }
+
+  /* ── LEGEND ── */
+  .legend { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+  .legend-item { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--muted); }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .legend-sq { width:12px; height:10px; border-radius:2px; flex-shrink:0; }
+
+  /* ── LINE CHART (SVG) ── */
+  .line-chart svg { width:100%; overflow:visible; }
+
+  /* ── FOOTNOTE ── */
+  .footnote { font-size:10px; color:var(--muted); margin-top:8px; font-style:italic; line-height:1.5; }
+
+  /* ── INSIGHT BOX ── */
+  .insight { display:flex; gap:10px; align-items:flex-start; padding:10px 12px;
+    background:#FFE8EA; border-radius:6px; margin-bottom:10px; }
+  .insight-icon { font-size:18px; flex-shrink:0; }
+  .insight-text { font-size:12px; color:var(--text); line-height:1.5; }
+  .insight-text strong { color:#CC0E1E; }
+
+/* ═══════════════════════════════════════════════════
+   ISZE BRAND OVERRIDE — Isuzu Red #CC0E1E · Arial
+   ═══════════════════════════════════════════════════ */
+
+/* Custom properties reset */
+:root {
+  --brand-red:    #CC0E1E;
+  --brand-dark:   #9A0B16;
+  --brand-light:  #FFE8EA;
+  --brand-xlight: #FFF5F5;
+  --black:        #1A1A1A;
+  --gray:         #5A5A5A;
+  --ltgray:       #F5F5F5;
+  --border:       #E0E0E0;
+  --white:        #FFFFFF;
+}
+
+/* Body + font */
+body { font-family: Arial, sans-serif !important; background: #F5F5F5 !important; color: #1A1A1A !important; }
+
+/* ── Header ── */
+.header, .top-bar, .hdr {
+  background: linear-gradient(135deg, #CC0E1E 0%, #9A0B16 100%);
+  border-bottom: none !important;
+  color: #FFFFFF !important;
+}
+.header h1, .top-bar h1, .hdr-title, .hdr h1 { color: #FFFFFF !important; }
+.header .sub, .top-bar .meta, .hdr-sub { color: rgba(255,255,255,0.8) !important; }
+.hdr-logo { color: #FFFFFF !important; font-family: Arial Black, Arial, sans-serif !important; }
+
+/* ── Sub-bar / control bar ── */
+.sub-bar, .ctrl-bar, .tabs, .nav {
+  background: #1A1A1A !important;
+  border-bottom-color: #CC0E1E !important;
+}
+.sub-bar span, .ctrl-bar .ctrl-label { color: #E0E0E0 !important; }
+.tab, .nav-tab { color: rgba(255,255,255,0.7) !important; font-family: Arial, sans-serif !important; }
+.tab.active, .nav-tab.active { color: #FFFFFF !important; border-bottom-color: #CC0E1E !important; }
+.tab:hover:not(.active), .nav-tab:hover { color: #FFFFFF !important; }
+
+/* ── KPI cards ── */
+.kpi-card, .kpi { background: #FFFFFF !important; border: 1px solid #E0E0E0 !important; box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important; }
+.kpi-card { border-left: 4px solid #CC0E1E !important; border-top: none !important; }
+.kpi { border-left: 4px solid #CC0E1E !important; border-top: none !important; }
+.kpi.red, .kpi-card.red { border-left-color: #CC0E1E !important; }
+.kpi.green, .kpi-card.green { border-left-color: #2E7D32 !important; }
+.kpi.orange, .kpi-card.orange, .kpi.amber, .kpi-card.amber { border-left-color: #E65100 !important; }
+.kpi.blue, .kpi-card.blue { border-left-color: #CC0E1E !important; }
+.kpi-val, .kpi-value, .value { color: #1A1A1A !important; }
+.kpi-label, .kpi_label, .label { color: #5A5A5A !important; }
+.kpi-sub, .sub { color: #888888 !important; }
+
+/* ── Cards ── */
+.card { background: #FFFFFF !important; border: 1px solid #E0E0E0 !important; border-radius: 8px !important; box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important; }
+.card h3, .section-title, .sec-title, .card-title { color: #1A1A1A !important; border-bottom-color: #CC0E1E !important; font-family: Arial Black, Arial, sans-serif !important; }
+
+/* ── Tables ── */
+th { background: #CC0E1E !important; color: #FFFFFF !important; font-family: Arial, sans-serif !important; }
+tr.total td, tfoot td { background: #FFE8EA !important; border-top-color: #CC0E1E !important; }
+tr:hover td { background: #FFF5F5 !important; }
+
+/* ── Badges ── */
+.badge { background: #CC0E1E !important; color: #FFFFFF !important; }
+.badge-internal { background: #FFE8EA !important; color: #CC0E1E !important; }
+
+/* ── Section titles ── */
+.section-title, .sec-title { color: #1A1A1A !important; border-bottom-color: #CC0E1E !important; }
+
+/* ── Links ── */
+a { color: #CC0E1E !important; }
+.nav-links a { color: rgba(255,255,255,0.8) !important; }
+.nav-links a.active { color: #FFFFFF !important; background: rgba(255,255,255,0.2) !important; }
+
+/* ── Verdict / alert bars ── */
+.verdict-bar, .update-banner {
+  background: #FFF5F5 !important;
+  border-left-color: #CC0E1E !important;
+  color: #1A1A1A !important;
+  border-color: #FFE8EA !important;
+}
+.verdict-bar h2 { color: #CC0E1E !important; }
+.verdict-bar p, .verdict-bar strong { color: #1A1A1A !important; }
+
+/* ── Year-end box / summary panels ── */
+.year-end-box {
+  background: #FFF5F5 !important;
+  border-color: #FFE8EA !important;
+}
+.ye-label { color: #5A5A5A !important; }
+
+/* ── Footer ── */
+footer, .footer {
+  background: #1A1A1A !important;
+  color: #AAAAAA !important;
+  border-top: 3px solid #CC0E1E !important;
+  padding: 14px 28px !important;
+  text-align: center !important;
+}
+footer a, .footer a { color: #FFE8EA !important; }
+
+/* ── Progress bars ── */
+.prog-bar-bg { background: #F0F0F0 !important; }
+.prog-label, .prog-val { color: #5A5A5A !important; }
+
+/* ── Status pills light theme ── */
+.sp-active { background: #e8f5e9 !important; color: #2e7d32 !important; border-color: #a5d6a7 !important; }
+.sp-risk { background: #fff3e0 !important; color: #e65100 !important; border-color: #ffcc80 !important; }
+.sp-hot { background: #FFE8EA !important; color: #CC0E1E !important; border-color: #FFAAB0 !important; }
+.sp-plan { background: #e8eaf6 !important; color: #283593 !important; border-color: #9fa8da !important; }
+
+/* ── Connection map nodes ── */
+.conn-map { background: #FFFFFF !important; border-color: #E0E0E0 !important; }
+.conn-node { background: #F5F5F5 !important; border-color: #E0E0E0 !important; }
+.conn-node-name { color: #CC0E1E !important; }
+.conn-arrow { color: #CC0E1E !important; }
+
+/* ── Project cards ── */
+.proj-card { background: #FFFFFF !important; border-color: #E0E0E0 !important; }
+.proj-card:hover { border-color: #CC0E1E !important; background: #FFF5F5 !important; }
+.proj-name { color: #1A1A1A !important; }
+.proj-sub, .proj-desc { color: #5A5A5A !important; }
+.file-link { background: #F5F5F5 !important; color: #CC0E1E !important; border-color: #E0E0E0 !important; }
+.file-link:hover { background: #FFE8EA !important; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar-track { background: #F5F5F5; }
+::-webkit-scrollbar-thumb { background: #CC0E1E; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #9A0B16; }
+
+</style>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <link rel="stylesheet" href="_ui/editorial.css">
+  <link rel="stylesheet" href="_ui/editorial-full.css">
+  <script src="_ui/editorial-charts.js"></script>
+  <script src="_ui/isze-shell.js" defer></script>
+</head>
+<body>
+<div data-isze-stamp style="background:#1F2937;color:#F3F4F6;font:11px/1.5 Arial,sans-serif;padding:5px 14px;text-align:right;letter-spacing:.3px;border-bottom:2px solid #CC0E1E"><span style="opacity:.65">📅 File last updated:</span> <strong>2026-05-12</strong> <span style="opacity:.55">— verify underlying data freshness before sharing externally</span></div>
+<div style="background:#1A1A1A;padding:7px 24px;display:flex;align-items:center;gap:20px;font-size:11px;font-family:Arial,sans-serif;border-bottom:2px solid #CC0E1E">
+  <a href="index.html" style="color:#CC0E1E;text-decoration:none;font-weight:700;white-space:nowrap">⬛ ISZE Hub</a>
+  <span style="color:#555">|</span>
+  <a href="MASTER_DASHBOARD.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Master Dashboard</a>
+  <a href="AIM_Dashboard_CY2025.html" style="color:#aaa;text-decoration:none;white-space:nowrap">AIM</a>
+  <a href="ISZE_Competitiveness_Dashboard.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Competitiveness</a>
+  <a href="ISZE_Monthly_Sales_Tracker.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Sales Tracker</a>
+  <a href="ITUK_ZEV_Golden_Window_Dashboard.html" style="color:#aaa;text-decoration:none;white-space:nowrap">ZEV / Golden Window</a>
+  <a href="ISUZU_UIO_Dashboard_2026_v18.html" style="color:#aaa;text-decoration:none;white-space:nowrap">UIO</a>
+  <a href="ISZE_Business Plan_Gap_Internal.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Business Plan Gap</a>
+  <a href="ISZE_FY2026_YearEnd_Review.html" style="color:#aaa;text-decoration:none;white-space:nowrap">FY2026 Review</a>
+  <a href="ISZE_Tender_Monitor_v2.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Tender Monitor</a>
+</div>
+
+
+<div class="header">
+  <div class="header-left">
+    <h1>ISZE · UK Market Intelligence Dashboard</h1>
+    <p>ITUK Dealer Network &nbsp;·&nbsp; Shell/UMI Lubricants &nbsp;·&nbsp; UK ZEV Mandate &nbsp;·&nbsp; Golden Window Fleet Model</p>
+  </div>
+  <div class="header-right">
+    ISZE Internal Use Only &nbsp;<span class="badge">CONFIDENTIAL</span>
+    <span class="badge">Mar 2026</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('network')">📊 ITUK · Dealer Network</div>
+  <div class="tab" onclick="showTab('lubes')">🛢 Shell/UMI · Lubricants</div>
+  <div class="tab" onclick="showTab('zev')">⚡ UK · ZEV Mandate</div>
+  <div class="tab" onclick="showTab('golden')">🏆 UK · Golden Window</div>
+  <div class="tab" onclick="showTab('action')">🎯 ISZE · Action Plan</div>
+  <div class="tab" onclick="showTab('isze')">📊 ISZE · GPS × AIM</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 1 — ITUK · DEALER NETWORK
+══════════════════════════════════════════════════════════ -->
+<div id="tab-network" class="content active">
+
+  <div class="kpi-row">
+    <div class="kpi green">
+      <div class="kpi-label">Network 2025 Annualised ★</div>
+      <div class="kpi-val">£12.5M</div>
+      <div class="kpi-sub pos">Rule of 3: £11.1M × 365/324 days</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-label">YoY Growth 2025 (annualised)</div>
+      <div class="kpi-val">+2.2%</div>
+      <div class="kpi-sub pos">vs £12.2M full-year 2024</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">CAGR 2022–2025</div>
+      <div class="kpi-val">+9.3%</div>
+      <div class="kpi-sub pos">Consistent growth trajectory</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">Top Dealer (reported, Jan–Nov 20)</div>
+      <div class="kpi-val">£726K</div>
+      <div class="kpi-sub">≈ £818K annualised</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">ISZE→ITUK (CY2025)</div>
+      <div class="kpi-val">€5.62M</div>
+      <div class="kpi-sub">Tier-1 supply (EUR)</div>
+    </div>
+  </div>
+
+  <div class="alert alert-blue">
+    <strong>📊 Recalibrated — data covers Jan 1 to Nov 20, 2025 (324/365 days = 88.8% of year).</strong>
+    Applying rule of three: £11,111,376 × (365 ÷ 324) = <strong>£12,517,445 annualised</strong>.
+    This is +2.2% vs full-year 2024 (£12.2M) — the network is growing, not contracting.
+    All reported 2025 figures in this dashboard are partial-year actuals; annualised equivalents shown where relevant.
+    Individual dealer YoY comparisons vs full-year 2024 are directionally valid but overstated — all dealers
+    will appear lower simply because the period is 38 days shorter.
+  </div>
+
+  <div class="alert alert-green" style="margin-top:8px;">
+    <strong>✅ Corrected narrative:</strong> ITUK dealer network is growing steadily at +9.3% CAGR (2022–2025 annualised).
+    The golden window thesis is reinforced — demand is rising alongside an ageing ICE fleet.
+    Average dealer revenue annualised = £190K (up from £168K reported). Focus shifts from
+    "arrest decline" to "accelerate capture" during the ZEV transition window.
+  </div>
+
+  <div class="grid-60-40">
+    <div class="card">
+      <div class="sec-title">Annual Network Revenue 2022–2025</div>
+      <div class="bar-chart" style="height:180px;">
+        <div class="bar-group">
+          <div style="position:relative;width:100%;display:flex;flex-direction:column;align-items:center;">
+            <span style="font-size:9px;font-weight:700;color:#CC0E1E;margin-bottom:3px;">£9.6M</span>
+            <div class="bar" style="height:130px;background:#9A0B16;width:65%;"></div>
+          </div>
+          <div class="bar-label">2022</div>
+        </div>
+        <div class="bar-group">
+          <div style="position:relative;width:100%;display:flex;flex-direction:column;align-items:center;">
+            <span style="font-size:9px;font-weight:700;color:#CC0E1E;margin-bottom:3px;">£11.6M</span>
+            <div class="bar" style="height:157px;background:#9A0B16;width:65%;"></div>
+          </div>
+          <div class="bar-label">2023</div>
+        </div>
+        <div class="bar-group">
+          <div style="position:relative;width:100%;display:flex;flex-direction:column;align-items:center;">
+            <span style="font-size:9px;font-weight:700;color:#CC0E1E;margin-bottom:3px;">£12.2M</span>
+            <div class="bar" style="height:165px;background:#9A0B16;width:65%;"></div>
+          </div>
+          <div class="bar-label">2024</div>
+        </div>
+        <div class="bar-group">
+          <div style="position:relative;width:100%;display:flex;flex-direction:column;align-items:center;">
+            <span style="font-size:9px;font-weight:700;color:var(--green);margin-bottom:3px;">£12.5M★</span>
+            <div class="bar" style="height:169px;background:var(--green);width:65%;"></div>
+          </div>
+          <div class="bar-label" style="color:var(--green);font-weight:700;">2025 ▲</div>
+        </div>
+      </div>
+      <p class="footnote">★ 2025 annualised (rule of 3): £11.1M reported (Jan–Nov 20) × 365/324 = £12.5M. Source: 86,597 rows, 66 dealers.</p>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">Top 10 Dealers — 2025 Reported & Annualised</div>
+      <table>
+        <tr><th>Dealer</th><th class="r">Reported</th><th class="r">Annualised★</th></tr>
+        <tr><td>Warrington Vehicle Centre</td><td class="r">£726K</td><td class="r">£818K</td></tr>
+        <tr><td>Hartwell Aylesbury</td><td class="r">£621K</td><td class="r">£700K</td></tr>
+        <tr><td>TruckEast (group)</td><td class="r">£584K</td><td class="r">£658K</td></tr>
+        <tr><td>Scotlands Trucks</td><td class="r">£512K</td><td class="r">£577K</td></tr>
+        <tr><td>Border Trucks</td><td class="r">£488K</td><td class="r">£550K</td></tr>
+        <tr><td>Isuzu North West</td><td class="r">£441K</td><td class="r">£497K</td></tr>
+        <tr><td>Grange Motors</td><td class="r">£398K</td><td class="r">£449K</td></tr>
+        <tr><td>Motorline Group</td><td class="r">£362K</td><td class="r">£408K</td></tr>
+        <tr><td>Johnsons Cars</td><td class="r">£318K</td><td class="r">£358K</td></tr>
+        <tr><td>Struans Motors</td><td class="r">£297K</td><td class="r">£335K</td></tr>
+      </table>
+      <p class="footnote">★ Annualised = reported × 365/324. YoY vs 2024 not shown — partial vs full year comparison is misleading. Dealer names approximate.</p>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="sec-title">Parts Categories — 2025 Split</div>
+      <table>
+        <tr><th>Category</th><th class="r">2025</th><th class="r">Share</th></tr>
+        <tr><td>Engine & EGR</td><td class="r">£2.84M</td><td class="r">25.6%</td></tr>
+        <tr><td>Transmission</td><td class="r">£1.62M</td><td class="r">14.6%</td></tr>
+        <tr><td>Brakes & Suspension</td><td class="r">£1.41M</td><td class="r">12.7%</td></tr>
+        <tr><td>Electrical / Sensors</td><td class="r">£1.38M</td><td class="r">12.4%</td></tr>
+        <tr><td>PMS (filters, clutch)</td><td class="r">£0.97M</td><td class="r">8.7%</td></tr>
+        <tr><td>Body / Cab</td><td class="r">£0.89M</td><td class="r">8.0%</td></tr>
+        <tr><td>Lubricants (TX Delo)</td><td class="r">£0.31M</td><td class="r">2.8%</td></tr>
+        <tr><td>Other / Misc</td><td class="r">£1.68M</td><td class="r">15.1%</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="sec-title">Top 5 Part Numbers (by 2025 value)</div>
+      <table>
+        <tr><th>Part Number</th><th>Description</th><th class="r">2025</th></tr>
+        <tr><td style="font-size:10px">8983528481</td><td>NOx Sensor</td><td class="r">£341K</td></tr>
+        <tr><td style="font-size:10px">8981850590</td><td>EGR Valve Assy</td><td class="r">£218K</td></tr>
+        <tr><td style="font-size:10px">8982705240</td><td>Oil Filter (PMS)</td><td class="r">£58K</td></tr>
+        <tr><td style="font-size:10px">8972599400</td><td>Clutch Disc</td><td class="r">£52K</td></tr>
+        <tr><td style="font-size:10px">8983320160</td><td>EGR Valve D-Max</td><td class="r">£48K</td></tr>
+      </table>
+      <div class="alert alert-amber" style="margin-top:10px;padding:8px 10px;">
+        <strong>NOx sensor dominance:</strong> £341K across 57 dealers —
+        emissions compliance driving high-value demand. Strategic pricing opportunity.
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-title">Network Health Matrix</div>
+      <table>
+        <tr><th>Metric</th><th class="r">Value</th></tr>
+        <tr><td>2025 annualised (rule of 3)</td><td class="r"><span class="tag-green">£12.5M</span></td></tr>
+        <tr><td>YoY growth (annualised)</td><td class="r"><span class="tag-green">+2.2%</span></td></tr>
+        <tr><td>CAGR 2022–2025 (annualised)</td><td class="r"><span class="tag-green">+9.3%</span></td></tr>
+        <tr><td>Top 10 concentration</td><td class="r">47% of network</td></tr>
+        <tr><td>Avg revenue per dealer (ann.)</td><td class="r">£190K</td></tr>
+        <tr><td>Data coverage</td><td class="r">Jan–Nov 20 (324 days)</td></tr>
+        <tr><td>Partial-year YoY comparisons</td><td class="r"><span class="tag-amber">⚠ Use annualised only</span></td></tr>
+        <tr><td>Median revenue (reported)</td><td class="r">~£112K (~£126K ann.)</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 2 — SHELL/UMI · LUBRICANTS
+══════════════════════════════════════════════════════════ -->
+<div id="tab-lubes" class="content">
+
+  <div class="kpi-row">
+    <div class="kpi red">
+      <div class="kpi-label">Texaco Delo — ITUK→Dealer (2025)</div>
+      <div class="kpi-val">£309K</div>
+      <div class="kpi-sub neg">ISU-prefix TX codes via ITUK</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">BESCO at Dealer (2025)</div>
+      <div class="kpi-val">£0</div>
+      <div class="kpi-sub neg">No BESCO at DLR level</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-label">ISZE Lubes Actual (CY2025)</div>
+      <div class="kpi-val">137,520L</div>
+      <div class="kpi-sub pos">via Shell/UMI — real volume</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Retention Rate</div>
+      <div class="kpi-val">43.3%</div>
+      <div class="kpi-sub">vs 30% base case target</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Texaco CAGR</div>
+      <div class="kpi-val">est. +8%</div>
+      <div class="kpi-sub neg">Growing at dealer level</div>
+    </div>
+  </div>
+
+  <div class="alert alert-red">
+    <strong>🛢 Competitive lubricants risk: Texaco Delo is entrenched at ITUK dealer level.</strong>
+    £308,948 of Texaco Delo was purchased by dealers through ITUK in 2025 — using ISU-prefixed product codes
+    that disguise the brand. This is direct BESCO displacement. While ISZE shows strong 137,520L actual at
+    distributor level (via Shell/UMI partnership), zero BESCO is reaching the dealer workshop bench.
+    The end-customer oil change is being performed with competitor product.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="sec-title">Lubricants Channel Comparison</div>
+      <table>
+        <tr><th>Channel</th><th>Brand</th><th class="r">2025 Volume</th><th class="r">Status</th></tr>
+        <tr>
+          <td>ISZE → Shell/UMI</td><td>BESCO</td>
+          <td class="r">137,520L</td>
+          <td class="r"><span class="tag-green">Active</span></td>
+        </tr>
+        <tr>
+          <td>ISZE → ITUK (direct)</td><td>BESCO</td>
+          <td class="r">~0L (est.)</td>
+          <td class="r"><span class="tag-red">Gap</span></td>
+        </tr>
+        <tr>
+          <td>ITUK → Dealers (TX Delo)</td><td>Texaco</td>
+          <td class="r">£309K value</td>
+          <td class="r"><span class="tag-red">Competitor</span></td>
+        </tr>
+        <tr>
+          <td>Dealer → End customer</td><td>Unknown</td>
+          <td class="r">—</td>
+          <td class="r"><span class="tag-amber">Untracked</span></td>
+        </tr>
+      </table>
+      <p class="footnote">⚠ ISZE→ITUK BESCO volumes unconfirmed — flagged assumption. ITUK data from dealer purchase export.</p>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">Texaco Delo at Dealer Level — Annual Trend (est.)</div>
+      <div class="bar-chart" style="height:140px;">
+        <div class="bar-group">
+          <div style="display:flex;flex-direction:column;align-items:center;width:100%;">
+            <span style="font-size:9px;font-weight:700;color:var(--red);margin-bottom:3px;">£238K</span>
+            <div class="bar" style="height:90px;background:#e07070;width:60%;"></div>
+          </div>
+          <div class="bar-label">2022 (est.)</div>
+        </div>
+        <div class="bar-group">
+          <div style="display:flex;flex-direction:column;align-items:center;width:100%;">
+            <span style="font-size:9px;font-weight:700;color:var(--red);margin-bottom:3px;">£259K</span>
+            <div class="bar" style="height:98px;background:#d05555;width:60%;"></div>
+          </div>
+          <div class="bar-label">2023 (est.)</div>
+        </div>
+        <div class="bar-group">
+          <div style="display:flex;flex-direction:column;align-items:center;width:100%;">
+            <span style="font-size:9px;font-weight:700;color:var(--red);margin-bottom:3px;">£285K</span>
+            <div class="bar" style="height:108px;background:#b83333;width:60%;"></div>
+          </div>
+          <div class="bar-label">2024 (est.)</div>
+        </div>
+        <div class="bar-group">
+          <div style="display:flex;flex-direction:column;align-items:center;width:100%;">
+            <span style="font-size:9px;font-weight:700;color:var(--red);margin-bottom:3px;">£309K</span>
+            <div class="bar" style="height:117px;background:var(--red);width:60%;"></div>
+          </div>
+          <div class="bar-label" style="color:var(--red);font-weight:700;">2025</div>
+        </div>
+      </div>
+      <p class="footnote">2022–2024 estimates based on 8% growth assumption from confirmed 2025 figure. Only 2025 is from actual data.</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="sec-title">BESCO Penetration Scenario — Dealer Level</div>
+      <table>
+        <tr><th>Scenario</th><th class="r">BESCO Vol (L)</th><th class="r">Revenue Gain</th><th>Assumption</th></tr>
+        <tr><td>Do Nothing</td><td class="r">0</td><td class="r"><span class="tag-red">£0</span></td><td>TX Delo stays unchallenged</td></tr>
+        <tr><td>5% penetration</td><td class="r">~7,500L</td><td class="r">~£18K</td><td>Token BESCO push</td></tr>
+        <tr><td>20% penetration</td><td class="r">~30,000L</td><td class="r">~£72K</td><td>BESCO on dealer shelf</td></tr>
+        <tr><td>50% penetration</td><td class="r">~75,000L</td><td class="r">~£180K</td><td>Dealer-level commitment</td></tr>
+        <tr><td>TX Delo displaced (100%)</td><td class="r">~150,000L</td><td class="r">~£360K</td><td>Full replacement — aspirational</td></tr>
+      </table>
+      <p class="footnote">Revenue estimate: ~£2.40/L assumed BESCO retail equiv. Pending IML formal lubes program sanction.</p>
+    </div>
+    <div class="card">
+      <div class="sec-title">Strategic Priority: Close the Dealer Gap</div>
+      <div class="insight">
+        <div class="insight-icon">🔴</div>
+        <div class="insight-text"><strong>IML sanction is the blocker.</strong> Without formal IML go-ahead for BESCO European program, ISZE cannot push into ITUK dealer channel. The 137,520L via Shell/UMI is informal and fragile.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">🎯</div>
+        <div class="insight-text"><strong>ITUK is complicit in Texaco entrenchment.</strong> They are actively purchasing and distributing Texaco Delo. This is a distributor incentive alignment problem, not just a product availability issue.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">💡</div>
+        <div class="insight-text"><strong>Dealer oil change = highest-frequency touchpoint.</strong> The workshop performing an oil change with Texaco product is a lost BESCO moment at every single service interval across ~42,000 D-Max UK parc.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 3 — UK · ZEV MANDATE
+══════════════════════════════════════════════════════════ -->
+<div id="tab-zev" class="content">
+
+  <div class="kpi-row">
+    <div class="kpi red">
+      <div class="kpi-label">ZEV Req 2026 (LCV/Van)</div>
+      <div class="kpi-val">24%</div>
+      <div class="kpi-sub neg">Rising 16% → 100% by 2035</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Penalty per Allowance</div>
+      <div class="kpi-val">£18K</div>
+      <div class="kpi-sub neg">From 2025 (VETS regulation)</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">D-Max EV Timeline</div>
+      <div class="kpi-val">Unknown</div>
+      <div class="kpi-sub">No confirmed launch date</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">UK D-Max Parc (est.)</div>
+      <div class="kpi-val">~42,000</div>
+      <div class="kpi-sub">Units In Operation</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">Peak ICE Parts Demand</div>
+      <div class="kpi-val">2027–2029</div>
+      <div class="kpi-sub">Golden Window peak</div>
+    </div>
+  </div>
+
+  <div class="alert alert-red">
+    <strong>⚡ D-Max faces the hardest ZEV mandate exposure in ISZE's portfolio.</strong>
+    As an N1 LCV (van equivalent), D-Max falls under the Van ZEV mandate — the most aggressive schedule.
+    By 2026, 24% of new D-Max registrations must be ZEV. No D-Max EV exists yet. This creates two consequences
+    for ISZE: (1) ITUK will be under extreme compliance pressure, likely reducing ICE D-Max volumes or paying £18K penalties.
+    (2) The existing 42,000-vehicle ICE parc will age in place — held longer by operators — driving elevated parts demand
+    through the golden window before structural revenue decline sets in post-2030.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="sec-title">UK Van ZEV Mandate Trajectory (D-Max N1 Category)</div>
+      <div style="display:flex;align-items:flex-end;gap:4px;height:150px;padding:4px 0;">
+        <!-- 2024 16% --> <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+          <span style="font-size:9px;font-weight:700;color:#CC0E1E;margin-bottom:2px;">16%</span>
+          <div style="height:24px;background:#CC0E1E;width:70%;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:var(--muted);margin-top:4px;font-weight:600;">2024</div></div>
+        <!-- 2025 16% --> <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+          <span style="font-size:9px;font-weight:700;color:#CC0E1E;margin-bottom:2px;">16%</span>
+          <div style="height:24px;background:#CC0E1E;width:70%;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:var(--muted);margin-top:4px;font-weight:600;">2025</div></div>
+        <!-- 2026 24% --> <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+          <span style="font-size:9px;font-weight:700;color:#d97706;margin-bottom:2px;">24%</span>
+          <div style="height:36px;background:#d97706;width:70%;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:var(--amber);margin-top:4px;font-weight:700;">2026 ▲</div></div>
+        <!-- 2027 34% --> <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+          <span style="font-size:9px;font-weight:700;color:#d97706;margin-bottom:2px;">34%</span>
+          <div style="height:51px;background:#d97706;width:70%;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:var(--muted);margin-top:4px;font-weight:600;">2027</div></div>
+        <!-- 2028 46% --> <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+          <span style="font-size:9px;font-weight:700;color:#c0392b;margin-bottom:2px;">46%</span>
+          <div style="height:69px;background:#c0392b;width:70%;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:var(--muted);margin-top:4px;font-weight:600;">2028</div></div>
+        <!-- 2029 58% --> <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+          <span style="font-size:9px;font-weight:700;color:#c0392b;margin-bottom:2px;">58%</span>
+          <div style="height:87px;background:#c0392b;width:70%;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:var(--muted);margin-top:4px;font-weight:600;">2029</div></div>
+        <!-- 2030 70% --> <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+          <span style="font-size:9px;font-weight:700;color:#7f1d1d;margin-bottom:2px;">70%</span>
+          <div style="height:105px;background:#7f1d1d;width:70%;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:var(--muted);margin-top:4px;font-weight:600;">2030</div></div>
+        <!-- 2035 100% --> <div style="flex:1;display:flex;flex-direction:column;align-items:center;">
+          <span style="font-size:9px;font-weight:700;color:#7f1d1d;margin-bottom:2px;">100%</span>
+          <div style="height:150px;background:#7f1d1d;width:70%;border-radius:3px 3px 0 0;"></div>
+          <div style="font-size:9px;color:var(--red);margin-top:4px;font-weight:700;">2035 ■</div></div>
+      </div>
+      <p class="footnote">UK VETS ZEV mandate: Van (N1) category. D-Max = N1 LCV. Penalty: £18,000/allowance from 2025. HGVs (N35+) phased separately by 2040.</p>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">ITUK Compliance Pressure Model</div>
+      <table>
+        <tr><th>Year</th><th class="r">ZEV Req</th><th class="r">ICE Sales (est.)</th><th class="r">EV Needed</th><th class="r">Penalty Risk</th></tr>
+        <tr><td>2025</td><td class="r">16%</td><td class="r">~4,200</td><td class="r">~672</td><td class="r"><span class="tag-amber">Medium</span></td></tr>
+        <tr><td>2026</td><td class="r">24%</td><td class="r">~3,800</td><td class="r">~912</td><td class="r"><span class="tag-red">High</span></td></tr>
+        <tr><td>2027</td><td class="r">34%</td><td class="r">~3,200</td><td class="r">~1,088</td><td class="r"><span class="tag-red">Very High</span></td></tr>
+        <tr><td>2028</td><td class="r">46%</td><td class="r">~2,500</td><td class="r">~1,150</td><td class="r"><span class="tag-red">Critical</span></td></tr>
+        <tr><td>2029</td><td class="r">58%</td><td class="r">~1,800</td><td class="r">~1,044</td><td class="r"><span class="tag-red">Critical</span></td></tr>
+        <tr><td>2030</td><td class="r">70%</td><td class="r">~1,200</td><td class="r">~840</td><td class="r"><span class="tag-red">Critical</span></td></tr>
+      </table>
+      <p class="footnote">⚠ Assumptions: UK D-Max registrations assumed to track ZEV pressure decline. EV D-Max availability unknown — any deficit = £18K penalty/unit. Model is illustrative — treat as directional only.</p>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="sec-title">ICE Parc Evolution (est.)</div>
+      <table>
+        <tr><th>Year</th><th class="r">ICE Parc</th><th class="r">vs 2025</th></tr>
+        <tr><td>2025</td><td class="r">42,000</td><td class="r">base</td></tr>
+        <tr><td>2026</td><td class="r">44,200</td><td class="r"><span class="tag-green">+5%</span></td></tr>
+        <tr><td>2027</td><td class="r">45,800</td><td class="r"><span class="tag-green">+9%</span></td></tr>
+        <tr><td>2028</td><td class="r">46,400</td><td class="r"><span class="tag-green">+10%</span></td></tr>
+        <tr><td>2029</td><td class="r">45,500</td><td class="r"><span class="tag-amber">+8%</span></td></tr>
+        <tr><td>2030</td><td class="r">43,000</td><td class="r"><span class="tag-amber">+2%</span></td></tr>
+        <tr><td>2032</td><td class="r">37,000</td><td class="r"><span class="tag-red">−12%</span></td></tr>
+        <tr><td>2035</td><td class="r">24,000</td><td class="r"><span class="tag-red">−43%</span></td></tr>
+      </table>
+      <p class="footnote">Parc peaks ~2028 as operators hold ICE vehicles longer. Decline accelerates post-2030.</p>
+    </div>
+    <div class="card">
+      <div class="sec-title">ZEV Impact on Parts Demand</div>
+      <div class="insight" style="margin-top:8px;">
+        <div class="insight-icon">🔺</div>
+        <div class="insight-text"><strong>2025–2028: Parts demand RISES.</strong> Operators holding ICE vehicles longer means more service intervals, more repair events, more genuine parts consumption. This is the golden window.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">🔻</div>
+        <div class="insight-text"><strong>2030–2035: Structural decline.</strong> ICE parc shrinks as ZEV mandate approaches 70–100%. Parts revenue follows parc with 1–2 year lag. The decline is non-recoverable for ICE parts.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">⚡</div>
+        <div class="insight-text"><strong>EV parts profile unknown.</strong> D-Max EV will have very different parts profile — lower PMS, different failure modes, no EGR/clutch. Revenue bridge to EV parts requires D-Max EV launch data.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-title">N35 Truck ZEV Mandate</div>
+      <table>
+        <tr><th>Vehicle Class</th><th>Mandate</th><th>Deadline</th></tr>
+        <tr><td>Van (N1) — D-Max</td><td>16%→100%</td><td>2035</td></tr>
+        <tr><td>N35 Light truck</td><td>Phased in</td><td>2035 goal</td></tr>
+        <tr><td>HGV under 26t</td><td>TBD</td><td>2035</td></tr>
+        <tr><td>All HGVs</td><td>Net Zero</td><td>2040</td></tr>
+      </table>
+      <div class="alert alert-blue" style="margin-top:10px;padding:8px 10px;">
+        N-Series (4-7.5t) has longer runway than D-Max but the HGV 2035/2040 deadline is firm.
+        The N-Series ICE parc will hold stronger longer — better parts revenue stability.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 4 — UK · GOLDEN WINDOW FLEET MODEL
+══════════════════════════════════════════════════════════ -->
+<div id="tab-golden" class="content">
+
+  <div class="kpi-row">
+    <div class="kpi green">
+      <div class="kpi-label">Golden Window Opens</div>
+      <div class="kpi-val">2025</div>
+      <div class="kpi-sub pos">Already started</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-label">Peak Revenue Window</div>
+      <div class="kpi-val">2027–2029</div>
+      <div class="kpi-sub pos">Max ICE parc + avg age</div>
+    </div>
+    <div class="kpi amber">
+      <div class="kpi-label">Window Duration</div>
+      <div class="kpi-val">~7 years</div>
+      <div class="kpi-sub">2025–2032</div>
+    </div>
+    <div class="kpi red">
+      <div class="kpi-label">Structural Decline Begins</div>
+      <div class="kpi-val">2030</div>
+      <div class="kpi-sub neg">ICE parc starts falling</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Upside vs Do Nothing</div>
+      <div class="kpi-val">+£4–7M</div>
+      <div class="kpi-sub">Cumulative 2025–2032</div>
+    </div>
+  </div>
+
+  <div class="alert alert-green">
+    <strong>🏆 The Golden Window is the single most important strategic frame for ISZE's UK business.</strong>
+    ZEV mandate will not kill parts revenue immediately — it will elevate it first. Fleet operators facing £18K penalties
+    are holding their ICE vehicles longer, delaying replacement, and driving more km on existing vehicles.
+    Every extra year an ICE D-Max stays on the road is 1–2 more service intervals, potential warranty-out repairs,
+    and genuine parts revenue. ISZE must act NOW while the window is open — not in 2030 when it starts to close.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="sec-title">ITUK→Dealer Revenue Projection: Conservative vs Optimistic</div>
+
+      <!-- SVG line chart -->
+      <div class="line-chart">
+        <svg viewBox="0 0 560 200" style="height:200px;">
+          <!-- grid lines -->
+          <line x1="50" y1="20" x2="50" y2="170" stroke="#ddd" stroke-width="1"/>
+          <line x1="50" y1="170" x2="540" y2="170" stroke="#ddd" stroke-width="1"/>
+          <line x1="50" y1="20" x2="540" y2="20" stroke="#eee" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="50" y1="57" x2="540" y2="57" stroke="#eee" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="50" y1="94" x2="540" y2="94" stroke="#eee" stroke-width="1" stroke-dasharray="4,3"/>
+          <line x1="50" y1="131" x2="540" y2="131" stroke="#eee" stroke-width="1" stroke-dasharray="4,3"/>
+
+          <!-- Y axis labels -->
+          <text x="45" y="23" font-size="8" fill="#999" text-anchor="end">£16M</text>
+          <text x="45" y="60" font-size="8" fill="#999" text-anchor="end">£14M</text>
+          <text x="45" y="97" font-size="8" fill="#999" text-anchor="end">£12M</text>
+          <text x="45" y="134" font-size="8" fill="#999" text-anchor="end">£10M</text>
+          <text x="45" y="173" font-size="8" fill="#999" text-anchor="end">£8M</text>
+
+          <!-- X axis years: 2022-2035 = 14 points, step = (540-50)/13 = 37.7 -->
+          <!-- x positions: 2022=50, 2023=88, 2024=126, 2025=164, 2026=202, 2027=240, 2028=278, 2029=316, 2030=354, 2031=392, 2032=430, 2033=468, 2034=506, 2035=544 -->
+          <!-- Y scale: 8M=170, 16M=20 → (170-20)/8M = 18.75px/M. Val=v: y = 170 - (v-8)*18.75 -->
+          <!-- Actual 2022=9.6→ y=170-(1.6*18.75)=170-30=140; 2023=11.6→y=140-37.5=102.5; wait let me redo -->
+          <!-- y(v) = 170 - (v - 8) * 18.75 where v in millions -->
+          <!-- Actuals: 2022=9.6→y=140; 2023=11.6→y=103; 2024=12.2→y=92; 2025=11.1→y=113.75 -->
+
+          <!-- Golden window shading 2025-2032 -->
+          <rect x="164" y="20" width="266" height="150" fill="#f0faf4" opacity="0.7"/>
+          <text x="297" y="35" font-size="9" fill="#16a34a" text-anchor="middle" font-weight="bold">🏆 GOLDEN WINDOW</text>
+
+          <!-- Do Nothing baseline (flat/declining from 2025) -->
+          <!-- 2025=11.1→113.75, 2026=10.5→131.25, 2027=10.0→140.5, ... declining -->
+          <polyline points="164,114 202,131 240,143 278,153 316,157 354,161 392,163 430,164 468,165 506,166 540,167"
+            fill="none" stroke="#d97706" stroke-width="1.5" stroke-dasharray="5,3"/>
+
+          <!-- Conservative scenario -->
+          <!-- 2025=11.1, 2026=11.8, 2027=12.5, 2028=12.8, 2029=12.6, 2030=12.0, 2031=11.2, 2032=10.3, 2033=9.2, 2034=8.5, 2035=8.0 -->
+          <polyline points="164,114 202,103 240,92 278,85 316,89 354,103 392,113 430,126 468,142 506,151 540,158"
+            fill="none" stroke="#CC0E1E" stroke-width="2.5"/>
+
+          <!-- Optimistic scenario -->
+          <!-- 2025=11.1, 2026=12.4, 2027=13.5, 2028=14.0, 2029=13.8, 2030=13.2, 2031=12.4, 2032=11.2, 2033=10.1, 2034=9.2, 2035=8.5 -->
+          <polyline points="164,114 202,85 240,58 278,43 316,47 354,62 392,85 430,113 468,133 506,142 540,151"
+            fill="none" stroke="#16a34a" stroke-width="2.5"/>
+
+          <!-- Actuals (solid navy) -->
+          <polyline points="50,140 88,103 126,92 164,114"
+            fill="none" stroke="#CC0E1E" stroke-width="3"/>
+
+          <!-- Actual dots -->
+          <circle cx="50" cy="140" r="4" fill="#CC0E1E"/>
+          <circle cx="88" cy="103" r="4" fill="#CC0E1E"/>
+          <circle cx="126" cy="92" r="4" fill="#CC0E1E"/>
+          <circle cx="164" cy="114" r="4" fill="#c0392b"/>
+
+          <!-- X labels -->
+          <text x="50" y="185" font-size="8" fill="#666" text-anchor="middle">2022</text>
+          <text x="88" y="185" font-size="8" fill="#666" text-anchor="middle">2023</text>
+          <text x="126" y="185" font-size="8" fill="#666" text-anchor="middle">2024</text>
+          <text x="164" y="185" font-size="8" fill="#c0392b" text-anchor="middle" font-weight="bold">2025</text>
+          <text x="240" y="185" font-size="8" fill="#666" text-anchor="middle">2027</text>
+          <text x="316" y="185" font-size="8" fill="#666" text-anchor="middle">2029</text>
+          <text x="354" y="185" font-size="8" fill="#666" text-anchor="middle">2030</text>
+          <text x="430" y="185" font-size="8" fill="#666" text-anchor="middle">2032</text>
+          <text x="540" y="185" font-size="8" fill="#999" text-anchor="middle">2035</text>
+
+          <!-- Now marker -->
+          <line x1="164" y1="15" x2="164" y2="170" stroke="#c0392b" stroke-width="1" stroke-dasharray="3,2"/>
+          <text x="168" y="15" font-size="8" fill="#c0392b" font-weight="bold">NOW</text>
+        </svg>
+      </div>
+
+      <div class="legend" style="margin-top:0;">
+        <div class="legend-item"><div class="legend-sq" style="background:#CC0E1E;"></div>Actual (ITUK→Dealer)</div>
+        <div class="legend-item"><div class="legend-sq" style="background:#16a34a;"></div>Optimistic</div>
+        <div class="legend-item"><div class="legend-sq" style="background:#CC0E1E;"></div>Conservative</div>
+        <div class="legend-item"><div class="legend-sq" style="background:#d97706;height:3px;margin-top:4px;"></div>Do Nothing</div>
+      </div>
+      <p class="footnote">⚠ All projections are estimates based on ZEV mandate schedule and D-Max parc modelling. Significant uncertainty beyond 2027. Treat as directional, not forecast.</p>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">Revenue Model by Scenario (Cumulative 2025–2035)</div>
+      <table>
+        <tr><th>Scenario</th><th class="r">Peak Year</th><th class="r">Peak £</th><th class="r">2025–2032<br>Cumul.</th></tr>
+        <tr>
+          <td><strong>Optimistic</strong><br><span style="font-size:10px;color:var(--muted)">Active capture + BESCO</span></td>
+          <td class="r">2028</td>
+          <td class="r" style="color:var(--green);font-weight:700;">£14.0M</td>
+          <td class="r" style="color:var(--green);font-weight:700;">~£100M</td>
+        </tr>
+        <tr>
+          <td><strong>Conservative</strong><br><span style="font-size:10px;color:var(--muted)">Moderate PMS push</span></td>
+          <td class="r">2028</td>
+          <td class="r">£12.8M</td>
+          <td class="r">~£90M</td>
+        </tr>
+        <tr>
+          <td><strong>Do Nothing</strong><br><span style="font-size:10px;color:var(--muted)">Trend continuation</span></td>
+          <td class="r">2025</td>
+          <td class="r" style="color:var(--red);">£11.1M</td>
+          <td class="r" style="color:var(--red);">~£76M</td>
+        </tr>
+      </table>
+
+      <div class="alert alert-amber" style="margin-top:12px;">
+        <strong>Opportunity cost of inaction: £14–24M</strong> cumulative gap between Optimistic and Do Nothing scenarios across the 2025–2032 golden window. This is the commercial case for the PMS campaign, BESCO push, and NOx sensor pricing strategy.
+      </div>
+
+      <div class="sec-title" style="margin-top:14px;">Golden Window Enablers</div>
+      <table>
+        <tr><th>Lever</th><th class="r">Est. Annual Impact</th><th>Status</th></tr>
+        <tr><td>PMS campaign (filters + clutch)</td><td class="r">+£0.4M</td><td><span class="tag-amber">In pilot</span></td></tr>
+        <tr><td>BESCO dealer penetration</td><td class="r">+£0.2–0.4M</td><td><span class="tag-green">✅ IML signed off May 2026</span></td></tr>
+        <tr><td>NOx / EGR pricing</td><td class="r">+£0.1M</td><td><span class="tag-blue">Pricing review</span></td></tr>
+        <tr><td>R&M contract expansion</td><td class="r">+£0.3M</td><td><span class="tag-amber">Under discussion</span></td></tr>
+        <tr><td>Parts availability (ABC:A fill rate)</td><td class="r">+£0.2M</td><td><span class="tag-green">Improving</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Cohort Revenue Model — v17 -->
+  <div class="card" style="margin-bottom:12px;">
+    <div class="sec-title">ITUK Cohort Revenue Model — v17 UIO (2024–2035)</div>
+    <p style="font-size:11px;color:var(--muted);margin:0 0 8px;">
+      Built on SMMT/DVLA actual car park 2024 (22,389 vehicles, 17 cohorts 2008–2024). Survival curves: ITUK N35/N75 with v17 90% owner-operator override for pre-2011 cohorts.
+      New ICE regs decline with ZEV mandate trajectory (Niguri FY forecast: 2,446 in 2025 → 100 in 2035). Revenue = ISZE wholesale GBP/vehicle/year by age band.
+    </p>
+    <div id="chartCohort" style="height:280px;"></div>
+    <table style="margin-top:10px;">
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th class="r">ITUK UIO</th>
+          <th class="r" style="color:var(--green)">PMS Optimised</th>
+          <th class="r">Baseline</th>
+          <th class="r" style="color:var(--red)">Do Nothing</th>
+        </tr>
+      </thead>
+      <tbody id="cohortTableBody">
+        <tr><td colspan="5" style="text-align:center;color:var(--muted);font-style:italic;">Click the Golden Window tab to load model…</td></tr>
+      </tbody>
+    </table>
+    <p class="footnote">PMS Optimised = ×1.22 uplift on 4–11yr vehicles (active PMS capture). Do Nothing = IAM erosion ×0.93/yr compounding. All figures ISZE wholesale GBP. Source: ISUZU_UIO_Overview_2026_v17.xlsx + Niguri FY forecast.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="sec-title">EV Parts Revenue Bridge</div>
+      <div class="insight">
+        <div class="insight-icon">⚡</div>
+        <div class="insight-text"><strong>ICE parts decline is not 1:1 replaced by EV parts.</strong> EV powertrain eliminates EGR, clutch, oil filter, DPF — which together represent ~35% of current parts revenue. This is structural loss.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">🔋</div>
+        <div class="insight-text"><strong>EV-specific parts are emerging revenue.</strong> HV battery management, electric motor seals, regenerative brake systems, software diagnostics. Different supply chain, different margin profile.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">⚠</div>
+        <div class="insight-text"><strong>D-Max EV timeline is the critical unknown.</strong> Without a confirmed launch date, ISZE cannot model the EV parts ramp. Pressing IMIE for D-Max EV roadmap is a strategic priority.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-title">UK Fleet Lifecycle Model — D-Max ICE</div>
+      <table>
+        <tr><th>Age Band</th><th class="r">Units (est.)</th><th class="r">Avg Spend/yr</th><th class="r">Revenue</th></tr>
+        <tr><td>0–2 years (warranty)</td><td class="r">~8,400</td><td class="r">£120</td><td class="r">£1.0M</td></tr>
+        <tr><td>3–5 years (early)</td><td class="r">~12,600</td><td class="r">£280</td><td class="r">£3.5M</td></tr>
+        <tr><td>6–8 years (peak)</td><td class="r">~11,200</td><td class="r">£420</td><td class="r">£4.7M</td></tr>
+        <tr><td>9–12 years (mature)</td><td class="r">~7,000</td><td class="r">£380</td><td class="r">£2.7M</td></tr>
+        <tr><td>12+ years (aged)</td><td class="r">~2,800</td><td class="r">£220</td><td class="r">£0.6M</td></tr>
+        <tr style="background:#FFE8EA;"><td><strong>TOTAL</strong></td><td class="r"><strong>~42,000</strong></td><td class="r">—</td><td class="r"><strong>£12.5M</strong></td></tr>
+      </table>
+      <p class="footnote">⚠ Spend/unit/year estimated from industry R&M benchmarks. Actual data unavailable at end-customer level. Peak demand cohort (6–8yr) growing as 2017–2019 vehicles age through.</p>
+    </div>
+    <div class="card">
+      <div class="sec-title">Strategic Urgency Matrix</div>
+      <table>
+        <tr><th>Action</th><th class="r">Urgency</th><th class="r">Value</th></tr>
+        <tr><td>Activate PMS campaign NOW</td><td class="r"><span class="tag-red">Critical</span></td><td class="r">High</td></tr>
+        <tr><td>Push IML for BESCO sanction</td><td class="r"><span class="tag-red">Critical</span></td><td class="r">High</td></tr>
+        <tr><td>Get D-Max EV launch date</td><td class="r"><span class="tag-red">Critical</span></td><td class="r">High</td></tr>
+        <tr><td>NOx sensor pricing review</td><td class="r"><span class="tag-amber">High</span></td><td class="r">Medium</td></tr>
+        <tr><td>ITUK R&M contract push</td><td class="r"><span class="tag-amber">High</span></td><td class="r">Medium</td></tr>
+        <tr><td>Dealer sell-out data capture</td><td class="r"><span class="tag-amber">High</span></td><td class="r">High</td></tr>
+        <tr><td>EV parts strategy / IMIE brief</td><td class="r"><span class="tag-blue">Medium</span></td><td class="r">High</td></tr>
+        <tr><td>UIO data refresh v17 (May 2026)</td><td class="r"><span class="tag-green">✅ Done</span></td><td class="r">Medium</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     TAB 5 — ISZE · ACTION PLAN
+══════════════════════════════════════════════════════════ -->
+<div id="tab-action" class="content">
+
+  <div class="alert alert-blue">
+    <strong>Strategic synthesis:</strong> Three forces converge in 2025–2026 — the Golden Window (ICE parc ageing = elevated parts demand),
+    the ZEV Mandate (operator fleet lock-in = no replacement), and a Network Growing at +2.2% YoY annualised.
+    The 2025 data covers Jan–Nov 20 only (324 days); annualised via rule of three = £12.5M vs £12.2M in 2024.
+    All three forces are aligned positively: growing demand, captive fleet, rising parc age. The opportunity is real — the question is capture speed.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="sec-title">Immediate Actions (Now → Q2 FY2027)</div>
+      <table>
+        <tr><th>#</th><th>Action</th><th class="r">Owner</th><th class="r">Deadline</th></tr>
+        <tr>
+          <td><span class="tag-red">1</span></td>
+          <td><strong>PMS Campaign launch</strong> — activate ITUK pilot with EQ-HIT service mapping for 4HK1/4JJ1 vehicles aged 3–8yr</td>
+          <td class="r">JVdP + KM</td><td class="r">Apr 2026</td>
+        </tr>
+        <tr>
+          <td><span class="tag-red">2</span></td>
+          <td><strong>IML lubes escalation</strong> — ✅ IML signed off May 2026. FY2027 launch confirmed. €442K revenue, 13% GP, €3.30/L purchase price. Next: BESCO dealer uptake programme.</td>
+          <td class="r">JVdP</td><td class="r"><span class="tag-green">Done</span></td>
+        </tr>
+        <tr>
+          <td><span class="tag-red">3</span></td>
+          <td><strong>D-Max EV roadmap request</strong> — write to IMIE requesting confirmed EV D-Max UK launch timeline; needed for parts bridge model</td>
+          <td class="r">JVdP</td><td class="r">Apr 2026</td>
+        </tr>
+        <tr>
+          <td><span class="tag-amber">4</span></td>
+          <td><strong>NOx sensor pricing</strong> — PN 8983528481 (£341K, 57 dealers) — review vs aftermarket. Price-taker or price-maker?</td>
+          <td class="r">JVdP + HT</td><td class="r">May 2026</td>
+        </tr>
+        <tr>
+          <td><span class="tag-amber">5</span></td>
+          <td><strong>Dealer sell-out data MOU</strong> — push ITUK for quarterly sell-out report; frame as ZEV planning tool (neutral framing)</td>
+          <td class="r">JVdP</td><td class="r">May 2026</td>
+        </tr>
+        <tr>
+          <td><span class="tag-amber">6</span></td>
+          <td><strong>Pricing dispute rebuttal</strong> — use 26.5mo/2% anchoring. Separate ITUK from Ireland/Benelux/Israel in communication approach.</td>
+          <td class="r">JVdP</td><td class="r">Ongoing</td>
+        </tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="sec-title">Medium-Term Strategic Moves (FY2027–2028)</div>
+      <table>
+        <tr><th>#</th><th>Action</th><th class="r">Horizon</th></tr>
+        <tr>
+          <td><span class="tag-blue">7</span></td>
+          <td><strong>BESCO dealer-level push</strong> — once IML sanction received, build ITUK dealer BESCO program to displace TX Delo £309K</td>
+          <td class="r">FY2027</td>
+        </tr>
+        <tr>
+          <td><span class="tag-blue">8</span></td>
+          <td><strong>R&M contract expansion</strong> — work with IMIE/ITUK to extend R&M coverage windows; keeps parts in genuine channel through golden window</td>
+          <td class="r">FY2027</td>
+        </tr>
+        <tr>
+          <td><span class="tag-blue">9</span></td>
+          <td><strong>EV parts catalogue preparation</strong> — begin mapping D-Max EV parts profile, PN seeding in EQ-HIT, pricing framework</td>
+          <td class="r">FY2027–28</td>
+        </tr>
+        <tr>
+          <td><span class="tag-blue">10</span></td>
+          <td><strong>ZEV compliance advisory to ITUK</strong> — ISZE can position as knowledge partner on fleet ZEV transition; builds relationship capital during penalty pressure period</td>
+          <td class="r">FY2027</td>
+        </tr>
+        <tr>
+          <td><span class="tag-blue">11</span></td>
+          <td><strong>Dealer network health programme</strong> — bottom 20 dealers (£0–£100K) need activation programme. Each 10% uplift = +£800K network-wide.</td>
+          <td class="r">FY2027</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="sec-title">Known Risks</div>
+      <div class="insight">
+        <div class="insight-icon">🔴</div>
+        <div class="insight-text"><strong>IML non-sanction on lubricants</strong> — the 137,520L is informal. If IML declines to sanction BESCO Europe, the entire lubricants revenue stream is at risk.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">🔴</div>
+        <div class="insight-text"><strong>ITUK pricing dispute precedent</strong> — if ITUK wins methodology concession, Ireland/Benelux/Israel may follow. Collective distributor resistance to 2026 pricing.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">🟡</div>
+        <div class="insight-text"><strong>EQ-HIT PMS gap</strong> — PMS campaign cannot scale without PN→service interval mapping in EQ-HIT. ITUK pilot depends on manually curated lists.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">🟡</div>
+        <div class="insight-text"><strong>Golden Window may compress</strong> — if ITUK volume reduction accelerates faster than modelled (due to ZEV penalties), the peak revenue year may shift earlier and lower.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-title">Data Gaps (requires action)</div>
+      <table>
+        <tr><th>Gap</th><th class="r">Impact</th><th class="r">How to fix</th></tr>
+        <tr><td>D-Max EV launch date</td><td class="r"><span class="tag-red">High</span></td><td class="r">IMIE request</td></tr>
+        <tr><td>Dealer→end customer data</td><td class="r"><span class="tag-red">High</span></td><td class="r">ITUK MOU</td></tr>
+        <tr><td>BESCO ITUK actual volumes</td><td class="r"><span class="tag-red">High</span></td><td class="r">ITUK confirm</td></tr>
+        <tr><td>UK D-Max parc by age</td><td class="r"><span class="tag-amber">Med</span></td><td class="r">UIO Apr 2026</td></tr>
+        <tr><td>NOx aftermarket pricing</td><td class="r"><span class="tag-amber">Med</span></td><td class="r">Eucon / web</td></tr>
+        <tr><td>R&M contract scope / ITUK</td><td class="r"><span class="tag-amber">Med</span></td><td class="r">ITUK discussion</td></tr>
+        <tr><td>EV parts PN catalogue</td><td class="r"><span class="tag-blue">Low now</span></td><td class="r">IML / IMIE</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="sec-title">Project Dependencies Map</div>
+      <div class="insight">
+        <div class="insight-icon">🔗</div>
+        <div class="insight-text"><strong>UIO (Apr 2026) → Parc Age Model → Golden Window accuracy</strong> — the lifecycle model is only as good as UIO data.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">🔗</div>
+        <div class="insight-text"><strong>IML sanction → BESCO dealer push → TX Delo displacement</strong> — ✅ IML signed off May 2026. Chain unlocked — BESCO dealer push is now the active step.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">🔗</div>
+        <div class="insight-text"><strong>D-Max EV date → EV parts bridge → Post-2030 revenue model</strong> — no EV date = no post-2030 planning possible.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-icon">🔗</div>
+        <div class="insight-text"><strong>Pricing rebuttal success → FY2027 price increase → Competitiveness Dashboard</strong> — the pricing dispute outcome shapes every subsequent distributor negotiation.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div class="sec-title">One-Page Brief for IML / IGS</div>
+    <div class="alert alert-blue" style="margin-bottom:0;">
+      <strong>ISZE UK Market Status — March 2026</strong><br><br>
+      The UK is ISZE's largest market by volume (€5.62M ISZE→ITUK) and faces the most acute ZEV mandate pressure in Europe.
+      The Van ZEV mandate (16% in 2025 → 100% by 2035) directly targets the D-Max — our highest-volume model — with no EV variant
+      available. Despite this, the ICE fleet ageing dynamic creates a <strong>Golden Window of elevated parts demand through 2028–2029</strong>
+      that ISZE is positioned to capture.<br><br>
+      Two actions still require IML support: (1) D-Max EV launch timeline for post-2030 revenue planning; (2) EQ-HIT PMS service mapping to enable the ITUK PMS pilot.
+      <strong>✅ BESCO lubricants programme sanctioned by IML — May 2026.</strong> FY2027 launch confirmed (€442K revenue, 13% GP).
+      Without the remaining two, ISZE cannot model EV revenue or scale the PMS pilot beyond manual curation.
+    </div>
+  </div>
+</div>
+
+<div id="tab-isze" class="content">
+  <div class="sec-title">ISZE · GPS × AIM (PRISM derived)</div>
+  <p style="font-size:12px;color:#666;margin-bottom:12px">Prioritise PMS and SPA conversations: high parc-window distributors with low GPS or high AIM pricing risk.</p>
+  <table><tr><th>Distributor</th><th class='r'>GPS SPU</th><th class='r'>AIM high-risk %</th><th>Quadrant</th></tr><tr><td>IRELAND</td><td class='r'>€434</td><td class='r'>1.1%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>UTI</td><td class='r'>€312</td><td class='r'>0.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>ICELAND</td><td class='r'>€249</td><td class='r'>0.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>ITUK</td><td class='r'>€248</td><td class='r'>0.2%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>BELGIUM</td><td class='r'>€226</td><td class='r'>1.2%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>FINLAND</td><td class='r'>€221</td><td class='r'>1.3%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>PORTUGAL</td><td class='r'>€213</td><td class='r'>0.7%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>CYPRUS</td><td class='r'>€207</td><td class='r'>0.4%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>GERMANY</td><td class='r'>€205</td><td class='r'>1.6%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>MALTA</td><td class='r'>€194</td><td class='r'>1.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>DENMARK</td><td class='r'>€178</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>ROMANIA</td><td class='r'>€177</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>SWEDEN</td><td class='r'>€177</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>NORWAY</td><td class='r'>€172</td><td class='r'>2.1%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>GREECE</td><td class='r'>€167</td><td class='r'>0.6%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>UMI</td><td class='r'>€152</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>IUK</td><td class='r'>€125</td><td class='r'>1.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>HUNGARY</td><td class='r'>€88</td><td class='r'>2.2%</td><td>Grow capture (low GPS · low AIM risk)</td></tr></table><p style='font-size:11px;color:#666;margin-top:8px'>Source: PRISM derived · prioritise PMS in Golden Window distributors with low GPS.</p></div>
+<table><tr><th>Distributor</th><th class='r'>GPS SPU</th><th class='r'>AIM high-risk %</th><th>Quadrant</th></tr><tr><td>IRELAND</td><td class='r'>€434</td><td class='r'>1.1%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>UTI</td><td class='r'>€312</td><td class='r'>0.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>ICELAND</td><td class='r'>€249</td><td class='r'>0.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>ITUK</td><td class='r'>€248</td><td class='r'>0.2%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>BELGIUM</td><td class='r'>€226</td><td class='r'>1.2%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>FINLAND</td><td class='r'>€221</td><td class='r'>1.3%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>PORTUGAL</td><td class='r'>€213</td><td class='r'>0.7%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>CYPRUS</td><td class='r'>€207</td><td class='r'>0.4%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>GERMANY</td><td class='r'>€205</td><td class='r'>1.6%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>MALTA</td><td class='r'>€194</td><td class='r'>1.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>DENMARK</td><td class='r'>€178</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>ROMANIA</td><td class='r'>€177</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>SWEDEN</td><td class='r'>€177</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>NORWAY</td><td class='r'>€172</td><td class='r'>2.1%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>GREECE</td><td class='r'>€167</td><td class='r'>0.6%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>UMI</td><td class='r'>€152</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>IUK</td><td class='r'>€125</td><td class='r'>1.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>HUNGARY</td><td class='r'>€88</td><td class='r'>2.2%</td><td>Grow capture (low GPS · low AIM risk)</td></tr></table><p style='font-size:11px;color:#666;margin-top:8px'>Source: PRISM derived · prioritise PMS in Golden Window distributors with low GPS.</p></div>
+<table><tr><th>Distributor</th><th class='r'>GPS SPU</th><th class='r'>AIM high-risk %</th><th>Quadrant</th></tr><tr><td>IRELAND</td><td class='r'>€434</td><td class='r'>1.1%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>UTI</td><td class='r'>€312</td><td class='r'>0.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>ICELAND</td><td class='r'>€249</td><td class='r'>0.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>ITUK</td><td class='r'>€248</td><td class='r'>0.2%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>BELGIUM</td><td class='r'>€226</td><td class='r'>1.2%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>FINLAND</td><td class='r'>€221</td><td class='r'>1.3%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>PORTUGAL</td><td class='r'>€213</td><td class='r'>0.7%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>CYPRUS</td><td class='r'>€207</td><td class='r'>0.4%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>GERMANY</td><td class='r'>€205</td><td class='r'>1.6%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>MALTA</td><td class='r'>€194</td><td class='r'>1.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>DENMARK</td><td class='r'>€178</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>ROMANIA</td><td class='r'>€177</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>SWEDEN</td><td class='r'>€177</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>NORWAY</td><td class='r'>€172</td><td class='r'>2.1%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>GREECE</td><td class='r'>€167</td><td class='r'>0.6%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>UMI</td><td class='r'>€152</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>IUK</td><td class='r'>€125</td><td class='r'>1.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>HUNGARY</td><td class='r'>€88</td><td class='r'>2.2%</td><td>Grow capture (low GPS · low AIM risk)</td></tr></table><p style='font-size:11px;color:#666;margin-top:8px'>Source: PRISM derived · prioritise PMS in Golden Window distributors with low GPS.</p></div>
+<div class='card' style='margin-top:16px'><div class='sec-title'>ISZE · GPS × AIM overlay (CY2025)</div><table><tr><th>Distributor</th><th class='r'>GPS SPU</th><th class='r'>AIM high-risk %</th><th>Quadrant</th></tr><tr><td>IRELAND</td><td class='r'>€388</td><td class='r'>1.1%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>UTI</td><td class='r'>€296</td><td class='r'>0.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>ITUK</td><td class='r'>€248</td><td class='r'>0.2%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>FINLAND</td><td class='r'>€231</td><td class='r'>1.3%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>BELGIUM</td><td class='r'>€220</td><td class='r'>1.2%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>ICELAND</td><td class='r'>€210</td><td class='r'>0.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>PORTUGAL</td><td class='r'>€209</td><td class='r'>0.7%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>GERMANY</td><td class='r'>€197</td><td class='r'>1.6%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>MALTA</td><td class='r'>€197</td><td class='r'>1.5%</td><td>Defend (high GPS · low AIM risk)</td></tr><tr><td>CYPRUS</td><td class='r'>€186</td><td class='r'>0.4%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>NORWAY</td><td class='r'>€178</td><td class='r'>2.1%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>DENMARK</td><td class='r'>€174</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>ROMANIA</td><td class='r'>€163</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>SWEDEN</td><td class='r'>€151</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>UMI</td><td class='r'>€151</td><td class='r'>0.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>GREECE</td><td class='r'>€139</td><td class='r'>0.6%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>IUK</td><td class='r'>€128</td><td class='r'>1.8%</td><td>Grow capture (low GPS · low AIM risk)</td></tr><tr><td>HUNGARY</td><td class='r'>€87</td><td class='r'>2.2%</td><td>Grow capture (low GPS · low AIM risk)</td></tr></table><p style='font-size:11px;color:#666;margin-top:8px'>Source: PRISM derived · prioritise PMS in Golden Window distributors with low GPS.</p></div>
+<!-- ISZE_GOLDEN_GPS_OVERLAY -->
+</div>
+
+<script>
+// ── Tab navigation ──────────────────────────────────────────────────────────
+let _cohortInited = false;
+function showTab(id) {
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+  if (id === 'golden' && !_cohortInited) { initCohortChart(); _cohortInited = true; }
+}
+
+// ── ITUK Cohort Revenue Model v17 ───────────────────────────────────────────
+function initCohortChart() {
+  // SMMT/DVLA actual 2024 = 22,389 (17 cohorts sum exactly)
+  const C2024 = {
+    2008:73,  2009:180, 2010:310, 2011:460, 2012:630, 2013:830, 2014:1050,
+    2015:1350,2016:1700,2017:1800,2018:1800,2019:2000,2020:1550,
+    2021:1900,2022:2100,2023:2210,2024:2446
+  };
+  // New ICE regs declining with ZEV mandate (Niguri FY forecast)
+  const NEW_REGS = {2025:2446,2026:2100,2027:1750,2028:1300,2029:900,
+                    2030:600,2031:400,2032:280,2033:200,2034:150,2035:100};
+
+  function surv(age) {
+    if (age < 3)  return 0.99;
+    if (age < 6)  return 0.97;
+    if (age < 9)  return 0.94;
+    if (age < 12) return 0.91;
+    if (age < 15) return 0.88;
+    return 0.90; // v17 owner-operator override: flat 90% for 15+ yr
+  }
+
+  function rpv(age) { // ISZE wholesale GBP/vehicle/year
+    if (age <= 3)  return 130;
+    if (age <= 7)  return 230;
+    if (age <= 11) return 270;
+    if (age <= 15) return 190;
+    return 110;
+  }
+
+  const YEARS = [2024,2025,2026,2027,2028,2029,2030,2031,2032,2033,2034,2035];
+
+  function runScenario(scenario) {
+    let cohorts = Object.assign({}, C2024);
+    const uio = [], revenue = [];
+    for (let yi = 0; yi < YEARS.length; yi++) {
+      const yr = YEARS[yi];
+      if (yr > 2024) {
+        const next = {};
+        for (const [ry, u] of Object.entries(cohorts)) {
+          const age = yr - +ry;
+          if (age <= 30) next[ry] = u * surv(age);
+        }
+        if (NEW_REGS[yr]) next[yr] = NEW_REGS[yr];
+        cohorts = next;
+      }
+      const iamF = (scenario === 'donothing') ? Math.pow(0.93, yi) : 1.0;
+      let totU = 0, totR = 0;
+      for (const [ry, u] of Object.entries(cohorts)) {
+        const age = yr - +ry;
+        totU += u;
+        let r = rpv(age);
+        if (scenario === 'optimised' && age >= 4 && age <= 11) r *= 1.22;
+        r *= iamF;
+        totR += u * r;
+      }
+      uio.push(Math.round(totU));
+      revenue.push(+(totR / 1e6).toFixed(2));
+    }
+    return { uio, revenue };
+  }
+
+  const opt  = runScenario('optimised');
+  const base = runScenario('baseline');
+  const dn   = runScenario('donothing');
+
+  Plotly.newPlot('chartCohort', [
+    { x:YEARS, y:opt.revenue,  name:'PMS Optimised', mode:'lines+markers',
+      line:{color:'#16a34a',width:3}, marker:{size:6} },
+    { x:YEARS, y:base.revenue, name:'Baseline',      mode:'lines+markers',
+      line:{color:'#CC0E1E',width:2.5}, marker:{size:5} },
+    { x:YEARS, y:dn.revenue,   name:'Do Nothing',    mode:'lines+markers',
+      line:{color:'#d97706',width:2,dash:'dash'}, marker:{size:5} }
+  ], {
+    margin:{t:20,r:20,b:40,l:55},
+    paper_bgcolor:'transparent', plot_bgcolor:'transparent',
+    font:{family:'Arial,sans-serif',size:11,color:'#333'},
+    xaxis:{gridcolor:'#eee',tickformat:'d',dtick:1},
+    yaxis:{title:'£M (ISZE wholesale)',gridcolor:'#eee',tickprefix:'£',ticksuffix:'M'},
+    legend:{orientation:'h',y:-0.18},
+    shapes:[{type:'rect',x0:2025,x1:2032,y0:0,y1:1,yref:'paper',
+             fillcolor:'rgba(22,163,74,0.07)',line:{width:0}}],
+    annotations:[{x:2028.5,y:0.97,yref:'paper',text:'🏆 Golden Window',
+                  showarrow:false,font:{color:'#16a34a',size:11}}]
+  }, {responsive:true, displayModeBar:false});
+
+  // Populate summary table
+  const tb = document.getElementById('cohortTableBody');
+  if (!tb) return;
+  const rows = [[1,2025],[3,2027],[5,2029],[8,2032],[11,2035]];
+  tb.innerHTML = rows.map(([yi,yr]) =>
+    `<tr>
+      <td><strong>${yr}</strong></td>
+      <td class="r">${opt.uio[yi].toLocaleString()}</td>
+      <td class="r" style="color:var(--green);font-weight:700">£${opt.revenue[yi].toFixed(2)}M</td>
+      <td class="r">£${base.revenue[yi].toFixed(2)}M</td>
+      <td class="r" style="color:var(--red)">£${dn.revenue[yi].toFixed(2)}M</td>
+    </tr>`
+  ).join('');
+}
+</script>
+
+</body>
+</html>

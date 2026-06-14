@@ -1,0 +1,105 @@
+ISZE MEMORY REVIEW — Week 18, 2026
+Generated: 2026-04-27
+
+## Memory Health
+
+### STALE FILES (last validated 2026-03-24 — 34 days ago, >3 weeks threshold)
+All of the following exceeded the 3-week threshold:
+-
+- memory/projects/pms-coverage.md
+- memory/projects/aftermarket-intelligence.md
+- memory/projects/lubricants.md
+- memory/projects/action-plan-fy2026.md
+- memory/projects/action-plan-fy2027.md
+- memory/projects/competitiveness.md
+
+Only uio.md is current (last validated 2026-04-20 — 7 days ago).
+
+### CLAUDE.md SUMMARY OUT OF DATE
+The CLAUDE.md Active Projects table still says:
+- UIO Tool (v9) → now v17 (promoted 20 Apr 2026). This is badly stale and will cause confusion.
+- AIM: "CY2024 still needed" → CY2024 cross-validation was confirmed 15 Mar 2026. Partially resolved.
+- Lubricants: "Awaiting IML go-ahead" → lubricants.md clarifies this applies only to BESCO/broad pilot,
+  NOT the existing UMI/Shell channel which is already live. The CLAUDE.md framing is misleading.
+
+### STATUS MISMATCH
+- action-plan-fy2027.md: status "Planning — FY2027 starts April 2026" → FY2027 started this month.
+  Should now read "Active". File ISZE_FY2027_ActionPlan_v1.xlsx exists on disk.
+- action-plan-fy2026.md: FY2026 closed March 2026. Status still reads "year-end review phase."
+  If the year-end review is complete, this project should be marked "Closed."
+- ISZE_FY2027_ActionPlan_CoverMemo.docx and ISZE_FY2027_ActionPlan_v1.xlsx found on disk
+  but not referenced in action-plan-fy2027.md file list — add them.
+
+---
+
+## Open Items Still Unresolved
+
+### Lubricants
+- Jerome still needs to send Yoshimoto-san the GP figure (~€57K gross / ~€37K net) in response
+  to Yoshimoto's question about profitability from the €20K support payment.
+  This has been sitting open since 4 Mar 2026 (54 days). Likely the most overdue action.
+- IML formal go-ahead for BESCO/broader pilot: still no sanction post Feb 2026 MTG.
+
+### AIM (Aftermarket Intelligence)
+- CY2025 sell-out not yet run through Parts Sales Classification engine (was "unblocked" 24 Mar).
+- Manual classification of residual 5% (~€1.6M CY2024) pending.
+- VKWRT (net revenue field) not yet loaded — SPA-adjusted scoring blocked.
+- IAM benchmark not yet linked into Competitiveness Dashboard for AIM scoring.
+
+### PMS Coverage
+- Full PMS basket gap revalidation using CY2025 data: pending (oil filter updated, rest of
+  basket not done).
+- EQ-HIT PN → service-schedule mapping: still blocked, ITUK must validate.
+
+### Pricing 2026
+- Open question: has the +5.3% been accepted by all other DBs (non-ITUK)?
+- CY2025 ITUK actuals via SAP — status unknown (was pending BVDB login fix in March).
+
+### UIO
+- MIDI toggle default policy not decided (currently defaults to "Include MIDI").
+- 2026F −3.7% dip needs a one-line explanation note added before sharing externally.
+- Build script build_isuzu_uio.py not updated for v17 — v17 fixes would be lost if
+  script is re-run from scratch.
+- MIDI contribution row 5 sheet 1 not verified post-v17 — SUMPRODUCT may point to old refs.
+- UIO HTML Dashboard still v11; Excel is v17. Naming drift flagged in uio.md but unresolved.
+- File sprawl (33+ UIO files) cleanup awaiting Jerome's Phase 1 approval.
+
+---
+
+## Suggested Updates (concrete edits recommended)
+
+1. CLAUDE.md Active Projects table — update UIO entry from "v9" to "v17". Remove "(v9)".
+   Change status from "Stable — FY2027 refresh due now (Apr 2026)" to
+   "Active — v17 canonical (Apr 2026). Dashboard v11 HTML behind; file sprawl cleanup pending."
+
+2. CLAUDE.md Active Projects table — Lubricants: change "Awaiting IML go-ahead" to
+   "Live (UMI/Shell, ~133K L, ~€57K GP). BESCO broader pilot awaiting IML sanction."
+
+3. action-plan-fy2027.md — Change status from "Planning" to "Active". Add to file list:
+   ISZE_FY2027_ActionPlan_v1.xlsx and ISZE_FY2027_ActionPlan_CoverMemo.docx.
+
+4. action-plan-fy2026.md — Mark as "Closed" if year-end review is complete.
+   If still open, note what's outstanding.
+
+5. lubricants.md — Add explicit "ACTION OVERDUE" flag: reply to Yoshimoto-san with GP
+   figure (~€57K gross / ~€37K net). Note that this has been pending since 4 Mar 2026.
+
+6. aftermarket-intelligence.md — Update "Next steps" section to reflect what has and hasn't
+   moved since 24 Mar. CY2025 sell-out classification was unblocked but not yet run —
+   flag this explicitly.
+
+7. All stale files — bump "Last validated" date once Jerome reviews and confirms status
+   has not materially changed (even a "reviewed, still accurate" stamp is useful).
+
+---
+
+## No Action Needed
+
+- uio.md: Current (2026-04-20). v17 status, key figures, open items well-documented.
+  Content is detailed and accurate per recent work.
+- memory/glossary.md: Not reviewed this cycle (no staleness flag triggered).
+- memory/people/jerome.md: Not reviewed this cycle.
+- Pricing methodology (formula, FX documentation, Class 0 PNs): still accurate; no
+  new pricing work has occurred since Mar 2026.
+- PMS cover ratios and entity mapping (Cust 2574/2575 distinction): documented correctly,
+  no new data to incorporate.

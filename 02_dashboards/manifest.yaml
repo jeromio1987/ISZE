@@ -1,0 +1,51 @@
+# ISZE HTML dashboard layout — source folders (deploy is flat via sync_to_deploys.ps1)
+# Agent sync: 2026-06-13
+
+version: 1
+
+folders:
+  hub: Entry points and navigation
+  sales: AIM, competitiveness, sell-out, monthly sales, SPA
+  fleet: UIO, ZEV, plan tracker, year-end
+  gps: GPS / SPU / target study
+  ops: Tender, AI tools, legal map
+  side: Non-ISZE (PROPERTIQ)
+
+files:
+  hub:
+    - PROJECT_HUB.html
+    - MASTER_DASHBOARD.html
+    - index.html
+    - AI_Operations_Explorer.html
+  sales:
+    - AIM_Dashboard_CY2025.html
+    - ISZE_Competitiveness_Dashboard.html
+    - Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html
+    - Dealer_Sellout_UTI_vs_ITUK.html
+    - ISZE_Monthly_Sales_Tracker.html
+    - ISZE_SPA_RunRate_UTI.html
+  fleet:
+    - ISUZU_UIO_Dashboard_2026_v18.html
+    - ITUK_ZEV_Golden_Window_Dashboard.html
+    - ISZE_Plan_Tracker_2030.html
+    - ISZE_FY2026_YearEnd_Review.html
+  gps:
+    - ISZE_GPS_Dashboard_v9.html
+    - ISZE_GPS_TargetStudy_Reconciliation_Dashboard.html
+    - ISZE_GPS_Network_SPU_Dashboard.html
+  ops:
+    - ISZE_Tender_Monitor_v2.html
+    - ISZE_Tools_Legal_Map.html
+    - ISZE_AI_Tools_Overview.html
+  side:
+    - PROPERTIQ.html
+
+archive:
+  - ISUZU_UIO_Dashboard_2026_v17.html
+
+deploy:
+  # Published URLs stay flat: /MASTER_DASHBOARD.html (GitHub Pages)
+  flatten_on_sync: true
+  skip_dirs:
+    - _archive
+    - _build

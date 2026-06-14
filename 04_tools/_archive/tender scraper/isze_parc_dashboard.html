@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ISZE Vehicle Parc Intelligence</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a2e}
+header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);color:white;padding:28px 36px}
+header h1{font-size:1.6rem;font-weight:700}
+header p{opacity:.65;font-size:.85rem;margin-top:4px}
+.main{padding:24px 36px;max-width:1600px;margin:0 auto}
+
+/* KPI cards */
+.kpi-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.kpi{background:white;border-radius:12px;padding:18px 22px;flex:1;min-width:130px;
+       box-shadow:0 2px 8px rgba(0,0,0,.07);border-top:4px solid #0f3460}
+.kpi.green{border-top-color:#27ae60}.kpi.blue{border-top-color:#1a73e8}
+.kpi.orange{border-top-color:#e67e22}.kpi.purple{border-top-color:#8e44ad}
+.kpi.teal{border-top-color:#16a085}
+.kpi-val{font-size:1.9rem;font-weight:700;color:#1a1a2e}
+.kpi-lbl{font-size:.72rem;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+.kpi-sub{font-size:.72rem;color:#aaa;margin-top:2px}
+
+/* Grid */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-bottom:18px}
+.grid-wide{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:18px}
+@media(max-width:1100px){.grid-2,.grid-3,.grid-wide{grid-template-columns:1fr}}
+
+/* Cards */
+.card{background:white;border-radius:12px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.card h3{font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-bottom:14px}
+.chart-wrap{position:relative}
+
+/* Table */
+.tbl{width:100%;border-collapse:collapse;font-size:.8rem}
+.tbl th{background:#f8f9fa;padding:8px 12px;text-align:left;font-size:.7rem;
+         text-transform:uppercase;letter-spacing:.4px;color:#666;border-bottom:2px solid #eee;
+         position:sticky;top:0;white-space:nowrap;cursor:pointer}
+.tbl th:hover{background:#edf2fb}
+.tbl td{padding:8px 12px;border-bottom:1px solid #f4f4f4;vertical-align:middle}
+.tbl tr:hover td{background:#fafbff}
+.tbl-wrap{max-height:380px;overflow-y:auto}
+.flag{font-size:1rem}
+.bar-inline{display:inline-block;height:6px;border-radius:3px;background:linear-gradient(90deg,#0f3460,#1a73e8);vertical-align:middle;margin-left:6px}
+.rpv-high{color:#27ae60;font-weight:700}
+.rpv-mid{color:#f39c12;font-weight:600}
+.rpv-low{color:#e74c3c}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.68rem;font-weight:600}
+.pill-green{background:#e8f8f0;color:#27ae60}
+.pill-red{background:#fde8e8;color:#c0392b}
+.pill-blue{background:#edf2fb;color:#1a73e8}
+
+/* RPV avg line label */
+.avg-note{font-size:.7rem;color:#888;margin-top:6px;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <h1>🚛 ISZE Vehicle Parc Intelligence</h1>
+  <p>CY2025 Actuals &nbsp;·&nbsp; 106,446 active vehicles across 18 markets &nbsp;·&nbsp; Generated 06 Mar 2026</p>
+</header>
+<div class="main">
+
+<!-- KPIs -->
+<div class="kpi-row">
+  <div class="kpi blue">
+    <div class="kpi-val">€31.0M</div>
+    <div class="kpi-lbl">Net Parts Revenue CY25</div>
+    <div class="kpi-sub">Gross invoiced, net of credits</div>
+  </div>
+  <div class="kpi green">
+    <div class="kpi-val">€13.8M</div>
+    <div class="kpi-lbl">Gross Margin</div>
+    <div class="kpi-sub">44.5% margin rate</div>
+  </div>
+  <div class="kpi orange">
+    <div class="kpi-val">106,446</div>
+    <div class="kpi-lbl">Active Vehicles (UIO 2025E)</div>
+    <div class="kpi-sub">12-year LCV survival curve</div>
+  </div>
+  <div class="kpi purple">
+    <div class="kpi-val">€291</div>
+    <div class="kpi-lbl">Avg Revenue / Vehicle</div>
+    <div class="kpi-sub">ISZE portfolio average</div>
+  </div>
+  <div class="kpi teal">
+    <div class="kpi-val">18</div>
+    <div class="kpi-lbl">Active Markets</div>
+    <div class="kpi-sub">With CY25 parts revenue</div>
+  </div>
+</div>
+
+<!-- Row 1: Revenue by market + Monthly trend -->
+<div class="grid-wide">
+  <div class="card">
+    <h3>Revenue by Market — CY2025 (€)</h3>
+    <div class="chart-wrap"><canvas id="revChart" height="220"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>Monthly Revenue Trend — CY2025 (€k)</h3>
+    <div class="chart-wrap"><canvas id="monthChart" height="220"></canvas></div>
+  </div>
+</div>
+
+<!-- Row 2: RPV + Bubble -->
+<div class="grid-2">
+  <div class="card">
+    <h3>Revenue per Vehicle by Market (€/vehicle/year) &nbsp;<span style="color:#1a73e8;font-size:.7rem">▬ Portfolio avg €291</span></h3>
+    <div class="chart-wrap"><canvas id="rpvChart" height="280"></canvas></div>
+    <div class="avg-note">Higher = better parts capture per active vehicle. Below avg = under-penetrated opportunity.</div>
+  </div>
+  <div class="card">
+    <h3>Parc vs Revenue — Opportunity Map</h3>
+    <div class="chart-wrap"><canvas id="bubbleChart" height="280"></canvas></div>
+    <div class="avg-note">Bubble size = revenue. X = parc size. Y = revenue per vehicle. Top-left = large parc, low capture.</div>
+  </div>
+</div>
+
+<!-- Row 3: UIO Trend + Top Parts -->
+<div class="grid-2">
+  <div class="card">
+    <h3>ISZE Global UIO Trend (units in operation)</h3>
+    <div class="chart-wrap"><canvas id="uioChart" height="220"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>Top 15 Parts by Revenue CY2025 (€k)</h3>
+    <div class="chart-wrap"><canvas id="partsChart" height="220"></canvas></div>
+  </div>
+</div>
+
+<!-- Row 4: Market detail table -->
+<div class="card" style="margin-bottom:18px">
+  <h3>Market Detail — click headers to sort</h3>
+  <div class="tbl-wrap">
+    <table class="tbl" id="mktTbl">
+      <thead><tr>
+        <th onclick="sortTbl(0)">Market ↕</th>
+        <th onclick="sortTbl(1)">UIO 2025E ↕</th>
+        <th onclick="sortTbl(2)">UIO 2024 ↕</th>
+        <th onclick="sortTbl(3)">Revenue CY25 ↕</th>
+        <th onclick="sortTbl(4)">Margin ↕</th>
+        <th onclick="sortTbl(5)">Margin % ↕</th>
+        <th onclick="sortTbl(6)">Rev / Vehicle ↕</th>
+        <th onclick="sortTbl(7)">vs Avg ↕</th>
+        <th onclick="sortTbl(8)">Lines ↕</th>
+      </tr></thead>
+      <tbody id="mktBody"></tbody>
+    </table>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+const MARKETS = [{"label": "UK", "uio": 40095.0, "uio_2024": 41012.0, "uio_trend": [40251.0, 37430.0, 37599.0, 38193.0, 39412.0, 41012.0, 40095.0, 37695.0, 35517.0, 33761.0], "rev": 11296032.0, "cost": 6290736.0, "margin": 5005295.0, "margin_pct": 44.3, "rpv": 282.0, "lines": 34491}, {"label": "Israel", "uio": 12577.0, "uio_2024": 12273.0, "uio_trend": [13162.0, 11868.0, 12185.0, 12102.0, 12155.0, 12273.0, 12577.0, 11887.0, 11401.0, 10924.0], "rev": 5840432.0, "cost": 3483595.0, "margin": 2356837.0, "margin_pct": 40.4, "rpv": 464.0, "lines": 17595}, {"label": "Germany", "uio": 10491.0, "uio_2024": 10044.0, "uio_trend": [9189.0, 8735.0, 8856.0, 8728.0, 9547.0, 10044.0, 10491.0, 10397.0, 10255.0, 10198.0], "rev": 2520305.0, "cost": 1314562.0, "margin": 1205743.0, "margin_pct": 47.8, "rpv": 240.0, "lines": 10024}, {"label": "Belgium", "uio": 8022.0, "uio_2024": 7774.0, "uio_trend": [6871.0, 6643.0, 6782.0, 6738.0, 7294.0, 7774.0, 8022.0, 7925.0, 7907.0, 7877.0], "rev": 2092013.0, "cost": 1133856.0, "margin": 958157.0, "margin_pct": 45.8, "rpv": 261.0, "lines": 16372}, {"label": "Portugal", "uio": 4735.0, "uio_2024": 4454.0, "uio_trend": [3123.0, 2966.0, 3012.0, 3283.0, 3866.0, 4454.0, 4735.0, 5148.0, 5546.0, 5892.0], "rev": 1693241.0, "cost": 916249.0, "margin": 776992.0, "margin_pct": 45.9, "rpv": 358.0, "lines": 15532}, {"label": "Norway", "uio": 6657.0, "uio_2024": 6916.0, "uio_trend": [6697.0, 6635.0, 7057.0, 6905.0, 7391.0, 6916.0, 6657.0, 6229.0, 5698.0, 5311.0], "rev": 1512849.0, "cost": 810691.0, "margin": 702158.0, "margin_pct": 46.4, "rpv": 227.0, "lines": 4784}, {"label": "Sweden", "uio": 7488.0, "uio_2024": 6404.0, "uio_trend": [4171.0, 3948.0, 4184.0, 4415.0, 5638.0, 6404.0, 7488.0, 7785.0, 8041.0, 8274.0], "rev": 1382627.0, "cost": 710523.0, "margin": 672104.0, "margin_pct": 48.6, "rpv": 185.0, "lines": 8577}, {"label": "Ireland", "uio": 1567.0, "uio_2024": 1186.0, "uio_trend": [1036.0, 880.0, 922.0, 934.0, 1038.0, 1186.0, 1567.0, 1864.0, 2155.0, 2445.0], "rev": 1190257.0, "cost": 643399.0, "margin": 546857.0, "margin_pct": 45.9, "rpv": 759.0, "lines": 8495}, {"label": "Ukraine", "uio": 922.0, "uio_2024": 259.0, "uio_trend": [0.0, 44.0, 43.0, 42.0, 40.0, 259.0, 922.0, 1350.0, 1858.0, 2400.0], "rev": 1160672.0, "cost": 668505.0, "margin": 492167.0, "margin_pct": 42.4, "rpv": 1259.0, "lines": 4657}, {"label": "Greece", "uio": 3273.0, "uio_2024": 2716.0, "uio_trend": [2339.0, 1825.0, 1729.0, 1817.0, 2140.0, 2716.0, 3273.0, 3627.0, 3986.0, 4335.0], "rev": 518326.0, "cost": 285617.0, "margin": 232709.0, "margin_pct": 44.9, "rpv": 158.0, "lines": 7392}, {"label": "Cyprus", "uio": 1831.0, "uio_2024": 1617.0, "uio_trend": [1562.0, 1273.0, 1146.0, 1239.0, 1461.0, 1617.0, 1831.0, 2024.0, 2245.0, 2433.0], "rev": 428016.0, "cost": 233083.0, "margin": 194933.0, "margin_pct": 45.5, "rpv": 234.0, "lines": 4250}, {"label": "Finland", "uio": 887.0, "uio_2024": 927.0, "uio_trend": [1706.0, 1478.0, 1369.0, 1129.0, 933.0, 927.0, 887.0, 880.0, 880.0, 914.0], "rev": 333914.0, "cost": 155069.0, "margin": 178845.0, "margin_pct": 53.6, "rpv": 376.0, "lines": 2176}, {"label": "Hungary", "uio": 3164.0, "uio_2024": 3146.0, "uio_trend": [3099.0, 2925.0, 2974.0, 3063.0, 3298.0, 3146.0, 3164.0, 3086.0, 3042.0, 2944.0], "rev": 323579.0, "cost": 177259.0, "margin": 146320.0, "margin_pct": 45.2, "rpv": 102.0, "lines": 3062}, {"label": "Malta", "uio": 701.0, "uio_2024": 697.0, "uio_trend": [569.0, 549.0, 585.0, 605.0, 674.0, 697.0, 701.0, 692.0, 732.0, 753.0], "rev": 208814.0, "cost": 110795.0, "margin": 98018.0, "margin_pct": 46.9, "rpv": 298.0, "lines": 3035}, {"label": "Romania", "uio": 951.0, "uio_2024": 876.0, "uio_trend": [610.0, 606.0, 662.0, 707.0, 806.0, 876.0, 951.0, 1030.0, 1100.0, 1169.0], "rev": 176051.0, "cost": 96106.0, "margin": 79945.0, "margin_pct": 45.4, "rpv": 185.0, "lines": 1309}, {"label": "Denmark", "uio": 781.0, "uio_2024": 761.0, "uio_trend": [381.0, 369.0, 477.0, 539.0, 648.0, 761.0, 781.0, 828.0, 874.0, 926.0], "rev": 165607.0, "cost": 77008.0, "margin": 88598.0, "margin_pct": 53.5, "rpv": 212.0, "lines": 1535}, {"label": "Iceland", "uio": 359.0, "uio_2024": 303.0, "uio_trend": [224.0, 207.0, 221.0, 221.0, 258.0, 303.0, 359.0, 370.0, 383.0, 442.0], "rev": 87260.0, "cost": 46685.0, "margin": 40575.0, "margin_pct": 46.5, "rpv": 243.0, "lines": 1339}, {"label": "Palestine", "uio": 240.0, "uio_2024": 195.0, "uio_trend": [117.0, 112.0, 126.0, 187.0, 204.0, 195.0, 240.0, 241.0, 239.0, 291.0], "rev": 27336.0, "cost": 23021.0, "margin": 4315.0, "margin_pct": 15.8, "rpv": 114.0, "lines": 202}, {"label": "UIO (12 years)", "uio": 0.0, "uio_2024": 0.0, "uio_trend": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "rev": 0.0, "cost": 0.0, "margin": 0.0, "margin_pct": 0.0, "rpv": 0.0, "lines": 0}, {"label": "Russia", "uio": 1664.0, "uio_2024": 1837.0, "uio_trend": [1387.0, 1493.0, 1915.0, 2058.0, 1968.0, 1837.0, 1664.0, 1426.0, 1176.0, 889.0], "rev": 0.0, "cost": 0.0, "margin": 0.0, "margin_pct": 0.0, "rpv": 0.0, "lines": 0}, {"label": "Armenia", "uio": 43.0, "uio_2024": 22.0, "uio_trend": [0.0, 0.0, 0.0, 0.0, 0.0, 22.0, 43.0, 66.0, 115.0, 187.0], "rev": 0.0, "cost": 0.0, "margin": 0.0, "margin_pct": 0.0, "rpv": 0.0, "lines": 0}, {"label": "ISUZU Kazakhstan", "uio": 0.0, "uio_2024": 0.0, "uio_trend": [13.0, 8.0, 4.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], "rev": 0.0, "cost": 0.0, "margin": 0.0, "margin_pct": 0.0, "rpv": 0.0, "lines": 0}];
+const AVG_RPV = 290.8;
+
+// ── Helpers ───────────────────────────────────────────────────────────────
+const fmt = v => '€' + Math.round(v).toLocaleString();
+const fmtk = v => '€' + (v/1000).toFixed(1) + 'k';
+const fmtm = v => '€' + (v/1e6).toFixed(2) + 'M';
+function rpvClass(v) {
+  if (v >= AVG_RPV*1.2) return 'rpv-high';
+  if (v >= AVG_RPV*0.8) return 'rpv-mid';
+  return 'rpv-low';
+}
+
+// ── Market table ─────────────────────────────────────────────────────────
+function renderTable(data) {
+  const tbody = document.getElementById('mktBody');
+  const maxRev = Math.max(...data.map(m=>m.rev));
+  tbody.innerHTML = data.map(m => {
+    const vs = m.uio>0 ? ((m.rpv/AVG_RPV-1)*100).toFixed(0) : null;
+    const vsCls = vs===null?'':vs>0?'pill pill-green':'pill pill-red';
+    const vsTxt = vs===null?'—':`<span class="${vsCls}">${vs>0?'+':''}${vs}%</span>`;
+    const barW  = m.rev>0 ? Math.round(m.rev/maxRev*80) : 0;
+    return `<tr>
+      <td><strong>${m.label}</strong></td>
+      <td>${m.uio>0?m.uio.toLocaleString():'—'}</td>
+      <td>${m.uio_2024>0?m.uio_2024.toLocaleString():'—'}</td>
+      <td>${m.rev>0?fmtm(m.rev):'—'}<span class="bar-inline" style="width:${barW}px"></span></td>
+      <td>${m.margin>0?fmtm(m.margin):'—'}</td>
+      <td>${m.margin_pct>0?m.margin_pct+'%':'—'}</td>
+      <td class="${rpvClass(m.rpv)}">${m.rpv>0?'€'+m.rpv.toLocaleString():'—'}</td>
+      <td>${vsTxt}</td>
+      <td>${m.lines>0?m.lines.toLocaleString():'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+let sortCol=-1, sortAsc=true;
+function sortTbl(col) {
+  if(sortCol===col) sortAsc=!sortAsc; else {sortCol=col;sortAsc=false;}
+  const keys=['label','uio','uio_2024','rev','margin','margin_pct','rpv','rpv','lines'];
+  const sorted=[...MARKETS].sort((a,b)=>{
+    const av=a[keys[col]]||0, bv=b[keys[col]]||0;
+    if(typeof av==='string') return sortAsc?av.localeCompare(bv):bv.localeCompare(av);
+    return sortAsc?av-bv:bv-av;
+  });
+  renderTable(sorted);
+}
+renderTable([...MARKETS].sort((a,b)=>b.rev-a.rev));
+
+// ── Charts ───────────────────────────────────────────────────────────────
+const REV_DATA = {"labels": ["UK", "Israel", "Germany", "Belgium", "Portugal", "Norway", "Sweden", "Ireland", "Ukraine", "Greece", "Cyprus", "Finland", "Hungary", "Malta", "Romania", "Denmark", "Iceland", "Palestine"], "values": [11296032.0, 5840432.0, 2520305.0, 2092013.0, 1693241.0, 1512849.0, 1382627.0, 1190257.0, 1160672.0, 518326.0, 428016.0, 333914.0, 323579.0, 208814.0, 176051.0, 165607.0, 87260.0, 27336.0]};
+const MONTHLY  = {"labels": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"], "values": [2864.0, 2881.4, 2066.8, 2284.2, 2475.1, 2974.9, 2955.4, 2727.3, 2821.7, 2677.7, 2535.7, 2494.6]};
+const PARTS    = {"labels": ["DS/E INTERNATION MOTORS LIMITED", "TVS SUPPLY CHAIN SOLUTIONS LTD", "UNIVERSAL MOTORS ISRAEL LTD", "UNIVERSAL TRUCKS ISRAEL LTD", "LANG Industrie Dienst GmbH", "Katoen Natie", "I MOTORS-Imp. E comercio AUT, Lda", "RUTEBILEIERNES STANDARDISERING AS", "ISUZU SVERIGE AB", "ISUZU IRELAND", "KOMTRANSKOMPLEKT LLC", "LOUTSIOS A & SONS LTD", "PETROS PETROPOULOS S.A. (VEHICLE)", "MIDI EUROPE S.R.L.", "DS/E - ASSISTOR OY"], "values": [6026.7, 5617.2, 3159.7, 3156.0, 2538.6, 2118.0, 1543.4, 1535.5, 1397.8, 1211.2, 1160.7, 428.8, 391.1, 365.1, 333.9]};
+const UIO_T    = {"years": ["2019", "2020", "2021", "2022", "2023", "2024", "2025E", "2026E", "2027E", "2028E"], "values": [53124.0, 50253.0, 48980.0, 51933.0, 56358.0, 59770.0, 65427.0, 74335.0, 84913.0, 95979.0]};
+const RPV_D    = {"labels": ["Ukraine", "Ireland", "Israel", "Finland", "Portugal", "Malta", "UK", "Belgium", "Iceland", "Germany", "Cyprus", "Norway", "Denmark", "Sweden", "Romania", "Greece", "Palestine", "Hungary", "Russia", "Armenia"], "values": [1259.0, 759.0, 464.0, 376.0, 358.0, 298.0, 282.0, 261.0, 243.0, 240.0, 234.0, 227.0, 212.0, 185.0, 185.0, 158.0, 114.0, 102.0, 0.0, 0.0], "avg": 290.8};
+const BUBBLE   = [{"label": "UK", "x": 40095.0, "y": 282.0, "r": 40, "rev": 11296032.0, "margin_pct": 44.3}, {"label": "Israel", "x": 12577.0, "y": 464.0, "r": 20.681357843178915, "rev": 5840432.0, "margin_pct": 40.4}, {"label": "Germany", "x": 10491.0, "y": 240.0, "r": 8.924567494143076, "rev": 2520305.0, "margin_pct": 47.8}, {"label": "Belgium", "x": 8022.0, "y": 261.0, "r": 7.4079570596117295, "rev": 2092013.0, "margin_pct": 45.8}, {"label": "Portugal", "x": 4735.0, "y": 358.0, "r": 6, "rev": 1693241.0, "margin_pct": 45.9}, {"label": "Norway", "x": 6657.0, "y": 227.0, "r": 6, "rev": 1512849.0, "margin_pct": 46.4}, {"label": "Sweden", "x": 7488.0, "y": 185.0, "r": 6, "rev": 1382627.0, "margin_pct": 48.6}, {"label": "Ireland", "x": 1567.0, "y": 759.0, "r": 6, "rev": 1190257.0, "margin_pct": 45.9}, {"label": "Ukraine", "x": 922.0, "y": 1259.0, "r": 6, "rev": 1160672.0, "margin_pct": 42.4}, {"label": "Greece", "x": 3273.0, "y": 158.0, "r": 6, "rev": 518326.0, "margin_pct": 44.9}, {"label": "Cyprus", "x": 1831.0, "y": 234.0, "r": 6, "rev": 428016.0, "margin_pct": 45.5}, {"label": "Finland", "x": 887.0, "y": 376.0, "r": 6, "rev": 333914.0, "margin_pct": 53.6}, {"label": "Hungary", "x": 3164.0, "y": 102.0, "r": 6, "rev": 323579.0, "margin_pct": 45.2}, {"label": "Malta", "x": 701.0, "y": 298.0, "r": 6, "rev": 208814.0, "margin_pct": 46.9}, {"label": "Romania", "x": 951.0, "y": 185.0, "r": 6, "rev": 176051.0, "margin_pct": 45.4}, {"label": "Denmark", "x": 781.0, "y": 212.0, "r": 6, "rev": 165607.0, "margin_pct": 53.5}, {"label": "Iceland", "x": 359.0, "y": 243.0, "r": 6, "rev": 87260.0, "margin_pct": 46.5}, {"label": "Palestine", "x": 240.0, "y": 114.0, "r": 6, "rev": 27336.0, "margin_pct": 15.8}];
+
+const BLUES = ['#0f3460','#1a4a7a','#1a73e8','#2196f3','#42a5f5','#64b5f6','#90caf9',
+               '#bbdefb','#4a90d9','#5ba3e8','#6cb5f0','#7dc7f8','#1565c0','#1976d2','#1e88e5',
+               '#2196f3','#42a5f5','#64b5f6','#90caf9','#bbdefb'];
+
+new Chart(document.getElementById('revChart'), {
+  type:'bar',
+  data:{labels:REV_DATA.labels,datasets:[{
+    data:REV_DATA.values,
+    backgroundColor:BLUES.slice(0,REV_DATA.labels.length),
+    borderRadius:5,borderSkipped:false
+  }]},
+  options:{plugins:{legend:{display:false}},scales:{
+    x:{ticks:{font:{size:10}}},
+    y:{ticks:{callback:v=>'€'+(v/1e6).toFixed(1)+'M',font:{size:10}}}
+  }}
+});
+
+new Chart(document.getElementById('monthChart'), {
+  type:'line',
+  data:{labels:MONTHLY.labels,datasets:[{
+    data:MONTHLY.values,fill:true,
+    backgroundColor:'rgba(26,115,232,0.08)',
+    borderColor:'#1a73e8',borderWidth:2,pointRadius:4,tension:.3
+  }]},
+  options:{plugins:{legend:{display:false}},scales:{
+    x:{ticks:{font:{size:10}}},
+    y:{ticks:{callback:v=>v+'k',font:{size:10}}}
+  }}
+});
+
+// RPV chart with avg line
+const rpvColors = RPV_D.values.map(v=>v>=RPV_D.avg*1.2?'#27ae60':v>=RPV_D.avg*0.8?'#f39c12':'#e74c3c');
+new Chart(document.getElementById('rpvChart'),{
+  type:'bar',
+  data:{labels:RPV_D.labels,datasets:[
+    {data:RPV_D.values,backgroundColor:rpvColors,borderRadius:4,borderSkipped:false,label:'Rev/Vehicle'},
+    {type:'line',data:RPV_D.labels.map(()=>RPV_D.avg),borderColor:'#1a73e8',borderWidth:2,
+     borderDash:[5,5],pointRadius:0,label:'Avg',fill:false,order:0},
+  ]},
+  options:{
+    indexAxis:'y',
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>ctx.datasetIndex===0?`${ctx.label}: €${ctx.parsed.x.toLocaleString()}`:`Avg: €${Math.round(RPV_D.avg)}`}}
+    },
+    scales:{
+      x:{ticks:{callback:v=>'€'+v.toLocaleString(),font:{size:10}}},
+      y:{ticks:{font:{size:10}}}
+    }
+  }
+});
+
+// Bubble chart
+new Chart(document.getElementById('bubbleChart'),{
+  type:'bubble',
+  data:{datasets:BUBBLE.map((b,i)=>{
+    return {
+      label:b.label,
+      data:[{x:b.x,y:b.y,r:b.r}],
+      backgroundColor:`hsla(${(i*37)%360},60%,50%,0.65)`,
+      borderColor:`hsla(${(i*37)%360},60%,40%,1)`,
+      borderWidth:1
+    };
+  })},
+  options:{
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>{
+        const b=BUBBLE[ctx.datasetIndex];
+        return [`${b.label}`,`UIO: ${b.x.toLocaleString()}`,
+                `RPV: €${b.y.toLocaleString()}`,`Rev: €${(b.rev/1000).toFixed(0)}k`,
+                `Margin: ${b.margin_pct}%`];
+      }}}
+    },
+    scales:{
+      x:{title:{display:true,text:'UIO (Active Vehicles)',font:{size:10}},ticks:{font:{size:9}}},
+      y:{title:{display:true,text:'Revenue per Vehicle (€)',font:{size:10}},ticks:{callback:v=>'€'+v,font:{size:9}}}
+    }
+  }
+});
+
+new Chart(document.getElementById('uioChart'),{
+  type:'line',
+  data:{labels:UIO_T.years,datasets:[{
+    data:UIO_T.values,fill:true,
+    backgroundColor:'rgba(15,52,96,0.08)',
+    borderColor:'#0f3460',borderWidth:2,pointRadius:5,tension:.2,
+    pointBackgroundColor:UIO_T.values.map((_,i)=>i>=5?'#e67e22':'#0f3460'),
+    label:'ISZE UIO'
+  }]},
+  options:{
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      label:ctx=>`UIO: ${Math.round(ctx.parsed.y).toLocaleString()} vehicles`
+    }}},
+    scales:{
+      x:{ticks:{font:{size:10}}},
+      y:{ticks:{callback:v=>(v/1000).toFixed(0)+'k',font:{size:10}}}
+    }
+  }
+});
+
+new Chart(document.getElementById('partsChart'),{
+  type:'bar',
+  data:{labels:PARTS.labels,datasets:[{
+    data:PARTS.values,
+    backgroundColor:'rgba(15,52,96,0.75)',
+    borderRadius:3,borderSkipped:false
+  }]},
+  options:{
+    indexAxis:'y',
+    plugins:{legend:{display:false}},
+    scales:{
+      x:{ticks:{callback:v=>'€'+v+'k',font:{size:9}}},
+      y:{ticks:{font:{size:9}}}
+    }
+  }
+});
+
+</script>
+
+<!-- ======= AGE BAND SECTION ======= -->
+<div style="margin-top:32px">
+  <h2 style="font-size:.95rem;font-weight:700;color:#1a1a2e;margin-bottom:4px">
+    🔬 Fleet Age Intelligence &amp; Revenue Opportunity
+  </h2>
+  <p style="font-size:.75rem;color:#888;margin-bottom:18px">
+    Vehicle age distribution estimated from UIO cohort model · Parts intensity index derived from 222,228 warranty claims (EU LCV, 2015-2025)
+  </p>
+</div>
+
+<div class="grid-2" style="margin-bottom:18px">
+  <!-- Age band stacked bar -->
+  <div class="card">
+    <h3>Fleet Age Composition by Market (2025 Est.)</h3>
+    <div style="font-size:.68rem;color:#aaa;margin-bottom:10px;display:flex;gap:16px">
+      <span><span style="display:inline-block;width:10px;height:10px;background:#27ae60;border-radius:2px"></span> Young (1-3yr) — warranty/early service</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:#e67e22;border-radius:2px"></span> Prime (4-7yr) — peak aftermarket</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:#8e44ad;border-radius:2px"></span> Mature (8+yr) — declining OEM loyalty</span>
+    </div>
+    <div class="chart-wrap"><canvas id="ageBandChart" height="260"></canvas></div>
+  </div>
+
+  <!-- Parts intensity curve -->
+  <div class="card">
+    <h3>Empirical Parts Intensity by Vehicle Age (ISZE EU Warranty Data)</h3>
+    <p style="font-size:.7rem;color:#888;margin-bottom:12px">
+      Average warranty claim value per vehicle (€) — indexed to fleet average.
+      Post-warranty aftermarket demand follows the same curve.
+    </p>
+    <div class="chart-wrap"><canvas id="intensityChart" height="220"></canvas></div>
+    <p style="font-size:.68rem;color:#aaa;margin-top:8px">
+      ⚑ <strong>4–5 year mark is peak aftermarket demand</strong> — 1.8× the fleet average RPV
+    </p>
+  </div>
+</div>
+
+<div class="grid-2" style="margin-bottom:18px">
+  <!-- Actual vs potential RPV -->
+  <div class="card">
+    <h3>Actual vs Age-Adjusted Potential RPV (€/vehicle)</h3>
+    <p style="font-size:.7rem;color:#888;margin-bottom:10px">
+      Potential RPV = EU avg (€291) × age intensity multiplier for each market's fleet composition.
+      Gap = untapped parts revenue per vehicle in operation.
+    </p>
+    <div class="chart-wrap"><canvas id="rpvGapChart" height="270"></canvas></div>
+  </div>
+
+  <!-- Revenue gap table -->
+  <div class="card">
+    <h3>Opportunity Prioritisation — Biggest Revenue Gaps</h3>
+    <p style="font-size:.7rem;color:#888;margin-bottom:10px">
+      Markets where fleet age suggests higher parts demand than current sales capture. 
+      Gap = (Potential RPV − Actual RPV) × UIO.
+    </p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Market</th>
+            <th>UIO</th>
+            <th>Prime %</th>
+            <th>Actual RPV</th>
+            <th>Potential RPV</th>
+            <th>Gap / veh</th>
+            <th>Tot. Pot. Gap</th>
+            <th>Signal</th>
+          </tr>
+        </thead>
+        <tbody id="gapTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// -------- Age band chart --------
+const AGE_LABELS = ["Norway", "Hungary", "Sweden", "Greece", "Germany", "Romania", "Denmark", "UK", "Israel", "Belgium", "Portugal", "Ireland", "Ukraine", "Cyprus", "Finland", "Malta"];
+const PCT_YOUNG  = [33.2, 54.6, 77.2, 83.2, 62.2, 60.8, 67.5, 59.0, 45.3, 58.3, 78.7, 67.8, 69.3, 79.4, 18.0, 59.1];
+const PCT_PRIME  = [48.2, 32.8, 17.6, 9.6, 27.1, 29.1, 27.9, 28.7, 40.0, 29.4, 15.3, 24.1, 18.0, 11.8, 46.9, 30.8];
+const PCT_MATURE = [18.6, 12.6, 5.2, 7.2, 10.7, 10.1, 4.5, 12.2, 14.7, 12.4, 5.9, 8.1, 12.7, 8.8, 35.0, 10.1];
+const ACT_RPV    = [227, 102, 185, 158, 240, 185, 212, 282, 464, 261, 358, 759, 1259, 234, 376, 298];
+const POT_RPV    = [318, 268, 218, 192, 249, 256, 251, 254, 291, 257, 210, 239, 220, 199, 316, 261];
+const GAP_K      = [606, 525, 247, 111, 94, 68, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+new Chart(document.getElementById('ageBandChart'),{
+  type:'bar',
+  data:{
+    labels:AGE_LABELS,
+    datasets:[
+      {label:'Young (1-3yr)',data:PCT_YOUNG,backgroundColor:'#27ae60',stack:'age'},
+      {label:'Prime (4-7yr)',data:PCT_PRIME,backgroundColor:'#e67e22',stack:'age'},
+      {label:'Mature (8+yr)',data:PCT_MATURE,backgroundColor:'#8e44ad',stack:'age'},
+    ]
+  },
+  options:{
+    plugins:{legend:{display:false},tooltip:{callbacks:{
+      label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)}%`
+    }}},
+    scales:{
+      x:{stacked:true,ticks:{font:{size:9}}},
+      y:{stacked:true,max:100,ticks:{callback:v=>v+'%',font:{size:9}}}
+    }
+  }
+});
+
+// -------- Parts intensity curve --------
+const INT_BANDS = ["0-1yr", "1-2yr", "2-3yr", "3-4yr", "4-5yr", "5-7yr", "7-10yr", "10+yr"];
+const INT_IDX   = [0.4, 0.9, 0.93, 1.21, 1.82, 1.51, 0.71, 0.52];
+const INT_AVG   = [51, 116, 119, 156, 233, 194, 92, 67];
+
+const intColors = INT_IDX.map(v=>v>=1.5?'#e74c3c':v>=1.0?'#e67e22':'#3498db');
+new Chart(document.getElementById('intensityChart'),{
+  type:'bar',
+  data:{
+    labels:INT_BANDS,
+    datasets:[{
+      data:INT_AVG,
+      backgroundColor:intColors,
+      borderRadius:4,
+      label:'Avg claim €'
+    },
+    {
+      type:'line',
+      data:INT_BANDS.map(()=>116),  // average line approx
+      borderColor:'#1a73e8',borderWidth:1.5,borderDash:[4,4],
+      pointRadius:0,label:'Avg',fill:false
+    }]
+  },
+  options:{
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>ctx.datasetIndex===0?`Avg €${ctx.parsed.y} / claim`:`EU avg: €116`}}
+    },
+    scales:{
+      x:{ticks:{font:{size:9}}},
+      y:{ticks:{callback:v=>'€'+v,font:{size:9}}}
+    }
+  }
+});
+
+// -------- Actual vs Potential RPV --------
+const rpvGapColors = ACT_RPV.map((a,i)=>a < POT_RPV[i] ? 'rgba(231,76,60,0.7)' : 'rgba(39,174,96,0.7)');
+new Chart(document.getElementById('rpvGapChart'),{
+  type:'bar',
+  data:{
+    labels:AGE_LABELS,
+    datasets:[
+      {label:'Actual RPV',data:ACT_RPV,backgroundColor:'rgba(26,115,232,0.75)',borderRadius:3,borderSkipped:false},
+      {label:'Age-Adj Potential',data:POT_RPV,backgroundColor:'rgba(231,76,60,0.20)',
+        borderColor:'rgba(231,76,60,0.6)',borderWidth:1.5,borderRadius:3,borderSkipped:false,type:'bar'}
+    ]
+  },
+  options:{
+    plugins:{
+      legend:{labels:{font:{size:9}}},
+      tooltip:{callbacks:{label:ctx=>`${ctx.dataset.label}: €${ctx.parsed.y}`}}
+    },
+    scales:{
+      x:{ticks:{font:{size:9}}},
+      y:{ticks:{callback:v=>'€'+v,font:{size:9}}}
+    }
+  }
+});
+
+// -------- Gap table --------
+const GAP_DATA = [{"label": "Norway", "uio": 6657, "pct_prime": 48.2, "rpv": 227, "potential_rpv": 318, "gap": 91, "gap_k": 606}, {"label": "Hungary", "uio": 3164, "pct_prime": 32.8, "rpv": 102, "potential_rpv": 268, "gap": 166, "gap_k": 525}, {"label": "Sweden", "uio": 7488, "pct_prime": 17.6, "rpv": 185, "potential_rpv": 218, "gap": 33, "gap_k": 247}, {"label": "Greece", "uio": 3273, "pct_prime": 9.6, "rpv": 158, "potential_rpv": 192, "gap": 34, "gap_k": 111}, {"label": "Germany", "uio": 10491, "pct_prime": 27.1, "rpv": 240, "potential_rpv": 249, "gap": 9, "gap_k": 94}, {"label": "Romania", "uio": 951, "pct_prime": 29.1, "rpv": 185, "potential_rpv": 256, "gap": 71, "gap_k": 68}, {"label": "Denmark", "uio": 781, "pct_prime": 27.9, "rpv": 212, "potential_rpv": 251, "gap": 39, "gap_k": 30}];
+
+const tbody = document.getElementById('gapTbody');
+GAP_DATA.sort((a,b)=>b.gap_k-a.gap_k).forEach(d=>{
+  const signal = d.gap > 100 ? '🔴 High priority' : d.gap > 30 ? '🟡 Monitor' : '🟢 On track';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td><strong>${d.label}</strong></td>
+    <td>${d.uio.toLocaleString()}</td>
+    <td><span style="color:#e67e22;font-weight:700">${d.pct_prime}%</span></td>
+    <td style="color:#1a73e8">€${d.rpv}</td>
+    <td style="color:#e74c3c">€${d.potential_rpv}</td>
+    <td style="font-weight:700;color:${d.gap>100?'#e74c3c':d.gap>30?'#e67e22':'#27ae60'}">
+      ${d.gap>0?'−€'+d.gap:'✓'}</td>
+    <td style="font-weight:700">€${d.gap_k}k</td>
+    <td style="font-size:.75rem">${signal}</td>`;
+  tbody.appendChild(tr);
+});
+</script>
+
+</body></html>

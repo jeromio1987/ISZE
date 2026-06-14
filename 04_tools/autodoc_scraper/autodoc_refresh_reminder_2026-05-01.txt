@@ -1,0 +1,39 @@
+📊 ISZE Autodoc Monthly Refresh — Action Required
+Generated: 2026-05-01 (automated scheduled task)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your Autodoc competitive price data is 32 DAYS OLD (last scraped: 2026-03-30).
+
+To refresh:
+1. Open: ISZE\Tools\autodoc_scraper\run_autodoc_scraper.bat
+2. Let it run (~40 min for 300 PNs)
+3. The Competitiveness dashboard tab updates automatically
+
+Current coverage: 289 PNs in file | 103 with Autodoc matches | 186 no results found
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TOP 5 RISK PNs — Autodoc avg price is much cheaper than PR00
+(Based on last run — converted at ~1.175 GBP/EUR)
+
+1. 8982924331 — SENSOR; SPD,FRT WHEEL
+   PR00: €158.26 | Autodoc avg: £22.78 (~€26.77) | We are 83% more expensive (4 listings)
+
+2. 8982924321 — SENSOR; SPD,FRT WHEEL
+   PR00: €158.26 | Autodoc avg: £22.78 (~€26.77) | We are 83% more expensive (3 listings)
+
+3. 8982399830 — FILTER ASM; FUEL
+   PR00: €55.33 | Autodoc avg: £12.19 (~€14.32) | We are 74% more expensive (9 listings)
+
+4. 8983929650 — SHAFT ASM; FRT DRIVE
+   PR00: €298.30 | Autodoc avg: £72.40 (~€85.07) | We are 72% more expensive (2 listings)
+
+5. 8982318983 — INJECTOR ASM; DEF DCM
+   PR00: €365.34 | Autodoc avg: £114.25 (~€134.24) | We are 63% more expensive (2 listings)
+
+NOTE: Autodoc avg prices include non-genuine / aftermarket parts — verify brand quality
+before interpreting as genuine competitive pressure. Wheel speed sensors and fuel filters
+often have many low-cost aftermarket alternatives.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+After scraping, run build_chain_pricing.bat to rebuild the Excel analysis.

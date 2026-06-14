@@ -1,0 +1,161 @@
+# ISZE task routing — read this after INDEX.md + AGENTS.md when the task type is clear.
+# Stop reading as soon as the task is answered. Do not glob the repo.
+# Agent sync: 2026-06-13
+
+version: 1
+
+global_ignore:
+  - 07_deploy/**
+  - isze-prism-analytics/**
+  - 91_legacy/Isuzu/Divers/**
+  - 08_gpt/**
+  - AUDIT_*.md
+  - 03_analytics/Isuzu/prism/evidence-app/.evidence/**
+  - 90_archive/**
+
+tasks:
+  quote_kpi:
+    description: Answer a headline metric (capture %, GPS, BVP mix, revenue)
+    read:
+      - 01_data/derived/_verification_report.json
+      - 01_data/derived/metrics_snapshot.json
+      - FACTS.md
+    optional:
+      - 03_analytics/Isuzu/prism/docs/metric_dictionary.md
+    never:
+      - 91_legacy/Isuzu/Divers/**
+      - 01_data/raw/sales/**
+
+  edit_pipeline:
+    description: Change PRISM build scripts, derived CSVs, or verify checks
+    read:
+      - 05_memory/projects/sales-analytics-pipeline.md
+      - 03_analytics/Isuzu/prism/docs/metric_dictionary.md
+      - 01_data/DATA_MANIFEST.md
+    verify:
+      - .cursor/skills/isze-verify-pipeline
+      - 03_analytics/Isuzu/prism/scripts/run_pipeline_and_verify.ps1
+
+  edit_html_dashboard:
+    description: Static HTML dashboards (GitHub Pages / Netlify)
+    read:
+      - 03_analytics/Isuzu/prism/docs/dashboard_contracts.md
+    workflow:
+      - Edit 02_dashboards/
+      - Run 02_dashboards/sync_to_deploys.ps1
+
+  refresh_dashboard_json:
+    description: isze_data.json or tender_data.json feeds
+    read:
+      - 03_analytics/Isuzu/prism/docs/dashboard_contracts.md
+      - 01_data/DATA_MANIFEST.md
+    run:
+      - 03_analytics/Isuzu/prism/scripts/build_isze_dashboard_json.py
+      - 04_tools/ISZE_Tender_Monitor_Install/ (tender only)
+
+  prism_ui:
+    description: Streamlit PRISM app (port 8503)
+    read:
+      - 03_analytics/Isuzu/prism/README.md
+      - 03_analytics/Isuzu/prism/ARCHITECTURE.md
+    run:
+      - 03_analytics/Isuzu/prism/run_prism.ps1
+
+  decision_models:
+    description: Waterfall, runway, defection, attach, leakage, elasticity
+    read:
+      - 00_docs/agent/NOTES.md
+      - 03_analytics/Isuzu/prism/data/decision_model_assumptions.yaml
+    data:
+      - 01_data/derived/wallet_waterfall.csv
+      - 01_data/derived/revenue_runway.csv
+      - 01_data/derived/defection_alerts.csv
+      - 01_data/derived/attach_rates.csv
+      - 01_data/derived/dealer_leakage_ituk.csv
+      - 01_data/derived/price_volume_elasticity.csv
+
+  pms_programme:
+    description: ITUK PMS pilot, capture analysis, IML joint programme
+    read:
+      - 05_memory/projects/pms-coverage.md
+      - FACTS.md
+      - 03_analytics/Isuzu/prism/docs/metric_dictionary.md
+    data:
+      - 03_analytics/Isuzu/pms-pilot/
+
+  pricing:
+    description: IE40, SPA, basket pricing
+    read:
+      - 05_memory/projects/competitiveness.md
+      - FACTS.md
+
+  uio_workbook:
+    description: UIO v17 logic, ITUK parc, forecast cache caveats
+    read:
+      - 05_memory/projects/uio.md
+      - 06_uio/_CURRENT/README.md
+      - 00_docs/agent/NOTES.md
+
+  data_ingest:
+    description: New SAP export, inbox, parquet rebuild
+    read:
+      - 01_data/DATA_MANIFEST.md
+      - 01_data/_INBOX/README.md
+    drop_zone:
+      - 01_data/_INBOX/
+
+  tender_monitor:
+    description: v3 tender scraper and publish
+    read:
+      - 04_tools/ISZE_Tender_Monitor_Install/
+    feed:
+      - 01_data/dashboards/tender_data.json
+    never:
+      - 91_legacy/tender scraper/
+
+  memory_topic:
+    description: Open memory file matching topic keyword
+    map:
+      aftermarket: 05_memory/projects/aftermarket-intelligence.md
+      competitiveness: 05_memory/projects/competitiveness.md
+      lubricants: 05_memory/projects/lubricants.md
+      action_fy2026: 05_memory/projects/action-plan-fy2026.md
+      action_fy2027: 05_memory/projects/action-plan-fy2027.md
+      glossary: 05_memory/glossary.md
+
+  bvp_strategy:
+    description: BVP narrative deck / strategy (not KPI quote)
+    read:
+      - 03_analytics/Isuzu/prism/docs/BVP_Strategy_Report_2026-05-28.md
+      - 03_analytics/Isuzu/prism/docs/metric_dictionary.md
+
+  data_integrity:
+    description: What is safe to quote externally
+    read:
+      - 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
+      - 01_data/derived/_verification_report.md
+
+  eu_conf_deck:
+    description: EU Conf 26 Parts Sales deck and MH review
+    read:
+      - 09_meetings/Preparation Meetings/EU_Conf26/MH_Remarks_Changelog.md
+    assets:
+      - 09_meetings/Preparation Meetings/EU_Conf26/EU Conf 26 ISZE Parts Sales 20260608 CLEAN.pptx
+
+  scheduled_ops:
+    description: Windows scheduled skill paths and automation touchpoints
+    read:
+      - 00_docs/agent/NOTES.md
+
+  ui_stack:
+    description: Which UI to use for external vs internal analytics
+    read:
+      - 00_docs/UI_STACK.md
+      - 00_docs/REFERENCE.md
+
+  workspace_cleanup:
+    description: Archive, dedupe, deploy mirror hygiene
+    read:
+      - 00_docs/ISZE_Cleanup_Plan.md
+      - 00_docs/MAPS.md
+      - 00_docs/MAP_REGISTRY.yaml

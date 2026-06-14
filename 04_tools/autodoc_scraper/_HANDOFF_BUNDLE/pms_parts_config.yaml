@@ -1,0 +1,82 @@
+# PMS intervals + per-model mileage (ISZE handoff engine).
+# effective_freq = annual_freq * (model_km / default_annual_mileage_km)
+
+default_annual_mileage_km: 80000
+
+models:
+  - model: N75
+    tonnage_class: "7.5t (N75)"
+    annual_mileage_km: 80000
+    prism_scope: N75_only
+  - model: N35
+    tonnage_class: "3.5t (N35)"
+    annual_mileage_km: 60000
+  - model: "N50/55"
+    tonnage_class: "5.5t (N50/55)"
+    annual_mileage_km: 70000
+  - model: "N62/65"
+    tonnage_class: "6.5t (N62/65)"
+    annual_mileage_km: 75000
+  - model: F135
+    tonnage_class: "F-Series"
+    annual_mileage_km: 80000
+  - model: "F150/180"
+    tonnage_class: "F-Series"
+    annual_mileage_km: 80000
+  - model: "F110/120"
+    tonnage_class: "F-Series"
+    annual_mileage_km: 80000
+  - model: "LCV D-Max"
+    tonnage_class: LCV
+    annual_mileage_km: 45000
+    primary_distributors: "IUK, UMI"
+
+parts:
+  - category: Oil filter
+    interval_km: 15000
+    parts_per_service: 1
+    annual_freq: 5.333333
+  - category: Fuel filter
+    interval_km: 40000
+    parts_per_service: 1
+    annual_freq: 2.0
+  - category: Air filter
+    interval_km: 20000
+    parts_per_service: 1
+    annual_freq: 4.0
+  - category: Cabin filter
+    interval_km: 20000
+    parts_per_service: 1
+    annual_freq: 4.0
+  - category: Clutch disc
+    interval_km: 150000
+    parts_per_service: 1
+    annual_freq: 0.533333
+  - category: Pressure plate
+    interval_km: 150000
+    parts_per_service: 1
+    annual_freq: 0.533333
+  - category: Release bearing
+    interval_km: 150000
+    parts_per_service: 1
+    annual_freq: 0.533333
+  - category: Brake pad (front)
+    interval_km: 40000
+    parts_per_service: 4
+    annual_freq: 2.0
+  - category: Brake pad (rear)
+    interval_km: 60000
+    parts_per_service: 4
+    annual_freq: 1.333333
+  - category: Brake disc (front)
+    interval_km: 80000
+    parts_per_service: 2
+    annual_freq: 1.0
+  - category: Brake disc (rear)
+    interval_km: 100000
+    parts_per_service: 2
+    annual_freq: 0.8
+  - category: Brake lining
+    interval_km: 50000
+    parts_per_service: 4
+    annual_freq: 1.6

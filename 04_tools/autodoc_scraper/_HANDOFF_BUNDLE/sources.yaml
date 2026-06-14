@@ -1,0 +1,79 @@
+# ISZE Competitive BI — data sources (edit paths when files upgrade)
+# Reload: restart Streamlit or re-run build_executive_dashboard.py
+# Paths are relative to this bundle folder unless absolute.
+
+version: 1
+
+# Single source for FX (used by engine + executive HTML builder)
+fx_rates:
+  as_of: "2026-05-01"
+  GBP_EUR: 1.17
+  SEK_EUR: 0.089
+
+paths:
+  v3_pn_matrix: ISZE_Parts_Intelligence_v3.xlsx
+  v3_sheet: PN_Price_Matrix
+
+  # Drop in a newer UIO workbook and update this path only
+  uio_overview: ../../../06_uio/_CURRENT/ISUZU_UIO_Overview_2026.xlsx
+
+  pms_coverage_calculator: ../../../91_legacy/Isuzu/Divers/ISZE_PMS_Coverage_Calculator.xlsx
+
+  # PRISM green-pipeline output (best multi-DB PMS actuals + UIO per DB)
+  pms_capture_by_db: ../../../01_data/derived/pms_capture_by_db_year.csv
+
+  # Distributor → dealer sales (one file per DB; filename pattern below)
+  sales_to_dealers_dir: ../../../03_analytics/Isuzu
+  sales_to_dealers_pattern: "Sales to Dealers_{db_code}_{period}{year}.xlsx"
+
+  # ITUK sell-out: PN × Margin % (SAP class margin — not in Sales to Dealers qty file)
+  ituk_pn_margins: ../../../03_analytics/Isuzu/ITUK_Parts_Sales_Classification_CY2025.xlsx
+  ituk_pn_margins_sheet: "PARTS MASTER CY2025"
+
+  # Optional: billing lines with net_sales_value (no COGS column today — GP from margin file above)
+  sales_fact: ../../../01_data/derived/sales_fact.parquet
+
+  scraper_dir: .
+
+# Pan-EU PMS: use these distributor names only (exclude MIDI / no-UIO — see SPEC.md)
+# Map v17 sheet "Distributor" name → code used in sales files / PRISM derived
+distributor_aliases:
+  ITUK: ITUK
+  IUK: IUK
+  "Isuzu Denmark": DENMARK
+  "Isuzu Sverige": SWEDEN
+  "Isuzu Ireland": IRELAND
+  "MIDI Europe": GERMANY
+  UMI: UMI
+  UTI: UTI
+  "Nordic Auto.": SWEDEN
+  BL: BELGIUM
+  RSA: ROMANIA
+  IBX: BELGIUM
+  Imotors: GREECE
+  GasanZammit: CYPRUS
+  "Isuzu Rom Auto": ROMANIA
+  "Loutsios & Sons": GREECE
+  "Petros Petropoulos": GREECE
+  AutoWallis: HUNGARY
+
+# ITUK pilot UIO from PMS Calc (Step 2) — used only when scope = ITUK (PMS Calc pilot)
+ituk_pms_calc_uio: 11900
+
+# Optional: override PMS part intervals (copy from PMS Calc Assumptions). If missing, read Excel.
+pms_parts_config: pms_parts_config.yaml
+
+defaults:
+  # Fallback GP % when PN has no row in ituk_pn_margins (ITUK scope only)
+  isze_gp_pct: 0.35
+  horizon_years: 1.0
+  potential_uio_factor: 0.5
+  period_type: CY
+  sales_year: 2025
+  pms_basket: "Maintenance + Wear Repair (PMS pilot)"
+  # ITUK: smmt_car_park = PRISM-aligned ~22,389 | pms_calc = 11,900 fleet exercise | v17_survival = diagnostic only
+  ituk_uio_source: smmt_car_park
+  ituk_smmt_car_park_year: 2024
+  pms_data_mode: auto
+  # Optional: only affects info caption on Scraped prices tab (not PMS engine)
+  scrape_max_age_days: 90

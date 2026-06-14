@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISZE Price Competitiveness Dashboard — FY2026</title>
+<style>
+/* ── Reset ─────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#edf0f5;color:#1a2340;font-size:13px;min-width:900px}
+
+/* ── Header ─────────────────────────── */
+.hdr{background:#0f1f3d;color:#fff;padding:16px 28px;display:flex;align-items:center;gap:16px}
+.hdr-logo{font-size:24px;font-weight:900;letter-spacing:-0.5px;color:#a8cfff;flex-shrink:0}
+.hdr-title{font-size:16px;font-weight:700}
+.hdr-sub{font-size:11px;color:#6ea3d4;margin-top:3px}
+
+/* ── Top control bar ─────────────────── */
+.ctrl-bar{background:#1a2d4e;padding:10px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ctrl-group{display:flex;align-items:center;gap:8px}
+.ctrl-label{font-size:11px;color:#6ea3d4;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.pill-group{display:flex;gap:4px}
+.pill{padding:5px 13px;border-radius:20px;border:1.5px solid #2e4a70;background:transparent;color:#9cbfdf;font-size:12px;cursor:pointer;transition:all .15s;font-weight:500}
+.pill:hover:not(.active){border-color:#4a7ab0;color:#c8e0f8}
+.pill.active{background:#3b7dd8;border-color:#3b7dd8;color:#fff;font-weight:700}
+
+/* Vehicle pills */
+.pill.v-lcv.active{background:#1a6e9e;border-color:#1a6e9e}
+.pill.v-mcv.active{background:#1e7a5e;border-color:#1e7a5e}
+.pill.v-hcv.active{background:#7a4d1e;border-color:#7a4d1e}
+.pill.v-all.active{background:#5a3d8a;border-color:#5a3d8a}
+
+/* ── KPI cards ───────────────────────── */
+.kpi-bar{background:#f7f9fc;border-bottom:1px solid #d8dff0;padding:12px 28px;display:flex;gap:12px;flex-wrap:wrap}
+.kpi{background:white;border:1px solid #e0e8f0;border-radius:8px;padding:10px 16px;min-width:130px;flex:1}
+.kpi-label{font-size:10px;color:#7890b0;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.kpi-val{font-size:20px;font-weight:800;margin-top:3px}
+.kpi-sub{font-size:10px;color:#9ab0c8;margin-top:2px}
+.kpi-red{color:#c0301a}
+.kpi-amber{color:#c07000}
+.kpi-green{color:#0a7a40}
+.kpi-blue{color:#1a5aa8}
+
+/* ── Legend ──────────────────────────── */
+.legend-bar{background:#f0f3f8;border-bottom:1px solid #dde3ec;padding:8px 28px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.legend-label{font-size:11px;color:#5570a0;font-weight:700}
+.legend-items{display:flex;gap:8px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:4px;font-size:11px;color:#5570a0}
+.lb{width:18px;height:14px;border-radius:3px;flex-shrink:0}
+
+/* ── Main content ───────────────────── */
+.main{padding:20px 28px}
+
+/* Source note */
+.src-note{background:#fffbe8;border:1px solid #e8d860;border-left:4px solid #c8a800;border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:11.5px;color:#5a4800;line-height:1.5}
+.src-note strong{color:#3a3000}
+
+/* Segment header */
+.seg-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;margin-top:6px}
+.seg-badge{padding:4px 12px;border-radius:4px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:white}
+.seg-lcv{background:#1a6e9e}
+.seg-mcv{background:#1e7a5e}
+.seg-hcv{background:#7a4d1e}
+.seg-note{font-size:11px;color:#7890b0;font-style:italic}
+
+/* Table */
+.tbl-wrap{background:white;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:20px}
+table{width:100%;border-collapse:collapse}
+thead tr{background:#0f1f3d;color:white}
+thead th{padding:9px 11px;font-size:11.5px;font-weight:700;text-align:left}
+thead th.tc{text-align:center}
+thead th.tr{text-align:right}
+tbody tr:hover td{filter:brightness(.97)}
+tbody tr.div-row:hover td{filter:none}
+td{padding:8px 11px;border-bottom:1px solid #edf0f6;vertical-align:middle}
+
+td.grp{width:60px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8090b8;background:#f5f7fb;border-right:2px solid #dde3ee;white-space:nowrap}
+td.pname{font-weight:600;color:#1a2d4e;min-width:170px}
+td.pr00c{text-align:right;color:#333;width:76px}
+td.amc{text-align:right;color:#777;font-style:italic;width:76px}
+td.confc{text-align:center;width:50px}
+
+.ic{text-align:center;font-weight:800;border-radius:4px;padding:6px 8px;font-size:12.5px;transition:all .2s;width:85px}
+.ic .ps{font-size:9.5px;font-weight:400;opacity:.82;display:block;margin-top:1px}
+
+/* Index colour scale */
+.lt1  {background:#0d7a40;color:#fff}
+.r1   {background:#3aac62;color:#fff}
+.r2   {background:#8ecc5a;color:#2a4000}
+.r3   {background:#f5d040;color:#4a3800}
+.r4   {background:#f07a28;color:#fff}
+.r5   {background:#dc3820;color:#fff}
+.r6   {background:#9a1010;color:#fff}
+
+.div-row td{background:#eef2fa;padding:4px 11px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#5c72a0;border-top:2px solid #ccd6ee;border-bottom:none}
+
+/* Column hide on level toggle */
+.hide-asc .col-asc{display:none}
+.hide-db  .col-db {display:none}
+.hide-dlr .col-dlr{display:none}
+
+/* Hidden segment */
+.seg-block.hidden{display:none}
+
+/* confidence dots */
+.ch{color:#0d7a40;font-weight:900}
+.cm{color:#c07000;font-weight:900}
+.cl{color:#a03000;font-weight:900}
+
+.footnote{margin-top:6px;font-size:11px;color:#6880a8;line-height:1.7}
+.footnote strong{color:#334}
+
+.badge2{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10.5px;font-weight:700;margin:1px 2px;vertical-align:middle}
+.b-red{background:#fcd8d0;color:#8a1800}
+.b-amber{background:#fff0cc;color:#7a5000}
+.b-green{background:#d0f0e0;color:#0a5a30}
+.b-gray{background:#e8edf8;color:#3a4a70}
+
+.tbl-wrap.lcv thead tr{background:#15527a}
+.tbl-wrap.mcv thead tr{background:#155a44}
+.tbl-wrap.hcv thead tr{background:#5a3a18}
+
+hr.seg-divider{border:none;border-top:2px solid #d4dcea;margin:24px 0 20px}
+
+.comparison-note{background:#f0f5ff;border:1px solid #c0d0f0;border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:11.5px;line-height:1.6;color:#1a3060}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="hdr">
+  <div class="hdr-logo">ISZE</div>
+  <div>
+    <div class="hdr-title">Price Competitiveness Dashboard — VP Parts vs Aftermarket &nbsp;|&nbsp; FY2026</div>
+    <div class="hdr-sub">Segments: D-Max (LCV) · N-Series (MCV) · F-Series (HCV) &nbsp;·&nbsp; Markets: UK / DE / FR &nbsp;·&nbsp; PR00 price list</div>
+  </div>
+</div>
+
+<!-- ── CONTROLS ── -->
+<div class="ctrl-bar">
+  <div class="ctrl-group">
+    <span class="ctrl-label">Segment</span>
+    <div class="pill-group" id="seg-pills">
+      <button class="pill v-all active" onclick="setSeg('all')" id="seg-all">All</button>
+      <button class="pill v-lcv" onclick="setSeg('lcv')" id="seg-lcv">🚙 D-Max (LCV)</button>
+      <button class="pill v-mcv" onclick="setSeg('mcv')" id="seg-mcv">🚛 N-Series (MCV)</button>
+      <button class="pill v-hcv" onclick="setSeg('hcv')" id="seg-hcv">🚚 F-Series (HCV)</button>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Market</span>
+    <div class="pill-group">
+      <button class="pill active" onclick="setMkt('uk')" id="mkt-uk">🇬🇧 UK</button>
+      <button class="pill" onclick="setMkt('de')" id="mkt-de">🇩🇪 DE</button>
+      <button class="pill" onclick="setMkt('fr')" id="mkt-fr">🇫🇷 FR</button>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Price level</span>
+    <div class="pill-group">
+      <button class="pill active" onclick="setLvl('all')" id="lvl-all">All levels</button>
+      <button class="pill" onclick="setLvl('asc')" id="lvl-asc">ASC</button>
+      <button class="pill" onclick="setLvl('db')"  id="lvl-db">DB</button>
+      <button class="pill" onclick="setLvl('dlr')" id="lvl-dlr">DLR/Fleet</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── KPI CARDS ── -->
+<div class="kpi-bar" id="kpi-bar">
+  <!-- populated by JS -->
+</div>
+
+<!-- ── LEGEND ── -->
+<div class="legend-bar">
+  <span class="legend-label">Index = Genuine ÷ AM retail:</span>
+  <div class="legend-items">
+    <div class="li"><div class="lb lt1"></div>&lt;1.0× cheaper than AM</div>
+    <div class="li"><div class="lb r1"></div>1.0–1.2× parity</div>
+    <div class="li"><div class="lb r2"></div>1.2–1.5× mild premium</div>
+    <div class="li"><div class="lb r3"></div>1.5–2.0× caution</div>
+    <div class="li"><div class="lb r4"></div>2.0–3.0× exposed</div>
+    <div class="li"><div class="lb r5"></div>3.0–4.0× high risk</div>
+    <div class="li"><div class="lb r6"></div>&gt;4.0× ⚠ critical</div>
+  </div>
+  <span style="margin-left:auto;font-size:10px;color:#9ab0c8">Chain: PR00 → DB (÷0.60) → DLR (÷0.75) &nbsp;|&nbsp; Hover part name for data note</span>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+<div class="src-note">
+  <strong>Data sources:</strong>
+  PR00 prices (D-Max &amp; N/F clusters) = actual FY2026 values from ISZE pricing simulation, qty-weighted.
+  N-Series &amp; F-Series PR00 = price clusters in simulation file distinct from D-Max range — <em>model assignment estimated by price clustering; validate against EQ-HIT catalog</em>.
+  Aftermarket (AM) prices = D-Max from Autodoc UK / eBay UK (Feb–Mar 2026, GBP × 1.18);
+  N-Series &amp; F-Series AM = estimated from European truck parts market knowledge (fewer AM brands, specialist suppliers).
+  DE market AM −8%; FR +5% vs UK EUR equivalent.
+  Confidence: <span class="ch">●●●</span> High · <span class="cm">●●○</span> Medium · <span class="cl">●○○</span> Low.
+</div>
+
+<!-- ── D-MAX SEGMENT ── -->
+<div class="seg-block" id="blk-lcv">
+  <div class="seg-hdr">
+    <span class="seg-badge seg-lcv">D-Max &nbsp;·&nbsp; LCV</span>
+    <span class="seg-note">D-Max TFR/TFS (4JJ1 · 4JK1 · RZ4E) &nbsp;·&nbsp; PR00 from simulation file (actual part-level data)</span>
+  </div>
+  <div class="tbl-wrap lcv" id="tbl-lcv"></div>
+  <div class="footnote" id="foot-lcv"></div>
+</div>
+
+<hr class="seg-divider" id="div-mcv">
+
+<!-- ── N-SERIES SEGMENT ── -->
+<div class="seg-block" id="blk-mcv">
+  <div class="seg-hdr">
+    <span class="seg-badge seg-mcv">N-Series &nbsp;·&nbsp; MCV</span>
+    <span class="seg-note">NPR / NQR / NRR (4HK1 · 4JJ1) &nbsp;·&nbsp; PR00 from high-price cluster in simulation; AM estimated — see confidence flags</span>
+  </div>
+  <div class="tbl-wrap mcv" id="tbl-mcv"></div>
+  <div class="footnote" id="foot-mcv"></div>
+</div>
+
+<hr class="seg-divider" id="div-hcv">
+
+<!-- ── F-SERIES SEGMENT ── -->
+<div class="seg-block" id="blk-hcv">
+  <div class="seg-hdr">
+    <span class="seg-badge seg-hcv">F-Series &nbsp;·&nbsp; HCV</span>
+    <span class="seg-note">FRR / FVR / FVM (6HK1 · 6WG1) &nbsp;·&nbsp; PR00 from highest-price cluster in simulation; AM estimated (thin market) — treat as directional</span>
+  </div>
+  <div class="tbl-wrap hcv" id="tbl-hcv"></div>
+  <div class="footnote" id="foot-hcv"></div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ══════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════
+// pr00: actual FY2026 from pricing simulation
+// am_uk/de/fr: aftermarket retail (what DLR/fleet buys from Autodoc etc.)
+// conf: high / medium / low
+// note: data source detail
+// na: true = part not applicable for this segment
+
+const segments = {
+
+  lcv: {
+    label: "D-Max (LCV)",
+    color: "#15527a",
+    parts: [
+      { grp:"PMS",   name:"Oil filter",              pr00:6.80,   am_uk:10.0, am_de:9.2,   am_fr:10.5, conf:"high",
+        note:"PR00: 8982705240 qty 51,785 — most common. AM: Autodoc UK £4.79–16.67, mid £8.5→€10." },
+      { grp:"PMS",   name:"Fuel filter (kit)",        pr00:13.85,  am_uk:18.0, am_de:16.6,  am_fr:18.9, conf:"medium",
+        note:"PR00: 8981596930 qty 20,959. AM: Autodoc ~£12–20, mid £15→€18." },
+      { grp:"PMS",   name:"Air filter",               pr00:21.18,  am_uk:22.0, am_de:20.2,  am_fr:23.1, conf:"medium",
+        note:"PR00: 8974995480 qty 13,741. AM: Autodoc UK £8–25, mid £18→€21, used €22." },
+      { grp:"PMS",   name:"Cabin filter",             pr00:16.33,  am_uk:14.0, am_de:12.9,  am_fr:14.7, conf:"medium",
+        note:"PR00: 8975554500 qty 15,981. AM: Autodoc UK £8–18, mid £12→€14. PR00 already above AM at ASC." },
+      { grp:"Brakes",name:"Brake pads (front)",       pr00:79.0,   am_uk:35.0, am_de:32.2,  am_fr:36.8, conf:"high",
+        note:"PR00: Qty-weighted avg of 4 main variants €63–89. AM: Autodoc UK £17.58–48.70, quality mid £28→€33, used €35." },
+      { grp:"Brakes",name:"Brake disc (front)",       pr00:79.26,  am_uk:42.0, am_de:38.6,  am_fr:44.1, conf:"medium",
+        note:"PR00: 8983767550 qty 10,330. AM: Search results £26–80, standard ~£35→€41." },
+      { grp:"Brakes",name:"Brake drum (rear)",        pr00:72.49,  am_uk:48.0, am_de:44.2,  am_fr:50.4, conf:"low",
+        note:"PR00: DRUM;BRK,RR qty 957. AM: Estimate £38–45→€48. Fewer AM brands than pads/discs." },
+      { grp:"Clutch",name:"Clutch kit (3-pce)",       pr00:178.0,  am_uk:130.0,am_de:119.6, am_fr:136.5,conf:"medium",
+        note:"PR00: Mid of €162.62 & €194.69. AM: eBay UK £95–130, quality mid £105→€124, used €130." },
+      { grp:"Clutch",name:"Clutch disc (standalone)", pr00:157.0,  am_uk:85.0, am_de:78.2,  am_fr:89.3, conf:"low",
+        note:"PR00: DISC;CLUTCH €157.24 (3 variants same price). AM: Estimated standalone disc £70–80→€85." },
+      { grp:"Susp.", name:"Shock absorber (front)",   pr00:25.0,   am_uk:55.0, am_de:50.6,  am_fr:57.8, conf:"medium",
+        note:"PR00: Qty-weighted avg of front shock variants ~€25. AM: KYB Autodoc UK £31–84, mid £45→€53. ISZE competitive at ASC level!" },
+      { grp:"Susp.", name:"Shock absorber (rear)",    pr00:22.0,   am_uk:48.0, am_de:44.2,  am_fr:50.4, conf:"medium",
+        note:"PR00: Most common rear shock qty 691 @ €20.86. AM: ~£40→€47. Very competitive at ASC." },
+      { grp:"Susp.", name:"Ball joint (lower)",       pr00:30.0,   am_uk:28.0, am_de:25.8,  am_fr:29.4, conf:"low",
+        note:"PR00: JOINTASM;BALL,LWRCONTARM qty-weighted ~€30. AM: Est. quality brand £22–28→€28." },
+      { grp:"Elec.", name:"O2 / Lambda sensor",       pr00:60.0,   am_uk:65.0, am_de:59.8,  am_fr:68.3, conf:"low",
+        note:"PR00: SENSOR;O2 €60.04 qty 653. AM: Estimated quality brand ~£55→€65." },
+    ],
+    footHtml: `<strong>D-Max summary:</strong>
+      <span class="badge2 b-red">Brakes CRITICAL</span> Brake pads ~5× and discs ~4× at DLR level vs AM.
+      <span class="badge2 b-amber">PMS caution</span> Cabin & air filter 2.1–2.6× at DLR — key capture risk.
+      <span class="badge2 b-green">Shocks competitive</span> ISZE beats AM at ASC level (~0.45×); barely above parity at DLR.
+      PR00 prices are actual values from the pricing simulation file.`
+  },
+
+  mcv: {
+    label: "N-Series (MCV)",
+    color: "#155a44",
+    parts: [
+      { grp:"PMS",   name:"Oil filter",              pr00:14.35,  am_uk:30.0, am_de:27.6,  am_fr:31.5, conf:"medium",
+        note:"PR00: €14.25–14.45 cluster in simulation (J-source, higher-qty non-D-Max). AM: Specialist truck filter (Mann/Mahle) est. €28–35, mid €30. Confidence MEDIUM." },
+      { grp:"PMS",   name:"Fuel filter (kit)",        pr00:20.29,  am_uk:35.0, am_de:32.2,  am_fr:36.8, conf:"low",
+        note:"PR00: €20.29 cluster (qty 340). AM: Estimated medium-duty truck filter €30–40, mid €35. Confidence LOW." },
+      { grp:"PMS",   name:"Air filter",               pr00:31.0,   am_uk:55.0, am_de:50.6,  am_fr:57.8, conf:"medium",
+        note:"PR00: €30.73–31.36 cluster (qty ~3,600 combined). AM: Larger truck element, fewer AM brands, est. €45–65, mid €55. Confidence MEDIUM." },
+      { grp:"PMS",   name:"Cabin filter",             pr00:null,   am_uk:null, am_de:null,  am_fr:null, conf:"n/a", na:true,
+        note:"N/A — N-Series cab typically has no cabin pollen filter." },
+      { grp:"Brakes",name:"Brake pads (front)",       pr00:92.0,   am_uk:80.0, am_de:73.6,  am_fr:84.0, conf:"medium",
+        note:"PR00: Qty-weighted avg of higher-cluster pads (781×€103 + 762×€81)/1543 ≈ €92. AM: Ferodo/ATE medium truck pads est. €65–95, mid €80. Confidence MEDIUM." },
+      { grp:"Brakes",name:"Brake disc (front)",       pr00:162.0,  am_uk:125.0,am_de:115.0, am_fr:131.0,conf:"medium",
+        note:"PR00: €158–166 cluster in simulation (J-source). AM: Medium-duty truck disc AM exists but limited brands, est. €100–150, mid €125. Confidence MEDIUM." },
+      { grp:"Brakes",name:"Brake drum (rear)",        pr00:115.0,  am_uk:110.0,am_de:101.2, am_fr:115.5,conf:"low",
+        note:"PR00: €108–127 cluster. AM: Estimated medium truck drum €90–130, mid €110. Confidence LOW." },
+      { grp:"Clutch",name:"Clutch kit",               pr00:180.0,  am_uk:270.0,am_de:248.4, am_fr:283.5,conf:"low",
+        note:"PR00: Higher CLUTCHKIT variant ~€180 (likely N-series). AM: Sachs/LuK medium-duty clutch kit est. €250–350, mid €270. Confidence LOW — N-series clutch kit PR00 may be understated if the large variants aren't in the simulation." },
+      { grp:"Susp.", name:"Shock absorber (front)",   pr00:45.0,   am_uk:85.0, am_de:78.2,  am_fr:89.3, conf:"low",
+        note:"PR00: Higher-cluster front shocks €42–46 (moderate qty). AM: Monroe/Sachs medium truck shock est. €70–100, mid €85. Confidence LOW." },
+      { grp:"Susp.", name:"Shock absorber (rear)",    pr00:28.0,   am_uk:75.0, am_de:69.0,  am_fr:78.8, conf:"low",
+        note:"PR00: €25–29 rear shock mid-cluster. AM: Est. €65–85, mid €75. Confidence LOW." },
+    ],
+    footHtml: `<strong>N-Series (MCV) notes:</strong>
+      <span class="badge2 b-gray">Lower AM competition</span> Fewer aftermarket brands make medium-truck parts vs LCV — AM prices are higher, which reduces the competitiveness gap.
+      <span class="badge2 b-amber">Brakes still exposed</span> Brake pads at DB/DLR level remain a risk.
+      <span class="badge2 b-green">Shocks competitive at DB</span> AM is thin enough that genuine is actually well-placed.
+      ⚠ <em>PR00 values = estimated from price clusters in simulation — confirm against EQ-HIT catalog. AM prices = estimates only (confidence LOW/MEDIUM).</em>`
+  },
+
+  hcv: {
+    label: "F-Series (HCV)",
+    color: "#5a3a18",
+    parts: [
+      { grp:"PMS",   name:"Oil filter",              pr00:20.0,   am_uk:50.0, am_de:46.0,  am_fr:52.5, conf:"low",
+        note:"PR00: €18–22 cluster (J-source, low qty). AM: Large-capacity truck oil filter, specialist brands, est. €40–60. Confidence LOW." },
+      { grp:"PMS",   name:"Fuel filter (large)",     pr00:41.33,  am_uk:60.0, am_de:55.2,  am_fr:63.0, conf:"low",
+        note:"PR00: €41.33 J-source variant (qty 347 — highest-price fuel filter in simulation). AM: Heavy truck fuel filter, very few AM brands, est. €50–70. Confidence LOW." },
+      { grp:"PMS",   name:"Air filter",               pr00:47.0,   am_uk:90.0, am_de:82.8,  am_fr:94.5, conf:"low",
+        note:"PR00: €42–52 cluster. AM: Large panel filter, Donaldson/Baldwin alternatives, est. €75–110, mid €90. Confidence LOW." },
+      { grp:"PMS",   name:"Cabin filter",             pr00:null,   am_uk:null, am_de:null,  am_fr:null, conf:"n/a", na:true,
+        note:"N/A — F-Series cab typically has no cabin pollen filter." },
+      { grp:"Brakes",name:"Brake pads (front)",       pr00:110.0,  am_uk:130.0,am_de:119.6, am_fr:136.5,conf:"low",
+        note:"PR00: €102–123 high-end pad cluster. AM: Heavy truck pads (Ferodo Heavy Duty), very limited AM, est. €110–150, mid €130. Confidence LOW." },
+      { grp:"Brakes",name:"Brake disc (front)",       pr00:233.0,  am_uk:200.0,am_de:184.0, am_fr:210.0,conf:"low",
+        note:"PR00: €230–236 top cluster (J-source). AM: Large truck disc, very few AM brands, est. €170–230, mid €200. Confidence LOW." },
+      { grp:"Brakes",name:"Brake drum (front/rear)",  pr00:235.0,  am_uk:220.0,am_de:202.4, am_fr:231.0,conf:"low",
+        note:"PR00: €231–234 cluster (FRT drums in simulation). AM: Heavy truck drum, est. €180–260, mid €220. Confidence LOW — AM market very thin at this level." },
+      { grp:"Clutch",name:"Clutch kit / disc",        pr00:null,   am_uk:null, am_de:null,  am_fr:null, conf:"n/a", na:true,
+        note:"N/A — F-Series uses pneumatic clutch assist; limited clutch kit data in simulation. Excluded to avoid misleading estimates." },
+      { grp:"Susp.", name:"Shock absorber (front)",   pr00:75.0,   am_uk:110.0,am_de:101.2, am_fr:115.5,conf:"low",
+        note:"PR00: €50–103 top shock cluster. AM: Heavy-duty Sachs/Monroe truck shock, est. €90–130, mid €110. Confidence LOW." },
+      { grp:"Susp.", name:"Shock absorber (rear)",    pr00:60.0,   am_uk:100.0,am_de:92.0,  am_fr:105.0,conf:"low",
+        note:"PR00: Estimated from upper rear shock range. AM: Est. €80–120, mid €100. Confidence LOW." },
+    ],
+    footHtml: `<strong>F-Series (HCV) notes:</strong>
+      <span class="badge2 b-green">Thin AM market = lower exposure</span> Heavy truck AM parts are expensive and scarce — the competitiveness gap narrows significantly vs LCV.
+      <span class="badge2 b-amber">Discs & drums borderline</span> Still 1.0–1.3× at DLR level in some categories.
+      ⚠ <em>All F-Series values are LOW confidence estimates. PR00 values are from the highest-price clusters in the simulation but model assignment is not confirmed. Use for directional analysis only.</em>`
+  }
+};
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+let curSeg = 'all', curMkt = 'uk', curLvl = 'all';
+
+function getAm(p) {
+  if (!p.am_uk) return null;
+  return curMkt === 'uk' ? p.am_uk : curMkt === 'de' ? p.am_de : p.am_fr;
+}
+
+function idxClass(v) {
+  if (v < 1.0) return 'lt1';
+  if (v < 1.2) return 'r1';
+  if (v < 1.5) return 'r2';
+  if (v < 2.0) return 'r3';
+  if (v < 3.0) return 'r4';
+  if (v < 4.0) return 'r5';
+  return 'r6';
+}
+function f2(v) { return v.toFixed(2); }
+function fIdx(v) { return v.toFixed(2)+'×'; }
+function confDots(c) {
+  if (c==='high')   return '<span class="ch">●●●</span>';
+  if (c==='medium') return '<span class="cm">●●○</span>';
+  if (c==='low')    return '<span class="cl">●○○</span>';
+  return '<span style="color:#bbb">—</span>';
+}
+
+// ── Build one table ──
+function buildTable(segKey, containerId) {
+  const seg = segments[segKey];
+  const container = document.getElementById(containerId);
+  let lastGrp = null;
+
+  let html = `<table>
+    <thead><tr>
+      <th style="width:58px">Group</th>
+      <th style="min-width:165px">Part category</th>
+      <th class="tr" style="width:74px">PR00 (€)</th>
+      <th class="tr" style="width:74px">AM retail (€)</th>
+      <th class="tc col-asc" style="width:86px">ASC idx<br><span style="font-size:10px;opacity:.7;font-weight:400">→DB</span></th>
+      <th class="tc col-db"  style="width:86px">DB idx<br><span style="font-size:10px;opacity:.7;font-weight:400">→DLR</span></th>
+      <th class="tc col-dlr" style="width:86px">DLR idx<br><span style="font-size:10px;opacity:.7;font-weight:400">fleet</span></th>
+      <th class="tc" style="width:48px">Conf.</th>
+    </tr></thead><tbody>`;
+
+  seg.parts.forEach(p => {
+    if (p.grp !== lastGrp) {
+      html += `<tr class="div-row"><td colspan="8">${p.grp}</td></tr>`;
+      lastGrp = p.grp;
+    }
+
+    if (p.na) {
+      html += `<tr>
+        <td class="grp">${p.grp}</td>
+        <td class="pname" title="${p.note.replace(/"/g,"'")}">${p.name}</td>
+        <td class="pr00c" colspan="6" style="color:#aaa;font-style:italic;text-align:left;padding-left:12px">— N/A for this segment</td>
+      </tr>`;
+      return;
+    }
+
+    const am  = getAm(p);
+    const db  = p.pr00 / 0.60;
+    const dlr = db / 0.75;
+    const iA  = p.pr00 / am;
+    const iD  = db / am;
+    const iL  = dlr / am;
+
+    const ascTd = `<td class="ic ${idxClass(iA)} col-asc">${fIdx(iA)}<span class="ps">€${f2(p.pr00)}</span></td>`;
+    const dbTd  = `<td class="ic ${idxClass(iD)} col-db">${fIdx(iD)}<span class="ps">€${f2(db)}</span></td>`;
+    const dlrTd = `<td class="ic ${idxClass(iL)} col-dlr">${fIdx(iL)}<span class="ps">€${f2(dlr)}</span></td>`;
+
+    html += `<tr>
+      <td class="grp">${p.grp}</td>
+      <td class="pname" title="${p.note.replace(/"/g,"'")}">${p.name}</td>
+      <td class="pr00c">€${f2(p.pr00)}</td>
+      <td class="amc">€${f2(am)}</td>
+      ${ascTd}${dbTd}${dlrTd}
+      <td class="confc">${confDots(p.conf)}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+  applyLevelClass(container);
+}
+
+// ── Apply level visibility ──
+function applyLevelClass(el) {
+  el.classList.toggle('hide-asc', curLvl !== 'all' && curLvl !== 'asc');
+  el.classList.toggle('hide-db',  curLvl !== 'all' && curLvl !== 'db');
+  el.classList.toggle('hide-dlr', curLvl !== 'all' && curLvl !== 'dlr');
+}
+
+// ── KPI cards ──
+function buildKpis() {
+  // Collect all index values at DLR level for current market & visible segs
+  let allIdxDlr = [];
+  let critCount = 0, exposedCount = 0, okCount = 0;
+
+  const segsToShow = curSeg === 'all' ? ['lcv','mcv','hcv'] : [curSeg];
+  segsToShow.forEach(sk => {
+    segments[sk].parts.forEach(p => {
+      if (p.na || !p.pr00) return;
+      const am = getAm(p);
+      if (!am) return;
+      const dlr = (p.pr00 / 0.60) / 0.75;
+      const idx = dlr / am;
+      allIdxDlr.push(idx);
+      if (idx >= 3.0) critCount++;
+      else if (idx >= 1.5) exposedCount++;
+      else okCount++;
+    });
+  });
+
+  const avg = allIdxDlr.length ? (allIdxDlr.reduce((a,b)=>a+b,0)/allIdxDlr.length) : 0;
+  const maxIdx = allIdxDlr.length ? Math.max(...allIdxDlr) : 0;
+
+  const bar = document.getElementById('kpi-bar');
+  bar.innerHTML = `
+    <div class="kpi">
+      <div class="kpi-label">Avg DLR index</div>
+      <div class="kpi-val ${avg>3?'kpi-red':avg>2?'kpi-amber':'kpi-green'}">${avg.toFixed(2)}×</div>
+      <div class="kpi-sub">vs AM retail at fleet level</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Peak DLR index</div>
+      <div class="kpi-val kpi-red">${maxIdx.toFixed(2)}×</div>
+      <div class="kpi-sub">worst-exposed category</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Critical (&gt;3×)</div>
+      <div class="kpi-val kpi-red">${critCount}</div>
+      <div class="kpi-sub">categories at DLR level</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Exposed (1.5–3×)</div>
+      <div class="kpi-val kpi-amber">${exposedCount}</div>
+      <div class="kpi-sub">categories need attention</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Competitive (&lt;1.5×)</div>
+      <div class="kpi-val kpi-green">${okCount}</div>
+      <div class="kpi-sub">categories at/near parity</div>
+    </div>
+  `;
+}
+
+// ── Render everything ──
+function renderAll() {
+  ['lcv','mcv','hcv'].forEach(sk => {
+    buildTable(sk, 'tbl-'+sk);
+    document.getElementById('foot-'+sk).innerHTML = segments[sk].footHtml;
+  });
+  buildKpis();
+  applySegVisibility();
+}
+
+function applySegVisibility() {
+  ['lcv','mcv','hcv'].forEach(sk => {
+    const show = curSeg === 'all' || curSeg === sk;
+    document.getElementById('blk-'+sk).classList.toggle('hidden', !show);
+    const div = document.getElementById('div-'+sk);
+    if (div) div.classList.toggle('hidden', !show);
+  });
+}
+
+// ── Controls ──
+function setSeg(s) {
+  curSeg = s;
+  ['all','lcv','mcv','hcv'].forEach(id => {
+    document.getElementById('seg-'+id).classList.toggle('active', id===s);
+  });
+  applySegVisibility();
+  buildKpis();
+}
+
+function setMkt(m) {
+  curMkt = m;
+  ['uk','de','fr'].forEach(id => {
+    document.getElementById('mkt-'+id).classList.toggle('active', id===m);
+  });
+  renderAll();
+}
+
+function setLvl(l) {
+  curLvl = l;
+  ['all','asc','db','dlr'].forEach(id => {
+    document.getElementById('lvl-'+id).classList.toggle('active', id===l);
+  });
+  ['lcv','mcv','hcv'].forEach(sk => {
+    applyLevelClass(document.getElementById('tbl-'+sk));
+  });
+}
+
+// Init
+renderAll();
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+---
+description: Static HTML dashboards — source, JSON feeds, deploy sync
+globs: Dashboards/**
+alwaysApply: false
+---
+
+# ISZE HTML dashboards
+
+- **Edit only** `Dashboards/*.html` at repo root — never `Master Dashboard/` or `publish-site/` (overwritten on sync).
+- **Deploy:** `Dashboards/sync_to_deploys.ps1` after HTML changes.
+- **JSON feeds:** `Data/dashboards/isze_data.json`, `tender_data.json` — build via PRISM scripts / tender publish, not `Dashboards/*.json`.
+- **Contracts:** `Projects/Isuzu/prism/docs/dashboard_contracts.md` for CSV/JSON field names.
+- **Roadmap:** `ISZE_ROADMAP.md` + `Dashboards/ROADMAP.md`.

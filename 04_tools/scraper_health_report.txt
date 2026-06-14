@@ -1,0 +1,78 @@
+ISZE SCRAPER HEALTH REPORT — 2026-06-07
+═══════════════════════════════════════════
+
+SCRAPER                  STATUS    LAST OUTPUT      ACTION TAKEN
+─────────────────────────────────────────────────────────────────
+Tender Scraper           🟢        2026-05-30       None (fresh, 8 days, threshold 14d)
+Autodoc Scraper          🟢        2026-05-30       None (fresh, 8 days, threshold 30d)
+KS Scraper               🟢        2026-05-09       None (29 days, threshold 30d — borderline)
+Discount Scraper         🔴        2026-05-15       Fixed: Lidl URL updated. No-scheduler flagged.
+
+═══════════════════════════════════════════
+FIXES APPLIED THIS RUN
+═══════════════════════════════════════════
+
+File: C:\Users\jerom\Desktop\claude\ISZE\Tools\discount-scanner\discount_scraper.py
+  Line ~96 (STORES dict, "lidl" entry):
+    OLD: "url": "https://www.lidl.be/fr/c/offres-de-la-semaine/a10051271"
+    NEW: "url": "https://www.lidl.be/c/fr-BE/promotions-cette-semaine/a10081723"
+  Reason: Lidl.be restructured their URL scheme from /fr/c/ to /c/fr-BE/. Old URL
+  is likely returning a 404 or redirect to homepage. Confirmed new URL via web
+  search (June 2026: https://www.lidl.be/c/fr-BE/promotions-cette-semaine/a10081723
+  is the active weekly promotions page).
+
+═══════════════════════════════════════════
+ISSUES REQUIRING MANUAL ATTENTION
+═══════════════════════════════════════════
+
+1. DISCOUNT SCRAPER — NO SCHEDULER CONFIGURED [CRITICAL]
+   The discount scraper has no Windows Task Scheduler setup (no .xml, no .bat file
+   in the discount-scanner folder). The tender scraper has ISZE_TenderMonitor_WeeklyTask.xml
+   + run_tender_monitor.bat and runs automatically. The discount scraper must be run manually.
+   Last manual run: 2026-05-15 (23 days ago — 3.3x the 7-day refresh target).
+   ACTION REQUIRED: Either set up a Windows Task Scheduler entry (copy/adapt the
+   ISZE_TenderMonitor_WeeklyTask.xml pattern) or run manually each week.
+   Command to run:
+     cd C:\Users\jerom\Desktop\claude\ISZE\Tools\discount-scanner\
+     python discount_scraper.py
+
+2. KS SCRAPER — APPROACHING STALE (29 of 30 days)
+   Last output 2026-05-09. Will cross the 30-day freshness threshold in ~1 day.
+   Code looks intact (server-side Magento, simple requests — no Playwright).
+   No critical URL or selector issues found.
+   ACTION: Run ks_scraper.py soon.
+
+3. TENDER SCRAPER — NON-CRITICAL LOG WARNINGS (from last run 2026-05-29)
+   These do not affect the core tender feed but reduce coverage:
+   a. UK Find a Tender: Rate-limited -> 0 results (Contracts Finder fallback: 77 OK)
+   b. Germany DTVP/NRW portals: HTTP 404 -- portal may require browser access
+   c. Belgium publicprocurement.be RSS: XML parse error (TED BEL covers above-threshold)
+   d. Israel RSS feed: "undefined entity" XML parse error
+   e. Doffin (Norway) + HILMA (Finland): No API key set -- skipped
+   NOTE: TED EU (707 matches) + Contracts Finder (77) working. Core function intact.
+
+4. DISCOUNT SCRAPER — OTHER SELECTORS: NOT VERIFIED
+   Selectors for Colruyt (verified Mar 2026), Delhaize (verified Apr 28 2026),
+   and Albert Heijn (verified Mar 2026) are documented as checked. Carrefour/
+   Coolblue/Bol use generic best-effort selectors. If Lidl URL fix is not enough
+   and a store returns 0 deals, selectors need manual inspection.
+
+═══════════════════════════════════════════
+NEXT STEPS
+═══════════════════════════════════════════
+
+1. RUN DISCOUNT SCRAPER MANUALLY (today — URL fix applied, should work):
+     cd C:\Users\jerom\Desktop\claude\ISZE\Tools\discount-scanner\
+     python discount_scraper.py
+
+2. SET UP WEEKLY SCHEDULER FOR DISCOUNT SCRAPER:
+   Create a .bat file + Task Scheduler entry (mirror the tender scraper pattern in
+   ISZE_TenderMonitor_WeeklyTask.xml). Target: Monday or Thursday (Delhaize folder
+   changes Thursday).
+
+3. RUN KS SCRAPER (within 24h to avoid crossing stale threshold):
+     cd C:\Users\jerom\Desktop\claude\ISZE\Tools\autodoc_scraper\
+     python ks_scraper.py
+
+═══════════════════════════════════════════
+Generated: 2026-06-07 (automated, Cowork scheduled task)

@@ -1,0 +1,75 @@
+---
+topic: sales-analytics-pipeline
+read_when: [pipeline, derived, parquet, data-ingest, phase-models]
+canonical: 01_data/derived/, metric_dictionary.md, DATA_MANIFEST.md
+last_validated: 2026-06-13
+---
+
+# Project: Sales analytics pipeline (3-phase)
+
+_Last validated: 2026-06-13 (numbered paths)_
+
+## Status: Active — PRISM builds `derived/`; Excel phase models remain parallel
+
+**Canonical numbers:** `01_data/derived/*` after green `verify_derived_pipeline.py` (see `03_analytics/Isuzu/prism/docs/metric_dictionary.md`).
+
+| Build | Script | Output |
+|-------|--------|--------|
+| Sales fact | `03_analytics/Isuzu/prism/scripts/build_sales_fact_from_cy.py` | `01_data/derived/sales_fact.parquet` |
+| Full derived stack | `03_analytics/Isuzu/prism/scripts/run_pipeline_and_verify.ps1` | PMS, GPS, BVP CSVs + `_verification_report.*` |
+| Dashboard JSON | `build_isze_dashboard_json.py` | `01_data/dashboards/isze_data.json` |
+
+## Canonical paths
+
+All paths under `$env:ISZE_ROOT/01_data/`:
+
+| Role | Path |
+|------|------|
+| Manifest | `01_data/DATA_MANIFEST.md` |
+| Data dictionary | `01_data/DATA_DICTIONARY.md` |
+| Raw CY billing | `raw/sales/CY2023-2024.XLSX`, `raw/sales/CY2025.XLSX` |
+| Reference | `raw/reference/` (BVP catalog, margin, FY27 order VP) |
+| Phase models | `models/Phase1_Sales_Clean_Model_Starter.xlsx` … `Phase3_Demand_Stocking_Model.xlsx` |
+| Planning | `planning/` (KPI Master, FY2027 VPACC) |
+| Derived | `derived/sales_fact.parquet`, `derived/pms_capture_by_db_year.csv`, etc. |
+| GPT-safe slices | `gpt_safe/` |
+| Dashboard JSON | `dashboards/isze_data.json`, `dashboards/tender_data.json` |
+| Ingest staging | `_INBOX/` |
+
+**Do not** re-copy CY files into `new files/`, duplicate trees, or legacy `Isuzu/data/` paths.
+
+## Phase 1 — Sales clean (Excel path)
+
+- **Input:** ~435k billing lines (CY2023-24 + CY2025), optional margin + customer order VP.
+- **Workbook:** `models/Phase1_Sales_Clean_Model_Starter.xlsx` — Column_Mapping, Order_Type_Master, Sales_Fact_Template, DQ checks.
+- **Output:** `Sales_Fact` table → may export to `derived/sales_fact.parquet` (PRISM build is primary for agents).
+
+## Phase 2 — Order behaviour
+
+- **Input:** Sales_Fact from Phase 1 or parquet.
+- **Workbook:** `models/Phase2_Order_Behaviour_Model.xlsx`
+- **Output:** `derived/phase2_*.csv` when exported.
+
+## Phase 3 — Demand & stocking
+
+- **Input:** Sales_Fact + Phase 2 + `raw/reference/BVP PARTS CATALOG.xlsx`.
+- **Workbook:** `models/Phase3_Demand_Stocking_Model.xlsx`
+
+## AI routing
+
+- **Claude / Cursor:** Full `01_data/` except never push raw billing to external tools.
+- **GPT Enterprise:** `gpt_safe/` + Context Pack MD only; monthly aggregates by DB, not payer-level.
+- **HTML dashboards:** `dashboards/*.json` only (deploy fetch uses `../Data/dashboards/` compatibility paths).
+
+## Next actions
+
+- [ ] Clear current verify **fails** in `_verification_report.md` (capture cap / ITUK band) or update `verification_fixtures.yaml` if intentional
+- [ ] Refresh `gpt_safe/` aggregates after green verify
+- [ ] Keep `DATA_MANIFEST.md` “Last refreshed” row current when CY files change
+- [ ] Jerome: confirm GitHub PAT revoked (Settings → Developer settings → PATs) — archive files in `90_archive/root_files/` still contain old token until scrubbed — **done 2026-06-13** (template + living-copy paths documented)
+
+## Related
+
+- `00_docs/RUNBOOK_MONTHLY_REFRESH.md` — monthly W1 ritual
+- `00_docs/agent/AI_STACK.md` — Tier 0–3 governance
+- `05_memory/projects/pms-coverage.md`, `competitiveness.md` — downstream use cases

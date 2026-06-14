@@ -1,0 +1,14 @@
+---
+description: ISZE workspace — INDEX-first routing, PRISM metrics, verify pipeline
+alwaysApply: true
+---
+
+# ISZE (Cursor)
+
+Read `INDEX.md` → `00_docs/ROUTING.yaml` (matching task) → `AGENTS.md` before globbing the tree.
+
+- Never use `07_deploy/Master Dashboard/context/` — deploy mirror only; edit MD at ISZE root + numbered folders.
+- KPIs: green `_verification_report.json` → `metrics_snapshot.json` / `FACTS.md`; metric_dictionary only when editing formulas.
+- HTML: `02_dashboards/` → `sync_to_deploys.ps1`. JSON: `01_data/dashboards/`.
+- No raw billing in chat/commits. Tender: `01_data/dashboards/tender_data.json` (v3 pipeline only).
+- Pipeline edits: skill `isze-verify-pipeline` or `03_analytics/Isuzu/prism/scripts/run_pipeline_and_verify.ps1`.

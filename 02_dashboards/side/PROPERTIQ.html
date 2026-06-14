@@ -1,0 +1,792 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=1400">
+  <title>PROPERTIQ · Split Hero</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #F6F3EE;
+      --ink: #1C1917;
+      --muted: #78716C;
+      --line: #E7E0D8;
+      --surface: #FFFFFF;
+      --accent: #B8956B;
+      --accent-soft: #F0E8DC;
+      --positive: #3D6B4F;
+      --positive-soft: #E8F2EC;
+      --debt: #C4A99A;
+      --band: rgba(61, 107, 79, 0.12);
+    }
+
+    body {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      min-height: 900px;
+      font-family: 'Inter', sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body.pq-embed { max-width: none; min-height: 820px; }
+    body.pq-embed .badge-style { display: none; }
+    body.pq-embed.isze-editorial { padding-top: 0 !important; }
+
+    .badge-style {
+      position: fixed; top: 16px; right: 20px; z-index: 100;
+      font: 600 11px/1 Inter; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 6px 12px; border-radius: 999px; background: var(--ink); color: var(--bg);
+    }
+
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 28px 48px 24px; border-bottom: 1px solid var(--line);
+    }
+    .logo { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; letter-spacing: 0.04em; }
+    .nav-tabs { display: flex; gap: 32px; list-style: none; }
+    .nav-tabs button {
+      background: none; border: none; cursor: pointer;
+      font-size: 13px; font-weight: 500; color: var(--muted); letter-spacing: 0.02em;
+      padding: 0 0 2px; font-family: inherit;
+    }
+    .nav-tabs button:hover { color: var(--ink); }
+    .nav-tabs button.active { color: var(--ink); border-bottom: 1.5px solid var(--accent); }
+    .nav-actions { display: flex; align-items: center; gap: 16px; }
+    .icon-btn {
+      width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--line);
+      background: var(--surface); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--muted); font-size: 14px;
+    }
+    .avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, #C4B5A0, #8B7355);
+      border: 2px solid var(--surface); box-shadow: 0 0 0 1px var(--line);
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Simulate tab ── */
+    .main {
+      display: grid; grid-template-columns: 58fr 42fr; min-height: 520px;
+    }
+
+    .chart-panel {
+      padding: 32px 36px 28px 40px;
+      background: var(--surface);
+      border-right: 1px solid var(--line);
+      display: flex; flex-direction: column;
+    }
+
+    .chart-head {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .chart-title {
+      font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600;
+    }
+    .chart-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .chart-legend { display: flex; gap: 16px; font-size: 11px; color: var(--muted); }
+    .chart-legend span { display: flex; align-items: center; gap: 6px; }
+    .chart-legend i {
+      display: inline-block; width: 10px; height: 10px; border-radius: 2px;
+    }
+
+    .chart-wrap {
+      flex: 1; position: relative; min-height: 300px;
+      background: linear-gradient(180deg, #FAFAF8 0%, var(--bg) 100%);
+      border: 1px solid var(--line); border-radius: 12px; padding: 16px 12px 8px;
+    }
+
+    .chart-wrap svg { width: 100%; height: 280px; display: block; transition: opacity 0.25s ease; }
+    .chart-wrap.is-updating svg { opacity: 0.55; }
+
+    .hero-photo {
+      height: 160px; border-radius: 12px; margin-bottom: 16px;
+      background-size: cover; background-position: center 40%;
+      border: 1px solid var(--line); transition: background-image 0.4s ease;
+    }
+
+    .equity-value { transition: color 0.2s ease; }
+    .equity-value.pulse { color: var(--positive); }
+
+    .chart-foot {
+      display: flex; justify-content: space-between; margin-top: 14px;
+      font-size: 11px; color: var(--muted);
+    }
+
+    .photo-strip {
+      display: flex; gap: 10px; margin-top: 16px;
+    }
+    .photo-thumb {
+      flex: 1; height: 72px; border-radius: 8px; background-size: cover;
+      background-position: center; border: 1px solid var(--line); opacity: 0.9;
+      cursor: pointer; transition: opacity 0.2s, outline 0.2s;
+    }
+    .photo-thumb:hover { opacity: 1; }
+    .photo-thumb.active { outline: 2px solid var(--accent); opacity: 1; }
+
+    .panel {
+      padding: 40px 44px 36px 36px; background: var(--bg);
+      display: flex; flex-direction: column;
+    }
+    .panel-meta {
+      font-size: 12px; font-weight: 500; color: var(--muted);
+      letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px;
+    }
+    .panel-meta strong { color: var(--ink); font-weight: 600; }
+    .equity-label { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    .equity-row { display: flex; align-items: baseline; gap: 16px; margin-bottom: 6px; }
+    .equity-value {
+      font-family: 'Fraunces', serif; font-size: 44px; font-weight: 700;
+      letter-spacing: -0.02em; line-height: 1;
+    }
+    .equity-delta {
+      display: inline-flex; align-items: center; font-size: 14px; font-weight: 600;
+      color: var(--positive); background: var(--positive-soft);
+      padding: 4px 10px; border-radius: 999px;
+    }
+    .equity-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+      margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid var(--line);
+    }
+    .stat .label {
+      font-size: 11px; font-weight: 500; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;
+    }
+    .stat .value { font-size: 15px; font-weight: 600; }
+    .stat .value.moderate { color: #9A6B4A; }
+
+    .presets-label { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 10px; }
+    .presets { display: flex; gap: 8px; margin-bottom: 24px; }
+    .preset {
+      padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line);
+      background: var(--surface); font-size: 12px; font-weight: 500; color: var(--muted);
+      cursor: pointer; transition: all 0.15s; font-family: inherit;
+    }
+    .preset:hover { border-color: var(--accent); color: var(--ink); }
+    .preset.active { background: var(--accent-soft); border-color: var(--accent); color: var(--ink); }
+
+    .slider-group { margin-bottom: 20px; }
+    .slider-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+    }
+    .slider-header label { font-size: 13px; font-weight: 500; }
+    .slider-header .val { font-size: 13px; font-weight: 600; color: var(--accent); }
+    .slider-track { position: relative; height: 4px; background: var(--line); border-radius: 2px; }
+    .slider-fill {
+      position: absolute; left: 0; top: 0; height: 100%;
+      background: var(--accent); border-radius: 2px;
+    }
+    .slider-thumb {
+      position: absolute; top: 50%; width: 16px; height: 16px;
+      background: var(--surface); border: 2px solid var(--accent); border-radius: 50%;
+      transform: translate(-50%, -50%); box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .actions { display: flex; gap: 12px; margin-top: 28px; }
+    .btn {
+      padding: 12px 24px; border-radius: 8px; font-size: 13px; font-weight: 600;
+      cursor: pointer; border: none; transition: all 0.15s; font-family: inherit;
+    }
+    .btn-primary { background: var(--ink); color: var(--bg); }
+    .btn-primary:hover { background: #292524; }
+    .btn-secondary { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+    .btn-secondary:hover { border-color: var(--accent); }
+
+    .bottom {
+      display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 20px;
+      padding: 32px 48px 48px; border-top: 1px solid var(--line);
+    }
+    .asset-card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+      overflow: hidden; transition: box-shadow 0.2s;
+    }
+    .asset-card:hover { box-shadow: 0 8px 24px rgba(28, 25, 23, 0.06); }
+    .asset-img { height: 140px; background-size: cover; background-position: center; }
+    .asset-body { padding: 18px 20px; }
+    .asset-tag {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px; margin-bottom: 10px;
+    }
+    .asset-tag.live { background: var(--positive-soft); color: var(--positive); }
+    .asset-tag.projected { background: #F5F5F4; color: var(--muted); }
+    .asset-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+    .asset-district {
+      font-size: 11px; color: var(--muted); letter-spacing: 0.04em;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+    .asset-metrics { display: flex; gap: 20px; font-size: 12px; }
+    .asset-metrics .m-label { color: var(--muted); }
+    .asset-metrics .m-value { font-weight: 600; }
+    .asset-metrics .m-value.up { color: var(--positive); }
+
+    .insight {
+      background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+      padding: 24px 28px; display: flex; flex-direction: column; justify-content: center;
+    }
+    .insight-label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--positive); margin-bottom: 12px;
+    }
+    .insight-text {
+      font-family: 'Fraunces', serif; font-size: 17px; line-height: 1.55; font-weight: 400;
+    }
+    .insight-text em { font-style: normal; font-weight: 600; color: var(--positive); }
+
+    /* ── Portfolio tab ── */
+    .portfolio-wrap { padding: 40px 48px 56px; }
+    .portfolio-head { margin-bottom: 32px; }
+    .portfolio-head h2 {
+      font-family: 'Fraunces', serif; font-size: 32px; font-weight: 600; margin-bottom: 8px;
+    }
+    .portfolio-head p { font-size: 14px; color: var(--muted); max-width: 560px; }
+    .portfolio-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px;
+    }
+    .portfolio-card {
+      display: grid; grid-template-columns: 220px 1fr;
+      background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+    }
+    .portfolio-card .asset-img { height: 100%; min-height: 180px; }
+    .portfolio-card .asset-body { padding: 24px; }
+    .portfolio-summary {
+      margin-top: 28px; padding: 24px 28px; background: var(--accent-soft);
+      border-radius: 12px; font-size: 14px; line-height: 1.6;
+    }
+
+    /* ── Formules tab ── */
+    .formules-wrap {
+      padding: 40px 48px 56px;
+      display: grid; grid-template-columns: 280px 1fr; gap: 40px;
+    }
+    .formules-nav {
+      position: sticky; top: 24px; align-self: start;
+    }
+    .formules-nav h2 {
+      font-family: 'Fraunces', serif; font-size: 28px; margin-bottom: 8px;
+    }
+    .formules-nav p { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 24px; }
+    .formules-nav ul { list-style: none; }
+    .formules-nav li { margin-bottom: 8px; }
+    .formules-nav a {
+      font-size: 13px; color: var(--muted); text-decoration: none;
+    }
+    .formules-nav a:hover { color: var(--ink); }
+
+    .formula-block {
+      background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+      padding: 28px 32px; margin-bottom: 20px;
+    }
+    .formula-block h3 {
+      font-family: 'Fraunces', serif; font-size: 20px; margin-bottom: 6px;
+    }
+    .formula-block .purpose {
+      font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.5;
+    }
+    .formula-eq {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 15px; line-height: 1.7;
+      background: var(--bg); border: 1px solid var(--line);
+      border-radius: 10px; padding: 18px 22px; margin-bottom: 16px;
+      overflow-x: auto;
+    }
+    .formula-vars {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px;
+      font-size: 13px; line-height: 1.55;
+    }
+    .formula-vars dt { color: var(--muted); font-weight: 500; }
+    .formula-vars dd { margin: 0; }
+    .formula-vars code {
+      font-family: 'IBM Plex Mono', monospace; font-size: 12px;
+      background: var(--accent-soft); padding: 1px 6px; border-radius: 4px;
+    }
+    .formula-note {
+      margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line);
+      font-size: 13px; color: var(--muted); line-height: 1.6;
+    }
+    .formula-note strong { color: var(--ink); font-weight: 600; }
+
+    .chain-box {
+      background: var(--positive-soft); border: 1px solid #C5D9CC;
+      border-radius: 12px; padding: 22px 28px; margin-top: 8px;
+    }
+    .chain-box h4 {
+      font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--positive); margin-bottom: 12px;
+    }
+    .chain-steps {
+      font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 2;
+    }
+  </style>
+  <link rel="stylesheet" href="_ui/editorial.css">
+  <link rel="stylesheet" href="_ui/editorial-full.css">
+  <script src="_ui/editorial-charts.js"></script>
+  <script src="_ui/isze-shell.js" defer></script>
+</head>
+<body>
+<script>if (new URLSearchParams(location.search).get('embed') === '1') document.body.classList.add('pq-embed');</script>
+
+<div class="badge-style">01 · Split Hero</div>
+
+<nav class="nav">
+  <div class="logo">PROPERTIQ</div>
+  <ul class="nav-tabs">
+    <li><button type="button" class="tab-btn active" data-tab="simulate">Simuleren</button></li>
+    <li><button type="button" class="tab-btn" data-tab="portfolio">Portfolio</button></li>
+    <li><button type="button" class="tab-btn" data-tab="formules">Formules</button></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="icon-btn" aria-label="Meldingen">🔔</button>
+    <div class="avatar" aria-label="Profiel"></div>
+  </div>
+</nav>
+
+<!-- TAB 1: SIMULEREN -->
+<div id="tab-simulate" class="tab-panel active">
+  <section class="main">
+    <div class="chart-panel">
+      <div class="hero-photo" id="hero-photo" style="background-image:url('propertiq-assets/eilandje-mas.jpg')"></div>
+      <div class="chart-head">
+        <div>
+          <div class="chart-title">Eigen vermogen over tijd</div>
+          <div class="chart-sub">Waarde pand − restschuld · 15 jaar · Antwerp portfolio</div>
+        </div>
+        <div class="chart-legend">
+          <span><i style="background:var(--positive)"></i> Eigen vermogen</span>
+          <span><i style="background:var(--debt)"></i> Restschuld</span>
+          <span><i style="background:var(--band);border:1px dashed var(--positive)"></i> Bandbreedte</span>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <svg id="equity-chart" viewBox="0 0 520 280" preserveAspectRatio="none" aria-label="Grafiek eigen vermogen"></svg>
+      </div>
+      <div class="chart-foot">
+        <span>Jaar 0 · €250k eigen inbreng</span>
+        <span id="chart-end-label">Jaar 15 · €1,42M eigen vermogen</span>
+      </div>
+      <div class="photo-strip">
+        <div class="photo-thumb active" style="background-image:url('propertiq-assets/eilandje-mas.jpg')"></div>
+        <div class="photo-thumb" style="background-image:url('propertiq-assets/zurenborg-cogels.jpg');background-position:center 35%"></div>
+        <div class="photo-thumb" style="background-image:url('propertiq-assets/eilandje-dock.jpg');background-position:center 40%"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-meta"><strong>Antwerpen</strong> · 2 activa in portfolio</div>
+      <div class="equity-label">Geprojecteerd eigen vermogen</div>
+      <div class="equity-row">
+        <div class="equity-value" id="equity-display">€1.420.885</div>
+        <span class="equity-delta" id="equity-delta">↑ +12,4%</span>
+      </div>
+      <div class="equity-sub" id="equity-sub">Over 15 jaar beleggingshorizon · gebalanceerd scenario</div>
+
+      <div class="stats-row">
+        <div class="stat"><div class="label">Eigen inbreng</div><div class="value">€250.000</div></div>
+        <div class="stat"><div class="label">Hefboom</div><div class="value">4,2×</div></div>
+        <div class="stat"><div class="label">Risicoprofiel</div><div class="value moderate">Matig</div></div>
+      </div>
+
+      <div class="presets-label">Scenario</div>
+      <div class="presets">
+        <button class="preset" data-g="0.02" data-rate="0.045">Behoud</button>
+        <button class="preset active" data-g="0.032" data-rate="0.0415">Gebalanceerd</button>
+        <button class="preset" data-g="0.045" data-rate="0.038">Groei</button>
+      </div>
+
+      <div class="sliders">
+        <div class="slider-group">
+          <div class="slider-header">
+            <label>Jaarlijkse waardestijging</label>
+            <span class="val" id="val-g">3,2%</span>
+          </div>
+          <input type="range" id="slider-g" min="0" max="80" value="42" style="width:100%;accent-color:var(--accent)">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <label>Hypotheekrente</label>
+            <span class="val" id="val-rate">4,15%</span>
+          </div>
+          <input type="range" id="slider-rate" min="20" max="70" value="55" style="width:100%;accent-color:var(--accent)">
+        </div>
+        <div class="slider-group">
+          <div class="slider-header">
+            <label>Belastingschijf</label>
+            <span class="val" id="val-tax">21%</span>
+          </div>
+          <input type="range" id="slider-tax" min="25" max="50" value="38" style="width:100%;accent-color:var(--accent)">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="btn-recalc">Herbereken</button>
+        <button class="btn btn-secondary">Scenario opslaan</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="bottom">
+    <article class="asset-card">
+      <div class="asset-img" style="background-image:url('propertiq-assets/zurenborg-cogels.jpg');background-position:center 35%"></div>
+      <div class="asset-body">
+        <span class="asset-tag live">Lopend actief</span>
+        <div class="asset-name">Zurenborg Lofts</div>
+        <div class="asset-district">District · 2018 Antwerpen</div>
+        <div class="asset-metrics">
+          <div><span class="m-label">Waardering </span><span class="m-value">€845.000</span></div>
+          <div><span class="m-label">ROI </span><span class="m-value up">+14,2%</span></div>
+        </div>
+      </div>
+    </article>
+    <article class="asset-card">
+      <div class="asset-img" style="background-image:url('propertiq-assets/eilandje-dock.jpg');background-position:center 40%"></div>
+      <div class="asset-body">
+        <span class="asset-tag projected">Geprojecteerd</span>
+        <div class="asset-name">Eilandje Wharf</div>
+        <div class="asset-district">District · 2000 Antwerpen</div>
+        <div class="asset-metrics">
+          <div><span class="m-label">Waardering </span><span class="m-value">€1.250.000</span></div>
+          <div><span class="m-label">Rendement </span><span class="m-value">6,8%</span></div>
+        </div>
+      </div>
+    </article>
+    <aside class="insight">
+      <div class="insight-label">Analistnota</div>
+      <p class="insight-text">
+        Marktvolatiliteit in Antwerpen-Zuid daalt. Huidige simulatie wijst op een
+        <em>12% stijging</em> in portfolioresistentie bij aankoop Eilandje Wharf in Q3.
+      </p>
+    </aside>
+  </section>
+</div>
+
+<!-- TAB 2: PORTFOLIO -->
+<div id="tab-portfolio" class="tab-panel">
+  <div class="portfolio-wrap">
+    <div class="portfolio-head">
+      <h2>Antwerpen portfolio</h2>
+      <p>Twee activa — één lopend in Zurenborg, één geprojecteerd in Eilandje. Waarderingen en rendementen zijn gekoppeld aan het simulatiemodel op tab 1.</p>
+    </div>
+    <div class="portfolio-grid">
+      <article class="portfolio-card">
+        <div class="asset-img" style="background-image:url('propertiq-assets/zurenborg-cogels.jpg');background-position:center 35%"></div>
+        <div class="asset-body">
+          <span class="asset-tag live">Lopend actief</span>
+          <div class="asset-name">Zurenborg Lofts</div>
+          <div class="asset-district">District · 2018 Antwerpen</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.55;margin:12px 0 16px">
+            Art-nouveauwijk, hoge bezettingsgraad (92%). Sterke waardestijging door gentrificatie Zuid/Berchem.
+          </p>
+          <div class="asset-metrics">
+            <div><span class="m-label">Waardering </span><span class="m-value">€845.000</span></div>
+            <div><span class="m-label">Bruto rendement </span><span class="m-value up">+14,2%</span></div>
+          </div>
+        </div>
+      </article>
+      <article class="portfolio-card">
+        <div class="asset-img" style="background-image:url('propertiq-assets/eilandje-dock.jpg');background-position:center 40%"></div>
+        <div class="asset-body">
+          <span class="asset-tag projected">Geprojecteerd</span>
+          <div class="asset-name">Eilandje Wharf</div>
+          <div class="asset-district">District · 2000 Antwerpen</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.55;margin:12px 0 16px">
+            Waterfront herontwikkeling nabij MAS. Hoger rendement, meer volatiliteit — past in gebalanceerd scenario.
+          </p>
+          <div class="asset-metrics">
+            <div><span class="m-label">Waardering </span><span class="m-value">€1.250.000</span></div>
+            <div><span class="m-label">Netto rendement </span><span class="m-value">6,8%</span></div>
+          </div>
+        </div>
+      </article>
+    </div>
+    <div class="portfolio-summary">
+      <strong>Totaal geprojecteerd eigen vermogen:</strong> €1.420.885 na 15 jaar ·
+      gecombineerde hefboom 4,2× · zie tab <em>Formules</em> voor de berekening.
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: FORMULES -->
+<div id="tab-formules" class="tab-panel">
+  <div class="formules-wrap">
+    <aside class="formules-nav">
+      <h2>Methodologie</h2>
+      <p>Elke metric op het dashboard is afgeleid van onderstaande formules. Geen black box — elke aanname is expliciet.</p>
+      <ul>
+        <li><a href="#f1">1 · Waardeontwikkeling</a></li>
+        <li><a href="#f2">2 · Restschuld</a></li>
+        <li><a href="#f3">3 · Eigen vermogen</a></li>
+        <li><a href="#f4">4 · Hefboom</a></li>
+        <li><a href="#f5">5 · Netto rendement</a></li>
+        <li><a href="#f6">6 · Belgische fiscaliteit</a></li>
+        <li><a href="#f7">7 · Bandbreedte</a></li>
+      </ul>
+    </aside>
+
+    <div class="formules-content">
+      <article class="formula-block" id="f1">
+        <h3>1. Waardeontwikkeling van het pand</h3>
+        <p class="purpose">De marktwaarde groeit jaarlijks met een constant percentage <code>g</code> (waardestijging). Dit is de basis van elke projectie.</p>
+        <div class="formula-eq">V<sub>t</sub> = V<sub>0</sub> × (1 + g)<sup>t</sup></div>
+        <dl class="formula-vars">
+          <dt><code>V<sub>t</sub></code></dt><dd>Marktwaarde na <code>t</code> jaar</dd>
+          <dt><code>V<sub>0</sub></code></dt><dd>Aankoopwaarde vandaag (€1.050.000 gecombineerd)</dd>
+          <dt><code>g</code></dt><dd>Jaarlijkse waardestijging (slider: 0–8%, default 3,2%)</dd>
+          <dt><code>t</code></dt><dd>Houdperiode in jaren (15)</dd>
+        </dl>
+        <p class="formula-note"><strong>Voorbeeld:</strong> bij g = 3,2% wordt V<sub>15</sub> = 1.050.000 × 1,032<sup>15</sup> ≈ €1.635.000.</p>
+      </article>
+
+      <article class="formula-block" id="f2">
+        <h3>2. Restschuld (annuïteitenhypotheek)</h3>
+        <p class="purpose">De lening wordt lineair afgelost via maandelijkse annuïteiten. De restschuld daalt sneller aan het einde.</p>
+        <div class="formula-eq">D<sub>t</sub> = L × [ (1+r)<sup>n</sup> − (1+r)<sup>t×12</sup> ] / [ (1+r)<sup>n</sup> − 1 ]</div>
+        <dl class="formula-vars">
+          <dt><code>D<sub>t</sub></code></dt><dd>Restschuld na <code>t</code> jaar</dd>
+          <dt><code>L</code></dt><dd>Initiële lening = V<sub>0</sub> − eigen inbreng = €800.000</dd>
+          <dt><code>r</code></dt><dd>Maandrente = jaarlijkse rente / 12 (slider: hypotheekrente)</dd>
+          <dt><code>n</code></dt><dd>Totaal aantal maanden (15 × 12 = 180)</dd>
+        </dl>
+        <p class="formula-note"><strong>Let op:</strong> alleen interest + aflossing; geen overbruggingskrediet of herfinanciering in dit model.</p>
+      </article>
+
+      <article class="formula-block" id="f3">
+        <h3>3. Eigen vermogen (kernmetric)</h3>
+        <p class="purpose">Dit is het grote getal op het dashboard — wat je netto bezit na aftrek van schuld.</p>
+        <div class="formula-eq">E<sub>t</sub> = V<sub>t</sub> − D<sub>t</sub></div>
+        <dl class="formula-vars">
+          <dt><code>E<sub>t</sub></code></dt><dd>Eigen vermogen na <code>t</code> jaar</dd>
+          <dt><code>E<sub>0</sub></code></dt><dd>Eigen inbreng = €250.000</dd>
+          <dt><code>E<sub>15</sub></code></dt><dd>Geprojecteerd resultaat ≈ €1.420.885 (gebalanceerd)</dd>
+        </dl>
+        <p class="formula-note">De grafiek toont <code>E<sub>t</sub></code> als groene vlakvulling tussen waarde- en schuldlijn.</p>
+      </article>
+
+      <article class="formula-block" id="f4">
+        <h3>4. Hefboom (leverage)</h3>
+        <p class="purpose">Hoeveel vreemd vermogen per euro eigen geld. Hogere hefboom = hoger rendement én hoger risico.</p>
+        <div class="formula-eq">λ = V<sub>0</sub> / E<sub>0</sub> = 1.050.000 / 250.000 = 4,2×</div>
+        <dl class="formula-vars">
+          <dt><code>λ</code></dt><dd>Hefboomratio (4,2× in gebalanceerd scenario)</dd>
+          <dt><code>LTV</code></dt><dd>Loan-to-value = L / V<sub>0</sub> = 76,2%</dd>
+        </dl>
+      </article>
+
+      <article class="formula-block" id="f5">
+        <h3>5. Netto rendement op eigen vermogen</h3>
+        <p class="purpose">Het percentage onder het hoofdgetal (+12,4%) is de CAGR van je eigen inbreng over de houdperiode.</p>
+        <div class="formula-eq">ROI = ( E<sub>T</sub> / E<sub>0</sub> )<sup>1/T</sup> − 1</div>
+        <dl class="formula-vars">
+          <dt><code>ROI</code></dt><dd>Jaarlijks gemiddeld rendement op eigen vermogen</dd>
+          <dt><code>T</code></dt><dd>Houdperiode (15 jaar)</dd>
+        </dl>
+        <p class="formula-note"><strong>Voorbeeld:</strong> (1.420.885 / 250.000)<sup>1/15</sup> − 1 ≈ 12,4% per jaar.</p>
+      </article>
+
+      <article class="formula-block" id="f6">
+        <h3>6. Belgische fiscaliteit (vereenvoudigd)</h3>
+        <p class="purpose">Huurinkomsten worden belast tegen de progressieve schijf. Kadastraal inkomen en aftrekposten zijn hier vereenvoudigd tot één tarief.</p>
+        <div class="formula-eq">R<sub>net</sub> = R<sub>bruto</sub> × (1 − τ) − I<sub>kad</sub></div>
+        <dl class="formula-vars">
+          <dt><code>τ</code></dt><dd>Belastingschijf op huurinkomsten (slider: 21–50%)</dd>
+          <dt><code>R<sub>bruto</sub></code></dt><dd>Bruto huurinkomsten (bezetting × maandhuur × 12)</dd>
+          <dt><code>I<sub>kad</sub></code></dt><dd>Geschat kadastraal inkomen (niet-geïndexeerd, vereenvoudigd)</dd>
+        </dl>
+        <p class="formula-note"><strong>Nog niet gemodelleerd:</strong> verkooprecht (10% in Vlaanderen), registratierechten, notionele huurinkomsten bij eigen bewoning. Dit komt in een volgende iteratie.</p>
+      </article>
+
+      <article class="formula-block" id="f7">
+        <h3>7. Bandbreedte op de grafiek</h3>
+        <p class="purpose">De gestippelde band rond de eigen-vermogenslijn toont onzekerheid in waardestijging ±1% rond het basisscenario.</p>
+        <div class="formula-eq">E<sub>t</sub><sup>low</sup> = V<sub>0</sub>(1+g−σ)<sup>t</sup> − D<sub>t</sub> &nbsp;&nbsp;|&nbsp;&nbsp; E<sub>t</sub><sup>high</sup> = V<sub>0</sub>(1+g+σ)<sup>t</sup> − D<sub>t</sub></div>
+        <dl class="formula-vars">
+          <dt><code>σ</code></dt><dd>Onzekerheidsmarge op g (default 1 procentpunt)</dd>
+        </dl>
+      </article>
+
+      <div class="chain-box">
+        <h4>Berekeningsketen (volgorde)</h4>
+        <div class="chain-steps">
+          V<sub>0</sub>, E<sub>0</sub>, g, rente → λ &nbsp;→&nbsp; V<sub>t</sub> per jaar &nbsp;→&nbsp; D<sub>t</sub> per jaar &nbsp;→&nbsp; E<sub>t</sub> = V<sub>t</sub> − D<sub>t</sub> &nbsp;→&nbsp; ROI &nbsp;→&nbsp; bandbreedte
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const V0 = 1_050_000;
+  const E0 = 250_000;
+  const L0 = V0 - E0;
+  const YEARS = 15;
+
+  const sliderG = document.getElementById('slider-g');
+  const sliderRate = document.getElementById('slider-rate');
+  const valG = document.getElementById('val-g');
+  const valRate = document.getElementById('val-rate');
+  const valTax = document.getElementById('val-tax');
+  const equityDisplay = document.getElementById('equity-display');
+  const equityDelta = document.getElementById('equity-delta');
+  const chartEnd = document.getElementById('chart-end-label');
+  const svg = document.getElementById('equity-chart');
+
+  function pct(slider, min, max) {
+    return min + (slider.value / 100) * (max - min);
+  }
+
+  function fmt(n) {
+    return '€' + Math.round(n).toLocaleString('nl-BE');
+  }
+
+  function fmtPct(p) {
+    return (p * 100).toFixed(1).replace('.', ',') + '%';
+  }
+
+  function debtAtYear(t, annualRate) {
+    const r = annualRate / 12;
+    const n = YEARS * 12;
+    const m = t * 12;
+    if (r === 0) return L0 * (1 - m / n);
+    const powN = Math.pow(1 + r, n);
+    const powM = Math.pow(1 + r, m);
+    return L0 * (powN - powM) / (powN - 1);
+  }
+
+  function simulate(g, annualRate, sigma) {
+    const pts = [];
+    for (let t = 0; t <= YEARS; t++) {
+      const V = V0 * Math.pow(1 + g, t);
+      const D = debtAtYear(t, annualRate);
+      const E = V - D;
+      const Vlo = V0 * Math.pow(1 + g - sigma, t);
+      const Vhi = V0 * Math.pow(1 + g + sigma, t);
+      pts.push({ t, V, D, E, Elo: Vlo - D, Ehi: Vhi - D });
+    }
+    return pts;
+  }
+
+  function roi(Et) {
+    return Math.pow(Et / E0, 1 / YEARS) - 1;
+  }
+
+  const chartWrap = document.querySelector('.chart-wrap');
+  const equitySub = document.getElementById('equity-sub');
+  const heroPhoto = document.getElementById('hero-photo');
+  const ANNUAL_RENT = 58_000;
+
+  const PHOTOS = [
+    { url: 'propertiq-assets/eilandje-mas.jpg', pos: 'center 40%', label: 'Eilandje · MAS' },
+    { url: 'propertiq-assets/zurenborg-cogels.jpg', pos: 'center 35%', label: 'Zurenborg · Cogels-Osylei' },
+    { url: 'propertiq-assets/eilandje-dock.jpg', pos: 'center 40%', label: 'Eilandje · Napelsstraat' }
+  ];
+
+  function drawChart(pts) {
+    const W = 520, H = 280, pad = { t: 12, r: 16, b: 28, l: 52 };
+    const iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
+    const maxY = Math.max(...pts.map(p => p.Ehi)) * 1.05;
+    const x = t => pad.l + (t / YEARS) * iw;
+    const y = v => pad.t + ih - (v / maxY) * ih;
+    const line = key => pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.t).toFixed(1)},${y(p[key]).toFixed(1)}`).join(' ');
+    const eqArea = pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.t).toFixed(1)},${y(p.E).toFixed(1)}`).join(' ')
+      + ` L${x(YEARS).toFixed(1)},${y(0)} L${x(0).toFixed(1)},${y(0)} Z`;
+    const band = () => {
+      const up = pts.map((p, i) => `${i ? 'L' : 'M'}${x(p.t).toFixed(1)},${y(p.Ehi).toFixed(1)}`).join(' ');
+      const dn = [...pts].reverse().map(p => `L${x(p.t).toFixed(1)},${y(p.Elo).toFixed(1)}`).join(' ');
+      return up + dn + 'Z';
+    };
+    const gridY = [0, 0.25, 0.5, 0.75, 1].map(f => {
+      const v = maxY * f;
+      return `<line x1="${pad.l}" y1="${y(v)}" x2="${W - pad.r}" y2="${y(v)}" stroke="#E7E0D8" stroke-width="1"/>
+        <text x="${pad.l - 8}" y="${y(v) + 4}" text-anchor="end" font-size="10" fill="#78716C" font-family="Inter">${v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : Math.round(v / 1000) + 'k'}</text>`;
+    }).join('');
+    const xLabels = [0, 5, 10, 15].map(t =>
+      `<text x="${x(t)}" y="${H - 6}" text-anchor="middle" font-size="10" fill="#78716C" font-family="Inter">${t}j</text>`
+    ).join('');
+    svg.innerHTML = `<defs><linearGradient id="eqGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3D6B4F"/><stop offset="100%" stop-color="#3D6B4F" stop-opacity="0"/></linearGradient></defs>
+      ${gridY}
+      <path d="${band()}" fill="rgba(61,107,79,0.14)" />
+      <path d="${eqArea}" fill="rgba(61,107,79,0.18)" />
+      <path d="${line('D')}" fill="none" stroke="#C4A99A" stroke-width="2.5" />
+      <path d="${line('V')}" fill="none" stroke="#B8956B" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.7" />
+      <path d="${line('E')}" fill="none" stroke="#3D6B4F" stroke-width="3" />
+      ${xLabels}`;
+  }
+
+  function setPhoto(index) {
+    const p = PHOTOS[index];
+    heroPhoto.style.backgroundImage = `url('${p.url}')`;
+    heroPhoto.style.backgroundPosition = p.pos;
+    document.querySelectorAll('.photo-thumb').forEach((el, i) => el.classList.toggle('active', i === index));
+  }
+
+  function recalc() {
+    chartWrap.classList.add('is-updating');
+    const g = pct(sliderG, 0, 0.08);
+    const rate = pct(sliderRate, 0.02, 0.07);
+    const tax = pct(document.getElementById('slider-tax'), 0.21, 0.50);
+    valG.textContent = fmtPct(g);
+    valRate.textContent = fmtPct(rate);
+    valTax.textContent = fmtPct(tax);
+
+    const pts = simulate(g, rate, 0.01);
+    const end = pts[YEARS];
+    const taxTotal = ANNUAL_RENT * tax * YEARS;
+    const netE = end.E - taxTotal;
+    const r = roi(netE);
+
+    equityDisplay.textContent = fmt(netE);
+    equityDisplay.classList.add('pulse');
+    setTimeout(() => equityDisplay.classList.remove('pulse'), 300);
+    equityDelta.textContent = (r >= 0 ? '↑ +' : '↓ ') + fmtPct(Math.abs(r));
+    equitySub.textContent = `Bruto ${fmt(end.E)} · belasting −${fmt(taxTotal)} · ${fmtPct(tax)} schijf`;
+    chartEnd.textContent = `Jaar ${YEARS} · ${fmt(netE)} netto eigen vermogen`;
+    drawChart(pts.map(p => ({ ...p, E: p.E - (taxTotal * p.t / YEARS) })));
+    requestAnimationFrame(() => chartWrap.classList.remove('is-updating'));
+  }
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  document.querySelectorAll('.preset').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.preset').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const g = parseFloat(btn.dataset.g);
+      const rate = parseFloat(btn.dataset.rate);
+      sliderG.value = Math.round((g / 0.08) * 100);
+      sliderRate.value = Math.round(((rate - 0.02) / 0.05) * 100);
+      recalc();
+    });
+  });
+
+  [sliderG, sliderRate, document.getElementById('slider-tax')].forEach(el => {
+    el.addEventListener('input', recalc);
+  });
+  document.getElementById('btn-recalc').addEventListener('click', recalc);
+
+  document.querySelectorAll('.photo-thumb').forEach((el, i) => {
+    el.addEventListener('click', () => setPhoto(i));
+  });
+
+  recalc();
+  setPhoto(0);
+})();
+</script>
+</body>
+</html>

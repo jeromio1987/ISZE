@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DB Brief button — location guide</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f8fafc; padding: 32px; }
+  h1 { font-size: 1rem; color: #64748b; margin-bottom: 24px; font-weight: 500; }
+
+  .drawer-mock {
+    width: 520px;
+    background: #fff;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .drawer-head {
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid #e2e8f0;
+    background: #fff;
+  }
+  .tiny { font-size: 0.75rem; color: #94a3b8; margin-bottom: 4px; }
+  .drawer-head h2 { font-size: 1.05rem; margin: 6px 0 10px; color: #0f172a; line-height: 1.4; }
+  .pill { display: inline-block; padding: 3px 9px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; margin-right: 4px; }
+  .pill-attack { background: #fee2e2; color: #991b1b; }
+  .pill-urgent { background: #fff7ed; color: #9a3412; }
+  .pill-rm { background: #fef9c3; color: #713f12; }
+
+  .drawer-body { padding: 18px; display: grid; gap: 16px; }
+
+  .drawer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .kv .k { font-size: 0.72rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .kv .v { font-size: 0.88rem; color: #1e293b; font-weight: 500; }
+
+  .section-label { font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 8px; }
+  .note-box { background: #f8fafc; border-radius: 8px; padding: 10px 12px; font-size: 0.82rem; color: #475569; }
+  .rm-box { background: #fef9c3; border: 1px solid #fde047; border-radius: 10px; padding: 10px 12px; font-size: 0.82rem; color: #713f12; margin-top: 8px; }
+
+  .workflow-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .workflow-grid label { font-size: 0.75rem; color: #64748b; display: flex; flex-direction: column; gap: 4px; }
+  .workflow-grid select, .workflow-grid input { padding: 6px 8px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.82rem; color: #334155; }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .btn { padding: 8px 14px; border-radius: 8px; font-size: 0.82rem; font-weight: 600; border: 1px solid; cursor: pointer; }
+  .btn-dark { background: #1e293b; color: #fff; border-color: #1e293b; }
+  .btn-ghost { background: #fff; color: #334155; border-color: #e2e8f0; }
+  .btn-brief { background: #eff6ff; color: #1d4ed8; border-color: #bfdbfe; }
+
+  /* Annotation */
+  .annotation {
+    position: absolute;
+    right: -220px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 210px;
+  }
+  .ann-line {
+    width: 60px;
+    height: 2px;
+    background: #f97316;
+    flex-shrink: 0;
+  }
+  .ann-text {
+    background: #fff7ed;
+    border: 1.5px solid #f97316;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 0.78rem;
+    color: #9a3412;
+    line-height: 1.4;
+    font-weight: 500;
+  }
+
+  .wrapper { position: relative; display: inline-block; }
+
+  .arrow-wrap {
+    position: absolute;
+    bottom: 52px;
+    right: -230px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    pointer-events: none;
+  }
+  .arrow-line {
+    width: 80px;
+    height: 2px;
+    background: #f97316;
+  }
+  .arrow-bubble {
+    background: #fff7ed;
+    border: 1.5px solid #f97316;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 0.78rem;
+    color: #9a3412;
+    line-height: 1.5;
+    font-weight: 500;
+    width: 200px;
+  }
+  .arrow-bubble strong { display: block; margin-bottom: 4px; font-size: 0.82rem; }
+
+  .dim { opacity: 0.4; }
+  .highlight-row { position: relative; }
+  .btn-brief-highlight {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+    box-shadow: 0 0 0 3px #93c5fd;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 3px #93c5fd; }
+    50% { box-shadow: 0 0 0 6px #bfdbfe; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Where the 📋 Copy DB brief button appears — annotated mockup</h1>
+
+<div class="wrapper">
+  <div class="drawer-mock">
+
+    <div class="drawer-head">
+      <div class="tiny">France · 🇪🇺 EU</div>
+      <h2>Maintenance et réparation des véhicules utilitaires — Région Grand Est</h2>
+      <div>
+        <span class="pill pill-attack">⚡ Attack</span>
+        <span class="pill pill-urgent">🔥 Hot</span>
+        <span class="pill pill-rm">🔧 R&amp;M contract</span>
+      </div>
+    </div>
+
+    <div class="drawer-body">
+
+      <div class="drawer-grid">
+        <div class="kv"><div class="k">Buyer</div><div class="v">Région Grand Est</div></div>
+        <div class="kv"><div class="k">Value</div><div class="v">€420,000</div></div>
+        <div class="kv"><div class="k">Deadline</div><div class="v">14 Apr 2026</div></div>
+        <div class="kv"><div class="k">Notices in family</div><div class="v">1</div></div>
+        <div class="kv"><div class="k">Scores</div><div class="v">Fit 72 · Win 61 · Econ 58</div></div>
+        <div class="kv"><div class="k">Data gaps</div><div class="v">Fleet size, buyer type</div></div>
+      </div>
+
+      <div>
+        <div class="section-label">Why this scored this way</div>
+        <div class="note-box">CPV 50112000 (repair services, passenger cars) · fleet maintenance signal · high value</div>
+        <div class="rm-box">🔧 <strong>R&amp;M Contract</strong> — fleet operator outsourcing repair &amp; maintenance. <em>Distributor action:</em> approach the tender winner to position as authorised Isuzu parts supplier.</div>
+      </div>
+
+      <div>
+        <div class="section-label">Workflow</div>
+        <div class="workflow-grid">
+          <label>Owner <select><option>Unassigned</option></select></label>
+          <label>Status <select><option>Watch</option></select></label>
+          <label>Internal due date <input type="date" value="2026-04-07"></label>
+          <label>Next action <input type="text" value="Approach winning maintainer"></label>
+        </div>
+
+        <div class="actions highlight-row">
+          <button class="btn btn-dark dim">Save workflow fields</button>
+          <button class="btn btn-ghost dim">Reset to suggested</button>
+          <button class="btn btn-ghost dim">Open notice</button>
+          <button class="btn btn-brief btn-brief-highlight">📋 Copy DB brief</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Annotation arrow -->
+  <div class="arrow-wrap">
+    <div class="arrow-line"></div>
+    <div class="arrow-bubble">
+      <strong>📋 Copy DB brief</strong>
+      Click this button — a ready-to-paste distributor briefing lands on your clipboard instantly. Tailored text based on tender type (R&amp;M, vehicle purchase, or parts signal).
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top: 48px; max-width: 520px; background:#f0f9ff; border:1px solid #bae6fd; border-radius:10px; padding:16px; font-size:0.82rem; color:#0c4a6e; line-height:1.6;">
+  <strong>What gets copied to clipboard:</strong><br><br>
+  <pre style="font-family:monospace;font-size:0.78rem;white-space:pre-wrap;color:#0f172a">ISZE TENDER INTELLIGENCE — DISTRIBUTOR LEAD BRIEF
+Generated: 19 Mar 2026
+───────────────────────────────────────────────────────
+
+Tender:          Maintenance et réparation des véhicules...
+Buyer:           Région Grand Est
+Country:         France
+Contract value:  €420,000
+Deadline:        14 Apr 2026 (26 days remaining)
+Priority:        Attack · Medium evidence
+Source:          https://ted.europa.eu/...
+
+───────────────────────────────────────────────────────
+OPPORTUNITY TYPE: FLEET MAINTENANCE CONTRACT (R&M)
+───────────────────────────────────────────────────────
+
+RECOMMENDED ACTION
+1. Monitor for contract award — winning maintainer will be disclosed.
+2. Approach the winner before the contract starts and position as
+   authorised Isuzu genuine parts supplier.
+3. Frame pitch: availability, warranty protection, correct fitment
+   for D-Max / N-Series, ISZE account terms.
+4. Log in CRM and flag to ISZE if SPA pricing needed.
+
+───────────────────────────────────────────────────────
+WHY THIS MATTERS
+Outsourced fleet maintenance contracts typically run 3–5 years.
+Genuine Isuzu parts protect the warranty — that is your argument.</pre>
+</div>
+
+</body>
+</html>
