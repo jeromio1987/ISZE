@@ -20,7 +20,7 @@ Everything else lives in numbered folders below.
 | # | Folder | Role |
 |---|--------|------|
 | 00 | `00_docs/` | Routing, maps, roadmaps, human README, CANONICAL |
-| 01 | `01_data/` | Raw + derived + `dashboards/*.json` |
+| 01 | `01_data/` | Raw + derived (`00_derived/`) + `14_dashboards/*.json` — subfolder map: `01_data/DATA_MANIFEST.md` §2 |
 | 02 | `02_dashboards/` | HTML source → `sync_to_deploys.ps1` |
 | 03 | `03_analytics/` | PRISM, PMS pilot, GPS dashboard code |
 | 04 | `04_tools/` | Scrapers, SPA, **`workspace/`** reorg scripts |
@@ -50,6 +50,8 @@ Everything else lives in numbered folders below.
 | Changelog | `CHANGELOG.md` |
 | Decision log | `DECISIONS.md` |
 | Workspace scripts | `04_tools/workspace/` |
+| Scheduled path check | `04_tools/workspace/verify_scheduled_paths.ps1` |
+| PRISM CI | `.github/workflows/prism-tests.yml` |
 
 ## Rules
 

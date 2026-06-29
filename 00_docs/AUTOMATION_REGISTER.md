@@ -77,4 +77,5 @@ Scrapers (`*-tender-scrape`, `*-ks-scrape`, `scraper-healthcheck-autofix`) abort
 
 - Extended agent notes: [00_docs/agent/NOTES.md](agent/NOTES.md)
 - Scheduled path fix detail: audit-export `scheduled-path-fix-report.md`
+- Scheduled path check: `04_tools/workspace/verify_scheduled_paths.ps1`
 - Monthly refresh (manual): [RUNBOOK_MONTHLY_REFRESH.md](RUNBOOK_MONTHLY_REFRESH.md)

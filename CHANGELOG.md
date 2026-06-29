@@ -9,7 +9,9 @@
 ## [Unreleased]
 
 ### Added
-- `00_docs/HUMAN_ONBOARDING.md` — human successor entry point
+- `04_tools/workspace/verify_scheduled_paths.ps1` — fail-loud check for stale Scheduled skill paths
+- `05_memory/projects/pricing-basket-2026.md` — confirmed pricing figures (unattended prompts cite this)
+- `.github/workflows/prism-tests.yml` — CI pytest on PRISM `tests/`
 - `04_tools/workspace/git_preflight.ps1` — pre-commit safety gate (billing, secrets, PAT scan, `git add -n` check)
 - `04_tools/_shared/tests/conftest.py` — shared pytest fixtures for `IncrementalCsvWriter`
 - Root `.gitignore` — full tier-0 policy (replaces md-only placeholder)
