@@ -13,6 +13,7 @@
 | AIM Dashboard | `sales/AIM_Dashboard_CY2025.html` | AIM classification CY2025 | Active |
 | UIO Dashboard | `_archive/ISUZU_UIO_Dashboard_2026_v17.html` | Vehicle-in-operation tracking | Archived (v17) — confirm replacement |
 | Competitiveness Dashboard | `sales/ISZE_Competitiveness_Dashboard.html` | Part price vs market | Active |
+| **Risk Cockpit** | `sales/ISZE_Risk_Cockpit.html` | Wallet, AIM×GPS, substitution, defection | Active · `viz/risk_cockpit.json` |
 | Monthly Sales Tracker | `sales/ISZE_Monthly_Sales_Tracker.html` | YTD revenue vs budget | Active |
 | Plan Tracker 2030 | `fleet/ISZE_Plan_Tracker_2030.html` | Kosha / long-range plan | Active |
 | SPA Run Rate (UTI) | `sales/ISZE_SPA_RunRate_UTI.html` | SPA run-rate UTI | Active |

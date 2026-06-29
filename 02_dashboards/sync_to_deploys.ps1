@@ -109,6 +109,16 @@ foreach ($target in $Targets) {
             Write-Host "    Data\dashboards\$($_.Name)"
             $count++
         }
+        $vizSrc = Join-Path $DataJson 'viz'
+        if (Test-Path $vizSrc) {
+            $vizDest = Join-Path $destJsonDir 'viz'
+            New-Item -ItemType Directory -Path $vizDest -Force | Out-Null
+            Get-ChildItem -Path $vizSrc -Filter '*.json' -File | ForEach-Object {
+                Copy-Item $_.FullName (Join-Path $vizDest $_.Name) -Force
+                Write-Host "    Data\dashboards\viz\$($_.Name)"
+                $count++
+            }
+        }
     }
     Write-Host "  $count files copied"
 }

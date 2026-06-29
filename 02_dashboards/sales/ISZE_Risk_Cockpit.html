@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISZE — Risk Cockpit</title>
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<link rel="stylesheet" href="../_ui/editorial.css">
+<link rel="stylesheet" href="../_ui/editorial-full.css">
+<script src="../_ui/editorial-charts.js"></script>
+<style>
+:root{--red:#CC0E1E;--dark:#9A0B16;--ink:#1A1A1A;--muted:#5A5A5A;--border:#E0E0E0;--bg:#F5F5F5;--card:#FFF}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--ink);font-size:13px}
+.hdr{background:linear-gradient(135deg,var(--red),var(--dark));color:#fff;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.hdr h1{font-size:20px;font-weight:800;letter-spacing:-0.02em}
+.hdr-sub{font-size:11px;opacity:.85;margin-top:4px}
+.hdr a{color:#FFE8EA;font-weight:700;font-size:11px;text-decoration:none}
+.trust{display:flex;gap:10px;flex-wrap:wrap;font-size:10px}
+.trust span{padding:4px 10px;border-radius:4px;background:rgba(0,0,0,.2)}
+.trust .ok{background:rgba(63,185,80,.35)}
+.trust .warn{background:rgba(227,179,65,.35)}
+.wrap{padding:20px 28px 40px;max-width:1440px;margin:0 auto}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px}
+.kpi-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted)}
+.kpi-val{font-size:22px;font-weight:800;margin-top:4px;color:var(--red)}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:4px;line-height:1.4}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px}
+.card-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px}
+.chart{min-height:320px}
+.chart-tall{min-height:400px}
+.sec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--red);margin:20px 0 10px;padding-left:10px;border-left:3px solid var(--red)}
+.alert{padding:10px 14px;border-radius:6px;font-size:11px;margin-bottom:14px;line-height:1.5}
+.alert-warn{background:#FFFBF0;border-left:4px solid #e3b341}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{text-align:left;padding:6px 8px;background:#EEE;color:var(--muted);font-size:9px;text-transform:uppercase}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--border)}
+@media(max-width:900px){.kpi-row,.grid-2{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="isze-editorial">
+<div class="hdr">
+  <div>
+    <h1>Risk Cockpit</h1>
+    <div class="hdr-sub">Wallet · AIM×GPS · Substitution · Defection · PMS opportunity — PRISM derived</div>
+  </div>
+  <div style="text-align:right">
+    <a href="../hub/MASTER_DASHBOARD.html">← Mission Control</a> ·
+    <a href="../hub/PROJECT_HUB.html">Project Hub</a>
+    <div class="trust" style="margin-top:8px;justify-content:flex-end" id="trust-strip"></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="alert alert-warn" id="integrity-note">
+    Internal analytics only. Do not quote externally until <code>_verification_report.json</code> is green and integrity flags C/H are closed.
+  </div>
+
+  <div class="kpi-row" id="headline-kpis"></div>
+
+  <div class="sec">Wallet — network addressable gap</div>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">Waterfall (theoretical → captured → gap)</div><div id="chart-wallet" class="chart-tall"></div></div>
+    <div class="card"><div class="card-title">Top distributors by addressable gap</div><div id="chart-gap-bars" class="chart"></div></div>
+  </div>
+
+  <div class="sec">Strategic position — AIM × GPS</div>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">Quadrant map (arrow = YoY motion)</div><div id="chart-aim-gps" class="chart-tall"></div></div>
+    <div class="card"><div class="card-title">Quadrant counts</div><div id="chart-quadrant-pie" class="chart"></div></div>
+  </div>
+
+  <div class="sec">Substitution invasion — families losing genuine share</div>
+  <div class="card"><div class="card-title">Genuine unit share % by year (worst families first)</div><div id="chart-substitution" class="chart-tall"></div></div>
+
+  <div class="sec">Capture opportunity &amp; defection</div>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">PMS revenue gap — bubble (size = TAM)</div><div id="chart-pms" class="chart-tall"></div></div>
+    <div class="card">
+      <div class="card-title">Active defection alerts (distributor level)</div>
+      <div id="defection-table"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SEM = window.ISZE_EDITORIAL_CHARTS?.SEM || { revenue:'#CC0E1E', gp:'#3D6B4F', grid:'#E7E0D8', ink:'#1C1917', text:'#78716C' };
+const layoutBase = {
+  paper_bgcolor:'#FFF', plot_bgcolor:'#FFF',
+  font:{family:'Arial,sans-serif',size:11,color:SEM.ink},
+  margin:{l:48,r:24,t:36,b:48},
+  xaxis:{gridcolor:SEM.grid,zerolinecolor:SEM.grid},
+  yaxis:{gridcolor:SEM.grid,zerolinecolor:SEM.grid},
+};
+
+function fmtEur(v) {
+  if (v == null || isNaN(v)) return '—';
+  if (Math.abs(v) >= 1e6) return '€' + (v/1e6).toFixed(1) + 'M';
+  if (Math.abs(v) >= 1e3) return '€' + Math.round(v/1e3) + 'K';
+  return '€' + Math.round(v);
+}
+
+function renderHeadline(d) {
+  const h = d.headline;
+  const y = d._meta.year;
+  document.getElementById('headline-kpis').innerHTML = `
+    <div class="kpi"><div class="kpi-lbl">Addressable gap</div><div class="kpi-val">${fmtEur(h.addressable_gap_eur)}</div><div class="kpi-sub">Network wallet uncaptured · ${y}</div></div>
+    <div class="kpi"><div class="kpi-lbl">Network GPS %</div><div class="kpi-val" style="color:#3D6B4F">${h.network_gps_pct}%</div><div class="kpi-sub">Genuine captured / theoretical wallet</div></div>
+    <div class="kpi"><div class="kpi-lbl">Defection alerts</div><div class="kpi-val">${h.active_defection_alerts}</div><div class="kpi-sub">${d.defection.distributors_flagged} distributors flagged</div></div>
+    <div class="kpi"><div class="kpi-lbl">Grow capture</div><div class="kpi-val" style="color:#E65100">${h.grow_capture_count}</div><div class="kpi-sub">Low GPS · low AIM risk — visit list</div></div>
+    <div class="kpi"><div class="kpi-lbl">Defend</div><div class="kpi-val" style="color:#3D6B4F">${h.defend_count}</div><div class="kpi-sub">High GPS · protect position</div></div>`;
+
+  const trust = document.getElementById('trust-strip');
+  const ok = d._meta.verification_ok;
+  trust.innerHTML = `
+    <span class="${ok?'ok':'warn'}">${ok ? '✓ verify green' : '⚠ verify stale'}</span>
+    <span>as of ${(d._meta.generated||'').slice(0,10)}</span>
+    <span>CY${y}</span>`;
+}
+
+function renderWallet(w) {
+  const wf = w.waterfall;
+  Plotly.newPlot('chart-wallet', [{
+    type:'waterfall', orientation:'v',
+    measure: wf.map(x => x.type === 'total' ? 'absolute' : x.type === 'remainder' ? 'total' : 'relative'),
+    x: wf.map(x => x.label),
+    y: wf.map(x => x.value),
+    connector:{line:{color:SEM.grid}},
+    increasing:{marker:{color:SEM.gp}},
+    decreasing:{marker:{color:SEM.revenue}},
+    totals:{marker:{color:'#7A8FA6'}},
+    text: wf.map(x => fmtEur(Math.abs(x.value))),
+    textposition:'outside',
+  }], {...layoutBase, title:{text:`Network wallet ${w.year}`, font:{size:12}}}, {responsive:true, displayModeBar:false});
+
+  const top = w.top_gaps;
+  Plotly.newPlot('chart-gap-bars', [{
+    type:'bar', orientation:'h',
+    y: top.map(t => t.distributor_code).reverse(),
+    x: top.map(t => t.addressable_uncaptured_eur).reverse(),
+    marker:{color:SEM.revenue},
+    text: top.map(t => fmtEur(t.addressable_uncaptured_eur)).reverse(),
+    textposition:'outside',
+  }], {...layoutBase, margin:{l:72,r:48,t:24,b:40}, xaxis:{title:'Addressable uncaptured €'}}, {responsive:true, displayModeBar:false});
+}
+
+function renderAimGps(ag) {
+  const pts = ag.points.filter(p => p.gps_spu_eur > 0);
+  const traces = [{
+    type:'scatter', mode:'markers+text',
+    x: pts.map(p => p.aim_high_risk_pct),
+    y: pts.map(p => p.gps_spu_eur),
+    text: pts.map(p => p.distributor_code),
+    textposition:'top center',
+    textfont:{size:9},
+    marker:{size:10, color: pts.map(p => p.color), line:{width:1,color:'#fff'}},
+    hovertemplate:'%{text}<br>AIM risk %{x:.1f}%<br>GPS €%{y}/UIO<extra></extra>',
+  }];
+  const arrows = pts.filter(p => p.gps_spu_prev != null && p.aim_prev != null);
+  if (arrows.length) {
+    traces.push({
+      type:'scatter', mode:'lines',
+      x: arrows.flatMap(p => [p.aim_prev, p.aim_high_risk_pct, null]),
+      y: arrows.flatMap(p => [p.gps_spu_prev, p.gps_spu_eur, null]),
+      line:{color:'rgba(90,90,90,0.35)', width:1},
+      hoverinfo:'skip', showlegend:false,
+    });
+  }
+  Plotly.newPlot('chart-aim-gps', traces, {
+    ...layoutBase,
+    title:{text:`AIM × GPS · ${ag.year}`, font:{size:12}},
+    xaxis:{...layoutBase.xaxis, title:'AIM high-risk % revenue'},
+    yaxis:{...layoutBase.yaxis, title:'GPS € / UIO'},
+    shapes:[{
+      type:'line', x0:0,x1:100,y0:191,y1:191,
+      line:{dash:'dot',color:SEM.text,width:1},
+    }],
+    annotations:[{x:95,y:191,text:'Network GPS median',showarrow:false,font:{size:9,color:SEM.text},xanchor:'right'}],
+  }, {responsive:true, displayModeBar:false});
+
+  const counts = ag.quadrant_counts;
+  Plotly.newPlot('chart-quadrant-pie', [{
+    type:'pie', labels:Object.keys(counts), values:Object.values(counts),
+    marker:{colors:['#3D6B4F','#CC0E1E','#E65100','#7A8FA6']},
+    textinfo:'label+value', hole:0.45,
+  }], {...layoutBase, margin:{t:24,b:24}}, {responsive:true, displayModeBar:false});
+}
+
+function renderSubstitution(families) {
+  const traces = families.map((f, i) => ({
+    type:'scatter', mode:'lines+markers', name: f.family.replace(/_/g,' '),
+    x: f.series.map(s => s.year),
+    y: f.series.map(s => s.genuine_share_pct),
+    line:{width:2},
+    marker:{size:6},
+  }));
+  Plotly.newPlot('chart-substitution', traces, {
+    ...layoutBase,
+    title:{text:'Genuine share erosion (families with BVP presence)', font:{size:12}},
+    yaxis:{...layoutBase.yaxis, title:'Genuine unit share %', range:[0,105]},
+    xaxis:{...layoutBase.xaxis, title:'Year', dtick:1},
+    legend:{orientation:'h', y:-0.2, font:{size:9}},
+  }, {responsive:true, displayModeBar:false});
+}
+
+function renderPms(bubbles) {
+  Plotly.newPlot('chart-pms', [{
+    type:'scatter', mode:'markers',
+    x: bubbles.map(b => b.capture_pct),
+    y: bubbles.map(b => b.revenue_gap_eur),
+    text: bubbles.map(b => b.distributor_code + ' · ' + b.category.replace(/_/g,' ')),
+    marker:{
+      size: bubbles.map(b => Math.min(40, Math.max(8, Math.sqrt(b.tam_eur)/80))),
+      color: bubbles.map(b => b.revenue_gap_eur),
+      colorscale:[[0,SEM.gp],[0.5,'#E3B341'],[1,SEM.revenue]],
+      showscale:false, opacity:0.85,
+    },
+    hovertemplate:'%{text}<br>Capture %{x}%<br>Gap %{y:,.0f}€<extra></extra>',
+  }], {
+    ...layoutBase,
+    title:{text:'PMS opportunity — largest revenue gaps', font:{size:12}},
+    xaxis:{...layoutBase.xaxis, title:'Capture rate %'},
+    yaxis:{...layoutBase.yaxis, title:'Revenue gap €', type:'log'},
+  }, {responsive:true, displayModeBar:false});
+}
+
+function renderDefection(def) {
+  const rows = def.top.length ? def.top.map(d =>
+    `<tr><td><strong>${d.distributor_code}</strong></td><td>${d.alert_count}</td><td>${d.categories.map(c=>c.replace(/_/g,' ')).join(', ')}</td></tr>`
+  ).join('') : '<tr><td colspan="3">No active distributor alerts</td></tr>';
+  document.getElementById('defection-table').innerHTML =
+    `<table class="tbl"><thead><tr><th>Distributor</th><th>Alerts</th><th>Categories</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+async function init() {
+  try {
+    const resp = await fetch('../Data/dashboards/viz/risk_cockpit.json');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const data = await resp.json();
+    renderHeadline(data);
+    renderWallet(data.wallet);
+    renderAimGps(data.aim_gps);
+    renderSubstitution(data.substitution);
+    renderPms(data.pms_opportunity);
+    renderDefection(data.defection);
+  } catch (e) {
+    document.getElementById('integrity-note').innerHTML =
+      '<strong>Could not load risk_cockpit.json.</strong> Run <code>python scripts/build_risk_cockpit_viz.py</code> from PRISM, then sync dashboards. (' + e.message + ')';
+  }
+}
+init();
+</script>
+</body>
+</html>

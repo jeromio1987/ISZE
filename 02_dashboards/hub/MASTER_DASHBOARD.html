@@ -270,8 +270,10 @@ footer a, .footer a { color: #FFE8EA !important; }
 </div>
 
 <!-- NAV -->
-<div style="background:#1A1A1A;padding:5px 24px;border-bottom:1px solid #333;font-size:11px">
+  <div style="background:#1A1A1A;padding:5px 24px;border-bottom:1px solid #333;font-size:11px">
   <a href="PROJECT_HUB.html" style="color:#CC0E1E;text-decoration:none;font-weight:700">⬛ ← Project Hub</a>
+  <span style="color:#555;margin:0 8px">|</span>
+  <a href="../sales/ISZE_Risk_Cockpit.html" style="color:#FF6B6B;text-decoration:none;font-weight:700">⚡ Risk Cockpit</a>
   <span style="color:#555;margin:0 8px">|</span>
   <a href="AI_Operations_Explorer.html" style="color:#E85D04;text-decoration:none;font-weight:700">🗂 AI Ops Explorer</a>
   <span style="color:#555;margin:0 8px">|</span>
@@ -327,6 +329,35 @@ footer a, .footer a { color: #FFE8EA !important; }
       <div class="kpi-lbl">Customer concentration</div>
       <div class="kpi-val kv-amber">36%</div>
       <div class="kpi-sub">IUK + ITUK = €11M · top-2 risk</div>
+    </div>
+  </div>
+
+  <div class="sec-hdr">Risk cockpit — PRISM live <a href="../sales/ISZE_Risk_Cockpit.html" style="color:#CC0E1E;font-size:11px;margin-left:8px">Open full cockpit →</a></div>
+  <div class="kpi-row" style="grid-template-columns:repeat(5,1fr);margin-top:0">
+    <div class="kpi">
+      <div class="kpi-lbl">Network wallet gap</div>
+      <div class="kpi-val kv-red" id="kpi-wallet-gap-val">—</div>
+      <div class="kpi-sub" id="kpi-wallet-gap-sub">Addressable uncaptured · PRISM</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Network GPS %</div>
+      <div class="kpi-val kv-green" id="kpi-network-gps-val">—</div>
+      <div class="kpi-sub" id="kpi-network-gps-sub">Genuine / theoretical wallet</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Defection alerts</div>
+      <div class="kpi-val kv-red" id="kpi-defection-val">—</div>
+      <div class="kpi-sub" id="kpi-defection-sub">Distributor-level silence flags</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Grow capture DBs</div>
+      <div class="kpi-val kv-amber" id="kpi-grow-val">—</div>
+      <div class="kpi-sub" id="kpi-grow-sub">Low GPS · visit priority</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-lbl">Substitution watch</div>
+      <div class="kpi-val kv-amber" id="kpi-subst-val">—</div>
+      <div class="kpi-sub" id="kpi-subst-sub">Families with BVP erosion</div>
     </div>
   </div>
 
@@ -2078,7 +2109,29 @@ async function loadPrismPms() {
   } catch (e) { /* offline / file:// — static HTML fallback */ }
 }
 
+async function loadRiskCockpit() {
+  try {
+    const resp = await fetch('../Data/dashboards/viz/risk_cockpit.json');
+    if (!resp.ok) return;
+    const d = await resp.json();
+    const h = d.headline;
+    const y = d._meta.year;
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    set('kpi-wallet-gap-val', fmtEurK(h.addressable_gap_eur));
+    set('kpi-wallet-gap-sub', `CY${y} network · wallet waterfall`);
+    set('kpi-network-gps-val', h.network_gps_pct + '%');
+    set('kpi-network-gps-sub', 'Captured genuine / wallet');
+    set('kpi-defection-val', String(h.active_defection_alerts));
+    set('kpi-defection-sub', d.defection.distributors_flagged + ' distributors flagged');
+    set('kpi-grow-val', String(h.grow_capture_count));
+    set('kpi-grow-sub', 'AIM×GPS grow quadrant');
+    set('kpi-subst-val', String(h.substitution_families_at_risk));
+    set('kpi-subst-sub', 'Families losing genuine share');
+  } catch (e) { /* optional */ }
+}
+
 loadPrismPms();
+loadRiskCockpit();
 
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
