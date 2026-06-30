@@ -83,8 +83,27 @@ body{font-family:Arial,sans-serif;background:var(--bg);color:var(--ink);font-siz
       <div id="defection-table"></div>
     </div>
   </div>
+
+  <div class="sec">Market — competitive fusion (PR00 vs IAM vs KS)</div>
+  <div class="alert alert-warn" id="competitive-note" style="display:none"></div>
+  <div class="card"><div class="card-title">Price fan — top revenue PNs (Autodoc + KS triangulated, £2 artefact filtered)</div><div id="chart-competitive" class="chart-tall"></div></div>
+
+  <div class="sec">Pipeline — tender horizon (Attack + Selective)</div>
+  <div class="alert alert-warn" id="tender-note" style="display:none"></div>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">Deadline timeline (next 90 days)</div><div id="chart-tender" class="chart-tall"></div></div>
+    <div class="card"><div class="card-title">By country · colour = opportunity score</div><div id="chart-tender-country" class="chart"></div></div>
+  </div>
+
+  <div class="sec">Network league — percentile bump (3-year)</div>
+  <div class="card"><div class="card-title">GPS €/UIO — league rank motion (1 = network top)</div><div id="chart-bump-gps" class="chart-tall"></div></div>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">PMS total capture %</div><div id="chart-bump-capture" class="chart"></div></div>
+    <div class="card"><div class="card-title">Genuine capture %</div><div id="chart-bump-genuine" class="chart"></div></div>
+  </div>
 </div>
 
+<script src="risk_cockpit.data.js"></script>
 <script>
 const SEM = window.ISZE_EDITORIAL_CHARTS?.SEM || { revenue:'#CC0E1E', gp:'#3D6B4F', grid:'#E7E0D8', ink:'#1C1917', text:'#78716C' };
 const layoutBase = {
@@ -110,7 +129,7 @@ function renderHeadline(d) {
     <div class="kpi"><div class="kpi-lbl">Network GPS %</div><div class="kpi-val" style="color:#3D6B4F">${h.network_gps_pct}%</div><div class="kpi-sub">Genuine captured / theoretical wallet</div></div>
     <div class="kpi"><div class="kpi-lbl">Defection alerts</div><div class="kpi-val">${h.active_defection_alerts}</div><div class="kpi-sub">${d.defection.distributors_flagged} distributors flagged</div></div>
     <div class="kpi"><div class="kpi-lbl">Grow capture</div><div class="kpi-val" style="color:#E65100">${h.grow_capture_count}</div><div class="kpi-sub">Low GPS · low AIM risk — visit list</div></div>
-    <div class="kpi"><div class="kpi-lbl">Defend</div><div class="kpi-val" style="color:#3D6B4F">${h.defend_count}</div><div class="kpi-sub">High GPS · protect position</div></div>`;
+    <div class="kpi"><div class="kpi-lbl">Competitive + tenders</div><div class="kpi-val" style="font-size:18px">${h.competitive_pn_tracked || 0} · ${h.tender_pipeline_90d || 0}</div><div class="kpi-sub">PNs tracked · pipeline 90d</div></div>`;
 
   const trust = document.getElementById('trust-strip');
   const ok = d._meta.verification_ok;
@@ -234,20 +253,156 @@ function renderDefection(def) {
     `<table class="tbl"><thead><tr><th>Distributor</th><th>Alerts</th><th>Categories</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
+function renderCompetitive(cf) {
+  const note = document.getElementById('competitive-note');
+  if (!cf || !cf.available || !cf.items || !cf.items.length) {
+    note.style.display = 'block';
+    note.textContent = cf?.reason || 'No competitive fusion data — refresh Autodoc/KS scrapers and rebuild.';
+    return;
+  }
+  if (cf.scrape_stale_days != null && cf.scrape_stale_days > 14) {
+    note.style.display = 'block';
+    note.textContent = `Scraper data ~${cf.scrape_stale_days} days old — triangulate with caution before pricing actions.`;
+  }
+  const items = cf.items.slice(0, 12);
+  const labels = ['PR00 €', 'Autodoc €', 'KS AM €', 'KS GEN €'];
+  const colors = ['#0D1B2A', '#E65100', '#CC0E1E', '#3D6B4F'];
+  const traces = labels.map((lab, i) => ({
+    type: 'bar', name: lab,
+    x: items.map(p => p.pn_mask),
+    y: items.map(p => [p.pr00_eur, p.autodoc_eur, p.ks_am_eur, p.ks_gen_eur][i] ?? null),
+    marker: { color: colors[i] },
+    hovertemplate: '%{x}<br>' + lab + ' %{y:.2f}€<extra></extra>',
+  }));
+  Plotly.newPlot('chart-competitive', traces, {
+    ...layoutBase,
+    barmode: 'group',
+    title: { text: `Competitive price fan · top ${items.length} PNs (min IAM triangulated)`, font: { size: 12 } },
+    yaxis: { ...layoutBase.yaxis, title: '€ EUR' },
+    legend: { orientation: 'h', y: -0.15, font: { size: 9 } },
+  }, { responsive: true, displayModeBar: false });
+}
+
+function renderTenderHorizon(th) {
+  const note = document.getElementById('tender-note');
+  if (!th || !th.items || !th.items.length) {
+    note.style.display = 'block';
+    note.textContent = 'No tenders in Attack/Selective window — check tender_data.json refresh.';
+    return;
+  }
+  if (th.stale_days != null && th.stale_days > 21) {
+    note.style.display = 'block';
+    note.textContent = `Tender extract ~${th.stale_days} days old — deadlines may have passed.`;
+  }
+  const items = th.items;
+  const yLabels = items.map(t => `${t.country} · ${t.title.slice(0, 42)}${t.title.length > 42 ? '…' : ''}`);
+  Plotly.newPlot('chart-tender', [{
+    type: 'bar', orientation: 'h',
+    y: yLabels,
+    x: items.map(t => t.days_to_deadline),
+    marker: {
+      color: items.map(t => t.opportunity_score),
+      colorscale: [[0, '#7A8FA6'], [0.5, '#E3B341'], [1, SEM.revenue]],
+      cmin: 0, cmax: 100,
+    },
+    text: items.map(t => `D-${t.days_to_deadline} · ${t.decision}`),
+    textposition: 'outside',
+    hovertemplate: '%{y}<br>Deadline %{x}d<br>Score %{marker.color}<extra></extra>',
+  }], {
+    ...layoutBase,
+    margin: { l: 200, r: 48, t: 24, b: 40 },
+    title: { text: 'Tender horizon (days to deadline)', font: { size: 12 } },
+    xaxis: { ...layoutBase.xaxis, title: 'Days to deadline', range: [-5, 95] },
+  }, { responsive: true, displayModeBar: false });
+
+  const byCountry = {};
+  items.forEach(t => {
+    if (!byCountry[t.country]) byCountry[t.country] = { n: 0, score: 0 };
+    byCountry[t.country].n += 1;
+    byCountry[t.country].score += t.opportunity_score;
+  });
+  const countries = Object.keys(byCountry).sort();
+  Plotly.newPlot('chart-tender-country', [{
+    type: 'bar',
+    x: countries,
+    y: countries.map(c => byCountry[c].n),
+    marker: {
+      color: countries.map(c => byCountry[c].score / byCountry[c].n),
+      colorscale: [[0, '#7A8FA6'], [0.5, '#E3B341'], [1, SEM.revenue]],
+      cmin: 0, cmax: 100,
+    },
+    text: countries.map(c => String(byCountry[c].n)),
+    textposition: 'outside',
+    hovertemplate: '%{x}<br>%{y} tenders<br>Avg score %{marker.color:.0f}<extra></extra>',
+  }], {
+    ...layoutBase,
+    title: { text: 'Pipeline count by country', font: { size: 12 } },
+    yaxis: { ...layoutBase.yaxis, title: 'Tenders in window' },
+  }, { responsive: true, displayModeBar: false });
+}
+
+function renderNetworkBump(nb) {
+  if (!nb || !nb.metrics || !nb.metrics.length) return;
+  const years = nb.years;
+  const bumpLayout = (title) => ({
+    ...layoutBase,
+    title: { text: title, font: { size: 12 } },
+    xaxis: { ...layoutBase.xaxis, title: 'Year', dtick: 1, tickvals: years },
+    yaxis: { ...layoutBase.yaxis, title: 'League rank (1 = best)', autorange: 'reversed' },
+    legend: { orientation: 'h', y: -0.22, font: { size: 8 } },
+  });
+  const metricPlot = (elId, key, title) => {
+    const m = nb.metrics.find(x => x.metric_id === key);
+    if (!m || !m.lines) return;
+    const traces = m.lines.map(s => ({
+      type: 'scatter', mode: 'lines+markers', name: s.distributor_code,
+      x: s.points.map(p => p.year),
+      y: s.points.map(p => p.rank),
+      line: { width: 2 },
+      marker: { size: 7 },
+      hovertemplate: s.distributor_code + '<br>%{x}: rank %{y}<extra></extra>',
+    }));
+    Plotly.newPlot(elId, traces, bumpLayout(title), { responsive: true, displayModeBar: false });
+  };
+  metricPlot('chart-bump-gps', 'gps_spu', 'GPS €/UIO league rank');
+  metricPlot('chart-bump-capture', 'total_capture', 'PMS total capture % rank');
+  metricPlot('chart-bump-genuine', 'genuine_capture', 'Genuine capture % rank');
+}
+
+async function loadRiskData() {
+  if (window.__RISK_COCKPIT_DATA__) return window.__RISK_COCKPIT_DATA__;
+  const candidates = [
+    '../Data/dashboards/viz/risk_cockpit.json',
+    '../../01_data/14_dashboards/viz/risk_cockpit.json',
+  ];
+  for (const url of candidates) {
+    try {
+      const resp = await fetch(url);
+      if (resp.ok) return await resp.json();
+    } catch (_) { /* file:// or missing path */ }
+  }
+  throw new Error('no embedded or fetchable risk_cockpit data');
+}
+
 async function init() {
   try {
-    const resp = await fetch('../Data/dashboards/viz/risk_cockpit.json');
-    if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    const data = await resp.json();
+    const data = await loadRiskData();
     renderHeadline(data);
     renderWallet(data.wallet);
     renderAimGps(data.aim_gps);
     renderSubstitution(data.substitution);
     renderPms(data.pms_opportunity);
     renderDefection(data.defection);
+    renderCompetitive(data.competitive_fusion);
+    renderTenderHorizon(data.tender_horizon);
+    renderNetworkBump(data.network_bump);
   } catch (e) {
     document.getElementById('integrity-note').innerHTML =
-      '<strong>Could not load risk_cockpit.json.</strong> Run <code>python scripts/build_risk_cockpit_viz.py</code> from PRISM, then sync dashboards. (' + e.message + ')';
+      '<strong>Could not load risk cockpit data.</strong> Run '
+      + '<code>python scripts/build_risk_cockpit_viz.py --force</code> from PRISM '
+      + '(writes <code>risk_cockpit.data.js</code> beside this HTML). '
+      + 'Or serve via <code>python -m http.server</code> from <code>02_dashboards/</code>. '
+      + '(' + e.message + ')';
   }
 }
 init();

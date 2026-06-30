@@ -2127,6 +2127,10 @@ async function loadRiskCockpit() {
     set('kpi-grow-sub', 'AIM×GPS grow quadrant');
     set('kpi-subst-val', String(h.substitution_families_at_risk));
     set('kpi-subst-sub', 'Families losing genuine share');
+    if (document.getElementById('kpi-competitive-val')) {
+      set('kpi-competitive-val', String(h.competitive_pn_tracked || 0));
+      set('kpi-competitive-sub', (h.tender_pipeline_90d || 0) + ' tenders · 90d horizon');
+    }
   } catch (e) { /* optional */ }
 }
 

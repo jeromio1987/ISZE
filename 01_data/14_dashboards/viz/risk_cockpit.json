@@ -1,0 +1,1876 @@
+{
+  "_meta": {
+    "generated": "2026-06-30T18:30:12Z",
+    "year": 2025,
+    "verification_ok": true,
+    "sources": [
+      "wallet_waterfall.csv",
+      "defection_alerts.csv",
+      "substitution_timeline.csv",
+      "aim_gps_matrix.csv",
+      "pms_opportunity_matrix.csv",
+      "network_percentile.csv",
+      "autodoc_results.csv",
+      "ks_results.csv",
+      "tender_data.json"
+    ]
+  },
+  "headline": {
+    "addressable_gap_eur": 21165016.0,
+    "network_gps_pct": 48.4,
+    "active_defection_alerts": 18,
+    "substitution_families_at_risk": 7,
+    "grow_capture_count": 13,
+    "defend_count": 9,
+    "competitive_pn_tracked": 13,
+    "tender_pipeline_90d": 26,
+    "tender_stale_days": 31
+  },
+  "wallet": {
+    "year": 2025,
+    "theoretical_wallet_eur": 60217570.0,
+    "captured_genuine_eur": 29145377.0,
+    "captured_bvp_eur": 1064704.0,
+    "addressable_uncaptured_eur": 21165016.0,
+    "gps_pct": 48.4,
+    "waterfall": [
+      {
+        "label": "Theoretical wallet",
+        "value": 60217570.0,
+        "type": "total"
+      },
+      {
+        "label": "Captured genuine",
+        "value": -29145377.0,
+        "type": "decrease"
+      },
+      {
+        "label": "Captured BVP",
+        "value": -1064704.0,
+        "type": "decrease"
+      },
+      {
+        "label": "Addressable gap",
+        "value": 21165016.0,
+        "type": "remainder"
+      }
+    ],
+    "top_gaps": [
+      {
+        "distributor_code": "ITUK",
+        "country": "United Kingdom",
+        "addressable_uncaptured_eur": 8131495.0,
+        "gps_pct": 32.4
+      },
+      {
+        "distributor_code": "IUK",
+        "country": "United Kingdom",
+        "addressable_uncaptured_eur": 4070319.0,
+        "gps_pct": 51.3
+      },
+      {
+        "distributor_code": "UTI",
+        "country": "Israel",
+        "addressable_uncaptured_eur": 3457852.0,
+        "gps_pct": 40.3
+      },
+      {
+        "distributor_code": "UMI",
+        "country": "Israel",
+        "addressable_uncaptured_eur": 1288639.0,
+        "gps_pct": 60.3
+      },
+      {
+        "distributor_code": "PORTUGAL",
+        "country": "Portugal",
+        "addressable_uncaptured_eur": 940001.0,
+        "gps_pct": 56.0
+      },
+      {
+        "distributor_code": "GERMANY",
+        "country": "Germany",
+        "addressable_uncaptured_eur": 892366.0,
+        "gps_pct": 66.5
+      },
+      {
+        "distributor_code": "SWEDEN",
+        "country": "Sweden",
+        "addressable_uncaptured_eur": 582672.0,
+        "gps_pct": 60.6
+      },
+      {
+        "distributor_code": "HUNGARY",
+        "country": "Hungary",
+        "addressable_uncaptured_eur": 425284.0,
+        "gps_pct": 34.9
+      }
+    ]
+  },
+  "defection": {
+    "active_distributor_alerts": 18,
+    "distributors_flagged": 12,
+    "top": [
+      {
+        "distributor_code": "FINLAND",
+        "alert_count": 3,
+        "categories": [
+          "clutch_kit",
+          "clutch_pressure_plate",
+          "brake_shoe"
+        ]
+      },
+      {
+        "distributor_code": "GERMANY",
+        "alert_count": 2,
+        "categories": [
+          "clutch_disc",
+          "clutch_pressure_plate"
+        ]
+      },
+      {
+        "distributor_code": "ICELAND",
+        "alert_count": 2,
+        "categories": [
+          "clutch_pressure_plate",
+          "release_bearing"
+        ]
+      },
+      {
+        "distributor_code": "UMI",
+        "alert_count": 2,
+        "categories": [
+          "clutch_pressure_plate",
+          "clutch_kit"
+        ]
+      },
+      {
+        "distributor_code": "UTI",
+        "alert_count": 2,
+        "categories": [
+          "clutch_booster",
+          "clutch_disc"
+        ]
+      },
+      {
+        "distributor_code": "HUNGARY",
+        "alert_count": 1,
+        "categories": [
+          "pilot_bearing"
+        ]
+      },
+      {
+        "distributor_code": "ITUK",
+        "alert_count": 1,
+        "categories": [
+          "brake_pad"
+        ]
+      },
+      {
+        "distributor_code": "NORWAY",
+        "alert_count": 1,
+        "categories": [
+          "release_bearing"
+        ]
+      },
+      {
+        "distributor_code": "PORTUGAL",
+        "alert_count": 1,
+        "categories": [
+          "brake_pad"
+        ]
+      },
+      {
+        "distributor_code": "PALESTINE",
+        "alert_count": 1,
+        "categories": [
+          "oil_filter"
+        ]
+      }
+    ]
+  },
+  "substitution": [
+    {
+      "family": "Electrical",
+      "genuine_share_pct": 26.6,
+      "bvp_units": 112,
+      "series": [
+        {
+          "year": 2023,
+          "genuine_share_pct": 14.6
+        },
+        {
+          "year": 2024,
+          "genuine_share_pct": 26.3
+        },
+        {
+          "year": 2025,
+          "genuine_share_pct": 26.6
+        }
+      ]
+    },
+    {
+      "family": "PMS_Filters",
+      "genuine_share_pct": 57.3,
+      "bvp_units": 91691,
+      "series": [
+        {
+          "year": 2023,
+          "genuine_share_pct": 56.4
+        },
+        {
+          "year": 2024,
+          "genuine_share_pct": 58.5
+        },
+        {
+          "year": 2025,
+          "genuine_share_pct": 57.3
+        }
+      ]
+    },
+    {
+      "family": "Brakes",
+      "genuine_share_pct": 58.2,
+      "bvp_units": 6853,
+      "series": [
+        {
+          "year": 2023,
+          "genuine_share_pct": 69.3
+        },
+        {
+          "year": 2024,
+          "genuine_share_pct": 61.4
+        },
+        {
+          "year": 2025,
+          "genuine_share_pct": 58.2
+        }
+      ]
+    },
+    {
+      "family": "Clutch_Driveline",
+      "genuine_share_pct": 63.8,
+      "bvp_units": 3170,
+      "series": [
+        {
+          "year": 2023,
+          "genuine_share_pct": 60.9
+        },
+        {
+          "year": 2024,
+          "genuine_share_pct": 61.6
+        },
+        {
+          "year": 2025,
+          "genuine_share_pct": 63.8
+        }
+      ]
+    },
+    {
+      "family": "Belts_Cooling",
+      "genuine_share_pct": 64.2,
+      "bvp_units": 2101,
+      "series": [
+        {
+          "year": 2023,
+          "genuine_share_pct": 60.8
+        },
+        {
+          "year": 2024,
+          "genuine_share_pct": 63.1
+        },
+        {
+          "year": 2025,
+          "genuine_share_pct": 64.2
+        }
+      ]
+    },
+    {
+      "family": "Cab_Misc",
+      "genuine_share_pct": 69.3,
+      "bvp_units": 4243,
+      "series": [
+        {
+          "year": 2023,
+          "genuine_share_pct": 75.2
+        },
+        {
+          "year": 2024,
+          "genuine_share_pct": 68.5
+        },
+        {
+          "year": 2025,
+          "genuine_share_pct": 69.3
+        }
+      ]
+    },
+    {
+      "family": "Suspension_Chassis",
+      "genuine_share_pct": 85.3,
+      "bvp_units": 5504,
+      "series": [
+        {
+          "year": 2023,
+          "genuine_share_pct": 83.9
+        },
+        {
+          "year": 2024,
+          "genuine_share_pct": 81.3
+        },
+        {
+          "year": 2025,
+          "genuine_share_pct": 85.3
+        }
+      ]
+    }
+  ],
+  "aim_gps": {
+    "year": 2025,
+    "quadrant_counts": {
+      "grow_capture": 13,
+      "defend": 9
+    },
+    "points": [
+      {
+        "distributor_code": "BELGIUM",
+        "region": "Benelux",
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS · low AIM risk)",
+        "gps_spu_eur": 219.8,
+        "aim_high_risk_pct": 1.22,
+        "gps_spu_prev": 222.9,
+        "aim_prev": 1.25,
+        "color": "#3D6B4F"
+      },
+      {
+        "distributor_code": "CYPRUS",
+        "region": "Med",
+        "quadrant": "grow_capture",
+        "quadrant_label": "Grow capture (low GPS · low AIM risk)",
+        "gps_spu_eur": 185.6,
+        "aim_high_risk_pct": 0.42,
+        "gps_spu_prev": 187.1,
+        "aim_prev": 0.6,
+        "color": "#CC0E1E"
+      },
+      {
+        "distributor_code": "DENMARK",
+        "region": "Nordics",
+        "quadrant": "grow_capture",
+        "quadrant_label": "Grow capture (low GPS · low AIM risk)",
+        "gps_spu_eur": 173.7,
+        "aim_high_risk_pct": 0.81,
+        "gps_spu_prev": 213.6,
+        "aim_prev": 1.34,
+        "color": "#CC0E1E"
+      },
+      {
+        "distributor_code": "FINLAND",
+        "region": "Nordics",
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS · low AIM risk)",
+        "gps_spu_eur": 230.8,
+        "aim_high_risk_pct": 1.27,
+        "gps_spu_prev": 216.3,
+        "aim_prev": 0.83,
+        "color": "#3D6B4F"
+      },
+      {
+        "distributor_code": "GERMANY",
+        "region": "DACH",
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS · low AIM risk)",
+        "gps_spu_eur": 197.1,
+        "aim_high_risk_pct": 1.55,
+        "gps_spu_prev": 200.3,
+        "aim_prev": 0.86,
+        "color": "#3D6B4F"
+      },
+      {
+        "distributor_code": "GREECE",
+        "region": "Med",
+        "quadrant": "grow_capture",
+        "quadrant_label": "Grow capture (low GPS · low AIM risk)",
+        "gps_spu_eur": 139.0,
+        "aim_high_risk_pct": 0.63,
+        "gps_spu_prev": 146.4,
+        "aim_prev": 0.71,
+        "color": "#CC0E1E"
+      },
+      {
+        "distributor_code": "HUNGARY",
+        "region": "CEE",
+        "quadrant": "grow_capture",
+        "quadrant_label": "Grow capture (low GPS · low AIM risk)",
+        "gps_spu_eur": 87.3,
+        "aim_high_risk_pct": 2.16,
+        "gps_spu_prev": 104.9,
+        "aim_prev": 2.65,
+        "color": "#CC0E1E"
+      },
+      {
+        "distributor_code": "ICELAND",
+        "region": "Nordics",
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS · low AIM risk)",
+        "gps_spu_eur": 210.1,
+        "aim_high_risk_pct": 0.5,
+        "gps_spu_prev": 223.3,
+        "aim_prev": 1.01,
+        "color": "#3D6B4F"
+      },
+      {
+        "distributor_code": "IRELAND",
+        "region": "UK/IE",
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS · low AIM risk)",
+        "gps_spu_eur": 387.6,
+        "aim_high_risk_pct": 1.06,
+        "gps_spu_prev": 653.4,
+        "aim_prev": 1.32,
+        "color": "#3D6B4F"
+      },
+      {
+        "distributor_code": "ITUK",
+        "region": "UK/IE",
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS · low AIM risk)",
+        "gps_spu_eur": 248.3,
+        "aim_high_risk_pct": 0.18,
+        "gps_spu_prev": 294.1,
+        "aim_prev": 0.32,
+        "color": "#3D6B4F"
+      },
+      {
+        "distributor_code": "IUK",
+        "region": "UK/IE",
+        "quadrant": "grow_capture",
+        "quadrant_label": "Grow capture (low GPS · low AIM risk)",
+        "gps_spu_eur": 128.3,
+        "aim_high_risk_pct": 1.77,
+        "gps_spu_prev": 151.8,
+        "aim_prev": 2.48,
+        "color": "#CC0E1E"
+      },
+      {
+        "distributor_code": "MALTA",
+        "region": "Med",
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS · low AIM risk)",
+        "gps_spu_eur": 197.1,
+        "aim_high_risk_pct": 1.46,
+        "gps_spu_prev": 206.6,
+        "aim_prev": 0.82,
+        "color": "#3D6B4F"
+      },
+      {
+        "distributor_code": "NORWAY",
+        "region": "Nordics",
+        "quadrant": "grow_capture",
+        "quadrant_label": "Grow capture (low GPS · low AIM risk)",
+        "gps_spu_eur": 178.3,
+        "aim_high_risk_pct": 2.09,
+        "gps_spu_prev": 141.0,
+        "aim_prev": 2.48,
+        "color": "#CC0E1E"
+      },
+      {
+        "distributor_code": "PORTUGAL",
+        "region": "Iberia",
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS · low AIM risk)",
+        "gps_spu_eur": 209.1,
+        "aim_high_risk_pct": 0.69,
+        "gps_spu_prev": 222.6,
+        "aim_prev": 0.95,
+        "color": "#3D6B4F"
+      },
+      {
+        "distributor_code": "ROMANIA",
+        "region": "CEE",
+        "quadrant": "grow_capture",
+        "quadrant_label": "Grow capture (low GPS · low AIM risk)",
+        "gps_spu_eur": 163.1,
+        "aim_high_risk_pct": 0.8,
+        "gps_spu_prev": 156.6,
+        "aim_prev": 0.37,
+        "color": "#CC0E1E"
+      },
+      {
+        "distributor_code": "SWEDEN",
+        "region": "Nordics",
+        "quadrant": "grow_capture",
+        "quadrant_label": "Grow capture (low GPS · low AIM risk)",
+        "gps_spu_eur": 151.4,
+        "aim_high_risk_pct": 0.83,
+        "gps_spu_prev": 152.0,
+        "aim_prev": 1.3,
+        "color": "#CC0E1E"
+      },
+      {
+        "distributor_code": "UMI",
+        "region": "MENA",
+        "quadrant": "grow_capture",
+        "quadrant_label": "Grow capture (low GPS · low AIM risk)",
+        "gps_spu_eur": 150.7,
+        "aim_high_risk_pct": 0.78,
+        "gps_spu_prev": 182.0,
+        "aim_prev": 0.74,
+        "color": "#CC0E1E"
+      },
+      {
+        "distributor_code": "UTI",
+        "region": "MENA",
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS · low AIM risk)",
+        "gps_spu_eur": 296.1,
+        "aim_high_risk_pct": 0.54,
+        "gps_spu_prev": 262.6,
+        "aim_prev": 0.17,
+        "color": "#3D6B4F"
+      }
+    ]
+  },
+  "pms_opportunity": [
+    {
+      "distributor_code": "IUK",
+      "category": "clutch_disc",
+      "capture_pct": 6.4,
+      "revenue_gap_eur": 918058.0,
+      "tam_eur": 980964.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "IUK",
+      "category": "brake_pad",
+      "capture_pct": 27.5,
+      "revenue_gap_eur": 674054.0,
+      "tam_eur": 929795.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "IUK",
+      "category": "brake_shoe",
+      "capture_pct": 8.0,
+      "revenue_gap_eur": 473569.0,
+      "tam_eur": 514582.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "IUK",
+      "category": "air_filter",
+      "capture_pct": 20.5,
+      "revenue_gap_eur": 449913.0,
+      "tam_eur": 566229.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "IUK",
+      "category": "clutch_pressure_plate",
+      "capture_pct": 9.2,
+      "revenue_gap_eur": 383885.0,
+      "tam_eur": 422958.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "IUK",
+      "category": "fuel_filter",
+      "capture_pct": 22.8,
+      "revenue_gap_eur": 311954.0,
+      "tam_eur": 404161.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "UMI",
+      "category": "brake_pad",
+      "capture_pct": 10.0,
+      "revenue_gap_eur": 286872.0,
+      "tam_eur": 318694.0,
+      "region": "MENA"
+    },
+    {
+      "distributor_code": "IUK",
+      "category": "clutch_kit",
+      "capture_pct": 0.3,
+      "revenue_gap_eur": 260922.0,
+      "tam_eur": 261704.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "IUK",
+      "category": "brake_rotor",
+      "capture_pct": 62.1,
+      "revenue_gap_eur": 220204.0,
+      "tam_eur": 581045.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "ITUK",
+      "category": "urea_filter",
+      "capture_pct": 16.8,
+      "revenue_gap_eur": 215341.0,
+      "tam_eur": 258923.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "UMI",
+      "category": "clutch_disc",
+      "capture_pct": 5.5,
+      "revenue_gap_eur": 188587.0,
+      "tam_eur": 199664.0,
+      "region": "MENA"
+    },
+    {
+      "distributor_code": "ITUK",
+      "category": "brake_shoe",
+      "capture_pct": 12.5,
+      "revenue_gap_eur": 184927.0,
+      "tam_eur": 211423.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "UMI",
+      "category": "brake_shoe",
+      "capture_pct": 19.7,
+      "revenue_gap_eur": 146559.0,
+      "tam_eur": 182498.0,
+      "region": "MENA"
+    },
+    {
+      "distributor_code": "UMI",
+      "category": "brake_rotor",
+      "capture_pct": 17.1,
+      "revenue_gap_eur": 143043.0,
+      "tam_eur": 172555.0,
+      "region": "MENA"
+    },
+    {
+      "distributor_code": "ITUK",
+      "category": "clutch_pressure_plate",
+      "capture_pct": 11.7,
+      "revenue_gap_eur": 124856.0,
+      "tam_eur": 141360.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "UMI",
+      "category": "air_filter",
+      "capture_pct": 16.4,
+      "revenue_gap_eur": 124108.0,
+      "tam_eur": 148446.0,
+      "region": "MENA"
+    },
+    {
+      "distributor_code": "ITUK",
+      "category": "clutch_disc",
+      "capture_pct": 19.1,
+      "revenue_gap_eur": 114639.0,
+      "tam_eur": 141776.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "ITUK",
+      "category": "air_filter",
+      "capture_pct": 48.9,
+      "revenue_gap_eur": 114526.0,
+      "tam_eur": 224239.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "UMI",
+      "category": "clutch_pressure_plate",
+      "capture_pct": 6.7,
+      "revenue_gap_eur": 113933.0,
+      "tam_eur": 122069.0,
+      "region": "MENA"
+    },
+    {
+      "distributor_code": "IUK",
+      "category": "release_bearing",
+      "capture_pct": 8.8,
+      "revenue_gap_eur": 107636.0,
+      "tam_eur": 118086.0,
+      "region": "UK/IE"
+    }
+  ],
+  "competitive_fusion": {
+    "available": true,
+    "autodoc_scraped_at": "2026-05-30 11:52:00",
+    "ks_scraped_at": "2026-05-09 10:38:29",
+    "scrape_stale_days": 31,
+    "gbp_eur": 1.17,
+    "bogus_filter_gbp": 3.05,
+    "items": [
+      {
+        "pn_mask": "…8250",
+        "description": "SENSOR; PM",
+        "aim_class": "C",
+        "rev_cy2025_eur": 688450.0,
+        "pr00_eur": 241.79,
+        "autodoc_eur": null,
+        "ks_am_eur": null,
+        "ks_gen_eur": 380.25,
+        "min_market_eur": 380.25,
+        "iam_discount_pct": -57.3
+      },
+      {
+        "pn_mask": "…7550",
+        "description": "ROTOR; DISC BRK,FRT",
+        "aim_class": "C",
+        "rev_cy2025_eur": 641264.0,
+        "pr00_eur": 79.26,
+        "autodoc_eur": null,
+        "ks_am_eur": 40.95,
+        "ks_gen_eur": 146.25,
+        "min_market_eur": 40.95,
+        "iam_discount_pct": 48.3
+      },
+      {
+        "pn_mask": "…7940",
+        "description": "PAD KIT; CALIPER,DISC BRK,FRT",
+        "aim_class": "V",
+        "rev_cy2025_eur": 287818.0,
+        "pr00_eur": 89.11,
+        "autodoc_eur": null,
+        "ks_am_eur": 128.7,
+        "ks_gen_eur": null,
+        "min_market_eur": 128.7,
+        "iam_discount_pct": -44.4
+      },
+      {
+        "pn_mask": "…5480",
+        "description": "FILTER; ACL",
+        "aim_class": "V",
+        "rev_cy2025_eur": 255235.0,
+        "pr00_eur": 21.18,
+        "autodoc_eur": null,
+        "ks_am_eur": null,
+        "ks_gen_eur": 35.1,
+        "min_market_eur": 35.1,
+        "iam_discount_pct": -65.7
+      },
+      {
+        "pn_mask": "…6930",
+        "description": "ELEMENT KIT; FUEL FILTER",
+        "aim_class": "V",
+        "rev_cy2025_eur": 234253.0,
+        "pr00_eur": 13.85,
+        "autodoc_eur": null,
+        "ks_am_eur": 5.85,
+        "ks_gen_eur": 29.25,
+        "min_market_eur": 5.85,
+        "iam_discount_pct": 57.8
+      },
+      {
+        "pn_mask": "…2091",
+        "description": "PIPE; EXH",
+        "aim_class": "C",
+        "rev_cy2025_eur": 228584.0,
+        "pr00_eur": 1276.51,
+        "autodoc_eur": null,
+        "ks_am_eur": null,
+        "ks_gen_eur": 1959.75,
+        "min_market_eur": 1959.75,
+        "iam_discount_pct": -53.5
+      },
+      {
+        "pn_mask": "…5240",
+        "description": "ELEMENT; OIL FILTER",
+        "aim_class": "V",
+        "rev_cy2025_eur": 215147.0,
+        "pr00_eur": 6.8,
+        "autodoc_eur": null,
+        "ks_am_eur": 4.68,
+        "ks_gen_eur": 17.55,
+        "min_market_eur": 4.68,
+        "iam_discount_pct": 31.2
+      },
+      {
+        "pn_mask": "…5741",
+        "description": "TURBOCHARGER ASM",
+        "aim_class": "C",
+        "rev_cy2025_eur": 148389.0,
+        "pr00_eur": 834.32,
+        "autodoc_eur": null,
+        "ks_am_eur": null,
+        "ks_gen_eur": 1930.5,
+        "min_market_eur": 1930.5,
+        "iam_discount_pct": -131.4
+      },
+      {
+        "pn_mask": "…0190",
+        "description": "NOZZLE ASM; INJ",
+        "aim_class": "F",
+        "rev_cy2025_eur": 145197.0,
+        "pr00_eur": 183.1,
+        "autodoc_eur": null,
+        "ks_am_eur": null,
+        "ks_gen_eur": 351.0,
+        "min_market_eur": 351.0,
+        "iam_discount_pct": -91.7
+      },
+      {
+        "pn_mask": "…0591",
+        "description": "NOZZLE ASM; INJ",
+        "aim_class": "F",
+        "rev_cy2025_eur": 143895.0,
+        "pr00_eur": 191.47,
+        "autodoc_eur": null,
+        "ks_am_eur": null,
+        "ks_gen_eur": 362.7,
+        "min_market_eur": 362.7,
+        "iam_discount_pct": -89.4
+      },
+      {
+        "pn_mask": "…4120",
+        "description": "SENSOR; PRESSURE,DPD",
+        "aim_class": "C",
+        "rev_cy2025_eur": 118471.0,
+        "pr00_eur": 196.64,
+        "autodoc_eur": null,
+        "ks_am_eur": 345.15,
+        "ks_gen_eur": 321.75,
+        "min_market_eur": 321.75,
+        "iam_discount_pct": -63.6
+      },
+      {
+        "pn_mask": "…0950",
+        "description": "SENSOR; PM",
+        "aim_class": "C",
+        "rev_cy2025_eur": 114941.0,
+        "pr00_eur": 386.83,
+        "autodoc_eur": null,
+        "ks_am_eur": 128.7,
+        "ks_gen_eur": 637.65,
+        "min_market_eur": 128.7,
+        "iam_discount_pct": 66.7
+      },
+      {
+        "pn_mask": "…6610",
+        "description": "PAD KIT; CALIPER,DISC BRK,FRT",
+        "aim_class": "V",
+        "rev_cy2025_eur": 105379.0,
+        "pr00_eur": 82.25,
+        "autodoc_eur": null,
+        "ks_am_eur": 17.55,
+        "ks_gen_eur": 146.25,
+        "min_market_eur": 17.55,
+        "iam_discount_pct": 78.7
+      }
+    ]
+  },
+  "tender_horizon": {
+    "available": true,
+    "generated_at": "2026-05-30",
+    "stale_days": 31,
+    "stats": {
+      "opportunities": 708,
+      "attack": 3,
+      "selective": 245,
+      "due_14d": 32
+    },
+    "horizon_days": 90,
+    "items": [
+      {
+        "title": "Italy – Repair and maintenance services of motor vehicles and associa…",
+        "country": "Italy",
+        "deadline_date": "2026-06-11",
+        "days_to_deadline": 12,
+        "opportunity_score": 68,
+        "decision": "Attack",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Norway – Repair and maintenance services of motor vehicles and associ…",
+        "country": "Norway",
+        "deadline_date": "2026-06-14",
+        "days_to_deadline": 15,
+        "opportunity_score": 68,
+        "decision": "Attack",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Italy – Repair and maintenance services of motor vehicles and associa…",
+        "country": "Italy",
+        "deadline_date": "2026-06-16",
+        "days_to_deadline": 17,
+        "opportunity_score": 68,
+        "decision": "Attack",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Italy – Repair and maintenance services of trucks – PROCEDURA APERTA …",
+        "country": "Italy",
+        "deadline_date": "2026-06-19",
+        "days_to_deadline": 20,
+        "opportunity_score": 66,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Netherlands – Vehicle-fleet management services – Lease en Mobiliteit",
+        "country": "Netherlands",
+        "deadline_date": "2026-06-22",
+        "days_to_deadline": 23,
+        "opportunity_score": 62,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "France – Repair and maintenance services of motor vehicles and associ…",
+        "country": "France",
+        "deadline_date": "2026-06-08",
+        "days_to_deadline": 9,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Spain – Repair and maintenance services of motor vehicles and associa…",
+        "country": "Spain",
+        "deadline_date": "2026-06-10",
+        "days_to_deadline": 11,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Norway – Body-repair services for vehicles – Workshop services (body …",
+        "country": "Norway",
+        "deadline_date": "2026-06-11",
+        "days_to_deadline": 12,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Norway – Vehicle-fleet management services – Vehicle Administration S…",
+        "country": "Norway",
+        "deadline_date": "2026-06-14",
+        "days_to_deadline": 15,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Netherlands – Vehicle-fleet management services – Autolease gemeente …",
+        "country": "Netherlands",
+        "deadline_date": "2026-06-15",
+        "days_to_deadline": 16,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Sweden – Repair and maintenance services of motor vehicles and associ…",
+        "country": "Sweden",
+        "deadline_date": "2026-06-15",
+        "days_to_deadline": 16,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Italy – Vehicle-fleet-support services – SERVIZIO DI MANUTENZIONE FUL…",
+        "country": "Italy",
+        "deadline_date": "2026-06-18",
+        "days_to_deadline": 19,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Greece – Fleet management, repair and maintenance services – ΣΥΝΤΗΡΗΣ…",
+        "country": "Greece",
+        "deadline_date": "2026-06-18",
+        "days_to_deadline": 19,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Norway – Fleet management, repair and maintenance services – Leasing …",
+        "country": "Norway",
+        "deadline_date": "2026-05-31",
+        "days_to_deadline": 1,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Ireland – Repair and maintenance services of motor vehicles and assoc…",
+        "country": "Ireland",
+        "deadline_date": "2026-06-02",
+        "days_to_deadline": 3,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Netherlands – Vehicle-fleet management services – Wagenparkbeheer",
+        "country": "Netherlands",
+        "deadline_date": "2026-06-03",
+        "days_to_deadline": 4,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Slovenia – Fleet management, repair and maintenance services – Servis…",
+        "country": "Slovenia",
+        "deadline_date": "2026-06-03",
+        "days_to_deadline": 4,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Ireland – Vehicle-fleet management services – Supply of Fleet Managem…",
+        "country": "Ireland",
+        "deadline_date": "2026-06-05",
+        "days_to_deadline": 6,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Sweden – Repair and maintenance services of motor vehicles and associ…",
+        "country": "Sweden",
+        "deadline_date": "2026-05-21",
+        "days_to_deadline": -9,
+        "opportunity_score": 54,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "France – Repair and maintenance services of motor vehicles and associ…",
+        "country": "France",
+        "deadline_date": "2026-05-26",
+        "days_to_deadline": -4,
+        "opportunity_score": 54,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Slovenia – Repair and maintenance services of motor vehicles and asso…",
+        "country": "Slovenia",
+        "deadline_date": "2026-05-27",
+        "days_to_deadline": -3,
+        "opportunity_score": 52,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Romania – Repair and maintenance services of cars – Servicii de servi…",
+        "country": "Romania",
+        "deadline_date": "2026-05-16",
+        "days_to_deadline": -14,
+        "opportunity_score": 46,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Romania – Repair and maintenance services of motor vehicles and assoc…",
+        "country": "Romania",
+        "deadline_date": "2026-05-18",
+        "days_to_deadline": -12,
+        "opportunity_score": 46,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Germany – Fleet management, repair and maintenance services – Folieru…",
+        "country": "Germany",
+        "deadline_date": "2026-05-25",
+        "days_to_deadline": -5,
+        "opportunity_score": 46,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Germany – Maintenance and repair services related to specific parts o…",
+        "country": "Germany",
+        "deadline_date": "2026-05-25",
+        "days_to_deadline": -5,
+        "opportunity_score": 46,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Slovenia – Tyre repair services, including fitting and balancing – Vu…",
+        "country": "Slovenia",
+        "deadline_date": "2026-05-28",
+        "days_to_deadline": -2,
+        "opportunity_score": 46,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      }
+    ]
+  },
+  "network_bump": {
+    "years": [
+      2023,
+      2024,
+      2025
+    ],
+    "top_distributors": [
+      "ITUK",
+      "IRELAND",
+      "UTI",
+      "ICELAND",
+      "CYPRUS",
+      "DENMARK",
+      "MALTA",
+      "FINLAND",
+      "UKRAINE",
+      "PALESTINE",
+      "ARMENIA",
+      "KAZAKHSTAN"
+    ],
+    "metrics": [
+      {
+        "metric_id": "gps_spu",
+        "label": "GPS €/UIO",
+        "lines": [
+          {
+            "distributor_code": "ITUK",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 88.2,
+                "rank": 13
+              },
+              {
+                "year": 2024,
+                "percentile": 94.1,
+                "rank": 7
+              },
+              {
+                "year": 2025,
+                "percentile": 88.2,
+                "rank": 13
+              }
+            ]
+          },
+          {
+            "distributor_code": "IRELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 100.0,
+                "rank": 1
+              },
+              {
+                "year": 2024,
+                "percentile": 100.0,
+                "rank": 1
+              },
+              {
+                "year": 2025,
+                "percentile": 100.0,
+                "rank": 1
+              }
+            ]
+          },
+          {
+            "distributor_code": "UTI",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 94.1,
+                "rank": 7
+              },
+              {
+                "year": 2024,
+                "percentile": 88.2,
+                "rank": 13
+              },
+              {
+                "year": 2025,
+                "percentile": 94.1,
+                "rank": 7
+              }
+            ]
+          },
+          {
+            "distributor_code": "ICELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 82.4,
+                "rank": 19
+              },
+              {
+                "year": 2024,
+                "percentile": 82.4,
+                "rank": 19
+              },
+              {
+                "year": 2025,
+                "percentile": 70.6,
+                "rank": 30
+              }
+            ]
+          },
+          {
+            "distributor_code": "CYPRUS",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 23.5,
+                "rank": 77
+              },
+              {
+                "year": 2024,
+                "percentile": 41.2,
+                "rank": 60
+              },
+              {
+                "year": 2025,
+                "percentile": 47.1,
+                "rank": 54
+              }
+            ]
+          },
+          {
+            "distributor_code": "DENMARK",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 29.4,
+                "rank": 72
+              },
+              {
+                "year": 2024,
+                "percentile": 58.8,
+                "rank": 42
+              },
+              {
+                "year": 2025,
+                "percentile": 35.3,
+                "rank": 66
+              }
+            ]
+          },
+          {
+            "distributor_code": "MALTA",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 58.8,
+                "rank": 42
+              },
+              {
+                "year": 2024,
+                "percentile": 52.9,
+                "rank": 48
+              },
+              {
+                "year": 2025,
+                "percentile": 52.9,
+                "rank": 48
+              }
+            ]
+          },
+          {
+            "distributor_code": "FINLAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 52.9,
+                "rank": 48
+              },
+              {
+                "year": 2024,
+                "percentile": 64.7,
+                "rank": 36
+              },
+              {
+                "year": 2025,
+                "percentile": 82.4,
+                "rank": 19
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "metric_id": "total_capture",
+        "label": "PMS capture %",
+        "lines": [
+          {
+            "distributor_code": "ITUK",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 88.2,
+                "rank": 13
+              },
+              {
+                "year": 2024,
+                "percentile": 76.5,
+                "rank": 25
+              },
+              {
+                "year": 2025,
+                "percentile": 82.4,
+                "rank": 19
+              }
+            ]
+          },
+          {
+            "distributor_code": "IRELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 100.0,
+                "rank": 1
+              },
+              {
+                "year": 2024,
+                "percentile": 100.0,
+                "rank": 1
+              },
+              {
+                "year": 2025,
+                "percentile": 100.0,
+                "rank": 1
+              }
+            ]
+          },
+          {
+            "distributor_code": "UTI",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 94.1,
+                "rank": 7
+              },
+              {
+                "year": 2024,
+                "percentile": 88.2,
+                "rank": 13
+              },
+              {
+                "year": 2025,
+                "percentile": 94.1,
+                "rank": 7
+              }
+            ]
+          },
+          {
+            "distributor_code": "ICELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 58.8,
+                "rank": 42
+              },
+              {
+                "year": 2024,
+                "percentile": 23.5,
+                "rank": 77
+              },
+              {
+                "year": 2025,
+                "percentile": 58.8,
+                "rank": 42
+              }
+            ]
+          },
+          {
+            "distributor_code": "CYPRUS",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 64.7,
+                "rank": 36
+              },
+              {
+                "year": 2024,
+                "percentile": 82.4,
+                "rank": 19
+              },
+              {
+                "year": 2025,
+                "percentile": 88.2,
+                "rank": 13
+              }
+            ]
+          },
+          {
+            "distributor_code": "DENMARK",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 35.3,
+                "rank": 66
+              },
+              {
+                "year": 2024,
+                "percentile": 94.1,
+                "rank": 7
+              },
+              {
+                "year": 2025,
+                "percentile": 70.6,
+                "rank": 30
+              }
+            ]
+          },
+          {
+            "distributor_code": "MALTA",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 70.6,
+                "rank": 30
+              },
+              {
+                "year": 2024,
+                "percentile": 35.3,
+                "rank": 66
+              },
+              {
+                "year": 2025,
+                "percentile": 64.7,
+                "rank": 36
+              }
+            ]
+          },
+          {
+            "distributor_code": "FINLAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 41.2,
+                "rank": 60
+              },
+              {
+                "year": 2024,
+                "percentile": 41.2,
+                "rank": 60
+              },
+              {
+                "year": 2025,
+                "percentile": 52.9,
+                "rank": 48
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "metric_id": "genuine_capture",
+        "label": "Genuine capture %",
+        "lines": [
+          {
+            "distributor_code": "ITUK",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 94.1,
+                "rank": 7
+              },
+              {
+                "year": 2024,
+                "percentile": 88.2,
+                "rank": 13
+              },
+              {
+                "year": 2025,
+                "percentile": 94.1,
+                "rank": 7
+              }
+            ]
+          },
+          {
+            "distributor_code": "IRELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 100.0,
+                "rank": 1
+              },
+              {
+                "year": 2024,
+                "percentile": 94.1,
+                "rank": 7
+              },
+              {
+                "year": 2025,
+                "percentile": 100.0,
+                "rank": 1
+              }
+            ]
+          },
+          {
+            "distributor_code": "UTI",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 70.6,
+                "rank": 30
+              },
+              {
+                "year": 2024,
+                "percentile": 70.6,
+                "rank": 30
+              },
+              {
+                "year": 2025,
+                "percentile": 88.2,
+                "rank": 13
+              }
+            ]
+          },
+          {
+            "distributor_code": "ICELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 82.4,
+                "rank": 19
+              },
+              {
+                "year": 2024,
+                "percentile": 29.4,
+                "rank": 72
+              },
+              {
+                "year": 2025,
+                "percentile": 70.6,
+                "rank": 30
+              }
+            ]
+          },
+          {
+            "distributor_code": "CYPRUS",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 64.7,
+                "rank": 36
+              },
+              {
+                "year": 2024,
+                "percentile": 82.4,
+                "rank": 19
+              },
+              {
+                "year": 2025,
+                "percentile": 64.7,
+                "rank": 36
+              }
+            ]
+          },
+          {
+            "distributor_code": "DENMARK",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 47.1,
+                "rank": 54
+              },
+              {
+                "year": 2024,
+                "percentile": 100.0,
+                "rank": 1
+              },
+              {
+                "year": 2025,
+                "percentile": 82.4,
+                "rank": 19
+              }
+            ]
+          },
+          {
+            "distributor_code": "MALTA",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 88.2,
+                "rank": 13
+              },
+              {
+                "year": 2024,
+                "percentile": 58.8,
+                "rank": 42
+              },
+              {
+                "year": 2025,
+                "percentile": 76.5,
+                "rank": 25
+              }
+            ]
+          },
+          {
+            "distributor_code": "FINLAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 58.8,
+                "rank": 42
+              },
+              {
+                "year": 2024,
+                "percentile": 64.7,
+                "rank": 36
+              },
+              {
+                "year": 2025,
+                "percentile": 58.8,
+                "rank": 42
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "metric_id": "aim_risk",
+        "label": "AIM safety (inverted)",
+        "lines": [
+          {
+            "distributor_code": "ITUK",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 19.0,
+                "rank": 82
+              },
+              {
+                "year": 2024,
+                "percentile": 23.8,
+                "rank": 77
+              },
+              {
+                "year": 2025,
+                "percentile": 9.5,
+                "rank": 91
+              }
+            ]
+          },
+          {
+            "distributor_code": "IRELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 57.1,
+                "rank": 44
+              },
+              {
+                "year": 2024,
+                "percentile": 81.0,
+                "rank": 20
+              },
+              {
+                "year": 2025,
+                "percentile": 66.7,
+                "rank": 34
+              }
+            ]
+          },
+          {
+            "distributor_code": "UTI",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 14.3,
+                "rank": 87
+              },
+              {
+                "year": 2024,
+                "percentile": 14.3,
+                "rank": 87
+              },
+              {
+                "year": 2025,
+                "percentile": 33.3,
+                "rank": 68
+              }
+            ]
+          },
+          {
+            "distributor_code": "ICELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 9.5,
+                "rank": 91
+              },
+              {
+                "year": 2024,
+                "percentile": 66.7,
+                "rank": 34
+              },
+              {
+                "year": 2025,
+                "percentile": 28.6,
+                "rank": 72
+              }
+            ]
+          },
+          {
+            "distributor_code": "CYPRUS",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 38.1,
+                "rank": 63
+              },
+              {
+                "year": 2024,
+                "percentile": 33.3,
+                "rank": 68
+              },
+              {
+                "year": 2025,
+                "percentile": 23.8,
+                "rank": 77
+              }
+            ]
+          },
+          {
+            "distributor_code": "DENMARK",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 66.7,
+                "rank": 34
+              },
+              {
+                "year": 2024,
+                "percentile": 85.7,
+                "rank": 15
+              },
+              {
+                "year": 2025,
+                "percentile": 57.1,
+                "rank": 44
+              }
+            ]
+          },
+          {
+            "distributor_code": "MALTA",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 52.4,
+                "rank": 49
+              },
+              {
+                "year": 2024,
+                "percentile": 47.6,
+                "rank": 53
+              },
+              {
+                "year": 2025,
+                "percentile": 81.0,
+                "rank": 20
+              }
+            ]
+          },
+          {
+            "distributor_code": "FINLAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 85.7,
+                "rank": 15
+              },
+              {
+                "year": 2024,
+                "percentile": 52.4,
+                "rank": 49
+              },
+              {
+                "year": 2025,
+                "percentile": 76.2,
+                "rank": 25
+              }
+            ]
+          },
+          {
+            "distributor_code": "UKRAINE",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 23.8,
+                "rank": 77
+              },
+              {
+                "year": 2024,
+                "percentile": 19.0,
+                "rank": 82
+              },
+              {
+                "year": 2025,
+                "percentile": 14.3,
+                "rank": 87
+              }
+            ]
+          },
+          {
+            "distributor_code": "PALESTINE",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 0.0,
+                "rank": 101
+              },
+              {
+                "year": 2024,
+                "percentile": 4.8,
+                "rank": 96
+              },
+              {
+                "year": 2025,
+                "percentile": 0.0,
+                "rank": 101
+              }
+            ]
+          },
+          {
+            "distributor_code": "ARMENIA",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 33.3,
+                "rank": 68
+              },
+              {
+                "year": 2024,
+                "percentile": 4.8,
+                "rank": 96
+              },
+              {
+                "year": 2025,
+                "percentile": 4.8,
+                "rank": 96
+              }
+            ]
+          },
+          {
+            "distributor_code": "KAZAKHSTAN",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 4.8,
+                "rank": 96
+              },
+              {
+                "year": 2024,
+                "percentile": 9.5,
+                "rank": 91
+              },
+              {
+                "year": 2025,
+                "percentile": 19.0,
+                "rank": 82
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

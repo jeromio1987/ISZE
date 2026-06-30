@@ -12,7 +12,11 @@ $IszeRootPs1 = Join-Path $PSScriptRoot '..\04_tools\workspace\isze_root.ps1'
 $IszeRoot = Get-IszeRoot
 
 $Dashboards = Get-IszePath -Key 'dashboards' -Legacy 'Dashboards'
-$DataJson   = Join-Path (Get-IszePath -Key 'data' -Legacy 'Data') 'dashboards'
+$dataRoot = Get-IszePath -Key 'data' -Legacy 'Data'
+$DataJson = Join-Path $dataRoot '14_dashboards'
+if (-not (Test-Path $DataJson)) {
+    $DataJson = Join-Path $dataRoot 'dashboards'
+}
 $DeployRoot = Get-IszePath -Key 'deploy' -Legacy '07_deploy'
 $Targets    = @(
     (Join-Path $DeployRoot 'Master Dashboard'),
@@ -118,6 +122,13 @@ foreach ($target in $Targets) {
                 Write-Host "    Data\dashboards\viz\$($_.Name)"
                 $count++
             }
+        }
+    }
+    $dataJs = Join-Path (Join-Path $Dashboards 'sales') 'risk_cockpit.data.js'
+    if (Test-Path $dataJs) {
+        foreach ($target in $Targets) {
+            Copy-Item $dataJs (Join-Path $target 'risk_cockpit.data.js') -Force
+            Write-Host "    risk_cockpit.data.js -> $target"
         }
     }
     Write-Host "  $count files copied"
