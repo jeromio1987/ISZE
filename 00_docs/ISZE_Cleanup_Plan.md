@@ -81,15 +81,66 @@ Example: `prism/mockups/` → `_archive/prism_mockups/mockups/`
 
 ### Phase 1 — Quick wins (low risk, ~1 hour)
 
-| Action | Move to | Implication |
-|--------|---------|-------------|
-| `prism/mockups/v01–v10*.html` | `_archive/prism_mockups/mockups/` | Update `PROJECT_HUB` link (already points at mockups — remove or archive tile) |
-| `prism/run-prism.ps1` (duplicate) | delete after confirm `run_prism.ps1` works | None if unused |
-| `new files/iszj_parts_master (1).txt` (468 MB) | `_archive/legacy_data/` or outside repo | Frees disk + agent noise |
-| `prism/data/UIO_v13.xlsx` | `_archive/versioned_docs/` | Confirm nothing reads v13 |
-| `ISZE_GPS_PMS_Conf26_v1/v2.pptx` | `_archive/versioned_docs/` | Keep v3 at root |
+| Action | Move to | Implication | Status |
+|--------|---------|-------------|--------|
+| `prism/mockups/v01–v10*.html` | `90_archive/prism_mockups/mockups/` | Stub README left at old path | ✅ 2026-07-16 |
+| `prism/run-prism.ps1` (duplicate) | deleted — use `run_prism.ps1` (port **8503**) | Wrong-port 8501 launcher removed | ✅ 2026-07-16 |
+| `new files/iszj_parts_master (1).txt` (468 MB) | `_archive/legacy_data/` or outside repo | Frees disk + agent noise | already gone |
+| `prism/data/UIO_v13.xlsx` | `_archive/versioned_docs/` | Confirm nothing reads v13 | already gone |
+| `ISZE_GPS_PMS_Conf26_v1/v2.pptx` | `_archive/versioned_docs/` | Keep v3 at root | leave |
 
 **Implication:** broken links only if something still referenced moved paths — grep first.
+
+### Phase 1b — HTML share surface (done 2026-07-16)
+
+| Action | Result |
+|--------|--------|
+| Primary external UI | Already decided: **GitHub Pages HTML** (`UI_STACK.md`) — unchanged |
+| Canonical GPS | `02_dashboards/fleet/ISZE_GPS_Dashboard.html` |
+| Canonical UIO | `02_dashboards/fleet/ISUZU_UIO_Dashboard_2026.html` |
+| `_v9` / `_v18` HTML | Thin redirects only |
+| Orphan `gps/ISZE_GPS_Dashboard_v9.html` | → `02_dashboards/_archive/gps_orphan_2026-07-16/` |
+| Hub / nav / manifest / `gps_reconcile` DASHBOARDS | Point at canonical fleet GPS |
+| `build_gps_dashboards.py` | Writes canonical HTML + redirect stub (no dual full copy) |
+
+---
+
+## Before / after — what an outsider should open
+
+| Intent | BEFORE (wrong / ambiguous) | AFTER (open this) |
+|--------|----------------------------|-------------------|
+| External share hub | Any of 4 UI stacks | `02_dashboards/hub/MASTER_DASHBOARD.html` → sync → GitHub Pages |
+| Project tile hub | `PROJECT_HUB` tiles → `_v9` / `_v18` | Same hub → `fleet/ISZE_GPS_Dashboard.html` · `fleet/ISUZU_UIO_Dashboard_2026.html` |
+| GPS numbers | `gps/ISZE_GPS_Dashboard_v9.html` (stale orphan) **or** fleet `_v9` | **Only** `fleet/ISZE_GPS_Dashboard.html` |
+| UIO fleet | `…_v18.html` | `fleet/ISUZU_UIO_Dashboard_2026.html` |
+| Day-to-day analysis | — | PRISM `run_prism.ps1` · **8503** (not `run-prism.ps1`) |
+| Verify before quote | — | `01_data/derived/_verification_report.json` green |
+
+### Archived this pass
+
+| Item | Where |
+|------|-------|
+| `prism/mockups/*` (11 files) | `90_archive/prism_mockups/mockups/` |
+| `gps/ISZE_GPS_Dashboard_v9.html` | `02_dashboards/_archive/gps_orphan_2026-07-16/` |
+| `run-prism.ps1` | deleted |
+
+### What breaks if you rename further (do **not** yet)
+
+| Rename | Breaks |
+|--------|--------|
+| `gps_v9_snapshot.json` → only `gps_snapshot.json` | `build_gps_v9.py`, `gps_reconcile.py` dual-compare, `build_gps_integrity_audit.py`, memo Fix 5 sequence |
+| Drop `uio_v18_gps.json` alias | Older scripts until all callers use `uio_v19_gps.json` / `uio_gps.json` |
+| Flatten deploy URL paths | GitHub Pages `fetch('../Data/...')` contract |
+| Archive Evidence / Dash / ISZE_Dashboard | Needs Jerome Phase-3 call — ops pages may lack PRISM equivalents |
+
+### Sequenced PR plan (remaining — risky)
+
+1. **PR-A (HTML done):** this pass — share surface + redirects + reconciler list.
+2. **PR-B (GPS snapshot primary):** after go-ahead on `GPS_RECONCILE_MEMO_2026-07-16.md` Fix 1–5 order: echarts self-contain → rebuild dashboards → copy/align `gps_snapshot.json` ← `gps_v9_snapshot.json` → then flip writers to unversioned primary.
+3. **PR-C (UIO JSON alias retire):** drop `uio_v18_gps.json` write once grep shows zero readers.
+4. **PR-D (Phase 3 UI):** Jerome decides ISZE_Dashboard merge timeline; only then archive Evidence/Dash overlap.
+
+**Not done this pass:** sync_to_deploys / GitHub Pages publish, GPS memo rebuild, ISZE_Dashboard merge.
 
 ### Phase 2 — Dedupe deploy mirrors (medium risk)
 

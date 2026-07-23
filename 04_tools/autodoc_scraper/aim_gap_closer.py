@@ -31,7 +31,7 @@ _WORKSPACE = Path(__file__).resolve().parents[1] / "workspace"
 sys.path.insert(0, str(_WORKSPACE))
 from isze_paths import DATA_ROOT, DERIVED_DIR, ISZE_ROOT  # noqa: E402
 
-DEFAULT_IE40 = DATA_ROOT / "IE40 Price list as of 13.03.2026 PR00_3_level_classified_GPT.xlsx"
+DEFAULT_IE40 = DATA_ROOT / "Pricing" / "IE40 Price list as of 13.03.2026 PR00_3_level_classified_GPT.xlsx"
 DEFAULT_SALES = DERIVED_DIR / "sales_fact.parquet"
 
 UNCLASSIFIED_L1 = "Other / review"

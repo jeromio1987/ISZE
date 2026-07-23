@@ -1,0 +1,131 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<title>ISZE PMS x IAM Bridge (internal)</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Arial, sans-serif; margin: 24px; color: #1a1a1a; background: #fff; }
+  .banner { background: #fff3cd; border: 1px solid #e0a800; padding: 12px 16px; border-radius: 6px; margin-bottom: 20px; font-size: 14px; }
+  .banner b { color: #7a5600; }
+  h1 { font-size: 20px; margin-bottom: 4px; }
+  .meta { color: #666; font-size: 12px; margin-bottom: 16px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { border: 1px solid #ddd; padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #f5f5f5; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .muted { color: #999; }
+  .neg { color: #c0392b; font-weight: 600; }
+  .foot { margin-top: 20px; font-size: 12px; color: #666; }
+</style></head>
+<body>
+<div class="banner">
+  <b>INTERNAL VIEW &mdash; NOT AUDITED &mdash; do not use for external / ITUK claims.</b><br>
+  PMS columns (Lost ISZE GP, Capture, ISZE PR00) are from the signed-off engine.compute_view() &mdash;
+  same numbers as isze_executive_pms.html. IAM columns are scraped competitor prices, context only.
+  These are shown side-by-side, <b>not combined into one figure</b> &mdash; see PRODUCT_LOGIC.md decision rule 4
+  (never cite IAM substitution loss as PMS leakage). Price gap % is PMS wholesale (PR00) vs cheapest
+  scraped IAM price found &mdash; a directional read, not a validated substitution-loss estimate.<br>
+  <b>ITUK scope caveat (from the engine itself):</b> ITUK tab: PMS Calc intervals × UIO (whole-fleet assumptions). All distributors tab: PRISM expected_qty (typically scope=N75_only). Do not compare potential_units across tabs.
+  Per AUDIT_STATUS.md, ITUK-tab potential/capture is <b>diagnostic only</b> &mdash; use the PRISM "All distributors"
+  row, not this tab, for a real capture-rate claim. The Lost GP / Capture columns below can look extreme
+  (whole-fleet PMS Calc assumptions vs a partial dealer-sales actuals feed) &mdash; read them as a category
+  ranking signal, not a validated euro figure.
+</div>
+<h1>PMS x IAM bridge &mdash; ITUK (PMS Calc pilot)</h1>
+<div class="meta">Built 2026-07-13 07:32 &middot; category-level IAM match for Tranzparts/T&amp;M/Auto365 (rolled up from 5 coarse buckets &mdash;
+see script docstring); PN-level match not possible for these three sites (not indexed by Isuzu OEM PN).</div>
+<table>
+  <thead><tr>
+    <th>PMS category</th>
+    <th>Lost ISZE GP (&euro;)</th>
+    <th>Capture</th>
+    <th>ISZE PR00 avg</th>
+    <th>IAM scrape (site: min/avg, n)</th>
+    <th>Price gap vs cheapest IAM</th>
+  </tr></thead>
+  <tbody>
+        <tr>
+          <td>Brake pad (front)</td>
+          <td class="num">&euro;23,529,782</td>
+          <td class="num">0%</td>
+          <td class="num">&euro;71.34</td>
+          <td>Tranzparts: min &euro;28.08 / avg &euro;67.76 (n=5)<br>T&amp;M Commercials: min &euro;77.22 / avg &euro;77.22 (n=1)</td>
+          <td class="num">+61%</td>
+        </tr>
+        <tr>
+          <td>Brake lining</td>
+          <td class="num">&euro;22,023,513</td>
+          <td class="num">0%</td>
+          <td class="num">&euro;81.70</td>
+          <td>Tranzparts: min &euro;28.08 / avg &euro;67.76 (n=5)<br>T&amp;M Commercials: min &euro;77.22 / avg &euro;77.22 (n=1)</td>
+          <td class="num">+66%</td>
+        </tr>
+        <tr>
+          <td>Brake disc (rear)</td>
+          <td class="num">&euro;13,675,588</td>
+          <td class="num">0%</td>
+          <td class="num">&euro;158.32</td>
+          <td>Tranzparts: min &euro;28.08 / avg &euro;67.76 (n=5)<br>T&amp;M Commercials: min &euro;77.22 / avg &euro;77.22 (n=1)</td>
+          <td class="num">+82%</td>
+        </tr>
+        <tr>
+          <td>Brake pad (rear)</td>
+          <td class="num">&euro;12,988,154</td>
+          <td class="num">0%</td>
+          <td class="num">&euro;62.16</td>
+          <td>Tranzparts: min &euro;28.08 / avg &euro;67.76 (n=5)<br>T&amp;M Commercials: min &euro;77.22 / avg &euro;77.22 (n=1)</td>
+          <td class="num">+55%</td>
+        </tr>
+        <tr>
+          <td>Brake disc (front)</td>
+          <td class="num">&euro;11,118,848</td>
+          <td class="num">0%</td>
+          <td class="num">&euro;121.70</td>
+          <td>Tranzparts: min &euro;28.08 / avg &euro;67.76 (n=5)<br>T&amp;M Commercials: min &euro;77.22 / avg &euro;77.22 (n=1)</td>
+          <td class="num">+77%</td>
+        </tr>
+        <tr>
+          <td>Air filter</td>
+          <td class="num">&euro;4,049,984</td>
+          <td class="num">1%</td>
+          <td class="num">&euro;24.01</td>
+          <td>Tranzparts: min &euro;18.72 / avg &euro;59.33 (n=3)</td>
+          <td class="num">+22%</td>
+        </tr>
+        <tr>
+          <td>Clutch disc</td>
+          <td class="num">&euro;3,827,609</td>
+          <td class="num">0%</td>
+          <td class="num">&euro;166.71</td>
+          <td>T&amp;M Commercials: min &euro;540.54 / avg &euro;540.54 (n=1)</td>
+          <td class="num"><span class='neg'>-224%</span></td>
+        </tr>
+        <tr>
+          <td>Oil filter</td>
+          <td class="num">&euro;2,579,716</td>
+          <td class="num">2%</td>
+          <td class="num">&euro;10.49</td>
+          <td>T&amp;M Commercials: min &euro;20.09 / avg &euro;24.46 (n=2)<br>Tranzparts: min &euro;22.53 / avg &euro;22.53 (n=1)</td>
+          <td class="num"><span class='neg'>-92%</span></td>
+        </tr>
+        <tr>
+          <td>Cabin filter</td>
+          <td class="num">&euro;1,663,092</td>
+          <td class="num">0%</td>
+          <td class="num">&euro;9.64</td>
+          <td><span class='muted'>no scrape match</span></td>
+          <td class="num"><span class='muted'>&mdash;</span></td>
+        </tr>
+        <tr>
+          <td>Fuel filter</td>
+          <td class="num">&euro;1,227,987</td>
+          <td class="num">9%</td>
+          <td class="num">&euro;15.33</td>
+          <td>Tranzparts: min &euro;13.10 / avg &euro;28.48 (n=3)<br>T&amp;M Commercials: min &euro;32.74 / avg &euro;46.84 (n=2)</td>
+          <td class="num">+15%</td>
+        </tr></tbody>
+</table>
+<div class="foot">
+  Sources: PMS engine = _HANDOFF_BUNDLE/engine.py compute_view(); IAM = tranzparts_results.csv, tmc_results.csv,
+  auto365_results.csv in this folder (refreshed by refresh_and_check_drift.py). No PN-level bridge exists for
+  these three sources &mdash; see build_pms_iam_bridge.py docstring.
+</div>
+</body></html>

@@ -14,6 +14,14 @@ from isze_paths import INBOX_DIR, ISZE_ROOT  # noqa: E402
 REPO = ISZE_ROOT
 DATA_ROOT = INBOX_DIR / "IDS_2026"
 RANKINGS_DIR = DATA_ROOT / "rankings"
+IDS_REPORTS_DIR = DATA_ROOT / "reports"
+IDS_RESULT_REPORTS_DIR = IDS_REPORTS_DIR / "evaluation_result"
+IDS_RESULT_DELTA_DIR = IDS_RESULT_REPORTS_DIR / "_delta"
+IDS_DASHBOARD_DIR = IDS_REPORTS_DIR / "dashboard"
+IDS_DASHBOARD_HTML = IDS_DASHBOARD_DIR / "IDS_2026_dealer_compare.html"
+IDS_RESULT_TEMPLATE_NAME = "2026 IDS Evaluation Result Report_DK.xls"
+IDS_RESULT_TEMPLATE = IDS_REPORTS_DIR / "_template" / IDS_RESULT_TEMPLATE_NAME
+_LEGACY_RESULT_TEMPLATE = REPO / "01_data" / IDS_RESULT_TEMPLATE_NAME
 
 RSA_TEMPLATE = DATA_ROOT / "RSA" / "IDS Evaluation Sheet_rev11 Alta Motorsenter.xlsx"
 BE_TEMPLATE = DATA_ROOT / "BE" / "BE" / "IDS Evaluation Sheet - De Corte.xlsx"
@@ -22,7 +30,7 @@ ITUK_INPUT = DATA_ROOT / "ITUK" / "IDS ITUK self evaluations.xlsx"
 ITUK_OUTPUT = RANKINGS_DIR / "ITUK_dealer_ranking.xlsx"
 MIDI_FILE = DATA_ROOT / "MIDI" / "MIDI_FR.xlsx"
 
-SKIP_DIRS = {"rankings", "reports", "__pycache__", "MIDI"}
+SKIP_DIRS = {"rankings", "reports", "__pycache__", "MIDI", "_EXPORT"}
 
 # On-disk folder name -> output country / tab label
 COUNTRY_LABELS: dict[str, str] = {
@@ -35,6 +43,25 @@ LABEL_TO_FOLDER: dict[str, str] = {v: k for k, v in COUNTRY_LABELS.items()}
 
 def country_label(folder_name: str) -> str:
     return COUNTRY_LABELS.get(folder_name, folder_name)
+
+
+def resolve_dk_template() -> Path:
+    """DK master .xls — preferred under IDS_2026/reports/_template/, legacy 01_data fallback."""
+    if IDS_RESULT_TEMPLATE.is_file():
+        return IDS_RESULT_TEMPLATE
+    if _LEGACY_RESULT_TEMPLATE.is_file():
+        return _LEGACY_RESULT_TEMPLATE
+    return IDS_RESULT_TEMPLATE
+
+
+def result_report_path(country: str) -> Path:
+    """Wide matrix report for a country (DK-clone .xls)."""
+    return IDS_RESULT_REPORTS_DIR / f"2026 IDS Evaluation Result Report_{country}.xls"
+
+
+def result_report_delta_path(country: str) -> Path:
+    """Plain delta workbook vs country average (no DK formatting — not the main report)."""
+    return IDS_RESULT_DELTA_DIR / f"2026 IDS Evaluation Result Report_{country}_Delta.xlsx"
 
 
 def data_folder_for_country(country: str) -> str:

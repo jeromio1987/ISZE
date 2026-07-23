@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+"""Build offline IDS 2026 dealer comparison dashboard (single HTML file)."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+from ids_dashboard_qa import format_qa_report, validate_dashboard_payload
+from ids_paths import IDS_DASHBOARD_HTML, IDS_RESULT_REPORTS_DIR
+from ids_report_extract import build_dashboard_payload
+
+_TEMPLATE = Path(__file__).resolve().parent / "ids_dashboard_template.html"
+
+
+def render_html(payload: dict, *, built_at: str) -> str:
+    template = _TEMPLATE.read_text(encoding="utf-8")
+    blob = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+    return (
+        template.replace("__BUILT_AT__", built_at)
+        .replace("__DATA_JSON__", blob)
+    )
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--reports-dir",
+        type=Path,
+        default=IDS_RESULT_REPORTS_DIR,
+        help="Folder with country .xls result reports",
+    )
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=IDS_DASHBOARD_HTML,
+        help="Output HTML path",
+    )
+    parser.add_argument(
+        "--skip-qa",
+        action="store_true",
+        help="Write HTML even if section-heatmap QA fails (emergency only)",
+    )
+    args = parser.parse_args()
+
+    if not _TEMPLATE.is_file():
+        print(f"Template missing: {_TEMPLATE}", file=sys.stderr)
+        return 1
+
+    payload = build_dashboard_payload(args.reports_dir)
+    if not payload["dealers"]:
+        print(f"No dealers found in {args.reports_dir}", file=sys.stderr)
+        return 2
+
+    qa_errors = validate_dashboard_payload(payload)
+    print(format_qa_report(payload, qa_errors))
+    if qa_errors and not args.skip_qa:
+        print(
+            "Refusing to write dashboard — fix extract/reports or pass --skip-qa",
+            file=sys.stderr,
+        )
+        return 3
+
+    built_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    payload["built_at"] = built_at
+
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    html = render_html(payload, built_at=built_at)
+    args.output.write_text(html, encoding="utf-8")
+
+    # Mirror to _EXPORT for hand-off (same folder tree as reports)
+    export = args.output.parent.parent.parent / "_EXPORT" / args.output.name
+    if export.parent.is_dir() or args.output == IDS_DASHBOARD_HTML:
+        export.parent.mkdir(parents=True, exist_ok=True)
+        export.write_text(html, encoding="utf-8")
+        print(f"Also wrote {export}")
+
+    print(f"Wrote {args.output}")
+    print(f"  dealers: {payload['dealer_count']}")
+    print(f"  countries: {payload['country_count']} ({', '.join(payload['countries'])})")
+    print(f"  size: {args.output.stat().st_size / 1024:.0f} KB")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

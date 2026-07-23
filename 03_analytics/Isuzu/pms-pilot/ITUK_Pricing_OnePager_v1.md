@@ -31,7 +31,7 @@
 ## Why this matters for the Kosha narrative
 
 - The ISZE network is leaving **€5.07M / year** in PMS revenue on the table by under-capturing its fleet (sum of revenue gap, latest year across all distributors).
-- ITUK is responsible for **€457k** of that gap — 9.0% of the network total, despite holding a much smaller share of the UIO.
+- ITUK is responsible for **€2.04M** of that gap — 9.0% of the network total, despite holding a much smaller share of the UIO.
 - ITUK's capture-rate gap vs the network median is the symptom; **the SPU premium above is the cause.** Customers walking away from ITUK's PMS prices show up downstream as a low capture rate and as the IAM share of wallet that we lose entirely.
 
 ---

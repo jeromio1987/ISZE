@@ -4,8 +4,11 @@
 # =============================================================================
 
 # --- Tier 0: raw billing & ingest (NEVER TRACK) ---
+01_data/12_raw/**
 01_data/raw/**
+01_data/90_INBOX/**
 01_data/_INBOX/**
+01_data/04_sales/**
 01_data/sales data/**
 
 # Stray billing/reference workbooks at 01_data root (not in raw/)
@@ -17,9 +20,13 @@
 01_data/*.pptx
 
 # --- Excel living models & planning (off-git; backup separately) ---
+01_data/13_models/**
 01_data/models/**
+01_data/11_planning/**
 01_data/planning/**
+01_data/92_archive/**
 01_data/_archive/**
+01_data/16_exports/**
 01_data/exports/**
 
 # --- UIO workbooks (canonical in 06_uio; scripts tracked) ---

@@ -1,0 +1,37 @@
+[
+  {
+    "check": "UTI FY24 not double-counted (< EUR4M)",
+    "status": "PASS",
+    "detail": "UTI FY24 billing JSON = EUR3,184,643"
+  },
+  {
+    "check": "billing JSON == raw (transport + surcharge stripped)",
+    "status": "PASS",
+    "detail": "all 54 cells match"
+  },
+  {
+    "check": "v3c gross == gps_master.csv",
+    "status": "PASS",
+    "detail": "all 54 cells"
+  },
+  {
+    "check": "v3d net == v3c gross \u2212 Distributor Warranty Expense",
+    "status": "PASS",
+    "detail": "all 54 cells"
+  },
+  {
+    "check": "transport sidecar populated (FY24-26)",
+    "status": "PASS",
+    "detail": "total EUR999,956"
+  },
+  {
+    "check": "Toggle gross == rebuilt billing JSON",
+    "status": "FAIL",
+    "detail": "11 gross mismatches"
+  },
+  {
+    "check": "Toggle warranty == fiscal Distributor Warranty Expense",
+    "status": "PASS",
+    "detail": "all checked cells"
+  }
+]

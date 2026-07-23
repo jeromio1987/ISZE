@@ -1,8 +1,8 @@
 # UIO — Canonical Working Files
 
-**Last updated:** Jun 2026
-**Canonical Excel:** `ISUZU_UIO_Overview_2026.xlsx` — no version in filename; version tracked on Changelog sheet inside the file.
-**Canonical Dashboard:** `ISZE/Dashboards/ISUZU_UIO_Dashboard_2026_v18.html` (HTML dashboard rename pending)
+**Last updated:** Jul 2026
+**Canonical Excel:** `ISUZU_UIO_Overview_2026.xlsx` — **v19** (Changelog sheet); no version in filename.
+**Canonical Dashboard:** `02_dashboards/fleet/ISUZU_UIO_Dashboard_2026.html` (HTML renamed 2026-07-16; workbook v19)
 **Previous versions:** archived in `_Archive/`.
 
 ---
@@ -19,23 +19,17 @@
 
 **Default: Exclude MIDI** (set Sheet 1, cell B4 = `"Exclude MIDI"`)
 
-MIDI Europe distributors (FR, CH, ES, IT, PL, RS) contribute ~92,585 units in 2024.
+⚠ **2026-07-09 check: the live file currently has B4 = `"Include"`, not `"Exclude MIDI"`.** Anyone pulling the Grand Total straight off Sheet 1 right now gets the incl.-MIDI number, not the ISZE-only default this policy calls for. Fix in the workbook (Sheet 1, cell B4) before quoting, or use the ex-MIDI column below.
+
+MIDI Europe distributors (FR, CH, ES, IT, PL, RS) contribute ~103,768 units by 2030F (was ~92,585 in 2024 — see table below, recalculated 2026-07-09 from the live file).
 Exclude for ISZE-only KPIs (action plan, Kosha reporting).
 Include when analysing cross-category synergies (lubricants scale, accessory campaigns).
 
-⚠ MIDI contribution not re-verified after v17 — confirm row 5 SUMPRODUCT before quoting externally.
-
 ---
 
-## 2026F dip — explanation for external use
+## 2026F dip — SUPERSEDED, do not use this section
 
-The Grand Total shows a −3.7% dip in 2026F (260,449 → 250,718). This is a genuine model output.
-
-**Root cause:** IML backbone roll-forward for non-ITUK distributors (deregistration cohorts aging out in several markets). ITUK itself grows +4.8% in 2025→2026 per the cohort model.
-
-**Recovery:** +1.0–1.3%/yr from 2027 onward.
-
-Proactively explain this when sharing externally to avoid "calculation error" confusion.
+⚠ **2026-07-09: this section describes a v17-era artifact that no longer exists in the live file.** Changelog entries V18-16 through V18-20 (2026-06-11) replaced the pure-decay 2026-2030 forecast with one driven by actual IMIT/CV-plan new-registration inputs. Per the Changelog itself (V18-18): *"Grand total now shows market growth instead of decline. Key 2025→2026 change: LCV +5% (was −3%)."* The −3.7% 2026F dip is gone — see the real current trajectory below. Do not repeat the old "explain the dip" line to anyone externally; it would now be actively wrong.
 
 ---
 
@@ -58,21 +52,60 @@ Proactively explain this when sharing externally to avoid "calculation error" co
 6. **Charts** — survival curve + registrations
 7. **Assumptions & Mapping**
 8. **Data Sources** — distributor → source mapping
-9. **Changelog** — v11→v17 audit trail
+9. **Changelog** — v11→v19 audit trail
 
 ---
 
-## Key v17 figures
+## Key figures — pulled live from this file 2026-07-09 (supersedes everything below this line before today)
+
+**Grand Total, Sheet 1 row 2 (SUMPRODUCT), as the file stands right now (B4 = "Include"):**
+
+| Year | Incl. MIDI | MIDI contribution | Ex-MIDI (ISZE-only, use this for Kosha/action plan) | YoY % (incl. MIDI) |
+|------|-----------:|-------------------:|------------------------------------------------------:|--------------------:|
+| 2023 | 242,338 | 90,623 | 151,715 | +7.7% |
+| 2024 (actual) | 252,710 | 92,585 | 160,125 | +4.3% |
+| 2025E | 258,594 | 95,395 | 163,199 | +2.3% |
+| 2026F | 269,314 | 96,935 | 172,379 | +4.1% |
+| 2027F | 279,502 | 98,654 | 180,848 | +3.8% |
+| 2028F | 289,529 | 100,411 | 189,118 | +3.6% |
+| 2029F | 299,448 | 102,115 | 197,333 | +3.4% |
+| 2030F | 309,125 | 103,768 | 205,357 | +3.2% |
+
+No dip anywhere in this trajectory — steady growth every year. The old "2026F dip" table below is wrong, kept only so the history is traceable.
+
+**ITUK Only, Sheet 4 "4. ITUK UIO Projection" row 28** — this sheet's own header still says **"V15"** internally (not V19) and the Changelog confirms it: none of the V18/V19 change entries (Portugal, Germany, UTI Israel, forecast methodology) touched Sheet 4. These numbers are genuinely current — they just haven't needed a change, so don't be alarmed that they match what you may remember from months ago:
+
+| Year | ITUK UIO |
+|------|---------:|
+| 2025E | 23,068 |
+| 2026F | 24,173 |
+| 2027F | 25,392 |
+| 2028F | 26,435 |
+| 2029F | 27,363 |
+| 2030F | 28,209 |
+
+**Israel UTI parc (CV LD + MD), from V19-1/V19-2 Changelog entries:**
+
+| Year | UTI parc |
+|------|----------|
+| 2024 | 10,049 |
+| 2025 | 10,336 |
+| 2026 | 10,760 |
+| 2027 | 10,972 |
+
+## Old "Key v17 figures" table — WRONG, superseded 2026-07-09, kept for history only
 
 | Year | Grand Total (incl. MIDI) | ITUK Only |
 |------|--------------------------|-----------|
 | 2024 (actual) | 254,117 | 22,389 |
 | 2025E | 260,449 | 23,068 |
-| 2026F | 250,718 ⚠ dip | 24,173 |
+| 2026F | 250,718 ⚠ dip — NO LONGER TRUE, see table above | 24,173 |
 | 2027F | 253,228 | 25,392 |
 | 2028F | 256,011 | 26,435 |
 | 2029F | 259,165 | 27,363 |
 | 2030F | 262,559 | 28,209 |
+
+Note the ITUK column was already correct in this old table — only the Grand Total (non-ITUK markets) changed.
 
 ---
 

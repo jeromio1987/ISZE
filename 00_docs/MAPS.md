@@ -1,6 +1,8 @@
 # ISZE — which map when
 
-**Agent sync:** 2026-06-13 · Registry: `MAP_REGISTRY.yaml`
+**Agent sync:** 2026-07-16 · Registry: `MAP_REGISTRY.yaml`
+
+> **Filing new data?** All new/unsorted files go to **`01_data/90_INBOX/`** first, then get sorted into the numbered folder for their topic (`01_data/DATA_MANIFEST.md` §0–§1). The root of `01_data/` is **not** a drop zone.
 
 ```
                     ┌─────────────┐
@@ -58,7 +60,7 @@ All paths above are under **`00_docs/`** unless noted as ISZE root.
 |-----|------|
 | `05_memory/projects/*.md` | Programme status, open questions |
 | `05_memory/glossary.md` | Terms |
-| `01_data/DATA_MANIFEST.md` | File registry, ingest |
+| `01_data/DATA_MANIFEST.md` | File registry, ingest, **INBOX dump-then-sort rule (§0)** |
 | `03_analytics/Isuzu/prism/docs/metric_dictionary.md` | Metric formulas (edit only) |
 
 **Numbers:** green `01_data/derived/_verification_report.json` → `metrics_snapshot.json` → `FACTS.md`

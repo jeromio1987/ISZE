@@ -1,6 +1,6 @@
 # Jarvis / isze-tools — roadmap
 
-**Last updated:** 2026-06-13  
+**Last updated:** 2026-07-17  
 **Hub:** [`ISZE_ROADMAP.md`](../../ISZE_ROADMAP.md)  
 **Stack:** Streamlit + Python, Claude API  
 **Run:** `cd 04_tools/isze-tools` → `python -m streamlit run app.py` (port **8501**)  
@@ -13,7 +13,7 @@
 | Page | File | Status |
 |---|---|---|
 | Home | app.py | Live |
-| Stack | 1_Stack.py | Live |
+| Stack | 1_Stack.py | Live — data from `data/stack.json` |
 | Email Drafter | 2_Email_Drafter.py | Live |
 | SPA Assistant | 3_SPA_Assistant.py | Live |
 | Opportunity Radar | 4_Opportunity_Radar.py | Live |
@@ -22,16 +22,15 @@
 
 **Open issues:**
 
-- Stack tracker data hardcoded in `1_Stack.py` — see V2.1
 - `deploy_to_github.py` creates repo **public** — decide private vs public
 
 ---
 
 ## V2 — Data quality
 
-### 2.1 Stack tracker: data out of code (2 h)
+### 2.1 Stack tracker: data out of code (2 h) ✅ Done 2026-07-17
 
-Move project data to `data/stack.json`.
+Project list lives in `04_tools/isze-tools/data/stack.json`; `pages/1_Stack.py` loads it at runtime.
 
 ### 2.2 SPA Assistant: save SPA history (3 h)
 

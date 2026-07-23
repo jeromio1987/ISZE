@@ -98,7 +98,7 @@ Outputs: `*_results.csv` in parent or bundle. Optional input to PMS app tab **Co
 | `iam_matrix_*.html` | Old IAM matrices | Legacy |
 
 ```powershell
-cd C:\Users\jerom\Desktop\claude\ISZE\Tools\autodoc_scraper
+cd C:\Users\jerom\Desktop\claude\ISZE\04_tools\autodoc_scraper
 python build_executive_dashboard.py --variant pms
 python build_executive_dashboard.py --variant iam
 python build_executive_dashboard.py --variant all

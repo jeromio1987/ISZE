@@ -40,3 +40,33 @@ function Get-IszePath {
     if (Test-Path $legacyPath) { return $legacyPath }
     return (Join-Path $root $Legacy)
 }
+
+function Get-DataSubfolderPath {
+    param([Parameter(Mandatory)][string]$Key)
+    $root = Get-IszeRoot
+    $yaml = Join-Path $root 'paths.yaml'
+    $numbered = $null
+    $legacy = $null
+    if (Test-Path $yaml) {
+        $inBlock = $false
+        $inKey = $false
+        foreach ($line in Get-Content $yaml) {
+            if ($line -match "^\s+$Key`:") { $inKey = $true; $inBlock = $true; continue }
+            if ($inKey -and $line -match '^\s+\w+:') { $inKey = $false }
+            if ($inBlock -and -not $inKey -and $line -match '^\s{2}\w+:') { break }
+            if ($inKey -and $line -match 'numbered:\s*"([^"]+)"') { $numbered = $Matches[1] }
+            if ($inKey -and $line -match 'legacy:\s*"([^"]+)"') { $legacy = $Matches[1] }
+        }
+    }
+    $dataRoot = Get-IszePath -Key 'data' -Legacy 'Data'
+    if ($numbered) {
+        $p = Join-Path $dataRoot $numbered
+        if (Test-Path $p) { return $p }
+    }
+    if ($legacy) {
+        $p = Join-Path $dataRoot $legacy
+        if (Test-Path $p) { return $p }
+    }
+    if ($numbered) { return (Join-Path $dataRoot $numbered) }
+    throw "data_subfolders.$Key not found in paths.yaml"
+}

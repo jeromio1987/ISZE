@@ -1,10 +1,12 @@
 # Publish tender v3 xlsx -> 01_data/dashboards/tender_data.json (canonical live feed)
 $ErrorActionPreference = 'Stop'
 $Here = Split-Path -Parent $MyInvocation.MyCommand.Path
-$IszeRootPs1 = Join-Path (Split-Path $Here -Parent) '..\workspace\isze_root.ps1'
-. $IszeRootPs1
-$DataRoot = Get-IszePath -Key 'data' -Legacy 'Data'
-$LiveJson = Join-Path $DataRoot 'dashboards\tender_data.json'
+# ISZE root = two levels up from 04_tools\ISZE_Tender_Monitor_Install
+$IszeRoot = Split-Path (Split-Path $Here -Parent) -Parent
+# Canonical live dashboards folder (01_data/dashboards is a junction -> 01_data/14_dashboards)
+$DashDir = Join-Path $IszeRoot '01_data\dashboards'
+if (-not (Test-Path $DashDir)) { $DashDir = Join-Path $IszeRoot '01_data\14_dashboards' }
+$LiveJson = Join-Path $DashDir 'tender_data.json'
 $BackupDir = Split-Path $LiveJson -Parent
 
 if (Test-Path $LiveJson) {

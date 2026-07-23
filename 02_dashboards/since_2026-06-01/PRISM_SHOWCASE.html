@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRISM — the network, mapped</title>
+<style>
+/* ─── tokens ─────────────────────────────────────────────────────────── */
+:root{
+  --bg0:#0e1626; --bg1:#15233c; --bg2:#1c2f4d;
+  --card:rgba(21,35,60,.92); --card-line:rgba(154,165,184,.22);
+  --ink:#e9ecf3; --muted:#9aa5b8; --faint:#5f6b80;
+  --terra:#c0552d; --terra-lit:#e0714a;
+  --green:#1d9e75; --amber:#eda100; --blue:#2a78d6; --violet:#8b7bd8;
+  --node:#20334f; --node-line:#33486b;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{
+  font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:var(--ink);
+  background:radial-gradient(1200px 800px at 75% -10%,var(--bg2) 0%,var(--bg1) 45%,var(--bg0) 100%);
+  overflow:hidden;
+}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:normal;}
+
+/* ─── top bar ────────────────────────────────────────────────────────── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;height:58px;z-index:40;
+  display:flex;align-items:center;gap:18px;padding:0 22px;
+  background:linear-gradient(180deg,rgba(14,22,38,.96),rgba(14,22,38,.75) 80%,transparent);
+}
+#wordmark{font-family:Georgia,serif;font-size:22px;letter-spacing:.12em;}
+#wordmark b{color:var(--terra-lit);font-weight:normal;}
+#wordmark small{display:block;font-family:"Segoe UI",sans-serif;font-size:9.5px;letter-spacing:.24em;color:var(--muted);text-transform:uppercase;}
+#lenses{display:flex;gap:4px;background:rgba(255,255,255,.05);border:1px solid var(--card-line);border-radius:9px;padding:3px;}
+#lenses button{
+  border:0;background:transparent;color:var(--muted);font:600 11.5px "Segoe UI",sans-serif;
+  letter-spacing:.06em;text-transform:uppercase;padding:7px 14px;border-radius:6px;cursor:pointer;transition:all .25s;
+}
+#lenses button.on{background:var(--terra);color:#fff;}
+#lenses button:not(.on):hover{color:var(--ink);}
+#spacer{flex:1;}
+#dots{display:flex;gap:7px;align-items:center;}
+#dots i{width:8px;height:8px;border-radius:50%;background:rgba(154,165,184,.3);cursor:pointer;transition:all .3s;}
+#dots i.on{background:var(--terra-lit);transform:scale(1.35);}
+#modebtn{
+  border:1px solid var(--card-line);background:rgba(255,255,255,.05);color:var(--ink);
+  font:600 11.5px "Segoe UI",sans-serif;letter-spacing:.06em;text-transform:uppercase;
+  padding:8px 16px;border-radius:9px;cursor:pointer;transition:all .25s;
+}
+#modebtn:hover{border-color:var(--terra-lit);color:var(--terra-lit);}
+kbd{font:600 10px "Segoe UI",sans-serif;color:var(--faint);border:1px solid var(--card-line);border-radius:4px;padding:1px 5px;margin-left:6px;}
+
+/* ─── stage ──────────────────────────────────────────────────────────── */
+#viewport{position:absolute;inset:58px 0 30px 0;overflow:hidden;}
+#stage{position:absolute;left:0;top:0;width:1680px;height:920px;transform-origin:0 0;
+  transition:transform .55s cubic-bezier(.4,0,.2,1);}
+#edges{position:absolute;left:0;top:0;pointer-events:none;}
+#edges path{fill:none;stroke:rgba(154,165,184,.22);stroke-width:1.4;transition:stroke .5s,opacity .5s;}
+#edges path.lit{stroke:rgba(224,113,74,.75);stroke-width:2;}
+#edges path.hid{opacity:0;}
+.lenswrap{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .55s;}
+.lenswrap.on{opacity:1;pointer-events:auto;}
+
+/* ─── nodes ──────────────────────────────────────────────────────────── */
+.node{
+  position:absolute;background:var(--node);border:1px solid var(--node-line);border-radius:10px;
+  padding:9px 12px;cursor:pointer;transition:opacity .5s,transform .35s,border-color .35s,box-shadow .35s;
+  animation:pop .6s both;
+}
+@keyframes pop{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:none;}}
+.node:hover{border-color:var(--terra-lit);transform:translateY(-2px);}
+.node .t{font:600 12.5px "Segoe UI",sans-serif;line-height:1.25;}
+.node .s{font-size:10.3px;color:var(--muted);line-height:1.3;margin-top:3px;}
+.node .badge{
+  position:absolute;top:-9px;right:10px;background:var(--terra);color:#fff;
+  font:700 9px "Segoe UI",sans-serif;letter-spacing:.05em;padding:2px 7px;border-radius:8px;
+}
+.node.dim{opacity:.13;}
+.node.lit{border-color:var(--terra-lit);box-shadow:0 0 0 1px rgba(224,113,74,.4),0 10px 28px -14px rgba(224,113,74,.5);}
+.node.sel{border-color:#fff;}
+/* status accents */
+.node.live{border-left:3px solid var(--green);}
+.node.build{border-left:3px solid var(--amber);}
+.node.input{border-left:3px solid var(--blue);}
+.node.concept{border:1px dashed var(--violet);background:rgba(139,123,216,.07);}
+.colhead{
+  position:absolute;font:700 10.5px "Segoe UI",sans-serif;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--faint);transition:opacity .5s;
+}
+.colhead.dim{opacity:.15;}
+.lane{position:absolute;left:36px;right:24px;border-top:1px dashed rgba(154,165,184,.14);transition:opacity .5s;}
+.lane.dim{opacity:.15;}
+
+/* ─── narrative card ─────────────────────────────────────────────────── */
+#story{
+  position:fixed;left:26px;top:96px;width:440px;max-height:calc(100% - 170px);z-index:30;
+  background:var(--card);border:1px solid var(--card-line);border-radius:14px;
+  padding:26px 28px 20px;backdrop-filter:blur(6px);
+  box-shadow:0 30px 70px -30px rgba(0,0,0,.7);
+  transition:transform .5s cubic-bezier(.4,0,.2,1),opacity .5s;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+#story.away{transform:translateX(-120%);opacity:0;pointer-events:none;}
+#kicker{font:700 10.5px "Segoe UI",sans-serif;letter-spacing:.26em;text-transform:uppercase;color:var(--terra-lit);}
+#stitle{font-size:25px;color:#fff;line-height:1.16;margin:9px 0 12px;}
+#sbody{font-size:13px;line-height:1.62;color:#c8cfdc;overflow-y:auto;}
+#sbody p{margin-bottom:9px;}
+#sbody b{color:#fff;font-weight:600;}
+#sbody .hush{color:var(--muted);font-size:12px;border-left:2px solid var(--terra);padding-left:10px;margin:10px 0 2px;}
+#chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px;}
+.chip{background:rgba(255,255,255,.055);border:1px solid var(--card-line);border-radius:8px;padding:7px 11px;}
+.chip .v{font:600 16px Georgia,serif;color:#fff;}
+.chip .v em{font-style:normal;color:var(--terra-lit);}
+.chip .l{font-size:9.3px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-top:1px;}
+#snav{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid var(--card-line);}
+#snav button{
+  border:1px solid var(--card-line);background:transparent;color:var(--ink);border-radius:8px;
+  padding:8px 15px;font:600 12px "Segoe UI",sans-serif;cursor:pointer;transition:all .2s;
+}
+#snav button:hover{border-color:var(--terra-lit);color:var(--terra-lit);}
+#snav button.primary{background:var(--terra);border-color:var(--terra);color:#fff;}
+#snav button.primary:hover{background:var(--terra-lit);color:#fff;}
+#stepno{margin-left:auto;font-size:11px;color:var(--faint);}
+.spark{margin:12px 0 2px;}
+.spark svg{display:block;width:100%;height:auto;}
+.spark .cap{font-size:10px;color:var(--faint);margin-top:4px;}
+
+/* ─── detail drawer ──────────────────────────────────────────────────── */
+#drawer{
+  position:fixed;right:26px;top:96px;width:380px;max-height:calc(100% - 170px);z-index:35;
+  background:var(--card);border:1px solid var(--card-line);border-radius:14px;padding:24px 26px;
+  backdrop-filter:blur(6px);box-shadow:0 30px 70px -30px rgba(0,0,0,.7);
+  transform:translateX(130%);transition:transform .45s cubic-bezier(.4,0,.2,1);overflow-y:auto;
+}
+#drawer.open{transform:none;}
+#drawer .status{display:inline-block;font:700 9.5px "Segoe UI",sans-serif;letter-spacing:.14em;text-transform:uppercase;border-radius:7px;padding:3px 9px;margin-bottom:10px;}
+#drawer .status.live{background:rgba(29,158,117,.18);color:#4fd0a4;}
+#drawer .status.build{background:rgba(237,161,0,.15);color:#f2b53d;}
+#drawer .status.input{background:rgba(42,120,214,.16);color:#6aa8ec;}
+#drawer .status.concept{background:rgba(139,123,216,.15);color:#ab9ff0;}
+#dtitle{font-size:20px;color:#fff;margin-bottom:10px;line-height:1.2;}
+#dbody{font-size:12.6px;line-height:1.6;color:#c8cfdc;}
+#dbody .caveat{color:var(--muted);font-size:11.8px;border-left:2px solid var(--terra);padding-left:10px;margin-top:10px;}
+#dtech{font-size:10.3px;color:var(--faint);margin-top:14px;padding-top:10px;border-top:1px solid var(--card-line);line-height:1.5;}
+#dclose{position:absolute;top:12px;right:14px;border:0;background:transparent;color:var(--faint);font-size:17px;cursor:pointer;}
+#dclose:hover{color:#fff;}
+
+/* ─── footer ─────────────────────────────────────────────────────────── */
+#foot{
+  position:fixed;bottom:0;left:0;right:0;height:30px;z-index:40;display:flex;align-items:center;
+  padding:0 22px;font-size:9.6px;color:var(--faint);
+  background:linear-gradient(0deg,rgba(14,22,38,.95),transparent);
+}
+#hint{margin-left:auto;}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div id="wordmark">PR<b>I</b>SM<small>Parts revenue intelligence</small></div>
+  <div id="lenses">
+    <button data-lens="anatomy">System</button>
+    <button data-lens="concept">Thinking model</button>
+    <button data-lens="roadmap">Roadmap</button>
+  </div>
+  <div id="spacer"></div>
+  <div id="dots"></div>
+  <button id="modebtn">Explore <kbd>E</kbd></button>
+</div>
+
+<div id="viewport"><div id="stage">
+  <svg id="edges" width="1680" height="920" viewBox="0 0 1680 920"></svg>
+  <div class="lenswrap" id="lw-anatomy"></div>
+  <div class="lenswrap" id="lw-concept"></div>
+  <div class="lenswrap" id="lw-roadmap"></div>
+</div></div>
+
+<div id="story">
+  <div id="kicker"></div>
+  <h2 id="stitle"></h2>
+  <div id="sbody"></div>
+  <div id="chips"></div>
+  <div id="snav">
+    <button id="prev">← Back</button>
+    <button id="next" class="primary">Next →</button>
+    <span id="stepno"></span>
+  </div>
+</div>
+
+<div id="drawer">
+  <button id="dclose">✕</button>
+  <span class="status" id="dstatus"></span>
+  <h3 id="dtitle"></h3>
+  <div id="dbody"></div>
+  <div id="dtech"></div>
+</div>
+
+<div id="foot">
+  <span>Source: PRISM derived layer (SAP billing · IML fleet workbook · BVP catalogue · street-price benchmark · tender notices), gated by 106 automated pipeline checks · figures CY2025 unless noted · wallet = spend ceiling, not a forecast · 17 Jul 2026</span>
+  <span id="hint">← → chapters · E explore · click any node</span>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   DATA — every node grounded in the real repo / derived layer
+   ════════════════════════════════════════════════════════════════════════ */
+var ST={live:"Live",build:"In build",input:"Needs input",concept:"Concept"};
+
+var LENSES={
+/* ── LENS 1 · SYSTEM ANATOMY ─────────────────────────────────────────── */
+anatomy:{
+ heads:[
+  {x:60,y:64,t:"Sources"},{x:405,y:64,t:"Engines"},{x:745,y:64,t:"Derived layer"},
+  {x:1058,y:64,t:"Gate"},{x:1330,y:64,t:"Surfaces"}
+ ],
+ nodes:[
+  {id:"src_sap",x:60,y:100,w:270,st:"live",t:"SAP billing extracts",s:"Every invoice line, CY2023–2026",
+   d:"The revenue truth. Line-level billing per distributor, part number, quantity and net value — the numerator of almost everything.",
+   tech:"Raw CY exports → sales_fact parquet (line grain)."},
+  {id:"src_uio",x:60,y:206,w:270,st:"live",t:"Fleet workbook (IML)",s:"Units in operation by market · model · year",
+   d:"The denominator. How many Isuzu are on the road, where, of which model and registration year. Without it, no per-truck metric exists.",
+   tech:"ISUZU_UIO_Overview_2026.xlsx (canonical _CURRENT copy)."},
+  {id:"src_cat",x:60,y:312,w:270,st:"live",t:"BVP catalogue + cross-reference",s:"Genuine ↔ Best Value part pairs",
+   d:"Which genuine part has a Best Value twin. Turns raw sales into a genuine-vs-BVP mix read and a substitution story.",
+   tech:"BVP parts catalog + genuine_bvp_crossref (authoritative)."},
+  {id:"src_reg",x:60,y:418,w:270,st:"live",t:"Service-parts registry",s:"PMS part numbers per model & interval",
+   d:"Which part numbers count as scheduled maintenance, per model family. The basis for expected demand — what the parc should consume.",
+   tech:"PMS PN registry + OEM interval schedules, country overrides."},
+  {id:"src_str",x:60,y:524,w:270,st:"live",t:"Street-price benchmark",s:"Aftermarket prices, scraped",
+   d:"What the competition charges at the counter. Genuine prices are grossed ×1.785 through the channel so the comparison is apples-to-apples.",
+   tech:"Eucon / AutoDoc scrape → eucon_price_gap, AIM classification."},
+  {id:"src_ten",x:60,y:630,w:270,st:"live",t:"Public tender notices",s:"EU/UK fleet R&M contracts",
+   d:"Forward demand: harvested and scored fleet repair & maintenance tenders. Counts and scores are solid; award prices are still thin.",
+   tech:"Tender scraper → tender_pipeline (520 rows; value on 12)."},
+  {id:"src_tgt",x:60,y:736,w:270,st:"live",t:"Per-model spend targets",s:"€ target per truck per model",
+   d:"What one truck of a given model should spend per year on genuine parts. Multiplied by the parc, this becomes the wallet ceiling.",
+   tech:"gps_model_targets reference table."},
+
+  {id:"eng_fact",x:405,y:120,w:260,st:"live",t:"Sales-fact builder",s:"Billing → one clean fact table",
+   d:"Normalises every billing extract into one line-grain fact table with mapped distributors, fiscal and calendar years.",
+   tech:"build_sales_fact_from_cy + distributor master mapping."},
+  {id:"eng_pms",x:405,y:226,w:260,st:"live",t:"PMS / BVP engines",s:"Capture, mix, substitution",
+   d:"Classifies every line as service-part or not, genuine or Best Value, and computes capture against expected demand from the surviving parc.",
+   tech:"build_bvp_p0…p5, pms_engine, calibrated 07-2026.", badge:"P0–P5"},
+  {id:"eng_con",x:405,y:332,w:260,st:"live",t:"Strategic-contract builder",s:"15 chart-ready datasets",
+   d:"One script per analytical contract: trajectory, lifecycle, concentration, price premium, VOR wheels — each with a written data contract.",
+   tech:"build_strategic_contracts + dashboard_contracts.md.", badge:"15"},
+  {id:"eng_dec",x:405,y:438,w:260,st:"live",t:"Decision-model builders",s:"Waterfall · runway · alerts",
+   d:"The € identity (wallet → captured → gap), the wallet projection to 2030, purchase-rhythm alarms, attach lifts, elasticity.",
+   tech:"build_revenue_runway, build_defection_alerts, build_attach_rates…"},
+  {id:"eng_ew",x:405,y:544,w:260,st:"live",t:"Early-warning builder",s:"3 signals → one ranked list",
+   d:"Joins silence, capture slope and VOR stress into one priority list with reason strings and € exposure. Shipped July 2026.",
+   tech:"build_early_warning → early_warning(_signals).csv."},
+  {id:"eng_ri",x:405,y:650,w:260,st:"live",t:"Risk & integrity audits",s:"Risk index + data checks",
+   d:"The weighted aftersales-risk index per market, plus the audit scripts that police classification and coverage.",
+   tech:"build_db_aftersales_risk, audit_* scripts.", badge:"63 scripts"},
+
+  {id:"der_gps",x:745,y:120,w:250,st:"live",t:"Spend per unit (GPS)",s:"€ per truck per year, traffic-lit",
+   d:"Net genuine-parts revenue divided by fleet, per market and year — with green/amber/red thresholds.",
+   tech:"gps_spu_by_distributor + family/PMS splits."},
+  {id:"der_cap",x:745,y:216,w:250,st:"live",t:"Capture by market · category · year",s:"Actual ÷ expected demand",
+   d:"The heart of PMS: how much of the parc's scheduled-service demand we actually serve, split genuine / Best Value / total.",
+   tech:"pms_capture_by_db_year (grain: DB × category × year × line)."},
+  {id:"der_mix",x:745,y:312,w:250,st:"live",t:"Mix & substitution",s:"Genuine ↔ BVP, pair-level",
+   d:"Where Best Value grows, whether it displaces genuine or defends against the aftermarket, pair by pair over time.",
+   tech:"mix_* families + substitution_by_pair_year."},
+  {id:"der_prc",x:745,y:408,w:250,st:"live",t:"Price exposure",s:"AIM risk + street undercut",
+   d:"Revenue share exposed to aftermarket price attack, and the named parts where the counter price beats ours.",
+   tech:"aim_exposure_by_db_year, eucon_price_gap."},
+  {id:"der_vor",x:745,y:504,w:250,st:"live",t:"Availability stress (VOR)",s:"Urgent orders, weekly",
+   d:"Vehicle-off-road order share by week — the one weekly-grain signal in the platform, and the cost of stockouts in airfreight.",
+   tech:"vor_seasonality, vor_profile, vor_airfreight_risk."},
+  {id:"der_ew",x:745,y:600,w:250,st:"live",t:"Early-warning list",s:"Ranked entities + reasons",
+   d:"One table: who to act on, why this cycle, € exposed. Distributor grain, ITUK expands to dealers.",
+   tech:"early_warning.csv + early_warning_signals.csv."},
+  {id:"der_dec",x:745,y:696,w:250,st:"live",t:"Decision tables",s:"Waterfall · runway · risk index",
+   d:"The € identity per market, the wallet projection 2024→2030 and the weighted risk ranking.",
+   tech:"wallet_waterfall, revenue_runway, db_aftersales_risk.", badge:"98 datasets"},
+
+  {id:"gate",x:1035,y:380,w:225,h:100,st:"live",t:"Verification gate",s:"106 automated checks — all green",
+   d:"No dataset reaches a page without passing contract checks: schema, coverage, reconciliation, FY completeness. A red gate blocks the pipeline, not the meeting.",
+   tech:"verify_derived_pipeline → _verification_report.json (106/0/0). FACTS.md is the quote gate for headline numbers."},
+
+  {id:"suf_home",x:1330,y:96,w:250,st:"live",t:"Home cockpit",s:"KPI strip · alert ribbon · heatmap",
+   d:"The helicopter view: live traffic-light heatmap over every market, data-integrity status, one click to any module.",
+   tech:"app.py — st.navigation shell, 9 sections."},
+  {id:"suf_ew",x:1330,y:178,w:250,st:"live",t:"Early Warning",s:"One ranked ops list",
+   d:"The page is the list: silence · capture slope · VOR stress, ranked with a € and a reason per entity.",
+   tech:"pages/0_Early_Warning.py."},
+  {id:"suf_fleet",x:1330,y:260,w:250,st:"live",t:"Fleet & Spend",s:"UIO · GPS per truck",
+   d:"How big the base is and what each truck yields — parc structure and spend-per-unit with trends and part explorer.",
+   tech:"pages/1_UIO.py, 2_GPS.py."},
+  {id:"suf_cap",x:1330,y:342,w:250,st:"live",t:"Capture & Mix",s:"PMS · BVP intelligence",
+   d:"Capture league with € gaps, and the genuine-vs-Best-Value quality read with catalog drill-down.",
+   tech:"pages/3_PMS.py, 4_BVP.py, 13_DB_Parts_Mix.py."},
+  {id:"suf_net",x:1330,y:424,w:250,st:"live",t:"Network Intelligence",s:"Cross-signal views",
+   d:"Where the fused signals live: opportunity matrix, benchmark, displacement, price premium, VOR wheels — being consolidated from 29 tabs to 8.",
+   tech:"pages/5_Insights, 5_Strategic (15 tabs), 12_Offset + AIM/ASP/Risk."},
+  {id:"suf_ituk",x:1330,y:506,w:250,st:"live",t:"ITUK deep-dive",s:"Mix-not-capture, with receipts",
+   d:"The narrative that the big-3 categories sit at the capture ceiling and the lever is mix — backed by a part-number audit.",
+   tech:"pages/11_ITUK_PMS_Story.py, 6_ITUK_PMS_Audit.py."},
+  {id:"suf_dec",x:1330,y:588,w:250,st:"live",t:"Decision models",s:"€ waterfall · runway",
+   d:"Wallet → captured → gap as one identity, and the projection of the ceiling to 2030. Assumption notes rendered on every table.",
+   tech:"pages/18_Decision_Models.py."},
+  {id:"suf_tools",x:1330,y:670,w:250,st:"live",t:"Tools & governance",s:"Review packs · tenders · integrity",
+   d:"PDF scorecards and QBR packs per distributor, the tender pipeline, and the data-integrity console.",
+   tech:"pages/9_Review_Pack, 6_Scorecard, 14_Tender, 10_Data_Integrity.", badge:"9 sections · 21 pages"}
+ ],
+ edges:[
+  ["src_sap","eng_fact"],["src_uio","eng_pms"],["src_cat","eng_pms"],["src_reg","eng_pms"],
+  ["src_str","eng_ri"],["src_ten","eng_ri"],["src_tgt","eng_dec"],["src_uio","eng_dec"],
+  ["eng_fact","der_gps"],["eng_fact","der_cap"],["eng_pms","der_cap"],["eng_pms","der_mix"],
+  ["eng_con","der_vor"],["eng_con","der_prc"],["eng_ri","der_prc"],["eng_dec","der_dec"],
+  ["eng_ew","der_ew"],["eng_con","der_gps"],
+  ["der_gps","gate"],["der_cap","gate"],["der_mix","gate"],["der_prc","gate"],
+  ["der_vor","gate"],["der_ew","gate"],["der_dec","gate"],
+  ["gate","suf_home"],["gate","suf_ew"],["gate","suf_fleet"],["gate","suf_cap"],
+  ["gate","suf_net"],["gate","suf_ituk"],["gate","suf_dec"],["gate","suf_tools"]
+ ]
+},
+
+/* ── LENS 2 · THINKING MODEL ─────────────────────────────────────────── */
+concept:{
+ heads:[
+  {x:100,y:96,t:"The base"},{x:520,y:96,t:"The measures"},{x:960,y:96,t:"The movement"},{x:1370,y:96,t:"The move"}
+ ],
+ nodes:[
+  {id:"c_fleet",x:80,y:380,w:280,h:86,st:"live",t:"Fleet on the road",s:"Every Isuzu in operation is recurring parts demand. The denominator under every metric.",
+   d:"22 distributor markets, parc by model and registration year. Nothing in PRISM is an absolute number without this base — everything is per truck, per market, per year.",
+   tech:"Lens in app: Fleet (UIO). Denominator of GPS, PMS, wallet."},
+  {id:"c_wallet",x:450,y:170,w:290,h:92,st:"live",t:"Wallet ceiling",s:"Parc × per-model target spend = what the network could buy. €60.2M in CY2025.",
+   d:"The maximum-spend ceiling, not a forecast. It is deliberately conservative in shape: flat across vehicle age until IML delivers the age-spend curve.",
+   cav:"Ceiling, not forecast. Age-flat until the IML curve lands — the honest gap in the model today.",
+   tech:"wallet_waterfall · Decision models page."},
+  {id:"c_spend",x:450,y:330,w:290,h:86,st:"live",t:"Spend per unit",s:"What each truck actually yields: net € / truck / year, traffic-lit per market.",
+   d:"The first lens on performance. Green ≥ €150, amber €50–149, red below — calibrated for a mixed truck/LCV parc.",
+   tech:"GPS page + cockpit heatmap."},
+  {id:"c_cap",x:450,y:488,w:290,h:92,st:"live",t:"Capture rate",s:"Actual service-part units ÷ expected demand from the surviving parc.",
+   d:"The sharper question: not how much revenue, but how much of the work the parc generates do we actually serve. Split genuine / Best Value / total, per category.",
+   tech:"pms_capture_by_db_year · Capture (PMS) page."},
+  {id:"c_mix",x:450,y:650,w:290,h:92,st:"live",t:"Mix quality",s:"Genuine vs Best Value inside the captured demand.",
+   d:"Best Value winning a line is retention inside our tent, not a loss — the real loss is aftermarket defection. Mix is a gross-profit-quality read, not a capture read.",
+   cav:"BVP ≠ leakage. Down-trade and walk-out are different threats and are never added as one €.",
+   tech:"mix_* + substitution pairs · Mix (BVP) page."},
+  {id:"c_press",x:900,y:210,w:290,h:92,st:"live",t:"Price pressure",s:"Where the aftermarket undercuts us at the counter — priced apples-to-apples.",
+   d:"Genuine list is grossed ×1.785 through distributor and dealer margin before comparing with scraped street prices. Exposure is revenue-weighted, not part-counted.",
+   tech:"AIM exposure + street-price gap · Network Intelligence."},
+  {id:"c_vor",x:900,y:370,w:290,h:86,st:"live",t:"Availability stress",s:"Urgent (VOR) order share vs each market's own baseline, weekly.",
+   d:"A market that always ships urgent is not an alarm — movement against its own baseline is. The only weekly-grain signal in the platform, and the one cause we fix ourselves.",
+   tech:"vor_seasonality / vor_profile."},
+  {id:"c_sig",x:900,y:540,w:290,h:100,st:"live",t:"Signals",s:"Silence · capture slope · VOR spike — the three that demand action.",
+   d:"An action signal must change between refreshes, name a concrete move and carry a €. Concentration and price exposure inform the weighting but never raise the alarm themselves.",
+   cav:"Measured against the data horizon, not today. Dead categories (never bought) are separated from defecting ones.",
+   tech:"early_warning_signals · Early Warning page."},
+  {id:"c_dec",x:1330,y:360,w:290,h:110,st:"live",t:"Decisions",s:"The € identity, the runway to 2030, and one ranked call list.",
+   d:"Wallet €60.2M → captured €30.8M → addressable gap €29.7M, as one arithmetic identity per market. The ceiling climbs to €77.8M by 2030 — and this cycle's call list is 11 entities, €307K exposed.",
+   tech:"Decision models + Early Warning."}
+ ],
+ edges:[
+  ["c_fleet","c_wallet"],["c_fleet","c_spend"],["c_fleet","c_cap"],
+  ["c_wallet","c_dec"],["c_spend","c_cap"],["c_cap","c_mix"],
+  ["c_cap","c_sig"],["c_mix","c_press"],["c_press","c_sig"],["c_vor","c_sig"],
+  ["c_sig","c_dec"]
+ ]
+},
+
+/* ── LENS 3 · ROADMAP ────────────────────────────────────────────────── */
+roadmap:{
+ heads:[
+  {x:46,y:80,t:"Live — describe & diagnose"},
+  {x:46,y:296,t:"In build — decide faster"},
+  {x:46,y:512,t:"Needs one input — sharpen"},
+  {x:46,y:706,t:"Concepts — anticipate"}
+ ],
+ lanes:[{y:288},{y:504},{y:698}],
+ nodes:[
+  {id:"r_found",x:46,y:116,w:280,st:"live",t:"Foundation + 15 strategic contracts",s:"May 2026 · verified pipeline, contract-driven charts",
+   d:"The derived layer with written data contracts per dashboard, and the 15 strategic views built on them. The discipline that everything since stands on.",
+   tech:"build_strategic_contracts · dashboard_contracts.md."},
+  {id:"r_dec",x:356,y:116,w:270,st:"live",t:"Decision models + risk index",s:"June 2026 · wallet identity, runway, alarms",
+   d:"The € waterfall, the 2030 runway, purchase-rhythm alarms and the weighted customer-risk ranking.",
+   tech:"Decision models page · db_aftersales_risk."},
+  {id:"r_cal",x:656,y:116,w:270,st:"live",t:"FY-completeness + calibration",s:"July 2026 · partial-year guards, PMS recalibrated",
+   d:"Part-billed years can no longer masquerade as collapse: coverage flags, complete-year defaults, capture slopes fitted on complete years only.",
+   tech:"year_coverage + pipeline reconcile (106 checks)."},
+  {id:"r_ew",x:956,y:116,w:270,st:"live",t:"Early Warning v1",s:"July 2026 · one ops list, 3 signals",
+   d:"Silence, capture slope and VOR stress collapsed into one ranked call list with reasons and € exposure. Replaces tab-hopping across three pages.",
+   tech:"11 act · 6 watch · €307K exposed this cycle."},
+  {id:"r_ia",x:1256,y:116,w:290,st:"live",t:"IA restructure P0–P2",s:"July 2026 · 9-section nav + render-parity tests",
+   d:"Navigation rebuilt to 9 sections with the decision layer first-class, a smoke-test net over every page, and chart code extracted for reuse.",
+   tech:"st.navigation shell · tests over 21 pages, all green."},
+
+  {id:"r_ni",x:46,y:332,w:300,st:"build",t:"Network Intelligence — 29 tabs → 8",s:"Same questions, one place each",
+   d:"Insights, Strategic and Offset answer the capture-trajectory question four times today. One consolidated page: most exposed, opportunity €, trajectory, benchmark, pricing, substitution, VOR, structure.",
+   tech:"IA plan P3 · render functions already extracted (P2)."},
+  {id:"r_hub",x:386,y:332,w:280,st:"build",t:"Mix & ITUK consolidation",s:"Duplicates return to their home page",
+   d:"BVP loses its three copied tabs; the DB mix split docks in; ITUK gets one hub — story, audit, incentive — instead of content scattered over three pages.",
+   tech:"IA plan P4–P5."},
+  {id:"r_gate",x:696,y:332,w:280,st:"build",t:"MD-safe / internal split",s:"One flag decides what the room sees",
+   d:"Dealer leakage, attach lifts, elasticity and the leakage Sankey sit behind an internal launch flag. Default off: the app is safe to project in any meeting.",
+   tech:"INTERNAL_MODE flag live in config · gating lands P6."},
+  {id:"r_tools",x:1006,y:332,w:280,st:"build",t:"Tools shelf + export cleanup",s:"21 pages → ~13 · exports become buttons",
+   d:"Generators (review pack, scorecard) merge, export tabs become download buttons, and the navigation ends at nine entries an MD can hold in one look.",
+   tech:"IA plan P7–P8."},
+
+  {id:"r_age",x:46,y:548,w:290,st:"input",t:"Age-aware wallets",s:"Unlock: IML age-spend curve",
+   d:"Wallets are age-flat today — a 2015 truck counts like a 2024 one. The IML curve turns the ceiling and the 2030 runway from conservative into precise.",
+   tech:"Feeds: wallet_waterfall, revenue_runway."},
+  {id:"r_award",x:366,y:548,w:290,st:"input",t:"Tender win/loss pricing",s:"Unlock: award line-items",
+   d:"520 scored opportunities, prices on 12. When awarded line-items land, the pipeline gains a win/loss-vs-aftermarket pricing read.",
+   tech:"Feeds: tender_pipeline → pricing analytics."},
+  {id:"r_dealer",x:686,y:548,w:290,st:"input",t:"Dealer-€ resolution",s:"Unlock: dealer sell-out revenue mapping",
+   d:"ITUK dealer silence is visible but carries no €: only ~16% of sell-out units map to service-part tags. A fuller join turns the call list into a priced dealer list.",
+   tech:"Feeds: early_warning dealer grain, leakage views."},
+  {id:"r_elas",x:1006,y:548,w:290,st:"input",t:"Elasticity with power",s:"Unlock: more price transitions",
+   d:"Price-volume response exists but is direction-only by construction (annual prices, two transitions). Each pricing round adds statistical power.",
+   tech:"price_volume_elasticity — never quote a beta externally today."},
+
+  {id:"r_pred",x:46,y:742,w:290,st:"concept",t:"Predictive defection",s:"Probability-ranked, not threshold-triggered",
+   d:"Today an alarm fires when silence crosses a median-gap threshold. The next step ranks entities by defection probability from rhythm, slope and exposure together — earlier, fewer false alarms. No numbers until it is built and validated.",
+   tech:"Builds on: early_warning + capture_trajectory."},
+  {id:"r_loop",x:366,y:742,w:290,st:"concept",t:"Campaign loop",s:"Push a campaign, measure the delta",
+   d:"Early Warning names the cohort; the loop closes when a campaign lands on it and the capture delta is measured on the same list next cycle. Marketing spend gets a feedback wire.",
+   tech:"Builds on: EW cohorts + seasonal pattern."},
+  {id:"r_sim",x:686,y:742,w:290,st:"concept",t:"What-if pricing simulator",s:"Price × volume × capture, offset live",
+   d:"Move a class price and see volume response, capture offset and channel effect in one view — the exec lens, interactive. Needs elasticity power first.",
+   tech:"Builds on: elasticity + price exposure + mix."},
+  {id:"r_net",x:1006,y:742,w:290,st:"concept",t:"Dealer-grain network view",s:"What ITUK has, every market gets",
+   d:"The dealer-level lens (leakage order, attach lifts) generalised beyond ITUK — where distributors share sell-out data.",
+   tech:"Builds on: dealer-€ resolution."},
+  {id:"r_stock",x:1326,y:742,w:290,st:"concept",t:"Season-aware pre-positioning",s:"Beat the VOR spike to the shelf",
+   d:"The VOR seasonality wheel already shows when stress peaks per market. The concept: translate it into pre-positioning advice before the spike, cutting airfreight.",
+   tech:"Builds on: vor_seasonality + airfreight cost."}
+ ],
+ edges:[
+  ["r_found","r_dec"],["r_dec","r_cal"],["r_cal","r_ew"],["r_ew","r_ia"],
+  ["r_ia","r_ni"],["r_ni","r_hub"],["r_hub","r_gate"],["r_gate","r_tools"],
+  ["r_age","r_dec"],["r_dealer","r_net"],["r_elas","r_sim"],["r_award","r_sim"],
+  ["r_ew","r_pred"],["r_ew","r_loop"]
+ ]
+}
+};
+
+/* ════════════════════════════════════════════════════════════════════════
+   CHAPTERS — the story that drives the graph
+   ════════════════════════════════════════════════════════════════════════ */
+var runwayW=[59.0,60.2,63.9,67.4,70.8,74.3,77.8];
+var runwayC=[30.1,30.8,32.9,34.9,36.9,39.0,41.0];
+
+function sparkRunway(){
+  var W=384,H=120,px=34,py=14,n=7;
+  function X(i){return px+i*(W-px-10)/(n-1);}
+  function Y(v){return H-py-(v-25)/(80-25)*(H-2*py);}
+  var pw=runwayW.map(function(v,i){return X(i)+","+Y(v);}).join(" ");
+  var pc=runwayC.map(function(v,i){return X(i)+","+Y(v);}).join(" ");
+  var yrs=[2024,2026,2028,2030];
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Network wallet ceiling versus projected capture, 2024 to 2030">';
+  [30,50,70].forEach(function(v){s+='<line x1="'+px+'" y1="'+Y(v)+'" x2="'+(W-10)+'" y2="'+Y(v)+'" stroke="rgba(154,165,184,.15)"/>'
+    +'<text x="'+(px-6)+'" y="'+(Y(v)+3)+'" fill="#5f6b80" font-size="9" text-anchor="end">'+v+'</text>';});
+  yrs.forEach(function(y){var i=y-2024;s+='<text x="'+X(i)+'" y="'+(H-1)+'" fill="#5f6b80" font-size="9" text-anchor="middle">'+y+'</text>';});
+  s+='<polyline points="'+pw+'" stroke="#e0714a" stroke-width="2.2" fill="none"/>';
+  s+='<polyline points="'+pc+'" stroke="#6aa8ec" stroke-width="1.8" fill="none" stroke-dasharray="5 4"/>';
+  s+='<circle cx="'+X(6)+'" cy="'+Y(77.8)+'" r="3.4" fill="#e0714a"/>';
+  s+='<text x="'+(X(6)-6)+'" y="'+(Y(77.8)-7)+'" fill="#e0714a" font-size="10" font-weight="600" text-anchor="end">€77.8M</text>';
+  s+='<text x="'+(X(2)+4)+'" y="'+(Y(63.9)-8)+'" fill="#c8cfdc" font-size="9">wallet ceiling</text>';
+  s+='<text x="'+(X(2)+4)+'" y="'+(Y(32.9)+15)+'" fill="#9aa5b8" font-size="9">capture, held at CY2025 rate</text>';
+  return '<div class="spark">'+s+'</svg><div class="cap">Network wallet ceiling vs projected capture, €M — capture held flat at the CY2025 rate. A ceiling scenario, not a forecast.</div></div>';
+}
+function sparkWaterfall(){
+  var W=384,H=104,x0=30;
+  function bar(x,y,w,h,c){return '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="2.5" fill="'+c+'"/>';}
+  function Y(v){return 92-v*(78/60.2);}
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="CY2025 euro identity: wallet 60.2, captured 30.8, addressable gap 29.7 million euro">';
+  s+=bar(x0,Y(60.2),74,92-Y(60.2),'#33486b');
+  s+=bar(x0+118,Y(30.8),74,92-Y(30.8),'#1d9e75');
+  s+=bar(x0+236,Y(29.7),74,92-Y(29.7),'#e0714a');
+  s+='<text x="'+(x0+37)+'" y="'+(Y(60.2)-6)+'" fill="#fff" font-size="11" font-weight="600" text-anchor="middle">€60.2M</text>';
+  s+='<text x="'+(x0+155)+'" y="'+(Y(30.8)-6)+'" fill="#4fd0a4" font-size="11" font-weight="600" text-anchor="middle">€30.8M</text>';
+  s+='<text x="'+(x0+273)+'" y="'+(Y(29.7)-6)+'" fill="#e0714a" font-size="11" font-weight="600" text-anchor="middle">€29.7M</text>';
+  s+='<text x="'+(x0+37)+'" y="102" fill="#9aa5b8" font-size="9" text-anchor="middle">wallet ceiling</text>';
+  s+='<text x="'+(x0+155)+'" y="102" fill="#9aa5b8" font-size="9" text-anchor="middle">captured</text>';
+  s+='<text x="'+(x0+273)+'" y="102" fill="#9aa5b8" font-size="9" text-anchor="middle">addressable gap</text>';
+  return '<div class="spark">'+s+'</svg><div class="cap">CY2025 network € identity. Captured = genuine €29.7M + Best Value €1.1M; over-target €0.2M closes the identity.</div></div>';
+}
+
+var CHAPTERS=[
+ {lens:"concept",kicker:"PRISM · Parts Revenue Intelligence",title:"One platform over the whole aftersales network",
+  focus:[],
+  body:"<p>Every Isuzu on the road is recurring parts demand. PRISM reads that demand with <b>one verified data spine</b>: what the parc could spend, what we actually capture, where it moves, and who needs a call this cycle.</p><p>This is a guided tour — the map behind it is live. Use <b>Next</b>, or press <b>E</b> at any point to explore every node yourself.</p>",
+  chips:[["€60.2M","wallet ceiling · CY2025"],["€30.8M","captured · CY2025"],["22","distributor markets"],["106/106","pipeline checks green"]]},
+
+ {lens:"anatomy",kicker:"Lens 1 · The system",title:"Everything stands on one verified spine",
+  focus:[],
+  body:"<p>Seven source families — billing, fleet, catalogue, service registry, street prices, tenders, targets — flow through <b>63 build engines</b> into <b>98 derived datasets</b>.</p><p>Nothing skips the middle: every dataset crosses the <b>same verification gate</b> before any page may show it. No screen computes its own truth, so two pages can never disagree.</p><div class='hush'>Click any node for what it is, where it lives, and its honest caveat.</div>",
+  chips:[["7","source families"],["63","build engines"],["98","derived datasets"],["106","automated checks"]]},
+
+ {lens:"concept",kicker:"Lens 2 · The thinking model",title:"From a truck on the road to a euro of decision",
+  focus:["c_fleet","c_wallet","c_spend","c_cap","c_mix"],
+  body:"<p>The chain is deliberate: the <b>fleet</b> sets the denominator, the <b>wallet ceiling</b> says what the parc could spend, <b>spend per unit</b> and <b>capture rate</b> say what we actually get — and <b>mix</b> says what that capture is worth.</p><p>Two honest rules hold it together: the wallet is a <b>ceiling, not a forecast</b> (age-flat until IML's age-spend curve lands), and <b>Best Value is not leakage</b> — down-trade inside our tent and walk-out to the aftermarket are never added into one number.</p>",
+  chips:[["51%","of ceiling captured · CY2025"],["€29.7M","genuine captured"],["€1.1M","Best Value captured"]]},
+
+ {lens:"concept",kicker:"Lens 2 · The thinking model",title:"The network warns us before it leaks",
+  focus:["c_press","c_vor","c_sig","c_cap"],
+  body:"<p>Three signals earn the right to raise an alarm: <b>silence</b> (a purchase rhythm breaks), <b>capture slope</b> (bleeding in motion), <b>VOR stress</b> (availability burning trust). Each changes between refreshes, names a concrete move, and carries a €.</p><p>Price pressure and concentration <b>inform the weighting but never ring the bell</b> — they explain why someone defects, not that they are defecting.</p><div class='hush'>€ shown is exposure — revenue sitting on alarming categories — never a claimed loss.</div>",
+  chips:[["3","signals, one ranked list"],["11 <em>act</em>","+ 6 watch this cycle"],["€307K","exposed on live alarms"]]},
+
+ {lens:"concept",kicker:"Lens 2 · The thinking model",title:"Decisions carry a €, not an opinion",
+  focus:["c_wallet","c_sig","c_dec"],
+  body:"<p>The decision layer is arithmetic, not narrative: wallet → captured → gap as <b>one identity per market</b>, and a runway that projects the ceiling forward.</p><p>The ceiling <b>climbs through 2030</b> — the parc that generates tomorrow's service demand is already sold. The window to capture it is open now.</p>"+sparkRunway()+sparkWaterfall(),
+  chips:[["€29.7M","addressable gap · CY2025"],["€77.8M","ceiling by 2030 · +32% vs 2024"]]},
+
+ {lens:"roadmap",kicker:"Lens 3 · The roadmap",title:"Built, building, and what one input unlocks",
+  focus:[],
+  body:"<p>The top lane is <b>live</b> — dated, tested, gated. The second is <b>in build</b>: the same insight in fewer, sharper places (29 tabs become 8; 21 pages become ~13 behind 9 entries).</p><p>The third lane is the honest one: four upgrades that are <b>blocked on exactly one input each</b>, named. And the bottom lane holds concepts — deliberately carrying <b>no invented numbers</b> until they are built and validated.</p>",
+  chips:[["9","nav sections · live"],["29 → 8","tabs consolidating"],["4","inputs unlock the next layer"]]},
+
+ {lens:"roadmap",kicker:"Explore",title:"Now walk the map yourself",
+  focus:[],
+  body:"<p>Press <b>E</b> or the Explore button: the text steps aside and every node opens — what it is, its status, its data source, and its honest caveat.</p><p>Switch lenses freely: <b>System</b> for how it is wired, <b>Thinking model</b> for how a truck becomes a euro, <b>Roadmap</b> for what is live, in build, waiting on an input, or still a concept.</p><div class='hush'>Everything green exists today and passed 106 checks this morning. Everything dashed is a concept — and says so.</div>",
+  chips:[["E","toggle explore"],["← →","chapters"],["1 · 2 · 3","switch lenses"]]}
+];
+
+/* ════════════════════════════════════════════════════════════════════════
+   ENGINE
+   ════════════════════════════════════════════════════════════════════════ */
+var state={mode:"story",ch:0,lens:CHAPTERS[0].lens,sel:null};
+var stage=document.getElementById("stage"),vp=document.getElementById("viewport");
+var svg=document.getElementById("edges");
+var nodeEls={},edgeEls={};
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;");}
+
+/* build nodes + edges once */
+Object.keys(LENSES).forEach(function(ln){
+  var L=LENSES[ln],wrap=document.getElementById("lw-"+ln);
+  (L.heads||[]).forEach(function(h){
+    var el=document.createElement("div");el.className="colhead";
+    el.style.left=h.x+"px";el.style.top=h.y+"px";el.textContent=h.t;wrap.appendChild(el);
+  });
+  (L.lanes||[]).forEach(function(l){
+    var el=document.createElement("div");el.className="lane";el.style.top=l.y+"px";wrap.appendChild(el);
+  });
+  L.nodes.forEach(function(n,i){
+    var el=document.createElement("div");
+    el.className="node "+(n.st||"");
+    el.style.left=n.x+"px";el.style.top=n.y+"px";el.style.width=n.w+"px";
+    if(n.h)el.style.minHeight=n.h+"px";
+    el.style.animationDelay=(i*45)+"ms";
+    el.innerHTML=(n.badge?'<span class="badge">'+esc(n.badge)+'</span>':"")
+      +'<div class="t">'+esc(n.t)+'</div>'+(n.s?'<div class="s">'+esc(n.s)+'</div>':"");
+    el.addEventListener("click",function(ev){ev.stopPropagation();openDrawer(n,el);});
+    wrap.appendChild(el);nodeEls[n.id]={el:el,n:n,lens:ln};
+  });
+});
+
+function drawEdges(){
+  svg.innerHTML="";edgeEls={};
+  var L=LENSES[state.lens];
+  L.edges.forEach(function(e){
+    var a=nodeEls[e[0]],b=nodeEls[e[1]];if(!a||!b)return;
+    var ar=a.el,br=b.el;
+    var x1=a.n.x+ar.offsetWidth,y1=a.n.y+ar.offsetHeight/2;
+    var x2=b.n.x,y2=b.n.y+br.offsetHeight/2;
+    if(x2<x1){ x1=a.n.x+ar.offsetWidth/2;y1=a.n.y+ar.offsetHeight;x2=b.n.x+br.offsetWidth/2;y2=b.n.y; }
+    var dx=Math.max(40,(x2-x1)*0.45);
+    var p=document.createElementNS("http://www.w3.org/2000/svg","path");
+    p.setAttribute("d","M"+x1+" "+y1+" C"+(x1+dx)+" "+y1+","+(x2-dx)+" "+y2+","+x2+" "+y2);
+    svg.appendChild(p);edgeEls[e[0]+">"+e[1]]=p;
+  });
+}
+
+function setLens(ln,animate){
+  state.lens=ln;
+  document.querySelectorAll(".lenswrap").forEach(function(w){w.classList.toggle("on",w.id==="lw-"+ln);});
+  document.querySelectorAll("#lenses button").forEach(function(b){b.classList.toggle("on",b.dataset.lens===ln);});
+  if(animate){var wrap=document.getElementById("lw-"+ln);
+    wrap.querySelectorAll(".node").forEach(function(el,i){el.style.animation="none";void el.offsetWidth;el.style.animationDelay=(i*38)+"ms";el.style.animation="";});
+  }
+  requestAnimationFrame(drawEdges);
+  applyFocus();
+}
+
+function applyFocus(){
+  var focus=(state.mode==="story")?(CHAPTERS[state.ch].focus||[]):[];
+  var hasFocus=focus.length>0;
+  Object.keys(nodeEls).forEach(function(id){
+    var rec=nodeEls[id];if(rec.lens!==state.lens)return;
+    rec.el.classList.toggle("dim",hasFocus&&focus.indexOf(id)<0);
+    rec.el.classList.toggle("lit",hasFocus&&focus.indexOf(id)>=0);
+  });
+  document.querySelectorAll("#lw-"+state.lens+" .colhead, #lw-"+state.lens+" .lane").forEach(function(h){
+    h.classList.toggle("dim",hasFocus);
+  });
+  Object.keys(edgeEls).forEach(function(k){
+    var ab=k.split(">");
+    var lit=hasFocus&&focus.indexOf(ab[0])>=0&&focus.indexOf(ab[1])>=0;
+    var hid=hasFocus&&!(focus.indexOf(ab[0])>=0&&focus.indexOf(ab[1])>=0);
+    edgeEls[k].classList.toggle("lit",lit);
+    edgeEls[k].classList.toggle("hid",hid&&false);
+    edgeEls[k].style.opacity=hasFocus&&!lit?0.12:"";
+  });
+}
+
+/* story */
+var storyEl=document.getElementById("story");
+function setChapter(i){
+  state.ch=Math.max(0,Math.min(CHAPTERS.length-1,i));
+  var c=CHAPTERS[state.ch];
+  storyEl.style.opacity=0;
+  setTimeout(function(){
+    document.getElementById("kicker").textContent=c.kicker;
+    document.getElementById("stitle").textContent=c.title;
+    document.getElementById("sbody").innerHTML=c.body;
+    document.getElementById("chips").innerHTML=c.chips.map(function(ch){
+      return '<div class="chip"><div class="v">'+ch[0]+'</div><div class="l">'+ch[1]+'</div></div>';}).join("");
+    document.getElementById("stepno").textContent=(state.ch+1)+" / "+CHAPTERS.length;
+    document.getElementById("prev").style.visibility=state.ch===0?"hidden":"visible";
+    document.getElementById("next").textContent=state.ch===CHAPTERS.length-1?"Explore →":"Next →";
+    storyEl.style.opacity=1;
+  },220);
+  document.querySelectorAll("#dots i").forEach(function(d,j){d.classList.toggle("on",j===state.ch);});
+  if(c.lens!==state.lens)setLens(c.lens,true);else applyFocus();
+}
+
+function setMode(m){
+  state.mode=m;
+  storyEl.classList.toggle("away",m==="explore");
+  document.getElementById("modebtn").innerHTML=(m==="explore"?"Story":"Explore")+" <kbd>E</kbd>";
+  fit();
+  applyFocus();
+}
+
+/* drawer */
+var drawer=document.getElementById("drawer");
+function openDrawer(n,el){
+  document.querySelectorAll(".node.sel").forEach(function(x){x.classList.remove("sel");});
+  el.classList.add("sel");state.sel=n.id;
+  var stEl=document.getElementById("dstatus");
+  stEl.textContent=ST[n.st]||"";stEl.className="status "+n.st;
+  document.getElementById("dtitle").textContent=n.t;
+  document.getElementById("dbody").innerHTML="<p>"+esc(n.d||n.s||"")+"</p>"+(n.cav?'<div class="caveat">'+esc(n.cav)+'</div>':"");
+  document.getElementById("dtech").textContent=n.tech||"";
+  drawer.classList.add("open");
+}
+function closeDrawer(){
+  drawer.classList.remove("open");state.sel=null;
+  document.querySelectorAll(".node.sel").forEach(function(x){x.classList.remove("sel");});
+}
+document.getElementById("dclose").addEventListener("click",closeDrawer);
+vp.addEventListener("click",closeDrawer);
+
+/* controls */
+document.getElementById("next").addEventListener("click",function(){
+  if(state.ch===CHAPTERS.length-1)setMode("explore");else setChapter(state.ch+1);
+});
+document.getElementById("prev").addEventListener("click",function(){setChapter(state.ch-1);});
+document.getElementById("modebtn").addEventListener("click",function(){setMode(state.mode==="story"?"explore":"story");});
+document.querySelectorAll("#lenses button").forEach(function(b){
+  b.addEventListener("click",function(){if(state.mode!=="explore")setMode("explore");setLens(b.dataset.lens,true);});
+});
+var dots=document.getElementById("dots");
+CHAPTERS.forEach(function(_,i){
+  var d=document.createElement("i");
+  d.addEventListener("click",function(){if(state.mode==="explore")setMode("story");setChapter(i);});
+  dots.appendChild(d);
+});
+document.addEventListener("keydown",function(ev){
+  if(ev.key==="ArrowRight"&&state.mode==="story")setChapter(state.ch+1);
+  else if(ev.key==="ArrowLeft"&&state.mode==="story")setChapter(state.ch-1);
+  else if(ev.key==="e"||ev.key==="E")setMode(state.mode==="story"?"explore":"story");
+  else if(ev.key==="Escape")closeDrawer();
+  else if(ev.key==="1"&&state.mode==="explore")setLens("anatomy",true);
+  else if(ev.key==="2"&&state.mode==="explore")setLens("concept",true);
+  else if(ev.key==="3"&&state.mode==="explore")setLens("roadmap",true);
+});
+
+/* fit stage to viewport — story mode fits the graph beside the text card,
+   explore mode reclaims the full width */
+function fit(){
+  var w=vp.clientWidth,h=vp.clientHeight;
+  var reserve=(state.mode==="story"&&w>900)?486:0;
+  var aw=w-reserve;
+  var s=Math.min(aw/1680,h/920);
+  var ox=reserve+Math.max(0,(aw-1680*s)/2),oy=Math.max(0,(h-920*s)/2);
+  stage.style.transform="translate("+ox+"px,"+oy+"px) scale("+s+")";
+}
+window.addEventListener("resize",fit);
+
+/* boot */
+fit();
+setLens(CHAPTERS[0].lens,false);
+setChapter(0);
+requestAnimationFrame(function(){requestAnimationFrame(drawEdges);});
+</script>
+</body>
+</html>

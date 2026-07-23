@@ -1,0 +1,51 @@
+---
+description: ISZE GPS — ITUK is never a kickback row; dealer £ vs ISZE € wallet
+globs: ISZE/**/build_gps*.py,ISZE/**/gps_v9_loaders.py,ISZE/**/ISZE_GPS*.xlsx,ISZE/**/GPS_FILE_LINEAGE.md
+alwaysApply: false
+---
+
+# ISZE GPS — ITUK rules (mandatory)
+
+Read `01_data/91_build/GPS_FILE_LINEAGE.md` before editing any GPS workbook or builder.
+
+## ITUK placement — never “just another DB”
+
+| Artifact | ITUK allowed? |
+|----------|----------------|
+| **Proposal FY27** (9 kickback DBs, +1.5pp) | **NO** |
+| **Other DBs FY27** (Cyprus, Greece, no-UIO, …) | **NO** |
+| **ITUK FY27** tab (Target Study walkthrough only) | **YES** |
+| **ISZE_GPS_v5.xlsx** (network plan, all DBs) | **YES** — class-weighted wallet |
+
+> User rule: **leave ITUK out** of kickback / other-DB proposal tables. Document on dedicated **ITUK FY27** tab only.
+
+Stretch rule for ITUK: **Target Study +9% dealer sell-out** — not flat +1.5pp kickback.
+
+## Two layers — do not compare totals
+
+| Layer | FY27 example | Currency | Data |
+|-------|--------------|----------|------|
+| Dealer retail potential (study row 22) | ~£17.65M | **GBP** | Sales **to dealer** |
+| ISZE max spend / wallet (study row 36) | ~€13.05M | **EUR** | **ISZE → DB** (ASC billing) |
+
+Row 36 = row 22 × **0.7392** (0.66 GP × 1.12 FX). GPS% denominator = **row 36 EUR only**.
+
+## Per-unit rates (ISZE wallet)
+
+| Class | €/UIO | £ retail |
+|-------|-------|----------|
+| N35 | **296** | 400 |
+| N75/LD | **739** | 1,000 |
+| F/MD | **887** | 1,200 |
+
+ITUK UIO buckets: **N35 / N75_LD / F_MD** from DVLA + `4. ITUK UIO Projection` — never generic “CV LD” @ €739 for N35.
+
+Source: `gps_v9_loaders.py` · `build_gps_v5.py` · `build_gps_kickback_proposal.py`.
+
+## Common agent mistakes (avoid)
+
+1. Putting ITUK on **Other DBs** next to small markets — wrong tab.
+2. HTML saying “ITUK excluded, no stretch” while workbook applies Target Study stretch — contradictory.
+3. Treating **£17M** and **€13M** as the same number in different currencies.
+4. Pricing N35 at **€739** (LD rate) in v5 — inflates wallet to ~€18M.
+5. Forking **v6** calculator as planning successor — extend **v5** instead.

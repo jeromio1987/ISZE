@@ -11,7 +11,9 @@
 |---|---|---|---|
 | Master Dashboard | `hub/MASTER_DASHBOARD.html` | Top-level ISZE KPI hub | Active |
 | AIM Dashboard | `sales/AIM_Dashboard_CY2025.html` | AIM classification CY2025 | Active |
-| UIO Dashboard | `_archive/ISUZU_UIO_Dashboard_2026_v17.html` | Vehicle-in-operation tracking | Archived (v17) — confirm replacement |
+| AIM Dashboard CY2026 | `sales/AIM_Dashboard_CY2026.html` | CY2026 YTD actual billing · IAM benchmark · `aim_cy2026.data.js` | Active (2026-07-02) |
+| UIO Dashboard | `fleet/ISUZU_UIO_Dashboard_2026.html` | Vehicle-in-operation tracking | Active — canonical name 2026-07-16; workbook **v19** at `06_uio/_CURRENT/` |
+| GPS Dashboard | `fleet/ISZE_GPS_Dashboard.html` | Network GPS / max-spend | Active — canonical; `_v9` = redirect only |
 | Competitiveness Dashboard | `sales/ISZE_Competitiveness_Dashboard.html` | Part price vs market | Active |
 | **Risk Cockpit** | `sales/ISZE_Risk_Cockpit.html` | Wallet, AIM×GPS, substitution, defection | Active · `viz/risk_cockpit.json` |
 | Monthly Sales Tracker | `sales/ISZE_Monthly_Sales_Tracker.html` | YTD revenue vs budget | Active |

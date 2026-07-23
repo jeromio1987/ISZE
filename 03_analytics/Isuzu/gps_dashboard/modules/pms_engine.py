@@ -197,7 +197,7 @@ DEFAULT_PARC_CONFIG = {
     "N35_surviving_parc":    9818,   # 10-year surviving UK parc
     "N75_services_per_year": 0.5,    # 40,000km interval / ~20,000km avg annual
     "N35_services_per_year": 0.75,   # N35.125 at 20,000km; blended
-    "addressable_pct":       0.70,   # S2+S3 proportion (est. 70% of parc)
+    "addressable_pct":       1.00,   # full parc in scope
     "scope":                 "N75_only",  # "N75_only" | "all"
 }
 

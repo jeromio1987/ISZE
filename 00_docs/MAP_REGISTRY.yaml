@@ -1,7 +1,7 @@
 # ISZE map registry — machine-readable index of all navigation maps
-# Human diagram: 00_docs/MAPS.md | Agent sync: 2026-06-13
+# Human diagram: 00_docs/MAPS.md | Agent sync: 2026-07-16
 
-version: 2
+version: 3
 
 bootstrap:
   index: INDEX.md
@@ -14,10 +14,12 @@ reference:
   topics: 00_docs/REFERENCE.md
   artifacts: 00_docs/CANONICAL.md
   human_readme: 00_docs/README.md
+  claude_desktop_onboarding: 00_docs/CLAUDE_DESKTOP_ONBOARDING.md
   ui_stack: 00_docs/UI_STACK.md
   map_diagram: 00_docs/MAPS.md
   scheduled_ops: 00_docs/agent/NOTES.md
   ai_stack: 00_docs/agent/AI_STACK.md
+  automation_register: 00_docs/AUTOMATION_REGISTER.md
 
 roadmaps:
   hub: 00_docs/ISZE_ROADMAP.md
@@ -37,20 +39,28 @@ deploy:
   context_whitelist: 00_docs/context_sync_whitelist.txt
   context_sync: 02_dashboards/sync_context_to_github.ps1
   github_mirror: 07_deploy/Master Dashboard/context/
+  github_upload_scripts: 04_tools/github_upload/   # upload_gps_data.py, upload_ids_data.py (token via $ISZE_GH_TOKEN)
 
 data_spine:
   manifest: 01_data/DATA_MANIFEST.md
-  derived: 01_data/derived/
-  metrics: 01_data/derived/metrics_snapshot.json
-  verify: 01_data/derived/_verification_report.json
+  inbox: 01_data/90_INBOX/            # drop zone for new/unsorted files — see DATA_MANIFEST.md §0
+  derived: 01_data/00_derived/
+  metrics: 01_data/00_derived/metrics_snapshot.json
+  verify: 01_data/00_derived/_verification_report.json
   facts: FACTS.md
+  dashboards: 01_data/14_dashboards/   # alias junction: 01_data/dashboards/ (load-bearing, keep)
 
 code_spine:
   prism: 03_analytics/Isuzu/prism/
   pms_pilot: 03_analytics/Isuzu/pms-pilot/
+  okf_assessment: 03_analytics/Isuzu/_OKF_assessment/   # moved from ISZE root 2026-07-16
 
 scripts:
   workspace: 04_tools/workspace/
+
+# Filing rule: new data files ALWAYS land in 01_data/90_INBOX/ first, then get
+# sorted into the numbered folder that matches their topic (DATA_MANIFEST.md §1).
+# The root of 01_data/ is NOT a drop zone — only wired working-set (§3) + docs.
 
 stubs:
   - path: 02_dashboards/ROADMAP.md
@@ -68,5 +78,5 @@ deprecated:
   - 90_archive/versioned_docs/
   - 91_legacy/Isuzu/Divers/
   - isze-prism-analytics/
-  - Dashboards/
-  - Projects/
+  - Dashboards/          # removed from ISZE root 2026-07-16 (was empty)
+  - Projects/            # removed from ISZE root 2026-07-16 (was empty tree)

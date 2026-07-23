@@ -2,7 +2,7 @@
 
 **Not bootstrap.** Read `INDEX.md` → `00_docs/ROUTING.yaml` → `AGENTS.md` first. Open this file for documentation map, EU Conf assets, UI stack choice, archived maps, and deprecated paths.
 
-**Agent sync:** 2026-06-13 (Tier 3 reference — see `docs/MAPS.md` for tiers)
+**Agent sync:** 2026-07-16 (Tier 3 reference — see `docs/MAPS.md` for tiers)
 
 ---
 
@@ -40,9 +40,14 @@
 | Claude vs GPT / tier protocol | `docs/agent/AI_STACK.md` (full memo: `AI_Stack_Architecture_Apr2026.md`) |
 | Weekly briefs | `05_memory/briefs/` |
 | PMS pilot artefacts | `03_analytics/Isuzu/pms-pilot/` |
+| PMS OKF assessment (fig-key completeness, leakage) | `03_analytics/Isuzu/_OKF_assessment/` (moved from root 2026-07-16) |
+| GitHub upload scripts (GPS/IDS → isuzu-docs) | `04_tools/github_upload/` — token via `$ISZE_GH_TOKEN` env var |
+| European Conference 2026 (Mainz) material | `09_meetings/European_Conference_2026_Mainz/` |
+| OEM service maintenance schedules (PMS intervals) | `01_data/03_PMS/service_schedules/` |
 | GPT Enterprise knowledge (upload) | `08_gpt/2_KNOWLEDGE_FILES/*.md` |
 | Cleanup / dedupe plan | `00_docs/ISZE_Cleanup_Plan.md` |
 | Repo overview | `00_docs/README.md` |
+| Claude Desktop onboarding (paste-ready) | `00_docs/CLAUDE_DESKTOP_ONBOARDING.md` |
 
 **Jerome working style:** `Isuzu/_SKILL_UPDATE/` or scheduled `isze-context` — see `docs/agent/NOTES.md`.
 
@@ -104,7 +109,10 @@ Live routing: `INDEX.md` + `docs/ROUTING.yaml` — refresh tooling map quarterly
 | `Isuzu/isze-company-context.md` | `03_analytics/Isuzu/_SKILL_UPDATE/isze-company-context.md` |
 | `AI_Briefs/` (root) | `05_memory/briefs/` |
 | `Isuzu/PMS project/` | `03_analytics/Isuzu/pms-pilot/` |
+| `Projects/` , `Dashboards/` (ISZE root) | **Removed 2026-07-16** (empty deprecated trees) — use `03_analytics/` + `02_dashboards/` |
 | `Projects/Isuzu/data/distributor_master_mapping.csv` | `03_analytics/Isuzu/prism/data/distributor_master_mapping.csv` |
+| `upload_*.py` / `run_*_upload.bat` (ISZE root) | `04_tools/github_upload/` (moved 2026-07-16; token now `$ISZE_GH_TOKEN`) |
+| `_OKF_assessment/` (ISZE root) | `03_analytics/Isuzu/_OKF_assessment/` (moved 2026-07-16) |
 | `02_dashboards/ROADMAP.md` | `00_docs/roadmaps/html.md` |
 | `Tools/SCRAPERS_ROADMAP.md` | `00_docs/roadmaps/scrapers.md` |
 | `tender scraper/` (root v2) | `04_tools/ISZE_Tender_Monitor_Install/` v3 |
@@ -122,7 +130,7 @@ Live routing: `INDEX.md` + `docs/ROUTING.yaml` — refresh tooling map quarterly
 
 ## Drop zone
 
-New SAP / exports → `01_data/_INBOX/` then file per `01_data/DATA_MANIFEST.md`.
+New SAP / exports / downloads → **`01_data/90_INBOX/`** then file per `01_data/DATA_MANIFEST.md` §0–§1. The root of `01_data/` is **not** a drop zone — only wired working-set (`DATA_MANIFEST.md` §3) + docs live there. A non-empty `90_INBOX/` means "sorting owed."
 
 ---
 

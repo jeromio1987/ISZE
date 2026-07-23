@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ISZE Pricing Action Map — CY2025</title>
+<style>
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;font-size:14px;line-height:1.5;background:#f7f4ee;}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0;}
+.band{background:linear-gradient(155deg,#15233c 0%,#203759 60%,#2b4a78 100%);color:#eef1f6;padding:34px 40px 26px;}
+.band h1{color:#fff;font-size:32px;line-height:1.1;}
+.band .rule{width:120px;height:3px;background:#c0552d;margin:14px 0 12px;}
+.band .sub{font-size:14px;color:#c9d2e2;max-width:980px;}
+.band .assume{margin-top:12px;font-size:12.5px;color:#9fb0ca;}
+.band .assume b{color:#e8c4b0;}
+.wrap{max-width:1240px;margin:0 auto;padding:26px 40px 60px;}
+h2.sec{font-size:21px;margin:34px 0 4px;padding-bottom:7px;border-bottom:2px solid #1a2b4a;}
+h2.sec .no{color:#c0552d;font-family:Georgia,serif;}
+p.lead{margin:8px 0 14px;max-width:960px;color:#3c3a36;}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px;}
+.kpi{background:#fff;border:1px solid #d9d3c8;border-radius:8px;padding:14px 16px;}
+.kpi .lab{font-size:12px;color:#6b6256;text-transform:uppercase;letter-spacing:.4px;}
+.kpi .val{font-size:26px;font-weight:600;color:#1a2b4a;margin-top:2px;font-family:Georgia,serif;}
+.kpi .note{font-size:11.5px;color:#6b6256;margin-top:3px;}
+.kpi.risk .val{color:#b23b3b;} .kpi.raise .val{color:#2e7d54;}
+.card{background:#fff;border:1px solid #d9d3c8;border-radius:8px;padding:18px 20px;margin:14px 0;}
+.chartbox{position:relative;width:100%;}
+.legend{display:flex;gap:18px;font-size:12.5px;color:#52514e;margin:6px 2px 0;flex-wrap:wrap;}
+.legend .sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px;}
+.controls{display:flex;gap:12px;align-items:center;margin:10px 0 4px;font-size:13px;}
+select{font:inherit;padding:5px 8px;border:1px solid #d9d3c8;border-radius:6px;background:#fff;color:#222;}
+table{width:100%;border-collapse:collapse;margin:10px 0 6px;font-size:12.5px;}
+th{background:#1a2b4a;color:#fff;text-align:left;padding:7px 9px;font-size:11px;text-transform:uppercase;letter-spacing:.3px;}
+td{padding:6px 9px;border-bottom:.5px solid #d9d3c8;}
+tbody tr:nth-child(even){background:#f7f4ee;}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+.callout{border-left:3px solid #c0552d;background:#fdf9f3;padding:12px 16px;margin:14px 0;font-size:13.5px;}
+.matrix td{text-align:center;padding:7px 4px;font-size:11.5px;color:#fff;font-weight:600;border:2px solid #f7f4ee;border-radius:0;min-width:52px;}
+.matrix td.rowlab{background:#fff !important;color:#1a2b4a;text-align:left;font-weight:600;min-width:150px;border-bottom:.5px solid #d9d3c8;}
+.matrix th{font-size:10px;padding:6px 4px;text-align:center;}
+.matrix th:first-child{text-align:left;}
+.actions{counter-reset:act;list-style:none;padding:0;margin:10px 0;}
+.actions li{counter-increment:act;position:relative;padding:11px 14px 11px 52px;background:#fff;border:1px solid #d9d3c8;border-radius:8px;margin:8px 0;font-size:13.5px;}
+.actions li::before{content:counter(act);position:absolute;left:14px;top:10px;width:26px;height:26px;border-radius:50%;background:#c0552d;color:#fff;font-family:Georgia,serif;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.actions b{color:#1a2b4a;}
+.tag{display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;border-radius:4px;padding:1px 7px;margin-right:6px;color:#fff;}
+.tag.raise{background:#1d9e75;} .tag.defend{background:#e24b4a;} .tag.fix{background:#888780;} .tag.verify{background:#eda100;}
+.foot{margin-top:40px;padding-top:12px;border-top:.5px solid #d9d3c8;font-size:11.5px;color:#6b6256;max-width:1100px;}
+.small{font-size:11.5px;color:#6b6256;}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,1fr);}.wrap{padding:20px 16px 40px;}.band{padding:24px 18px;}}
+</style>
+</head>
+<body>
+
+<div class="band">
+  <h1>Pricing Action Map — where to raise, where we are losing the customer</h1>
+  <div class="rule"></div>
+  <div class="sub">CY2025 · 18 distributor markets · PMS wear-part wallet + whole-base price posture.
+  Every euro on this page is either invoiced revenue or a capture gap from the verified sales pipeline — no estimated market shares.</div>
+  <div class="assume"><b>Apples-to-apples assumption:</b> genuine street price = ISZE list (IE40/PR00) × 1.40 (distributor) × 1.275 (dealer) = <b>× 1.785</b>, compared against observed aftermarket <i>retail</i> prices (Eucon panel + live shop scrapes). <b>BVP is not leakage:</b> capture = genuine + BVP together; only aftermarket defection counts as loss.</div>
+</div>
+
+<div class="wrap">
+
+  <div class="kpis">
+    <div class="kpi risk"><div class="lab">Wear-part wallet at risk (IAM)</div><div class="val" id="kRisk">—</div><div class="note">CY2025 capture gap, genuine+BVP vs expected demand, low-capture cells</div></div>
+    <div class="kpi"><div class="lab">Contested (45–80% capture)</div><div class="val" id="kCont">—</div><div class="note">winnable wallet in mid-capture cells</div></div>
+    <div class="kpi raise"><div class="lab">Raise scenario, captive wear cells</div><div class="val" id="kRaise">—</div><div class="note">+5% list on cells at ≥80% capture (scenario, not forecast)</div></div>
+    <div class="kpi raise"><div class="lab">Whole base: each +1% list</div><div class="val" id="kOne">—</div><div class="note">on non-IAM-exposed revenue (€103.6M parts base, AIM-classified)</div></div>
+  </div>
+
+  <h2 class="sec"><span class="no">1 ·</span> The decision map</h2>
+  <p class="lead">Each bubble is one part family in one market; size = CY2025 wallet (expected demand × price). Right = we already own the wallet (pricing headroom). Left = the customer already buys aftermarket (price cuts alone won't win them back — act on availability, range and BVP). Vertical position = how far our genuine street price sits above the aftermarket for that family.</p>
+  <div class="card">
+    <div class="controls">
+      <label for="dbSel">Market:</label>
+      <select id="dbSel"><option value="ALL">All markets</option></select>
+      <span class="small" id="quadNote"></span>
+    </div>
+    <div class="chartbox" style="height:520px;"><canvas id="quad" role="img" aria-label="Decision map: capture vs street price premium per family and market">Decision map chart</canvas></div>
+    <div class="legend">
+      <span><span class="sw" style="background:#e24b4a"></span>Defend / win back (&lt;45% capture)</span>
+      <span><span class="sw" style="background:#eda100"></span>Contested (45–80%)</span>
+      <span><span class="sw" style="background:#1d9e75"></span>Genuine-exclusive (≥80% — headroom)</span>
+      <span class="small">Street premium = family median, Eucon panel ×1.785 (n shown in tooltip). Families without Eucon price evidence (clutch booster, urea filter) are not plotted — see the heat-map for their capture.</span>
+    </div>
+  </div>
+
+  <h2 class="sec"><span class="no">2 ·</span> € at risk — where the aftermarket already has our customer</h2>
+  <p class="lead">Largest CY2025 capture gaps (genuine+BVP actuals vs UIO-implied demand). This is revenue a competitor invoices today, ranked so the top of this chart is the win-back agenda.</p>
+  <div class="card">
+    <div class="chartbox" style="height:640px;"><canvas id="riskBars" role="img" aria-label="Top capture gaps by family and market">At-risk ranking chart</canvas></div>
+  </div>
+
+  <h2 class="sec"><span class="no">3 ·</span> € to raise — headroom where the wallet is already ours</h2>
+  <p class="lead">Cells at ≥80% capture: customers demonstrably accept genuine/BVP at today's premium. A +5% list scenario is shown per cell (arithmetic on captured revenue — elasticity readings flagged where they urge staging). Below it, the bigger lever: the whole parts base that has no aftermarket alternative at all.</p>
+  <div class="card">
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:22px;align-items:start;">
+      <div>
+        <h3 style="font-size:15px;margin-bottom:6px;">Captive wear-part cells — +5% list scenario</h3>
+        <table id="raiseTbl"><thead><tr><th>Market</th><th>Family</th><th class="num">Capture</th><th class="num">Captured € 2025</th><th class="num">+5% ≈ €/yr</th><th>Elasticity note</th></tr></thead><tbody></tbody></table>
+      </div>
+      <div>
+        <h3 style="font-size:15px;margin-bottom:6px;">Non-contested base — value of +1% list, per market</h3>
+        <div class="chartbox" style="height:430px;"><canvas id="oneBars" role="img" aria-label="Value of +1% list per market on captive base">+1% per market chart</canvas></div>
+        <div class="small" style="margin-top:6px;">Captive base = CY2025 net sales minus AIM "competitive-class" revenue (parts with a catalogued aftermarket alternative). Arithmetic scenario — assumes volume holds on parts with no IAM substitute.</div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec"><span class="no">4 ·</span> Street price reality check — genuine vs aftermarket at the counter</h2>
+  <p class="lead">Median genuine street premium per family. Two independent measurements: the Eucon competitor panel (network level, ×1.785 on list) and live UK trade-shop scrapes where the same shop lists both genuine and aftermarket. Small samples — treat as direction, not decimals.</p>
+  <div class="card">
+    <div class="chartbox" style="height:460px;"><canvas id="ladder" role="img" aria-label="Genuine street premium vs aftermarket per family">Street premium chart</canvas></div>
+    <div class="legend">
+      <span><span class="sw" style="background:#2a78d6"></span>Eucon panel, street ×1.785 (pan-EU)</span>
+      <span><span class="sw" style="background:#85b7eb"></span>UK trade shop, observed genuine vs IAM listing</span>
+      <span class="small">Bars show median premium; "n" = part numbers behind each bar.</span>
+    </div>
+    <div class="callout" id="clutchNote"></div>
+  </div>
+
+  <h2 class="sec"><span class="no">5 ·</span> Capture heat-map — family × market</h2>
+  <p class="lead">Total ISZE capture (genuine+BVP, capped at 100%) per family and market. Green = ours. Red = theirs. The number in each cell is the CY2025 € gap.</p>
+  <div class="card" style="overflow-x:auto;">
+    <table class="matrix" id="heat"></table>
+    <div class="small" style="margin-top:6px;">Cells blank where expected demand is nil. UK = ITUK (trucks) + IUK (pick-up/LCV) — separate wallets.</div>
+  </div>
+
+  <h2 class="sec"><span class="no">6 ·</span> Ten actions for next week</h2>
+  <ol class="actions" id="acts"></ol>
+
+  <div class="callout"><b>Known caveats, stated up front.</b>
+    <ul style="margin:6px 0 0 16px;padding:0;">
+      <li><b>ITUK has two published lanes:</b> this page uses the network (PRISM) lane so all 18 markets are comparable. The official ITUK external numbers (IML v7 schedule: weighted cover 35.9%, €2.04M gap across 5 categories) use different intervals and UIO — directionally the same story, different absolutes. Don't mix the two in one document.</li>
+      <li><b>Air-filter capture</b> rests on a provisional every-2nd-service interval assumption, not yet confirmed by IML.</li>
+      <li><b>Price samples are thin</b> (Eucon 44 PNs, UK shop 39–42 PNs, scraped 9 May; UK/IL category scrapes 13 Jul). Premium medians are direction, not calibration.</li>
+      <li><b>Sweden:</b> 5 of 6 aftermarket price hits from the Swedish chain scrape were page artifacts (identical price on unrelated parts) and were excluded; Sweden has no usable local price evidence this cycle.</li>
+    </ul>
+  </div>
+
+  <div class="foot" id="src"></div>
+</div>
+
+<script>/*CHARTJS*/</script>
+<script id="data" type="application/json">/*DATA*/</script>
+<script>
+"use strict";
+const D = JSON.parse(document.getElementById('data').textContent);
+const fmtE = v => '€' + Math.round(v).toLocaleString('nl-BE');
+const fmtM = v => v >= 1e6 ? '€' + (v/1e6).toLocaleString('nl-BE',{maximumFractionDigits:1}) + 'M'
+                : v >= 1e3 ? '€' + Math.round(v/1e3).toLocaleString('nl-BE') + 'K' : fmtE(v);
+const pct = v => Math.round(v*100) + '%';
+const ZC = {defend:'#e24b4a', contested:'#eda100', raise:'#1d9e75'};
+const ink = '#52514e', grid = '#e1e0d9';
+Chart.defaults.font.family = '"Segoe UI",Helvetica,Arial,sans-serif';
+Chart.defaults.color = ink;
+Chart.defaults.animation = false;
+
+/* ---- KPIs ---- */
+const cells = D.cells;
+const sum = (a,f) => a.reduce((s,x)=>s+f(x),0);
+document.getElementById('kRisk').textContent = fmtM(sum(cells.filter(c=>c.zone==='defend'), c=>c.at_risk));
+document.getElementById('kCont').textContent = fmtM(sum(cells.filter(c=>c.zone==='contested'), c=>c.at_risk));
+document.getElementById('kRaise').textContent = fmtM(sum(cells, c=>c.headroom)) + '/yr';
+document.getElementById('kOne').textContent = fmtM(sum(D.db_context, r=>r.plus1pct_eur||0)) + '/pt';
+
+/* ---- price evidence per family (median eucon street delta) ---- */
+const ev = D.price_evidence;
+const famPrem = {};
+for (const [cat,e] of Object.entries(ev)) if (e.eucon) famPrem[cat] = e.eucon.med_street_delta_pct;
+
+/* ---- 1. decision quadrant ---- */
+const dbSel = document.getElementById('dbSel');
+[...new Set(cells.map(c=>c.db))].sort().forEach(db=>{const o=document.createElement('option');o.value=o.textContent=db;dbSel.appendChild(o);});
+function quadData(db){
+  const rows = cells.filter(c => (db==='ALL'||c.db===db) && c.tam > 20000);
+  const withEv = rows.filter(c => famPrem[c.cat] !== undefined);
+  document.getElementById('quadNote').textContent =
+    withEv.length + ' family×market cells with price evidence shown (wallet > €20K); premium axis = network Eucon median per family.';
+  return withEv.map(c => ({x:Math.round(c.capture*100), y:Math.round(famPrem[c.cat]*100),
+    r:Math.max(5, Math.min(26, Math.sqrt(c.tam)/28)), c}));
+}
+const zones = {id:'zones', beforeDatasetsDraw(ch){
+  const {ctx,scales:{x,y}} = ch; ctx.save();
+  ctx.fillStyle='rgba(226,75,74,0.07)';
+  ctx.fillRect(x.getPixelForValue(0), y.top, x.getPixelForValue(45)-x.getPixelForValue(0), y.bottom-y.top);
+  ctx.fillStyle='rgba(29,158,117,0.08)';
+  ctx.fillRect(x.getPixelForValue(80), y.top, x.getPixelForValue(100)-x.getPixelForValue(80), y.bottom-y.top);
+  ctx.fillStyle='#b23b3b'; ctx.font='11px Georgia,serif'; ctx.textAlign='left';
+  ctx.fillText('THEIR WALLET — win back', x.getPixelForValue(1), y.top+14);
+  ctx.fillStyle='#2e7d54'; ctx.textAlign='right';
+  ctx.fillText('OUR WALLET — headroom', x.getPixelForValue(99), y.top+14);
+  ctx.restore();
+}};
+const quad = new Chart(document.getElementById('quad'), {
+  type:'bubble',
+  data:{datasets:[{data:quadData('ALL'),
+    backgroundColor:ctx=>ctx.raw ? ZC[ctx.raw.c.zone]+'B3' : '#888',
+    borderColor:'#fff', borderWidth:1}]},
+  options:{responsive:true, maintainAspectRatio:false, layout:{padding:{top:6,right:14}},
+    plugins:{legend:{display:false}, tooltip:{callbacks:{label(ctx){const c=ctx.raw.c;
+      const e=ev[c.cat]&&ev[c.cat].eucon;
+      return [c.db+' · '+c.label, 'Capture (gen+BVP): '+pct(c.capture),
+        'Wallet 2025: '+fmtM(c.tam)+' · gap: '+fmtM(c.gap),
+        'Street premium (family median'+(e?', n='+e.n:'')+'): '+ctx.raw.y+'%'];}}}},
+    scales:{x:{min:0,max:100,title:{display:true,text:'ISZE capture of expected demand (genuine + BVP), %'},
+        ticks:{stepSize:20,callback:v=>v+'%'},grid:{color:grid}},
+      y:{title:{display:true,text:'Genuine street premium vs aftermarket (family median), %'},
+        ticks:{callback:v=>v+'%'},grid:{color:grid}}}},
+  plugins:[zones]});
+dbSel.addEventListener('input',()=>{quad.data.datasets[0].data=quadData(dbSel.value);quad.update();refreshRisk();});
+
+/* ---- 2. at-risk bars ---- */
+const riskC = document.getElementById('riskBars');
+let riskChart=null;
+function refreshRisk(){
+  const db=dbSel.value;
+  const top = cells.filter(c=>(db==='ALL'||c.db===db)&&c.at_risk>0)
+    .sort((a,b)=>b.at_risk-a.at_risk).slice(0,14);
+  const labels = top.map(c=>c.db+' · '+c.label);
+  const data = top.map(c=>Math.round(c.at_risk));
+  if(riskChart){riskChart.data.labels=labels;riskChart.data.datasets[0].data=data;
+    riskChart.data.datasets[0].backgroundColor=top.map(c=>ZC[c.zone]);riskChart.update();return;}
+  riskChart=new Chart(riskC,{type:'bar',
+    data:{labels,datasets:[{data,backgroundColor:top.map(c=>ZC[c.zone]),borderRadius:4,barThickness:24}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>{
+        const c=top[ctx.dataIndex];
+        return fmtE(c.at_risk)+' gap · capture '+pct(c.capture)+' · wallet '+fmtM(c.tam);}}}},
+      scales:{x:{grid:{color:grid},ticks:{maxTicksLimit:6,callback:v=>fmtM(v)}},
+        y:{grid:{display:false},ticks:{font:{size:12}}}}}});
+}
+refreshRisk();
+
+/* ---- 3. raise table + one-percent bars ---- */
+const rtb = document.querySelector('#raiseTbl tbody');
+cells.filter(c=>c.headroom>0).sort((a,b)=>b.headroom-a.headroom).slice(0,12).forEach(c=>{
+  const tr=document.createElement('tr');
+  const el = c.elasticity ? String(c.elasticity).replace('(contestable)','').trim() : '—';
+  tr.innerHTML='<td>'+c.db+'</td><td>'+c.label+'</td><td class="num">'+pct(c.capture)+'</td>'+
+    '<td class="num">'+fmtE(c.captured)+'</td><td class="num"><b>'+fmtE(c.headroom)+'</b></td>'+
+    '<td class="small">'+el+'</td>';
+  rtb.appendChild(tr);
+});
+const one = D.db_context.filter(r=>r.plus1pct_eur>1000).sort((a,b)=>b.plus1pct_eur-a.plus1pct_eur).slice(0,10);
+new Chart(document.getElementById('oneBars'),{type:'bar',
+  data:{labels:one.map(r=>r.distributor_code),
+    datasets:[{data:one.map(r=>Math.round(r.plus1pct_eur)),backgroundColor:'#1d9e75',borderRadius:4,barThickness:22}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+    tooltip:{callbacks:{label:ctx=>{const r=one[ctx.dataIndex];
+      return fmtE(r.plus1pct_eur)+'/pt · captive base '+fmtM(r.captive_rev_eur)+' of '+fmtM(r.net_sales_eur)+' net';}}}},
+    scales:{x:{grid:{color:grid},ticks:{maxTicksLimit:5,callback:v=>fmtM(v)}},y:{grid:{display:false}}}}});
+
+/* ---- 4. street premium ladder ---- */
+const famOrder = Object.keys(ev).filter(c=>ev[c].eucon||ev[c].ks_observed);
+famOrder.sort((a,b)=>((ev[b].eucon||{}).med_street_delta_pct||0)-((ev[a].eucon||{}).med_street_delta_pct||0));
+const CAT_LABEL = {brake_pad_front:'Brake pads (frt)', brake_pad_rear:'Brake pads (rr)', leaf_spring:'Leaf spring'};
+cells.forEach(c=>CAT_LABEL[c.cat]=c.label);
+const lb = famOrder.map(c=>{const e=ev[c];let l=CAT_LABEL[c]||c;
+  return l+'  (n='+((e.eucon||{}).n||0)+(e.ks_observed?('/'+e.ks_observed.n):'')+')';});
+new Chart(document.getElementById('ladder'),{type:'bar',
+  data:{labels:lb,datasets:[
+    {label:'Eucon ×1.785',data:famOrder.map(c=>ev[c].eucon?Math.round(ev[c].eucon.med_street_delta_pct*100):null),
+      backgroundColor:'#2a78d6',borderRadius:3,barThickness:16},
+    {label:'UK shop observed',data:famOrder.map(c=>ev[c].ks_observed?Math.round(ev[c].ks_observed.med_premium_pct*100):null),
+      backgroundColor:'#85b7eb',borderRadius:3,barThickness:16}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': +'+ctx.raw+'% vs aftermarket'}}},
+    scales:{x:{grid:{color:grid},title:{display:true,text:'genuine street premium vs aftermarket, %'},
+      ticks:{maxTicksLimit:6,callback:v=>(v>0?'+':'')+v+'%'}},y:{grid:{display:false},ticks:{font:{size:12}}}}}});
+const cd=ev.clutch_disc,cp=ev.clutch_pressure_plate;
+if(cd&&cd.eucon&&cd.eucon.med_street_delta_pct<0){
+  document.getElementById('clutchNote').innerHTML='<b>Clutch anomaly worth knowing:</b> on the small Eucon sample, genuine clutch discs and pressure plates price <i>below</i> the aftermarket at street level ('+Math.round(cd.eucon.med_street_delta_pct*100)+'% and '+Math.round(cp.eucon.med_street_delta_pct*100)+'%, n='+cd.eucon.n+'+'+cp.eucon.n+'). Yet clutch capture is the worst on the map — the loss there is not a price problem. Verify on a fuller sample, then fix availability and kit coverage, not price.';
+}
+
+/* ---- 5. heat matrix ---- */
+const heat=document.getElementById('heat');
+const famsAll=[...new Set(cells.map(c=>c.cat))];
+const famTam={}; famsAll.forEach(f=>famTam[f]=sum(cells.filter(c=>c.cat===f),c=>c.tam));
+const fams=famsAll.filter(f=>famTam[f]>100000).sort((a,b)=>famTam[b]-famTam[a]);
+const dbs=[...new Set(cells.map(c=>c.db))];
+const dbTam={}; dbs.forEach(d=>dbTam[d]=sum(cells.filter(c=>c.db===d),c=>c.tam));
+dbs.sort((a,b)=>dbTam[b]-dbTam[a]);
+const byKey={}; cells.forEach(c=>byKey[c.db+'|'+c.cat]=c);
+function shade(cap){ // red -> amber -> green
+  if(cap>=0.8)return '#1d9e75'; if(cap>=0.6)return '#7fb069';
+  if(cap>=0.45)return '#eda100'; if(cap>=0.25)return '#e07b39'; return '#e24b4a';}
+let h='<thead><tr><th>Family \\ Market</th>'+dbs.map(d=>'<th>'+d+'</th>').join('')+'</tr></thead><tbody>';
+fams.forEach(f=>{
+  h+='<tr><td class="rowlab">'+(CAT_LABEL[f]||f)+'</td>';
+  dbs.forEach(d=>{const c=byKey[d+'|'+f];
+    if(!c||c.tam<5000){h+='<td style="background:#efece5;color:#b8b2a6;">·</td>';return;}
+    h+='<td style="background:'+shade(c.capture)+'" title="'+d+' · '+(CAT_LABEL[f]||f)+' — capture '+pct(c.capture)+', gap '+fmtE(c.gap)+'">'+pct(c.capture)+'<br><span style="font-weight:400;font-size:9.5px;">'+fmtM(c.gap)+'</span></td>';});
+  h+='</tr>';});
+heat.innerHTML=h+'</tbody>';
+
+/* ---- 6. actions ---- */
+const ACTS = [
+ ['defend','<b>IUK clutch — €2.3M wallet, 4–6% capture.</b> Clutch disc gap €1.34M, pressure plate €565K, kit €373K. Street pricing is <i>not</i> the blocker (genuine prices at/below IAM on the sample). Launch a clutch-kit availability & dealer-stocking programme in the UK pick-up network; target the fitted-kit job, not the part.'],
+ ['defend','<b>IUK brakes — pads €807K + shoes €694K + rotors €469K gap.</b> Genuine street premium on pads runs >+100% vs IAM. Price-position the BVP brake line as the counter-offer at the counter — BVP revenue is our revenue; a BVP brake sale beats a Febi sale every time.'],
+ ['defend','<b>UTI brake pads (€456K gap, 7% capture) + clutch booster (€388K, 2%).</b> Israel has live local IAM price evidence (13 Jul scrape). Build the UTI counter-offer around it and take it to the April-trip follow-up agenda.'],
+ ['defend','<b>Belgium brake shoes — €344K gap at 7% capture</b> in a market we visit easily. Smallest-effort win-back pilot: one distributor, one family, measurable in two quarters.'],
+ ['raise','<b>Fuel filters ITUK + UTI: capture ≥80% at a +146% street premium — the premium is accepted.</b> Take +5% list (≈ €19K/yr on these two cells alone, €96K/yr across all captive wear cells). Elasticity readings say stage it, not big-bang.'],
+ ['raise','<b>Whole-base captive raise: +1% list on non-IAM-exposed revenue ≈ €328K/yr network-wide</b> (ITUK €56K, IUK €61K, UTI €34K, UMI €34K per point). No aftermarket alternative exists for these parts — volume risk is VOR behaviour, not defection.'],
+ ['verify','<b>Clutch price anomaly: genuine street below aftermarket (n=3).</b> Commission a fuller Eucon pull on clutch before any repricing — if confirmed, clutch list can carry +10% without touching the capture problem (which is availability-driven).'],
+ ['verify','<b>Air filter: don\'t reprice yet.</b> Capture looks healthy only under the provisional every-2nd-service interval; the official ITUK lane still shows a €736K air-filter gap. Get IML to confirm the interval ratio first — it flips air filter between "raise" and "defend".'],
+ ['verify','<b>Germany + Norway street-price audit: €382K / €373K of revenue sits on Eucon-undercut part numbers.</b> Check actual distributor counter prices against the ×1.785 assumption — if their real markup is higher, we are pricing ourselves out with our own channel.'],
+ ['fix','<b>Price-evidence pipeline repaired 16 Jul</b> (UK PN-level scraper restored after the 13 Jul crash; Swedish page-artifact guard in place — 4 clean Swedish price points now on file). One step left: kick a fresh UK PN-level run this week — genuine-vs-IAM evidence is still the 9 May scrape and it is the only source that sees both sides of the counter. Confirm the Sunday scheduled run lands before any repricing decision.'],
+];
+document.getElementById('acts').innerHTML = ACTS.map(a=>
+  '<li><span class="tag '+a[0]+'">'+(a[0]==='raise'?'Raise':a[0]==='defend'?'Win back':a[0]==='verify'?'Verify':'Fix')+'</span> '+a[1]+'</li>').join('');
+
+/* ---- sources foot ---- */
+document.getElementById('src').innerHTML =
+ '<b>Sources & method.</b> Capture and € gaps: verified sales pipeline (SAP billing 2023–2026, credit notes/returns and non-part lines excluded; pipeline verification green, 106 checks, 6 Jul 2026) against UIO-implied demand per model bucket. '+
+ 'Price benchmarks: Eucon competitor panel (44 part numbers, brands incl. Blue Print, Febi, Delphi, Textar — OE/mid-tier, not budget) grossed to street ×1.785; UK trade shop scrape 9 May 2026 (genuine vs IAM listings, same shop); UK & Israel category scrapes 13 Jul 2026; Swedish chain scrape 13 Jul 2026 (artifact-filtered). '+
+ 'Whole-base captive split: AIM classification (93.5% of revenue classified, Mar 2026). Channel markups (+40% / +27.5%) are working assumptions — replace with confirmed distributor margins when available. '+
+ 'Built ' + D.meta.built + ' · CY2025 · MIDI and Turkey excluded by policy (not ISZE-direct customers).';
+</script>
+</body>
+</html>

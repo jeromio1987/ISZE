@@ -72,7 +72,7 @@ PRISM `uio_source` (e.g. `ituk_dvla_2026`) is shown verbatim — confirm with PR
 ## Executive HTML (parent folder)
 
 ```powershell
-cd C:\Users\jerom\Desktop\claude\ISZE\Tools\autodoc_scraper
+cd C:\Users\jerom\Desktop\claude\ISZE\04_tools\autodoc_scraper
 python build_executive_dashboard.py --variant all
 ```
 
@@ -89,7 +89,7 @@ Or: `run_executive_html.bat` (opens PMS HTML by default).
 ## How to run Streamlit
 
 ```powershell
-cd C:\Users\jerom\Desktop\claude\ISZE\Tools\autodoc_scraper\_HANDOFF_BUNDLE
+cd C:\Users\jerom\Desktop\claude\ISZE\04_tools\autodoc_scraper\_HANDOFF_BUNDLE
 run_bi.bat
 ```
 
@@ -105,4 +105,4 @@ Edit `sources.yaml` only, then restart `run_bi.bat`. See `AUDIT_MAP.md` for path
 
 ## Confirmed dead scrapers (parent only)
 
-Autodoc EU/DE, Mister Auto, Oscaro — no Isuzu commercial coverage. Evidence in parent `_diag/`.
+Autodoc EU/DE, Oscaro — **Cloudflare Turnstile blocks every request** (100% no_results, 200-328/200-328 PNs); a playwright-stealth retry (`diagnose_stealth.py`) was already tried and still blocked. This is not a coverage gap — the sites were never actually queried. Mister Auto returns an empty response body (different failure mode, not confirmed as bot-blocking). Evidence in parent `_diag/` and `_diag_stealth/`.

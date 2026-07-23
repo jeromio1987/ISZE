@@ -24,7 +24,8 @@
 
 ## Drift watch
 
-FACTS.md vs Pricing_Logic.md and Active_Projects — not compared since 2026-06-10.
+**2026-07-09 — Active_Projects_Apr2026.md and Pricing_Logic.md reconciled against FACTS.md/project files** by Claude (Cowork). See `08_gpt/CHANGELOG.md` v1.1 for full diff and open gaps (UIO v19 totals, AIM revenue/GP figures, and the newer `Price file 2026_full.xlsx` were flagged but NOT verified — check before upload).
+Other 6 pack files (UIO_V17_File_Guide, ISZE_Company_Context, Glossary_and_Terms, Jerome_Working_Style, Email_Templates, Analysis_Frameworks) not reviewed this pass — drift status unknown.
 01_data/gpt_safe/ may carry pre-fix figures — re-export after green verify.
 
 Full protocol: 00_docs/agent/AI_STACK.md

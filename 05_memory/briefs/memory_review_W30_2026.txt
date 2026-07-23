@@ -1,0 +1,110 @@
+ISZE MEMORY REVIEW — Week 30, 2026
+Generated: 2026-07-20
+
+(First run of this scheduled task — no prior memory_review file to diff against.)
+
+Scope note: per standing instruction (2026-07-13), lubricants.md and action-plan-fy*.md
+are permanently out of scope. Neither file exists on disk currently — confirmed, not
+re-flagged as missing.
+
+## Memory Health
+
+STALE (>3 weeks since last validated):
+- competitiveness.md — last validated 2026-03-24 (117 days). By far the oldest project
+  file reviewed. It also sits downstream of pricing-basket-2026.md, which was updated
+  2026-07-14 with a new canonical PR00 price file — competitiveness.md's ASC/DB/DLR price
+  levels were never re-run against that file. N-Series confidence was already MEDIUM and
+  F-Series LOW pending EQ-HIT; treat the whole dashboard as unverified until re-run.
+- sales-analytics-pipeline.md — last validated 2026-06-13 (37 days). Its "Next actions"
+  checklist (clear verify fails, refresh gpt_safe aggregates, keep DATA_MANIFEST current)
+  has no recorded update since — unclear if still accurate.
+- glossary.md — has no `last_validated` field at all (unlike the project files, which all
+  use one). File mtime is 2026-06-13 (37 days). Recommend adding the same frontmatter
+  convention so it can be tracked going forward.
+
+BORDERLINE (right at the 3-week line):
+- pricing-basket-2026.md — last verified 2026-06-29 (21 days = exactly 3 weeks, not yet
+  "older than"). Flagging as a watch item rather than stale, since this file is explicitly
+  cited in unattended prompts and the underlying canonical price file changed 2026-07-14
+  without a corresponding basket re-verification noted here.
+
+NOT STALE: pms-coverage.md (17d), aftermarket-intelligence.md (18d), uio.md (14d),
+monthly-sales-report-fy2027.md (15d), gps-reconciliation.md (17d, dated in title only,
+no frontmatter field).
+
+## Corrections not propagated to CLAUDE.md
+
+1. **PMS gap/oil-filter figures — the biggest one.** Global CLAUDE.md "Key confirmed data"
+   still states: "ITUK PMS gap: ~€3.5M+ | Oil filter capture rate 0.3%... FY26 target
+   £13.13M | True Sales avg £580.65/vehicle/yr." pms-coverage.md explicitly rejects this:
+   "Do not quote 0.3% or ~€3.5M+ — both stale/rejected." The adopted headline since
+   2026-07-02 (Model B) is **35.1% oil filter cover, €2.04M gap, 5 categories, UIO 22,389
+   DVLA**. CLAUDE.md has not been updated to match. Real risk of quoting a rejected figure
+   externally if CLAUDE.md is the reference point.
+
+2. **AIM classification rate — needs a CY2024/CY2025 split.** CLAUDE.md says "Classification
+   93.5% (14 Mar, was 75.6%). VKWRT + CY2024 still needed" with no caveat. The project file
+   is explicit that 93.5% is CY2024 count-based only, and CY2025 uses a different, non-
+   comparable metric (87% revenue-weighted) — "Do not cite 93.5% for CY2025." CLAUDE.md
+   also hasn't picked up the 2026-07-02 update (residual gap closed further to 1.6–1.8%,
+   CY2026 Q1 dashboard live, +10.4% YoY). Recommend rewriting the CLAUDE.md line to
+   separate the two metrics and add the July update.
+
+3. **Minor, internal to uio.md:** header/status say "v19 canonical" (validated 2026-07-06),
+   but the file's own "Version history" table only runs to v17 (2026-04-20), and "Known
+   open items" #7 still reads "Build script not updated for v17." The v18→v19 jump isn't
+   reflected in the version table — a housekeeping gap inside the file itself, not just
+   vs. CLAUDE.md.
+
+## Project status mismatches
+
+- CLAUDE.md's Active Projects table lists UIO Tool as **"(v9) — Stable — FY2027 refresh due
+  now (Apr 2026) | Awaiting new data from DBs."** The actual project file has moved well
+  past that: **v19 canonical**, validated 2026-07-06, full v11→v17 changelog with several
+  confirmed bug fixes since April, ITUK cohort model corrected, MIDI toggle policy set.
+  CLAUDE.md's summary line is several versions and ~3 months stale — recommend rewriting
+  it from uio.md's current status block rather than the old "v9 / Apr 2026" framing.
+
+## Open Items Still Unresolved
+
+- EQ-HIT PN→service-schedule mapping (pms-coverage.md) — still pending; also blocks
+  competitiveness.md's N/F-Series confidence upgrade.
+- CY2025 full PMS basket gap revalidation (pms-coverage.md) — pending.
+- VKWRT load for SPA-adjusted AIM scoring (aftermarket-intelligence.md, next-steps #4) —
+  still open.
+- Other-DB sell-out data collection for AIM, tied to the FY2027 20% KPI condition
+  (aftermarket-intelligence.md, next-steps #6, references ISZE_DealerData_Initiative_
+  FY2027.docx — not the out-of-scope action-plan file) — still open.
+- Q1FY2027 canonical file swap (Q1FY2027_full.XLSX → Q1FY2027.XLSX) — blocked on Jerome
+  closing the old file in Excel (monthly-sales-report-fy2027.md).
+- GPS v9 snapshot re-basing decision — still needs Jerome's call. Raw rebuild now runs
+  2–4.5% lower than the hardcoded 12-Jun-2026 snapshot embedded in the GPS dashboards
+  (UMI −20%, UTI −7.5%) (gps-reconciliation.md).
+- Israel 2027–30 UIO extrapolation via trend CAGR — flagged as weak if Israel is ever
+  debated in isolation (uio.md).
+- MIDI contribution (uio.md, sheet 1 row 5, ~92,585 units 2024) — not verified after v17,
+  still marked "treat as estimate."
+- Competitiveness dashboard's three "what would make it better" items (EQ-HIT access, SAP
+  invoice export, real-time AM price scraping) — no movement since March; all still open.
+
+## Suggested Updates
+
+1. CLAUDE.md "Key confirmed data": replace the 0.3%/€3.5M+ PMS figures with Model B's
+   35.1%/€2.04M and note the old figures as rejected.
+2. CLAUDE.md AIM line: split CY2024 (93.5%, count-based) from CY2025 (87%, revenue-
+   weighted); add the 2026-07-02 residual-closure and CY2026 dashboard update.
+3. CLAUDE.md UIO Tool row: update from "(v9)/Apr 2026/awaiting data" to reflect v19
+   canonical status.
+4. Re-run or explicitly re-date competitiveness.md against the 2026-07-14 canonical price
+   file before citing it again — 117 days stale and built on pricing that has since moved.
+5. Add a `last_validated` line to glossary.md so it's trackable in future reviews.
+6. Check off or update the three "Next actions" in sales-analytics-pipeline.md (37 days
+   stale) — confirm whether verify-fails are cleared and gpt_safe is refreshed.
+
+## No action needed
+
+pms-coverage.md, aftermarket-intelligence.md, uio.md (aside from the version-table gap
+above), monthly-sales-report-fy2027.md, and gps-reconciliation.md are all validated
+within the last three weeks and internally consistent. pricing-basket-2026.md's content
+(FX rate, Class 0 count, discount factors) matches CLAUDE.md and glossary.md — only its
+recency is borderline.

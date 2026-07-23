@@ -76,6 +76,36 @@ def _col_for(headers: list[str], label: str, default: int) -> int:
     return default
 
 
+def _col_for_any(headers: list[str], labels: tuple[str, ...], default: int) -> int:
+    for label in labels:
+        if label in headers:
+            return headers.index(label) + 1
+    return default
+
+
+ITUK_ITEMS_MAX = 234
+
+
+def _coerce_items_pct(
+    value,
+    *,
+    header: str,
+    points_pct: float | None,
+) -> float | None:
+    """Normalise Items scored % — some legacy ITUK sheets store raw counts."""
+    if value is None:
+        return points_pct
+    try:
+        items_f = float(value)
+    except (TypeError, ValueError):
+        return points_pct
+    if items_f <= 100.001:
+        return round(items_f, 2)
+    if header == "Assessed points" or items_f > 150:
+        return round(items_f / ITUK_ITEMS_MAX * 100, 2)
+    return round(items_f, 2)
+
+
 def _read_total_country(path: Path, country: str) -> list[dict]:
     wb = load_workbook(path, read_only=True, data_only=True)
     sheet = country if country in wb.sheetnames else wb.sheetnames[0]
@@ -83,8 +113,9 @@ def _read_total_country(path: Path, country: str) -> list[dict]:
     headers = _header_row(ws)
     rank_col = _col_for(headers, "Rank", 1)
     name_col = _col_for(headers, "Name", 2)
-    pts_col = _col_for(headers, "Points achieved %", 3)
-    items_col = _col_for(headers, "Items scored %", 4)
+    pts_col = _col_for_any(headers, ("Points achieved %", "Total percentage"), 3)
+    items_col = _col_for_any(headers, ("Items scored %", "Assessed points"), 4)
+    items_header = headers[items_col - 1] if items_col <= len(headers) else ""
     rows: list[dict] = []
     for r in range(2, ws.max_row + 1):
         name = ws.cell(r, name_col).value
@@ -98,10 +129,7 @@ def _read_total_country(path: Path, country: str) -> list[dict]:
             pts_f = None
         if pts_f is None or pts_f > 100:
             continue
-        try:
-            items_f = float(items) if items is not None else pts_f
-        except (TypeError, ValueError):
-            items_f = pts_f
+        items_f = _coerce_items_pct(items, header=items_header, points_pct=pts_f)
         rows.append(
             {
                 "country": country,

@@ -1,6 +1,6 @@
 # ISZE folder layout — single source for path constants
-# Code: 03_analytics/Isuzu/prism/config.py reads this file
-# Agent sync: 2026-06-13
+# Code: 03_analytics/Isuzu/prism/config.py + 04_tools/_shared/paths.py
+# Agent sync: 2026-06-18 (data_subfolders added)
 
 version: 1
 
@@ -40,3 +40,64 @@ deploy:
 analytics:
   prism: "03_analytics/Isuzu/prism"
   pms_pilot: "03_analytics/Isuzu/pms-pilot"
+
+# 01_data subfolders — numbered names (Explorer) + legacy aliases (junctions after reorg)
+# Resolved by 04_tools/_shared/paths.py and prism/config.py (_resolve_data_subfolder)
+data_subfolders:
+  derived:
+    numbered: "00_derived"
+    legacy: "derived"
+  pricing:
+    numbered: "01_Pricing"
+    legacy: "Pricing"
+  gps:
+    numbered: "02_GPS"
+    legacy: "GPS"
+  pms:
+    numbered: "03_PMS"
+    legacy: "PMS"
+  sales:
+    numbered: "04_sales"
+    legacy: "sales data"
+  dealer_sellout:
+    numbered: "05_Dealer_sellout"
+    legacy: "Dealer_sellout"
+  warranty:
+    numbered: "06_Warranty"
+    legacy: "Warranty"
+  uio:
+    numbered: "07_UIO"
+    legacy: "UIO"
+  distributor:
+    numbered: "08_Distributor"
+    legacy: "Distributor"
+  tender:
+    numbered: "10_Tender"
+    legacy: "Tender"
+  planning:
+    numbered: "11_planning"
+    legacy: "planning"
+  raw:
+    numbered: "12_raw"
+    legacy: "raw"
+  models:
+    numbered: "13_models"
+    legacy: "models"
+  dashboards:
+    numbered: "14_dashboards"
+    legacy: "dashboards"
+  gpt_safe:
+    numbered: "15_gpt_safe"
+    legacy: "gpt_safe"
+  exports:
+    numbered: "16_exports"
+    legacy: "exports"
+  inbox:
+    numbered: "90_INBOX"
+    legacy: "_INBOX"
+  build:
+    numbered: "91_build"
+    legacy: "_build"
+  archive:
+    numbered: "92_archive"
+    legacy: "_archive"

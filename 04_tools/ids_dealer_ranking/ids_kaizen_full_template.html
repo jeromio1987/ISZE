@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IDS Kaizen Full Study 2026</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;font-size:15px;line-height:1.55;background:#f7f4ee}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0}
+.wrap{max-width:1140px;margin:0 auto;padding:0 1.25rem 3rem}
+.cover{background:linear-gradient(155deg,#15233c 0%,#203759 60%,#2b4a78 100%);color:#eef1f6;padding:3.5rem 1.5rem 3rem;margin-bottom:2rem}
+.cover h1{color:#fff;font-size:2.15rem;line-height:1.15;max-width:20ch}
+.cover .rule{width:4.5rem;height:3px;background:#c0552d;margin:1.25rem 0 1rem}
+.cover p{opacity:.9;max-width:52rem;margin:0}
+.meta{font-size:.85rem;opacity:.75;margin-top:1.5rem}
+h2{font-size:1.4rem;margin:2.2rem 0 .6rem;padding-bottom:.4rem;border-bottom:2px solid #1a2b4a}
+h2 .no{color:#c0552d}
+.callout{border-left:3px solid #c0552d;background:#fff;padding:.9rem 1.1rem;margin:1rem 0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.75rem;margin:1rem 0 1.5rem}
+.stat{background:#fff;border:1px solid #d9d3c8;border-radius:6px;padding:.85rem 1rem}
+.stat .n{font-size:1.45rem;font-weight:700;color:#1a2b4a;font-family:Georgia,serif}
+.stat .l{font-size:.75rem;color:#6b6256;text-transform:uppercase;letter-spacing:.03em}
+.chart-box{background:#fff;border:1px solid #d9d3c8;border-radius:8px;padding:1rem;margin:1rem 0 1.5rem}
+.chart-box .caption{font-size:.9rem;color:#6b6256;margin:0 0 .75rem}
+table{width:100%;border-collapse:collapse;font-size:.82rem;background:#fff;margin:1rem 0}
+th{background:#1a2b4a;color:#fff;text-align:left;padding:.45rem .55rem;font-size:.72rem;text-transform:uppercase}
+td{padding:.4rem .55rem;border-bottom:1px solid #d9d3c8;vertical-align:top}
+tr:nth-child(even) td{background:#f7f4ee}
+.hm{display:inline-block;min-width:2.6rem;padding:.2rem .35rem;border-radius:3px;color:#fff;font-weight:700;text-align:center;font-size:.78rem}
+.dealer-card{background:#fff;border:1px solid #d9d3c8;border-radius:8px;padding:1rem 1.15rem;margin:.75rem 0}
+.dealer-card h3{font-size:1.05rem;color:#c0552d}
+.country-block{margin:1.5rem 0}
+.country-block h3{margin-bottom:.4rem}
+.gap-list{margin:.35rem 0 0;padding-left:1.1rem;font-size:.88rem}
+.muted{color:#6b6256}
+.foot{font-size:.75rem;color:#6b6256;margin-top:2.5rem;padding-top:.75rem;border-top:1px solid #d9d3c8}
+.badge{display:inline-block;padding:.12rem .4rem;border-radius:3px;font-size:.72rem;font-weight:600;background:#fff3d6;color:#8a6a00}
+.tip{border-bottom:1px dotted #c0552d;cursor:help;position:relative;color:inherit}
+.tip:hover,.tip:focus{outline:none;color:#c0552d}
+.tip::after{
+  content:attr(data-tip);
+  position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);
+  width:min(340px,78vw);padding:10px 12px;background:#1a2b4a;color:#eef1f6;
+  font:400 12px/1.45 "Segoe UI",Helvetica,Arial,sans-serif;text-align:left;
+  border-radius:6px;box-shadow:0 6px 18px rgba(26,39,68,.28);
+  white-space:pre-wrap;z-index:40;opacity:0;pointer-events:none;visibility:hidden;
+  transition:opacity .12s ease;
+}
+.tip:hover::after,.tip:focus::after{opacity:1;visibility:visible}
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="wrap">
+    <div style="font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;opacity:.8">ISZE · IDS 2026 Kaizen</div>
+    <h1>Full IDS Kaizen pack</h1>
+    <div class="rule"></div>
+    <p>Bottom dealers in every country, Excel question gaps for Kaizen, plus a country × section view so we can ask distributors why a whole section is soft.</p>
+    <div class="meta">Built __BUILT_AT__ · Offline charts</div>
+  </div>
+</div>
+<div class="wrap">
+
+<h2><span class="no">01</span> How this pack works</h2>
+<div class="callout" id="howto"></div>
+<div class="stats" id="stats"></div>
+
+<h2><span class="no">02</span> Country × section (side quest)</h2>
+<p class="muted">Each cell = country average % for that IDS section. Red-ish = weaker vs network. Use the ask-list to brief DBs.</p>
+<div class="chart-box">
+  <p class="caption">Country total IDS % (horizontal ranking)</p>
+  <div style="position:relative;width:100%;height:420px"><canvas id="countryRank" role="img" aria-label="Country IDS ranking"></canvas></div>
+</div>
+<div class="chart-box">
+  <p class="caption">Section profile — network vs selected weak countries</p>
+  <div style="position:relative;width:100%;height:320px"><canvas id="sectionRadar" role="img" aria-label="Section comparison"></canvas></div>
+</div>
+<table id="matrixTable"><thead></thead><tbody></tbody></table>
+<h3>Ask list (section ≤ −8 pp vs network)</h3>
+<ul id="askList"></ul>
+
+<h2><span class="no">03</span> Kaizen dealers (3 per country)</h2>
+<p class="muted">Lowest total IDS % in each market. Gaps come from the evaluation Excel. Each card includes <b>questions to ask the DB</b> (aftersales / sales / parts rank, B.1, CAP ownership) — answer columns are in the register sheet <code>DB_Questions</code>.</p>
+<div id="dealers"></div>
+
+<p class="foot">Source: IDS 2026 evaluation result reports (A–E). Ranks cross-checked with TOTAL and B.1 ranking workbooks where names match. ITUK is totals-only (no question rows). Side quest flags use network section averages from the same dashboard extract.</p>
+</div>
+<script>__CHART_JS__</script>
+<script>
+const DATA = __DATA_JSON__;
+__APP_JS__
+</script>
+</body>
+</html>

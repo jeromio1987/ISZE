@@ -75,7 +75,7 @@ Same slim formatters as Streamlit (`bi_display` / `iam_display`). Tables capped 
 ## Rebuild static HTML after code changes
 
 ```bat
-cd C:\Users\jerom\Desktop\claude\ISZE\Tools\autodoc_scraper
+cd C:\Users\jerom\Desktop\claude\ISZE\04_tools\autodoc_scraper
 python build_executive_dashboard.py --variant all
 ```
 

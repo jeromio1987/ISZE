@@ -19,15 +19,32 @@ paths:
 
   pms_coverage_calculator: ../../../91_legacy/Isuzu/Divers/ISZE_PMS_Coverage_Calculator.xlsx
 
-  # PRISM green-pipeline output (best multi-DB PMS actuals + UIO per DB)
-  pms_capture_by_db: ../../../01_data/derived/pms_capture_by_db_year.csv
+  # PRISM green-pipeline output (best multi-DB PMS actuals + UIO per DB).
+  # 2026-07-09 fix: same stale-path bug as sales_to_dealers_dir below — this pointed
+  # at 01_data/derived/ which doesn't exist; real file is 01_data/00_derived/. Because
+  # this never resolved, compute_pms_all_distributors()'s "auto" mode always fell back
+  # to the internal v17 cohort-survival UIO calc instead of this file — which is how
+  # flipping the default scope to Pan-European produced a 1.82M-vehicle network UIO
+  # (MIDI alone contributing 667K vs its own documented 98,654, and MIDI should be
+  # EXCLUDED per distributor_master_mapping.csv — this PRISM file already excludes it
+  # correctly, engine.py's internal calc does not).
+  pms_capture_by_db: ../../../01_data/00_derived/pms_capture_by_db_year.csv
 
-  # Distributor → dealer sales (one file per DB; filename pattern below)
-  sales_to_dealers_dir: ../../../03_analytics/Isuzu
+  # Distributor -> dealer sales. 2026-07-09 fix: this used to point at
+  # 03_analytics/Isuzu, which no longer has the file (moved under 01_data/12_raw/
+  # dealer_sales/<DB>/ — see DEALER_SELL_OUT.md). Engine was silently falling back
+  # to v3 global Qty_CY2025 for ITUK actuals, comparing network-wide qty against
+  # ITUK-only potential demand -> capture rates up to 165% on the PMS lost-sales tab.
+  # ITUK-only for now (load_ituk_dealer_sales is ITUK-specific); UTI has a different
+  # file layout (UTIPartSales_*.xlsx, PN-only, no dealer dimension).
+  sales_to_dealers_dir: ../../../01_data/12_raw/dealer_sales/ITUK
   sales_to_dealers_pattern: "Sales to Dealers_{db_code}_{period}{year}.xlsx"
 
-  # ITUK sell-out: PN × Margin % (SAP class margin — not in Sales to Dealers qty file)
-  ituk_pn_margins: ../../../03_analytics/Isuzu/ITUK_Parts_Sales_Classification_CY2025.xlsx
+  # ITUK sell-out: PN x Margin % (SAP class margin — not in Sales to Dealers qty file)
+  # 2026-07-09 fix: same stale-path bug as above; only a legacy copy exists on disk
+  # (91_legacy/Isuzu — not regenerated in the current pipeline). Using it is better
+  # than the flat 35% fallback but confirm freshness before citing externally.
+  ituk_pn_margins: ../../../91_legacy/Isuzu/ITUK_Parts_Sales_Classification_CY2025.xlsx
   ituk_pn_margins_sheet: "PARTS MASTER CY2025"
 
   # Optional: billing lines with net_sales_value (no COGS column today — GP from margin file above)

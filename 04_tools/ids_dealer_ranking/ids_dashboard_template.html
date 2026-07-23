@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IDS 2026 — Dealer Compare</title>
+  <style>
+    :root {
+      --navy: #1a2744;
+      --navy-light: #2d3f5c;
+      --terracotta: #c45c3e;
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --muted: #6b7a90;
+      --bad: #c45c3e;
+      --good: #2d8a5e;
+      --mid: #d4dae3;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--navy); line-height: 1.45; }
+    header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); color: #fff; padding: 1.25rem 1.5rem 1rem; }
+    header h1 { margin: 0 0 0.25rem; font-size: 1.35rem; font-weight: 600; }
+    header p { margin: 0; opacity: 0.85; font-size: 0.9rem; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: end; padding: 1rem 1.5rem; background: var(--card); border-bottom: 1px solid var(--mid); position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 8px rgba(26,39,68,0.06); }
+    label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); display: block; margin-bottom: 0.25rem; }
+    select, input[type="search"] { font: inherit; padding: 0.4rem 0.6rem; border: 1px solid var(--mid); border-radius: 6px; min-width: 9rem; background: #fff; color: var(--navy); }
+    select[multiple] { min-height: 2.2rem; min-width: 11rem; }
+    .chk { display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; padding-bottom: 0.35rem; }
+    .tabs { display: flex; flex-wrap: wrap; gap: 0.15rem; padding: 0 1rem; margin-top: 0.5rem; border-bottom: 1px solid var(--mid); background: var(--card); }
+    .tab { border: none; background: transparent; color: var(--muted); font: inherit; font-weight: 600; font-size: 0.88rem; padding: 0.6rem 0.75rem; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+    .tab.active { color: var(--terracotta); border-bottom-color: var(--terracotta); }
+    main { padding: 1rem 1.5rem 2rem; max-width: 1400px; margin: 0 auto; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
+    .stat { background: var(--card); border-radius: 10px; padding: 0.85rem 1rem; border-left: 4px solid var(--terracotta); box-shadow: 0 1px 4px rgba(26,39,68,0.05); }
+    .stat strong { display: block; font-size: 1.35rem; }
+    .stat span { font-size: 0.8rem; color: var(--muted); }
+    .card { background: var(--card); border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 1rem; box-shadow: 0 1px 4px rgba(26,39,68,0.05); }
+    .card h2 { margin: 0 0 0.75rem; font-size: 1.05rem; }
+    .controls { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; align-items: end; }
+    .bar-row { display: grid; grid-template-columns: 11rem 1fr 4rem; gap: 0.5rem; align-items: center; margin-bottom: 0.35rem; font-size: 0.82rem; }
+    .bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-label small { color: var(--muted); }
+    .bar-track { height: 1.1rem; background: #e8ecf2; border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--navy-light), var(--terracotta)); min-width: 2px; }
+    .bar-fill.below { background: linear-gradient(90deg, #a8b4c4, var(--bad)); }
+    .bar-fill.gap-pos { background: linear-gradient(90deg, #6aab82, var(--good)); }
+    .bar-fill.gap-neg { background: linear-gradient(90deg, #d4907f, var(--bad)); }
+    .bar-pct { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .heatmap-wrap { overflow: auto; max-height: 70vh; }
+    .heatmap { display: grid; gap: 2px; font-size: 0.72rem; min-width: max-content; }
+    .hm-corner { position: sticky; left: 0; z-index: 2; background: var(--card); font-weight: 600; padding: 0.35rem; }
+    .hm-head { writing-mode: vertical-rl; transform: rotate(180deg); padding: 0.35rem 0.2rem; font-weight: 600; color: var(--muted); max-height: 7rem; }
+    .hm-row-label { position: sticky; left: 0; z-index: 1; background: var(--card); padding: 0.25rem 0.4rem; white-space: nowrap; max-width: 14rem; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--mid); }
+    .hm-cell { width: 2.1rem; height: 1.6rem; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #fff; font-size: 0.7rem; }
+    .hm-na { background: #e8ecf2 !important; color: var(--muted) !important; }
+    .legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.75rem; }
+    .legend i { display: inline-block; width: 1rem; height: 1rem; border-radius: 2px; vertical-align: middle; margin-right: 0.25rem; }
+    .badge { font-size: 0.65rem; background: #fff3e8; color: var(--terracotta); border-radius: 4px; padding: 0.1rem 0.35rem; margin-left: 0.35rem; font-weight: 600; }
+    .radar-wrap { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; }
+    .radar-box { flex: 1 1 320px; max-width: 420px; }
+    .radar-box svg { width: 100%; height: auto; display: block; }
+    .radar-legend { font-size: 0.82rem; margin-top: 0.5rem; }
+    .radar-legend span { display: inline-flex; align-items: center; gap: 0.35rem; margin-right: 1rem; margin-bottom: 0.25rem; }
+    .radar-legend i { width: 1.5rem; height: 3px; border-radius: 2px; display: inline-block; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+    table.data { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    table.data th, table.data td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--mid); text-align: left; }
+    table.data th { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; }
+    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .hint { font-size: 0.85rem; color: var(--muted); margin: 0 0 0.75rem; }
+    footer { text-align: center; font-size: 0.75rem; color: var(--muted); padding: 1rem; border-top: 1px solid var(--mid); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>IDS 2026 — Dealer comparison</h1>
+    <p>Offline · sections A–E · built __BUILT_AT__</p>
+  </header>
+
+  <div class="toolbar">
+    <div><label for="f-country">Country filter</label><select id="f-country" multiple></select></div>
+    <div><label for="f-search">Dealer search</label><input id="f-search" type="search" placeholder="Name…" /></div>
+    <label class="chk"><input type="checkbox" id="f-below" /> Below country avg only</label>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="overview" type="button">Overview</button>
+    <button class="tab" data-tab="heatmap" type="button">Heatmap</button>
+    <button class="tab" data-tab="dealer-radar" type="button">Dealer radar</button>
+    <button class="tab" data-tab="country-radar" type="button">Country radar</button>
+    <button class="tab" data-tab="gaps" type="button">Section gaps</button>
+    <button class="tab" data-tab="compare" type="button">Compare dealers</button>
+    <button class="tab" data-tab="country" type="button">By country</button>
+  </nav>
+
+  <main>
+    <div class="stats" id="stats"></div>
+
+    <section id="panel-overview" class="panel active">
+      <div class="card">
+        <h2>Total score ranking (% of 280)</h2>
+        <div id="chart-overview"></div>
+      </div>
+    </section>
+
+    <section id="panel-heatmap" class="panel">
+      <div class="card">
+        <h2>Section heatmap (% of section max)</h2>
+        <div class="legend">
+          <span><i style="background:#2d8a5e"></i> ≥ country avg</span>
+          <span><i style="background:#c45c3e"></i> &lt; country avg</span>
+          <span><i style="background:#e8ecf2"></i> no data</span>
+        </div>
+        <div class="heatmap-wrap"><div id="heatmap" class="heatmap"></div></div>
+      </div>
+    </section>
+
+    <section id="panel-dealer-radar" class="panel">
+      <div class="card">
+        <h2>Dealer profile vs benchmarks</h2>
+        <p class="hint">Section scores as % of each section maximum. Overlay country and network averages to see shape, not just total rank.</p>
+        <div class="controls">
+          <div><label for="dr-country">Country</label><select id="dr-country"></select></div>
+          <div><label for="dr-dealer">Dealer</label><select id="dr-dealer"></select></div>
+          <label class="chk"><input type="checkbox" id="dr-show-country" checked /> Country avg</label>
+          <label class="chk"><input type="checkbox" id="dr-show-network" checked /> Network avg</label>
+        </div>
+        <div class="radar-wrap">
+          <div class="radar-box" id="dealer-radar-chart"></div>
+          <div id="dealer-radar-table"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-country-radar" class="panel">
+      <div class="card">
+        <h2>Country comparison</h2>
+        <p class="hint">Select up to 4 countries. Polygons show average section profile per market.</p>
+        <div class="controls">
+          <div><label for="cr-countries">Countries (Ctrl+click)</label><select id="cr-countries" multiple size="5"></select></div>
+        </div>
+        <div class="split">
+          <div class="radar-box" id="country-radar-chart"></div>
+          <div id="country-radar-table"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-gaps" class="panel">
+      <div class="card">
+        <h2>Section gap audit</h2>
+        <p class="hint">Dealer % minus country average % — negative = below peers (audit priority).</p>
+        <div class="controls">
+          <div><label for="gp-country">Country</label><select id="gp-country"></select></div>
+          <div><label for="gp-section">Section</label><select id="gp-section"></select></div>
+          <div><label for="gp-limit">Show</label><select id="gp-limit"><option value="20">20 worst</option><option value="40">40 worst</option><option value="999">All</option></select></div>
+        </div>
+        <div id="chart-gaps"></div>
+      </div>
+    </section>
+
+    <section id="panel-compare" class="panel">
+      <div class="card">
+        <h2>Compare dealers (same country)</h2>
+        <div class="controls">
+          <div><label for="cp-country">Country</label><select id="cp-country"></select></div>
+          <div><label for="cp-a">Dealer A</label><select id="cp-a"></select></div>
+          <div><label for="cp-b">Dealer B</label><select id="cp-b"></select></div>
+          <div><label for="cp-c">Dealer C (optional)</label><select id="cp-c"><option value="">—</option></select></div>
+        </div>
+        <div class="radar-wrap">
+          <div class="radar-box" id="compare-radar-chart"></div>
+          <div id="compare-table"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-country" class="panel">
+      <div class="card">
+        <label for="f-country-one">Country</label>
+        <select id="f-country-one"></select>
+        <h2 style="margin-top:1rem">Section bars</h2>
+        <div id="chart-country"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>Single-file offline dashboard · save to disk · open in Chrome or Firefox</footer>
+
+  <script>
+    const DATA = __DATA_JSON__;
+    const COUNTRY_COLORS = ["#c45c3e", "#1a2744", "#2d8a5e", "#5b7cba", "#9b6bb8", "#d4a017"];
+    const $ = (s) => document.querySelector(s);
+    const pct = (v) => (v == null ? "—" : (v * 100).toFixed(1) + "%");
+    const pctGap = (v) => (v == null ? "—" : ((v >= 0 ? "+" : "") + (v * 100).toFixed(1) + " pp"));
+
+    function secIds() { return DATA.sections.map((s) => s.id); }
+    function secLabel(id) { return DATA.sections.find((s) => s.id === id)?.label || id; }
+
+    function dealerVector(d) {
+      return secIds().map((id) => d.sections[id]?.pct ?? null);
+    }
+
+    function countryVector(c) {
+      const p = DATA.country_profiles[c];
+      if (!p) return secIds().map(() => null);
+      return secIds().map((id) => p.sections_pct[id] ?? null);
+    }
+
+    function networkVector() {
+      return secIds().map((id) => DATA.network.sections_pct[id] ?? null);
+    }
+
+    function selectedCountries() {
+      const picked = [...$("#f-country").selectedOptions].map((o) => o.value);
+      return picked.length ? picked : DATA.countries;
+    }
+
+    function filteredDealers() {
+      const countries = new Set(selectedCountries());
+      const q = $("#f-search").value.trim().toLowerCase();
+      const below = $("#f-below").checked;
+      return DATA.dealers.filter((d) => {
+        if (!countries.has(d.country)) return false;
+        if (q && !d.name.toLowerCase().includes(q)) return false;
+        if (below && d.total_pct != null && d.country_avg_pct != null && d.total_pct >= d.country_avg_pct) return false;
+        return true;
+      });
+    }
+
+    function drawRadar(el, series) {
+      const ids = secIds();
+      const n = ids.length || 1;
+      const W = 400, H = 400, cx = W / 2, cy = H / 2, R = 145;
+      const rings = [0.25, 0.5, 0.75, 1];
+      let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img">`;
+      rings.forEach((t) => {
+        const pts = ids.map((_, i) => {
+          const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
+          return `${cx + R * t * Math.cos(a)},${cy + R * t * Math.sin(a)}`;
+        }).join(" ");
+        svg += `<polygon points="${pts}" fill="none" stroke="#d4dae3" stroke-width="1"/>`;
+      });
+      ids.forEach((id, i) => {
+        const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
+        const x = cx + R * Math.cos(a), y = cy + R * Math.sin(a);
+        svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#d4dae3" stroke-width="1"/>`;
+        const lx = cx + (R + 22) * Math.cos(a), ly = cy + (R + 22) * Math.sin(a);
+        const anchor = Math.abs(Math.cos(a)) < 0.1 ? "middle" : Math.cos(a) > 0 ? "start" : "end";
+        svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" dominant-baseline="middle" font-size="11" font-weight="600" fill="#1a2744">${id}</text>`;
+        const sub = secLabel(id).split(",")[0].replace(/^[A-E]\.\s*/, "");
+        if (sub && sub !== id) {
+          svg += `<text x="${lx}" y="${ly + 12}" text-anchor="${anchor}" font-size="8" fill="#6b7a90">${sub.slice(0, 18)}</text>`;
+        }
+      });
+      series.forEach((s) => {
+        const pts = ids.map((_, i) => {
+          const v = Math.max(0, Math.min(1, s.values[i] ?? 0));
+          const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
+          return `${cx + R * v * Math.cos(a)},${cy + R * v * Math.sin(a)}`;
+        }).join(" ");
+        const fill = s.fill || "none";
+        const dash = s.dash ? `stroke-dasharray="${s.dash}"` : "";
+        svg += `<polygon points="${pts}" fill="${fill}" stroke="${s.color}" stroke-width="${s.width || 2}" ${dash} opacity="${s.opacity ?? 1}"/>`;
+      });
+      svg += `<text x="${cx}" y="${H - 8}" text-anchor="middle" font-size="9" fill="#6b7a90">0% center → 100% outer ring</text></svg>`;
+      let leg = '<div class="radar-legend">';
+      series.forEach((s) => {
+        leg += `<span><i style="background:${s.color}"></i>${s.label}</span>`;
+      });
+      leg += "</div>";
+      el.innerHTML = svg + leg;
+    }
+
+    function sectionTableHtml(title, rows) {
+      let h = `<h3 style="margin:0 0 0.5rem;font-size:0.95rem">${title}</h3><table class="data"><thead><tr><th>Section</th><th class="num">%</th></tr></thead><tbody>`;
+      rows.forEach(([id, v]) => { h += `<tr><td>${id} — ${secLabel(id).slice(0, 35)}</td><td class="num">${pct(v)}</td></tr>`; });
+      return h + "</tbody></table>";
+    }
+
+    function populateDealerSelect(sel, country, skipId) {
+      const cur = sel.value;
+      sel.innerHTML = "";
+      DATA.dealers.filter((d) => d.country === country && !d.totals_only && d.id !== skipId)
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach((d) => {
+          const o = document.createElement("option");
+          o.value = d.id;
+          o.textContent = d.name;
+          sel.appendChild(o);
+        });
+      if (cur && [...sel.options].some((o) => o.value === cur)) sel.value = cur;
+    }
+
+    function renderDealerRadar() {
+      const country = $("#dr-country").value;
+      populateDealerSelect($("#dr-dealer"), country);
+      const dealer = DATA.dealers.find((d) => d.id === $("#dr-dealer").value);
+      if (!dealer || dealer.totals_only) {
+        $("#dealer-radar-chart").innerHTML = "<p>No section detail for this dealer (totals only).</p>";
+        $("#dealer-radar-table").innerHTML = "";
+        return;
+      }
+      const series = [{ label: dealer.name, values: dealerVector(dealer), color: "#c45c3e", fill: "rgba(196,92,62,0.15)", width: 2.5 }];
+      if ($("#dr-show-country").checked) {
+        series.push({ label: country + " avg", values: countryVector(country), color: "#1a2744", fill: "none", dash: "6 4", width: 2 });
+      }
+      if ($("#dr-show-network").checked) {
+        series.push({ label: "Network avg", values: networkVector(), color: "#6b7a90", fill: "none", dash: "2 3", width: 1.5 });
+      }
+      drawRadar($("#dealer-radar-chart"), series);
+      const rows = secIds().map((id, i) => [id, dealerVector(dealer)[i]]);
+      $("#dealer-radar-table").innerHTML = sectionTableHtml(dealer.name + " · total " + pct(dealer.total_pct), rows);
+    }
+
+    function renderCountryRadar() {
+      const picked = [...$("#cr-countries").selectedOptions].map((o) => o.value).slice(0, 4);
+      if (!picked.length) picked.push(DATA.countries[0]);
+      const series = picked.map((c, i) => ({
+        label: c,
+        values: countryVector(c),
+        color: COUNTRY_COLORS[i % COUNTRY_COLORS.length],
+        fill: COUNTRY_COLORS[i % COUNTRY_COLORS.length] + "22",
+        width: 2,
+      }));
+      drawRadar($("#country-radar-chart"), series);
+      let tbl = '<table class="data"><thead><tr><th>Country</th><th>Dealers</th><th class="num">Total %</th><th>Weakest section</th></tr></thead><tbody>';
+      picked.forEach((c) => {
+        const p = DATA.country_profiles[c];
+        const vec = countryVector(c);
+        let weak = "—", weakV = 1;
+        secIds().forEach((id, i) => {
+          const v = vec[i];
+          if (v != null && v < weakV) { weakV = v; weak = id + " (" + pct(v) + ")"; }
+        });
+        tbl += `<tr><td>${c}</td><td>${p.dealer_count}</td><td class="num">${pct(p.total_pct)}</td><td>${weak}</td></tr>`;
+      });
+      $("#country-radar-table").innerHTML = tbl + "</tbody></table>";
+    }
+
+    function renderGaps() {
+      const country = $("#gp-country").value;
+      const sec = $("#gp-section").value;
+      const limit = parseInt($("#gp-limit").value, 10);
+      const list = DATA.dealers.filter((d) => d.country === country && !d.totals_only);
+      const rows = list.map((d) => {
+        const s = d.sections[sec];
+        const gap = s?.pct != null && s?.country_avg_pct != null ? s.pct - s.country_avg_pct : null;
+        return { d, gap, pct: s?.pct };
+      }).filter((r) => r.gap != null).sort((a, b) => a.gap - b.gap).slice(0, limit);
+      const maxG = Math.max(0.05, ...rows.map((r) => Math.abs(r.gap)));
+      $("#chart-gaps").innerHTML = rows.length ? rows.map(({ d, gap, pct: p }) => {
+        const w = Math.min(100, (Math.abs(gap) / maxG) * 100);
+        const cls = gap >= 0 ? "gap-pos" : "gap-neg";
+        return `<div class="bar-row">
+          <div class="bar-label">${d.name}</div>
+          <div class="bar-track"><div class="bar-fill ${cls}" style="width:${w}%"></div></div>
+          <div class="bar-pct">${pctGap(gap)}</div>
+        </div>`;
+      }).join("") : "<p>No gap data for this section.</p>";
+    }
+
+    function populateCompareSelects() {
+      const country = $("#cp-country").value;
+      const dealers = DATA.dealers
+        .filter((d) => d.country === country && !d.totals_only)
+        .sort((a, b) => a.name.localeCompare(b.name));
+      const specs = [
+        { id: "cp-a", optional: false, pick: 0 },
+        { id: "cp-b", optional: false, pick: 1 },
+        { id: "cp-c", optional: true, pick: -1 },
+      ];
+      specs.forEach(({ id, optional, pick }) => {
+        const sel = $("#" + id);
+        const cur = sel.value;
+        sel.innerHTML = optional ? '<option value="">—</option>' : "";
+        dealers.forEach((d) => {
+          const o = document.createElement("option");
+          o.value = d.id;
+          o.textContent = d.name;
+          sel.appendChild(o);
+        });
+        if (cur && [...sel.options].some((o) => o.value === cur)) sel.value = cur;
+        else if (!optional && dealers[pick]) sel.value = dealers[pick].id;
+      });
+    }
+
+    function renderCompare() {
+      const country = $("#cp-country").value;
+      populateCompareSelects();
+      const ids = [$("#cp-a").value, $("#cp-b").value, $("#cp-c").value].filter(Boolean);
+      const series = ids.map((id, i) => {
+        const d = DATA.dealers.find((x) => x.id === id);
+        return d ? { label: d.name, values: dealerVector(d), color: COUNTRY_COLORS[i], fill: COUNTRY_COLORS[i] + "18", width: 2 } : null;
+      }).filter(Boolean);
+      if (!series.length) {
+        $("#compare-radar-chart").innerHTML = "<p>Select dealers to compare.</p>";
+        return;
+      }
+      drawRadar($("#compare-radar-chart"), series);
+      let tbl = '<table class="data"><thead><tr><th>Section</th>';
+      series.forEach((s) => { tbl += `<th class="num">${s.label.slice(0, 20)}</th>`; });
+      tbl += "</tr></thead><tbody>";
+      secIds().forEach((id, i) => {
+        tbl += `<tr><td>${id}</td>`;
+        series.forEach((s) => { tbl += `<td class="num">${pct(s.values[i])}</td>`; });
+        tbl += "</tr>";
+      });
+      $("#compare-table").innerHTML = tbl + "</tbody></table>";
+    }
+
+    function renderStats(list) {
+      $("#stats").innerHTML = `
+        <div class="stat"><strong>${list.length}</strong><span>dealers shown</span></div>
+        <div class="stat"><strong>${DATA.country_count}</strong><span>countries</span></div>
+        <div class="stat"><strong>${DATA.sections.length}</strong><span>sections</span></div>
+        <div class="stat"><strong>${pct(DATA.network.total_pct)}</strong><span>network avg total</span></div>`;
+    }
+
+    function renderOverview(list) {
+      const top = [...list].sort((a, b) => (b.total_pct ?? -1) - (a.total_pct ?? -1)).slice(0, 40);
+      $("#chart-overview").innerHTML = top.map((d) => {
+        const p = d.total_pct ?? 0;
+        const below = d.total_pct != null && d.country_avg_pct != null && d.total_pct < d.country_avg_pct;
+        const badge = d.totals_only ? '<span class="badge">totals only</span>' : "";
+        return `<div class="bar-row"><div class="bar-label">${d.name}<small> · ${d.country}</small>${badge}</div>
+          <div class="bar-track"><div class="bar-fill${below ? " below" : ""}" style="width:${Math.min(100, p * 100)}%"></div></div>
+          <div class="bar-pct">${pct(d.total_pct)}</div></div>`;
+      }).join("") || "<p>No dealers match filters.</p>";
+    }
+
+    function heatBg(d, sec) {
+      const s = d.sections[sec];
+      if (!s || s.pct == null) return null;
+      const t = Math.max(0, Math.min(1, s.pct));
+      if (s.country_avg_pct != null && s.pct < s.country_avg_pct) return `hsl(12, 55%, ${45 + t * 25}%)`;
+      return `hsl(155, 45%, ${32 + t * 28}%)`;
+    }
+
+    function renderHeatmap(list) {
+      const secs = secIds();
+      const grid = $("#heatmap");
+      grid.style.gridTemplateColumns = `14rem repeat(${secs.length}, 2.1rem)`;
+      let html = `<div class="hm-corner">Dealer</div>`;
+      secs.forEach((id) => { html += `<div class="hm-head" title="${secLabel(id)}">${id}</div>`; });
+      list.slice(0, 120).forEach((d) => {
+        html += `<div class="hm-row-label">${d.name} <small>${d.country}</small></div>`;
+        secs.forEach((sec) => {
+          const v = d.sections[sec]?.pct;
+          const bg = heatBg(d, sec);
+          html += `<div class="hm-cell${bg ? "" : " hm-na"}"${bg ? ` style="background:${bg}"` : ""}>${v == null ? "·" : Math.round(v * 100)}</div>`;
+        });
+      });
+      grid.innerHTML = html;
+    }
+
+    function renderCountry() {
+      const c = $("#f-country-one").value || DATA.countries[0];
+      const list = DATA.dealers.filter((d) => d.country === c);
+      $("#chart-country").innerHTML = secIds().map((sec) => {
+        const pcts = list.map((d) => d.sections[sec]?.pct).filter((v) => v != null);
+        const avg = pcts.length ? pcts.reduce((a, b) => a + b, 0) / pcts.length : null;
+        const maxBar = Math.max(0.01, ...pcts, avg ?? 0);
+        const rows = list.filter((d) => d.sections[sec]?.pct != null).sort((a, b) => (b.sections[sec].pct ?? 0) - (a.sections[sec].pct ?? 0)).slice(0, 12)
+          .map((d) => `<div class="bar-row"><div class="bar-label">${d.name}</div><div class="bar-track"><div class="bar-fill" style="width:${(d.sections[sec].pct / maxBar) * 100}%"></div></div><div class="bar-pct">${pct(d.sections[sec].pct)}</div></div>`).join("");
+        return `<div style="margin-bottom:1.2rem"><h3 style="margin:0 0 0.35rem;font-size:0.95rem">${sec} — ${secLabel(sec)}</h3><p style="margin:0 0 0.5rem;font-size:0.8rem;color:var(--muted)">Avg ${pct(avg)}</p>${rows || "<p>No data.</p>"}</div>`;
+      }).join("");
+    }
+
+    function refresh() {
+      const list = filteredDealers();
+      renderStats(list);
+      renderOverview(list);
+      renderHeatmap(list);
+      renderCountry();
+    }
+
+    function fillCountrySelect(sel, multi) {
+      DATA.countries.forEach((c) => {
+        const o = document.createElement("option");
+        o.value = c;
+        o.textContent = c;
+        if (multi) o.selected = DATA.countries.indexOf(c) < 3;
+        sel.appendChild(o);
+      });
+    }
+
+    function init() {
+      const fc = $("#f-country");
+      DATA.countries.forEach((c) => {
+        const o = document.createElement("option");
+        o.value = c; o.textContent = c; o.selected = true;
+        fc.appendChild(o);
+      });
+      ["f-country-one", "dr-country", "gp-country", "cp-country"].forEach((id) => fillCountrySelect($("#" + id), false));
+      fillCountrySelect($("#cr-countries"), true);
+      secIds().forEach((id) => {
+        const o = document.createElement("option");
+        o.value = id;
+        o.textContent = id + " — " + secLabel(id).slice(0, 40);
+        $("#gp-section").appendChild(o);
+      });
+
+      fc.addEventListener("change", refresh);
+      $("#f-search").addEventListener("input", refresh);
+      $("#f-below").addEventListener("change", refresh);
+      $("#f-country-one").addEventListener("change", renderCountry);
+
+      $("#dr-country").addEventListener("change", renderDealerRadar);
+      $("#dr-dealer").addEventListener("change", renderDealerRadar);
+      $("#dr-show-country").addEventListener("change", renderDealerRadar);
+      $("#dr-show-network").addEventListener("change", renderDealerRadar);
+
+      $("#cr-countries").addEventListener("change", renderCountryRadar);
+
+      $("#gp-country").addEventListener("change", renderGaps);
+      $("#gp-section").addEventListener("change", renderGaps);
+      $("#gp-limit").addEventListener("change", renderGaps);
+
+      $("#cp-country").addEventListener("change", () => { renderCompare(); });
+      ["cp-a", "cp-b", "cp-c"].forEach((id) => $("#" + id).addEventListener("change", renderCompare));
+
+      document.querySelectorAll(".tab").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab").forEach((b) => b.classList.remove("active"));
+          document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+          btn.classList.add("active");
+          const panel = $("#panel-" + btn.dataset.tab);
+          panel.classList.add("active");
+          if (btn.dataset.tab === "dealer-radar") renderDealerRadar();
+          if (btn.dataset.tab === "country-radar") renderCountryRadar();
+          if (btn.dataset.tab === "gaps") renderGaps();
+          if (btn.dataset.tab === "compare") renderCompare();
+        });
+      });
+
+      refresh();
+      renderDealerRadar();
+      renderCountryRadar();
+      renderGaps();
+      renderCompare();
+    }
+
+    init();
+  </script>
+</body>
+</html>

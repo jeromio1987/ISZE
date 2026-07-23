@@ -1,0 +1,16 @@
+---
+description: PMS and parts sales — never drop or genuine-only-filter sales when analysing capture
+alwaysApply: true
+---
+
+# PMS / parts sales — sales is sales
+
+When analysing **PMS capture, parts sales, GPS €/UIO, or dealer Parts (IDS Section D)**:
+
+- **Do not exclude PMS** from a study, scatter, correlation, or Kaizen pack because correlation with IDS is weak or negative. Weak r is a finding — keep the metric on the chart and in the register.
+- **Do not default to genuine-only** (`line_type=genuine`) as the headline PMS capture. **Primary = total sales / total capture** (`line_type=total`). Genuine share / genuine capture are **extra** lenses (mix / quality), never a substitute that hides BVP or total volume.
+- **Sales is sales:** if units or € moved in the PMS basket, they count in the primary capture view unless Jerome explicitly asks for a genuine-only cut.
+- Label clearly when you show both: e.g. “PMS total capture” vs “PMS genuine capture” — do not silently swap one for the other.
+- Same for KPI Parts Handling: use reported parts sales / fill / MOS as-is; do not drop a DB because fill looks “too good” relative to IDS.
+
+If a prior deliverable led with genuine-only PMS, correct it to **total first** on the next rebuild.

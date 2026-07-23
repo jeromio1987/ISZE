@@ -52,6 +52,33 @@ def dealer_name_from_filename(path: Path) -> str:
     return stem or path.stem
 
 
+_PLACEHOLDER_NAME_RE = re.compile(
+    r"write your official company name|for certificate",
+    re.IGNORECASE,
+)
+
+
+def clean_dealer_name(raw: str | None) -> str | None:
+    """Strip IDS cover-page placeholder text; return None if nothing usable remains."""
+    if raw is None:
+        return None
+    s = str(raw).strip()
+    if not s:
+        return None
+    # Cover template often keeps the instruction plus optional real name after it.
+    if _PLACEHOLDER_NAME_RE.search(s) or s.startswith("*"):
+        # Keep text after the certificate instruction when dealers typed a name there.
+        parts = re.split(
+            r"\*?\s*Write your official company name for certificate\.?\s*",
+            s,
+            flags=re.IGNORECASE,
+        )
+        s = " ".join(p.strip(" \t*-–—") for p in parts if p and p.strip(" \t*-–—")).strip()
+        if not s or _PLACEHOLDER_NAME_RE.search(s):
+            return None
+    return s or None
+
+
 def read_dealer_name_from_cover(path: Path) -> str | None:
     """Read dealer name from Cover Page / Fedlap (single-dealer audits)."""
     try:
@@ -69,9 +96,10 @@ def read_dealer_name_from_cover(path: Path) -> str | None:
             if label.strip().lower() != "dealer name":
                 continue
             val = row[4] if len(row) > 4 else None
-            if val:
+            cleaned = clean_dealer_name(str(val) if val is not None else None)
+            if cleaned:
                 wb.close()
-                return str(val).strip()
+                return cleaned
     wb.close()
     return None
 

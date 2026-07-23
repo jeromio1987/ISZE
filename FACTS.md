@@ -1,5 +1,7 @@
 # ISZE — Single Facts Sheet
 
+> ⚠ **ITUK PMS has two correct lanes (§1 Model B/IML vs §1b PRISM network) — never quote one without knowing which.** See `00_docs/ITUK_PRISM_LANE_BRIDGE.md` before putting an ITUK capture % or gap € in any deck.
+
 **Role:** This is the **one authoritative source** for ISZE headline figures. When a number here conflicts with anything in a deck, email, GPT knowledge file, or memory note, **this file wins** — fix the other copy, not this one.
 
 **Last verified:** 2026-06-10 (re-synced to pipeline after 2026-06-02 line_type classification fix)
@@ -20,43 +22,68 @@
 |------|-------|
 | Metric definitions (PMS / BVP / GPS) | `03_analytics\Isuzu\prism\docs\metric_dictionary.md` |
 | Data integrity flags (what's safe to quote) | `03_analytics\Isuzu\prism\docs\DATA_INTEGRITY_FLAGS_2026-05-28.md` |
-| PMS capture data | `01_data\derived\pms_capture_by_db_year.csv` |
+| PMS capture data (network league) | `01_data\derived\pms_capture_by_db_year.csv` |
+| **ITUK PMS headline (IML v7)** | `03_analytics\Isuzu\prism\data\iml_v7_ituk_cy2025.yaml` |
 | Genuine/BVP authoritative split | `01_data\derived\genuine_bvp_crossref.csv` |
 | BVP mix | `01_data\derived\mix_genuine_bvp_pms.csv` |
 | GPS spend per unit | `01_data\derived\gps_spu_by_distributor.csv` |
-| **Sign-off** | green run of `03_analytics\Isuzu\prism\scripts\run_pipeline_and_verify.ps1` → `01_data\derived\_verification_report.md` shows **0 fail** |
+| **Sign-off** | green run of `03_analytics\Isuzu\prism\scripts\run_pipeline_and_verify.ps1` → `01_data\derived\_verification_report.md` shows **0 fail**
 
-Last green verify: **96 pass / 0 fail, 2026-06-04**.
+Last green verify: **106 pass / 0 fail, 2026-07-06** (addressable_pct **100%**).
 Headline metrics machine-readable: `01_data\derived\metrics_snapshot.json` (build: `03_analytics\Isuzu\prism\scripts\build_metrics_snapshot.py`).
 
 ---
 
-## 1. ITUK oil-filter capture — the dispute anchor
+## 1. ITUK PMS — IML v7 schedule (Model B, external standard)
 
-Source: `pms_capture_by_db_year.csv`, rebuilt 2026-06-04 (verify 96/0) after the
-2026-06-02 line_type classification fix — actuals/rates moved up vs the 2026-05-22
-table (genuine PNs previously mislabelled BVP; capture PN set realigned to crossref).
-Inputs (constant): UIO **22,389** (DVLA Mar 2026) · 0.5 svc/yr (N75) · 70% addressable → expected oil-filter qty **7,836.1/yr**.
+**Adopted 2026-07-02** — all IML/ITUK decks, business case, dashboards, and correspondence use these numbers.
+
+Source: `ITUK_PMS_Analysis_Apr2026_v7_reclassified.xlsx` · ISZE→ITUK (General) · CY2025 sales  
+Canonical constants: `03_analytics\Isuzu\prism\data\iml_v7_ituk_cy2025.yaml`
+
+| Parameter | Value |
+|-----------|-------|
+| UIO | **22,389** (full DVLA, Mar 2026) |
+| Service frequency | Oil/Fuel/Air **1.25×/yr** (IML 40,000 km ÷ 50,000 km/yr); Clutch/Brake **0.5×/yr** |
+| Addressable | **100%** |
+| Oil-filter cover | **35.1%** (9,818 actual vs 27,986 expected) |
+| Oil-filter cover ITUK→DLR | **40.6%** |
+| PMS revenue gap (5 cat) | **€2,038,471** |
+| Weighted cover (5 cat) | **35.9%** |
+
+### Category breakdown (CY2025)
+
+| Category | Cover | Gap € |
+|----------|------:|------:|
+| Oil filter | 35.1% | 140,602 |
+| Fuel filter | 65.1% | 127,440 |
+| Air filter | 13.2% | 736,037 |
+| Clutch | 7.8% | 392,559 |
+| Brake | 35.3% | 641,833 |
+
+**The story is a real workshop capture gap** on the IML service schedule — largest € leaks in air filter and brake/clutch wear. Filters are not "saturated" under this denominator.
+
+## 1b. ITUK oil-filter — PRISM network lane (real UIO-bucket split, 100% addressable)
+
+**Re-based 2026-07-15** — PRISM's ITUK expected demand now uses the real per-distributor UIO split across cv_std/f_series/lcv buckets (`data/uio_by_model_bucket.csv`), fixing a hardcoded 2-market allowlist (`LCV_DISTRIBUTORS`/`CV_TRUCK_DISTRIBUTORS` in `modules/pms_engine.py`) that had silently mis-scoped 14 of 18 distributors — ITUK's own numbers shift too, since its N75 truck fleet is now split into real cv_std (22,190.9) + f_series (877.0) buckets instead of one flat N75 figure. `scripts/build_bvp_p0_p1.py` now calls `expected_by_category_bucketed()`.
+
+Source: `pms_capture_by_db_year.csv` · bucketed UIO split (`uio_source=model_bucket_split`) × **100% addressable** → expected **11,680.2/yr** (bucketed UIO 23,068 = cv_std 22,190.9 + f_series 877.0).
 
 | Year | Actual total | Uncapped | Total capture (cap 100%) | Genuine | BVP | Revenue (total) |
 |------|-------------|----------|--------------------------|---------|-----|-----------------|
-| 2023 | 17,009 | 217% | **100%** | 97% | 120% | €124,485 |
-| 2024 | 9,475 | 121% | **100%** | **89%** | 31% | €58,819 |
-| 2025 | 12,705 | 162% | **100%** | **120%** | 42% | €84,779 |
+| 2023 | 18,030 | 154% | **100%** | 74% | 81% | €138,257 |
+| 2024 | 9,750 | 84% | **84%** | **62%** | 21% | €62,384 |
+| 2025 | 13,599 | 116% | **100%** | **88%** | 29% | €96,024 |
 
-**The story is mix (genuine vs BVP), NOT a capture deficit.** ITUK already saturates N75 oil-filter demand on the combined line. 2025 uses 2024 fleet as proxy (flag D).
-⚠ External-use caution: uncapped totals far above 100% reflect actuals beyond the
-N75-only denominator (multi-segment + cross-OEM PNs). Quote the capped figure, or
-use an N75-fitment-scoped variant, when this leaves the building.
-Superseded (2026-05-22 pre-fix): 13,214/169%/64%/105% · 8,004/102%/79%/23% · 11,074/141%/103%/38% — do not quote.
+**Not the IML v7 headline** (that uses 1.25×/yr filter intervals and a separate 22,389 DVLA UIO from `iml_v7_ituk_cy2025.yaml` — unaffected by this re-base — see §1). Retained for PRISM dashboard and network league. See `isze_data.json` → `pms.ituk_prism_lane`.
 
 ## 2. Capture method constants
 
 | Scope | svc/yr | addressable | wear factor (brake) |
 |-------|--------|-------------|---------------------|
-| N75 (ITUK, UTI) | 0.5 | 70% | 0.5 |
-| LCV (IUK, UMI) | 1.0 | 70% | 0.5 |
-| N35 blend | 0.75 | 70% | 0.5 |
+| N75 (ITUK, UTI) | 0.5 | **100%** | 0.5 |
+| LCV (IUK, UMI) | 1.0 | **100%** | 0.5 |
+| N35 blend | 0.75 | **100%** | 0.5 |
 
 Capture = `actual_qty ÷ expected_qty` (CSV uncapped; headline tiles cap at 100%). Capture >100% on `total` is valid (multi-segment / cross-OEM sales) — do not strip it.
 
@@ -65,15 +92,17 @@ Capture = `actual_qty ÷ expected_qty` (CSV uncapped; headline tiles cap at 100%
 - `bvp_share_units` = bvp_qty ÷ (genuine_qty + bvp_qty); `bvp_share_eur` analogous. BVP has **no** capture rate.
 - GPS `spend_per_unit_eur` = net parts sales ÷ uio_units. Traffic light: green ≥ €150, amber €50–150, red < €50.
 
-## 4. Revenue base (sales_fact, 2026-05-28)
+## 4. Revenue base (sales_fact, 2026-07-03)
 
 | Figure | Value | Note |
 |--------|-------|------|
-| Raw `sales_fact.parquet` total | €97,429,989 | 434,858 rows; includes internal/excluded codes |
-| GPS-facing, all lines | €95.68M | after distributor exclusion (snapshot 2026-06-10) |
-| GPS-facing, parts only | **€94.26M** | use this as the parts base (snapshot 2026-06-10; prior €94.55M was the 2026-05-28 cut) |
+| Raw `sales_fact.parquet` total | €108,816,956 | 477,505 rows, 2023-2026 (2026 = Jan-Mar partial); includes internal/excluded codes and credit notes/returns |
+| GPS-facing, all lines | €105.00M | after distributor exclusion, **ex-credit-notes/returns** (snapshot 2026-07-03) |
+| GPS-facing, parts only | **€103.57M** | use this as the parts base (snapshot 2026-07-03; prior €94.26M was 2023-2025 only, no CR/RE exclusion) |
 
-Non-part lines now excluded: TRANSPORT, REBATE, LATE PAYMENT INTEREST (€1.14M combined).
+Non-part lines excluded: TRANSPORT, REBATE, LATE PAYMENT INTEREST (€1.14M combined, 2023-2025 baseline).
+**Credit notes / returns excluded since 2026-07-03** (flag H): SaTy `CR`/`RE` lines, 280 rows / **€1,651,149** network-wide 2023-2026 — see flag H below.
+**2023-2025 sub-total is not directly comparable to the pre-2026-07-03 €94.26M figure** — the row count, year range, and exclusion rules all changed in the same rebuild; don't compute a delta between them as if only one variable moved.
 
 ## 5. AIM classification
 
@@ -106,12 +135,14 @@ Any ITUK oil-filter capture under ~50% is a red flag — re-derive from the CSV.
 
 ## ⚠ NOT YET SAFE EXTERNALLY (open integrity flags)
 
-- **C — interval-aware capture (partial):** expected demand uses a flat service rate; **air-filter capture is artificially deflated and capture rates are NOT cross-category comparable.** Air vs oil interval ratio still needed from IML.
-- **H — returns/credits (verify):** zero negative rows in sales_fact; confirm returns are pre-netted before treating revenue as final.
-- **FY2025 trap:** ISZE FY = Apr–Mar. FY2025 (Apr 2025–Mar 2026) needs data through 31 Mar 2026 to be complete; CY2025 is complete. Don't publish a partial FY as full-year.
+- **C — interval-aware capture (mitigated 2026-07-02, provisional):** air-filter expected demand now uses a **0.5× interval factor** (air element ~every 2nd service) instead of the flat rate — air capture ~doubled and is directionally comparable across categories. **The 0.5 is a labelled assumption, NOT an IML figure** — quote air capture only as "on a provisional interval assumption" until IML confirms the ratio (`prism/docs/pms_service_intervals.md` §6).
+- **H — returns/credits (acted on 2026-07-03, still no ERP confirmation):** zero negative-value rows exist, but SaTy carries explicit `CR` (credit) / `RE` (return) codes on **positive**-value lines — 280 rows, €1,651,149 network-wide 2023-2026. These are now excluded from GPS revenue, the parts base, and PMS capture actuals (`is_credit_note` extended beyond sign to also catch SaTy CR/RE). **This is a judgment call, not an ERP-confirmed netting rule** — Jerome has not been able to get ERP confirmation and does not expect to soon. If SAP later confirms these should NOT be excluded (e.g., "RE" means something other than a return), revert by narrowing `is_credit_note`'s definition in `sales_loader.py`/`data_prep.py` back to sign-only.
+- **FY2025 trap — CLOSED 2026-07-03:** ISZE FY = Apr–Mar. FY2025 (Apr 2025–Mar 2026) needed data through 31 Mar 2026; `sales_2026tillApril.XLSX` (Jan 5–Mar 31 2026) now lands in `sales_fact.parquet`. FY2025 is complete — safe to report as a full fiscal year for the first time.
 
 ---
 
 ## Change log
+- **2026-07-03** — Two source-file gaps closed: `CY2024-2025.XLSX` (more-complete 2025 SAP re-export, +1,369 rows vs the old `CY2025.XLSX`, which is now superseded and no longer loaded) and `sales_2026tillApril.XLSX` (Jan-Mar 2026, **closes the FY2025 completeness trap**). `sales_fact.parquet` 434,858 → 477,505 rows, years now [2023,2024,2025,2026]. Flag H acted on: SaTy `CR`/`RE` credit-note/return lines (280 rows, €1.65M) now excluded from GPS/parts-base/PMS-capture — **not** ERP-confirmed, a documented judgment call, reversible. Net effect: parts base €94.26M → **€103.57M** (2026 quarter added more than CR/RE removed); network GPS CY2025 50.2% → **51.1%** (more-complete 2025 data, partially offset by CR/RE). Verified `Sales_israel_1799&_1797.XLSX` is NOT missing data — row-for-row identical to what's already in the CY files, with one footer/grand-total artifact row; correctly left unwired. See `DECISIONS.md` 2026-07-03.
+- **2026-07-02** — flag C mitigated: `air_filter` consumable_factor 1.0 → **0.5 PROVISIONAL** (pending IML); air capture ~doubles vs earlier outputs. `sales_fact.parquet` now carries `fig_key` (catalog join, 98.9% coverage). Oil-filter anchors unchanged. **Network GPS (waterfall) CY2025 re-based 40.2% → 50.2%** — MIDI's ~€15M theoretical wallet (98,654 UIO, zero ISZE-direct sales) dropped from the denominator per the MIDI-not-a-customer decision; first drift-checked run since the 2026-06-18 UIO refresh. See `DECISIONS.md` 2026-07-02.
 - **2026-06-10** — §1 dispute-anchor table re-synced to pipeline (verify 96/0, 2026-06-04) after the 2026-06-02 line_type classification fix; pre-fix figures moved to "superseded — do not quote". §4 parts base €94.55M → €94.26M (current snapshot; line_kind tagging at load). Drift enforcement added: `facts_anchor.yaml` + `verify_facts_drift.py` + `metrics_snapshot.json`. ⚠ `01_data\gpt_safe\` exports still carry pre-fix numbers — re-export required.
 - **2026-06-07** — created. Seeded from `metric_dictionary.md` (verify 2026-05-22) and `DATA_INTEGRITY_FLAGS_2026-05-28.md`.

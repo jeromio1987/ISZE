@@ -16,3 +16,9 @@ If you already have `autodoc_results.csv` (etc.) in the bundle, the app uses the
 3. Restart Streamlit.
 
 No Task Scheduler or monthly cadence is required for this audit closure.
+
+**Update 2026-07-10:** a weekly Windows Task Scheduler job (`ISZE_PMS_IAM_Refresh`, Mondays 07:00)
+was added at Jerome's request — parent `run_refresh_scheduled.bat` → `refresh_and_check_drift.py`.
+It re-runs the 5 working scrapers, snapshots + diffs prices, appends to
+`_snapshots/drift_history.csv`, and rebuilds the executive/bridge/trend HTML. This is still
+optional context only — it does not feed PMS actuals or change anything in this bundle.

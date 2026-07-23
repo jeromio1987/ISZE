@@ -63,20 +63,43 @@ def _resolve_folder(key: str, legacy: str) -> Path:
 
 
 DATA_ROOT = _resolve_folder("data", "Data")
-DERIVED_DIR = DATA_ROOT / "derived"
-RAW_SALES_DIR = DATA_ROOT / "raw" / "sales"
-RAW_REFERENCE_DIR = DATA_ROOT / "raw" / "reference"
-DASHBOARDS_JSON_DIR = DATA_ROOT / "dashboards"
-GPT_SAFE_DIR = DATA_ROOT / "gpt_safe"
-INBOX_DIR = DATA_ROOT / "_INBOX"
+
+
+def _resolve_data_subfolder(key: str) -> Path:
+    """Numbered 01_data subfolder (paths.yaml data_subfolders) with legacy/junction fallback."""
+    entry = (_paths_doc().get("data_subfolders") or {}).get(key) or {}
+    numbered = entry.get("numbered")
+    legacy = entry.get("legacy")
+    if numbered:
+        path = DATA_ROOT / numbered
+        if path.exists():
+            return path
+    if legacy:
+        path = DATA_ROOT / legacy
+        if path.exists():
+            return path
+    if numbered:
+        return DATA_ROOT / numbered
+    if legacy:
+        return DATA_ROOT / legacy
+    return DATA_ROOT / key
+
+
+DERIVED_DIR = _resolve_data_subfolder("derived")
+_raw_root = _resolve_data_subfolder("raw")
+RAW_SALES_DIR = _raw_root / "sales"
+RAW_REFERENCE_DIR = _raw_root / "reference"
+DASHBOARDS_JSON_DIR = _resolve_data_subfolder("dashboards")
+GPT_SAFE_DIR = _resolve_data_subfolder("gpt_safe")
+INBOX_DIR = _resolve_data_subfolder("inbox")
 
 DASHBOARDS_DIR = _resolve_folder("dashboards", "Dashboards")
 TOOLS_DIR = _resolve_folder("tools", "Tools")
 MEMORY_DIR = _resolve_folder("memory", "memory")
 
-DATA_BUILD_DIR = DATA_ROOT / "_build"
-EXPORTS_DIR = DATA_ROOT / "exports"
-RAW_DEALER_SALES_DIR = DATA_ROOT / "raw" / "dealer_sales"
+DATA_BUILD_DIR = _resolve_data_subfolder("build")
+EXPORTS_DIR = _resolve_data_subfolder("exports")
+RAW_DEALER_SALES_DIR = _raw_root / "dealer_sales"
 BRIEFS_DIR = MEMORY_DIR / "briefs"
 
 TENDER_MONITOR_DIR = TOOLS_DIR / "ISZE_Tender_Monitor_Install"

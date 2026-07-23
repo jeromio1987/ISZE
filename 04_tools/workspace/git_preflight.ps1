@@ -53,7 +53,7 @@ if ($DryRun) { Write-Host '(DryRun mode - exit 0 even if issues found)' -Foregro
 # 1. Raw billing
 $billing = Get-ChildItem -Recurse -File -EA SilentlyContinue |
     Where-Object {
-        $_.FullName -match '\\01_data\\raw\\sales\\' -or
+        $_.FullName -match '\\01_data\\(12_raw|raw)\\sales\\' -or
         ($_.DirectoryName -eq (Join-Path $Root '01_data') -and $_.Extension -match '\.xlsx?$')
     }
 if ($billing) {
@@ -98,7 +98,7 @@ $large = Get-ChildItem -Recurse -File -EA SilentlyContinue |
     Where-Object { $_.FullName -notmatch '\\90_archive\\|\\91_legacy\\|\\07_deploy\\|\\.git\\' }
 foreach ($f in $large) {
     $rel = $f.FullName.Substring($Root.Length + 1)
-    if ($rel -match '^01_data\\derived\\_(verification|metrics_snapshot)') { continue }
+    if ($rel -match '^01_data\\(00_derived|derived)\\_(verification|metrics_snapshot)') { continue }
     $sizeMb = [math]::Round($f.Length / 1MB, 1)
     $msg = "large file (>500KB): $rel (${sizeMb} MB)"
     if ($Strict) { Fail $msg } else { Warn $msg }
@@ -120,7 +120,8 @@ if (-not $PreInit -and (Test-Path (Join-Path $Root '.git'))) {
     $ErrorActionPreference = $prevEap
     if ($addExit -ne 0) { Fail "git add -n exited $addExit" }
     $forbidden = @(
-        '01_data/raw/', '01_data/_INBOX/', '01_data/models/',
+        '01_data/12_raw/', '01_data/raw/', '01_data/90_INBOX/', '01_data/_INBOX/',
+        '01_data/13_models/', '01_data/models/',
         '07_deploy/', '90_archive/', '91_legacy/', '.env', 'secrets.toml',
         'gps_dashboard/data/', '_results.csv'
     )

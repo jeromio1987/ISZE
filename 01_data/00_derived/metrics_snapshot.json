@@ -1,0 +1,271 @@
+{
+  "as_of": "2026-07-21T15:23:36Z",
+  "generator": "scripts/build_metrics_snapshot.py",
+  "metrics": {
+    "sales_fact.rows": {
+      "value": 477505,
+      "source": "sales_fact.parquet",
+      "note": ""
+    },
+    "sales_fact.raw_total_eur": {
+      "value": 108816956.0,
+      "source": "sales_fact.parquet",
+      "note": "includes internal/excluded codes"
+    },
+    "sales.gps_facing_all_lines_eur": {
+      "value": 105002413.0,
+      "source": "load_prism_sales after distributor exclusion, ex-credit-notes/returns",
+      "note": ""
+    },
+    "sales.parts_base_eur": {
+      "value": 103573715.0,
+      "source": "GPS-facing, parts only (line_kind=part), ex-credit-notes/returns",
+      "note": "the parts base"
+    },
+    "ituk.oil_filter.2023.genuine.capture_uncapped_pct": {
+      "value": 73.8,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2023.genuine.actual_qty": {
+      "value": 8614,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2023.genuine.revenue_eur": {
+      "value": 59707.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2023.bvp.capture_uncapped_pct": {
+      "value": 80.6,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2023.bvp.actual_qty": {
+      "value": 9416,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2023.bvp.revenue_eur": {
+      "value": 78549.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2023.total.capture_uncapped_pct": {
+      "value": 154.4,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2023.total.actual_qty": {
+      "value": 18030,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2023.total.revenue_eur": {
+      "value": 138257.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2024.genuine.capture_uncapped_pct": {
+      "value": 62.1,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2024.genuine.actual_qty": {
+      "value": 7258,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2024.genuine.revenue_eur": {
+      "value": 41318.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2024.bvp.capture_uncapped_pct": {
+      "value": 21.3,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2024.bvp.actual_qty": {
+      "value": 2492,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2024.bvp.revenue_eur": {
+      "value": 21065.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2024.total.capture_uncapped_pct": {
+      "value": 83.5,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2024.total.actual_qty": {
+      "value": 9750,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2024.total.revenue_eur": {
+      "value": 62384.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2025.genuine.capture_uncapped_pct": {
+      "value": 87.6,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2025.genuine.actual_qty": {
+      "value": 10231,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2025.genuine.revenue_eur": {
+      "value": 63762.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2025.bvp.capture_uncapped_pct": {
+      "value": 28.8,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2025.bvp.actual_qty": {
+      "value": 3368,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2025.bvp.revenue_eur": {
+      "value": 32261.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2025.total.capture_uncapped_pct": {
+      "value": 116.4,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2025.total.actual_qty": {
+      "value": 13599,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2025.total.revenue_eur": {
+      "value": 96024.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2026.genuine.capture_uncapped_pct": {
+      "value": 19.3,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2026.genuine.actual_qty": {
+      "value": 2250,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2026.genuine.revenue_eur": {
+      "value": 16061.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2026.bvp.capture_uncapped_pct": {
+      "value": 9.2,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2026.bvp.actual_qty": {
+      "value": 1072,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2026.bvp.revenue_eur": {
+      "value": 10559.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2026.total.capture_uncapped_pct": {
+      "value": 28.4,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2026.total.actual_qty": {
+      "value": 3322,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.2026.total.revenue_eur": {
+      "value": 26620.0,
+      "source": "pms_capture_by_db_year.csv",
+      "note": ""
+    },
+    "ituk.oil_filter.uio_units": {
+      "value": 23068,
+      "source": "pms_capture_by_db_year.csv",
+      "note": "DVLA Mar 2026 override, constant across years"
+    },
+    "ituk.oil_filter.expected_qty": {
+      "value": 11680.2,
+      "source": "pms_capture_by_db_year.csv",
+      "note": "22389 x 0.5 svc/yr x 70%"
+    },
+    "mix.ITUK.genuine_share_eur_pct_2025": {
+      "value": 97.3,
+      "source": "sales_fact + genuine_bvp_crossref",
+      "note": "overall parts mix, EUR basis"
+    },
+    "mix.UTI.genuine_share_eur_pct_2025": {
+      "value": 88.9,
+      "source": "sales_fact + genuine_bvp_crossref",
+      "note": "overall parts mix, EUR basis"
+    },
+    "waterfall.network.wallet_eur_2025": {
+      "value": 60217570.0,
+      "source": "wallet_waterfall.csv",
+      "note": "GPS max-spend ceiling"
+    },
+    "waterfall.network.captured_eur_2025": {
+      "value": 30756772.0,
+      "source": "wallet_waterfall.csv",
+      "note": ""
+    },
+    "waterfall.network.gps_pct_2025": {
+      "value": 51.1,
+      "source": "wallet_waterfall.csv",
+      "note": ""
+    },
+    "runway.network.wallet_eur_2030": {
+      "value": 77778869.0,
+      "source": "revenue_runway.csv",
+      "note": "age-flat wallet, UIO v17 projection"
+    },
+    "defection.active_alerts": {
+      "value": 25,
+      "source": "defection_alerts.csv",
+      "note": "data horizon 2026-03"
+    },
+    "leakage.ituk.benchmark_gap_eur": {
+      "value": 79118.0,
+      "source": "dealer_leakage_ituk.csv",
+      "note": "relative benchmark vs network-median dealer mix"
+    },
+    "verify.pass": {
+      "value": 106,
+      "source": "_verification_report.json",
+      "note": ""
+    },
+    "verify.fail": {
+      "value": 0,
+      "source": "_verification_report.json",
+      "note": ""
+    },
+    "verify.generated": {
+      "value": "2026-07-21T15:19:09Z",
+      "source": "_verification_report.json",
+      "note": ""
+    }
+  }
+}

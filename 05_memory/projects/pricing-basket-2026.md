@@ -2,8 +2,10 @@
 
 **Use:** `isze-pricing-basket-monitor` and GPT pricing sessions cite this file — do not embed figures in unattended prompts.
 
-**Last verified:** 2026-06-29  
+**Last verified:** 2026-06-29
 **Source:** Jerome sign-off post FY2026 basket modelling
+
+**Canonical price file (confirmed 2026-07-14):** `01_data/01_Pricing/IE40 Price list as of 13.03.2026 PR00_3_level_classified_GPT.xlsx` (164,381 rows, taxonomy-classified) — these are the active parts. Do **not** use `01_data/01_Pricing/Price file 2026_full.xlsx` (674,119 rows, mod 2026-06-16) for pricing/basket figures — Jerome confirmed it is not the source to use. File left in place, not deleted; just not authoritative for pricing.
 
 | Item | Value |
 |------|-------|

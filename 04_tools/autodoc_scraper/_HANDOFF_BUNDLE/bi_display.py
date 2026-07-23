@@ -108,6 +108,7 @@ def format_category_table(df: pd.DataFrame) -> pd.DataFrame:
         ("potential_units", "Potential"),
         ("actual_units", "Actual"),
         ("capture_rate", "Capture %"),
+        ("lost_revenue", "Lost revenue (€)"),
         ("lost_isze_gp", "Lost GP (€)"),
         ("lost_units", "Lost units"),
     ]
@@ -117,6 +118,8 @@ def format_category_table(df: pd.DataFrame) -> pd.DataFrame:
     for c in ("Potential units", "Actual units", "Lost units", "Over-capture", "PNs"):
         if c in out.columns:
             out[c] = pd.to_numeric(out[c], errors="coerce").round(0)
+    if "Lost revenue (€)" in out.columns:
+        out["Lost revenue (€)"] = pd.to_numeric(out["Lost revenue (€)"], errors="coerce").round(0)
     if "Lost GP (€)" in out.columns:
         out["Lost GP (€)"] = pd.to_numeric(out["Lost GP (€)"], errors="coerce").round(0)
     return out

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Executive HTML — engine + PRISM only (layer B)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,800;1,9..144,500&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-3.4.0.min.js"></script>
+<style>
+:root {
+  --bg:#0f1419; --card:#1a222d; --text:#e8ecf1; --muted:#8b9cb3;
+  --red:#e63946; --amber:#f4a261; --blue:#4cc9f0; --green:#2a9d8f;
+  --border:#2d3a4d;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'DM Sans',system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.55; }
+header { padding:28px 32px 16px; border-bottom:1px solid var(--border);
+  background:linear-gradient(135deg,#1a222d 0%,#0f1419 60%); }
+header h1 { font-family:'Fraunces',serif; font-size:2rem; font-weight:800; }
+header .sub { color:var(--muted); font-size:0.9rem; margin-top:8px; }
+nav.tabs { display:flex; flex-wrap:wrap; gap:6px; padding:12px 24px; position:sticky; top:0;
+  background:rgba(15,20,25,0.95); backdrop-filter:blur(8px); z-index:100; border-bottom:1px solid var(--border); }
+.nav-btn { background:var(--card); border:1px solid var(--border); color:var(--muted);
+  padding:8px 14px; border-radius:8px; cursor:pointer; font-size:0.8rem; font-weight:600; }
+.nav-btn:hover,.nav-btn.active { color:var(--text); border-color:var(--blue); background:#243044; }
+main { padding:24px 32px 80px; max-width:1400px; margin:0 auto; }
+.panel { display:none; animation:fade .25s ease; }
+.panel.active { display:block; }
+@keyframes fade { from{opacity:0; transform:translateY(6px)} to{opacity:1;transform:none} }
+.explain-hero { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:28px; }
+.explain-hero h2 { font-family:'Fraunces',serif; margin-bottom:12px; }
+.lede { font-size:1.05rem; color:var(--muted); margin-bottom:20px; }
+.legend { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px; font-size:0.82rem; }
+.pill { display:inline-block; padding:3px 10px; border-radius:20px; font-size:0.68rem;
+  font-weight:700; letter-spacing:.06em; margin-right:6px; }
+.pill.observed { background:#1e3d38; color:#7dffc8; }
+.pill.lookup { background:#2a2848; color:#b8b0ff; }
+.pill.scraped { background:#1e3348; color:#7ec8ff; }
+.pill.caution { background:#3d2a1e; color:#ffb07e; }
+.pill.guide { background:#2d3a4d; color:#aab; }
+ul.narrative { list-style:none; }
+ul.narrative li { margin-bottom:16px; padding-left:0; }
+ul.narrative .src { display:block; font-size:0.75rem; color:var(--muted); margin-top:6px; font-family:ui-monospace,monospace; }
+.glossary { margin-top:28px; padding-top:20px; border-top:1px solid var(--border); }
+.glossary dt { font-weight:700; color:var(--blue); margin-top:12px; }
+.glossary dd { color:var(--muted); margin-left:0; margin-bottom:8px; font-size:0.9rem; }
+.kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:20px; }
+.kpi-row.quad { grid-template-columns:repeat(4,1fr); }
+.kpi { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:18px; }
+.kpi .lbl { font-size:0.7rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); }
+.kpi .val { font-size:1.8rem; font-weight:800; margin-top:6px; font-family:'Fraunces',serif; }
+.kpi .sub { font-size:0.78rem; color:var(--muted); margin-top:6px; }
+.kpi.d { border-top:3px solid var(--red); }
+.kpi.n { border-top:3px solid var(--amber); }
+.kpi.w { border-top:3px solid var(--blue); }
+.kpi.i { border-top:3px solid var(--muted); }
+.note { font-size:0.88rem; padding:12px 16px; border-radius:8px; margin-bottom:16px; border-left:4px solid var(--border); }
+.note.observed { border-color:var(--green); background:rgba(42,157,143,.12); }
+.note.lookup { border-color:#7b6cf0; background:rgba(123,108,240,.1); }
+.note.scraped { border-color:var(--blue); background:rgba(76,201,240,.08); }
+.note.caution { border-color:var(--amber); background:rgba(244,162,97,.12); }
+.note.guide { border-color:var(--muted); background:rgba(45,58,77,.5); }
+table.data { width:100%; max-width:100%; border-collapse:collapse; font-size:0.82rem; margin:12px 0 24px; table-layout:fixed; }
+table.data th, table.data td { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:140px; }
+table.data th { text-align:left; padding:10px 8px; color:var(--muted); font-size:0.68rem;
+  text-transform:uppercase; letter-spacing:.08em; border-bottom:1px solid var(--border); }
+table.data td { padding:8px; border-bottom:1px solid var(--border); }
+table.compact td, table.compact th { padding:6px; font-size:0.75rem; }
+.chart { background:var(--card); border-radius:12px; padding:16px; margin:16px 0; }
+.quads { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px; }
+.empty { color:var(--muted); font-style:italic; }
+pre { background:#0a0e12; padding:12px; border-radius:8px; font-size:0.85rem; overflow:auto; }
+ul.files { margin:12px 0; padding-left:20px; color:var(--muted); font-size:0.88rem; }
+ul.files code { color:var(--blue); font-size:0.8rem; }
+footer { text-align:center; padding:32px; color:var(--muted); font-size:0.75rem; border-top:1px solid var(--border); }
+@media (max-width:900px) { .kpi-row { grid-template-columns:1fr 1fr; } .quads { grid-template-columns:1fr; } }
+</style></head>
+<body>
+<header>
+  <h1>ISZE PMS Intelligence</h1>
+  <p class="sub">Executive HTML — engine + PRISM only (layer B) · 22 May 2026 · 09:17 · variant=pms</p>
+</header>
+<nav class="tabs"><button type="button" class="nav-btn" data-section="explain">Read first</button><button type="button" class="nav-btn" data-section="cockpit">Cockpit</button><button type="button" class="nav-btn" data-section="pms">PMS lost sales</button><button type="button" class="nav-btn" data-section="multidb">All distributors</button><button type="button" class="nav-btn" data-section="scenario">Scenario lab</button><button type="button" class="nav-btn" data-section="geo">Geography / sites</button><button type="button" class="nav-btn" data-section="method">Methodology</button></nav>
+<main><section id="sec-explain" class="panel active">
+        <div class="explain-hero">
+          
+    <p class="note caution"><strong>PRISM vs engine:</strong> ITUK tab <code>potential_units</code> uses PMS Calc whole-fleet frequencies.
+    All distributors <code>expected_qty</code> is usually <strong>N75_only</strong> in PRISM CSV — do not compare (e.g. oil filter ~15× gap).</p>
+    
+          <h2>How to read this dashboard</h2>
+          <p class="lede">PMS lost sales and multi-DB capture from engine.py + PRISM derived CSV only.</p>
+          <div class="legend">
+            <span class="pill observed">OBSERVED</span> UIO × interval math from Excel sources
+            <span class="pill lookup">LOOKUP</span> T/Q scores &amp; P(sub) from CSV tables you can edit
+            <span class="pill scraped">SCRAPED</span> Live AM prices from CSV scrapers only
+            <span class="pill caution">CAUTION</span> Known scope mismatch — read before acting
+          </div>
+          <ul class="narrative"><li class='narr guide'><span class='pill guide'>GUIDE</span>This dashboard shows three metric families. They are not interchangeable: use PMS Lost GP for service-part leakage, Threat/Quality for IAM pricing pressure on scraped PNs, and Expected Loss only where no PMS interval exists.<span class='src'>Dashboard design</span></li><li class='narr observed'><span class='pill observed'>OBSERVED</span>PMS macro (ITUK — car park 2024A (v17 sheet 4; workbook: SMMT via ITUK)): UIO scope 22,389 vehicles · 233 mapped PNs · lost ISZE GP €17,119,574/yr · capture 5.1%.<span class='src'>engine.compute_view → Summary KPIs</span></li><li class='narr observed'><span class='pill observed'>OBSERVED</span>Largest category leak: Brake pad (front) — lost GP €4,383,818 at 2.0% capture.<span class='src'>engine.compute_view → Category lost sales (row 1 by lost_isze_gp)</span></li><li class='narr observed'><span class='pill observed'>OBSERVED</span>ITUK actuals: dealer sales (ITUK) (distributor file, not pan-ISZE v3 qty).<span class='src'>sources_loader.load_ituk_dealer_sales</span></li><li class='narr observed'><span class='pill observed'>OBSERVED</span>ITUK UIO basis for this build: smmt_car_park → scope label «ITUK — car park 2024A (v17 sheet 4; workbook: SMMT via ITUK)».<span class='src'>engine.resolve_uio_scope</span></li><li class='narr observed'><span class='pill observed'>OBSERVED</span>SMMT car park (~22,389 for 2024A) matches PRISM All distributors ITUK uio_units — Duncan/SMMT via ITUK, sheet 4.<span class='src'>v17 «4. ITUK UIO Projection» / PRISM derived</span></li><li class='narr scraped'><span class='pill scraped'>SCRAPED</span>Scrape panel: 300 PNs in autodoc_results base · 140 with at least one AM price (47% coverage).<span class='src'>Merged autodoc_results.csv + ks + mek</span></li><li class='narr lookup'><span class='pill lookup'>LOOKUP</span>IAM matrix: 55 Dangerous · 40 Nuisance · 20 Watch · 185 Ignore (T≥50 and Q≥50 thresholds from iam_scoring.py).<span class='src'>iam_scoring.compute_scores</span></li><li class='narr lookup'><span class='pill lookup'>LOOKUP</span>Substitution-model expected loss (breakdown PNs): €937,689 total across scraped set — cells from substitution_probability.csv × Rev_CY2025 × 35% GP.<span class='src'>iam_scoring.compute_expected_loss</span></li><li class='narr guide'><span class='pill guide'>GUIDE</span>We do not invent: survival rates, brand tiers, P(sub) cells, or UIO counts — each is read from the file named in the Methodology tab or labeled on the chart.<span class='src'>Handoff README / SPEC.md</span></li></ul>
+          <div class="glossary">
+            <h3>Glossary</h3>
+            <dl>
+              <dt>T (Threat)</dt><dd>0–100 from price-gap bucket: dealer workshop ÷ cheapest AM. Source: <code>iam_scoring.py</code> + scrape.</dd>
+              <dt>Q (Quality)</dt><dd>0–100 from <code>iam_brand_tiers.csv</code> tier (+25 if OE supplier flag).</dd>
+              <dt>Lost ISZE GP</dt><dd>Category-level: max(potential−actual,0) × avg PR00 × GP%. Source: <code>engine.py</code> + PMS Calc.</dd>
+              <dt>Expected Loss</dt><dd>Rev_CY2025 × GP% × P(sub) from <code>substitution_probability.csv</code>. Fallback for non-PMS parts.</dd>
+              <dt>Rev CY25 bubble size</dt><dd>ISZE revenue sold — <strong>not</strong> revenue at risk (label corrected in this build).</dd>
+            </dl>
+          </div>
+        </div></section><section id="sec-cockpit" class="panel">
+        
+        <div class="kpi-row">
+          <div class="kpi"><div class="lbl">PMS Lost ISZE GP/yr</div><div class="val">€17,119,574</div><div class="sub">Category-level · engine</div></div>
+          <div class="kpi"><div class="lbl">PMS capture</div><div class="val">5.1%</div><div class="sub">ITUK — car park 2024A (v17 sheet 4; workbook: SMMT via ITUK)</div></div>
+          <div class="kpi"><div class="lbl">UIO scope</div><div class="val">22,389</div><div class="sub">ITUK engine tab basis</div></div>
+          <div class="kpi"><div class="lbl">AM scrape coverage</div><div class="val">47%</div><div class="sub">140 / 300 PNs</div></div>
+        </div></section><section id="sec-pms" class="panel">
+        <p class="note observed">Category aggregation — one demand pool per PMS category (avoids per-PN UIO double-count).</p>
+        <div>                            <div id="f554265f-6811-4715-91f0-7118fc30ab4f" class="plotly-graph-div" style="height:360px; width:100%;"></div>            <script>                window.PLOTLYENV=window.PLOTLYENV || {};                                if (document.getElementById("f554265f-6811-4715-91f0-7118fc30ab4f")) {                    Plotly.newPlot(                        "f554265f-6811-4715-91f0-7118fc30ab4f",                        [{"hovertemplate":"Lost ISZE GP €=%{x}\u003cbr\u003ecategory=%{y}\u003cbr\u003eCapture %=%{marker.color}\u003cextra\u003e\u003c\u002fextra\u003e","legendgroup":"","marker":{"color":{"dtype":"f8","bdata":"ao7Vf4RMRkD+zBiLL3rqP30qjYv5qCdAcomM63Ye+D80Eqih7lIXQGCIpUeu3vk\u002fOVb\u002fETKx+z8AAAAAAAAAAGwG1hrhlXw\u002f26Ublti6\u002fz8="},"coloraxis":"coloraxis","pattern":{"shape":""}},"name":"","orientation":"h","showlegend":false,"textposition":"auto","x":{"dtype":"f8","bdata":"DAIrhzZAAEHy0k0iikoSQaeTQqUSlhdBn6fpNCHxJEEL3+5z1Z8lQawcWgodojxBoPgxlozDPUE26tNqf9FDQYu5a2XdQU9BV2qlZhK5UEE="},"xaxis":"x","y":["Fuel filter","Cabin filter","Oil filter","Clutch disc","Air filter","Brake disc (front)","Brake disc (rear)","Brake pad (rear)","Brake lining","Brake pad (front)"],"yaxis":"y","type":"bar"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermap":[{"type":"scattermap","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"title":{"text":"Lost ISZE GP €"}},"yaxis":{"anchor":"x","domain":[0.0,1.0],"title":{"text":"category"}},"coloraxis":{"colorbar":{"title":{"text":"Capture %"}},"colorscale":[[0.0,"#8b1a2e"],[0.5,"#c05010"],[1.0,"#0a6644"]]},"legend":{"tracegroupgap":0},"margin":{"t":20,"l":10,"r":10,"b":20},"barmode":"relative","height":360,"paper_bgcolor":"rgba(0,0,0,0)","plot_bgcolor":"rgba(0,0,0,0)"},                        {"responsive": true}                    )                };            </script>        </div>
+        <h3>Category table</h3>
+        <table class='data'><thead><tr><th>Category</th><th>Potential</th><th>Actual</th><th>Capture %</th><th>Lost GP (€)</th><th>Lost units</th></tr></thead><tbody><tr><td>Brake pad (front)</td><td>179,112</td><td>3,552</td><td>2.00</td><td>4,383,818</td><td>175,560</td></tr><tr><td>Brake lining</td><td>143,290</td><td>10.0</td><td>0.00</td><td>4,096,955</td><td>143,280</td></tr><tr><td>Brake pad (rear)</td><td>119,408</td><td>0.00</td><td>0.00</td><td>2,597,631</td><td>119,408</td></tr><tr><td>Brake disc (rear)</td><td>35,822</td><td>620.0</td><td>1.70</td><td>1,950,605</td><td>35,202</td></tr><tr><td>Brake disc (front)</td><td>44,778</td><td>724.0</td><td>1.60</td><td>1,876,509</td><td>44,054</td></tr><tr><td>Air filter</td><td>89,556</td><td>5,222</td><td>5.80</td><td>708,587</td><td>84,334</td></tr><tr><td>Clutch disc</td><td>11,941</td><td>180.0</td><td>1.50</td><td>686,225</td><td>11,761</td></tr><tr><td>Oil filter</td><td>119,408</td><td>14,126</td><td>11.8</td><td>386,437</td><td>105,282</td></tr><tr><td>Cabin filter</td><td>89,556</td><td>741.0</td><td>0.80</td><td>299,683</td><td>88,815</td></tr><tr><td>Fuel filter</td><td>44,778</td><td>19,970</td><td>44.6</td><td>133,127</td><td>24,808</td></tr></tbody></table>
+        <h3>Top PNs (allocated within category)</h3>
+        <table class='data'><thead><tr><th>PN</th><th>Description</th><th>Category</th><th>Actual qty</th><th>Lost GP (€)</th><th>AM min (€)</th></tr></thead><tbody><tr><td>8982447940</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>Brake pad (front)</td><td>2,367</td><td>2,921,311</td><td>128.7</td></tr><tr><td>1883113430</td><td>LINING SET; RR BRK,STANDARD</td><td>Brake lining</td><td>4.00</td><td>1,638,782</td><td>—</td></tr><tr><td>1883113870</td><td>LINING SET; RR BRK,STANDARD</td><td>Brake lining</td><td>4.00</td><td>1,638,782</td><td>—</td></tr><tr><td>8981919560</td><td>ROTOR; DISC BRK,RR</td><td>Brake disc (rear)</td><td>487.0</td><td>1,532,168</td><td>87.8</td></tr><tr><td>8982488951</td><td>ROTOR; DISC BRK,FRT</td><td>Brake disc (front)</td><td>393.0</td><td>1,018,602</td><td>—</td></tr><tr><td>1883113850</td><td>LINING SET; FRT BRK,STANDARD</td><td>Brake lining</td><td>2.00</td><td>819,391</td><td>—</td></tr><tr><td>8982169210</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>Brake pad (front)</td><td>649.0</td><td>800,985</td><td>—</td></tr><tr><td>8982169220</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td>Brake pad (front)</td><td>533.0</td><td>657,819</td><td>—</td></tr><tr><td>8982488930</td><td>ROTOR; DISC BRK,FRT</td><td>Brake disc (front)</td><td>199.0</td><td>515,781</td><td>—</td></tr><tr><td>5876102060</td><td>CLUTCH KIT</td><td>Clutch disc</td><td>117.0</td><td>446,046</td><td>—</td></tr><tr><td>8982488970</td><td>ROTOR; DISC BRK,RR</td><td>Brake disc (rear)</td><td>125.0</td><td>393,267</td><td>204.8</td></tr><tr><td>8981710330</td><td>ROTOR; DISC BRK,FRT</td><td>Brake disc (front)</td><td>93.0</td><td>241,043</td><td>—</td></tr></tbody></table></section><section id="sec-multidb" class="panel">
+        <p class="note caution"><strong>PRISM scope:</strong> <code>expected_qty</code> is usually <strong>N75_only</strong>. Not comparable to ITUK engine potentials.</p>
+        <p class="note observed">**PRISM derived** · `pms_capture_by_db_year.csv` · Typically N75_only — not comparable to ITUK PMS Calc tab</p>
+        <table class='data'><thead><tr><th>Distributor</th><th>UIO</th><th>Expected</th><th>Actual</th><th>Capture %</th><th>Lost GP (€)</th><th>Scope</th></tr></thead><tbody><tr><td>IUK</td><td>48876</td><td>150,538</td><td>29,328</td><td>19.5</td><td>828,804</td><td>LCV_only</td></tr><tr><td>UMI</td><td>18349</td><td>56,515</td><td>6,880</td><td>12.2</td><td>201,834</td><td>LCV_only</td></tr><tr><td>GERMANY</td><td>12360</td><td>19,034</td><td>4,124</td><td>21.7</td><td>181,305</td><td>N75_only</td></tr><tr><td>ITUK</td><td>22389</td><td>34,479</td><td>31,121</td><td>90.3</td><td>159,937</td><td>N75_only</td></tr><tr><td>BELGIUM</td><td>9311</td><td>14,339</td><td>5,439</td><td>37.9</td><td>120,500</td><td>N75_only</td></tr><tr><td>PORTUGAL</td><td>8019</td><td>12,349</td><td>2,005</td><td>16.2</td><td>79,908</td><td>N75_only</td></tr><tr><td>UTI</td><td>10668</td><td>16,429</td><td>10,916</td><td>66.4</td><td>77,272</td><td>N75_only</td></tr><tr><td>GREECE</td><td>3118</td><td>4,802</td><td>2,738</td><td>57.0</td><td>46,298</td><td>N75_only</td></tr><tr><td>CYPRUS</td><td>2072</td><td>3,191</td><td>2,148</td><td>67.3</td><td>26,750</td><td>N75_only</td></tr><tr><td>IRELAND</td><td>2727</td><td>4,199</td><td>5,054</td><td>120.4</td><td>14,988</td><td>N75_only</td></tr><tr><td>HUNGARY</td><td>3714</td><td>5,720</td><td>1,317</td><td>23.0</td><td>14,800</td><td>N75_only</td></tr><tr><td>ROMANIA</td><td>986</td><td>1,518</td><td>596.0</td><td>39.3</td><td>9,036</td><td>N75_only</td></tr><tr><td>MALTA</td><td>1054</td><td>1,623</td><td>867.0</td><td>53.4</td><td>7,814</td><td>N75_only</td></tr><tr><td>SWEDEN</td><td>7221</td><td>11,120</td><td>5,755</td><td>51.8</td><td>3,513</td><td>N75_only</td></tr><tr><td>FINLAND</td><td>1259</td><td>1,939</td><td>956.0</td><td>49.3</td><td>1,165</td><td>N75_only</td></tr><tr><td>DENMARK</td><td>830</td><td>1,278</td><td>612.0</td><td>47.9</td><td>375.7</td><td>N75_only</td></tr><tr><td>ICELAND</td><td>342</td><td>526.5</td><td>332.0</td><td>63.1</td><td>200.1</td><td>N75_only</td></tr><tr><td>NORWAY</td><td>8237</td><td>12,685</td><td>3,200</td><td>25.2</td><td>0.00</td><td>N75_only</td></tr></tbody></table>
+        <p class="sub-note">Period CY · year 2025 · multi-DB mode auto</p></section><section id="sec-scenario" class="panel">
+        <p class="note">Build settings (CLI flags or <code>_HANDOFF_BUNDLE/sources.yaml</code> defaults).</p>
+        <table class="data"><tbody>
+          <tr><td>Market scope</td><td>ITUK (PMS Calc pilot)</td></tr>
+          <tr><td>ITUK UIO basis</td><td>smmt_car_park</td></tr>
+          <tr><td>Period / year</td><td>CY 2025</td></tr>
+          <tr><td>Multi-DB actuals</td><td>auto</td></tr>
+          <tr><td>Horizon (years)</td><td>1.0</td></tr>
+          <tr><td>ISZE GP %</td><td>35%</td></tr>
+          <tr><td>DB gross margin</td><td>37%</td></tr>
+          <tr><td>DLR gross margin</td><td>25%</td></tr>
+          <tr><td>GBP→EUR</td><td>1.17 (yaml 2026-05-01)</td></tr>
+          <tr><td>SEK→EUR</td><td>0.089</td></tr>
+        </tbody></table>
+        <pre>python build_executive_dashboard.py --variant all --help</pre></section><section id="sec-geo" class="panel">
+        <table class="data"><thead><tr><th>Site</th><th>CSV</th><th>Present</th><th>Rows</th></tr></thead><tbody><tr><td>AD_UK</td><td>autodoc_results.csv</td><td>✓</td><td>300</td></tr><tr><td>MEK</td><td>mekonomen_results.csv</td><td>✓</td><td>200</td></tr><tr><td>KS_AM</td><td>ks_results.csv</td><td>✓</td><td>300</td></tr><tr><td>KS_GEN</td><td>ks_results.csv</td><td>✓</td><td>300</td></tr></tbody></table>
+        <p class="note scraped">Only AD_UK, KS, Mekonomen feed this build. EU/MA/Oscaro scrapers excluded (confirmed empty for Isuzu commercial).</p></section><section id="sec-method" class="panel">
+        <h3>Source files on disk</h3>
+        <ul class="files">
+          <li>Config: <code>C:\Users\jerom\Desktop\claude\ISZE\Tools\autodoc_scraper\_HANDOFF_BUNDLE\sources.yaml</code></li>
+          <li>v3 PN matrix: <code>C:\Users\jerom\Desktop\claude\ISZE\Tools\autodoc_scraper\_HANDOFF_BUNDLE\ISZE_Parts_Intelligence_v3.xlsx</code> — exists</li>
+          <li>v17 UIO: <code>C:\Users\jerom\Desktop\claude\ISZE\UIO\_CURRENT\ISUZU_UIO_Overview_2026_v17.xlsx</code></li>
+          <li>PMS Calc: <code>C:\Users\jerom\Desktop\claude\ISZE\Isuzu\Divers\ISZE_PMS_Coverage_Calculator.xlsx</code></li>
+          <li>PRISM multi-DB: <code>C:\Users\jerom\Desktop\claude\ISZE\Data\derived\pms_capture_by_db_year.csv</code></li>
+          <li>Brand tiers: <code>C:\Users\jerom\Desktop\claude\ISZE\Tools\autodoc_scraper\iam_brand_tiers.csv</code></li>
+          <li>Substitution: <code>C:\Users\jerom\Desktop\claude\ISZE\Tools\autodoc_scraper\substitution_probability.csv</code></li>
+        </ul>
+        <h3>Substitution table (excerpt)</h3>
+        <table class='data'><thead><tr><th>price_gap_bucket</th><th>tier_1</th><th>tier_2</th><th>tier_3</th><th>tier_4</th><th>notes</th></tr></thead><tbody><tr><td>&lt;1.0</td><td>0.00</td><td>0.00</td><td>0.00</td><td>0.00</td><td>Dealer is cheaper — no economic reason to switch.</td></tr><tr><td>1.0-1.2</td><td>0.01</td><td>0.02</td><td>0.03</td><td>0.05</td><td>Marginal gap (up to 20%) — most workshops stay with dealer for warranty/convenience.</td></tr><tr><td>1.2-1.5</td><td>0.03</td><td>0.05</td><td>0.10</td><td>0.20</td><td>Real gap (20-50%) — premium IAM brands start winning workshops.</td></tr><tr><td>1.5-2.0</td><td>0.05</td><td>0.10</td><td>0.25</td><td>0.40</td><td>Significant gap (50-100%) — clear economic incentive.</td></tr><tr><td>2.0-3.0</td><td>0.08</td><td>0.15</td><td>0.40</td><td>0.60</td><td>Large gap (2-3x) — dealer chain failing for this part.</td></tr><tr><td>&gt;=3.0</td><td>0.10</td><td>0.20</td><td>0.55</td><td>0.75</td><td>Extreme gap (3x+) — workshop has to justify NOT switching.</td></tr></tbody></table>
+        <h3>Brand tiers (excerpt)</h3>
+        <table class='data'><thead><tr><th>brand</th><th>tier</th><th>oe_supplier</th><th>oem_notes</th><th>trustpilot_url</th><th>reddit_subreddits</th><th>notes</th></tr></thead><tbody><tr><td>BOSCH</td><td>4</td><td>1</td><td>OE for VW/BMW/Mercedes/many — quality benchmark in IAM</td><td>https://www.trustpilot.com/review/bosch.com</td><td>r/MechanicAdvice|r/AskMechanics</td><td>Top-tier IAM. Workshops trust this. If Bosch undercuts dealer = real threat.</td></tr><tr><td>DENSO</td><td>4</td><td>1</td><td>OE Japanese — Toyota/Honda/Isuzu factory supplier</td><td>https://www.trustpilot.com/review/denso.com</td><td>r/MechanicAdvice</td><td>OE for Isuzu sensors/electrics. Direct OE-equivalent.</td></tr><tr><td>DELPHI</td><td>4</td><td>1</td><td>Originally GM OE — still tier-1 OE supplier</td><td>https://www.trustpilot.com/review/delphiautoparts.com</td><td>r/MechanicAdvice|r/AutoMechanic</td><td>OE-tier diesel injection &amp; electrics.</td></tr><tr><td>HITACHI</td><td>4</td><td>1</td><td>OE Japanese — major supplier to Japanese OEMs</td><td>—</td><td>r/MechanicAdvice</td><td>OE-tier electrics &amp; engine management.</td></tr><tr><td>MAGNETI MARELLI</td><td>4</td><td>1</td><td>OE Italian — supplier to FCA/Stellantis</td><td>—</td><td>r/MechanicAdvice</td><td>OE-tier electrics &amp; lighting.</td></tr><tr><td>AISIN</td><td>4</td><td>1</td><td>OE Japanese — Toyota Group transmissions/clutches</td><td>—</td><td>r/MechanicAdvice</td><td>OE clutch &amp; transmission components.</td></tr><tr><td>EXEDY</td><td>4</td><td>1</td><td>OE clutch supplier — Japan/Korea OEMs</td><td>—</td><td>r/MechanicAdvice</td><td>OE-tier clutch.</td></tr><tr><td>HENGST FILTER</td><td>4</td><td>1</td><td>OE filter supplier — Mercedes/BMW factory fit</td><td>—</td><td>r/MechanicAdvice</td><td>OE-grade filtration.</td></tr><tr><td>DONALDSON</td><td>4</td><td>1</td><td>OE filtration — commercial vehicle focus</td><td>—</td><td>r/Trucks|r/MechanicAdvice</td><td>Truck OE filters. Direct Isuzu commercial threat.</td></tr><tr><td>PURFLUX</td><td>4</td><td>1</td><td>OE filter French — Renault/PSA factory fit</td><td>—</td><td>r/MechanicAdvice</td><td>OE-tier filters.</td></tr><tr><td>NRF</td><td>4</td><td>1</td><td>OE cooling Dutch — radiators/AC</td><td>—</td><td>r/MechanicAdvice</td><td>OE cooling system supplier.</td></tr><tr><td>FEBI BILSTEIN</td><td>4</td><td>1</td><td>Premium German IAM — OE-equivalent on many lines</td><td>—</td><td>r/MechanicAdvice</td><td>Workshops accept Febi as equivalent to OE.</td></tr></tbody></table>
+        <h3>Rebuild command</h3>
+        <pre>python build_executive_dashboard.py --variant all</pre></section></main>
+<footer>Generated 22 May 2026 · 09:17 · No numbers invented in HTML — rebuild from CSV/Excel via build_executive_dashboard.py</footer>
+<script>
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('sec-' + btn.dataset.section).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+document.querySelector('.nav-btn[data-section="explain"]').classList.add('active');
+</script>
+</body></html>

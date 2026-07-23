@@ -1,0 +1,308 @@
+ 
+============================================================ 
+Run started: do 16/07/2026 10:56:18,78 
+============================================================ 
+============================================================
+  ISZE TENDER MONITOR v3
+  Last 30 days | Markets: UK, EU/TED, DE, BE, NL, Norway, Finland, Israel
+  CPV codes: 9 (surgical — ISZE targets only)
+  TED country filter: 27 markets
+  TED detail fetch: OFF
+============================================================
+
+[UK] Fetching from Find a Tender...
+  [UK] API response keys: ['uri', 'version', 'extensions', 'publishedDate', 'publisher', 'license']
+  Page 1: 0 releases (total: 0)
+[UK] Zero releases on page 1 with stages filter — retrying without it...
+  [UK] Without stages filter: 100 releases
+  Page 2: 0 releases (total: 100)
+[UK] Total fetched: 100
+[UK] Matches: 18 (excluded 1 by CPV gate)
+
+[CF] Fetching from Contracts Finder (UK lower-value, OCDS API)...
+  [CF] 'vehicle maintenance': 119 new matches
+  [CF] 'repair and maintenance': 429 rate-limited — waiting 120s
+[CF] Total unique matches: 119
+
+[TED] Fetching from TED Europa (v3 — surgical CPV + country filter)...
+  Query: (PC=34131000 OR PC=34113000 OR PC=34136000 OR PC=34130000 OR PC=34136200 OR PC=50110000 OR PC=50112000 OR PC=50116000 OR PC=50111000) AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616
+  Status: 200
+  Fetched 100 (running total: 100)
+  Status: 200
+  Fetched 100 (running total: 200)
+  Status: 200
+  Fetched 100 (running total: 300)
+  Status: 200
+  Fetched 100 (running total: 400)
+  Status: 200
+  Fetched 100 (running total: 500)
+  Status: 200
+  Fetched 100 (running total: 600)
+  Status: 200
+  Fetched 100 (running total: 700)
+  Status: 200
+  Fetched 100 (running total: 800)
+  Status: 200
+  Fetched 90 (running total: 890)
+  Status: 200
+[TED] Total fetched: 890 — applying keyword + CPV exclusion filter...
+[TED] Keyword matches: 685
+  Excluded by CPV gate:   45
+  Excluded by keyword:    160
+  Detail fetch results:   deadline=51/685 (7%) | value=0/685 (0%)
+
+[DE] Fetching from Germany national portals (DTVP)...
+  [DE] DTVP RSS: HTTP 404 — portal may require browser access
+  [DE] NRW portal: HTTP 404 — skipping
+[DE] Total Germany national results: 0
+[DE] Coverage note: TED (DEU) covers above-threshold German contracts.
+[DE] Below-threshold German tenders need portal registration (DTVP, Vergabe.NRW, Bavaria).
+
+[BE] Fetching from Belgium procurement RSS...
+  [BEL] RSS parse error: syntax error: line 1, column 0
+  [BE] https://www.publicprocurement.be/supplier/feed/rss: 0 matches
+  [BEL] RSS parse error: syntax error: line 1, column 0
+  [BE] https://www.publicprocurement.be/en/rss: 0 matches
+[BE] Total Belgium RSS: 0
+[BE] Note: TED (BEL) still covers above-threshold BE contracts.
+
+[NL] Fetching from TenderNed RSS...
+[NL] TenderNed: 25 keyword matches
+
+[Doffin] No API key set — skipping.
+
+[HILMA] No API key set — skipping.
+
+[IL] Fetching Israel government tenders RSS...
+[IL] Error: undefined entity: line 11, column 0
+
+✓ Saved: C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isuzu_tenders_v3.xlsx
+  UK (Find a Tender): 18
+  UK (Contracts Finder): 119
+  TED EU:   685
+  Germany:  0 (national portals) + included in TED above-threshold
+  Norway:   0
+  Finland:  0
+  Israel:   0
+  Belgium:  0
+  Netherlands: 25
+
+Done.
+============================================================
+. : The term 'C:\Users\jerom\Desktop\claude\ISZE\04_tools\..\workspace\isze_root.ps1' is not recognized as the name of 
+a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify
+ that the path is correct and try again.
+At C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\publish_live_tender_json.ps1:5 char:3
++ . $IszeRootPs1
++   ~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\jerom\...e\isze_root.ps1:String) [], ParentContainsErrorRecord 
+   Exception
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+ 
+============================================================ 
+Run started: do 16/07/2026 13:33:03,57 
+============================================================ 
+============================================================
+  ISZE TENDER MONITOR v3
+  Last 30 days | Markets: UK, EU/TED, DE, BE, NL, Norway, Finland, Israel
+  CPV codes: 9 (surgical — ISZE targets only)
+  TED country filter: 27 markets
+  TED detail fetch: OFF
+============================================================
+
+[UK] Fetching from Find a Tender...
+  [UK] API response keys: ['uri', 'version', 'extensions', 'publishedDate', 'publisher', 'license']
+  Page 1: 0 releases (total: 0)
+[UK] Zero releases on page 1 with stages filter — retrying without it...
+  [UK] Without stages filter: 100 releases
+  Page 2: 0 releases (total: 100)
+[UK] Total fetched: 100
+[UK] Matches: 32 (excluded 1 by CPV gate)
+
+[CF] Fetching from Contracts Finder (UK lower-value, OCDS API)...
+  [CF] 'vehicle maintenance': 118 new matches
+  [CF] 'fleet repair': 429 rate-limited — waiting 120s
+[CF] Total unique matches: 118
+
+[TED] Fetching from TED Europa (v3 — surgical CPV + country filter)...
+  Query: (PC=34131000 OR PC=34113000 OR PC=34136000 OR PC=34130000 OR PC=34136200 OR PC=50110000 OR PC=50112000 OR PC=50116000 OR PC=50111000) AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616
+  Status: 200
+  Fetched 100 (running total: 100)
+  Status: 200
+  Fetched 100 (running total: 200)
+  Status: 200
+  Fetched 100 (running total: 300)
+  Status: 200
+  Fetched 100 (running total: 400)
+  Status: 200
+  Fetched 100 (running total: 500)
+  Status: 200
+  Fetched 100 (running total: 600)
+  Status: 200
+  Fetched 100 (running total: 700)
+  Status: 200
+  Fetched 100 (running total: 800)
+  Status: 200
+  Fetched 90 (running total: 890)
+  Status: 200
+[TED] Total fetched: 890 — applying keyword + CPV exclusion filter...
+[TED] Keyword matches: 685
+  Excluded by CPV gate:   45
+  Excluded by keyword:    160
+  Detail fetch results:   deadline=51/685 (7%) | value=0/685 (0%)
+
+[DE] Fetching from Germany national portals (DTVP)...
+  [DE] DTVP RSS: HTTP 404 — portal may require browser access
+  [DE] NRW portal: HTTP 404 — skipping
+[DE] Total Germany national results: 0
+[DE] Coverage note: TED (DEU) covers above-threshold German contracts.
+[DE] Below-threshold German tenders need portal registration (DTVP, Vergabe.NRW, Bavaria).
+
+[BE] Fetching from Belgium procurement RSS...
+  [BEL] RSS parse error: syntax error: line 1, column 0
+  [BE] https://www.publicprocurement.be/supplier/feed/rss: 0 matches
+  [BEL] RSS parse error: syntax error: line 1, column 0
+  [BE] https://www.publicprocurement.be/en/rss: 0 matches
+[BE] Total Belgium RSS: 0
+[BE] Note: TED (BEL) still covers above-threshold BE contracts.
+
+[NL] Fetching from TenderNed RSS...
+[NL] TenderNed: 25 keyword matches
+
+[Doffin] No API key set — skipping.
+
+[HILMA] No API key set — skipping.
+
+[IL] Fetching Israel government tenders RSS...
+[IL] Error: undefined entity: line 11, column 0
+
+✓ Saved: C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isuzu_tenders_v3.xlsx
+  UK (Find a Tender): 32
+  UK (Contracts Finder): 118
+  TED EU:   685
+  Germany:  0 (national portals) + included in TED above-threshold
+  Norway:   0
+  Finland:  0
+  Israel:   0
+  Belgium:  0
+  Netherlands: 25
+
+Done.
+============================================================
+Built C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v2.html
+  Raw notices: 864
+  Opportunities: 741
+  Attack targets: 0
+  Action queue: 5
+Published: C:\Users\jerom\Desktop\claude\ISZE\01_data\dashboards\tender_data.json
+  Size: 3.79 MB  Modified: 07/16/2026 13:36:35
+Built C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v2.html
+  Raw notices: 864
+  Opportunities: 741
+  Attack targets: 0
+  Action queue: 5
+Done: do 16/07/2026 13:36:36,19 
+ 
+============================================================ 
+Run started: ma 20/07/2026  7:30:01,34 
+============================================================ 
+============================================================
+  ISZE TENDER MONITOR v3
+  Last 30 days | Markets: UK, EU/TED, DE, BE, NL, Norway, Finland, Israel
+  CPV codes: 9 (surgical — ISZE targets only)
+  TED country filter: 27 markets
+  TED detail fetch: OFF
+============================================================
+
+[UK] Fetching from Find a Tender...
+  [UK] API response keys: ['uri', 'version', 'extensions', 'publishedDate', 'publisher', 'license']
+  Page 1: 0 releases (total: 0)
+[UK] Zero releases on page 1 with stages filter — retrying without it...
+  [UK] Without stages filter: 100 releases
+  Page 2: 0 releases (total: 100)
+[UK] Total fetched: 100
+[UK] Matches: 25 (excluded 1 by CPV gate)
+
+[CF] Fetching from Contracts Finder (UK lower-value, OCDS API)...
+  [CF] 'vehicle maintenance': 90 new matches
+  [CF] 'repair and maintenance': 429 rate-limited — waiting 120s
+  [CF] 'pickup': 429 rate-limited — waiting 120s
+[CF] Total unique matches: 90
+
+[TED] Fetching from TED Europa (v3 — surgical CPV + country filter)...
+  Query: (PC=34131000 OR PC=34113000 OR PC=34136000 OR PC=34130000 OR PC=34136200 OR PC=50110000 OR PC=50112000 OR PC=50116000 OR PC=50111000) AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260620
+  Status: 200
+  Fetched 100 (running total: 100)
+  Status: 200
+  Fetched 100 (running total: 200)
+  Status: 200
+  Fetched 100 (running total: 300)
+  Status: 200
+  Fetched 100 (running total: 400)
+  Status: 200
+  Fetched 100 (running total: 500)
+  Status: 200
+  Fetched 100 (running total: 600)
+  Status: 200
+  Fetched 100 (running total: 700)
+  Status: 200
+  Fetched 87 (running total: 787)
+  Status: 200
+[TED] Total fetched: 787 — applying keyword + CPV exclusion filter...
+[TED] Keyword matches: 616
+  Excluded by CPV gate:   41
+  Excluded by keyword:    130
+  Detail fetch results:   deadline=46/616 (7%) | value=0/616 (0%)
+
+[DE] Fetching from Germany national portals (DTVP)...
+  [DE] DTVP RSS: HTTP 404 — portal may require browser access
+  [DE] NRW portal: HTTP 404 — skipping
+[DE] Total Germany national results: 0
+[DE] Coverage note: TED (DEU) covers above-threshold German contracts.
+[DE] Below-threshold German tenders need portal registration (DTVP, Vergabe.NRW, Bavaria).
+
+[BE] Fetching from Belgium procurement RSS...
+  [BEL] RSS parse error: syntax error: line 1, column 0
+  [BE] https://www.publicprocurement.be/supplier/feed/rss: 0 matches
+  [BEL] RSS parse error: syntax error: line 1, column 0
+  [BE] https://www.publicprocurement.be/en/rss: 0 matches
+[BE] Total Belgium RSS: 0
+[BE] Note: TED (BEL) still covers above-threshold BE contracts.
+
+[NL] Fetching from TenderNed RSS...
+[NL] TenderNed: 25 keyword matches
+
+[Doffin] No API key set — skipping.
+
+[HILMA] No API key set — skipping.
+
+[IL] Fetching Israel government tenders RSS...
+[IL] Error: undefined entity: line 11, column 0
+
+✓ Saved: C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isuzu_tenders_v3.xlsx
+  UK (Find a Tender): 25
+  UK (Contracts Finder): 90
+  TED EU:   616
+  Germany:  0 (national portals) + included in TED above-threshold
+  Norway:   0
+  Finland:  0
+  Israel:   0
+  Belgium:  0
+  Netherlands: 25
+
+Done.
+============================================================
+Built C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v2.html
+  Raw notices: 760
+  Opportunities: 680
+  Attack targets: 0
+  Action queue: 5
+Published: C:\Users\jerom\Desktop\claude\ISZE\01_data\dashboards\tender_data.json
+  Size: 3.38 MB  Modified: 07/20/2026 07:35:34
+Built C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v2.html
+  Raw notices: 760
+  Opportunities: 680
+  Attack targets: 0
+  Action queue: 5
+Done: ma 20/07/2026  7:35:36,03 

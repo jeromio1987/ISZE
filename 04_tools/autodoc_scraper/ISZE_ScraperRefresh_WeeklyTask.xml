@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Description>ISZE competitive pricing refresh — KS, Tranzparts, TMC, Mekonomen, Auto365 via refresh_and_check_drift.py (resets incremental CSVs before each run).</Description>
+    <Author>ISZE</Author>
+  </RegistrationInfo>
+  <Triggers>
+    <!-- Every Sunday at 21:00 — runs before scraper health check (Sun 22:00) -->
+    <CalendarTrigger>
+      <StartBoundary>2026-07-20T21:00:00</StartBoundary>
+      <Enabled>true</Enabled>
+      <ScheduleByWeek>
+        <WeeksInterval>1</WeeksInterval>
+        <DaysOfWeek>
+          <Sunday />
+        </DaysOfWeek>
+      </ScheduleByWeek>
+    </CalendarTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id="Author">
+      <LogonType>InteractiveToken</LogonType>
+      <RunLevel>LeastPrivilege</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>true</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>true</RunOnlyIfNetworkAvailable>
+    <IdleSettings>
+      <StopOnIdleEnd>false</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <AllowStartOnDemand>true</AllowStartOnDemand>
+    <Enabled>true</Enabled>
+    <Hidden>false</Hidden>
+    <RunOnlyIfIdle>false</RunOnlyIfIdle>
+    <WakeToRun>false</WakeToRun>
+    <ExecutionTimeLimit>PT4H</ExecutionTimeLimit>
+    <Priority>7</Priority>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <!-- UPDATE THIS PATH if you move the folder -->
+      <Command>C:\Users\jerom\Desktop\claude\ISZE\04_tools\autodoc_scraper\run_refresh_scheduled.bat</Command>
+      <WorkingDirectory>C:\Users\jerom\Desktop\claude\ISZE\04_tools\autodoc_scraper</WorkingDirectory>
+    </Exec>
+  </Actions>
+</Task>

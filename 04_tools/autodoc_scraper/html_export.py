@@ -86,7 +86,10 @@ def _plotly_div(scored: pd.DataFrame) -> str:
         margin=dict(l=40, r=20, t=10, b=40),
         legend=dict(orientation="h", y=-0.15),
     )
-    return fig.to_html(full_html=False, include_plotlyjs="cdn")
+    # NOTE (2026-07-09 fix): was include_plotlyjs="cdn". Plotly is now loaded once,
+    # inline, in the page <head> (see build_executive_dashboard.py) — same pattern
+    # category_bar_div already assumed. Do not re-embed the library per-chart.
+    return fig.to_html(full_html=False, include_plotlyjs=False)
 
 
 def _eur(v) -> str:

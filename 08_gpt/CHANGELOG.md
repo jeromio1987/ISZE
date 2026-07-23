@@ -17,6 +17,30 @@ Use this before each upload batch to identify what changed since the last sync.
 
 ---
 
+## v1.1 — July 2026 (FACTS.md reconciliation)
+
+**Author:** Claude (Cowork) on behalf of Jérôme Van der Pluym
+**Date:** 2026-07-09
+
+### What changed (vs May 2026 upload state)
+
+| File | Change | Sensitivity | Upload now? |
+|------|--------|-------------|-------------|
+| `Active_Projects_Apr2026.md` | Rewritten: PMS section replaced stale 9.8%→17.3% capture figures with adopted IML v7 "Model B" (35.1% oil filter, €2.04M gap). Lubricants section split into live Shell/UMI channel vs unsanctioned BESCO scale-up (was conflated, wrongly said "FY2027 launch confirmed"). AIM section updated to current ~98.2–98.4% classification / €1.12M open residual (was stale ~87%). UIO bumped to v19 label with an explicit caveat that headline totals are unconfirmed against v19. Competitiveness Dashboard flagged stale (last calibrated March, refresh never happened in June as this changelog's own prior entry planned). | confidential | ✅ Upload after Jerome reviews the caveats (esp. UIO figures, AIM revenue/GP figures) |
+| `Pricing_Logic.md` | No factual changes — formulas, FX table, ITUK "Key Numbers" all re-checked against `pricing-basket-2026.md` (verified 2026-06-29) and still correct. Added caveat that a newer price file (`Price file 2026_full.xlsx`, 16 Jun) exists and line-item PR00 prices haven't been checked against it. | confidential | ✅ Re-upload if not synced |
+| Other 6 files | Not reviewed this pass | — | — |
+
+### Known gaps / things NOT done in this pass
+- Did not verify `Price file 2026_full.xlsx` against the line-item PR00 prices in `Pricing_Logic.md` — flagged, not resolved.
+- Did not re-verify UIO v19 grand totals — flagged, not resolved.
+- Did not re-verify AIM network revenue/GP figures (€32.4M/€14.6M/45.0%) or Rev/Vehicle benchmarks — flagged, not resolved.
+- Competitiveness Dashboard content itself not yet refreshed (separate in-progress task) — this pack now says so explicitly instead of implying it's current.
+- `UIO_V17_File_Guide.md`, `ISZE_Company_Context.md`, `Glossary_and_Terms.md`, `Jerome_Working_Style.md`, `Email_Templates.md`, `Analysis_Frameworks.md` not reviewed — unknown drift status.
+
+**Manual upload to GPT Enterprise still required — Claude cannot do this step.**
+
+---
+
 ## v1.0 — May 2026 (initial CHANGELOG created)
 
 **Author:** Claude (Cowork) on behalf of Jérôme Van der Pluym  

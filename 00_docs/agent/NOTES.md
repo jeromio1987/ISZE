@@ -35,9 +35,9 @@ Skills live under `C:\Users\jerom\Documents\Claude\Scheduled\`. Each ISZE skill 
 | Skill | Status | Canonical inputs | Canonical outputs | Path preflight | Notes |
 |-------|--------|------------------|-------------------|----------------|-------|
 | `isze-weekly-tender-scrape` | Active | `04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py` | `01_data/dashboards/tender_data.json` | Script + output dir | Runs v3 scraper + publish; weekly |
-| `isze-scraper-healthcheck-autofix` | Active | `04_tools/…` scraper scripts (read-only) | `04_tools/scraper_health_report.md` (+ optional diff) | Input scripts + `04_tools/` | **Propose-only** — never auto-applies patches |
-| `isze-weekly-ks-scrape` | Active | `04_tools/autodoc_scraper/ks_scraper.py` | `04_tools/autodoc_scraper/ks_results.csv` | Script + output dir | Weekly price diff vs prior run |
-| `autodoc-monthly-refresh` | Active | `04_tools/autodoc_scraper/autodoc_results.csv` | (reminder only) | Scraper folder | Monthly freshness reminder |
+| `isze-scraper-healthcheck-autofix` | Active | `04_tools/…` scraper scripts (read-only) | `04_tools/scraper_health_report.md` (+ optional diff) | Input scripts + `04_tools/` | **Propose-only** — Autodoc retired from scope 2026-07-14 |
+| `isze-weekly-ks-scrape` | Superseded | — | — | — | Replaced by `refresh_and_check_drift.py` + Task Scheduler XML |
+| `autodoc-monthly-refresh` | Retired | — | — | — | Autodoc permanently blocked |
 | `isze-dashboard-freshness-check` | Active | `02_dashboards/`, `01_data/dashboards/` | (report only) | Parent folders | Monday staleness table |
 | `isze-uio-staleness-alert` | Active | `06_uio/_CURRENT/ISUZU_UIO_Overview_2026.xlsx` | (report only) | Canonical UIO + README | Monthly; flags copy drift |
 | `isze-memory-review` | Active | `05_memory/projects/`, `05_memory/glossary.md` | `05_memory/briefs/weekly_W*.txt` | Input + output dirs | Weekly hygiene |
@@ -51,7 +51,7 @@ Skills live under `C:\Users\jerom\Documents\Claude\Scheduled\`. Each ISZE skill 
 
 ## Decision-model layer notes (2026-06-10)
 
-- ITUK 2025–2030 UIO forecast cells in the v17 workbook are **uncached formulas** — Python readers (openpyxl) get None. `build_revenue_runway.py` reads computed values once via Excel COM (read-only) and caches to `03_analytics/Isuzu/prism/data/ituk_uio_projection_cache.csv`. **Delete that cache after any UIO workbook update** so it re-reads.
+- ITUK 2025–2030 UIO forecast cells in the v19 workbook are **uncached formulas** — Python readers (openpyxl) get None. `build_revenue_runway.py` reads computed values once via Excel COM (read-only) and caches to `03_analytics/Isuzu/prism/data/ituk_uio_projection_cache.csv`. **Delete that cache after any UIO workbook update** so it re-reads.
 - Wallets are age-flat (GPS max targets). The genuine-€-by-age curve from IML plugs into `03_analytics/Isuzu/prism/data/decision_model_assumptions.yaml` when it lands.
 - Elasticity output is LOW POWER by construction — direction only, never quote betas externally.
 

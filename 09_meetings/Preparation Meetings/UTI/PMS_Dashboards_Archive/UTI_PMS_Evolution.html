@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>UTI PMS cover evolution — capped at 100%</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root { --red:#CC0E1E; --navy:#1a2b4a; --bg:#f5f5f5; --card:#fff; --border:#e0e0e0; --muted:#5a5a5a; }
+* { box-sizing:border-box; }
+body { font-family:"Segoe UI",Calibri,sans-serif; margin:0; background:var(--bg); color:#1a1a1a; }
+header { background:var(--navy); color:#fff; padding:1.2rem 1.5rem; }
+header h1 { margin:0; font-size:1.35rem; }
+header p { margin:0.35rem 0 0; opacity:0.85; font-size:0.9rem; }
+.controls { background:var(--card); border-bottom:1px solid var(--border); padding:0.75rem 1.25rem; display:flex; flex-wrap:wrap; gap:1rem; align-items:center; }
+.controls label { font-size:0.85rem; font-weight:600; }
+.controls select { margin-left:0.35rem; padding:0.35rem 0.5rem; }
+.wrap { max-width:1100px; margin:0 auto; padding:1rem 1.25rem 2rem; }
+section { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1rem 1.2rem; margin-bottom:1rem; }
+section h2 { margin:0 0 0.2rem; font-size:1.05rem; color:var(--red); border-bottom:3px solid var(--red); padding-bottom:0.35rem; }
+section .sub { margin:0 0 0.75rem; font-size:0.82rem; color:var(--muted); }
+.grid2 { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+@media(max-width:800px){ .grid2{ grid-template-columns:1fr; } }
+.callout { padding:0.65rem 0.9rem; border-left:4px solid var(--red); background:#fff8f8; font-size:0.85rem; margin-bottom:1rem; }
+.callout.warn { border-color:#b45309; background:#fffbeb; }
+canvas { max-height:280px; }
+footer { text-align:center; color:var(--muted); font-size:0.75rem; padding:1rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>UTI — PMS cover evolution</h1>
+  <p>Cover capped at 100% · PRISM N75 schedule (not IML) · CY2023–2025 billing</p>
+</header>
+<div class="controls">
+  <label>Attach period <select id="attachMode"><option value="fy" selected>FY (Apr–Mar)</option><option value="cy">CY (Jan–Dec)</option></select></label>
+</div>
+<div class="wrap">
+<div class="callout warn"><strong>Methodology — not IML.</strong> UTI cover uses <strong>PRISM N75</strong>: 0.5 replacement events/vehicle/yr × 70% addressable workshop share, plus category factors (oil/fuel 1.0×, air 0.5×, brake pad 0.5×, clutch 0.1–0.2×, etc.). <strong>IML v7</strong> (1.25× filters, 100% addressable) is the <em>ITUK headline only</em> — do not apply to UTI. All cover % charts are <strong>capped at 100%</strong>; hover for true rate when billing overshoots the normative ceiling (+).</div>
+
+<section><h2>1 · Total PMS cover %</h2><p class="sub">Genuine + BVP billing vs PRISM expected demand · max 100%</p><canvas id="cTotal"></canvas></section>
+<section><h2>2 · Genuine cover %</h2><p class="sub">OE billing only</p><canvas id="cGenuine"></canvas></section>
+<section><h2>3 · BVP cover %</h2><p class="sub">BVP channel only · capped at 100%</p><canvas id="cBvp"></canvas></section>
+
+<div class="grid2">
+<section><h2>4 · Residual gap €</h2><p class="sub">Wear-parts only at capped cover — filters at ceiling</p><canvas id="cGap"></canvas></section>
+<section><h2>5 · PMS revenue € (genuine vs BVP)</h2><p class="sub">Actual billing — not capped</p><canvas id="cRev"></canvas></section>
+</div>
+
+<section><h2>6 · BVP share of PMS revenue %</h2><p class="sub">Channel mix — UTI is BVP-led on filters/clutch</p><canvas id="cBvpShare"></canvas></section>
+
+<div class="grid2">
+<section><h2>7 · Filters vs wear cover %</h2><p class="sub">Filters at 100% ceiling · wear = the gap story</p><canvas id="cSplit"></canvas></section>
+<section><h2>8 · PMS attach rates</h2><p class="sub">Units per vehicle per year (FY default) — oil / fuel / air / brake pad</p><canvas id="cAttach"></canvas></section>
+</div>
+
+<section><h2>9 · Category cover evolution</h2><p class="sub">Capped at 100% · tooltip shows true % when overshoot</p><canvas id="cCats"></canvas></section>
+<section><h2>10 · Category residual gap €</h2><p class="sub">Where cover is below 100%</p><canvas id="cCatGap"></canvas></section>
+<section><h2>11 · Top gap categories CY2025</h2><p class="sub">Wear parts — clutch &amp; brake</p><canvas id="cTopGap"></canvas></section>
+</div>
+<footer>ISZE · UTI meeting · PRISM N75 · cover never above 100% in this view</footer>
+<script>
+const P = {"capture": {"years_cy": [2023, 2024, 2025], "methodology": "UTI cover/capture uses PRISM N75 \u2014 0.5 service events/vehicle/yr \u00d7 70% addressable, plus per-category wear factors (pms_capture_assumptions.yaml). This is NOT the IML v7 schedule (that is ITUK headline only). Charts show cover capped at 100%; billing can exceed the normative ceiling (BVP multi-buy, export).", "distributors": {"UTI": {"total": [100.0, 100.0, 100.0], "total_true": [153.6, 167.8, 194.8], "overshoot_total": [true, true, true], "genuine": [61.4, 68.2, 80.5], "genuine_true": [61.4, 68.2, 80.5], "bvp": [92.1, 99.6, 100.0], "bvp_true": [92.1, 99.6, 114.4], "gap_eur": [345692, 368945, 399553], "rev_genuine": [209019, 247775, 257545], "rev_bvp": [328963, 319151, 369625], "bvp_share": [61.1, 56.3, 58.9], "filters": [100.0, 100.0, 100.0], "filters_true": [219.2, 239.2, 280.9], "wear": [39.1, 43.3, 44.7], "wear_true": [39.1, 43.3, 44.7], "categories": {"oil_filter": {"label": "Oil filter", "capture": [100.0, 100.0, 100.0], "capture_true": [265.8, 286.9, 326.2], "overshoot": [true, true, true], "gap": [0, 0, 0]}, "fuel_filter": {"label": "Fuel filter", "capture": [100.0, 100.0, 100.0], "capture_true": [409.6, 452.4, 517.6], "overshoot": [true, true, true], "gap": [0, 0, 0]}, "air_filter": {"label": "Air filter", "capture": [100.0, 100.0, 100.0], "capture_true": [293.2, 310.2, 414.8], "overshoot": [true, true, true], "gap": [0, 0, 0]}, "brake_pad": {"label": "Brake pad", "capture": [31.1, 43.8, 25.1], "capture_true": [31.1, 43.8, 25.1], "overshoot": [false, false, false], "gap": [92125, 73622, 102844]}, "brake_rotor": {"label": "Brake rotor", "capture": [23.9, 28.7, 33.2], "capture_true": [23.9, 28.7, 33.2], "overshoot": [false, false, false], "gap": [61689, 58225, 44539]}, "clutch_booster": {"label": "Clutch booster", "capture": [15.7, 11.4, 6.4], "capture_true": [15.7, 11.4, 6.4], "overshoot": [false, false, false], "gap": [76104, 86996, 103614]}, "clutch_disc": {"label": "Clutch disc", "capture": [3.7, 7.0, 4.6], "capture_true": [3.7, 7.0, 4.6], "overshoot": [false, false, false], "gap": [33635, 42938, 45163]}, "urea_filter": {"label": "Urea filter", "capture": [0.0, 2.6, 2.3], "capture_true": [0.0, 2.6, 2.3], "overshoot": [false, false, false], "gap": [0, 33920, 35641]}}, "top_gaps_2025": [{"cat": "Clutch booster", "gap": 103614, "capture": 6.4, "capture_true": 6.4}, {"cat": "Brake pad", "gap": 102844, "capture": 25.1, "capture_true": 25.1}, {"cat": "Clutch PP", "gap": 67751, "capture": 5.0, "capture_true": 5.0}, {"cat": "Clutch disc", "gap": 45163, "capture": 4.6, "capture_true": 4.6}, {"cat": "Brake rotor", "gap": 44539, "capture": 33.2, "capture_true": 33.2}, {"cat": "Urea filter", "gap": 35641, "capture": 2.3, "capture_true": 2.3}]}}}, "attach": {"fy_years": [2022, 2023, 2024, 2025], "cy_years": [2023, 2024, 2025], "UTI": {"fy": {"2022": {"oil_filter": 0.18, "fuel_filter": 0.33, "air_filter": 0.15, "brake_pad": 0.01}, "2023": {"oil_filter": 0.52, "fuel_filter": 0.53, "air_filter": 0.49, "brake_pad": 0.05}, "2024": {"oil_filter": 0.65, "fuel_filter": 0.85, "air_filter": 0.67, "brake_pad": 0.06}, "2025": {"oil_filter": 0.23, "fuel_filter": 0.77, "air_filter": 0.62, "brake_pad": 0.03}}, "cy": {"2023": {"oil_filter": 0.49, "fuel_filter": 0.66, "air_filter": 0.55, "brake_pad": 0.05}, "2024": {"oil_filter": 0.63, "fuel_filter": 0.75, "air_filter": 0.6, "brake_pad": 0.07}, "2025": {"oil_filter": 0.47, "fuel_filter": 1.07, "air_filter": 0.78, "brake_pad": 0.04}}}, "ITUK": {"fy": {"2022": {"oil_filter": 0.44, "fuel_filter": 0.13, "air_filter": 0.03, "brake_pad": 0.04}, "2023": {"oil_filter": 0.56, "fuel_filter": 0.82, "air_filter": 0.2, "brake_pad": 0.21}, "2024": {"oil_filter": 0.5, "fuel_filter": 0.8, "air_filter": 0.21, "brake_pad": 0.15}, "2025": {"oil_filter": 0.43, "fuel_filter": 0.61, "air_filter": 0.2, "brake_pad": 0.14}}, "cy": {"2023": {"oil_filter": 0.84, "fuel_filter": 0.79, "air_filter": 0.18, "brake_pad": 0.17}, "2024": {"oil_filter": 0.42, "fuel_filter": 0.79, "air_filter": 0.21, "brake_pad": 0.2}, "2025": {"oil_filter": 0.57, "fuel_filter": 0.74, "air_filter": 0.25, "brake_pad": 0.15}}}}};
+const CY = P.capture.years_cy;
+const U = P.capture.distributors.UTI;
+const charts = [];
+const COL_UTI = '#CC0E1E';
+const YMAX = 100;
+
+const tip = {
+  callbacks: {
+    label(ctx) {
+      const ds = ctx.dataset;
+      const i = ctx.dataIndex;
+      const v = ctx.parsed.y;
+      if (ds.trueData && ds.trueData[i] != null && ds.trueData[i] > 100.05) {
+        return `${ds.label}: ${v}% (true ${ds.trueData[i]}% +)`;
+      }
+      return `${ds.label}: ${v}%`;
+    }
+  }
+};
+
+function destroyAll() { charts.forEach(c => c.destroy()); charts.length = 0; }
+
+function lineDs(label, data, trueData, color) {
+  return { label, data, trueData, borderColor: color, backgroundColor: color+'33', tension: 0.2, fill: false };
+}
+
+function buildCaptureCharts() {
+  const mk = (id, data, trueData, label) => {
+    charts.push(new Chart(document.getElementById(id), {
+      type: 'line', data: { labels: CY.map(String), datasets: [lineDs(label, data, trueData, COL_UTI)] },
+      options: { responsive: true, plugins: { tooltip: tip }, scales: { y: { beginAtZero: true, max: YMAX, title: { display: true, text: 'cover %' } } } }
+    }));
+  };
+  mk('cTotal', U.total, U.total_true, 'UTI total cover');
+  mk('cGenuine', U.genuine, U.genuine_true, 'UTI genuine cover');
+  mk('cBvp', U.bvp, U.bvp_true, 'UTI BVP cover');
+
+  charts.push(new Chart(document.getElementById('cGap'), {
+    type: 'bar', data: {
+      labels: CY.map(String),
+      datasets: [{ label: 'Residual gap €', data: U.gap_eur, backgroundColor: COL_UTI }]
+    }, options: { responsive: true }
+  }));
+
+  charts.push(new Chart(document.getElementById('cRev'), {
+    type: 'bar', data: {
+      labels: CY.map(String),
+      datasets: [
+        { label: 'Genuine €', data: U.rev_genuine, backgroundColor: '#1a2b4a', stack: 'u' },
+        { label: 'BVP €', data: U.rev_bvp, backgroundColor: '#c0552d', stack: 'u' },
+      ]
+    }, options: { responsive: true, scales: { x: { stacked: true }, y: { stacked: true } } }
+  }));
+
+  charts.push(new Chart(document.getElementById('cBvpShare'), {
+    type: 'line', data: { labels: CY.map(String), datasets: [lineDs('BVP share %', U.bvp_share, null, COL_UTI)] },
+    options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } } }
+  }));
+
+  charts.push(new Chart(document.getElementById('cSplit'), {
+    type: 'line', data: {
+      labels: CY.map(String),
+      datasets: [
+        lineDs('Filters cover', U.filters, U.filters_true, '#CC0E1E'),
+        lineDs('Wear cover', U.wear, U.wear_true, '#c0552d'),
+      ]
+    }, options: { responsive: true, plugins: { tooltip: tip }, scales: { y: { beginAtZero: true, max: YMAX } } }
+  }));
+
+  const gaps = U.top_gaps_2025;
+  charts.push(new Chart(document.getElementById('cTopGap'), {
+    type: 'bar', data: {
+      labels: gaps.map(g => g.cat),
+      datasets: [{ label: 'Gap € CY2025', data: gaps.map(g => g.gap), backgroundColor: COL_UTI }]
+    }, options: { indexAxis: 'y', responsive: true }
+  }));
+
+  const catKeys = ["oil_filter", "fuel_filter", "air_filter", "brake_pad", "brake_rotor", "clutch_booster", "clutch_disc", "urea_filter"];
+  charts.push(new Chart(document.getElementById('cCats'), {
+    type: 'line', data: {
+      labels: CY.map(String),
+      datasets: catKeys.map((k, i) => {
+        const hues = ['#CC0E1E','#c0552d','#1a2b4a','#eda100','#2a78d6','#1d9e75','#7c3aed','#0891b2'];
+        const c = U.categories[k];
+        return lineDs(c.label, c.capture, c.capture_true, hues[i % hues.length]);
+      })
+    }, options: { responsive: true, plugins: { tooltip: tip, legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } }, scales: { y: { max: YMAX } } }
+  }));
+
+  charts.push(new Chart(document.getElementById('cCatGap'), {
+    type: 'bar', data: {
+      labels: catKeys.map(k => U.categories[k].label),
+      datasets: CY.map((yr, yi) => ({
+        label: String(yr),
+        data: catKeys.map(k => U.categories[k].gap[yi]),
+        backgroundColor: ['#CC0E1E88','#c0552d88','#1a2b4a88'][yi]
+      }))
+    }, options: { responsive: true }
+  }));
+}
+
+function buildAttachChart() {
+  const mode = document.getElementById('attachMode').value;
+  const years = (mode === 'fy' ? P.attach.fy_years : P.attach.cy_years).map(String);
+  const u = P.attach.UTI[mode] || {};
+  const i = P.attach.ITUK[mode] || {};
+  const cats = ['oil_filter','fuel_filter','air_filter','brake_pad'];
+  const labels = ['Oil','Fuel','Air','Brake pad'];
+  const lastYr = years[years.length - 1];
+  if (!lastYr) return;
+  // Multi-year attach: one chart per category as lines
+  const ds = cats.map((c, idx) => ({
+    label: labels[idx],
+    data: years.map(y => (u[y] || {})[c] || 0),
+    borderColor: ['#CC0E1E','#c0552d','#1a2b4a','#eda100'][idx],
+    tension: 0.2
+  }));
+  charts.push(new Chart(document.getElementById('cAttach'), {
+    type: 'line', data: { labels: years, datasets: ds },
+    options: { responsive: true, scales: { y: { beginAtZero: true, title: { display: true, text: 'units / vehicle / yr' } } } }
+  }));
+}
+
+function render() {
+  destroyAll();
+  buildCaptureCharts();
+  buildAttachChart();
+}
+
+document.getElementById('attachMode').addEventListener('change', render);
+render();
+</script>
+</body>
+</html>

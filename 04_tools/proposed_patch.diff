@@ -1,0 +1,25 @@
+⚠ REQUIRES JEROME REVIEW — DO NOT AUTO-APPLY. Generated 2026-07-19 by isze-scraper-healthcheck-autofix.
+
+# No patch proposed this run (2026-07-19).
+#
+# The two hunks carried in the 2026-07-12 version of this file are both
+# confirmed applied — leaving them here as stale diffs risked you
+# re-applying something already done, so this file has been cleared.
+#
+#   - Hunk 1 (Tender Monitor Task Scheduler XML dead-path fix): applied,
+#     task re-imported per your 2026-07-14 note in manual_review_required.md.
+#     Confirmed working this run — two clean scraper runs on 2026-07-16
+#     with fresh tender_data.json output (meta.generated_at 2026-07-16T11:36:34Z).
+#   - Hunk 2 (autodoc_scraper.py no-results price-artifact guard): applied
+#     2026-07-14 per your note, line ~215. Autodoc itself has been out of
+#     scope since 2026-07-14 (Cloudflare-blocked, retired) so this fix is
+#     dormant but harmless.
+#
+# Nothing diagnosed this run met the bar for a new diff. The two open
+# issues (Israel RSS undefined-entity parse error, Belgium RSS non-XML
+# response) are unchanged since 2026-06-28 and remain in the "needs a
+# live test against the actual feed, can't safely propose exact lines
+# blind" category — see manual_review_required.md Items 2 and 3 for the
+# suggested-but-untested approaches carried forward from prior runs.
+#
+# This file intentionally contains no diff hunks this run. Do not git apply.

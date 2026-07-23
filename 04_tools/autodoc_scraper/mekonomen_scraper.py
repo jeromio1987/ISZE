@@ -24,6 +24,13 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+# cp1252 consoles (Task Scheduler) can't print some scraped brand strings —
+# degrade to '?' instead of crashing the run (same failure class that killed
+# ks_scraper.py on 2026-07-13).
+for _stream in (sys.stdout, sys.stderr):
+    if _stream is not None and hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(errors="replace")
+
 SCRIPT_DIR = Path(__file__).parent
 _TOOLS = SCRIPT_DIR.parent
 if str(_TOOLS) not in sys.path:
@@ -33,6 +40,14 @@ from scraper_pn_loader import load_top_pns
 from _shared.scraper_io import IncrementalCsvWriter
 OUTPUT_CSV = SCRIPT_DIR / "mekonomen_results.csv"
 BASE_URL = "https://www.mekonomen.se/catalogsearch/result/?q={pn}"
+
+# Page-chrome labels from Mekonomen's tire-filter panel that the Tillverkare
+# block parser was picking up as "brands" (confirmed on every ok-row of the
+# 2026-07-13 run: Bredd|Däckprofil|...). Lowercase for comparison.
+JUNK_BRAND_LABELS = frozenset({
+    "bredd", "däckprofil", "rullmotstånd", "våtgrepp", "tum",
+    "hastighetsindex", "lastindex", "se alla", "tillverkare", "more",
+})
 
 CSV_FIELDS = [
     "PN",
@@ -87,15 +102,20 @@ def parse_page_text(text: str) -> dict:
     if "0 Items" in text or "Inga resultat" in text.lower() or "inga produkter" in text.lower():
         return out
 
+    # Guard (same class as the Autodoc £2.00 artifact): only harvest kr amounts
+    # when the page explicitly shows a result count. Without this, page chrome
+    # (e.g. a 259-kr tire promo) was harvested on zero-result pages and reported
+    # as a "min price" — identical 259.0 on unrelated PNs in the 2026-07-13 run.
     prices = []
-    for m in re.finditer(r"([\d\s]+(?:[,.]\d{1,2})?)\s*kr\b", text):
-        raw = m.group(1).replace(" ", "").replace("\xa0", "").replace(",", ".")
-        try:
-            v = float(raw)
-            if 10 <= v <= 100_000:
-                prices.append(v)
-        except ValueError:
-            pass
+    if out["result_count"] > 0:
+        for m in re.finditer(r"([\d\s]+(?:[,.]\d{1,2})?)\s*kr\b", text):
+            raw = m.group(1).replace(" ", "").replace("\xa0", "").replace(",", ".")
+            try:
+                v = float(raw)
+                if 10 <= v <= 100_000:
+                    prices.append(v)
+            except ValueError:
+                pass
     out["prices"] = sorted(set(prices))
 
     brands = set()
@@ -108,17 +128,88 @@ def parse_page_text(text: str) -> dict:
                 continue
             if re.match(r"^\(\d+\)$", line):
                 continue
-            if line.lower() in {"tillverkare", "more"}:
+            if line.lower() in JUNK_BRAND_LABELS:
                 continue
             if re.search(r"[A-Za-z]", line) and len(line) <= 40:
                 brands.add(line)
 
     out["brands"] = sorted(brands)
 
-    if out["result_count"] == 0 and prices:
-        out["result_count"] = len(prices)
+    # NOTE: there used to be a fallback here that fabricated result_count from
+    # len(prices) when the "N Items" text was missing — that is exactly how
+    # chrome prices became fake "ok" rows. A rendered results page always shows
+    # the count (the scraper waits for it), so no count = no results.
 
     return out
+
+
+def _row_prices(row: dict) -> list[float]:
+    out = []
+    for p in (row.get("MEK_AllProducts") or "").split("|"):
+        if p.endswith("kr"):
+            try:
+                out.append(float(p[:-2]))
+            except ValueError:
+                pass
+    return out
+
+
+def strip_chrome_artifacts(csv_path: Path = OUTPUT_CSV, min_repeat: int = 3) -> int:
+    """Post-run validation sweep (Autodoc-£2.00-class guard, cross-PN variant).
+
+    An identical price appearing on >= min_repeat distinct PNs is page chrome
+    (banner/promo text), not a product price — real unrelated Isuzu parts don't
+    share an exact kr amount. Confirmed 2026-07-13: 259.0 SEK reported as min
+    price for a DPD sensor, a DEF tank sensor AND a rear final drive. Strips the
+    offending value from each row, recomputes min/avg/count, demotes rows with
+    nothing left to no_results, and scrubs junk chrome labels from the brand
+    column. Returns the number of rows fixed.
+    """
+    if not csv_path.is_file():
+        return 0
+    with csv_path.open(encoding="utf-8", newline="") as f:
+        rows = list(csv.DictReader(f))
+
+    pn_count_per_price: dict[float, int] = {}
+    for row in rows:
+        for v in set(_row_prices(row)):
+            pn_count_per_price[v] = pn_count_per_price.get(v, 0) + 1
+    chrome = {v for v, n in pn_count_per_price.items() if n >= min_repeat}
+
+    fixed = 0
+    for row in rows:
+        brands = [b for b in (row.get("MEK_AM_Brands") or "").split("|")
+                  if b and b.lower() not in JUNK_BRAND_LABELS]
+        row["MEK_AM_Brands"] = "|".join(brands)
+
+        prices = _row_prices(row)
+        hit = sorted(set(prices) & chrome)
+        if not hit:
+            continue
+        kept = [p for p in prices if p not in chrome]
+        row["MEK_AllProducts"] = "|".join(f"{p:.2f}kr" for p in kept)
+        row["MEK_AM_Count"] = len(kept)
+        if kept:
+            row["MEK_AM_MinPrice_SEK"] = min(kept)
+            row["MEK_AM_AvgPrice_SEK"] = round(sum(kept) / len(kept), 2)
+        else:
+            row["MEK_AM_MinPrice_SEK"] = ""
+            row["MEK_AM_AvgPrice_SEK"] = ""
+            row["MEK_ResultCount"] = 0
+            row["Status"] = "no_results"
+        note = "chrome_price_stripped:" + ",".join(f"{v:g}" for v in hit)
+        row["Notes"] = f"{row['Notes']};{note}" if row.get("Notes") else note
+        fixed += 1
+
+    with csv_path.open("w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=CSV_FIELDS, extrasaction="ignore")
+        w.writeheader()
+        w.writerows(rows)
+    if chrome:
+        print(f"Chrome-price guard: stripped {sorted(chrome)} from {fixed} rows", flush=True)
+    else:
+        print("Chrome-price guard: no repeated cross-PN prices found", flush=True)
+    return fixed
 
 
 def run(
@@ -253,6 +344,7 @@ def run(
 
         browser.close()
 
+    strip_chrome_artifacts(writer.path)
     print(f"Done -> {OUTPUT_CSV}", flush=True)
 
 
@@ -263,7 +355,12 @@ def main() -> None:
     ap.add_argument("--visible", action="store_true", help="Show browser window")
     ap.add_argument("--retry-errors", action="store_true")
     ap.add_argument("--force", action="store_true", help="Delete CSV and re-scrape all")
+    ap.add_argument("--clean-artifacts", action="store_true",
+                    help="Only run the chrome-price/junk-brand sweep on the existing CSV, no scraping")
     args = ap.parse_args()
+    if args.clean_artifacts:
+        strip_chrome_artifacts()
+        return
     run(
         args.top,
         args.delay[0],

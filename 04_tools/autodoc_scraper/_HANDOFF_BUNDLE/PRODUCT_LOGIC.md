@@ -66,10 +66,10 @@ So titles like **“ISZE Competitive Intelligence”** mixed **PMS + IAM + scrap
 
 | Path | Historical name | Actual role |
 |------|-----------------|-------------|
-| `Tools/autodoc_scraper/` | “scraper repo” | **Monorepo**: PMS handoff + IAM dashboard + scrape scripts |
-| `Tools/autodoc_scraper/_HANDOFF_BUNDLE/` | handoff | **PMS product only** (engine + Streamlit) |
-| `Tools/autodoc_scraper/_html_previews/` | previews | Built **PMS** and **IAM** HTML (separate files) |
-| `Tools/autodoc_scraper/autodoc_scraper.py` | scraper | **Capability C** only |
+| `04_tools/autodoc_scraper/` | “scraper repo” | **Monorepo**: PMS handoff + IAM dashboard + scrape scripts |
+| `04_tools/autodoc_scraper/_HANDOFF_BUNDLE/` | handoff | **PMS product only** (engine + Streamlit) |
+| `04_tools/autodoc_scraper/_html_previews/` | previews | Built **PMS** and **IAM** HTML (separate files) |
+| `04_tools/autodoc_scraper/autodoc_scraper.py` | scraper | **Capability C** only |
 
 Renaming the disk folder is optional and disruptive; **UI and docs now use product names above**, not the folder name.
 

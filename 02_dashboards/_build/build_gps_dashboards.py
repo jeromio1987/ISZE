@@ -1,4 +1,6 @@
-"""Build ISZE_GPS_Dashboard_v9.html — UIO v18 + car park + study rates."""
+"""Build ISZE_GPS_Dashboard.html — canonical GPS fleet dashboard (was v9)."""
+from __future__ import annotations
+
 import datetime
 import io
 import json
@@ -7,17 +9,34 @@ from pathlib import Path
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-ROOT = Path(r"C:\Users\jerom\Desktop\claude\ISZE")
-ECHARTS = (ROOT / "echarts.min.js").read_text(encoding="utf-8")
+_TOOLS = Path(__file__).resolve().parents[2] / "04_tools"
+sys.path.insert(0, str(_TOOLS))
+from _shared.paths import DATA_BUILD_DIR, DASHBOARDS_DIR, ISZE_ROOT  # noqa: E402
+
+# Library source, not a tag: the template already wraps this in <script>…</script>.
+# Emitting a tag here produced <script><script src=CDN></script></script> — the inner tag
+# parsed as text, echarts never loaded, every chart rendered as an empty div.
+ECHARTS_JS = (DASHBOARDS_DIR / "_ui" / "echarts.min.js").read_text(encoding="utf-8")
 STAMP = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
 
-snap = json.loads((ROOT / "Data" / "_build" / "gps_v9_snapshot.json").read_text(encoding="utf-8"))
+SNAP_FILE = DATA_BUILD_DIR / "gps_v9_snapshot.json"
+if not SNAP_FILE.is_file():
+    SNAP_FILE = DATA_BUILD_DIR / "gps_snapshot.json"
+DUAL_FILE = DATA_BUILD_DIR / "gps_dual_basis.json"
+CAR_PARK_FILE = DATA_BUILD_DIR / "uio_v19_gps.json"
+if not CAR_PARK_FILE.is_file():
+    CAR_PARK_FILE = DATA_BUILD_DIR / "uio_v18_gps.json"
+if not CAR_PARK_FILE.is_file():
+    CAR_PARK_FILE = DATA_BUILD_DIR / "uio_gps.json"
+
+snap = json.loads(SNAP_FILE.read_text(encoding="utf-8"))
+dual = json.loads(DUAL_FILE.read_text(encoding="utf-8")) if DUAL_FILE.is_file() else None
 BASE25 = snap["base25"]
 WARR = snap["warranty"]
 UIO26 = snap["uio26"]
 BP27 = snap["bp27"]
 MAX27 = snap["uio27_max"]
-RATES = [snap["rates"][0], snap["rates"][1], snap["rates"][2]]  # N35, N75, FMD
+RATES = [snap["rates"][0], snap["rates"][1], snap["rates"][2]]
 LCV_RATE = 250
 
 ituk = BASE25[0]
@@ -31,13 +50,18 @@ ITUK_MAX_27 = snap["uio27_max"]["ITUK"]
 GPS_NEEDED_ITUK = BP_ITUK_27 / ITUK_MAX_27
 PP_GAP_ITUK = GPS_NEEDED_ITUK - ITUK_GPS_EX
 
-cp = json.loads((ROOT / "Data" / "_build" / "uio_v18_gps.json").read_text(encoding="utf-8"))
+cp = json.loads(CAR_PARK_FILE.read_text(encoding="utf-8"))
 uio25 = cp["distributors"]["ITUK"]["uio"]["2025"]
+
+# Canonical alias for future builds (CANONICAL.md)
+canonical_snap = DATA_BUILD_DIR / "gps_snapshot.json"
+if SNAP_FILE.name != "gps_snapshot.json":
+    canonical_snap.write_text(json.dumps(snap, indent=2), encoding="utf-8")
 
 HTML = r"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ISZE GPS Dashboard v9</title>
+<title>ISZE GPS Dashboard</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f4f4f5;color:#1a1a1a}
@@ -73,20 +97,21 @@ input[type=number],select{padding:4px 6px;border:1px solid #2962cc;border-radius
 </head><body>
 <div class="wrap">
 <header>
-<h1>ISZE GPS Dashboard <span class="badge">v9</span></h1>
-<p>Max spend per unit · UIO v18 + ITUK DVLA car park · rates €296/€739/€887 · %%STAMP%%</p>
+<h1>ISZE GPS Dashboard</h1>
+<p>Max spend per unit · UIO + ITUK DVLA car park · rates €296/€739/€887 · %%STAMP%%</p>
 </header>
 <nav class="nav">
 <button type="button" class="on" data-tab="network">Network GPS</button>
 <button type="button" data-tab="ituk">ITUK car park</button>
-<button type="button" data-tab="bp27">BP FY2027 gap</button>
+<button type="button" data-tab="bp27">Targets FY2027</button>
 </nav>
 
 <section id="panel-network" class="panel on">
-<div class="flag">CV distributors use <b>study rates</b> (€296 / €739 / €887) — not legacy €1,120 / €1,344. CY2025 UIO from sales-aligned parc; 2026 from UIO v18 growth.</div>
+<div class="flag">CV distributors use <b>study rates</b> (€296 / €739 / €887) — not legacy €1,120 / €1,344. Toggle <b>Calendar vs Fiscal</b> for actuals; UIO anchor stays CY2025 / FY2027 max spend.</div>
 <div class="card">
 <div class="controls">
-<label>View <select id="viewSel"><option value="2025" selected>CY2025 actual</option><option value="2026">FY2026 projection</option></select></label>
+<label>Year basis <select id="basisSel"><option value="calendar" selected>Calendar (Jan–Dec)</option><option value="fiscal">Fiscal (Apr–Mar)</option></select></label>
+<label>Period <select id="viewSel"><option value="2025" selected>2025 actual</option><option value="2026">2026 projection</option></select></label>
 <label>Warranty <select id="warrSel"><option value="incl">incl.</option><option value="ex" selected>ex.</option></select></label>
 <label>Uplift (pp) <input type="number" id="uplift" value="1.0" step="0.1" style="width:56px"></label>
 <span id="netLine" style="margin-left:auto;font-weight:700"></span>
@@ -112,9 +137,14 @@ input[type=number],select{padding:4px 6px;border:1px solid #2962cc;border-radius
 <div class="hero"><div class="v">+%%PP_GAP_ITUK%%</div><div class="l">Δ GPS pp vs CY2025 ex-warr</div><div class="s">Genuine share increase required</div></div>
 <div class="hero"><div class="v">€%%PP_EUR_ITUK%%</div><div class="l">Value per +1pp ITUK</div><div class="s">On FY27 max spend base</div></div>
 </div>
-<div class="card"><h2>FY2027 — Δ GPS pp to business plan (ex-warranty basis)</h2><div id="bpChart"></div></div>
-<div class="card"><h2>Detail</h2><table id="bpTbl"><thead></thead><tbody></tbody></table>
-<p class="note">ITUK: BP ISZE €7.43M. Other DBs: Kosha VP €35.3M allocated by CY2025 sales share (proxy).</p></div>
+<div class="card">
+<div class="controls">
+<label>Compare actuals <select id="bpBasisSel"><option value="calendar" selected>CY2025</option><option value="fiscal">FY2025</option></select></label>
+<label>Target tier <select id="tierSel"><option value="base" selected>Base plan</option><option value="stretch">Stretch (realistic)</option><option value="extended">Extended (ambitious)</option></select></label>
+</div>
+<h2>FY2027 targets — GPS gap vs actual (ex-warranty)</h2><div id="bpChart"></div></div>
+<div class="card"><h2>Detail — all distributors</h2><table id="bpTbl"><thead></thead><tbody></tbody></table>
+<p class="note">Base = reviewed BP FY27 per DB (budget 24 Apr 2026 · €35.28M VP turnover). Stretch = +2–5pp GPS uplift (tiered). Extended = ~60% of remaining gap to plan. See gps_dual_basis.json.</p></div>
 </section>
 </div>
 
@@ -127,6 +157,7 @@ var BP27=%%BP27%%;
 var MAX27=%%MAX27%%;
 var RATES=%%RATES_JSON%%;
 var LCV=%%LCV_RATE%%;
+var DUAL=%%DUAL_JSON%%;
 
 document.querySelectorAll('.nav button').forEach(function(btn){
  btn.addEventListener('click',function(){
@@ -154,10 +185,26 @@ function maxSpend26(db){
  return (u.LD||0)*RATES[1]+(u.FMD||0)*RATES[2]+(u.LCV||0)*LCV;
 }
 
+function dualRow(db,basis,year){
+ if(!DUAL||!DUAL.distributors)return null;
+ var d=DUAL.distributors.find(function(x){return x.code===db;});
+ if(!d)return null;
+ if(basis==='fiscal'&&year==='2025')return d.actuals.fiscal['2025'];
+ if(basis==='calendar'&&year==='2025')return d.actuals.calendar['2025'];
+ return null;
+}
 function rows2025(ex){
+ var basis=document.getElementById('basisSel').value;
  return BASE25.map(function(b){
-  var sales=b[3]-(ex?warrOf(b[0]):0);
-  return {db:b[0],max:b[2],sales:sales,gps:sales/b[2]};
+  var db=b[0],max=b[2],sales,warr;
+  var dr=dualRow(db,basis,'2025');
+  if(dr&&dr.sales_gross_eur!=null){
+   warr=ex?(dr.warranty_eur||0):0;
+   sales=dr.sales_gross_eur-warr;
+  }else{
+   sales=b[3]-(ex?warrOf(db):0);
+  }
+  return {db:db,max:max,sales:sales,gps:sales/max};
  });
 }
 function rows2026(ex,upl){
@@ -194,7 +241,7 @@ function renderNet(){
   tbody.appendChild(tr);
  });
 }
-['viewSel','warrSel','uplift'].forEach(function(id){document.getElementById(id).addEventListener('change',renderNet);});
+['basisSel','viewSel','warrSel','uplift'].forEach(function(id){document.getElementById(id).addEventListener('change',renderNet);});
 renderNet();
 
 var spuChart=echarts.init(document.getElementById('spuChart'));
@@ -206,42 +253,67 @@ spuChart.setOption({
   label:{show:true,position:'top',formatter:function(p){return '€'+p.value;}}}]
 });
 
-var bpRows=BASE25.map(function(b){
- var db=b[0],max27=MAX27[db]||b[2];
- var salesEx=b[3]-warrOf(db);
- var gps25=salesEx/b[2];
- var target=BP27[db]||0;
- var gpsNeed=target/max27;
- return {db:db,gps25:gps25,gpsNeed:gpsNeed,dpp:gpsNeed-gps25,target:target,max27:max27};
-}).sort(function(a,b){return b.dpp-a.dpp;});
-
+function targetEur(db,tier){
+ if(DUAL){
+  var d=DUAL.distributors.find(function(x){return x.code===db;});
+  if(d){
+   var t=d.targets_fy2027;
+   if(tier==='stretch')return t.stretch.eur;
+   if(tier==='extended')return t.extended.eur;
+   return t.base_plan_eur;
+  }
+ }
+ return BP27[db]||0;
+}
+function renderBp(){
+ var basis=document.getElementById('bpBasisSel').value;
+ var tier=document.getElementById('tierSel').value;
+ var bpRows=BASE25.map(function(b){
+  var db=b[0],max27=MAX27[db]||b[2],max25=b[2];
+  var dr=dualRow(db,basis,'2025');
+  var salesEx=dr?dr.sales_ex_warranty_eur:(b[3]-warrOf(db));
+  var gpsAct=salesEx/max25;
+  var target=targetEur(db,tier);
+  var gpsNeed=target/max27;
+  var uplift=(DUAL&&tier!=='base')?((DUAL.distributors.find(function(x){return x.code===db;})||{}).targets_fy2027||{})[tier]:null;
+  return {db:db,gps25:gpsAct,gpsNeed:gpsNeed,dpp:gpsNeed-gpsAct,target:target,max27:max27,ppUp:uplift?uplift.gps_pp_uplift:null};
+ }).sort(function(a,b){return b.dpp-a.dpp;});
+ bpChart.setOption({
+  grid:{left:72,right:24,top:10,bottom:20},
+  xAxis:{type:'value',axisLabel:{formatter:'{value} pp'}},
+  yAxis:{type:'category',data:bpRows.map(function(o){return o.db;}).reverse()},
+  series:[{type:'bar',data:bpRows.map(function(o){
+   return {value:Math.round(o.dpp*1000)/10,itemStyle:{color:o.dpp>0?'#CC0E1E':'#0a7d33'},
+    label:{show:true,position:'right',formatter:function(p){return (p.value>=0?'+':'')+p.value+' pp';}}};
+  }).reverse()}]
+ },true);
+ var bthead=document.querySelector('#bpTbl thead'),btbody=document.querySelector('#bpTbl tbody');
+ var tierLbl=tier==='base'?'Plan':(tier==='stretch'?'Stretch':'Extended');
+ var actLbl=basis==='fiscal'?'FY2025':'CY2025';
+ bthead.innerHTML='<tr><th>DB</th><th>GPS '+actLbl+' ex</th><th>GPS for '+tierLbl+'</th><th>Δ pp</th><th>'+tierLbl+' €</th><th>+pp uplift</th></tr>';
+ btbody.innerHTML='';
+ bpRows.forEach(function(o){
+  var tr=document.createElement('tr');
+  tr.innerHTML='<td><b>'+o.db+'</b></td><td>'+(100*o.gps25).toFixed(1)+'%</td><td>'+(100*o.gpsNeed).toFixed(1)+'%</td><td class="'+(o.dpp>0?'r':'g')+'">'+(o.dpp>=0?'+':'')+(100*o.dpp).toFixed(1)+' pp</td><td>'+fmt0(o.target)+'</td><td>'+(o.ppUp!=null?('+'+o.ppUp.toFixed(1)+' pp'):'—')+'</td>';
+  btbody.appendChild(tr);
+ });
+}
 var bpChart=echarts.init(document.getElementById('bpChart'));
-bpChart.setOption({
- grid:{left:72,right:24,top:10,bottom:20},
- xAxis:{type:'value',axisLabel:{formatter:'{value} pp'}},
- yAxis:{type:'category',data:bpRows.map(function(o){return o.db;}).reverse()},
- series:[{type:'bar',data:bpRows.map(function(o){
-  return {value:Math.round(o.dpp*1000)/10,itemStyle:{color:o.dpp>0?'#CC0E1E':'#0a7d33'},
-   label:{show:true,position:'right',formatter:function(p){return (p.value>=0?'+':'')+p.value+' pp';}}};
- }).reverse()}]
-});
-var bthead=document.querySelector('#bpTbl thead'),btbody=document.querySelector('#bpTbl tbody');
-bthead.innerHTML='<tr><th>DB</th><th>GPS 2025 ex</th><th>GPS for BP27</th><th>Δ pp</th><th>Plan €</th></tr>';
-btbody.innerHTML='';
-bpRows.forEach(function(o){
- var tr=document.createElement('tr');
- tr.innerHTML='<td><b>'+o.db+'</b></td><td>'+(100*o.gps25).toFixed(1)+'%</td><td>'+(100*o.gpsNeed).toFixed(1)+'%</td><td class="'+(o.dpp>0?'r':'g')+'">'+(o.dpp>=0?'+':'')+(100*o.dpp).toFixed(1)+' pp</td><td>'+fmt0(o.target)+'</td>';
- btbody.appendChild(tr);
-});
+['bpBasisSel','tierSel'].forEach(function(id){document.getElementById(id).addEventListener('change',renderBp);});
+renderBp();
 
 window.addEventListener('resize',function(){netChart.resize();spuChart.resize();bpChart.resize();});
 </script>
 </body></html>
 """
 
-out = ROOT / "Dashboards" / "ISZE_GPS_Dashboard_v9.html"
+fleet_dir = DASHBOARDS_DIR / "fleet"
+fleet_dir.mkdir(parents=True, exist_ok=True)
+out = fleet_dir / "ISZE_GPS_Dashboard.html"
+legacy = fleet_dir / "ISZE_GPS_Dashboard_v9.html"
+
 html = (
-    HTML.replace("%%ECHARTS%%", ECHARTS)
+    HTML.replace("%%ECHARTS%%", ECHARTS_JS)
     .replace("%%STAMP%%", STAMP)
     .replace("%%BASE25%%", json.dumps(BASE25))
     .replace("%%WARR%%", json.dumps(WARR))
@@ -250,6 +322,7 @@ html = (
     .replace("%%MAX27%%", json.dumps(MAX27))
     .replace("%%RATES_JSON%%", json.dumps(RATES))
     .replace("%%LCV_RATE%%", str(LCV_RATE))
+    .replace("%%DUAL_JSON%%", json.dumps(dual if dual else {}))
     .replace("%%ITUK_GPS_INCL%%", f"{ITUK_GPS_INCL:.1%}")
     .replace("%%ITUK_GPS_EX%%", f"{ITUK_GPS_EX:.1%}")
     .replace("%%ITUK_SALES_M%%", f"{ITUK_SALES/1e6:.2f}")
@@ -263,4 +336,14 @@ html = (
     .replace("%%PP_EUR_ITUK%%", f"{ITUK_MAX_27*0.01:,.0f}")
 )
 io.open(out, "w", encoding="utf-8").write(html)
+# Keep old bookmarks alive — thin redirect only (no second full copy).
+legacy.write_text(
+    "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\">"
+    "<meta http-equiv=\"refresh\" content=\"0;url=ISZE_GPS_Dashboard.html\">"
+    "<title>Redirect — GPS Dashboard</title></head><body>"
+    "<p>Canonical: <a href=\"ISZE_GPS_Dashboard.html\">ISZE_GPS_Dashboard.html</a>.</p>"
+    "</body></html>\n",
+    encoding="utf-8",
+)
 print("written", out)
+print("legacy redirect", legacy)

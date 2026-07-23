@@ -245,16 +245,21 @@ def resolve_uio_scope(
             except ImportError:
                 pass
             return 0.0, "ITUK — SMMT car park (sheet 4 not loaded)", factor
-        if src in ("v17", "v17_survival", "survival", "v17 survival"):
+        # 2026-07-09: added "cohort_survival" as the preferred name — this always reads
+        # sheet 1 of whichever file UIO_FILE/uio_overview resolves to (the current
+        # canonical _CURRENT workbook), never a pinned old version. "v17"/"v17_survival"/
+        # "survival"/"v17 survival" kept as accepted aliases so nothing already using
+        # those strings (saved configs, old scripts) breaks.
+        if src in ("v17", "v17_survival", "survival", "v17 survival", "cohort_survival"):
             if not uio_by_dist.empty:
                 match = uio_by_dist[uio_by_dist["Distributor"] == "ITUK"]
                 raw_uio = float(match["active_uio"].sum()) if len(match) else 0.0
                 return (
                     raw_uio,
-                    "ITUK — v17 survival-adjusted (sheet 1 cohort math, not SMMT car park)",
+                    "ITUK — cohort survival-adjusted (sheet 1 cohort math, not SMMT car park)",
                     factor,
                 )
-            return 0.0, "ITUK — v17 (no ITUK row)", factor
+            return 0.0, "ITUK — cohort_survival (no ITUK row)", factor
         pot = parse_pms_coverage_uio(pms_sheets)
         if pot is not None:
             return pot, "ITUK — PMS Coverage Step 2", factor

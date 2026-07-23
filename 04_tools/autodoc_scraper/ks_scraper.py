@@ -26,6 +26,13 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+# Task Scheduler / plain cmd consoles are cp1252: the emoji status prints below
+# crashed the whole run with UnicodeEncodeError on 2026-07-13 (before a single PN
+# was scraped). Degrade unprintable characters to '?' instead of dying.
+for _stream in (sys.stdout, sys.stderr):
+    if _stream is not None and hasattr(_stream, "reconfigure"):
+        _stream.reconfigure(errors="replace")
+
 SCRIPT_DIR = Path(__file__).parent
 _TOOLS = SCRIPT_DIR.parent
 if str(_TOOLS) not in sys.path:

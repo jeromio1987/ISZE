@@ -321,9 +321,9 @@ footer a, .footer a { color: #FFE8EA !important; }
       <div class="kpi-sub">+5.3% on same basket · line-by-line confirmed</div>
     </div>
     <div class="kpi">
-      <div class="kpi-lbl">PMS gap ITUK (PRISM)</div>
-      <div class="kpi-val kv-red" id="kpi-pms-gap-val">€457K</div>
-      <div class="kpi-sub" id="kpi-pms-gap-sub">Registry gap · 22,389 DVLA · May 2026</div>
+      <div class="kpi-lbl">PMS gap ITUK (IML v7)</div>
+      <div class="kpi-val kv-red" id="kpi-pms-gap-val">€2.04M</div>
+      <div class="kpi-sub" id="kpi-pms-gap-sub">IML gap · 22,389 DVLA · CY2025</div>
     </div>
     <div class="kpi">
       <div class="kpi-lbl">Customer concentration</div>
@@ -469,8 +469,8 @@ footer a, .footer a { color: #FFE8EA !important; }
       Original showed 1,428L (96× wrong). v2 rebuilt: 137,520L actuals, 43.3% retention, exceeds base case. <strong>Still open:</strong> 35% margin assumption unverified, 100% UMI concentration not modelled, IML not yet informed. Use v2 only.
     </div>
     <div class="alert alert-amber" id="alert-pms-gap">
-      <strong>⚠ PMS — PRISM registry view (ITUK 22,389 DVLA · 0.5×70% expected demand)</strong><br>
-      Oil filter registry capture <strong>100%+</strong> (11,074 vs 7,836 expected). Largest € gaps: air filter (28%), clutch disc/plate. Sum registry revenue gap <strong>~€457K</strong> across PMS categories — not the old dealer-basket €3.5M estimate. Source: <code>Data/derived/pms_capture_by_db_year.csv</code> · <code>metric_dictionary.md</code>.
+      <strong>⚠ PMS — IML v7 schedule view (ITUK 22,389 DVLA · 0.5×70% expected demand)</strong><br>
+      Oil filter cover <strong>35.1%</strong> (11,074 vs 7,836 expected). Largest € gaps: air filter (28%), clutch disc/plate. Sum registry revenue gap <strong>~€2.04M</strong> across PMS categories — not the old dealer-basket €3.5M estimate. Source: <code>Data/derived/ITUK_PMS_Analysis_Apr2026_v7_reclassified.xlsx</code> · <code>metric_dictionary.md</code>.
     </div>
     <div class="alert alert-amber">
       <strong>⚠ Revenue data quality</strong><br>
@@ -534,11 +534,11 @@ footer a, .footer a { color: #FFE8EA !important; }
         <div class="proj-icon">🔧</div>
         <div>
           <div class="proj-name">PMS Coverage Project</div>
-          <div class="proj-sub" id="proj-pms-sub">ISZJ+ISZE joint · ITUK pilot · €457K registry gap (PRISM · DVLA 22,389)</div>
+          <div class="proj-sub" id="proj-pms-sub">ISZJ+ISZE joint · ITUK pilot · €2.04M registry gap (PRISM · DVLA 22,389)</div>
           <span class="status-pill sp-risk">⚠ In pilot — PRISM + Maintenance Matrix</span>
         </div>
       </div>
-      <div class="proj-desc" id="proj-pms-desc">Joint project with IML to improve genuine PMS penetration. ITUK as first market. <strong>PRISM (May 2026):</strong> Registry sell-in vs expected demand (UIO 22,389 × 0.5 svc/yr × 70%). Oil filter already at <strong>100%+</strong> registry capture; air filter ~28%; clutch categories drive most of the <strong>€457K</strong> revenue-gap sum. Maintenance Matrix priced from IE40. Dealer-file “13 PNs at zero” analysis remains in CY2025 workbook — different lens from PRISM registry totals. See PRISM page 3 / <code>pms_capture_by_db_year.csv</code>.</div>
+      <div class="proj-desc" id="proj-pms-desc">Joint project with IML to improve genuine PMS penetration. ITUK as first market. <strong>PRISM (May 2026):</strong> Registry sell-in vs expected demand (UIO 22,389 × 1.25 svc/yr IML schedule · 100% addressable). Oil filter already at <strong>100%+</strong> registry capture; air filter ~28%; clutch categories drive most of the <strong>€2.04M</strong> revenue-gap sum. Maintenance Matrix priced from IE40. Dealer-file “13 PNs at zero” analysis remains in CY2025 workbook — different lens from IML v7 totals. See PRISM page 3 / <code>ITUK_PMS_Analysis_Apr2026_v7_reclassified.xlsx</code>.</div>
       <div class="proj-links">
         <a class="file-link" href="../Isuzu/ISZE_CY2025_Analysis_v1.xlsx">📊 PMS Gap Analysis (Sheet 1)</a>
         <a class="file-link" href="../Isuzu/Maintenance_Matrix_IE40_Priced_v1.xlsx">Maintenance Matrix (priced)</a>
@@ -587,15 +587,15 @@ footer a, .footer a { color: #FFE8EA !important; }
         <div class="proj-icon">🚗</div>
         <div>
           <div class="proj-name">UIO Analysis Tool</div>
-          <div class="proj-sub">Units In Operation · IML Hasegawa methodology · v18</div>
+          <div class="proj-sub">Units In Operation · IML Hasegawa methodology · v19 workbook</div>
           <span class="status-pill sp-active">● Stable</span>
         </div>
       </div>
       <div class="proj-desc">Python+Excel tool calculating vehicle fleet in service by country/segment. Feeds market sizing for PMS, lubricants, and action plan targets. Based on shipment volumes + survival rates. UK = largest UIO market.</div>
       <div class="proj-links">
-        <a class="file-link" href="ISUZU_UIO_Dashboard_2026_v18.html">UIO Dashboard v18 →</a>
-        <a class="file-link" href="ISZE_GPS_Dashboard_v9.html">GPS Dashboard v9 →</a>
-        <a class="file-link" href="../Data/ISUZU_UIO_Overview_2026_v18.xlsx">UIO workbook v18</a>
+        <a class="file-link" href="../fleet/ISUZU_UIO_Dashboard_2026.html">UIO Dashboard →</a>
+        <a class="file-link" href="../fleet/ISZE_GPS_Dashboard.html">GPS Dashboard →</a>
+        <a class="file-link" href="../../06_uio/_CURRENT/ISUZU_UIO_Overview_2026.xlsx">UIO workbook v19 (_CURRENT)</a>
       </div>
     </div>
 
@@ -690,9 +690,9 @@ footer a, .footer a { color: #FFE8EA !important; }
           <tr><td>Net price increase on basket</td><td><strong style="color:#e3b341">+€298,911</strong></td><td>+5.3% effective</td></tr>
           <tr><td>ITUK car park (actual, N+F Series)</td><td><strong>21,972 vehicles</strong></td><td>N35: 10,900 · N75: 9,359 · N50/55: 651 · N62/65: 257 · F: 805 · Source: Parts Sales Calc FY26</td></tr>
           <tr><td>PMS PNs with ZERO purchases</td><td><strong style="color:#f85149">13 of 28</strong></td><td>Maintenance Matrix scope</td></tr>
-          <tr><td>ITUK oil filter capture (PRISM registry)</td><td><strong style="color:#3fb950">100%+</strong></td><td>11,074 actual vs 7,836 expected · 0.5×70% denominator</td></tr>
+          <tr><td>ITUK oil filter cover (IML v7)</td><td><strong style="color:#f85149">35.1%</strong></td><td>11,074 actual vs 7,836 expected · 0.5×70% denominator</td></tr>
           <tr><td>ITUK air filter capture (PRISM)</td><td><strong style="color:#e3b341">28.1%</strong></td><td>2,205 vs 7,836 expected · €170K registry gap</td></tr>
-          <tr><td>PMS registry revenue gap (sum)</td><td><strong style="color:#f85149">€457K</strong></td><td>PRISM <code>pms_capture_by_db_year.csv</code> · ITUK 2025</td></tr>
+          <tr><td>PMS registry revenue gap (sum)</td><td><strong style="color:#f85149">€2.04M</strong></td><td>PRISM <code>ITUK_PMS_Analysis_Apr2026_v7_reclassified.xlsx</code> · ITUK 2025</td></tr>
         </tbody>
       </table>
     </div>
@@ -916,7 +916,7 @@ footer a, .footer a { color: #FFE8EA !important; }
         <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2024_Sales_Analysis.xlsx">ISZE_CY2024_Sales_Analysis.xlsx</a></td><td>ITUK Deep Dive</td><td>ITUK monthly vs network, top 50 PNs, pricing risk flags</td></tr>
         <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2024_Sales_Analysis.xlsx">ISZE_CY2024_Sales_Analysis.xlsx</a></td><td>Low Margin Alert</td><td>All PNs &lt;35% margin with &gt;€30K revenue — competitiveness watchlist</td></tr>
         <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2024_Sales_Analysis.xlsx">ISZE_CY2024_Sales_Analysis.xlsx</a></td><td>AIM Validation</td><td>95% AIM revenue coverage confirmed · top unmatched PNs for classification</td></tr>
-        <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2025_Analysis_v1.xlsx">ISZE_CY2025_Analysis_v1.xlsx</a></td><td>PMS Gap — ITUK</td><td>PN-level workbook view — use PRISM registry gap <span data-pms-gap-sum>€457K</span> (not legacy dealer-basket totals)</td></tr>
+        <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2025_Analysis_v1.xlsx">ISZE_CY2025_Analysis_v1.xlsx</a></td><td>PMS Gap — ITUK</td><td>PN-level workbook view — use IML v7 gap <span data-pms-gap-sum>€2.04M</span> (not legacy dealer-basket totals)</td></tr>
         <tr><td><a class="file-link" href="../Isuzu/ISZE_CY2025_Analysis_v1.xlsx">ISZE_CY2025_Analysis_v1.xlsx</a></td><td>ITUK Pricing Impact</td><td>Line-by-line 2025→2026 price impact on ITUK's actual basket (+€299k)</td></tr>
         <tr><td><a class="file-link" href="../Isuzu/Maintenance_Matrix_IE40_Priced_v1.xlsx">Maintenance_Matrix_IE40_Priced_v1.xlsx</a></td><td>Cost Matrix</td><td>PMS PN → IE40 price mapping for D-Max, N-Series, F-Series, TF</td></tr>
         <tr><td><a class="file-link" href="../Isuzu/ISZE_DataIntegrity_Dashboard.xlsx">ISZE_DataIntegrity_Dashboard.xlsx</a></td><td>Data Integrity</td><td>Datasets scored — gaps, actions, owners</td></tr>
@@ -1208,11 +1208,11 @@ OUTPUT:
           <td>Fix N-Series label. Add fluids. Add D-Max 2023+ from ISZJ service docs.</td>
         </tr>
         <tr>
-          <td><strong>UIO Dashboard v18</strong><br><span style="font-size:10.5px;color:#666666">Data/ISUZU_UIO_Overview_2026_v18.xlsx · ITUK DVLA + network</span></td>
+          <td><strong>UIO Dashboard</strong><br><span style="font-size:10.5px;color:#666666">06_uio/_CURRENT/ (v19) · HTML fleet/ v18 pending rebuild</span></td>
           <td><span class="tbl-badge tb-green">🟢 VALIDATED</span></td>
           <td>Medium</td>
           <td>✅ ITUK car park DVLA 22,389 (Mar 2026). Hasegawa retired for UK. Needs FY2027 refresh April 2026.</td>
-          <td>PMS uses PRISM registry denominator (0.5 svc/yr × 70% addressable). Registry revenue gap <span data-pms-gap-sum>€457K</span>; oil filter registry capture <span data-pms-oil-cap>100%+</span> — see <code>pms_capture_by_db_year.csv</code>.</td>
+          <td>PMS uses IML v7 denominator (1.25 svc/yr IML schedule · 100% addressable addressable). Registry revenue gap <span data-pms-gap-sum>€2.04M</span>; oil filter registry capture <span data-pms-oil-cap>100%+</span> — see <code>ITUK_PMS_Analysis_Apr2026_v7_reclassified.xlsx</code>.</td>
           <td>Schedule annual data refresh post FY-end. Add ITUK car park refresh request to April 2026 calendar.</td>
         </tr>
         <tr>
@@ -1299,7 +1299,7 @@ OUTPUT:
         </tbody>
       </table>
       <div class="alert alert-amber" style="margin-top:10px;font-size:11.5px" id="alert-pms-model-verdict">
-        <strong>Model verdict (PRISM):</strong> ITUK UIO 22,389 (DVLA). Registry sum gap <span data-pms-gap-sum>€457K</span> across PMS categories; largest € leaks in air filter / clutch (not oil filter at registry level). Legacy dealer-pivot / 1.5×UIO basket estimates are retired — use <code>metric_dictionary.md</code>.
+        <strong>Model verdict (IML v7):</strong> ITUK UIO 22,389 (DVLA). Registry sum gap <span data-pms-gap-sum>€2.04M</span> across PMS categories; largest € leaks in air filter / clutch (not oil filter at registry level). Legacy dealer-pivot / 1.5×UIO basket estimates are retired — use <code>metric_dictionary.md</code>.
       </div>
     </div>
 
@@ -1376,11 +1376,11 @@ OUTPUT:
           <td>ITUK car park = 22,389 vehicles (DVLA actual) · N+F: 21,972</td>
           <td>PMS gap, lubricants demand</td>
           <td><span class="tbl-badge tb-green">Validated</span></td>
-          <td>UIO v18 / ITUK DVLA car park (22,389)</td>
-          <td>PRISM registry gap scales ~±20% with UIO; conclusion on under-penetration in air/clutch unchanged.</td>
+          <td>UIO v19 / ITUK DVLA car park (22,389)</td>
+          <td>IML v7 gap scales ~±20% with UIO; conclusion on under-penetration in air/clutch unchanged.</td>
         </tr>
         <tr>
-          <td>N75 services/yr = 0.5 × 70% addressable (PRISM)</td>
+          <td>IML schedule: 1.25× filters · 0.5× wear · 100% addressable</td>
           <td>PMS capture rate denominator</td>
           <td><span class="tbl-badge tb-green">PRISM canonical</span></td>
           <td><code>metric_dictionary.md</code></td>
@@ -1671,8 +1671,8 @@ OUTPUT:
 
     <div class="topic-card">
       <span class="tc-tag tag-ops">Operations</span>
-      <div class="tc-title">PMS registry gap <span data-pms-gap-sum>€457K</span> — how much is recoverable?</div>
-      <div class="tc-hook">PRISM registry view (22,389 DVLA, 0.5 svc/yr × 70% addressable): oil filter capture is already high at registry level; air filter and clutch lines drive most of the € gap. Dealer-pivot “basket gap” estimates are obsolete. Question: which categories are structurally IAM-owned vs winnable with ITUK?</div>
+      <div class="tc-title">PMS registry gap <span data-pms-gap-sum>€2.04M</span> — how much is recoverable?</div>
+      <div class="tc-hook">IML v7 schedule view (22,389 DVLA, 1.25 svc/yr IML schedule · 100% addressable addressable): oil filter capture is already high at registry level; air filter and clutch lines drive most of the € gap. Dealer-pivot “basket gap” estimates are obsolete. Question: which categories are structurally IAM-owned vs winnable with ITUK?</div>
       <div class="tc-tension">⚡ Tension: The gap is real. The question is whether it's capturable — or whether it's structurally owned by independent garages and IAM suppliers.</div>
     </div>
 
@@ -1786,9 +1786,9 @@ OUTPUT:
         <thead><tr><th>File</th><th>Format</th><th>What</th></tr></thead>
         <tbody>
           <tr><td><a class="file-link" href="ISZE_Competitiveness_Dashboard.html">Competitiveness Dashboard</a></td><td>.html</td><td>IE40-based heatmap, 3 segments, 4 AM modes</td></tr>
-          <tr><td><a class="file-link" href="ISZE_GPS_Dashboard_v9.html">GPS Dashboard v9 ★</a></td><td>.html</td><td>Network GPS · CY2025 warranty ex-adjustment · UIO v18 max-spend</td></tr>
-          <tr><td><a class="file-link" href="ISUZU_UIO_Dashboard_2026_v18.html">UIO Dashboard v18 ★</a></td><td>.html</td><td>Vehicle fleet by country/segment · Jun 2026</td></tr>
-          <tr><td><a class="file-link" href="../Data/ISUZU_UIO_Overview_2026_v18.xlsx">UIO Overview v18</a></td><td>.xlsx</td><td>Master UIO data · PRISM canonical via config.py</td></tr>
+          <tr><td><a class="file-link" href="../fleet/ISZE_GPS_Dashboard.html">GPS Dashboard ★</a></td><td>.html</td><td>Network GPS · CY2025 warranty ex-adjustment · UIO v19 max-spend</td></tr>
+          <tr><td><a class="file-link" href="../fleet/ISUZU_UIO_Dashboard_2026.html">UIO Dashboard ★</a></td><td>.html</td><td>Vehicle fleet by country/segment · workbook v19</td></tr>
+          <tr><td><a class="file-link" href="../../06_uio/_CURRENT/ISUZU_UIO_Overview_2026.xlsx">UIO Overview v19</a></td><td>.xlsx</td><td>Master UIO data · PRISM canonical via config.py</td></tr>
           <tr><td><a class="file-link" href="../Isuzu/UIO/Script/Parts Sales Calculation FY26.xlsx">Parts Sales Calc FY26 ★</a></td><td>.xlsx</td><td>✅ ITUK DVLA car park actual · 22,389 vehicles · FY26 target £13.13M · True Sales avg £580.65/vehicle</td></tr>
           <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_PMS_Coverage_Calculator.xlsx">PMS Calculator</a></td><td>.xlsx</td><td>PMS coverage + revenue impact</td></tr>
           <tr><td><a class="file-link" href="../Isuzu/Divers/ISZE_Lubricants_Business_Case.xlsx">Lubricants BC (original)</a></td><td>.xlsx</td><td>⚠ SUPERSEDED — use rebuilt v2 instead</td></tr>
@@ -2083,7 +2083,7 @@ async function loadPrismPms() {
     const elSub = document.getElementById('kpi-pms-gap-sub');
     if (elVal) elVal.textContent = fmtEurK(gap);
     if (elSub) {
-      let sub = `Registry gap · ${pms.uio_dvla.toLocaleString()} DVLA · PRISM ${pms.year}`;
+      let sub = `IML v7 gap · ${pms.uio_dvla.toLocaleString()} DVLA · ${pms.year}`;
       if (gps && gps.spend_per_unit_ex_warranty_eur) {
         sub += ` · GPS ex-warr €${Math.round(gps.spend_per_unit_ex_warranty_eur)}/unit`;
       }
@@ -2091,20 +2091,24 @@ async function loadPrismPms() {
     }
     const hdr = document.getElementById('hdr-data-as-of');
     if (hdr && data._meta && data._meta.prism_refreshed) {
-      hdr.textContent = 'PRISM data: ' + data._meta.prism_refreshed.slice(0, 10)
+      hdr.textContent = 'Data: ' + data._meta.prism_refreshed.slice(0, 10)
         + (data.pms.distributor_count ? ` · PMS ${data.pms.distributor_count} DBs` : '');
     }
     if (oil) {
-      const capLabel = oil.capture_rate_pct >= 100 ? '100%+' : oil.capture_rate_pct + '%';
+      const capLabel = oil.capture_rate_pct + '%';
       document.querySelectorAll('[data-pms-gap-sum]').forEach(el => { el.textContent = fmtEurK(gap); });
       document.querySelectorAll('[data-pms-oil-cap]').forEach(el => { el.textContent = capLabel; });
       const alertEl = document.getElementById('alert-pms-gap');
       if (alertEl) {
-        alertEl.innerHTML = `<strong>⚠ PMS — PRISM registry view (ITUK ${pms.uio_dvla.toLocaleString()} DVLA)</strong><br>` +
-          `Oil filter registry capture <strong>${oil.capture_rate_pct >= 100 ? '100%+' : oil.capture_rate_pct + '%'}</strong> ` +
+        alertEl.innerHTML = `<strong>⚠ PMS — IML v7 schedule (ITUK ${pms.uio_dvla.toLocaleString()} DVLA)</strong><br>` +
+          `Oil filter cover <strong>${oil.capture_rate_pct}%</strong> ` +
           `(${Math.round(oil.actual_qty).toLocaleString()} vs ${Math.round(oil.expected_qty).toLocaleString()} expected). ` +
-          `Sum registry revenue gap <strong>${fmtEurK(gap)}</strong> across PMS categories. Source: PRISM derived CSV.`;
+          `Sum IML revenue gap <strong>${fmtEurK(gap)}</strong> across 5 PMS categories. Source: v7 workbook / iml_v7_ituk_cy2025.yaml.`;
       }
+      const projSub = document.getElementById('proj-pms-sub');
+      if (projSub) projSub.textContent = `ISZJ+ISZE joint · ITUK pilot · ${fmtEurK(gap)} IML gap · DVLA 22,389`;
+      const projDesc = document.getElementById('proj-pms-desc');
+      if (projDesc) projDesc.innerHTML = `Joint project with IML to improve genuine PMS penetration. ITUK as first market. <strong>IML v7 (CY2025):</strong> ISZE→ITUK sell-in vs IML service schedule (1.25× filters, 0.5× wear, 100% addressable). Oil filter <strong>${oil.capture_rate_pct}%</strong> cover; weighted <strong>${pms.weighted_cover_pct || '35.9'}%</strong>; total gap <strong>${fmtEurK(gap)}</strong>. See <code>ITUK_PMS_Analysis_Apr2026_v7_reclassified.xlsx</code>.`;
     }
   } catch (e) { /* offline / file:// — static HTML fallback */ }
 }

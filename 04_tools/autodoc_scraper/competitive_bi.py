@@ -35,9 +35,11 @@ from isze_paths import (  # noqa: E402
 
 SCRIPT_DIR = Path(__file__).parent
 V3_FILE   = SCRIPT_DIR / "ISZE_Parts_Intelligence_v3.xlsx"
+# 2026-07-09: removed a hardcoded "..._v17.xlsx" fallback that used to sit here.
+# There is only ever one canonical, unversioned UIO file — always resolve to that.
+# Version lives on the workbook's own Changelog sheet, never in the filename or in code.
 UIO_FILE  = resolve_first_existing([
     UIO_DIR / "_CURRENT" / "ISUZU_UIO_Overview_2026.xlsx",
-    UIO_DIR / "_CURRENT" / "ISUZU_UIO_Overview_2026_v17.xlsx",
     ISZE_ROOT / "UIO" / "_CURRENT" / "ISUZU_UIO_Overview_2026.xlsx",
 ]) or (UIO_DIR / "_CURRENT" / "ISUZU_UIO_Overview_2026.xlsx")
 PMS_CALC  = resolve_first_existing([
@@ -46,8 +48,17 @@ PMS_CALC  = resolve_first_existing([
     ANALYTICS_DIR / "Isuzu" / "Divers" / "ISZE_PMS_Coverage_Calculator.xlsx",
 ]) or (LEGACY_DIR / "Isuzu" / "Divers" / "ISZE_PMS_Coverage_Calculator.xlsx")
 
-# ── Survival rates from v17 Sheet 3 (CV — Developed Countries) ───────────────
-# Vehicle Age (years) -> survival ratio. Source: v17 UIO Calculation sheet.
+# ── Survival rates, originally copied from v17 Sheet 3 (CV — Developed Countries) ─
+# Vehicle Age (years) -> survival ratio.
+# ⚠ 2026-07-09: FLAGGED, NOT FIXED. These are hardcoded Python constants, not read
+# from UIO_FILE at runtime — so even though UIO_FILE above now always resolves to
+# the current canonical workbook, THESE NUMBERS DO NOT UPDATE WITH IT. If "3. UIO
+# Calculation" sheet's survival curves changed in V18/V19 (plausible — Germany,
+# Ireland, Portugal, UTI Israel all got new methodology per the Changelog), this
+# dict is stale regardless of file version. Not fixed here — making this read
+# dynamically from the workbook needs testing I can't do from this session
+# (sandbox can't execute against your live files). Compare against Sheet 3 by hand
+# before trusting this script's numbers, or ask me to wire it up properly and test it live.
 SURVIVAL_CV_DEV = {
     1:1.00, 2:0.99, 3:0.98, 4:0.97, 5:0.96, 6:0.95, 7:0.90, 8:0.80, 9:0.70,
     10:0.55, 11:0.40, 12:0.30, 13:0.20, 14:0.10, 15:0.05, 16:0.00,

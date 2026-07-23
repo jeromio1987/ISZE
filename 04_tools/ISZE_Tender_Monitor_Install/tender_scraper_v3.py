@@ -132,12 +132,20 @@ def safe_get(d: Dict[str, Any], path: List[Any], default: Any = "") -> Any:
     return cur if cur not in (None, "") else default
 
 
-def get_with_retry(session: requests.Session, url: str, params: Optional[Dict[str, Any]] = None, max_retries: int = 4):
+# 2026-07-14: backoff lengthened per Jerome's decision (option "wait longer" over
+# API key / accept-partial-coverage) for UK Find a Tender 429s — see DECISIONS.md.
+# Old schedule (4 tries, 5/10/15/20s) was too fast for FaT's limiter. New schedule
+# is slower but should clear the block reliably; a run that hits 429 repeatedly
+# on every page can now take several extra minutes, which is the accepted trade-off.
+RATE_LIMIT_BACKOFF_SCHEDULE = [30, 60, 90, 120, 180, 240]
+
+
+def get_with_retry(session: requests.Session, url: str, params: Optional[Dict[str, Any]] = None, max_retries: int = 6):
     for attempt in range(max_retries):
         try:
             r = session.get(url, params=params, timeout=30)
             if r.status_code == 429:
-                wait = 5 + attempt * 5
+                wait = RATE_LIMIT_BACKOFF_SCHEDULE[min(attempt, len(RATE_LIMIT_BACKOFF_SCHEDULE) - 1)]
                 print(f"  Rate limited — waiting {wait}s")
                 time.sleep(wait)
                 continue
@@ -148,12 +156,12 @@ def get_with_retry(session: requests.Session, url: str, params: Optional[Dict[st
     return None
 
 
-def post_with_retry(session: requests.Session, url: str, payload: Dict[str, Any], max_retries: int = 4):
+def post_with_retry(session: requests.Session, url: str, payload: Dict[str, Any], max_retries: int = 6):
     for attempt in range(max_retries):
         try:
             r = session.post(url, json=payload, timeout=30)
             if r.status_code == 429:
-                wait = 5 + attempt * 5
+                wait = RATE_LIMIT_BACKOFF_SCHEDULE[min(attempt, len(RATE_LIMIT_BACKOFF_SCHEDULE) - 1)]
                 print(f"  Rate limited — waiting {wait}s")
                 time.sleep(wait)
                 continue

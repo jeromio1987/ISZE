@@ -11,7 +11,7 @@ Sign-off register for the handoff bundle. **PMS BI is the product; scrapers are 
 | **H-3** | FX hardcoded | **Fixed** | `sources.yaml` → `fx_rates`; `load_fx_rates()` |
 | **H-4** | README “removed” but parent files exist | **Fixed** | `README.md` bundle vs parent table |
 | **H-5** | Two BI surfaces | **Fixed** | `isze_executive_pms.html` (authoritative PMS); IAM split + disclaimers |
-| **H-6** | Scrape freshness / automation | **Closed (minimal)** | Optional CSV age caption only — **no scheduled scrape push** (see `SCRAPE_OPTIONAL.md`) |
+| **H-6** | Scrape freshness / automation | **Reopened by Jerome 2026-07-10** | Weekly Windows Task Scheduler job `ISZE_PMS_IAM_Refresh` added (parent `run_refresh_scheduled.bat` → `refresh_and_check_drift.py`) — still optional context only, does not feed PMS actuals. See `SCRAPE_OPTIONAL.md`. |
 | **M-1** | Sheet 4 parse heuristic | **Fixed** | Named column `2024A` / `Total ITUK` row |
 | **M-2** | Lost units clip hides over-capture | **Fixed** | `over_capture_units` column |
 | **M-3** | Mileage default unflagged | **Fixed** | `mileage_source` on KPIs |

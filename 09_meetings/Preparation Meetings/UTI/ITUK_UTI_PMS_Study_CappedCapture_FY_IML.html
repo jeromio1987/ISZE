@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PMS Study — ITUK vs UTI — FY2025 IML</title>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; background:#F5F5F5; margin:0; padding:32px; color:#1A1A1A; }
+  .wrap { max-width: 980px; margin: 0 auto; background:#fff; border-radius:8px; padding:36px 40px; box-shadow:0 1px 4px rgba(0,0,0,.08); }
+  h1 { font-size:20px; margin:0 0 4px; }
+  .sub { color:#666; font-size:13px; margin-bottom:24px; }
+  .note { background:#FFF4F4; border-left:4px solid #CC0E1E; padding:12px 16px; font-size:13px; margin-bottom:28px; line-height:1.5; }
+  h2 { font-size:15px; margin:32px 0 4px; border-bottom:2px solid #CC0E1E; padding-bottom:6px; }
+  .h2sub { font-size:12px; color:#777; margin-bottom:16px; }
+  .row { display:flex; align-items:center; gap:12px; margin:10px 0; }
+  .label { width:150px; font-size:13px; font-weight:600; flex-shrink:0; }
+  .track { flex:1; background:#EEE; border-radius:4px; height:22px; position:relative; }
+  .bar { height:22px; border-radius:4px; display:flex; align-items:center; min-width:2px; }
+  .bar.ituk { background:#1A3A5C; }
+  .bar.uti { background:#CC0E1E; }
+  .bar.bvp-bvp { background:#B08D57; }
+  .pct { font-size:12px; color:#fff; padding-left:8px; font-weight:600; }
+  .bvp-pct { font-size:12px; width:60px; }
+  .overshoot { position:absolute; right:-46px; top:0; font-size:11px; color:#CC0E1E; font-weight:700; line-height:22px; }
+  .legend { display:flex; gap:20px; font-size:12px; margin-bottom:14px; flex-wrap:wrap; }
+  .sw { width:12px; height:12px; border-radius:2px; display:inline-block; }
+  table { width:100%; border-collapse:collapse; font-size:12.5px; margin-top:10px; }
+  th, td { text-align:left; padding:6px 10px; border-bottom:1px solid #eee; }
+  th { background:#1A3A5C; color:#fff; }
+  tr:nth-child(even) { background:#FAFAFA; }
+  .iml { color:#888; font-size:10px; }
+  footer { margin-top:28px; font-size:11px; color:#999; border-top:1px solid #eee; padding-top:10px; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>PMS Study — ITUK vs UTI — Family-level view</h1>
+  <div class="sub">FY2025 (Apr 2025–Mar 2026) · <strong>Both: IML v7 schedule</strong> · 100% addressable · cover capped at 100%</div>
+  <div class="note">
+    <b>Unified methodology.</b> ITUK from <code>iml_v7_ituk_cy2025.yaml</code> (CY2025 billing, IML schedule).
+    <strong>UTI recalculated</strong> on the same IML intervals — oil/fuel/air <strong>1.25×/yr</strong> (40,000 km @ 50,000 km/yr),
+    brake &amp; clutch <strong>0.5×/yr</strong>, <strong>100% addressable</strong>, UIO 10,336 — billing <strong>FY2025</strong>.
+    No PRISM 70% haircut; no calendar-year mix.
+  </div>
+
+  <h2>Filters, Brakes, Clutch — cover %</h2>
+  <div class="h2sub">Σ actual ÷ Σ expected on IML schedule. Bars capped at 100%.</div>
+  <div class="legend">
+    <span><i class="sw" style="background:#1A3A5C"></i> ITUK</span>
+    <span><i class="sw" style="background:#CC0E1E"></i> UTI FY2025</span>
+  </div>
+  <div class="row"><div class="label">Filters — ITUK</div><div class="track"><div class="bar ituk" style="width:37.8%"><span class="pct">37.8%</span></div></div></div><div class="row"><div class="label">Filters — UTI</div><div class="track"><div class="bar uti" style="width:41.0%"><span class="pct">41.0%</span></div></div></div><div class="row"><div class="label">Brakes — ITUK</div><div class="track"><div class="bar ituk" style="width:35.3%"><span class="pct">35.3%</span></div></div></div><div class="row"><div class="label">Brakes — UTI</div><div class="track"><div class="bar uti" style="width:10.7%"><span class="pct">10.7%</span></div></div></div><div class="row"><div class="label">Clutch — ITUK</div><div class="track"><div class="bar ituk" style="width:7.8%"><span class="pct">7.8%</span></div></div></div><div class="row"><div class="label">Clutch — UTI</div><div class="track"><div class="bar uti" style="width:20.3%"><span class="pct">20.3%</span></div></div></div>
+  <table>
+    <tr><th>Family</th><th>ITUK capped</th><th>ITUK true</th><th>UTI capped</th><th>UTI true</th><th>Reading</th></tr>
+    <tr><td>Filters</td><td>37.8%</td><td>37.8%</td><td>41.0%</td><td>41.0%</td><td>ITUK 37.8% on IML · UTI 41.0% FY2025 — both on 1.25×/yr filter schedule; UTI no longer PRISM-saturated.</td></tr><tr><td>Brakes</td><td>35.3%</td><td>35.3%</td><td>10.7%</td><td>10.7%</td><td>ITUK 35.3% · UTI 10.7% — IML 0.5×/yr wear; main UTI gap category.</td></tr><tr><td>Clutch</td><td>7.8%</td><td>7.8%</td><td>20.3%</td><td>20.3%</td><td>ITUK 7.8% · UTI 20.3% — IML 0.5×/yr on clutch parc subset; deferred ITUK phase-one.</td></tr>
+  </table>
+
+  <h2>Suspension, Cab, Electrical — BVP share %</h2>
+  <div class="h2sub">Mix metric · FY2025 / CY2025 billing (unchanged source)</div>
+  <div class="row"><div class="label">Suspension — ITUK</div><div class="track"><div class="bar bvp-bvp" style="width:8.3%"></div></div><div class="bvp-pct">8.3% BVP</div></div><div class="row"><div class="label">Suspension — UTI</div><div class="track"><div class="bar bvp-bvp" style="width:37.0%"></div></div><div class="bvp-pct">37.0% BVP</div></div><div class="row"><div class="label">Cab — ITUK</div><div class="track"><div class="bar bvp-bvp" style="width:42.6%"></div></div><div class="bvp-pct">42.6% BVP</div></div><div class="row"><div class="label">Cab — UTI</div><div class="track"><div class="bar bvp-bvp" style="width:43.6%"></div></div><div class="bvp-pct">43.6% BVP</div></div><div class="row"><div class="label">Electrical — ITUK</div><div class="track"><div class="bar bvp-bvp" style="width:23.0%"></div></div><div class="bvp-pct">23.0% BVP</div></div><div class="row"><div class="label">Electrical — UTI</div><div class="track"><div class="bar bvp-bvp" style="width:100.0%"></div></div><div class="bvp-pct">100.0% BVP</div></div>
+
+  <h2>Sub-category detail — UTI (IML + FY)</h2>
+  <table>
+    <tr><th>Category</th><th>ITUK</th><th>ITUK true</th><th>ITUK gen</th><th>UTI capped</th><th>UTI true</th><th>UTI genuine</th></tr>
+    <tr><td>Oil filter <span class='iml'>(IML)</span></td><td>35.1%</td><td>35.1%</td><td>0% (0.2%)</td><td>31.3%</td><td>31.3%</td><td>0.2%</td></tr><tr><td>Fuel filter <span class='iml'>(IML)</span></td><td>65.1%</td><td>65.1%</td><td>0% (0.0%)</td><td>74.8%</td><td>74.8%</td><td>0.0%</td></tr><tr><td>Air filter <span class='iml'>(IML)</span></td><td>13.2%</td><td>13.2%</td><td>0% (0.3%)</td><td>58.1%</td><td>58.1%</td><td>0.3%</td></tr><tr><td>Urea filter</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr><tr><td>Brake pad</td><td>0.0%</td><td>0.0%</td><td>26.7%</td><td>26.7%</td><td>26.7%</td><td>26.7%</td></tr><tr><td>Brake shoe</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr><tr><td>Brake rotor</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr><tr><td>Clutch disc</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>4.3%</td><td>4.3%</td><td>0.0%</td></tr><tr><td>Clutch pressure plate</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>4.8%</td><td>4.8%</td><td>0.0%</td></tr><tr><td>Clutch kit</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>100.0%</td><td>108.9%</td><td>0.0%</td></tr><tr><td>Clutch booster</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>1.1%</td><td>1.1%</td><td>0.0%</td></tr><tr><td>Release bearing</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr><tr><td>Pilot bearing</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td><td>0.0%</td></tr>
+  </table>
+
+  <footer>
+    ITUK oil filter <strong>35.1%</strong> · gap <strong>€2,038,471</strong>.
+    UTI FY2025: filters <strong>41.0%</strong>, brakes <strong>10.7%</strong>, clutch <strong>20.3%</strong>.
+    Rebuild: <code>python _build/build_uti_presentation_suite.py</code>
+  </footer>
+</div>
+</body>
+</html>

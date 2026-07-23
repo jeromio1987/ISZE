@@ -1,0 +1,193 @@
+{
+  "generated_at": "2026-07-23T18:59:42Z",
+  "tolerances": {
+    "identity_eur_per_cell": 5.0,
+    "waterfall_eur_per_stage": 10.0,
+    "cross_basis_pct": 2.0,
+    "unmapped_payer_hard_eur": 5000.0
+  },
+  "result": "FAIL",
+  "hard_failures": 1,
+  "checks": [
+    {
+      "id": "inputs_present",
+      "severity": "hard",
+      "status": "PASS",
+      "detail": "all derived/presentation inputs found",
+      "deltas": [],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_clean.json",
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_transport_excluded.json",
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_surcharge_stripped.json",
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\gps_snapshot.json",
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\gps_v9_snapshot.json",
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_spu_by_distributor.csv",
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\fleet\\ISZE_GPS_Dashboard.html"
+      ]
+    },
+    {
+      "id": "snapshot_copy",
+      "severity": "hard",
+      "status": "PASS",
+      "detail": "gps_snapshot.json is a byte-identical copy of gps_v9_snapshot.json",
+      "deltas": [],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\gps_snapshot.json",
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\gps_v9_snapshot.json"
+      ]
+    },
+    {
+      "id": "dashboard_embedded:fleet/ISZE_GPS_Dashboard.html",
+      "severity": "hard",
+      "status": "PASS",
+      "detail": "embedded JS constants match gps_snapshot.json",
+      "deltas": [],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\fleet\\ISZE_GPS_Dashboard.html"
+      ]
+    },
+    {
+      "id": "dashboard_selfcontained:fleet/ISZE_GPS_Dashboard.html",
+      "severity": "hard",
+      "status": "PASS",
+      "detail": "no CDN dependency, ECharts inlined",
+      "deltas": [],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\fleet\\ISZE_GPS_Dashboard.html"
+      ]
+    },
+    {
+      "id": "spu_internal",
+      "severity": "hard",
+      "status": "PASS",
+      "detail": "SPU / ex-warranty / capture arithmetic consistent across 89 rows",
+      "deltas": [],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_spu_by_distributor.csv"
+      ]
+    },
+    {
+      "id": "spu_vs_snapshot_cy2025",
+      "severity": "soft",
+      "status": "WARN",
+      "detail": "6 DBs beyond 2.0% (cross-basis, informational)",
+      "deltas": [
+        "IRELAND: PRISM 1,187,459 vs v9 1,213,660 (-2.2%)",
+        "UTI: PRISM 3,331,512 vs v9 3,402,117 (-2.1%)",
+        "ITUK: PRISM 5,564,544 vs v9 5,769,868 (-3.6%)",
+        "FINLAND: PRISM 277,921 vs v9 285,913 (-2.8%)",
+        "ICELAND: PRISM 85,282 vs v9 87,260 (-2.3%)",
+        "UMI: PRISM 3,319,344 vs v9 3,388,801 (-2.0%)"
+      ],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_spu_by_distributor.csv",
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\gps_snapshot.json"
+      ]
+    },
+    {
+      "id": "billing_json_vs_raw",
+      "severity": "hard",
+      "status": "PASS",
+      "detail": "all DBxFY cells within EUR5",
+      "deltas": [],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_clean.json"
+      ]
+    },
+    {
+      "id": "transport_sidecar_vs_raw",
+      "severity": "hard",
+      "status": "PASS",
+      "detail": "all DBxFY cells within EUR5",
+      "deltas": [],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_transport_excluded.json"
+      ]
+    },
+    {
+      "id": "surcharge_sidecar_vs_raw",
+      "severity": "hard",
+      "status": "PASS",
+      "detail": "all DBxFY cells within EUR5",
+      "deltas": [],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_surcharge_stripped.json"
+      ]
+    },
+    {
+      "id": "unmapped_payers",
+      "severity": "hard",
+      "status": "WARN",
+      "detail": "unmapped payer buckets: UNK_2686=360 (total EUR360)",
+      "deltas": [
+        "UNK_2686: {\"2026\": 360.0}"
+      ],
+      "files": []
+    },
+    {
+      "id": "waterfall_vs_raw",
+      "severity": "hard",
+      "status": "PASS",
+      "detail": "waterfall reproduces gps_billing_fy_waterfall.csv exactly (raw net clean, tol EUR10)",
+      "deltas": [],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_fy_waterfall.csv"
+      ]
+    },
+    {
+      "id": "allcustomers_vs_raw",
+      "severity": "hard",
+      "status": "PASS",
+      "detail": "all non-Israel customer FY cells within EUR5 vs gps_billing_fy_ALLCUSTOMERS.csv",
+      "deltas": [],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_fy_ALLCUSTOMERS.csv"
+      ]
+    },
+    {
+      "id": "allcustomers_israel_basis",
+      "severity": "hard",
+      "status": "PASS",
+      "detail": "Israel totals consistent with dedicated UMI/UTI extract",
+      "deltas": [],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_billing_fy_ALLCUSTOMERS.csv"
+      ]
+    },
+    {
+      "id": "snapshot_vs_raw_cy2025",
+      "severity": "soft",
+      "status": "WARN",
+      "detail": "12 DBs beyond 2.0% (v9 SALES_25 is a hardcoded ERP extract \u2014 rebuild build_gps_v9.py if raw has been refreshed)",
+      "deltas": [
+        "ITUK: raw CY2025 5,571,234 vs snapshot 5,769,868 (-3.4%)",
+        "IUK: raw CY2025 6,060,535 vs snapshot 6,221,920 (-2.6%)",
+        "GERMANY: raw CY2025 2,486,243 vs snapshot 2,577,766 (-3.6%)",
+        "BELGIUM: raw CY2025 2,046,828 vs snapshot 2,143,952 (-4.5%)",
+        "IRELAND: raw CY2025 1,187,182 vs snapshot 1,213,660 (-2.2%)",
+        "DENMARK: raw CY2025 145,044 vs snapshot 150,218 (-3.4%)",
+        "ICELAND: raw CY2025 84,456 vs snapshot 87,260 (-3.2%)",
+        "CYPRUS: raw CY2025 418,864 vs snapshot 429,512 (-2.5%)",
+        "GREECE: raw CY2025 512,001 vs snapshot 528,391 (-3.1%)",
+        "ROMANIA: raw CY2025 169,310 vs snapshot 177,276 (-4.5%)",
+        "UMI: raw CY2025 2,711,493 vs snapshot 3,388,801 (-20.0%)",
+        "UTI: raw CY2025 3,147,475 vs snapshot 3,402,117 (-7.5%)"
+      ],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\gps_snapshot.json"
+      ]
+    },
+    {
+      "id": "kosha_chain",
+      "severity": "hard",
+      "status": "FAIL",
+      "detail": "6/7 Kosha workbook checks passed; failures: Toggle gross == rebuilt billing JSON",
+      "deltas": [
+        "Toggle gross == rebuilt billing JSON: 11 gross mismatches"
+      ],
+      "files": [
+        "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_integrity_audit.json"
+      ]
+    }
+  ]
+}

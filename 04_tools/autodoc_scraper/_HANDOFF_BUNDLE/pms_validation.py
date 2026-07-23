@@ -47,6 +47,23 @@ def validate_engine_result(result: dict) -> pd.DataFrame:
                 "message": f"Actuals from {src} (ITUK dealer file when present).",
             }
         )
+    elif src:
+        # 2026-07-09: this is the case that actually matters — silently falling back
+        # to network-wide v3 qty against ITUK-only potential is what produced 165%
+        # category capture rates undetected (source file path was stale in sources.yaml).
+        # This used to be un-flagged; the "dealer sales" branch above only spoke up
+        # when the good path succeeded, never when it silently fell back.
+        rows.append(
+            {
+                "severity": "error",
+                "check": "actuals_source",
+                "message": (
+                    f"Actuals from '{src}' — NOT ITUK dealer sales. This compares "
+                    "network-wide quantity against ITUK-only potential demand and "
+                    "will misstate capture %. Check sales_to_dealers_dir in sources.yaml."
+                ),
+            }
+        )
 
     try:
         cap_f = float(cap) if cap is not None and pd.notna(cap) else None
@@ -98,6 +115,26 @@ def validate_engine_result(result: dict) -> pd.DataFrame:
                     ),
                 }
             )
+        # 2026-07-09: the ×10 check above only catches gross blowouts. The overall
+        # (network-wide) capture_rate check further up misses per-category problems
+        # entirely — a single category at 165% averages out against others near 0%
+        # and the aggregate never crosses 100%. This is exactly how the 2026-07-09
+        # capture-rate bug went unflagged: overall was 31.6%, Fuel filter alone was 165.7%.
+        if "capture_rate" in cat.columns:
+            over = cat[pd.to_numeric(cat["capture_rate"], errors="coerce") > 1.0]
+            if not over.empty:
+                worst = over.loc[over["capture_rate"].idxmax()]
+                rows.append(
+                    {
+                        "severity": "error" if worst["capture_rate"] > 1.5 else "warn",
+                        "check": "category_capture_rate",
+                        "message": (
+                            f"{len(over)} categor{'y' if len(over) == 1 else 'ies'} over 100% capture "
+                            f"(worst: {worst['category']} at {worst['capture_rate'] * 100:.0f}%) — "
+                            "impossible if actuals and potential share the same scope."
+                        ),
+                    }
+                )
 
     pn = result.get("PN drill-down", pd.DataFrame())
     if not pn.empty and "actual_units" in pn.columns:

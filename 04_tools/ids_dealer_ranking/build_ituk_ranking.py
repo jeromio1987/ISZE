@@ -80,12 +80,15 @@ def _read_block(
         pct = _coerce_percent(pct_raw)
         if pct is None and points_val > 0:
             pct = round(points_val / float(max_pts) * 100, 2)
+        items_pct = round(points_val / float(max_pts) * 100, 2) if points_val > 0 else None
 
         rows.append(
             {
                 "name": name,
                 "points": pct,
-                "items": round(points_val, 2),
+                "items": items_pct,
+                "raw_points": points_val,
+                "max_pts": float(max_pts),
                 "file": source_file,
                 "error": None,
             }
@@ -150,9 +153,6 @@ def main() -> int:
         "ITUK",
         rows,
         args.output.resolve(),
-        points_header="Total percentage",
-        items_header="Assessed points",
-        chart_second_series=False,
     )
 
     print(f"Wrote {args.output}")

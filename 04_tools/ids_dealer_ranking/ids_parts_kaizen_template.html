@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IDS Parts Kaizen — Section D × GPS/PMS Study</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;font-size:15px;line-height:1.55;background:#f7f4ee}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0}
+.wrap{max-width:1100px;margin:0 auto;padding:0 1.25rem 3rem}
+.cover{background:linear-gradient(155deg,#15233c 0%,#203759 60%,#2b4a78 100%);color:#eef1f6;padding:3.5rem 1.5rem 3rem;margin-bottom:2rem}
+.cover h1{color:#fff;font-size:2.2rem;line-height:1.15;max-width:18ch}
+.cover .rule{width:4.5rem;height:3px;background:#c0552d;margin:1.25rem 0 1rem}
+.cover p{opacity:.9;max-width:52rem;margin:0}
+.meta{font-size:.85rem;opacity:.75;margin-top:1.5rem}
+h2{font-size:1.45rem;margin:2.2rem 0 .6rem;padding-bottom:.4rem;border-bottom:2px solid #1a2b4a}
+h2 .no{color:#c0552d}
+h3{font-size:1.1rem;margin:1.4rem 0 .4rem}
+p.lead{font-size:1.05rem;color:#333}
+.callout{border-left:3px solid #c0552d;background:#fff;padding:.9rem 1.1rem;margin:1rem 0}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin:1rem 0 1.5rem}
+.stat{background:#fff;border:1px solid #d9d3c8;border-radius:6px;padding:.85rem 1rem}
+.stat .n{font-size:1.55rem;font-weight:700;color:#1a2b4a;font-family:Georgia,serif}
+.stat .l{font-size:.78rem;color:#6b6256;text-transform:uppercase;letter-spacing:.03em}
+.chart-box{background:#fff;border:1px solid #d9d3c8;border-radius:8px;padding:1rem;margin:1rem 0 1.5rem}
+.chart-box .caption{font-size:.9rem;color:#6b6256;margin:0 0 .75rem}
+table{width:100%;border-collapse:collapse;font-size:.88rem;background:#fff;margin:1rem 0}
+th{background:#1a2b4a;color:#fff;text-align:left;padding:.55rem .65rem;font-size:.75rem;text-transform:uppercase}
+td{padding:.5rem .65rem;border-bottom:1px solid #d9d3c8;vertical-align:top}
+tr:nth-child(even) td{background:#f7f4ee}
+.badge{display:inline-block;padding:.15rem .45rem;border-radius:3px;font-size:.75rem;font-weight:600}
+.badge.red{background:#fde8e8;color:#b23b3b}
+.badge.amber{background:#fff3d6;color:#8a6a00}
+.badge.green{background:#e5f6ef;color:#2e7d54}
+.dealer-card{background:#fff;border:1px solid #d9d3c8;border-radius:8px;padding:1.1rem 1.25rem;margin:1rem 0}
+.dealer-card h3{color:#c0552d}
+.gap-list{margin:.4rem 0 0;padding-left:1.1rem}
+.gap-list li{margin:.25rem 0}
+.foot{font-size:.75rem;color:#6b6256;margin-top:2.5rem;padding-top:.75rem;border-top:1px solid #d9d3c8}
+.muted{color:#6b6256}
+.tip{border-bottom:1px dotted #c0552d;cursor:help;position:relative;color:inherit}
+.tip:hover,.tip:focus{outline:none;color:#c0552d}
+.tip::after{
+  content:attr(data-tip);
+  position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);
+  width:min(340px,78vw);padding:10px 12px;background:#1a2b4a;color:#eef1f6;
+  font:400 12px/1.45 "Segoe UI",Helvetica,Arial,sans-serif;text-align:left;
+  border-radius:6px;box-shadow:0 6px 18px rgba(26,39,68,.28);
+  white-space:pre-wrap;z-index:40;opacity:0;pointer-events:none;visibility:hidden;
+  transition:opacity .12s ease;
+}
+.tip:hover::after,.tip:focus::after{opacity:1;visibility:visible}
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="wrap">
+    <div style="font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;opacity:.8">ISZE Parts · IDS 2026</div>
+    <h1>Parts Kaizen from IDS Section D</h1>
+    <div class="rule"></div>
+    <p>Correlation of dealer Parts standards (Section D) with distributor GPS / genuine share / PMS capture / KPI fill — then four <span class="tip" tabindex="0" data-tip="Wave-1 = the first 90-day Kaizen batch: a short call list of priority dealers (not a permanent blacklist). Fix Excel gaps + one commercial check, then expand to Wave-2.">Wave-1</span> dealers with the actual Excel question gaps.</p>
+    <div class="meta">Built __BUILT_AT__ · Self-contained (offline charts)</div>
+  </div>
+</div>
+<div class="wrap">
+
+<h2><span class="no">01</span> Verdict for Parts</h2>
+<p class="lead" id="verdict"></p>
+<div class="stats" id="stats"></div>
+<div class="callout" id="naming"></div>
+
+<h2><span class="no">02</span> Correlation study — Section D vs DB Parts metrics</h2>
+<div class="callout">
+  <b>How to read the scatters:</b> upward slope = thesis supported (better D ↔ better DB metric).
+  Flat / downward = standards self-score and commercial capture diverge — still Kaizen the D gaps, but verify with RO attach and PMS €.
+</div>
+<p class="muted">Each point is an IDS country linked to its PRISM distributor. X = average dealer Section D %. Y = distributor metric (CY2025 unless KPI).</p>
+<div class="chart-box">
+  <p class="caption">Scatter — IDS Section D % vs PMS total capture % (CY2025) — primary (sales is sales)</p>
+  <div style="position:relative;width:100%;height:360px"><canvas id="scatPms" role="img" aria-label="Section D vs PMS total capture"></canvas></div>
+</div>
+<div class="chart-box">
+  <p class="caption">Scatter — IDS Section D % vs Genuine parts share % (EUR mix, CY2025) — extra lens, not a substitute for total</p>
+  <div style="position:relative;width:100%;height:360px"><canvas id="scatGen" role="img" aria-label="Section D vs genuine share"></canvas></div>
+</div>
+<div class="chart-box">
+  <p class="caption">Scatter — IDS Section D % vs GPS spend per unit € (CY2025)</p>
+  <div style="position:relative;width:100%;height:360px"><canvas id="scatGps" role="img" aria-label="Section D vs GPS SPU"></canvas></div>
+</div>
+<div class="chart-box">
+  <p class="caption"><span class="tip" tabindex="0" data-tip="Pearson r (correlation) measures how two series move together across markets, from −1 to +1.&#10;+1 = perfect lockstep&#10;0 = no linear link&#10;−1 = perfect opposite&#10;&#10;Example: r = +0.5 on fill means countries with higher Section D tend to have higher first fill. Weak or negative r is still a finding — do not drop the metric.">Pearson r</span> (Section D vs DB metrics) — only markets with both values · hover the dotted term</p>
+  <div style="position:relative;width:100%;height:280px"><canvas id="corrBars" role="img" aria-label="Correlation bars"></canvas></div>
+</div>
+<table id="joinTable"><thead></thead><tbody></tbody></table>
+
+<h2><span class="no">03</span> <span class="tip" tabindex="0" data-tip="Wave-1 = the first 90-day Kaizen batch: a short call list of priority dealers (not a permanent blacklist). Fix Excel gaps + one commercial check, then expand to Wave-2.">Wave-1</span> focus dealers (Kaizen)</h2>
+<p>Selected for <b>low Section D</b> in markets that also show parts pressure at DB level. Reasons come from the IDS evaluation result Excel (question rows under D).</p>
+<div id="dealers"></div>
+
+<h2><span class="no">04</span> 90-day Kaizen play (Parts)</h2>
+<p class="lead">One dealer, ≤3 countermeasures, one owner each, one verify metric. Do not open a museum of actions — close or escalate at day 90.</p>
+
+<div class="callout">
+  <b>How to use this play:</b> pick K1 for every Wave-1 dealer (RO attach). Add K2 where Excel shows weak Genuine/BVP promo or mix (e.g. D.1-8). Add K3 where D.2-10 / fill / MOS / inventory control is zero. Cap at three K’s per dealer.
+</div>
+
+<div class="dealer-card">
+  <h3>K1 — PMS basket on every R&amp;M repair order</h3>
+  <p><b>Intent:</b> every paid service visit offers the periodic-maintenance parts set, not only what the customer asked for.</p>
+  <p><b>Do:</b></p>
+  <ul class="gap-list">
+    <li>Define the basket: oil filter + fuel filter + air filter (and cabin if fitted) + “next due” wear hint (brake/clutch) from km/age.</li>
+    <li>Advisor / DMS: PMS basket line is <b>default on</b> for R&amp;M job types; customer decline = reason code on the RO.</li>
+    <li>Week 1: print a one-page counter card; train advisors + 1 workshop lead (30′).</li>
+  </ul>
+  <p><b>Owner:</b> dealer Service Manager (+ DB Aftersales coach). <b>Verify:</b> % of R&amp;M ROs with ≥1 PMS filter line (sample 20 ROs / week). <b>Target (90d):</b> ≥70% of R&amp;M ROs carry the basket or a logged decline reason.</p>
+</div>
+
+<div class="dealer-card">
+  <h3>K2 — Genuine default on PMS part numbers</h3>
+  <p><b>Intent:</b> stop silent non-genuine / wrong-brand substitution on the PMS basket; make Genuine (and approved BVP where policy allows) the path of least resistance.</p>
+  <p><b>Do:</b></p>
+  <ul class="gap-list">
+    <li>DMS / parts counter: PMS PNs default to Genuine; non-genuine needs a reason code (price / availability / customer request).</li>
+    <li>Fix IDS gap <b>D.1-8</b>: Genuine + BVP promo visible at the parts counter (poster / screen / kit display).</li>
+    <li>Weekly: pull 10 PMS lines — count Genuine vs other; discuss the “other” reasons in the board.</li>
+  </ul>
+  <p><b>Owner:</b> dealer Parts Manager. <b>Verify:</b> Genuine share on PMS-family lines (or RO sample if no sell-out). <b>Target (90d):</b> +5–10 pp Genuine on sampled PMS lines <i>or</i> 100% of non-genuine lines have a reason code.</p>
+</div>
+
+<div class="dealer-card">
+  <h3>K3 — Min/max + first-fill recovery (top PMS stock)</h3>
+  <p><b>Intent:</b> close the Excel gaps on inventory control and fill measurement (D.1-5, D.2-8, <b>D.2-9</b>, <b>D.2-10</b>) so the workshop can sell what K1/K2 promise.</p>
+  <p><b>Do:</b></p>
+  <ul class="gap-list">
+    <li>List top ~50 PMS movers (filters + high-runner wear); set min/max and review weekly.</li>
+    <li>Measure and post: first fill rate, turns, standing stock — even a simple spreadsheet counts if DMS cannot.</li>
+    <li>Monthly sales/order targets for parts (D.2-9): plan vs actual on one A4, reviewed in the board.</li>
+    <li>Escalate to DB when fill fails because of <b>their</b> supply (BO / lead time), not dealer process.</li>
+  </ul>
+  <p><b>Owner:</b> dealer Parts Manager + DB Parts. <b>Verify:</b> first-fill % on the top-50 list; zero critical stockouts on oil/fuel/air for &gt;5 working days. <b>Target (90d):</b> fill on top-50 ≥ country DB average (or +5 pp vs baseline if already measured); D.2-10 re-score moves off zero.</p>
+</div>
+
+<div class="dealer-card">
+  <h3>Cadence — weekly / monthly / day 90</h3>
+  <table>
+    <thead><tr><th>When</th><th>Forum</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>Weekly 30′</b></td>
+        <td>Dealer board (SM + Parts + 1 advisor)</td>
+        <td>Review <b>5 ROs</b>: basket on/off, Genuine vs other, stockout excuses. Update red/amber/green on K1–K3. No slide deck — whiteboard or one Excel tab.</td>
+      </tr>
+      <tr>
+        <td><b>Monthly</b></td>
+        <td>ISZE × DB Aftersales / Parts</td>
+        <td><b>CAP RAG</b> on Wave-1 dealers: owners, due dates, blockers (supply vs behaviour). DB answers commercial-rank questions (aftersales / sales / parts) if still blank.</td>
+      </tr>
+      <tr>
+        <td><b>Day 90</b></td>
+        <td>ISZE + DB + dealer</td>
+        <td><b>Re-score IDS Section D</b> (affected questions). Check verify metrics. <b>Pass</b> → standardise playbook. <b>Fail</b> → escalate (more support / probation / awards hold).</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="callout">
+  <b>Register:</b> use <i>IDS_Parts_Kaizen_Register.xlsx</i> — columns for owner, due date, verify metric, baseline → target, status. One row per Wave-1 dealer; do not invent a second tracker.
+</div>
+
+<p class="muted">K1–K3 map to typical Excel fails on Wave-1 dealers: D.2-10 (fill/turnover), D.2-9 (sales/order targets), D.1-8 (Genuine/BVP display), D.1-5 (inventory control).</p>
+
+<p class="foot">Bronnen: IDS 2026 evaluation result reports (Section D); PRISM PMS capture &amp; GPS SPU CY2025; genuine/BVP mix CY2025; KPI Master June 2026 Parts Handling (fill / MOS / SPU where reported). ITUK has no Section D detail (totals-only). RSA PMS proxy = Norway. IDS Israel joins <b>UMI only</b> (UTI did not participate — never blend). Correlation ≠ proof of causation — use as triage, confirm with RO samples.</p>
+</div>
+<script>__CHART_JS__</script>
+<script>
+const DATA = __DATA_JSON__;
+__APP_JS__
+</script>
+</body>
+</html>

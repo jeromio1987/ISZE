@@ -1,8 +1,8 @@
 # Project: UIO (Units In Operation) Tool
 
-_Last validated: 2026-04-20 (v17 canonical — 90% owner-operator override fixed for 2026–2030, sheet 1 relinked to sheet 4)_
+_Last validated: 2026-07-06 (v19 canonical — `06_uio/_CURRENT/ISUZU_UIO_Overview_2026.xlsx`)_
 
-## Status: Active — v17 canonical · Cleanup executed May 2026 · Dashboard rebuilt v17
+## Status: Active — **v19 canonical** · JSON extract `01_data/91_build/uio_2026.json` · Dashboard HTML v18 (rebuild pending)
 
 ## What
 Excel + Python tool calculating Isuzu vehicle population in service (UIO) by country, distributor, model type.
@@ -12,12 +12,9 @@ Dual methodology:
 - **Russia excluded** from all calculations
 
 ## Files (CANONICAL)
-- `ISZE/UIO/_CURRENT/ISUZU_UIO_Overview_2026_v17.xlsx` — **canonical working file**
-- `ISZE/UIO/_Scripts/build_isuzu_uio.py` — build script (⚠️ not updated for v17 — do not regenerate)
-- `ISZE/UIO/_SourceData/` — LCV UIO Study (IMIT), UIO.xlsx
-- `ISZE/UIO/_Archive/` — v8 through v16b archived here
-- Dashboard: `ISZE/Dashboards/ISUZU_UIO_Dashboard_2026_v17.html` ✅ rebuilt May 2026
-- README: `ISZE/UIO/_CURRENT/README.md` — full structure, MIDI policy, dip explanation
+- `06_uio/_CURRENT/ISUZU_UIO_Overview_2026.xlsx` — **canonical working file (v19)**
+- `01_data/91_build/uio_2026.json` — distributor extract for slides/UTI (`extract_uio_warranty2.py`)
+- `01_data/91_build/uio_v19_gps.json` — GPS max-spend package (`gps_v9_loaders.py`)
 
 ## v17 workbook structure (9 sheets)
 1. **Cover** — scope, assumptions, FY→CY mapping, March 2026 build stamp
@@ -30,8 +27,16 @@ Dual methodology:
 8. **Data Sources** — source file registry + distributor-to-source mapping + methodology notes
 9. **Changelog** — v11→v17 audit trail
 
-## Key figures v17 (verified 20 Apr 2026)
-### Grand Total UIO (all Europe + Israel + ITUK, CV + LCV)
+## Key figures — SUPERSEDED 2026-07-09, kept below for history only
+
+The v17 (20 Apr 2026) table that used to be here, including the "−3.7% 2026F dip", is **wrong as of the current v19 workbook**. Changelog V18-16→V18-20 (2026-06-11) replaced the pure-decay 2026-2030 forecast with one driven by real IMIT/CV-plan new-registration inputs — the dip is gone, replaced by steady growth. See `06_uio/_CURRENT/README.md` (updated 2026-07-09) for the current, live-pulled Grand Total table (incl. and ex-MIDI) and the correct explanation. Do not use the old dip narrative externally.
+
+Also flagged 2026-07-09: Sheet 1 B4 (MIDI toggle) is currently set to **"Include"**, not the policy default of "Exclude MIDI" — check before quoting the Grand Total raw off Sheet 1.
+
+ITUK figures (22,389 → 23,068 → 24,173 → ... → 28,209) are unaffected and still correct — Sheet 4 "4. ITUK UIO Projection" has not been touched since v15/v17 (confirmed via Changelog), it just still carries an internal "V15" header, which is a labeling lag, not stale data.
+
+<details><summary>Old v17 table (2026-04-20) — do not use, kept for traceability</summary>
+
 | Year | UIO | YoY | MIDI contribution |
 |------|-----|-----|-------------------|
 | 2024 | 254,117 | +3.9% | 92,585 |
@@ -42,9 +47,7 @@ Dual methodology:
 | 2029F | 259,165 | +1.2% | (unchanged) |
 | 2030F | 262,559 | +1.3% | (unchanged) |
 
-Note: Grand Total numbers shifted up vs v16b because sheet 1 ITUK rows were hardcoded to v11 step-function values and never refreshed when v12 switched to cohort model. v17 fixed this + applied 90% override 2026–2030. 2025 +1,914 units (v11→v12 gap closing), 2026–2030 +2,173 to +2,400 units (combined v12 gap + v17 override). MIDI contribution not recomputed — SUMPRODUCT may need refresh.
-
-2026F dip (−3.7%) is real model output, **not** a calc error — driven by non-ITUK distributors under IML backbone roll-forward, not ITUK (ITUK is actually +4.8% 2025→2026 in v17). Still needs one-line explanation when sharing.
+</details>
 
 ### ITUK car park (SMMT/DVLA actual, 2024)
 - **Total: 22,389 vehicles** (re-confirmed in v12+ cohort model, matches memory from 15 Mar)

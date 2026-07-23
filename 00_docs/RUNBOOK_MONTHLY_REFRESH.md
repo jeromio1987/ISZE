@@ -133,6 +133,20 @@ Cursor skill equivalent: `.cursor/skills/isze-verify-pipeline/SKILL.md`
 
 ---
 
+## Step 4b — GPS reconciliation (after every GPS upload)
+
+After any new sales/billing upload that touches GPS, run the unified GPS harness — it replaces the one-off `_audit_gps_*` spot-checks with one entry point:
+
+```powershell
+cd $env:ISZE_ROOT\04_tools
+python gps_reconcile.py            # full run (~5 min, loads raw Excel)
+python gps_reconcile.py --rebuild  # also regenerates canonical gps_billing_fy_*.csv
+```
+
+It reconciles raw SAP billing → `gps_billing_clean.json` (Kosha basis) → `gps_billing_fy_*.csv` (full GPS-clean basis) → `91_build/gps_snapshot.json` → dashboard-embedded numbers → `gps_spu_by_distributor.csv` (PRISM feed), plus the Kosha workbook chain. Exit code non-zero = hard failure; report at `01_data/00_derived/gps_reconciliation_report.json` (tolerances documented in the report header). Soft WARNs (cross-basis deltas vs the v9 snapshot) are informational — see the report before quoting GPS % per DB.
+
+---
+
 ## Step 5 — Headline figures
 
 1. If metrics changed **intentionally**: update `FACTS.md` + `03_analytics/Isuzu/prism/data/facts_anchor.yaml` together.

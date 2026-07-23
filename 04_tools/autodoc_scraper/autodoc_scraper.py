@@ -212,7 +212,7 @@ def run_scraper(top_n: int, delay_min: float, delay_max: float, headless: bool, 
                 out["Autodoc_ResultCount"] = parsed["result_count"]
                 out["Notes"]               = parsed.get("notes", "")
 
-                if parsed["prices"]:
+                if parsed["result_count"] > 0 and parsed["prices"]:
                     prices = parsed["prices"]
                     out["Autodoc_MinPrice_GBP"] = min(prices)
                     out["Autodoc_AvgPrice_GBP"] = round(sum(prices) / len(prices), 2)

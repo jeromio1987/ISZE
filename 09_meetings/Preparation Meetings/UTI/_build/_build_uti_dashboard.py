@@ -15,13 +15,18 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-PRISM = Path(__file__).resolve().parents[3] / "Projects" / "Isuzu" / "prism"
+ISZE = Path(__file__).resolve().parents[4]
+PRISM = ISZE / "03_analytics" / "Isuzu" / "prism"
 sys.path.insert(0, str(PRISM))
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = ISZE
 OUT = Path(__file__).resolve().parent.parent
-WARR_PATH = ROOT / "Data" / "Final_Complete_Warranty_Pricing_2026.xlsx"
+WARR_PATH = ISZE / "Data" / "Final_Complete_Warranty_Pricing_2026.xlsx"
 
-from config import resolve_mapping_path, resolve_uio_path  # noqa: E402
+from config import (  # noqa: E402
+    DERIVED_DIR,
+    resolve_mapping_path,
+    resolve_uio_path,
+)
 from modules.bvp_analytics import ensure_part_number, normalize_pn_value  # noqa: E402
 from modules.data_prep import (  # noqa: E402
     load_distributor_mapping,
@@ -35,7 +40,7 @@ from modules.gps_engine import (  # noqa: E402
 )
 from modules.sales_loader import load_prism_sales  # noqa: E402
 
-DERIVED = ROOT / "Data" / "derived"
+DERIVED = DERIVED_DIR
 CV_MAP = {
     "ITUK": "ITUK",
     "UTI": "UTI",
@@ -353,7 +358,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>__TITLE__</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="assets/chart.umd.min.js"></script>
 <style>
 __CSS__
 </style>
