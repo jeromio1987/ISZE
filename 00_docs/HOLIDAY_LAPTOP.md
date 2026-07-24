@@ -102,3 +102,37 @@ git push
 ```
 
 ISZE should be clean enough that a fresh clone is usable without hunting nested remotes.
+
+---
+
+## Holiday-readiness audit (2026-07-24)
+
+### Ready on GitHub
+
+| Repo | Status |
+|------|--------|
+| `ISZE` | Pushed with PRISM **folded in** (no submodule). Guide: this file. |
+| `mypens` | Synced earlier (planner/mobile branch). |
+| `investing-dashboard` | Synced earlier. |
+| `gents-trip-pitch` | Synced earlier (optional). |
+
+### Blocked / your click needed
+
+| Item | Action |
+|------|--------|
+| **`rigged-game` (accountability)** | Local git ready at `Private/rigged-game/`. GitHub repo **does not exist yet** (`gh` not logged in). Create empty **private** repo `jeromio1987/rigged-game`, then from that folder: `git push -u origin main`. |
+| Archive dead remotes | Archive (don’t delete): `jarvis-isze`, `isze-dashboard`, standalone `PRISM`. |
+| `gh auth login` | Needed once if you want agents to create/archive repos for you. |
+
+### Intentionally missing after clone (by design)
+
+- Raw sales / billing `.xlsx` (including local PRISM `data/*.xlsx` — kept on disk, **not** in ISZE git)
+- `.env` / API keys for mypens, Jarvis, scrapers — recreate on laptop or copy via password manager
+- `07_deploy/Master Dashboard` — use `02_dashboards/` source instead
+- `Projects/cockpit` — **not** on GitHub (local only today)
+
+### Workability notes
+
+- **PRISM on holiday:** code + derived CSVs/JSON are in the ISZE clone. Full rebuild from raw billing still needs the main PC’s raw extracts.
+- **Jarvis:** run from `ISZE/04_tools/isze-tools/` — do not clone `jarvis-isze`.
+- **Quoting KPIs:** prefer `01_data/00_derived/_verification_report.json` / dashboard JSON already in the repo.
