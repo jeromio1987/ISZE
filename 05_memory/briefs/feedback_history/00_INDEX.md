@@ -19,6 +19,7 @@ Best-guess chronological order (oldest → newest). Where a run gave itself an e
 | — | (duplicate/continuation, not saved separately) | — | A session titled "Feedback" with content identical to #10's tail appears to be a re-opened continuation of #10, not a distinct new report. Noted here for completeness, not filed separately. |
 | 12 | `ai_feedback_2026-07-17.md` (saved in `ISZE/05_memory/briefs/`, one level up) | 17 Jul 2026 | Original |
 | 13 | `feedback_jerome_2026-07-18.md` | 18 Jul 2026 | Original — first run of the upgraded two-layer prompt (work + Claude usage), run interactively with workspace connected |
+| 14 | `feedback_jerome_2026-07-24_bookmarks.md` | 24 Jul 2026 | Original — X bookmarks via `Projects/twitter-mcp` (50 posts); maps to ISZE / myPENS / agent gaps |
 
 ## The pattern across the runs
 

@@ -8,6 +8,14 @@
 
 ## [Unreleased]
 
+### Changed (2026-07-24) — Loops package: allowlist self-patch + open-loops digest
+- **Scraper healthcheck** — allowlist auto-apply for KS/Tranzparts/TMC/Mekonomen/Auto365 URL/selector fixes; Tender remains propose-only (`DECISIONS.md` § 2026-07-24). Verifier block + `04_tools/applied_patches_log.md`.
+- **Memory review** — may apply high-confidence factual syncs; logs `05_memory/briefs/memory_applied_log.md`; verifier table in weekly brief.
+- **New skill** `isze-weekly-open-loops` — Monday merged digest → `05_memory/briefs/open_loops_YYYY-MM-DD.md`.
+- **Model tiers** on all `Documents/Claude/Scheduled/*/SKILL.md` (CHEAP vs FRONTIER); register updated.
+- **Deleted** empty duplicate dirs `isze-weekly-intel-brief`, `isze-tender-dashboard-refresh`.
+- **Teach-skill drafts** under `00_docs/teach-skills/`; bookmark analyzer `Projects/twitter-mcp/analyze_bookmarks.py`; myPENS workflow `Projects/mypens/.claude/workflows/api-auth-audit.js`.
+
 ### Changed (2026-07-17) — ITUK/UIO landmine closed + Jarvis stack.json
 - **ITUK UIO keep 23,068 (PRISM capture lane)** — deliberate 2026-07-15 decision confirmed: `verification_fixtures.yaml` `ituk_pilot.uio_units: 23068` matches `facts_anchor.yaml`. IML §1 / `iml_v7_ituk_cy2025.yaml` may stay **22,389** separately. No force-revert.
 - **`DATA_MANIFEST.md` §1/§3/§7** — stale "scripts read v18 / decision pending" wording removed; `_CURRENT` = v19; root `v18` not load-bearing (archived to `92_archive/` when moved).

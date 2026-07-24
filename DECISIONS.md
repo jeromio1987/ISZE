@@ -226,12 +226,27 @@ Until (1)–(3) are agreed with IML (open item already logged in `05_memory/proj
 
 ## 2026-06-13 — Unattended scraper auto-fix is propose-only
 
-**Status:** Accepted  
+**Status:** Superseded in part by § 2026-07-24 (allowlist auto-apply)  
 **Context:** `isze-scraper-healthcheck-autofix` runs unattended on a schedule. Auto-applying code patches to scrapers without human review risks breaking production ingest or publishing stale data.  
-**Decision:** The healthcheck job may **detect** staleness and **propose** patches (diff/report only). It must **never** auto-apply edits to scraper scripts or publish outputs without Jerome review.  
+**Decision (original):** The healthcheck job may **detect** staleness and **propose** patches (diff/report only). It must **never** auto-apply edits to scraper scripts or publish outputs without Jerome review.  
 **Alternatives considered:** Full auto-fix with rollback; manual-only checks with no scheduled job.  
 **Consequences:** Scheduled job output is `04_tools/scraper_health_report.md` (+ optional diff). Jerome reviews before any patch is applied. Path preflight aborts if required scripts missing.  
 **Docs updated:** [00_docs/AUTOMATION_REGISTER.md](00_docs/AUTOMATION_REGISTER.md), [00_docs/agent/NOTES.md](00_docs/agent/NOTES.md), audit-export `scheduled-path-fix-report.md`.
+
+---
+
+## 2026-07-24 — Scraper healthcheck: allowlist auto-apply + propose-only elsewhere
+
+**Status:** Accepted (Jerome, chat 2026-07-24)  
+**Context:** June–July feedback repeatedly flagged that propose-only healthcheck produces homework-by-design; X bookmarks push for loops that close themselves. Blanket auto-apply on Tender remains too risky.  
+**Decision:**
+- **Auto-apply allowed** only for high-confidence URL/CSS-selector (or XPath string) fixes on these files under `04_tools/autodoc_scraper/`: `ks_scraper.py`, `tranzparts_scraper.py`, `tmc_scraper.py`, `mekonomen_scraper.py`, `auto365_scraper.py`. Gates: ≤30 changed lines, `py_compile` OK, log to `04_tools/applied_patches_log.md`.
+- **Propose-only** for Tender (`tender_scraper_v3.py` / Install tree), `refresh_and_check_drift.py`, Autodoc/Oscaro/Mister Auto, bats/ps1/yaml, and any non-string structural change.
+- Memory review may apply high-confidence factual syncs to `05_memory/projects/*.md` + glossary; log `05_memory/briefs/memory_applied_log.md`.
+- Model routing: routine scheduled ISZE jobs **CHEAP**; `feedback` + `zondag-checkin-traject` **FRONTIER** (see AUTOMATION_REGISTER).
+**Alternatives considered:** Keep full propose-only; auto-apply all scrapers including Tender (rejected).  
+**Consequences:** Healthcheck skill gains conditional Edit; new Monday synthesizer `isze-weekly-open-loops`; empty duplicate scheduled dirs deleted.  
+**Docs updated:** `Documents/Claude/Scheduled/isze-scraper-healthcheck-autofix/SKILL.md`, `isze-memory-review/SKILL.md`, `isze-weekly-open-loops/SKILL.md`, [00_docs/AUTOMATION_REGISTER.md](00_docs/AUTOMATION_REGISTER.md), this entry.
 
 ---
 

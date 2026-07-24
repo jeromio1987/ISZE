@@ -2,34 +2,44 @@
 
 **Job implementations:** `C:\Users\jerom\Documents\Claude\Scheduled\<job-name>\SKILL.md`  
 **This file:** Canonical in-repo index (migrated from `00_docs/agent/NOTES.md`)  
-**Last audited:** 2026-07-16  
+**Last audited:** 2026-07-24  
 **Path contract:** `$env:ISZE_ROOT` + [`paths.yaml`](../paths.yaml) · preflight policy: audit-export `scheduled-path-fix-report.md`
+
+### Model routing (2026-07-24)
+
+| Tier | Use for | Jobs |
+|------|---------|------|
+| **CHEAP** | Routine hygiene / freshness / scrape wrappers | healthcheck, open-loops, memory-review, dashboard freshness, UIO staleness, pricing basket, AIM refresh, weekly intel, tender/ks scrape skills |
+| **FRONTIER** | Judgment / coaching | `feedback`, `zondag-checkin-traject` |
+
+Each `SKILL.md` states `**Model tier: …**` under the frontmatter. Prefer Haiku/Sonnet-class for CHEAP when the scheduler UI allows; Opus/Fable-class for FRONTIER.
 
 ---
 
-## ISZE active skills (10)
+## ISZE active skills
 
-| Skill | Status | Cadence | Inputs | Outputs | Path Preflight | Owner Review | Notes |
-|-------|--------|---------|--------|---------|----------------|--------------|-------|
-| `isze-weekly-tender-scrape` | Active | Weekly | `04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py` | `01_data/dashboards/tender_data.json` | Script + `01_data/dashboards/` | Jerome | v3 scraper + publish; **publish step fixed 2026-07-16** (removed dependency on non-existent `isze_root.ps1`; was silently failing since 2026-05-30) |
-| `isze-scraper-healthcheck-autofix` | Active | Sun 22:00 | `04_tools/ISZE_Tender_Monitor_Install/`, `04_tools/autodoc_scraper/` (read-only scripts) | `04_tools/scraper_health_report.md` (+ optional diff) | Tender + KS scripts + `04_tools/` | Jerome (diff review) | **Propose-only** — Autodoc/Oscaro **retired from scope** 2026-07-14 ([DECISIONS.md](../DECISIONS.md)) |
-| `isze-weekly-ks-scrape` | Superseded | — | — | — | — | — | Replaced by `refresh_and_check_drift.py` + `ISZE_ScraperRefresh_WeeklyTask.xml` (2026-07-14) |
-| `autodoc-monthly-refresh` | Retired | — | — | — | — | — | Autodoc permanently blocked (Cloudflare); competitive pricing via KS/Tranzparts/TMC/Mekonomen/Auto365 |
-| `isze-dashboard-freshness-check` | Active | Monday | `02_dashboards/`, `01_data/dashboards/` | Report only | Both input folders | Jerome | Source HTML (`02_dashboards/`), not deploy mirror; 4 xlsx paths unresolved — see Notes § Open |
-| `isze-uio-staleness-alert` | Active | Monthly | `06_uio/_CURRENT/ISUZU_UIO_Overview_2026.xlsx`, `06_uio/_CURRENT/README.md` | Report only | Canonical UIO + README | Jerome | Flags copy drift vs PRISM `data/UIO.xlsx` |
-| `isze-memory-review` | Active | Weekly | `05_memory/projects/*.md`, `05_memory/glossary.md`, `03_analytics/Isuzu/prism/docs/metric_dictionary.md`, `01_data/derived/_verification_report.md` | `05_memory/briefs/weekly_W*.txt` | Input + `05_memory/briefs/` | Jerome | Hygiene vs green verify |
-| `isze-weekly-intelligence-brief` | Active | Weekly | WebSearch (no local inputs) | `05_memory/briefs/weekly_W*.txt` + `latest_weekly_brief.txt` (pending) | `05_memory/briefs/` | Jerome | **Never** write to `07_deploy/`; output 1 (`latest_weekly_brief.txt`) disabled pending Jerome decision |
-| `isze-pricing-basket-monitor` | Active | 1st of month | `01_data/` (price lists) | Report only | Memory + `01_data/` | Jerome | IE40/PR00 drift check |
-| `isze-aim-classification-refresh` | Active | Monthly | `05_memory/projects/aftermarket-intelligence.md`, `01_data/`, `03_analytics/Isuzu/data/` | Report only | All input paths | Jerome | AIM completeness |
+| Skill | Status | Cadence | Tier | Inputs | Outputs | Path Preflight | Owner Review | Notes |
+|-------|--------|---------|------|--------|---------|----------------|--------------|-------|
+| `isze-weekly-tender-scrape` | Active | Weekly | CHEAP | `04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py` | `01_data/dashboards/tender_data.json` | Script + `01_data/dashboards/` | Jerome | v3 scraper + publish |
+| `isze-scraper-healthcheck-autofix` | Active | Sun 22:00 | CHEAP | Tender + `autodoc_scraper/` scripts | `scraper_health_report.md`, optional diff, `applied_patches_log.md` | Tender + KS scripts + `04_tools/` | Jerome (non-allowlist) | **Allowlist auto-apply** KS/Tranzparts/TMC/Mekonomen/Auto365 URL/selector fixes; Tender propose-only ([DECISIONS.md](../DECISIONS.md) § 2026-07-24) |
+| `isze-weekly-open-loops` | Active | Monday | CHEAP | health report, memory_review_W*, briefs | `05_memory/briefs/open_loops_YYYY-MM-DD.md` | `04_tools`, `05_memory/briefs`, `02_dashboards` | Jerome | Merged digest — read existing artifacts only |
+| `isze-weekly-ks-scrape` | Superseded | — | CHEAP | — | — | — | — | Replaced by `refresh_and_check_drift.py` + live Task `ISZE_PMS_IAM_Refresh` |
+| `autodoc-monthly-refresh` | Retired | — | CHEAP | — | — | — | — | Autodoc permanently blocked |
+| `isze-dashboard-freshness-check` | Active | Monday | CHEAP | `02_dashboards/`, `01_data/dashboards/` | Report only | Both input folders | Jerome | |
+| `isze-uio-staleness-alert` | Active | Monthly | CHEAP | `06_uio/_CURRENT/…` | Report only | Canonical UIO + README | Jerome | |
+| `isze-memory-review` | Active | Weekly | CHEAP | `05_memory/projects/*.md`, glossary, verify reports | `memory_review_W*.txt`, optional `memory_applied_log.md` | Input + `05_memory/briefs/` | Jerome | May apply high-confidence factual syncs |
+| `isze-weekly-intelligence-brief` | Active | Weekly | CHEAP | WebSearch | `weekly_W*.txt` | `05_memory/briefs/` | Jerome | Never write `07_deploy/` |
+| `isze-pricing-basket-monitor` | Active | 1st of month | CHEAP | `01_data/` price lists | Report only | Memory + `01_data/` | Jerome | |
+| `isze-aim-classification-refresh` | Active | Monthly | CHEAP | AIM memory + data | Report only | All input paths | Jerome | |
 
 ---
 
 ## Non-ISZE / private / meta skills (2)
 
-| Skill | Status | Cadence | Inputs | Outputs | Path Preflight | Owner Review | Notes |
-|-------|--------|---------|--------|---------|----------------|--------------|-------|
-| `zondag-checkin-traject` | Active | Weekly (Sun) | `Prive/moi/HERSTEL_TRAJECT.md` | Same file (weeklog) | N/A (private path) | Jerome | **Not ISZE** — personal recovery check-in |
-| `feedback` | Active | Ad hoc | — | — | N/A | Jerome | **Meta** — Claude product feedback; no ISZE paths |
+| Skill | Status | Cadence | Tier | Notes |
+|-------|--------|---------|------|-------|
+| `zondag-checkin-traject` | Active | Weekly (Sun) | FRONTIER | **Not ISZE** — personal recovery check-in |
+| `feedback` | Active | Ad hoc | FRONTIER | **Meta** — Claude/ISZE usage feedback |
 
 ---
 
@@ -37,8 +47,8 @@
 
 | Folder | Reason | Action |
 |--------|--------|--------|
-| `isze-weekly-intel-brief` | Empty dir; duplicate name of `isze-weekly-intelligence-brief` | Delete when confirmed empty (Jerome approval) |
-| `isze-tender-dashboard-refresh` | Empty dir; superseded by `isze-weekly-tender-scrape` | Delete when confirmed empty (Jerome approval) |
+| `isze-weekly-intel-brief` | Empty duplicate of `isze-weekly-intelligence-brief` | **Deleted 2026-07-24** |
+| `isze-tender-dashboard-refresh` | Empty; superseded by `isze-weekly-tender-scrape` | **Deleted 2026-07-24** |
 
 ---
 
