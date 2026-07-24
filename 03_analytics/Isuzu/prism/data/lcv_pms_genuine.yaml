@@ -1,0 +1,66 @@
+# D-Max / LCV genuine PMS parts (IUK, UMI)
+# Sources: BVP catalog crossref (TF*, UCR, NHR, NLR, RZ4E), ISZE OE catalog Mar 2026
+# Run: python scripts/discover_iuk_lcv_pms.py to refresh IUK sales ranking
+
+# Interval assumptions revised 2026-07-14 (Jerome, web research + Isuzu-manual cross-check):
+# - service_interval_km was a 10,000km placeholder guess — replaced with the actual Isuzu
+#   D-Max normal-condition manufacturer spec (20,000km/24mo, UK D-Max owner's handbook,
+#   confirmed distinct from the Isuzu N-series truck range).
+# - Global 20,000 km/yr average mileage assumption used flat across markets per Jerome's
+#   call (per-market mileage data too thin/unreliable to justify country_overrides here —
+#   contrast with N75/UTI scope in pms_capture_assumptions.yaml, which has a confirmed
+#   UTI-specific 50,000 km/yr override).
+# - Brake pad wear intervals are NOT manufacturer-fixed (Isuzu spec = "inspect every
+#   service, replace when worn", same across the whole range). front_pad/rear_pad km
+#   below are Jerome-confirmed working assumptions, triangulated from: (a) Isuzu N-series
+#   (NPR/N35, same brand/engineering family) real spec — 3mm min lining thickness,
+#   front 25-40k mi / rear 40-70k mi; (b) generic pickup aftermarket data, front 30-70k km.
+#   PROVISIONAL — no ITUK or IML-confirmed D-Max-specific figure exists yet; ITUK trip
+#   data (project_ituk_pms_trip_apr2026) only covers N75 visit frequency + brake IAM
+#   pricing gap, not wear-km, so it doesn't validate these numbers directly.
+model: LCV_DMax
+service_interval_km: 20000
+services_per_year: 1.0            # 20,000 km/yr average mileage ÷ 20,000 km interval
+
+brake_pad_front_interval_km: 50000
+brake_pad_rear_interval_km: 75000
+wear_factor:
+  # wear_factor = service_interval_km / component_interval_km
+  # (fraction of service visits at which the part is actually replaced)
+  brake_pad_front: 0.4    # 20000 / 50000 — replaced roughly every 2.5 services
+  brake_pad_rear: 0.267   # 20000 / 75000 — replaced roughly every 3.75 services
+  brake_rotor: 0.2        # paired with front pad change, every ~2nd front-pad cycle
+
+parts:
+  - part_number: "8982705240"
+    category: oil_filter
+    note: "D-Max / NLR RZ4E oil filter — also on N35_RZ4E"
+  - part_number: "8981596930"
+    category: fuel_filter
+    note: "D-Max fuel filter kit — 4JH/4JJ/RZ4E"
+  - part_number: "8975080920"
+    category: fuel_filter
+  - part_number: "8975080932"
+    category: fuel_filter
+  - part_number: "8981941190"
+    category: fuel_filter
+  - part_number: "8974995480"
+    category: air_filter
+    note: "TFR/TFS/UCR — RZ4E"
+  - part_number: "8979445700"
+    category: air_filter
+  - part_number: "8980274800"
+    category: air_filter
+  - part_number: "8981402650"
+    category: air_filter
+  - part_number: "8981402660"
+    category: air_filter
+  - part_number: "8975056800"
+    category: brake_pad
+    note: "TF* pickup brake pad kit — front/rear position not confirmed, needed to map to wear_factor.brake_pad_front/rear"
+  - part_number: "8975128370"
+    category: brake_pad
+    note: "front/rear position not confirmed"
+  - part_number: "8982120690"
+    category: clutch_disc
+    note: "D-Max clutch disc OE"

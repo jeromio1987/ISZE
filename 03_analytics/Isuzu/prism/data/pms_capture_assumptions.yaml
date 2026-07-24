@@ -1,0 +1,79 @@
+# Edit consumable_factor when IML supplies service-interval ratios.
+# oil_filter = 1.0 means one filter per addressable service event.
+# Lower air_filter (e.g. 0.35) raises air capture % vs the flat model.
+# Filter billing actuals: element PNs only (assemblies/kits excluded — see pms_tagging).
+
+# N75 parc defaults (UTI, ITUK PRISM lane). Km column = annual_km_yr ÷ (svc/yr × addressable × factor).
+n75_parc_assumptions:
+  services_per_year: 0.5          # 40,000 km visit interval ÷ 20,000 km/yr average
+  service_visit_interval_km: 40000  # nominal oil-service visit (PRISM convention)
+  annual_km_yr: 20000             # implied average parc mileage — ASSUMPTION, not UTI-measured
+  addressable_pct: 1.0    # full parc addressable (Jerome 2026-07-03; PRISM + IML external)
+
+consumable_factor:
+  oil_filter: 1.0
+  fuel_filter: 1.0
+  air_filter: 0.5   # PROVISIONAL (air element ~every 2nd service vs oil every service) — confirm with IML; added 2026-07-02 (was 1.0 flat — integrity flag C)
+  urea_filter: 1.0
+  blower_filter: 0.25
+
+wear_factor:
+  # Every key here becomes a P1 capture category (modules/pms_capture_config.P1_CATEGORIES).
+  # These are merged ONTO _DEFAULT_WEAR in pms_capture_config.py, not substituted for it —
+  # so a category present there but absent here is still live. brake_pad/brake_shoe are
+  # restated below to keep that visible; changing them here is what takes effect.
+  #
+  # Brakes are ONE category per part type, not split front/rear (Jerome 2026-07-16).
+  # brake_pad_front/rear + brake_shoe_front/rear were removed: they ran a second and
+  # third expected-demand estimate over the same parc as the brake_pad/brake_shoe
+  # parents (0.5 + 0.5 + 0.5 on one set of brakes), inflating the capture denominator
+  # ~3x while carrying no actuals. The split also has no basis in observed behaviour —
+  # the ITUK data below has front+rear replaced together as one job, not as independent
+  # wear cycles — and no market has ever measured the two axles separately.
+  #
+  # Global CV default — PROVISIONAL, applies to every N75-scope distributor UNLESS
+  # overridden below. Kept at the old unsourced 0.5 guess deliberately: the only real
+  # data we have (IML "Market Research(PMS parts sales)" slide, 2026-07-14) is anchored
+  # to ITUK, and Jerome flagged 2026-07-14 that ITUK is a special market — UK O-Licence
+  # forces regular mandatory safety inspections (separate from service visits), which
+  # plausibly drives different real-world brake replacement timing than unregulated
+  # markets. Don't extrapolate the ITUK-sourced 0.4/100,000km figure to the global
+  # default — see the ITUK-specific country_override below instead. Expect more
+  # per-market variance here over time (Jerome 2026-07-14) as other markets get real data.
+  brake_pad: 0.5
+  brake_shoe: 0.5
+  clutch_disc: 0.2
+  clutch_pressure_plate: 0.2
+  clutch_kit: 0.15
+  release_bearing: 0.15
+  pilot_bearing: 0.1
+  clutch_booster: 0.1
+  brake_rotor: 0.25   # PROVISIONAL (rotors ~every 2nd pad change) — confirm with IML; added 2026-06-15
+                       # NOTE: IML slide's brake FIG-key list has no separate rotor/disc entry, so this
+                       # provisional figure is still NOT confirmed by the 2026-07-14 slide — unchanged.
+
+# Country / distributor interval overrides — see docs/pms_service_intervals.md §5.
+# Empty = use the global services_per_year + factors above. Fill per distributor from IML.
+# Each entry: services_per_year (replaces the scope default) and/or factors: {category: value}.
+country_overrides:
+  # UTI (Israel): Jerome confirmed 2026-07-10 real average annual mileage = 50,000 km/yr
+  # (vs the global 20,000 km/yr assumption this pipeline used for every N75-scope DB).
+  # services_per_year = annual_km_yr / service_visit_interval_km = 50000 / 40000 = 1.25.
+  # This was the root cause of UTI oil/fuel/air filter capture reading >100%
+  # (2026-07-09 finding) — expected demand was understated at the old 0.5 rate.
+  UTI: { services_per_year: 1.25 }
+  # ITUK: IML slide (2026-07-14), CV/N-series study, ITUK-provided 50,000 km/yr mileage.
+  # Brake replacement = flat 100,000km interval, front+rear replaced TOGETHER as one
+  # paired "2item" event (not independent wear cycles) — wear_factor = 40,000/100,000 = 0.4.
+  # Scoped to ITUK only — see the O-Licence caveat on the global wear_factor above;
+  # do NOT copy this onto other N75-scope distributors without their own confirmed data.
+  #
+  # 0.4 carried over unchanged when the front/rear split was dropped (2026-07-16): it is
+  # an interval ratio (40,000/100,000), derived independently of axle count, so it
+  # transfers to the merged categories as-is. OPEN: if one paired "2item" job consumes a
+  # pad set per axle, the merged factor is arguably 0.8, not 0.4 — that is a units
+  # question about what one brake_pad unit represents, unresolved and never measured.
+  # ITUK brake capture reads ~2x optimistic if 0.8 is the right basis.
+  ITUK: { factors: { brake_pad: 0.4, brake_shoe: 0.4 } }
+#   NORWAY:  { services_per_year: 0.60 }
+#   GREECE:  { services_per_year: 0.45, factors: { air_filter: 1.5 } }

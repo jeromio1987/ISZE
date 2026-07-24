@@ -1,0 +1,61 @@
+---
+title: "PRISM — Offset Insights"
+subtitle: "Six cross-data visuals from real sales_fact"
+format:
+  dashboard:
+    theme: cosmo
+    orientation: rows
+execute:
+  echo: false
+  warning: false
+---
+
+```{python}
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path.cwd().parent))
+from config import DERIVED_DIR
+from modules import advanced_visuals as av
+HL = "ITUK"
+```
+
+::: {.callout-warning}
+The Sankey "Leakage" leg is an **INFERENCE** (under-service gap), not a measured
+competitor figure — internal use only.
+:::
+
+## Row
+
+### Distributor Movement 2023→2025
+```{python}
+av.fig_trajectory_quiver(DERIVED_DIR, HL)
+```
+
+### Lumpiness → Airfreight
+```{python}
+av.fig_lumpiness_airfreight(DERIVED_DIR)
+```
+
+## Row
+
+### Demand-Flow Sankey
+```{python}
+av.fig_demand_flow_sankey(DERIVED_DIR)
+```
+
+### VOR Pricing Power
+```{python}
+av.fig_vor_pricing_power(DERIVED_DIR, HL)
+```
+
+## Row
+
+### Premium vs Defection
+```{python}
+av.fig_premium_defection(DERIVED_DIR, HL)
+```
+
+### Capture-Ceiling Bridge
+```{python}
+av.fig_capture_ceiling(DERIVED_DIR, HL)
+```

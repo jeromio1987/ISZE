@@ -1,0 +1,35 @@
+# Data files — sensitive / large / OneDrive-synced, never commit
+data/*.csv
+data/*.tsv
+data/*.xlsx
+data/*.xls
+
+# Allow production data files — private repo, needed for Streamlit Cloud
+# !data/UIO.xlsx  # blocked at ISZE root � holiday laptop uses derived JSON
+!data/distributor_master_mapping.csv
+!data/sales_detailed_for_claude_full_fixed.tsv
+!data/dealer_sales/
+!data/dealer_sales/**
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Streamlit cache
+.streamlit/
+
+# Local scratch / inspect output
+*_out.txt
+*_dump.txt
+bvp_inspect_out.txt
+data/_crossref_build_log.txt
+data/_ituk_study_dump.txt
+data/_crossref_build_runner.py
+data/analyze_ituk.py
+inspect_bvp.py
+
+# Local agent / worktrees
+.claude/
+

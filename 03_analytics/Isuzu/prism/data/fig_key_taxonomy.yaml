@@ -1,0 +1,202 @@
+# EPC / BVP fig-key taxonomy → PRISM PMS category (GPS V2 layer).
+# Source: Isuzu EPC BVP index + ITUK PMS pilot (BVP_FINDING.md).
+# PN-level overrides: data/fig_key_pn_overrides.csv (optional, hand-maintained).
+
+pms_fig_keys:
+  "041-002":
+    label: Fuel filter (element)
+    pms_category: fuel_filter
+    bvp_subgroup: fuel_filter
+  "041-001":
+    label: Fuel filter (PR00 alt / often assembly line)
+    pms_category: fuel_filter
+    bvp_subgroup: fuel_filter
+  "050-002":
+    label: Oil filter (element)
+    pms_category: oil_filter
+    bvp_subgroup: oil_filter
+  "050-001":
+    label: Oil filter (PR00 alt)
+    pms_category: oil_filter
+    bvp_subgroup: oil_filter
+  "130-006":
+    label: Air filter
+    pms_category: air_filter
+    bvp_subgroup: air_filter
+  "873-042":
+    label: Urea (AdBlue) filter
+    pms_category: urea_filter
+    bvp_subgroup: urea_filter
+
+  # Brake FIG keys — front (301/302) vs rear (305/306), sourced from IML market-research
+  # slide "Market Research(PMS parts sales)" (CV/N-series study, Jerome 2026-07-14).
+  # Added to override the generic keyword-matched brake_shoe/brake_pad category (which
+  # can't distinguish position from the text "Brake shoe / lining" label alone) — this
+  # was flagged because parts_catalog_dimension.csv already has 573+ PN rows tagged
+  # brake_shoe/brake_pad with no front/rear split. FIG-key is universal across chassis
+  # (TFR/TFS, UCR/UCS) and engine variants, so this fixes classification catalog-wide,
+  # not just for D-Max — the specific 10-digit PN differs by variant, the FIG-key doesn't.
+  "301-001":
+    label: Shoe ASM (front)
+    pms_category: brake_shoe_front
+    bvp_subgroup: brake_shoe
+  "301-002":
+    label: Lining; FRT BRK shoe, standard
+    pms_category: brake_lining_front
+    bvp_subgroup: brake_shoe
+  "301-004":
+    label: Lining set; FRT
+    pms_category: brake_lining_front
+    bvp_subgroup: brake_shoe
+  "301-006":
+    label: Lining kit; FRT
+    pms_category: brake_lining_front
+    bvp_subgroup: brake_shoe
+  "301-130":
+    label: Shoe kit; BRK,FRT
+    pms_category: brake_shoe_front
+    bvp_subgroup: brake_shoe
+  "302-017":
+    label: Pad kit; caliper,disc BRK,FRT
+    pms_category: brake_pad_front
+    bvp_subgroup: brake_pad
+  "302-133":
+    label: Pad kit; disc BRK,w/o shim & clip
+    pms_category: brake_pad_front
+    bvp_subgroup: brake_pad
+  "305-001":
+    label: Shoe; BRK,RR
+    pms_category: brake_shoe_rear
+    bvp_subgroup: brake_shoe
+  "305-002":
+    label: Lining set; RR BRK,standard
+    pms_category: brake_lining_rear
+    bvp_subgroup: brake_shoe
+  "305-005":
+    label: Lining; RR BRK shoe,standard
+    pms_category: brake_lining_rear
+    bvp_subgroup: brake_shoe
+  "305-124":
+    label: Shoe ASM; BRK,RR
+    pms_category: brake_shoe_rear
+    bvp_subgroup: brake_shoe
+  "305-217":
+    label: Lining kit; RR
+    pms_category: brake_lining_rear
+    bvp_subgroup: brake_shoe
+  "305-218":
+    label: Shoe kit; BRK,RR
+    pms_category: brake_shoe_rear
+    bvp_subgroup: brake_shoe
+  "306-009":
+    label: Pad kit; caliper,RR
+    pms_category: brake_pad_rear
+    bvp_subgroup: brake_pad
+  "201-001":
+    label: Disc; clutch
+    pms_category: clutch_disc
+    bvp_subgroup: clutch
+  "201-002":
+    label: Plate ASM; pressure,CLU
+    pms_category: clutch_pressure_plate
+    bvp_subgroup: clutch
+
+# Default fig key when we only know PRISM pms_category (registry / BVP catalog)
+category_default_fig_key:
+  oil_filter: "050-002"
+  fuel_filter: "041-002"
+  air_filter: "130-006"
+  urea_filter: "873-042"
+  brake_pad: null
+  brake_shoe: null
+  brake_pad_front: "302-017"
+  brake_pad_rear: "306-009"
+  brake_shoe_front: "301-130"
+  brake_shoe_rear: "305-218"
+  brake_lining_front: "301-006"
+  brake_lining_rear: "305-217"
+  clutch_disc: null
+  clutch_pressure_plate: null
+  clutch_kit: null
+  release_bearing: null
+  pilot_bearing: null
+  clutch_booster: null
+
+# PR00 Level 2/3 text -> pms_category when BVP sheet did not set pms_category
+pr00_pms_category_rules:
+  - match_group: "Filters"
+    level3_contains:
+      oil: oil_filter
+      fuel: fuel_filter
+      air: air_filter
+      urea: urea_filter
+      adblue: urea_filter
+  - match_level3: "oil filter"
+    category: oil_filter
+  - match_level3: "fuel filter"
+    category: fuel_filter
+  - match_level3: "air filter"
+    category: air_filter
+  - match_fig_key: "041-001"
+    category: fuel_filter
+  - match_fig_key: "041-002"
+    category: fuel_filter
+  - match_fig_key: "050-001"
+    category: oil_filter
+  - match_fig_key: "050-002"
+    category: oil_filter
+  - match_fig_key: "130-006"
+    category: air_filter
+  - match_group: "Brake parts"
+    level3_contains:
+      shoe: brake_shoe
+      pad: brake_pad
+      lining: brake_lining
+      rotor: brake_rotor
+      disc: brake_rotor
+      caliper: brake_pad
+  - match_group: "Clutch parts"
+    level3_contains:
+      disc: clutch_disc
+      cover: clutch_pressure_plate
+      plate: clutch_pressure_plate
+      kit: clutch_kit
+      release: release_bearing
+      pilot: pilot_bearing
+      booster: clutch_booster
+  - match_level3: "urea"
+    category: urea_filter
+  - match_level3: "adblue"
+    category: urea_filter
+  - match_fig_key: "873-042"
+    category: urea_filter
+  - match_group: "Suspension"
+    level3_contains:
+      shock: shock_absorber
+      absorber: shock_absorber
+      spring: leaf_spring
+      leaf: leaf_spring
+      bushing: bushing
+      king: king_pin
+      wheel pin: wheel_pin
+      bearing: hub_bearing
+      seal: hub_oil_seal
+  - match_group: "Belts"
+    level3_contains:
+      belt: fan_belt
+      fan: fan_belt
+      v-belt: fan_belt
+  - match_group: "Cooling"
+    level3_contains:
+      pump: water_pump
+      water: water_pump
+      mount: engine_mount
+  - match_group: "Electrical"
+    level3_contains:
+      alternator: generator
+      generator: generator
+      starter: starter
+  - match_group: "Cab"
+    level3_contains:
+      wiper: wiper_blade
+      blade: wiper_blade

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IDS DB Parts Posture — one-pagers &amp; D vs C CAP</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;font-size:15px;line-height:1.55;background:#f7f4ee}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0}
+.wrap{max-width:1100px;margin:0 auto;padding:0 1.25rem 3rem}
+.cover{background:linear-gradient(155deg,#15233c 0%,#203759 60%,#2b4a78 100%);color:#eef1f6;padding:3.5rem 1.5rem 3rem;margin-bottom:2rem}
+.cover h1{color:#fff;font-size:2.15rem;line-height:1.15;max-width:22ch}
+.cover .rule{width:4.5rem;height:3px;background:#c0552d;margin:1.25rem 0 1rem}
+.cover p{opacity:.9;max-width:52rem;margin:0}
+.meta{font-size:.85rem;opacity:.75;margin-top:1.5rem}
+h2{font-size:1.45rem;margin:2.2rem 0 .6rem;padding-bottom:.4rem;border-bottom:2px solid #1a2b4a}
+h2 .no{color:#c0552d}
+h3{font-size:1.05rem;margin:0 0 .35rem}
+p.lead{font-size:1.05rem;color:#333}
+.callout{border-left:3px solid #c0552d;background:#fff;padding:.9rem 1.1rem;margin:1rem 0}
+.callout.navy{border-left-color:#1a2b4a}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.75rem;margin:1rem 0 1.5rem}
+.stat{background:#fff;border:1px solid #d9d3c8;border-radius:6px;padding:.85rem 1rem}
+.stat .n{font-size:1.45rem;font-weight:700;color:#1a2b4a;font-family:Georgia,serif}
+.stat .l{font-size:.75rem;color:#6b6256;text-transform:uppercase;letter-spacing:.03em}
+.chart-box{background:#fff;border:1px solid #d9d3c8;border-radius:8px;padding:1rem;margin:1rem 0 1.5rem}
+.chart-box .caption{font-size:.9rem;color:#6b6256;margin:0 0 .75rem}
+.cards{display:grid;grid-template-columns:1fr;gap:1rem;margin:1rem 0}
+.card{background:#fff;border:1px solid #d9d3c8;border-radius:8px;padding:1.1rem 1.25rem;break-inside:avoid}
+.card .top{display:flex;flex-wrap:wrap;gap:.5rem 1rem;align-items:baseline;justify-content:space-between;margin-bottom:.5rem}
+.card .arch{display:inline-block;padding:.2rem .55rem;border-radius:3px;font-size:.78rem;font-weight:700;background:#1a2b4a;color:#fff}
+.card .arch.floor{background:#b23b3b}
+.card .arch.ops{background:#c0552d}
+.card .arch.mix{background:#8a6a00}
+.card .arch.capture{background:#2b4a78}
+.card .arch.uio{background:#5a6a7a}
+.card .arch.ok{background:#2e7d54}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:.45rem;margin:.75rem 0}
+.metrics div{background:#f7f4ee;border-radius:4px;padding:.45rem .5rem}
+.metrics .k{font-size:.68rem;color:#6b6256;text-transform:uppercase}
+.metrics .v{font-size:1.05rem;font-weight:700;color:#1a2b4a;font-family:Georgia,serif}
+.asks{margin:.6rem 0 0;padding-left:1.1rem}
+.asks li{margin:.3rem 0}
+.muted{color:#6b6256}
+.foot{font-size:.75rem;color:#6b6256;margin-top:2.5rem;padding-top:.75rem;border-top:1px solid #d9d3c8}
+.badge{display:inline-block;padding:.12rem .4rem;border-radius:3px;font-size:.72rem;font-weight:600}
+.badge.red{background:#fde8e8;color:#b23b3b}
+.badge.amber{background:#fff3d6;color:#8a6a00}
+.badge.green{background:#e5f6ef;color:#2e7d54}
+.ex{font-size:.88rem;margin:.35rem 0}
+.slow{background:#fff;border:1px solid #d9d3c8;border-radius:8px;padding:1.25rem 1.4rem;margin:1rem 0}
+.slow h3{margin:1.1rem 0 .4rem;color:#c0552d}
+.slow h3:first-child{margin-top:0}
+.slow ol,.slow ul{margin:.4rem 0 .8rem;padding-left:1.25rem}
+.slow li{margin:.35rem 0}
+table.cov{width:100%;border-collapse:collapse;font-size:.88rem;background:#fff;margin:1rem 0}
+table.cov th{background:#1a2b4a;color:#fff;text-align:left;padding:.55rem .65rem;font-size:.75rem;text-transform:uppercase}
+table.cov td{padding:.5rem .65rem;border-bottom:1px solid #d9d3c8;vertical-align:top}
+table.cov tr:nth-child(even) td{background:#f7f4ee}
+.tip{border-bottom:1px dotted #c0552d;cursor:help;position:relative;color:inherit}
+.tip:hover,.tip:focus{outline:none;color:#c0552d}
+.tip::after{
+  content:attr(data-tip);
+  position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);
+  width:min(380px,82vw);padding:10px 12px;background:#1a2b4a;color:#eef1f6;
+  font:400 12px/1.45 "Segoe UI",Helvetica,Arial,sans-serif;text-align:left;
+  border-radius:6px;box-shadow:0 6px 18px rgba(26,39,68,.28);
+  white-space:pre-wrap;z-index:50;opacity:0;pointer-events:none;visibility:hidden;
+  transition:opacity .12s ease;
+}
+.tip:hover::after,.tip:focus::after{opacity:1;visibility:visible}
+@media print{
+  .card,.slow{break-inside:avoid}
+  .cover{padding:2rem 1rem}
+  .tip::after{display:none}
+}
+</style>
+</head>
+<body>
+<div class="cover">
+  <div class="wrap">
+    <div style="font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;opacity:.8">ISZE Parts · IDS 2026</div>
+    <h1>DB Parts posture — one page per distributor</h1>
+    <div class="rule"></div>
+    <p>Profile + Kaizen thesis + two asks per DB. Dotted terms have <b>hover explainers</b> — leave the cursor on them for the full meaning. Includes MIDI/Benelux hygiene and a within-country split: weak Parts (D) alone vs weak Parts + Service (D+C).</p>
+    <div class="meta">Built __BUILT_AT__ · Self-contained (offline charts)</div>
+  </div>
+</div>
+<div class="wrap">
+
+<h2><span class="no">01</span> Hygiene before the stats</h2>
+<p class="lead" id="hygieneLead"></p>
+<div class="stats" id="hygieneStats"></div>
+<div class="callout" id="hygieneNote"></div>
+
+<h2><span class="no">02</span> Network prior (not per-DB Pearson)</h2>
+<p class="muted" id="corrIntro"></p>
+<div class="chart-box">
+  <p class="caption" id="corrCaption"></p>
+  <div style="position:relative;width:100%;height:260px"><canvas id="corrBars" role="img" aria-label="Correlation bars"></canvas></div>
+</div>
+
+<div class="callout navy" id="mixVsGpsExplainer"></div>
+
+<div class="chart-box">
+  <p class="caption" id="scatGenCaption"></p>
+  <div style="position:relative;width:100%;height:320px"><canvas id="scatGen" role="img" aria-label="D vs genuine mix"></canvas></div>
+</div>
+<div class="chart-box">
+  <p class="caption" id="scatGpsCaption"></p>
+  <div style="position:relative;width:100%;height:320px"><canvas id="scatGps" role="img" aria-label="D vs GPS euro per UIO"></canvas></div>
+</div>
+
+<h2><span class="no">03</span> One page per DB</h2>
+<p>Owner column left open (TBD). <b>PMS is excluded from these conclusions.</b> GPS €/UIO shown is <b>including warranty</b> (ex-warranty also on the card). Hover metric labels for definitions.</p>
+<div class="callout navy" id="gpsWarrantyBanner"></div>
+<div class="cards" id="cards"></div>
+
+<h2><span class="no">03b</span> Park age vs fill — every DB</h2>
+<p class="lead" id="parkLead"></p>
+<div class="callout" id="parkMethod"></div>
+<div class="chart-box">
+  <p class="caption" id="parkCaption"></p>
+  <div style="position:relative;width:100%;height:340px"><canvas id="scatParkFill" role="img" aria-label="Park change vs fill"></canvas></div>
+</div>
+<table class="cov" id="parkTable"><thead></thead><tbody></tbody></table>
+
+<h2><span class="no">04</span> Within-country CAP split — D-only vs D+C</h2>
+<p class="lead" id="capLead"></p>
+<div class="callout" id="capCountExplainer">
+  <b>What “CAP D-only = 4” means:</b> it is a <u>count of dealers</u> in that country, not IDS question D.1 or D.4.
+  Example: <b>4</b> = four dealers are weak on Parts but OK on Service → Parts/counter Kaizen.
+  <b>CAP D+C = 1</b> = one dealer is weak on Parts <i>and</i> Service → combined workshop + parts CAP.
+</div>
+<div class="chart-box">
+  <p class="caption" id="capCaption"></p>
+  <div style="position:relative;width:100%;height:420px"><canvas id="capStack" role="img" aria-label="CAP split stacked bars"></canvas></div>
+</div>
+<div class="stats" id="capTotals"></div>
+<div id="capExamples"></div>
+
+<h2><span class="no">05</span> Genuine mix vs GPS €/UIO — and why KPI SPU is off the chart</h2>
+<div class="slow" id="spuExplainer"></div>
+<div class="callout navy" id="spuCoverageNote"></div>
+<table class="cov" id="spuCoverage"><thead></thead><tbody></tbody></table>
+
+<div class="foot" id="foot"></div>
+</div>
+<script>__CHART_JS__</script>
+<script>const DATA = __DATA_JSON__;</script>
+<script>__APP_JS__</script>
+</body>
+</html>

@@ -195,12 +195,21 @@ Until (1)–(3) are agreed with IML (open item already logged in `05_memory/proj
 
 ## 2026-06-13 — PRISM stays a git submodule (not monorepo merge)
 
+**Status:** Superseded 2026-07-24  
+**Context:** `03_analytics/Isuzu/prism/` was a nested repo (`jeromio1987/prism`). Archived duplicate `isze-prism-analytics` lives in `90_archive/`.  
+**Decision (original):** Keep PRISM as a git submodule.  
+**Superseded by:** [2026-07-24 — PRISM folded into ISZE monorepo](#2026-07-24--prism-folded-into-isze-monorepo-holiday-single-clone).
+
+---
+
+## 2026-07-24 — PRISM folded into ISZE monorepo (holiday single-clone)
+
 **Status:** Accepted  
-**Context:** `03_analytics/Isuzu/prism/` is a nested repo (`jeromio1987/prism`). Archived duplicate `isze-prism-analytics` lives in `90_archive/`. Root Git init requires explicit nested-repo policy.  
-**Decision:** Keep **`jeromio1987/prism` as a git submodule** at ISZE root init. Do not merge PRISM into root monorepo or delete `prism/.git` without a migration plan. `90_archive/duplicate_repos/` remains ignored.  
-**Alternatives considered:** Full monorepo merge (deferred — loses independent PRISM remote history and deploy cadence).  
-**Consequences:** After `git init`, run `git submodule add https://github.com/jeromio1987/prism.git 03_analytics/Isuzu/prism` when wiring remote (resolve existing `.git` if needed). Root tracks submodule pointer only.  
-**Docs updated:** `DECISIONS.md`, `.gitignore`, `00_docs/RUNBOOK_MONTHLY_REFRESH.md` rollback table.
+**Context:** GitHub is used as private holiday/laptop backup, not a publish surface. A plain `git clone` of ISZE did not include PRISM file contents without submodule init. Separate remotes (`jarvis-isze`, `isze-dashboard`, standalone `PRISM`) added friction.  
+**Decision:** Absorb `03_analytics/Isuzu/prism/` as **normal tracked files** in `jeromio1987/ISZE`. Remove `.gitmodules` and nested `prism/.git`. Day-to-day clone = ISZE only. Archive standalone `PRISM` / `jarvis-isze` / `isze-dashboard` on GitHub (do not delete yet).  
+**Alternatives considered:** Keep submodule (rejected — two-step clone); merge personal repos into ISZE (rejected — different sensitivity).  
+**Consequences:** `git clone https://github.com/jeromio1987/ISZE.git` is enough for work+PRISM+Jarvis app. See `00_docs/HOLIDAY_LAPTOP.md`.  
+**Docs updated:** `DECISIONS.md`, `00_docs/HOLIDAY_LAPTOP.md`, `00_docs/README.md`, `00_docs/RUNBOOK_MONTHLY_REFRESH.md`, `INDEX.md`.
 
 ---
 

@@ -1,6 +1,6 @@
 # GPS / PMS / BVP integrity audit
 
-**Generated:** 2026-07-21T15:20:53Z
+**Generated:** 2026-07-23T19:29:48Z
 **GPS year:** 2025 | **Warranty basis:** CY2025
 
 Distributors: **22** | PMS summaries: **18** | Issues: **6**

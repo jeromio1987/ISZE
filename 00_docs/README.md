@@ -4,6 +4,8 @@
 
 **Humans:** start at [HUMAN_ONBOARDING.md](HUMAN_ONBOARDING.md) for onboarding; programme status in [`ISZE_ROADMAP.md`](ISZE_ROADMAP.md). Map overview in [`MAPS.md`](MAPS.md).
 
+**Holiday / other laptop:** [`HOLIDAY_LAPTOP.md`](HOLIDAY_LAPTOP.md) — clone `ISZE` only for work (PRISM is inside the monorepo).
+
 ---
 
 ## Daily workflow

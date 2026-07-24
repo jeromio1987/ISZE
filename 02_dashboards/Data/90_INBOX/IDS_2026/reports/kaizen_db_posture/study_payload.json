@@ -1,0 +1,1426 @@
+{
+  "built_at": "2026-07-24 03:31 UTC",
+  "hygiene": {
+    "raw_dealer_rows": 532,
+    "raw_network_d_pct": 75.6,
+    "raw_network_total_pct": 76.4,
+    "clean_dealer_rows": 460,
+    "clean_network_d_pct": 80.5,
+    "clean_network_total_pct": 81.0,
+    "dropped_benelux_rollup": 43,
+    "dropped_zero_shells": 29,
+    "note": "Clean stats exclude Benelux rollup (BE+NL already counted) and 0% unscored shells (MIDI empties)."
+  },
+  "correlations": {
+    "pms_capture_total": {
+      "label": "PMS total capture",
+      "n": 11,
+      "r": -0.4489817599863526,
+      "markets": [
+        "BE",
+        "NL",
+        "PETROS",
+        "RSA",
+        "IUK",
+        "ISRAEL",
+        "MALTA",
+        "CYPRUS",
+        "ROMANIA",
+        "PORTUGAL",
+        "HUNGARY"
+      ]
+    },
+    "pms_capture_genuine": {
+      "label": "PMS genuine capture",
+      "n": 11,
+      "r": -0.0938855210432136,
+      "markets": [
+        "BE",
+        "NL",
+        "PETROS",
+        "RSA",
+        "IUK",
+        "ISRAEL",
+        "MALTA",
+        "CYPRUS",
+        "ROMANIA",
+        "PORTUGAL",
+        "HUNGARY"
+      ]
+    },
+    "genuine_share_eur": {
+      "label": "Genuine parts share (€ mix)",
+      "n": 11,
+      "r": 0.4127702302543922,
+      "markets": [
+        "BE",
+        "NL",
+        "PETROS",
+        "RSA",
+        "IUK",
+        "ISRAEL",
+        "MALTA",
+        "CYPRUS",
+        "ROMANIA",
+        "PORTUGAL",
+        "HUNGARY"
+      ]
+    },
+    "gps_spu_eur": {
+      "label": "GPS spend per unit (€/UIO)",
+      "n": 11,
+      "r": -0.1957194356268791,
+      "markets": [
+        "BE",
+        "NL",
+        "PETROS",
+        "RSA",
+        "IUK",
+        "ISRAEL",
+        "MALTA",
+        "CYPRUS",
+        "ROMANIA",
+        "PORTUGAL",
+        "HUNGARY"
+      ]
+    },
+    "kpi_fill_rate": {
+      "label": "KPI first fill rate",
+      "n": 9,
+      "r": 0.41183524337577565,
+      "markets": [
+        "BE",
+        "NL",
+        "POLAND",
+        "PETROS",
+        "RSA",
+        "IUK",
+        "ISRAEL",
+        "MALTA",
+        "ROMANIA"
+      ]
+    },
+    "kpi_mos_days": {
+      "label": "KPI MOS (days)",
+      "n": 8,
+      "r": 0.32791592577400736,
+      "markets": [
+        "BE",
+        "NL",
+        "PETROS",
+        "RSA",
+        "IUK",
+        "ISRAEL",
+        "MALTA",
+        "ROMANIA"
+      ]
+    },
+    "kpi_spu_eur": {
+      "label": "KPI parts sales per unit",
+      "n": 3,
+      "r": 0.9839152336280852,
+      "markets": [
+        "PETROS",
+        "IUK",
+        "ROMANIA"
+      ]
+    }
+  },
+  "correlations_chart": {
+    "genuine_share_eur": {
+      "label": "Genuine parts share (€ mix)",
+      "n": 11,
+      "r": 0.4127702302543922,
+      "markets": [
+        "BE",
+        "NL",
+        "PETROS",
+        "RSA",
+        "IUK",
+        "ISRAEL",
+        "MALTA",
+        "CYPRUS",
+        "ROMANIA",
+        "PORTUGAL",
+        "HUNGARY"
+      ]
+    },
+    "gps_spu_eur": {
+      "label": "GPS spend per unit (€/UIO)",
+      "n": 11,
+      "r": -0.1957194356268791,
+      "markets": [
+        "BE",
+        "NL",
+        "PETROS",
+        "RSA",
+        "IUK",
+        "ISRAEL",
+        "MALTA",
+        "CYPRUS",
+        "ROMANIA",
+        "PORTUGAL",
+        "HUNGARY"
+      ]
+    },
+    "kpi_fill_rate": {
+      "label": "KPI first fill rate",
+      "n": 9,
+      "r": 0.41183524337577565,
+      "markets": [
+        "BE",
+        "NL",
+        "POLAND",
+        "PETROS",
+        "RSA",
+        "IUK",
+        "ISRAEL",
+        "MALTA",
+        "ROMANIA"
+      ]
+    },
+    "kpi_mos_days": {
+      "label": "KPI MOS (days)",
+      "n": 8,
+      "r": 0.32791592577400736,
+      "markets": [
+        "BE",
+        "NL",
+        "PETROS",
+        "RSA",
+        "IUK",
+        "ISRAEL",
+        "MALTA",
+        "ROMANIA"
+      ]
+    }
+  },
+  "db_cards": [
+    {
+      "ids_country": "IUK",
+      "prism_db": "IUK",
+      "kpi_name": "IUK",
+      "note": "",
+      "ids_d_avg": 0.817966903073286,
+      "ids_total_avg": 0.8203174666666667,
+      "dealer_count": 45,
+      "ids_d_min": 0.3404255319148936,
+      "genuine_share_eur": 0.7697952753796297,
+      "gps_spu_eur": 128.33,
+      "gps_spu_ex_warranty_eur": 106.26,
+      "warranty_parts_eur": 1054395.0,
+      "warranty_data_gap": false,
+      "gps_light": "amber",
+      "gps_light_ex_warranty": "red",
+      "kpi_fill_rate": 0.9376666666666666,
+      "kpi_mos_days": 74.83333333333333,
+      "kpi_spu_eur": 336.30239896261077,
+      "park_change_5y_pct": 0.08126687945003683,
+      "park_change_10y_pct": 0.4406047958098044,
+      "uio_units_park": 48876.0,
+      "ageing_label": "Stable / mixed",
+      "ageing_risk": "medium",
+      "uio_park_year": 2024,
+      "uio_park_name": "IUK",
+      "archetype": "Floor problem",
+      "thesis": "Network D average looks fine, but the floor is weak — Kaizen the outliers (counter process / targets), not a DB-wide Parts redesign.",
+      "ask_1": "Confirm York Van / Adam (or your worst D names) rank for parts purchases vs network.",
+      "ask_2": "Do they miss monthly parts targets and first-fill tracking (D.2-9 / D.2-10), or is it display/space only?",
+      "cap_d_only": 1,
+      "cap_d_plus_c": 3,
+      "cap_c_only": 0,
+      "cap_ok": 41,
+      "ids_d_avg_pct": 81.8,
+      "ids_d_min_pct": 34.0,
+      "ids_total_avg_pct": 82.0,
+      "genuine_share_pct": 77.0,
+      "fill_pct": 93.8,
+      "park_change_5y_pct_disp": 8.1
+    },
+    {
+      "ids_country": "PETROS",
+      "prism_db": "GREECE",
+      "kpi_name": "Petros Petropoulos",
+      "note": "",
+      "ids_d_avg": 0.7327909887359199,
+      "ids_total_avg": 0.7382352647058823,
+      "dealer_count": 34,
+      "ids_d_min": 0.5531914893617021,
+      "genuine_share_eur": 0.5665681862527904,
+      "gps_spu_eur": 139.04,
+      "gps_spu_ex_warranty_eur": 124.04,
+      "warranty_parts_eur": 56159.0,
+      "warranty_data_gap": false,
+      "gps_light": "amber",
+      "gps_light_ex_warranty": "red",
+      "kpi_fill_rate": 0.6,
+      "kpi_mos_days": 60.0,
+      "kpi_spu_eur": 67.07466666666666,
+      "park_change_5y_pct": -0.20525978191148173,
+      "park_change_10y_pct": -1.5542014111610007,
+      "uio_units_park": 3118.0,
+      "ageing_label": "Shrinking / likely older",
+      "ageing_risk": "high",
+      "uio_park_year": 2024,
+      "uio_park_name": "Petros Petropoulos",
+      "archetype": "Ops + standards",
+      "thesis": "Section D and first-fill are both soft, and the parc is shrinking (-21% net over 5y) — older remaining vehicles often need odd/slow-moving parts, which can drag fill. Treat as ops hygiene + age-aware stocking, not fill-blaming alone. Petros specifically: park decline supports the fill story — do not conclude fill is only dealer discipline.",
+      "ask_1": "How much of the fill gap is odd/obsolete parts for older vehicles vs process (ordering/min-max)?",
+      "ask_2": "Which dealers drag fill most, and do they sit in older local fleets?",
+      "cap_d_only": 4,
+      "cap_d_plus_c": 0,
+      "cap_c_only": 0,
+      "cap_ok": 30,
+      "ids_d_avg_pct": 73.3,
+      "ids_d_min_pct": 55.3,
+      "ids_total_avg_pct": 73.8,
+      "genuine_share_pct": 56.7,
+      "fill_pct": 60.0,
+      "park_change_5y_pct_disp": -20.5
+    },
+    {
+      "ids_country": "PORTUGAL",
+      "prism_db": "PORTUGAL",
+      "kpi_name": "Astara Portugal",
+      "note": "KPI name may vary",
+      "ids_d_avg": 0.8869680851063829,
+      "ids_total_avg": 0.8678571428571429,
+      "dealer_count": 16,
+      "ids_d_min": 0.7659574468085106,
+      "genuine_share_eur": 0.41906814083344124,
+      "gps_spu_eur": 209.12,
+      "gps_spu_ex_warranty_eur": 193.15,
+      "warranty_parts_eur": 130588.0,
+      "warranty_data_gap": false,
+      "gps_light": "green",
+      "gps_light_ex_warranty": "red",
+      "kpi_fill_rate": null,
+      "kpi_mos_days": null,
+      "kpi_spu_eur": null,
+      "park_change_5y_pct": 0.29595827900912647,
+      "park_change_10y_pct": 0.8442706069824714,
+      "uio_units_park": 6903.0,
+      "ageing_label": "Growing / likely younger",
+      "ageing_risk": "low",
+      "uio_park_year": 2024,
+      "uio_park_name": "Imotors",
+      "archetype": "Mix gap",
+      "thesis": "Genuine € mix is low relative to IDS D — validate whether Section D is paper compliance vs real counter mix (genuine default / BVP placement).",
+      "ask_1": "Is genuine the default recommendation at the counter, or is BVP / non-genuine pushed on price?",
+      "ask_2": "Any dealer-level genuine share for the weakest IDS D dealers?",
+      "cap_d_only": 0,
+      "cap_d_plus_c": 0,
+      "cap_c_only": 0,
+      "cap_ok": 16,
+      "ids_d_avg_pct": 88.7,
+      "ids_d_min_pct": 76.6,
+      "ids_total_avg_pct": 86.8,
+      "genuine_share_pct": 41.9,
+      "fill_pct": null,
+      "park_change_5y_pct_disp": 29.6
+    },
+    {
+      "ids_country": "ISRAEL",
+      "prism_db": "UMI",
+      "kpi_name": "UMI",
+      "note": "IDS Israel = UMI network only. UTI did not participate — never blend UTI+UMI.",
+      "ids_d_avg": 0.7652237710931769,
+      "ids_total_avg": 0.8011083743842364,
+      "dealer_count": 29,
+      "ids_d_min": 0.5531914893617021,
+      "genuine_share_eur": 0.1839126180539346,
+      "gps_spu_eur": 179.02,
+      "gps_spu_ex_warranty_eur": 82.42,
+      "warranty_parts_eur": 1791020.28,
+      "warranty_data_gap": false,
+      "gps_light": "green",
+      "gps_light_ex_warranty": "red",
+      "kpi_fill_rate": 0.97,
+      "kpi_mos_days": 147.0,
+      "kpi_spu_eur": null,
+      "park_change_5y_pct": -0.06349119843043217,
+      "park_change_10y_pct": -0.12196849964575726,
+      "uio_units_park": 18349.0,
+      "ageing_label": "Slightly shrinking",
+      "ageing_risk": "elevated",
+      "uio_park_year": 2024,
+      "uio_park_name": "UMI",
+      "archetype": "Mix gap (UMI)",
+      "thesis": "Genuine € mix is low relative to IDS D — validate whether Section D is paper compliance vs real counter mix (genuine default / BVP placement). IDS Israel = UMI only — never blend UTI.",
+      "ask_1": "Is genuine the default recommendation at the counter, or is BVP / non-genuine pushed on price?",
+      "ask_2": "Any dealer-level genuine share for the weakest IDS D dealers?",
+      "cap_d_only": 1,
+      "cap_d_plus_c": 0,
+      "cap_c_only": 0,
+      "cap_ok": 28,
+      "ids_d_avg_pct": 76.5,
+      "ids_d_min_pct": 55.3,
+      "ids_total_avg_pct": 80.1,
+      "genuine_share_pct": 18.4,
+      "fill_pct": 97.0,
+      "park_change_5y_pct_disp": -6.3
+    },
+    {
+      "ids_country": "HUNGARY",
+      "prism_db": "HUNGARY",
+      "kpi_name": null,
+      "note": "No KPI Master monthly row for Hungary",
+      "ids_d_avg": 0.8947368421052632,
+      "ids_total_avg": 0.8640977894736842,
+      "dealer_count": 19,
+      "ids_d_min": 0.574468085106383,
+      "genuine_share_eur": 0.7065659302319985,
+      "gps_spu_eur": 88.39,
+      "gps_spu_ex_warranty_eur": 67.65,
+      "warranty_parts_eur": 77434.0,
+      "warranty_data_gap": false,
+      "gps_light": "amber",
+      "gps_light_ex_warranty": "red",
+      "kpi_fill_rate": null,
+      "kpi_mos_days": null,
+      "kpi_spu_eur": null,
+      "park_change_5y_pct": 0.10446957458266021,
+      "park_change_10y_pct": 0.7197092084006462,
+      "uio_units_park": 3714.0,
+      "ageing_label": "Stable / mixed",
+      "ageing_risk": "medium",
+      "uio_park_year": 2024,
+      "uio_park_name": "AutoWallis",
+      "archetype": "Low €/UIO intensity",
+      "thesis": "GPS €/UIO (incl. warranty) is soft while IDS may look OK — standards and spend intensity diverge. Check €/UIO ex-warranty too; use UIO for priority weight, not as an IDS causal story. No KPI Master Parts row — posture relies on IDS + PRISM only.",
+      "ask_1": "Is low €/UIO age-mix, channel leakage, or under-worked parc?",
+      "ask_2": "Which dealers cover the largest UIO with the weakest Parts standards?",
+      "cap_d_only": 2,
+      "cap_d_plus_c": 0,
+      "cap_c_only": 0,
+      "cap_ok": 17,
+      "ids_d_avg_pct": 89.5,
+      "ids_d_min_pct": 57.4,
+      "ids_total_avg_pct": 86.4,
+      "genuine_share_pct": 70.7,
+      "fill_pct": null,
+      "park_change_5y_pct_disp": 10.4
+    },
+    {
+      "ids_country": "POLAND",
+      "prism_db": "POLAND",
+      "kpi_name": "Isuzu Polska",
+      "note": "",
+      "ids_d_avg": 0.8751156336725254,
+      "ids_total_avg": 0.8498447204968944,
+      "dealer_count": 23,
+      "ids_d_min": 0.6382978723404256,
+      "genuine_share_eur": null,
+      "gps_spu_eur": null,
+      "gps_spu_ex_warranty_eur": null,
+      "warranty_parts_eur": null,
+      "warranty_data_gap": null,
+      "gps_light": null,
+      "gps_light_ex_warranty": null,
+      "kpi_fill_rate": 0.8451666666666666,
+      "kpi_mos_days": null,
+      "kpi_spu_eur": null,
+      "park_change_5y_pct": null,
+      "park_change_10y_pct": null,
+      "uio_units_park": null,
+      "ageing_label": "No UIO age proxy",
+      "ageing_risk": "unknown",
+      "archetype": "Balanced",
+      "thesis": "IDS Parts standards and ops metrics are not loudly mismatched — still close floor dealers and watch park age vs fill.",
+      "ask_1": "Which of your bottom-3 IDS Section D dealers also rank bottom-third for parts purchases?",
+      "ask_2": "Can you share dealer-level first-fill or genuine-mix for those names (even rough)?",
+      "cap_d_only": 1,
+      "cap_d_plus_c": 0,
+      "cap_c_only": 0,
+      "cap_ok": 22,
+      "ids_d_avg_pct": 87.5,
+      "ids_d_min_pct": 63.8,
+      "ids_total_avg_pct": 85.0,
+      "genuine_share_pct": null,
+      "fill_pct": 84.5,
+      "park_change_5y_pct_disp": null
+    },
+    {
+      "ids_country": "MALTA",
+      "prism_db": "MALTA",
+      "kpi_name": "GasanZammit",
+      "note": "",
+      "ids_d_avg": 0.8723404255319149,
+      "ids_total_avg": 0.8928571428571429,
+      "dealer_count": 1,
+      "ids_d_min": 0.8723404255319149,
+      "genuine_share_eur": 0.9888480029040143,
+      "gps_spu_eur": 198.56,
+      "gps_spu_ex_warranty_eur": 181.04,
+      "warranty_parts_eur": 18219.0,
+      "warranty_data_gap": false,
+      "gps_light": "green",
+      "gps_light_ex_warranty": "red",
+      "kpi_fill_rate": 0.8766666666666667,
+      "kpi_mos_days": 115.66666666666667,
+      "kpi_spu_eur": null,
+      "park_change_5y_pct": 0.2647058823529412,
+      "park_change_10y_pct": 0.7077798861480076,
+      "uio_units_park": 1054.0,
+      "ageing_label": "Growing / likely younger",
+      "ageing_risk": "low",
+      "uio_park_year": 2024,
+      "uio_park_name": "GasanZammit",
+      "archetype": "Balanced",
+      "thesis": "IDS Parts standards and ops metrics are not loudly mismatched — still close floor dealers and watch park age vs fill.",
+      "ask_1": "Which of your bottom-3 IDS Section D dealers also rank bottom-third for parts purchases?",
+      "ask_2": "Can you share dealer-level first-fill or genuine-mix for those names (even rough)?",
+      "cap_d_only": 0,
+      "cap_d_plus_c": 0,
+      "cap_c_only": 0,
+      "cap_ok": 0,
+      "ids_d_avg_pct": 87.2,
+      "ids_d_min_pct": 87.2,
+      "ids_total_avg_pct": 89.3,
+      "genuine_share_pct": 98.9,
+      "fill_pct": 87.7,
+      "park_change_5y_pct_disp": 26.5
+    },
+    {
+      "ids_country": "RSA",
+      "prism_db": "NORWAY",
+      "kpi_name": "RSA",
+      "note": "RSA cluster; PMS proxy NORWAY (largest Nordic)",
+      "ids_d_avg": 0.8197088465845465,
+      "ids_total_avg": 0.8277255639097745,
+      "dealer_count": 38,
+      "ids_d_min": 0.6382978723404256,
+      "genuine_share_eur": 0.8743582040060147,
+      "gps_spu_eur": 178.65,
+      "gps_spu_ex_warranty_eur": 141.99,
+      "warranty_parts_eur": 290712.0,
+      "warranty_data_gap": false,
+      "gps_light": "green",
+      "gps_light_ex_warranty": "amber",
+      "kpi_fill_rate": 0.9591666666666666,
+      "kpi_mos_days": 98.16666666666667,
+      "kpi_spu_eur": null,
+      "park_change_5y_pct": 0.06980696855651329,
+      "park_change_10y_pct": 0.43207478450892317,
+      "uio_units_park": 8237.0,
+      "ageing_label": "Stable / mixed",
+      "ageing_risk": "medium",
+      "uio_park_year": 2024,
+      "uio_park_name": "RSA",
+      "archetype": "Balanced",
+      "thesis": "IDS Parts standards and ops metrics are not loudly mismatched — still close floor dealers and watch park age vs fill.",
+      "ask_1": "Which of your bottom-3 IDS Section D dealers also rank bottom-third for parts purchases?",
+      "ask_2": "Can you share dealer-level first-fill or genuine-mix for those names (even rough)?",
+      "cap_d_only": 2,
+      "cap_d_plus_c": 0,
+      "cap_c_only": 0,
+      "cap_ok": 36,
+      "ids_d_avg_pct": 82.0,
+      "ids_d_min_pct": 63.8,
+      "ids_total_avg_pct": 82.8,
+      "genuine_share_pct": 87.4,
+      "fill_pct": 95.9,
+      "park_change_5y_pct_disp": 7.0
+    },
+    {
+      "ids_country": "ROMANIA",
+      "prism_db": "ROMANIA",
+      "kpi_name": "Isuzu Rom Auto",
+      "note": "",
+      "ids_d_avg": 0.801418439716312,
+      "ids_total_avg": 0.8000000666666667,
+      "dealer_count": 15,
+      "ids_d_min": 0.5319148936170213,
+      "genuine_share_eur": 0.8263331065709875,
+      "gps_spu_eur": 163.6,
+      "gps_spu_ex_warranty_eur": 145.51,
+      "warranty_parts_eur": 19377.0,
+      "warranty_data_gap": false,
+      "gps_light": "green",
+      "gps_light_ex_warranty": "amber",
+      "kpi_fill_rate": 0.8848333333333334,
+      "kpi_mos_days": 119.83333333333333,
+      "kpi_spu_eur": 239.2562417871222,
+      "park_change_5y_pct": 0.3265720081135903,
+      "park_change_10y_pct": 0.7454361054766734,
+      "uio_units_park": 986.0,
+      "ageing_label": "Growing / likely younger",
+      "ageing_risk": "low",
+      "uio_park_year": 2024,
+      "uio_park_name": "Isuzu Rom Auto",
+      "archetype": "Balanced",
+      "thesis": "IDS Parts standards and ops metrics are not loudly mismatched — still close floor dealers and watch park age vs fill.",
+      "ask_1": "Which of your bottom-3 IDS Section D dealers also rank bottom-third for parts purchases?",
+      "ask_2": "Can you share dealer-level first-fill or genuine-mix for those names (even rough)?",
+      "cap_d_only": 1,
+      "cap_d_plus_c": 0,
+      "cap_c_only": 0,
+      "cap_ok": 14,
+      "ids_d_avg_pct": 80.1,
+      "ids_d_min_pct": 53.2,
+      "ids_total_avg_pct": 80.0,
+      "genuine_share_pct": 82.6,
+      "fill_pct": 88.5,
+      "park_change_5y_pct_disp": 32.7
+    },
+    {
+      "ids_country": "BE",
+      "prism_db": "BELGIUM",
+      "kpi_name": "IBX (BENELUX)",
+      "note": "Benelux IBX",
+      "ids_d_avg": 0.7978723404255319,
+      "ids_total_avg": 0.7861344537815126,
+      "dealer_count": 34,
+      "ids_d_min": 0.574468085106383,
+      "genuine_share_eur": 0.5870492426758108,
+      "gps_spu_eur": 219.86,
+      "gps_spu_ex_warranty_eur": 212.08,
+      "warranty_parts_eur": 74677.0,
+      "warranty_data_gap": false,
+      "gps_light": "green",
+      "gps_light_ex_warranty": "amber",
+      "kpi_fill_rate": 0.8450333333333333,
+      "kpi_mos_days": 47.166666666666664,
+      "kpi_spu_eur": null,
+      "park_change_5y_pct": 0.10170765760927934,
+      "park_change_10y_pct": 0.3422833208033509,
+      "uio_units_park": 9311.0,
+      "ageing_label": "Stable / mixed",
+      "ageing_risk": "medium",
+      "uio_park_year": 2024,
+      "uio_park_name": "IBX",
+      "archetype": "Balanced",
+      "thesis": "IDS Parts standards and ops metrics are not loudly mismatched — still close floor dealers and watch park age vs fill. IBX shares one GPS pool — dealer CAP on Degroote-class names.",
+      "ask_1": "Which of your bottom-3 IDS Section D dealers also rank bottom-third for parts purchases?",
+      "ask_2": "Can you share dealer-level first-fill or genuine-mix for those names (even rough)?",
+      "cap_d_only": 2,
+      "cap_d_plus_c": 0,
+      "cap_c_only": 0,
+      "cap_ok": 32,
+      "ids_d_avg_pct": 79.8,
+      "ids_d_min_pct": 57.4,
+      "ids_total_avg_pct": 78.6,
+      "genuine_share_pct": 58.7,
+      "fill_pct": 84.5,
+      "park_change_5y_pct_disp": 10.2
+    },
+    {
+      "ids_country": "NL",
+      "prism_db": "BELGIUM",
+      "kpi_name": "IBX (BENELUX)",
+      "note": "NL dealers; PMS/GPS via BELGIUM/IBX",
+      "ids_d_avg": 0.7565011820330969,
+      "ids_total_avg": 0.7611111111111111,
+      "dealer_count": 9,
+      "ids_d_min": 0.6170212765957447,
+      "genuine_share_eur": 0.5870492426758108,
+      "gps_spu_eur": 219.86,
+      "gps_spu_ex_warranty_eur": 212.08,
+      "warranty_parts_eur": 74677.0,
+      "warranty_data_gap": false,
+      "gps_light": "green",
+      "gps_light_ex_warranty": "amber",
+      "kpi_fill_rate": 0.8450333333333333,
+      "kpi_mos_days": 47.166666666666664,
+      "kpi_spu_eur": null,
+      "park_change_5y_pct": 0.10170765760927934,
+      "park_change_10y_pct": 0.3422833208033509,
+      "uio_units_park": 9311.0,
+      "ageing_label": "Stable / mixed",
+      "ageing_risk": "medium",
+      "uio_park_year": 2024,
+      "uio_park_name": "IBX",
+      "archetype": "Balanced",
+      "thesis": "IDS Parts standards and ops metrics are not loudly mismatched — still close floor dealers and watch park age vs fill. IBX shares one GPS pool — dealer CAP on Degroote-class names.",
+      "ask_1": "Which of your bottom-3 IDS Section D dealers also rank bottom-third for parts purchases?",
+      "ask_2": "Can you share dealer-level first-fill or genuine-mix for those names (even rough)?",
+      "cap_d_only": 1,
+      "cap_d_plus_c": 0,
+      "cap_c_only": 0,
+      "cap_ok": 8,
+      "ids_d_avg_pct": 75.7,
+      "ids_d_min_pct": 61.7,
+      "ids_total_avg_pct": 76.1,
+      "genuine_share_pct": 58.7,
+      "fill_pct": 84.5,
+      "park_change_5y_pct_disp": 10.2
+    },
+    {
+      "ids_country": "CYPRUS",
+      "prism_db": "CYPRUS",
+      "kpi_name": "Loutsios Group",
+      "note": "",
+      "ids_d_avg": 0.723404255319149,
+      "ids_total_avg": 0.75,
+      "dealer_count": 1,
+      "ids_d_min": 0.723404255319149,
+      "genuine_share_eur": 0.4631560038989019,
+      "gps_spu_eur": 185.63,
+      "gps_spu_ex_warranty_eur": 173.48,
+      "warranty_parts_eur": 28041.0,
+      "warranty_data_gap": false,
+      "gps_light": "green",
+      "gps_light_ex_warranty": "amber",
+      "kpi_fill_rate": null,
+      "kpi_mos_days": null,
+      "kpi_spu_eur": null,
+      "park_change_5y_pct": -0.10907335907335908,
+      "park_change_10y_pct": -1.1317567567567568,
+      "uio_units_park": 2072.0,
+      "ageing_label": "Shrinking / likely older",
+      "ageing_risk": "high",
+      "uio_park_year": 2024,
+      "uio_park_name": "Loutsios & Sons",
+      "archetype": "Balanced",
+      "thesis": "IDS Parts standards and ops metrics are not loudly mismatched — still close floor dealers and watch park age vs fill.",
+      "ask_1": "Which of your bottom-3 IDS Section D dealers also rank bottom-third for parts purchases?",
+      "ask_2": "Can you share dealer-level first-fill or genuine-mix for those names (even rough)?",
+      "cap_d_only": 0,
+      "cap_d_plus_c": 0,
+      "cap_c_only": 0,
+      "cap_ok": 0,
+      "ids_d_avg_pct": 72.3,
+      "ids_d_min_pct": 72.3,
+      "ids_total_avg_pct": 75.0,
+      "genuine_share_pct": 46.3,
+      "fill_pct": null,
+      "park_change_5y_pct_disp": -10.9
+    }
+  ],
+  "cap_split": {
+    "countries": [
+      {
+        "country": "BE",
+        "n": 34,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 2,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 32
+        }
+      },
+      {
+        "country": "HUNGARY",
+        "n": 19,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 2,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 17
+        }
+      },
+      {
+        "country": "ISRAEL",
+        "n": 29,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 1,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 28
+        }
+      },
+      {
+        "country": "IUK",
+        "n": 45,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 1,
+          "D+C": 3,
+          "C-only": 0,
+          "OK": 41
+        }
+      },
+      {
+        "country": "MIDI_CH",
+        "n": 14,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 0,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 14
+        }
+      },
+      {
+        "country": "MIDI_ES",
+        "n": 37,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 0,
+          "D+C": 1,
+          "C-only": 0,
+          "OK": 36
+        }
+      },
+      {
+        "country": "MIDI_FR",
+        "n": 65,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 6,
+          "D+C": 7,
+          "C-only": 1,
+          "OK": 51
+        }
+      },
+      {
+        "country": "MIDI_IT",
+        "n": 36,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 0,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 36
+        }
+      },
+      {
+        "country": "NL",
+        "n": 9,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 1,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 8
+        }
+      },
+      {
+        "country": "PETROS",
+        "n": 34,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 4,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 30
+        }
+      },
+      {
+        "country": "POLAND",
+        "n": 23,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 1,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 22
+        }
+      },
+      {
+        "country": "PORTUGAL",
+        "n": 16,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 0,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 16
+        }
+      },
+      {
+        "country": "ROMANIA",
+        "n": 15,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 1,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 14
+        }
+      },
+      {
+        "country": "RSA",
+        "n": 38,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 2,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 36
+        }
+      }
+    ],
+    "examples": [
+      {
+        "country": "BE",
+        "name": "Garage Degroote",
+        "cap_type": "D-only",
+        "d_pct": 0.574468085106383,
+        "c_pct": 0.675,
+        "total_pct": 0.5535714285714286,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "BE",
+        "name": "Garage Fayt",
+        "cap_type": "D-only",
+        "d_pct": 0.5957446808510638,
+        "c_pct": 0.6625,
+        "total_pct": 0.5535714285714286,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "HUNGARY",
+        "name": "Bonus Kft.",
+        "cap_type": "D-only",
+        "d_pct": 0.574468085106383,
+        "c_pct": 0.75,
+        "total_pct": 0.664286,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "HUNGARY",
+        "name": "Marsal",
+        "cap_type": "D-only",
+        "d_pct": 0.6170212765957447,
+        "c_pct": 0.9125,
+        "total_pct": 0.696429,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "ISRAEL",
+        "name": "Asayag Jerusalem",
+        "cap_type": "D-only",
+        "d_pct": 0.5531914893617021,
+        "c_pct": 0.6875,
+        "total_pct": 0.6178571428571429,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "IUK",
+        "name": "Adam",
+        "cap_type": "D+C",
+        "d_pct": 0.44680851063829785,
+        "c_pct": 0.4625,
+        "total_pct": 0.553571,
+        "ask": "Parts + Service together — workshop pull-through & RO attach CAP"
+      },
+      {
+        "country": "IUK",
+        "name": "Bob Gerard Ltd",
+        "cap_type": "D-only",
+        "d_pct": 0.5106382978723404,
+        "c_pct": 0.7,
+        "total_pct": 0.667857,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "IUK",
+        "name": "PatKirk",
+        "cap_type": "D+C",
+        "d_pct": 0.5319148936170213,
+        "c_pct": 0.4125,
+        "total_pct": 0.603571,
+        "ask": "Parts + Service together — workshop pull-through & RO attach CAP"
+      },
+      {
+        "country": "MIDI_ES",
+        "name": "ESTORAUTO,S.L.",
+        "cap_type": "D+C",
+        "d_pct": 0.425531914893617,
+        "c_pct": 0.4875,
+        "total_pct": 0.564286,
+        "ask": "Parts + Service together — workshop pull-through & RO attach CAP"
+      },
+      {
+        "country": "MIDI_FR",
+        "name": "BERNARD TRUCKS LORRAINE S.A.S. societé à associé unique",
+        "cap_type": "D-only",
+        "d_pct": 0.0,
+        "c_pct": 0.775,
+        "total_pct": 0.453571,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "MIDI_FR",
+        "name": "CHAUMONT POIDS LOURDS SOCIETE PAR ACTIONS SIMPLIFIEE",
+        "cap_type": "D+C",
+        "d_pct": 0.0,
+        "c_pct": 0.0375,
+        "total_pct": 0.232143,
+        "ask": "Parts + Service together — workshop pull-through & RO attach CAP"
+      },
+      {
+        "country": "MIDI_FR",
+        "name": "ETABLISSEMENT LAGUERRE ET FILS SARL",
+        "cap_type": "D-only",
+        "d_pct": 0.5106382978723404,
+        "c_pct": 0.7375,
+        "total_pct": 0.582143,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "NL",
+        "name": "Autobedrijf Tiggeloven B.V.",
+        "cap_type": "D-only",
+        "d_pct": 0.6170212765957447,
+        "c_pct": 0.825,
+        "total_pct": 0.6642857142857143,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "PETROS",
+        "name": "Afoi Andriopouloi OE",
+        "cap_type": "D-only",
+        "d_pct": 0.6382978723404256,
+        "c_pct": 0.75,
+        "total_pct": 0.628571,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "PETROS",
+        "name": "Basdelis G. A. IKE",
+        "cap_type": "D-only",
+        "d_pct": 0.574468085106383,
+        "c_pct": 0.7125,
+        "total_pct": 0.621429,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "PETROS",
+        "name": "Chaniotis A. AE",
+        "cap_type": "D-only",
+        "d_pct": 0.5957446808510638,
+        "c_pct": 0.7,
+        "total_pct": 0.571429,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "POLAND",
+        "name": "PGD JM MOTORS Sp. z o. o.",
+        "cap_type": "D-only",
+        "d_pct": 0.6382978723404256,
+        "c_pct": 0.825,
+        "total_pct": 0.775,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "ROMANIA",
+        "name": "SIMODE CRAIOVA",
+        "cap_type": "D-only",
+        "d_pct": 0.5319148936170213,
+        "c_pct": 0.7875,
+        "total_pct": 0.55,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "RSA",
+        "name": "Granrud Bilverksted AS",
+        "cap_type": "D-only",
+        "d_pct": 0.6382978723404256,
+        "c_pct": 0.8375,
+        "total_pct": 0.7714285714285715,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "RSA",
+        "name": "Kristoffersen Bil As.",
+        "cap_type": "D-only",
+        "d_pct": 0.6382978723404256,
+        "c_pct": 0.75,
+        "total_pct": 0.6535714285714286,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      }
+    ],
+    "totals": {
+      "D-only": 21,
+      "D+C": 11,
+      "C-only": 1,
+      "OK": 381,
+      "unclassified": 0
+    }
+  },
+  "park_fill": {
+    "r_park_change_vs_fill": 0.47609614807436634,
+    "n": 8,
+    "rows": [
+      {
+        "country": "PETROS",
+        "uio_name": "Petros Petropoulos",
+        "uio_units": 3118.0,
+        "park_change_5y_pct": -0.20525978191148173,
+        "ageing_label": "Shrinking / likely older",
+        "ageing_risk": "high",
+        "fill_pct": 60.0,
+        "ids_d_avg_pct": 73.3,
+        "note": "Shrinking park + soft fill — age/odd-parts hypothesis fits"
+      },
+      {
+        "country": "CYPRUS",
+        "uio_name": "Loutsios & Sons",
+        "uio_units": 2072.0,
+        "park_change_5y_pct": -0.10907335907335908,
+        "ageing_label": "Shrinking / likely older",
+        "ageing_risk": "high",
+        "fill_pct": null,
+        "ids_d_avg_pct": 72.3,
+        "note": ""
+      },
+      {
+        "country": "ISRAEL",
+        "uio_name": "UMI",
+        "uio_units": 18349.0,
+        "park_change_5y_pct": -0.06349119843043217,
+        "ageing_label": "Slightly shrinking",
+        "ageing_risk": "elevated",
+        "fill_pct": 97.0,
+        "ids_d_avg_pct": 76.5,
+        "note": ""
+      },
+      {
+        "country": "RSA",
+        "uio_name": "RSA",
+        "uio_units": 8237.0,
+        "park_change_5y_pct": 0.06980696855651329,
+        "ageing_label": "Stable / mixed",
+        "ageing_risk": "medium",
+        "fill_pct": 95.9,
+        "ids_d_avg_pct": 82.0,
+        "note": ""
+      },
+      {
+        "country": "IUK",
+        "uio_name": "IUK",
+        "uio_units": 48876.0,
+        "park_change_5y_pct": 0.08126687945003683,
+        "ageing_label": "Stable / mixed",
+        "ageing_risk": "medium",
+        "fill_pct": 93.8,
+        "ids_d_avg_pct": 81.8,
+        "note": ""
+      },
+      {
+        "country": "BE",
+        "uio_name": "IBX",
+        "uio_units": 9311.0,
+        "park_change_5y_pct": 0.10170765760927934,
+        "ageing_label": "Stable / mixed",
+        "ageing_risk": "medium",
+        "fill_pct": 84.5,
+        "ids_d_avg_pct": 79.8,
+        "note": "Growing park — fill issues less likely driven by old VIN mix alone"
+      },
+      {
+        "country": "NL",
+        "uio_name": "IBX",
+        "uio_units": 9311.0,
+        "park_change_5y_pct": 0.10170765760927934,
+        "ageing_label": "Stable / mixed",
+        "ageing_risk": "medium",
+        "fill_pct": 84.5,
+        "ids_d_avg_pct": 75.7,
+        "note": "Growing park — fill issues less likely driven by old VIN mix alone"
+      },
+      {
+        "country": "HUNGARY",
+        "uio_name": "AutoWallis",
+        "uio_units": 3714.0,
+        "park_change_5y_pct": 0.10446957458266021,
+        "ageing_label": "Stable / mixed",
+        "ageing_risk": "medium",
+        "fill_pct": null,
+        "ids_d_avg_pct": 89.5,
+        "note": "Growing park — fill issues less likely driven by old VIN mix alone"
+      },
+      {
+        "country": "MALTA",
+        "uio_name": "GasanZammit",
+        "uio_units": 1054.0,
+        "park_change_5y_pct": 0.2647058823529412,
+        "ageing_label": "Growing / likely younger",
+        "ageing_risk": "low",
+        "fill_pct": 87.7,
+        "ids_d_avg_pct": 87.2,
+        "note": "Growing park — fill issues less likely driven by old VIN mix alone"
+      },
+      {
+        "country": "PORTUGAL",
+        "uio_name": "Imotors",
+        "uio_units": 6903.0,
+        "park_change_5y_pct": 0.29595827900912647,
+        "ageing_label": "Growing / likely younger",
+        "ageing_risk": "low",
+        "fill_pct": null,
+        "ids_d_avg_pct": 88.7,
+        "note": "Growing park — fill issues less likely driven by old VIN mix alone"
+      },
+      {
+        "country": "ROMANIA",
+        "uio_name": "Isuzu Rom Auto",
+        "uio_units": 986.0,
+        "park_change_5y_pct": 0.3265720081135903,
+        "ageing_label": "Growing / likely younger",
+        "ageing_risk": "low",
+        "fill_pct": 88.5,
+        "ids_d_avg_pct": 80.1,
+        "note": "Growing park — fill issues less likely driven by old VIN mix alone"
+      },
+      {
+        "country": "POLAND",
+        "uio_name": null,
+        "uio_units": null,
+        "park_change_5y_pct": null,
+        "ageing_label": "No UIO age proxy",
+        "ageing_risk": "unknown",
+        "fill_pct": 84.5,
+        "ids_d_avg_pct": 87.5,
+        "note": ""
+      }
+    ],
+    "method_note": "Ageing proxy = 5-year net UIO change from UIO.xlsx (latest vs −5y), not mean vehicle age. Hypothesis: shrinking parks leave older vehicles → harder repairs → lower fill. Positive r supports younger/growing ↔ higher fill."
+  },
+  "glossary": {
+    "pearson": "Pearson r measures how two series move together across markets, from −1 to +1.\n+1 = perfect lockstep\n0 = no linear link\n−1 = perfect opposite\n\nHere each point is ONE distributor (not one dealer).\nSo this is a cross-market prior — NOT a correlation inside IBX or IUK.",
+    "section_d": "IDS Section D = Parts standards in the dealer self-evaluation (stock, counter, genuine display, targets, fill tracking, etc.).\nShown as % of maximum points for that section.\nD avg = average across scored dealers in the country.\nIt is a PROCESS / STANDARDS score — not € sales.",
+    "d_min": "Lowest Section D % among scored dealers in that country.\nA big gap between D avg and D min = 'floor problem': the network average looks fine but a few dealers are very weak.",
+    "genuine_mix": "Genuine parts share (€ mix) = Genuine € ÷ (Genuine € + BVP €).\n\nYES — it is how high genuine is compared with BVP inside that basket.\nExample: 80% means €80 genuine and €20 BVP out of €100 in that mix.\n\nIt is NOT 'genuine vs all independent aftermarket'.\nIt is NOT PMS capture %.\nHigh mix (e.g. 85–98%) = mostly genuine in the Genuine+BVP euro mix.\nLow mix (e.g. <45–50%) = BVP takes a large € share of that basket.\n\nIsrael/UMI can show a very low mix — that is a mix/policy story, not fill.",
+    "pms_total": "PMS total capture = actual parts sales ÷ expected wallet (all PMS lines).\nPRIMARY commercial lens — sales is sales (includes BVP/total basket).\nHigh IDS D does NOT automatically mean high PMS capture (in this study the cross-market link is even slightly negative).",
+    "pms_genuine": "PMS genuine capture = same idea as total capture, but only the genuine line type.\nExtra lens — do not replace total capture with this as the headline.",
+    "fill": "KPI first fill rate = share of parts demand lines shipped from stock on first request (KPI Master).\nHigher is usually better ops (fewer backorders).\nRough guide: well above ~90% looks strong; ~60% (e.g. Petros) is soft.\nAlways read with MOS and park age — older shrinking parks often need more odd/slow-moving parts, which can drag fill even with good processes.",
+    "mos": "MOS = Months Of Supply (days in KPI Master, averaged).\nRoughly: how many days of stock you are carrying vs sales pace.\n\nWhat is 'high' MOS?\n• Lean: often ~40–70 days (e.g. IBX ~47 in this extract)\n• Typical/elevated: ~90–120 days\n• High: ~140+ days (capital tied in stock; e.g. UMI ~147)\n• Extreme: 200–300+ days (e.g. some MIDI readings) — investigate\n\nHigh MOS is not 'good' by itself. Too high = overstock / slow movers. Too low with poor fill = stockouts. Target bands are market-specific.",
+    "gps_spu": "GPS €/UIO (PRISM) = parts € intensity per Unit In Operation (parc vehicle).\n\nIMPORTANT — warranty: the headline figure used here is spend_per_unit_eur, which INCLUDES warranty parts (warranty is embedded in ERP genuine sales).\nAn ex-warranty €/UIO also exists and is shown on cards as '€/UIO ex-w'.\n\nThis is the better-positioned '€ per unit' metric vs sparse KPI Parts Sales per Unit.\nDifferent from genuine mix % and from IDS Section D.\nTraffic light (green/amber) is on the INCLUSIVE €/UIO unless labelled ex-w.",
+    "gps_spu_ex": "GPS €/UIO excluding warranty parts.\nHeadline GPS on cards still includes warranty; use this to see how much warranty inflates €/UIO (large gaps e.g. on UMI).",
+    "gps_light": "PRISM traffic light on GPS €/UIO intensity for that distributor (on the INCLUSIVE / with-warranty figure unless labelled ex-w).\nGreen = intensity in a healthier band vs peers/targets; amber = soft. Not an IDS result.",
+    "park_age": "Park ageing proxy from UIO.xlsx stock time series (not a true mean vehicle age).\n5y net park change % = (UIO_2024 − UIO_2019) / UIO_2024.\nNegative = shrinking parc → remaining fleet tends to be older (harder repairs, more odd parts, lower first-fill risk).\nStrongly positive = younger / expanding parc.",
+    "kpi_spu": "KPI Master row: Parts Sales per Unit in € (€ parts ÷ unit base).\nSame FAMILY of idea as GPS €/UIO (intensity per vehicle), but sparsely filled.\nWhen blank: prefer GPS €/UIO — it is better positioned for this comparison.\nSee §05. The ~0.98 correlation uses just 3 markets — ignore that bar.",
+    "cap_d_only": "COUNT of dealers in this country tagged 'D-only' for Kaizen.\n\nMeaning: weak on IDS Parts (Section D), but Service (Section C) is OK.\nExample: CAP D-only = 4 → four dealers need a Parts/counter CAP, not a workshop CAP.\n\nThis is NOT question D.1 or D.4 from the Excel — it is a headcount.",
+    "cap_d_plus_c": "COUNT of dealers in this country tagged 'D+C' for Kaizen.\n\nMeaning: weak on BOTH Parts (D) and Service (C).\nExample: CAP D+C = 1 → one dealer needs a combined workshop + parts CAP (RO attach / pull-through), not only a counter fix.\n\nThis is NOT an IDS question number — it is a headcount.",
+    "cap_c_only": "COUNT of dealers weak on Service (C) only, while Parts (D) looks OK.\nAgain a headcount — not an Excel question code.",
+    "benelux": "Benelux result-report tab = BE + NL dealers combined.\nIf we also keep BE and NL tabs, summing countries double-counts those dealers.\nHygiene drops the Benelux rollup from network averages.",
+    "zero_shells": "Dealers with 0% / blank totals — often empty MIDI self-eval shells still in the file.\nThey pull averages down unfairly, so hygiene excludes them from scored stats.",
+    "raw_rows": "Every dealer row in the dashboard extract before hygiene filters.",
+    "clean_rows": "Dealer rows after dropping Benelux rollup and 0% unscored shells."
+  },
+  "kpi_spu_coverage": {
+    "rows": [
+      {
+        "kpi_name": "IUK",
+        "ids_countries": "IUK",
+        "kpi_fill_rate": 0.9376666666666666,
+        "kpi_mos_days": 74.83333333333333,
+        "kpi_spu_eur": 336.30239896261077
+      },
+      {
+        "kpi_name": "Isuzu Rom Auto",
+        "ids_countries": "ROMANIA",
+        "kpi_fill_rate": 0.8848333333333334,
+        "kpi_mos_days": 119.83333333333333,
+        "kpi_spu_eur": 239.2562417871222
+      },
+      {
+        "kpi_name": "Petros Petropoulos",
+        "ids_countries": "PETROS",
+        "kpi_fill_rate": 0.6,
+        "kpi_mos_days": 60.0,
+        "kpi_spu_eur": 67.07466666666666
+      },
+      {
+        "kpi_name": "Astara Portugal",
+        "ids_countries": "PORTUGAL",
+        "kpi_fill_rate": null,
+        "kpi_mos_days": null,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "GasanZammit",
+        "ids_countries": "MALTA",
+        "kpi_fill_rate": 0.8766666666666667,
+        "kpi_mos_days": 115.66666666666667,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "IBX (BENELUX)",
+        "ids_countries": "BE, NL",
+        "kpi_fill_rate": 0.8450333333333333,
+        "kpi_mos_days": 47.166666666666664,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "ITUK",
+        "ids_countries": "ITUK",
+        "kpi_fill_rate": 0.9494,
+        "kpi_mos_days": 137.83333333333334,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "Isuzu Polska",
+        "ids_countries": "POLAND",
+        "kpi_fill_rate": 0.8451666666666666,
+        "kpi_mos_days": null,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "Loutsios Group",
+        "ids_countries": "CYPRUS",
+        "kpi_fill_rate": null,
+        "kpi_mos_days": null,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "RSA",
+        "ids_countries": "RSA",
+        "kpi_fill_rate": 0.9591666666666666,
+        "kpi_mos_days": 98.16666666666667,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "UMI",
+        "ids_countries": "ISRAEL",
+        "kpi_fill_rate": 0.97,
+        "kpi_mos_days": 147.0,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "ISD",
+        "ids_countries": "— (not in IDS join map)",
+        "kpi_fill_rate": 0.9839,
+        "kpi_mos_days": 94.5,
+        "kpi_spu_eur": 319.6873071384489
+      },
+      {
+        "kpi_name": "Imotors",
+        "ids_countries": "— (not in IDS join map)",
+        "kpi_fill_rate": 0.82835,
+        "kpi_mos_days": 85.0,
+        "kpi_spu_eur": 462.1451247165533
+      },
+      {
+        "kpi_name": "MIDI",
+        "ids_countries": "— (not in IDS join map)",
+        "kpi_fill_rate": 0.9684999999999999,
+        "kpi_mos_days": 332.6666666666667,
+        "kpi_spu_eur": 473.2390236751448
+      },
+      {
+        "kpi_name": "WAE",
+        "ids_countries": "— (not in IDS join map)",
+        "kpi_fill_rate": 23.33795,
+        "kpi_mos_days": 91.83333333333333,
+        "kpi_spu_eur": 199.14375
+      },
+      {
+        "kpi_name": "AIOS",
+        "ids_countries": "— (not in IDS join map)",
+        "kpi_fill_rate": 0.965,
+        "kpi_mos_days": 157.83333333333334,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "BL ehf",
+        "ids_countries": "— (not in IDS join map)",
+        "kpi_fill_rate": 0.9066666666666667,
+        "kpi_mos_days": 112.0,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "IMF",
+        "ids_countries": "— (not in IDS join map)",
+        "kpi_fill_rate": 0.8788333333333334,
+        "kpi_mos_days": 34.333333333333336,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "Isuzu Ireland",
+        "ids_countries": "— (not in IDS join map)",
+        "kpi_fill_rate": 0.9716666666666667,
+        "kpi_mos_days": 121.16666666666667,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "Isuzu Sverige",
+        "ids_countries": "— (not in IDS join map)",
+        "kpi_fill_rate": 16.971666666666668,
+        "kpi_mos_days": 45.0,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "KIMA",
+        "ids_countries": "— (not in IDS join map)",
+        "kpi_fill_rate": 0.9033333333333333,
+        "kpi_mos_days": 30.0,
+        "kpi_spu_eur": null
+      },
+      {
+        "kpi_name": "UTI",
+        "ids_countries": "— (not in IDS join map)",
+        "kpi_fill_rate": 0.9155,
+        "kpi_mos_days": 146.33333333333334,
+        "kpi_spu_eur": null
+      }
+    ],
+    "filled": [
+      {
+        "kpi_name": "IUK",
+        "ids": "IUK"
+      },
+      {
+        "kpi_name": "Isuzu Rom Auto",
+        "ids": "ROMANIA"
+      },
+      {
+        "kpi_name": "Petros Petropoulos",
+        "ids": "PETROS"
+      }
+    ],
+    "blank_on_ids_map": [
+      {
+        "kpi_name": "Astara Portugal",
+        "ids": "PORTUGAL"
+      },
+      {
+        "kpi_name": "GasanZammit",
+        "ids": "MALTA"
+      },
+      {
+        "kpi_name": "IBX (BENELUX)",
+        "ids": "BE, NL"
+      },
+      {
+        "kpi_name": "ITUK",
+        "ids": "ITUK"
+      },
+      {
+        "kpi_name": "Isuzu Polska",
+        "ids": "POLAND"
+      },
+      {
+        "kpi_name": "Loutsios Group",
+        "ids": "CYPRUS"
+      },
+      {
+        "kpi_name": "RSA",
+        "ids": "RSA"
+      },
+      {
+        "kpi_name": "UMI",
+        "ids": "ISRAEL"
+      }
+    ]
+  },
+  "gps_warranty_note": "Headline GPS €/UIO in this pack is spend_per_unit_eur and INCLUDES warranty parts. Cards also show €/UIO ex-warranty where available.",
+  "metric_notes": {
+    "pearson": "Network r across DBs — not a within-DB Pearson. Used only as prior.",
+    "cap_split": "Within country: weak D vs median∩65% floor; D+C if Service (C) also weak.",
+    "chart_excludes": "Correlation chart and DB conclusions exclude PMS and KPI Parts Sales per Unit.",
+    "israel": "IDS Israel = UMI only.",
+    "park_age": "Ageing proxy = 5-year net UIO change from UIO.xlsx (latest vs −5y), not mean vehicle age. Hypothesis: shrinking parks leave older vehicles → harder repairs → lower fill. Positive r supports younger/growing ↔ higher fill."
+  }
+}

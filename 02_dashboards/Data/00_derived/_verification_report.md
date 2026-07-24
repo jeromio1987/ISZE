@@ -1,6 +1,6 @@
 # ISZE derived pipeline verification
 
-**Generated:** 2026-07-21T15:19:09Z
+**Generated:** 2026-07-23T19:27:17Z
 **Data root:** `C:\Users\jerom\Desktop\claude\ISZE\01_data`
 
 | Pass | Warn | Fail |

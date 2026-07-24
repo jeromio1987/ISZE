@@ -1,0 +1,45 @@
+# Decision-model layer — central assumptions file
+# ==================================================
+# Every parameter here is an ASSUMPTION unless its `source` says otherwise.
+# Outputs that depend on an assumption carry an `assumption_note` column.
+# Replace values when IML / source data lands — builders pick them up on next run.
+
+wallet_waterfall:
+  # Share of the uncaptured wallet considered addressable (serviceable demand
+  # ISZE could realistically win). Same convention as PMS capture.
+  addressable_pct: 1.00          # full parc addressable (Jerome 2026-07-03; was 0.70 ASSUMPTION)
+  years: [2023, 2024, 2025]
+
+revenue_runway:
+  # Golden Window horizon. UIO workbook v17 projects to 2030 — no extrapolation
+  # beyond the workbook by default (set extrapolate_to_2032: true to extend at
+  # the last workbook YoY rate; rows get is_extrapolated = True).
+  start_year: 2024
+  end_year: 2030
+  extrapolate_to_2032: false
+  # Capture scenario: distributor's CY2025 GPS % held flat across the horizon.
+  # This is a BASELINE SCENARIO, not a forecast.
+  capture_basis_year: 2025
+  # Genuine-€-by-vehicle-age curve: NOT AVAILABLE (ask IML — Nov-2025 EU study).
+  # null = runway uses flat wallet (UIO × max target). When the real curve lands,
+  # provide {age_band: relative_index} here and rerun.
+  age_spend_curve: null
+
+defection:
+  min_historical_orders: 4       # minimum order-months before a series is judged
+  gap_alert_factor: 2.0          # alert when silence >= factor x median gap
+  min_qty_per_month: 1
+  dealer_min_active_months: 5    # dealer-level (ITUK sell-out): months active before judging
+  dealer_silent_months: 3        # dealer alert when last order >= N months before data end
+
+attach_rates:
+  min_dealers_per_cell: 10       # suppress attach cells with fewer dealers (stability)
+
+dealer_leakage:
+  min_dealer_total_units: 50     # ignore micro-dealers
+  benchmark: network_median_share  # expected category mix = median share across dealers
+
+elasticity:
+  min_qty_both_years: 10         # PN x distributor x year pairs below this are dropped
+  min_pairs_per_category: 30     # categories with fewer YoY pairs are reported but flagged low-power
+  winsorize_pct: 0.02            # clip extreme log-deltas (top/bottom 2%)

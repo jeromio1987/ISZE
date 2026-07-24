@@ -1,0 +1,35 @@
+{
+  "meta": {
+    "period": "CY2025",
+    "basis": "ISZE list/transfer EUR (qty × price) from claim files",
+    "source_doc": "Data/Warranty_CY2025_by_DB.md",
+    "wired_into": ["build_bvp_p4_p5.py", "enrich_gps_spu_v9.py", "ISZE_GPS_Dashboard_v9.html"],
+    "updated": "2026-07-03 (UMI gap closed — see notes.UMI)"
+  },
+  "warranty_eur": {
+    "ITUK": 374426.05,
+    "IUK": 1054395,
+    "UMI": 1791020.28,
+    "UTI": 255967.77,
+    "GERMANY": 259675,
+    "BELGIUM": 74677,
+    "IRELAND": 34857,
+    "NORWAY": 290712,
+    "SWEDEN": 189618,
+    "DENMARK": 9115,
+    "FINLAND": 48676,
+    "ICELAND": 7035,
+    "CYPRUS": 28041,
+    "GREECE": 56159,
+    "MALTA": 18219,
+    "ROMANIA": 19377,
+    "HUNGARY": 77434,
+    "PORTUGAL": 130588
+  },
+  "data_gaps": [],
+  "notes": {
+    "UMI": "Resolved 2026-07-03 from dedicated claim file 'UMI warranty data 202301 - 202605 (1).xlsx' (01_data/ root). CY2025 (calendar) = sum of 'Approved part cost' per line item where Written Date_YMD in 20250101-20251231 (12,042 lines / 201 claims). Matches the fiscal-year figure independently computed in distributor_warranty_expense_fiscal.csv (FY24/25/26 = 2,902,813/1,504,142/1,633,086) to the euro, confirming the source. Prior 0 was a genuine data gap (Israel LCV rows missing from the network-wide LCV warranty export), not a true zero.",
+    "IRELAND": "CV truck warranty is lower bound (82% priced)",
+    "PORTUGAL": "CV truck warranty is lower bound (52% priced)"
+  }
+}

@@ -28,6 +28,7 @@ from build_ids_result_report import (
     ROW_META_START,
     load_matrix_rows_from_sheet,
 )
+from ids_kaizen_hygiene import dealers_for_stats, hygienic_country_profiles, hygienic_network, is_rollup_country
 from ids_paths import DATA_ROOT, IDS_RESULT_REPORTS_DIR
 from ids_report_extract import build_dashboard_payload
 
@@ -208,9 +209,13 @@ def pick_dealers_per_country(payload: dict, n: int = DEALERS_PER_COUNTRY) -> lis
 
 
 def country_section_matrix(payload: dict) -> list[dict[str, Any]]:
+    """Country × section matrix on hygienic averages (no Benelux rollup / 0% shells)."""
     rows = []
-    network = payload.get("network", {}).get("sections_pct", {})
-    for country, prof in sorted(payload["country_profiles"].items()):
+    profiles = hygienic_country_profiles(payload)
+    network = hygienic_network(payload).get("sections_pct", {})
+    for country, prof in sorted(profiles.items()):
+        if is_rollup_country(country):
+            continue
         sec = prof.get("sections_pct") or {}
         row = {
             "country": country,
@@ -618,11 +623,11 @@ def main() -> int:
     study = {
         "built_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "dealers_per_country": DEALERS_PER_COUNTRY,
-        "scored_dealers": sum(1 for d in ids["dealers"] if not d.get("totals_only")),
+        "scored_dealers": len(dealers_for_stats(ids)),
         "total_dealers": len(ids["dealers"]),
-        "countries": sorted(ids["country_profiles"].keys()),
+        "countries": sorted(c for c in ids["country_profiles"].keys() if not is_rollup_country(c)),
         "section_labels": SECTION_LABELS,
-        "network_sections": ids.get("network", {}).get("sections_pct", {}),
+        "network_sections": hygienic_network(ids).get("sections_pct", {}),
         "focus_dealers": focus,
         "country_matrix": matrix,
         "country_flags": flags,

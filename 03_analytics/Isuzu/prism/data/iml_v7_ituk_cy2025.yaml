@@ -1,0 +1,74 @@
+# ITUK PMS — Model B (IML v7 schedule) — adopted 2026-07-02 for all IML/ITUK/external use
+# Source: ITUK_PMS_Analysis_Apr2026_v7_reclassified.xlsx · ISZE → ITUK (General) · CY2025
+
+model: iml_v7
+year: 2025
+distributor: ITUK
+uio_dvla: 22389
+scope: full DVLA fleet (all models)
+addressable_pct: 100
+mileage_km_yr: 50000
+methodology: >-
+  IML service schedule: Oil/Fuel/Air 1.25×/yr (40,000 km ÷ 50,000 km/yr);
+  Clutch/Brake 0.5×/yr. UIO × category freq, no addressability discount.
+source_workbook: ITUK_PMS_Analysis_Apr2026_v7_reclassified.xlsx
+source_sheet: ISZE → ITUK (General)
+
+headline:
+  revenue_gap_eur_sum: 2038471
+  weighted_cover_pct: 35.9
+  actual_pms_rev_eur: 809458
+  oil_filter_cover_pct: 35.1
+  oil_filter_cover_dlr_pct: 40.6
+
+categories:
+  - key: oil_filter
+    label: Oil filter
+    uio: 22389
+    freq_yr: 1.25
+    expected_demand: 27986
+    actual_sales: 9818
+    cover_pct: 35.1
+    actual_rev_eur: 76010
+    expected_rev_eur: 216612
+    revenue_gap_eur: 140602
+  - key: fuel_filter
+    label: Fuel filter
+    uio: 22389
+    freq_yr: 1.25
+    expected_demand: 27986
+    actual_sales: 18228
+    cover_pct: 65.1
+    actual_rev_eur: 238053
+    expected_rev_eur: 365494
+    revenue_gap_eur: 127440
+  - key: air_filter
+    label: Air filter
+    uio: 22389
+    freq_yr: 1.25
+    expected_demand: 27986
+    actual_sales: 3692
+    cover_pct: 13.2
+    actual_rev_eur: 111856
+    expected_rev_eur: 847893
+    revenue_gap_eur: 736037
+  - key: clutch
+    label: Clutch
+    uio: 10549
+    freq_yr: 0.5
+    expected_demand: 5274
+    actual_sales: 411
+    cover_pct: 7.8
+    actual_rev_eur: 33174
+    expected_rev_eur: 425733
+    revenue_gap_eur: 392559
+  - key: brake
+    label: Brake
+    uio: 22389
+    freq_yr: 0.5
+    expected_demand: 11194
+    actual_sales: 3953
+    cover_pct: 35.3
+    actual_rev_eur: 350365
+    expected_rev_eur: 992197
+    revenue_gap_eur: 641833

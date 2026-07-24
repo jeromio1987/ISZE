@@ -1,0 +1,91 @@
+# FACTS anchor — machine-readable companion to ISZE\FACTS.md
+# ============================================================
+# Each entry pins a FACTS.md headline figure to a metrics_snapshot.json key.
+# verify_facts_drift.py recomputes the snapshot side and FAILS on |drift| > tol.
+# When the pipeline legitimately changes a number: update FACTS.md AND this
+# anchor in the same commit — that is the reconcile step, enforced not manual.
+#
+# Seeded 2026-06-10 from metrics_snapshot.json (pipeline verify 96/0, 2026-06-04).
+
+anchors:
+  # 2026-07-03: parts base grew 94.26M -> 103.57M. Two legitimate, real causes
+  # (not a bug): (1) sales_fact widened from 434,858 to 477,505 rows (added
+  # CY2024-2025.XLSX's more-complete 2025 re-export + sales_2026tillApril.XLSX,
+  # Jan-Mar 2026 — closes the FY2025-completeness gap); (2) SaTy CR/RE
+  # credit-note/return lines (280 rows, EUR1.65M network-wide) now excluded from
+  # revenue-bearing metrics for the first time (flag H). Net effect is additive
+  # since the new 2026 quarter (~EUR10M gross) outweighs the CR/RE removal.
+  - key: sales.parts_base_eur
+    facts_value: 103573715
+    tol_pct: 0.5
+    facts_ref: "FACTS.md section 4 - parts base (2023-2026, ex-credit-notes/returns)"
+
+  # 2026-07-15: PRISM lane re-based on the real per-distributor UIO bucket
+  # split (cv_std/f_series/lcv) instead of the old hardcoded 2-market N75/LCV
+  # allowlist that mis-scoped 14 of 18 distributors — see modules/pms_engine.py
+  # expected_by_category_bucketed() and scripts/build_bvp_p0_p1.py. ITUK's real
+  # bucketed UIO (cv_std 22,190.9 + f_series 877.0 = 23,068) replaces the flat
+  # 22,389 DVLA figure that was previously (coincidentally) shared with the
+  # unrelated §1 IML headline. Section 1 (IML v7 Model B, 35.1%/UIO 22,389) is
+  # a separate source (iml_v7_ituk_cy2025.yaml) and is NOT affected by this fix.
+  - key: ituk.oil_filter.2023.total.capture_uncapped_pct
+    facts_value: 154.4
+    tol_pct: 1.0
+    facts_ref: "FACTS.md section 1b - PRISM lane 2023 (100% addressable)"
+
+  - key: ituk.oil_filter.2024.total.capture_uncapped_pct
+    facts_value: 83.5
+    tol_pct: 1.0
+    facts_ref: "FACTS.md section 1b - PRISM lane 2024 (100% addressable)"
+
+  - key: ituk.oil_filter.2025.total.capture_uncapped_pct
+    facts_value: 116.4
+    tol_pct: 1.0
+    facts_ref: "FACTS.md section 1b - PRISM lane 2025 (100% addressable)"
+
+  - key: ituk.oil_filter.2024.genuine.capture_uncapped_pct
+    facts_value: 62.1
+    tol_pct: 1.0
+    facts_ref: "FACTS.md section 1b - genuine 2024"
+
+  - key: ituk.oil_filter.2025.genuine.capture_uncapped_pct
+    facts_value: 87.6
+    tol_pct: 1.0
+    facts_ref: "FACTS.md section 1b - genuine 2025"
+
+  - key: ituk.oil_filter.uio_units
+    facts_value: 23068
+    tol_pct: 0.0
+    facts_ref: "FACTS.md section 1b - PRISM lane bucketed UIO (NOT the section 1 IML constant)"
+
+  - key: ituk.oil_filter.expected_qty
+    facts_value: 11680.2
+    tol_pct: 0.1
+    facts_ref: "FACTS.md section 1b - expected qty (100% addressable)"
+
+  - key: mix.ITUK.genuine_share_eur_pct_2025
+    facts_value: 97.3
+    tol_pct: 1.0
+    facts_ref: "BVP mix - ITUK overall genuine share CY2025"
+
+  - key: mix.UTI.genuine_share_eur_pct_2025
+    facts_value: 88.9
+    tol_pct: 1.0
+    facts_ref: "BVP mix - UTI overall genuine share CY2025"
+
+  # 40.2 (seeded 2026-06-10) included MIDI's ~EUR15M theoretical wallet with zero
+  # ISZE-direct sales; MIDI excluded from GPS/Projection per Jerome decision —
+  # first drift-checked run after the 2026-06-18 UIO refresh re-based it to 50.2.
+  # 2026-07-03: 50.2 -> 51.1. Wallet unchanged (EUR60.22M, same UIO/targets);
+  # captured_total_eur rose EUR30.20M -> EUR30.76M from the more-complete 2025
+  # re-export (CY2024-2025.XLSX), partially offset by CR/RE exclusion
+  # (~EUR509K removed from 2025). Verified: 30,756,771.61 / 60,217,570 = 51.08%.
+  - key: waterfall.network.gps_pct_2025
+    facts_value: 51.1
+    tol_pct: 0.5
+    facts_ref: "GPS - network CY2025 (ex-MIDI, ex-credit-notes/returns)"
+
+  - key: verify.fail
+    facts_value: 0
+    tol_pct: 0.0
+    facts_ref: "pipeline must be green"

@@ -191,7 +191,7 @@ Tender JSON (`tender_data.json`) is refreshed by weekly `isze-weekly-tender-scra
 | Asset | Policy |
 |-------|--------|
 | Previous parquet/CSVs | `[TODO: Jerome — backup location before overwrite]` |
-| Git | ISZE root + PRISM submodule; deploy via `isze-dashboard` repo only |
+| Git | ISZE monorepo only (PRISM folded in); Pages deploy via `isze-dashboard` is **legacy/optional** |
 | FACTS.md | Git history or manual revert to prior verified figures |
 
 ---

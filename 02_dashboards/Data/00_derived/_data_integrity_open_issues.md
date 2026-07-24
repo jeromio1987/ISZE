@@ -1,6 +1,6 @@
 # Data integrity — open issues
 
-**Updated:** 2026-07-21
+**Updated:** 2026-07-23
 
 Pipeline verification: **green** (see `_verification_report.md`). Items below are **source gaps** or **known limitations**, not build failures.
 

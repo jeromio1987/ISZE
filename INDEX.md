@@ -46,6 +46,7 @@ Everything else lives in numbered folders below.
 | Workspace root | `$env:ISZE_ROOT` (see `paths.yaml`) |
 | PRISM | `03_analytics/Isuzu/prism/run_prism.ps1` (**8503**) |
 | Human onboarding | `00_docs/HUMAN_ONBOARDING.md` |
+| **Holiday laptop / GitHub clones** | `00_docs/HOLIDAY_LAPTOP.md` |
 | Monthly refresh runbook | `00_docs/RUNBOOK_MONTHLY_REFRESH.md` |
 | Automation register | `00_docs/AUTOMATION_REGISTER.md` |
 | Data dictionary | `01_data/DATA_DICTIONARY.md` |

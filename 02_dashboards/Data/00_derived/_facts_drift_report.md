@@ -1,7 +1,7 @@
 # FACTS drift report
 
-**Checked:** 2026-07-21T15:23:37Z
-**Snapshot as-of:** 2026-07-21T15:23:36Z
+**Checked:** 2026-07-23T19:33:31Z
+**Snapshot as-of:** 2026-07-23T19:33:28Z
 
 | Anchor | FACTS value | Pipeline value | Drift | Status |
 |---|---|---|---|---|

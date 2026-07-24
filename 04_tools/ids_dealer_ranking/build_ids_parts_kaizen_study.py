@@ -33,6 +33,7 @@ from build_ids_result_report import (
     ROW_META_START,
     load_matrix_rows_from_sheet,
 )
+from ids_kaizen_hygiene import dealers_for_stats, hygienic_country_profiles, is_rollup_country
 from ids_paths import DATA_ROOT, IDS_RESULT_REPORTS_DIR
 from ids_report_extract import build_dashboard_payload, discover_result_reports
 
@@ -134,6 +135,11 @@ def load_pms_db_2025() -> dict[str, dict[str, float]]:
 
 
 def load_gps_2025() -> dict[str, dict[str, Any]]:
+    """GPS €/UIO for CY2025.
+
+    Headline spend_per_unit_eur INCLUDES warranty parts (embedded in ERP genuine sales).
+    Also expose ex-warranty SPU for comparison.
+    """
     out: dict[str, dict[str, Any]] = {}
     for row in csv_dict(DERIVED / "gps_spu_by_distributor.csv"):
         if row.get("year") != "2025":
@@ -143,7 +149,11 @@ def load_gps_2025() -> dict[str, dict[str, Any]]:
             continue
         out[row["distributor_code"]] = {
             "gps_spu_eur": spu,
+            "gps_spu_ex_warranty_eur": _f(row.get("spend_per_unit_ex_warranty_eur")),
+            "warranty_parts_eur": _f(row.get("warranty_parts_eur")),
+            "warranty_data_gap": str(row.get("warranty_data_gap") or "").lower() in {"true", "1", "yes"},
             "traffic_light": row.get("traffic_light") or "",
+            "traffic_light_ex_warranty": row.get("traffic_light_v9_ex_warranty") or "",
             "gps_capture_vs_max": _f(row.get("gps_capture_vs_max")),
         }
     return out
@@ -232,19 +242,26 @@ def load_kpi_fill_mos() -> dict[str, dict[str, float | None]]:
 
 
 def ids_country_section_d(payload: dict) -> dict[str, dict[str, Any]]:
+    """Section D country stats with Benelux rollup + 0% shell hygiene."""
+    profiles = hygienic_country_profiles(payload)
     out: dict[str, dict[str, Any]] = {}
-    for c, prof in payload["country_profiles"].items():
-        d_pct = prof.get("sections_pct", {}).get("D")
-        dealers = [d for d in payload["dealers"] if d["country"] == c and not d.get("totals_only")]
+    for c, prof in profiles.items():
+        if is_rollup_country(c):
+            continue
+        dealers = [
+            d
+            for d in dealers_for_stats(payload)
+            if d["country"] == c and not d.get("totals_only")
+        ]
         d_vals = [
             d["sections"]["D"]["pct"]
             for d in dealers
             if d.get("sections", {}).get("D", {}).get("pct") is not None
         ]
         out[c] = {
-            "ids_d_avg": d_pct,
+            "ids_d_avg": prof.get("sections_pct", {}).get("D"),
             "ids_total_avg": prof.get("total_pct"),
-            "dealer_count_scored": len(d_vals),
+            "dealer_count_scored": len(d_vals) if d_vals else prof.get("dealer_count") or 0,
             "ids_d_min": min(d_vals) if d_vals else None,
             "ids_d_p25": sorted(d_vals)[max(0, len(d_vals) // 4)] if d_vals else None,
         }
@@ -287,7 +304,11 @@ def build_join_rows(
                 "pms_gap_eur": p.get("pms_gap_eur"),
                 "genuine_share_eur": gen_share,
                 "gps_spu_eur": g.get("gps_spu_eur"),
+                "gps_spu_ex_warranty_eur": g.get("gps_spu_ex_warranty_eur"),
+                "warranty_parts_eur": g.get("warranty_parts_eur"),
+                "warranty_data_gap": g.get("warranty_data_gap"),
                 "gps_light": g.get("traffic_light"),
+                "gps_light_ex_warranty": g.get("traffic_light_ex_warranty"),
                 "kpi_fill_rate": k.get("kpi_fill_rate"),
                 "kpi_mos_days": k.get("kpi_mos_days"),
                 "kpi_spu_eur": k.get("kpi_spu_eur"),

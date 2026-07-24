@@ -1,0 +1,203 @@
+# Golden checks for ISZE derived pipeline (2026-05-15 baseline; refreshed 2026-07-03).
+# Update after intentional data refreshes; verifier reads this file.
+
+# 2026-07-03: added CY2024-2025.XLSX (more-complete 2025 re-export, supersedes
+# CY2025.XLSX) + sales_2026tillApril.XLSX (Jan-Mar 2026, closes the FY2025
+# completeness gap). 434,858 -> 477,505 rows. See build_sales_fact_from_cy.py
+# CY_FILE_YEARS for the year-ownership rule that avoids double-counting 2024.
+sales_fact:
+  row_count: 477505
+  row_tolerance_pct: 0.5
+  years: [2023, 2024, 2025, 2026]
+  max_unmapped_pct: 1.0
+
+bvp_pn_dimension:
+  min_rows: 500
+  min_pms_flagged: 50
+  line_types: [genuine, bvp]
+
+genuine_bvp_crossref:
+  min_rows: 200
+  min_catalog_pairs: 150
+  pair_sources: [catalog_paired, catalog_continuation, registry_model_category]
+
+gps_spu_warranty:
+  warranty_year: 2025
+  min_dbs_with_warranty: 17
+  required_columns:
+    - warranty_parts_eur
+    - sales_ex_warranty_eur
+    - spend_per_unit_ex_warranty_eur
+    - gps_capture_ex_warranty_vs_max
+    - traffic_light_v9_ex_warranty
+
+pms_summary_by_db:
+  min_distributors: 18
+  required_columns:
+    - distributor_code
+    - capture_rate_total_wtd
+    - oil_filter_capture
+    - revenue_gap_eur_sum
+
+pms_capture:
+  min_rows: 100
+  line_types: [genuine, bvp, total]
+  min_distributors: 18
+  # ITUK (and peers) sell PMS to non-Isuzu parc (e.g. DAF) and multi-segment PNs;
+  # uncapped capture can exceed 100% vs Isuzu UIO denominator — not a data bug.
+  # Catalog-wide actuals push small markets high (e.g. DEN oil_filter); cap is sanity only.
+  capture_rate_max: 10.00
+
+ituk_pilot:
+  distributor_code: ITUK
+  # PRISM lane (2026-07-15): bucketed model split cv_std+f_series = 23068
+  # (NOT IML v7 DVLA 22389 — that stays in iml_v7_ituk_cy2025.yaml / FACTS §1).
+  uio_units: 23068
+  uio_tolerance: 0
+  # UIO × 0.5 svc/yr × 100% addressable (Jerome 2026-07-03).
+  # Actuals = registry + BVP-catalog PMS PNs (incl. multi-model + cross-OEM) — do not strip sales.
+  oil_filter_total_capture:
+    "2024":
+      min: 0.82
+      max: 0.92
+    "2025":
+      min: 1.15
+      max: 1.28
+
+required_derived:
+  - sales_fact.parquet
+  - bvp_pn_dimension.csv
+  - genuine_bvp_crossref.csv
+  - sales_with_crossref.parquet
+  - substitution_by_pair_year.csv
+  - substitution_by_db_year.csv
+  - pms_capture_by_db_year.csv
+  - mix_genuine_bvp_by_family.csv
+  - mix_genuine_bvp_pms.csv
+  - db_benchmark_mix.csv
+  - gps_spu_by_distributor.csv
+  - pms_summary_by_db.csv
+  - gps_spu_by_family.csv
+  - gps_spu_pms.csv
+  - aim_exposure_by_db_year.csv
+  - aim_bvp_family_risk.csv
+  - pms_opportunity_matrix.csv
+  - network_percentile.csv
+  - vor_airfreight_risk.csv
+  - vor_seasonality.csv
+  - vor_profile.csv
+  - capture_trajectory.csv
+  - part_lifecycle.csv
+  - revenue_concentration.csv
+  - revenue_waterfall.csv
+  - price_premium.csv
+  - basket_correlation.csv
+  - substitution_timeline.csv
+  - capture_recovery_model.csv
+  - bvp_addressable_basket.csv
+  - ituk_pms_pn_audit.csv
+  - parts_catalog_dimension.csv
+  - sales_by_db_fig_key_year.csv
+  - aim_gps_matrix.csv
+
+aim_gps_matrix:
+  min_rows: 50
+  # 2026-07-17: AIM pricing-risk axis retired — see DECISIONS.md
+  quadrants: [defend, priority_target, attach_gap, wallet_gap, insufficient_data]
+
+bvp_addressable_basket:
+  min_rows: 1500
+  required_columns: [distributor_code, genuine_pn, bvp_pn, product_subgroup, currently_selling_bvp]
+  min_distinct_distributors: 20
+  min_distinct_subgroups: 22
+
+sales_fact_saty:
+  required_column: saty
+  min_non_null_pct: 95.0
+
+# fig_key on sales_fact: SAP export column when present, else parts_catalog_dimension
+# join at build time (2026-07-02). Floor set below observed sales-weighted coverage.
+sales_fact_fig_key:
+  min_non_null_pct: 90.0
+
+pms_opportunity_matrix:
+  min_rows: 200
+  capture_rate_max: 10.00
+  tam_eur_min: 1.0
+
+network_percentile:
+  min_rows: 200
+  metrics: [gps_spu, total_capture, genuine_capture, bvp_mix, aim_risk]
+  percentile_range: [0, 100]
+
+vor_airfreight_risk:
+  min_rows: 50
+
+vor_seasonality:
+  min_rows: 100
+
+vor_profile:
+  min_rows: 50
+
+capture_trajectory:
+  min_rows: 200
+  projected_years: [2026, 2027]
+  r2_range: [0, 1]
+
+part_lifecycle:
+  min_rows: 300
+  lifecycle_stages: [emerging, growing, mature, declining, zombie]
+
+revenue_concentration:
+  min_rows: 100
+  gini_range: [0, 1]
+
+revenue_waterfall:
+  min_rows: 50
+
+price_premium:
+  min_rows: 30
+  price_premium_range: [-0.5, 10.0]
+
+basket_correlation:
+  min_rows: 30
+  correlation_range: [-1, 1]
+
+substitution_timeline:
+  min_rows: 100
+
+capture_recovery_model:
+  min_rows: 50
+  gap_types: [substitution, under_service, catalog_gap]
+
+distributor_geo:
+  min_rows: 15
+
+parts_catalog_dimension:
+  min_rows: 100000
+  min_registry_with_fig_key: 35
+  min_with_fig_key: 150000
+  min_fig_key_pct: 95.0
+
+sales_by_db_fig_key_year:
+  min_rows: 50
+  min_mapped_fig_key_rows: 10
+
+ituk_pms_pn_audit:
+  min_rows: 10
+  distributor_code: ITUK
+  required_columns:
+    - year
+    - distributor_code
+    - pms_category
+    - part_number
+    - pms_type
+    - actual_qty
+    - share_of_category_qty
+  oil_filter_min_pns: 3
+
+required_raw:
+  - raw/sales/CY2023-2024.XLSX
+  - raw/sales/CY2024-2025.XLSX
+  - raw/sales/sales_2026tillApril.XLSX
+  - raw/reference/BVP PARTS CATALOG.xlsx
