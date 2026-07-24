@@ -120,7 +120,7 @@ ISZE should be clean enough that a fresh clone is usable without hunting nested 
 
 | Item | Action |
 |------|--------|
-| **`rigged-game` (accountability)** | Local git ready at `Private/rigged-game/`. GitHub repo **does not exist yet** (`gh` not logged in). Create empty **private** repo `jeromio1987/rigged-game`, then from that folder: `git push -u origin main`. |
+| **`rigged-game` (accountability)** | Local commit ready at `Private/rigged-game/`. Create empty **private** repo named `rigged-game` under `jeromio1987`, then run: `cd Private/rigged-game; git push -u origin main` |
 | Archive dead remotes | Archive (don’t delete): `jarvis-isze`, `isze-dashboard`, standalone `PRISM`. |
 | `gh auth login` | Needed once if you want agents to create/archive repos for you. |
 
