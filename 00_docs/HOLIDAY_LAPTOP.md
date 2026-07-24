@@ -17,7 +17,7 @@ git clone https://github.com/jeromio1987/investing-dashboard.git
 Optional fun side quest:
 
 ```bash
-git clone https://github.com/jeromio1987/rigged-game.git
+git clone https://github.com/jeromio1987/accountability.git
 ```
 
 Optional (rarely needed on holiday):
@@ -37,7 +37,7 @@ After clone of ISZE (post–PRISM fold): **no** `--recurse-submodules` needed. P
 | **ISZE** | All work: dashboards (`02_dashboards/`), Jarvis/tools (`04_tools/isze-tools/`), PRISM, docs, allowlisted derived data |
 | **mypens** | Personal training/food product |
 | **investing-dashboard** | Personal investing app (`Private/investing` locally) |
-| **rigged-game** | Accountability / “Rigged Game” environment cockpit (side quest) |
+| **accountability** | Rigged Game environment cockpit (side quest; local folder `Private/rigged-game`) |
 | **gents-trip-pitch** | Trip pitch site — only if you need it |
 
 ---
@@ -116,13 +116,13 @@ ISZE should be clean enough that a fresh clone is usable without hunting nested 
 | `investing-dashboard` | Synced earlier. |
 | `gents-trip-pitch` | Synced earlier (optional). |
 
-### Blocked / your click needed
+### Your clicks still needed
 
 | Item | Action |
 |------|--------|
-| **`rigged-game` (accountability)** | Local commit ready at `Private/rigged-game/`. Create empty **private** repo named `rigged-game` under `jeromio1987`, then run: `cd Private/rigged-game; git push -u origin main` |
-| Archive dead remotes | Archive (don’t delete): `jarvis-isze`, `isze-dashboard`, standalone `PRISM`. |
-| `gh auth login` | Needed once if you want agents to create/archive repos for you. |
+| **`accountability`** | Pushed to https://github.com/jeromio1987/accountability |
+| Archive dead remotes | GitHub → Settings → Danger Zone → Archive: `jarvis-isze`, `isze-dashboard`, standalone `PRISM` |
+| mypens dirty on this PC | New mobile cockpit files not committed — push before you leave if you need them on holiday |
 
 ### Intentionally missing after clone (by design)
 
