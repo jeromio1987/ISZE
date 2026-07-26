@@ -921,17 +921,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 88.2,
-                "rank": 13
+                "rank": 3
               },
               {
                 "year": 2024,
                 "percentile": 94.1,
-                "rank": 7
+                "rank": 2
               },
               {
                 "year": 2025,
                 "percentile": 88.2,
-                "rank": 13
+                "rank": 3
               }
             ]
           },
@@ -961,17 +961,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 82.4,
-                "rank": 19
+                "rank": 5
               },
               {
                 "year": 2024,
                 "percentile": 82.4,
-                "rank": 19
+                "rank": 5
               },
               {
                 "year": 2025,
                 "percentile": 70.6,
-                "rank": 30
+                "rank": 7
               }
             ]
           },
@@ -981,17 +981,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 58.8,
-                "rank": 42
+                "rank": 10
               },
               {
                 "year": 2024,
                 "percentile": 52.9,
-                "rank": 48
+                "rank": 11
               },
               {
                 "year": 2025,
                 "percentile": 58.8,
-                "rank": 42
+                "rank": 10
               }
             ]
           },
@@ -1001,17 +1001,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 23.5,
-                "rank": 77
+                "rank": 17
               },
               {
                 "year": 2024,
                 "percentile": 41.2,
-                "rank": 60
+                "rank": 13
               },
               {
                 "year": 2025,
                 "percentile": 47.1,
-                "rank": 54
+                "rank": 12
               }
             ]
           },
@@ -1021,17 +1021,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 94.1,
-                "rank": 7
+                "rank": 2
               },
               {
                 "year": 2024,
                 "percentile": 88.2,
-                "rank": 13
+                "rank": 3
               },
               {
                 "year": 2025,
                 "percentile": 94.1,
-                "rank": 7
+                "rank": 2
               }
             ]
           },
@@ -1041,17 +1041,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 52.9,
-                "rank": 48
+                "rank": 11
               },
               {
                 "year": 2024,
                 "percentile": 64.7,
-                "rank": 36
+                "rank": 8
               },
               {
                 "year": 2025,
                 "percentile": 82.4,
-                "rank": 19
+                "rank": 5
               }
             ]
           },
@@ -1061,17 +1061,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 29.4,
-                "rank": 72
+                "rank": 16
               },
               {
                 "year": 2024,
                 "percentile": 58.8,
-                "rank": 42
+                "rank": 10
               },
               {
                 "year": 2025,
                 "percentile": 29.4,
-                "rank": 72
+                "rank": 16
               }
             ]
           },
@@ -1081,17 +1081,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 35.3,
-                "rank": 66
+                "rank": 15
               },
               {
                 "year": 2024,
                 "percentile": 29.4,
-                "rank": 72
+                "rank": 16
               },
               {
                 "year": 2025,
                 "percentile": 23.5,
-                "rank": 77
+                "rank": 17
               }
             ]
           }
@@ -1107,17 +1107,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 94.1,
-                "rank": 7
+                "rank": 2
               },
               {
                 "year": 2024,
                 "percentile": 94.1,
-                "rank": 7
+                "rank": 2
               },
               {
                 "year": 2025,
                 "percentile": 94.1,
-                "rank": 7
+                "rank": 2
               }
             ]
           },
@@ -1147,17 +1147,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 35.3,
-                "rank": 66
+                "rank": 12
               },
               {
                 "year": 2024,
                 "percentile": 0.0,
-                "rank": 101
+                "rank": 18
               },
               {
                 "year": 2025,
                 "percentile": 52.9,
-                "rank": 48
+                "rank": 9
               }
             ]
           },
@@ -1167,17 +1167,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 82.4,
-                "rank": 19
+                "rank": 4
               },
               {
                 "year": 2024,
                 "percentile": 41.2,
-                "rank": 60
+                "rank": 11
               },
               {
                 "year": 2025,
                 "percentile": 64.7,
-                "rank": 36
+                "rank": 7
               }
             ]
           },
@@ -1187,17 +1187,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 52.9,
-                "rank": 48
+                "rank": 9
               },
               {
                 "year": 2024,
                 "percentile": 88.2,
-                "rank": 13
+                "rank": 3
               },
               {
                 "year": 2025,
                 "percentile": 88.2,
-                "rank": 13
+                "rank": 3
               }
             ]
           },
@@ -1207,17 +1207,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 88.2,
-                "rank": 13
+                "rank": 3
               },
               {
                 "year": 2024,
                 "percentile": 76.5,
-                "rank": 25
+                "rank": 5
               },
               {
                 "year": 2025,
                 "percentile": 82.4,
-                "rank": 19
+                "rank": 4
               }
             ]
           },
@@ -1227,17 +1227,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 47.1,
-                "rank": 54
+                "rank": 10
               },
               {
                 "year": 2024,
                 "percentile": 35.3,
-                "rank": 66
+                "rank": 12
               },
               {
                 "year": 2025,
                 "percentile": 41.2,
-                "rank": 60
+                "rank": 11
               }
             ]
           },
@@ -1247,17 +1247,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 17.6,
-                "rank": 83
+                "rank": 15
               },
               {
                 "year": 2024,
                 "percentile": 82.4,
-                "rank": 19
+                "rank": 4
               },
               {
                 "year": 2025,
                 "percentile": 47.1,
-                "rank": 54
+                "rank": 10
               }
             ]
           },
@@ -1267,17 +1267,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 76.5,
-                "rank": 25
+                "rank": 5
               },
               {
                 "year": 2024,
                 "percentile": 64.7,
-                "rank": 36
+                "rank": 7
               },
               {
                 "year": 2025,
                 "percentile": 70.6,
-                "rank": 30
+                "rank": 6
               }
             ]
           }
@@ -1293,17 +1293,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 94.1,
-                "rank": 7
+                "rank": 2
               },
               {
                 "year": 2024,
                 "percentile": 94.1,
-                "rank": 7
+                "rank": 2
               },
               {
                 "year": 2025,
                 "percentile": 94.1,
-                "rank": 7
+                "rank": 2
               }
             ]
           },
@@ -1333,17 +1333,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 70.6,
-                "rank": 30
+                "rank": 6
               },
               {
                 "year": 2024,
                 "percentile": 23.5,
-                "rank": 77
+                "rank": 14
               },
               {
                 "year": 2025,
                 "percentile": 82.4,
-                "rank": 19
+                "rank": 4
               }
             ]
           },
@@ -1353,17 +1353,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 88.2,
-                "rank": 13
+                "rank": 3
               },
               {
                 "year": 2024,
                 "percentile": 70.6,
-                "rank": 30
+                "rank": 6
               },
               {
                 "year": 2025,
                 "percentile": 88.2,
-                "rank": 13
+                "rank": 3
               }
             ]
           },
@@ -1373,17 +1373,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 41.2,
-                "rank": 60
+                "rank": 11
               },
               {
                 "year": 2024,
                 "percentile": 76.5,
-                "rank": 25
+                "rank": 5
               },
               {
                 "year": 2025,
                 "percentile": 58.8,
-                "rank": 42
+                "rank": 8
               }
             ]
           },
@@ -1393,17 +1393,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 29.4,
-                "rank": 72
+                "rank": 13
               },
               {
                 "year": 2024,
                 "percentile": 29.4,
-                "rank": 72
+                "rank": 13
               },
               {
                 "year": 2025,
                 "percentile": 35.3,
-                "rank": 66
+                "rank": 12
               }
             ]
           },
@@ -1413,17 +1413,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 76.5,
-                "rank": 25
+                "rank": 5
               },
               {
                 "year": 2024,
                 "percentile": 64.7,
-                "rank": 36
+                "rank": 7
               },
               {
                 "year": 2025,
                 "percentile": 64.7,
-                "rank": 36
+                "rank": 7
               }
             ]
           },
@@ -1433,17 +1433,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 58.8,
-                "rank": 42
+                "rank": 8
               },
               {
                 "year": 2024,
                 "percentile": 88.2,
-                "rank": 13
+                "rank": 3
               },
               {
                 "year": 2025,
                 "percentile": 76.5,
-                "rank": 25
+                "rank": 5
               }
             ]
           },
@@ -1453,17 +1453,17 @@ window.__RISK_COCKPIT_DATA__ = {
               {
                 "year": 2023,
                 "percentile": 82.4,
-                "rank": 19
+                "rank": 4
               },
               {
                 "year": 2024,
                 "percentile": 82.4,
-                "rank": 19
+                "rank": 4
               },
               {
                 "year": 2025,
                 "percentile": 70.6,
-                "rank": 30
+                "rank": 6
               }
             ]
           }
@@ -1478,18 +1478,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 19.0,
-                "rank": 82
+                "percentile": 81.0,
+                "rank": 5
               },
               {
                 "year": 2024,
-                "percentile": 23.8,
-                "rank": 77
+                "percentile": 76.2,
+                "rank": 6
               },
               {
                 "year": 2025,
-                "percentile": 9.5,
-                "rank": 91
+                "percentile": 90.5,
+                "rank": 3
               }
             ]
           },
@@ -1498,18 +1498,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 57.1,
-                "rank": 44
+                "percentile": 42.9,
+                "rank": 13
               },
               {
                 "year": 2024,
-                "percentile": 81.0,
-                "rank": 20
+                "percentile": 19.0,
+                "rank": 18
               },
               {
                 "year": 2025,
-                "percentile": 66.7,
-                "rank": 34
+                "percentile": 33.3,
+                "rank": 15
               }
             ]
           },
@@ -1518,18 +1518,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 9.5,
-                "rank": 91
+                "percentile": 90.5,
+                "rank": 3
               },
               {
                 "year": 2024,
-                "percentile": 66.7,
-                "rank": 34
+                "percentile": 33.3,
+                "rank": 15
               },
               {
                 "year": 2025,
-                "percentile": 28.6,
-                "rank": 72
+                "percentile": 71.4,
+                "rank": 7
               }
             ]
           },
@@ -1538,18 +1538,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 52.4,
-                "rank": 49
+                "percentile": 47.6,
+                "rank": 12
               },
               {
                 "year": 2024,
-                "percentile": 47.6,
-                "rank": 53
+                "percentile": 52.4,
+                "rank": 11
               },
               {
                 "year": 2025,
-                "percentile": 81.0,
-                "rank": 20
+                "percentile": 19.0,
+                "rank": 18
               }
             ]
           },
@@ -1558,18 +1558,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 38.1,
-                "rank": 63
+                "percentile": 61.9,
+                "rank": 9
               },
               {
                 "year": 2024,
-                "percentile": 33.3,
-                "rank": 68
+                "percentile": 66.7,
+                "rank": 8
               },
               {
                 "year": 2025,
-                "percentile": 23.8,
-                "rank": 77
+                "percentile": 76.2,
+                "rank": 6
               }
             ]
           },
@@ -1578,18 +1578,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 14.3,
-                "rank": 87
+                "percentile": 85.7,
+                "rank": 4
               },
               {
                 "year": 2024,
-                "percentile": 14.3,
-                "rank": 87
+                "percentile": 85.7,
+                "rank": 4
               },
               {
                 "year": 2025,
-                "percentile": 33.3,
-                "rank": 68
+                "percentile": 66.7,
+                "rank": 8
               }
             ]
           },
@@ -1598,18 +1598,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 85.7,
-                "rank": 15
+                "percentile": 14.3,
+                "rank": 19
               },
               {
                 "year": 2024,
-                "percentile": 52.4,
-                "rank": 49
+                "percentile": 47.6,
+                "rank": 12
               },
               {
                 "year": 2025,
-                "percentile": 76.2,
-                "rank": 25
+                "percentile": 23.8,
+                "rank": 17
               }
             ]
           },
@@ -1618,18 +1618,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 0.0,
-                "rank": 101
+                "percentile": 100.0,
+                "rank": 1
               },
               {
                 "year": 2024,
-                "percentile": 4.8,
-                "rank": 96
+                "percentile": 95.2,
+                "rank": 2
               },
               {
                 "year": 2025,
-                "percentile": 0.0,
-                "rank": 101
+                "percentile": 100.0,
+                "rank": 1
               }
             ]
           },
@@ -1638,18 +1638,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 23.8,
-                "rank": 77
+                "percentile": 76.2,
+                "rank": 6
               },
               {
                 "year": 2024,
-                "percentile": 19.0,
-                "rank": 82
+                "percentile": 81.0,
+                "rank": 5
               },
               {
                 "year": 2025,
-                "percentile": 14.3,
-                "rank": 87
+                "percentile": 85.7,
+                "rank": 4
               }
             ]
           },
@@ -1658,18 +1658,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 66.7,
-                "rank": 34
-              },
-              {
-                "year": 2024,
-                "percentile": 85.7,
+                "percentile": 33.3,
                 "rank": 15
               },
               {
+                "year": 2024,
+                "percentile": 14.3,
+                "rank": 19
+              },
+              {
                 "year": 2025,
-                "percentile": 61.9,
-                "rank": 39
+                "percentile": 38.1,
+                "rank": 14
               }
             ]
           },
@@ -1678,18 +1678,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 61.9,
-                "rank": 39
+                "percentile": 38.1,
+                "rank": 14
               },
               {
                 "year": 2024,
-                "percentile": 28.6,
-                "rank": 72
+                "percentile": 71.4,
+                "rank": 7
               },
               {
                 "year": 2025,
-                "percentile": 47.6,
-                "rank": 53
+                "percentile": 52.4,
+                "rank": 11
               }
             ]
           },
@@ -1698,18 +1698,18 @@ window.__RISK_COCKPIT_DATA__ = {
             "points": [
               {
                 "year": 2023,
-                "percentile": 4.8,
-                "rank": 96
+                "percentile": 95.2,
+                "rank": 2
               },
               {
                 "year": 2024,
-                "percentile": 9.5,
-                "rank": 91
+                "percentile": 90.5,
+                "rank": 3
               },
               {
                 "year": 2025,
-                "percentile": 19.0,
-                "rank": 82
+                "percentile": 81.0,
+                "rank": 5
               }
             ]
           }

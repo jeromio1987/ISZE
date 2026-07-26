@@ -368,6 +368,14 @@ def _tender_horizon(horizon_days: int = 90, top_n: int = 30) -> dict:
     }
 
 
+def _league_rank(percentile: float, n_distributors: int) -> int:
+    """Convert a 0–100 percentile into an ordinal network rank."""
+    if n_distributors <= 1:
+        return 1
+    rank = n_distributors - round(percentile / 100.0 * (n_distributors - 1))
+    return max(1, min(n_distributors, int(rank)))
+
+
 def _network_bump(latest_year: int, top_n: int = 12) -> dict:
     df = pd.read_csv(NETWORK_PCT_CSV)
     metrics = [
@@ -397,9 +405,8 @@ def _network_bump(latest_year: int, top_n: int = 12) -> dict:
                 pct = float(row.iloc[0]["percentile_rank"])
                 if pd.isna(pct):
                     continue
-                if metric_id == "aim_risk":
-                    pct = 100.0 - pct
-                rank = int(round(100 - pct)) + 1
+                n_distributors = int(row.iloc[0]["n_distributors"])
+                rank = _league_rank(pct, n_distributors)
                 pts.append({"year": int(y), "percentile": round(pct, 1), "rank": rank})
             if pts:
                 lines.append({"distributor_code": db, "points": pts})
