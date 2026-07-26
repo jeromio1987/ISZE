@@ -33,6 +33,7 @@ OUTPUT = RANKINGS_DIR / "IDS_2026_Evaluation_Result_Reports_COMBINED.xlsx"
 COUNTRIES = (
     "BE",
     "NL",
+    "Denmark",
     "Benelux",
     "Poland",
     "Petros",

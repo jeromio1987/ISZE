@@ -1,6 +1,6 @@
 # ISZE Data manifest — sort-by-topic map
 
-**Last updated:** 2026-07-17 (ITUK/UIO landmine closed — keep 23068; fallbacks = v19) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
+**Last updated:** 2026-07-24 (IDS NL/DK/LUX drop — DK dealers filed + outputs rebuilt; LUX Autopolis staged) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
 
 This is the **data map**. Each subject has a numbered folder under `01_data/` — drop new files into the matching one (§1). A small **wired working-set stays flat at root** because build scripts read it from there (§3).
 
@@ -105,6 +105,7 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | ITUK_ExecutiveSummary_Jan2026.pptx | `01_data/08_Distributor/` | also Meetings (§09) |
 | Imotors_Portugal_UIO_GPS_PMS_Study.xlsx | `01_data/08_Distributor/` | Portugal (Imotors) study (filed 2026-07-16) |
 | BO OVERVIEW - UNIVERSAL TRUCKS ISRAEL LTD 01-07-2026 (1).xlsx | `01_data/08_Distributor/` | Israel/UTI back-order overview (filed 2026-07-16) |
+| **IDS 2026 dealer eval packs** (NL / DK / LUX drop 2026-07-24) | `01_data/90_INBOX/IDS_2026/` | ⚙ `04_tools/ids_dealer_ranking/` — NL unchanged (identical); DK 20 dealers filed; LUX Autopolis in `LUX/` pending BE/Benelux mapping |
 | **Meetings prep per DB:** | `09_meetings/Preparation Meetings/<DB>/` | |
 
 ### 09 · Meetings & minutes → `09_meetings/`

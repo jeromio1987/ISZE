@@ -1,4 +1,4 @@
-﻿import sys
+import sys
 sys.stdout.reconfigure(encoding="utf-8")
 from pathlib import Path
 from openpyxl import load_workbook
@@ -31,7 +31,7 @@ for o in overs[:20]:
 # Romania: compare source sum vs report for ANVELO
 from ids_report_extract import extract_result_report
 ro_rep = Path(r"..\..\01_data\90_INBOX\IDS_2026\reports\evaluation_result\2026 IDS Evaluation Result Report_Romania.xls")
-_, recs, _ = extract_result_report(ro_rep)
+_, recs, _, _ = extract_result_report(ro_rep)
 by = {r.name: r for r in recs}
 ro = Path(r"..\..\01_data\90_INBOX\IDS_2026\Romania")
 for f in sorted(ro.glob("*.xlsx")):

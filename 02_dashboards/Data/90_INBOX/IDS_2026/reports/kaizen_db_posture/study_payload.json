@@ -1,12 +1,12 @@
 {
-  "built_at": "2026-07-24 03:31 UTC",
+  "built_at": "2026-07-24 14:53 UTC",
   "hygiene": {
-    "raw_dealer_rows": 532,
+    "raw_dealer_rows": 552,
     "raw_network_d_pct": 75.6,
-    "raw_network_total_pct": 76.4,
-    "clean_dealer_rows": 460,
-    "clean_network_d_pct": 80.5,
-    "clean_network_total_pct": 81.0,
+    "raw_network_total_pct": 76.6,
+    "clean_dealer_rows": 480,
+    "clean_network_d_pct": 80.3,
+    "clean_network_total_pct": 81.1,
     "dropped_benelux_rollup": 43,
     "dropped_zero_shells": 29,
     "note": "Clean stats exclude Benelux rollup (BE+NL already counted) and 0% unscored shells (MIDI empties)."
@@ -702,6 +702,18 @@
         }
       },
       {
+        "country": "DENMARK",
+        "n": 20,
+        "d_cut": 0.65,
+        "c_cut": 0.65,
+        "counts": {
+          "D-only": 2,
+          "D+C": 0,
+          "C-only": 0,
+          "OK": 18
+        }
+      },
+      {
         "country": "HUNGARY",
         "n": 19,
         "d_cut": 0.65,
@@ -878,6 +890,24 @@
         "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
       },
       {
+        "country": "DENMARK",
+        "name": "Pedersen & Nielsen Aalborg",
+        "cap_type": "D-only",
+        "d_pct": 0.6170212765957447,
+        "c_pct": 0.7875,
+        "total_pct": 0.767857,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
+        "country": "DENMARK",
+        "name": "Varebil-Leasing Kolding",
+        "cap_type": "D-only",
+        "d_pct": 0.2765957446808511,
+        "c_pct": 0.8125,
+        "total_pct": 0.664286,
+        "ask": "Counter / inventory / genuine display gaps — Parts process CAP"
+      },
+      {
         "country": "HUNGARY",
         "name": "Bonus Kft.",
         "cap_type": "D-only",
@@ -1041,10 +1071,10 @@
       }
     ],
     "totals": {
-      "D-only": 21,
+      "D-only": 23,
       "D+C": 11,
       "C-only": 1,
-      "OK": 381,
+      "OK": 399,
       "unclassified": 0
     }
   },

@@ -10,6 +10,7 @@ from pathlib import Path
 COUNTRIES = (
     "BE",
     "NL",
+    "Denmark",
     "Poland",
     "Petros",
     "RSA",

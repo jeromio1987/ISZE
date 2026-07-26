@@ -12,6 +12,7 @@ from ids_paths import DATA_ROOT, discover_country_folders
 COUNTRIES = (
     "BE",
     "NL",
+    "Denmark",
     "Poland",
     "Petros",
     "RSA",
@@ -25,8 +26,8 @@ COUNTRIES = (
     "Hungary",
 )
 
-# No per-dealer evaluation workbooks in inbox (ranking-only export)
-SKIP = {"Denmark", "MIDI"}
+# MIDI adapter countries; LUX dealers are optional/extra (see Benelux wiring)
+SKIP = {"MIDI", "LUX"}
 
 # MIDI CodDivs get dedicated result reports via --midi
 MIDI_CODS = ("FR", "IT", "ES", "CH")
@@ -57,7 +58,8 @@ def main() -> int:
         if r.returncode != 0:
             rc = r.returncode
 
-    # IBX Benelux = BE + NL (+ LX when available)
+    # IBX Benelux = BE + NL. LUX (Autopolis) stays in LUX/ until Jerome confirms
+    # whether to merge into BE (Huberty pattern) or attach as --extra-input-dir.
     print("\n=== Benelux (IBX: BE+NL) ===")
     be_dir = DATA_ROOT / "BE"
     nl_dir = DATA_ROOT / "NL"

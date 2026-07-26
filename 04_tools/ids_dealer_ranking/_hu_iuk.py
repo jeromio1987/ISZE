@@ -1,4 +1,4 @@
-﻿import sys
+import sys
 sys.stdout.reconfigure(encoding="utf-8")
 from pathlib import Path
 from build_ids_result_report import parse_dealer_workbook, _coerce_score, COL_MAX
@@ -7,7 +7,7 @@ import xlrd
 
 # Hungary uniqueness check
 hu = Path(r"..\..\01_data\90_INBOX\IDS_2026\reports\evaluation_result\2026 IDS Evaluation Result Report_Hungary.xls")
-c, recs, _ = extract_result_report(hu)
+c, recs, _, _ = extract_result_report(hu)
 totals = sorted({(r.total, round(r.total_pct*100,2) if r.total_pct else None) for r in recs})
 print("HUNGARY unique totals", totals, "n", len(recs))
 print("top3", [(r.name, r.total, round(r.total_pct*100,1)) for r in sorted(recs, key=lambda x: -(x.total or 0))[:3]])
@@ -15,7 +15,7 @@ print("bot3", [(r.name, r.total, round(r.total_pct*100,1)) for r in sorted(recs,
 
 # IUK missing names
 iuk = Path(r"..\..\01_data\90_INBOX\IDS_2026\reports\evaluation_result\2026 IDS Evaluation Result Report_IUK.xls")
-c, recs, _ = extract_result_report(iuk)
+c, recs, _, _ = extract_result_report(iuk)
 print("\nIUK dealers", len(recs))
 for r in recs:
     bad = (not r.name) or r.name.startswith("*") or "Write your" in r.name or r.name.strip()==""

@@ -14,6 +14,7 @@
       --muted: #6b7a90;
       --bad: #c45c3e;
       --good: #2d8a5e;
+      --amber: #c48a1a;
       --mid: #d4dae3;
     }
     * { box-sizing: border-box; }
@@ -25,7 +26,7 @@
     label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); display: block; margin-bottom: 0.25rem; }
     select, input[type="search"] { font: inherit; padding: 0.4rem 0.6rem; border: 1px solid var(--mid); border-radius: 6px; min-width: 9rem; background: #fff; color: var(--navy); }
     select[multiple] { min-height: 2.2rem; min-width: 11rem; }
-    .chk { display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; padding-bottom: 0.35rem; }
+    .chk { display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; padding-bottom: 0.35rem; text-transform: none; font-weight: 500; letter-spacing: 0; color: var(--navy); }
     .tabs { display: flex; flex-wrap: wrap; gap: 0.15rem; padding: 0 1rem; margin-top: 0.5rem; border-bottom: 1px solid var(--mid); background: var(--card); }
     .tab { border: none; background: transparent; color: var(--muted); font: inherit; font-weight: 600; font-size: 0.88rem; padding: 0.6rem 0.75rem; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
     .tab.active { color: var(--terracotta); border-bottom-color: var(--terracotta); }
@@ -40,14 +41,23 @@
     .card h2 { margin: 0 0 0.75rem; font-size: 1.05rem; }
     .controls { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; align-items: end; }
     .bar-row { display: grid; grid-template-columns: 11rem 1fr 4rem; gap: 0.5rem; align-items: center; margin-bottom: 0.35rem; font-size: 0.82rem; }
+    .bar-row.tri { grid-template-columns: 8rem 1fr 3.6rem 3.6rem 3.6rem; }
     .bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .bar-label small { color: var(--muted); }
-    .bar-track { height: 1.1rem; background: #e8ecf2; border-radius: 4px; overflow: hidden; }
+    .bar-track { height: 1.1rem; background: #e8ecf2; border-radius: 4px; overflow: hidden; position: relative; }
     .bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--navy-light), var(--terracotta)); min-width: 2px; }
     .bar-fill.below { background: linear-gradient(90deg, #a8b4c4, var(--bad)); }
     .bar-fill.gap-pos { background: linear-gradient(90deg, #6aab82, var(--good)); }
     .bar-fill.gap-neg { background: linear-gradient(90deg, #d4907f, var(--bad)); }
+    .bar-fill.good { background: var(--good); }
+    .bar-fill.medium { background: var(--amber); }
+    .bar-fill.bad { background: var(--bad); }
     .bar-pct { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .group-bars { display: grid; gap: 0.55rem; }
+    .gbar { display: grid; grid-template-columns: 9rem 1fr; gap: 0.5rem; align-items: center; font-size: 0.82rem; }
+    .gbar-tracks { display: grid; gap: 3px; }
+    .gbar-tracks .bar-track { height: 0.72rem; }
+    .gbar-meta { font-size: 0.72rem; color: var(--muted); grid-column: 2; }
     .heatmap-wrap { overflow: auto; max-height: 70vh; }
     .heatmap { display: grid; gap: 2px; font-size: 0.72rem; min-width: max-content; }
     .hm-corner { position: sticky; left: 0; z-index: 2; background: var(--card); font-weight: 600; padding: 0.35rem; }
@@ -58,6 +68,18 @@
     .legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.75rem; }
     .legend i { display: inline-block; width: 1rem; height: 1rem; border-radius: 2px; vertical-align: middle; margin-right: 0.25rem; }
     .badge { font-size: 0.65rem; background: #fff3e8; color: var(--terracotta); border-radius: 4px; padding: 0.1rem 0.35rem; margin-left: 0.35rem; font-weight: 600; }
+    .band { display: inline-block; font-size: 0.68rem; font-weight: 700; border-radius: 4px; padding: 0.12rem 0.4rem; text-transform: uppercase; letter-spacing: 0.03em; }
+    .band.good { background: #e5f4ec; color: var(--good); }
+    .band.medium { background: #f8efd9; color: var(--amber); }
+    .band.bad { background: #f8e6e1; color: var(--bad); }
+    .callouts { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 900px) { .callouts, .split { grid-template-columns: 1fr; } }
+    .callout h3 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+    .callout.good h3 { color: var(--good); }
+    .callout.bad h3 { color: var(--bad); }
+    .callout ul { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; }
+    .callout li { margin-bottom: 0.35rem; }
+    button.linkish { background: none; border: none; color: var(--navy); font: inherit; text-decoration: underline; cursor: pointer; padding: 0; }
     .radar-wrap { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; }
     .radar-box { flex: 1 1 320px; max-width: 420px; }
     .radar-box svg { width: 100%; height: auto; display: block; }
@@ -65,19 +87,24 @@
     .radar-legend span { display: inline-flex; align-items: center; gap: 0.35rem; margin-right: 1rem; margin-bottom: 0.25rem; }
     .radar-legend i { width: 1.5rem; height: 3px; border-radius: 2px; display: inline-block; }
     .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    @media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
     table.data { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-    table.data th, table.data td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--mid); text-align: left; }
+    table.data th, table.data td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--mid); text-align: left; vertical-align: top; }
     table.data th { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; }
-    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    table.data tr.clickable { cursor: pointer; }
+    table.data tr.clickable:hover { background: #f0f3f8; }
+    .q-text { color: var(--muted); font-size: 0.78rem; max-width: 28rem; }
     .hint { font-size: 0.85rem; color: var(--muted); margin: 0 0 0.75rem; }
+    .matrix-wrap { overflow: auto; }
+    .matrix td.pos { color: var(--good); font-weight: 600; }
+    .matrix td.neg { color: var(--bad); font-weight: 600; }
     footer { text-align: center; font-size: 0.75rem; color: var(--muted); padding: 1rem; border-top: 1px solid var(--mid); }
   </style>
 </head>
 <body>
   <header>
     <h1>IDS 2026 — Dealer comparison</h1>
-    <p>Offline · sections A–E · built __BUILT_AT__</p>
+    <p>Offline · sections A–E + questions · goed / medium / slecht · built __BUILT_AT__</p>
   </header>
 
   <div class="toolbar">
@@ -89,9 +116,11 @@
   <nav class="tabs">
     <button class="tab active" data-tab="overview" type="button">Overview</button>
     <button class="tab" data-tab="heatmap" type="button">Heatmap</button>
+    <button class="tab" data-tab="gaps" type="button">Strengths &amp; gaps</button>
+    <button class="tab" data-tab="questions" type="button">Questions</button>
+    <button class="tab" data-tab="vs-network" type="button">Country vs network</button>
     <button class="tab" data-tab="dealer-radar" type="button">Dealer radar</button>
     <button class="tab" data-tab="country-radar" type="button">Country radar</button>
-    <button class="tab" data-tab="gaps" type="button">Section gaps</button>
     <button class="tab" data-tab="compare" type="button">Compare dealers</button>
     <button class="tab" data-tab="country" type="button">By country</button>
   </nav>
@@ -101,27 +130,121 @@
 
     <section id="panel-overview" class="panel active">
       <div class="card">
-        <h2>Total score ranking (% of 280)</h2>
+        <h2>Dealer overview — section vs country &amp; network</h2>
+        <p class="hint">Pick a dealer to see section bars against country and network averages, plus strengths and weak points. Click a section to open question drill.</p>
+        <div class="controls">
+          <div><label for="ov-country">Country</label><select id="ov-country"></select></div>
+          <div><label for="ov-dealer">Dealer</label><select id="ov-dealer"></select></div>
+        </div>
+        <div id="ov-kpis" class="stats" style="margin-bottom:1rem"></div>
+        <div id="ov-section-bars" class="group-bars"></div>
+      </div>
+      <div class="callouts">
+        <div class="card callout good">
+          <h3>Strengths (goed)</h3>
+          <ul id="ov-strengths"></ul>
+        </div>
+        <div class="card callout bad">
+          <h3>Weak points (slecht)</h3>
+          <ul id="ov-weak"></ul>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Network ranking (filtered)</h2>
         <div id="chart-overview"></div>
       </div>
     </section>
 
     <section id="panel-heatmap" class="panel">
       <div class="card">
-        <h2>Section heatmap (% of section max)</h2>
-        <div class="legend">
-          <span><i style="background:#2d8a5e"></i> ≥ country avg</span>
-          <span><i style="background:#c45c3e"></i> &lt; country avg</span>
-          <span><i style="background:#e8ecf2"></i> no data</span>
+        <h2>Section heatmap</h2>
+        <div class="controls">
+          <div>
+            <label for="hm-mode">Colour mode</label>
+            <select id="hm-mode">
+              <option value="country">vs country avg</option>
+              <option value="network">vs network avg</option>
+              <option value="band">traffic light (goed/medium/slecht)</option>
+            </select>
+          </div>
         </div>
+        <div class="legend" id="hm-legend"></div>
         <div class="heatmap-wrap"><div id="heatmap" class="heatmap"></div></div>
+      </div>
+    </section>
+
+    <section id="panel-gaps" class="panel">
+      <div class="card">
+        <h2>Strengths &amp; gaps (section level)</h2>
+        <p class="hint">Dealer % minus benchmark. Positive = strength; negative = audit priority.</p>
+        <div class="controls">
+          <div><label for="gp-country">Country</label><select id="gp-country"></select></div>
+          <div><label for="gp-section">Section</label><select id="gp-section"></select></div>
+          <div>
+            <label for="gp-bench">Benchmark</label>
+            <select id="gp-bench">
+              <option value="country">Country avg</option>
+              <option value="network">Network avg</option>
+            </select>
+          </div>
+          <div>
+            <label for="gp-side">Show</label>
+            <select id="gp-side">
+              <option value="weak">Worst gaps</option>
+              <option value="strong">Best strengths</option>
+              <option value="both">Both (top &amp; bottom)</option>
+            </select>
+          </div>
+          <div><label for="gp-limit">Limit</label><select id="gp-limit"><option value="20">20</option><option value="40">40</option><option value="999">All</option></select></div>
+        </div>
+        <div id="chart-gaps"></div>
+      </div>
+    </section>
+
+    <section id="panel-questions" class="panel">
+      <div class="card">
+        <h2>Question drill</h2>
+        <p class="hint">Compare each checklist item to country and network average. Band = goed / medium / slecht.</p>
+        <div class="controls">
+          <div><label for="qq-country">Country</label><select id="qq-country"></select></div>
+          <div><label for="qq-dealer">Dealer</label><select id="qq-dealer"></select></div>
+          <div><label for="qq-section">Section</label><select id="qq-section"><option value="">All</option></select></div>
+          <div>
+            <label for="qq-band">Band filter</label>
+            <select id="qq-band">
+              <option value="">All</option>
+              <option value="good">Goed</option>
+              <option value="medium">Medium</option>
+              <option value="bad">Slecht</option>
+            </select>
+          </div>
+          <div>
+            <label for="qq-sort">Sort</label>
+            <select id="qq-sort">
+              <option value="worst">Worst vs country</option>
+              <option value="best">Best vs country</option>
+              <option value="gap_pts">Biggest points left</option>
+              <option value="ref">Question ref</option>
+            </select>
+          </div>
+        </div>
+        <div id="qq-summary" class="legend"></div>
+        <div class="matrix-wrap"><div id="qq-table"></div></div>
+      </div>
+    </section>
+
+    <section id="panel-vs-network" class="panel">
+      <div class="card">
+        <h2>Country versus network average</h2>
+        <p class="hint">Section % for each country minus network %. Negative = market lag vs full IDS network.</p>
+        <div class="matrix-wrap" id="vs-network-table"></div>
       </div>
     </section>
 
     <section id="panel-dealer-radar" class="panel">
       <div class="card">
         <h2>Dealer profile vs benchmarks</h2>
-        <p class="hint">Section scores as % of each section maximum. Overlay country and network averages to see shape, not just total rank.</p>
+        <p class="hint">Section scores as % of each section maximum. Overlay country and network averages.</p>
         <div class="controls">
           <div><label for="dr-country">Country</label><select id="dr-country"></select></div>
           <div><label for="dr-dealer">Dealer</label><select id="dr-dealer"></select></div>
@@ -141,24 +264,12 @@
         <p class="hint">Select up to 4 countries. Polygons show average section profile per market.</p>
         <div class="controls">
           <div><label for="cr-countries">Countries (Ctrl+click)</label><select id="cr-countries" multiple size="5"></select></div>
+          <label class="chk"><input type="checkbox" id="cr-show-network" checked /> Overlay network</label>
         </div>
         <div class="split">
           <div class="radar-box" id="country-radar-chart"></div>
           <div id="country-radar-table"></div>
         </div>
-      </div>
-    </section>
-
-    <section id="panel-gaps" class="panel">
-      <div class="card">
-        <h2>Section gap audit</h2>
-        <p class="hint">Dealer % minus country average % — negative = below peers (audit priority).</p>
-        <div class="controls">
-          <div><label for="gp-country">Country</label><select id="gp-country"></select></div>
-          <div><label for="gp-section">Section</label><select id="gp-section"></select></div>
-          <div><label for="gp-limit">Show</label><select id="gp-limit"><option value="20">20 worst</option><option value="40">40 worst</option><option value="999">All</option></select></div>
-        </div>
-        <div id="chart-gaps"></div>
       </div>
     </section>
 
@@ -182,7 +293,7 @@
       <div class="card">
         <label for="f-country-one">Country</label>
         <select id="f-country-one"></select>
-        <h2 style="margin-top:1rem">Section bars</h2>
+        <h2 style="margin-top:1rem">Section bars (dealers + country avg + network)</h2>
         <div id="chart-country"></div>
       </div>
     </section>
@@ -193,25 +304,45 @@
   <script>
     const DATA = __DATA_JSON__;
     const COUNTRY_COLORS = ["#c45c3e", "#1a2744", "#2d8a5e", "#5b7cba", "#9b6bb8", "#d4a017"];
+    const BANDS = DATA.bands || { good_min_pct: 0.80, medium_min_pct: 0.60, near_country_pp: 0.05, weak_gap_pp: -0.10 };
     const $ = (s) => document.querySelector(s);
     const pct = (v) => (v == null ? "—" : (v * 100).toFixed(1) + "%");
     const pctGap = (v) => (v == null ? "—" : ((v >= 0 ? "+" : "") + (v * 100).toFixed(1) + " pp"));
 
     function secIds() { return DATA.sections.map((s) => s.id); }
     function secLabel(id) { return DATA.sections.find((s) => s.id === id)?.label || id; }
+    function questions() { return DATA.questions || []; }
 
     function dealerVector(d) {
       return secIds().map((id) => d.sections[id]?.pct ?? null);
     }
-
     function countryVector(c) {
       const p = DATA.country_profiles[c];
       if (!p) return secIds().map(() => null);
       return secIds().map((id) => p.sections_pct[id] ?? null);
     }
-
     function networkVector() {
       return secIds().map((id) => DATA.network.sections_pct[id] ?? null);
+    }
+
+    /** Traffic light vs country avg (proposal V1). */
+    function bandFor(pctVal, countryAvg) {
+      if (pctVal == null) return null;
+      const gap = countryAvg != null ? pctVal - countryAvg : null;
+      if (gap != null && gap <= BANDS.weak_gap_pp) return "bad";
+      if (pctVal >= BANDS.good_min_pct && (countryAvg == null || pctVal >= countryAvg)) return "good";
+      if (pctVal < BANDS.medium_min_pct && (countryAvg == null || pctVal < countryAvg)) return "bad";
+      if (gap != null && Math.abs(gap) <= BANDS.near_country_pp) return "medium";
+      if (pctVal >= BANDS.medium_min_pct && pctVal < BANDS.good_min_pct) return "medium";
+      if (countryAvg != null && pctVal < countryAvg) return "bad";
+      if (pctVal >= BANDS.good_min_pct) return "good";
+      return "medium";
+    }
+    function bandLabel(b) {
+      return b === "good" ? "Goed" : b === "bad" ? "Slecht" : b === "medium" ? "Medium" : "—";
+    }
+    function bandHtml(b) {
+      return b ? `<span class="band ${b}">${bandLabel(b)}</span>` : "—";
     }
 
     function selectedCountries() {
@@ -231,7 +362,9 @@
       });
     }
 
-    function drawRadar(el, series) {
+    function drawRadar(el, series, opts) {
+      opts = opts || {};
+      const weakIndices = opts.weakIndices || [];
       const ids = secIds();
       const n = ids.length || 1;
       const W = 400, H = 400, cx = W / 2, cy = H / 2, R = 145;
@@ -251,10 +384,20 @@
         const lx = cx + (R + 22) * Math.cos(a), ly = cy + (R + 22) * Math.sin(a);
         const anchor = Math.abs(Math.cos(a)) < 0.1 ? "middle" : Math.cos(a) > 0 ? "start" : "end";
         svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" dominant-baseline="middle" font-size="11" font-weight="600" fill="#1a2744">${id}</text>`;
-        const sub = secLabel(id).split(",")[0].replace(/^[A-E]\.\s*/, "");
-        if (sub && sub !== id) {
-          svg += `<text x="${lx}" y="${ly + 12}" text-anchor="${anchor}" font-size="8" fill="#6b7a90">${sub.slice(0, 18)}</text>`;
-        }
+      });
+      // Weak-point wedges (PPT-style filled sectors) — under series polygons
+      const half = Math.PI / n;
+      weakIndices.forEach((i) => {
+        if (i < 0 || i >= n) return;
+        const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
+        const xL = cx + R * Math.cos(a - half);
+        const yL = cy + R * Math.sin(a - half);
+        const xR = cx + R * Math.cos(a + half);
+        const yR = cy + R * Math.sin(a + half);
+        svg += `<polygon points="${cx},${cy} ${xL},${yL} ${xR},${yR}" fill="#1a2744" opacity="0.30"/>`;
+        const tx = cx + R * 0.52 * Math.cos(a);
+        const ty = cy + R * 0.52 * Math.sin(a);
+        svg += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" font-size="9" font-weight="700" fill="#fff">Weak</text>`;
       });
       series.forEach((s) => {
         const pts = ids.map((_, i) => {
@@ -268,16 +411,17 @@
       });
       svg += `<text x="${cx}" y="${H - 8}" text-anchor="middle" font-size="9" fill="#6b7a90">0% center → 100% outer ring</text></svg>`;
       let leg = '<div class="radar-legend">';
-      series.forEach((s) => {
-        leg += `<span><i style="background:${s.color}"></i>${s.label}</span>`;
-      });
+      series.forEach((s) => { leg += `<span><i style="background:${s.color}"></i>${s.label}</span>`; });
+      if (weakIndices.length) leg += `<span><i style="background:#1a2744;height:10px;width:10px;border-radius:2px"></i>Weak sector</span>`;
       leg += "</div>";
       el.innerHTML = svg + leg;
     }
 
     function sectionTableHtml(title, rows) {
-      let h = `<h3 style="margin:0 0 0.5rem;font-size:0.95rem">${title}</h3><table class="data"><thead><tr><th>Section</th><th class="num">%</th></tr></thead><tbody>`;
-      rows.forEach(([id, v]) => { h += `<tr><td>${id} — ${secLabel(id).slice(0, 35)}</td><td class="num">${pct(v)}</td></tr>`; });
+      let h = `<h3 style="margin:0 0 0.5rem;font-size:0.95rem">${title}</h3><table class="data"><thead><tr><th>Section</th><th class="num">Dealer</th><th class="num">Country</th><th class="num">Network</th><th class="num">Δ ctry</th></tr></thead><tbody>`;
+      rows.forEach((r) => {
+        h += `<tr><td>${r.id} — ${secLabel(r.id).slice(0, 28)}</td><td class="num">${pct(r.d)}</td><td class="num">${pct(r.c)}</td><td class="num">${pct(r.n)}</td><td class="num">${pctGap(r.gap)}</td></tr>`;
+      });
       return h + "</tbody></table>";
     }
 
@@ -293,6 +437,85 @@
           sel.appendChild(o);
         });
       if (cur && [...sel.options].some((o) => o.value === cur)) sel.value = cur;
+    }
+
+    function jumpToQuestions(dealerId, sectionId) {
+      const d = DATA.dealers.find((x) => x.id === dealerId);
+      if (!d) return;
+      document.querySelectorAll(".tab").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+      const tab = document.querySelector('.tab[data-tab="questions"]');
+      tab.classList.add("active");
+      $("#panel-questions").classList.add("active");
+      $("#qq-country").value = d.country;
+      populateDealerSelect($("#qq-dealer"), d.country);
+      $("#qq-dealer").value = d.id;
+      if (sectionId) $("#qq-section").value = sectionId;
+      renderQuestions();
+    }
+
+    function renderOverviewFocus() {
+      const country = $("#ov-country").value;
+      populateDealerSelect($("#ov-dealer"), country);
+      const dealer = DATA.dealers.find((d) => d.id === $("#ov-dealer").value);
+      if (!dealer) {
+        $("#ov-kpis").innerHTML = "";
+        $("#ov-section-bars").innerHTML = "<p>No dealer selected.</p>";
+        $("#ov-strengths").innerHTML = "";
+        $("#ov-weak").innerHTML = "";
+        return;
+      }
+      const cAvg = dealer.country_avg_pct;
+      const nAvg = DATA.network.total_pct;
+      $("#ov-kpis").innerHTML = `
+        <div class="stat"><strong>${pct(dealer.total_pct)}</strong><span>${dealer.name} total</span></div>
+        <div class="stat"><strong>${pct(cAvg)}</strong><span>${country} avg</span></div>
+        <div class="stat"><strong>${pct(nAvg)}</strong><span>Network avg</span></div>
+        <div class="stat"><strong>${pctGap(dealer.total_pct != null && cAvg != null ? dealer.total_pct - cAvg : null)}</strong><span>Δ vs country</span></div>
+        <div class="stat"><strong>${pctGap(dealer.total_pct != null && nAvg != null ? dealer.total_pct - nAvg : null)}</strong><span>Δ vs network</span></div>`;
+
+      const rows = secIds().map((id) => {
+        const s = dealer.sections[id] || {};
+        const dPct = s.pct ?? null;
+        const cPct = s.country_avg_pct ?? DATA.country_profiles[country]?.sections_pct?.[id] ?? null;
+        const nPct = s.network_avg_pct ?? DATA.network.sections_pct[id] ?? null;
+        const gapC = dPct != null && cPct != null ? dPct - cPct : null;
+        const band = bandFor(dPct, cPct);
+        return { id, dPct, cPct, nPct, gapC, band };
+      });
+
+      $("#ov-section-bars").innerHTML = rows.map((r) => {
+        const fill = r.band || "medium";
+        return `<div class="gbar">
+          <div><strong>${r.id}</strong><br/><small>${secLabel(r.id).replace(/^[A-E]\.\s*/, "").slice(0, 28)}</small><br/>${bandHtml(r.band)}</div>
+          <div>
+            <div class="gbar-tracks">
+              <div class="bar-track" title="Dealer"><div class="bar-fill ${fill}" style="width:${Math.min(100, (r.dPct ?? 0) * 100)}%"></div></div>
+              <div class="bar-track" title="Country"><div class="bar-fill" style="width:${Math.min(100, (r.cPct ?? 0) * 100)}%;background:#1a2744"></div></div>
+              <div class="bar-track" title="Network"><div class="bar-fill" style="width:${Math.min(100, (r.nPct ?? 0) * 100)}%;background:#6b7a90"></div></div>
+            </div>
+            <div class="gbar-meta">Dealer ${pct(r.dPct)} · Country ${pct(r.cPct)} · Network ${pct(r.nPct)} · Δ ${pctGap(r.gapC)}
+              · <button type="button" class="linkish" data-jump-sec="${r.id}">Questions →</button></div>
+          </div>
+        </div>`;
+      }).join("");
+
+      $("#ov-section-bars").querySelectorAll("[data-jump-sec]").forEach((btn) => {
+        btn.addEventListener("click", () => jumpToQuestions(dealer.id, btn.getAttribute("data-jump-sec")));
+      });
+
+      const ranked = [...rows].filter((r) => r.gapC != null).sort((a, b) => b.gapC - a.gapC);
+      const strengths = ranked.filter((r) => r.gapC > 0).slice(0, 5);
+      const weak = [...ranked].filter((r) => r.gapC < 0).sort((a, b) => a.gapC - b.gapC).slice(0, 5);
+      $("#ov-strengths").innerHTML = strengths.length
+        ? strengths.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.id}"><strong>${r.id}</strong></button> ${pctGap(r.gapC)} vs country · ${bandHtml(r.band)}</li>`).join("")
+        : "<li>No section above country average.</li>";
+      $("#ov-weak").innerHTML = weak.length
+        ? weak.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.id}"><strong>${r.id}</strong></button> ${pctGap(r.gapC)} vs country · ${bandHtml(r.band)}</li>`).join("")
+        : "<li>No section below country average.</li>";
+      [...$("#ov-strengths").querySelectorAll("[data-jump-sec]"), ...$("#ov-weak").querySelectorAll("[data-jump-sec]")].forEach((btn) => {
+        btn.addEventListener("click", () => jumpToQuestions(dealer.id, btn.getAttribute("data-jump-sec")));
+      });
     }
 
     function renderDealerRadar() {
@@ -311,8 +534,13 @@
       if ($("#dr-show-network").checked) {
         series.push({ label: "Network avg", values: networkVector(), color: "#6b7a90", fill: "none", dash: "2 3", width: 1.5 });
       }
-      drawRadar($("#dealer-radar-chart"), series);
-      const rows = secIds().map((id, i) => [id, dealerVector(dealer)[i]]);
+      const weakIndices = secIds().map((id, i) => {
+        const s = dealer.sections[id] || {};
+        return bandFor(s.pct, s.country_avg_pct) === "bad" ? i : -1;
+      }).filter((i) => i >= 0);
+      drawRadar($("#dealer-radar-chart"), series, { weakIndices });
+      const cv = countryVector(country), nv = networkVector(), dv = dealerVector(dealer);
+      const rows = secIds().map((id, i) => ({ id, d: dv[i], c: cv[i], n: nv[i], gap: dv[i] != null && cv[i] != null ? dv[i] - cv[i] : null }));
       $("#dealer-radar-table").innerHTML = sectionTableHtml(dealer.name + " · total " + pct(dealer.total_pct), rows);
     }
 
@@ -326,8 +554,11 @@
         fill: COUNTRY_COLORS[i % COUNTRY_COLORS.length] + "22",
         width: 2,
       }));
+      if ($("#cr-show-network").checked) {
+        series.push({ label: "Network", values: networkVector(), color: "#6b7a90", fill: "none", dash: "2 3", width: 1.5 });
+      }
       drawRadar($("#country-radar-chart"), series);
-      let tbl = '<table class="data"><thead><tr><th>Country</th><th>Dealers</th><th class="num">Total %</th><th>Weakest section</th></tr></thead><tbody>';
+      let tbl = '<table class="data"><thead><tr><th>Country</th><th>Dealers</th><th class="num">Total %</th><th class="num">Δ network</th><th>Weakest</th></tr></thead><tbody>';
       picked.forEach((c) => {
         const p = DATA.country_profiles[c];
         const vec = countryVector(c);
@@ -336,7 +567,8 @@
           const v = vec[i];
           if (v != null && v < weakV) { weakV = v; weak = id + " (" + pct(v) + ")"; }
         });
-        tbl += `<tr><td>${c}</td><td>${p.dealer_count}</td><td class="num">${pct(p.total_pct)}</td><td>${weak}</td></tr>`;
+        const gapN = p.total_pct != null && DATA.network.total_pct != null ? p.total_pct - DATA.network.total_pct : null;
+        tbl += `<tr><td>${c}</td><td>${p.dealer_count}</td><td class="num">${pct(p.total_pct)}</td><td class="num">${pctGap(gapN)}</td><td>${weak}</td></tr>`;
       });
       $("#country-radar-table").innerHTML = tbl + "</tbody></table>";
     }
@@ -345,22 +577,140 @@
       const country = $("#gp-country").value;
       const sec = $("#gp-section").value;
       const limit = parseInt($("#gp-limit").value, 10);
+      const bench = $("#gp-bench").value;
+      const side = $("#gp-side").value;
       const list = DATA.dealers.filter((d) => d.country === country && !d.totals_only);
       const rows = list.map((d) => {
-        const s = d.sections[sec];
-        const gap = s?.pct != null && s?.country_avg_pct != null ? s.pct - s.country_avg_pct : null;
-        return { d, gap, pct: s?.pct };
-      }).filter((r) => r.gap != null).sort((a, b) => a.gap - b.gap).slice(0, limit);
-      const maxG = Math.max(0.05, ...rows.map((r) => Math.abs(r.gap)));
-      $("#chart-gaps").innerHTML = rows.length ? rows.map(({ d, gap, pct: p }) => {
+        const s = d.sections[sec] || {};
+        const base = bench === "network"
+          ? (s.network_avg_pct ?? DATA.network.sections_pct[sec])
+          : s.country_avg_pct;
+        const gap = s.pct != null && base != null ? s.pct - base : null;
+        return { d, gap, pct: s.pct, band: bandFor(s.pct, s.country_avg_pct) };
+      }).filter((r) => r.gap != null);
+
+      let show = [];
+      const worst = [...rows].sort((a, b) => a.gap - b.gap);
+      const best = [...rows].sort((a, b) => b.gap - a.gap);
+      if (side === "weak") show = worst.slice(0, limit);
+      else if (side === "strong") show = best.slice(0, limit);
+      else {
+        const half = Math.max(1, Math.floor(limit / 2));
+        const top = best.slice(0, half);
+        const bot = worst.slice(0, half);
+        const seen = new Set();
+        show = [...bot, ...top].filter((r) => {
+          if (seen.has(r.d.id)) return false;
+          seen.add(r.d.id);
+          return true;
+        });
+      }
+
+      const maxG = Math.max(0.05, ...show.map((r) => Math.abs(r.gap)));
+      $("#chart-gaps").innerHTML = show.length ? show.map(({ d, gap, pct: p, band }) => {
         const w = Math.min(100, (Math.abs(gap) / maxG) * 100);
         const cls = gap >= 0 ? "gap-pos" : "gap-neg";
         return `<div class="bar-row">
-          <div class="bar-label">${d.name}</div>
+          <div class="bar-label">${d.name} ${bandHtml(band)}</div>
           <div class="bar-track"><div class="bar-fill ${cls}" style="width:${w}%"></div></div>
           <div class="bar-pct">${pctGap(gap)}</div>
         </div>`;
       }).join("") : "<p>No gap data for this section.</p>";
+    }
+
+    function renderQuestions() {
+      const country = $("#qq-country").value;
+      populateDealerSelect($("#qq-dealer"), country);
+      const dealer = DATA.dealers.find((d) => d.id === $("#qq-dealer").value);
+      const secFilter = $("#qq-section").value;
+      const bandFilter = $("#qq-band").value;
+      const sort = $("#qq-sort").value;
+      const qs = questions();
+      if (!dealer || !Array.isArray(dealer.q) || !qs.length) {
+        $("#qq-table").innerHTML = "<p>No question-level scores for this dealer (totals-only or missing extract).</p>";
+        $("#qq-summary").innerHTML = "";
+        return;
+      }
+      const cProf = DATA.country_profiles[country]?.q_pct || [];
+      const nProf = DATA.network.q_pct || [];
+      let rows = qs.map((q, i) => {
+        const dPct = dealer.q[i];
+        const cPct = cProf[i] ?? null;
+        const nPct = nProf[i] ?? null;
+        const maxPts = q.max || 0;
+        const score = dPct != null && maxPts ? dPct * maxPts : null;
+        const gapPts = score != null && maxPts ? maxPts - score : null;
+        const gapC = dPct != null && cPct != null ? dPct - cPct : null;
+        const gapN = dPct != null && nPct != null ? dPct - nPct : null;
+        const band = bandFor(dPct, cPct);
+        return { q, i, dPct, cPct, nPct, score, gapPts, gapC, gapN, band };
+      }).filter((r) => r.dPct != null)
+        .filter((r) => !secFilter || r.q.section === secFilter)
+        .filter((r) => !bandFilter || r.band === bandFilter);
+
+      if (sort === "worst") rows.sort((a, b) => (a.gapC ?? 0) - (b.gapC ?? 0));
+      else if (sort === "best") rows.sort((a, b) => (b.gapC ?? 0) - (a.gapC ?? 0));
+      else if (sort === "gap_pts") rows.sort((a, b) => (b.gapPts ?? 0) - (a.gapPts ?? 0));
+      else rows.sort((a, b) => a.q.id.localeCompare(b.q.id));
+
+      const counts = { good: 0, medium: 0, bad: 0 };
+      rows.forEach((r) => { if (r.band) counts[r.band]++; });
+      $("#qq-summary").innerHTML = `
+        <span><i style="background:var(--good)"></i>Goed ${counts.good}</span>
+        <span><i style="background:var(--amber)"></i>Medium ${counts.medium}</span>
+        <span><i style="background:var(--bad)"></i>Slecht ${counts.bad}</span>
+        <span>${rows.length} questions shown</span>`;
+
+      let html = `<table class="data"><thead><tr>
+        <th>Ref</th><th>Question</th><th>Band</th>
+        <th class="num">Dealer</th><th class="num">Country</th><th class="num">Network</th>
+        <th class="num">Δ ctry</th><th class="num">Δ net</th><th class="num">Pts left</th>
+      </tr></thead><tbody>`;
+      rows.forEach((r) => {
+        html += `<tr>
+          <td><strong>${r.q.id}</strong><br/><small>${r.q.section || ""}</small></td>
+          <td class="q-text">${(r.q.text || "").slice(0, 140)}</td>
+          <td>${bandHtml(r.band)}</td>
+          <td class="num">${pct(r.dPct)}</td>
+          <td class="num">${pct(r.cPct)}</td>
+          <td class="num">${pct(r.nPct)}</td>
+          <td class="num">${pctGap(r.gapC)}</td>
+          <td class="num">${pctGap(r.gapN)}</td>
+          <td class="num">${r.gapPts == null ? "—" : r.gapPts.toFixed(1)}</td>
+        </tr>`;
+      });
+      $("#qq-table").innerHTML = html + "</tbody></table>";
+    }
+
+    function renderVsNetwork() {
+      const secs = secIds();
+      let html = `<table class="data matrix"><thead><tr><th>Country</th><th class="num">Total Δ</th>`;
+      secs.forEach((s) => { html += `<th class="num">${s}</th>`; });
+      html += `<th>Weakest vs net</th></tr></thead><tbody>`;
+      const rows = DATA.countries.map((c) => {
+        const p = DATA.country_profiles[c];
+        const totalGap = p.total_pct != null && DATA.network.total_pct != null ? p.total_pct - DATA.network.total_pct : null;
+        const gaps = {};
+        let weak = null, weakV = 0;
+        secs.forEach((s) => {
+          const cv = p.sections_pct?.[s];
+          const nv = DATA.network.sections_pct?.[s];
+          const g = cv != null && nv != null ? cv - nv : null;
+          gaps[s] = g;
+          if (g != null && (weak == null || g < weakV)) { weak = s; weakV = g; }
+        });
+        return { c, p, totalGap, gaps, weak, weakV };
+      }).sort((a, b) => (a.totalGap ?? 0) - (b.totalGap ?? 0));
+
+      rows.forEach((r) => {
+        const cls = (v) => (v == null ? "" : v >= 0 ? "pos" : "neg");
+        html += `<tr><td>${r.c} <small>(${r.p.dealer_count})</small></td><td class="num ${cls(r.totalGap)}">${pctGap(r.totalGap)}</td>`;
+        secs.forEach((s) => {
+          html += `<td class="num ${cls(r.gaps[s])}">${pctGap(r.gaps[s])}</td>`;
+        });
+        html += `<td>${r.weak ? r.weak + " (" + pctGap(r.weakV) + ")" : "—"}</td></tr>`;
+      });
+      $("#vs-network-table").innerHTML = html + "</tbody></table>";
     }
 
     function populateCompareSelects() {
@@ -389,7 +739,6 @@
     }
 
     function renderCompare() {
-      const country = $("#cp-country").value;
       populateCompareSelects();
       const ids = [$("#cp-a").value, $("#cp-b").value, $("#cp-c").value].filter(Boolean);
       const series = ids.map((id, i) => {
@@ -403,24 +752,29 @@
       drawRadar($("#compare-radar-chart"), series);
       let tbl = '<table class="data"><thead><tr><th>Section</th>';
       series.forEach((s) => { tbl += `<th class="num">${s.label.slice(0, 20)}</th>`; });
-      tbl += "</tr></thead><tbody>";
+      tbl += '<th class="num">Country</th><th class="num">Network</th></tr></thead><tbody>';
+      const country = $("#cp-country").value;
+      const cv = countryVector(country), nv = networkVector();
       secIds().forEach((id, i) => {
         tbl += `<tr><td>${id}</td>`;
         series.forEach((s) => { tbl += `<td class="num">${pct(s.values[i])}</td>`; });
-        tbl += "</tr>";
+        tbl += `<td class="num">${pct(cv[i])}</td><td class="num">${pct(nv[i])}</td></tr>`;
       });
       $("#compare-table").innerHTML = tbl + "</tbody></table>";
     }
 
     function renderStats(list) {
+      const qn = questions().length;
       $("#stats").innerHTML = `
         <div class="stat"><strong>${list.length}</strong><span>dealers shown</span></div>
         <div class="stat"><strong>${DATA.country_count}</strong><span>countries</span></div>
         <div class="stat"><strong>${DATA.sections.length}</strong><span>sections</span></div>
+        <div class="stat"><strong>${qn}</strong><span>questions</span></div>
         <div class="stat"><strong>${pct(DATA.network.total_pct)}</strong><span>network avg total</span></div>`;
     }
 
     function renderOverview(list) {
+      renderOverviewFocus();
       const top = [...list].sort((a, b) => (b.total_pct ?? -1) - (a.total_pct ?? -1)).slice(0, 40);
       $("#chart-overview").innerHTML = top.map((d) => {
         const p = d.total_pct ?? 0;
@@ -432,15 +786,35 @@
       }).join("") || "<p>No dealers match filters.</p>";
     }
 
-    function heatBg(d, sec) {
+    function heatBg(d, sec, mode) {
       const s = d.sections[sec];
       if (!s || s.pct == null) return null;
       const t = Math.max(0, Math.min(1, s.pct));
+      if (mode === "band") {
+        const b = bandFor(s.pct, s.country_avg_pct);
+        if (b === "good") return "#2d8a5e";
+        if (b === "bad") return "#c45c3e";
+        return "#c48a1a";
+      }
+      if (mode === "network") {
+        const n = s.network_avg_pct ?? DATA.network.sections_pct[sec];
+        if (n != null && s.pct < n) return `hsl(12, 55%, ${45 + t * 25}%)`;
+        return `hsl(155, 45%, ${32 + t * 28}%)`;
+      }
       if (s.country_avg_pct != null && s.pct < s.country_avg_pct) return `hsl(12, 55%, ${45 + t * 25}%)`;
       return `hsl(155, 45%, ${32 + t * 28}%)`;
     }
 
     function renderHeatmap(list) {
+      const mode = $("#hm-mode").value;
+      const legend = $("#hm-legend");
+      if (mode === "band") {
+        legend.innerHTML = `<span><i style="background:#2d8a5e"></i> Goed</span><span><i style="background:#c48a1a"></i> Medium</span><span><i style="background:#c45c3e"></i> Slecht</span>`;
+      } else if (mode === "network") {
+        legend.innerHTML = `<span><i style="background:#2d8a5e"></i> ≥ network avg</span><span><i style="background:#c45c3e"></i> &lt; network avg</span>`;
+      } else {
+        legend.innerHTML = `<span><i style="background:#2d8a5e"></i> ≥ country avg</span><span><i style="background:#c45c3e"></i> &lt; country avg</span>`;
+      }
       const secs = secIds();
       const grid = $("#heatmap");
       grid.style.gridTemplateColumns = `14rem repeat(${secs.length}, 2.1rem)`;
@@ -450,7 +824,7 @@
         html += `<div class="hm-row-label">${d.name} <small>${d.country}</small></div>`;
         secs.forEach((sec) => {
           const v = d.sections[sec]?.pct;
-          const bg = heatBg(d, sec);
+          const bg = heatBg(d, sec, mode);
           html += `<div class="hm-cell${bg ? "" : " hm-na"}"${bg ? ` style="background:${bg}"` : ""}>${v == null ? "·" : Math.round(v * 100)}</div>`;
         });
       });
@@ -460,13 +834,19 @@
     function renderCountry() {
       const c = $("#f-country-one").value || DATA.countries[0];
       const list = DATA.dealers.filter((d) => d.country === c);
-      $("#chart-country").innerHTML = secIds().map((sec) => {
+      const nVec = networkVector();
+      $("#chart-country").innerHTML = secIds().map((sec, si) => {
         const pcts = list.map((d) => d.sections[sec]?.pct).filter((v) => v != null);
         const avg = pcts.length ? pcts.reduce((a, b) => a + b, 0) / pcts.length : null;
-        const maxBar = Math.max(0.01, ...pcts, avg ?? 0);
+        const net = nVec[si];
+        const maxBar = Math.max(0.01, ...pcts, avg ?? 0, net ?? 0);
         const rows = list.filter((d) => d.sections[sec]?.pct != null).sort((a, b) => (b.sections[sec].pct ?? 0) - (a.sections[sec].pct ?? 0)).slice(0, 12)
-          .map((d) => `<div class="bar-row"><div class="bar-label">${d.name}</div><div class="bar-track"><div class="bar-fill" style="width:${(d.sections[sec].pct / maxBar) * 100}%"></div></div><div class="bar-pct">${pct(d.sections[sec].pct)}</div></div>`).join("");
-        return `<div style="margin-bottom:1.2rem"><h3 style="margin:0 0 0.35rem;font-size:0.95rem">${sec} — ${secLabel(sec)}</h3><p style="margin:0 0 0.5rem;font-size:0.8rem;color:var(--muted)">Avg ${pct(avg)}</p>${rows || "<p>No data.</p>"}</div>`;
+          .map((d) => {
+            const band = bandFor(d.sections[sec].pct, d.sections[sec].country_avg_pct);
+            return `<div class="bar-row"><div class="bar-label">${d.name} ${bandHtml(band)}</div><div class="bar-track"><div class="bar-fill ${band || ""}" style="width:${(d.sections[sec].pct / maxBar) * 100}%"></div></div><div class="bar-pct">${pct(d.sections[sec].pct)}</div></div>`;
+          }).join("");
+        return `<div style="margin-bottom:1.2rem"><h3 style="margin:0 0 0.35rem;font-size:0.95rem">${sec} — ${secLabel(sec)}</h3>
+          <p style="margin:0 0 0.5rem;font-size:0.8rem;color:var(--muted)">Country avg ${pct(avg)} · Network ${pct(net)}</p>${rows || "<p>No data.</p>"}</div>`;
       }).join("");
     }
 
@@ -488,6 +868,12 @@
       });
     }
 
+    function syncOverviewFromFilter() {
+      // Keep overview country in sync with first selected filter country when possible
+      const picked = [...$("#f-country").selectedOptions].map((o) => o.value);
+      if (picked.length === 1) $("#ov-country").value = picked[0];
+    }
+
     function init() {
       const fc = $("#f-country");
       DATA.countries.forEach((c) => {
@@ -495,19 +881,26 @@
         o.value = c; o.textContent = c; o.selected = true;
         fc.appendChild(o);
       });
-      ["f-country-one", "dr-country", "gp-country", "cp-country"].forEach((id) => fillCountrySelect($("#" + id), false));
+      ["f-country-one", "dr-country", "gp-country", "cp-country", "ov-country", "qq-country"].forEach((id) => fillCountrySelect($("#" + id), false));
       fillCountrySelect($("#cr-countries"), true);
       secIds().forEach((id) => {
-        const o = document.createElement("option");
-        o.value = id;
-        o.textContent = id + " — " + secLabel(id).slice(0, 40);
-        $("#gp-section").appendChild(o);
+        const label = id + " — " + secLabel(id).slice(0, 40);
+        ["gp-section", "qq-section"].forEach((sid) => {
+          const o = document.createElement("option");
+          o.value = id;
+          o.textContent = label;
+          $("#" + sid).appendChild(o);
+        });
       });
 
-      fc.addEventListener("change", refresh);
+      fc.addEventListener("change", () => { syncOverviewFromFilter(); refresh(); });
       $("#f-search").addEventListener("input", refresh);
       $("#f-below").addEventListener("change", refresh);
       $("#f-country-one").addEventListener("change", renderCountry);
+      $("#hm-mode").addEventListener("change", () => renderHeatmap(filteredDealers()));
+
+      $("#ov-country").addEventListener("change", renderOverviewFocus);
+      $("#ov-dealer").addEventListener("change", renderOverviewFocus);
 
       $("#dr-country").addEventListener("change", renderDealerRadar);
       $("#dr-dealer").addEventListener("change", renderDealerRadar);
@@ -515,10 +908,18 @@
       $("#dr-show-network").addEventListener("change", renderDealerRadar);
 
       $("#cr-countries").addEventListener("change", renderCountryRadar);
+      $("#cr-show-network").addEventListener("change", renderCountryRadar);
 
-      $("#gp-country").addEventListener("change", renderGaps);
-      $("#gp-section").addEventListener("change", renderGaps);
-      $("#gp-limit").addEventListener("change", renderGaps);
+      ["gp-country", "gp-section", "gp-bench", "gp-side", "gp-limit"].forEach((id) => {
+        $("#" + id).addEventListener("change", renderGaps);
+      });
+
+      ["qq-country", "qq-dealer", "qq-section", "qq-band", "qq-sort"].forEach((id) => {
+        $("#" + id).addEventListener("change", () => {
+          if (id === "qq-country") populateDealerSelect($("#qq-dealer"), $("#qq-country").value);
+          renderQuestions();
+        });
+      });
 
       $("#cp-country").addEventListener("change", () => { renderCompare(); });
       ["cp-a", "cp-b", "cp-c"].forEach((id) => $("#" + id).addEventListener("change", renderCompare));
@@ -534,6 +935,9 @@
           if (btn.dataset.tab === "country-radar") renderCountryRadar();
           if (btn.dataset.tab === "gaps") renderGaps();
           if (btn.dataset.tab === "compare") renderCompare();
+          if (btn.dataset.tab === "questions") renderQuestions();
+          if (btn.dataset.tab === "vs-network") renderVsNetwork();
+          if (btn.dataset.tab === "overview") renderOverviewFocus();
         });
       });
 
@@ -542,6 +946,8 @@
       renderCountryRadar();
       renderGaps();
       renderCompare();
+      renderQuestions();
+      renderVsNetwork();
     }
 
     init();

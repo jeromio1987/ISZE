@@ -52,7 +52,7 @@ python build_ids_dashboard.py
 | Romania | `Romania/` | `..._Romania.xls` | Skips `ISUZU DEALERS ROMANIA 2025.xlsx` |
 | Portugal | `Portugal/` | `..._Portugal.xls` | |
 | Hungary | `Hungary/` | `..._Hungary.xls` | Hungarian rubric columns |
-| Denmark | — | — | **Not built** — ranking export only |
+| Denmark | `Denmark/` | `..._Denmark.xls` | Per-dealer Version 2026 sheets filed 2026-07-24; summary charts in `Denmark/_summary/` |
 | MIDI | `MIDI/` | — | **Not built** — consolidated file, no adapter |
 
 ---

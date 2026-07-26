@@ -30,7 +30,7 @@ ITUK_INPUT = DATA_ROOT / "ITUK" / "IDS ITUK self evaluations.xlsx"
 ITUK_OUTPUT = RANKINGS_DIR / "ITUK_dealer_ranking.xlsx"
 MIDI_FILE = DATA_ROOT / "MIDI" / "MIDI_FR.xlsx"
 
-SKIP_DIRS = {"rankings", "reports", "__pycache__", "MIDI", "_EXPORT"}
+SKIP_DIRS = {"rankings", "reports", "__pycache__", "MIDI", "_EXPORT", "LUX"}
 
 # On-disk folder name -> output country / tab label
 COUNTRY_LABELS: dict[str, str] = {
@@ -99,6 +99,9 @@ def discover_country_folders(data_root: Path = DATA_ROOT) -> list[str]:
     countries: list[str] = []
     for p in sorted(data_root.iterdir(), key=lambda x: x.name.casefold()):
         if not p.is_dir() or p.name in SKIP_DIRS:
+            continue
+        # Staging / scratch folders (e.g. _INCOMING_*, _summary)
+        if p.name.startswith("_"):
             continue
         if p.name.upper() == "ITUK":
             if (p / "IDS ITUK self evaluations.xlsx").is_file():

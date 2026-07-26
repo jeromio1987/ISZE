@@ -185,6 +185,10 @@ def read_scorecard_metrics(path: Path) -> tuple[float | None, float | None]:
 def _is_dealer_eval_workbook(path: Path) -> bool:
     if path.name.startswith("~$"):
         return False
+    low = path.name.lower()
+    # Ranking / chart summaries (e.g. Denmark "met grafiek"), not dealer eval sheets
+    if "grafiek" in low or "ranking" in low:
+        return False
     upper = path.name.upper()
     if "DEALERS" in upper and "EVALUATION" not in upper:
         return False

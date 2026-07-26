@@ -1,11 +1,12 @@
 {
-  "built_at": "2026-07-24 02:56 UTC",
+  "built_at": "2026-07-24 14:53 UTC",
   "dealers_per_country": 3,
-  "scored_dealers": 460,
-  "total_dealers": 532,
+  "scored_dealers": 480,
+  "total_dealers": 552,
   "countries": [
     "BE",
     "CYPRUS",
+    "DENMARK",
     "HUNGARY",
     "ISRAEL",
     "ITUK",
@@ -30,11 +31,11 @@
     "E": "E Vehicle sales"
   },
   "network_sections": {
-    "A": 0.775449414715719,
-    "B": 0.7810997596153846,
-    "C": 0.85703125,
-    "D": 0.8050838788870703,
-    "E": 0.7974172719935432
+    "A": 0.7748803350618269,
+    "B": 0.7803899082568807,
+    "C": 0.8583142201834862,
+    "D": 0.8034842865508491,
+    "E": 0.8018988965871183
   },
   "focus_dealers": [
     {
@@ -505,7 +506,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.5185185185185185,
-      "ids_global_rank": 313,
+      "ids_global_rank": 328,
       "ids_country_rank_total": 1,
       "b1_country_rank": 1,
       "b1_pct": 0.4167,
@@ -638,6 +639,456 @@
       ]
     },
     {
+      "country": "DENMARK",
+      "name": "Varebil-Leasing Kolding",
+      "id": "DENMARK::Varebil-Leasing Kolding",
+      "rank_in_country": 1,
+      "ids_total_pct": 0.664286,
+      "country_avg_pct": 0.81250005,
+      "vs_country_pp": -14.821404999999999,
+      "totals_only": false,
+      "sections": {
+        "A": 0.6956521739130435,
+        "B": 0.6375,
+        "C": 0.8125,
+        "D": 0.2765957446808511,
+        "E": 0.9259259259259259
+      },
+      "weakest_section": "D",
+      "weakest_section_pct": 0.2765957446808511,
+      "ids_global_rank": 418,
+      "ids_country_rank_total": 19,
+      "b1_country_rank": null,
+      "b1_pct": null,
+      "gaps": [
+        {
+          "ref": "D.1-3",
+          "section": "D",
+          "text": "Are storage locations determined so that receiving and shipping can be implemented efficiently and logically and are they controlled through a DMS system? Are recommended parts identifiable in the DMS",
+          "score": 0.0,
+          "max": 3.0,
+          "pct": 0.0,
+          "gap_pts": 3.0
+        },
+        {
+          "ref": "D.2-9",
+          "section": "D",
+          "text": "Do you have targets for orders and sales and monitor actual values on a monthly basis?",
+          "score": 0.0,
+          "max": 3.0,
+          "pct": 0.0,
+          "gap_pts": 3.0
+        },
+        {
+          "ref": "D.1-5",
+          "section": "D",
+          "text": "Do you have an inventory control system for managing an adequate inventory such as automatically calculation and ordering for the required quantities?",
+          "score": 0.0,
+          "max": 2.0,
+          "pct": 0.0,
+          "gap_pts": 2.0
+        },
+        {
+          "ref": "D.1-6",
+          "section": "D",
+          "text": "Do you have a sales order control management system?",
+          "score": 0.0,
+          "max": 2.0,
+          "pct": 0.0,
+          "gap_pts": 2.0
+        },
+        {
+          "ref": "D.1-8",
+          "section": "D",
+          "text": "Do you display parts sales promotional materials for Genuine and BVP parts around the counter?",
+          "score": 0.0,
+          "max": 2.0,
+          "pct": 0.0,
+          "gap_pts": 2.0
+        },
+        {
+          "ref": "D.2-10",
+          "section": "D",
+          "text": "Do you measure first fill rate, inventory turnover rates and standing inventory rates, monitor on a monthly basis and set target values?",
+          "score": 0.0,
+          "max": 2.0,
+          "pct": 0.0,
+          "gap_pts": 2.0
+        },
+        {
+          "ref": "D.1-1",
+          "section": "D",
+          "text": "Do you have enough space corresponding to the amount of the parts to be stocked?",
+          "score": 0.0,
+          "max": 1.0,
+          "pct": 0.0,
+          "gap_pts": 1.0
+        },
+        {
+          "ref": "D.1-2",
+          "section": "D",
+          "text": "Are the design and location of the parts warehouse considered based on the frequency of the movement and parts characteristics?",
+          "score": 0.0,
+          "max": 1.0,
+          "pct": 0.0,
+          "gap_pts": 1.0
+        }
+      ],
+      "suggested": "Fix weakest section D: D.1-3, D.2-9, D.1-5, D.1-6",
+      "db_questions": [
+        {
+          "id": "AS_RANK",
+          "theme": "Aftersales",
+          "question": "Where does Varebil-Leasing Kolding rank in your DENMARK network for aftersales (parts + labour revenue) last FY and YTD — top / mid / bottom third?"
+        },
+        {
+          "id": "SALES_RANK",
+          "theme": "Vehicle sales",
+          "question": "Where does Varebil-Leasing Kolding rank for new (and used, if tracked) vehicle sales in DENMARK? Are they a sales leader with weak standards, or weak on both?"
+        },
+        {
+          "id": "PARTS_BUY",
+          "theme": "Parts",
+          "question": "Where does Varebil-Leasing Kolding rank for parts purchases from you (genuine + BVP)? Any dealer-level first-fill / backorder / genuine-mix data you can share?"
+        },
+        {
+          "id": "WORKSHOP",
+          "theme": "Workshop",
+          "question": "How does Varebil-Leasing Kolding compare on workshop throughput (ROs / vehicles serviced / month) and retention vs your other dealers?"
+        },
+        {
+          "id": "IDS_CONTEXT",
+          "theme": "IDS",
+          "question": "Varebil-Leasing Kolding is IDS Kaizen pick #19 of ~20 in DENMARK (total 66.4% if scored; weakest section D Parts). Do you agree this ranking matches commercial reality?"
+        },
+        {
+          "id": "SECTION_FOCUS",
+          "theme": "Section D",
+          "question": "Specifically on D Parts: why is Varebil-Leasing Kolding soft here, and what is the one countermeasure you will run in the next 90 days?"
+        },
+        {
+          "id": "B1_PLAN",
+          "theme": "Business plan",
+          "question": "Does Varebil-Leasing Kolding have an agreed aftersales / parts business plan (IDS B.1) with monthly review? What is their B.1 status?"
+        },
+        {
+          "id": "GAP_WHY",
+          "theme": "Root cause",
+          "question": "For the Excel gaps on Varebil-Leasing Kolding (see Gap_Detail): is the cause people, process, stock, multi-brand priority, or data/self-score quality?"
+        },
+        {
+          "id": "COMMERCIAL_VS_IDS",
+          "theme": "Priority",
+          "question": "If Varebil-Leasing Kolding is commercially important but IDS-weak: what support will you give in 90 days? If commercially weak and IDS-weak: development, probation, or exit?"
+        },
+        {
+          "id": "OWNER_CAP",
+          "theme": "Ownership",
+          "question": "Who owns the Kaizen CAP for Varebil-Leasing Kolding at dealer and at DB, and what is the go/no-go check at day 90?"
+        }
+      ]
+    },
+    {
+      "country": "DENMARK",
+      "name": "Kjerulff A/S",
+      "id": "DENMARK::Kjerulff A/S",
+      "rank_in_country": 2,
+      "ids_total_pct": 0.75,
+      "country_avg_pct": 0.81250005,
+      "vs_country_pp": -6.250005000000003,
+      "totals_only": false,
+      "sections": {
+        "A": 0.6739130434782609,
+        "B": 0.7,
+        "C": 0.825,
+        "D": 0.6595744680851063,
+        "E": 0.9629629629629629
+      },
+      "weakest_section": "D",
+      "weakest_section_pct": 0.6595744680851063,
+      "ids_global_rank": 477,
+      "ids_country_rank_total": 20,
+      "b1_country_rank": null,
+      "b1_pct": null,
+      "gaps": [
+        {
+          "ref": "D.2-9",
+          "section": "D",
+          "text": "Do you have targets for orders and sales and monitor actual values on a monthly basis?",
+          "score": 0.0,
+          "max": 3.0,
+          "pct": 0.0,
+          "gap_pts": 3.0
+        },
+        {
+          "ref": "D.1-8",
+          "section": "D",
+          "text": "Do you display parts sales promotional materials for Genuine and BVP parts around the counter?",
+          "score": 0.0,
+          "max": 2.0,
+          "pct": 0.0,
+          "gap_pts": 2.0
+        },
+        {
+          "ref": "D.2-10",
+          "section": "D",
+          "text": "Do you measure first fill rate, inventory turnover rates and standing inventory rates, monitor on a monthly basis and set target values?",
+          "score": 0.0,
+          "max": 2.0,
+          "pct": 0.0,
+          "gap_pts": 2.0
+        },
+        {
+          "ref": "D.2-6",
+          "section": "D",
+          "text": "Is the order quantity decided based on the demand forecast from the actual sales results?",
+          "score": 0.0,
+          "max": 1.0,
+          "pct": 0.0,
+          "gap_pts": 1.0
+        },
+        {
+          "ref": "D.2-8",
+          "section": "D",
+          "text": "Do you have targets for inventory values, and monitor actual values on a monthly basis?",
+          "score": 0.0,
+          "max": 1.0,
+          "pct": 0.0,
+          "gap_pts": 1.0
+        },
+        {
+          "ref": "D.1-1",
+          "section": "D",
+          "text": "Do you have enough space corresponding to the amount of the parts to be stocked?",
+          "score": 1.0,
+          "max": 1.0,
+          "pct": 1.0,
+          "gap_pts": 0.0
+        },
+        {
+          "ref": "D.1-2",
+          "section": "D",
+          "text": "Are the design and location of the parts warehouse considered based on the frequency of the movement and parts characteristics?",
+          "score": 1.0,
+          "max": 1.0,
+          "pct": 1.0,
+          "gap_pts": 0.0
+        },
+        {
+          "ref": "D.1-4",
+          "section": "D",
+          "text": "Do you have two service parts sales counters, one for customers (retail sales) and one for the workshop (in-house sales)?",
+          "score": 1.0,
+          "max": 1.0,
+          "pct": 1.0,
+          "gap_pts": 0.0
+        }
+      ],
+      "suggested": "Fix weakest section D: D.2-9, D.1-8, D.2-10, D.2-6",
+      "db_questions": [
+        {
+          "id": "AS_RANK",
+          "theme": "Aftersales",
+          "question": "Where does Kjerulff A/S rank in your DENMARK network for aftersales (parts + labour revenue) last FY and YTD — top / mid / bottom third?"
+        },
+        {
+          "id": "SALES_RANK",
+          "theme": "Vehicle sales",
+          "question": "Where does Kjerulff A/S rank for new (and used, if tracked) vehicle sales in DENMARK? Are they a sales leader with weak standards, or weak on both?"
+        },
+        {
+          "id": "PARTS_BUY",
+          "theme": "Parts",
+          "question": "Where does Kjerulff A/S rank for parts purchases from you (genuine + BVP)? Any dealer-level first-fill / backorder / genuine-mix data you can share?"
+        },
+        {
+          "id": "WORKSHOP",
+          "theme": "Workshop",
+          "question": "How does Kjerulff A/S compare on workshop throughput (ROs / vehicles serviced / month) and retention vs your other dealers?"
+        },
+        {
+          "id": "IDS_CONTEXT",
+          "theme": "IDS",
+          "question": "Kjerulff A/S is IDS Kaizen pick #20 of ~20 in DENMARK (total 75.0% if scored; weakest section D Parts). Do you agree this ranking matches commercial reality?"
+        },
+        {
+          "id": "SECTION_FOCUS",
+          "theme": "Section D",
+          "question": "Specifically on D Parts: why is Kjerulff A/S soft here, and what is the one countermeasure you will run in the next 90 days?"
+        },
+        {
+          "id": "B1_PLAN",
+          "theme": "Business plan",
+          "question": "Does Kjerulff A/S have an agreed aftersales / parts business plan (IDS B.1) with monthly review? What is their B.1 status?"
+        },
+        {
+          "id": "GAP_WHY",
+          "theme": "Root cause",
+          "question": "For the Excel gaps on Kjerulff A/S (see Gap_Detail): is the cause people, process, stock, multi-brand priority, or data/self-score quality?"
+        },
+        {
+          "id": "COMMERCIAL_VS_IDS",
+          "theme": "Priority",
+          "question": "If Kjerulff A/S is commercially important but IDS-weak: what support will you give in 90 days? If commercially weak and IDS-weak: development, probation, or exit?"
+        },
+        {
+          "id": "OWNER_CAP",
+          "theme": "Ownership",
+          "question": "Who owns the Kaizen CAP for Kjerulff A/S at dealer and at DB, and what is the go/no-go check at day 90?"
+        }
+      ]
+    },
+    {
+      "country": "DENMARK",
+      "name": "Sjelle autoværksted a/s",
+      "id": "DENMARK::Sjelle autoværksted a/s",
+      "rank_in_country": 3,
+      "ids_total_pct": 0.753571,
+      "country_avg_pct": 0.81250005,
+      "vs_country_pp": -5.892905000000004,
+      "totals_only": false,
+      "sections": {
+        "A": 0.8260869565217391,
+        "B": 0.65,
+        "C": 0.85,
+        "D": 0.7446808510638298,
+        "E": 0.6666666666666666
+      },
+      "weakest_section": "B",
+      "weakest_section_pct": 0.65,
+      "ids_global_rank": 248,
+      "ids_country_rank_total": 9,
+      "b1_country_rank": null,
+      "b1_pct": null,
+      "gaps": [
+        {
+          "ref": "B.1-5",
+          "section": "B",
+          "text": "Is the specific business plan developed to achieve the established parts annual target? Is the annual target for parts sales and profit established?",
+          "score": 0.0,
+          "max": 3.0,
+          "pct": 0.0,
+          "gap_pts": 3.0
+        },
+        {
+          "ref": "B.3-1",
+          "section": "B",
+          "text": "Are employees abilities and skills evaluated on a regular basis using an evaluation sheet?",
+          "score": 0.0,
+          "max": 2.0,
+          "pct": 0.0,
+          "gap_pts": 2.0
+        },
+        {
+          "ref": "B.3-2",
+          "section": "B",
+          "text": "Are education plans for each employee for improvement of necessary abilities and skills developed?",
+          "score": 0.0,
+          "max": 2.0,
+          "pct": 0.0,
+          "gap_pts": 2.0
+        },
+        {
+          "ref": "B.1-2",
+          "section": "B",
+          "text": "Do you have the data of the Number of ISUZU vehicle in operation in your area, and use the data for planning the services and parts sales targets?",
+          "score": 0.0,
+          "max": 1.0,
+          "pct": 0.0,
+          "gap_pts": 1.0
+        },
+        {
+          "ref": "B.2-4",
+          "section": "B",
+          "text": "Is the person of each responsibility seen in the plan to see for the customer?",
+          "score": 0.0,
+          "max": 1.0,
+          "pct": 0.0,
+          "gap_pts": 1.0
+        },
+        {
+          "ref": "B.4-6",
+          "section": "B",
+          "text": "Is there a parking lot reserved for handicapped persons and clearly indicated?",
+          "score": 0.0,
+          "max": 1.0,
+          "pct": 0.0,
+          "gap_pts": 1.0
+        },
+        {
+          "ref": "B.5-3",
+          "section": "B",
+          "text": "Aisles and work area - Should be clearly divided in component line.",
+          "score": 0.0,
+          "max": 1.0,
+          "pct": 0.0,
+          "gap_pts": 1.0
+        },
+        {
+          "ref": "B.5-8",
+          "section": "B",
+          "text": "Each document type has the designated storage area and / or stored in Dealer's Database.",
+          "score": 0.0,
+          "max": 1.0,
+          "pct": 0.0,
+          "gap_pts": 1.0
+        }
+      ],
+      "suggested": "Fix weakest section B: B.1-5, B.3-1, B.3-2, B.1-2",
+      "db_questions": [
+        {
+          "id": "AS_RANK",
+          "theme": "Aftersales",
+          "question": "Where does Sjelle autoværksted a/s rank in your DENMARK network for aftersales (parts + labour revenue) last FY and YTD — top / mid / bottom third?"
+        },
+        {
+          "id": "SALES_RANK",
+          "theme": "Vehicle sales",
+          "question": "Where does Sjelle autoværksted a/s rank for new (and used, if tracked) vehicle sales in DENMARK? Are they a sales leader with weak standards, or weak on both?"
+        },
+        {
+          "id": "PARTS_BUY",
+          "theme": "Parts",
+          "question": "Where does Sjelle autoværksted a/s rank for parts purchases from you (genuine + BVP)? Any dealer-level first-fill / backorder / genuine-mix data you can share?"
+        },
+        {
+          "id": "WORKSHOP",
+          "theme": "Workshop",
+          "question": "How does Sjelle autoværksted a/s compare on workshop throughput (ROs / vehicles serviced / month) and retention vs your other dealers?"
+        },
+        {
+          "id": "IDS_CONTEXT",
+          "theme": "IDS",
+          "question": "Sjelle autoværksted a/s is IDS Kaizen pick #9 of ~20 in DENMARK (total 75.4% if scored; weakest section B Organisation). Do you agree this ranking matches commercial reality?"
+        },
+        {
+          "id": "SECTION_FOCUS",
+          "theme": "Section B",
+          "question": "Specifically on B Organisation: why is Sjelle autoværksted a/s soft here, and what is the one countermeasure you will run in the next 90 days?"
+        },
+        {
+          "id": "B1_PLAN",
+          "theme": "Business plan",
+          "question": "Does Sjelle autoværksted a/s have an agreed aftersales / parts business plan (IDS B.1) with monthly review? What is their B.1 status?"
+        },
+        {
+          "id": "GAP_WHY",
+          "theme": "Root cause",
+          "question": "For the Excel gaps on Sjelle autoværksted a/s (see Gap_Detail): is the cause people, process, stock, multi-brand priority, or data/self-score quality?"
+        },
+        {
+          "id": "COMMERCIAL_VS_IDS",
+          "theme": "Priority",
+          "question": "If Sjelle autoværksted a/s is commercially important but IDS-weak: what support will you give in 90 days? If commercially weak and IDS-weak: development, probation, or exit?"
+        },
+        {
+          "id": "OWNER_CAP",
+          "theme": "Ownership",
+          "question": "Who owns the Kaizen CAP for Sjelle autoværksted a/s at dealer and at DB, and what is the go/no-go check at day 90?"
+        }
+      ]
+    },
+    {
       "country": "HUNGARY",
       "name": "Bonus Kft.",
       "id": "HUNGARY::Bonus Kft.",
@@ -655,7 +1106,7 @@
       },
       "weakest_section": "D",
       "weakest_section_pct": 0.574468085106383,
-      "ids_global_rank": 395,
+      "ids_global_rank": 413,
       "ids_country_rank_total": 19,
       "b1_country_rank": 15,
       "b1_pct": 0.5,
@@ -805,7 +1256,7 @@
       },
       "weakest_section": "B",
       "weakest_section_pct": 0.55,
-      "ids_global_rank": 379,
+      "ids_global_rank": 397,
       "ids_country_rank_total": 18,
       "b1_country_rank": 16,
       "b1_pct": 0.5,
@@ -955,7 +1406,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.25925925925925924,
-      "ids_global_rank": 328,
+      "ids_global_rank": 346,
       "ids_country_rank_total": 17,
       "b1_country_rank": 14,
       "b1_pct": 0.5,
@@ -1105,7 +1556,7 @@
       },
       "weakest_section": "A",
       "weakest_section_pct": 0.4782608695652174,
-      "ids_global_rank": 444,
+      "ids_global_rank": 463,
       "ids_country_rank_total": 27,
       "b1_country_rank": 2,
       "b1_pct": 0.0,
@@ -1255,7 +1706,7 @@
       },
       "weakest_section": "B",
       "weakest_section_pct": 0.6375,
-      "ids_global_rank": 448,
+      "ids_global_rank": 467,
       "ids_country_rank_total": 29,
       "b1_country_rank": 29,
       "b1_pct": 0.0,
@@ -1405,7 +1856,7 @@
       },
       "weakest_section": "A",
       "weakest_section_pct": 0.4782608695652174,
-      "ids_global_rank": 436,
+      "ids_global_rank": 455,
       "ids_country_rank_total": 24,
       "b1_country_rank": 3,
       "b1_pct": 0.0,
@@ -1555,7 +2006,7 @@
       },
       "weakest_section": null,
       "weakest_section_pct": null,
-      "ids_global_rank": 449,
+      "ids_global_rank": 468,
       "ids_country_rank_total": 44,
       "b1_country_rank": 42,
       "b1_pct": 0.0,
@@ -1631,7 +2082,7 @@
       },
       "weakest_section": null,
       "weakest_section_pct": null,
-      "ids_global_rank": 394,
+      "ids_global_rank": 412,
       "ids_country_rank_total": 43,
       "b1_country_rank": 25,
       "b1_pct": 1.0,
@@ -1707,7 +2158,7 @@
       },
       "weakest_section": null,
       "weakest_section_pct": null,
-      "ids_global_rank": 391,
+      "ids_global_rank": 409,
       "ids_country_rank_total": 41,
       "b1_country_rank": 13,
       "b1_pct": 1.0,
@@ -1783,7 +2234,7 @@
       },
       "weakest_section": "D",
       "weakest_section_pct": 0.3404255319148936,
-      "ids_global_rank": 431,
+      "ids_global_rank": 450,
       "ids_country_rank_total": 42,
       "b1_country_rank": 13,
       "b1_pct": 0.8571,
@@ -2233,7 +2684,7 @@
       },
       "weakest_section": "A",
       "weakest_section_pct": 0.8043478260869565,
-      "ids_global_rank": 106,
+      "ids_global_rank": 107,
       "ids_country_rank_total": 1,
       "b1_country_rank": 1,
       "b1_pct": 1.0,
@@ -2383,7 +2834,7 @@
       },
       "weakest_section": "B",
       "weakest_section_pct": 0.6,
-      "ids_global_rank": 377,
+      "ids_global_rank": 395,
       "ids_country_rank_total": 14,
       "b1_country_rank": 14,
       "b1_pct": 0.0833,
@@ -2533,7 +2984,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.6666666666666666,
-      "ids_global_rank": 369,
+      "ids_global_rank": 387,
       "ids_country_rank_total": 13,
       "b1_country_rank": 13,
       "b1_pct": 0.4167,
@@ -2683,7 +3134,7 @@
       },
       "weakest_section": "B",
       "weakest_section_pct": 0.675,
-      "ids_global_rank": 214,
+      "ids_global_rank": 218,
       "ids_country_rank_total": 12,
       "b1_country_rank": 12,
       "b1_pct": 0.5,
@@ -2833,7 +3284,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.18518518518518517,
-      "ids_global_rank": 439,
+      "ids_global_rank": 458,
       "ids_country_rank_total": 37,
       "b1_country_rank": 37,
       "b1_pct": 0.0833,
@@ -2983,7 +3434,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.4444444444444444,
-      "ids_global_rank": 386,
+      "ids_global_rank": 404,
       "ids_country_rank_total": 36,
       "b1_country_rank": 32,
       "b1_pct": 0.3333,
@@ -3133,7 +3584,7 @@
       },
       "weakest_section": "A",
       "weakest_section_pct": 0.5652173913043478,
-      "ids_global_rank": 370,
+      "ids_global_rank": 388,
       "ids_country_rank_total": 35,
       "b1_country_rank": 36,
       "b1_pct": 0.16670000000000001,
@@ -3283,7 +3734,7 @@
       },
       "weakest_section": "B",
       "weakest_section_pct": 0.0,
-      "ids_global_rank": 456,
+      "ids_global_rank": 475,
       "ids_country_rank_total": 65,
       "b1_country_rank": 64,
       "b1_pct": 0.0,
@@ -3433,7 +3884,7 @@
       },
       "weakest_section": "A",
       "weakest_section_pct": 0.0,
-      "ids_global_rank": 455,
+      "ids_global_rank": 474,
       "ids_country_rank_total": 64,
       "b1_country_rank": 65,
       "b1_pct": 0.0,
@@ -3583,7 +4034,7 @@
       },
       "weakest_section": "C",
       "weakest_section_pct": 0.0,
-      "ids_global_rank": 454,
+      "ids_global_rank": 473,
       "ids_country_rank_total": 63,
       "b1_country_rank": 59,
       "b1_pct": 0.0833,
@@ -3733,7 +4184,7 @@
       },
       "weakest_section": "A",
       "weakest_section_pct": 0.4782608695652174,
-      "ids_global_rank": 399,
+      "ids_global_rank": 417,
       "ids_country_rank_total": 36,
       "b1_country_rank": 36,
       "b1_pct": 0.0833,
@@ -3883,7 +4334,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.5925925925925926,
-      "ids_global_rank": 341,
+      "ids_global_rank": 359,
       "ids_country_rank_total": 35,
       "b1_country_rank": 16,
       "b1_pct": 0.75,
@@ -4033,7 +4484,7 @@
       },
       "weakest_section": "D",
       "weakest_section_pct": 0.6595744680851063,
-      "ids_global_rank": 317,
+      "ids_global_rank": 332,
       "ids_country_rank_total": 34,
       "b1_country_rank": 33,
       "b1_pct": 0.3333,
@@ -4633,7 +5084,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.2222222222222222,
-      "ids_global_rank": 435,
+      "ids_global_rank": 454,
       "ids_country_rank_total": 34,
       "b1_country_rank": 34,
       "b1_pct": 0.0,
@@ -4783,7 +5234,7 @@
       },
       "weakest_section": "A",
       "weakest_section_pct": 0.45652173913043476,
-      "ids_global_rank": 423,
+      "ids_global_rank": 442,
       "ids_country_rank_total": 33,
       "b1_country_rank": 33,
       "b1_pct": 0.0833,
@@ -4933,7 +5384,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.5555555555555556,
-      "ids_global_rank": 422,
+      "ids_global_rank": 441,
       "ids_country_rank_total": 32,
       "b1_country_rank": 31,
       "b1_pct": 0.16670000000000001,
@@ -5083,7 +5534,7 @@
       },
       "weakest_section": "B",
       "weakest_section_pct": 0.55,
-      "ids_global_rank": 362,
+      "ids_global_rank": 380,
       "ids_country_rank_total": 23,
       "b1_country_rank": 22,
       "b1_pct": 0.0,
@@ -5233,7 +5684,7 @@
       },
       "weakest_section": "A",
       "weakest_section_pct": 0.717391304347826,
-      "ids_global_rank": 300,
+      "ids_global_rank": 315,
       "ids_country_rank_total": 21,
       "b1_country_rank": 11,
       "b1_pct": 0.75,
@@ -5383,7 +5834,7 @@
       },
       "weakest_section": "D",
       "weakest_section_pct": 0.6382978723404256,
-      "ids_global_rank": 288,
+      "ids_global_rank": 299,
       "ids_country_rank_total": 20,
       "b1_country_rank": 7,
       "b1_pct": 0.8332999999999999,
@@ -5533,7 +5984,7 @@
       },
       "weakest_section": "A",
       "weakest_section_pct": 0.5434782608695652,
-      "ids_global_rank": 325,
+      "ids_global_rank": 343,
       "ids_country_rank_total": 16,
       "b1_country_rank": 11,
       "b1_pct": 0.8332999999999999,
@@ -5683,7 +6134,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.6296296296296297,
-      "ids_global_rank": 295,
+      "ids_global_rank": 310,
       "ids_country_rank_total": 15,
       "b1_country_rank": 8,
       "b1_pct": 0.9167000000000001,
@@ -5833,7 +6284,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.6296296296296297,
-      "ids_global_rank": 282,
+      "ids_global_rank": 293,
       "ids_country_rank_total": 12,
       "b1_country_rank": 6,
       "b1_pct": 1.0,
@@ -5983,7 +6434,7 @@
       },
       "weakest_section": "B",
       "weakest_section_pct": 0.3625,
-      "ids_global_rank": 441,
+      "ids_global_rank": 460,
       "ids_country_rank_total": 15,
       "b1_country_rank": 15,
       "b1_pct": 0.0833,
@@ -6133,7 +6584,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.3333333333333333,
-      "ids_global_rank": 356,
+      "ids_global_rank": 374,
       "ids_country_rank_total": 13,
       "b1_country_rank": 11,
       "b1_pct": 0.3333,
@@ -6283,7 +6734,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.2962962962962963,
-      "ids_global_rank": 381,
+      "ids_global_rank": 399,
       "ids_country_rank_total": 14,
       "b1_country_rank": 12,
       "b1_pct": 0.3333,
@@ -6433,7 +6884,7 @@
       },
       "weakest_section": "E",
       "weakest_section_pct": 0.5555555555555556,
-      "ids_global_rank": 404,
+      "ids_global_rank": 423,
       "ids_country_rank_total": 32,
       "b1_country_rank": 34,
       "b1_pct": 0.3333,
@@ -6583,7 +7034,7 @@
       },
       "weakest_section": "A",
       "weakest_section_pct": 0.5869565217391305,
-      "ids_global_rank": 457,
+      "ids_global_rank": 476,
       "ids_country_rank_total": 37,
       "b1_country_rank": 37,
       "b1_pct": 0.0,
@@ -6733,7 +7184,7 @@
       },
       "weakest_section": "A",
       "weakest_section_pct": 0.6956521739130435,
-      "ids_global_rank": 407,
+      "ids_global_rank": 426,
       "ids_country_rank_total": 33,
       "b1_country_rank": 31,
       "b1_pct": 0.4167,
@@ -6879,11 +7330,11 @@
         "E": 0.7723311546840959
       },
       "vs_network_pp": {
-        "A": -6.317319988195946,
-        "B": -4.543799490950217,
-        "C": 1.9806985294117618,
-        "D": -0.7211538461538436,
-        "E": -2.508611730944732
+        "A": -6.260412022806728,
+        "B": -4.47281435509983,
+        "C": 1.8524015110631398,
+        "D": -0.5611946125317235,
+        "E": -2.956774190302247
       },
       "weakest_section": "A",
       "weakest_pct": 0.7122762148337596
@@ -6900,14 +7351,35 @@
         "E": 0.5185185185185185
       },
       "vs_network_pp": {
-        "A": -5.805811036789299,
-        "B": -4.359975961538454,
-        "C": 1.7968749999999978,
-        "D": -8.167962356792135,
-        "E": -27.889875347502468
+        "A": -5.74890307140008,
+        "B": -4.2889908256880656,
+        "C": 1.6685779816513757,
+        "D": -8.008003123170015,
+        "E": -28.338037806859983
       },
       "weakest_section": "E",
       "weakest_pct": 0.5185185185185185
+    },
+    {
+      "country": "DENMARK",
+      "dealer_count": 20,
+      "total_pct": 0.81250005,
+      "sections": {
+        "A": 0.7630434782608696,
+        "B": 0.765625,
+        "C": 0.885,
+        "D": 0.7702127659574468,
+        "E": 0.8944444444444444
+      },
+      "vs_network_pp": {
+        "A": -1.1836856800957252,
+        "B": -1.4764908256880704,
+        "C": 2.6685779816513766,
+        "D": -3.3271520593402326,
+        "E": 9.254554785732605
+      },
+      "weakest_section": "A",
+      "weakest_pct": 0.7630434782608696
     },
     {
       "country": "HUNGARY",
@@ -6921,11 +7393,11 @@
         "E": 0.8538011695906432
       },
       "vs_network_pp": {
-        "A": 3.576339992958988,
-        "B": 4.521602985829965,
-        "C": 6.073190789473681,
-        "D": 8.965296321819283,
-        "E": 5.638389759710005
+        "A": 3.633247958348207,
+        "B": 4.592588121680352,
+        "C": 5.944893771125059,
+        "D": 9.125255555441402,
+        "E": 5.19022730035249
       },
       "weakest_section": "A",
       "weakest_pct": 0.8112128146453089
@@ -6942,11 +7414,11 @@
         "E": 0.9629629629629629
       },
       "vs_network_pp": {
-        "A": -5.655885999308041,
-        "B": -2.6789414787798393,
-        "C": 0.4606681034482696,
-        "D": -3.9860107793893484,
-        "E": 16.554569096941975
+        "A": -5.598978033918822,
+        "B": -2.6079563429294517,
+        "C": 0.3323710850996475,
+        "D": -3.8260515457672284,
+        "E": 16.10640663758446
       },
       "weakest_section": "A",
       "weakest_pct": 0.7188905547226386
@@ -6978,11 +7450,11 @@
         "E": 0.8844797178130511
       },
       "vs_network_pp": {
-        "A": 2.358440170940168,
-        "B": 2.6955795940170946,
-        "C": -3.1475694444444424,
-        "D": 1.2883024186215675,
-        "E": 8.706244581950795
+        "A": 2.415348136329387,
+        "B": 2.7665647298674823,
+        "C": -3.2758664627930645,
+        "D": 1.4482616522436875,
+        "E": 8.25808212259328
       },
       "weakest_section": "A",
       "weakest_pct": 0.7990338164251207
@@ -6999,11 +7471,11 @@
         "E": 0.8888888888888888
       },
       "vs_network_pp": {
-        "A": 2.88984113712375,
-        "B": 18.140024038461544,
-        "C": 3.0468749999999933,
-        "D": 6.725654664484459,
-        "E": 9.147161689534567
+        "A": 2.946749102512969,
+        "B": 18.211009174311933,
+        "C": 2.9185779816513713,
+        "D": 6.8856138981065795,
+        "E": 8.698999230177051
       },
       "weakest_section": "A",
       "weakest_pct": 0.8043478260869565
@@ -7020,11 +7492,11 @@
         "E": 0.9153439153439153
       },
       "vs_network_pp": {
-        "A": 6.305990205446732,
-        "B": 5.9971668956043995,
-        "C": 9.20758928571429,
-        "D": 5.965776245031574,
-        "E": 11.792664335037218
+        "A": 6.362898170835951,
+        "B": 6.068152031454788,
+        "C": 9.079292267365668,
+        "D": 6.125735478653693,
+        "E": 11.344501875679702
       },
       "weakest_section": "A",
       "weakest_pct": 0.8385093167701864
@@ -7041,11 +7513,11 @@
         "E": 0.8038038038038038
       },
       "vs_network_pp": {
-        "A": 2.6548235108017737,
-        "B": 5.741375389812897,
-        "C": 4.803631756756754,
-        "D": 3.6204217720175236,
-        "E": 0.638653181026061
+        "A": 2.7117314761909928,
+        "B": 5.812360525663285,
+        "C": 4.675334738408132,
+        "D": 3.7803810056396436,
+        "E": 0.19049072166854586
       },
       "weakest_section": "A",
       "weakest_pct": 0.8019976498237368
@@ -7062,11 +7534,11 @@
         "E": 0.6974358974358974
       },
       "vs_network_pp": {
-        "A": -1.6252090301003275,
-        "B": -8.07151442307692,
-        "C": -8.760817307692314,
-        "D": -8.953559738134198,
-        "E": -9.998137455764578
+        "A": -1.5683010647111084,
+        "B": -8.000529287226533,
+        "C": -8.889114326040936,
+        "D": -8.793600504512078,
+        "E": -10.446299915122093
       },
       "weakest_section": "E",
       "weakest_pct": 0.6974358974358974
@@ -7083,11 +7555,11 @@
         "E": 0.861111111111111
       },
       "vs_network_pp": {
-        "A": 5.788391861761433,
-        "B": 4.910857371794874,
-        "C": 2.8385416666666607,
-        "D": 6.252841425713774,
-        "E": 6.369383911756787
+        "A": 5.845299827150652,
+        "B": 4.981842507645262,
+        "C": 2.7102446483180387,
+        "D": 6.412800659335893,
+        "E": 5.921221452399273
       },
       "weakest_section": "B",
       "weakest_pct": 0.8302083333333333
@@ -7104,11 +7576,11 @@
         "E": 0.7119341563786008
       },
       "vs_network_pp": {
-        "A": -8.462815867707175,
-        "B": -5.054420405982906,
-        "C": -0.564236111111116,
-        "D": -4.858269685397342,
-        "E": -8.548311561494238
+        "A": -8.405907902317955,
+        "B": -4.983435270132519,
+        "C": -0.6925331294597381,
+        "D": -4.698310451775223,
+        "E": -8.996474020851753
       },
       "weakest_section": "A",
       "weakest_pct": 0.6908212560386473
@@ -7125,11 +7597,11 @@
         "E": 0.5860566448801743
       },
       "vs_network_pp": {
-        "A": -4.079468325791858,
-        "B": -6.198211255656105,
-        "C": -4.3060661764705905,
-        "D": -7.229289015115048,
-        "E": -21.13606271133689
+        "A": -4.022560360402638,
+        "B": -6.127226119805718,
+        "C": -4.434363194819213,
+        "D": -7.069329781492928,
+        "E": -21.584225170694403
       },
       "weakest_section": "E",
       "weakest_pct": 0.5860566448801743
@@ -7146,11 +7618,11 @@
         "E": 0.78743961352657
       },
       "vs_network_pp": {
-        "A": 5.7253798894866925,
-        "B": 4.226980560200677,
-        "C": 3.5360054347826075,
-        "D": 7.00317547854551,
-        "E": -0.9977658466973183
+        "A": 5.782287854875912,
+        "B": 4.297965696051065,
+        "C": 3.4077084164339855,
+        "D": 7.163134712167629,
+        "E": -1.4459283060548334
       },
       "weakest_section": "E",
       "weakest_pct": 0.78743961352657
@@ -7167,11 +7639,11 @@
         "E": 0.8657407407407407
       },
       "vs_network_pp": {
-        "A": 5.063754180602009,
-        "B": 8.686899038461537,
-        "C": 2.4218749999999956,
-        "D": 8.188420621931257,
-        "E": 6.832346874719752
+        "A": 5.120662145991228,
+        "B": 8.757884174311926,
+        "C": 2.2935779816513735,
+        "D": 8.348379855553379,
+        "E": 6.384184415362237
       },
       "weakest_section": "A",
       "weakest_pct": 0.8260869565217391
@@ -7188,11 +7660,11 @@
         "E": 0.7382716049382716
       },
       "vs_network_pp": {
-        "A": 0.8608556298773773,
-        "B": -0.9433092948717858,
-        "C": 0.046875000000001776,
-        "D": -0.36654391707583445,
-        "E": -5.914566705527157
+        "A": 0.9177635952665963,
+        "B": -0.8723241590213981,
+        "C": -0.08142201834862028,
+        "D": -0.2065846834537144,
+        "E": -6.362729164884673
       },
       "weakest_section": "E",
       "weakest_pct": 0.7382716049382716
@@ -7209,11 +7681,11 @@
         "E": 0.8450292397660819
       },
       "vs_network_pp": {
-        "A": -2.430524995599359,
-        "B": 2.547918775303648,
-        "C": 3.4745065789473673,
-        "D": 1.4624967697476121,
-        "E": 4.761196777253874
+        "A": -2.37361703021014,
+        "B": 2.6189039111540358,
+        "C": 3.346209560598745,
+        "D": 1.6224560033697322,
+        "E": 4.313034317896358
       },
       "weakest_section": "A",
       "weakest_pct": 0.7511441647597255
@@ -7225,7 +7697,7 @@
       "section": "E",
       "section_label": "E Vehicle sales",
       "country_pct": 0.5185185185185185,
-      "vs_network_pp": -27.889875347502468,
+      "vs_network_pp": -28.338037806859983,
       "ask": "Why is CYPRUS underperforming on E Vehicle sales vs network?"
     },
     {
@@ -7233,7 +7705,7 @@
       "section": "E",
       "section_label": "E Vehicle sales",
       "country_pct": 0.5860566448801743,
-      "vs_network_pp": -21.13606271133689,
+      "vs_network_pp": -21.584225170694403,
       "ask": "Why is PETROS underperforming on E Vehicle sales vs network?"
     },
     {
@@ -7241,39 +7713,39 @@
       "section": "E",
       "section_label": "E Vehicle sales",
       "country_pct": 0.6974358974358974,
-      "vs_network_pp": -9.998137455764578,
+      "vs_network_pp": -10.446299915122093,
       "ask": "Why is MIDI_FR underperforming on E Vehicle sales vs network?"
-    },
-    {
-      "country": "MIDI_FR",
-      "section": "D",
-      "section_label": "D Parts",
-      "country_pct": 0.7155482815057284,
-      "vs_network_pp": -8.953559738134198,
-      "ask": "Why is MIDI_FR underperforming on D Parts vs network?"
-    },
-    {
-      "country": "MIDI_FR",
-      "section": "C",
-      "section_label": "C Service",
-      "country_pct": 0.7694230769230769,
-      "vs_network_pp": -8.760817307692314,
-      "ask": "Why is MIDI_FR underperforming on C Service vs network?"
     },
     {
       "country": "NL",
       "section": "E",
       "section_label": "E Vehicle sales",
       "country_pct": 0.7119341563786008,
-      "vs_network_pp": -8.548311561494238,
+      "vs_network_pp": -8.996474020851753,
       "ask": "Why is NL underperforming on E Vehicle sales vs network?"
+    },
+    {
+      "country": "MIDI_FR",
+      "section": "C",
+      "section_label": "C Service",
+      "country_pct": 0.7694230769230769,
+      "vs_network_pp": -8.889114326040936,
+      "ask": "Why is MIDI_FR underperforming on C Service vs network?"
+    },
+    {
+      "country": "MIDI_FR",
+      "section": "D",
+      "section_label": "D Parts",
+      "country_pct": 0.7155482815057284,
+      "vs_network_pp": -8.793600504512078,
+      "ask": "Why is MIDI_FR underperforming on D Parts vs network?"
     },
     {
       "country": "NL",
       "section": "A",
       "section_label": "A Premises",
       "country_pct": 0.6908212560386473,
-      "vs_network_pp": -8.462815867707175,
+      "vs_network_pp": -8.405907902317955,
       "ask": "Why is NL underperforming on A Premises vs network?"
     },
     {
@@ -7281,7 +7753,7 @@
       "section": "D",
       "section_label": "D Parts",
       "country_pct": 0.723404255319149,
-      "vs_network_pp": -8.167962356792135,
+      "vs_network_pp": -8.008003123170015,
       "ask": "Why is CYPRUS underperforming on D Parts vs network?"
     },
     {
@@ -7289,7 +7761,7 @@
       "section": "B",
       "section_label": "B Organisation",
       "country_pct": 0.7003846153846154,
-      "vs_network_pp": -8.07151442307692,
+      "vs_network_pp": -8.000529287226533,
       "ask": "Why is MIDI_FR underperforming on B Organisation vs network?"
     }
   ]

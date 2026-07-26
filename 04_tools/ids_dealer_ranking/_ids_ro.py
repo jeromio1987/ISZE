@@ -1,4 +1,4 @@
-﻿import sys
+import sys
 sys.stdout.reconfigure(encoding="utf-8")
 from pathlib import Path
 import xlrd
@@ -13,7 +13,7 @@ print("ours exists", ours.exists(), "tb", tb.exists())
 for label, path in [("OURS", ours), ("TB", tb)]:
     if not path.exists():
         print(label, "missing"); continue
-    country, recs, _ = extract_result_report(path)
+    country, recs, _, _ = extract_result_report(path)
     print(f"\n=== {label} country={country} n={len(recs)} ===")
     for r in sorted(recs, key=lambda x: x.name.lower()):
         print(f"  {r.name[:40]:40} tot={r.total} pct={None if r.total_pct is None else round(r.total_pct*100,2)}")

@@ -35,6 +35,7 @@ def _safe_save(wb: Workbook, path: Path) -> Path:
 TOTAL_SOURCES = (
     ("BE_dealer_ranking.xlsx", "BE"),
     ("NL_dealer_ranking.xlsx", "NL"),
+    ("Denmark_dealer_ranking.xlsx", "Denmark"),
     ("Poland_dealer_ranking.xlsx", "Poland"),
     ("Petros_dealer_ranking.xlsx", "Petros"),
     ("RSA_dealer_ranking.xlsx", "RSA"),

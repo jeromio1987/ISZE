@@ -18,6 +18,7 @@ OUTPUT = RANKINGS_DIR / "IDS_2026_all_country_rankings.xlsx"
 SOURCES = (
     ("BE_dealer_ranking.xlsx", "BE"),
     ("NL_dealer_ranking.xlsx", "NL"),
+    ("Denmark_dealer_ranking.xlsx", "Denmark"),
     ("Poland_dealer_ranking.xlsx", "Poland"),
     ("Petros_dealer_ranking.xlsx", "Petros"),
     ("RSA_dealer_ranking.xlsx", "RSA"),

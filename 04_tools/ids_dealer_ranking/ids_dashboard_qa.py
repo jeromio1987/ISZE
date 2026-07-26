@@ -100,6 +100,10 @@ def format_qa_report(payload: dict[str, Any], errors: list[str]) -> str:
         f"totals_only: {totals_only}",
         f"countries: {payload.get('country_count')} ({', '.join(payload.get('countries') or [])})",
     ]
+    qn = len(payload.get("questions") or [])
+    with_q = sum(1 for d in dealers if isinstance(d.get("q"), list))
+    lines.append(f"questions: {qn}")
+    lines.append(f"dealers with q[]: {with_q}")
     if errors:
         lines.append("FAIL:")
         lines.extend(f"  - {e}" for e in errors)
