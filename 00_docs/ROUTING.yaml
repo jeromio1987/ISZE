@@ -14,6 +14,12 @@ global_ignore:
   - 90_archive/**
 
 tasks:
+  holiday_laptop:
+    description: Set up another PC / holiday laptop (clone, Cursor sync, secrets)
+    read:
+      - 00_docs/HOLIDAY_LAPTOP.md
+      - 00_docs/README.md
+
   quote_kpi:
     description: Answer a headline metric (capture %, GPS, BVP mix, revenue)
     read:
