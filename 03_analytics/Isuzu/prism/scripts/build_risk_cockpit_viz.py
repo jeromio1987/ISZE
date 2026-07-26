@@ -464,11 +464,8 @@ def build_payload(force: bool = False) -> dict:
     }
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Build risk_cockpit.json for static HTML")
-    parser.add_argument("--force", action="store_true")
-    args = parser.parse_args()
-    payload = build_payload(force=args.force)
+def write_payload(payload: dict) -> None:
+    """Write the JSON and embedded-JS variants from one serialization."""
     serialized = json.dumps(_null_nan(payload), ensure_ascii=False, indent=2, allow_nan=False)
     VIZ_DIR.mkdir(parents=True, exist_ok=True)
     OUT_JSON.write_text(serialized, encoding="utf-8")
@@ -480,6 +477,14 @@ def main() -> int:
         + ";\n",
         encoding="utf-8",
     )
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Build risk_cockpit.json for static HTML")
+    parser.add_argument("--force", action="store_true")
+    args = parser.parse_args()
+    payload = build_payload(force=args.force)
+    write_payload(payload)
     h = payload["headline"]
     print(f"Wrote {OUT_JSON}")
     print(f"Wrote {OUT_JS}")

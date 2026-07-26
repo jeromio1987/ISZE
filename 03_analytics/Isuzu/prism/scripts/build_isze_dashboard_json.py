@@ -265,14 +265,13 @@ def main() -> int:
 
     # Risk cockpit viz (parallel JSON for ISZE_Risk_Cockpit.html)
     try:
-        from build_risk_cockpit_viz import build_payload as _risk_payload  # noqa: WPS433
+        from build_risk_cockpit_viz import (  # noqa: WPS433
+            build_payload as _risk_payload,
+            write_payload as _write_risk_payload,
+        )
 
         risk = _risk_payload(force=args.force)
-        VIZ_DIR = DASHBOARDS_JSON_DIR / "viz"
-        VIZ_DIR.mkdir(parents=True, exist_ok=True)
-        (VIZ_DIR / "risk_cockpit.json").write_text(
-            json.dumps(risk, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
+        _write_risk_payload(risk)
         payload["risk_cockpit"] = risk.get("headline", {})
     except Exception as exc:
         print(f"WARNING: risk_cockpit viz skipped: {exc}", flush=True)
