@@ -104,7 +104,7 @@
 <body>
   <header>
     <h1>IDS 2026 — Dealer comparison</h1>
-    <p>Offline · sections A–E + questions · goed / medium / slecht · built __BUILT_AT__</p>
+    <p>Offline · sections A–E + questions · good / medium / bad · built __BUILT_AT__</p>
   </header>
 
   <div class="toolbar">
@@ -123,6 +123,7 @@
     <button class="tab" data-tab="country-radar" type="button">Country radar</button>
     <button class="tab" data-tab="compare" type="button">Compare dealers</button>
     <button class="tab" data-tab="country" type="button">By country</button>
+    <button class="tab" data-tab="changelog" type="button">Changelog</button>
   </nav>
 
   <main>
@@ -131,7 +132,7 @@
     <section id="panel-overview" class="panel active">
       <div class="card">
         <h2>Dealer overview — section vs country &amp; network</h2>
-        <p class="hint">Pick a dealer to see section bars against country and network averages, plus strengths and weak points. Click a section to open question drill.</p>
+        <p class="hint">Pick a dealer to see section bars against country and network averages, plus strengths/weak points (full vs zero on max-point checklist items, one per section A–E). Click a section to open question drill.</p>
         <div class="controls">
           <div><label for="ov-country">Country</label><select id="ov-country"></select></div>
           <div><label for="ov-dealer">Dealer</label><select id="ov-dealer"></select></div>
@@ -141,11 +142,11 @@
       </div>
       <div class="callouts">
         <div class="card callout good">
-          <h3>Strengths (goed)</h3>
+          <h3>Strengths (good)</h3>
           <ul id="ov-strengths"></ul>
         </div>
         <div class="card callout bad">
-          <h3>Weak points (slecht)</h3>
+          <h3>Weak points (bad)</h3>
           <ul id="ov-weak"></ul>
         </div>
       </div>
@@ -164,7 +165,7 @@
             <select id="hm-mode">
               <option value="country">vs country avg</option>
               <option value="network">vs network avg</option>
-              <option value="band">traffic light (goed/medium/slecht)</option>
+              <option value="band">traffic light (good/medium/bad)</option>
             </select>
           </div>
         </div>
@@ -204,7 +205,7 @@
     <section id="panel-questions" class="panel">
       <div class="card">
         <h2>Question drill</h2>
-        <p class="hint">Compare each checklist item to country and network average. Band = goed / medium / slecht.</p>
+        <p class="hint">Compare each checklist item to country and network average. Band = good / medium / bad. Strengths = full score on max-point items; weak = zero score — one pick per section A–E.</p>
         <div class="controls">
           <div><label for="qq-country">Country</label><select id="qq-country"></select></div>
           <div><label for="qq-dealer">Dealer</label><select id="qq-dealer"></select></div>
@@ -213,9 +214,9 @@
             <label for="qq-band">Band filter</label>
             <select id="qq-band">
               <option value="">All</option>
-              <option value="good">Goed</option>
+              <option value="good">Good</option>
               <option value="medium">Medium</option>
-              <option value="bad">Slecht</option>
+              <option value="bad">Bad</option>
             </select>
           </div>
           <div>
@@ -297,6 +298,22 @@
         <div id="chart-country"></div>
       </div>
     </section>
+
+    <section id="panel-changelog" class="panel">
+      <div class="card">
+        <h2>Changelog — 2026-07-28</h2>
+        <ul>
+          <li>All UI labels in English (good / medium / bad — no Dutch goed/slecht).</li>
+          <li>Country names in English: Switzerland / France / Italy / Spain (not MIDI_CH etc.).</li>
+          <li>UK CV (IUK), UK LCV (ITUK), Israel LCV (UMI IDS pack — never blended with UTI), Norway (RSA).</li>
+          <li>Benelux kept; Belgium, Netherlands and Luxembourg also shown as separate countries.</li>
+          <li>Overview strengths / weak points: per section A–E, based on max-point items (full score = good, zero = bad) — not “first question in section”.</li>
+          <li>Dealer total score shown as percentage (Score % of 280); GPS context on feedback packs prefers capture % where available.</li>
+        </ul>
+        <p class="hint">Built __BUILT_AT__</p>
+      </div>
+    </section>
+
   </main>
 
   <footer>Single-file offline dashboard · save to disk · open in Chrome or Firefox</footer>
@@ -339,7 +356,7 @@
       return "medium";
     }
     function bandLabel(b) {
-      return b === "good" ? "Goed" : b === "bad" ? "Slecht" : b === "medium" ? "Medium" : "—";
+      return b === "good" ? "Good" : b === "bad" ? "Bad" : b === "medium" ? "Medium" : "—";
     }
     function bandHtml(b) {
       return b ? `<span class="band ${b}">${bandLabel(b)}</span>` : "—";
@@ -504,18 +521,51 @@
         btn.addEventListener("click", () => jumpToQuestions(dealer.id, btn.getAttribute("data-jump-sec")));
       });
 
-      const ranked = [...rows].filter((r) => r.gapC != null).sort((a, b) => b.gapC - a.gapC);
-      const strengths = ranked.filter((r) => r.gapC > 0).slice(0, 5);
-      const weak = [...ranked].filter((r) => r.gapC < 0).sort((a, b) => a.gapC - b.gapC).slice(0, 5);
-      $("#ov-strengths").innerHTML = strengths.length
-        ? strengths.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.id}"><strong>${r.id}</strong></button> ${pctGap(r.gapC)} vs country · ${bandHtml(r.band)}</li>`).join("")
-        : "<li>No section above country average.</li>";
-      $("#ov-weak").innerHTML = weak.length
-        ? weak.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.id}"><strong>${r.id}</strong></button> ${pctGap(r.gapC)} vs country · ${bandHtml(r.band)}</li>`).join("")
-        : "<li>No section below country average.</li>";
+      const hl = pickMaxPointHighlights(dealer);
+      $("#ov-strengths").innerHTML = hl.strengths.length
+        ? hl.strengths.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.section}" data-jump-q="${r.id}"><strong>${r.id}</strong></button> ${r.score}/${r.max} (full) · ${esc(shortText(r.text))}</li>`).join("")
+        : "<li>No full-score max-point items in sections A–E.</li>";
+      $("#ov-weak").innerHTML = hl.weak.length
+        ? hl.weak.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.section}" data-jump-q="${r.id}"><strong>${r.id}</strong></button> 0/${r.max} · ${esc(shortText(r.text))}</li>`).join("")
+        : "<li>No zero-score max-point items in sections A–E.</li>";
       [...$("#ov-strengths").querySelectorAll("[data-jump-sec]"), ...$("#ov-weak").querySelectorAll("[data-jump-sec]")].forEach((btn) => {
         btn.addEventListener("click", () => jumpToQuestions(dealer.id, btn.getAttribute("data-jump-sec")));
       });
+    }
+
+    function shortText(s) {
+      const t = (s || "").replace(/\s+/g, " ").trim();
+      return t.length > 72 ? t.slice(0, 70) + "…" : t;
+    }
+    function esc(s) {
+      return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+    /** Per section A–E: good = full score on an item; bad = zero. Prefer higher max points (not first row). */
+    function pickMaxPointHighlights(dealer) {
+      const qs = questions();
+      const strengths = [];
+      const weak = [];
+      if (!dealer || !Array.isArray(dealer.q) || !qs.length) return { strengths, weak };
+      const bySec = {};
+      qs.forEach((q, i) => {
+        const dPct = dealer.q[i];
+        const maxPts = Number(q.max) || 0;
+        if (dPct == null || maxPts <= 0) return;
+        const score = dPct * maxPts;
+        const sec = q.section || (q.id || "").charAt(0);
+        if (!secIds().includes(sec)) return;
+        if (!bySec[sec]) bySec[sec] = { good: [], bad: [] };
+        const item = { id: q.id, section: sec, text: q.text || "", score: Math.round(score * 1000) / 1000, max: maxPts, pct: dPct };
+        if (Math.abs(score - maxPts) < 0.05) bySec[sec].good.push(item);
+        if (score < 0.05) bySec[sec].bad.push(item);
+      });
+      secIds().forEach((sec) => {
+        const g = (bySec[sec] && bySec[sec].good || []).slice().sort((a, b) => b.max - a.max || a.id.localeCompare(b.id));
+        const b = (bySec[sec] && bySec[sec].bad || []).slice().sort((a, b) => b.max - a.max || a.id.localeCompare(b.id));
+        if (g[0]) strengths.push(g[0]);
+        if (b[0]) weak.push(b[0]);
+      });
+      return { strengths, weak };
     }
 
     function renderDealerRadar() {
@@ -656,9 +706,9 @@
       const counts = { good: 0, medium: 0, bad: 0 };
       rows.forEach((r) => { if (r.band) counts[r.band]++; });
       $("#qq-summary").innerHTML = `
-        <span><i style="background:var(--good)"></i>Goed ${counts.good}</span>
+        <span><i style="background:var(--good)"></i>Good ${counts.good}</span>
         <span><i style="background:var(--amber)"></i>Medium ${counts.medium}</span>
-        <span><i style="background:var(--bad)"></i>Slecht ${counts.bad}</span>
+        <span><i style="background:var(--bad)"></i>Bad ${counts.bad}</span>
         <span>${rows.length} questions shown</span>`;
 
       let html = `<table class="data"><thead><tr>
@@ -809,7 +859,7 @@
       const mode = $("#hm-mode").value;
       const legend = $("#hm-legend");
       if (mode === "band") {
-        legend.innerHTML = `<span><i style="background:#2d8a5e"></i> Goed</span><span><i style="background:#c48a1a"></i> Medium</span><span><i style="background:#c45c3e"></i> Slecht</span>`;
+        legend.innerHTML = `<span><i style="background:#2d8a5e"></i> Good</span><span><i style="background:#c48a1a"></i> Medium</span><span><i style="background:#c45c3e"></i> Bad</span>`;
       } else if (mode === "network") {
         legend.innerHTML = `<span><i style="background:#2d8a5e"></i> ≥ network avg</span><span><i style="background:#c45c3e"></i> &lt; network avg</span>`;
       } else {

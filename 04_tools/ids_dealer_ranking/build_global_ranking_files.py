@@ -32,26 +32,33 @@ def _safe_save(wb: Workbook, path: Path) -> Path:
         print(f"  (target locked — wrote {alt.name} instead)", file=sys.stderr)
         return alt
 
+# (source filename, English tab name) — main total ranking sheet only
 TOTAL_SOURCES = (
-    ("BE_dealer_ranking.xlsx", "BE"),
-    ("NL_dealer_ranking.xlsx", "NL"),
+    ("BE_dealer_ranking.xlsx", "Belgium"),
+    ("NL_dealer_ranking.xlsx", "Netherlands"),
+    ("LUX_dealer_ranking.xlsx", "Luxembourg"),
     ("Denmark_dealer_ranking.xlsx", "Denmark"),
     ("Poland_dealer_ranking.xlsx", "Poland"),
-    ("Petros_dealer_ranking.xlsx", "Petros"),
-    ("RSA_dealer_ranking.xlsx", "RSA"),
-    ("IUK_dealer_ranking.xlsx", "IUK"),
-    ("ITUK_dealer_ranking.xlsx", "ITUK"),
-    ("MIDI_FR_dealer_ranking.xlsx", "MIDI_FR"),
-    ("MIDI_IT_dealer_ranking.xlsx", "MIDI_IT"),
-    ("MIDI_CH_dealer_ranking.xlsx", "MIDI_CH"),
-    ("MIDI_ES_dealer_ranking.xlsx", "MIDI_ES"),
-    ("Israel_dealer_ranking.xlsx", "Israel"),
+    ("Petros_dealer_ranking.xlsx", "Greece"),
+    ("RSA_dealer_ranking.xlsx", "Norway"),
+    ("IUK_dealer_ranking.xlsx", "UK CV"),
+    ("ITUK_dealer_ranking.xlsx", "UK LCV"),
+    ("France_dealer_ranking.xlsx", "France"),
+    ("Italy_dealer_ranking.xlsx", "Italy"),
+    ("Switzerland_dealer_ranking.xlsx", "Switzerland"),
+    ("Spain_dealer_ranking.xlsx", "Spain"),
+    ("MIDI_FR_dealer_ranking.xlsx", "France"),
+    ("MIDI_IT_dealer_ranking.xlsx", "Italy"),
+    ("MIDI_CH_dealer_ranking.xlsx", "Switzerland"),
+    ("MIDI_ES_dealer_ranking.xlsx", "Spain"),
+    ("Israel_dealer_ranking.xlsx", "Israel LCV"),
     ("Romania_dealer_ranking.xlsx", "Romania"),
     ("Portugal_dealer_ranking.xlsx", "Portugal"),
     ("Hungary_dealer_ranking.xlsx", "Hungary"),
     ("Malta_dealer_ranking.xlsx", "Malta"),
     ("Cyprus_dealer_ranking.xlsx", "Cyprus"),
 )
+
 
 B1_HEADERS = (
     "Rank",

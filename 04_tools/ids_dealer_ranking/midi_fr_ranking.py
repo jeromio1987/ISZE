@@ -20,10 +20,10 @@ B1_REF = re.compile(r"^B\.1", re.IGNORECASE)
 
 # CodDiv column values in DLR SELF EVALUATION -> workbook tab / country label
 MIDI_COUNTRY_LABELS: dict[str, str] = {
-    "FR": "MIDI_FR",
-    "IT": "MIDI_IT",
-    "CH": "MIDI_CH",
-    "ES": "MIDI_ES",
+    "FR": "France",
+    "IT": "Italy",
+    "CH": "Switzerland",
+    "ES": "Spain",
 }
 
 

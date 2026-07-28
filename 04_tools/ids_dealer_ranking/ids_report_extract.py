@@ -10,6 +10,7 @@ from typing import Any
 
 import xlrd
 
+from ids_paths import country_display_name
 from build_ids_result_report import (
     COL_FIRST_DEALER,
     COL_LABEL,
@@ -60,15 +61,16 @@ def _num(val: Any) -> float | None:
 def _country_from_sheet(sh) -> str:
     line = str(sh.cell_value(ROW_COUNTRY, COL_LABEL)).strip()
     if line.lower().startswith("country"):
-        return line.split(None, 1)[-1].strip()
-    return line
+        raw = line.split(None, 1)[-1].strip()
+        return country_display_name(raw)
+    return country_display_name(line)
 
 
 def _country_from_filename(path: Path) -> str:
     stem = path.stem
     if stem.startswith(REPORT_PREFIX):
-        return stem[len(REPORT_PREFIX) :]
-    return stem
+        return country_display_name(stem[len(REPORT_PREFIX) :])
+    return country_display_name(stem)
 
 
 def _read_dealers(sh) -> list[tuple[int, str]]:
@@ -317,13 +319,28 @@ def extract_result_report(
 
 
 def discover_result_reports(reports_dir: Path) -> list[Path]:
+    """List country result .xls files, preferring English-named files over legacy codes."""
     if not reports_dir.is_dir():
         return []
-    return sorted(
+    candidates = [
         p
         for p in reports_dir.glob(f"{REPORT_PREFIX}*{REPORT_SUFFIX}")
         if p.is_file() and "_Delta" not in p.name and " - Copy" not in p.name
-    )
+    ]
+    best: dict[str, Path] = {}
+    for path in candidates:
+        label = country_display_name(path.stem[len(REPORT_PREFIX) :])
+        stem_label = path.stem[len(REPORT_PREFIX) :]
+        prev = best.get(label)
+        if prev is None:
+            best[label] = path
+            continue
+        prev_stem = prev.stem[len(REPORT_PREFIX) :]
+        if stem_label == label and prev_stem != label:
+            best[label] = path
+        elif stem_label != label and prev_stem != label and path.name < prev.name:
+            best[label] = path
+    return sorted(best.values(), key=lambda p: p.name.casefold())
 
 
 def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:

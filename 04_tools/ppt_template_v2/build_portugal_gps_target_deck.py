@@ -38,6 +38,15 @@ ct.trend_line(
     value_fmt="{:,.0f}",
 )
 
+ct.waterfall(
+    ["FY2026\nActual", "+ Stretch\n(1.8% of potential)", "FY2027\nTarget"],
+    [4047903, 96286, 4144190],
+    cp("target_bridge.png"),
+    total_indices={0, 2},
+    title="The ask adds 1.8% of a growing market — it does not compound onto what you already sell",
+    value_fmt="{:+,.0f}",
+)
+
 prs = db.new_presentation()
 
 db.build_cover(
@@ -70,7 +79,7 @@ rows_data = [
     ["Portugal fleet (units)", "7,235", "7,909", "+9.3%"],
     ["ISZE-net rate / unit", "base", "+5%", "+5.0%"],
     ["Additional growth (stretch)", "—", "+1.8%", "+1.8%"],
-    ["Sales-to-Dealer target", "€4,047,903", "€4,147,949", "+2.5%"],
+    ["Sales-to-Dealer target", "€4,047,903", "€4,144,190", "+2.4%"],
 ]
 n_rows, n_cols = len(rows_data), len(rows_data[0])
 tbl_left, tbl_top, tbl_w, tbl_h = Inches(0.32), Inches(1.35), Inches(9.4), Inches(2.6)
@@ -111,31 +120,45 @@ for r in range(n_rows):
 
 db.bullet_list(
     s,
-    ["Fleet size, price and stretch combine through the target model — the +2.5% "
-     "Sales-to-Dealer change is the net effect, not a simple sum of the inputs above.",
-     "FY2026 actual and the +5% rate are the same basis used across all ISZE markets this year."],
+    ["FY2026 actual and the +5% rate are the same basis used across all ISZE markets this year.",
+     "Why the target only moves +2.4% while the inputs are bigger — next slide."],
     Inches(0.32), Inches(4.25), Inches(12.7), Inches(1.4), size=13,
 )
 
-# ---- Slide 4: data request --------------------------------------------------
-s = db.build_content(prs, "Ask: Sales-to-Dealer data, direct from I-Motors", eyebrow="Data request", page_no=4)
+# ---- Slide 4: why the ask is small -----------------------------------------
+db.build_two_col(
+    prs,
+    title="Fleet + price grow the market ~15% — we're asking for 1.8% of that, not all of it",
+    chart_path=cp("target_bridge.png"),
+    eyebrow="Why +2.4%, not +16%",
+    page_no=4,
+    takeaway_heading="How it works",
+    takeaways=[
+        "Fleet (+9.3%) and price (+5%) grow the total addressable market to about €5.35M — that's the ceiling, not the ask.",
+        "The stretch (1.8%) is applied to that ceiling, not to what you already sell us.",
+        "Result: €96K on top of your €4.05M actual — a 2.4% ask, not a compounded 16%.",
+        "You're already selling close to that ceiling. A growing market with a small ask is the point, not a rounding trick.",
+    ],
+)
+
+# ---- Slide 5: data request --------------------------------------------------
+s = db.build_content(prs, "Share your Sales-to-Dealer data with us, from 01/01/2025", eyebrow="Ask", page_no=5)
 db.bullet_list(
     s,
     [
-        "We're asking I-Motors to share Sales-to-Dealer data directly, from 01/01/2025 onward.",
-        "Today's dealer-level figure is drawn from an internal KPI file that isn't always current.",
-        "Direct data means faster, more accurate joint target-setting every year — for both sides.",
-        "Same principle as the fleet number on the previous slide: your own records replace a modeled estimate.",
+        "Real demand data means faster replenishment when your sales pick up — less risk of running out on fast movers.",
+        "It also lets us see, part by part, where you're underperforming — and feed that straight into the SPA.",
+        "Better stock availability for you, a sharper target for us — same data, both sides benefit.",
     ],
     Inches(0.32), Inches(1.35), Inches(11.5), Inches(3.5), size=15,
 )
 
-# ---- Slide 5: next steps -----------------------------------------------------
-s = db.build_content(prs, "Next steps", eyebrow="Summary", page_no=5)
+# ---- Slide 6: next steps -----------------------------------------------------
+s = db.build_content(prs, "Next steps", eyebrow="Summary", page_no=6)
 db.bullet_list(
     s,
     [
-        "Confirm FY2027 target: €4,147,949 Sales-to-Dealer (+2.5% vs FY2026 actual).",
+        "Confirm FY2027 target: €4,144,190 Sales-to-Dealer (+2.4% vs FY2026 actual).",
         "Agree Sales-to-Dealer data-sharing arrangement, effective 01/01/2025.",
         "Genuine parts share and parts sales target — detail to follow per the standing agenda.",
     ],

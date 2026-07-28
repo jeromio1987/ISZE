@@ -9,7 +9,7 @@ Outputs under IDS_2026/reports/dealer_feedback/:
 
 Tier C (default):
   - every scored dealer gets a short card
-  - deep question list when any section is 'slecht' OR total Δ country ≤ −10 pp
+  - deep question list when any section is 'bad' OR total Δ country ≤ −10 pp
 
 DB KPIs (fill / MOS / GPS €/UIO / PMS total capture) are distributor-level —
 shown as context for the country pack, never as a dealer-owned score.
@@ -102,7 +102,7 @@ def band_for(pct: float | None, country_avg: float | None) -> str | None:
 
 
 def band_label(b: str | None) -> str:
-    return {"good": "Goed", "medium": "Medium", "bad": "Slecht"}.get(b or "", "—")
+    return {"good": "Good", "medium": "Medium", "bad": "Bad"}.get(b or "", "—")
 
 
 def safe_name(name: str) -> str:
@@ -125,6 +125,7 @@ def load_db_kpi_by_country() -> dict[str, dict[str, Any]]:
             "note": meta.get("note") or "",
             "pms_capture_total": None,
             "gps_spu_eur": None,
+            "gps_capture_vs_max": None,
             "gps_traffic": None,
             "kpi_fill_rate": None,
             "kpi_mos_days": None,
@@ -140,6 +141,7 @@ def load_db_kpi_by_country() -> dict[str, dict[str, Any]]:
             row["pms_capture_total"] = None if v is None or (isinstance(v, float) and math.isnan(v)) else v
         if prism and prism in gps:
             row["gps_spu_eur"] = gps[prism].get("gps_spu_eur")
+            row["gps_capture_vs_max"] = gps[prism].get("gps_capture_vs_max")
             row["gps_traffic"] = gps[prism].get("traffic_light")
         if kpi_name and kpi_name in kpi:
             row["kpi_fill_rate"] = kpi[kpi_name].get("kpi_fill_rate")
@@ -306,7 +308,7 @@ def radar_svg(dealer: dict, country: str, network: dict, rows: list[dict]) -> st
     poly(dv, "#c45c3e", "rgba(196,92,62,0.15)", 2.5)
     parts.append(
         f'<text x="{cx}" y="{H - 6}" text-anchor="middle" font-size="9" fill="#6b7a90">'
-        f"Dealer vs {escape(country)} avg vs network · weak wedges = slecht</text>"
+        f"Dealer vs {escape(country)} avg vs network · weak wedges = bad</text>"
     )
     parts.append("</svg>")
     return "\n".join(parts)
@@ -376,7 +378,7 @@ def render_card(
           <div class="stats">
             <div class="stat"><strong>{fill_s}</strong><span>KPI first fill</span></div>
             <div class="stat"><strong>{mos_s}</strong><span>KPI MOS</span></div>
-            <div class="stat"><strong>{_eur(db_kpi.get("gps_spu_eur"))}</strong><span>GPS €/UIO 2025</span></div>
+            <div class="stat"><strong>{_pct(db_kpi.get("gps_capture_vs_max")) if db_kpi.get("gps_capture_vs_max") is not None else _eur(db_kpi.get("gps_spu_eur"))}</strong><span>{"GPS capture % 2025" if db_kpi.get("gps_capture_vs_max") is not None else "GPS €/UIO 2025"}</span></div>
             <div class="stat"><strong>{_pct(db_kpi.get("pms_capture_total"))}</strong><span>PMS total capture 2025</span></div>
           </div>
           {asks_html}
@@ -417,9 +419,9 @@ def render_card(
         return "".join(out) or f"<tr><td colspan='5'>{escape(empty)}</td></tr>"
 
     deep_note = (
-        "<p class='hint'>Deep pack — section slecht and/or total ≥10 pp below country.</p>"
+        "<p class='hint'>Deep pack — section bad and/or total ≥10 pp below country.</p>"
         if deep
-        else "<p class='hint'>Short pack — no slecht section trigger; question list limited.</p>"
+        else "<p class='hint'>Short pack — no bad section trigger; question list limited.</p>"
     )
 
     strength_li = "".join(
@@ -510,8 +512,8 @@ footer {{ text-align:center; font-size:.75rem; color:var(--muted); padding:1rem;
   </div>
 
   <div class="callouts">
-    <div class="card good"><h3>Strengths (goed)</h3><ul>{strength_li}</ul></div>
-    <div class="card bad"><h3>Weak points (slecht)</h3><ul>{weak_li}</ul></div>
+    <div class="card good"><h3>Strengths (good)</h3><ul>{strength_li}</ul></div>
+    <div class="card bad"><h3>Weak points (bad)</h3><ul>{weak_li}</ul></div>
   </div>
 
   <div class="card">

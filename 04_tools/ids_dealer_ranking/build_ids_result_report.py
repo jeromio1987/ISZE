@@ -30,7 +30,14 @@ from xlwt.Formatting import Protection
 from xlwt.Style import XFStyle
 
 from build_country_ranking import clean_dealer_name, dealer_display_name, dealer_name_from_filename
-from ids_paths import DATA_ROOT, resolve_dk_template, resolve_input_dir, result_report_delta_path, result_report_path
+from ids_paths import (
+    DATA_ROOT,
+    country_display_name,
+    resolve_dk_template,
+    resolve_input_dir,
+    result_report_delta_path,
+    result_report_path,
+)
 
 # 0-based column indices — match DK .xls (A=0, B=1, C=max pts, D=first dealer)
 COL_LABEL = 0
@@ -873,7 +880,7 @@ def _write_staff_sheet(ws, country: str, dealers: list[DealerData], attr: str) -
         staff_list = getattr(d, attr)
         if staff_list:
             for s in staff_list:
-                ws.write(row, 0, country.upper())
+                ws.write(row, 0, country_display_name(country))
                 ws.write(row, 1, d.name)
                 ws.write(row, 2, s.name)
                 ws.write(row, 3, s.title)
@@ -883,7 +890,7 @@ def _write_staff_sheet(ws, country: str, dealers: list[DealerData], attr: str) -
                 ws.write(row, 7, s.mechanic_years)
                 row += 1
         else:
-            ws.write(row, 0, country.upper())
+            ws.write(row, 0, country_display_name(country))
             ws.write(row, 1, d.name)
             row += 1
 
@@ -899,9 +906,9 @@ def build_delta_workbook(
 
     wb = Workbook()
     ws = wb.active
-    ws.title = f"{country}26_Delta"[:31]
+    ws.title = f"{country_display_name(country)}26_Delta"[:31]
     ws["A1"] = "Delta vs country average (dealer score - country avg)"
-    ws["A2"] = f"Country  {country.upper()}"
+    ws["A2"] = f"Country  {country_display_name(country)}"
     ws["A1"].font = Font(bold=True)
     ws["A2"].font = Font(bold=True)
 
@@ -963,7 +970,7 @@ def build_report(
     wb = copy(rb)
     main = wb.get_sheet(0)
     try:
-        main.name = f"{country}26"[:31]
+        main.name = f"{country_display_name(country)}26"[:31]
     except Exception:
         pass
 
@@ -971,7 +978,7 @@ def build_report(
     default_style = wb.get_default_style()
 
     # Country label (keep DK merges / styles in cols A-C)
-    main.write(ROW_COUNTRY, COL_LABEL, f"Country  {country.upper()}")
+    main.write(ROW_COUNTRY, COL_LABEL, f"Country  {country_display_name(country)}")
 
     # Clear old dealer + average columns only (never col C except existing template maxima)
     for r in range(sh_t.nrows):
@@ -1220,7 +1227,7 @@ def main() -> int:
 
     if args.midi:
         dealers = parse_midi_dealers(args.midi)
-    elif country.upper() == "ITUK":
+    elif country_display_name(country) in {"UK LCV", "UK (ITUK)"} or country.upper() == "ITUK":
         from ids_paths import ITUK_INPUT
 
         if not ITUK_INPUT.is_file():

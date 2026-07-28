@@ -150,7 +150,7 @@ def main() -> int:
         return 2
 
     write_ranking_workbook(
-        "ITUK",
+        "UK LCV",
         rows,
         args.output.resolve(),
     )

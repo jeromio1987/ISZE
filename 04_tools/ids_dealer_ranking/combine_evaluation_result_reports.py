@@ -31,25 +31,26 @@ PCT_FORMAT = "0.0%"
 OUTPUT = RANKINGS_DIR / "IDS_2026_Evaluation_Result_Reports_COMBINED.xlsx"
 
 COUNTRIES = (
-    "BE",
-    "NL",
-    "Denmark",
+    "Belgium",
+    "Netherlands",
+    "Luxembourg",
     "Benelux",
+    "Denmark",
     "Poland",
-    "Petros",
-    "RSA",
-    "IUK",
-    "ITUK",
-    "Israel",
+    "Greece",
+    "Norway",
+    "UK CV",
+    "UK LCV",
+    "Israel LCV",
     "Malta",
     "Cyprus",
     "Romania",
     "Portugal",
     "Hungary",
-    "MIDI_FR",
-    "MIDI_IT",
-    "MIDI_CH",
-    "MIDI_ES",
+    "France",
+    "Italy",
+    "Switzerland",
+    "Spain",
 )
 
 

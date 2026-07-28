@@ -30,19 +30,93 @@ ITUK_INPUT = DATA_ROOT / "ITUK" / "IDS ITUK self evaluations.xlsx"
 ITUK_OUTPUT = RANKINGS_DIR / "ITUK_dealer_ranking.xlsx"
 MIDI_FILE = DATA_ROOT / "MIDI" / "MIDI_FR.xlsx"
 
-SKIP_DIRS = {"rankings", "reports", "__pycache__", "MIDI", "_EXPORT", "LUX"}
+SKIP_DIRS = {"rankings", "reports", "__pycache__", "MIDI", "_EXPORT"}
 
-# On-disk folder name -> output country / tab label
+# On-disk folder name -> English country / tab label (Mode A — shared sheets & dashboard)
 COUNTRY_LABELS: dict[str, str] = {
     "Gasanzammit": "Malta",
     "Loutsios": "Cyprus",
+    "BE": "Belgium",
+    "NL": "Netherlands",
+    "LUX": "Luxembourg",
+    "Petros": "Greece",
+    "RSA": "Norway",
+    "IUK": "UK CV",
+    "ITUK": "UK LCV",
+    "Israel": "Israel LCV",
+}
+
+# Legacy codes / MIDI tags / ALL-CAPS sheet values → English display name
+COUNTRY_DISPLAY_ALIASES: dict[str, str] = {
+    "BE": "Belgium",
+    "NL": "Netherlands",
+    "LUX": "Luxembourg",
+    "BENELUX": "Benelux",
+    "Benelux": "Benelux",
+    "MIDI_CH": "Switzerland",
+    "MIDI_FR": "France",
+    "MIDI_IT": "Italy",
+    "MIDI_ES": "Spain",
+    "CH": "Switzerland",
+    "FR": "France",
+    "IT": "Italy",
+    "ES": "Spain",
+    "PETROS": "Greece",
+    "Petros": "Greece",
+    "RSA": "Norway",
+    "IUK": "UK CV",
+    "ITUK": "UK LCV",
+    "UK (IUK)": "UK CV",
+    "UK (ITUK)": "UK LCV",
+    "UK CV": "UK CV",
+    "UK LCV": "UK LCV",
+    "Israel": "Israel LCV",
+    "Israel LCV": "Israel LCV",
+    "Gasanzammit": "Malta",
+    "Loutsios": "Cyprus",
+    "MALTA": "Malta",
+    "CYPRUS": "Cyprus",
+    "HUNGARY": "Hungary",
+    "ISRAEL": "Israel LCV",
+    "POLAND": "Poland",
+    "PORTUGAL": "Portugal",
+    "ROMANIA": "Romania",
+    "DENMARK": "Denmark",
+    "GREECE": "Greece",
+    "NORWAY": "Norway",
+    "SWITZERLAND": "Switzerland",
+    "FRANCE": "France",
+    "ITALY": "Italy",
+    "SPAIN": "Spain",
+    "BELGIUM": "Belgium",
+    "NETHERLANDS": "Netherlands",
+    "LUXEMBOURG": "Luxembourg",
 }
 
 LABEL_TO_FOLDER: dict[str, str] = {v: k for k, v in COUNTRY_LABELS.items()}
+for _folder in COUNTRY_LABELS:
+    LABEL_TO_FOLDER.setdefault(_folder, _folder)
 
 
 def country_label(folder_name: str) -> str:
     return COUNTRY_LABELS.get(folder_name, folder_name)
+
+
+def country_display_name(name: str) -> str:
+    """English label for sheets, dashboard filters, and Country row text."""
+    raw = (name or "").strip()
+    if not raw:
+        return raw
+    if raw in COUNTRY_DISPLAY_ALIASES:
+        return COUNTRY_DISPLAY_ALIASES[raw]
+    if raw in COUNTRY_LABELS:
+        return COUNTRY_LABELS[raw]
+    upper = raw.upper()
+    if upper in COUNTRY_DISPLAY_ALIASES:
+        return COUNTRY_DISPLAY_ALIASES[upper]
+    if raw.isupper() and len(raw) > 2 and " " not in raw and "(" not in raw:
+        return raw.title()
+    return raw
 
 
 def resolve_dk_template() -> Path:
@@ -56,12 +130,14 @@ def resolve_dk_template() -> Path:
 
 def result_report_path(country: str) -> Path:
     """Wide matrix report for a country (DK-clone .xls)."""
-    return IDS_RESULT_REPORTS_DIR / f"2026 IDS Evaluation Result Report_{country}.xls"
+    label = country_display_name(country)
+    return IDS_RESULT_REPORTS_DIR / f"2026 IDS Evaluation Result Report_{label}.xls"
 
 
 def result_report_delta_path(country: str) -> Path:
     """Plain delta workbook vs country average (no DK formatting — not the main report)."""
-    return IDS_RESULT_DELTA_DIR / f"2026 IDS Evaluation Result Report_{country}_Delta.xlsx"
+    label = country_display_name(country)
+    return IDS_RESULT_DELTA_DIR / f"2026 IDS Evaluation Result Report_{label}_Delta.xlsx"
 
 
 def data_folder_for_country(country: str) -> str:
@@ -75,6 +151,9 @@ def resolve_input_dir(country: str, data_root: Path = DATA_ROOT) -> Path:
     nested = base / country
     if nested.is_dir() and _has_xlsx(nested):
         return nested
+    nested_code = base / folder
+    if nested_code.is_dir() and nested_code != base and _has_xlsx(nested_code):
+        return nested_code
     if _has_xlsx(base):
         return base
     if base.is_dir():
@@ -92,7 +171,7 @@ def _has_xlsx(folder: Path) -> bool:
 
 
 def discover_country_folders(data_root: Path = DATA_ROOT) -> list[str]:
-    """Country folder names that contain at least one dealer workbook."""
+    """English country labels for folders that contain at least one dealer workbook."""
     if not data_root.is_dir():
         return []
 
@@ -100,15 +179,15 @@ def discover_country_folders(data_root: Path = DATA_ROOT) -> list[str]:
     for p in sorted(data_root.iterdir(), key=lambda x: x.name.casefold()):
         if not p.is_dir() or p.name in SKIP_DIRS:
             continue
-        # Staging / scratch folders (e.g. _INCOMING_*, _summary)
         if p.name.startswith("_"):
             continue
         if p.name.upper() == "ITUK":
             if (p / "IDS ITUK self evaluations.xlsx").is_file():
-                countries.append("ITUK")
+                countries.append(country_label("ITUK"))
             continue
         if _has_xlsx(resolve_input_dir(p.name, data_root)):
             countries.append(country_label(p.name))
-    if "ITUK" in countries:
-        countries = [c for c in countries if c != "ITUK"] + ["ITUK"]
+    ituk_label = country_label("ITUK")
+    if ituk_label in countries:
+        countries = [c for c in countries if c != ituk_label] + [ituk_label]
     return countries

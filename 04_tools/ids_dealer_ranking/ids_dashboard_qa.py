@@ -11,7 +11,7 @@ from typing import Any
 
 # Countries that ship totals only (no A–E question detail) are allowed
 # to have empty section pcts. Everything else with dealers must have detail.
-TOTALS_ONLY_COUNTRIES = frozenset({"ITUK"})
+TOTALS_ONLY_COUNTRIES = frozenset({"ITUK", "UK LCV", "UK (ITUK)"})
 
 REQUIRED_SECTIONS = ("A", "B", "C", "D", "E")
 
