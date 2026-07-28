@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-16"?>
+<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+  <RegistrationInfo>
+    <Description>ISZE live-state audit - compares AUTOMATION_REGISTER.md against Windows Task Scheduler and the FACTS/pipeline reports, then writes a numbered "waiting on Jerome" list to ISZE\05_memory\briefs\. Read-only: it never changes a task or a register row.</Description>
+    <Author>ISZE Workspace</Author>
+  </RegistrationInfo>
+  <Triggers>
+    <!-- Monday 08:00, after the 07:00 and 07:30 jobs so their Last Result is fresh -->
+    <CalendarTrigger>
+      <StartBoundary>2026-07-27T08:00:00</StartBoundary>
+      <Enabled>true</Enabled>
+      <ScheduleByWeek>
+        <WeeksInterval>1</WeeksInterval>
+        <DaysOfWeek>
+          <Monday />
+        </DaysOfWeek>
+      </ScheduleByWeek>
+    </CalendarTrigger>
+  </Triggers>
+  <Principals>
+    <Principal id="Author">
+      <LogonType>InteractiveToken</LogonType>
+      <RunLevel>LeastPrivilege</RunLevel>
+    </Principal>
+  </Principals>
+  <Settings>
+    <MultipleInstancesPolicy>IgnoreNew</MultipleInstancesPolicy>
+    <DisallowStartIfOnBatteries>false</DisallowStartIfOnBatteries>
+    <StopIfGoingOnBatteries>false</StopIfGoingOnBatteries>
+    <AllowHardTerminate>true</AllowHardTerminate>
+    <StartWhenAvailable>true</StartWhenAvailable>
+    <RunOnlyIfNetworkAvailable>false</RunOnlyIfNetworkAvailable>
+    <IdleSettings>
+      <StopOnIdleEnd>false</StopOnIdleEnd>
+      <RestartOnIdle>false</RestartOnIdle>
+    </IdleSettings>
+    <AllowStartOnDemand>true</AllowStartOnDemand>
+    <Enabled>true</Enabled>
+    <Hidden>false</Hidden>
+    <RunOnlyIfIdle>false</RunOnlyIfIdle>
+    <WakeToRun>false</WakeToRun>
+    <ExecutionTimeLimit>PT15M</ExecutionTimeLimit>
+    <Priority>7</Priority>
+  </Settings>
+  <Actions Context="Author">
+    <Exec>
+      <!-- UPDATE THIS PATH if you move the folder -->
+      <Command>C:\Users\jerom\Desktop\claude\ISZE\04_tools\workspace\run_live_state_audit.cmd</Command>
+      <WorkingDirectory>C:\Users\jerom\Desktop\claude\ISZE\04_tools\workspace</WorkingDirectory>
+    </Exec>
+  </Actions>
+</Task>

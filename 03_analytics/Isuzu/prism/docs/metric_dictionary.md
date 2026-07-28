@@ -37,7 +37,7 @@ wear (brake / clutch): expected = base × wear_factor
 ```
 
 `consumable_factor`: oil / fuel / urea = 1.0; **air = 0.5** (provisional 2026-07-02 — air element
-~every 2nd service, pending IML confirmation; was 1.0 flat, integrity flag C); blower = 0.25.
+~every 2nd service, pending IML confirmation; was 1.0 flat, integrity flag C); blower = 1.0 (Jerome 2026-07-26 — aligned with oil/fuel/urea; was 0.25 cabin placeholder).
 All factors editable in `data/pms_capture_assumptions.yaml` — see `docs/pms_service_intervals.md`.
 
 | Scope | services_per_year | addressable_pct | wear (brake) |

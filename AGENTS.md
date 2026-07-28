@@ -39,6 +39,16 @@
 - Prefer `01_data/gpt_safe/` for external / GPT uploads.
 - Tender live feed: **`01_data/dashboards/tender_data.json`** only.
 
+## External IML / meeting language (Cursor + Claude)
+
+Shared rule: `.cursor/rules/isze-external-iml-language.mdc` — **always on**.
+
+**Mode shorthand (Jerome):** **A** = outside / dashboards / Excel · **B** = internal sparring.  
+**Defaults:** this chat = **B**; `02_dashboards/`, meeting HTML, and Excel studies = **A**.
+
+- **A — shared** decks/HTML/PDF/email: never use internal nicknames (**IML v7**, **Model B**, **PRISM lane**). Say **IML service schedule** and point to the real business source (Apr 2026 PMS analysis / trip report / business case / GIDSS). No personal contact names — roles only (IML / ITUK).
+- **B — sparring / private notes:** nicknames and blunt traps OK (`FACTS.md`, `DECISIONS.md`, memory, speaker notes, agent chat).
+
 ## Production — ask Jerome first
 
 Scheduled SKILL paths, `06_uio/_CURRENT/*.xlsx` formulas, `sales_fact.parquet` rebuilds, GitHub Pages deploy.

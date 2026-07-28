@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-07-23T18:59:42Z",
+  "generated_at": "2026-07-26T20:12:40Z",
   "tolerances": {
     "identity_eur_per_cell": 5.0,
     "waterfall_eur_per_stage": 10.0,
     "cross_basis_pct": 2.0,
     "unmapped_payer_hard_eur": 5000.0
   },
-  "result": "FAIL",
-  "hard_failures": 1,
+  "result": "PASS",
+  "hard_failures": 0,
   "checks": [
     {
       "id": "inputs_present",
@@ -180,11 +180,9 @@
     {
       "id": "kosha_chain",
       "severity": "hard",
-      "status": "FAIL",
-      "detail": "6/7 Kosha workbook checks passed; failures: Toggle gross == rebuilt billing JSON",
-      "deltas": [
-        "Toggle gross == rebuilt billing JSON: 11 gross mismatches"
-      ],
+      "status": "PASS",
+      "detail": "7/7 Kosha workbook checks passed",
+      "deltas": [],
       "files": [
         "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\gps_integrity_audit.json"
       ]

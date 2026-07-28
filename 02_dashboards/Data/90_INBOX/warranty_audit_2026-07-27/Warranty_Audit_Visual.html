@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warranty audit — CY2025 (geverifieerd 2026-07-27)</title>
+<style>
+  :root { --bg:#f4f6f8; --card:#fff; --ink:#1a1a1a; --muted:#5a6472; --ok:#0a7a40; --warn:#b45309; --bad:#c0301a; --line:#dde3ea; --hi:#fff8e6; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:14px/1.5 Segoe UI, Arial, sans-serif; color:var(--ink); background:var(--bg); }
+  .wrap { max-width:980px; margin:0 auto; padding:24px 20px 48px; }
+  h1 { font-size:22px; margin:0 0 6px; }
+  .sub { color:var(--muted); margin-bottom:24px; }
+  section { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:18px 20px; margin-bottom:18px; }
+  section h2 { font-size:16px; margin:0 0 10px; }
+  section h3 { font-size:13px; margin:16px 0 8px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
+  .pill { display:inline-block; padding:3px 10px; border-radius:999px; font-size:11px; font-weight:700; }
+  .ok { background:#e6f6ee; color:var(--ok); }
+  .warn { background:#fff3e0; color:var(--warn); }
+  .bad { background:#fdecea; color:var(--bad); }
+  .plain { background:#eef4ff; border-left:4px solid #4d8fe8; padding:12px 14px; border-radius:6px; margin:10px 0; }
+  .plain strong { display:block; margin-bottom:4px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { border:1px solid var(--line); padding:8px 10px; text-align:left; }
+  th { background:#f0f3f8; }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  tr.highlight { background:var(--hi); font-weight:600; }
+  tr.zero { color:var(--muted); }
+  code, .path { font-family:Consolas, monospace; font-size:12px; word-break:break-all; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:720px) { .grid2 { grid-template-columns:1fr; } }
+  .metric { border:1px solid var(--line); border-radius:8px; padding:12px; }
+  .metric .v { font-size:22px; font-weight:800; }
+  .metric .l { font-size:11px; color:var(--muted); text-transform:uppercase; }
+  #shot-umi, #shot-lcv, #shot-cv { scroll-margin-top:12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Warranty audit — CY2025</h1>
+  <p class="sub">Zelf gecontroleerd op de echte Excel-bestanden · 2026-07-27 · Mode B intern</p>
+
+  <section id="shot-summary">
+    <h2>In één zin</h2>
+    <div class="plain">
+      <strong>UMI is OK voor CY2025</strong>
+      Het netwerk-LCV-bestand mist Israel nog steeds, maar we gebruiken een apart UMI-export — €1.791.020,28 staat correct in GPS.
+    </div>
+    <div class="plain">
+      <strong>Wat nog kapot is</strong>
+      In het CV-truckbestand zitten ~€314K warranty-claims zonder landcode (“0”). Ireland en Portugal truck-warranty zijn ondergeteld door ontbrekende prijzen (82% / 52%).
+    </div>
+  </section>
+
+  <section id="shot-umi">
+    <h2>1 · UMI — geverifieerd dicht <span class="pill ok">OK</span></h2>
+    <p class="path"><code>C:\Users\jerom\Desktop\claude\ISZE\01_data\06_Warranty\UMI warranty data 202301 - 202605.xlsx</code></p>
+    <p>Tab <strong>ClaimAssess (1)</strong> · filter <strong>Written Date_YMD</strong> in kalenderjaar <strong>2025</strong> · som kolom <strong>Approved total part cost</strong>.</p>
+    <div class="grid2">
+      <div class="metric"><div class="l">UMI file CY2025</div><div class="v">€1.791.020,28</div><div class="l">12.042 regels</div></div>
+      <div class="metric"><div class="l">Pipeline gps_spu UMI 2025</div><div class="v">€1.791.020,28</div><div class="l">warranty_data_gap = false</div></div>
+    </div>
+    <h3>Mensentaal</h3>
+    <ul>
+      <li><strong>Geen gat meer</strong> in GPS voor UMI CY2025.</li>
+      <li>Het <em>algemene</em> LCV-exportbestand bevat nog geen Israel/UMI — dat is de oude bron, niet wat we nu gebruiken.</li>
+      <li>Periode file: Written Date jan 2023 – mei 2026; GPS gebruikt alleen het <strong>2025</strong>-deel.</li>
+    </ul>
+    <table>
+      <tr><th>Kolom</th><th>Voorbeeld (dec 2025)</th></tr>
+      <tr><td>Written Date_YMD</td><td>20251202</td></tr>
+      <tr><td>Approved total part cost</td><td>79,14 / 6.375,04 …</td></tr>
+      <tr><td>VIN</td><td>MPATFR87JPT003931 …</td></tr>
+    </table>
+  </section>
+
+  <section id="shot-lcv">
+    <h2>2 · LCV netwerkexport — waarom UMI-WARR verwarrend was <span class="pill warn">Oude bron</span></h2>
+    <p class="path"><code>C:\Users\jerom\Desktop\claude\ISZE\01_data\06_Warranty\Warranty_LCV_2025.xlsx</code></p>
+    <p>Tab <strong>ExportClaimAssessment202501-202</strong> · kolom <strong>DistributorName</strong></p>
+    <div class="plain">
+      <strong>0 rijen</strong> met Israel / UMI / Universal Motors in dit bestand. Daarom stond UMI-WARR op “open” — tot het dedicated UMI-bestand kwam.
+    </div>
+    <h3>Top distributeurs (bewijs: geen Israel)</h3>
+    <table>
+      <tr><th>DistributorName</th><th class="num">Regels</th></tr>
+      <tr><td>ISUZU (UK)</td><td class="num">6.560</td></tr>
+      <tr><td>MIDI EUROPE - FRANCE</td><td class="num">1.099</td></tr>
+      <tr><td>Isuzu Sverige AB</td><td class="num">1.056</td></tr>
+      <tr><td>RSA</td><td class="num">1.025</td></tr>
+      <tr><td>IMOTORS LDA (Portugal LCV)</td><td class="num">527</td></tr>
+      <tr><td>Isuzu Ireland 2020 Unlimited Company</td><td class="num">172</td></tr>
+      <tr class="highlight"><td><em>Israel / UMI</em></td><td class="num"><em>0</em></td></tr>
+    </table>
+  </section>
+
+  <section id="shot-cv">
+    <h2>3 · CV trucks — Sheet4 pivot <span class="pill bad">Nog open</span></h2>
+    <p class="path"><code>C:\Users\jerom\Desktop\claude\ISZE\01_data\06_Warranty\Warranty_CV_2025.xlsx</code> → tab <strong>Sheet4</strong></p>
+    <p>Periode: CY2025 truck warranty (BILLYMD 2025 in bronfile).</p>
+    <h3>Bucket-tabel (zoals in Excel pivot)</h3>
+    <table>
+      <tr><th>Land / bucket</th><th class="num">Warranty parts €</th><th>Opmerking</th></tr>
+      <tr><td>ITUK</td><td class="num">374.426,05</td><td>OK — eigen tab</td></tr>
+      <tr class="highlight"><td><strong>“0” (geen landcode)</strong></td><td class="num"><strong>314.213,97</strong></td><td>Weet niet welke DB — moet uit pivot/export komen</td></tr>
+      <tr><td>ISD</td><td class="num">5.593,33</td></tr>
+      <tr class="zero"><td>IRELAND (pivot totaal)</td><td class="num">0,00</td><td>17 truck-regels; waarde zit deels onder sub-bucket “0” (2 regels)</td></tr>
+      <tr class="zero"><td>PORTUGAL (pivot totaal)</td><td class="num">0,00</td><td>139 truck-regels; sub-bucket “0” (25 regels)</td></tr>
+      <tr class="zero"><td>UTI (pivot totaal)</td><td class="num">0,00</td><td>1.082 regels; sub-bucket “0” (274 regels) — UTI zelf OK via UTI-tab</td></tr>
+    </table>
+    <h3>Structuur in Sheet4 (screenshot-achtig)</h3>
+    <table>
+      <tr><th>Rij-label</th><th>Count</th><th>Waarde-kolom</th></tr>
+      <tr><td>IRELAND</td><td>17</td><td>—</td></tr>
+      <tr class="highlight"><td>&nbsp;&nbsp;↳ 0</td><td>2</td><td>#N/A</td></tr>
+      <tr><td>PORTUGAL</td><td>139</td><td>—</td></tr>
+      <tr class="highlight"><td>&nbsp;&nbsp;↳ 0</td><td>25</td><td>#N/A</td></tr>
+      <tr><td>UTI</td><td>1082</td><td>—</td></tr>
+      <tr class="highlight"><td>&nbsp;&nbsp;↳ 0</td><td>274</td><td>#N/A</td></tr>
+    </table>
+    <div class="plain">
+      <strong>Mode B nuance (Sheet3 vs Sheet4)</strong>
+      In Sheet3 staat die “0” als PARTNBR <code>0000000000</code> onder IRELAND / PORTUGAL / UTI (plus ISD).
+      Excel toont dat op Sheet4 als <code>0</code>. De audit-som €314.213,97 = alle geprijsde regels ná die drie nesten (IE+PT+UTI).
+      Correct toegerekend: IRELAND ≈ €4.718 · PORTUGAL ≈ €35.221 · UTI ≈ €274.275 (Count×prijs op Sheet4; GPS gebruikt qty×prijs uit detail ≈ IE €3.908 / PT €28.836 / UTI-tab €255.968).
+    </div>
+    <div class="plain">
+      <strong>Wat je moet aanleveren (CY2025)</strong>
+      Export of pivot-fix waar die <strong>€314K “0”-claims</strong> aan Ireland / Portugal / andere CV-DB worden gekoppeld. Geen UMI — dat zit al goed.
+    </div>
+    <h3>Screenshot uit echte Sheet4-cellen</h3>
+    <p><a href="sheet4_zero_bucket_314k.html">Interactieve HTML-replica</a> · PNG:</p>
+    <img src="sheet4_zero_bucket_314k.png" alt="Sheet4 0-bucket €314K" style="max-width:100%;border:1px solid var(--line);border-radius:8px;margin-top:8px">
+  </section>
+
+  <section id="shot-iept">
+    <h2>4 · Ireland & Portugal — truck prijs-gaten <span class="pill warn">Lower bound</span></h2>
+    <p>LCV-deel per DB is schoon. Het probleem is <strong>CV truck</strong> warranty: niet elke part heeft een ISZE EUR-prijs in de ITUK/UTI-prijsmap. Claims bestaan wél (IE 17 · PT 139).</p>
+    <table>
+      <tr><th>DB</th><th>CY2025 totaal (doc)</th><th>Truck-deel (lower bound)</th><th>Price-map dekking (herberekend)</th></tr>
+      <tr><td>Ireland</td><td class="num">€34.857</td><td>CV €3.907,62</td><td>93,3% part-cellen geprijsd (doc noemde 82%)</td></tr>
+      <tr><td>Portugal</td><td class="num">€130.588</td><td>CV €28.835,51</td><td>63,2% part-cellen geprijsd (doc noemde 52%)</td></tr>
+    </table>
+    <div class="plain">
+      <strong>Gevolg in GPS</strong>
+      Ex-warranty GPS voor IE/PT truck kan iets te hoog lijken (warranty afgetrokken is te laag). Geen ontbrekende sales — ontbrekende <em>prijzen op warranty-regels</em>.
+    </div>
+    <h3>Screenshot IE/PT price gaps</h3>
+    <p><a href="ireland_portugal_cv_price_gaps.html">Interactieve HTML-replica</a> · PNG:</p>
+    <img src="ireland_portugal_cv_price_gaps.png" alt="Ireland Portugal CV price gaps" style="max-width:100%;border:1px solid var(--line);border-radius:8px;margin-top:8px">
+  </section>
+
+  <section>
+    <h2>5 · Wat NIET het probleem is</h2>
+    <ul>
+      <li>UMI CY2025 warranty — <strong>opgelost en geverifieerd</strong>.</li>
+      <li>UTI Israel trucks — eigen CV-tab, €255.968 CY2025.</li>
+      <li>FY2026 refresh — apart traject; GPS CY2025 gebruikt bovenstaande bestanden.</li>
+    </ul>
+  </section>
+</div>
+</body>
+</html>

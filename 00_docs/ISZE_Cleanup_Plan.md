@@ -138,7 +138,7 @@ Example: `prism/mockups/` → `_archive/prism_mockups/mockups/`
 1. **PR-A (HTML done):** this pass — share surface + redirects + reconciler list.
 2. **PR-B (GPS snapshot primary):** after go-ahead on `GPS_RECONCILE_MEMO_2026-07-16.md` Fix 1–5 order: echarts self-contain → rebuild dashboards → copy/align `gps_snapshot.json` ← `gps_v9_snapshot.json` → then flip writers to unversioned primary.
 3. **PR-C (UIO JSON alias retire):** drop `uio_v18_gps.json` write once grep shows zero readers.
-4. **PR-D (Phase 3 UI):** Jerome decides ISZE_Dashboard merge timeline; only then archive Evidence/Dash overlap.
+4. **PR-D (Phase 3 UI):** ~~Jerome decides ISZE_Dashboard merge timeline~~ — **closed 2026-07-26:** ops sandbox indefinite; no Evidence/Dash archive.
 
 **Not done this pass:** sync_to_deploys / GitHub Pages publish, GPS memo rebuild, ISZE_Dashboard merge.
 
@@ -153,18 +153,17 @@ Example: `prism/mockups/` → `_archive/prism_mockups/mockups/`
 - `sync_to_deploys.ps1` must remain the only path to Pages/Netlify.
 - If `isze-prism-analytics` is a **separate Git repo**, archive the local copy here but keep the remote if you still deploy Evidence from it.
 
-### Phase 3 — Consolidate UI stacks (strategic, 1–2 weeks)
+### Phase 3 — Consolidate UI stacks (closed 2026-07-26 — no merge timeline)
 
-Pick **one primary** analytics UI for day-to-day work:
+| Stack | Role |
+|-------|------|
+| **HTML (GitHub Pages)** | Only external share surface |
+| **Streamlit PRISM** | Day-to-day analysis (8503) |
+| **Evidence** | Internal SQL boards — keep |
+| **Dash** | Offset Insights sandbox — keep |
+| **ISZE_Dashboard** | Ops sandbox indefinitely — fold pages into PRISM only when actively used *and* needing filters/export |
 
-| Stack | Keep if… | Archive if… |
-|-------|----------|-------------|
-| **Streamlit PRISM** | You need filters, PDF export, decision models | — |
-| **Evidence** | You want shareable static BI, SQL-native boards | Overlap with Streamlit pages you never open |
-| **Dash** | Offset Insights interactivity | Evidence `offset-insights.md` covers same data |
-| **ISZE_Dashboard** | Ops pages not yet in PRISM | After merge into PRISM |
-
-**Implication:** archiving a UI stack does **not** remove derived CSVs — only the front-end. Pipeline stays one spine (`01_data/derived/`).
+**Implication:** archiving a UI stack does **not** remove derived CSVs — only the front-end. Pipeline stays one spine (`01_data/derived/` → `00_derived`).
 
 ### Phase 4 — Map consolidation (done 2026-06-13)
 
@@ -220,7 +219,16 @@ Before Phase 2–3, confirm:
 
 1. ~~**Is `isze-prism-analytics/` still a separate git remote you deploy?**~~ Local copy archived 2026-06-13; remote unchanged if still used.
 2. ~~**Primary UI for external sharing:** static Evidence build vs GitHub Pages HTML?~~ **Decided 2026-06-13:** HTML (GitHub Pages). Evidence = internal. See `docs/UI_STACK.md`.
-3. **ISZE_Dashboard merge:** timeline to fold into PRISM or keep as ops sandbox?
+3. ~~**ISZE_Dashboard merge:**~~ **Closed 2026-07-26:** keep as **ops sandbox** indefinitely — no merge timeline. Fold individual ops pages into PRISM only when a page is actively used *and* needs filters/export; do not archive Evidence/Dash until that happens. External share stays HTML only (`UI_STACK.md`).
+
+### HTML archive pass (2026-07-26)
+
+| Action | Result |
+|--------|--------|
+| GPS Network SPU / Target Study redirects | Fixed to `../fleet/ISZE_GPS_Dashboard.html` (was broken hop to missing `gps/…_v9.html`) |
+| `ISZE_Commercial_Model_Map_V2.html` | Byte-identical to unversioned map → `_archive/ISZE_Commercial_Model_Map_V2_duplicate_of_unversioned_2026-07-26.html`; keep `ops/ISZE_Commercial_Model_Map.html` |
+| Dated GPS SPU/Target archive pile | Newest 2 kept in `_archive/`; older → `_archive/gps_dated_snapshots_pre_2026-07-26/` |
+| Redirect stubs `_v9` / `_v18` | Keep (bookmark compatibility) |
 
 ### Phase 2 workspace (done 2026-06-13)
 

@@ -1,0 +1,48 @@
+{
+  "asof_date": "2026-07-27",
+  "rolling_months": 60,
+  "rolling_60m_start": "2021-07-27",
+  "source_file": "VIN_list_JP_20260727.xlsx",
+  "n_vins": 3238,
+  "n_vins_ok_len": 3238,
+  "n_skd": 3110,
+  "n_cbu": 128,
+  "n_in_pms_rolling_60m": 2582,
+  "n_scope_ex_ituk_uti": 3238,
+  "by_db": {
+    "PT": 2111,
+    "IE": 647,
+    "DE": 183,
+    "MT": 130,
+    "CY": 114,
+    "BE": 49,
+    "GR": 4
+  },
+  "by_series": {
+    "NLR": 1377,
+    "NPR": 1290,
+    "FRR": 284,
+    "NMR": 149,
+    "NNR": 108,
+    "FSR": 30
+  },
+  "by_nf": {
+    "N": 2936,
+    "F": 302
+  },
+  "by_invoice_year": {
+    "2023": 749,
+    "2021": 682,
+    "2026": 478,
+    "2024": 426,
+    "2022": 393,
+    "2020": 326,
+    "2025": 184
+  },
+  "transmission_status": "all unknown \u2014 Europe JAA VIN + model suffix not validated for AT/MT/AMT",
+  "outputs": {
+    "parquet": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\07_UIO\\vin\\VIN_register.parquet",
+    "csv": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\07_UIO\\vin\\VIN_register.csv",
+    "model_dimension": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\07_UIO\\vin\\model_dimension.csv"
+  }
+}

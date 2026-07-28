@@ -1,40 +1,42 @@
 # Scrapers — roadmap
 
-**Last updated:** 2026-07-14  
+**Last updated:** 2026-07-26  
 **Hub:** [`ISZE_ROADMAP.md`](../../ISZE_ROADMAP.md) · **Location:** `04_tools/`  
-**Owner:** Claude scheduled tasks (health report runs automatically)
+**Owner:** Claude scheduled tasks (health report runs automatically)  
+**Live register:** [`AUTOMATION_REGISTER.md`](../AUTOMATION_REGISTER.md)
 
 ---
 
 ## Current state
 
-| Scraper | Status (2026-07-14) | Output | Schedule |
+| Scraper | Status (2026-07-26) | Output | Schedule |
 |---|---|---|---|
-| Tender Scraper | 🔴 Dead since 2026-05-29 — **XML path fixed 2026-07-14; re-import Task Scheduler task** | `01_data/14_dashboards/tender_data.json` | Weekly Mon 07:30 |
-| Competitive pricing (KS, Tranzparts, TMC, Mekonomen, Auto365) | 🟠 Stale — **scheduler XML created 2026-07-14; import task** | `04_tools/autodoc_scraper/*_results.csv` | Weekly Sun 21:00 (proposed) |
+| Tender Scraper | ✅ Live task `ISZE Tender Monitor` — last OK 2026-07-20 (result 0); next Mon 07:30 | `01_data/14_dashboards/tender_data.json` | Weekly Mon 07:30 |
+| Competitive pricing (KS, Tranzparts, TMC, Mekonomen, Auto365) | ✅ Live task `ISZE_PMS_IAM_Refresh` — **do not** also import `ISZE_ScraperRefresh_WeeklyTask.xml` (double-run). Last scheduled 2026-07-20 exited interrupt (`0xC000013A`); manual `refresh_and_check_drift.py` re-run started 2026-07-26 ~21:28 | `04_tools/autodoc_scraper/*_results.csv` | Weekly Mon 07:00 |
 | Autodoc / Oscaro | **Retired** — Cloudflare Turnstile blocks 100% of requests | `autodoc_results.csv` (frozen) | None |
-| Discount Scraper | Stale | `04_tools/discount-scanner/deals_dashboard.html` — last run 2026-04-28 | Weekly Thu 07:00 |
+| Discount Scraper | Optional / personal promos — task may be registered; not ISZE core | `04_tools/discount-scanner/deals_dashboard.html` | Weekly Thu 07:00 |
 
 **Canonical versions:**
 
-- Tender: `04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py` · Task XML: `ISZE_TenderMonitor_WeeklyTask.xml`
-- Competitive pricing: `04_tools/autodoc_scraper/refresh_and_check_drift.py` · Task XML: `ISZE_ScraperRefresh_WeeklyTask.xml`
+- Tender: `04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py` · live task name `ISZE Tender Monitor`
+- Competitive pricing: `04_tools/autodoc_scraper/refresh_and_check_drift.py` · live task name `ISZE_PMS_IAM_Refresh`
 - Discount: `04_tools/discount-scanner/discount_scraper.py` · Task XML: `ISZE_DiscountScanner_WeeklyTask.xml`
 
 **Known issues (open):**
 
 1. Doffin (Norway) API requires subscription key — no key registered yet
-2. Discount Scraper stale — needs manual run: `python discount_scraper.py`
+2. Discount Scraper optional — personal supermarket promos, not ISZE work
 3. Lidl URL hardcodes category ID `a10051271` — verify after next discount run
 4. Israel RSS entity parse error, Belgium RSS non-XML response, UK Find a Tender 429s — see `04_tools/manual_review_required.md` Items 2–4
+5. `ISZE_PMS_IAM_Refresh` Mon 07:00 sometimes interrupted (sleep / stop) — prefer overnight manual if Monday AM fails
 
 ---
 
 ## Immediate actions
 
-1. **Re-import Tender Monitor task** — `04_tools/ISZE_Tender_Monitor_Install/ISZE_TenderMonitor_WeeklyTask.xml` (path fixed 2026-07-14)
-2. **Import competitive pricing refresh task** — `04_tools/autodoc_scraper/ISZE_ScraperRefresh_WeeklyTask.xml`
-3. **Run discount scraper manually** — promotions stale since 2026-04-28
+1. ~~Re-import Tender Monitor~~ — **done** (live, verified)
+2. ~~Import competitive pricing refresh~~ — **done** as `ISZE_PMS_IAM_Refresh` (spare XML is redundant)
+3. ~~Manual competitiveness refresh~~ — **in progress** 2026-07-26 (KS leg of `refresh_and_check_drift.py`)
 
 ---
 

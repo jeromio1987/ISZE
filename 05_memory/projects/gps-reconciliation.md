@@ -1,3 +1,10 @@
+---
+topic: gps-reconciliation
+read_when: [gps, reconciliation, kosha, billing, warranty, integrity, payer]
+canonical_metrics: FACTS.md, 01_data/00_derived/gps_reconciliation_report.json, gps_master.csv
+last_validated: 2026-07-03
+---
+
 # GPS reconciliation — lessons (2026-07-03)
 
 **Harness:** `04_tools/gps_reconcile.py` — single entry point for all GPS integrity checks

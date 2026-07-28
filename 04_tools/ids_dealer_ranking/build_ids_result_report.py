@@ -475,16 +475,17 @@ def _rubric_mark_score(row: tuple, max_pt: float) -> float | None:
 
 
 def _standard_eval_score(row: tuple, max_pt: float) -> float | None:
-    """Self-eval col L, with rubric fallback and cap at max points."""
+    """Self-eval col L, capped at max points.
+
+    Blank self-evaluation → 0 (Tomoe / Romania col P, 2026-07-24).
+    Do **not** infer marks from Point 0–3 cells: on standard templates those
+    columns hold static rubric labels (NO/YES), identical for every dealer.
+    Over-max inputs are capped (same rule as Petros V41).
+    """
     raw = _coerce_score(row[11] if len(row) > 11 else None, max_pt)
-    rubric = _rubric_mark_score(row, max_pt)
-    if raw is not None and raw <= max_pt:
-        return raw
-    if rubric is not None:
-        return rubric
-    if raw is not None:
-        return min(raw, max_pt)
-    return None
+    if raw is None:
+        return 0.0
+    return min(float(raw), float(max_pt))
 
 
 def _parse_eval_rows(rows_iter, *, hungarian: bool = False) -> dict[str, float]:

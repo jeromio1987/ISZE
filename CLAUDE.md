@@ -6,7 +6,7 @@ Same rules as Cursor. **Start:** [`INDEX.md`](INDEX.md) → [`00_docs/ROUTING.ya
 - **New / unsorted files go to `01_data/90_INBOX/` only** — never dump into `01_data/` root. Sort per `01_data/DATA_MANIFEST.md` §0–§1.
 - Numbers: green `01_data/00_derived/_verification_report.json` → `metrics_snapshot.json` → `FACTS.md` wins over decks/memory/GPT.
 
-**Claude Desktop (standalone) users:** paste `00_docs/CLAUDE_DESKTOP_ONBOARDING.md` into the Project's custom instructions so the app boots from the same maps.
+**Claude Desktop (standalone) users:** paste `00_docs/CLAUDE_DESKTOP_ONBOARDING.md` into the Project's custom instructions so the app boots from the same maps. That paste includes the external IML language rule (no “IML v7” / “Model B” / personal names in shared decks).
 
 ## Dynamic workflows (Claude Code)
 

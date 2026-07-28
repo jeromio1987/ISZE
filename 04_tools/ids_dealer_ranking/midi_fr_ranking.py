@@ -156,8 +156,14 @@ def _collect_midi_rows(
 
 
 def collect_midi_total_dealers(cod_div: str, path: Path = MIDI_FILE) -> list[dict]:
+    # Keep zero-score shells so MIDI DLR count matches the source NETWORK /
+    # self-eval set (Tomoe 27 Jul: count must not drop; scores may be 0).
     return _collect_midi_rows(
-        path, cod_div, question_rx=QUESTION_REF, max_points=MAX_POINTS_TOTAL
+        path,
+        cod_div,
+        question_rx=QUESTION_REF,
+        max_points=MAX_POINTS_TOTAL,
+        include_zero_scores=True,
     )
 
 

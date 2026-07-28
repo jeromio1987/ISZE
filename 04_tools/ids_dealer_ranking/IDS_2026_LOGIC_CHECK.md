@@ -67,7 +67,8 @@ python build_ids_dashboard.py
 | **Dealer % row (14)** | `Score (One hundred perfect score conversion)` ≤ **1.0** per dealer | Total > 280 |
 | **Dealer question scores** | Each question score ≤ **col C max** for that row | Priority/rubric code written as points (e.g. `4` on max-1 item) |
 
-**Typical bug (fixed):** Garage Degroote (BE) had `4` in French auto-évaluation for A.1-2 (max 1). Country average for row 18 showed **105.9%** (`1.059`).
+**Typical bug (fixed 2026-07-27 — Tomoe Romania col P):** Blank Self Evaluation cells were scored as full points because Point 0–3 columns hold static rubric labels (`NO`/`YES`), and the old fallback treated those labels as dealer marks. **Blank self-eval now scores 0**; over-max inputs are capped at max (Petros V41 rule unchanged).
+
 
 **Fixes in pipeline:**
 - Scores capped at `max_points` when writing.

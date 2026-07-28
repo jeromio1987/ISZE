@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Warranty date coverage sanity — 2026-07-27</title>
+<style>
+  :root { --bg:#0f1419; --card:#1a2332; --ink:#e7ecf3; --muted:#8b9bb4; --ok:#3dd68c; --warn:#f5a524; --bad:#f76e6e; --line:#2a3548; }
+  body { margin:0; font:14px/1.45 "Segoe UI", system-ui, sans-serif; background:var(--bg); color:var(--ink); padding:24px; }
+  h1 { font-size:1.35rem; margin:0 0 6px; }
+  .sub { color:var(--muted); margin-bottom:20px; }
+  .verdicts { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:22px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+  .card b { display:block; font-size:1.1rem; margin-bottom:4px; }
+  .ok { color:var(--ok); } .warn { color:var(--warn); }
+  table { width:100%; border-collapse:collapse; background:var(--card); border-radius:10px; overflow:hidden; }
+  th, td { padding:8px 10px; border-bottom:1px solid var(--line); text-align:right; }
+  th:first-child, td:first-child { text-align:left; }
+  th { color:var(--muted); font-weight:600; background:#141c28; }
+  .z { color:var(--muted); }
+  .hole { color:var(--bad); font-weight:600; }
+  .barwrap { display:flex; gap:2px; align-items:flex-end; height:36px; }
+  .bar { width:14px; background:#4f7cff; border-radius:2px 2px 0 0; min-height:2px; }
+  .bar.zero { background:#2a3548; }
+  caption { text-align:left; padding:12px 10px; color:var(--muted); }
+</style>
+</head>
+<body>
+<h1>Warranty date coverage — Jerome sanity 2026-07-27</h1>
+<p class="sub">Raw Excel check · Mode B evidence · See SANITY.md</p>
+
+<div class="verdicts">
+  <div class="card"><b class="ok">€314K → SKIP</b>PARTNBR 0000000000 = labour (PARTAMT €0 / LBR €111K). Sheet4 orphan was parse artifact.</div>
+  <div class="card"><b class="ok">IE/PT → not a problem</b>Blank PN = labour skip. Unpriced real PNs = price-map only.</div>
+  <div class="card"><b class="ok">Data missing? NO</b>Key GPS DBs present; no multi-month feed blackouts on volume markets.</div>
+</div>
+
+<table>
+  <caption>CV parts-only monthly counts — Warranty_CV_2025.xlsx (Nov–Dec filled by sister file CV Warranty.xlsx)</caption>
+  <thead>
+    <tr><th>DB</th><th>n</th><th>01</th><th>02</th><th>03</th><th>04</th><th>05</th><th>06</th><th>07</th><th>08</th><th>09</th><th>10</th><th>11*</th><th>12*</th><th>Spark</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>ITUK</td><td>1507</td><td>203</td><td>34</td><td>364</td><td>99</td><td>272</td><td>61</td><td>160</td><td>129</td><td>92</td><td>93</td><td class="z">0</td><td class="z">0</td>
+      <td><div class="barwrap">
+        <div class="bar" style="height:20px"></div><div class="bar" style="height:4px"></div><div class="bar" style="height:36px"></div>
+        <div class="bar" style="height:10px"></div><div class="bar" style="height:27px"></div><div class="bar" style="height:6px"></div>
+        <div class="bar" style="height:16px"></div><div class="bar" style="height:13px"></div><div class="bar" style="height:9px"></div>
+        <div class="bar" style="height:9px"></div><div class="bar zero"></div><div class="bar zero"></div>
+      </div></td></tr>
+    <tr><td>UTI</td><td>758</td><td>113</td><td>48</td><td>64</td><td>69</td><td>78</td><td>121</td><td>75</td><td>103</td><td>25</td><td>62</td><td class="z">0</td><td class="z">0</td>
+      <td><div class="barwrap">
+        <div class="bar" style="height:34px"></div><div class="bar" style="height:14px"></div><div class="bar" style="height:19px"></div>
+        <div class="bar" style="height:21px"></div><div class="bar" style="height:23px"></div><div class="bar" style="height:36px"></div>
+        <div class="bar" style="height:22px"></div><div class="bar" style="height:31px"></div><div class="bar" style="height:8px"></div>
+        <div class="bar" style="height:18px"></div><div class="bar zero"></div><div class="bar zero"></div>
+      </div></td></tr>
+    <tr><td>Ireland</td><td>15</td><td>2</td><td class="z">0</td><td>2</td><td>1</td><td>4</td><td class="z">0</td><td>1</td><td>2</td><td>1</td><td>2</td><td class="z">0</td><td class="z">0</td>
+      <td><div class="barwrap">
+        <div class="bar" style="height:18px"></div><div class="bar zero"></div><div class="bar" style="height:18px"></div>
+        <div class="bar" style="height:9px"></div><div class="bar" style="height:36px"></div><div class="bar zero"></div>
+        <div class="bar" style="height:9px"></div><div class="bar" style="height:18px"></div><div class="bar" style="height:9px"></div>
+        <div class="bar" style="height:18px"></div><div class="bar zero"></div><div class="bar zero"></div>
+      </div></td></tr>
+    <tr><td>Portugal</td><td>114</td><td>16</td><td>10</td><td>8</td><td>13</td><td>8</td><td>7</td><td>20</td><td>12</td><td>5</td><td>15</td><td class="z">0</td><td class="z">0</td>
+      <td><div class="barwrap">
+        <div class="bar" style="height:29px"></div><div class="bar" style="height:18px"></div><div class="bar" style="height:14px"></div>
+        <div class="bar" style="height:23px"></div><div class="bar" style="height:14px"></div><div class="bar" style="height:13px"></div>
+        <div class="bar" style="height:36px"></div><div class="bar" style="height:22px"></div><div class="bar" style="height:9px"></div>
+        <div class="bar" style="height:27px"></div><div class="bar zero"></div><div class="bar zero"></div>
+      </div></td></tr>
+    <tr><td>ISD</td><td>10</td><td>3</td><td>1</td><td>2</td><td class="hole">0</td><td class="hole">0</td><td class="hole">0</td><td class="hole">0</td><td>2</td><td>1</td><td>1</td><td class="z">0</td><td class="z">0</td>
+      <td><div class="barwrap">
+        <div class="bar" style="height:36px"></div><div class="bar" style="height:12px"></div><div class="bar" style="height:24px"></div>
+        <div class="bar zero"></div><div class="bar zero"></div><div class="bar zero"></div><div class="bar zero"></div>
+        <div class="bar" style="height:24px"></div><div class="bar" style="height:12px"></div><div class="bar" style="height:12px"></div>
+        <div class="bar zero"></div><div class="bar zero"></div>
+      </div></td></tr>
+  </tbody>
+</table>
+<p class="sub" style="margin-top:14px">* Nov–Dec empty in this extract only — <code>CV Warranty.xlsx</code> has ITUK 106/103 and UTI 249/61 for Nov/Dec 2025. ISD Apr–Jul quiet = ~10 parts/year volume, not a missing feed. LCV IUK/ISD/IE/PT and UMI Jan–Dec: continuous (see SANITY.md).</p>
+</body>
+</html>

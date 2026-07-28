@@ -22,13 +22,45 @@ Usage:
 """
 from __future__ import annotations
 
+import atexit
 import os
+import signal
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
+
+# Backups parked by a needs_reset job. If the whole process gets Ctrl+C'd
+# (Task Scheduler stop / sleep / STATUS_CONTROL_C_EXIT), the per-job restore
+# below never runs — so atexit + signal handlers put the previous CSV back.
+_PENDING_BACKUPS: dict[Path, Path] = {}
+
+
+def _restore_pending_backups(reason: str) -> None:
+    for csv_path, backup_path in list(_PENDING_BACKUPS.items()):
+        try:
+            if not backup_path.exists():
+                continue
+            if csv_path.exists() and _data_row_count(csv_path) > 0:
+                # A partial scrape beat the interrupt; keep it and drop the bak.
+                backup_path.unlink(missing_ok=True)
+            else:
+                if csv_path.exists():
+                    csv_path.unlink()
+                backup_path.rename(csv_path)
+                print(f"  !! interrupted ({reason}) — restored {csv_path.name} from backup", flush=True)
+        except Exception as e:
+            print(f"  !! could not restore {csv_path.name}: {e}", flush=True)
+        finally:
+            _PENDING_BACKUPS.pop(csv_path, None)
+
+
+def _on_signal(signum, _frame):
+    name = signal.Signals(signum).name if hasattr(signal, "Signals") else str(signum)
+    _restore_pending_backups(name)
+    raise SystemExit(0xC000013A & 0xFFFFFFFF)  # same family as STATUS_CONTROL_C_EXIT
 
 SCRIPT_DIR = Path(__file__).parent
 SNAPSHOT_DIR = SCRIPT_DIR / "_snapshots"
@@ -144,6 +176,15 @@ def main():
     print(f"  ISZE scraper refresh + drift check — {stamp}")
     print("=" * 60)
 
+    atexit.register(_restore_pending_backups, "atexit")
+    for sig in (signal.SIGINT, signal.SIGTERM, getattr(signal, "SIGBREAK", None)):
+        if sig is None:
+            continue
+        try:
+            signal.signal(sig, _on_signal)
+        except Exception:
+            pass
+
     prior_paths: dict[str, Path | None] = {}
     for _, csv_name, _, _, _, _ in JOBS:
         csv_path = SCRIPT_DIR / csv_name
@@ -163,6 +204,7 @@ def main():
             if backup_path.exists():
                 backup_path.unlink()
             csv_path.rename(backup_path)
+            _PENDING_BACKUPS[csv_path] = backup_path
             print(f"  (reset {csv_name} — previous results kept at {backup_path.name} until this run succeeds)")
         try:
             subprocess.run(
@@ -174,10 +216,12 @@ def main():
         if backup_path:
             if _data_row_count(csv_path) > 0:
                 backup_path.unlink()
+                _PENDING_BACKUPS.pop(csv_path, None)
             else:
                 if csv_path.exists():
                     csv_path.unlink()  # header-only / empty file from the failed run
                 backup_path.rename(csv_path)
+                _PENDING_BACKUPS.pop(csv_path, None)
                 print(f"  !! {script} produced no rows — restored previous {csv_name} from backup")
 
     print("\n" + "=" * 60)

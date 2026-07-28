@@ -11,9 +11,14 @@ from openpyxl import load_workbook
 from ids_paths import DATA_ROOT, RANKINGS_DIR
 
 AWARDS = RANKINGS_DIR / "DB Evaluation for Awards 26.xlsx"
-SUMMARY_SRC = Path(r"C:\Users\jerom\Downloads\26 summary.xlsx")
+SUMMARY_SRC = Path(
+    r"C:\Users\jerom\Desktop\claude\ISZE\01_data\90_INBOX\tomoe_ids_mail_pull\20260723_1635_26_summary.xlsx"
+)
 SUMMARY_OUT = DATA_ROOT / "reports" / "2026_IDS_FollowUp_Summary.xlsx"
-DOWNLOADS_OUT = Path(r"C:\Users\jerom\Downloads\26 summary_filled.xlsx")
+# Keep a copy next to the mail pull (never write deliverables to Downloads)
+DOWNLOADS_OUT = Path(
+    r"C:\Users\jerom\Desktop\claude\ISZE\01_data\90_INBOX\tomoe_ids_mail_pull\26_summary_filled.xlsx"
+)
 
 # Map summary "DB Name" → Awards owner (IMG/ISZE Responsible).
 # Benelux/IBX left blank in Awards for BE/NL/LX child rows — use IBX programme lead.

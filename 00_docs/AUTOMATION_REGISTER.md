@@ -2,7 +2,7 @@
 
 **Job implementations:** `C:\Users\jerom\Documents\Claude\Scheduled\<job-name>\SKILL.md`  
 **This file:** Canonical in-repo index (migrated from `00_docs/agent/NOTES.md`)  
-**Last audited:** 2026-07-24  
+**Last audited:** 2026-07-26  
 **Path contract:** `$env:ISZE_ROOT` + [`paths.yaml`](../paths.yaml) · preflight policy: audit-export `scheduled-path-fix-report.md`
 
 ### Model routing (2026-07-24)
@@ -56,14 +56,18 @@ Each `SKILL.md` states `**Model tier: …**` under the frontmatter. Prefer Haiku
 
 | Live task name | Registered? | Cadence | Batch / script | Notes |
 |----------------|-------------|---------|----------------|-------|
-| `ISZE Tender Monitor` | ✅ registered + **verified end-to-end 2026-07-16 (Last Result 0)** | Weekly Mon 07:30 | `run_tender_monitor.bat` | Publish step fixed (see below). `tender_data.json` now **current** (3.72 MB · 851 notices · 729 opportunities). |
-| `ISZE_PMS_IAM_Refresh` | ✅ already live (last run 2026-07-13, result 0) | Weekly Mon 07:00 | `04_tools/autodoc_scraper/run_refresh_scheduled.bat` | This **is** the competitive-pricing refresh (KS/Tranzparts/TMC/Mekonomen/Auto365). The spare `ISZE_ScraperRefresh_WeeklyTask.xml` is **redundant — do NOT import it** (would double-run). |
-| `ISZE Discount Scanner` | ❌ not registered | Thu 07:00 | `04_tools/run_discount_scraper.bat` | XML ready at `discount-scanner/ISZE_DiscountScanner_WeeklyTask.xml`; import if promo tracking wanted. **Manual refresh run 2026-07-16 → 168 deals** (Lidl 40 / Delhaize 30 / Colruyt 22 / AH 40 / Carrefour 36). Note: JS stores (Delhaize/Colruyt/AH) need `playwright install chromium` first — the bat does this. |
+| `ISZE Tender Monitor` | ✅ registered + last result **0** (2026-07-20); next 2026-07-27 07:30 | Weekly Mon 07:30 | `run_tender_monitor.bat` | Publish step fixed (see below). |
+| `ISZE_PMS_IAM_Refresh` | ✅ live — last scheduled 2026-07-20 result **`0xC000013A` (interrupted)**; manual refresh started 2026-07-26 ~21:28 | Weekly Mon 07:00 | `04_tools/autodoc_scraper/run_refresh_scheduled.bat` | This **is** the competitive-pricing refresh (KS/Tranzparts/TMC/Mekonomen/Auto365). The spare `ISZE_ScraperRefresh_WeeklyTask.xml` is **redundant — do NOT import it** (would double-run). |
+| `ISZE Discount Scanner` | ❌ not registered | Thu 07:00 | `04_tools/run_discount_scraper.bat` | XML ready at `discount-scanner/ISZE_DiscountScanner_WeeklyTask.xml`; import if promo tracking wanted. **Manual refresh run 2026-07-16 → 168 deals** (Lidl 40 / Delhaize 30 / Colruyt 22 / AH 40 / Carrefour 36). Note: JS stores (Delhaize/Colruyt/AH) need `playwright install chromium` first — the bat does this. Personal supermarket promos, not ISZE work — excluded from the live-state audit. |
+| `ISZE_CursorWeekDigest_Weekly` | ✅ registered 2026-07-26 | Sun 20:00 | `04_tools/workspace/run_cursor_week_digest.cmd` | Cross-tool bridge: summarises the week's local Cursor sessions into `05_memory/briefs/cursor_week_*.md` so the Claude Desktop weekly review sees work done in Cursor. Output is gitignored (spans private projects). |
+| `ISZE_LiveStateAudit_Weekly` | ✅ registered 2026-07-26 | Mon 08:00 | `04_tools/workspace/run_live_state_audit.cmd` | Compares this register against Task Scheduler and the FACTS/pipeline reports; writes a numbered "waiting on Jerome" list to `05_memory/briefs/automation_drift_*.md`. Read-only — it reports drift, it never closes it. |
 
 **Register a task from XML (no elevation needed for these LeastPrivilege tasks):**
 `schtasks /create /tn "ISZE Discount Scanner" /xml "<full path to xml>" /f`
 
 **Tender publish fix (2026-07-16):** `publish_live_tender_json.ps1` dot-sourced a helper `..\workspace\isze_root.ps1` (`Get-IszePath`/`Get-DataSubfolderPath`) that **does not exist** — so step 2/3 always exited 1 and `tender_data.json` went stale from 2026-05-30. Rewrote the script to resolve `01_data/dashboards/tender_data.json` directly. Full task re-run confirmed **Last Result 0**.
+
+**Duplicate tasks removed (2026-07-26):** `import_isze_scheduled_tasks.ps1` had imported `ISZE_TenderMonitor_Weekly` and `ISZE_ScraperRefresh_Weekly`, which run the same batch files as `ISZE Tender Monitor` and `ISZE_PMS_IAM_Refresh` — the exact double-run this table warned against. Neither duplicate had ever run; both deleted. The originals are canonical. The import script now skips both entries unless `-Force`.
 
 > **Editing an XML on disk does not update a live task** — re-register (delete + `schtasks /create /xml`) after editing.
 
@@ -104,3 +108,5 @@ Scrapers (`*-tender-scrape`, `*-ks-scrape`, `scraper-healthcheck-autofix`) abort
 - Scheduled path fix detail: audit-export `scheduled-path-fix-report.md`
 - Scheduled path check: `04_tools/workspace/verify_scheduled_paths.ps1`
 - Monthly refresh (manual): [RUNBOOK_MONTHLY_REFRESH.md](RUNBOOK_MONTHLY_REFRESH.md)
+- Monthly refresh (orchestrated, fail-closed): `04_tools/workspace/isze_monthly_refresh.ps1`
+- Drift audit of this file vs live state: `04_tools/workspace/isze_live_state_audit.ps1`

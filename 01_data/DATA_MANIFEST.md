@@ -1,6 +1,6 @@
 # ISZE Data manifest — sort-by-topic map
 
-**Last updated:** 2026-07-24 (IDS NL/DK/LUX drop — DK dealers filed + outputs rebuilt; LUX Autopolis staged) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
+**Last updated:** 2026-07-27 (JP VIN register filed under `07_UIO/vin/`) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
 
 This is the **data map**. Each subject has a numbered folder under `01_data/` — drop new files into the matching one (§1). A small **wired working-set stays flat at root** because build scripts read it from there (§3).
 
@@ -95,7 +95,9 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | ISUZU_UIO_Overview_2026_v19.xlsx | `01_data/` (root) | ⚙ versioned fallback — `config.py` / `gps_v9_loaders.py` (only if `_CURRENT` missing) |
 | ISUZU_UIO_Overview_2026_v18.xlsx | `01_data/92_archive/` | archived 2026-07-17 — **not** load-bearing; fallbacks re-pointed v18→v19 |
 | isuzuregdata.xlsx | `01_data/07_UIO/` | DVLA reg source |
-| **Scripts:** | `06_uio/_Scripts/build_isuzu_uio.py` | |
+| **JP VIN register (separate project)** | `01_data/07_UIO/vin/` | ★ SKD+CBU unified → `VIN_register.parquet` · rolling-60m PMS cohort · **ex ITUK/UTI** (later) · AT/MT unknown until ISZJ map — see `vin/README.md` |
+| VIN_list_JP_YYYYMMDD.xlsx | `01_data/07_UIO/vin/raw/` | immutable JP drop |
+| **Scripts:** | `06_uio/_Scripts/build_isuzu_uio.py` · `01_data/07_UIO/vin/build_vin_register.py` | |
 | **ITUK UIO (PRISM capture lane):** | keep **23,068** | `verification_fixtures.yaml` / `facts_anchor.yaml` aligned. IML §1 / `iml_v7_ituk_cy2025.yaml` may stay **22,389** (DVLA) separately — do not force-merge. |
 
 ### 08 · Distributor / entity docs → `08_Distributor/` (IML · IMIT · ITUK · UTI · UMI · MIDI)
@@ -142,7 +144,7 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | 04 | `04_sales/` | Extra billing extracts (not `12_raw/sales/`) |
 | 05 | `05_Dealer_sellout/` | Dealer sell-out topic files |
 | 06 | `06_Warranty/` | Warranty exports + method docs (wired copies may stay at root §3) |
-| 07 | `07_UIO/` | UIO/reg topic files (canonical workbook: `06_uio/_CURRENT/`) |
+| 07 | `07_UIO/` | UIO/reg topic files (canonical workbook: `06_uio/_CURRENT/`; **`vin/`** = JP VIN register project) |
 | 08 | `08_Distributor/` | Per-DB distributor docs + studies |
 | 10 | `10_Tender/` | Tender strategy briefs |
 | 11 | `11_planning/` | KPI Master, VPACC action plan, PL plan, reviewed BP |

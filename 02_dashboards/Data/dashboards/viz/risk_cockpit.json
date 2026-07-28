@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated": "2026-07-23T19:29:46Z",
+    "generated": "2026-07-27T15:30:57Z",
     "year": 2025,
     "verification_ok": true,
     "sources": [
@@ -22,9 +22,9 @@
     "substitution_families_at_risk": 7,
     "grow_capture_count": 0,
     "defend_count": 6,
-    "competitive_pn_tracked": 4,
+    "competitive_pn_tracked": 12,
     "tender_pipeline_90d": 13,
-    "tender_stale_days": 2
+    "tender_stale_days": 0
   },
   "wallet": {
     "year": 2025,
@@ -581,6 +581,14 @@
     },
     {
       "distributor_code": "IUK",
+      "category": "blower_filter",
+      "capture_pct": 18.4,
+      "revenue_gap_eur": 470253.0,
+      "tam_eur": 576260.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "IUK",
       "category": "brake_rotor",
       "capture_pct": 43.5,
       "revenue_gap_eur": 469224.0,
@@ -668,6 +676,14 @@
       "region": "MENA"
     },
     {
+      "distributor_code": "UMI",
+      "category": "blower_filter",
+      "capture_pct": 0.7,
+      "revenue_gap_eur": 246608.0,
+      "tam_eur": 248349.0,
+      "region": "MENA"
+    },
+    {
       "distributor_code": "SWEDEN",
       "category": "clutch_disc",
       "capture_pct": 0.2,
@@ -682,29 +698,13 @@
       "revenue_gap_eur": 240987.0,
       "tam_eur": 249853.0,
       "region": "DACH"
-    },
-    {
-      "distributor_code": "UMI",
-      "category": "brake_shoe",
-      "capture_pct": 13.8,
-      "revenue_gap_eur": 224773.0,
-      "tam_eur": 260712.0,
-      "region": "MENA"
-    },
-    {
-      "distributor_code": "UMI",
-      "category": "brake_rotor",
-      "capture_pct": 12.0,
-      "revenue_gap_eur": 216996.0,
-      "tam_eur": 246510.0,
-      "region": "MENA"
     }
   ],
   "competitive_fusion": {
     "available": true,
     "autodoc_scraped_at": "2026-05-30 11:52:00",
-    "ks_scraped_at": "2026-07-20 07:00:11",
-    "scrape_stale_days": 54,
+    "ks_scraped_at": "2026-07-27 07:00:11",
+    "scrape_stale_days": 58,
     "gbp_eur": 1.17,
     "bogus_filter_gbp": 3.05,
     "items": [
@@ -755,26 +755,140 @@
         "ks_gen_eur": 29.25,
         "min_market_eur": 5.85,
         "iam_discount_pct": 57.8
+      },
+      {
+        "pn_mask": "…2091",
+        "description": "PIPE; EXH",
+        "aim_class": "C",
+        "rev_cy2025_eur": 228584.0,
+        "pr00_eur": 1276.51,
+        "autodoc_eur": null,
+        "ks_am_eur": null,
+        "ks_gen_eur": 1959.75,
+        "min_market_eur": 1959.75,
+        "iam_discount_pct": -53.5
+      },
+      {
+        "pn_mask": "…5240",
+        "description": "ELEMENT; OIL FILTER",
+        "aim_class": "V",
+        "rev_cy2025_eur": 215147.0,
+        "pr00_eur": 6.8,
+        "autodoc_eur": null,
+        "ks_am_eur": 11.7,
+        "ks_gen_eur": 17.55,
+        "min_market_eur": 11.7,
+        "iam_discount_pct": -72.1
+      },
+      {
+        "pn_mask": "…5741",
+        "description": "TURBOCHARGER ASM",
+        "aim_class": "C",
+        "rev_cy2025_eur": 148389.0,
+        "pr00_eur": 834.32,
+        "autodoc_eur": null,
+        "ks_am_eur": null,
+        "ks_gen_eur": 1930.5,
+        "min_market_eur": 1930.5,
+        "iam_discount_pct": -131.4
+      },
+      {
+        "pn_mask": "…0190",
+        "description": "NOZZLE ASM; INJ",
+        "aim_class": "F",
+        "rev_cy2025_eur": 145197.0,
+        "pr00_eur": 183.1,
+        "autodoc_eur": null,
+        "ks_am_eur": null,
+        "ks_gen_eur": 351.0,
+        "min_market_eur": 351.0,
+        "iam_discount_pct": -91.7
+      },
+      {
+        "pn_mask": "…0591",
+        "description": "NOZZLE ASM; INJ",
+        "aim_class": "F",
+        "rev_cy2025_eur": 143895.0,
+        "pr00_eur": 191.47,
+        "autodoc_eur": null,
+        "ks_am_eur": null,
+        "ks_gen_eur": 362.7,
+        "min_market_eur": 362.7,
+        "iam_discount_pct": -89.4
+      },
+      {
+        "pn_mask": "…4120",
+        "description": "SENSOR; PRESSURE,DPD",
+        "aim_class": "C",
+        "rev_cy2025_eur": 118471.0,
+        "pr00_eur": 196.64,
+        "autodoc_eur": null,
+        "ks_am_eur": 345.15,
+        "ks_gen_eur": 321.75,
+        "min_market_eur": 321.75,
+        "iam_discount_pct": -63.6
+      },
+      {
+        "pn_mask": "…0950",
+        "description": "SENSOR; PM",
+        "aim_class": "C",
+        "rev_cy2025_eur": 114941.0,
+        "pr00_eur": 386.83,
+        "autodoc_eur": null,
+        "ks_am_eur": 128.7,
+        "ks_gen_eur": 637.65,
+        "min_market_eur": 128.7,
+        "iam_discount_pct": 66.7
+      },
+      {
+        "pn_mask": "…6610",
+        "description": "PAD KIT; CALIPER,DISC BRK,FRT",
+        "aim_class": "V",
+        "rev_cy2025_eur": 105379.0,
+        "pr00_eur": 82.25,
+        "autodoc_eur": null,
+        "ks_am_eur": 17.55,
+        "ks_gen_eur": 146.25,
+        "min_market_eur": 17.55,
+        "iam_discount_pct": 78.7
       }
     ]
   },
   "tender_horizon": {
     "available": true,
-    "generated_at": "2026-07-21",
-    "stale_days": 2,
+    "generated_at": "2026-07-27",
+    "stale_days": 0,
     "stats": {
-      "opportunities": 692,
-      "attack": 0,
-      "selective": 217,
-      "due_14d": 20
+      "opportunities": 641,
+      "attack": 2,
+      "selective": 208,
+      "due_14d": 23
     },
     "horizon_days": 90,
     "items": [
       {
+        "title": "France – Repair and maintenance services of motor vehicles and associ…",
+        "country": "France",
+        "deadline_date": "2026-09-11",
+        "days_to_deadline": 46,
+        "opportunity_score": 71,
+        "decision": "Attack",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Netherlands – Vehicle-fleet management services – Raamovereenkomst le…",
+        "country": "Netherlands",
+        "deadline_date": "2026-08-04",
+        "days_to_deadline": 8,
+        "opportunity_score": 68,
+        "decision": "Attack",
+        "lifecycle": "competition"
+      },
+      {
         "title": "Norway – Repair, maintenance and associated services of vehicles and …",
         "country": "Norway",
         "deadline_date": "2026-08-10",
-        "days_to_deadline": 20,
+        "days_to_deadline": 14,
         "opportunity_score": 66,
         "decision": "Selective",
         "lifecycle": "competition"
@@ -783,7 +897,7 @@
         "title": "France – Fleet management, repair and maintenance services – Entretie…",
         "country": "France",
         "deadline_date": "2026-08-27",
-        "days_to_deadline": 37,
+        "days_to_deadline": 31,
         "opportunity_score": 62,
         "decision": "Selective",
         "lifecycle": "competition"
@@ -792,7 +906,7 @@
         "title": "Italy – Vehicle-fleet management services – SERVIZIO DI FLEET MANAGEM…",
         "country": "Italy",
         "deadline_date": "2026-08-27",
-        "days_to_deadline": 37,
+        "days_to_deadline": 31,
         "opportunity_score": 62,
         "decision": "Selective",
         "lifecycle": "competition"
@@ -801,26 +915,8 @@
         "title": "Netherlands – Fleet management, repair and maintenance services – Ful…",
         "country": "Netherlands",
         "deadline_date": "2026-09-03",
-        "days_to_deadline": 44,
+        "days_to_deadline": 38,
         "opportunity_score": 62,
-        "decision": "Selective",
-        "lifecycle": "competition"
-      },
-      {
-        "title": "Germany – Repair and maintenance services of motor vehicles and assoc…",
-        "country": "Germany",
-        "deadline_date": "2026-07-31",
-        "days_to_deadline": 10,
-        "opportunity_score": 60,
-        "decision": "Selective",
-        "lifecycle": "competition"
-      },
-      {
-        "title": "Italy – Repair and maintenance services of motor vehicles and associa…",
-        "country": "Italy",
-        "deadline_date": "2026-08-03",
-        "days_to_deadline": 13,
-        "opportunity_score": 60,
         "decision": "Selective",
         "lifecycle": "competition"
       },
@@ -828,7 +924,7 @@
         "title": "France – Repair and maintenance services of motor vehicles and associ…",
         "country": "France",
         "deadline_date": "2026-08-11",
-        "days_to_deadline": 21,
+        "days_to_deadline": 15,
         "opportunity_score": 60,
         "decision": "Selective",
         "lifecycle": "competition"
@@ -837,7 +933,7 @@
         "title": "Netherlands – Repair and maintenance services of motor vehicles and a…",
         "country": "Netherlands",
         "deadline_date": "2026-08-11",
-        "days_to_deadline": 21,
+        "days_to_deadline": 15,
         "opportunity_score": 60,
         "decision": "Selective",
         "lifecycle": "competition"
@@ -846,17 +942,35 @@
         "title": "Ireland – Vehicle-fleet management services – Meath Co Co - MH-TRA-26…",
         "country": "Ireland",
         "deadline_date": "2026-07-27",
-        "days_to_deadline": 6,
+        "days_to_deadline": 0,
         "opportunity_score": 56,
         "decision": "Selective",
         "lifecycle": "competition"
       },
       {
-        "title": "Netherlands – Vehicle-fleet management services – Raamovereenkomst le…",
-        "country": "Netherlands",
-        "deadline_date": "2026-07-14",
-        "days_to_deadline": -7,
-        "opportunity_score": 54,
+        "title": "Germany – Repair and maintenance services of motor vehicles and assoc…",
+        "country": "Germany",
+        "deadline_date": "2026-07-31",
+        "days_to_deadline": 4,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Italy – Repair and maintenance services of motor vehicles and associa…",
+        "country": "Italy",
+        "deadline_date": "2026-08-03",
+        "days_to_deadline": 7,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Romania – Repair and maintenance services of motor vehicles and assoc…",
+        "country": "Romania",
+        "deadline_date": "2026-07-15",
+        "days_to_deadline": -12,
+        "opportunity_score": 52,
         "decision": "Selective",
         "lifecycle": "competition"
       },
@@ -864,26 +978,8 @@
         "title": "Bulgaria – Repair and maintenance services of motor vehicles and asso…",
         "country": "Bulgaria",
         "deadline_date": "2026-07-16",
-        "days_to_deadline": -5,
+        "days_to_deadline": -11,
         "opportunity_score": 52,
-        "decision": "Selective",
-        "lifecycle": "competition"
-      },
-      {
-        "title": "Italy – Fleet management, repair and maintenance services – UCMAN - S…",
-        "country": "Italy",
-        "deadline_date": "2026-07-15",
-        "days_to_deadline": -6,
-        "opportunity_score": 46,
-        "decision": "Selective",
-        "lifecycle": "competition"
-      },
-      {
-        "title": "Italy – Car maintenance services – Procedura Aperta per fornitura del…",
-        "country": "Italy",
-        "deadline_date": "2026-07-20",
-        "days_to_deadline": -1,
-        "opportunity_score": 46,
         "decision": "Selective",
         "lifecycle": "competition"
       }
@@ -1210,8 +1306,8 @@
               },
               {
                 "year": 2024,
-                "percentile": 76.5,
-                "rank": 25
+                "percentile": 82.4,
+                "rank": 19
               },
               {
                 "year": 2025,
@@ -1250,8 +1346,8 @@
               },
               {
                 "year": 2024,
-                "percentile": 82.4,
-                "rank": 19
+                "percentile": 76.5,
+                "rank": 25
               },
               {
                 "year": 2025,

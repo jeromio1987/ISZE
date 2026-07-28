@@ -63,7 +63,7 @@ All paths under `$env:ISZE_ROOT/01_data/`:
 
 ## Next actions
 
-- [ ] Clear current verify **fails** in `_verification_report.md` (capture cap / ITUK band) or update `verification_fixtures.yaml` if intentional
+- [x] Clear current verify **fails** in `_verification_report.md` — **confirmed clear 2026-07-27**: report generated 2026-07-26T20:05:36Z shows 106 pass / 0 warn / 0 fail
 - [ ] Refresh `gpt_safe/` aggregates after green verify
 - [ ] Keep `DATA_MANIFEST.md` “Last refreshed” row current when CY files change
 - [ ] Jerome: confirm GitHub PAT revoked (Settings → Developer settings → PATs) — archive files in `90_archive/root_files/` still contain old token until scrubbed — **done 2026-06-13** (template + living-copy paths documented)

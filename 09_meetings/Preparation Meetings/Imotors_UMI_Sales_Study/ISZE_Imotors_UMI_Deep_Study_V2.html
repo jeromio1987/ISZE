@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>I Motors &amp; UMI — Deep Sales &amp; Order Study V2</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;background:#f7f4ee;font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0}
+.page{max-width:980px;margin:0 auto;padding:2.2rem 1.4rem 1rem;min-height:80vh;border-bottom:1px solid #d9d3c8}
+@media print{.page{break-after:page;min-height:0;border:0}.no-print{display:none!important}body{background:#fff}}
+.cover{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:3.5rem 1.6rem 3rem}
+.cover .inner{max-width:980px;margin:0 auto}
+.cover h1{color:#fff;font-size:2.5rem;line-height:1.12}
+.cover .rule{width:4.2rem;height:3px;background:#c0552d;margin:1.1rem 0 1rem}
+.chip{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);padding:.2rem .65rem;border-radius:4px;font-size:.78rem;margin:.15rem .25rem .15rem 0}
+.nav{position:sticky;top:0;z-index:20;background:#f7f4ee;border-bottom:1px solid #d9d3c8;padding:.45rem 1rem;display:flex;flex-wrap:wrap;gap:.35rem}
+.nav a{font-size:.75rem;color:#1a2b4a;text-decoration:none;padding:.25rem .45rem;border:1px solid #d9d3c8;background:#fff}
+h2.sec{font-size:1.45rem;margin:0 0 .7rem;padding-bottom:.35rem;border-bottom:2px solid #1a2b4a}
+h2.sec .no{color:#c0552d}
+h3{font-size:1.05rem;margin:1.1rem 0 .4rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.7rem;margin:1rem 0}
+.stat{background:#fff;border:1px solid #d9d3c8;padding:.85rem 1rem}
+.stat .lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:#6b6256}
+.stat .val{font-size:1.3rem;font-weight:700;color:#1a2b4a;margin-top:.1rem}
+.stat .sub{font-size:.82rem;color:#6b6256}
+.good{color:#2e7d54!important}.bad{color:#b23b3b!important}.amber{color:#a67c00!important}
+.tl{display:inline-block;width:.7rem;height:.7rem;border-radius:50%;margin-right:.35rem;vertical-align:middle}
+.tl.g{background:#1d9e75}.tl.a{background:#eda100}.tl.r{background:#e24b4a}
+.callout{border-left:3px solid #c0552d;background:#fff;padding:.85rem 1rem;margin:1rem 0}
+.callout.warn{border-left-color:#eda100}
+.chart{position:relative;width:100%;height:320px;background:#fff;border:1px solid #d9d3c8;padding:.5rem;margin:.8rem 0}
+.chart.tall{height:420px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:820px){.two{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:.86rem;background:#fff;margin:.7rem 0}
+th{background:#1a2b4a;color:#fff;text-align:left;padding:.5rem .6rem;font-size:.72rem;text-transform:uppercase}
+td{padding:.45rem .6rem;border-bottom:1px solid #d9d3c8}
+tbody tr:nth-child(even){background:#faf8f4}
+td.num,.num{text-align:right;font-variant-numeric:tabular-nums}
+code{font-family:Consolas,monospace;font-size:.84em}
+.muted{color:#6b6256;font-size:.9rem}
+.ask{background:#fff;border:1px solid #d9d3c8;padding:.7rem 1rem;margin:.4rem 0}
+.footer{max-width:980px;margin:0 auto;padding:1rem 1.4rem 2.5rem;font-size:.75rem;color:#6b6256}
+.heat{display:grid;grid-template-columns:1fr 1fr;gap:.45rem}
+.heat .c{background:#fff;border:1px solid #d9d3c8;padding:.55rem .65rem;font-size:.8rem}
+.heat .c .p{font-weight:700;font-size:1.05rem}
+</style>
+</head>
+<body>
+<div class="cover"><div class="inner">
+<span class="chip">ISZE Parts · Meeting prep V2</span>
+<span class="chip">Deep study · 10 pages</span>
+<h1>I Motors &amp; UMI<br/>Sales, Order &amp; Capture</h1>
+<div class="rule"></div>
+<p style="max-width:40rem;opacity:.93">Two distributor stories — Portugal growth vs Israel LCV realisation gap. Hierarchy from fiscal sales through SaTy, GPS, PMS basket, and part number.</p>
+<p style="color:#c9d2e0;font-size:.9rem">FY = Apr–Mar · Billing through 2026-03-31 · PBI H1 CY2026 refreshed 2026-07-21 · Generated 2026-07-26</p>
+</div></div>
+<nav class="nav no-print">
+<a href="#p1">01 Scope</a><a href="#p2">02 Exec</a><a href="#p3">03 Trend</a><a href="#p4">04 Order</a>
+<a href="#p5">05 SaTy</a><a href="#p6">06 GPS</a><a href="#p7">07 PMS</a><a href="#p8">08 Family</a>
+<a href="#p9">09 Fill</a><a href="#p10">10 Asks</a>
+</nav>
+
+<section class="page" id="p1">
+<h2 class="sec"><span class="no">01</span> Scope &amp; periods</h2>
+<div class="callout"><strong>Who:</strong> I Motors (Portugal, SAP 92/519) and UMI (Israel LCV, SAP 1797).<br/>
+<strong>IDS Israel:</strong> covers the UMI dealer network only. Other Israel distributors, if shown, are separate context rows — do not combine with IDS Israel / PMS / GPS scores.</div>
+<table>
+<thead><tr><th>Layer</th><th>Period</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Fiscal sales, SaTy, PN</td><td>FY2024 &amp; FY2025 (Apr–Mar)</td><td>ISZE billing</td></tr>
+<tr><td>Sales tendency</td><td>24 fiscal months</td><td>ISZE billing</td></tr>
+<tr><td>ORDER vs SALES</td><td>H1 CY2026</td><td>Power BI ORDER / SALES</td></tr>
+<tr><td>GPS / PMS</td><td>CY2025</td><td>PRISM</td></tr>
+<tr><td>Fill rate</td><td>PBI SPI</td><td>I Motors captured; UMI not isolated</td></tr>
+</tbody></table>
+<p class="muted">Primary lens = <strong>total</strong> sales / total PMS capture. Genuine is secondary.</p>
+</section>
+
+<section class="page" id="p2">
+<h2 class="sec"><span class="no">02</span> Executive contrast</h2>
+<div class="grid">
+<div class="stat"><div class="lbl"><span class="tl g"></span>I Motors FY</div><div class="val good">+18.8%</div><div class="sub">€1.56M → €1.85M</div></div>
+<div class="stat"><div class="lbl"><span class="tl r"></span>UMI FY</div><div class="val bad">-10.2%</div><div class="sub">€3.43M → €3.08M</div></div>
+<div class="stat"><div class="lbl"><span class="tl g"></span>I Motors H1 sales</div><div class="val good">+15%</div><div class="sub">€935K</div></div>
+<div class="stat"><div class="lbl"><span class="tl r"></span>UMI H1 sales</div><div class="val bad">-19%</div><div class="sub">€1.20M</div></div>
+<div class="stat"><div class="lbl"><span class="tl a"></span>UMI H1 demand</div><div class="val">−0.4%</div><div class="sub">€1.42M · almost flat</div></div>
+<div class="stat"><div class="lbl"><span class="tl r"></span>UMI gap</div><div class="val bad">€222K</div><div class="sub">Demand ahead of billing</div></div>
+</div>
+<div class="chart"><canvas id="cFy" role="img" aria-label="FY compare"></canvas></div>
+<div class="two">
+<div class="callout"><strong>I Motors:</strong> Growing, diversified (top-10 14% of FY25). Sales≈demand. PMS total 41.8%.</div>
+<div class="callout warn"><strong>UMI:</strong> Invoice down, demand holds. Top-10 40%. PMS total 22.7% · gap €1.11M.</div>
+</div>
+</section>
+
+<section class="page" id="p3">
+<h2 class="sec"><span class="no">03</span> Sales tendency — 24 months</h2>
+<p class="muted">FY2024 months then FY2025 months.</p>
+<h3>I Motors — increasing</h3>
+<div class="chart"><canvas id="cImoM" role="img" aria-label="I Motors monthly"></canvas></div>
+<h3>UMI — dropping / soft</h3>
+<div class="chart"><canvas id="cUmiM" role="img" aria-label="UMI monthly"></canvas></div>
+</section>
+
+<section class="page" id="p4">
+<h2 class="sec"><span class="no">04</span> ORDER vs SALES — lost realisation</h2>
+<div class="chart"><canvas id="cOrd" role="img" aria-label="Order vs sales"></canvas></div>
+<table>
+<thead><tr><th>DB</th><th class="num">Sales</th><th class="num">YoY</th><th class="num">Demand</th><th class="num">YoY</th><th class="num">Gap</th></tr></thead>
+<tbody>
+<tr><td>I Motors</td><td class="num">€935K</td><td class="num good">+15%</td><td class="num">€953K</td><td class="num good">+14%</td><td class="num">€18K</td></tr>
+<tr><td>UMI</td><td class="num">€1.20M</td><td class="num bad">-19%</td><td class="num">€1.42M</td><td class="num">−0.4%</td><td class="num bad">€222K</td></tr>
+<tr><td>UTI (context)</td><td class="num">€1.72M</td><td class="num good">+15%</td><td class="num">€1.75M</td><td class="num good">+62%</td><td class="num muted">—</td></tr>
+</tbody></table>
+<div class="callout warn">Israel market demand +26% is largely driven by another Israel distributor (+62% demand). UMI −19% sales is UMI-specific — not “Israel soft”.</div>
+<div class="two">
+<div><h3>UMI H1 source</h3><div class="chart"><canvas id="cUmiSrc"></canvas></div></div>
+<div><h3>I Motors H1 source</h3><div class="chart"><canvas id="cImoSrc"></canvas></div></div>
+</div>
+</section>
+
+<section class="page" id="p5">
+<h2 class="sec"><span class="no">05</span> SaTy evolution</h2>
+<p class="muted">SOR = planned. RUSH/VOR = pressure. Share of €.</p>
+<div class="two">
+<div><h3>I Motors</h3><div class="chart"><canvas id="cImoSaty"></canvas></div></div>
+<div><h3>UMI</h3><div class="chart"><canvas id="cUmiSaty"></canvas></div></div>
+</div>
+<div class="callout">I Motors SOR ~82% FY25. UMI SOR ~86% with material VOR; almost no RUSH coding.</div>
+</section>
+
+<section class="page" id="p6">
+<h2 class="sec"><span class="no">06</span> GPS — SPU &amp; peers</h2>
+<div class="grid">
+<div class="stat"><div class="lbl">I Motors CY2025 SPU</div><div class="val">€209</div><div class="sub">UIO 8,176 · GPS 49% · green</div></div>
+<div class="stat"><div class="lbl">UMI CY2025 SPU</div><div class="val">€179</div><div class="sub">UIO 18,542 · GPS 72% · green</div></div>
+</div>
+<div class="chart tall"><canvas id="cPeers"></canvas></div>
+<div class="callout warn">UMI GPS green ≠ healthy basket — lubricants inflate wallet. Treat other Israel distributors as separate rows.</div>
+</section>
+
+<section class="page" id="p7">
+<h2 class="sec"><span class="no">07</span> PMS — total capture first</h2>
+<div class="grid">
+<div class="stat"><div class="lbl">I Motors total</div><div class="val">41.8%</div><div class="sub">Gap €166K · genuine 9.4%</div></div>
+<div class="stat"><div class="lbl">UMI total</div><div class="val bad">22.7%</div><div class="sub">Gap €1.11M · oil filter 76%</div></div>
+</div>
+<h3>I Motors gaps</h3><div class="chart tall"><canvas id="cImoPms"></canvas></div>
+<h3>UMI gaps</h3><div class="chart tall"><canvas id="cUmiPms"></canvas></div>
+<div class="heat">
+<div class="c"><div class="muted">I Motors top gaps</div><div class="p">brake_shoe · clutch_pressure_plate · air_filter</div></div>
+<div class="c"><div class="muted">UMI top gaps</div><div class="p">clutch_disc · brake_pad · clutch_pressure_plate</div></div>
+</div>
+</section>
+
+<section class="page" id="p8">
+<h2 class="sec"><span class="no">08</span> Strong vs weak — H1 categories</h2>
+<div class="two">
+<div><h3>I Motors H1</h3><div class="chart tall"><canvas id="cImoCat"></canvas></div>
+<p class="muted">Emission +87% · Engine +77% · Competitive −27%.</p></div>
+<div><h3>UMI H1</h3><div class="chart tall"><canvas id="cUmiCat"></canvas></div>
+<p class="muted">Others −17% · Emission −29% · Engine −62% · LOCAL −55%.</p></div>
+</div>
+</section>
+
+<section class="page" id="p9">
+<h2 class="sec"><span class="no">09</span> Fill &amp; where we lose sales</h2>
+<div class="grid">
+<div class="stat"><div class="lbl">I Motors fill</div><div class="val">87.5%</div><div class="sub">PBI SPI customer view · session 2026-07-26</div></div>
+<div class="stat"><div class="lbl">UMI fill</div><div class="val amber">n/a*</div><div class="sub">Not isolated on fill page this session — use PN losers + ORDER gap</div></div>
+</div>
+<div class="two">
+<div><h3>I Motors PN losers</h3>
+<table><thead><tr><th>PN</th><th>Desc</th><th class="num">FY24</th><th class="num">FY25</th><th class="num">Δ</th></tr></thead>
+<tbody><tr><td><code>8975293220</code></td><td>ENGINE ASM</td><td class='num'>€15K</td><td class='num'>€0K</td><td class='num bad'>€-15K</td></tr>
+<tr><td><code>5876150180</code></td><td>FILTER; BLOWER UNIT</td><td class='num'>€15K</td><td class='num'>€1K</td><td class='num bad'>€-15K</td></tr>
+<tr><td><code>8983320764</code></td><td>DPD ASM</td><td class='num'>€15K</td><td class='num'>€0K</td><td class='num bad'>€-15K</td></tr>
+<tr><td><code>8983528481</code></td><td>SENSOR; NOX</td><td class='num'>€38K</td><td class='num'>€27K</td><td class='num bad'>€-12K</td></tr>
+<tr><td><code>8982049420</code></td><td>FILTER ASM</td><td class='num'>€12K</td><td class='num'>€0K</td><td class='num bad'>€-12K</td></tr>
+<tr><td><code>5876101170</code></td><td>ELEMENT; OIL FILTER</td><td class='num'>€11K</td><td class='num'>€0K</td><td class='num bad'>€-11K</td></tr>
+<tr><td><code>8978808270</code></td><td>SENSOR; PM</td><td class='num'>€34K</td><td class='num'>€23K</td><td class='num bad'>€-11K</td></tr>
+<tr><td><code>8982688122</code></td><td>PUMP ASM; DEF,DCM SPLY</td><td class='num'>€21K</td><td class='num'>€12K</td><td class='num bad'>€-9K</td></tr></tbody></table></div>
+<div><h3>UMI PN losers</h3>
+<table><thead><tr><th>PN</th><th>Desc</th><th class="num">FY24</th><th class="num">FY25</th><th class="num">Δ</th></tr></thead>
+<tbody><tr><td><code>550047337</code></td><td>Rim R4L15W40 CK4_3*5L             </td><td class='num'>€479K</td><td class='num'>€426K</td><td class='num bad'>€-53K</td></tr>
+<tr><td><code>8978808270</code></td><td>SENSOR; PM</td><td class='num'>€72K</td><td class='num'>€24K</td><td class='num bad'>€-48K</td></tr>
+<tr><td><code>REBATE</code></td><td>Rebate Material</td><td class='num'>€65K</td><td class='num'>€20K</td><td class='num bad'>€-45K</td></tr>
+<tr><td><code>8983320764</code></td><td>DPD ASM</td><td class='num'>€58K</td><td class='num'>€21K</td><td class='num bad'>€-37K</td></tr>
+<tr><td><code>8984865960</code></td><td>RADIATOR ASM</td><td class='num'>€39K</td><td class='num'>€6K</td><td class='num bad'>€-33K</td></tr>
+<tr><td><code>550047252</code></td><td>Rim R4 L 15W40 CJ4_1*209L</td><td class='num'>€114K</td><td class='num'>€84K</td><td class='num bad'>€-30K</td></tr>
+<tr><td><code>8975293230</code></td><td>ENGINE ASM</td><td class='num'>€100K</td><td class='num'>€72K</td><td class='num bad'>€-29K</td></tr>
+<tr><td><code>8972775834</code></td><td>HEADLAMP UNIT</td><td class='num'>€27K</td><td class='num'>€0K</td><td class='num bad'>€-27K</td></tr></tbody></table></div>
+</div>
+<div class="callout">Probe: (1) UMI ORDER→SALES gap €222K (2) LOCAL/Shell −55% (3) clutch/brake PMS (4) I Motors competitive −27%.</div>
+</section>
+
+<section class="page" id="p10">
+<h2 class="sec"><span class="no">10</span> Asks &amp; appendix</h2>
+<h3>I Motors</h3>
+<div class="ask"><strong>1.</strong> Competitive-parts H1 −27%: price, stock, or channel?</div>
+<div class="ask"><strong>2.</strong> Dealer view on brake shoe / clutch / air filter.</div>
+<div class="ask"><strong>3.</strong> Is ~11% RUSH intentional or planning miss?</div>
+<h3>UMI</h3>
+<div class="ask"><strong>1.</strong> What sits between ORDER and SALES in H1?</div>
+<div class="ask"><strong>2.</strong> Rimula / LOCAL outlook for rest of FY.</div>
+<div class="ask"><strong>3.</strong> Clutch &amp; brake — lead with total capture (22.7%), not genuine-only.</div>
+<div class="ask"><strong>4.</strong> IDS Israel covers the UMI network only — do not combine other Israel distributors with IDS Israel / PMS / GPS for this discussion.</div>
+<h3>Appendix — Top PN FY2025</h3>
+<div class="two">
+<div><h3>I Motors</h3><table><thead><tr><th>#</th><th>PN</th><th>Desc</th><th class="num">€</th><th class="num">%</th></tr></thead><tbody><tr><td>1</td><td><code>7552348290</code></td><td>STEERING UNIT</td><td class='num'>€58K</td><td class='num'>3.1%</td></tr>
+<tr><td>2</td><td><code>8976607440</code></td><td>TRANSMISSION ASM; MANUAL</td><td class='num'>€32K</td><td class='num'>1.7%</td></tr>
+<tr><td>3</td><td><code>8983767550</code></td><td>ROTOR; DISC BRK,FRT</td><td class='num'>€27K</td><td class='num'>1.4%</td></tr>
+<tr><td>4</td><td><code>8983528481</code></td><td>SENSOR; NOX</td><td class='num'>€27K</td><td class='num'>1.4%</td></tr>
+<tr><td>5</td><td><code>8978808270</code></td><td>SENSOR; PM</td><td class='num'>€23K</td><td class='num'>1.3%</td></tr>
+<tr><td>6</td><td><code>8982447940</code></td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td class='num'>€21K</td><td class='num'>1.1%</td></tr>
+<tr><td>7</td><td><code>REBATE</code></td><td>Rebate Material</td><td class='num'>€20K</td><td class='num'>1.1%</td></tr>
+<tr><td>8</td><td><code>8983842670</code></td><td>INJECTOR ASM; DEF DCM</td><td class='num'>€19K</td><td class='num'>1.0%</td></tr>
+<tr><td>9</td><td><code>8978808250</code></td><td>SENSOR; PM</td><td class='num'>€18K</td><td class='num'>1.0%</td></tr>
+<tr><td>10</td><td><code>1884057500</code></td><td>T/AXLEOIL</td><td class='num'>€17K</td><td class='num'>0.9%</td></tr>
+<tr><td>11</td><td><code>5876150640</code></td><td>PAD KIT; DISC BRK,W/O SHIM & CLIP</td><td class='num'>€16K</td><td class='num'>0.8%</td></tr>
+<tr><td>12</td><td><code>8975056801</code></td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td class='num'>€14K</td><td class='num'>0.7%</td></tr></tbody></table></div>
+<div><h3>UMI</h3><table><thead><tr><th>#</th><th>PN</th><th>Desc</th><th class="num">€</th><th class="num">%</th></tr></thead><tbody><tr><td>1</td><td><code>550047337</code></td><td>Rim R4L15W40 CK4_3*5L             </td><td class='num'>€426K</td><td class='num'>13.8%</td></tr>
+<tr><td>2</td><td><code>8975359391</code></td><td>DPD ASM</td><td class='num'>€174K</td><td class='num'>5.7%</td></tr>
+<tr><td>3</td><td><code>8978808250</code></td><td>SENSOR; PM</td><td class='num'>€134K</td><td class='num'>4.4%</td></tr>
+<tr><td>4</td><td><code>7552348290</code></td><td>STEERING UNIT</td><td class='num'>€123K</td><td class='num'>4.0%</td></tr>
+<tr><td>5</td><td><code>550047252</code></td><td>Rim R4 L 15W40 CJ4_1*209L</td><td class='num'>€84K</td><td class='num'>2.7%</td></tr>
+<tr><td>6</td><td><code>8975293230</code></td><td>ENGINE ASM</td><td class='num'>€72K</td><td class='num'>2.3%</td></tr>
+<tr><td>7</td><td><code>7552026060</code></td><td>FILTER ASM; VCV</td><td class='num'>€65K</td><td class='num'>2.1%</td></tr>
+<tr><td>8</td><td><code>8983682091</code></td><td>PIPE; EXH</td><td class='num'>€57K</td><td class='num'>1.9%</td></tr>
+<tr><td>9</td><td><code>8984890180</code></td><td>RAIL; COMMON</td><td class='num'>€55K</td><td class='num'>1.8%</td></tr>
+<tr><td>10</td><td><code>8974985741</code></td><td>TURBOCHARGER ASM</td><td class='num'>€52K</td><td class='num'>1.7%</td></tr>
+<tr><td>11</td><td><code>8984890190</code></td><td>NOZZLE ASM; INJ</td><td class='num'>€43K</td><td class='num'>1.4%</td></tr>
+<tr><td>12</td><td><code>8983320591</code></td><td>NOZZLE ASM; INJ</td><td class='num'>€39K</td><td class='num'>1.3%</td></tr></tbody></table></div>
+</div>
+</section>
+<div class="footer">Sources: ISZE billing FY2024–FY2025 · Power BI SALES/ORDER H1 CY2026 · PRISM GPS/PMS CY2025. Total capture primary. IDS Israel = UMI network only. Excel: ISZE_Imotors_UMI_Deep_Study_V2.xlsx</div>
+<script src="assets/chart.umd.min.js"></script>
+<script>
+const D = {"imoMonthly": [{"fiscal_year": 2024, "ym": "2024-04", "sales_eur": 107929.99, "qty": 3947.0, "lines": 1096}, {"fiscal_year": 2024, "ym": "2024-05", "sales_eur": 120073.29, "qty": 4322.0, "lines": 1089}, {"fiscal_year": 2024, "ym": "2024-06", "sales_eur": 95744.29, "qty": 3279.0, "lines": 899}, {"fiscal_year": 2024, "ym": "2024-07", "sales_eur": 167565.97, "qty": 8710.0, "lines": 1077}, {"fiscal_year": 2024, "ym": "2024-08", "sales_eur": 86048.15, "qty": 2708.0, "lines": 1004}, {"fiscal_year": 2024, "ym": "2024-09", "sales_eur": 155459.82, "qty": 4475.0, "lines": 1502}, {"fiscal_year": 2024, "ym": "2024-10", "sales_eur": 149170.52, "qty": 3924.0, "lines": 1421}, {"fiscal_year": 2024, "ym": "2024-11", "sales_eur": 132167.67, "qty": 4168.0, "lines": 1540}, {"fiscal_year": 2024, "ym": "2024-12", "sales_eur": 156775.42, "qty": 3294.0, "lines": 1164}, {"fiscal_year": 2024, "ym": "2025-01", "sales_eur": 132183.01, "qty": 6181.0, "lines": 1259}, {"fiscal_year": 2024, "ym": "2025-02", "sales_eur": 135253.5, "qty": 3660.0, "lines": 1347}, {"fiscal_year": 2024, "ym": "2025-03", "sales_eur": 122546.49, "qty": 3795.0, "lines": 1443}, {"fiscal_year": 2025, "ym": "2025-04", "sales_eur": 115894.25, "qty": 3753.0, "lines": 1322}, {"fiscal_year": 2025, "ym": "2025-05", "sales_eur": 140492.67, "qty": 5212.0, "lines": 1329}, {"fiscal_year": 2025, "ym": "2025-06", "sales_eur": 168957.89, "qty": 5269.0, "lines": 1519}, {"fiscal_year": 2025, "ym": "2025-07", "sales_eur": 146866.57, "qty": 4739.0, "lines": 1367}, {"fiscal_year": 2025, "ym": "2025-08", "sales_eur": 123081.22, "qty": 4319.0, "lines": 1189}, {"fiscal_year": 2025, "ym": "2025-09", "sales_eur": 168595.26, "qty": 4523.0, "lines": 1367}, {"fiscal_year": 2025, "ym": "2025-10", "sales_eur": 175562.86, "qty": 6673.0, "lines": 1580}, {"fiscal_year": 2025, "ym": "2025-11", "sales_eur": 126781.34, "qty": 3776.0, "lines": 997}, {"fiscal_year": 2025, "ym": "2025-12", "sales_eur": 156575.9, "qty": 3782.0, "lines": 814}, {"fiscal_year": 2025, "ym": "2026-01", "sales_eur": 148816.64, "qty": 4186.0, "lines": 1082}, {"fiscal_year": 2025, "ym": "2026-02", "sales_eur": 191188.26, "qty": 6629.0, "lines": 1167}, {"fiscal_year": 2025, "ym": "2026-03", "sales_eur": 190800.56, "qty": 6392.0, "lines": 1322}], "umiMonthly": [{"fiscal_year": 2024, "ym": "2024-04", "sales_eur": 225530.89, "qty": 5552.0, "lines": 582}, {"fiscal_year": 2024, "ym": "2024-05", "sales_eur": 113529.84, "qty": 3226.0, "lines": 454}, {"fiscal_year": 2024, "ym": "2024-06", "sales_eur": 400495.82, "qty": 12775.0, "lines": 992}, {"fiscal_year": 2024, "ym": "2024-07", "sales_eur": 478498.14, "qty": 15183.0, "lines": 944}, {"fiscal_year": 2024, "ym": "2024-08", "sales_eur": 275531.42, "qty": 9480.0, "lines": 858}, {"fiscal_year": 2024, "ym": "2024-09", "sales_eur": 176892.24, "qty": 4445.0, "lines": 962}, {"fiscal_year": 2024, "ym": "2024-10", "sales_eur": 304735.07, "qty": 8534.0, "lines": 1156}, {"fiscal_year": 2024, "ym": "2024-11", "sales_eur": 187476.79, "qty": 7009.0, "lines": 591}, {"fiscal_year": 2024, "ym": "2024-12", "sales_eur": 245625.01, "qty": 5414.0, "lines": 839}, {"fiscal_year": 2024, "ym": "2025-01", "sales_eur": 308589.73, "qty": 8236.0, "lines": 789}, {"fiscal_year": 2024, "ym": "2025-02", "sales_eur": 412569.18, "qty": 21216.0, "lines": 1189}, {"fiscal_year": 2024, "ym": "2025-03", "sales_eur": 299405.41, "qty": 8228.0, "lines": 676}, {"fiscal_year": 2025, "ym": "2025-04", "sales_eur": 218758.3, "qty": 8509.0, "lines": 747}, {"fiscal_year": 2025, "ym": "2025-05", "sales_eur": 251005.96, "qty": 6577.0, "lines": 790}, {"fiscal_year": 2025, "ym": "2025-06", "sales_eur": 173663.95, "qty": 11371.0, "lines": 536}, {"fiscal_year": 2025, "ym": "2025-07", "sales_eur": 373438.96, "qty": 6512.0, "lines": 859}, {"fiscal_year": 2025, "ym": "2025-08", "sales_eur": 308841.88, "qty": 8893.0, "lines": 988}, {"fiscal_year": 2025, "ym": "2025-09", "sales_eur": 398775.27, "qty": 11976.0, "lines": 711}, {"fiscal_year": 2025, "ym": "2025-10", "sales_eur": 279086.26, "qty": 8708.0, "lines": 637}, {"fiscal_year": 2025, "ym": "2025-11", "sales_eur": 107595.22, "qty": 4363.0, "lines": 568}, {"fiscal_year": 2025, "ym": "2025-12", "sales_eur": 257071.16, "qty": 6961.0, "lines": 1000}, {"fiscal_year": 2025, "ym": "2026-01", "sales_eur": 308143.35, "qty": 9591.0, "lines": 672}, {"fiscal_year": 2025, "ym": "2026-02", "sales_eur": 216811.53, "qty": 4487.0, "lines": 765}, {"fiscal_year": 2025, "ym": "2026-03", "sales_eur": 186486.5, "qty": 6639.0, "lines": 853}], "imoSaty24": [{"fiscal_year": 2024, "saty": "SOR", "sales_eur": 1180556.11, "share_pct": 75.63, "qty": 43963.0, "lines": 12589}, {"fiscal_year": 2024, "saty": "VOR", "sales_eur": 155528.59, "share_pct": 9.96, "qty": 1872.0, "lines": 914}, {"fiscal_year": 2024, "saty": "RUSH", "sales_eur": 137807.69, "share_pct": 8.83, "qty": 1744.0, "lines": 1244}, {"fiscal_year": 2024, "saty": "PRD", "sales_eur": 82194.72, "share_pct": 5.27, "qty": 4721.0, "lines": 82}, {"fiscal_year": 2024, "saty": "CR", "sales_eur": 4831.01, "share_pct": 0.31, "qty": 163.0, "lines": 12}], "imoSaty25": [{"fiscal_year": 2025, "saty": "SOR", "sales_eur": 1521726.13, "share_pct": 82.1, "qty": 54254.0, "lines": 12573}, {"fiscal_year": 2025, "saty": "RUSH", "sales_eur": 151991.23, "share_pct": 8.2, "qty": 2143.0, "lines": 1676}, {"fiscal_year": 2025, "saty": "VOR", "sales_eur": 121457.37, "share_pct": 6.55, "qty": 1135.0, "lines": 767}, {"fiscal_year": 2025, "saty": "PRD", "sales_eur": 38350.72, "share_pct": 2.07, "qty": 1713.0, "lines": 32}, {"fiscal_year": 2025, "saty": "CR", "sales_eur": 20087.97, "share_pct": 1.08, "qty": 6.0, "lines": 6}, {"fiscal_year": 2025, "saty": "FD", "sales_eur": 0.0, "share_pct": 0.0, "qty": 2.0, "lines": 1}], "umiSaty24": [{"fiscal_year": 2024, "saty": "SOR", "sales_eur": 2573502.18, "share_pct": 75.05, "qty": 73392.0, "lines": 8670}, {"fiscal_year": 2024, "saty": "VOR", "sales_eur": 470793.81, "share_pct": 13.73, "qty": 12638.0, "lines": 1154}, {"fiscal_year": 2024, "saty": "PRD", "sales_eur": 244441.95, "share_pct": 7.13, "qty": 16726.0, "lines": 202}, {"fiscal_year": 2024, "saty": "CR", "sales_eur": 140141.6, "share_pct": 4.09, "qty": 6542.0, "lines": 6}], "umiSaty25": [{"fiscal_year": 2025, "saty": "SOR", "sales_eur": 2654014.35, "share_pct": 86.18, "qty": 72004.0, "lines": 8524}, {"fiscal_year": 2025, "saty": "VOR", "sales_eur": 239903.37, "share_pct": 7.79, "qty": 5698.0, "lines": 563}, {"fiscal_year": 2025, "saty": "PRD", "sales_eur": 106561.77, "share_pct": 3.46, "qty": 12158.0, "lines": 33}, {"fiscal_year": 2025, "saty": "CR", "sales_eur": 79198.85, "share_pct": 2.57, "qty": 4727.0, "lines": 6}], "imoFy": [1560918.12, 1853613.42], "umiFy": [3428879.54, 3079678.34], "orderSales": {"labels": ["I Motors", "UMI"], "sales": [935394.38, 1197039.44], "demand": [953000, 1419000]}, "peers": [{"code": "PORTUGAL", "spu": 209.1, "uio": 8176, "gps": 48.9, "sales": 1709794.0, "tl": "green"}, {"code": "UMI", "spu": 179.0, "uio": 18542, "gps": 71.6, "sales": 3319344.0, "tl": "green"}, {"code": "UTI", "spu": 322.3, "uio": 10336, "gps": 40.3, "sales": 3331512.0, "tl": "green"}, {"code": "ITUK", "spu": 248.5, "uio": 22389, "gps": 47.0, "sales": 5564544.0, "tl": "green"}, {"code": "IUK", "spu": 128.3, "uio": 47783, "gps": 51.3, "sales": 6131920.0, "tl": "amber"}, {"code": "BELGIUM", "spu": 219.9, "uio": 9594, "gps": 85.9, "sales": 2109332.0, "tl": "green"}, {"code": "IRELAND", "spu": 388.6, "uio": 3056, "gps": 85.4, "sales": 1187459.0, "tl": "green"}], "imoPms": [{"category": "brake_shoe", "capture_rate": 0.1046, "revenue_gap_eur": 45610.99, "actual_rev_eur": 5330.84}, {"category": "clutch_pressure_plate", "capture_rate": 0.2081, "revenue_gap_eur": 34878.73, "actual_rev_eur": 9165.75}, {"category": "air_filter", "capture_rate": 0.507, "revenue_gap_eur": 26414.45, "actual_rev_eur": 27161.99}, {"category": "clutch_disc", "capture_rate": 0.1704, "revenue_gap_eur": 24489.51, "actual_rev_eur": 5031.77}, {"category": "fuel_filter", "capture_rate": 0.3472, "revenue_gap_eur": 13792.38, "actual_rev_eur": 7336.73}, {"category": "oil_filter", "capture_rate": 0.3702, "revenue_gap_eur": 7969.69, "actual_rev_eur": 4685.1}, {"category": "clutch_kit", "capture_rate": 0.806, "revenue_gap_eur": 5068.8, "actual_rev_eur": 21056.73}, {"category": "release_bearing", "capture_rate": 0.2008, "revenue_gap_eur": 4868.17, "actual_rev_eur": 1223.4}, {"category": "brake_pad", "capture_rate": 0.9727, "revenue_gap_eur": 1853.56, "actual_rev_eur": 66114.04}, {"category": "pilot_bearing", "capture_rate": 0.0476, "revenue_gap_eur": 732.85, "actual_rev_eur": 36.6}], "umiPms": [{"category": "clutch_disc", "capture_rate": 0.0023, "revenue_gap_eur": 278955.97, "actual_rev_eur": 646.26}, {"category": "brake_pad", "capture_rate": 0.0519, "revenue_gap_eur": 203316.79, "actual_rev_eur": 11136.21}, {"category": "clutch_pressure_plate", "capture_rate": 0.0316, "revenue_gap_eur": 150401.76, "actual_rev_eur": 4905.94}, {"category": "brake_shoe", "capture_rate": 0.1926, "revenue_gap_eur": 149512.53, "actual_rev_eur": 35668.2}, {"category": "air_filter", "capture_rate": 0.1071, "revenue_gap_eur": 140636.12, "actual_rev_eur": 16867.5}, {"category": "fuel_filter", "capture_rate": 0.3769, "revenue_gap_eur": 57145.28, "actual_rev_eur": 34566.7}, {"category": "clutch_kit", "capture_rate": 0.0216, "revenue_gap_eur": 49934.04, "actual_rev_eur": 1100.96}, {"category": "blower_filter", "capture_rate": 0.0401, "revenue_gap_eur": 41719.82, "actual_rev_eur": 1741.2}, {"category": "release_bearing", "capture_rate": 0.0642, "revenue_gap_eur": 25950.56, "actual_rev_eur": 1780.45}, {"category": "oil_filter", "capture_rate": 0.7607, "revenue_gap_eur": 12709.06, "actual_rev_eur": 40392.92}], "imoCatH1": [{"name": "OTHERS", "eur": 668000, "pct": 71.37, "yoy": 17}, {"name": "COMPETITIVE PARTS", "eur": 84000, "pct": 8.98, "yoy": -27}, {"name": "EMISSION RELATED PARTS", "eur": 72000, "pct": 7.74, "yoy": 87}, {"name": "PANEL PARTS", "eur": 50000, "pct": 5.34, "yoy": 5}, {"name": "ENGINE PARTS", "eur": 31000, "pct": 3.29, "yoy": 77}, {"name": "LARGE PARTS", "eur": 12000, "pct": 1.28, "yoy": 41}, {"name": "GLASS PARTS", "eur": 11000, "pct": 1.18, "yoy": 46}, {"name": "SEMI COMPETITIVE PARTS", "eur": 8000, "pct": 0.82, "yoy": -7}], "umiCatH1": [{"name": "OTHERS", "eur": 889000, "pct": 74.25, "yoy": -17}, {"name": "EMISSION RELATED PARTS", "eur": 153000, "pct": 12.8, "yoy": -29}, {"name": "COMPETITIVE PARTS", "eur": 87000, "pct": 7.28, "yoy": -29}, {"name": "PANEL PARTS", "eur": 49000, "pct": 4.07, "yoy": 4}, {"name": "GLASS PARTS", "eur": 8000, "pct": 0.68, "yoy": 277}, {"name": "SEMI COMPETITIVE PARTS", "eur": 7000, "pct": 0.59, "yoy": -1}, {"name": "ENGINE PARTS", "eur": 4000, "pct": 0.32, "yoy": -62}], "imoSrcH1": [{"name": "JP", "eur": 547764, "pct": 58.56, "yoy": 23.18}, {"name": "TH", "eur": 407631, "pct": 43.58, "yoy": 10.3}, {"name": "OTHER", "eur": -20000, "pct": -2.14, "yoy": null}], "umiSrcH1": [{"name": "TH", "eur": 939036, "pct": 78.45, "yoy": -16.36}, {"name": "JP", "eur": 202071, "pct": 16.88, "yoy": -18.87}, {"name": "LOCAL", "eur": 75933, "pct": 6.34, "yoy": -54.97}, {"name": "OTHER", "eur": -20000, "pct": -1.67, "yoy": -69.23}]};
+const ink='#52514e', grid='#e1e0d9', navy='#2a78d6', terra='#c0552d', good='#1d9e75', bad='#e24b4a', grey='#888780';
+new Chart(cFy,{type:'bar',data:{labels:['FY2024','FY2025'],datasets:[
+  {label:'I Motors',data:D.imoFy,backgroundColor:navy,borderRadius:4,barThickness:36},
+  {label:'UMI',data:D.umiFy,backgroundColor:terra,borderRadius:4,barThickness:36}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},
+  scales:{y:{ticks:{callback:v=>'€'+(v/1e6).toFixed(1)+'M',color:ink},grid:{color:grid}},x:{ticks:{color:ink},grid:{display:false}}}}});
+function monthly(id,rows,color){
+  const a=rows.filter(r=>r.fiscal_year===2024), b=rows.filter(r=>r.fiscal_year===2025);
+  const labels=[...a.map(r=>r.ym.slice(5)),'|',...b.map(r=>r.ym.slice(5))];
+  const data=[...a.map(r=>r.sales_eur),null,...b.map(r=>r.sales_eur)];
+  new Chart(document.getElementById(id),{type:'bar',data:{labels,datasets:[{data,backgroundColor:data.map((v,i)=>i===a.length?'transparent':color),borderRadius:2,barThickness:9}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:'FY2024 | FY2025',color:ink}},
+      scales:{y:{ticks:{callback:v=>'€'+(v/1000).toFixed(0)+'K',color:ink},grid:{color:grid}},x:{ticks:{color:ink,maxRotation:90,font:{size:8}},grid:{display:false}}}}});
+}
+monthly('cImoM',D.imoMonthly,navy); monthly('cUmiM',D.umiMonthly,terra);
+new Chart(cOrd,{type:'bar',data:{labels:D.orderSales.labels,datasets:[
+  {label:'Sales H1',data:D.orderSales.sales,backgroundColor:navy,borderRadius:4,barThickness:28},
+  {label:'Demand H1',data:D.orderSales.demand,backgroundColor:terra,borderRadius:4,barThickness:28}
+]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},
+  scales:{y:{ticks:{callback:v=>'€'+(v/1000).toFixed(0)+'K',color:ink},grid:{color:grid}},x:{ticks:{color:ink},grid:{display:false}}}}});
+function doughnut(id,rows){const r=(rows||[]).filter(x=>x.eur>0);
+  new Chart(document.getElementById(id),{type:'doughnut',data:{labels:r.map(x=>x.name+' '+x.pct.toFixed(0)+'%'),datasets:[{data:r.map(x=>x.eur),backgroundColor:[navy,terra,good,grey]}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});}
+doughnut('cUmiSrc',D.umiSrcH1); doughnut('cImoSrc',D.imoSrcH1);
+function saty(id,a,b){const keys=[...new Set([...a,...b].map(x=>x.saty))].filter(k=>k&&k!=='(blank)');
+  new Chart(document.getElementById(id),{type:'bar',data:{labels:keys,datasets:[
+    {label:'FY2024',data:keys.map(k=>(a.find(x=>x.saty===k)||{}).share_pct||0),backgroundColor:grey,barThickness:16},
+    {label:'FY2025',data:keys.map(k=>(b.find(x=>x.saty===k)||{}).share_pct||0),backgroundColor:navy,barThickness:16}
+  ]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}},
+    scales:{x:{max:100,ticks:{callback:v=>v+'%',color:ink},grid:{color:grid}},y:{ticks:{color:ink},grid:{display:false}}}}});}
+saty('cImoSaty',D.imoSaty24,D.imoSaty25); saty('cUmiSaty',D.umiSaty24,D.umiSaty25);
+new Chart(cPeers,{type:'bar',data:{labels:D.peers.map(p=>p.code),datasets:[{label:'SPU',data:D.peers.map(p=>p.spu),
+  backgroundColor:D.peers.map(p=>p.code==='UMI'?terra:(p.code==='PORTUGAL'?navy:grey)),borderRadius:4,barThickness:22}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},title:{display:true,text:'Peer SPU — IDS Israel = UMI network',color:ink}},
+    scales:{x:{ticks:{callback:v=>'€'+v,color:ink},grid:{color:grid}},y:{ticks:{color:ink},grid:{display:false}}}}});
+function pms(id,rows){new Chart(document.getElementById(id),{type:'bar',data:{labels:rows.map(r=>r.category+' · '+(r.capture_rate*100).toFixed(0)+'%'),
+  datasets:[{data:rows.map(r=>r.revenue_gap_eur),backgroundColor:bad,borderRadius:4,barThickness:16}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{x:{ticks:{callback:v=>'€'+(v/1000).toFixed(0)+'K',color:ink},grid:{color:grid}},y:{ticks:{color:ink,font:{size:10}},grid:{display:false}}}}});}
+pms('cImoPms',D.imoPms); pms('cUmiPms',D.umiPms);
+function cats(id,rows,color){const r=(rows||[]).slice().sort((a,b)=>b.eur-a.eur);
+  new Chart(document.getElementById(id),{type:'bar',data:{labels:r.map(x=>x.name),datasets:[{data:r.map(x=>x.eur),backgroundColor:r.map(x=>(x.yoy||0)<0?bad:color),borderRadius:4,barThickness:14}]},
+  options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{x:{ticks:{callback:v=>'€'+(v/1000).toFixed(0)+'K',color:ink},grid:{color:grid}},y:{ticks:{color:ink,font:{size:10}},grid:{display:false}}}}});}
+cats('cImoCat',D.imoCatH1,navy); cats('cUmiCat',D.umiCatH1,terra);
+</script>
+</body></html>

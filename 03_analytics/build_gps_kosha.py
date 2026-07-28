@@ -133,7 +133,7 @@ DB_ORDER = [
 # 48.27→46.39M).  KOSHA_DB FY2028–FY2030 is a fixed-share top-down allocation,
 # so rescale FY2029/FY2030 per-DB to the new totals — preserves every DB's share
 # exactly.  FY2027 (bespoke bottom-up) and FY2028 (already on target) untouched.
-_PLAN = ISZE_ROOT / "01_data" / "ISZE PL Plan FY2026 2027 2028 20260205_2 -.xlsx"
+_PLAN = ISZE_ROOT / "01_data" / "11_planning" / "ISZE PL Plan FY2026 2027 2028 20260205_2 -.xlsx"
 def _revised_vp():
     ws = openpyxl.load_workbook(_PLAN, data_only=True)["IX study"]
     return {2029: float(ws.cell(186, 9).value), 2030: float(ws.cell(186, 10).value)}  # I186, J186
@@ -791,7 +791,7 @@ def main():
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     wb.save(str(OUT))
-    print(f"Saved → {OUT}")
+    print(f"Saved -> {OUT}")
     print(f"Sheets: {[ws.title for ws in wb.worksheets]}")
     print(f"UMI FY25 warranty: €{WARRANTY_FY25['UMI']:,.0f}  (was 0)")
     print(f"Network FY25 total warranty: €{sum(WARRANTY_FY25.values()):,.0f}")

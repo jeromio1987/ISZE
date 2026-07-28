@@ -12,7 +12,7 @@
 | **Day-to-day analysis** | Streamlit PRISM (`run_prism.ps1` · 8503) | Filters, decision models, PDF export |
 | **Internal SQL-native boards** | Evidence (`run_evidence.ps1` · 3000) | Deep dives, SQL boards — not the public face |
 | **Sandbox interactivity** | Dash (`run_dash.ps1` · 8050) | Offset Insights experiments only |
-| **Legacy ops** | ISZE_Dashboard | Until merged into PRISM — no new pages |
+| **Legacy ops** | ISZE_Dashboard | **Keep as ops sandbox** (closed 2026-07-26 — no merge timeline). Fold pages into PRISM only when used *and* needing filters/export. |
 
 **Rule:** One spine (`01_data/derived/`). UI choice is presentation only. Do not rebuild the same KPI in HTML *and* Evidence unless HTML is the published export of that view.
 
@@ -27,7 +27,7 @@
 | Primary external UI | **GitHub Pages HTML** — already deployed, shareable, no local server |
 | Evidence role | **Internal / workshop** — rebuild static HTML when a view is ready to publish |
 | Dash role | **Keep** for Offset Insights until ported or retired |
-| ISZE_Dashboard | **Sandbox** — fold into PRISM when ops pages have PRISM equivalents |
+| ISZE_Dashboard | **Ops sandbox (indefinite)** — no forced merge; HTML remains the only public face |
 
 ---
 

@@ -11,7 +11,7 @@ _DEFAULT_CONSUMABLE: dict[str, float] = {
     "fuel_filter": 1.0,
     "air_filter": 0.5,  # PROVISIONAL (air element ~every 2nd service vs oil every service) — confirm with IML; added 2026-07-02
     "urea_filter": 1.0,
-    "blower_filter": 0.25,
+    "blower_filter": 1.0,  # Jerome 2026-07-26 — align with oil/fuel/urea; was 0.25 cabin placeholder
 }
 
 _DEFAULT_WEAR: dict[str, float] = {

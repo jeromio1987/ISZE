@@ -56,7 +56,7 @@ These live in `parc_config` defaults (`pms_engine.DEFAULT_PARC_CONFIG`) / `pms_c
 | fuel_filter | 1.00 | 0.35 | Assumption. Pending IML. |
 | **air_filter** | **0.50** | **0.175** | **Claude provisional 2026-07-02** — air element ~every 2nd service vs oil every service (flag C interval-aware fix; was 1.0 flat, which deflated air capture ~2×). Confirm with IML. |
 | urea_filter | 1.00 | 0.35 | Assumption. Pending IML. |
-| blower_filter | 0.25 | 0.09 | Assumption (cabin filter less frequent). Pending IML. |
+| blower_filter | 1.00 | 0.35 | **Jerome 2026-07-26** — same as oil/fuel/urea (1 element per addressable service). Was 0.25 cabin/100k placeholder; that understated demand network-wide. **ITUK pilot / Model B lane unchanged.** |
 
 **Wear parts** (`wear_factor`):
 

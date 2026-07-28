@@ -15,7 +15,7 @@ consumable_factor:
   fuel_filter: 1.0
   air_filter: 0.5   # PROVISIONAL (air element ~every 2nd service vs oil every service) — confirm with IML; added 2026-07-02 (was 1.0 flat — integrity flag C)
   urea_filter: 1.0
-  blower_filter: 0.25
+  blower_filter: 1.0   # Jerome 2026-07-26 — same as oil/fuel/urea (not 100k cabin / 0.25 placeholder). ITUK pilot lane unchanged.
 
 wear_factor:
   # Every key here becomes a P1 capture category (modules/pms_capture_config.P1_CATEGORIES).

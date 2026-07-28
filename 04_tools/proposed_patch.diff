@@ -1,25 +1,24 @@
-⚠ REQUIRES JEROME REVIEW — DO NOT AUTO-APPLY. Generated 2026-07-19 by isze-scraper-healthcheck-autofix.
+⚠ GENERATED 2026-07-27 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
 
-# No patch proposed this run (2026-07-19).
+# No patch proposed this run (2026-07-27).
 #
-# The two hunks carried in the 2026-07-12 version of this file are both
-# confirmed applied — leaving them here as stale diffs risked you
-# re-applying something already done, so this file has been cleared.
+# Nothing diagnosed this run is a diffable code fix:
 #
-#   - Hunk 1 (Tender Monitor Task Scheduler XML dead-path fix): applied,
-#     task re-imported per your 2026-07-14 note in manual_review_required.md.
-#     Confirmed working this run — two clean scraper runs on 2026-07-16
-#     with fresh tender_data.json output (meta.generated_at 2026-07-16T11:36:34Z).
-#   - Hunk 2 (autodoc_scraper.py no-results price-artifact guard): applied
-#     2026-07-14 per your note, line ~215. Autodoc itself has been out of
-#     scope since 2026-07-14 (Cloudflare-blocked, retired) so this fix is
-#     dormant but harmless.
-#
-# Nothing diagnosed this run met the bar for a new diff. The two open
-# issues (Israel RSS undefined-entity parse error, Belgium RSS non-XML
-# response) are unchanged since 2026-06-28 and remain in the "needs a
-# live test against the actual feed, can't safely propose exact lines
-# blind" category — see manual_review_required.md Items 2 and 3 for the
-# suggested-but-untested approaches carried forward from prior runs.
+#   - KS / Tranzparts / TMC / Auto365 (all allowlisted): ran clean with
+#     0 errors in the 2026-07-26 manual refresh, and KS was mid-refresh
+#     again via the Monday 07:00 scheduled task at the time of this
+#     check (119/300 rows written, no errors observed). No bug found,
+#     nothing to patch.
+#   - Mekonomen (allowlisted): confirmed broken, but the cause is a
+#     missing Playwright browser executable (environment/dependency
+#     issue), not a URL/selector string in the script. This fails the
+#     auto-apply gate ("string updates only") and there is no in-script
+#     line to change — see manual_review_required.md Item 1 for the
+#     full traceback and suggested fix (run `playwright install`, check
+#     PLAYWRIGHT_BROWSERS_PATH).
+#   - Tender (propose-only regardless): Israel RSS undefined-entity
+#     parse error and Belgium RSS non-XML response are both unchanged
+#     since 2026-06-28 — see manual_review_required.md Items 3 and 4 for
+#     the suggested-but-untested code, carried forward again this run.
 #
 # This file intentionally contains no diff hunks this run. Do not git apply.

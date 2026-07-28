@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PMS Progress — ITUK N75 pilot + UTI · ISZE / IML</title>
+<style>
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;font-size:14px;line-height:1.45;background:#e8e4dc;}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0;}
+.page{max-width:980px;margin:0 auto 18px;background:#fff;padding:28px 32px 36px;box-shadow:0 1px 6px rgba(0,0,0,.08);}
+.cover{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:40px 36px 44px;margin:0 auto 18px;max-width:980px;}
+.cover h1{color:#fff;font-size:32px;line-height:1.15;max-width:18ch;}
+.cover .rule{width:64px;height:3px;background:#c0552d;margin:18px 0 16px;}
+.cover .meta{font-size:14px;opacity:.92;max-width:52ch;}
+.cover .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;}
+.chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:6px 12px;font-size:12px;border-radius:2px;}
+.chip.warn{background:rgba(192,85,45,.35);border-color:#c0552d;}
+h2.sec{font-size:20px;margin:0 0 6px;padding-bottom:8px;border-bottom:2px solid #1a2b4a;}
+h2.sec .no{color:#c0552d;}
+.lead{color:#6b6256;font-size:13px;margin:0 0 18px;}
+.callout{border-left:3px solid #c0552d;background:#f7f4ee;padding:12px 14px;margin:0 0 18px;}
+.callout.ok{border-left-color:#1d9e75;}
+.callout.flag{border-left-color:#c0552d;background:#fbf0ea;}
+.callout b{color:#1a2b4a;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0;}
+.kpi{background:#f7f4ee;padding:14px 16px;border-top:3px solid #1a2b4a;}
+.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#6b6256;}
+.kpi .val{font-family:Georgia,serif;font-size:28px;color:#1a2b4a;margin-top:4px;}
+.kpi .sub{font-size:12px;color:#6b6256;margin-top:4px;}
+.kpi.gap{border-top-color:#c0552d;}
+.kpi.gap .val{color:#c0552d;}
+table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:13px;}
+th{background:#1a2b4a;color:#fff;text-align:left;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.03em;}
+td{padding:8px 10px;border-bottom:1px solid #d9d3c8;}
+tbody tr:nth-child(even){background:#f7f4ee;}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:2px;vertical-align:middle;}
+.tag.pilot{background:#1a2b4a;color:#fff;}
+.tag.phase{background:#2a78d6;color:#fff;}
+.tag.defer{background:#888780;color:#fff;}
+.tag.vin{background:#c0552d;color:#fff;}
+.tag.cy{background:#1d9e75;color:#fff;}
+.barrow{display:grid;grid-template-columns:140px 1fr 64px;gap:10px;align-items:center;margin:7px 0;}
+.barrow .name{font-size:13px;font-weight:600;color:#1a2b4a;}
+.track{height:22px;background:#eee9e0;border-radius:3px;overflow:hidden;position:relative;}
+.fill{height:100%;border-radius:3px;display:flex;align-items:center;}
+.fill.ituk{background:#1a2b4a;}
+.fill.uti{background:#c0552d;}
+.fill.dlr{background:#2a78d6;}
+.fill span{color:#fff;font-size:11px;font-weight:700;padding-left:8px;}
+.pct{font-variant-numeric:tabular-nums;font-weight:700;color:#1a2b4a;text-align:right;}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;margin:4px 0 12px;color:#6b6256;}
+.sw{width:12px;height:12px;display:inline-block;border-radius:2px;margin-right:5px;vertical-align:middle;}
+.matrix td.cell{text-align:center;font-weight:700;font-variant-numeric:tabular-nums;}
+.g{background:#e6f5ef;color:#2e7d54;}
+.a{background:#fbf0d8;color:#8a6a00;}
+.r{background:#f8e4e3;color:#b23b3b;}
+.ask{margin:0;padding-left:18px;}
+.ask li{margin:6px 0;}
+.footer{margin-top:22px;padding-top:10px;border-top:1px solid #d9d3c8;font-size:11px;color:#6b6256;line-height:1.5;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media print{
+  body{background:#fff;}
+  .page,.cover{box-shadow:none;margin-bottom:0;page-break-after:always;}
+  .page:last-child{page-break-after:auto;}
+}
+@media(max-width:720px){
+  .grid2,.grid3,.two-col{grid-template-columns:1fr;}
+  .barrow{grid-template-columns:110px 1fr 52px;}
+}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;">ISZE × IML · Meeting pack</div>
+  <h1>PMS progress — clear &amp; comparable</h1>
+  <div class="rule"></div>
+  <p class="meta">ITUK N75 pilot (distributor + dealer) · UTI distributor snapshot · same IML service schedule on both markets.</p>
+  <div class="chips">
+    <span class="chip">Period: <b>CY2025</b> (dealer sell-out)</span>
+    <span class="chip warn">No dealer sales through 31/03/2026 yet</span>
+    <span class="chip">Basis: IML service schedule</span>
+    <span class="chip">Pilot scope: N75 · brake + air first</span>
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">0</span> How to read this pack</h2>
+  <p class="lead">One screen of rules — then numbers. Same service schedule on ITUK and UTI so the bars are comparable.</p>
+
+  <div class="callout ok">
+    <b>Data period locked.</b> Dealer sell-out (distributor → dealer) exists for <b>calendar 2025 only</b>.
+    We do <b>not</b> have ITUK/UTI dealer sales through <b>31/03/2026</b>. All dealer charts below = CY2025.
+    ISZE → distributor billing has Jan–Mar 2026, but that is <b>not</b> dealer sell-out — this pack stays on one period.
+  </div>
+
+  <div class="grid2">
+    <div>
+      <h3 style="font-size:15px;margin-bottom:8px;">Two layers (do not mix)</h3>
+      <table>
+        <thead><tr><th>Layer</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><b>Distributor (DB)</b></td><td>ISZE → distributor (billing). Cover vs expected demand on the IML service schedule.</td></tr>
+          <tr><td><b>Dealer (DLR)</b></td><td>Distributor → dealers (sell-out). ITUK only — dealers with mapped PMS quantities.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="font-size:15px;margin-bottom:8px;">IML service schedule (shared)</h3>
+      <table>
+        <thead><tr><th>Family</th><th>Freq</th></tr></thead>
+        <tbody>
+          <tr><td>Oil / fuel / air</td><td>1.25× / yr</td></tr>
+          <tr><td>Brake / clutch</td><td>0.5× / yr</td></tr>
+          <tr><td>Addressable</td><td>100%</td></tr>
+        </tbody>
+      </table>
+      <p class="lead" style="margin-top:8px;">Source: ISZE–ITUK PMS analysis &amp; business case (Apr 2026), aligned with the IML intervals used in that work.</p>
+    </div>
+  </div>
+
+  <div class="callout flag">
+    <span class="tag vin">VIN</span>
+    <b> Clutch % is provisional.</b> Denominator today uses the agreed parc convention (~47% of UIO = clutch-relevant fleet).
+    ITUK has confirmed VIN / model-year format is <b>not available</b> in the form IML requested (Mar 2026).
+    Without transmission split we cannot prove “clutch PMS % on manuals only”. Tagged on every clutch row below.
+  </div>
+</section>
+
+<!-- 0b HOW PMS IS DONE -->
+<section class="page">
+  <h2 class="sec"><span class="no">0b</span> How PMS is being run (shared picture)</h2>
+  <p class="lead">Same programme, two roles — so the meeting stays aligned on method.</p>
+
+  <div class="grid2">
+    <div>
+      <h3 style="font-size:15px;margin-bottom:8px;">IML — study &amp; promotion design</h3>
+      <table>
+        <tbody>
+          <tr><td><b>1</b></td><td>Demand = UIO × km/yr × replacement frequency by FIG-KEY / category</td></tr>
+          <tr><td><b>2</b></td><td>Cover % = actual sales ÷ that expected demand (IML service schedule)</td></tr>
+          <tr><td><b>3</b></td><td>Select promotion basket → sales promotion activities</td></tr>
+          <tr><td><b>4</b></td><td>Face-to-face to finalise (UK visit · EU conference · Japan Aug)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="font-size:15px;margin-bottom:8px;">ITUK — data &amp; execution</h3>
+      <table>
+        <tbody>
+          <tr><td><b>1</b></td><td>Supply UIO / R&amp;M / dealer sell-out (practical UK formats)</td></tr>
+          <tr><td><b>2</b></td><td>Review replacement frequencies → target items → promotion plan</td></tr>
+          <tr><td><b>3</b></td><td>Phase-one scope: <b>N75</b> · brake + air first · clutch deferred</td></tr>
+          <tr><td><b>4</b></td><td>PMS as one lever; also higher-value categories + dealer engagement</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout ok">
+    <b>ISZE role in this pack.</b> Put both markets on the <b>same IML service schedule</b>, show distributor + dealer layers for ITUK,
+    and flag where data still blocks a clean % (especially clutch / VIN).
+  </div>
+
+  <table>
+    <thead><tr><th>Milestone</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>CY2025 dealer sell-out (PN + fig-key)</td><td>Received · used in this pack</td></tr>
+      <tr><td>Dealer sell-out 01/01–31/03/2026</td><td><b>Outstanding</b> — same file shape needed</td></tr>
+      <tr><td>VIN / transmission for clutch</td><td><b>Blocked</b> — not available in requested format</td></tr>
+      <tr><td>Japan PMS finalisation window</td><td><b>18–19 Aug 2026</b> (ITUK availability)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">1</span> ITUK — N75 pilot cut <span class="tag pilot">UIO 9,359</span></h2>
+  <p class="lead">Same service schedule (50k km/yr · oil/fuel every 40k per GIDSS NPR75 MY24). Parc limited to N75 (both engine gens). Phase-one = brake + air.</p>
+
+  <div class="grid3">
+    <div class="kpi"><div class="lbl">Oil · distributor (N75)</div><div class="val">40.0%</div><div class="sub">4,673 / 11,699 expected</div></div>
+    <div class="kpi"><div class="lbl">Oil · dealer (N75)</div><div class="val" style="color:#2a78d6">46.2%</div><div class="sub">5,404 / 11,699 · WS2025 PN split</div></div>
+    <div class="kpi gap"><div class="lbl">N75 revenue gap</div><div class="val">~€0.65M</div><div class="sub">5 cat · subset of full DVLA — do not add to €2.04M</div></div>
+  </div>
+
+  <div class="legend">
+    <span><i class="sw" style="background:#1a2b4a"></i> N75 distributor</span>
+    <span><i class="sw" style="background:#2a78d6"></i> N75 dealer</span>
+    <span><span class="tag phase">Phase-one</span> brake + air</span>
+  </div>
+  <div class="barrow"><div class="name">Oil · N75 DB</div><div class="track"><div class="fill ituk" style="width:40%"><span>40.0%</span></div></div><div class="pct">40.0%</div></div>
+  <div class="barrow"><div class="name">Oil · N75 DLR</div><div class="track"><div class="fill dlr" style="width:46.2%"><span>46.2%</span></div></div><div class="pct">46.2%</div></div>
+  <div class="barrow"><div class="name">Air · N75 DB <span class="tag phase">P1</span></div><div class="track"><div class="fill ituk" style="width:19%"><span>19.0%</span></div></div><div class="pct">19.0%</div></div>
+  <div class="barrow"><div class="name">Brake · N75 DB <span class="tag phase">P1</span></div><div class="track"><div class="fill ituk" style="width:62%"><span>62.0%</span></div></div><div class="pct">62.0%</div></div>
+  <div class="barrow"><div class="name">Fuel · N75 DB</div><div class="track"><div class="fill ituk" style="width:94.2%"><span>94.2%</span></div></div><div class="pct">94.2%</div></div>
+
+  <div class="callout">
+    <b>GIDSS (Rene / workshop manual).</b> Current NPR75 (4HK1) oil filter + fuel filter = <b>replace every 40,000 km</b> — supports this schedule.
+    Mar kick-off oil-at-20k does <b>not</b> match current GIDSS (older MY14 oil was 22.5k). Annual km/yr remains a planning assumption.
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Category</th><th class="num">Cover DB</th><th class="num">Cover DLR</th><th class="num">Actual DB</th><th class="num">Expected</th><th>Note</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Oil filter</td><td class="num">40.0%</td><td class="num">46.2%</td><td class="num">4,673</td><td class="num">11,699</td><td>Pilot oil headline</td></tr>
+      <tr><td>Fuel filter</td><td class="num">94.2%</td><td class="num">95.2%</td><td class="num">11,021</td><td class="num">11,699</td><td>Near full on N75</td></tr>
+      <tr><td>Air filter <span class="tag phase">P1</span></td><td class="num">19.0%</td><td class="num">19.6%</td><td class="num">2,226</td><td class="num">11,699</td><td>Phase-one</td></tr>
+      <tr><td>Brake <span class="tag phase">P1</span></td><td class="num">62.0%</td><td class="num">62.5%</td><td class="num">2,902</td><td class="num">4,680</td><td>Phase-one</td></tr>
+      <tr><td>Clutch <span class="tag vin">VIN</span></td><td class="num">11.0%</td><td class="num">15.5%</td><td class="num">243</td><td class="num">2,199</td><td>Deferred · ~47% MT convention</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">N75 DB actuals are share-scaled; N75 DLR is bottom-up PN (ex N35 + F). Excel sheets 02b / 03b.</div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">1b</span> ITUK — full DVLA context <span class="tag cy">UIO 22,389</span></h2>
+  <p class="lead">Network ruler on the same schedule — full DVLA, not the pilot parc. Use when comparing to UTI or quoting the €2.04M gap.</p>
+
+  <div class="grid3">
+    <div class="kpi"><div class="lbl">Oil filter cover</div><div class="val">35.1%</div><div class="sub">9,818 / 27,986 expected</div></div>
+    <div class="kpi"><div class="lbl">Weighted cover (5 cat)</div><div class="val">35.9%</div><div class="sub">Filters + brake + clutch</div></div>
+    <div class="kpi gap"><div class="lbl">PMS revenue gap</div><div class="val">€2.04M</div><div class="sub">5 categories · CY2025</div></div>
+  </div>
+
+  <div class="legend">
+    <span><i class="sw" style="background:#1a2b4a"></i> Cover %</span>
+    <span><span class="tag phase">Phase-one</span> brake + air</span>
+    <span><span class="tag defer">Deferred</span> clutch</span>
+  </div>
+
+  <div class="barrow"><div class="name">Air filter <span class="tag phase">P1</span></div><div class="track"><div class="fill ituk" style="width:13.2%"><span>13.2%</span></div></div><div class="pct">€736k</div></div>
+  <div class="barrow"><div class="name">Brake <span class="tag phase">P1</span></div><div class="track"><div class="fill ituk" style="width:35.3%"><span>35.3%</span></div></div><div class="pct">€642k</div></div>
+  <div class="barrow"><div class="name">Oil filter</div><div class="track"><div class="fill ituk" style="width:35.1%"><span>35.1%</span></div></div><div class="pct">€141k</div></div>
+  <div class="barrow"><div class="name">Fuel filter</div><div class="track"><div class="fill ituk" style="width:65.1%"><span>65.1%</span></div></div><div class="pct">€127k</div></div>
+  <div class="barrow"><div class="name">Clutch <span class="tag defer">defer</span> <span class="tag vin">VIN</span></div><div class="track"><div class="fill ituk" style="width:7.8%"><span>7.8%</span></div></div><div class="pct">€393k</div></div>
+
+  <table>
+    <thead>
+      <tr><th>Category</th><th class="num">Cover</th><th class="num">Actual</th><th class="num">Expected</th><th class="num">Gap €</th><th>Pilot note</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Air filter</td><td class="num">13.2%</td><td class="num">3,692</td><td class="num">27,986</td><td class="num">736,037</td><td>Phase-one · largest € leak</td></tr>
+      <tr><td>Brake</td><td class="num">35.3%</td><td class="num">3,953</td><td class="num">11,194</td><td class="num">641,833</td><td>Phase-one · IAM price gap</td></tr>
+      <tr><td>Oil filter</td><td class="num">35.1%</td><td class="num">9,818</td><td class="num">27,986</td><td class="num">140,602</td><td>Service-pack support</td></tr>
+      <tr><td>Fuel filter</td><td class="num">65.1%</td><td class="num">18,228</td><td class="num">27,986</td><td class="num">127,440</td><td>Best filter cover</td></tr>
+      <tr><td>Clutch <span class="tag vin">VIN</span></td><td class="num">7.8%</td><td class="num">411</td><td class="num">5,274</td><td class="num">392,559</td><td>Deferred · ~47% UIO clutch parc</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">Full DVLA context for network / UTI comparison. Pilot execution stays on N75 (§1).</div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">2</span> ITUK — dealer level <span class="tag cy">CY2025 sell-out</span></h2>
+  <p class="lead">Full-parc dealer sell-out vs distributor (network ruler). N75 dealer cut is in §1.</p>
+
+  <div class="grid2">
+    <div class="kpi"><div class="lbl">Oil filter · distributor</div><div class="val">35.1%</div><div class="sub">ISZE → ITUK · full DVLA</div></div>
+    <div class="kpi"><div class="lbl">Oil filter · dealer sell-out</div><div class="val" style="color:#2a78d6">40.6%</div><div class="sub">ITUK → dealers · CY2025</div></div>
+  </div>
+
+  <div class="legend">
+    <span><i class="sw" style="background:#1a2b4a"></i> Distributor</span>
+    <span><i class="sw" style="background:#2a78d6"></i> Dealer</span>
+  </div>
+  <div class="barrow"><div class="name">Oil · DB</div><div class="track"><div class="fill ituk" style="width:35.1%"><span>35.1%</span></div></div><div class="pct">35.1%</div></div>
+  <div class="barrow"><div class="name">Oil · DLR</div><div class="track"><div class="fill dlr" style="width:40.6%"><span>40.6%</span></div></div><div class="pct">40.6%</div></div>
+
+  <div class="callout">
+    <b>Reading.</b> Dealer cover (40.6%) sits above distributor (35.1%) — stock / channel timing can explain part of the gap.
+    Dealer ranking below is a <b>relative</b> network benchmark (median category share), not a second absolute demand model.
+  </div>
+
+  <h3 style="font-size:15px;margin:18px 0 8px;">Largest relative PMS gaps by dealer (CY2025)</h3>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Dealer</th><th class="num">Gap € (rel.)</th><th>Signal</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Motus Group UK Ltd</td><td class="num">9,726</td><td>Fuel + air + oil below median share</td></tr>
+      <tr><td>2</td><td>Sapphire Vehicle Services</td><td class="num">5,959</td><td>Broad under-index vs network</td></tr>
+      <tr><td>3</td><td>Ferndown Commercials Ltd</td><td class="num">5,277</td><td>Fuel share soft; volume dealer</td></tr>
+      <tr><td>4</td><td>Harry Moore Commercials</td><td class="num">3,615</td><td>Oil + fuel below median</td></tr>
+      <tr><td>5</td><td>SW Commercials Ltd</td><td class="num">3,016</td><td>Follow-up candidate</td></tr>
+    </tbody>
+  </table>
+
+  <p class="lead" style="margin-top:14px;">Oil-filter share laggards (vs network median ~5.5% of dealer PMS units)</p>
+  <table>
+    <thead><tr><th>Dealer</th><th class="num">Oil qty</th><th class="num">Share</th><th class="num">Gap units</th></tr></thead>
+    <tbody>
+      <tr><td>Waldron Commercials</td><td class="num">42</td><td class="num">2.2%</td><td class="num">64</td></tr>
+      <tr><td>Truck &amp; Bus Cymru</td><td class="num">37</td><td class="num">2.5%</td><td class="num">43</td></tr>
+      <tr><td>Andy Powell Commercials</td><td class="num">46</td><td class="num">2.9%</td><td class="num">42</td></tr>
+      <tr><td>Motus Group UK</td><td class="num">303</td><td class="num">3.0%</td><td class="num">246</td></tr>
+      <tr><td>T&amp;M Commercials</td><td class="num">234</td><td class="num">3.3%</td><td class="num">152</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">UTI sell-out files have <b>no dealer grain</b> (network aggregate only) — dealer map is ITUK-only in this pack.</div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">3</span> UTI — distributor level (same schedule)</h2>
+  <p class="lead">Not an IML pilot contract — progress snapshot so both markets can be compared on one ruler. UIO 10,336 · IML service schedule · total sales line.</p>
+
+  <div class="grid3">
+    <div class="kpi"><div class="lbl">Filters cover (qty Σ)</div><div class="val">54.7%</div><div class="sub">Oil + fuel + air</div></div>
+    <div class="kpi"><div class="lbl">Brakes cover</div><div class="val">10.7%</div><div class="sub">Main UTI € gap family</div></div>
+    <div class="kpi gap"><div class="lbl">Clutch family <span class="tag vin">VIN</span></div><div class="val">20.3%</div><div class="sub">~47% UIO convention — not Israel-verified</div></div>
+  </div>
+
+  <h3 style="font-size:15px;margin:8px 0;">Category detail — UTI</h3>
+  <table>
+    <thead>
+      <tr><th>Category</th><th class="num">Cover</th><th class="num">Actual</th><th class="num">Expected</th><th class="num">Gap €</th><th>Note</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Oil filter</td><td class="num">31.3%</td><td class="num">4,046</td><td class="num">12,920</td><td class="num">90,136</td><td>Below ITUK 35.1%</td></tr>
+      <tr><td>Fuel filter</td><td class="num">74.8%</td><td class="num">9,663</td><td class="num">12,920</td><td class="num">28,642</td><td>Stronger than ITUK</td></tr>
+      <tr><td>Air filter</td><td class="num">58.1%</td><td class="num">7,505</td><td class="num">12,920</td><td class="num">101,931</td><td>Far above ITUK 13.2%</td></tr>
+      <tr><td>Brake pad</td><td class="num">26.7%</td><td class="num">551</td><td class="num">2,067</td><td class="num">116,314</td><td>Largest single gap €</td></tr>
+      <tr><td>Clutch kit <span class="tag vin">VIN</span></td><td class="num">108.9%</td><td class="num">442</td><td class="num">406</td><td class="num">0</td><td>Over 100% = mix / weighting artefact until VIN split</td></tr>
+      <tr><td>Clutch disc <span class="tag vin">VIN</span></td><td class="num">4.3%</td><td class="num">23</td><td class="num">541</td><td class="num">24,807</td><td>Manual-only truth unknown</td></tr>
+      <tr><td>Clutch PP <span class="tag vin">VIN</span></td><td class="num">4.8%</td><td class="num">26</td><td class="num">541</td><td class="num">33,727</td><td>Same VIN ask</td></tr>
+      <tr><td>Clutch booster <span class="tag vin">VIN</span></td><td class="num">1.1%</td><td class="num">3</td><td class="num">271</td><td class="num">31,962</td><td>Residual wear leak</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout flag">
+    <span class="tag vin">Action</span>
+    <b> To trust clutch PMS %:</b> need VIN list (or parc file) with <b>manual vs automatic</b> transmission.
+    Until then, treat clutch cover as directional only — kit &gt;100% and disc/PP &lt;5% can both be wrong if automatic trucks sit in the denominator.
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">4</span> Side-by-side — ITUK vs UTI</h2>
+  <p class="lead">Same IML service schedule · family cover %.</p>
+
+  <div class="legend">
+    <span><i class="sw" style="background:#1a2b4a"></i> ITUK</span>
+    <span><i class="sw" style="background:#c0552d"></i> UTI</span>
+    <span class="g" style="padding:2px 6px;">≥50%</span>
+    <span class="a" style="padding:2px 6px;">20–50%</span>
+    <span class="r" style="padding:2px 6px;">&lt;20%</span>
+  </div>
+
+  <div class="barrow"><div class="name">Filters — ITUK</div><div class="track"><div class="fill ituk" style="width:37.8%"><span>37.8%</span></div></div><div class="pct">37.8%</div></div>
+  <div class="barrow"><div class="name">Filters — UTI</div><div class="track"><div class="fill uti" style="width:54.7%"><span>54.7%</span></div></div><div class="pct">54.7%</div></div>
+  <div class="barrow"><div class="name">Brakes — ITUK</div><div class="track"><div class="fill ituk" style="width:35.3%"><span>35.3%</span></div></div><div class="pct">35.3%</div></div>
+  <div class="barrow"><div class="name">Brakes — UTI</div><div class="track"><div class="fill uti" style="width:10.7%"><span>10.7%</span></div></div><div class="pct">10.7%</div></div>
+  <div class="barrow"><div class="name">Clutch — ITUK <span class="tag vin">VIN</span></div><div class="track"><div class="fill ituk" style="width:7.8%"><span>7.8%</span></div></div><div class="pct">7.8%</div></div>
+  <div class="barrow"><div class="name">Clutch — UTI <span class="tag vin">VIN</span></div><div class="track"><div class="fill uti" style="width:20.3%"><span>20.3%</span></div></div><div class="pct">20.3%</div></div>
+
+  <table class="matrix">
+    <thead>
+      <tr><th>Family</th><th class="num">ITUK</th><th class="num">UTI</th><th>One-line read</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Filters</td>
+        <td class="cell a">37.8%</td>
+        <td class="cell g">54.7%</td>
+        <td>UTI ahead on air/fuel; ITUK oil similar (35% vs 31%)</td>
+      </tr>
+      <tr>
+        <td>Brakes</td>
+        <td class="cell a">35.3%</td>
+        <td class="cell r">10.7%</td>
+        <td>UTI main gap — ITUK already phase-one focus</td>
+      </tr>
+      <tr>
+        <td>Clutch <span class="tag vin">VIN</span></td>
+        <td class="cell r">7.8%</td>
+        <td class="cell a">20.3%</td>
+        <td>Both provisional until MT/AT VIN split</td>
+      </tr>
+      <tr>
+        <td>Oil filter (detail)</td>
+        <td class="cell a">35.1%</td>
+        <td class="cell a">31.3%</td>
+        <td>ITUK dealer oil sell-out = 40.6%</td>
+      </tr>
+      <tr>
+        <td>Air filter (detail)</td>
+        <td class="cell r">13.2%</td>
+        <td class="cell g">58.1%</td>
+        <td>ITUK phase-one offensive priority</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout ok" style="margin-top:16px;">
+    <b>Meeting line.</b> Pilot = N75: oil <b>40%</b> DB / <b>46%</b> DLR · gap ~€0.65M · phase-one = air + brake.
+    Full DVLA context = 35.1% oil / €2.04M (do not add the two gaps).
+    UTI shows progress on the same ruler — stronger filters, weak brakes, clutch still VIN-blocked.
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">5</span> Decisions &amp; next data</h2>
+  <p class="lead">Agree these in the room — then refresh the pack without mixing periods.</p>
+
+  <table>
+    <thead><tr><th>#</th><th>Decision / ask</th><th>Owner</th><th>Needed by</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Confirm phase-one still <b>N75 · brake + air</b> (clutch deferred)</td><td>IML + ITUK</td><td>This meeting</td></tr>
+      <tr><td>2</td><td>Dealer sell-out <b>01/01–31/03/2026</b> — same columns as CY2025 (dealer, PN, fig-key, qty, value, period)</td><td>ITUK</td><td>Before Japan Aug</td></tr>
+      <tr><td>3</td><td>Clutch: keep provisional <b>or</b> find any MT/AT proxy short of full VIN</td><td>IML + ITUK</td><td>Before quoting clutch %</td></tr>
+      <tr><td>4</td><td>Japan PMS finalisation slot <b>18 or 19 Aug</b> — agenda length (intensive day)</td><td>IML + ITUK</td><td>This week</td></tr>
+      <tr><td>5</td><td>UTI: use as comparable DB snapshot only (no dealer map; not the IML pilot contract)</td><td>ISZE</td><td>Noted</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout" style="margin-top:18px;">
+    <b>Ready-to-paste request (ITUK):</b>
+    <div style="margin-top:8px;font-size:12.5px;font-family:Consolas,monospace;background:#fff;border:1px solid #d9d3c8;padding:10px 12px;line-height:1.55;">
+Please send ISZE an updated “Sales to Dealers” extract for 01/01/2026–31/03/2026,
+same columns as the CY2025 file (dealer, part number, fig-key, qty, value, period).
+If any progress on transmission type (manual vs automatic) for the N75 parc —
+even without full VIN — that would let us firm up clutch PMS % on manuals only.
+    </div>
+  </div>
+
+  <div class="footer">
+    Cover figures: ISZE–ITUK PMS analysis / business case (Apr 2026) on the IML service schedule · UTI on the same schedule · ITUK dealer sell-out CY2025
+    (file lineage: Sales to Dealers + fig-key extract). Do not use a different internal network denominator in this IML discussion.
+  </div>
+</section>
+
+</body>
+</html>
