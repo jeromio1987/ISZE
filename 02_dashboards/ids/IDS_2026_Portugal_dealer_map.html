@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IDS 2026 — Portugal dealer map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+:root { --navy:#1a2744; --terracotta:#c45c3e; --bg:#f4f6f9; --card:#fff; --muted:#6b7a90; --mid:#d4dae3; --good:#2d8a5e; --bad:#c45c3e; }
+body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--navy); }
+header { background:linear-gradient(135deg,var(--navy),#2d3f5c); color:#fff; padding:1.1rem 1.4rem; }
+header h1 { margin:0 0 .25rem; font-size:1.25rem; }
+header p { margin:0; opacity:.85; font-size:.88rem; }
+main { max-width:1180px; margin:0 auto; padding:1rem 1.2rem 2rem; display:grid; gap:1rem; grid-template-columns:1.25fr 1fr; }
+@media (max-width:900px) { main { grid-template-columns:1fr; } }
+.card { background:var(--card); border-radius:10px; padding:1rem; box-shadow:0 1px 4px rgba(26,39,68,.05); }
+.card h2 { margin:0 0 .6rem; font-size:1.02rem; }
+.hint { color:var(--muted); font-size:.85rem; margin:0 0 .75rem; }
+#pt-map { width:100%; height:560px; border-radius:8px; border:1px solid var(--mid); background:#dce3ec; }
+.leaflet-container { font: inherit; }
+.rank-pin {
+  background: var(--terracotta); color:#fff; border:2px solid #fff;
+  border-radius:50%; width:26px; height:26px; line-height:22px;
+  text-align:center; font-size:11px; font-weight:700;
+  box-shadow:0 1px 4px rgba(0,0,0,.35);
+}
+.pt-map-tooltip {
+  background: #fff; border:1px solid var(--mid); border-radius:8px;
+  box-shadow:0 4px 14px rgba(26,39,68,.18); padding:0; max-width:280px;
+}
+.map-tip-title { font-weight:700; margin:0 0 .35rem; color:var(--navy); font-size:.92rem; }
+.map-tip-meta { margin:0.15rem 0; color:#54657a; font-size:.85rem; }
+.map-tip-meta .pos { color: var(--good); }
+.map-tip-meta .neg { color: var(--bad); }
+.tile-note { margin:.55rem 0 0; color:var(--muted); font-size:.78rem; }
+.tile-note.warn { color:#9a3412; }
+table { width:100%; border-collapse:collapse; font-size:.82rem; }
+th,td { padding:.35rem .4rem; border-bottom:1px solid var(--mid); text-align:left; }
+th { color:var(--muted); font-size:.72rem; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<header>
+  <h1>IDS 2026 — Portugal dealer map</h1>
+  <p>Imotors pack · GPS Capture 63.3% (genuine parts share capture — locked meeting figure) · hover pins for dealer score vs Portugal national average · primary map is in the dealer compare Map tab</p>
+</header>
+<main>
+  <div class="card">
+    <h2>Network map</h2>
+    <p class="hint">Hover a pin for that dealer’s total score vs the Portugal national average (delta in pp). Pins are approximate city centres — not surveyed street addresses. Map tiles require an internet connection.</p>
+    <div id="pt-map" role="img" aria-label="Portugal dealer interactive map"></div>
+    <p class="tile-note" id="tile-status">Loading OpenStreetMap tiles…</p>
+  </div>
+  <div class="card">
+    <h2>Ranking</h2>
+    <p class="hint">16 Portugal dealers · 16 pinned on map · network average still used in the compare HTML as an anonymous benchmark.</p>
+    <table>
+      <thead><tr><th>#</th><th>Dealer</th><th>Total</th><th>PT national avg</th><th>Δ pp</th><th>Place</th><th>Geo</th></tr></thead>
+      <tbody><tr><td>1</td><td>AMATOSCAR EVORA</td><td>99.3%</td><td>86.7%</td><td>+12.6</td><td>Évora</td><td>Approx city</td></tr><tr><td>2</td><td>AUTO RENO MINHO POVOA</td><td>96.1%</td><td>86.7%</td><td>+9.4</td><td>Póvoa de Varzim</td><td>Approx city</td></tr><tr><td>3</td><td>AUTO RENO MINHO VIANA</td><td>96.1%</td><td>86.7%</td><td>+9.4</td><td>Viana do Castelo</td><td>Approx city</td></tr><tr><td>4</td><td>AUTO RENO PAÇOS FERREIRA</td><td>96.1%</td><td>86.7%</td><td>+9.4</td><td>Paços de Ferreira</td><td>Approx city</td></tr><tr><td>5</td><td>AUTO RENO PENAFIEL</td><td>94.3%</td><td>86.7%</td><td>+7.6</td><td>Penafiel</td><td>Approx city</td></tr><tr><td>6</td><td>AMATOSCAR PORTALEGRE</td><td>92.5%</td><td>86.7%</td><td>+5.8</td><td>Portalegre</td><td>Approx city</td></tr><tr><td>7</td><td>AUTO INDUSTRIAL LEIRIA</td><td>90.7%</td><td>86.7%</td><td>+4.0</td><td>Leiria</td><td>Approx city</td></tr><tr><td>8</td><td>ROLMAX</td><td>90.7%</td><td>86.7%</td><td>+4.0</td><td>Vila Nova de Gaia</td><td>Approx city</td></tr><tr><td>9</td><td>AUTO IMPERIAL</td><td>86.4%</td><td>86.7%</td><td>-0.3</td><td>Bragança</td><td>Approx city</td></tr><tr><td>10</td><td>SOCARROS CALDAS</td><td>82.1%</td><td>86.7%</td><td>-4.6</td><td>Caldas da Rainha</td><td>Approx city</td></tr><tr><td>11</td><td>ASTARA RETAIL LISBOA</td><td>78.6%</td><td>86.7%</td><td>-8.1</td><td>Lisboa</td><td>Approx city</td></tr><tr><td>12</td><td>MSCAR</td><td>77.9%</td><td>86.7%</td><td>-8.9</td><td>Almancil</td><td>Approx city</td></tr><tr><td>13</td><td>SOTERMÁQUINAS</td><td>77.9%</td><td>86.7%</td><td>-8.9</td><td>Angra do Heroísmo</td><td>Approx city</td></tr><tr><td>14</td><td>XANAUTO</td><td>77.9%</td><td>86.7%</td><td>-8.9</td><td>Loures</td><td>Approx city</td></tr><tr><td>15</td><td>ASTARA RETAIL CASCAIS</td><td>76.4%</td><td>86.7%</td><td>-10.3</td><td>Cascais</td><td>Approx city</td></tr><tr><td>16</td><td>AMATOSCAR BEJA</td><td>74.6%</td><td>86.7%</td><td>-12.1</td><td>Beja</td><td>Approx city</td></tr></tbody>
+    </table>
+  </div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function () {
+  const POINTS = [{"rank": 1, "name": "AMATOSCAR EVORA", "pct": 99.3, "country_avg": 86.7, "delta_pp": 12.6, "lat": 38.5667, "lon": -7.9, "place": "Évora", "geo_label": "Approx city from dealer name"}, {"rank": 2, "name": "AUTO RENO MINHO POVOA", "pct": 96.1, "country_avg": 86.7, "delta_pp": 9.4, "lat": 41.3833, "lon": -8.7667, "place": "Póvoa de Varzim", "geo_label": "Approx city from dealer name"}, {"rank": 3, "name": "AUTO RENO MINHO VIANA", "pct": 96.1, "country_avg": 86.7, "delta_pp": 9.4, "lat": 41.6918, "lon": -8.8344, "place": "Viana do Castelo", "geo_label": "Approx city from dealer name"}, {"rank": 4, "name": "AUTO RENO PAÇOS FERREIRA", "pct": 96.1, "country_avg": 86.7, "delta_pp": 9.4, "lat": 41.276, "lon": -8.376, "place": "Paços de Ferreira", "geo_label": "Approx city from dealer name"}, {"rank": 5, "name": "AUTO RENO PENAFIEL", "pct": 94.3, "country_avg": 86.7, "delta_pp": 7.6, "lat": 41.208, "lon": -8.282, "place": "Penafiel", "geo_label": "Approx city from dealer name"}, {"rank": 6, "name": "AMATOSCAR PORTALEGRE", "pct": 92.5, "country_avg": 86.7, "delta_pp": 5.8, "lat": 39.2938, "lon": -7.4312, "place": "Portalegre", "geo_label": "Approx city from dealer name"}, {"rank": 7, "name": "AUTO INDUSTRIAL LEIRIA", "pct": 90.7, "country_avg": 86.7, "delta_pp": 4.0, "lat": 39.7436, "lon": -8.8071, "place": "Leiria", "geo_label": "Approx city from dealer name"}, {"rank": 8, "name": "ROLMAX", "pct": 90.7, "country_avg": 86.7, "delta_pp": 4.0, "lat": 41.1239, "lon": -8.6118, "place": "Vila Nova de Gaia", "geo_label": "Approx city (directory / known place)"}, {"rank": 9, "name": "AUTO IMPERIAL", "pct": 86.4, "country_avg": 86.7, "delta_pp": -0.3, "lat": 41.8061, "lon": -6.7567, "place": "Bragança", "geo_label": "Approx city (directory / known place)"}, {"rank": 10, "name": "SOCARROS CALDAS", "pct": 82.1, "country_avg": 86.7, "delta_pp": -4.6, "lat": 39.407, "lon": -9.135, "place": "Caldas da Rainha", "geo_label": "Approx city from dealer name"}, {"rank": 11, "name": "ASTARA RETAIL LISBOA", "pct": 78.6, "country_avg": 86.7, "delta_pp": -8.1, "lat": 38.7223, "lon": -9.1393, "place": "Lisboa", "geo_label": "Approx city from dealer name"}, {"rank": 12, "name": "MSCAR", "pct": 77.9, "country_avg": 86.7, "delta_pp": -8.9, "lat": 37.087, "lon": -8.0307, "place": "Almancil", "geo_label": "Approx city (directory / known place)"}, {"rank": 13, "name": "SOTERMÁQUINAS", "pct": 77.9, "country_avg": 86.7, "delta_pp": -8.9, "lat": 38.6593, "lon": -27.2194, "place": "Angra do Heroísmo", "geo_label": "Approx city (directory / known place)"}, {"rank": 14, "name": "XANAUTO", "pct": 77.9, "country_avg": 86.7, "delta_pp": -8.9, "lat": 38.8309, "lon": -9.1681, "place": "Loures", "geo_label": "Approx city (directory / known place)"}, {"rank": 15, "name": "ASTARA RETAIL CASCAIS", "pct": 76.4, "country_avg": 86.7, "delta_pp": -10.3, "lat": 38.6979, "lon": -9.4215, "place": "Cascais", "geo_label": "Approx city from dealer name"}, {"rank": 16, "name": "AMATOSCAR BEJA", "pct": 74.6, "country_avg": 86.7, "delta_pp": -12.1, "lat": 38.0151, "lon": -7.8632, "place": "Beja", "geo_label": "Approx city from dealer name"}];
+  const AUTO_INIT = true;
+  const statusEl = document.getElementById("tile-status");
+  const mapEl = document.getElementById("pt-map");
+  if (!mapEl) return;
+
+  function tipHtml(p) {
+    const delta = p.delta_pp == null
+      ? "—"
+      : ((p.delta_pp > 0 ? "+" : "") + Number(p.delta_pp).toFixed(1) + " pp");
+    const deltaCls = p.delta_pp == null ? "" : (p.delta_pp >= 0 ? "pos" : "neg");
+    const place = p.place ? (" · " + p.place) : "";
+    const pct = p.pct != null ? Number(p.pct).toFixed(1) + "%" : "—";
+    const cavg = p.country_avg != null ? Number(p.country_avg).toFixed(1) + "%" : "—";
+    return (
+      '<p class="map-tip-title">#' + p.rank + " · " + p.name + "</p>" +
+      '<p class="map-tip-meta">Dealer total score: <strong>' + pct + "</strong></p>" +
+      '<p class="map-tip-meta">Portugal national average: <strong>' + cavg + "</strong></p>" +
+      '<p class="map-tip-meta">Vs national average: <strong class="' + deltaCls + '">' +
+      delta + "</strong></p>" +
+      '<p class="map-tip-meta" style="margin-top:.35rem;font-size:.78rem">' +
+      "Approx city centre" + place + " — not a surveyed street address</p>"
+    );
+  }
+
+  function initMap() {
+    if (typeof L === "undefined") {
+      if (statusEl) {
+        statusEl.textContent = "Leaflet failed to load (check network / CDN). Other compare tabs still work.";
+        statusEl.classList.add("warn");
+      }
+      mapEl.innerHTML = "<p style='padding:1rem;color:#9a3412'>Map library unavailable offline. Open with internet access.</p>";
+      return;
+    }
+    if (window.__ptMap) return;
+
+    const map = L.map("pt-map", { scrollWheelZoom: true });
+    window.__ptMap = map;
+    // CARTO Voyager (OSM data) — more reliable than raw OSM tile CDN on file://
+    const tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+      maxZoom: 18,
+      subdomains: "abcd",
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    });
+    let baseStatus = "Base layer: OpenStreetMap / CARTO · hover a pin for dealer score vs Portugal national average.";
+    tiles.on("load", function () {
+      if (statusEl) {
+        statusEl.textContent = baseStatus;
+        statusEl.classList.remove("warn");
+      }
+    });
+    tiles.on("tileerror", function () {
+      if (statusEl) {
+        statusEl.textContent = "Tile load issue — check network. Pins still show if tiles partially load.";
+        statusEl.classList.add("warn");
+      }
+    });
+    tiles.addTo(map);
+    setTimeout(function () { map.invalidateSize(); }, 200);
+
+    const pinIcon = function (rank) {
+      return L.divIcon({
+        className: "",
+        html: '<div class="rank-pin">' + rank + "</div>",
+        iconSize: [26, 26],
+        iconAnchor: [13, 13],
+        popupAnchor: [0, -14],
+      });
+    };
+
+    const latLngs = [];
+    const mainland = [];
+    POINTS.forEach(function (p) {
+      if (p.lat == null || p.lon == null) return;
+      const ll = L.latLng(p.lat, p.lon);
+      latLngs.push(ll);
+      if (p.lon > -12) mainland.push(ll);
+      const html = tipHtml(p);
+      L.marker(ll, { icon: pinIcon(p.rank) })
+        .addTo(map)
+        .bindTooltip(html, {
+          direction: "top",
+          offset: [0, -12],
+          opacity: 0.97,
+          className: "pt-map-tooltip",
+          sticky: false,
+        })
+        .bindPopup(html);
+    });
+
+    if (latLngs.length) {
+      const fit = mainland.length ? mainland : latLngs;
+      map.fitBounds(L.latLngBounds(fit), { padding: [36, 36], maxZoom: 9 });
+      if (mainland.length && mainland.length < latLngs.length) {
+        baseStatus =
+          "Base layer: OpenStreetMap / CARTO · mainland view; Açores pin(s) on map (zoom out / pan west). Hover a pin for score vs Portugal national average.";
+        if (statusEl) statusEl.textContent = baseStatus;
+      }
+    } else {
+      map.setView([39.5, -8.0], 7);
+      if (statusEl) {
+        statusEl.textContent = "No dealer coordinates available.";
+        statusEl.classList.add("warn");
+      }
+    }
+  }
+
+  function showMapTab() {
+    initMap();
+    if (window.__ptMap) {
+      setTimeout(function () { window.__ptMap.invalidateSize(); }, 80);
+    }
+  }
+
+  document.querySelectorAll(".tab").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      if (btn.dataset.tab === "map") showMapTab();
+    });
+  });
+
+  if (AUTO_INIT) {
+    showMapTab();
+  } else if (document.getElementById("panel-map") &&
+      document.getElementById("panel-map").classList.contains("active")) {
+    showMapTab();
+  }
+})();
+</script>
+
+</body>
+</html>

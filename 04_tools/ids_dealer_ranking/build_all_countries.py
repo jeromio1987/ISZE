@@ -10,6 +10,7 @@ from pathlib import Path
 COUNTRIES = (
     "BE",
     "NL",
+    "LUX",
     "Denmark",
     "Poland",
     "Petros",
@@ -23,8 +24,7 @@ COUNTRIES = (
     "Israel",
 )
 
-
-from ids_paths import DATA_ROOT, resolve_input_dir as _resolve_input_dir
+from ids_paths import DATA_ROOT, country_display_name, resolve_input_dir as _resolve_input_dir
 
 
 def resolve_input_dir(root: Path, country: str) -> Path:
@@ -50,8 +50,9 @@ def main() -> int:
             exit_code = 1
             continue
 
+        label = country_display_name(country)
         output = rankings_dir / f"{country}_dealer_ranking.xlsx"
-        print(f"\n=== {country} ({n} files) ===")
+        print(f"\n=== {label} ({n} files) ===")
         result = subprocess.run(
             [
                 sys.executable,
@@ -59,7 +60,7 @@ def main() -> int:
                 "--input-dir",
                 str(input_dir),
                 "--country",
-                country,
+                label,
                 "--output",
                 str(output),
             ],
@@ -71,7 +72,7 @@ def main() -> int:
     ituk_script = Path(__file__).with_name("build_ituk_ranking.py")
     ituk_input = data_root / "ITUK" / "IDS ITUK self evaluations.xlsx"
     if ituk_input.is_file():
-        print("\n=== ITUK (consolidated workbook) ===")
+        print("\n=== UK LCV (consolidated workbook) ===")
         result = subprocess.run([sys.executable, str(ituk_script)], check=False)
         if result.returncode != 0:
             exit_code = result.returncode

@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>IDS 2026 — Dealer Compare</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <style>
     :root {
       --navy: #1a2744;
@@ -98,13 +100,32 @@
     .matrix-wrap { overflow: auto; }
     .matrix td.pos { color: var(--good); font-weight: 600; }
     .matrix td.neg { color: var(--bad); font-weight: 600; }
+    #ids-map { width:100%; height:560px; border-radius:8px; border:1px solid var(--mid); background:#dce3ec; }
+    .leaflet-container { font: inherit; }
+    .rank-pin {
+      background: var(--terracotta); color:#fff; border:2px solid #fff;
+      border-radius:50%; width:26px; height:26px; line-height:22px;
+      text-align:center; font-size:11px; font-weight:700;
+      box-shadow:0 1px 4px rgba(0,0,0,.35);
+    }
+    .ids-map-tooltip {
+      background: #fff; border:1px solid var(--mid); border-radius:8px;
+      box-shadow:0 4px 14px rgba(26,39,68,.18); padding:0; max-width:300px;
+    }
+    .ids-map-tooltip .leaflet-tooltip-content { margin:0; }
+    .map-tip-title { font-weight:700; margin:0 0 .35rem; color:var(--navy); font-size:.92rem; }
+    .map-tip-meta { margin:0.15rem 0; color:#54657a; font-size:.85rem; }
+    .map-tip-meta .pos { color: var(--good); }
+    .map-tip-meta .neg { color: var(--bad); }
+    .tile-note { margin:.55rem 0 0; color:var(--muted); font-size:.78rem; }
+    .tile-note.warn { color:#9a3412; }
     footer { text-align: center; font-size: 0.75rem; color: var(--muted); padding: 1rem; border-top: 1px solid var(--mid); }
   </style>
 </head>
 <body>
   <header>
-    <h1>IDS 2026 — Dealer comparison</h1>
-    <p>Offline · sections A–E + questions · good / medium / bad · built __BUILT_AT__</p>
+    <h1>IDS 2026 — Dealer comparison <span style="font-weight:500;opacity:.85;font-size:.85em">v1.2</span></h1>
+    <p>v1.2 with map · sections A–E + questions · good / medium / bad · built __BUILT_AT__</p>
   </header>
 
   <div class="toolbar">
@@ -115,6 +136,7 @@
 
   <nav class="tabs">
     <button class="tab active" data-tab="overview" type="button">Overview</button>
+    <button class="tab" data-tab="map" type="button">Map</button>
     <button class="tab" data-tab="heatmap" type="button">Heatmap</button>
     <button class="tab" data-tab="gaps" type="button">Strengths &amp; gaps</button>
     <button class="tab" data-tab="questions" type="button">Questions</button>
@@ -153,6 +175,15 @@
       <div class="card">
         <h2>Network ranking (filtered)</h2>
         <div id="chart-overview"></div>
+      </div>
+    </section>
+
+    <section id="panel-map" class="panel">
+      <div class="card">
+        <h2>Network dealer map</h2>
+        <p class="hint">Interactive map (Leaflet + OpenStreetMap / CARTO). Hover a pin for dealer total score %, that country’s national average %, and the delta in percentage points. Pins follow the country / search filters above. Locations are approximate city centres (or a country centre when the dealer name has no place token) — not surveyed street addresses. Map tiles require an internet connection. Dealers without coordinates stay in the tables only.</p>
+        <div id="ids-map" role="img" aria-label="IDS network dealer interactive map"></div>
+        <p class="tile-note" id="ids-tile-status">Open the Map tab to load tiles…</p>
       </div>
     </section>
 
@@ -301,14 +332,21 @@
 
     <section id="panel-changelog" class="panel">
       <div class="card">
-        <h2>Changelog — 2026-07-28</h2>
+        <h2>Changelog — v1.2 · 2026-07-28</h2>
         <ul>
+          <li><strong>v1.2 with map:</strong> Map tab — Leaflet + OpenStreetMap / CARTO pins for the full IDS network; hover shows dealer score %, country national average %, and delta (pp).</li>
+          <li><strong>MIDI FR/IT/ES/CH geo:</strong> Pins use MIDI_FR.xlsx NETWORK Town + Latitude/Longitude (exact DLRName match). Switzerland uses NETWORK Town city centres when lat/lon are blank. Removes the country-centre jitter blobs for those four countries.</li>
+          <li><strong>UK LCV geo:</strong> Extra city pins from Isuzu Truck UK store pages / public dealer addresses for residual names without an Address row.</li>
+          <li><strong>Map fitBounds:</strong> Initial zoom prefers the dense pin core so overseas outliers (e.g. France DOM-TOM) do not force a world view; outlier pins remain on the map.</li>
+          <li><strong>Poland geo fix:</strong> Pins use city centres inferred from the IDS result-report Address row (Toruń, Warszawa, Kraków, Poznań, Gdynia, …) — not the country-centre jitter blob near Łódź.</li>
+          <li><strong>Network geo + sanity:</strong> Address-row city matching expanded (Greece, Belgium, Denmark, Norway, UK CV, NL, …); word-boundary tokens (no Bilboel→Bilbao); builder geo sanity warns on country-centre blobs / tight clusters and fails if Poland/Portugal/Greece/Belgium/France/Italy/Spain/Switzerland city coverage regresses.</li>
+          <li>Radar charts: removed dark “Weak sector” overlay wedges and floating Weak labels — clean dealer / country / network polygons only.</li>
           <li>All UI labels in English (good / medium / bad — no Dutch goed/slecht).</li>
           <li>Country names in English: Switzerland / France / Italy / Spain (not MIDI_CH etc.).</li>
           <li>UK CV (IUK), UK LCV (ITUK), Israel LCV (UMI IDS pack — never blended with UTI), Norway (RSA).</li>
-          <li>Benelux kept; Belgium, Netherlands and Luxembourg also shown as separate countries.</li>
+          <li>Benelux kept; Belgium, Netherlands and Luxembourg also shown as separate countries (map prefers non-Benelux pins when both exist).</li>
           <li>Overview strengths / weak points: per section A–E, based on max-point items (full score = good, zero = bad) — not “first question in section”.</li>
-          <li>Dealer total score shown as percentage (Score % of 280); GPS context on feedback packs prefers capture % where available.</li>
+          <li>Dealer total score shown as percentage (Score % of 280). Network GPS capture is not hardcoded here (Portugal meeting lock 63.3% stays on the Portugal / Imotors pack only).</li>
         </ul>
         <p class="hint">Built __BUILT_AT__</p>
       </div>
@@ -381,7 +419,6 @@
 
     function drawRadar(el, series, opts) {
       opts = opts || {};
-      const weakIndices = opts.weakIndices || [];
       const ids = secIds();
       const n = ids.length || 1;
       const W = 400, H = 400, cx = W / 2, cy = H / 2, R = 145;
@@ -402,20 +439,6 @@
         const anchor = Math.abs(Math.cos(a)) < 0.1 ? "middle" : Math.cos(a) > 0 ? "start" : "end";
         svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" dominant-baseline="middle" font-size="11" font-weight="600" fill="#1a2744">${id}</text>`;
       });
-      // Weak-point wedges (PPT-style filled sectors) — under series polygons
-      const half = Math.PI / n;
-      weakIndices.forEach((i) => {
-        if (i < 0 || i >= n) return;
-        const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
-        const xL = cx + R * Math.cos(a - half);
-        const yL = cy + R * Math.sin(a - half);
-        const xR = cx + R * Math.cos(a + half);
-        const yR = cy + R * Math.sin(a + half);
-        svg += `<polygon points="${cx},${cy} ${xL},${yL} ${xR},${yR}" fill="#1a2744" opacity="0.30"/>`;
-        const tx = cx + R * 0.52 * Math.cos(a);
-        const ty = cy + R * 0.52 * Math.sin(a);
-        svg += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="middle" font-size="9" font-weight="700" fill="#fff">Weak</text>`;
-      });
       series.forEach((s) => {
         const pts = ids.map((_, i) => {
           const v = Math.max(0, Math.min(1, s.values[i] ?? 0));
@@ -429,7 +452,6 @@
       svg += `<text x="${cx}" y="${H - 8}" text-anchor="middle" font-size="9" fill="#6b7a90">0% center → 100% outer ring</text></svg>`;
       let leg = '<div class="radar-legend">';
       series.forEach((s) => { leg += `<span><i style="background:${s.color}"></i>${s.label}</span>`; });
-      if (weakIndices.length) leg += `<span><i style="background:#1a2744;height:10px;width:10px;border-radius:2px"></i>Weak sector</span>`;
       leg += "</div>";
       el.innerHTML = svg + leg;
     }
@@ -584,11 +606,7 @@
       if ($("#dr-show-network").checked) {
         series.push({ label: "Network avg", values: networkVector(), color: "#6b7a90", fill: "none", dash: "2 3", width: 1.5 });
       }
-      const weakIndices = secIds().map((id, i) => {
-        const s = dealer.sections[id] || {};
-        return bandFor(s.pct, s.country_avg_pct) === "bad" ? i : -1;
-      }).filter((i) => i >= 0);
-      drawRadar($("#dealer-radar-chart"), series, { weakIndices });
+      drawRadar($("#dealer-radar-chart"), series);
       const cv = countryVector(country), nv = networkVector(), dv = dealerVector(dealer);
       const rows = secIds().map((id, i) => ({ id, d: dv[i], c: cv[i], n: nv[i], gap: dv[i] != null && cv[i] != null ? dv[i] - cv[i] : null }));
       $("#dealer-radar-table").innerHTML = sectionTableHtml(dealer.name + " · total " + pct(dealer.total_pct), rows);
@@ -900,12 +918,160 @@
       }).join("");
     }
 
+    function mapTipHtml(p) {
+      const delta = p.delta_pp == null
+        ? "—"
+        : ((p.delta_pp > 0 ? "+" : "") + Number(p.delta_pp).toFixed(1) + " pp");
+      const deltaCls = p.delta_pp == null ? "" : (p.delta_pp >= 0 ? "pos" : "neg");
+      const place = p.place ? (" · " + p.place) : "";
+      const pct = p.pct != null ? Number(p.pct).toFixed(1) + "%" : "—";
+      const cavg = p.country_avg != null ? Number(p.country_avg).toFixed(1) + "%" : "—";
+      const ctry = p.country || "Country";
+      return (
+        '<p class="map-tip-title">#' + p.rank + " · " + p.name + "</p>" +
+        '<p class="map-tip-meta">' + ctry + "</p>" +
+        '<p class="map-tip-meta">Dealer total score: <strong>' + pct + "</strong></p>" +
+        '<p class="map-tip-meta">' + ctry + ' national average: <strong>' + cavg + "</strong></p>" +
+        '<p class="map-tip-meta">Vs national average: <strong class="' + deltaCls + '">' +
+        delta + "</strong></p>" +
+        '<p class="map-tip-meta" style="margin-top:.35rem;font-size:.78rem">' +
+        (p.geo_label || "Approx location") + place + " — not a surveyed street address</p>"
+      );
+    }
+
+    function dealersForMap(list) {
+      // Prefer non-Benelux rows when the same name exists under BE/NL/LUX
+      const nonBx = new Set(
+        list.filter((d) => d.country !== "Benelux").map((d) => (d.name || "").toLowerCase())
+      );
+      const ranked = [...list]
+        .filter((d) => d.total_pct != null)
+        .filter((d) => !(d.country === "Benelux" && nonBx.has((d.name || "").toLowerCase())))
+        .sort((a, b) => (b.total_pct - a.total_pct) || String(a.name).localeCompare(String(b.name)));
+      return ranked.map((d, i) => {
+        const g = d.geo || {};
+        const pct = d.total_pct != null ? Math.round(d.total_pct * 1000) / 10 : null;
+        const cavg = d.country_avg_pct != null ? Math.round(d.country_avg_pct * 1000) / 10 : null;
+        const delta_pp =
+          d.total_pct != null && d.country_avg_pct != null
+            ? Math.round((d.total_pct - d.country_avg_pct) * 1000) / 10
+            : null;
+        return {
+          id: d.id,
+          rank: i + 1,
+          name: d.name,
+          country: d.country,
+          pct,
+          country_avg: cavg,
+          delta_pp,
+          lat: g.lat != null ? g.lat : null,
+          lon: g.lon != null ? g.lon : null,
+          place: g.place || null,
+          geo_label: g.geo_label || null,
+        };
+      });
+    }
+
+    function renderMap(list) {
+      const statusEl = $("#ids-tile-status");
+      const mapEl = $("#ids-map");
+      if (!mapEl) return;
+      const points = dealersForMap(list || filteredDealers());
+      const pinned = points.filter((p) => p.lat != null && p.lon != null);
+      const off = points.length - pinned.length;
+
+      if (typeof L === "undefined") {
+        if (statusEl) {
+          statusEl.textContent = "Leaflet failed to load (check network / CDN). Other compare tabs still work.";
+          statusEl.classList.add("warn");
+        }
+        mapEl.innerHTML = "<p style='padding:1rem;color:#9a3412'>Map library unavailable offline. Open with internet access.</p>";
+        return;
+      }
+
+      if (!window.__idsMap) {
+        window.__idsMap = L.map("ids-map", { scrollWheelZoom: true });
+        const tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+          maxZoom: 18,
+          subdomains: "abcd",
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        });
+        tiles.on("load", function () {
+          if (statusEl) statusEl.classList.remove("warn");
+        });
+        tiles.on("tileerror", function () {
+          if (statusEl) {
+            statusEl.textContent = "Tile load issue — check network. Pins still show if tiles partially load.";
+            statusEl.classList.add("warn");
+          }
+        });
+        tiles.addTo(window.__idsMap);
+        window.__idsMapLayer = L.layerGroup().addTo(window.__idsMap);
+      }
+
+      const layer = window.__idsMapLayer;
+      layer.clearLayers();
+      const latLngs = [];
+      pinned.forEach((p) => {
+        const ll = L.latLng(p.lat, p.lon);
+        latLngs.push(ll);
+        const html = mapTipHtml(p);
+        const icon = L.divIcon({
+          className: "",
+          html: '<div class="rank-pin">' + p.rank + "</div>",
+          iconSize: [26, 26],
+          iconAnchor: [13, 13],
+          popupAnchor: [0, -14],
+        });
+        L.marker(ll, { icon })
+          .addTo(layer)
+          .bindTooltip(html, {
+            direction: "top",
+            offset: [0, -12],
+            opacity: 0.97,
+            className: "ids-map-tooltip",
+            sticky: false,
+          })
+          .bindPopup(html);
+      });
+
+      if (latLngs.length) {
+        // Prefer the dense core for fitBounds so DOM-TOM / overseas outliers
+        // (e.g. France Réunion/Antilles) do not force a world zoom.
+        let fit = latLngs;
+        if (latLngs.length >= 5) {
+          const lats = latLngs.map((ll) => ll.lat).slice().sort((a, b) => a - b);
+          const lons = latLngs.map((ll) => ll.lng).slice().sort((a, b) => a - b);
+          const medLat = lats[Math.floor(lats.length / 2)];
+          const medLon = lons[Math.floor(lons.length / 2)];
+          const core = latLngs.filter(
+            (ll) => Math.abs(ll.lat - medLat) < 8 && Math.abs(ll.lng - medLon) < 12
+          );
+          if (core.length >= Math.max(3, Math.floor(latLngs.length * 0.6))) fit = core;
+        }
+        window.__idsMap.fitBounds(L.latLngBounds(fit), { padding: [36, 36], maxZoom: 6 });
+      } else {
+        window.__idsMap.setView([48.5, 10.0], 4);
+      }
+      setTimeout(function () { window.__idsMap.invalidateSize(); }, 80);
+
+      if (statusEl) {
+        statusEl.classList.remove("warn");
+        statusEl.textContent =
+          "Base layer: OpenStreetMap / CARTO · " +
+          pinned.length + " pinned / " + points.length + " in filter" +
+          (off ? (" · " + off + " without coordinates (tables only)") : "") +
+          " · hover a pin for score vs that country’s national average.";
+      }
+    }
+
     function refresh() {
       const list = filteredDealers();
       renderStats(list);
       renderOverview(list);
       renderHeatmap(list);
       renderCountry();
+      if ($("#panel-map") && $("#panel-map").classList.contains("active")) renderMap(list);
     }
 
     function fillCountrySelect(sel, multi) {
@@ -988,6 +1154,7 @@
           if (btn.dataset.tab === "questions") renderQuestions();
           if (btn.dataset.tab === "vs-network") renderVsNetwork();
           if (btn.dataset.tab === "overview") renderOverviewFocus();
+          if (btn.dataset.tab === "map") renderMap(filteredDealers());
         });
       });
 
@@ -1002,5 +1169,7 @@
 
     init();
   </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </body>
 </html>

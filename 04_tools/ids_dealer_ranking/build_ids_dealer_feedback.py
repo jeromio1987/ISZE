@@ -38,7 +38,7 @@ from build_ids_parts_kaizen_study import (
     load_kpi_fill_mos,
     load_pms_db_2025,
 )
-from ids_paths import DATA_ROOT, IDS_RESULT_REPORTS_DIR
+from ids_paths import country_display_name, DATA_ROOT, IDS_RESULT_REPORTS_DIR
 from ids_report_extract import build_dashboard_payload
 
 OUT_DIR = DATA_ROOT / "reports" / "dealer_feedback"
@@ -59,7 +59,7 @@ BANDS = {
     "weak_gap_pp": -0.10,
 }
 
-SKIP_COUNTRIES = frozenset({"BENELUX"})  # rollup duplicate of BE+NL
+SKIP_COUNTRIES = frozenset({"BENELUX", "Benelux"})  # rollup duplicate of BE+NL
 
 
 def _pct(v: float | None) -> str:
@@ -237,6 +237,81 @@ def section_rows(dealer: dict) -> list[dict[str, Any]]:
     return rows
 
 
+
+def max_point_section_highlights(country: str, name: str) -> tuple[list[dict], list[dict]]:
+    """Per section A–E: good = full score on a max-point item; bad = zero. Prefer higher max."""
+    from build_ids_result_report import (
+        COL_FIRST_DEALER,
+        COL_MAX,
+        COL_TEXT,
+        QUESTION_RE,
+        ROW_META_START,
+        load_matrix_rows_from_sheet,
+    )
+    from ids_paths import result_report_path
+    import xlrd
+
+    path = result_report_path(country)
+    if not path.is_file():
+        return [], []
+    rb = xlrd.open_workbook(str(path))
+    sh = rb.sheet_by_index(0)
+    col = None
+    for c in range(COL_FIRST_DEALER, sh.ncols):
+        nm = str(sh.cell_value(ROW_META_START, c) or "").strip()
+        if nm.casefold() == name.casefold():
+            col = c
+            break
+    if col is None:
+        return [], []
+    matrix = load_matrix_rows_from_sheet(sh)
+    current_sec = None
+    by_sec: dict[str, dict[str, list]] = {}
+    for row in matrix:
+        ref = (row.ref or "").strip()
+        if row.kind == "category":
+            m = re.match(r"^([A-E])\.", ref, re.I)
+            current_sec = m.group(1).upper() if m else None
+            continue
+        if row.kind != "question" or row.sheet_row is None or not current_sec:
+            continue
+        if not QUESTION_RE.match(ref):
+            continue
+        max_pts = row.max_points or float(sh.cell_value(row.sheet_row, COL_MAX) or 0) or 0.0
+        try:
+            score = float(sh.cell_value(row.sheet_row, col))
+        except (TypeError, ValueError):
+            continue
+        if max_pts <= 0:
+            continue
+        text = (row.text or str(sh.cell_value(row.sheet_row, COL_TEXT) or "")).strip()
+        item = {
+            "id": ref,
+            "section": current_sec,
+            "text": text[:120],
+            "score": score,
+            "max": max_pts,
+            "pct": score / max_pts,
+            "gap": None,
+            "band": "good" if abs(score - max_pts) < 0.05 else ("bad" if score < 0.05 else "medium"),
+        }
+        bucket = by_sec.setdefault(current_sec, {"good": [], "bad": []})
+        if abs(score - max_pts) < 0.05:
+            bucket["good"].append(item)
+        if score < 0.05:
+            bucket["bad"].append(item)
+    strengths: list[dict] = []
+    weaks: list[dict] = []
+    for sec in SECTIONS:
+        g = sorted(by_sec.get(sec, {}).get("good", []), key=lambda x: (-x["max"], x["id"]))
+        b = sorted(by_sec.get(sec, {}).get("bad", []), key=lambda x: (-x["max"], x["id"]))
+        if g:
+            strengths.append(g[0])
+        if b:
+            weaks.append(b[0])
+    return strengths, weaks
+
+
 def needs_deep(dealer: dict, rows: list[dict]) -> bool:
     if any(r["band"] == "bad" for r in rows):
         return True
@@ -330,8 +405,11 @@ def render_card(
     cavg = dealer.get("country_avg_pct")
     navg = network.get("total_pct")
     name = dealer.get("name") or ""
-    strengths = sorted([r for r in rows if r["gap"] is not None and r["gap"] > 0], key=lambda r: -r["gap"])[:3]
-    weaks = sorted([r for r in rows if r["gap"] is not None and r["gap"] < 0], key=lambda r: r["gap"])[:3]
+    strengths, weaks = max_point_section_highlights(country, name)
+    if not strengths and not weaks:
+        # fallback: section gaps if question extract empty (totals-only packs)
+        strengths = sorted([r for r in rows if r["gap"] is not None and r["gap"] > 0], key=lambda r: -r["gap"])[:3]
+        weaks = sorted([r for r in rows if r["gap"] is not None and r["gap"] < 0], key=lambda r: r["gap"])[:3]
 
     db_block = ""
     cap_ask = dealer_cap_ask(db_kpi, name) if db_kpi else None
@@ -425,11 +503,11 @@ def render_card(
     )
 
     strength_li = "".join(
-        f"<li><strong>{r['id']}</strong> {_pp(r['gap'])} vs country · {band_label(r['band'])}</li>"
+        f"<li><strong>{r.get('id') or r.get('ref')}</strong> {(str(int(r['score']))+'/'+str(int(r['max']))+' (full)') if r.get('max') and r.get('band')=='good' else (_pp(r.get('gap'))+' vs country')} · {band_label(r.get('band'))}</li>"
         for r in strengths
     ) or "<li>No section above country average.</li>"
     weak_li = "".join(
-        f"<li><strong>{r['id']}</strong> {_pp(r['gap'])} vs country · {band_label(r['band'])}</li>"
+        f"<li><strong>{r.get('id') or r.get('ref')}</strong> {('0/'+str(int(r['max']))) if r.get('max') and r.get('band')=='bad' else (_pp(r.get('gap'))+' vs country')} · {band_label(r.get('band'))}</li>"
         for r in weaks
     ) or "<li>No section below country average.</li>"
 

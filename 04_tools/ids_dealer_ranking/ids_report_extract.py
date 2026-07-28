@@ -32,6 +32,10 @@ REPORT_PREFIX = "2026 IDS Evaluation Result Report_"
 REPORT_SUFFIX = ".xls"
 
 
+# META_ROWS offset: Dealer Name (0), Evaluation Date (1), Address (2)
+ROW_ADDRESS = ROW_META_START + 2
+
+
 @dataclass
 class DealerRecord:
     country: str
@@ -44,9 +48,14 @@ class DealerRecord:
     # qid -> {score, max, pct} for scored checklist items
     questions: dict[str, dict[str, float | None]] = field(default_factory=dict)
     totals_only: bool = False
+    address: str | None = None
+    # Disambiguate same company name / multi-site columns in one country report
+    site_key: str | None = None
 
     @property
     def id(self) -> str:
+        if self.site_key:
+            return f"{self.country}::{self.name}::{self.site_key}"
         return f"{self.country}::{self.name}"
 
 
@@ -243,10 +252,15 @@ def extract_result_report(
     records: list[DealerRecord] = []
     resolved_totals: dict[int, float | None] = {}
     resolved_pcts: dict[int, float | None] = {}
+    name_counts: dict[str, int] = {}
+    for _, name in dealers:
+        name_counts[name] = name_counts.get(name, 0) + 1
+    name_seen: dict[str, int] = {}
 
     for col, name in dealers:
         total = _num(sh.cell_value(ROW_SCORE_ORIG, col))
         total_pct = _num(sh.cell_value(ROW_SCORE_PCT, col))
+        address = str(sh.cell_value(ROW_ADDRESS, col) or "").strip() or None
         sec_data: dict[str, dict[str, float | None]] = {}
 
         for sec, by_col in section_scores.items():
@@ -293,6 +307,16 @@ def extract_result_report(
             v.get("score") is not None for v in sec_data.values()
         )
 
+        site_key: str | None = None
+        if name_counts.get(name, 0) > 1:
+            name_seen[name] = name_seen.get(name, 0) + 1
+            # Prefer a short address token so multi-site companies stay distinct
+            addr_bit = (address or "").replace("\n", " ").strip()
+            if addr_bit:
+                site_key = f"{name_seen[name]}|{addr_bit[:48]}"
+            else:
+                site_key = f"col{col}"
+
         records.append(
             DealerRecord(
                 country=country,
@@ -304,6 +328,8 @@ def extract_result_report(
                 sections=sec_data,
                 questions=q_data,
                 totals_only=totals_only,
+                address=address,
+                site_key=site_key,
             )
         )
 
@@ -375,6 +401,7 @@ def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:
                     "id": rec.id,
                     "country": rec.country,
                     "name": rec.name,
+                    "address": rec.address,
                     "total": rec.total,
                     "total_pct": rec.total_pct,
                     "country_avg_total": rec.country_avg_total,

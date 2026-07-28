@@ -5,15 +5,23 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 from ids_dashboard_qa import format_qa_report, validate_dashboard_payload
-from ids_paths import IDS_DASHBOARD_HTML, IDS_RESULT_REPORTS_DIR
+from ids_dealer_geo import (
+    attach_geo_to_dealers,
+    format_geo_sanity_report,
+    geo_coverage_summary,
+    sanity_check_geo_clustering,
+)
+from ids_paths import IDS_DASHBOARD_HTML, IDS_RESULT_REPORTS_DIR, ISZE_ROOT
 from ids_report_extract import build_dashboard_payload
 
 _TEMPLATE = Path(__file__).resolve().parent / "ids_dashboard_template.html"
+_DASH_MIRROR = ISZE_ROOT / "02_dashboards" / "ids" / "IDS_2026_dealer_compare.html"
 
 
 def render_html(payload: dict, *, built_at: str) -> str:
@@ -44,6 +52,16 @@ def main() -> int:
         action="store_true",
         help="Write HTML even if section-heatmap QA fails (emergency only)",
     )
+    parser.add_argument(
+        "--no-mirror",
+        action="store_true",
+        help="Do not copy to 02_dashboards/ids/",
+    )
+    parser.add_argument(
+        "--skip-geo-sanity",
+        action="store_true",
+        help="Do not fail build on geo clustering / country-centre blob errors",
+    )
     args = parser.parse_args()
 
     if not _TEMPLATE.is_file():
@@ -55,14 +73,33 @@ def main() -> int:
         print(f"No dealers found in {args.reports_dir}", file=sys.stderr)
         return 2
 
+    geo_counts = attach_geo_to_dealers(payload["dealers"])
+    payload["geo"] = geo_counts
+    geo_sanity = sanity_check_geo_clustering(payload["dealers"])
+    payload["geo_sanity"] = {
+        "ok": geo_sanity["ok"],
+        "errors": geo_sanity["errors"],
+        "warnings": geo_sanity["warnings"],
+        "countries": geo_sanity["countries"],
+    }
+    payload["version"] = "v1.2"
+
     qa_errors = validate_dashboard_payload(payload)
     print(format_qa_report(payload, qa_errors))
+    print(format_geo_sanity_report(geo_sanity))
     if qa_errors and not args.skip_qa:
         print(
             "Refusing to write dashboard — fix extract/reports or pass --skip-qa",
             file=sys.stderr,
         )
         return 3
+    if not geo_sanity["ok"] and not args.skip_geo_sanity:
+        print(
+            "Refusing to write dashboard — geo sanity failed "
+            "(fix city/address mapping or pass --skip-geo-sanity)",
+            file=sys.stderr,
+        )
+        return 4
 
     built_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     payload["built_at"] = built_at
@@ -78,9 +115,23 @@ def main() -> int:
         export.write_text(html, encoding="utf-8")
         print(f"Also wrote {export}")
 
+    if not args.no_mirror:
+        _DASH_MIRROR.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(args.output, _DASH_MIRROR)
+        print(f"Also wrote {_DASH_MIRROR}")
+
+    cov = geo_coverage_summary(payload["dealers"])
+    countries_pinned = sum(1 for c, s in cov.items() if s["pinned"] > 0)
     print(f"Wrote {args.output}")
+    print(f"  version: {payload['version']}")
     print(f"  dealers: {payload['dealer_count']}")
     print(f"  countries: {payload['country_count']} ({', '.join(payload['countries'])})")
+    print(
+        f"  geo: {geo_counts['geo_ok']} pinned "
+        f"({geo_counts['geo_city']} city / {geo_counts['geo_country_fallback']} country centre) · "
+        f"{geo_counts['geo_missing']} without · "
+        f"{countries_pinned}/{len(cov)} countries with pins"
+    )
     print(f"  size: {args.output.stat().st_size / 1024:.0f} KB")
     return 0
 

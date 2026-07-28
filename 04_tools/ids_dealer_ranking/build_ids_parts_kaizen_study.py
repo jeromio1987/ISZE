@@ -43,33 +43,62 @@ KPI_MASTER = ISZE / "01_data" / "11_planning" / "KPI Master File june 2026.xlsx"
 CHART_JS = ISZE / "09_meetings" / "Preparation Meetings" / "PMS_Top10" / "assets" / "chart.umd.min.js"
 OUT_DIR = DATA_ROOT / "reports" / "kaizen_parts"
 
-# IDS country label → PRISM / KPI join keys
+# IDS country label → PRISM / KPI join keys (English display names + legacy codes)
 COUNTRY_MAP: dict[str, dict[str, Any]] = {
+    "Belgium": {"prism": "BELGIUM", "kpi": "IBX (BENELUX)", "note": "Benelux IBX"},
+    "Netherlands": {"prism": "BELGIUM", "kpi": "IBX (BENELUX)", "note": "NL dealers; PMS/GPS via BELGIUM/IBX"},
+    "Luxembourg": {"prism": "BELGIUM", "kpi": "IBX (BENELUX)", "note": "LUX Autopolis; GPS via IBX pool"},
     "BE": {"prism": "BELGIUM", "kpi": "IBX (BENELUX)", "note": "Benelux IBX"},
     "NL": {"prism": "BELGIUM", "kpi": "IBX (BENELUX)", "note": "NL dealers; PMS/GPS via BELGIUM/IBX"},
+    "LUX": {"prism": "BELGIUM", "kpi": "IBX (BENELUX)", "note": "LUX Autopolis; GPS via IBX pool"},
+    "Poland": {"prism": "POLAND", "kpi": "Isuzu Polska", "note": ""},
     "POLAND": {"prism": "POLAND", "kpi": "Isuzu Polska", "note": ""},
+    "Greece": {"prism": "GREECE", "kpi": "Petros Petropoulos", "note": ""},
     "PETROS": {"prism": "GREECE", "kpi": "Petros Petropoulos", "note": ""},
+    "Petros": {"prism": "GREECE", "kpi": "Petros Petropoulos", "note": ""},
+    "Norway": {"prism": "NORWAY", "kpi": "RSA", "note": "RSA cluster; PMS proxy NORWAY (largest Nordic)"},
     "RSA": {"prism": "NORWAY", "kpi": "RSA", "note": "RSA cluster; PMS proxy NORWAY (largest Nordic)"},
+    "UK CV": {"prism": "IUK", "kpi": "IUK", "note": ""},
     "IUK": {"prism": "IUK", "kpi": "IUK", "note": ""},
+    "UK LCV": {"prism": "ITUK", "kpi": "ITUK", "note": "IDS totals-only — no Section D heatmap"},
     "ITUK": {"prism": "ITUK", "kpi": "ITUK", "note": "IDS totals-only — no Section D heatmap"},
+    "Israel LCV": {
+        "prism": "UMI",
+        "kpi": "UMI",
+        "note": "IDS Israel = UMI network only. UTI did not participate — never blend UTI+UMI.",
+    },
     "ISRAEL": {
         "prism": "UMI",
         "kpi": "UMI",
         "note": "IDS Israel = UMI network only. UTI did not participate — never blend UTI+UMI.",
     },
+    "Israel": {
+        "prism": "UMI",
+        "kpi": "UMI",
+        "note": "IDS Israel = UMI network only. UTI did not participate — never blend UTI+UMI.",
+    },
+    "Malta": {"prism": "MALTA", "kpi": "GasanZammit", "note": ""},
     "MALTA": {"prism": "MALTA", "kpi": "GasanZammit", "note": ""},
+    "Cyprus": {"prism": "CYPRUS", "kpi": "Loutsios Group", "note": ""},
     "CYPRUS": {"prism": "CYPRUS", "kpi": "Loutsios Group", "note": ""},
+    "Romania": {"prism": "ROMANIA", "kpi": "Isuzu Rom Auto", "note": ""},
     "ROMANIA": {"prism": "ROMANIA", "kpi": "Isuzu Rom Auto", "note": ""},
+    "Portugal": {"prism": "PORTUGAL", "kpi": "Astara Portugal", "note": "KPI name may vary"},
     "PORTUGAL": {"prism": "PORTUGAL", "kpi": "Astara Portugal", "note": "KPI name may vary"},
+    "Hungary": {"prism": "HUNGARY", "kpi": None, "note": "No KPI Master monthly row for Hungary"},
     "HUNGARY": {"prism": "HUNGARY", "kpi": None, "note": "No KPI Master monthly row for Hungary"},
+    "France": {"prism": None, "kpi": None, "note": "MIDI France"},
+    "Italy": {"prism": None, "kpi": None, "note": "MIDI Italy"},
+    "Switzerland": {"prism": None, "kpi": None, "note": "MIDI Switzerland"},
+    "Spain": {"prism": None, "kpi": None, "note": "MIDI Spain"},
 }
 
 # Wave-1 shortlist preference (overridden if correlation study finds stronger cases)
 PREFERRED_FOCUS = [
-    ("IUK", "YORK VAN CENTRE LTD"),
-    ("IUK", "Adam"),
-    ("ROMANIA", "SIMODE CRAIOVA"),
-    ("BE", "Garage Degroote"),
+    ("UK CV", "YORK VAN CENTRE LTD"),
+    ("UK CV", "Adam"),
+    ("Romania", "SIMODE CRAIOVA"),
+    ("Belgium", "Garage Degroote"),
 ]
 
 

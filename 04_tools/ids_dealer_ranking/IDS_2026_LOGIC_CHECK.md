@@ -196,6 +196,26 @@ After `build_ids_dashboard.py`:
 
 ---
 
+## 6b. Pre-ship map / geo / UI (Mode A)
+
+Agent rule: `.cursor/rules/isze-ids-delivery.mdc` (always on). Automated geo: `ids_dealer_geo.sanity_check_geo_clustering` (wired into `build_ids_dashboard.py` — refuses write on hard fail unless `--skip-geo-sanity`).
+
+| # | Check | Pass |
+|---|-------|------|
+| M1 | Basemap tiles load (open HTML) | Real map, not blank outline box |
+| M2 | Geo clustering | No country with ≥50% country-centre blob; FR/IT/ES/CH not residual blobs after “all OK” |
+| M3 | English labels | Full English country names — no `goed`/`slecht`, no `MIDI_CH`/`BE` as UI |
+| M4 | Mode A shell | No Changelog / agent notes; no dark “Weak sector” overlay |
+| M5 | Map in compare | Map merged into dealer compare when asked; hover = score vs national avg |
+| M6 | Locked GPS | Jerome-locked slide figures (e.g. Portugal 63.3%) not overwritten by unverified pipeline |
+
+```powershell
+cd ISZE\04_tools\ids_dealer_ranking
+python build_ids_dashboard.py   # prints geo sanity; exits non-zero on hard fail
+```
+
+---
+
 ## 7. Error register (history)
 
 Use as regression checklist — if any reappears, treat as **blocker** before sharing reports.
@@ -247,9 +267,11 @@ After rebuild, mark each country when **layout QA** (`ids_report_qa.py`) and **l
 | `ids_logic_check.py` | Score / % / section arithmetic checks |
 | `run_ids_result_reports.py` | Batch build 13 countries |
 | `ids_report_extract.py` | Extract data for dashboard |
-| `build_ids_dashboard.py` | Offline HTML dashboard |
-| `ids_paths.py` | Paths and country resolution |
+| `build_ids_dashboard.py` | Offline HTML dashboard (+ geo sanity gate) |
+| `ids_dealer_geo.py` | Dealer lat/lon + `sanity_check_geo_clustering` |
+| `ids_paths.py` | Paths and country resolution (English Mode A labels) |
 | `reports/_template/2026 IDS Evaluation Result Report_DK.xls` | DK master (sheet `DK26`) |
+| `.cursor/rules/isze-ids-delivery.mdc` | IDS Mode A ship gate (maps/geo/UI) |
 
 ---
 

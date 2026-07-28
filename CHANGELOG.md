@@ -8,6 +8,11 @@
 
 ## [Unreleased]
 
+### Changed (2026-07-28) — IDS dealer map: MIDI FR/IT/ES/CH + UK LCV geo
+- **`ids_dealer_geo.py`** — loads `MIDI_FR.xlsx` NETWORK (Town + lat/lon) for exact DLRName match; Switzerland uses Town city centres when NETWORK lat/lon blank; UK LCV residual dealers pinned from Isuzu Truck UK store pages. Geo sanity city floors for France/Italy/Spain/Switzerland.
+- **Map fitBounds** — initial zoom prefers dense pin core so France DOM-TOM outliers do not force a world view.
+- **Rebuild** `IDS_2026_dealer_compare.html` v1.2 → `02_dashboards/ids/` + `01_data/90_INBOX/IDS_2026/reports/dashboard/` (changelog, no dark Weak overlay, hover = score vs country national avg, Mode A English).
+
 ### Changed (2026-07-24) — Loops package: allowlist self-patch + open-loops digest
 - **Scraper healthcheck** — allowlist auto-apply for KS/Tranzparts/TMC/Mekonomen/Auto365 URL/selector fixes; Tender remains propose-only (`DECISIONS.md` § 2026-07-24). Verifier block + `04_tools/applied_patches_log.md`.
 - **Memory review** — may apply high-confidence factual syncs; logs `05_memory/briefs/memory_applied_log.md`; verifier table in weekly brief.

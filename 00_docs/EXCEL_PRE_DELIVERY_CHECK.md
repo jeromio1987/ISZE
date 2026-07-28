@@ -158,11 +158,13 @@ Full detail: [`IDS_2026_LOGIC_CHECK.md`](../04_tools/ids_dealer_ranking/IDS_2026
 | Col C | Max points only — never dealer data |
 | Countries | 13 built; Denmark/MIDI excluded |
 | Error register | E01–E11 in IDS doc |
+| Map / geo / Mode A UI | §6b in IDS doc + `.cursor/rules/isze-ids-delivery.mdc`; `build_ids_dashboard.py` geo sanity |
 
 ```powershell
 cd ISZE\04_tools\ids_dealer_ranking
 python ids_logic_check.py
 python ids_report_qa.py "..\..\01_data\90_INBOX\IDS_2026\reports\evaluation_result\2026 IDS Evaluation Result Report_BE.xls"
+python build_ids_dashboard.py   # geo sanity + heatmap QA before HTML write
 ```
 
 ---
