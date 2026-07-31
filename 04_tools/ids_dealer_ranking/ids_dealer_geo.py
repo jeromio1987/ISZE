@@ -368,7 +368,7 @@ _CITY_COORDS: dict[str, tuple[float, float, str]] = {
     "HUNNDALEN": (60.8000, 10.7000, "Hunndalen / Gjøvik"),
     "HESSENG": (69.6870, 29.9970, "Hesseng"),
     "HELLANDSJO": (63.4500, 8.7000, "Hellandsjøen"),
-    # --- UK CV (Address) ---
+    # --- UK LCV / IUK (Address) ---
     "GALASHIELS": (55.6140, -2.8070, "Galashiels"),
     "TWEEDBANK": (55.6050, -2.7600, "Tweedbank"),
     "BURTON ON TRENT": (52.8060, -1.6370, "Burton upon Trent"),
@@ -395,7 +395,7 @@ _CITY_COORDS: dict[str, tuple[float, float, str]] = {
     "CARLISLE": (54.8951, -2.9382, "Carlisle"),
     "SHEFFIELD": (53.3811, -1.4701, "Sheffield"),
     "DARLINGTON": (54.5270, -1.5528, "Darlington"),
-    # --- UK LCV / name tokens ---
+    # --- UK CV / ITUK name tokens ---
     "CYMRU": (52.1307, -3.7837, "Wales (approx)"),
     "NORFOLK": (52.6309, 1.2974, "Norwich (Norfolk)"),
     # --- France name tokens (extra) ---
@@ -465,7 +465,7 @@ _CITY_COORDS: dict[str, tuple[float, float, str]] = {
     "ZARAGOZA": (41.6488, -0.8891, "Zaragoza"),
     "VITORIA": (42.8467, -2.6716, "Vitoria-Gasteiz"),
     "GASTEIZ": (42.8467, -2.6716, "Vitoria-Gasteiz"),
-    # --- UK LCV cities ---
+    # --- UK CV / ITUK cities ---
     "BRISTOL": (51.4545, -2.5879, "Bristol"),
     "TEWKESBURY": (51.9920, -2.1560, "Tewkesbury"),
     "BASINGSTOKE": (51.2667, -1.0876, "Basingstoke"),
@@ -525,7 +525,7 @@ _DEALER_GEO_OVERRIDE: dict[str, tuple[float, float, str]] = {
     "GJERMUNDSEN BILSENTER A/S": (59.2675, 10.4076, "Tønsberg area"),
     "BLAKSTAD AUTO AS": (63.4500, 8.7000, "Hellandsjøen"),
     "TUNGEN BIL AS": (63.4305, 10.3951, "Trondheim area"),
-    # UK CV no/weak address
+    # UK LCV / IUK no/weak address
     "ADAM": (54.8951, -2.9382, "Carlisle area"),
     "CROSSKEYS": (51.4800, -3.1800, "Cardiff / Crosskeys"),
     "FUSSELLWADMAN": (51.3800, -2.3600, "Bath / Somerset area"),
@@ -563,7 +563,7 @@ _DEALER_GEO_OVERRIDE: dict[str, tuple[float, float, str]] = {
     # Italy
     "CUNEOTRE S.P.A.": (44.3841, 7.5420, "Cuneo"),
     "NUOVA VIB VEICOLI INDUSTRIALI BIELLESI S.R.L.": (45.5620, 8.0580, "Biella"),
-    # UK LCV — Isuzu Truck UK store pages / public dealer addresses
+    # UK CV / ITUK — Isuzu Truck UK store pages / public dealer addresses
     "NORSCOT TRUCK AND VAN LTD": (57.4778, -4.2247, "Inverness area"),
     "CORDWALLIS COMMERCIALS": (51.4700, -0.4543, "Heathrow / Cordwallis"),
     "PAYNES GARAGES LTD": (52.6369, -1.1398, "Leicester area"),
@@ -583,6 +583,67 @@ _DEALER_GEO_OVERRIDE: dict[str, tuple[float, float, str]] = {
     "T.I.M COMMERCIALS": (52.9710, -1.3090, "Ilkeston"),
     "TIM COMMERCIALS": (52.9710, -1.3090, "Ilkeston"),
 }
+
+# Mainland / core IDS bounding boxes — used to reject absurd city matches and
+# to keep the map focused on Europe/Israel (not DOM-TOM / wrong continent).
+# (min_lat, max_lat, min_lon, max_lon) — generous for islands that belong.
+_COUNTRY_BOUNDS: dict[str, tuple[float, float, float, float]] = {
+    "Belgium": (49.4, 51.6, 2.4, 6.5),
+    "Benelux": (49.4, 53.7, 2.4, 7.3),
+    "Cyprus": (34.5, 35.8, 32.0, 34.8),
+    "Denmark": (54.5, 57.9, 8.0, 15.3),
+    "France": (41.0, 51.5, -5.5, 10.0),  # metro only — DOM-TOM verified separately
+    "Greece": (34.7, 41.8, 19.3, 29.7),
+    "Hungary": (45.7, 48.6, 16.0, 23.0),
+    "Israel LCV": (29.4, 33.4, 34.2, 35.9),
+    "Italy": (36.0, 47.5, 6.5, 19.0),
+    "Luxembourg": (49.4, 50.2, 5.7, 6.6),
+    "Malta": (35.7, 36.1, 14.1, 14.6),
+    "Netherlands": (50.7, 53.7, 3.2, 7.3),
+    "Norway": (57.8, 71.5, 4.5, 31.5),
+    "Poland": (49.0, 55.0, 14.0, 24.5),
+    "Portugal": (36.8, 42.3, -9.6, -6.0),  # mainland; Açores kept via allowlist
+    "Romania": (43.5, 48.3, 20.0, 30.0),
+    "Spain": (35.9, 44.0, -9.5, 4.5),  # mainland + Balearics; Canaries allowlisted
+    "Switzerland": (45.7, 47.9, 5.8, 10.6),
+    "UK CV": (49.8, 61.0, -8.5, 2.0),
+    "UK LCV": (49.8, 61.0, -8.5, 2.0),
+}
+
+# Cities that exist in more than one country — only match when country matches.
+_CITY_COUNTRY_SCOPE: dict[str, frozenset[str]] = {
+    "SOFIA": frozenset({"Bulgaria"}),  # never Greece/IDS — "Sofia France Auto" false hit
+}
+
+# Verified French overseas (DOM-TOM) markers — stay on the map; fitBounds stays Europe.
+# Prefer MIDI "FRANCE DOM TOM" + hard lat/lon far-box over loose place substrings
+# (Saint-Pierre-Du-Mont / Saint-Pierre-En-Faucigny are metro France).
+_OVERSEAS_PLACE_MARKERS = (
+    "FORT-DE-FRANCE",
+    "MAMOUDZOU",
+    "GUADELOUPE",
+    "MARTINIQUE",
+    "MAYOTTE",
+    "GUYANE",
+    "NOUMEA",
+    "TAHITI",
+    "PAPEETE",
+    "CAYENNE",
+    "POINTE-A-PITRE",
+    "SAINT-PIERRE CEDEX",  # Réunion — not Saint-Pierre-Du-Mont / not Madagascar
+)
+
+# Clear Mode A place labels so Réunion is never read as Madagascar.
+# Longer / specific markers first — do not add a bare "REUNION" entry that
+# would rewrite "Saint-Pierre (Réunion)" down to "Réunion" on a second pass.
+_OVERSEAS_PLACE_LABELS: tuple[tuple[str, str], ...] = (
+    ("FORT-DE-FRANCE", "Fort-de-France (Martinique)"),
+    ("MAMOUDZOU", "Mamoudzou (Mayotte)"),
+    ("MAYOTTE", "Mamoudzou (Mayotte)"),
+    ("SAINT-PIERRE CEDEX", "Saint-Pierre (Réunion)"),
+    ("SAINT-PIERRE (RÉUNION)", "Saint-Pierre (Réunion)"),
+    ("SAINT-PIERRE (REUNION)", "Saint-Pierre (Réunion)"),
+)
 
 # Country centre used when no city token / override (jittered per dealer).
 _COUNTRY_CENTRE: dict[str, tuple[float, float, str]] = {
@@ -604,8 +665,10 @@ _COUNTRY_CENTRE: dict[str, tuple[float, float, str]] = {
     "Romania": (45.9, 24.9, "Romania (approx)"),
     "Spain": (40.2, -3.7, "Spain (approx)"),
     "Switzerland": (46.8, 8.2, "Switzerland (approx)"),
-    "UK CV": (54.0, -2.5, "UK (approx)"),
-    "UK LCV": (52.5, -1.5, "UK (approx)"),
+    # Centroids follow the population, not the label: IUK (= UK LCV) skews
+    # north/Scotland, ITUK (= UK CV) truck centres sit mid-England.
+    "UK LCV": (54.0, -2.5, "UK (approx)"),
+    "UK CV": (52.5, -1.5, "UK (approx)"),
 }
 
 # Sanity-check thresholds (always run on rebuild)
@@ -677,7 +740,8 @@ def load_midi_network_geo() -> dict[str, dict[str, Any]]:
             name = row[0] if row else None
             if not name:
                 continue
-            country = _MIDI_COUNTRY_MAP.get(str(row[5] or "").strip().upper())
+            raw_country = str(row[5] or "").strip().upper()
+            country = _MIDI_COUNTRY_MAP.get(raw_country)
             if not country:
                 continue
             lat = lon = None
@@ -696,6 +760,7 @@ def load_midi_network_geo() -> dict[str, dict[str, Any]]:
             out[key] = {
                 "name": str(name).strip(),
                 "country": country,
+                "midi_country": raw_country,
                 "town": town,
                 "address": address,
                 "postal": postal,
@@ -778,11 +843,14 @@ def _jitter(seed: str, lat: float, lon: float, *, km: float = 28.0) -> tuple[flo
     return lat + dlat, lon + dlon
 
 
-def _match_city_token(text: str) -> tuple[float, float, str] | None:
+def _match_city_token(
+    text: str, *, country: str | None = None
+) -> tuple[float, float, str] | None:
     """Longest city-token match in free text (address or dealer name).
 
     Uses alphanumeric word boundaries so short tokens (e.g. BILBO) do not
-    false-hit longer names (Bilboel).
+    false-hit longer names (Bilboel). Country-scoped tokens (e.g. SOFIA)
+    only match when the dealer country is in the allow-list.
     """
     upper = (text or "").upper()
     if not upper.strip():
@@ -790,10 +858,116 @@ def _match_city_token(text: str) -> tuple[float, float, str] | None:
     for key, (lat, lon, label) in sorted(
         _CITY_COORDS.items(), key=lambda kv: -len(kv[0])
     ):
+        scope = _CITY_COUNTRY_SCOPE.get(key)
+        if scope is not None and (country or "") not in scope:
+            continue
         pat = r"(?<![A-Z0-9])" + re.escape(key) + r"(?![A-Z0-9])"
         if re.search(pat, upper):
+            if country and not _coords_in_country_bounds(lat, lon, country):
+                continue
             return lat, lon, label
     return None
+
+
+def _coords_in_country_bounds(lat: float, lon: float, country: str) -> bool:
+    bounds = _COUNTRY_BOUNDS.get(country)
+    if not bounds:
+        return True
+    lo_la, hi_la, lo_lo, hi_lo = bounds
+    return lo_la <= lat <= hi_la and lo_lo <= lon <= hi_lo
+
+
+def _is_verified_dom_tom(
+    *,
+    place: str | None,
+    lat: float | None,
+    lon: float | None,
+    midi_country: str | None = None,
+) -> bool:
+    """True for known French DOM-TOM (Martinique / Réunion / Mayotte / …).
+
+    Réunion (lon ~55.5) is east of Madagascar — not Madagascar itself.
+    """
+    if midi_country and "DOM" in str(midi_country).upper():
+        return True
+    place_u = (place or "").upper()
+    if any(m in place_u for m in _OVERSEAS_PLACE_MARKERS):
+        return True
+    if lat is None or lon is None:
+        return False
+    # Hard boxes for the three MIDI DOM-TOM pins (sanity / anti-Madagascar).
+    if 14.3 <= lat <= 14.9 and -61.3 <= lon <= -60.8:
+        return True  # Martinique / Fort-de-France
+    if -21.5 <= lat <= -20.8 and 55.2 <= lon <= 55.9:
+        return True  # Réunion / Saint-Pierre (NOT Madagascar ~lon 43–50)
+    if -13.1 <= lat <= -12.5 and 45.0 <= lon <= 45.4:
+        return True  # Mayotte / Mamoudzou
+    return False
+
+
+def _overseas_display_place(
+    place: str | None,
+    *,
+    lat: float | None = None,
+    lon: float | None = None,
+) -> str | None:
+    """Rewrite DOM-TOM town labels so Réunion is not confused with Madagascar."""
+    place_u = (place or "").upper()
+    for marker, label in _OVERSEAS_PLACE_LABELS:
+        if marker in place_u:
+            return label
+    if lat is not None and lon is not None:
+        if 14.3 <= lat <= 14.9 and -61.3 <= lon <= -60.8:
+            return "Fort-de-France (Martinique)"
+        if -21.5 <= lat <= -20.8 and 55.2 <= lon <= 55.9:
+            return "Saint-Pierre (Réunion)"
+        if -13.1 <= lat <= -12.5 and 45.0 <= lon <= 45.4:
+            return "Mamoudzou (Mayotte)"
+    return place
+
+
+def _is_overseas_pin(
+    *,
+    place: str | None,
+    lat: float | None,
+    lon: float | None,
+    country: str | None,
+    midi_country: str | None = None,
+) -> bool:
+    """True for DOM-TOM / far overseas (outside Europe-core fitBounds)."""
+    if _is_verified_dom_tom(
+        place=place, lat=lat, lon=lon, midi_country=midi_country
+    ):
+        return True
+    if lat is None or lon is None:
+        return False
+    # Far outside Europe/Israel box used by IDS network map
+    if lon < -20 or lon > 40 or lat < 28 or lat > 72:
+        # Açores / Madeira / Canaries / Cyprus already in or near box; flag rest
+        if country == "Portugal" and -32 <= lon <= -6 and 32 <= lat <= 40:
+            return False  # Açores / Madeira — keep on map, fitBounds excludes
+        if country == "Spain" and -19 <= lon <= -13 and 27 <= lat <= 30:
+            return False  # Canaries — keep, fitBounds excludes
+        if country in {"Cyprus", "Malta", "Israel LCV"}:
+            return False
+        return True
+    # Metro France / Europe coords are never overseas via place-name alone.
+    return False
+
+
+def _should_map_exclude_overseas(
+    *,
+    place: str | None,
+    lat: float | None,
+    lon: float | None,
+    midi_country: str | None = None,
+) -> bool:
+    """Hide mystery far pins; keep verified French DOM-TOM on the map."""
+    if _is_verified_dom_tom(
+        place=place, lat=lat, lon=lon, midi_country=midi_country
+    ):
+        return False
+    return True
 
 
 def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
@@ -825,21 +999,36 @@ def place_for_dealer(
     midi = midi_lookup(raw)
     if midi and midi.get("lat") is not None and midi.get("lon") is not None:
         town = (midi.get("town") or "").strip() or "MIDI network"
-        # Title-case town for display; keep accents as stored
         place = town.title() if town == town.upper() else town
-        return (
-            float(midi["lat"]),
-            float(midi["lon"]),
-            place,
-            "Approx city (MIDI network)",
+        lat, lon = float(midi["lat"]), float(midi["lon"])
+        # Prefer MIDI coords only when they sit in the dealer's country bbox
+        # (or are explicitly overseas DOM-TOM — still returned; map may show them).
+        midi_cty = (midi.get("country") or country or "")
+        midi_raw = str(midi.get("midi_country") or "")
+        overseas = _is_overseas_pin(
+            place=place, lat=lat, lon=lon, country=country, midi_country=midi_raw
         )
+        if overseas or not country or _coords_in_country_bounds(lat, lon, country) or midi_cty == country:
+            if overseas:
+                place = _overseas_display_place(place, lat=lat, lon=lon) or place
+                verified = _is_verified_dom_tom(
+                    place=place, lat=lat, lon=lon, midi_country=midi_raw
+                )
+                src = (
+                    "Overseas territory (French DOM-TOM)"
+                    if verified
+                    else "Overseas territory (far from Europe core)"
+                )
+            else:
+                src = "Approx city (MIDI network)"
+            return lat, lon, place, src
 
     # Prefer MIDI town text when result reports have no Address row
     midi_town = (midi or {}).get("town") if midi else None
     addr_text = " ".join(
         x for x in [(address or "").strip(), (midi_town or "").strip()] if x
     )
-    addr_hit = _match_city_token(addr_text)
+    addr_hit = _match_city_token(addr_text, country=country)
     if addr_hit:
         lat, lon, label = addr_hit
         src = (
@@ -849,7 +1038,7 @@ def place_for_dealer(
         )
         return lat, lon, label, src
 
-    name_hit = _match_city_token(upper)
+    name_hit = _match_city_token(upper, country=country)
     if name_hit:
         lat, lon, label = name_hit
         return lat, lon, label, "Approx city from dealer name"
@@ -884,11 +1073,35 @@ def attach_geo_to_dealers(
             d["geo"] = None
             missing += 1
             continue
+        midi_raw = (midi_lookup(d.get("name") or "") or {}).get("midi_country")
+        overseas = _is_overseas_pin(
+            place=place,
+            lat=lat,
+            lon=lon,
+            country=d.get("country"),
+            midi_country=midi_raw,
+        )
+        if overseas:
+            place = _overseas_display_place(place, lat=lat, lon=lon) or place
+            verified = _is_verified_dom_tom(
+                place=place, lat=lat, lon=lon, midi_country=midi_raw
+            )
+            if verified:
+                label = "Overseas territory (French DOM-TOM)"
+            elif "Overseas" not in (label or ""):
+                label = "Overseas territory (far from Europe core)"
+        map_exclude = bool(
+            overseas
+            and _should_map_exclude_overseas(
+                place=place, lat=lat, lon=lon, midi_country=midi_raw
+            )
+        )
         d["geo"] = {
             "lat": round(lat, 5),
             "lon": round(lon, 5),
             "place": place,
             "geo_label": label,
+            "map_exclude": map_exclude,
         }
         ok += 1
         if "country centre" in label:
@@ -941,6 +1154,11 @@ def map_points_from_dealers(
                 lat, lon = geo["lat"], geo["lon"]
                 place = geo.get("place")
                 geo_label = geo.get("geo_label") or ""
+                if geo.get("map_exclude"):
+                    # Keep geo_label for transparency; do not draw pin on Europe map
+                    lat = lon = None
+                    if "Overseas" not in geo_label:
+                        geo_label = "Overseas territory (hidden on Europe map)"
             else:
                 lat, lon, place, geo_label = place_for_dealer(
                     name,
@@ -948,6 +1166,17 @@ def map_points_from_dealers(
                     address=d.get("address"),
                     allow_country_centre=allow_country_centre,
                 )
+                if lat is not None and _is_overseas_pin(
+                    place=place, lat=lat, lon=lon, country=ctry
+                ):
+                    if _should_map_exclude_overseas(
+                        place=place, lat=lat, lon=lon
+                    ):
+                        lat = lon = None
+                        geo_label = "Overseas territory (hidden on Europe map)"
+                    else:
+                        place = _overseas_display_place(place, lat=lat, lon=lon) or place
+                        geo_label = "Overseas territory (French DOM-TOM)"
 
         pct = d.get("total_pct")
         cavg = d.get("country_avg_pct")
@@ -1085,6 +1314,38 @@ def sanity_check_geo_clustering(
             )
         near_share = (near_centre / n) if n else 0.0
         blob = fb_share >= share_threshold and near_share >= share_threshold
+
+        # Out-of-bounds on map = hard fail for non-overseas pins.
+        # Verified French DOM-TOM may sit on the map (Réunion / Antilles / Mayotte);
+        # Europe fitBounds still ignores them. Mystery far pins must stay map_exclude.
+        oob_on_map = 0
+        for d in pinned:
+            g = d.get("geo") or {}
+            if g.get("map_exclude"):
+                continue
+            la, lo = float(g["lat"]), float(g["lon"])
+            ctry = d.get("country") or country
+            midi_raw = (midi_lookup(d.get("name") or "") or {}).get("midi_country")
+            if _is_verified_dom_tom(
+                place=g.get("place"), lat=la, lon=lo, midi_country=midi_raw
+            ):
+                continue
+            if _is_overseas_pin(
+                place=g.get("place"), lat=la, lon=lo, country=ctry, midi_country=midi_raw
+            ) or (
+                ctry in _COUNTRY_BOUNDS and not _coords_in_country_bounds(la, lo, ctry)
+            ):
+                # Açores / Madeira / Canaries allowed as pins but rare
+                if ctry == "Portugal" and -32 <= lo <= -6 and 32 <= la <= 40:
+                    continue
+                if ctry == "Spain" and -19 <= lo <= -13 and 27 <= la <= 30:
+                    continue
+                oob_on_map += 1
+        if oob_on_map:
+            errors.append(
+                f"{country}: {oob_on_map} map pin(s) outside country/Europe bounds "
+                f"(ocean / wrong continent) — fix tokens or map_exclude"
+            )
 
         floor = _EXPECTED_CITY_FLOOR.get(country)
         if floor is not None and city_share < floor:

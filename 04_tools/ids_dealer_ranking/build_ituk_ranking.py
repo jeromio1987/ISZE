@@ -18,7 +18,7 @@ from openpyxl import load_workbook
 
 from build_country_ranking import _coerce_percent, write_ranking_workbook
 
-from ids_paths import ITUK_INPUT, ITUK_OUTPUT
+from ids_paths import ITUK_INPUT, ITUK_OUTPUT, country_label
 
 DEFAULT_INPUT = ITUK_INPUT
 DEFAULT_OUTPUT = ITUK_OUTPUT
@@ -150,7 +150,7 @@ def main() -> int:
         return 2
 
     write_ranking_workbook(
-        "UK LCV",
+        country_label("ITUK"),
         rows,
         args.output.resolve(),
     )

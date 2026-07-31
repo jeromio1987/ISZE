@@ -26,7 +26,8 @@
     header p { margin: 0; opacity: 0.85; font-size: 0.9rem; }
     .toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: end; padding: 1rem 1.5rem; background: var(--card); border-bottom: 1px solid var(--mid); position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 8px rgba(26,39,68,0.06); }
     label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); display: block; margin-bottom: 0.25rem; }
-    select, input[type="search"] { font: inherit; padding: 0.4rem 0.6rem; border: 1px solid var(--mid); border-radius: 6px; min-width: 9rem; background: #fff; color: var(--navy); }
+    select, input[type="search"], input[type="number"] { font: inherit; padding: 0.4rem 0.6rem; border: 1px solid var(--mid); border-radius: 6px; min-width: 9rem; background: #fff; color: var(--navy); }
+    input[type="number"] { min-width: 5.5rem; width: 5.5rem; }
     select[multiple] { min-height: 2.2rem; min-width: 11rem; }
     .chk { display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; padding-bottom: 0.35rem; text-transform: none; font-weight: 500; letter-spacing: 0; color: var(--navy); }
     .tabs { display: flex; flex-wrap: wrap; gap: 0.15rem; padding: 0 1rem; margin-top: 0.5rem; border-bottom: 1px solid var(--mid); background: var(--card); }
@@ -93,6 +94,11 @@
     table.data th, table.data td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--mid); text-align: left; vertical-align: top; }
     table.data th { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; }
     table.data td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    /* Country vs network: center Total Δ, A–E headers/values, and Weakest vs net */
+    table.data.matrix th.num,
+    table.data.matrix td.num,
+    table.data.matrix th:last-child,
+    table.data.matrix td:last-child { text-align: center; }
     table.data tr.clickable { cursor: pointer; }
     table.data tr.clickable:hover { background: #f0f3f8; }
     .q-text { color: var(--muted); font-size: 0.78rem; max-width: 28rem; }
@@ -103,11 +109,24 @@
     #ids-map { width:100%; height:560px; border-radius:8px; border:1px solid var(--mid); background:#dce3ec; }
     .leaflet-container { font: inherit; }
     .rank-pin {
-      background: var(--terracotta); color:#fff; border:2px solid #fff;
-      border-radius:50%; width:26px; height:26px; line-height:22px;
-      text-align:center; font-size:11px; font-weight:700;
+      border:2px solid #fff;
+      border-radius:50%; width:16px; height:16px;
       box-shadow:0 1px 4px rgba(0,0,0,.35);
+      cursor: pointer;
     }
+    .rank-pin.above { background: var(--good); }
+    .rank-pin.near { background: var(--amber); }
+    .rank-pin.below { background: var(--bad); }
+    .rank-pin.unknown { background: #94a3b8; }
+    .map-pin-legend { margin-top: 0.75rem; margin-bottom: 0.25rem; align-items: center; }
+    .map-pin-legend .pin-swatch {
+      display: inline-block; width: 0.85rem; height: 0.85rem; border-radius: 50%;
+      border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(26,39,68,.2); vertical-align: middle; margin-right: 0.3rem;
+    }
+    .map-pin-legend .pin-swatch.above { background: var(--good); }
+    .map-pin-legend .pin-swatch.near { background: var(--amber); }
+    .map-pin-legend .pin-swatch.below { background: var(--bad); }
+    .map-pin-legend .pin-swatch.unknown { background: #94a3b8; }
     .ids-map-tooltip {
       background: #fff; border:1px solid var(--mid); border-radius:8px;
       box-shadow:0 4px 14px rgba(26,39,68,.18); padding:0; max-width:300px;
@@ -124,14 +143,36 @@
 </head>
 <body>
   <header>
-    <h1>IDS 2026 — Dealer comparison <span style="font-weight:500;opacity:.85;font-size:.85em">v1.2</span></h1>
-    <p>v1.2 with map · sections A–E + questions · good / medium / bad · built __BUILT_AT__</p>
+    <h1>IDS 2026 — Dealer comparison <span style="font-weight:500;opacity:.85;font-size:.85em">v1.3</span></h1>
+    <p>v1.3 map pins · score filters · sections A–E + questions · good / medium / bad · built __BUILT_AT__</p>
   </header>
 
   <div class="toolbar">
     <div><label for="f-country">Country filter</label><select id="f-country" multiple></select></div>
     <div><label for="f-search">Dealer search</label><input id="f-search" type="search" placeholder="Name…" /></div>
-    <label class="chk"><input type="checkbox" id="f-below" /> Below country avg only</label>
+    <div>
+      <label for="f-vs-national">Vs national avg</label>
+      <select id="f-vs-national">
+        <option value="all">All</option>
+        <option value="below">Below (≥ 3 pp under)</option>
+        <option value="above">Above (≥ 3 pp over)</option>
+        <option value="near">Near (±3 pp)</option>
+      </select>
+    </div>
+    <div>
+      <label for="f-min-score">Min score %</label>
+      <input id="f-min-score" type="number" min="0" max="100" step="1" placeholder="—" />
+    </div>
+    <div>
+      <label for="f-max-score">Max score %</label>
+      <input id="f-max-score" type="number" min="0" max="100" step="1" placeholder="—" />
+    </div>
+    <div>
+      <label for="f-weak-section">Weak section</label>
+      <select id="f-weak-section">
+        <option value="">Any section</option>
+      </select>
+    </div>
   </div>
 
   <nav class="tabs">
@@ -181,8 +222,14 @@
     <section id="panel-map" class="panel">
       <div class="card">
         <h2>Network dealer map</h2>
-        <p class="hint">Interactive map (Leaflet + OpenStreetMap / CARTO). Hover a pin for dealer total score %, that country’s national average %, and the delta in percentage points. Pins follow the country / search filters above. Locations are approximate city centres (or a country centre when the dealer name has no place token) — not surveyed street addresses. Map tiles require an internet connection. Dealers without coordinates stay in the tables only.</p>
+        <p class="hint">Pins are coloured by dealer total vs that country’s national average (no rank digits — hover for name and scores; click to open Dealer radar). Filters above apply to the map and other tabs. Locations are approximate city centres (or a country centre when the dealer name has no place token) — not surveyed street addresses. Initial zoom stays on Europe/Israel; French overseas dealers remain on the map — zoom out or filter to France to see them. Map tiles require an internet connection. Dealers without coordinates stay in the tables only.</p>
         <div id="ids-map" role="img" aria-label="IDS network dealer interactive map"></div>
+        <div class="legend map-pin-legend" id="map-legend">
+          <span><i class="pin-swatch above"></i> ≥ +3 pp vs national avg</span>
+          <span><i class="pin-swatch near"></i> Near avg (±3 pp)</span>
+          <span><i class="pin-swatch below"></i> ≤ −3 pp vs national avg</span>
+          <span><i class="pin-swatch unknown"></i> No national avg</span>
+        </div>
         <p class="tile-note" id="ids-tile-status">Open the Map tab to load tiles…</p>
       </div>
     </section>
@@ -332,18 +379,20 @@
 
     <section id="panel-changelog" class="panel">
       <div class="card">
-        <h2>Changelog — v1.2 · 2026-07-28</h2>
+        <h2>Changelog — v1.3 · 2026-07-30</h2>
         <ul>
+          <li><strong>v1.3 map pins + filters:</strong> Pins are colour discs by vs national average (±3 pp bands) — no rank digits. Toolbar: min/max score %, vs-national select, weak section (below that section’s country avg). Click a pin to open Dealer radar.</li>
           <li><strong>v1.2 with map:</strong> Map tab — Leaflet + OpenStreetMap / CARTO pins for the full IDS network; hover shows dealer score %, country national average %, and delta (pp).</li>
           <li><strong>MIDI FR/IT/ES/CH geo:</strong> Pins use MIDI_FR.xlsx NETWORK Town + Latitude/Longitude (exact DLRName match). Switzerland uses NETWORK Town city centres when lat/lon are blank. Removes the country-centre jitter blobs for those four countries.</li>
-          <li><strong>UK LCV geo:</strong> Extra city pins from Isuzu Truck UK store pages / public dealer addresses for residual names without an Address row.</li>
-          <li><strong>Map fitBounds:</strong> Initial zoom prefers the dense pin core so overseas outliers (e.g. France DOM-TOM) do not force a world view; outlier pins remain on the map.</li>
+          <li><strong>UK CV geo:</strong> Extra city pins from Isuzu Truck UK store pages / public dealer addresses for residual names without an Address row.</li>
+          <li><strong>Map fitBounds:</strong> Europe/Israel core only on open — French overseas dealers (Réunion / Martinique / Mayotte) stay on the map when MIDI NETWORK confirms them; zoom out or filter to France to see them. Réunion is labelled Saint-Pierre (Réunion), not Madagascar. Sanity fails if a non-overseas drawn pin sits outside country bounds.</li>
+          <li><strong>City-token scope:</strong> Country-scoped tokens (e.g. Sofia) cannot false-place a Greece dealer in Bulgaria.</li>
           <li><strong>Poland geo fix:</strong> Pins use city centres inferred from the IDS result-report Address row (Toruń, Warszawa, Kraków, Poznań, Gdynia, …) — not the country-centre jitter blob near Łódź.</li>
-          <li><strong>Network geo + sanity:</strong> Address-row city matching expanded (Greece, Belgium, Denmark, Norway, UK CV, NL, …); word-boundary tokens (no Bilboel→Bilbao); builder geo sanity warns on country-centre blobs / tight clusters and fails if Poland/Portugal/Greece/Belgium/France/Italy/Spain/Switzerland city coverage regresses.</li>
+          <li><strong>Network geo + sanity:</strong> Address-row city matching expanded (Greece, Belgium, Denmark, Norway, UK LCV, NL, …); word-boundary tokens (no Bilboel→Bilbao); builder geo sanity warns on country-centre blobs / tight clusters and fails if Poland/Portugal/Greece/Belgium/France/Italy/Spain/Switzerland city coverage regresses.</li>
           <li>Radar charts: removed dark “Weak sector” overlay wedges and floating Weak labels — clean dealer / country / network polygons only.</li>
           <li>All UI labels in English (good / medium / bad — no Dutch goed/slecht).</li>
           <li>Country names in English: Switzerland / France / Italy / Spain (not MIDI_CH etc.).</li>
-          <li>UK CV (IUK), UK LCV (ITUK), Israel LCV (UMI IDS pack — never blended with UTI), Norway (RSA).</li>
+          <li>UK LCV (IUK — I.M. Parts &amp; Service, D-Max), UK CV (ITUK — Isuzu Truck UK), Israel LCV (UMI IDS pack — never blended with UTI), Norway (RSA).</li>
           <li>Benelux kept; Belgium, Netherlands and Luxembourg also shown as separate countries (map prefers non-Benelux pins when both exist).</li>
           <li>Overview strengths / weak points: per section A–E, based on max-point items (full score = good, zero = bad) — not “first question in section”.</li>
           <li>Dealer total score shown as percentage (Score % of 280). Network GPS capture is not hardcoded here (Portugal meeting lock 63.3% stays on the Portugal / Imotors pack only).</li>
@@ -405,14 +454,65 @@
       return picked.length ? picked : DATA.countries;
     }
 
+    /** Pin / filter band vs country national average (±3 pp). */
+    const VS_NATIONAL_PP = 3;
+    function vsNationalBand(totalPct, countryAvgPct) {
+      if (totalPct == null || countryAvgPct == null) return "unknown";
+      const deltaPp = (totalPct - countryAvgPct) * 100;
+      if (deltaPp >= VS_NATIONAL_PP) return "above";
+      if (deltaPp <= -VS_NATIONAL_PP) return "below";
+      return "near";
+    }
+
+    function parseScoreFilter(el) {
+      if (!el) return null;
+      const raw = String(el.value || "").trim();
+      if (raw === "") return null;
+      const n = Number(raw);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    /** Workspace aliases → Mode A country labels (search / filter help). */
+    const COUNTRY_SEARCH_ALIASES = {
+      "uk lcv": ["iuk", "uk (iuk)", "uk_lcv"],
+      "uk cv": ["ituk", "uk (ituk)", "uk_cv"],
+      "israel lcv": ["umi", "israel"],
+    };
+    function matchesSearch(d, q) {
+      if (!q) return true;
+      if (d.name.toLowerCase().includes(q)) return true;
+      const c = String(d.country || "").toLowerCase();
+      if (c.includes(q)) return true;
+      const aliases = COUNTRY_SEARCH_ALIASES[c] || [];
+      return aliases.some((a) => a === q || a.includes(q) || q.includes(a));
+    }
+
     function filteredDealers() {
       const countries = new Set(selectedCountries());
       const q = $("#f-search").value.trim().toLowerCase();
-      const below = $("#f-below").checked;
+      const vs = ($("#f-vs-national") && $("#f-vs-national").value) || "all";
+      const minScore = parseScoreFilter($("#f-min-score"));
+      const maxScore = parseScoreFilter($("#f-max-score"));
+      const weakSec = ($("#f-weak-section") && $("#f-weak-section").value) || "";
       return DATA.dealers.filter((d) => {
         if (!countries.has(d.country)) return false;
-        if (q && !d.name.toLowerCase().includes(q)) return false;
-        if (below && d.total_pct != null && d.country_avg_pct != null && d.total_pct >= d.country_avg_pct) return false;
+        if (!matchesSearch(d, q)) return false;
+        if (d.total_pct != null) {
+          const scorePct = d.total_pct * 100;
+          if (minScore != null && scorePct < minScore) return false;
+          if (maxScore != null && scorePct > maxScore) return false;
+        } else if (minScore != null || maxScore != null) {
+          return false;
+        }
+        if (vs !== "all") {
+          const band = vsNationalBand(d.total_pct, d.country_avg_pct);
+          if (band !== vs) return false;
+        }
+        if (weakSec) {
+          const s = d.sections && d.sections[weakSec];
+          if (!s || s.pct == null || s.country_avg_pct == null) return false;
+          if (s.pct >= s.country_avg_pct) return false;
+        }
         return true;
       });
     }
@@ -491,6 +591,26 @@
       $("#qq-dealer").value = d.id;
       if (sectionId) $("#qq-section").value = sectionId;
       renderQuestions();
+    }
+
+    function jumpToDealerRadar(dealerId) {
+      const d = DATA.dealers.find((x) => x.id === dealerId);
+      if (!d) return;
+      document.querySelectorAll(".tab").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+      const tab = document.querySelector('.tab[data-tab="dealer-radar"]');
+      tab.classList.add("active");
+      $("#panel-dealer-radar").classList.add("active");
+      $("#dr-country").value = d.country;
+      populateDealerSelect($("#dr-dealer"), d.country);
+      if (![...$("#dr-dealer").options].some((o) => o.value === d.id)) {
+        const o = document.createElement("option");
+        o.value = d.id;
+        o.textContent = d.name + (d.totals_only ? " (totals only)" : "");
+        $("#dr-dealer").appendChild(o);
+      }
+      $("#dr-dealer").value = d.id;
+      renderDealerRadar();
     }
 
     function renderOverviewFocus() {
@@ -964,12 +1084,14 @@
           pct,
           country_avg: cavg,
           delta_pp,
+          band: vsNationalBand(d.total_pct, d.country_avg_pct),
           lat: g.lat != null ? g.lat : null,
           lon: g.lon != null ? g.lon : null,
           place: g.place || null,
           geo_label: g.geo_label || null,
+          map_exclude: !!g.map_exclude,
         };
-      });
+      }).filter((p) => !p.map_exclude);
     }
 
     function renderMap(list) {
@@ -1016,38 +1138,43 @@
         const ll = L.latLng(p.lat, p.lon);
         latLngs.push(ll);
         const html = mapTipHtml(p);
+        const band = p.band || "unknown";
         const icon = L.divIcon({
           className: "",
-          html: '<div class="rank-pin">' + p.rank + "</div>",
-          iconSize: [26, 26],
-          iconAnchor: [13, 13],
-          popupAnchor: [0, -14],
+          html: '<div class="rank-pin ' + band + '" title=""></div>',
+          iconSize: [16, 16],
+          iconAnchor: [8, 8],
+          popupAnchor: [0, -10],
         });
         L.marker(ll, { icon })
           .addTo(layer)
           .bindTooltip(html, {
             direction: "top",
-            offset: [0, -12],
+            offset: [0, -10],
             opacity: 0.97,
             className: "ids-map-tooltip",
             sticky: false,
           })
-          .bindPopup(html);
+          .on("click", function () {
+            jumpToDealerRadar(p.id);
+          });
       });
 
       if (latLngs.length) {
-        // Prefer the dense core for fitBounds so DOM-TOM / overseas outliers
-        // (e.g. France Réunion/Antilles) do not force a world zoom.
-        let fit = latLngs;
-        if (latLngs.length >= 5) {
-          const lats = latLngs.map((ll) => ll.lat).slice().sort((a, b) => a - b);
-          const lons = latLngs.map((ll) => ll.lng).slice().sort((a, b) => a - b);
+        // Always fit to Europe/Israel core — never let DOM-TOM / Açores force world zoom.
+        const EUROPE_CORE = latLngs.filter(
+          (ll) => ll.lat >= 28 && ll.lat <= 72 && ll.lng >= -12 && ll.lng <= 40
+        );
+        let fit = EUROPE_CORE.length >= 3 ? EUROPE_CORE : latLngs;
+        if (fit.length >= 5) {
+          const lats = fit.map((ll) => ll.lat).slice().sort((a, b) => a - b);
+          const lons = fit.map((ll) => ll.lng).slice().sort((a, b) => a - b);
           const medLat = lats[Math.floor(lats.length / 2)];
           const medLon = lons[Math.floor(lons.length / 2)];
-          const core = latLngs.filter(
+          const core = fit.filter(
             (ll) => Math.abs(ll.lat - medLat) < 8 && Math.abs(ll.lng - medLon) < 12
           );
-          if (core.length >= Math.max(3, Math.floor(latLngs.length * 0.6))) fit = core;
+          if (core.length >= Math.max(3, Math.floor(fit.length * 0.6))) fit = core;
         }
         window.__idsMap.fitBounds(L.latLngBounds(fit), { padding: [36, 36], maxZoom: 6 });
       } else {
@@ -1057,11 +1184,24 @@
 
       if (statusEl) {
         statusEl.classList.remove("warn");
+        const overseasN = pinned.filter(
+          (p) => p.lat < 28 || p.lat > 72 || p.lon < -12 || p.lon > 40
+        ).length;
+        const bandCounts = { above: 0, near: 0, below: 0, unknown: 0 };
+        pinned.forEach((p) => {
+          const b = p.band || "unknown";
+          if (bandCounts[b] != null) bandCounts[b] += 1;
+          else bandCounts.unknown += 1;
+        });
         statusEl.textContent =
-          "Base layer: OpenStreetMap / CARTO · " +
-          pinned.length + " pinned / " + points.length + " in filter" +
+          "Showing " + pinned.length + " dealers on map" +
           (off ? (" · " + off + " without coordinates (tables only)") : "") +
-          " · hover a pin for score vs that country’s national average.";
+          " · " + bandCounts.above + " above / " + bandCounts.near + " near / " +
+          bandCounts.below + " below national avg" +
+          (overseasN
+            ? (" · " + overseasN + " overseas pin(s) — zoom out to see; default view stays Europe")
+            : "") +
+          " · hover for name & scores · click pin for Dealer radar.";
       }
     }
 
@@ -1101,17 +1241,24 @@
       fillCountrySelect($("#cr-countries"), true);
       secIds().forEach((id) => {
         const label = id + " — " + secLabel(id).slice(0, 40);
-        ["gp-section", "qq-section"].forEach((sid) => {
+        ["gp-section", "qq-section", "f-weak-section"].forEach((sid) => {
+          const el = $("#" + sid);
+          if (!el) return;
           const o = document.createElement("option");
           o.value = id;
-          o.textContent = label;
-          $("#" + sid).appendChild(o);
+          o.textContent = sid === "f-weak-section"
+            ? (id + " below country avg")
+            : label;
+          el.appendChild(o);
         });
       });
 
       fc.addEventListener("change", () => { syncOverviewFromFilter(); refresh(); });
       $("#f-search").addEventListener("input", refresh);
-      $("#f-below").addEventListener("change", refresh);
+      $("#f-vs-national").addEventListener("change", refresh);
+      $("#f-min-score").addEventListener("input", refresh);
+      $("#f-max-score").addEventListener("input", refresh);
+      $("#f-weak-section").addEventListener("change", refresh);
       $("#f-country-one").addEventListener("change", renderCountry);
       $("#hm-mode").addEventListener("change", () => renderHeatmap(filteredDealers()));
 

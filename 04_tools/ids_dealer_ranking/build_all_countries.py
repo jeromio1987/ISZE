@@ -72,7 +72,7 @@ def main() -> int:
     ituk_script = Path(__file__).with_name("build_ituk_ranking.py")
     ituk_input = data_root / "ITUK" / "IDS ITUK self evaluations.xlsx"
     if ituk_input.is_file():
-        print("\n=== UK LCV (consolidated workbook) ===")
+        print(f"\n=== {country_display_name('ITUK')} (consolidated workbook) ===")
         result = subprocess.run([sys.executable, str(ituk_script)], check=False)
         if result.returncode != 0:
             exit_code = result.returncode

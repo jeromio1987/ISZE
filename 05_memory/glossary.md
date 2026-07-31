@@ -25,6 +25,11 @@
 | James Marsh | James Marsh | Materials Expeditor, ITUK |
 | Ryusuke Tanaka | Ryusuke Tanaka | Product Marketing, IML International Parts |
 | Tomoaki Hiratsuka | Tomoaki Hiratsuka | IML International Parts Sales |
+| Nikola Broecker | Nikola Broecker | IMIE Sales & Marketing — 3-party pickup decks / D-Max regs |
+| Lucas Ganske | Lucas Ganske | IMIE — 3-party meeting circuit (with Nikola / Sonja) |
+| Sonja Baranowski | Sonja Baranowski | IMIE — often distributes 3-party English PDFs |
+| Łukasz Krzemiński | Łukasz Krzemiński | Poland aftersales — KPI/SPI monthly sheets (≠ Lucas IMIE) |
+| Hadewijch Tibos / Hadi | Hadewijch Tibos | ISZE Sales — 3-party host with IMIE |
 
 ## Parts & Technical
 | Term | Meaning |

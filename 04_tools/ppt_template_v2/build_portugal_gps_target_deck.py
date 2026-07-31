@@ -198,10 +198,10 @@ diverging_bar_chart(
 )
 
 ct.bar_chart(
-    ["Oil\nFilter", "Fuel\nFilter", "Air\nFilter", "Urea\nFilter", "Blower\nFilter"],
-    {"Portugal capture % CY2025": [52.1, 44.9, 62.7, 1.1, 24.2]},
+    ["Oil Filter\n(20,000km)", "Fuel Filter\n(20,000km)", "Air Filter\n(40,000km)", "Urea Filter\n(60,000km)", "Blower Filter\n(20,000km)"],
+    {"Portugal capture % CY2025": [52.1, 44.9, 62.7, 3.3, 24.2]},
     cp("pms_portugal_filters.png"),
-    title="Portugal — Filter Capture Rate by Category, CY2025 (%)",
+    title="Portugal — Filter Capture Rate by Category and Service Interval, CY2025 (%)",
     ylabel="%",
     value_fmt="{:,.1f}",
     figsize=(10.2, 4.3),
@@ -243,6 +243,7 @@ db.bullet_list(
         "Parts Performance — New Business",
         "GPS Capture",
         "PMS Coverage",
+        "IDS 2026 — Dealer Standard",
         "Fleet & FY2027 Target",
         "SPA — status",
         "R&M — market discussion",
@@ -283,25 +284,25 @@ db.build_two_col(
 )
 
 # ---- Slide 5: Brake parts detail ---------------------------------------------
-s = db.build_content(prs, "Brake parts: -33%, and it's not a value-tier switch", eyebrow="Parts Performance — Brakes", page_no=5)
+s = db.build_content(prs, "Brake Parts Performance — H1 2026 vs H1 2025", eyebrow="Parts Performance — Brakes", page_no=5)
 db.bullet_list(
     s,
     [
         "EUR 102,894 (H1'25) -> EUR 68,680 (H1'26), down EUR 34,215.",
-        "Biggest single line: PAD KIT, CALIPER/DISC BRK FRT, EUR 17,342 -> EUR 0. Two more brake pad lines also dropped to exactly zero.",
-        "Checked on our side: none of this shows up as a shift to our own value-tier (BVP) range — the volume simply isn't landing with us, either way.",
+        "Biggest lines: 8975056801 (PAD KIT, CALIPER/DISC BRK FRT) EUR 17,342 -> EUR 0; 5876150640 (PAD KIT, DISC BRK) EUR 10,838 -> EUR 0; 8982447940 (PAD KIT, CALIPER/DISC BRK FRT) EUR 6,469 -> EUR 0.",
+        "A genuine BVP alternative exists for the 3.5t truck brake pad specifically — a direct, lower-cost option worth putting on the table.",
     ],
-    Inches(0.32), Inches(1.35), Inches(11.5), Inches(2.3), size=15,
+    Inches(0.32), Inches(1.35), Inches(11.5), Inches(2.5), size=15,
 )
-db.txt(s, "Questions for us to work through together", Inches(0.32), Inches(3.85), Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
+db.txt(s, "Questions for us to work through together", Inches(0.32), Inches(3.95), Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
 db.bullet_list(
     s,
     [
-        "Has anything changed in how you source brake pads recently?",
-        "Any fitment or catalog issues you've run into on specific part numbers?",
-        "Is this a deliberate move, or more of a service/availability gap on our end?",
+        "Is this coming down to price competitiveness on brake pads specifically?",
+        "Any fitment or catalog issues you've run into on these part numbers?",
+        "Would the 3.5t BVP option be worth trialling on the truck side?",
     ],
-    Inches(0.32), Inches(4.2), Inches(11.5), Inches(2.0), size=15,
+    Inches(0.32), Inches(4.3), Inches(11.5), Inches(2.0), size=15,
 )
 
 # ---- Slide 6: Clutch parts detail --------------------------------------------
@@ -310,19 +311,20 @@ db.bullet_list(
     s,
     [
         "EUR 41,807 (H1'25) -> EUR 33,316 (H1'26), down EUR 8,491.",
-        "Same check as brakes: no shift to our value-tier (BVP) range on the clutch side either.",
+        "Biggest lines: 5876102060 (CLUTCH KIT) EUR 3,781; 8978293170 (DISC; CLUTCH) EUR 2,389; 5876100910 (PLATE ASM, PRESSURE) EUR 1,772 — all down.",
+        "No BVP alternative exists for any of these — unlike brakes, this is a genuine-only conversation.",
     ],
-    Inches(0.32), Inches(1.35), Inches(11.5), Inches(1.6), size=15,
+    Inches(0.32), Inches(1.35), Inches(11.5), Inches(2.1), size=15,
 )
-db.txt(s, "Questions for us to work through together", Inches(0.32), Inches(3.15), Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
+db.txt(s, "Questions for us to work through together", Inches(0.32), Inches(3.75), Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
 db.bullet_list(
     s,
     [
         "Is clutch pricing specifically a barrier against local competition for you?",
         "What would make the biggest difference to keep this business with us?",
-        "Worth a joint look at the 2-3 part numbers with the biggest gap?",
+        "Worth a joint look at these three part numbers together?",
     ],
-    Inches(0.32), Inches(3.5), Inches(11.5), Inches(2.0), size=15,
+    Inches(0.32), Inches(4.1), Inches(11.5), Inches(2.0), size=15,
 )
 
 # ---- Slide 7: New business ----------------------------------------------------
@@ -365,16 +367,44 @@ db.bullet_list(
 # ---- Slide 5: PMS Coverage — filters, fresh data -----------------------------
 db.build_two_col(
     prs,
-    title="PMS filters: air strongest at 62.7%, urea the clear gap at 1.1%",
+    title="PMS filters: air strongest at 62.7%, urea the clear gap at 3.3%",
     chart_path=cp("pms_portugal_filters.png"),
     eyebrow="PMS Coverage",
     page_no=9,
     takeaways=[
         "Air filter 62.7% and oil filter 52.1% are the strongest categories.",
-        "Urea (AdBlue) filter at 1.1% is the standout gap — EUR 62,414 addressable.",
+        "Urea (AdBlue) filter at 3.3% is the standout gap — EUR 20,336 addressable at a 60,000km interval.",
         "Fuel filter 44.9%, blower filter 24.2% — mid-pack, real headroom on both.",
-        "Filter-only addressable gap to 100% capture: ~EUR 176,000 (gross, theoretical ceiling).",
+        "Filter-only addressable gap to 100% capture: ~EUR 134,000 (gross, theoretical ceiling).",
     ],
+)
+
+# ---- Slide 9b: IDS 2026 — Dealer Standard ------------------------------------
+s = db.build_content(prs, "IDS 2026: Portugal averages 86.7%, above the 75.7% network benchmark", eyebrow="IDS 2026 — Dealer Standard", page_no=10)
+styled_table(
+    s,
+    [
+        ["Dealer", "Total %", "vs Country Avg", "vs Network Avg"],
+        ["AMATOSCAR EVORA (#1)", "99.3%", "+12.6pp", "+23.6pp"],
+        ["AUTO RENO MINHO POVOA (#2)", "96.1%", "+9.4pp", "+20.4pp"],
+        ["Portugal country average", "86.7%", "—", "+11.0pp"],
+        ["Network average (all IDS 2026)", "75.7%", "-11.0pp", "—"],
+        ["ASTARA RETAIL CASCAIS (#15)", "76.4%", "-10.3pp", "+0.7pp"],
+        ["AMATOSCAR BEJA (#16)", "74.6%", "-12.1pp", "-1.1pp"],
+    ],
+    Inches(0.32), Inches(1.35), Inches(12.7), Inches(2.4),
+    [Inches(4.5), Inches(2.5), Inches(2.8), Inches(2.9)],
+    bold_last_row=False,
+)
+db.bullet_list(
+    s,
+    [
+        "16 Portugal dealers assessed across Premises, Organisation, Service, Parts and Vehicle Sales.",
+        "Every Portugal dealer sits within about 1pp of the network average or above it — no dealer is a clear outlier on the downside.",
+        "Full dealer-by-dealer map and individual feedback fiches available as a separate pack — happy to walk through specific dealers together.",
+        "Worth agreeing dates for physical dealer visits as a next step — which dealers, and when works for your team?",
+    ],
+    Inches(0.32), Inches(4.0), Inches(12.7), Inches(2.3), size=14,
 )
 
 # ---- Slide 6: Fleet trend -----------------------------------------------------
@@ -383,7 +413,7 @@ db.build_two_col(
     title="Fleet has grown steadily since 2019 — +9.3% into 2026",
     chart_path=cp("uio_trend.png"),
     eyebrow="Fleet & FY2027 Target",
-    page_no=10,
+    page_no=11,
     takeaway_heading="What this means for FY2027",
     takeaways=[
         "Built directly from your vehicle registration records (2005-2026), not a top-down estimate.",
@@ -394,19 +424,19 @@ db.build_two_col(
 )
 
 # ---- Slide 7: target build-up, as two separate chains -----------------------
-s = db.build_content(prs, "How the FY2027 target is built", eyebrow="Fleet & FY2027 Target", page_no=11)
+s = db.build_content(prs, "How the FY2027 target is built", eyebrow="Fleet & FY2027 Target", page_no=12)
 
-db.txt(s, "Market potential, FY2027 — units x rate, per segment (not one blended rate)",
+db.txt(s, "Market potential, FY2027 — units x rate, per segment, dealer level (not one blended rate)",
        Inches(0.32), Inches(1.28), Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
 styled_table(
     s,
     [
         ["Segment", "Units", "Rate/unit (+5%)", "Value"],
-        ["Pickup", "4,968", "€230.54", "€1,145,325"],
-        ["N35 (3.5t)", "1,624", "€310.80", "€504,796"],
-        ["N75+ (5-7.5t)", "969", "€775.95", "€751,967"],
-        ["F-series", "348", "€931.35", "€323,798"],
-        ["= Market potential", "7,909", "", "€2,725,886"],
+        ["Pickup", "4,968", "€354.68", "€1,762,038"],
+        ["N35 (3.5t)", "1,624", "€478.15", "€776,609"],
+        ["N75+ (5-7.5t)", "969", "€1,193.77", "€1,156,872"],
+        ["F-series", "348", "€1,433.00", "€498,151"],
+        ["= Market potential", "7,909", "", "€4,193,671"],
     ],
     Inches(0.32), Inches(1.62), Inches(9.4), Inches(2.35),
     [Inches(2.6), Inches(1.8), Inches(2.2), Inches(2.8)],
@@ -429,16 +459,15 @@ styled_table(
 db.bullet_list(
     s,
     ["These are two separate chains, not one list to add up: potential is units × price; "
-     "your target is actual + a small slice of potential. The 1.8% stretch is 1.8% of €2.73M "
+     "your target is actual + a small slice of potential. The 1.8% stretch is 1.8% of €4.19M "
      "potential (€75K), not 1.8% of your €4.05M actual."],
     Inches(0.32), Inches(6.15), Inches(12.7), Inches(0.7), size=12,
 )
 
 # ---- Slide 8: the growth story, the price move, and the incentive -----------
-s = db.build_content(prs, "A growing market, and what FY2027 reflects", eyebrow="FY2027 Target", page_no=12)
+s = db.build_content(prs, "A growing market, and what FY2027 reflects", eyebrow="FY2027 Target", page_no=13)
 card(s, Inches(0.32), Inches(1.35), Inches(6.0), Inches(3.1), "1", "Your growth",
-     ["Portugal's fleet is up +9.3% — real, organic growth, built from your own registrations.",
-      "That's the market you've built. It's the foundation for everything else on this slide."])
+     ["Portugal's fleet is up +9.3% — real, organic growth, built from your own registrations."])
 card(s, Inches(6.5), Inches(1.35), Inches(6.5), Inches(3.1), "2", "The price move",
      ["ISZE is applying a 5% price adjustment for FY2027, consistent with every ISZE market this year.",
       "Applied per vehicle segment, not one blended rate."])
@@ -463,7 +492,7 @@ db.bullet_list(
 )
 
 # ---- Slide 9: SPA — the real process, four cards -----------------------------
-s = db.build_content(prs, "SPA", eyebrow="SPA", page_no=13)
+s = db.build_content(prs, "SPA", eyebrow="SPA", page_no=14)
 card(s, Inches(0.32), Inches(1.35), Inches(3.06), Inches(3.8), "1", "I-Motors proposal",
      ["I-Motors submits a proposed parts list."])
 card(s, Inches(3.53), Inches(1.35), Inches(3.06), Inches(3.8), "2", "ISZE review",
@@ -476,7 +505,7 @@ db.txt(s, "Purpose: higher turnover for both sides.",
        Inches(0.32), Inches(5.35), Inches(9.4), Inches(0.4), size=14, bold=True, color=RED)
 
 # ---- Slide 10: R&M — discussion questions, two cards -------------------------
-s = db.build_content(prs, "R&M — let's align on the market", eyebrow="R&M", page_no=14)
+s = db.build_content(prs, "R&M — let's align on the market", eyebrow="R&M", page_no=15)
 card(s, Inches(0.32), Inches(1.30), Inches(6.0), Inches(4.9), "L", "LCV",
      [
          "How is the LCV market moving for you right now?",
@@ -493,7 +522,7 @@ card(s, Inches(6.5), Inches(1.30), Inches(6.5), Inches(4.9), "C", "CV / P700",
      ])
 
 # ---- Slide 11: data request, card layout --------------------------------------
-s = db.build_content(prs, "Sales-to-Dealer Data — From 01/01/2025", eyebrow="Ask", page_no=15)
+s = db.build_content(prs, "Sales-to-Dealer Data — From 01/01/2025", eyebrow="Ask", page_no=16)
 card(s, Inches(0.32), Inches(1.35), Inches(3.95), Inches(3.6), "1", "Faster replenishment",
      ["Real demand data lets us restock faster when your sales pick up — fewer stockouts on fast movers."])
 card(s, Inches(4.47), Inches(1.35), Inches(3.95), Inches(3.6), "2", "Sharper insight",
@@ -502,7 +531,7 @@ card(s, Inches(8.62), Inches(1.35), Inches(3.95), Inches(3.6), "3", "Shared bene
      ["Better availability for you, a sharper target for us — same data, both sides gain."])
 
 # ---- Slide 12: next steps -----------------------------------------------------
-s = db.build_content(prs, "Next steps", eyebrow="Summary", page_no=16)
+s = db.build_content(prs, "Next steps", eyebrow="Summary", page_no=17)
 db.bullet_list(
     s,
     [

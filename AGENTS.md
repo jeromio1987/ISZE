@@ -52,7 +52,7 @@ Shared rule: `.cursor/rules/isze-external-iml-language.mdc` — **always on**.
 
 ## Production — ask Jerome first
 
-Scheduled SKILL paths, `06_uio/_CURRENT/*.xlsx` formulas, `sales_fact.parquet` rebuilds, GitHub Pages deploy.
+Scheduled SKILL paths, `06_uio/_CURRENT/*.xlsx` formulas, `sales_fact.parquet` rebuilds, GitHub Pages deploy. Outward mail/packs/versions: `.cursor/rules/isze-no-ship-without-ok.mdc` (draft-only; no silent version overwrite; rebuild/ship only on explicit ask).
 
 ## Memory vs markdown
 

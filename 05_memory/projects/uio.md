@@ -92,6 +92,7 @@ ITUK figures (22,389 → 23,068 → 24,173 → ... → 28,209) are unaffected an
 → Feeds Lubricants project (UIO × service interval = lube demand)
 → Feeds Action Plan KPIs (UIO = market size denominator)
 → Feeds AIM Opportunity Engine (Parc × Age Factor × Category Factor = Spend Index)
+→ **IMIE 3-party commercial context (UK ZEV/BIK, ICE/BEV order strips, UMI stock):** `05_memory/projects/imie_3party_2025_2026.md` — supports IUK LCV decline narrative; does **not** override V20 lock **44,926** (`06_uio/_CURRENT/V20_SPEC.md`)
 
 ## Known open items
 1. ✅ **MIDI toggle default** — Policy set May 2026: default = "Exclude MIDI" for ISZE KPI reporting. Include for lubricants/synergy analysis. Set manually in Excel B4 each session.

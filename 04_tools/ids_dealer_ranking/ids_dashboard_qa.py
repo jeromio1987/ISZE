@@ -9,9 +9,15 @@ from __future__ import annotations
 
 from typing import Any
 
+from ids_paths import country_display_name
+
 # Countries that ship totals only (no A–E question detail) are allowed
 # to have empty section pcts. Everything else with dealers must have detail.
-TOTALS_ONLY_COUNTRIES = frozenset({"ITUK", "UK LCV", "UK (ITUK)"})
+# ITUK (= UK CV, the truck distributor) files one consolidated workbook with
+# totals only — take the label from ids_paths, never hardcode the UK segment.
+TOTALS_ONLY_COUNTRIES = frozenset(
+    {"ITUK", "UK (ITUK)", country_display_name("ITUK")}
+)
 
 REQUIRED_SECTIONS = ("A", "B", "C", "D", "E")
 

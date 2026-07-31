@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>IDS 2026 — Poland dealer compare (v1.3)</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <style>
+    :root {
+      --navy: #1a2744;
+      --navy-light: #2d3f5c;
+      --terracotta: #c45c3e;
+      --bg: #f4f6f9;
+      --card: #ffffff;
+      --muted: #6b7a90;
+      --bad: #c45c3e;
+      --good: #2d8a5e;
+      --amber: #c48a1a;
+      --mid: #d4dae3;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", system-ui, sans-serif; background: var(--bg); color: var(--navy); line-height: 1.45; }
+    header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%); color: #fff; padding: 1.25rem 1.5rem 1rem; }
+    header h1 { margin: 0 0 0.25rem; font-size: 1.35rem; font-weight: 600; }
+    header p { margin: 0; opacity: 0.85; font-size: 0.9rem; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: end; padding: 1rem 1.5rem; background: var(--card); border-bottom: 1px solid var(--mid); position: sticky; top: 0; z-index: 10; box-shadow: 0 2px 8px rgba(26,39,68,0.06); }
+    label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); display: block; margin-bottom: 0.25rem; }
+    select, input[type="search"], input[type="number"] { font: inherit; padding: 0.4rem 0.6rem; border: 1px solid var(--mid); border-radius: 6px; min-width: 9rem; background: #fff; color: var(--navy); }
+    input[type="number"] { min-width: 5.5rem; width: 5.5rem; }
+    select[multiple] { min-height: 2.2rem; min-width: 11rem; }
+    .chk { display: flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; padding-bottom: 0.35rem; text-transform: none; font-weight: 500; letter-spacing: 0; color: var(--navy); }
+    .tabs { display: flex; flex-wrap: wrap; gap: 0.15rem; padding: 0 1rem; margin-top: 0.5rem; border-bottom: 1px solid var(--mid); background: var(--card); }
+    .tab { border: none; background: transparent; color: var(--muted); font: inherit; font-weight: 600; font-size: 0.88rem; padding: 0.6rem 0.75rem; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
+    .tab.active { color: var(--terracotta); border-bottom-color: var(--terracotta); }
+    main { padding: 1rem 1.5rem 2rem; max-width: 1400px; margin: 0 auto; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
+    .stat { background: var(--card); border-radius: 10px; padding: 0.85rem 1rem; border-left: 4px solid var(--terracotta); box-shadow: 0 1px 4px rgba(26,39,68,0.05); }
+    .stat strong { display: block; font-size: 1.35rem; }
+    .stat span { font-size: 0.8rem; color: var(--muted); }
+    .card { background: var(--card); border-radius: 10px; padding: 1rem 1.1rem; margin-bottom: 1rem; box-shadow: 0 1px 4px rgba(26,39,68,0.05); }
+    .card h2 { margin: 0 0 0.75rem; font-size: 1.05rem; }
+    .controls { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; align-items: end; }
+    .bar-row { display: grid; grid-template-columns: 11rem 1fr 4rem; gap: 0.5rem; align-items: center; margin-bottom: 0.35rem; font-size: 0.82rem; }
+    .bar-row.tri { grid-template-columns: 8rem 1fr 3.6rem 3.6rem 3.6rem; }
+    .bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bar-label small { color: var(--muted); }
+    .bar-track { height: 1.1rem; background: #e8ecf2; border-radius: 4px; overflow: hidden; position: relative; }
+    .bar-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--navy-light), var(--terracotta)); min-width: 2px; }
+    .bar-fill.below { background: linear-gradient(90deg, #a8b4c4, var(--bad)); }
+    .bar-fill.gap-pos { background: linear-gradient(90deg, #6aab82, var(--good)); }
+    .bar-fill.gap-neg { background: linear-gradient(90deg, #d4907f, var(--bad)); }
+    .bar-fill.good { background: var(--good); }
+    .bar-fill.medium { background: var(--amber); }
+    .bar-fill.bad { background: var(--bad); }
+    .bar-pct { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+    .group-bars { display: grid; gap: 0.55rem; }
+    .gbar { display: grid; grid-template-columns: 9rem 1fr; gap: 0.5rem; align-items: center; font-size: 0.82rem; }
+    .gbar-tracks { display: grid; gap: 3px; }
+    .gbar-tracks .bar-track { height: 0.72rem; }
+    .gbar-meta { font-size: 0.72rem; color: var(--muted); grid-column: 2; }
+    .heatmap-wrap { overflow: auto; max-height: 70vh; }
+    .heatmap { display: grid; gap: 2px; font-size: 0.72rem; min-width: max-content; }
+    .hm-corner { position: sticky; left: 0; z-index: 2; background: var(--card); font-weight: 600; padding: 0.35rem; }
+    .hm-head { writing-mode: vertical-rl; transform: rotate(180deg); padding: 0.35rem 0.2rem; font-weight: 600; color: var(--muted); max-height: 7rem; }
+    .hm-row-label { position: sticky; left: 0; z-index: 1; background: var(--card); padding: 0.25rem 0.4rem; white-space: nowrap; max-width: 14rem; overflow: hidden; text-overflow: ellipsis; border-right: 1px solid var(--mid); }
+    .hm-cell { width: 2.1rem; height: 1.6rem; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #fff; font-size: 0.7rem; }
+    .hm-na { background: #e8ecf2 !important; color: var(--muted) !important; }
+    .legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.75rem; }
+    .legend i { display: inline-block; width: 1rem; height: 1rem; border-radius: 2px; vertical-align: middle; margin-right: 0.25rem; }
+    .badge { font-size: 0.65rem; background: #fff3e8; color: var(--terracotta); border-radius: 4px; padding: 0.1rem 0.35rem; margin-left: 0.35rem; font-weight: 600; }
+    .band { display: inline-block; font-size: 0.68rem; font-weight: 700; border-radius: 4px; padding: 0.12rem 0.4rem; text-transform: uppercase; letter-spacing: 0.03em; }
+    .band.good { background: #e5f4ec; color: var(--good); }
+    .band.medium { background: #f8efd9; color: var(--amber); }
+    .band.bad { background: #f8e6e1; color: var(--bad); }
+    .callouts { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 900px) { .callouts, .split { grid-template-columns: 1fr; } }
+    .callout h3 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+    .callout.good h3 { color: var(--good); }
+    .callout.bad h3 { color: var(--bad); }
+    .callout ul { margin: 0; padding-left: 1.1rem; font-size: 0.85rem; }
+    .callout li { margin-bottom: 0.35rem; }
+    button.linkish { background: none; border: none; color: var(--navy); font: inherit; text-decoration: underline; cursor: pointer; padding: 0; }
+    .radar-wrap { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; }
+    .radar-box { flex: 1 1 320px; max-width: 420px; }
+    .radar-box svg { width: 100%; height: auto; display: block; }
+    .radar-legend { font-size: 0.82rem; margin-top: 0.5rem; }
+    .radar-legend span { display: inline-flex; align-items: center; gap: 0.35rem; margin-right: 1rem; margin-bottom: 0.25rem; }
+    .radar-legend i { width: 1.5rem; height: 3px; border-radius: 2px; display: inline-block; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    table.data { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    table.data th, table.data td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--mid); text-align: left; vertical-align: top; }
+    table.data th { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; }
+    table.data td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    /* Country vs network: center Total Δ, A–E headers/values, and Weakest vs net */
+    table.data.matrix th.num,
+    table.data.matrix td.num,
+    table.data.matrix th:last-child,
+    table.data.matrix td:last-child { text-align: center; }
+    table.data tr.clickable { cursor: pointer; }
+    table.data tr.clickable:hover { background: #f0f3f8; }
+    .q-text { color: var(--muted); font-size: 0.78rem; max-width: 28rem; }
+    .hint { font-size: 0.85rem; color: var(--muted); margin: 0 0 0.75rem; }
+    .matrix-wrap { overflow: auto; }
+    .matrix td.pos { color: var(--good); font-weight: 600; }
+    .matrix td.neg { color: var(--bad); font-weight: 600; }
+    #ids-map { width:100%; height:560px; border-radius:8px; border:1px solid var(--mid); background:#dce3ec; }
+    .leaflet-container { font: inherit; }
+    .rank-pin {
+      border:2px solid #fff;
+      border-radius:50%; width:16px; height:16px;
+      box-shadow:0 1px 4px rgba(0,0,0,.35);
+      cursor: pointer;
+    }
+    .rank-pin.above { background: var(--good); }
+    .rank-pin.near { background: var(--amber); }
+    .rank-pin.below { background: var(--bad); }
+    .rank-pin.unknown { background: #94a3b8; }
+    .map-pin-legend { margin-top: 0.75rem; margin-bottom: 0.25rem; align-items: center; }
+    .map-pin-legend .pin-swatch {
+      display: inline-block; width: 0.85rem; height: 0.85rem; border-radius: 50%;
+      border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(26,39,68,.2); vertical-align: middle; margin-right: 0.3rem;
+    }
+    .map-pin-legend .pin-swatch.above { background: var(--good); }
+    .map-pin-legend .pin-swatch.near { background: var(--amber); }
+    .map-pin-legend .pin-swatch.below { background: var(--bad); }
+    .map-pin-legend .pin-swatch.unknown { background: #94a3b8; }
+    .ids-map-tooltip {
+      background: #fff; border:1px solid var(--mid); border-radius:8px;
+      box-shadow:0 4px 14px rgba(26,39,68,.18); padding:0; max-width:300px;
+    }
+    .ids-map-tooltip .leaflet-tooltip-content { margin:0; }
+    .map-tip-title { font-weight:700; margin:0 0 .35rem; color:var(--navy); font-size:.92rem; }
+    .map-tip-meta { margin:0.15rem 0; color:#54657a; font-size:.85rem; }
+    .map-tip-meta .pos { color: var(--good); }
+    .map-tip-meta .neg { color: var(--bad); }
+    .tile-note { margin:.55rem 0 0; color:var(--muted); font-size:.78rem; }
+    .tile-note.warn { color:#9a3412; }
+    footer { text-align: center; font-size: 0.75rem; color: var(--muted); padding: 1rem; border-top: 1px solid var(--mid); }
+  </style>
+
+<style id="country-only-ui">
+  /* Single-country pack: hide DB-level country filter and multi-country tabs/panels */
+  .toolbar > div:has(#f-country) { display: none !important; }
+  button.tab[data-tab="country"],
+  button.tab[data-tab="country-radar"] { display: none !important; }
+  #panel-country, #panel-country-radar { display: none !important; }
+  /* Per-panel Country dropdowns — only one market in this file */
+  .controls > div:has(#ov-country),
+  .controls > div:has(#gp-country),
+  .controls > div:has(#qq-country),
+  .controls > div:has(#dr-country),
+  .controls > div:has(#cp-country) { display: none !important; }
+</style>
+
+</head>
+<body>
+  <header>
+    <h1>IDS 2026 — Poland dealer comparison <span style="font-weight:500;opacity:.85;font-size:.85em">v1.3</span></h1>
+    <p>v1.3 · Poland dealers only (23) · no country filter (single market) · map hover = dealer score vs Poland national average · network avg from full IDS network (564 dealers, anonymous) · built 2026-07-30 12:30 UTC</p>
+  </header>
+
+  <div class="toolbar">
+    <select id="f-country" multiple hidden aria-hidden="true"></select>
+    <div><label for="f-search">Dealer search</label><input id="f-search" type="search" placeholder="Name…" /></div>
+    <div>
+      <label for="f-vs-national">Vs national avg</label>
+      <select id="f-vs-national">
+        <option value="all">All</option>
+        <option value="below">Below (≥ 3 pp under)</option>
+        <option value="above">Above (≥ 3 pp over)</option>
+        <option value="near">Near (±3 pp)</option>
+      </select>
+    </div>
+    <div>
+      <label for="f-min-score">Min score %</label>
+      <input id="f-min-score" type="number" min="0" max="100" step="1" placeholder="—" />
+    </div>
+    <div>
+      <label for="f-max-score">Max score %</label>
+      <input id="f-max-score" type="number" min="0" max="100" step="1" placeholder="—" />
+    </div>
+    <div>
+      <label for="f-weak-section">Weak section</label>
+      <select id="f-weak-section">
+        <option value="">Any section</option>
+      </select>
+    </div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="overview" type="button">Overview</button>
+    <button class="tab" data-tab="map" type="button">Map</button>
+    <button class="tab" data-tab="heatmap" type="button">Heatmap</button>
+    <button class="tab" data-tab="gaps" type="button">Strengths &amp; gaps</button>
+    <button class="tab" data-tab="questions" type="button">Questions</button>
+    <button class="tab" data-tab="vs-network" type="button">Country vs network</button>
+    <button class="tab" data-tab="dealer-radar" type="button">Dealer radar</button>
+    <button class="tab" data-tab="compare" type="button">Compare dealers</button>
+  </nav>
+
+  <main>
+    <div class="stats" id="stats"></div>
+
+    <section id="panel-overview" class="panel active">
+      <div class="card">
+        <h2>Dealer overview — section vs country &amp; network</h2>
+        <p class="hint">Pick a dealer to see section bars against country and network averages, plus strengths/weak points (full vs zero on max-point checklist items, one per section A–E). Click a section to open question drill.</p>
+        <div class="controls">
+          <div><label for="ov-country">Country</label><select id="ov-country"></select></div>
+          <div><label for="ov-dealer">Dealer</label><select id="ov-dealer"></select></div>
+        </div>
+        <div id="ov-kpis" class="stats" style="margin-bottom:1rem"></div>
+        <div id="ov-section-bars" class="group-bars"></div>
+      </div>
+      <div class="callouts">
+        <div class="card callout good">
+          <h3>Strengths (good)</h3>
+          <ul id="ov-strengths"></ul>
+        </div>
+        <div class="card callout bad">
+          <h3>Weak points (bad)</h3>
+          <ul id="ov-weak"></ul>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Network ranking (filtered)</h2>
+        <div id="chart-overview"></div>
+      </div>
+    </section>
+
+    <section id="panel-map" class="panel">
+      <div class="card">
+        <h2>Poland dealer map</h2>
+        <p class="hint">Pins are coloured by dealer total vs the Poland national average (no rank digits — hover for name and scores; click to open Dealer radar). Filters above apply to the map and other tabs. Locations are approximate city centres (or a country centre when the dealer name has no place token) — not surveyed street addresses. Initial zoom stays on Europe/Israel; French overseas dealers remain on the map — zoom out or filter to France to see them. Map tiles require an internet connection. Dealers without coordinates stay in the tables only.</p>
+        <div id="ids-map" role="img" aria-label="Poland dealer interactive map"></div>
+        <div class="legend map-pin-legend" id="map-legend">
+          <span><i class="pin-swatch above"></i> ≥ +3 pp vs national avg</span>
+          <span><i class="pin-swatch near"></i> Near avg (±3 pp)</span>
+          <span><i class="pin-swatch below"></i> ≤ −3 pp vs national avg</span>
+          <span><i class="pin-swatch unknown"></i> No national avg</span>
+        </div>
+        <p class="tile-note" id="ids-tile-status">Open the Map tab to load tiles…</p>
+      </div>
+    </section>
+
+    <section id="panel-heatmap" class="panel">
+      <div class="card">
+        <h2>Section heatmap</h2>
+        <div class="controls">
+          <div>
+            <label for="hm-mode">Colour mode</label>
+            <select id="hm-mode">
+              <option value="country">vs country avg</option>
+              <option value="network">vs network avg</option>
+              <option value="band">traffic light (good/medium/bad)</option>
+            </select>
+          </div>
+        </div>
+        <div class="legend" id="hm-legend"></div>
+        <div class="heatmap-wrap"><div id="heatmap" class="heatmap"></div></div>
+      </div>
+    </section>
+
+    <section id="panel-gaps" class="panel">
+      <div class="card">
+        <h2>Strengths &amp; gaps (section level)</h2>
+        <p class="hint">Dealer % minus benchmark. Positive = strength; negative = audit priority.</p>
+        <div class="controls">
+          <div><label for="gp-country">Country</label><select id="gp-country"></select></div>
+          <div><label for="gp-section">Section</label><select id="gp-section"></select></div>
+          <div>
+            <label for="gp-bench">Benchmark</label>
+            <select id="gp-bench">
+              <option value="country">Country avg</option>
+              <option value="network">Network avg</option>
+            </select>
+          </div>
+          <div>
+            <label for="gp-side">Show</label>
+            <select id="gp-side">
+              <option value="weak">Worst gaps</option>
+              <option value="strong">Best strengths</option>
+              <option value="both">Both (top &amp; bottom)</option>
+            </select>
+          </div>
+          <div><label for="gp-limit">Limit</label><select id="gp-limit"><option value="20">20</option><option value="40">40</option><option value="999">All</option></select></div>
+        </div>
+        <div id="chart-gaps"></div>
+      </div>
+    </section>
+
+    <section id="panel-questions" class="panel">
+      <div class="card">
+        <h2>Question drill</h2>
+        <p class="hint">Compare each checklist item to country and network average. Band = good / medium / bad. Strengths = full score on max-point items; weak = zero score — one pick per section A–E.</p>
+        <div class="controls">
+          <div><label for="qq-country">Country</label><select id="qq-country"></select></div>
+          <div><label for="qq-dealer">Dealer</label><select id="qq-dealer"></select></div>
+          <div><label for="qq-section">Section</label><select id="qq-section"><option value="">All</option></select></div>
+          <div>
+            <label for="qq-band">Band filter</label>
+            <select id="qq-band">
+              <option value="">All</option>
+              <option value="good">Good</option>
+              <option value="medium">Medium</option>
+              <option value="bad">Bad</option>
+            </select>
+          </div>
+          <div>
+            <label for="qq-sort">Sort</label>
+            <select id="qq-sort">
+              <option value="worst">Worst vs country</option>
+              <option value="best">Best vs country</option>
+              <option value="gap_pts">Biggest points left</option>
+              <option value="ref">Question ref</option>
+            </select>
+          </div>
+        </div>
+        <div id="qq-summary" class="legend"></div>
+        <div class="matrix-wrap"><div id="qq-table"></div></div>
+      </div>
+    </section>
+
+    <section id="panel-vs-network" class="panel">
+      <div class="card">
+        <h2>Country versus network average</h2>
+        <p class="hint">Section % for each country minus network %. Negative = market lag vs full IDS network.</p>
+        <div class="matrix-wrap" id="vs-network-table"></div>
+      </div>
+    </section>
+
+    <section id="panel-dealer-radar" class="panel">
+      <div class="card">
+        <h2>Dealer profile vs benchmarks</h2>
+        <p class="hint">Section scores as % of each section maximum. Overlay country and network averages.</p>
+        <div class="controls">
+          <div><label for="dr-country">Country</label><select id="dr-country"></select></div>
+          <div><label for="dr-dealer">Dealer</label><select id="dr-dealer"></select></div>
+          <label class="chk"><input type="checkbox" id="dr-show-country" checked /> Country avg</label>
+          <label class="chk"><input type="checkbox" id="dr-show-network" checked /> Network avg</label>
+        </div>
+        <div class="radar-wrap">
+          <div class="radar-box" id="dealer-radar-chart"></div>
+          <div id="dealer-radar-table"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-country-radar" class="panel">
+      <div class="card">
+        <h2>Country comparison</h2>
+        <p class="hint">Select up to 4 countries. Polygons show average section profile per market.</p>
+        <div class="controls">
+          <div><label for="cr-countries">Countries (Ctrl+click)</label><select id="cr-countries" multiple size="5"></select></div>
+          <label class="chk"><input type="checkbox" id="cr-show-network" checked /> Overlay network</label>
+        </div>
+        <div class="split">
+          <div class="radar-box" id="country-radar-chart"></div>
+          <div id="country-radar-table"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-compare" class="panel">
+      <div class="card">
+        <h2>Compare dealers (same country)</h2>
+        <div class="controls">
+          <div><label for="cp-country">Country</label><select id="cp-country"></select></div>
+          <div><label for="cp-a">Dealer A</label><select id="cp-a"></select></div>
+          <div><label for="cp-b">Dealer B</label><select id="cp-b"></select></div>
+          <div><label for="cp-c">Dealer C (optional)</label><select id="cp-c"><option value="">—</option></select></div>
+        </div>
+        <div class="radar-wrap">
+          <div class="radar-box" id="compare-radar-chart"></div>
+          <div id="compare-table"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-country" class="panel">
+      <div class="card">
+        <label for="f-country-one">Country</label>
+        <select id="f-country-one"></select>
+        <h2 style="margin-top:1rem">Section bars (dealers + country avg + network)</h2>
+        <div id="chart-country"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>Single-file offline dashboard · save to disk · open in Chrome or Firefox</footer>
+
+  <script>
+    const DATA = {"countries":["Poland"],"sections":[{"id":"A","label":"A. Premises, Facility and Clothing"},{"id":"B","label":"B. Organization, Management, Personnel Management"},{"id":"C","label":"C. Service"},{"id":"D","label":"D. Parts & Accessories"},{"id":"E","label":"E. Vehicle Sales"}],"questions":[{"id":"A.1-1","section":"A","text":"Is the ISUZU Outdoor Sign (Sign board) placed in a location that can be seen from a distance of 200m and is it according to \"I.VIS\" / \"I.BIS\"?\n(Check if main Brand allow to place a ISUZU Outdoor Sign)","max":2.0},{"id":"A.1-10","section":"A","text":"Are there items placed on the service reception counter that have nothing to do with customer relations and is the reception area free from unncecessary obstructions, clean and tidy?","max":1.0},{"id":"A.1-11","section":"A","text":"Does the layout allow customers to move from the reception counter to the waiting lounge and customer toilets without entering office space?","max":1.0},{"id":"A.1-12","section":"A","text":"Is a customer waiting room and/or place available?","max":2.0},{"id":"A.1-13","section":"A","text":"Is the sign for the customer waiting room clearly visible or signed?","max":1.0},{"id":"A.1-14","section":"A","text":"Is the customer waiting room kept clean and orderly?","max":1.0},{"id":"A.1-15","section":"A","text":"Are entertainments (TV, Sales Special via TV display, newspaper, Wifi and magazine) and beverages available in the customer waiting room?","max":3.0},{"id":"A.1-16","section":"A","text":"Are seperate toilets for customers and employees available?","max":1.0},{"id":"A.1-17","section":"A","text":"Is the sign for customer toilets clearly visible?","max":1.0},{"id":"A.1-18","section":"A","text":"Is the customer toilet kept clean and orderly?","max":1.0},{"id":"A.1-19","section":"A","text":"Does the Dealer display a sign detailing the warranty terms and conditions for ISUZU parts and accessories","max":2.0},{"id":"A.1-2","section":"A","text":"The site facilities/premises must present a professional appearance and image. The building, fences and vehicle parking areas must be in a good state of repair and paint work must be free from colour fade and flaking. Exterior lighting must be in good working order and external ground areas must have adequate drainage.","max":1.0},{"id":"A.1-20","section":"A","text":"Does the service reception have access to:\n-A PC with the latest relevant software as instructed by the Distributor\n-A secure method of identifying and storing keys for customer vehicles","max":2.0},{"id":"A.1-21","section":"A","text":"Are charging stations or wallboxes for battery electric vehicles available in the parking and sales area?","max":2.0},{"id":"A.1-22","section":"A","text":"Does the ISUZU Dealer provide 24/7 contact number for out of hours roadside assistance","max":2.0},{"id":"A.1-3","section":"A","text":"Is the ISUZU Outdoor Sign (sign board) maintained in good order, free from color loss or dirt?","max":1.0},{"id":"A.1-4","section":"A","text":"Are operating hours displayed at all customer entrances where the customer can see in a visible and clear way when closed?","max":2.0},{"id":"A.1-5","section":"A","text":"Is the ISUZU Corporate Symbol displayed in the building?\n(Check if main Brand allow to place a ISUZU Corporate Symbol)","max":1.0},{"id":"A.1-6","section":"A","text":"Is the ISUZU Corporate Symbol in the building designed according to \"I.VIS\" / \"I.BIS\"? \n(Check if main Brand allow to place a ISUZU Corporate Symbol)","max":1.0},{"id":"A.1-7","section":"A","text":"Is the customer parking lot available, separated from the employee parking, clearly indicated for customer's use, and shown by lines or marks and must be illuminated during darkness hours whilst within working hours?","max":1.0},{"id":"A.1-8","section":"A","text":"Is the sign for service reception clearly visible in the customer parking lot?","max":2.0},{"id":"A.1-9","section":"A","text":"Is the service reception located inside the shop in a location easily visible from the entrance?","max":1.0},{"id":"A.2-1","section":"A","text":"Is the ISUZU corporate symbol compliant with \"I.VIS\" / \"I.BIS\" put on the company letterhead?","max":2.0},{"id":"A.2-2","section":"A","text":"Is the ISUZU corporate symbol compliant with \"I.VIS\" / \"I.BIS\" put on business cards?","max":2.0},{"id":"A.2-3","section":"A","text":"Are there promotional items in the waiting/sales or aftersales area available and clearly visible and are all corporate literature/posters in the appropriate areas?","max":1.0},{"id":"A.2-4","section":"A","text":"Are there promotional items for Aftersales products (Service contract, Health Report, etc) in the aftersales reception area available and clearly visible?","max":1.0},{"id":"A.3-1","section":"A","text":"Do all reception staffs wear the service advisor uniform?\n(Confirm if main Brand allow to wear ISUZU Uniform)","max":3.0},{"id":"A.3-2","section":"A","text":"Do all reception staffs wear name badge or put the name plate on the service reception counter?\n(Confirm if main Brand allow to wear ISUZU Uniform)","max":2.0},{"id":"A.3-3","section":"A","text":"Do all mechanics wear safety shoes?","max":2.0},{"id":"A.3-4","section":"A","text":"Do all ISUZU trained technicians display ISUZU branding of equal prominence to other brands or neutral branding?","max":1.0},{"id":"B.1-1","section":"B","text":"The Dealer prepares an Isuzu sales and marketing plan. The sales and marketing plan is continuously updated in accordance with the Workshop activities as well as the Importer's national / regional marketing plan.","max":2.0},{"id":"B.1-2","section":"B","text":"Do you have the data of the Number of ISUZU vehicle in operation in your area, and use the data for planning the services and parts sales targets?","max":1.0},{"id":"B.1-3","section":"B","text":"The Dealer prepares an Isuzu specific business plan developed to achieve established annual target.","max":2.0},{"id":"B.1-4","section":"B","text":"Is the specific business plan developed to achieve the established service annual target and continuously updated in accordance with the Workshop activities as well as the Importer's national / regional marketing plan.\nIs the annual target for service sales and profit established?","max":3.0},{"id":"B.1-5","section":"B","text":"Is the specific business plan developed to achieve the established parts annual target? Is the annual target for parts sales and profit established?","max":3.0},{"id":"B.1-6","section":"B","text":"The Dealer Principal must be available for ongoing business reviews as required with the Distributors management team with reasonable notice.","max":1.0},{"id":"B.2-1","section":"B","text":"Is an organization chart prepared?","max":1.0},{"id":"B.2-10","section":"B","text":"Is a Dealer Principal, Proprietor or General Manager designated?","max":1.0},{"id":"B.2-11","section":"B","text":"Are three full time operational staff employed to fulfil the following aftersales roles:\n    -Core function - overall management\n    -Sales Manager, if applicable to franchise\n    -Department - Parts manager, service manager","max":1.0},{"id":"B.2-2","section":"B","text":"Is the organization chart updated yearly and the update date shown on the chart?","max":2.0},{"id":"B.2-3","section":"B","text":"Are roles and responsibilities for organizations and employees clarified?","max":1.0},{"id":"B.2-4","section":"B","text":"Is the person of each responsibility seen in the plan to see for the customer?","max":1.0},{"id":"B.2-5","section":"B","text":"Is there at least one service advisor in charge of Isuzu?","max":2.0},{"id":"B.2-6","section":"B","text":"Is there at least one trained Mechanic who can work on ISUZU Vehicles?","max":3.0},{"id":"B.2-7","section":"B","text":"Is there at least one employee in charge of Isuzu parts sales?","max":2.0},{"id":"B.2-8","section":"B","text":"Is there an HR Management System available to control the quality of each mechanic?","max":3.0},{"id":"B.2-9","section":"B","text":"Is there at least one employee who is the warranty and R&M administrator?","max":1.0},{"id":"B.3-1","section":"B","text":"Are employees abilities and skills evaluated on a regular basis using an evaluation sheet?","max":2.0},{"id":"B.3-2","section":"B","text":"Are education plans for each employee for improvement of necessary abilities and skills developed?","max":2.0},{"id":"B.3-3","section":"B","text":"Does the person in charge of trainings take part in the Isuzu/distributor organized trainings?","max":2.0},{"id":"B.3-4","section":"B","text":"Does the person in charge of trainings, organize trainings for relevant employees in their company shortly after they took the Isuzu/distributor organized trainings?","max":2.0},{"id":"B.3-5","section":"B","text":"Is there sufficient trained staff to cover all key roles in the event of sickness or holiday? Does the Dealer plan for succession?","max":2.0},{"id":"B.3-6","section":"B","text":"Is there a minimum of one ISUZU Master Technician and one ISUZU part trained technician per shift?","max":2.0},{"id":"B.4-1","section":"B","text":"Are fire prevention facilities (fire distinguisher, special fire distinguisher, sprinkler and etc.) in place according to government and/or legal requirements?","max":1.0},{"id":"B.4-2","section":"B","text":"Are signs for emergency exits, fire distinguisher, hazardous material clearly represented according to government and/or legal requirements?","max":1.0},{"id":"B.4-3","section":"B","text":"Is hazardous material controlled according to government and/or legal requirements?","max":2.0},{"id":"B.4-4","section":"B","text":"Is waste disposal managed according to government and/or legal requirements?","max":1.0},{"id":"B.4-5","section":"B","text":"Is health and safety of employees managed according to government and/or legal requirements?","max":1.0},{"id":"B.4-6","section":"B","text":"Is there a parking lot reserved for handicapped persons and clearly indicated?","max":1.0},{"id":"B.4-7","section":"B","text":"Are certificates regarding the handling and servicing of Battery Electric Vehicles available?","max":3.0},{"id":"B.4-8","section":"B","text":"Is there adequate insurance cover in place to cover the day-to-day operation of the ISUZU Dealership?","max":1.0},{"id":"B.5-1","section":"B","text":"Around the fire protection facilities - Nothing should be placed in front of a fire protection facility.","max":1.0},{"id":"B.5-10","section":"B","text":"Are the lifts/pits regularly inspected and maintained well?","max":2.0},{"id":"B.5-11","section":"B","text":"Is there an AED (Defibrillator) Kit available in the service workshop or sales room?","max":1.0},{"id":"B.5-2","section":"B","text":"Tools, carts, racks and jacks not being used - Should not be placed in the service shop.","max":1.0},{"id":"B.5-3","section":"B","text":"Aisles and work area - Should be clearly divided in component line.","max":1.0},{"id":"B.5-4","section":"B","text":"Storage locations of Torque Wrench &  Special Tools - All should be labelled to indicate what is stored.","max":1.0},{"id":"B.5-5","section":"B","text":"Dirt in aisles or floors - Nothing should be dropped or dirty","max":1.0},{"id":"B.5-6","section":"B","text":"Rest room, Toilets and Washroom for Employee - Should be maintained and in clean condition.","max":1.0},{"id":"B.5-7","section":"B","text":"Is 5S carried out per check sheet and are improvement activities implemented after evaluating the check sheet?","max":2.0},{"id":"B.5-8","section":"B","text":"Each document type has the designated storage area and / or stored in Dealer's Database.","max":1.0},{"id":"B.5-9","section":"B","text":"Are there First Aid Kits available in the service workshop?","max":1.0},{"id":"B.6-1","section":"B","text":"Is the customer satisfaction survey for service being conducted regularly and/or Dealer participates in all centrally-organized programs and activities from the Distributor with the aim of improving the customer satisfaction of the individual repairer.","max":1.0},{"id":"B.6-10","section":"B","text":"Is for every customer checked whether a GDPR agreement has been signed and if necessary, obtained if it does not exist?","max":2.0},{"id":"B.6-2","section":"B","text":"Is customer information database for effective communication with potential and existing customers kept?","max":1.0},{"id":"B.6-3","section":"B","text":"Is the name, address, phone number and contact person of the customer, registered in the customer database?","max":2.0},{"id":"B.6-4","section":"B","text":"Is the payment classification registered in the customer database?","max":1.0},{"id":"B.6-5","section":"B","text":"Is the customer classification registered in the customer database (S-classification)?","max":1.0},{"id":"B.6-6","section":"B","text":"Is information on whether the customer has an own service shop registered in the customer database?","max":1.0},{"id":"B.6-7","section":"B","text":"Are the VIN and license plate number of the customer’s vehicles registered in the customer database?","max":2.0},{"id":"B.6-8","section":"B","text":"Is the vehicle mileage when servicing at ISUZU Service Shop registered to the customer database?","max":1.0},{"id":"B.6-9","section":"B","text":"Are all service history of the customer’s vehicle registered in the customer information database?","max":1.0},{"id":"B.7-1","section":"B","text":"Is regular self-evaluation conducted to meet the dealer standards?","max":1.0},{"id":"C.1-1","section":"C","text":"Is lighting arranged in such way to facilitate operation?","max":1.0},{"id":"C.1-10","section":"C","text":"Are all essential service special tools (A Grade) available?","max":2.0},{"id":"C.1-11","section":"C","text":"Is at least one set of diagnostic tools specified by Isuzu (Tech2 and G-IDSS) available?","max":1.0},{"id":"C.1-12","section":"C","text":"Is the latest software installed into diagnostic tools specified by Isuzu (Tech2 and G-IDSS)?","max":1.0},{"id":"C.1-13","section":"C","text":"Are sufficient general tools necessary for repair & maintenance available for each mechanic?","max":1.0},{"id":"C.1-14","section":"C","text":"Are fender cover, grill cover, seat cover, floor mat and steering wheel cover used in each stall?\n(For commercial vehicle dealer, only seat cover, floor mat and steering cover are required.)","max":2.0},{"id":"C.1-15","section":"C","text":"Are mechanic tools organized in a mobile locker set to carry out day-to-day operations efficiently","max":1.0},{"id":"C.1-16","section":"C","text":"Is there personal protection gear available for mechanics when working with battery electric vehicles?","max":2.0},{"id":"C.1-17","section":"C","text":"Are there specially insulated tools available to use for mechanics when working with battery electric vehicles?","max":2.0},{"id":"C.1-18","section":"C","text":"Is a Battery Lift available?","max":2.0},{"id":"C.1-19","section":"C","text":"Does the ISUZU dealer have at least one fully equipped service van (branded in accordance with \"I.VIS\" / \"I.BIS\") for the purpose of offering roadside assistance?","max":1.0},{"id":"C.1-2","section":"C","text":"Are air ducts and/or ventilating systems in place?","max":1.0},{"id":"C.1-20","section":"C","text":"Does the ISUZU dealer provide roadside assistance to broken down vehicles 24/7?","max":1.0},{"id":"C.1-3","section":"C","text":"Lifts or pits which can handle the heaviest or longest vehicle in the market are installed?","max":1.0},{"id":"C.1-4","section":"C","text":"Is the component repair room available to prevent contamination from foreign matters?","max":2.0},{"id":"C.1-5","section":"C","text":"Are engine and transmission jacks available?","max":1.0},{"id":"C.1-6","section":"C","text":"Is a workbench exclusively for disassembly and assembly of parts in place?","max":1.0},{"id":"C.1-7","section":"C","text":"Is an A/C gas recovery and recycle system available?","max":1.0},{"id":"C.1-8","section":"C","text":"The dealer has \"on-site\" general workshop tools and equipment in accordance with industry practice, including the Isuzu Dealer Operating Manual and the Isuzu Warranty Operating Manual.","max":1.0},{"id":"C.1-9","section":"C","text":"Are adequate torque wrenches available and are they regularly calibrated and such calibration records maintained?","max":2.0},{"id":"C.2-1","section":"C","text":"Are changing space and the number of lockers sufficient for the number of employees?","max":1.0},{"id":"C.2-2","section":"C","text":"Toilet and washroom exclusively for employees shall be sufficient for the number of employees.","max":1.0},{"id":"C.2-3","section":"C","text":"Rest room exclusively for employees shall be sufficient in terms of numbers and comfort.","max":1.0},{"id":"C.3-1","section":"C","text":"Is the latest version of service operation manual which is delivered from ISUZU or your distributor (Service Policies and Procedures Manual for ISUZU) kept and / or has Dealer access to the online Version ?","max":1.0},{"id":"C.3-10","section":"C","text":"Are replaced parts under the warranty kept attached with claim information (Repair Order Number, VIN, the Repair Order Date, the Mileage and the Main Phenomenon, etc.)?","max":2.0},{"id":"C.3-11","section":"C","text":"Is the recall or service campaign per definition conducted according to SPPM?","max":1.0},{"id":"C.3-12","section":"C","text":"Does the ISUZU dealer keep accurate records of all inspection/maintenance work completed?","max":2.0},{"id":"C.3-2","section":"C","text":"Is there all the latest service information's available?\n(Parts catalog EQ-Hit, Workshop manual, Owners manual, CSS-Net, SPPM, LTG)","max":1.0},{"id":"C.3-3","section":"C","text":"Is the process to report product issues regarding critical product issue or safety to distributor or ISUZU clarified?","max":2.0},{"id":"C.3-4","section":"C","text":"Are new vehicles stored properly to prevent damage to and/or deterioration of the vehicles and inspect them regularly with storage maintenance sheet?","max":1.0},{"id":"C.3-5","section":"C","text":"Are all storage maintenance sheets kept?","max":2.0},{"id":"C.3-6","section":"C","text":"Is pre-delivery inspection (PDI) performed with PDI sheet immediately before the vehicle is delivered to the customer?","max":1.0},{"id":"C.3-7","section":"C","text":"Are all PDI sheets within specified storage period kept?","max":1.0},{"id":"C.3-8","section":"C","text":"Do you explain the detail of warranty to the customer using warranty booklet or warranty certificate, when delivering the new vehicle?","max":2.0},{"id":"C.3-9","section":"C","text":"Is enough parts rack space available, classified by months to store replaced warranty parts, according to the Isuzu guidelines?","max":2.0},{"id":"C.4-1","section":"C","text":"Do you have an appointment control system?","max":1.0},{"id":"C.4-10","section":"C","text":"Do you always monitor the job progress with a process flow management board or DMS and take actions if necessary?","max":2.0},{"id":"C.4-11","section":"C","text":"Do you identify the cause of delay, immediately contact the customer to explain the reason and delivery time change, and get the customer's approval if there is a delay in the job process?","max":1.0},{"id":"C.4-12","section":"C","text":"Do you confirm work result and customer's order and perform final inspection using the check sheet after job is completed?","max":1.0},{"id":"C.4-13","section":"C","text":"Do you explain the actual work and final inspection result using the necessary document to the customer?","max":1.0},{"id":"C.4-14","section":"C","text":"Do you inform about the next periodical maintenance during vehicle delivery?","max":1.0},{"id":"C.4-15","section":"C","text":"Do you follow up with customers within one week after a vehicle service to confirm the vehicle’s condition and document the results?","max":2.0},{"id":"C.4-16","section":"C","text":"Do you ensure the usage of Isuzu genuine parts for maintenance and repair?","max":1.0},{"id":"C.4-17","section":"C","text":"Do you accept urgent requests for repairs even without prior reservation?","max":1.0},{"id":"C.4-18","section":"C","text":"Do you provide outside services outside of normal business hours, (such as delivery or collection of the vehicle, workshop on wheels) if the customer requests as such?","max":1.0},{"id":"C.4-19","section":"C","text":"Is the repair time allotted as per Isuzu LTG or dealers fixed labor times?","max":1.0},{"id":"C.4-2","section":"C","text":"Do you contact the customer to come to ISUZU Service Shop for scheduled maintenance by utilizing data consisting of customer information, sales records and service records?","max":1.0},{"id":"C.4-20","section":"C","text":"Are the number of incoming vehicles and maintenances provided to the distributor?","max":3.0},{"id":"C.4-21","section":"C","text":"Does the mechanic write a clear and concise report on the job sheet on completion of works including original complaint, defects & parts replaced? This must include any DTC codes present or non-present.","max":2.0},{"id":"C.4-22","section":"C","text":"Is there an electronic time clock or other efficient method of recording workshop times for the management of labour hours?","max":2.0},{"id":"C.4-3","section":"C","text":"Is the person responsible for contacting the customer assigned?","max":1.0},{"id":"C.4-4","section":"C","text":"Do you perform the inquiry to the customer accurately and check the vehicle?","max":1.0},{"id":"C.4-5","section":"C","text":"Do you explain the detail of estimate (necessary parts, work contents, price, and delivery time) to the customer and get an approval from the customer?","max":2.0},{"id":"C.4-6","section":"C","text":"Do you confirm a customer’s contact in case that additional work is required or the vehicle cannot be delivered on the promised delivery time?","max":1.0},{"id":"C.4-7","section":"C","text":"Do you agree the delivery time with the customer before starting works?","max":1.0},{"id":"C.4-8","section":"C","text":"Do you provide a job order with a job order sheet to the mechanic?","max":3.0},{"id":"C.4-9","section":"C","text":"Do you explain to the customer about the additional work contents, delivery time and price, and get the customer’s approval before starting the additional job?","max":2.0},{"id":"D.1-1","section":"D","text":"Do you have enough space corresponding to the amount of the parts to be stocked?","max":1.0},{"id":"D.1-10","section":"D","text":"Does the ISUZU dealer provide suitable access to an undercover secure area for the delivery of parts outside normal opening hours?","max":1.0},{"id":"D.1-11","section":"D","text":"Is sufficient area provided to store the mandatory level of stock and anticipated level of stock based on customer demand?","max":1.0},{"id":"D.1-12","section":"D","text":"Is there a good receiving/despatch area for goods awaiting placing into storage or collection available inside the parts warehouse?","max":1.0},{"id":"D.1-13","section":"D","text":"Is there a suitable area allocated to allow for the collection and dispensing of oils lubricants and batteries in line with appropriate health, safety and local regulations?","max":1.0},{"id":"D.1-14","section":"D","text":"The entrances and exits of the parts warehouse are organized and tidy. No items block one of them.","max":1.0},{"id":"D.1-15","section":"D","text":"No other Objects than Parts should be placed in the warehouse (personal items, unlisted assets).","max":1.0},{"id":"D.1-16","section":"D","text":"No objects, including parts, documents or cardboard boxes should be on any floor, corridor, or lane.","max":1.0},{"id":"D.1-17","section":"D","text":"Upon the goods arrival Parts are sorted for putaway immediately.","max":1.0},{"id":"D.1-18","section":"D","text":"Parts are immediately put away after sorting.","max":1.0},{"id":"D.1-19","section":"D","text":"Heavy and large items should not be stored on the shelf.","max":1.0},{"id":"D.1-2","section":"D","text":"Are the design and location of the parts warehouse considered based on the frequency of the movement and parts characteristics?","max":1.0},{"id":"D.1-20","section":"D","text":"No parts are stored in between storage bins.","max":1.0},{"id":"D.1-21","section":"D","text":"Parts are stored with the part number label in front and in the right position","max":1.0},{"id":"D.1-3","section":"D","text":"Are storage locations determined so that receiving and shipping can be implemented efficiently and logically and are they controlled through a DMS system? Are recommended parts identifiable in the DMS with a suitable stocking and ordering system in place?","max":3.0},{"id":"D.1-4","section":"D","text":"Do you have two service parts sales counters, one for customers (retail sales) and one for the workshop (in-house sales)?","max":1.0},{"id":"D.1-5","section":"D","text":"Do you have an inventory control system for managing an adequate inventory such as automatically calculation and ordering for the required quantities?","max":2.0},{"id":"D.1-6","section":"D","text":"Do you have a sales order control management system?","max":2.0},{"id":"D.1-7","section":"D","text":"Are all non-genuine parts stored separately from ISUZU genuine parts and clearly labelled?","max":1.0},{"id":"D.1-8","section":"D","text":"Do you display parts sales promotional materials for Genuine and BVP parts around the counter?","max":2.0},{"id":"D.1-9","section":"D","text":"Can the ISUZU dealer accept deliveries during normal working hours?","max":1.0},{"id":"D.2-1","section":"D","text":"Do you have the latest original parts operation manual based on the operation manual provided by ISUZU or ISUZU Distributor and do you always refer to the parts catalogs?","max":1.0},{"id":"D.2-10","section":"D","text":"Do you measure first fill rate, inventory turnover rates and standing inventory rates, monitor on a monthly basis and set target values?","max":2.0},{"id":"D.2-11","section":"D","text":"Do you categorise the products (e.g.parts, accessories, oil, tyre, batteries, others, etc.), and manage the sales of each category?","max":1.0},{"id":"D.2-12","section":"D","text":"Do you categorise the type of parts sales (e.g. warranty, retail) and type of customer (e.g. in-house, counter-sales, fleet customer, parts shop, other workshop, etc.), and manage the sales of each category?","max":1.0},{"id":"D.2-13","section":"D","text":"Are service parts and accessories for sales and repair compliant with the local regulation?","max":1.0},{"id":"D.2-14","section":"D","text":"Is the latest version of parts catalogue available and / or has the Dealer access to the EPC online Version ?","max":1.0},{"id":"D.2-15","section":"D","text":"Do you track lost sales due to pricing issues or back orders?","max":1.0},{"id":"D.2-16","section":"D","text":"Do you offer R&M and or Extended Warranty Programs?\nIf YES: Specify in Reference Column!\nIf NO: Would you like to offer if available?","max":1.0},{"id":"D.2-17","section":"D","text":"Is the ISUZU dealer able to supply on demand a full inventory of ISUZU parts in electronic format for audit or stock cleanse purposes?","max":1.0},{"id":"D.2-2","section":"D","text":"Is the same format of the documentation used in the service shop?","max":1.0},{"id":"D.2-3","section":"D","text":"When you receive the repair job order from the service department, do you check the parts stock availability needed for the job, and order the necessary parts for the job if there is no stock?","max":1.0},{"id":"D.2-4","section":"D","text":"Are the procedures and responsible person for ordering, stocking, shipping and inventory control clarified?","max":1.0},{"id":"D.2-5","section":"D","text":"Is a dedicated Parts Sales Person assigned and is the Person responsible for parts taking part in the Distributors parts trainings according to their After Sales Policy?","max":2.0},{"id":"D.2-6","section":"D","text":"Is the order quantity decided based on the demand forecast from the actual sales results?","max":1.0},{"id":"D.2-7","section":"D","text":"Do you place \"Fast moving parts\" Orders on regular basis to avoid non availability at all time?","max":1.0},{"id":"D.2-8","section":"D","text":"Do you have targets for inventory values, and monitor actual values on a monthly basis?","max":1.0},{"id":"D.2-9","section":"D","text":"Do you have targets for orders and sales and monitor actual values on a monthly basis?","max":3.0},{"id":"E.1-1","section":"E","text":"Is a dedicated Vehicle Sales Person assigned?","max":1.0},{"id":"E.1-10","section":"E","text":"Is there a standardized follow-up process to assess customer satisfaction and uncover any further requirements after every new vehicle purchase?","max":2.0},{"id":"E.1-11","section":"E","text":"After customers understand the high standard of Isuzu maintenance, do you offer new customers suggestions on inspection and maintenance services?","max":2.0},{"id":"E.1-12","section":"E","text":"Do you suggest/offer maintenance packages and or warranty extension when selling new vehicles?","max":2.0},{"id":"E.1-2","section":"E","text":"A minimum of one Isuzu Demonstrator must be operated per Dealer Sales location. The Vehicle(s) type and Bodywork configuration is at the Dealer discretion. The Vehicle must be to the latest Isuzu specification and must not be more than twelve-months old from its Date of First Registration.","max":1.0},{"id":"E.1-3","section":"E","text":"Are there the newest Models available in Showroom?","max":1.0},{"id":"E.1-4","section":"E","text":"All 'Point of Sales' material, Pictures, Posters, Brochures, Specification Sheets etc must be kept up to date with the latest Isuzu models and displayed in all relevant Customer facing areas?","max":1.0},{"id":"E.1-5","section":"E","text":"Do you have a system implemented to track lead response times?","max":1.0},{"id":"E.1-6","section":"E","text":"Do you have a system or practice implemented to follow-up on potential customers and also to input and update their customer information in the system?","max":2.0},{"id":"E.1-7","section":"E","text":"Do you track the Conversion rate of leads to actual sales?","max":1.0},{"id":"E.1-8","section":"E","text":"Are there regular trainings conducted to make sure that the sales team understands the features and benefits of the vehicles?","max":2.0},{"id":"E.1-9","section":"E","text":"Do you use a Software to manage your vehicle sales?","max":1.0},{"id":"E.2-1","section":"E","text":"Is actual model information available for all available vehicles on dealers website?","max":2.0},{"id":"E.2-2","section":"E","text":"Is the ISUZU Corporate Symbol used on the dealers website according to \"I.BIS\" / \"I.VIS\"?","max":1.0},{"id":"E.2-3","section":"E","text":"Do all company vehicles such as service van, parts delivery van etc. display the correct ISUZU logo as defined by \"I.VIS\" / \"I.BIS\"?","max":2.0},{"id":"E.2-4","section":"E","text":"Does the ISUZU dealership have a suitable Email address for each department such as service@dealername, parts@dealername?","max":2.0},{"id":"E.2-5","section":"E","text":"Are dealer contacts registered in Google Ads/Search?","max":1.0},{"id":"E.2-6","section":"E","text":"Does the dealer have an own Website and is it possible to schedule appointments on it?","max":2.0}],"dealers":[{"id":"Poland::ARPOL MOTOR COMPANY SP Z O O","country":"Poland","name":"ARPOL MOTOR COMPANY SP Z O O","address":"SZOSA BYDGOSKA 52, 87-100 TORUŃ","total":221.0,"total_pct":0.789286,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":38.0,"max":46.0,"pct":0.8260869565217391,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":58.0,"max":80.0,"pct":0.725,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":67.0,"max":80.0,"pct":0.8375,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":34.0,"max":47.0,"pct":0.723404255319149,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":24.0,"max":27.0,"pct":0.8888888888888888,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,0.6667,0.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,1.0,0.5,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,0.0,0.5,1.0,0.5,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,0.5,1.0,0.5,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,0.5,1.0,1.0,0.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5],"geo":{"lat":53.0138,"lon":18.5984,"place":"Toruń","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::AUTO DASZUTA SPÓŁKA JAWNA","country":"Poland","name":"AUTO DASZUTA SPÓŁKA JAWNA","address":"ul. Sikorskiego 33, 10-088 Olsztyn","total":197.0,"total_pct":0.703571,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":33.0,"max":46.0,"pct":0.717391304347826,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":44.0,"max":80.0,"pct":0.55,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":63.0,"max":80.0,"pct":0.7875,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":33.0,"max":47.0,"pct":0.7021276595744681,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":24.0,"max":27.0,"pct":0.8888888888888888,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.3333,0.5,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,0.0,1.0,0.0,0.5,1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.5,1.0,1.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,0.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5],"geo":{"lat":53.7784,"lon":20.4801,"place":"Olsztyn","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::Auto Diug Sp. Z o.o.","country":"Poland","name":"Auto Diug Sp. Z o.o.","address":"76-200 Słupsk Ul. Poznańska 74","total":251.0,"total_pct":0.896429,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":44.0,"max":46.0,"pct":0.9565217391304348,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":67.0,"max":80.0,"pct":0.8375,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":71.0,"max":80.0,"pct":0.8875,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":42.0,"max":47.0,"pct":0.8936170212765957,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":27.0,"max":27.0,"pct":1.0,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.6667,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.6667,1.0,0.3333,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,1.0,0.5,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0],"geo":{"lat":54.4641,"lon":17.0285,"place":"Słupsk","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::AUTO-JAKUBOWSCY SPÓŁKA JAWNA","country":"Poland","name":"AUTO-JAKUBOWSCY SPÓŁKA JAWNA","address":"36-072 ŚWILCZA 146I","total":255.0,"total_pct":0.910714,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":38.0,"max":46.0,"pct":0.8260869565217391,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":76.0,"max":80.0,"pct":0.95,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":74.0,"max":80.0,"pct":0.925,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":43.0,"max":47.0,"pct":0.9148936170212766,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":24.0,"max":27.0,"pct":0.8888888888888888,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,0.5,1.0,1.0,1.0,1.0,1.0,0.6667,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0],"geo":{"lat":50.071,"lon":21.966,"place":"Świlcza (Rzeszów)","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::Budmat Auto Sp. Z o.o.","country":"Poland","name":"Budmat Auto Sp. Z o.o.","address":"09-400 PŁOCK, UL.Bielska 67","total":258.0,"total_pct":0.921429,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":40.0,"max":46.0,"pct":0.8695652173913043,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":70.0,"max":80.0,"pct":0.875,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":76.0,"max":80.0,"pct":0.95,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":46.0,"max":47.0,"pct":0.9787234042553191,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":26.0,"max":27.0,"pct":0.9629629629629629,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,0.5,1.0,1.0,1.0,1.0,0.5,0.6667,0.6667,1.0,1.0,1.0,1.0,0.5,1.0,1.0,0.5,0.3333,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5],"geo":{"lat":52.5463,"lon":19.7065,"place":"Płock","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::Centrum Motoryzacyjne Szymański Sp. z o.o.","country":"Poland","name":"Centrum Motoryzacyjne Szymański Sp. z o.o.","address":"41-300 Dąbrowa Górnicza, Al.. Piłsudskiego 2H","total":214.0,"total_pct":0.764286,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":33.0,"max":46.0,"pct":0.717391304347826,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":60.0,"max":80.0,"pct":0.75,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":65.0,"max":80.0,"pct":0.8125,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":34.0,"max":47.0,"pct":0.723404255319149,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":22.0,"max":27.0,"pct":0.8148148148148148,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,0.0,1.0,0.3333,1.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,1.0,1.0,0.5,1.0,1.0,0.6667,0.6667,1.0,1.0,1.0,0.0,0.5,1.0,0.0,1.0,0.6667,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.5,1.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.5,1.0,0.5,0.5,0.5,0.0,1.0,0.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,0.0,0.5,0.5,1.0,0.5,1.0,1.0,0.5,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,0.0,1.0,0.5],"geo":{"lat":50.3217,"lon":19.1876,"place":"Dąbrowa Górnicza","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::DESIM SP.ZO.O SPÓŁKA KOMANDYTOWA - AUTORYZOWANY SERWIS ISUZU","country":"Poland","name":"DESIM SP.ZO.O SPÓŁKA KOMANDYTOWA - AUTORYZOWANY SERWIS ISUZU","address":"59-100 POLKOWICE UL. KRZYWA 3","total":246.0,"total_pct":0.878571,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":44.0,"max":46.0,"pct":0.9565217391304348,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":73.0,"max":80.0,"pct":0.9125,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":75.0,"max":80.0,"pct":0.9375,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":47.0,"max":47.0,"pct":1.0,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":7.0,"max":27.0,"pct":0.25925925925925924,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.6667,1.0,0.5,0.5,0.5,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0],"geo":{"lat":51.5022,"lon":16.0726,"place":"Polkowice","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::HLC Sp. z o.o.","country":"Poland","name":"HLC Sp. z o.o.","address":"al.. Zwycięstwa 162, 81-540 Gdynia","total":231.0,"total_pct":0.825,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":34.0,"max":46.0,"pct":0.7391304347826086,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":65.0,"max":80.0,"pct":0.8125,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":70.0,"max":80.0,"pct":0.875,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":38.0,"max":47.0,"pct":0.8085106382978723,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":24.0,"max":27.0,"pct":0.8888888888888888,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,0.0,0.3333,0.5,1.0,1.0,1.0,0.0,1.0,0.3333,0.3333,1.0,1.0,1.0,1.0,0.5,1.0,1.0,0.5,0.6667,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,0.0,1.0],"geo":{"lat":54.5189,"lon":18.5305,"place":"Gdynia","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::Lee Motors Automotive Sp z o.o.","country":"Poland","name":"Lee Motors Automotive Sp z o.o.","address":"62-052 komorniki ul Poznańska 156","total":228.0,"total_pct":0.814286,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":30.0,"max":46.0,"pct":0.6521739130434783,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":70.0,"max":80.0,"pct":0.875,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":72.0,"max":80.0,"pct":0.9,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":40.0,"max":47.0,"pct":0.851063829787234,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":16.0,"max":27.0,"pct":0.5925925925925926,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.0,1.0,0.5,0.0,0.0,1.0,1.0,1.0,0.0,0.5,0.0,0.0,0.0,1.0,1.0,1.0,1.0,0.0,0.5,0.6667,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,0.5,0.0,1.0,1.0,1.0,1.0,0.5,1.0,0.5,1.0,0.5,1.0,0.5,0.5,1.0,0.5],"geo":{"lat":52.338,"lon":16.807,"place":"Komorniki","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::Odyssey sp. z o. o.::1|Droga Męczenników Majdanka 74A, 20-325 Lublin","country":"Poland","name":"Odyssey sp. z o. o.","address":"Droga Męczenników Majdanka 74A, 20-325 Lublin","total":232.0,"total_pct":0.828571,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":32.0,"max":46.0,"pct":0.6956521739130435,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":66.0,"max":80.0,"pct":0.825,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":72.0,"max":80.0,"pct":0.9,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":42.0,"max":47.0,"pct":0.8936170212765957,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":20.0,"max":27.0,"pct":0.7407407407407407,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,0.0,0.0,0.3333,0.5,1.0,1.0,1.0,0.0,1.0,0.3333,0.6667,1.0,1.0,1.0,1.0,0.5,1.0,1.0,0.5,0.6667,1.0,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.5,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,0.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,0.5,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5],"geo":{"lat":51.2465,"lon":22.5684,"place":"Lublin","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::Odyssey sp. z o. o.::2|Droga Męczenników Majdanka 74A, 20-325 Lublin","country":"Poland","name":"Odyssey sp. z o. o.","address":"Droga Męczenników Majdanka 74A, 20-325 Lublin","total":232.0,"total_pct":0.828571,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":32.0,"max":46.0,"pct":0.6956521739130435,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":66.0,"max":80.0,"pct":0.825,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":72.0,"max":80.0,"pct":0.9,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":42.0,"max":47.0,"pct":0.8936170212765957,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":20.0,"max":27.0,"pct":0.7407407407407407,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,0.0,0.0,0.3333,0.5,1.0,1.0,1.0,0.0,1.0,0.3333,0.6667,1.0,1.0,1.0,1.0,0.5,1.0,1.0,0.5,0.6667,1.0,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.5,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,0.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,0.5,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5],"geo":{"lat":51.2465,"lon":22.5684,"place":"Lublin","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::Odyssey sp. z o. o.::3|ul. Górczewska 32, 01-147 Warszawa","country":"Poland","name":"Odyssey sp. z o. o.","address":"ul. Górczewska 32, 01-147 Warszawa","total":233.0,"total_pct":0.832143,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":33.0,"max":46.0,"pct":0.717391304347826,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":66.0,"max":80.0,"pct":0.825,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":72.0,"max":80.0,"pct":0.9,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":42.0,"max":47.0,"pct":0.8936170212765957,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":20.0,"max":27.0,"pct":0.7407407407407407,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,0.0,0.0,0.3333,0.5,1.0,1.0,1.0,0.0,1.0,0.3333,0.6667,1.0,1.0,1.0,1.0,0.5,1.0,1.0,0.5,0.6667,1.0,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.5,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,0.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,0.5,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5],"geo":{"lat":52.2297,"lon":21.0122,"place":"Warszawa","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::PGD JM MOTORS Sp. z o. o.::1|43-300 Bielsko-Biała, ul. Wyzwolenia 95","country":"Poland","name":"PGD JM MOTORS Sp. z o. o.","address":"43-300 Bielsko-Biała, ul. Wyzwolenia 95","total":217.0,"total_pct":0.775,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":38.0,"max":46.0,"pct":0.8260869565217391,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":60.0,"max":80.0,"pct":0.75,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":66.0,"max":80.0,"pct":0.825,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":30.0,"max":47.0,"pct":0.6382978723404256,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":23.0,"max":27.0,"pct":0.8518518518518519,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,0.0,0.0,0.3333,0.5,1.0,1.0,1.0,1.0,1.0,0.6667,0.6667,1.0,1.0,1.0,1.0,0.5,1.0,1.0,0.5,0.3333,0.5,0.3333,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.0,0.0,1.0,0.5,1.0,0.0,0.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.6667,0.0,1.0,1.0,1.0,0.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0,0.5,0.0,1.0,0.0,0.3333,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.5],"geo":{"lat":49.8225,"lon":19.0444,"place":"Bielsko-Biała","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::PGD JM MOTORS Sp. z o. o.::2|30 - 570 Kraków, Al. Powstańców Śląskich 22","country":"Poland","name":"PGD JM MOTORS Sp. z o. o.","address":"30 - 570 Kraków, Al. Powstańców Śląskich 22","total":241.0,"total_pct":0.860714,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":39.0,"max":46.0,"pct":0.8478260869565217,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":66.0,"max":80.0,"pct":0.825,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":71.0,"max":80.0,"pct":0.8875,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":40.0,"max":47.0,"pct":0.851063829787234,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":25.0,"max":27.0,"pct":0.9259259259259259,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,1.0,1.0,1.0,1.0,1.0,0.6667,0.6667,1.0,1.0,1.0,1.0,0.5,1.0,0.0,0.5,0.6667,1.0,0.6667,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.5],"geo":{"lat":50.0647,"lon":19.945,"place":"Kraków","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::Przedsiębiorstwo Motoryzacyjne Pol-Car sp. z o.o.","country":"Poland","name":"Przedsiębiorstwo Motoryzacyjne Pol-Car sp. z o.o.","address":"61-057 Poznań ul. Gorzysława 9","total":223.0,"total_pct":0.796429,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":42.0,"max":46.0,"pct":0.9130434782608695,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":59.0,"max":80.0,"pct":0.7375,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":71.0,"max":80.0,"pct":0.8875,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":46.0,"max":47.0,"pct":0.9787234042553191,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":5.0,"max":27.0,"pct":0.18518518518518517,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,0.0,1.0],"geo":{"lat":52.4064,"lon":16.9252,"place":"Poznań","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::SOLO HOLDING SP ZOO","country":"Poland","name":"SOLO HOLDING SP ZOO","address":"DĄBROWA UL. ŹRÓDLANA 36 26-001 MASŁÓW","total":237.0,"total_pct":0.846429,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":43.0,"max":46.0,"pct":0.9347826086956522,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":62.0,"max":80.0,"pct":0.775,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":68.0,"max":80.0,"pct":0.85,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":44.0,"max":47.0,"pct":0.9361702127659575,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":20.0,"max":27.0,"pct":0.7407407407407407,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,0.5],"geo":{"lat":50.906,"lon":20.726,"place":"Masłów (Kielce)","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::TOP AUTO ANDRZEJ AREFIEW","country":"Poland","name":"TOP AUTO ANDRZEJ AREFIEW","address":"Krupniki 25","total":239.0,"total_pct":0.853571,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":37.0,"max":46.0,"pct":0.8043478260869565,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":65.0,"max":80.0,"pct":0.8125,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":72.0,"max":80.0,"pct":0.9,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":39.0,"max":47.0,"pct":0.8297872340425532,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":26.0,"max":27.0,"pct":0.9629629629629629,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[0.5,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.5,1.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,0.5,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.5,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.3333,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5],"geo":{"lat":53.1325,"lon":23.1688,"place":"Białystok","geo_label":"Approx city (directory / known place)","map_exclude":false}},{"id":"Poland::TRUCK SUPPORT WOJCIECH BYRA DANUTA BYRA SPÓŁKA CYWILNA::1|05-870 BŁONIE UL. POWSTAŃCÓW 97A","country":"Poland","name":"TRUCK SUPPORT WOJCIECH BYRA DANUTA BYRA SPÓŁKA CYWILNA","address":"05-870 BŁONIE UL. POWSTAŃCÓW 97A","total":274.0,"total_pct":0.978571,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":46.0,"max":46.0,"pct":1.0,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":79.0,"max":80.0,"pct":0.9875,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":76.0,"max":80.0,"pct":0.95,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":47.0,"max":47.0,"pct":1.0,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":26.0,"max":27.0,"pct":0.9629629629629629,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0],"geo":{"lat":52.195,"lon":20.617,"place":"Błonie","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::TRUCK SUPPORT WOJCIECH BYRA DANUTA BYRA SPÓŁKA CYWILNA::2|05-870 BŁONIE UL. POWSTAŃCÓW 97A","country":"Poland","name":"TRUCK SUPPORT WOJCIECH BYRA DANUTA BYRA SPÓŁKA CYWILNA","address":"05-870 BŁONIE UL. POWSTAŃCÓW 97A","total":225.0,"total_pct":0.803571,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":43.0,"max":46.0,"pct":0.9347826086956522,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":57.0,"max":80.0,"pct":0.7125,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":73.0,"max":80.0,"pct":0.9125,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":45.0,"max":47.0,"pct":0.9574468085106383,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":7.0,"max":27.0,"pct":0.25925925925925924,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,1.0,1.0,0.5,1.0,0.0,0.0,0.0,0.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.6667,0.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,0.0,1.0,0.0,1.0],"geo":{"lat":52.195,"lon":20.617,"place":"Błonie","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::Truckekspert Isuzu","country":"Poland","name":"Truckekspert Isuzu","address":"Powstańców 98A, 05-870, Błonie","total":250.0,"total_pct":0.892857,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":38.0,"max":46.0,"pct":0.8260869565217391,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":72.0,"max":80.0,"pct":0.9,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":73.0,"max":80.0,"pct":0.9125,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":43.0,"max":47.0,"pct":0.9148936170212766,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":24.0,"max":27.0,"pct":0.8888888888888888,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.3333,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.3333,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.5],"geo":{"lat":52.195,"lon":20.617,"place":"Błonie","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::ULTIMA Sp. z o.o.","country":"Poland","name":"ULTIMA Sp. z o.o.","address":"ul. Fałata 1 58-560 Jelenia Góra","total":252.0,"total_pct":0.9,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":38.0,"max":46.0,"pct":0.8260869565217391,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":70.0,"max":80.0,"pct":0.875,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":74.0,"max":80.0,"pct":0.925,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":44.0,"max":47.0,"pct":0.9361702127659575,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":26.0,"max":27.0,"pct":0.9629629629629629,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,0.6667,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,0.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0],"geo":{"lat":50.9044,"lon":15.7194,"place":"Jelenia Góra","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::Vip Car Sp. z o.o.","country":"Poland","name":"Vip Car Sp. z o.o.","address":"45-273 Opole, ul. Kazimierza Pużaka 6","total":251.0,"total_pct":0.896429,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":39.0,"max":46.0,"pct":0.8478260869565217,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":69.0,"max":80.0,"pct":0.8625,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":74.0,"max":80.0,"pct":0.925,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":44.0,"max":47.0,"pct":0.9361702127659575,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":25.0,"max":27.0,"pct":0.9259259259259259,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,0.0,1.0,0.6667,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,0.5,1.0,1.0,1.0,1.0,0.5,0.6667,0.6667,1.0,0.0,1.0,1.0,0.5,1.0,1.0,0.5,0.6667,1.0,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,0.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.5],"geo":{"lat":50.6751,"lon":17.9213,"place":"Opole","geo_label":"Approx city from address","map_exclude":false}},{"id":"Poland::Viskar Sp. Z o.o.","country":"Poland","name":"Viskar Sp. Z o.o.","address":"84-200 Wejherowo, ul. Gdańska 17","total":253.0,"total_pct":0.903571,"country_avg_total":237.3913043478261,"country_avg_pct":0.8478260434782608,"totals_only":false,"sections":{"A":{"score":41.0,"max":46.0,"pct":0.8913043478260869,"country_avg_score":38.04347826086956,"country_avg_pct":0.82703213610586,"network_avg_pct":0.726128762541806},"B":{"score":73.0,"max":80.0,"pct":0.9125,"country_avg_score":65.78260869565217,"country_avg_pct":0.8222826086956522,"network_avg_pct":0.7248076923076923},"C":{"score":72.0,"max":80.0,"pct":0.9,"country_avg_score":71.26086956521739,"country_avg_pct":0.8907608695652174,"network_avg_pct":0.8058653846153846},"D":{"score":41.0,"max":47.0,"pct":0.8723404255319149,"country_avg_score":41.130434782608695,"country_avg_pct":0.8751156336725254,"network_avg_pct":0.7518003273322422},"E":{"score":26.0,"max":27.0,"pct":0.9629629629629629,"country_avg_score":21.17391304347826,"country_avg_pct":0.784219001610306,"network_avg_pct":0.6966831434916542}},"q":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.3333,0.5,1.0,1.0,0.5,1.0,1.0,0.6667,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,0.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,0.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.5,1.0,1.0,1.0,1.0,1.0],"geo":{"lat":54.6056,"lon":18.2335,"place":"Wejherowo","geo_label":"Approx city from address","map_exclude":false}}],"dealer_count":23,"country_count":1,"country_profiles":{"Poland":{"dealer_count":23,"total_pct":0.8478260434782608,"sections_pct":{"A":0.8270321361058601,"B":0.8222826086956522,"C":0.8907608695652174,"D":0.8751156336725254,"E":0.7842190016103059},"q_pct":[0.9783,1.0,1.0,0.9783,0.7826,1.0,0.9275,0.9565,1.0,1.0,0.3478,1.0,1.0,0.7826,0.5217,1.0,0.8913,0.9565,0.9565,1.0,0.7826,1.0,0.7826,0.8696,0.6522,0.5652,0.4348,0.6087,1.0,1.0,0.8261,0.6087,0.6739,0.4783,0.5073,0.8696,0.913,1.0,0.9565,0.6957,1.0,0.8696,0.7609,0.7971,0.9565,0.8261,1.0,0.7609,0.6739,0.8043,0.8043,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.7826,0.5072,1.0,1.0,0.9348,0.1739,1.0,1.0,0.9565,1.0,1.0,0.4565,0.9565,1.0,0.913,0.8261,1.0,0.9565,0.913,0.8696,0.6522,0.8913,1.0,1.0,0.9565,1.0,0.5435,1.0,1.0,1.0,0.913,1.0,0.8913,0.8043,0.6739,0.1739,1.0,0.3913,0.8261,0.5652,1.0,1.0,1.0,1.0,0.8261,1.0,1.0,1.0,0.9565,0.9565,1.0,0.9348,1.0,0.8043,0.913,0.7826,0.9565,0.9565,0.9565,0.8261,1.0,0.9348,1.0,0.913,0.9565,1.0,0.7609,1.0,0.9565,0.5652,1.0,0.913,0.913,1.0,0.913,1.0,1.0,0.9783,1.0,1.0,0.971,1.0,1.0,0.913,1.0,0.9565,1.0,1.0,0.9565,1.0,1.0,1.0,1.0,1.0,1.0,0.9565,0.7971,0.7826,0.7391,0.8913,1.0,0.4348,1.0,1.0,0.7174,0.8696,0.9565,1.0,1.0,0.7826,0.6087,0.8696,0.9565,1.0,1.0,0.7391,0.9565,1.0,0.9565,0.7246,0.8696,0.6087,0.8913,0.6304,0.8696,0.8696,0.7826,0.8261,0.8478,0.6957,0.8261,0.8696,0.7391,0.9565,0.8043,0.9348,0.5652,0.6522]}},"network":{"dealer_count":564,"total_pct":0.7569628581560284,"sections_pct":{"A":0.726128762541806,"B":0.7248076923076923,"C":0.8058653846153846,"D":0.7518003273322422,"E":0.6966831434916542},"q_pct":[0.8365,0.7942,0.9058,0.7846,0.8212,0.9385,0.8122,0.8538,0.8827,0.9346,0.3946,0.9231,0.8849,0.7485,0.4255,0.8635,0.7942,0.7923,0.7692,0.8654,0.7913,0.9077,0.7635,0.7192,0.6422,0.4739,0.3686,0.3644,0.9327,0.6422,0.6096,0.6404,0.6087,0.4635,0.4301,0.8356,0.7673,0.8839,0.7834,0.5788,0.8308,0.6558,0.6173,0.8128,0.8625,0.5906,0.9342,0.5615,0.5221,0.7837,0.7163,0.8878,0.8462,0.9323,0.925,0.9038,0.9231,0.9269,0.6673,0.6109,0.9149,0.8173,0.9,0.3019,0.8327,0.8038,0.8462,0.8962,0.925,0.3449,0.8519,0.9308,0.7365,0.6731,0.8962,0.8962,0.7327,0.6058,0.5096,0.9115,0.9288,0.9269,0.7192,0.9269,0.7048,0.9288,0.9269,0.9308,0.7683,0.9168,0.8288,0.7587,0.5446,0.265,0.8135,0.3527,0.8788,0.5519,0.9269,0.9,0.8654,0.9192,0.7654,0.8808,0.8923,0.8801,0.9115,0.8548,0.9173,0.901,0.9154,0.8603,0.8365,0.7029,0.8288,0.7923,0.8452,0.7269,0.8917,0.7708,0.9284,0.8414,0.8839,0.9226,0.5213,0.9304,0.9207,0.6364,0.8279,0.764,0.7228,0.8859,0.7834,0.8201,0.8781,0.9149,0.9284,0.9284,0.9175,0.9265,0.9192,0.7079,0.9246,0.8762,0.9265,0.9091,0.8897,0.8453,0.9246,0.9323,0.911,0.9096,0.8607,0.9265,0.6353,0.6558,0.7423,0.8635,0.8923,0.3202,0.9284,0.9192,0.4538,0.7788,0.7558,0.875,0.9265,0.5319,0.4043,0.8839,0.8942,0.9308,0.9212,0.6231,0.8038,0.8962,0.6308,0.4712,0.8201,0.6267,0.7427,0.5406,0.8124,0.7621,0.7776,0.675,0.7273,0.6557,0.7418,0.8046,0.7079,0.8201,0.5348,0.7592,0.7911,0.5648]},"bands":{"good_min_pct":0.8,"medium_min_pct":0.6,"near_country_pp":0.05,"weak_gap_pp":-0.1},"version":"v1.3","scope":{"label":"Poland only","audience":"ISZE / IMG colleagues","network_benchmark":"Full IDS 2026 network average (anonymous)","network_dealer_count":564},"geo":{"geo_ok":23,"geo_city":23,"geo_country_fallback":0,"geo_missing":0,"dealer_count":23},"geo_sanity":{"ok":true,"errors":[],"warnings":[],"countries":{"Poland":{"n":23,"pinned":23,"city":23,"country_fb":0,"unique_places":20,"cluster_max":3,"cluster_share":0.13,"cluster_radius_km":10.0}}},"built_at":"2026-07-30 12:30 UTC"};
+    const COUNTRY_COLORS = ["#c45c3e", "#1a2744", "#2d8a5e", "#5b7cba", "#9b6bb8", "#d4a017"];
+    const BANDS = DATA.bands || { good_min_pct: 0.80, medium_min_pct: 0.60, near_country_pp: 0.05, weak_gap_pp: -0.10 };
+    const $ = (s) => document.querySelector(s);
+    const pct = (v) => (v == null ? "—" : (v * 100).toFixed(1) + "%");
+    const pctGap = (v) => (v == null ? "—" : ((v >= 0 ? "+" : "") + (v * 100).toFixed(1) + " pp"));
+
+    function secIds() { return DATA.sections.map((s) => s.id); }
+    function secLabel(id) { return DATA.sections.find((s) => s.id === id)?.label || id; }
+    function questions() { return DATA.questions || []; }
+
+    function dealerVector(d) {
+      return secIds().map((id) => d.sections[id]?.pct ?? null);
+    }
+    function countryVector(c) {
+      const p = DATA.country_profiles[c];
+      if (!p) return secIds().map(() => null);
+      return secIds().map((id) => p.sections_pct[id] ?? null);
+    }
+    function networkVector() {
+      return secIds().map((id) => DATA.network.sections_pct[id] ?? null);
+    }
+
+    /** Traffic light vs country avg (proposal V1). */
+    function bandFor(pctVal, countryAvg) {
+      if (pctVal == null) return null;
+      const gap = countryAvg != null ? pctVal - countryAvg : null;
+      if (gap != null && gap <= BANDS.weak_gap_pp) return "bad";
+      if (pctVal >= BANDS.good_min_pct && (countryAvg == null || pctVal >= countryAvg)) return "good";
+      if (pctVal < BANDS.medium_min_pct && (countryAvg == null || pctVal < countryAvg)) return "bad";
+      if (gap != null && Math.abs(gap) <= BANDS.near_country_pp) return "medium";
+      if (pctVal >= BANDS.medium_min_pct && pctVal < BANDS.good_min_pct) return "medium";
+      if (countryAvg != null && pctVal < countryAvg) return "bad";
+      if (pctVal >= BANDS.good_min_pct) return "good";
+      return "medium";
+    }
+    function bandLabel(b) {
+      return b === "good" ? "Good" : b === "bad" ? "Bad" : b === "medium" ? "Medium" : "—";
+    }
+    function bandHtml(b) {
+      return b ? `<span class="band ${b}">${bandLabel(b)}</span>` : "—";
+    }
+
+    function selectedCountries() {
+      const picked = [...$("#f-country").selectedOptions].map((o) => o.value);
+      return picked.length ? picked : DATA.countries;
+    }
+
+    /** Pin / filter band vs country national average (±3 pp). */
+    const VS_NATIONAL_PP = 3;
+    function vsNationalBand(totalPct, countryAvgPct) {
+      if (totalPct == null || countryAvgPct == null) return "unknown";
+      const deltaPp = (totalPct - countryAvgPct) * 100;
+      if (deltaPp >= VS_NATIONAL_PP) return "above";
+      if (deltaPp <= -VS_NATIONAL_PP) return "below";
+      return "near";
+    }
+
+    function parseScoreFilter(el) {
+      if (!el) return null;
+      const raw = String(el.value || "").trim();
+      if (raw === "") return null;
+      const n = Number(raw);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    /** Workspace aliases → Mode A country labels (search / filter help). */
+    const COUNTRY_SEARCH_ALIASES = {
+      "uk lcv": ["iuk", "uk (iuk)", "uk_lcv"],
+      "uk cv": ["ituk", "uk (ituk)", "uk_cv"],
+      "israel lcv": ["umi", "israel"],
+    };
+    function matchesSearch(d, q) {
+      if (!q) return true;
+      if (d.name.toLowerCase().includes(q)) return true;
+      const c = String(d.country || "").toLowerCase();
+      if (c.includes(q)) return true;
+      const aliases = COUNTRY_SEARCH_ALIASES[c] || [];
+      return aliases.some((a) => a === q || a.includes(q) || q.includes(a));
+    }
+
+    function filteredDealers() {
+      const countries = new Set(selectedCountries());
+      const q = $("#f-search").value.trim().toLowerCase();
+      const vs = ($("#f-vs-national") && $("#f-vs-national").value) || "all";
+      const minScore = parseScoreFilter($("#f-min-score"));
+      const maxScore = parseScoreFilter($("#f-max-score"));
+      const weakSec = ($("#f-weak-section") && $("#f-weak-section").value) || "";
+      return DATA.dealers.filter((d) => {
+        if (!countries.has(d.country)) return false;
+        if (!matchesSearch(d, q)) return false;
+        if (d.total_pct != null) {
+          const scorePct = d.total_pct * 100;
+          if (minScore != null && scorePct < minScore) return false;
+          if (maxScore != null && scorePct > maxScore) return false;
+        } else if (minScore != null || maxScore != null) {
+          return false;
+        }
+        if (vs !== "all") {
+          const band = vsNationalBand(d.total_pct, d.country_avg_pct);
+          if (band !== vs) return false;
+        }
+        if (weakSec) {
+          const s = d.sections && d.sections[weakSec];
+          if (!s || s.pct == null || s.country_avg_pct == null) return false;
+          if (s.pct >= s.country_avg_pct) return false;
+        }
+        return true;
+      });
+    }
+
+    function drawRadar(el, series, opts) {
+      opts = opts || {};
+      const ids = secIds();
+      const n = ids.length || 1;
+      const W = 400, H = 400, cx = W / 2, cy = H / 2, R = 145;
+      const rings = [0.25, 0.5, 0.75, 1];
+      let svg = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" role="img">`;
+      rings.forEach((t) => {
+        const pts = ids.map((_, i) => {
+          const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
+          return `${cx + R * t * Math.cos(a)},${cy + R * t * Math.sin(a)}`;
+        }).join(" ");
+        svg += `<polygon points="${pts}" fill="none" stroke="#d4dae3" stroke-width="1"/>`;
+      });
+      ids.forEach((id, i) => {
+        const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
+        const x = cx + R * Math.cos(a), y = cy + R * Math.sin(a);
+        svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#d4dae3" stroke-width="1"/>`;
+        const lx = cx + (R + 22) * Math.cos(a), ly = cy + (R + 22) * Math.sin(a);
+        const anchor = Math.abs(Math.cos(a)) < 0.1 ? "middle" : Math.cos(a) > 0 ? "start" : "end";
+        svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" dominant-baseline="middle" font-size="11" font-weight="600" fill="#1a2744">${id}</text>`;
+      });
+      series.forEach((s) => {
+        const pts = ids.map((_, i) => {
+          const v = Math.max(0, Math.min(1, s.values[i] ?? 0));
+          const a = -Math.PI / 2 + (2 * Math.PI * i) / n;
+          return `${cx + R * v * Math.cos(a)},${cy + R * v * Math.sin(a)}`;
+        }).join(" ");
+        const fill = s.fill || "none";
+        const dash = s.dash ? `stroke-dasharray="${s.dash}"` : "";
+        svg += `<polygon points="${pts}" fill="${fill}" stroke="${s.color}" stroke-width="${s.width || 2}" ${dash} opacity="${s.opacity ?? 1}"/>`;
+      });
+      svg += `<text x="${cx}" y="${H - 8}" text-anchor="middle" font-size="9" fill="#6b7a90">0% center → 100% outer ring</text></svg>`;
+      let leg = '<div class="radar-legend">';
+      series.forEach((s) => { leg += `<span><i style="background:${s.color}"></i>${s.label}</span>`; });
+      leg += "</div>";
+      el.innerHTML = svg + leg;
+    }
+
+    function sectionTableHtml(title, rows) {
+      let h = `<h3 style="margin:0 0 0.5rem;font-size:0.95rem">${title}</h3><table class="data"><thead><tr><th>Section</th><th class="num">Dealer</th><th class="num">Country</th><th class="num">Network</th><th class="num">Δ ctry</th></tr></thead><tbody>`;
+      rows.forEach((r) => {
+        h += `<tr><td>${r.id} — ${secLabel(r.id).slice(0, 28)}</td><td class="num">${pct(r.d)}</td><td class="num">${pct(r.c)}</td><td class="num">${pct(r.n)}</td><td class="num">${pctGap(r.gap)}</td></tr>`;
+      });
+      return h + "</tbody></table>";
+    }
+
+    function populateDealerSelect(sel, country, skipId) {
+      const cur = sel.value;
+      sel.innerHTML = "";
+      DATA.dealers.filter((d) => d.country === country && !d.totals_only && d.id !== skipId)
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .forEach((d) => {
+          const o = document.createElement("option");
+          o.value = d.id;
+          o.textContent = d.name;
+          sel.appendChild(o);
+        });
+      if (cur && [...sel.options].some((o) => o.value === cur)) sel.value = cur;
+    }
+
+    function jumpToQuestions(dealerId, sectionId) {
+      const d = DATA.dealers.find((x) => x.id === dealerId);
+      if (!d) return;
+      document.querySelectorAll(".tab").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+      const tab = document.querySelector('.tab[data-tab="questions"]');
+      tab.classList.add("active");
+      $("#panel-questions").classList.add("active");
+      $("#qq-country").value = d.country;
+      populateDealerSelect($("#qq-dealer"), d.country);
+      $("#qq-dealer").value = d.id;
+      if (sectionId) $("#qq-section").value = sectionId;
+      renderQuestions();
+    }
+
+    function jumpToDealerRadar(dealerId) {
+      const d = DATA.dealers.find((x) => x.id === dealerId);
+      if (!d) return;
+      document.querySelectorAll(".tab").forEach((b) => b.classList.remove("active"));
+      document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+      const tab = document.querySelector('.tab[data-tab="dealer-radar"]');
+      tab.classList.add("active");
+      $("#panel-dealer-radar").classList.add("active");
+      $("#dr-country").value = d.country;
+      populateDealerSelect($("#dr-dealer"), d.country);
+      if (![...$("#dr-dealer").options].some((o) => o.value === d.id)) {
+        const o = document.createElement("option");
+        o.value = d.id;
+        o.textContent = d.name + (d.totals_only ? " (totals only)" : "");
+        $("#dr-dealer").appendChild(o);
+      }
+      $("#dr-dealer").value = d.id;
+      renderDealerRadar();
+    }
+
+    function renderOverviewFocus() {
+      const country = $("#ov-country").value;
+      populateDealerSelect($("#ov-dealer"), country);
+      const dealer = DATA.dealers.find((d) => d.id === $("#ov-dealer").value);
+      if (!dealer) {
+        $("#ov-kpis").innerHTML = "";
+        $("#ov-section-bars").innerHTML = "<p>No dealer selected.</p>";
+        $("#ov-strengths").innerHTML = "";
+        $("#ov-weak").innerHTML = "";
+        return;
+      }
+      const cAvg = dealer.country_avg_pct;
+      const nAvg = DATA.network.total_pct;
+      $("#ov-kpis").innerHTML = `
+        <div class="stat"><strong>${pct(dealer.total_pct)}</strong><span>${dealer.name} total</span></div>
+        <div class="stat"><strong>${pct(cAvg)}</strong><span>${country} avg</span></div>
+        <div class="stat"><strong>${pct(nAvg)}</strong><span>Network avg</span></div>
+        <div class="stat"><strong>${pctGap(dealer.total_pct != null && cAvg != null ? dealer.total_pct - cAvg : null)}</strong><span>Δ vs country</span></div>
+        <div class="stat"><strong>${pctGap(dealer.total_pct != null && nAvg != null ? dealer.total_pct - nAvg : null)}</strong><span>Δ vs network</span></div>`;
+
+      const rows = secIds().map((id) => {
+        const s = dealer.sections[id] || {};
+        const dPct = s.pct ?? null;
+        const cPct = s.country_avg_pct ?? DATA.country_profiles[country]?.sections_pct?.[id] ?? null;
+        const nPct = s.network_avg_pct ?? DATA.network.sections_pct[id] ?? null;
+        const gapC = dPct != null && cPct != null ? dPct - cPct : null;
+        const band = bandFor(dPct, cPct);
+        return { id, dPct, cPct, nPct, gapC, band };
+      });
+
+      $("#ov-section-bars").innerHTML = rows.map((r) => {
+        const fill = r.band || "medium";
+        return `<div class="gbar">
+          <div><strong>${r.id}</strong><br/><small>${secLabel(r.id).replace(/^[A-E]\.\s*/, "").slice(0, 28)}</small><br/>${bandHtml(r.band)}</div>
+          <div>
+            <div class="gbar-tracks">
+              <div class="bar-track" title="Dealer"><div class="bar-fill ${fill}" style="width:${Math.min(100, (r.dPct ?? 0) * 100)}%"></div></div>
+              <div class="bar-track" title="Country"><div class="bar-fill" style="width:${Math.min(100, (r.cPct ?? 0) * 100)}%;background:#1a2744"></div></div>
+              <div class="bar-track" title="Network"><div class="bar-fill" style="width:${Math.min(100, (r.nPct ?? 0) * 100)}%;background:#6b7a90"></div></div>
+            </div>
+            <div class="gbar-meta">Dealer ${pct(r.dPct)} · Country ${pct(r.cPct)} · Network ${pct(r.nPct)} · Δ ${pctGap(r.gapC)}
+              · <button type="button" class="linkish" data-jump-sec="${r.id}">Questions →</button></div>
+          </div>
+        </div>`;
+      }).join("");
+
+      $("#ov-section-bars").querySelectorAll("[data-jump-sec]").forEach((btn) => {
+        btn.addEventListener("click", () => jumpToQuestions(dealer.id, btn.getAttribute("data-jump-sec")));
+      });
+
+      const hl = pickMaxPointHighlights(dealer);
+      $("#ov-strengths").innerHTML = hl.strengths.length
+        ? hl.strengths.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.section}" data-jump-q="${r.id}"><strong>${r.id}</strong></button> ${r.score}/${r.max} (full) · ${esc(shortText(r.text))}</li>`).join("")
+        : "<li>No full-score max-point items in sections A–E.</li>";
+      $("#ov-weak").innerHTML = hl.weak.length
+        ? hl.weak.map((r) => `<li><button type="button" class="linkish" data-jump-sec="${r.section}" data-jump-q="${r.id}"><strong>${r.id}</strong></button> 0/${r.max} · ${esc(shortText(r.text))}</li>`).join("")
+        : "<li>No zero-score max-point items in sections A–E.</li>";
+      [...$("#ov-strengths").querySelectorAll("[data-jump-sec]"), ...$("#ov-weak").querySelectorAll("[data-jump-sec]")].forEach((btn) => {
+        btn.addEventListener("click", () => jumpToQuestions(dealer.id, btn.getAttribute("data-jump-sec")));
+      });
+    }
+
+    function shortText(s) {
+      const t = (s || "").replace(/\s+/g, " ").trim();
+      return t.length > 72 ? t.slice(0, 70) + "…" : t;
+    }
+    function esc(s) {
+      return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+    /** Per section A–E: good = full score on an item; bad = zero. Prefer higher max points (not first row). */
+    function pickMaxPointHighlights(dealer) {
+      const qs = questions();
+      const strengths = [];
+      const weak = [];
+      if (!dealer || !Array.isArray(dealer.q) || !qs.length) return { strengths, weak };
+      const bySec = {};
+      qs.forEach((q, i) => {
+        const dPct = dealer.q[i];
+        const maxPts = Number(q.max) || 0;
+        if (dPct == null || maxPts <= 0) return;
+        const score = dPct * maxPts;
+        const sec = q.section || (q.id || "").charAt(0);
+        if (!secIds().includes(sec)) return;
+        if (!bySec[sec]) bySec[sec] = { good: [], bad: [] };
+        const item = { id: q.id, section: sec, text: q.text || "", score: Math.round(score * 1000) / 1000, max: maxPts, pct: dPct };
+        if (Math.abs(score - maxPts) < 0.05) bySec[sec].good.push(item);
+        if (score < 0.05) bySec[sec].bad.push(item);
+      });
+      secIds().forEach((sec) => {
+        const g = (bySec[sec] && bySec[sec].good || []).slice().sort((a, b) => b.max - a.max || a.id.localeCompare(b.id));
+        const b = (bySec[sec] && bySec[sec].bad || []).slice().sort((a, b) => b.max - a.max || a.id.localeCompare(b.id));
+        if (g[0]) strengths.push(g[0]);
+        if (b[0]) weak.push(b[0]);
+      });
+      return { strengths, weak };
+    }
+
+    function renderDealerRadar() {
+      const country = $("#dr-country").value;
+      populateDealerSelect($("#dr-dealer"), country);
+      const dealer = DATA.dealers.find((d) => d.id === $("#dr-dealer").value);
+      if (!dealer || dealer.totals_only) {
+        $("#dealer-radar-chart").innerHTML = "<p>No section detail for this dealer (totals only).</p>";
+        $("#dealer-radar-table").innerHTML = "";
+        return;
+      }
+      const series = [{ label: dealer.name, values: dealerVector(dealer), color: "#c45c3e", fill: "rgba(196,92,62,0.15)", width: 2.5 }];
+      if ($("#dr-show-country").checked) {
+        series.push({ label: country + " avg", values: countryVector(country), color: "#1a2744", fill: "none", dash: "6 4", width: 2 });
+      }
+      if ($("#dr-show-network").checked) {
+        series.push({ label: "Network avg", values: networkVector(), color: "#6b7a90", fill: "none", dash: "2 3", width: 1.5 });
+      }
+      drawRadar($("#dealer-radar-chart"), series);
+      const cv = countryVector(country), nv = networkVector(), dv = dealerVector(dealer);
+      const rows = secIds().map((id, i) => ({ id, d: dv[i], c: cv[i], n: nv[i], gap: dv[i] != null && cv[i] != null ? dv[i] - cv[i] : null }));
+      $("#dealer-radar-table").innerHTML = sectionTableHtml(dealer.name + " · total " + pct(dealer.total_pct), rows);
+    }
+
+    function renderCountryRadar() {
+      const picked = [...$("#cr-countries").selectedOptions].map((o) => o.value).slice(0, 4);
+      if (!picked.length) picked.push(DATA.countries[0]);
+      const series = picked.map((c, i) => ({
+        label: c,
+        values: countryVector(c),
+        color: COUNTRY_COLORS[i % COUNTRY_COLORS.length],
+        fill: COUNTRY_COLORS[i % COUNTRY_COLORS.length] + "22",
+        width: 2,
+      }));
+      if ($("#cr-show-network").checked) {
+        series.push({ label: "Network", values: networkVector(), color: "#6b7a90", fill: "none", dash: "2 3", width: 1.5 });
+      }
+      drawRadar($("#country-radar-chart"), series);
+      let tbl = '<table class="data"><thead><tr><th>Country</th><th>Dealers</th><th class="num">Total %</th><th class="num">Δ network</th><th>Weakest</th></tr></thead><tbody>';
+      picked.forEach((c) => {
+        const p = DATA.country_profiles[c];
+        const vec = countryVector(c);
+        let weak = "—", weakV = 1;
+        secIds().forEach((id, i) => {
+          const v = vec[i];
+          if (v != null && v < weakV) { weakV = v; weak = id + " (" + pct(v) + ")"; }
+        });
+        const gapN = p.total_pct != null && DATA.network.total_pct != null ? p.total_pct - DATA.network.total_pct : null;
+        tbl += `<tr><td>${c}</td><td>${p.dealer_count}</td><td class="num">${pct(p.total_pct)}</td><td class="num">${pctGap(gapN)}</td><td>${weak}</td></tr>`;
+      });
+      $("#country-radar-table").innerHTML = tbl + "</tbody></table>";
+    }
+
+    function renderGaps() {
+      const country = $("#gp-country").value;
+      const sec = $("#gp-section").value;
+      const limit = parseInt($("#gp-limit").value, 10);
+      const bench = $("#gp-bench").value;
+      const side = $("#gp-side").value;
+      const list = DATA.dealers.filter((d) => d.country === country && !d.totals_only);
+      const rows = list.map((d) => {
+        const s = d.sections[sec] || {};
+        const base = bench === "network"
+          ? (s.network_avg_pct ?? DATA.network.sections_pct[sec])
+          : s.country_avg_pct;
+        const gap = s.pct != null && base != null ? s.pct - base : null;
+        return { d, gap, pct: s.pct, band: bandFor(s.pct, s.country_avg_pct) };
+      }).filter((r) => r.gap != null);
+
+      let show = [];
+      const worst = [...rows].sort((a, b) => a.gap - b.gap);
+      const best = [...rows].sort((a, b) => b.gap - a.gap);
+      if (side === "weak") show = worst.slice(0, limit);
+      else if (side === "strong") show = best.slice(0, limit);
+      else {
+        const half = Math.max(1, Math.floor(limit / 2));
+        const top = best.slice(0, half);
+        const bot = worst.slice(0, half);
+        const seen = new Set();
+        show = [...bot, ...top].filter((r) => {
+          if (seen.has(r.d.id)) return false;
+          seen.add(r.d.id);
+          return true;
+        });
+      }
+
+      const maxG = Math.max(0.05, ...show.map((r) => Math.abs(r.gap)));
+      $("#chart-gaps").innerHTML = show.length ? show.map(({ d, gap, pct: p, band }) => {
+        const w = Math.min(100, (Math.abs(gap) / maxG) * 100);
+        const cls = gap >= 0 ? "gap-pos" : "gap-neg";
+        return `<div class="bar-row">
+          <div class="bar-label">${d.name} ${bandHtml(band)}</div>
+          <div class="bar-track"><div class="bar-fill ${cls}" style="width:${w}%"></div></div>
+          <div class="bar-pct">${pctGap(gap)}</div>
+        </div>`;
+      }).join("") : "<p>No gap data for this section.</p>";
+    }
+
+    function renderQuestions() {
+      const country = $("#qq-country").value;
+      populateDealerSelect($("#qq-dealer"), country);
+      const dealer = DATA.dealers.find((d) => d.id === $("#qq-dealer").value);
+      const secFilter = $("#qq-section").value;
+      const bandFilter = $("#qq-band").value;
+      const sort = $("#qq-sort").value;
+      const qs = questions();
+      if (!dealer || !Array.isArray(dealer.q) || !qs.length) {
+        $("#qq-table").innerHTML = "<p>No question-level scores for this dealer (totals-only or missing extract).</p>";
+        $("#qq-summary").innerHTML = "";
+        return;
+      }
+      const cProf = DATA.country_profiles[country]?.q_pct || [];
+      const nProf = DATA.network.q_pct || [];
+      let rows = qs.map((q, i) => {
+        const dPct = dealer.q[i];
+        const cPct = cProf[i] ?? null;
+        const nPct = nProf[i] ?? null;
+        const maxPts = q.max || 0;
+        const score = dPct != null && maxPts ? dPct * maxPts : null;
+        const gapPts = score != null && maxPts ? maxPts - score : null;
+        const gapC = dPct != null && cPct != null ? dPct - cPct : null;
+        const gapN = dPct != null && nPct != null ? dPct - nPct : null;
+        const band = bandFor(dPct, cPct);
+        return { q, i, dPct, cPct, nPct, score, gapPts, gapC, gapN, band };
+      }).filter((r) => r.dPct != null)
+        .filter((r) => !secFilter || r.q.section === secFilter)
+        .filter((r) => !bandFilter || r.band === bandFilter);
+
+      if (sort === "worst") rows.sort((a, b) => (a.gapC ?? 0) - (b.gapC ?? 0));
+      else if (sort === "best") rows.sort((a, b) => (b.gapC ?? 0) - (a.gapC ?? 0));
+      else if (sort === "gap_pts") rows.sort((a, b) => (b.gapPts ?? 0) - (a.gapPts ?? 0));
+      else rows.sort((a, b) => a.q.id.localeCompare(b.q.id));
+
+      const counts = { good: 0, medium: 0, bad: 0 };
+      rows.forEach((r) => { if (r.band) counts[r.band]++; });
+      $("#qq-summary").innerHTML = `
+        <span><i style="background:var(--good)"></i>Good ${counts.good}</span>
+        <span><i style="background:var(--amber)"></i>Medium ${counts.medium}</span>
+        <span><i style="background:var(--bad)"></i>Bad ${counts.bad}</span>
+        <span>${rows.length} questions shown</span>`;
+
+      let html = `<table class="data"><thead><tr>
+        <th>Ref</th><th>Question</th><th>Band</th>
+        <th class="num">Dealer</th><th class="num">Country</th><th class="num">Network</th>
+        <th class="num">Δ ctry</th><th class="num">Δ net</th><th class="num">Pts left</th>
+      </tr></thead><tbody>`;
+      rows.forEach((r) => {
+        html += `<tr>
+          <td><strong>${r.q.id}</strong><br/><small>${r.q.section || ""}</small></td>
+          <td class="q-text">${(r.q.text || "").slice(0, 140)}</td>
+          <td>${bandHtml(r.band)}</td>
+          <td class="num">${pct(r.dPct)}</td>
+          <td class="num">${pct(r.cPct)}</td>
+          <td class="num">${pct(r.nPct)}</td>
+          <td class="num">${pctGap(r.gapC)}</td>
+          <td class="num">${pctGap(r.gapN)}</td>
+          <td class="num">${r.gapPts == null ? "—" : r.gapPts.toFixed(1)}</td>
+        </tr>`;
+      });
+      $("#qq-table").innerHTML = html + "</tbody></table>";
+    }
+
+    function renderVsNetwork() {
+      const secs = secIds();
+      let html = `<table class="data matrix"><thead><tr><th>Country</th><th class="num">Total Δ</th>`;
+      secs.forEach((s) => { html += `<th class="num">${s}</th>`; });
+      html += `<th>Weakest vs net</th></tr></thead><tbody>`;
+      const rows = DATA.countries.map((c) => {
+        const p = DATA.country_profiles[c];
+        const totalGap = p.total_pct != null && DATA.network.total_pct != null ? p.total_pct - DATA.network.total_pct : null;
+        const gaps = {};
+        let weak = null, weakV = 0;
+        secs.forEach((s) => {
+          const cv = p.sections_pct?.[s];
+          const nv = DATA.network.sections_pct?.[s];
+          const g = cv != null && nv != null ? cv - nv : null;
+          gaps[s] = g;
+          if (g != null && (weak == null || g < weakV)) { weak = s; weakV = g; }
+        });
+        return { c, p, totalGap, gaps, weak, weakV };
+      }).sort((a, b) => (a.totalGap ?? 0) - (b.totalGap ?? 0));
+
+      rows.forEach((r) => {
+        const cls = (v) => (v == null ? "" : v >= 0 ? "pos" : "neg");
+        html += `<tr><td>${r.c} <small>(${r.p.dealer_count})</small></td><td class="num ${cls(r.totalGap)}">${pctGap(r.totalGap)}</td>`;
+        secs.forEach((s) => {
+          html += `<td class="num ${cls(r.gaps[s])}">${pctGap(r.gaps[s])}</td>`;
+        });
+        html += `<td>${r.weak ? r.weak + " (" + pctGap(r.weakV) + ")" : "—"}</td></tr>`;
+      });
+      $("#vs-network-table").innerHTML = html + "</tbody></table>";
+    }
+
+    function populateCompareSelects() {
+      const country = $("#cp-country").value;
+      const dealers = DATA.dealers
+        .filter((d) => d.country === country && !d.totals_only)
+        .sort((a, b) => a.name.localeCompare(b.name));
+      const specs = [
+        { id: "cp-a", optional: false, pick: 0 },
+        { id: "cp-b", optional: false, pick: 1 },
+        { id: "cp-c", optional: true, pick: -1 },
+      ];
+      specs.forEach(({ id, optional, pick }) => {
+        const sel = $("#" + id);
+        const cur = sel.value;
+        sel.innerHTML = optional ? '<option value="">—</option>' : "";
+        dealers.forEach((d) => {
+          const o = document.createElement("option");
+          o.value = d.id;
+          o.textContent = d.name;
+          sel.appendChild(o);
+        });
+        if (cur && [...sel.options].some((o) => o.value === cur)) sel.value = cur;
+        else if (!optional && dealers[pick]) sel.value = dealers[pick].id;
+      });
+    }
+
+    function renderCompare() {
+      populateCompareSelects();
+      const ids = [$("#cp-a").value, $("#cp-b").value, $("#cp-c").value].filter(Boolean);
+      const series = ids.map((id, i) => {
+        const d = DATA.dealers.find((x) => x.id === id);
+        return d ? { label: d.name, values: dealerVector(d), color: COUNTRY_COLORS[i], fill: COUNTRY_COLORS[i] + "18", width: 2 } : null;
+      }).filter(Boolean);
+      if (!series.length) {
+        $("#compare-radar-chart").innerHTML = "<p>Select dealers to compare.</p>";
+        return;
+      }
+      drawRadar($("#compare-radar-chart"), series);
+      let tbl = '<table class="data"><thead><tr><th>Section</th>';
+      series.forEach((s) => { tbl += `<th class="num">${s.label.slice(0, 20)}</th>`; });
+      tbl += '<th class="num">Country</th><th class="num">Network</th></tr></thead><tbody>';
+      const country = $("#cp-country").value;
+      const cv = countryVector(country), nv = networkVector();
+      secIds().forEach((id, i) => {
+        tbl += `<tr><td>${id}</td>`;
+        series.forEach((s) => { tbl += `<td class="num">${pct(s.values[i])}</td>`; });
+        tbl += `<td class="num">${pct(cv[i])}</td><td class="num">${pct(nv[i])}</td></tr>`;
+      });
+      $("#compare-table").innerHTML = tbl + "</tbody></table>";
+    }
+
+    function renderStats(list) {
+      const qn = questions().length;
+      $("#stats").innerHTML = `
+        <div class="stat"><strong>${list.length}</strong><span>dealers shown</span></div>
+        <div class="stat"><strong>${DATA.country_count}</strong><span>countries</span></div>
+        <div class="stat"><strong>${DATA.sections.length}</strong><span>sections</span></div>
+        <div class="stat"><strong>${qn}</strong><span>questions</span></div>
+        <div class="stat"><strong>${pct(DATA.network.total_pct)}</strong><span>network avg total</span></div>`;
+    }
+
+    function renderOverview(list) {
+      renderOverviewFocus();
+      const top = [...list].sort((a, b) => (b.total_pct ?? -1) - (a.total_pct ?? -1)).slice(0, 40);
+      $("#chart-overview").innerHTML = top.map((d) => {
+        const p = d.total_pct ?? 0;
+        const below = d.total_pct != null && d.country_avg_pct != null && d.total_pct < d.country_avg_pct;
+        const badge = d.totals_only ? '<span class="badge">totals only</span>' : "";
+        return `<div class="bar-row"><div class="bar-label">${d.name}<small> · ${d.country}</small>${badge}</div>
+          <div class="bar-track"><div class="bar-fill${below ? " below" : ""}" style="width:${Math.min(100, p * 100)}%"></div></div>
+          <div class="bar-pct">${pct(d.total_pct)}</div></div>`;
+      }).join("") || "<p>No dealers match filters.</p>";
+    }
+
+    function heatBg(d, sec, mode) {
+      const s = d.sections[sec];
+      if (!s || s.pct == null) return null;
+      const t = Math.max(0, Math.min(1, s.pct));
+      if (mode === "band") {
+        const b = bandFor(s.pct, s.country_avg_pct);
+        if (b === "good") return "#2d8a5e";
+        if (b === "bad") return "#c45c3e";
+        return "#c48a1a";
+      }
+      if (mode === "network") {
+        const n = s.network_avg_pct ?? DATA.network.sections_pct[sec];
+        if (n != null && s.pct < n) return `hsl(12, 55%, ${45 + t * 25}%)`;
+        return `hsl(155, 45%, ${32 + t * 28}%)`;
+      }
+      if (s.country_avg_pct != null && s.pct < s.country_avg_pct) return `hsl(12, 55%, ${45 + t * 25}%)`;
+      return `hsl(155, 45%, ${32 + t * 28}%)`;
+    }
+
+    function renderHeatmap(list) {
+      const mode = $("#hm-mode").value;
+      const legend = $("#hm-legend");
+      if (mode === "band") {
+        legend.innerHTML = `<span><i style="background:#2d8a5e"></i> Good</span><span><i style="background:#c48a1a"></i> Medium</span><span><i style="background:#c45c3e"></i> Bad</span>`;
+      } else if (mode === "network") {
+        legend.innerHTML = `<span><i style="background:#2d8a5e"></i> ≥ network avg</span><span><i style="background:#c45c3e"></i> &lt; network avg</span>`;
+      } else {
+        legend.innerHTML = `<span><i style="background:#2d8a5e"></i> ≥ country avg</span><span><i style="background:#c45c3e"></i> &lt; country avg</span>`;
+      }
+      const secs = secIds();
+      const grid = $("#heatmap");
+      grid.style.gridTemplateColumns = `14rem repeat(${secs.length}, 2.1rem)`;
+      let html = `<div class="hm-corner">Dealer</div>`;
+      secs.forEach((id) => { html += `<div class="hm-head" title="${secLabel(id)}">${id}</div>`; });
+      list.slice(0, 120).forEach((d) => {
+        html += `<div class="hm-row-label">${d.name} <small>${d.country}</small></div>`;
+        secs.forEach((sec) => {
+          const v = d.sections[sec]?.pct;
+          const bg = heatBg(d, sec, mode);
+          html += `<div class="hm-cell${bg ? "" : " hm-na"}"${bg ? ` style="background:${bg}"` : ""}>${v == null ? "·" : Math.round(v * 100)}</div>`;
+        });
+      });
+      grid.innerHTML = html;
+    }
+
+    function renderCountry() {
+      const c = $("#f-country-one").value || DATA.countries[0];
+      const list = DATA.dealers.filter((d) => d.country === c);
+      const nVec = networkVector();
+      $("#chart-country").innerHTML = secIds().map((sec, si) => {
+        const pcts = list.map((d) => d.sections[sec]?.pct).filter((v) => v != null);
+        const avg = pcts.length ? pcts.reduce((a, b) => a + b, 0) / pcts.length : null;
+        const net = nVec[si];
+        const maxBar = Math.max(0.01, ...pcts, avg ?? 0, net ?? 0);
+        const rows = list.filter((d) => d.sections[sec]?.pct != null).sort((a, b) => (b.sections[sec].pct ?? 0) - (a.sections[sec].pct ?? 0)).slice(0, 12)
+          .map((d) => {
+            const band = bandFor(d.sections[sec].pct, d.sections[sec].country_avg_pct);
+            return `<div class="bar-row"><div class="bar-label">${d.name} ${bandHtml(band)}</div><div class="bar-track"><div class="bar-fill ${band || ""}" style="width:${(d.sections[sec].pct / maxBar) * 100}%"></div></div><div class="bar-pct">${pct(d.sections[sec].pct)}</div></div>`;
+          }).join("");
+        return `<div style="margin-bottom:1.2rem"><h3 style="margin:0 0 0.35rem;font-size:0.95rem">${sec} — ${secLabel(sec)}</h3>
+          <p style="margin:0 0 0.5rem;font-size:0.8rem;color:var(--muted)">Country avg ${pct(avg)} · Network ${pct(net)}</p>${rows || "<p>No data.</p>"}</div>`;
+      }).join("");
+    }
+
+    function mapTipHtml(p) {
+      const delta = p.delta_pp == null
+        ? "—"
+        : ((p.delta_pp > 0 ? "+" : "") + Number(p.delta_pp).toFixed(1) + " pp");
+      const deltaCls = p.delta_pp == null ? "" : (p.delta_pp >= 0 ? "pos" : "neg");
+      const place = p.place ? (" · " + p.place) : "";
+      const pct = p.pct != null ? Number(p.pct).toFixed(1) + "%" : "—";
+      const cavg = p.country_avg != null ? Number(p.country_avg).toFixed(1) + "%" : "—";
+      const ctry = p.country || "Country";
+      return (
+        '<p class="map-tip-title">#' + p.rank + " · " + p.name + "</p>" +
+        '<p class="map-tip-meta">' + ctry + "</p>" +
+        '<p class="map-tip-meta">Dealer total score: <strong>' + pct + "</strong></p>" +
+        '<p class="map-tip-meta">' + ctry + ' national average: <strong>' + cavg + "</strong></p>" +
+        '<p class="map-tip-meta">Vs national average: <strong class="' + deltaCls + '">' +
+        delta + "</strong></p>" +
+        '<p class="map-tip-meta" style="margin-top:.35rem;font-size:.78rem">' +
+        (p.geo_label || "Approx location") + place + " — not a surveyed street address</p>"
+      );
+    }
+
+    function dealersForMap(list) {
+      // Prefer non-Benelux rows when the same name exists under BE/NL/LUX
+      const nonBx = new Set(
+        list.filter((d) => d.country !== "Benelux").map((d) => (d.name || "").toLowerCase())
+      );
+      const ranked = [...list]
+        .filter((d) => d.total_pct != null)
+        .filter((d) => !(d.country === "Benelux" && nonBx.has((d.name || "").toLowerCase())))
+        .sort((a, b) => (b.total_pct - a.total_pct) || String(a.name).localeCompare(String(b.name)));
+      return ranked.map((d, i) => {
+        const g = d.geo || {};
+        const pct = d.total_pct != null ? Math.round(d.total_pct * 1000) / 10 : null;
+        const cavg = d.country_avg_pct != null ? Math.round(d.country_avg_pct * 1000) / 10 : null;
+        const delta_pp =
+          d.total_pct != null && d.country_avg_pct != null
+            ? Math.round((d.total_pct - d.country_avg_pct) * 1000) / 10
+            : null;
+        return {
+          id: d.id,
+          rank: i + 1,
+          name: d.name,
+          country: d.country,
+          pct,
+          country_avg: cavg,
+          delta_pp,
+          band: vsNationalBand(d.total_pct, d.country_avg_pct),
+          lat: g.lat != null ? g.lat : null,
+          lon: g.lon != null ? g.lon : null,
+          place: g.place || null,
+          geo_label: g.geo_label || null,
+          map_exclude: !!g.map_exclude,
+        };
+      }).filter((p) => !p.map_exclude);
+    }
+
+    function renderMap(list) {
+      const statusEl = $("#ids-tile-status");
+      const mapEl = $("#ids-map");
+      if (!mapEl) return;
+      const points = dealersForMap(list || filteredDealers());
+      const pinned = points.filter((p) => p.lat != null && p.lon != null);
+      const off = points.length - pinned.length;
+
+      if (typeof L === "undefined") {
+        if (statusEl) {
+          statusEl.textContent = "Leaflet failed to load (check network / CDN). Other compare tabs still work.";
+          statusEl.classList.add("warn");
+        }
+        mapEl.innerHTML = "<p style='padding:1rem;color:#9a3412'>Map library unavailable offline. Open with internet access.</p>";
+        return;
+      }
+
+      if (!window.__idsMap) {
+        window.__idsMap = L.map("ids-map", { scrollWheelZoom: true });
+        const tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+          maxZoom: 18,
+          subdomains: "abcd",
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        });
+        tiles.on("load", function () {
+          if (statusEl) statusEl.classList.remove("warn");
+        });
+        tiles.on("tileerror", function () {
+          if (statusEl) {
+            statusEl.textContent = "Tile load issue — check network. Pins still show if tiles partially load.";
+            statusEl.classList.add("warn");
+          }
+        });
+        tiles.addTo(window.__idsMap);
+        window.__idsMapLayer = L.layerGroup().addTo(window.__idsMap);
+      }
+
+      const layer = window.__idsMapLayer;
+      layer.clearLayers();
+      const latLngs = [];
+      pinned.forEach((p) => {
+        const ll = L.latLng(p.lat, p.lon);
+        latLngs.push(ll);
+        const html = mapTipHtml(p);
+        const band = p.band || "unknown";
+        const icon = L.divIcon({
+          className: "",
+          html: '<div class="rank-pin ' + band + '" title=""></div>',
+          iconSize: [16, 16],
+          iconAnchor: [8, 8],
+          popupAnchor: [0, -10],
+        });
+        L.marker(ll, { icon })
+          .addTo(layer)
+          .bindTooltip(html, {
+            direction: "top",
+            offset: [0, -10],
+            opacity: 0.97,
+            className: "ids-map-tooltip",
+            sticky: false,
+          })
+          .on("click", function () {
+            jumpToDealerRadar(p.id);
+          });
+      });
+
+      if (latLngs.length) {
+        // Always fit to Europe/Israel core — never let DOM-TOM / Açores force world zoom.
+        const EUROPE_CORE = latLngs.filter(
+          (ll) => ll.lat >= 28 && ll.lat <= 72 && ll.lng >= -12 && ll.lng <= 40
+        );
+        let fit = EUROPE_CORE.length >= 3 ? EUROPE_CORE : latLngs;
+        if (fit.length >= 5) {
+          const lats = fit.map((ll) => ll.lat).slice().sort((a, b) => a - b);
+          const lons = fit.map((ll) => ll.lng).slice().sort((a, b) => a - b);
+          const medLat = lats[Math.floor(lats.length / 2)];
+          const medLon = lons[Math.floor(lons.length / 2)];
+          const core = fit.filter(
+            (ll) => Math.abs(ll.lat - medLat) < 8 && Math.abs(ll.lng - medLon) < 12
+          );
+          if (core.length >= Math.max(3, Math.floor(fit.length * 0.6))) fit = core;
+        }
+        window.__idsMap.fitBounds(L.latLngBounds(fit), { padding: [36, 36], maxZoom: 6 });
+      } else {
+        window.__idsMap.setView([48.5, 10.0], 4);
+      }
+      setTimeout(function () { window.__idsMap.invalidateSize(); }, 80);
+
+      if (statusEl) {
+        statusEl.classList.remove("warn");
+        const overseasN = pinned.filter(
+          (p) => p.lat < 28 || p.lat > 72 || p.lon < -12 || p.lon > 40
+        ).length;
+        const bandCounts = { above: 0, near: 0, below: 0, unknown: 0 };
+        pinned.forEach((p) => {
+          const b = p.band || "unknown";
+          if (bandCounts[b] != null) bandCounts[b] += 1;
+          else bandCounts.unknown += 1;
+        });
+        statusEl.textContent =
+          "Showing " + pinned.length + " dealers on map" +
+          (off ? (" · " + off + " without coordinates (tables only)") : "") +
+          " · " + bandCounts.above + " above / " + bandCounts.near + " near / " +
+          bandCounts.below + " below national avg" +
+          (overseasN
+            ? (" · " + overseasN + " overseas pin(s) — zoom out to see; default view stays Europe")
+            : "") +
+          " · hover for name & scores · click pin for Dealer radar.";
+      }
+    }
+
+    function refresh() {
+      const list = filteredDealers();
+      renderStats(list);
+      renderOverview(list);
+      renderHeatmap(list);
+      renderCountry();
+      if ($("#panel-map") && $("#panel-map").classList.contains("active")) renderMap(list);
+    }
+
+    function fillCountrySelect(sel, multi) {
+      DATA.countries.forEach((c) => {
+        const o = document.createElement("option");
+        o.value = c;
+        o.textContent = c;
+        if (multi) o.selected = DATA.countries.indexOf(c) < 3;
+        sel.appendChild(o);
+      });
+    }
+
+    function syncOverviewFromFilter() {
+      // Keep overview country in sync with first selected filter country when possible
+      const picked = [...$("#f-country").selectedOptions].map((o) => o.value);
+      if (picked.length === 1) $("#ov-country").value = picked[0];
+    }
+
+    function init() {
+      const fc = $("#f-country");
+      DATA.countries.forEach((c) => {
+        const o = document.createElement("option");
+        o.value = c; o.textContent = c; o.selected = true;
+        fc.appendChild(o);
+      });
+      ["f-country-one", "dr-country", "gp-country", "cp-country", "ov-country", "qq-country"].forEach((id) => fillCountrySelect($("#" + id), false));
+      fillCountrySelect($("#cr-countries"), true);
+      secIds().forEach((id) => {
+        const label = id + " — " + secLabel(id).slice(0, 40);
+        ["gp-section", "qq-section", "f-weak-section"].forEach((sid) => {
+          const el = $("#" + sid);
+          if (!el) return;
+          const o = document.createElement("option");
+          o.value = id;
+          o.textContent = sid === "f-weak-section"
+            ? (id + " below country avg")
+            : label;
+          el.appendChild(o);
+        });
+      });
+
+      fc.addEventListener("change", () => { syncOverviewFromFilter(); refresh(); });
+      $("#f-search").addEventListener("input", refresh);
+      $("#f-vs-national").addEventListener("change", refresh);
+      $("#f-min-score").addEventListener("input", refresh);
+      $("#f-max-score").addEventListener("input", refresh);
+      $("#f-weak-section").addEventListener("change", refresh);
+      $("#f-country-one").addEventListener("change", renderCountry);
+      $("#hm-mode").addEventListener("change", () => renderHeatmap(filteredDealers()));
+
+      $("#ov-country").addEventListener("change", renderOverviewFocus);
+      $("#ov-dealer").addEventListener("change", renderOverviewFocus);
+
+      $("#dr-country").addEventListener("change", renderDealerRadar);
+      $("#dr-dealer").addEventListener("change", renderDealerRadar);
+      $("#dr-show-country").addEventListener("change", renderDealerRadar);
+      $("#dr-show-network").addEventListener("change", renderDealerRadar);
+
+      $("#cr-countries").addEventListener("change", renderCountryRadar);
+      $("#cr-show-network").addEventListener("change", renderCountryRadar);
+
+      ["gp-country", "gp-section", "gp-bench", "gp-side", "gp-limit"].forEach((id) => {
+        $("#" + id).addEventListener("change", renderGaps);
+      });
+
+      ["qq-country", "qq-dealer", "qq-section", "qq-band", "qq-sort"].forEach((id) => {
+        $("#" + id).addEventListener("change", () => {
+          if (id === "qq-country") populateDealerSelect($("#qq-dealer"), $("#qq-country").value);
+          renderQuestions();
+        });
+      });
+
+      $("#cp-country").addEventListener("change", () => { renderCompare(); });
+      ["cp-a", "cp-b", "cp-c"].forEach((id) => $("#" + id).addEventListener("change", renderCompare));
+
+      document.querySelectorAll(".tab").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab").forEach((b) => b.classList.remove("active"));
+          document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+          btn.classList.add("active");
+          const panel = $("#panel-" + btn.dataset.tab);
+          panel.classList.add("active");
+          if (btn.dataset.tab === "dealer-radar") renderDealerRadar();
+          if (btn.dataset.tab === "country-radar") renderCountryRadar();
+          if (btn.dataset.tab === "gaps") renderGaps();
+          if (btn.dataset.tab === "compare") renderCompare();
+          if (btn.dataset.tab === "questions") renderQuestions();
+          if (btn.dataset.tab === "vs-network") renderVsNetwork();
+          if (btn.dataset.tab === "overview") renderOverviewFocus();
+          if (btn.dataset.tab === "map") renderMap(filteredDealers());
+        });
+      });
+
+      refresh();
+      renderDealerRadar();
+      renderCountryRadar();
+      renderGaps();
+      renderCompare();
+      renderQuestions();
+      renderVsNetwork();
+    }
+
+    init();
+  </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</body>
+</html>

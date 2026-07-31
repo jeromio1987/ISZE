@@ -33,6 +33,11 @@ MIDI_FILE = DATA_ROOT / "MIDI" / "MIDI_FR.xlsx"
 SKIP_DIRS = {"rankings", "reports", "__pycache__", "MIDI", "_EXPORT"}
 
 # On-disk folder name -> English country / tab label (Mode A — shared sheets & dashboard)
+#
+# UK: do not flip these two. IUK = I.M. PARTS & SERVICE Limited (sold-to 2574),
+# the LCV / D-Max distributor. ITUK = ISUZU TRUCK (UK) LIMITED (sold-to 2575),
+# the CV / truck distributor. Confirmed by dealer populations (IUK = pickup
+# dealers, ITUK = truck centres) and by IMG's own "26 summary" workbook.
 COUNTRY_LABELS: dict[str, str] = {
     "Gasanzammit": "Malta",
     "Loutsios": "Cyprus",
@@ -41,8 +46,8 @@ COUNTRY_LABELS: dict[str, str] = {
     "LUX": "Luxembourg",
     "Petros": "Greece",
     "RSA": "Norway",
-    "IUK": "UK CV",
-    "ITUK": "UK LCV",
+    "IUK": "UK LCV",
+    "ITUK": "UK CV",
     "Israel": "Israel LCV",
 }
 
@@ -64,10 +69,10 @@ COUNTRY_DISPLAY_ALIASES: dict[str, str] = {
     "PETROS": "Greece",
     "Petros": "Greece",
     "RSA": "Norway",
-    "IUK": "UK CV",
-    "ITUK": "UK LCV",
-    "UK (IUK)": "UK CV",
-    "UK (ITUK)": "UK LCV",
+    "IUK": "UK LCV",
+    "ITUK": "UK CV",
+    "UK (IUK)": "UK LCV",
+    "UK (ITUK)": "UK CV",
     "UK CV": "UK CV",
     "UK LCV": "UK LCV",
     "Israel": "Israel LCV",

@@ -1,0 +1,420 @@
+# ISZE Distributor Sales Review — per-DB profile registry
+#
+# Every constant that used to be re-discovered by hand for each deck lives here.
+# All values verified against source on 2026-07-29 unless a later date is noted.
+# Add a DB by copying a block and filling it in; run `python preflight.py --db <KEY>`
+# to check every field resolves before building anything.
+#
+# Field notes
+#   payer          exact string in cy2025_raw.csv 'DB' and cy2026_q1.csv 'Payer.1'
+#   sold_to        SAP sold-to code (sanity check only)
+#   gps_key        row key in 00_derived/gps_master.csv (column 'Unnamed: 0')
+#   pms_code       distributor_code in 00_derived/pms_capture_by_db_year.csv
+#   fy27_tab       tab in 01_data/ISZE_GPS_Extended_Target_FY27_V3.1.xlsx
+#   ids_code       'Country' value in IDS_2026_TOTAL_ranking_all.xlsx; null = no IDS data
+#   uio_rows       '1.UIO Overview' row numbers in 06_uio/_CURRENT (ld / md / f_series / lcv)
+#   warranty_cy2025_claim   from 01_data/06_Warranty/Warranty_CY2025_by_DB.md, CLAIM price basis
+#                           (ISZE-net is roughly x0.74 — the report applies that itself)
+#   pbi            official Power BI quarter. Leave null until Jerome supplies the cut;
+#                  the deck refuses to build the sales-review slide without it.
+#   watch          per-DB caveats lifted from the FY27 workbook's own GAPS block.
+#                  These are printed by preflight and must be read before presenting.
+
+defaults:
+  # shared across every DB — change here, not per profile
+  price_increase_fy27: 0.05
+  stretch_pct: 0.02
+  additional_growth_fy27: 0.018
+  rate_ld: 775.95           # v9 CV rate +5%
+  rate_md: 931.35
+  rate_f_series: 931.35
+  rate_lcv: 230.5430        # MH LCV chain 291.2 x 1.16 x 0.65, +5%
+  rate_lcv_base: 219.5648
+  # Calendar H1 = Jan–Jun (Q1+Q2). NOT fiscal H1.
+  # CY2026 H1 = cy2026_q1.csv (Jan–Mar) + q1fy2027_billing_tagged.csv (Apr–Jun).
+  # preflight re-verifies completeness per DB against the canonical FY billing figure.
+  window_prior: ["2025-01-01", "2025-07-01"]
+  window_current: ["2026-01-01", "2026-07-01"]
+  window_label_prior: "CY H1 2025"
+  window_label_current: "CY H1 2026"
+
+distributors:
+
+  IUK:
+    name: "I.M. Parts & Service"
+    country: "United Kingdom"
+    display: "UK"
+    segment: "LCV"
+    payer: "I.M. PARTS & SERVICE Limited"
+    sold_to: 2574
+    gps_key: "IUK"
+    pms_code: "IUK"
+    fy27_tab: "IUK"
+    dashboard_key: "IUK"
+    ids_code: "IUK"
+    uio_rows: {ld: null, md: null, f_series: null, lcv: 25}
+    uio_cy2026_method: "corrected_survival"
+    uio_2026_fixed: {lcv: 44926}
+    warranty_cy2025_claim: 1054395
+    warranty_note: "PM-sensor campaign plus steering / brake / engine claims. Verified real."
+    incentive_fy27: 78000
+    pbi:
+      quarter: "Q1 FY2027"
+      months: ["Apr", "May", "Jun"]
+      sales: [929000, 357000, 377000]
+      budget: [483000, 459000, 531000]
+      prev_year: [358000, 427000, 395000]
+      order_intake_total: 939000
+      source: "Power BI Q1 FY2027 report, IUK row — supplied by Jerome 2026-07-29"
+    watch:
+      - "The Apr-Jun 2026 SAP extract holds only EUR 586,024 for IUK against Power BI's EUR 1,663K (~35%). Never cut PN detail on that window for this DB."
+      - "Q1 2026 carries a EUR 95,000 rebate credit memo. Signed negative by the loader; kept out of the mover lists."
+
+  PORTUGAL:
+    name: "I-Motors"
+    country: "Portugal"
+    display: "Portugal"
+    segment: "mixed"
+    payer: "IMOTORS - Importacao e Comercio"
+    sold_to: null
+    gps_key: "Imotors"
+    pms_code: "PORTUGAL"
+    fy27_tab: "PORTUGAL"
+    dashboard_key: "PORTUGAL"
+    build_enabled: false
+    ids_code: "Portugal"
+    uio_rows: {ld: 51, md: 52, f_series: 53, lcv: 54}
+    uio_cy2026_method: "corrected_survival"
+    exclude_uio_segments: [md]
+    warranty_cy2025_claim: 130588
+    warranty_note: "CV EUR 28,836 is a lower bound (52% of part cells priced); LCV EUR 101,752 is clean."
+    incentive_fy27: 22000
+    pbi:
+      quarter: "Q1 FY2027"
+      months: ["Apr", "May", "Jun"]
+      sales: [140000, 141000, 163000]
+      budget: [148000, 141000, 163000]
+      prev_year: [116000, 140000, 169000]
+      order_intake_total: null
+      source: "Power BI Q1 FY2027 report, Portugal row — supplied by Jerome 2026-07-28"
+    watch:
+      - "Portugal has a real registration file (01_data/Matriculas Isuzu SAP.xlsx). Prefer it over UIO for the fleet chart — no other DB here has an equivalent."
+      - "The July 2026 deck reported H1 2026 at EUR 935,636 with a EUR 20,000 rebate credit counted as a POSITIVE. Correct figure is EUR 40,000 lower. Fix before that deck is reused."
+
+  ISD:
+    name: "Isuzu Sales Deutschland"
+    country: "Germany"
+    display: "Germany"
+    segment: "mixed"
+    payer: "ISUZU SALES DEUTSCHLAND GMBH"
+    sold_to: null
+    gps_key: "ISD"
+    pms_code: "GERMANY"
+    fy27_tab: "GERMANY"
+    dashboard_key: "GERMANY"
+    ids_code: null            # Germany has no IDS 2026 assessment — skip that slide
+    uio_rows: {ld: 42, md: 43, f_series: null, lcv: 44}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 259675
+    warranty_note: "CV EUR 5,593 + LCV EUR 254,082."
+    incentive_fy27: 37000
+    pbi: null
+    watch:
+      - "distributor_master_mapping.csv says segment_cv=No ('Mainly LCV'), but UIO carries LD 1,066 + MD 34. The FY27 tab builds it as mixed. Mapping is stale at source."
+      - "No IDS 2026 data for Germany — drop the dealer-standard slide."
+      - "KPI DB-to-DLR reporting stopped Mar'25, so there is no FY26 Sales-to-Dealer figure. Do not put a Sales-to-Dealer target on a slide."
+      - "Q1 2026 carries a EUR 29,600 credit memo — signed by the loader."
+
+  IBX:
+    name: "Isuzu Benelux"
+    country: "Belgium"
+    display: "Benelux"
+    segment: "mixed"
+    payer: "ISUZU BENELUX NV"
+    sold_to: null
+    gps_key: "IBX"
+    pms_code: "BELGIUM"
+    fy27_tab: "BELGIUM"
+    dashboard_key: "BELGIUM"
+    ids_code: "BE"            # NL is a separate IDS bucket; see watch
+    uio_rows: {ld: 33, md: 34, f_series: null, lcv: 35}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 74677
+    warranty_note: "IBX Belgium only; no CV warranty rows in the source file."
+    incentive_fy27: 28000
+    pbi:
+      quarter: "Q1 FY2027"
+      months: ["Apr", "May", "Jun"]
+      sales: [209000, 157000, 230000]
+      budget: [null, null, null]
+      prev_year: [null, null, null]
+      order_intake_total: null
+      source: "Power BI Q1 FY2027 report, IBX row — sales supplied by Jerome 2026-07-30; budget/prior pending"
+    watch:
+      - "ISUZU BENELUX NV bills for BE/NL/PL/LUX but the FY27 max spend uses the BELGIUM UIO rows only. GPS 95-98% is therefore likely OVERSTATED — numerator covers a parc the denominator excludes. Do not present the % without stating that, or widen the denominator first (UIO rows NL 30/31/32, LUX 36/37/38, Poland 69)."
+      - "IDS 2026 splits Benelux across 'BE' and 'NL' country buckets — decide which the meeting covers before pulling the dealer table."
+      - "Q1 2026 carries a EUR 25,200 credit memo — signed by the loader."
+
+  PETROS:
+    name: "Petros Petropoulos"
+    country: "Greece"
+    display: "Greece"
+    segment: "mixed"
+    payer: "PETROS PETROPOULOS S.A. (VEHICLE)"
+    sold_to: 66
+    gps_key: "Greece"
+    pms_code: "GREECE"
+    fy27_tab: "GREECE"
+    dashboard_key: "GREECE"
+    ids_code: "Petros"
+    uio_rows: {ld: 79, md: 80, f_series: null, lcv: 81}
+    uio_cy2026_method: "corrected_survival"
+    exclude_uio_segments: [md]
+    warranty_cy2025_claim: 56159
+    warranty_note: "CV EUR 1,450 + LCV EUR 54,708."
+    incentive_fy27: null
+    pbi: null
+    watch:
+      - "LIVE SOURCE BUG: Greece's billing sits under payer 66, which gps_billing_fy_ALLCUSTOMERS.csv labels 'RSA'. The warranty file uses 'RSA' for NORWAY. Joining the two on that name merges Greece into Norway. Confirmed by Jerome 17-07-2026. Never join those files on the name."
+      - "KPI DB-to-DLR stale since Jun'25 — no FY26 Sales-to-Dealer figure."
+      - "Q1 2026 billing is down about 40% on Q1 2025 — expect that to be the whole meeting, check it against the Power BI cut first."
+
+  IRELAND:
+    name: "Isuzu Ireland"
+    country: "Ireland"
+    display: "Ireland"
+    segment: "mixed"
+    payer: "ISUZU IRELAND"
+    sold_to: null
+    gps_key: "Ireland"
+    pms_code: "IRELAND"
+    fy27_tab: "IRELAND"
+    dashboard_key: "IRELAND"
+    ids_code: null            # Ireland has no IDS 2026 assessment — skip that slide
+    uio_rows: {ld: 26, md: 27, f_series: 28, lcv: 29}
+    uio_cy2026_method: "corrected_survival"
+    exclude_uio_segments: [md]
+    warranty_cy2025_claim: 34857
+    warranty_note: "CV EUR 3,908 is a lower bound (82% of part cells priced); LCV EUR 30,949 is clean."
+    incentive_fy27: 16000
+    pbi:
+      quarter: "Q1 FY2027"
+      months: ["Apr", "May", "Jun"]
+      sales: [82000, 82000, 119000]
+      budget: [null, null, null]
+      prev_year: [null, null, null]
+      order_intake_total: null
+      source: "Power BI Q1 FY2027 report, Ireland row — sales supplied by Jerome 2026-07-30; budget/prior pending"
+    watch:
+      - "GPS EXCEEDS 100% (122% FY26, 105% after FY27 stretch). The target is above the theoretical max spend of the whole parc. DO NOT put a GPS % on a slide for Ireland — discuss the amount, or agree the per-unit rate first."
+      - "The 100%+ reading means the denominator is wrong, not that capture is complete. Same failure mode as Finland and Iceland."
+      - "No IDS 2026 data for Ireland — drop the dealer-standard slide."
+
+  UMI:
+    name: "Universal Motors Israel"
+    country: "Israel"
+    display: "UMI"
+    segment: "LCV"
+    payer: "UNIVERSAL MOTORS ISRAEL LTD"
+    sold_to: null
+    gps_key: "UMI"
+    pms_code: "UMI"
+    fy27_tab: "UMI"
+    dashboard_key: "UMI"
+    ids_code: "Israel"
+    uio_rows: {ld: null, md: null, f_series: null, lcv: 9}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 1791020
+    warranty_note: "Dedicated UMI claim file; UMI only, never blended with UTI."
+    incentive_fy27: null
+    pbi: null
+    watch:
+      - "IDS Israel is the UMI dealer network. Never blend UTI into an IDS-linked view."
+      - "Dashboard S2D is unavailable; FY2026 S2D is imputed from ISZE billing / 0.65."
+
+  NORWAY:
+    name: "Rutebileiernes Standardisering"
+    country: "Norway"
+    display: "Norway"
+    segment: "mixed"
+    payer: "RUTEBILEIERNES STANDARDISERING AS"
+    sold_to: null
+    gps_key: "RSA"
+    pms_code: "NORWAY"
+    fy27_tab: "NORWAY"
+    dashboard_key: "NORWAY"
+    ids_code: "RSA"
+    uio_rows: {ld: 13, md: 14, f_series: null, lcv: 15}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 290712
+    warranty_note: "LCV warranty; keep separate from Greece payer-label issue."
+    incentive_fy27: null
+    pbi: null
+    watch:
+      - "Warranty RSA means Norway; a separate billing source labels Greece payer 66 as RSA. Never join those sources on RSA alone."
+
+  SWEDEN:
+    name: "Isuzu Sverige"
+    country: "Sweden"
+    display: "Sweden"
+    segment: "mixed"
+    payer: "ISUZU SVERIGE AB"
+    sold_to: null
+    gps_key: "Sverige"
+    pms_code: "SWEDEN"
+    fy27_tab: "SWEDEN"
+    dashboard_key: "SWEDEN"
+    ids_code: null
+    uio_rows: {ld: 16, md: 17, f_series: null, lcv: 18}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 189618
+    warranty_note: "LCV warranty."
+    incentive_fy27: null
+    pbi: null
+    watch:
+      - "No IDS 2026 assessment is available for Sweden; skip the dealer-standard slide."
+
+  HUNGARY:
+    name: "AutoWallis Distribution"
+    country: "Hungary"
+    display: "Hungary"
+    segment: "mixed"
+    payer: "AW Distribution Kft."
+    sold_to: null
+    gps_key: "AutoWallis"
+    pms_code: "HUNGARY"
+    fy27_tab: "HUNGARY"
+    dashboard_key: "HUNGARY"
+    ids_code: "Hungary"
+    uio_rows: {ld: 73, md: 74, f_series: null, lcv: 75}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 77434
+    warranty_note: "LCV warranty."
+    incentive_fy27: null
+    pbi: null
+    watch:
+      - "Dashboard S2D is unavailable; FY2026 S2D is imputed from ISZE billing / 0.65."
+
+  FINLAND:
+    name: "Nordic Automotive Trading"
+    country: "Finland"
+    display: "Finland"
+    segment: "mixed"
+    payer: "Nordic Automotive trading oy."
+    sold_to: null
+    gps_key: "Nordic FI"
+    pms_code: "FINLAND"
+    fy27_tab: "FINLAND"
+    dashboard_key: "FINLAND"
+    ids_code: null
+    uio_rows: {ld: 64, md: 65, f_series: null, lcv: 66}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 48676
+    warranty_note: "LCV warranty."
+    incentive_fy27: null
+    pbi: null
+    watch:
+      - "Dashboard S2D is unavailable; FY2026 S2D is imputed from ISZE billing / 0.65."
+      - "No IDS 2026 assessment is available for Finland."
+
+  ROMANIA:
+    name: "Isuzu Rom Auto"
+    country: "Romania"
+    display: "Romania"
+    segment: "mixed"
+    payer: "ISUZU ROM AUTO SRL"
+    sold_to: null
+    gps_key: "ROM Auto"
+    pms_code: "ROMANIA"
+    fy27_tab: "ROMANIA"
+    dashboard_key: "ROMANIA"
+    ids_code: "Romania"
+    uio_rows: {ld: 82, md: 83, f_series: null, lcv: 84}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 19377
+    warranty_note: "LCV warranty."
+    incentive_fy27: null
+    pbi: null
+    watch: []
+
+  DENMARK:
+    name: "Isuzu Danmark"
+    country: "Denmark"
+    display: "Denmark"
+    segment: "mixed"
+    payer: "ISUZU DANMARK A/S"
+    sold_to: null
+    gps_key: "Danmark"
+    pms_code: "DENMARK"
+    fy27_tab: "DENMARK"
+    dashboard_key: "DENMARK"
+    ids_code: "Denmark"
+    uio_rows: {ld: 19, md: 20, f_series: null, lcv: 21}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 9115
+    warranty_note: "LCV warranty."
+    incentive_fy27: null
+    pbi: null
+    watch: []
+
+  ICELAND:
+    name: "BL ehf."
+    country: "Iceland"
+    display: "Iceland"
+    segment: "mixed"
+    payer: "BL. EHF."
+    sold_to: null
+    gps_key: "BL Iceland"
+    pms_code: "ICELAND"
+    fy27_tab: "ICELAND"
+    dashboard_key: "ICELAND"
+    ids_code: null
+    uio_rows: {ld: 10, md: 11, f_series: null, lcv: 12}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 7035
+    warranty_note: "LCV warranty."
+    incentive_fy27: null
+    pbi: null
+    watch:
+      - "No IDS 2026 assessment is available for Iceland."
+
+  CYPRUS:
+    name: "Loutsios & Sons"
+    country: "Cyprus"
+    display: "Cyprus"
+    segment: "mixed"
+    payer: "LOUTSIOS A & SONS LTD"
+    sold_to: null
+    gps_key: "Loutsios"
+    pms_code: "CYPRUS"
+    fy27_tab: "CYPRUS"
+    dashboard_key: "CYPRUS"
+    ids_code: "Cyprus"
+    uio_rows: {ld: 88, md: 89, f_series: null, lcv: 90}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 28041
+    warranty_note: "CV and LCV warranty."
+    incentive_fy27: null
+    pbi: null
+    watch:
+      - "Dashboard billing is blank; S2D imputation relies on gps_master FY2026 billing."
+
+  MALTA:
+    name: "GasanZammit Motors"
+    country: "Malta"
+    display: "Malta"
+    segment: "mixed"
+    payer: "GASANZAMMIT MOTORS LTD"
+    sold_to: null
+    gps_key: "GasanZammit"
+    pms_code: "MALTA"
+    fy27_tab: "MALTA"
+    dashboard_key: "MALTA"
+    ids_code: "Malta"
+    uio_rows: {ld: 61, md: 62, f_series: null, lcv: 63}
+    uio_cy2026_method: "corrected_survival"
+    warranty_cy2025_claim: 18219
+    warranty_note: "CV and LCV warranty."
+    incentive_fy27: null
+    pbi: null
+    watch: []

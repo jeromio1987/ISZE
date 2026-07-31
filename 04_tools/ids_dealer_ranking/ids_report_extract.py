@@ -100,6 +100,21 @@ def _avg(vals: list[float | None]) -> float | None:
     return mean(ok) if ok else None
 
 
+def _is_scored_pct(pct: float | None) -> bool:
+    """True when total % is usable for averages (> 0).
+
+    Zero-score shells (common in MIDI empty self-evals) stay in dealer lists
+    for Tomoe count checks, but must not drag country / network averages down.
+    Same rule as ids_kaizen_hygiene.is_scored_dealer.
+    """
+    if pct is None:
+        return False
+    try:
+        return float(pct) > 0.0
+    except (TypeError, ValueError):
+        return False
+
+
 def _question_rows_under_category(matrix: list, category) -> list:
     """All question rows belonging to a top-level A–E category (incl. under subcats).
 

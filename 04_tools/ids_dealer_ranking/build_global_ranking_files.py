@@ -11,7 +11,7 @@ from pathlib import Path
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font
 
-from ids_paths import RANKINGS_DIR
+from ids_paths import RANKINGS_DIR, country_display_name
 RUN_DATE = date.today()
 
 OUTPUT_TOTAL = RANKINGS_DIR / "IDS_2026_TOTAL_ranking_all.xlsx"
@@ -41,8 +41,9 @@ TOTAL_SOURCES = (
     ("Poland_dealer_ranking.xlsx", "Poland"),
     ("Petros_dealer_ranking.xlsx", "Greece"),
     ("RSA_dealer_ranking.xlsx", "Norway"),
-    ("IUK_dealer_ranking.xlsx", "UK CV"),
-    ("ITUK_dealer_ranking.xlsx", "UK LCV"),
+    # Labels come from ids_paths so the UK segments cannot drift apart again.
+    ("IUK_dealer_ranking.xlsx", country_display_name("IUK")),
+    ("ITUK_dealer_ranking.xlsx", country_display_name("ITUK")),
     ("France_dealer_ranking.xlsx", "France"),
     ("Italy_dealer_ranking.xlsx", "Italy"),
     ("Switzerland_dealer_ranking.xlsx", "Switzerland"),

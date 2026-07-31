@@ -1,0 +1,34 @@
+---
+description: HARD LOCK — no Send; no silent version overwrite; no rebuild/ship without explicit OK; no quiet fix of known-bad metrics
+alwaysApply: true
+---
+
+# No ship without OK (always on)
+
+Applies to **all** Mode A / outward work: packs, HTML, Excel, zip, Outlook to colleagues, dashboards — not IDS-only. Overrides “helpful” drive-bys. **Banned phrase:** “fix if safe.” Do not invent waivers.
+
+## 1. Mail — draft only
+
+- Outlook / email / `.msg` / Copilot: **Draft only**. Jerome sends.
+- **Never Send** (no API, no script, no “he said send earlier”, no urgent exception).
+- Only create/update a draft when the **current** message asks for draft/mail content — still draft-only.
+
+## 2. Versions — no silent overwrite
+
+- Any **versioned** deliverable (v1.3, deck rev, pack label, filename version): if **content** changes, **stop and ask** — new version label (e.g. v1.4) or leave as-is?
+- **Forbidden:** rebuild under the same label and claim it is still the old version.
+- Do not invent or bump version labels without his OK.
+
+## 3. Rebuild / ship — explicit words only
+
+- Default for packs, HTML, Excel, zips, Mode A outputs: **read-only**.
+- Write / regenerate / ship / sync-as-deliverable **only** when the **current** message explicitly says **rebuild** or **ship** (or clear equivalent he uses the same way).
+- Check / investigate / QA = **read only**. No “while I’m here” mutation of client files.
+- Ask before expanding scope (extra countries, extra recipients, INDEX/manifest bumps).
+
+## 4. Known-bad metrics — don’t touch until asked
+
+- If a number/average/score is known broken or flagged in chat/memory: **leave it**. Note it if useful; do **not** quietly fix, recompute into deliverables, or “correct” averages without an explicit ask.
+- Same for any pending decision metric — awareness ≠ permission to patch.
+
+**IDS QA after authorized rebuild:** `isze-ids-delivery.mdc` (tiles/geo/UI) — that file is not permission to rebuild.

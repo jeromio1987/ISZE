@@ -7,6 +7,8 @@ alwaysApply: true
 
 **When:** building or shipping IDS HTML, dealer maps, country/Imotors packs, ranking dashboards, or answering IDS geo/UI/GPS questions. Paths: `02_dashboards/ids/`, `04_tools/ids_dealer_ranking/`, `09_meetings/**/IDS*`, Imotors packs.
 
+**Authority first:** before rebuild/ship, email, or version change → `isze-no-ship-without-ok.mdc`. This file is QA *after* Jerome authorized the work — not permission to do the work.
+
 Cross-refs (do not duplicate): Mode A/B → `isze-external-iml-language.mdc`; Israel UTI≠UMI → `isze-israel-uti-umi.mdc`; Benelux/BE/NL/LUX country labels → `ids_paths.py` + existing Benelux rules; Excel layout → `IDS_2026_LOGIC_CHECK.md`.
 
 ## Ship blockers (Mode A HTML / packs)

@@ -1,11 +1,26 @@
 #!/usr/bin/env python3
-"""Apply IDS English labels + Jerome 2026-07-28 naming (UK CV / UK LCV / Israel LCV)."""
+"""SPENT one-shot: IDS English labels + Jerome 2026-07-28 naming (applied 2026-07-28).
+
+DO NOT RE-RUN. This script rewrites whole SOURCES / TOTAL_SOURCES / TOTALS_ONLY
+blocks with hardcoded UK labels, and the ones baked in here are the swapped pair
+(IUK->"UK CV", ITUK->"UK LCV") that was corrected on 2026-07-29. Re-running would
+silently reintroduce the swap across the whole builder chain.
+
+Source of truth for country labels is ids_paths.COUNTRY_LABELS. Kept for history.
+"""
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
+
+_SPENT = (
+    "_patch_jerome_labels.py is a spent one-shot from 2026-07-28 and encodes the\n"
+    "swapped UK mapping (IUK->UK CV, ITUK->UK LCV) fixed on 2026-07-29.\n"
+    "Edit ids_paths.COUNTRY_LABELS instead. Refusing to run."
+)
 
 
 def patch_ids_paths() -> None:
@@ -198,4 +213,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(_SPENT)

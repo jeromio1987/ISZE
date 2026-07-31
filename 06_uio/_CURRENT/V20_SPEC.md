@@ -1,7 +1,7 @@
 # UIO V20 — what needs to change and why
 
-**Status:** draft, nothing built yet
-**Written:** 27 July 2026 (Jérôme Van der Pluym / Claude)
+**Status:** draft, nothing built yet — IUK LCV (row 25) CY2026F **locked** 30 July 2026
+**Written:** 27 July 2026 (Jérôme Van der Pluym / Claude); **amended** 30 July 2026 (IUK LCV decision)
 **File it applies to:** `C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026.xlsx` (V19, dated 18 June 2026)
 
 ---
@@ -99,9 +99,13 @@ those markets scrap less — it is evidence their fleet history is not built on 
 Delete the 3 % rule. Use the same survival-curve method for 2026–2030 that we already use for
 1990–2025. One method for the whole row, no join in the middle.
 
-Applies to columns AQ to AU (the years 2026–2030) on sheet `1.UIO Overview`, every row except the UK
-rows 22 and 24 (the UK already does this correctly) and the Israel rows 7 and 8 (those get rebuilt
-entirely — see Problem 4).
+Applies to columns AQ to AU (the years 2026–2030) on sheet `1.UIO Overview`, every row except:
+
+- **UK CV rows 22 and 24** — already correct (Sheet 4 survival model). Leave those alone.
+- **Israel rows 7 and 8** — rebuilt entirely (Problem 4).
+
+**UK LCV row 25 is in scope** for this scrap fix (see Decision — IUK LCV below). Ireland, Portugal,
+and all other non-Israel markets follow this Problem 1 fix as written.
 
 ---
 
@@ -136,6 +140,71 @@ No separate override is needed.
 
 **Warning:** this will be the biggest single movement in the file, and it flows into every number that
 divides by fleet size — parts spend per truck, capture rates, GPS target wallet. Expect questions.
+
+---
+
+## Decision — IUK LCV row 25 (Jerome, 30 July 2026) — LOCKED
+
+**Row:** `U KING / LCV / IUK` = sheet `1.UIO Overview` **row 25**. Hardcoded values. **Not** linked to
+sheet `4. ITUK UIO Projection` (that sheet drives **ITUK CV** rows 22/24 only).
+
+### Problem
+
+V19’s 2025E→2026F+ rise is **wrong**. It uses the same broken `UIO × 0.97 + regs` (3 % scrap). Real
+pickup scrap is ~10–12 % (spec: **12.3 %** / 8.1 yr life). With collapsing UK D-Max registrations the
+parc must **fall**, not grow. Decline is acceptable and better for GPS target honesty.
+
+| | 2024 | 2025E | 2026F | later |
+|---|---:|---:|---:|---:|
+| **V19 (wrong direction from 2026F)** | 48,876 | 47,783 (−2.24 %) | **49,280** (+3.1 %) | climbs to ~52,804 by 2030 |
+| **IMIT Nov 2025 UK fleet (12 yr)** | 41,012 | 40,095 | 37,695 | 35,517… (falling) |
+
+- 2024→2025E **−2.2 % is correct** (IMIT-aligned ratio on the IML absolute level). Keep 2025E = **47,783**.
+- IMIT UK D-Max regs: 2024 = 7,013 · 2025 ≈ 4,280 (−39 %) · **2026E ≈ 3,020**.
+- V19 appendix buried ~2,930 for 2026 regs on row 25; prefer **IMIT ≈ 3,020** for the rebuild.
+
+**Clarify prior “leave the UK alone” wording:** that meant **rows 22 and 24 only**. **Row 25 is in
+scope** for the scrap / survival fix.
+
+### Correct method (preferred)
+
+Keep the **IML absolute level** (do not silently drop 48k→40k to IMIT absolute without labeling). Apply
+the same pickup survival / scrap as the rest of the file, plus IMIT new regs:
+
+**CY2026F** = `2025E × (1 − 0.123) + IMIT_2026_regs`
+
+Using the locked inputs (2025E = 47,783, scrap = **12.3 %** pickup curve, regs = **3,020**):
+
+```
+47,783 × (1 − 0.123) + 3,020 = 41,905.691 + 3,020 = 44,925.691 → 44,926
+```
+
+| Locked for FY27 GPS / Extended Target | Value |
+|---|---:|
+| **IUK LCV CY2026F (use this, not V19)** | **44,926** |
+| vs 2025E 47,783 | **−6.0 %** |
+| V19 was | 49,280 (+3.13 %) — **do not use** |
+
+Roll 2027–2030 the same way (pickup scrap 12.3 % + IMIT regs each year) so the series keeps declining
+in line with IMIT direction. Alternative if needed for a labeled bridge: scale IML level by IMIT YoY —
+same direction; prefer the scrap+regs arithmetic above for consistency with Problem 1/2.
+
+### Downstream
+
+GPS Extended Target Dashboard (IUK cols R/U): replace the **+3.13 %** UIO growth assumption with the
+corrected **−6.0 %** (2025E→2026F). FY27 GPS still needs a CY2026F number — that number is **44,926**,
+not 49,280.
+
+*(Ireland / Portugal / other markets: still the Problem 1 survival-curve fix — unchanged by this
+decision.)*
+
+### Related commercial context (pointer only — lock unchanged)
+
+IMIE 3-party decks indexed 30 Jul 2026 (Nikola Broecker / Jerome self-mail dump) show UK D-Max under
+**ZEV mandate + BIK** pressure, YTD market volume called an **all-time low**, and IUK still on an **ICE**
+order strip with **BEV ≈ 0**. That supports the *direction* of this IUK LCV decline (and IMIT’s weak
+2026 regs), but it does **not** replace the locked **44,926** arithmetic. Detail:
+`05_memory/projects/imie_3party_2025_2026.md`.
 
 ---
 
@@ -371,9 +440,9 @@ Fix: rewrite the method sections and the source list to describe what the rebuil
 
 ## Deliberately not touching
 
-- **The UK (sheet `4. ITUK UIO Projection` and rows 22, 24).** The UK already does this correctly —
-  real registration data, proper survival curves, its own age floor. It is the model for how the rest
-  of the file should work. Leave it alone.
+- **UK CV only — sheet `4. ITUK UIO Projection` and Overview rows 22 and 24.** Those already use real
+  registration data, proper survival curves, and an age floor. Leave **22/24** alone. **Do not read
+  this as “all UK rows”** — **row 25 (IUK LCV)** is in scope (Decision — IUK LCV, locked 30 July 2026).
 - **The summary tables further down sheet 1 (rows ~93–200).** These have been stale and misaligned
   across every country since about V12. Already flagged. They need their own rebuild, not a patch.
 
@@ -382,7 +451,8 @@ Fix: rewrite the method sections and the source list to describe what the rebuil
 ## Build order
 
 1. **Israel first.** Self-contained, doesn't depend on anything else, biggest single correction.
-2. **The survival curve fix** (Problems 1 and 2 together — they are one change).
+2. **The survival curve fix** (Problems 1 and 2 together — they are one change), **including IUK LCV
+   row 25** per the locked CY2026F = **44,926** arithmetic (not V19’s 49,280).
 3. **The sales plan handling** (Problem 3): one-to-one on the level, smoothing on the annual profile,
    plan-only rows split out.
 4. **Flag the four low-confidence markets** (Problem 5).
@@ -399,6 +469,7 @@ V19 that exists is the working file itself.
 - Run the forecast engine backwards to 2025 for Ireland, Portugal and Israel. It should land on the
   historical number within one unit. No jump at the 2025/2026 boundary.
 - The pickup fleet in 2030 must be smaller than in 2025. Falling registrations cannot grow a fleet.
+- **IUK LCV (row 25) CY2026F = 44,926** (declining vs 47,783); must not quote V19’s 49,280.
 - Israel 2026 must reconcile to 14,019, class by class, with any exclusions written down.
 - No row may grow faster than its registration input divided by its survival-curve length.
 - Every forecast number must trace to a named file that actually exists on disk.
@@ -519,7 +590,7 @@ the workbook. Recovered by working backwards from the numbers.
 
 | Row | Market | Type | 2026 | 2027 | 2028 | 2029 | 2030 |
 |---|---|---|---:|---:|---:|---:|---:|
-| 25 | UK | pickup | 2,930 | 2,400 | 2,400 | 2,400 | 2,400 |
+| 25 | UK | pickup | 2,930† | 2,400 | 2,400 | 2,400 | 2,400 |
 | 60 | Italy | pickup | 4,500 | 4,600 | 4,690 | 4,690 | 4,690 |
 | 44 | Germany | pickup | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 |
 | 42 | Germany | truck | 390 | 388 | 624 | 898 | 1,000 |
@@ -542,3 +613,6 @@ the workbook. Recovered by working backwards from the numbers.
 | 63 | Malta | pickup | 75 | 125 | 105 | 105 | 105 |
 | 12 | Iceland | pickup | 45 | 45 | 92 | 92 | 92 |
 | **All rows** | | | **18,478** | **18,267** | **18,412** | **18,605** | **18,660** |
+
+† V19 buried ~2,930 for UK pickup 2026 regs. For the IUK LCV rebuild use **IMIT 2026E ≈ 3,020**
+(Decision — IUK LCV). The 18,478 all-rows total above is still the V19 recovery, not the locked rebuild.

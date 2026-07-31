@@ -1227,7 +1227,10 @@ def main() -> int:
 
     if args.midi:
         dealers = parse_midi_dealers(args.midi)
-    elif country_display_name(country) in {"UK LCV", "UK (ITUK)"} or country.upper() == "ITUK":
+    elif (
+        country_display_name(country) == country_display_name("ITUK")
+        or country.upper() == "ITUK"
+    ):
         from ids_paths import ITUK_INPUT
 
         if not ITUK_INPUT.is_file():

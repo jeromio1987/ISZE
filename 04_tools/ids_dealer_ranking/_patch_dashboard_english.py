@@ -67,7 +67,7 @@ def main() -> None:
         <ul>
           <li>All UI labels in English (good / medium / bad — no Dutch goed/slecht).</li>
           <li>Country names in English: Switzerland / France / Italy / Spain (not MIDI_CH etc.).</li>
-          <li>UK CV (IUK), UK LCV (ITUK), Israel LCV (UMI IDS pack — never blended with UTI), Norway (RSA).</li>
+          <li>UK LCV (IUK), UK CV (ITUK), Israel LCV (UMI IDS pack — never blended with UTI), Norway (RSA).</li>
           <li>Benelux kept; Belgium, Netherlands and Luxembourg also shown as separate countries.</li>
           <li>Overview strengths / weak points: per section A–E, based on max-point items (full score = good, zero = bad) — not “first question in section”.</li>
           <li>Dealer total score shown as percentage (Score % of 280); GPS context on feedback packs prefers capture % where available.</li>

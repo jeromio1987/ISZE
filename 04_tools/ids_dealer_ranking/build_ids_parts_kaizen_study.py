@@ -58,9 +58,10 @@ COUNTRY_MAP: dict[str, dict[str, Any]] = {
     "Petros": {"prism": "GREECE", "kpi": "Petros Petropoulos", "note": ""},
     "Norway": {"prism": "NORWAY", "kpi": "RSA", "note": "RSA cluster; PMS proxy NORWAY (largest Nordic)"},
     "RSA": {"prism": "NORWAY", "kpi": "RSA", "note": "RSA cluster; PMS proxy NORWAY (largest Nordic)"},
-    "UK CV": {"prism": "IUK", "kpi": "IUK", "note": ""},
+    # UK LCV = IUK (I.M. Parts & Service, D-Max) · UK CV = ITUK (Isuzu Truck UK)
+    "UK LCV": {"prism": "IUK", "kpi": "IUK", "note": ""},
     "IUK": {"prism": "IUK", "kpi": "IUK", "note": ""},
-    "UK LCV": {"prism": "ITUK", "kpi": "ITUK", "note": "IDS totals-only — no Section D heatmap"},
+    "UK CV": {"prism": "ITUK", "kpi": "ITUK", "note": "IDS totals-only — no Section D heatmap"},
     "ITUK": {"prism": "ITUK", "kpi": "ITUK", "note": "IDS totals-only — no Section D heatmap"},
     "Israel LCV": {
         "prism": "UMI",
@@ -95,8 +96,8 @@ COUNTRY_MAP: dict[str, dict[str, Any]] = {
 
 # Wave-1 shortlist preference (overridden if correlation study finds stronger cases)
 PREFERRED_FOCUS = [
-    ("UK CV", "YORK VAN CENTRE LTD"),
-    ("UK CV", "Adam"),
+    ("UK LCV", "YORK VAN CENTRE LTD"),
+    ("UK LCV", "Adam"),
     ("Romania", "SIMODE CRAIOVA"),
     ("Belgium", "Garage Degroote"),
 ]
@@ -334,6 +335,7 @@ def build_join_rows(
                 "genuine_share_eur": gen_share,
                 "gps_spu_eur": g.get("gps_spu_eur"),
                 "gps_spu_ex_warranty_eur": g.get("gps_spu_ex_warranty_eur"),
+                "gps_capture_pct": g.get("gps_capture_vs_max"),
                 "warranty_parts_eur": g.get("warranty_parts_eur"),
                 "warranty_data_gap": g.get("warranty_data_gap"),
                 "gps_light": g.get("traffic_light"),

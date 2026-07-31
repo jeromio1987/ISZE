@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
+"""SPENT one-shot (2026-07-28). DO NOT RE-RUN.
+
+Rewrites the ITUK branch in build_ids_result_report.py to match label "UK LCV" —
+the swapped label fixed on 2026-07-29. The branch now compares against
+country_display_name("ITUK"), so this script would undo the correction.
+"""
+import sys
 from pathlib import Path
+
+sys.exit(
+    "_fix_ituk_branch.py is spent and encodes the swapped UK label "
+    '(ITUK -> "UK LCV"). ITUK is UK CV. Refusing to run.'
+)
 
 p = Path(__file__).resolve().parent / "build_ids_result_report.py"
 t = p.read_text(encoding="utf-8")
