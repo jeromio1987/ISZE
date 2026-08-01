@@ -1,0 +1,1513 @@
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ISZE · Pricing BI v1</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#1A1A1A;font:15px/1.55 "Segoe UI",Arial,sans-serif}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px 90px}
+header{border-bottom:3px solid #CC0E1E;padding:38px 0 20px;margin-bottom:30px}
+.brand{font:800 13px/1 Arial Black,Arial;letter-spacing:.22em;color:#CC0E1E;margin-bottom:16px}
+h1{font-size:34px;line-height:1.15;margin:0 0 10px;font-weight:700;letter-spacing:-.4px}
+.sub{color:#5A5A5A;font-size:15px;max-width:830px}
+.stamp{color:#5A5A5A;font-size:12.5px;margin-top:14px}
+.roots{font-family:Consolas,monospace;font-size:11.6px;background:#FAFAFA;border:1px solid #E4E4E7;
+ border-left:3px solid #CC0E1E;padding:12px 14px;margin:18px 0 0;line-height:1.85;overflow-x:auto;white-space:pre}
+.roots b{color:#CC0E1E;font-family:"Segoe UI",Arial,sans-serif;font-size:11.5px;
+ text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:6px}
+h2{font-size:21px;margin:0 0 6px;font-weight:700;letter-spacing:-.2px}
+h2 .num{color:#CC0E1E;font-weight:800;margin-right:10px}
+.lead{color:#5A5A5A;font-size:14.5px;margin:0 0 20px;max-width:870px}
+section{margin:0 0 52px;padding-top:14px;border-top:1px solid #E4E4E7}
+section:first-of-type{border-top:none}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin:0 0 30px}
+.kpi{border:1px solid #E4E4E7;border-top:3px solid #CC0E1E;padding:15px 16px 14px}
+.kpi .v{font-size:30px;font-weight:800;letter-spacing:-1px;line-height:1.05}
+.kpi .l{font-size:11.5px;color:#5A5A5A;text-transform:uppercase;letter-spacing:.07em;margin-top:7px;font-weight:600}
+.kpi .n{font-size:12px;color:#5A5A5A;margin-top:6px;line-height:1.4}
+.kpi.amber{border-top-color:#B45309} .kpi.amber .v{color:#B45309}
+.kpi.ok{border-top-color:#15803D} .kpi.ok .v{color:#15803D}
+.card{border:1px solid #E4E4E7;padding:20px 22px 16px;margin:0 0 18px}
+.card h3{font-size:14px;margin:0 0 3px;font-weight:700}
+.card .cap{font-size:12.5px;color:#5A5A5A;margin:0 0 14px}
+.callout{border-left:4px solid #CC0E1E;background:#FDF3F4;padding:15px 18px;margin:0 0 20px;font-size:14.5px}
+.callout b{color:#CC0E1E}
+.callout.ok{border-left-color:#15803D;background:#F2F9F4} .callout.ok b{color:#15803D}
+.callout.amber{border-left-color:#B45309;background:#FEF8F0} .callout.amber b{color:#B45309}
+table{width:100%;border-collapse:collapse;font-size:13.2px}
+th{background:#CC0E1E;color:#fff;font-weight:600;text-align:left;padding:9px 11px;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em}
+td{padding:8px 11px;border-bottom:1px solid #F0F0F0}
+tbody tr:nth-child(even){background:#FAFAFA}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+td.b{font-weight:700} td.sm{font-size:12px;color:#5A5A5A}
+td.mono{font-family:Consolas,monospace;font-size:12px}
+td.hi{color:#CC0E1E}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tw{overflow-x:auto}
+.foot{margin-top:56px;padding-top:18px;border-top:1px solid #E4E4E7;font-size:11.5px;color:#5A5A5A;line-height:1.7}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}.wrap{padding:0 16px 60px}h1{font-size:26px}}
+
+svg.ch{width:100%;height:auto;display:block;overflow:visible}
+svg.ch text{font-family:"Segoe UI",Arial,Helvetica,sans-serif}
+svg.ch .tk{font-size:11px;fill:#5A5A5A}
+svg.ch .ax{font-size:11px;fill:#5A5A5A}
+svg.ch .axt{font-size:11.5px;fill:#5A5A5A;font-weight:600}
+svg.ch .lg{font-size:11.5px;fill:#1A1A1A}
+svg.ch g:hover rect,svg.ch g:hover circle{fill-opacity:.72}
+svg.ch a circle{cursor:pointer}
+svg.ch a:hover circle{stroke:#1A1A1A;stroke-width:2}
+
+</style>
+<div class="wrap">
+<header>
+ <div class="brand">ISUZU · ISZE</div>
+ <h1>Pricing BI · v1</h1>
+ <div class="sub">Three views: where the invoiced euro actually lands, whether the price list itself is sound,
+ and where the same part is sold at very different prices across distributors. Sales to distributor, CY2025.</div>
+ <div class="stamp">Built 1 Aug 2026 · 143,459 billing lines matched to a list price ·
+ no margin shown — there is no cost column in the billing extract</div>
+ <div class="roots"><b>Sources</b>C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\sales_fact.parquet
+C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\IE40 Price list as of 13.03.2026 PR00_3_level_classified_GPT.xlsx
+C:\Users\jerom\Desktop\claude\ISZE\03_analytics\Isuzu\prism\data\sap_sold_to_mapping.csv</div>
+</header>
+
+<div class="kpis">
+ <div class="kpi"><div class="v">€32.81M</div><div class="l">Parts net CY2025</div>
+  <div class="n">after non-part lines, credit notes and Turkey.</div></div>
+ <div class="kpi amber"><div class="v">84.9%</div><div class="l">Revenue with a list price</div>
+  <div class="n">€4.96M of parts revenue has no PR00 match.</div></div>
+ <div class="kpi amber"><div class="v">522</div><div class="l">PNs billed, no list price</div>
+  <div class="n">€4.96M — 15.1% of parts revenue.</div></div>
+ <div class="kpi amber"><div class="v">800</div><div class="l">Superseded PNs still billed</div>
+  <div class="n">€1.82M on numbers with a newer replacement.</div></div>
+ <div class="kpi"><div class="v">9</div><div class="l">Parts &gt;1.5× price spread</div>
+  <div class="n">of 220 parts sold to 5+ distributors.</div></div>
+</div>
+
+<section>
+ <h2><span class="num">01</span>Where the invoiced euro lands</h2>
+ <p class="lead">The ladder from everything billed down to parts net. This part is clean — it uses only
+ identified line types and needs no price list.</p>
+ <div class="grid2">
+  <div class="card"><h3>Billed → parts net, CY2025</h3>
+   <p class="cap">Amber bars are deductions.</p><svg viewBox="0 0 560 270" class="ch" role="img" preserveAspectRatio="xMidYMid meet"><line x1="210.0" y1="12" x2="210.0" y2="222.0" stroke="#E4E4E7"/><text x="210.0" y="239" text-anchor="middle" class="tk">0M</text><line x1="303.2" y1="12" x2="303.2" y2="222.0" stroke="#E4E4E7"/><text x="303.2" y="239" text-anchor="middle" class="tk">10M</text><line x1="396.5" y1="12" x2="396.5" y2="222.0" stroke="#E4E4E7"/><text x="396.5" y="239" text-anchor="middle" class="tk">20M</text><line x1="489.7" y1="12" x2="489.7" y2="222.0" stroke="#E4E4E7"/><text x="489.7" y="239" text-anchor="middle" class="tk">30M</text><g><title>Total billed
+€33,707,574</title><rect x="210.0" y="23.0" width="314.3" height="20.0" fill="#C7C7CC"/></g><text x="201" y="37.0" text-anchor="end" class="ax">Total billed</text><g><title>Non-part lines
+€852,641  (deducted)</title><rect x="210.0" y="65.0" width="7.9" height="20.0" fill="#B45309"/></g><text x="201" y="79.0" text-anchor="end" class="ax">Non-part lines</text><g><title>Credit notes / returns
+€44,200  (deducted)</title><rect x="210.0" y="107.0" width="0.8" height="20.0" fill="#B45309"/></g><text x="201" y="121.0" text-anchor="end" class="ax">Credit notes / returns</text><g><title>Turkey (not a distributor)
+€36  (deducted)</title><rect x="210.0" y="149.0" width="0.8" height="20.0" fill="#B45309"/></g><text x="201" y="163.0" text-anchor="end" class="ax">Turkey (not a distributor)</text><g><title>Parts net to distributors
+€32,810,697</title><rect x="210.0" y="191.0" width="305.9" height="20.0" fill="#CC0E1E"/></g><text x="201" y="205.0" text-anchor="end" class="ax">Parts net to distributors</text><text x="375" y="262" text-anchor="middle" class="axt">EUR, CY2025</text></svg></div>
+  <div class="card"><h3>Realization vs the 2026 list, by year</h3>
+   <p class="cap">Net ÷ list value. Read the slope, not the level — see below.</p><svg viewBox="0 0 560 330" class="ch" role="img" preserveAspectRatio="xMidYMid meet"><line x1="56" y1="227.5" x2="542" y2="227.5" stroke="#E4E4E7"/><text x="48" y="231.5" text-anchor="end" class="tk">0.88</text><line x1="56" y1="176.7" x2="542" y2="176.7" stroke="#E4E4E7"/><text x="48" y="180.7" text-anchor="end" class="tk">0.90</text><line x1="56" y1="125.8" x2="542" y2="125.8" stroke="#E4E4E7"/><text x="48" y="129.8" text-anchor="end" class="tk">0.93</text><line x1="56" y1="75.0" x2="542" y2="75.0" stroke="#E4E4E7"/><text x="48" y="79.0" text-anchor="end" class="tk">0.95</text><line x1="56" y1="24.2" x2="542" y2="24.2" stroke="#E4E4E7"/><text x="48" y="28.2" text-anchor="end" class="tk">0.97</text><text x="56.0" y="275" text-anchor="middle" class="ax">2023</text><text x="218.0" y="275" text-anchor="middle" class="ax">2024</text><text x="380.0" y="275" text-anchor="middle" class="ax">2025</text><text x="542.0" y="275" text-anchor="middle" class="ax">2026</text><polyline points="56.0,204.1 218.0,185.6 380.0,139.1 542.0,92.1" fill="none" stroke="#CC0E1E" stroke-width="2.4"/><g><title>net ÷ list value · 2023: 0.9</title><circle cx="56.0" cy="204.1" r="4.2" fill="#CC0E1E"/></g><g><title>net ÷ list value · 2024: 0.9</title><circle cx="218.0" cy="185.6" r="4.2" fill="#CC0E1E"/></g><g><title>net ÷ list value · 2025: 0.9</title><circle cx="380.0" cy="139.1" r="4.2" fill="#CC0E1E"/></g><g><title>net ÷ list value · 2026: 0.9</title><circle cx="542.0" cy="92.1" r="4.2" fill="#CC0E1E"/></g><text transform="rotate(-90 13 136)" x="13" y="136" text-anchor="middle" class="axt">realization index</text><circle cx="226" cy="318" r="5.5" fill="#CC0E1E"/><text x="239" y="322" class="lg">net ÷ list value</text></svg></div>
+ </div>
+
+ <div class="callout"><b>The concession number cannot be separated from the price increase — and this is the
+ finding, not a caveat.</b> There is one price list on disk, dated 13 March 2026. Measured against it, realization
+ climbs steadily the closer billing gets to that date: 0.8865 in 2023, 0.8956 in 2024, 0.9185 in 2025, 0.9416 in
+ Q1 2026. That is the shape of a price list that has risen, applied backwards to older invoices. The apparent
+ &ldquo;€2.47M concession&rdquo; in CY2025 is mostly the 2026 increase, not money given away. I am not presenting
+ a list-to-pocket waterfall on this basis, because it would read as leakage and it is not.</div>
+
+ <div class="card"><h3>Realization by year — the vintage test</h3>
+  <p class="cap">Same list applied to every year. A rising index with a fixed list means the list moved.</p>
+  <div class="tw"><table><thead><tr><th class="n">Year</th><th class="n">Lines</th><th class="n">Net €</th>
+  <th class="n">List value €</th><th class="n">Realization</th><th class="n">Lines above list</th></tr></thead>
+  <tbody><tr><td class="n">2023</td><td class="n">128,053</td><td class="n">24,070,691</td><td class="n">27,151,348</td><td class="n b">0.8865</td><td class="n">11.6%</td></tr><tr><td class="n">2024</td><td class="n">148,746</td><td class="n">27,929,689</td><td class="n">31,184,411</td><td class="n b">0.8956</td><td class="n">11.5%</td></tr><tr><td class="n">2025</td><td class="n">143,461</td><td class="n">27,853,643</td><td class="n">30,324,959</td><td class="n b">0.9185</td><td class="n">10.9%</td></tr><tr><td class="n">2026</td><td class="n">39,745</td><td class="n">7,633,149</td><td class="n">8,106,835</td><td class="n b">0.9416</td><td class="n">12.4%</td></tr></tbody></table></div></div>
+
+ <div class="card"><h3>Realization by family, CY2025</h3>
+  <p class="cap">All families share the same vintage bias, so the ranking is meaningful even though the level is not.</p><svg viewBox="0 0 560 300" class="ch" role="img" preserveAspectRatio="xMidYMid meet"><line x1="185.0" y1="12" x2="185.0" y2="252.0" stroke="#E4E4E7"/><text x="185.0" y="269" text-anchor="middle" class="tk">0.85</text><line x1="303.3" y1="12" x2="303.3" y2="252.0" stroke="#E4E4E7"/><text x="303.3" y="269" text-anchor="middle" class="tk">0.90</text><line x1="421.7" y1="12" x2="421.7" y2="252.0" stroke="#E4E4E7"/><text x="421.7" y="269" text-anchor="middle" class="tk">0.95</text><line x1="540.0" y1="12" x2="540.0" y2="252.0" stroke="#E4E4E7"/><text x="540.0" y="269" text-anchor="middle" class="tk">1.00</text><g><title>High value repair
+realization 0.900
+list €2,446,528 · net €2,203,018
+gap €243,510 across 10,331 lines
+
+Read as relative, not absolute — all families carry the same
+price-list vintage bias.</title><rect x="185.0" y="19.1" width="119.5" height="20.0" fill="#CC0E1E"/></g><text x="176" y="33.1" text-anchor="end" class="ax">High value repair</text><g><title>Competitive parts
+realization 0.907
+list €11,296,550 · net €10,245,636
+gap €1,050,914 across 36,070 lines
+
+Read as relative, not absolute — all families carry the same
+price-list vintage bias.</title><rect x="185.0" y="53.4" width="134.9" height="20.0" fill="#CC0E1E"/></g><text x="176" y="67.4" text-anchor="end" class="ax">Competitive parts</text><g><title>Comfort parts
+realization 0.917
+list €1,570,631 · net €1,440,524
+gap €130,106 across 4,260 lines
+
+Read as relative, not absolute — all families carry the same
+price-list vintage bias.</title><rect x="185.0" y="87.7" width="159.0" height="20.0" fill="#CC0E1E"/></g><text x="176" y="101.7" text-anchor="end" class="ax">Comfort parts</text><g><title>Repair parts
+realization 0.920
+list €6,638,563 · net €6,107,489
+gap €531,074 across 29,631 lines
+
+Read as relative, not absolute — all families carry the same
+price-list vintage bias.</title><rect x="185.0" y="122.0" width="165.7" height="20.0" fill="#15803D"/></g><text x="176" y="136.0" text-anchor="end" class="ax">Repair parts</text><g><title>Other / review
+realization 0.936
+list €1,207,859 · net €1,130,725
+gap €77,134 across 7,783 lines
+
+Read as relative, not absolute — all families carry the same
+price-list vintage bias.</title><rect x="185.0" y="156.3" width="203.8" height="20.0" fill="#15803D"/></g><text x="176" y="170.3" text-anchor="end" class="ax">Other / review</text><g><title>Accident parts
+realization 0.939
+list €6,518,679 · net €6,118,453
+gap €400,226 across 43,375 lines
+
+Read as relative, not absolute — all families carry the same
+price-list vintage bias.</title><rect x="185.0" y="190.6" width="209.7" height="20.0" fill="#15803D"/></g><text x="176" y="204.6" text-anchor="end" class="ax">Accident parts</text><g><title>Hardware &amp; consumables
+realization 0.941
+list €646,111 · net €607,762
+gap €38,349 across 12,009 lines
+
+Read as relative, not absolute — all families carry the same
+price-list vintage bias.</title><rect x="185.0" y="224.9" width="214.4" height="20.0" fill="#15803D"/></g><text x="176" y="238.9" text-anchor="end" class="ax">Hardware &amp; consumables</text><line x1="540.0" y1="12" x2="540.0" y2="252.0" stroke="#1A1A1A" stroke-width="1.4" stroke-dasharray="5,3"/><text x="362" y="292" text-anchor="middle" class="axt">net ÷ list value, CY2025</text></svg></div>
+
+ <div class="callout amber"><b>Competitive parts sit lowest at 0.907, hardware highest at 0.941.</b> Since every
+ family carries the same list-vintage bias, the spread between them is real: the parts most exposed to the
+ aftermarket are also the ones realizing least against list. That is the expected direction, and it is the first
+ thing worth testing once dated lists exist.</div>
+</section>
+
+<section>
+ <h2><span class="num">02</span>Is the price list itself sound?</h2>
+ <p class="lead">Unglamorous and the highest-yield view here. None of it depends on the list vintage — these are
+ structural defects that are true regardless of when the list was cut.</p>
+ <div class="card"><h3>€ at stake by defect type, CY2025</h3>
+  <p class="cap">Hover for the part-number counts.</p><svg viewBox="0 0 560 250" class="ch" role="img" preserveAspectRatio="xMidYMid meet"><line x1="210.0" y1="12" x2="210.0" y2="202.0" stroke="#E4E4E7"/><text x="210.0" y="219" text-anchor="middle" class="tk">0.0M</text><line x1="331.0" y1="12" x2="331.0" y2="202.0" stroke="#E4E4E7"/><text x="331.0" y="219" text-anchor="middle" class="tk">2.0M</text><line x1="452.1" y1="12" x2="452.1" y2="202.0" stroke="#E4E4E7"/><text x="452.1" y="219" text-anchor="middle" class="tk">4.0M</text><g><title>No list price at all
+€4,957,089
+522 part numbers billed with no PR00 entry</title><rect x="210.0" y="25.8" width="300.0" height="20.0" fill="#CC0E1E"/></g><text x="201" y="39.8" text-anchor="end" class="ax">No list price at all</text><g><title>Superseded number still billed
+€1,818,448
+800 part numbers where P/N differs from Newest P/N</title><rect x="210.0" y="73.2" width="110.1" height="20.0" fill="#B45309"/></g><text x="201" y="87.2" text-anchor="end" class="ax">Superseded number still billed</text><g><title>Billed above list (&gt;5%)
+€2,203,410
+15,699 lines invoiced over the list price</title><rect x="210.0" y="120.8" width="133.3" height="20.0" fill="#B45309"/></g><text x="201" y="134.8" text-anchor="end" class="ax">Billed above list (&gt;5%)</text><g><title>Deep concession (&lt;40% of list)
+€9,138
+136 lines at under 40% of list</title><rect x="210.0" y="168.2" width="0.8" height="20.0" fill="#DC606E"/></g><text x="201" y="182.2" text-anchor="end" class="ax">Deep concession (&lt;40% of list)</text><text x="375" y="242" text-anchor="middle" class="axt">EUR at stake, CY2025</text></svg></div>
+
+ <div class="callout"><b>€4.96M of parts revenue — 15.1% — was billed on
+ 522 part numbers that have no entry in the price list at all.</b> Not a mismatch of format:
+ these numbers are absent. Whatever price they were invoiced at did not come from the list, so for a sixth of the
+ revenue there is no list to compare against, no governance, and no way to see a concession.</div>
+
+ <div class="callout amber"><b>800 part numbers worth €1.82M are still being
+ billed under a number the list itself marks as superseded.</b> The list carries a Newest P/N for each, so the
+ replacement is known. Every one of those lines is priced off a record that should no longer be in use.</div>
+
+ <div class="callout amber"><b>15,699 lines worth €2.20M were invoiced more
+ than 5% above list</b> — and that holds at 11–12% of lines in every year including 2023, against a list dated 2026.
+ Billing above a list that is itself the newest and highest version is the anomaly worth explaining first: either
+ surcharges are landing in net value, or those parts were repriced downward, or the list is wrong for them.</div>
+
+ <div class="card"><h3>Largest revenue with no list price</h3>
+  <p class="cap">These 12 alone carry a large share of the €4.96M.</p>
+  <div class="tw"><table><thead><tr><th>Part number</th><th>Description</th><th class="n">Lines</th>
+  <th class="n">CY2025 €</th></tr></thead><tbody><tr><td class="mono sm">7552348290</td><td>STEERING UNIT</td><td class="n">111</td><td class="n b">718,864</td></tr><tr><td class="mono sm">550047337</td><td>Rim R4L15W40 CK4_3*5L             </td><td class="n">165</td><td class="n b">417,148</td></tr><tr><td class="mono sm">8982878080</td><td>FILTER ASM</td><td class="n">28</td><td class="n b">276,848</td></tr><tr><td class="mono sm">8975359391</td><td>DPD ASM</td><td class="n">38</td><td class="n b">272,210</td></tr><tr><td class="mono sm">7552348280</td><td>STEERING UNIT</td><td class="n">20</td><td class="n b">259,369</td></tr><tr><td class="mono sm">8983682091</td><td>PIPE; EXH</td><td class="n">80</td><td class="n b">228,584</td></tr><tr><td class="mono sm">8982688122</td><td>PUMP ASM; DEF,DCM SPLY</td><td class="n">42</td><td class="n b">178,723</td></tr><tr><td class="mono sm">8975077751</td><td>PUMP ASM; DEF,DCM SPLY</td><td class="n">15</td><td class="n b">119,490</td></tr><tr><td class="mono sm">8972746690</td><td>TANK ASM; DEF</td><td class="n">65</td><td class="n b">116,501</td></tr><tr><td class="mono sm">8981901180</td><td>DRIVE ASM; FINAL,RR</td><td class="n">32</td><td class="n b">104,331</td></tr><tr><td class="mono sm">8975293230</td><td>ENGINE ASM</td><td class="n">5</td><td class="n b">100,349</td></tr><tr><td class="mono sm">8983320764</td><td>DPD ASM</td><td class="n">19</td><td class="n b">95,174</td></tr></tbody></table></div></div>
+</section>
+
+<section>
+ <h2><span class="num">03</span>Same part, different distributor, different price</h2>
+ <p class="lead">Realized €/unit for the identical part number across distributors, same period. Vintage-free by
+ construction — every point is the same list, same year. Limited to parts sold to five or more distributors with at
+ least €20k of revenue.</p>
+ <div class="grid2">
+  <div class="card"><h3>Every distributor × part</h3>
+   <p class="cap">Rose = part whose p90 is more than 1.5× its p10.</p><svg viewBox="0 0 560 340" class="ch" role="img" preserveAspectRatio="xMidYMid meet"><line x1="62" y1="220.9" x2="542" y2="220.9" stroke="#E4E4E7"/><text x="54" y="224.9" text-anchor="end" class="tk">10</text><line x1="62" y1="173.4" x2="542" y2="173.4" stroke="#E4E4E7"/><text x="54" y="177.4" text-anchor="end" class="tk">30</text><line x1="62" y1="121.4" x2="542" y2="121.4" stroke="#E4E4E7"/><text x="54" y="125.4" text-anchor="end" class="tk">100</text><line x1="62" y1="74.0" x2="542" y2="74.0" stroke="#E4E4E7"/><text x="54" y="78.0" text-anchor="end" class="tk">300</text><line x1="62" y1="22.0" x2="542" y2="22.0" stroke="#E4E4E7"/><text x="54" y="26.0" text-anchor="end" class="tk">1,000</text><line x1="123.2" y1="14" x2="123.2" y2="266.0" stroke="#E4E4E7"/><text x="123.2" y="283" text-anchor="middle" class="tk">100,000</text><line x1="329.6" y1="14" x2="329.6" y2="266.0" stroke="#E4E4E7"/><text x="329.6" y="283" text-anchor="middle" class="tk">300,000</text><g><title>SENSOR; PM
+8978808250 · IRELAND
+€247/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="82.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · ROMANIA
+€252/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="81.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · SWEDEN
+€253/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="81.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · CYPRUS
+€260/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="80.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · DENMARK
+€254/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="81.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · PORTUGAL
+€244/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="83.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · PALESTINE
+€166/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="99.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · NORWAY
+€234/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="84.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · MALTA
+€244/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="83.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · HUNGARY
+€244/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="83.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · GREECE
+€244/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="82.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · GERMANY
+€244/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="82.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · FINLAND
+€246/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="82.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · BELGIUM
+€248/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="82.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · IUK
+€235/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="84.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · ICELAND
+€242/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="83.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · UMI
+€223/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="86.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808250 · UKRAINE
+€240/unit · part total €688,450
+spread p90÷p10 = 1.10×</title><circle cx="485.6" cy="83.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · FINLAND
+€79/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="131.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · NORWAY
+€76/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="133.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · MALTA
+€79/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="131.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · IUK
+€74/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="134.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · BELGIUM
+€79/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="131.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · IRELAND
+€79/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="131.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · ICELAND
+€78/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="132.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · GREECE
+€79/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="131.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · ROMANIA
+€81/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="130.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · PORTUGAL
+€79/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="131.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · DENMARK
+€80/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="131.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · CYPRUS
+€79/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="131.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · SWEDEN
+€79/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="131.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · HUNGARY
+€79/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="131.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ROTOR; DISC BRK,FRT
+8983767550 · GERMANY
+€79/unit · part total €641,264
+spread p90÷p10 = 1.04×</title><circle cx="472.3" cy="131.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; NOX
+8983528481 · BELGIUM
+€271/unit · part total €557,039
+spread p90÷p10 = 1.14×</title><circle cx="445.8" cy="78.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; NOX
+8983528481 · CYPRUS
+€270/unit · part total €557,039
+spread p90÷p10 = 1.14×</title><circle cx="445.8" cy="78.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; NOX
+8983528481 · IRELAND
+€257/unit · part total €557,039
+spread p90÷p10 = 1.14×</title><circle cx="445.8" cy="80.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; NOX
+8983528481 · GERMANY
+€253/unit · part total €557,039
+spread p90÷p10 = 1.14×</title><circle cx="445.8" cy="81.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; NOX
+8983528481 · UTI
+€226/unit · part total €557,039
+spread p90÷p10 = 1.14×</title><circle cx="445.8" cy="86.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; NOX
+8983528481 · PORTUGAL
+€253/unit · part total €557,039
+spread p90÷p10 = 1.14×</title><circle cx="445.8" cy="81.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; NOX
+8983528481 · ITUK
+€244/unit · part total €557,039
+spread p90÷p10 = 1.14×</title><circle cx="445.8" cy="82.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · CYPRUS
+€260/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="80.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · GERMANY
+€244/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="82.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · IUK
+€235/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="84.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · SWEDEN
+€247/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="82.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · UKRAINE
+€244/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="83.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · DENMARK
+€247/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="82.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · MALTA
+€244/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="83.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · PORTUGAL
+€244/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="82.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · NORWAY
+€233/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="84.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · ROMANIA
+€251/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="81.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · IRELAND
+€246/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="82.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · HUNGARY
+€244/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="82.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · GREECE
+€243/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="83.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · ICELAND
+€241/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="83.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · FINLAND
+€250/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="81.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · BELGIUM
+€245/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="82.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · UMI
+€220/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="87.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8978808270 · ITUK
+€237/unit · part total €517,590
+spread p90÷p10 = 1.06×</title><circle cx="432.0" cy="84.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · PORTUGAL
+€61/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="142.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · ROMANIA
+€86/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="128.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · HUNGARY
+€83/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="129.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · ICELAND
+€83/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="129.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · IUK
+€65/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="140.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · UMI
+€71/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="136.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · CYPRUS
+€83/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="129.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · GERMANY
+€71/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="136.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · BELGIUM
+€83/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="129.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · FINLAND
+€83/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="129.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · SWEDEN
+€79/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="131.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · GREECE
+€80/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="131.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · IRELAND
+€61/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="142.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · NORWAY
+€80/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="131.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · MALTA
+€83/unit · part total €306,344
+spread p90÷p10 = 1.33×</title><circle cx="333.5" cy="129.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · GREECE
+€95/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="123.8" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · IRELAND
+€90/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="126.0" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · PORTUGAL
+€74/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="134.5" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · ITUK
+€87/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="127.4" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · UTI
+€77/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="132.8" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · UKRAINE
+€71/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="136.4" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · MALTA
+€90/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="126.0" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · KAZAKHSTAN
+€131/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="109.6" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · ARMENIA
+€131/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="109.6" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · BELGIUM
+€90/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="126.0" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · CYPRUS
+€90/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="126.0" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · GERMANY
+€68/unit · part total €287,818
+spread p90÷p10 = 1.80×</title><circle cx="321.8" cy="138.1" r="3.4" fill="#DC606E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · BELGIUM
+€21/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="188.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · UKRAINE
+€17/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="199.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · ROMANIA
+€22/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="186.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · SWEDEN
+€19/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="193.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · MALTA
+€21/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="187.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · NORWAY
+€21/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="189.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · IUK
+€20/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="191.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · CYPRUS
+€20/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="191.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · IRELAND
+€19/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="193.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · ICELAND
+€21/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="188.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · PORTUGAL
+€21/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="187.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · FINLAND
+€21/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="187.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · GERMANY_SERVICE
+€21/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="188.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · GERMANY
+€22/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="187.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · GREECE
+€21/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="188.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · HUNGARY
+€21/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="187.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; ACL
+8974995480 · DENMARK
+€20/unit · part total €255,235
+spread p90÷p10 = 1.14×</title><circle cx="299.2" cy="191.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · SWEDEN
+€14/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="207.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · UMI
+€12/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="211.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · BELGIUM
+€14/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="205.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · DENMARK
+€14/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="207.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · FINLAND
+€14/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="207.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · GERMANY_SERVICE
+€13/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="208.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · GERMANY
+€14/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="207.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · GREECE
+€14/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="206.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · ICELAND
+€13/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="208.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · CYPRUS
+€13/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="211.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · IRELAND
+€12/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="214.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · MALTA
+€14/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="207.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · IUK
+€12/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="212.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · ITUK
+€13/unit · part total €234,253
+spread p90÷p10 = 1.14×</title><circle cx="283.1" cy="209.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · BELGIUM
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="251.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · MALTA
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="250.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · NORWAY
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="252.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · ROMANIA
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="249.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · SWEDEN
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="251.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · IUK
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="253.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · ITUK
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="252.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · IRELAND
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="252.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · ICELAND
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="251.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · FINLAND
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="250.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · DENMARK
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="251.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · CYPRUS
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="251.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · GERMANY
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="250.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · HUNGARY
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="250.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · GREECE
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="250.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982705240 · GERMANY_SERVICE
+€5/unit · part total €215,147
+spread p90÷p10 = 1.04×</title><circle cx="267.1" cy="251.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · IRELAND
+€15/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="204.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · GERMANY_SERVICE
+€17/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="198.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · GREECE
+€17/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="198.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · HUNGARY
+€17/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="198.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · ICELAND
+€17/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="199.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · GERMANY
+€17/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="198.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · FINLAND
+€17/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="198.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · DENMARK
+€14/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="205.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · CYPRUS
+€17/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="198.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · SWEDEN
+€15/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="202.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · UKRAINE
+€17/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="198.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · ARMENIA
+€23/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="184.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · BELGIUM
+€17/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="198.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · IUK
+€12/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="213.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · MALTA
+€17/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="198.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · NORWAY
+€16/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="200.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER; BLOWER UNIT
+8975554500 · ROMANIA
+€17/unit · part total €206,830
+spread p90÷p10 = 1.18×</title><circle cx="259.7" cy="197.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · BELGIUM
+€183/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="95.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · CYPRUS
+€187/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="94.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · DENMARK
+€192/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="93.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · GERMANY
+€184/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="95.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · FINLAND
+€183/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="95.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · GREECE
+€189/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="93.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · HUNGARY
+€183/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="95.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · MALTA
+€183/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="95.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · ICELAND
+€183/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="95.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · IRELAND
+€183/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="95.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · IUK
+€174/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="97.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · PALESTINE
+€106/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="118.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · ARMENIA
+€228/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="85.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · PORTUGAL
+€183/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="95.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · ROMANIA
+€189/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="94.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · SWEDEN
+€183/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="95.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · NORWAY
+€176/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="97.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · UMI
+€168/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="99.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RADIATOR ASM
+8984865960 · UKRAINE
+€183/unit · part total €163,921
+spread p90÷p10 = 1.10×</title><circle cx="216.0" cy="95.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · UMI
+€86/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="127.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · CYPRUS
+€136/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · NORWAY
+€130/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="110.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · MALTA
+€136/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · IRELAND
+€135/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · ICELAND
+€134/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · DENMARK
+€144/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="105.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · FINLAND
+€136/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · IUK
+€122/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="113.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · UKRAINE
+€136/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · SWEDEN
+€135/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · ROMANIA
+€139/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="107.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · HUNGARY
+€136/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · PALESTINE
+€64/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="140.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · GERMANY
+€136/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · BELGIUM
+€136/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · PORTUGAL
+€136/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>BUMPER ASM; FRT
+8975509392 · GREECE
+€135/unit · part total €157,598
+spread p90÷p10 = 1.23×</title><circle cx="208.7" cy="108.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · DENMARK
+€172/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="97.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · UMI
+€162/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="100.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · ROMANIA
+€180/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="96.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · FINLAND
+€175/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="97.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · GERMANY
+€177/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="96.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · CYPRUS
+€184/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="95.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · ICELAND
+€175/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="97.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · UKRAINE
+€173/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="97.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · IRELAND
+€174/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="97.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · IUK
+€169/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="98.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · BELGIUM
+€182/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="95.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · SWEDEN
+€174/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="97.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · HUNGARY
+€175/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="97.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · PORTUGAL
+€175/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="97.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · PALESTINE
+€116/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="115.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · MALTA
+€175/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="97.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · GREECE
+€175/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="97.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP; WATER
+8984865441 · NORWAY
+€168/unit · part total €153,393
+spread p90÷p10 = 1.09×</title><circle cx="203.6" cy="99.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · IUK
+€672/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="39.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · PORTUGAL
+€681/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="38.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · SWEDEN
+€688/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="38.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · GREECE
+€702/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="37.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · CYPRUS
+€729/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="35.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · DENMARK
+€817/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="30.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · GERMANY
+€838/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="29.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · MALTA
+€681/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="38.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · HUNGARY
+€702/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="37.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · IRELAND
+€729/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="35.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · BELGIUM
+€720/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="36.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · UMI
+€607/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="43.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>CONTROL UNIT
+7552752270 · NORWAY
+€656/unit · part total €151,462
+spread p90÷p10 = 1.21×</title><circle cx="201.2" cy="40.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · ROMANIA
+€857/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="28.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · UMI
+€705/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="37.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · SWEDEN
+€773/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="33.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · IUK
+€727/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="35.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · HUNGARY
+€842/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="29.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · IRELAND
+€891/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="27.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · GREECE
+€857/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="28.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · BELGIUM
+€870/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="28.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · GERMANY
+€776/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="32.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · FINLAND
+€841/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="29.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · CYPRUS
+€891/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="27.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · PORTUGAL
+€785/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="32.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>TURBOCHARGER ASM
+8974985741 · NORWAY
+€805/unit · part total €148,135
+spread p90÷p10 = 1.20×</title><circle cx="197.0" cy="31.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · IUK
+€154/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="102.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · IRELAND
+€160/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="101.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · HUNGARY
+€164/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="100.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · FINLAND
+€160/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="101.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · CYPRUS
+€171/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="98.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · ICELAND
+€162/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="100.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · SWEDEN
+€160/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="101.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · BELGIUM
+€165/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="99.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · NORWAY
+€154/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="102.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · PORTUGAL
+€160/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="101.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · PALESTINE
+€121/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="113.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · UMI
+€145/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="105.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · UKRAINE
+€160/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="101.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · GREECE
+€165/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="99.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · GERMANY
+€162/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="100.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8984890190 · DENMARK
+€181/unit · part total €145,197
+spread p90÷p10 = 1.13×</title><circle cx="193.3" cy="95.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · UKRAINE
+€124/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="112.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · GERMANY
+€134/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="108.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · UMI
+€153/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="102.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · PALESTINE
+€128/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="110.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · DENMARK
+€176/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="96.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · CYPRUS
+€189/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="94.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · ITUK
+€171/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="98.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · IUK
+€157/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="101.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · ICELAND
+€175/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="97.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · IRELAND
+€176/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="96.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · MIDI
+€182/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="95.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · NORWAY
+€170/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="98.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · HUNGARY
+€176/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="96.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · GREECE
+€153/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="103.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · PORTUGAL
+€148/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="104.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · BELGIUM
+€185/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="94.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>NOZZLE ASM; INJ
+8983320591 · SWEDEN
+€155/unit · part total €143,818
+spread p90÷p10 = 1.40×</title><circle cx="191.5" cy="102.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · ICELAND
+€69/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="137.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · IRELAND
+€69/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="137.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · IUK
+€64/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="140.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · DENMARK
+€70/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="136.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · MALTA
+€69/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="137.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · GERMANY
+€71/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="136.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · GREECE
+€70/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="136.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · HUNGARY
+€69/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="137.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · SWEDEN
+€69/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="137.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · BELGIUM
+€70/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="137.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · CYPRUS
+€70/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="137.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; DISC BRK,W/O SHIM &amp; CLIP
+8978279610 · FINLAND
+€69/unit · part total €128,430
+spread p90÷p10 = 1.02×</title><circle cx="170.2" cy="137.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+1876102890 · UTI
+€10/unit · part total €122,599
+spread p90÷p10 = 1.50×</title><circle cx="161.5" cy="220.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+1876102890 · ARMENIA
+€15/unit · part total €122,599
+spread p90÷p10 = 1.50×</title><circle cx="161.5" cy="203.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+1876102890 · BELGIUM
+€10/unit · part total €122,599
+spread p90÷p10 = 1.50×</title><circle cx="161.5" cy="219.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+1876102890 · KAZAKHSTAN
+€15/unit · part total €122,599
+spread p90÷p10 = 1.50×</title><circle cx="161.5" cy="203.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+1876102890 · ITUK
+€10/unit · part total €122,599
+spread p90÷p10 = 1.50×</title><circle cx="161.5" cy="220.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+1876102890 · UKRAINE
+€10/unit · part total €122,599
+spread p90÷p10 = 1.50×</title><circle cx="161.5" cy="220.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+1876102890 · PORTUGAL
+€10/unit · part total €122,599
+spread p90÷p10 = 1.50×</title><circle cx="161.5" cy="220.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+1876102890 · GREECE
+€11/unit · part total €122,599
+spread p90÷p10 = 1.50×</title><circle cx="161.5" cy="218.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+1876102890 · IRELAND
+€9/unit · part total €122,599
+spread p90÷p10 = 1.50×</title><circle cx="161.5" cy="223.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+1876102890 · CYPRUS
+€10/unit · part total €122,599
+spread p90÷p10 = 1.50×</title><circle cx="161.5" cy="220.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · HUNGARY
+€195/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="92.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · ITUK
+€191/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="93.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · IUK
+€193/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="92.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · MALTA
+€205/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="90.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · IRELAND
+€198/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="91.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · SWEDEN
+€199/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="91.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · UTI
+€157/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="102.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · CYPRUS
+€212/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="89.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · BELGIUM
+€212/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="89.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · GERMANY
+€198/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="91.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · DENMARK
+€238/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="84.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · FINLAND
+€198/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="91.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · NORWAY
+€190/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="93.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · PALESTINE
+€122/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="112.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PRESSURE,DPD
+8983314120 · PORTUGAL
+€199/unit · part total €118,471
+spread p90÷p10 = 1.25×</title><circle cx="155.0" cy="91.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · DENMARK
+€291/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="75.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · IRELAND
+€243/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="83.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · UMI
+€235/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="84.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · UKRAINE
+€243/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="83.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · NORWAY
+€235/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="84.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · PALESTINE
+€140/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="106.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · SWEDEN
+€242/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="83.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · PORTUGAL
+€243/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="83.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · MIDI
+€250/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="81.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · IUK
+€236/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="84.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · BELGIUM
+€259/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="80.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · CYPRUS
+€260/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="80.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · ICELAND
+€240/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="83.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · HUNGARY
+€250/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="81.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · GREECE
+€250/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="81.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>RAIL; COMMON
+8984890180 · GERMANY
+€299/unit · part total €115,065
+spread p90÷p10 = 1.17×</title><circle cx="149.6" cy="74.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8983300950 · PORTUGAL
+€389/unit · part total €114,941
+spread p90÷p10 = 1.12×</title><circle cx="149.4" cy="62.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8983300950 · UTI
+€348/unit · part total €114,941
+spread p90÷p10 = 1.12×</title><circle cx="149.4" cy="67.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8983300950 · MIDI
+€401/unit · part total €114,941
+spread p90÷p10 = 1.12×</title><circle cx="149.4" cy="61.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8983300950 · GERMANY
+€405/unit · part total €114,941
+spread p90÷p10 = 1.12×</title><circle cx="149.4" cy="61.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8983300950 · ITUK
+€376/unit · part total €114,941
+spread p90÷p10 = 1.12×</title><circle cx="149.4" cy="64.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8983300950 · MALTA
+€417/unit · part total €114,941
+spread p90÷p10 = 1.12×</title><circle cx="149.4" cy="59.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; PM
+8983300950 · IRELAND
+€391/unit · part total €114,941
+spread p90÷p10 = 1.12×</title><circle cx="149.4" cy="62.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8980252486 · UTI
+€161/unit · part total €111,655
+spread p90÷p10 = 1.34×</title><circle cx="143.9" cy="101.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8980252486 · PORTUGAL
+€230/unit · part total €111,655
+spread p90÷p10 = 1.34×</title><circle cx="143.9" cy="85.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8980252486 · ITUK
+€222/unit · part total €111,655
+spread p90÷p10 = 1.34×</title><circle cx="143.9" cy="87.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8980252486 · IRELAND
+€230/unit · part total €111,655
+spread p90÷p10 = 1.34×</title><circle cx="143.9" cy="85.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8980252486 · UKRAINE
+€228/unit · part total €111,655
+spread p90÷p10 = 1.34×</title><circle cx="143.9" cy="85.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8980252486 · GERMANY
+€282/unit · part total €111,655
+spread p90÷p10 = 1.34×</title><circle cx="143.9" cy="76.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975546610 · CYPRUS
+€83/unit · part total €105,379
+spread p90÷p10 = 1.25×</title><circle cx="133.0" cy="129.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975546610 · GREECE
+€72/unit · part total €105,379
+spread p90÷p10 = 1.25×</title><circle cx="133.0" cy="135.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975546610 · BELGIUM
+€85/unit · part total €105,379
+spread p90÷p10 = 1.25×</title><circle cx="133.0" cy="128.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975546610 · GERMANY
+€103/unit · part total €105,379
+spread p90÷p10 = 1.25×</title><circle cx="133.0" cy="120.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975546610 · FINLAND
+€83/unit · part total €105,379
+spread p90÷p10 = 1.25×</title><circle cx="133.0" cy="129.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975546610 · DENMARK
+€84/unit · part total €105,379
+spread p90÷p10 = 1.25×</title><circle cx="133.0" cy="129.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975546610 · HUNGARY
+€83/unit · part total €105,379
+spread p90÷p10 = 1.25×</title><circle cx="133.0" cy="129.3" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975546610 · ICELAND
+€83/unit · part total €105,379
+spread p90÷p10 = 1.25×</title><circle cx="133.0" cy="129.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975546610 · IRELAND
+€68/unit · part total €105,379
+spread p90÷p10 = 1.25×</title><circle cx="133.0" cy="138.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975546610 · NORWAY
+€80/unit · part total €105,379
+spread p90÷p10 = 1.25×</title><circle cx="133.0" cy="131.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975546610 · UKRAINE
+€67/unit · part total €105,379
+spread p90÷p10 = 1.25×</title><circle cx="133.0" cy="138.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · GERMANY
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="212.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · GERMANY_SERVICE
+€13/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="208.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · PORTUGAL
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="212.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · ROMANIA
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="211.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · SWEDEN
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="211.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · UMI
+€20/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="191.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · MALTA
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="212.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · NORWAY
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="213.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · DENMARK
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="212.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · BELGIUM
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="211.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · GREECE
+€13/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="210.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · HUNGARY
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="211.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · IUK
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="214.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · ICELAND
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="213.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · FINLAND
+€12/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="212.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SENSOR; TIRE INFLATION
+8974993681 · ARMENIA
+€29/unit · part total €102,138
+spread p90÷p10 = 1.40×</title><circle cx="127.2" cy="174.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · GREECE
+€687/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="38.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · NORWAY
+€686/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="38.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · DENMARK
+€801/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="31.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · GERMANY
+€821/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="30.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · BELGIUM
+€687/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="38.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · CYPRUS
+€714/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="36.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · UKRAINE
+€667/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="39.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · UMI
+€648/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="40.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · PORTUGAL
+€667/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="39.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · SWEDEN
+€668/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="39.4" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · ICELAND
+€661/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="39.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · IRELAND
+€660/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="39.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · IUK
+€650/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="40.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · MIDI
+€687/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="38.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>PUMP ASM; FUEL,SUPPLY
+8984890171 · PALESTINE
+€385/unit · part total €99,649
+spread p90÷p10 = 1.18×</title><circle cx="122.5" cy="63.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8982127181 · IRELAND
+€231/unit · part total €99,078
+spread p90÷p10 = 1.34×</title><circle cx="121.5" cy="85.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8982127181 · ITUK
+€223/unit · part total €99,078
+spread p90÷p10 = 1.34×</title><circle cx="121.5" cy="86.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8982127181 · PORTUGAL
+€230/unit · part total €99,078
+spread p90÷p10 = 1.34×</title><circle cx="121.5" cy="85.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8982127181 · UTI
+€161/unit · part total €99,078
+spread p90÷p10 = 1.34×</title><circle cx="121.5" cy="101.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8982127181 · UKRAINE
+€228/unit · part total €99,078
+spread p90÷p10 = 1.34×</title><circle cx="121.5" cy="85.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>COOLER ASM; EGR
+8982127181 · GERMANY
+€282/unit · part total €99,078
+spread p90÷p10 = 1.34×</title><circle cx="121.5" cy="76.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982984040 · ITUK
+€14/unit · part total €98,097
+spread p90÷p10 = 1.28×</title><circle cx="119.6" cy="206.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982984040 · IRELAND
+€13/unit · part total €98,097
+spread p90÷p10 = 1.28×</title><circle cx="119.6" cy="210.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982984040 · UTI
+€12/unit · part total €98,097
+spread p90÷p10 = 1.28×</title><circle cx="119.6" cy="212.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982984040 · BELGIUM
+€15/unit · part total €98,097
+spread p90÷p10 = 1.28×</title><circle cx="119.6" cy="202.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982984040 · GERMANY
+€18/unit · part total €98,097
+spread p90÷p10 = 1.28×</title><circle cx="119.6" cy="196.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982984040 · UKRAINE
+€14/unit · part total €98,097
+spread p90÷p10 = 1.28×</title><circle cx="119.6" cy="205.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>ELEMENT; OIL FILTER
+8982984040 · PORTUGAL
+€14/unit · part total €98,097
+spread p90÷p10 = 1.28×</title><circle cx="119.6" cy="205.2" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · HUNGARY
+€143/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="105.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · GREECE
+€147/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="104.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · ICELAND
+€141/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="106.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · DENMARK
+€143/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="106.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · PORTUGAL
+€143/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="105.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · GERMANY
+€143/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="105.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · FINLAND
+€143/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="105.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · BELGIUM
+€144/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="105.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · ROMANIA
+€147/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="104.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · SWEDEN
+€143/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="106.0" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · UMI
+€129/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="110.5" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · IRELAND
+€143/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="105.9" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · IUK
+€135/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="108.6" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>SILENCER ASM; EXH
+8981405904 · NORWAY
+€137/unit · part total €97,222
+spread p90÷p10 = 1.08×</title><circle cx="117.9" cy="107.7" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER ASM; VCV
+7552026060 · BELGIUM
+€51/unit · part total €96,258
+spread p90÷p10 = 1.48×</title><circle cx="116.0" cy="150.8" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><g><title>FILTER ASM; VCV
+7552026060 · MIDI
+€51/unit · part total €96,258
+spread p90÷p10 = 1.48×</title><circle cx="116.0" cy="150.1" r="3.4" fill="#CC0E1E" fill-opacity="1"/></g><text x="302" y="314" text-anchor="middle" class="axt">part revenue € (log)</text><text transform="rotate(-90 13 140)" x="13" y="140" text-anchor="middle" class="axt">realized €/unit (log)</text><circle cx="129" cy="330" r="5.5" fill="#CC0E1E"/><text x="142" y="334" class="lg">one distributor × part</text><circle cx="287" cy="330" r="5.5" fill="#DC606E"/><text x="300" y="334" class="lg">part with &gt;1.5× spread</text></svg></div>
+  <div class="card"><h3>Widest spreads</h3>
+   <p class="cap">p90 ÷ p10 of realized unit price.</p><svg viewBox="0 0 560 330" class="ch" role="img" preserveAspectRatio="xMidYMid meet"><line x1="195.0" y1="12" x2="195.0" y2="282.0" stroke="#E4E4E7"/><text x="195.0" y="299" text-anchor="middle" class="tk">1.0×</text><line x1="268.2" y1="12" x2="268.2" y2="282.0" stroke="#E4E4E7"/><text x="268.2" y="299" text-anchor="middle" class="tk">1.2×</text><line x1="341.4" y1="12" x2="341.4" y2="282.0" stroke="#E4E4E7"/><text x="341.4" y="299" text-anchor="middle" class="tk">1.4×</text><line x1="414.5" y1="12" x2="414.5" y2="282.0" stroke="#E4E4E7"/><text x="414.5" y="299" text-anchor="middle" class="tk">1.6×</text><line x1="487.7" y1="12" x2="487.7" y2="282.0" stroke="#E4E4E7"/><text x="487.7" y="299" text-anchor="middle" class="tk">1.8×</text><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8975056801 · 15 distributors
+p10 €63 · median €80 · p90 €83
+spread 1.33×
+part revenue €306,344
+€ at stake if all moved to median: €66,723</title><rect x="195.0" y="16.5" width="120.7" height="13.5" fill="#B45309"/></g><text x="186" y="27.2" text-anchor="end" class="ax">PAD KIT; CALIPER,DISC BRK, …</text><g><title>PAD KIT; CALIPER,DISC BRK,FRT
+8982447940 · 12 distributors
+p10 €71 · median €90 · p90 €128
+spread 1.80×
+part revenue €287,818
+€ at stake if all moved to median: €60,307</title><rect x="195.0" y="39.0" width="292.3" height="13.5" fill="#CC0E1E"/></g><text x="186" y="49.8" text-anchor="end" class="ax">PAD KIT; CALIPER,DISC BRK, …</text><g><title>SENSOR; PM
+8978808250 · 18 distributors
+p10 €231 · median €244 · p90 €253
+spread 1.10×
+part revenue €688,450
+€ at stake if all moved to median: €36,658</title><rect x="195.0" y="61.5" width="35.5" height="13.5" fill="#B45309"/></g><text x="186" y="72.2" text-anchor="end" class="ax">SENSOR; PM</text><g><title>SENSOR; NOX
+8983528481 · 7 distributors
+p10 €237 · median €253 · p90 €270
+spread 1.14×
+part revenue €557,039
+€ at stake if all moved to median: €35,208</title><rect x="195.0" y="84.0" width="51.6" height="13.5" fill="#B45309"/></g><text x="186" y="94.8" text-anchor="end" class="ax">SENSOR; NOX</text><g><title>NOZZLE ASM; INJ
+8983320591 · 17 distributors
+p10 €131 · median €170 · p90 €183
+spread 1.40×
+part revenue €143,818
+€ at stake if all moved to median: €32,978</title><rect x="195.0" y="106.5" width="144.9" height="13.5" fill="#B45309"/></g><text x="186" y="117.2" text-anchor="end" class="ax">NOZZLE ASM; INJ</text><g><title>BUMPER ASM; FRT
+8975509392 · 18 distributors
+p10 €111 · median €136 · p90 €137
+spread 1.23×
+part revenue €157,598
+€ at stake if all moved to median: €28,591</title><rect x="195.0" y="129.0" width="85.6" height="13.5" fill="#B45309"/></g><text x="186" y="139.8" text-anchor="end" class="ax">BUMPER ASM; FRT</text><g><title>FILTER; BLOWER UNIT
+8975554500 · 17 distributors
+p10 €14 · median €17 · p90 €17
+spread 1.18×
+part revenue €206,830
+€ at stake if all moved to median: €28,209</title><rect x="195.0" y="151.5" width="64.0" height="13.5" fill="#B45309"/></g><text x="186" y="162.2" text-anchor="end" class="ax">FILTER; BLOWER UNIT</text><g><title>FILTER; ACL
+8974995480 · 17 distributors
+p10 €19 · median €21 · p90 €21
+spread 1.14×
+part revenue €255,235
+€ at stake if all moved to median: €28,074</title><rect x="195.0" y="174.0" width="50.1" height="13.5" fill="#B45309"/></g><text x="186" y="184.8" text-anchor="end" class="ax">FILTER; ACL</text><g><title>FILTER ASM; VCV
+7552026060 · 14 distributors
+p10 €35 · median €49 · p90 €52
+spread 1.48×
+part revenue €96,258
+€ at stake if all moved to median: €26,808</title><rect x="195.0" y="196.5" width="175.6" height="13.5" fill="#B45309"/></g><text x="186" y="207.2" text-anchor="end" class="ax">FILTER ASM; VCV</text><g><title>FILTER; BLOWER UNIT
+8975488420 · 15 distributors
+p10 €11 · median €17 · p90 €17
+spread 1.57×
+part revenue €71,172
+€ at stake if all moved to median: €25,046</title><rect x="195.0" y="219.0" width="209.7" height="13.5" fill="#CC0E1E"/></g><text x="186" y="229.8" text-anchor="end" class="ax">FILTER; BLOWER UNIT</text><g><title>VALVE; EGR
+8981647861 · 14 distributors
+p10 €147 · median €217 · p90 €226
+spread 1.53×
+part revenue €71,790
+€ at stake if all moved to median: €23,026</title><rect x="195.0" y="241.5" width="195.4" height="13.5" fill="#CC0E1E"/></g><text x="186" y="252.2" text-anchor="end" class="ax">VALVE; EGR</text><g><title>ELEMENT KIT; FUEL FILTER
+8981596930 · 14 distributors
+p10 €12 · median €13 · p90 €14
+spread 1.14×
+part revenue €234,253
+€ at stake if all moved to median: €21,257</title><rect x="195.0" y="264.0" width="50.1" height="13.5" fill="#B45309"/></g><text x="186" y="274.8" text-anchor="end" class="ax">ELEMENT KIT; FUEL FILTER</text><text x="368" y="322" text-anchor="middle" class="axt">p90 ÷ p10 realized unit price</text></svg></div>
+ </div>
+
+ <div class="callout"><b>Median spread across 220 parts is
+ 1.122× — tight, and that is good news.</b> Pricing across the network is
+ broadly consistent. The exception list is short and therefore actionable:
+ 9 parts exceed 1.5× and one exceeds 2×.</div>
+
+ <div class="callout amber"><b>Front brake pads are the standout, twice.</b> 8982447940 runs €71.02 to €127.80
+ across 12 distributors (1.80×) and 8975056801 runs €62.68 to €83.37 across 15 (1.33×) — the same component family
+ appearing twice at the top of the list. Together they carry roughly €127k of the
+ €163,445 that would move if every distributor below the median were
+ brought to it.</div>
+
+ <div class="card"><h3>Top 15 by € at stake</h3>
+  <p class="cap">€ at stake = revenue that would shift if distributors below the median moved to it. An upper bound,
+  not a forecast — it assumes the spread is unjustified, and some of it will be volume or contract.</p>
+  <div class="tw"><table><thead><tr><th>Part number</th><th>Description</th><th class="n">DBs</th>
+  <th class="n">p10 €</th><th class="n">Median €</th><th class="n">p90 €</th><th class="n">Spread</th>
+  <th class="n">€ at stake</th></tr></thead><tbody><tr><td class="mono sm">8975056801</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td class="n">15</td><td class="n">62.68</td><td class="n b">80.13</td><td class="n">83.37</td><td class="n b ">1.33×</td><td class="n">66,723</td></tr><tr><td class="mono sm">8982447940</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td class="n">12</td><td class="n">71.02</td><td class="n b">89.85</td><td class="n">127.80</td><td class="n b hi">1.80×</td><td class="n">60,307</td></tr><tr><td class="mono sm">8978808250</td><td>SENSOR; PM</td><td class="n">18</td><td class="n">230.66</td><td class="n b">243.64</td><td class="n">253.02</td><td class="n b ">1.10×</td><td class="n">36,658</td></tr><tr><td class="mono sm">8983528481</td><td>SENSOR; NOX</td><td class="n">7</td><td class="n">236.83</td><td class="n b">252.81</td><td class="n">270.19</td><td class="n b ">1.14×</td><td class="n">35,208</td></tr><tr><td class="mono sm">8983320591</td><td>NOZZLE ASM; INJ</td><td class="n">17</td><td class="n">131.25</td><td class="n b">170.31</td><td class="n">183.18</td><td class="n b ">1.40×</td><td class="n">32,978</td></tr><tr><td class="mono sm">8975509392</td><td>BUMPER ASM; FRT</td><td class="n">18</td><td class="n">110.94</td><td class="n b">135.53</td><td class="n">136.87</td><td class="n b ">1.23×</td><td class="n">28,591</td></tr><tr><td class="mono sm">8975554500</td><td>FILTER; BLOWER UNIT</td><td class="n">17</td><td class="n">14.44</td><td class="n b">16.72</td><td class="n">16.97</td><td class="n b ">1.18×</td><td class="n">28,209</td></tr><tr><td class="mono sm">8974995480</td><td>FILTER; ACL</td><td class="n">17</td><td class="n">18.91</td><td class="n b">21.25</td><td class="n">21.50</td><td class="n b ">1.14×</td><td class="n">28,074</td></tr><tr><td class="mono sm">7552026060</td><td>FILTER ASM; VCV</td><td class="n">14</td><td class="n">35.46</td><td class="n b">49.15</td><td class="n">52.49</td><td class="n b ">1.48×</td><td class="n">26,808</td></tr><tr><td class="mono sm">8975488420</td><td>FILTER; BLOWER UNIT</td><td class="n">15</td><td class="n">10.83</td><td class="n b">16.71</td><td class="n">17.03</td><td class="n b hi">1.57×</td><td class="n">25,046</td></tr><tr><td class="mono sm">8981647861</td><td>VALVE; EGR</td><td class="n">14</td><td class="n">147.25</td><td class="n b">216.78</td><td class="n">225.90</td><td class="n b hi">1.53×</td><td class="n">23,026</td></tr><tr><td class="mono sm">8981596930</td><td>ELEMENT KIT; FUEL FILTER</td><td class="n">14</td><td class="n">12.26</td><td class="n b">13.48</td><td class="n">13.94</td><td class="n b ">1.14×</td><td class="n">21,257</td></tr><tr><td class="mono sm">8975546610</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td class="n">11</td><td class="n">67.52</td><td class="n b">83.35</td><td class="n">84.59</td><td class="n b ">1.25×</td><td class="n">20,012</td></tr><tr><td class="mono sm">8982169210</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td class="n">8</td><td class="n">74.65</td><td class="n b">101.59</td><td class="n">108.48</td><td class="n b ">1.45×</td><td class="n">19,584</td></tr><tr><td class="mono sm">8978808270</td><td>SENSOR; PM</td><td class="n">18</td><td class="n">234.78</td><td class="n b">243.90</td><td class="n">250.03</td><td class="n b ">1.06×</td><td class="n">19,371</td></tr></tbody></table></div></div>
+</section>
+
+<section>
+ <h2><span class="num">04</span>What this needs next</h2>
+ <div class="callout"><b>Dated price-list snapshots are the single unlock.</b> One list means no view of price
+ movement, which is what blocks a real list-to-pocket waterfall — exactly the same gap that makes elasticity
+ impossible at ISZE level. If prior-year IE40 lists exist in SAP or an archive, view 01 becomes a genuine
+ realization measure instead of a diagnostic.</div>
+ <div class="callout amber"><b>The billing extract has no gross or discount column.</b> Only net_sales_value, so
+ discount, SPA and mix cannot be separated even with dated lists. Adding gross and condition values to the extract
+ would turn view 01 into the decomposed waterfall it should be.</div>
+ <div class="callout"><b>Explain the 522 unpriced part numbers before anything else.</b> Fifteen percent of parts
+ revenue sits outside the price list entirely. Until that is closed, every realization figure covers only 85% of
+ the business.</div>
+</section>
+
+<div class="foot">
+Sales to distributor, CY2025 unless stated. Excluded: SaTy CR/RE credit notes and returns, non-part lines
+(transport, rebate, late-payment interest, service fee), and Turkey, which is not an ISZE distributor. No margin
+figure appears anywhere in this dashboard — the billing extract carries no cost, so any margin would be invented;
+realization index against list price is used instead. Realization = net invoiced ÷ (list price × billed quantity),
+and carries the price-list vintage bias described in view 01. Charts are inline SVG — no external libraries,
+no network calls.
+</div>
+</div>

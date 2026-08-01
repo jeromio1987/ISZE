@@ -48,6 +48,9 @@ td.d{color:#5A5A5A;font-size:12px;font-family:Consolas,monospace}
 and shell script never loaded; two dead GPS redirects were repointed at the canonical file. Dashboards that render
 fully with no network went from 20 to 49.</div>
 
+<div class="note"><b>Evening pass (same day) — blank / broken pages repaired.</b>
+Monthly Sales Tracker was crashing before data load (empty chart + table); Competitiveness had a JS syntax error that killed the heatmap and had the Class&nbsp;C Autodoc table pasted 19×; Dealer Sell-out charts were double-initialised; PROPERTIQ images and Project Hub iframe pointed at wrong paths. Re-verified offline in headless Chrome.</div>
+
 <div class="note"><b>Six dashboards load their data at runtime — all six now work by double-click.</b>
 They used <code>fetch()</code>, which browsers block on <code>file://</code> URLs, so they showed
 "Data unavailable" whether or not you were connected — they only worked served from SharePoint. Each JSON now also

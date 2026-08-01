@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Sell-out AIM · ITUK vs UTI 2025</title>
-<script src="../_ui/chart.umd.min.js" defer></script>
+<script src="../_ui/chart.umd.min.js"></script>
 <style>
 :root { --red:#CC0E1E; --bg:#f4f5f7; --card:#fff; --text:#1a1a1a; --muted:#5a5a5a; --border:#e4e4e7; }
 * { box-sizing:border-box; }
@@ -40,8 +40,8 @@ section h3 { font-size:0.9rem; margin:0.5rem 0; color:var(--muted); }
   <div class="callout">Network-level DB→DLR sell-out CY2025. ITUK dealer pivot summed to one network. AIM buckets: bvp | genuine_contested (catalog pair exists) | genuine_only.<br/><strong>Sell-out reports are quantity only — no dealer EUR. ISZE-denominated value = reported qty × median CY2025 ISZE→DB unit price per PN (proxy for mix; not sell-out revenue). PNs with no billing price contribute qty but €0 to proxy totals. Billing rows use actual invoice EUR and GPS.</strong></div>
   <section><h2>Network summary</h2><div class="kpi-row"><div class="kpi"><div class="val">223,897</div><div class="lbl">ITUK sell-out qty</div></div><div class="kpi"><div class="val">92,660</div><div class="lbl">UTI sell-out qty</div></div><div class="kpi"><div class="val">€5,506,143</div><div class="lbl">ITUK ISZE-denom. (proxy)</div></div><div class="kpi"><div class="val">€2,143,892</div><div class="lbl">UTI ISZE-denom. (proxy)</div></div><div class="kpi"><div class="val">2.6%</div><div class="lbl">ITUK BVP % of proxy</div></div><div class="kpi"><div class="val">13.5%</div><div class="lbl">UTI BVP % of proxy</div></div><div class="kpi"><div class="val">4.7%</div><div class="lbl">ITUK qty w/o ISZE price</div></div><div class="kpi"><div class="val">1.4%</div><div class="lbl">UTI qty w/o ISZE price</div></div></div></section>
   <div class="grid2">
-    <section><h2>AIM mix by network</h2><canvas id="chartMix" height="260"></canvas></section>
-    <section><h2>PMS — BVP qty (sell-out)</h2><canvas id="chartPms" height="260"></canvas></section>
+    <section><h2>AIM mix by network</h2><div style="height:280px"><canvas id="chartMix"></canvas></div></section>
+    <section><h2>PMS — BVP qty (sell-out)</h2><div style="height:280px"><canvas id="chartPms"></canvas></div></section>
   </div>
   <section><h2>AIM comparison (sell-out qty vs ISZE-denom. proxy vs billing)</h2>
     <p class="muted">No dealer breakdown — ITUK dealer file aggregated to network. BVP / genuine % on sell-out rows use ISZE-denominated proxy only (not qty-only mix).</p>
@@ -60,10 +60,16 @@ section h3 { font-size:0.9rem; margin:0.5rem 0; color:var(--muted); }
 <script>
 function initCharts() {
   if (typeof Chart === 'undefined') return;
+  if (window.__selloutChartsReady) return;
+  window.__selloutChartsReady = true;
   const D = JSON.parse(document.getElementById('chart-data').textContent);
   const mix = D.aim_mix || [];
   const sell = mix.filter(r => r.layer === 'sellout_db_dlr');
-  new Chart(document.getElementById('chartMix'), {
+  const mixEl = document.getElementById('chartMix');
+  const pmsEl = document.getElementById('chartPms');
+  const existingMix = Chart.getChart(mixEl); if (existingMix) existingMix.destroy();
+  const existingPms = Chart.getChart(pmsEl); if (existingPms) existingPms.destroy();
+  new Chart(mixEl, {
     type: 'bar',
     data: {
       labels: sell.map(r => r.distributor_code),
@@ -73,10 +79,24 @@ function initCharts() {
         { label: 'Genuine-only %', data: sell.map(r => (r.genuine_only_pct||0)*100), backgroundColor: '#cbd5e1' },
       ],
     },
-    options: { responsive: true, scales: { x: { stacked: true }, y: { stacked: true, max: 100 } } },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom' } },
+      scales: {
+        x: { stacked: true, ticks: { autoSkip: false, maxRotation: 0 } },
+        y: { stacked: true, max: 100, title: { display: true, text: '% of ISZE-denom. proxy' } },
+      },
+    },
   });
-  const pms = D.pms_compare || [];
-  new Chart(document.getElementById('chartPms'), {
+  const pms = (D.pms_compare || [])
+    .map(r => ({
+      ...r,
+      _tot: (r.ITUK_sellout_db_dlr_bvp_qty||0) + (r.UTI_sellout_db_dlr_bvp_qty||0),
+    }))
+    .sort((a,b) => b._tot - a._tot)
+    .slice(0, 12);
+  new Chart(pmsEl, {
     type: 'bar',
     data: {
       labels: pms.map(r => r.category_label || r.pms_category),
@@ -85,11 +105,18 @@ function initCharts() {
         { label: 'UTI BVP', data: pms.map(r => r.UTI_sellout_db_dlr_bvp_qty||0), backgroundColor: '#9a0b17' },
       ],
     },
-    options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom' } },
+      scales: {
+        x: { ticks: { autoSkip: false, maxRotation: 45, minRotation: 30 } },
+        y: { title: { display: true, text: 'BVP qty' } },
+      },
+    },
   });
 }
 document.addEventListener('DOMContentLoaded', initCharts);
-window.addEventListener('load', initCharts);
 </script>
 </body>
 </html>

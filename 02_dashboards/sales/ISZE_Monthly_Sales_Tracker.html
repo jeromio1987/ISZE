@@ -637,13 +637,9 @@ function showTab(name) {
   event.target.classList.add('active');
 }
 
-// ── INIT ──────────────────────────────────────────────────────
-buildMonthlyTable();
-buildBarChart();
-buildDistTable();
-updateComparison();
-
+// ── INIT (only after data loads — sync init previously crashed on undefined) ──
 function initDashboard(d) {
+  if (!d || !d.monthlyData || !d.distributors) throw new Error('monthly_sales payload missing');
   monthlyData = d.monthlyData;
   distributors = d.distributors;
   periods = {
@@ -666,6 +662,7 @@ function initDashboard(d) {
     initDashboard(j.monthly_sales);
   } catch(e) {
     document.getElementById('isze-offline-banner').style.display = 'block';
+    console.error('Monthly Sales Tracker init failed:', e);
   }
 })();
 </script>

@@ -354,7 +354,7 @@
 <div id="tab-simulate" class="tab-panel active">
   <section class="main">
     <div class="chart-panel">
-      <div class="hero-photo" id="hero-photo" style="background-image:url('propertiq-assets/eilandje-mas.jpg')"></div>
+      <div class="hero-photo" id="hero-photo" style="background-image:url('../propertiq-assets/eilandje-mas.jpg')"></div>
       <div class="chart-head">
         <div>
           <div class="chart-title">Eigen vermogen over tijd</div>
@@ -374,9 +374,9 @@
         <span id="chart-end-label">Jaar 15 · €1,42M eigen vermogen</span>
       </div>
       <div class="photo-strip">
-        <div class="photo-thumb active" style="background-image:url('propertiq-assets/eilandje-mas.jpg')"></div>
-        <div class="photo-thumb" style="background-image:url('propertiq-assets/zurenborg-cogels.jpg');background-position:center 35%"></div>
-        <div class="photo-thumb" style="background-image:url('propertiq-assets/eilandje-dock.jpg');background-position:center 40%"></div>
+        <div class="photo-thumb active" style="background-image:url('../propertiq-assets/eilandje-mas.jpg')"></div>
+        <div class="photo-thumb" style="background-image:url('../propertiq-assets/zurenborg-cogels.jpg');background-position:center 35%"></div>
+        <div class="photo-thumb" style="background-image:url('../propertiq-assets/eilandje-dock.jpg');background-position:center 40%"></div>
       </div>
     </div>
 
@@ -435,7 +435,7 @@
 
   <section class="bottom">
     <article class="asset-card">
-      <div class="asset-img" style="background-image:url('propertiq-assets/zurenborg-cogels.jpg');background-position:center 35%"></div>
+      <div class="asset-img" style="background-image:url('../propertiq-assets/zurenborg-cogels.jpg');background-position:center 35%"></div>
       <div class="asset-body">
         <span class="asset-tag live">Lopend actief</span>
         <div class="asset-name">Zurenborg Lofts</div>
@@ -447,7 +447,7 @@
       </div>
     </article>
     <article class="asset-card">
-      <div class="asset-img" style="background-image:url('propertiq-assets/eilandje-dock.jpg');background-position:center 40%"></div>
+      <div class="asset-img" style="background-image:url('../propertiq-assets/eilandje-dock.jpg');background-position:center 40%"></div>
       <div class="asset-body">
         <span class="asset-tag projected">Geprojecteerd</span>
         <div class="asset-name">Eilandje Wharf</div>
@@ -477,7 +477,7 @@
     </div>
     <div class="portfolio-grid">
       <article class="portfolio-card">
-        <div class="asset-img" style="background-image:url('propertiq-assets/zurenborg-cogels.jpg');background-position:center 35%"></div>
+        <div class="asset-img" style="background-image:url('../propertiq-assets/zurenborg-cogels.jpg');background-position:center 35%"></div>
         <div class="asset-body">
           <span class="asset-tag live">Lopend actief</span>
           <div class="asset-name">Zurenborg Lofts</div>
@@ -492,7 +492,7 @@
         </div>
       </article>
       <article class="portfolio-card">
-        <div class="asset-img" style="background-image:url('propertiq-assets/eilandje-dock.jpg');background-position:center 40%"></div>
+        <div class="asset-img" style="background-image:url('../propertiq-assets/eilandje-dock.jpg');background-position:center 40%"></div>
         <div class="asset-body">
           <span class="asset-tag projected">Geprojecteerd</span>
           <div class="asset-name">Eilandje Wharf</div>
@@ -684,9 +684,9 @@
   const ANNUAL_RENT = 58_000;
 
   const PHOTOS = [
-    { url: 'propertiq-assets/eilandje-mas.jpg', pos: 'center 40%', label: 'Eilandje · MAS' },
-    { url: 'propertiq-assets/zurenborg-cogels.jpg', pos: 'center 35%', label: 'Zurenborg · Cogels-Osylei' },
-    { url: 'propertiq-assets/eilandje-dock.jpg', pos: 'center 40%', label: 'Eilandje · Napelsstraat' }
+    { url: '../propertiq-assets/eilandje-mas.jpg', pos: 'center 40%', label: 'Eilandje · MAS' },
+    { url: '../propertiq-assets/zurenborg-cogels.jpg', pos: 'center 35%', label: 'Zurenborg · Cogels-Osylei' },
+    { url: '../propertiq-assets/eilandje-dock.jpg', pos: 'center 40%', label: 'Eilandje · Napelsstraat' }
   ];
 
   function drawChart(pts) {
