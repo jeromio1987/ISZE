@@ -316,10 +316,28 @@ footer a, .footer a { color: #FFE8EA !important; }
 
 </style>
 <script src="../_ui/chart.umd.min.js"></script>
-  <link rel="stylesheet" href="_ui/editorial.css">
-  <link rel="stylesheet" href="_ui/editorial-full.css">
-  <script src="_ui/editorial-charts.js"></script>
-  <script src="_ui/isze-shell.js" defer></script>
+  <link rel="stylesheet" href="../_ui/editorial.css">
+  <link rel="stylesheet" href="../_ui/editorial-full.css">
+  <script src="../_ui/editorial-charts.js"></script>
+  <script src="../_ui/isze-shell.js" defer></script>
+<script>
+/* local-file data loader — added 2026-08-01.
+   fetch() is blocked on file:// URLs, so these dashboards could never load their
+   JSON by double-click. The matching *.preload.js assigns the data to
+   window.__PRELOADS__; this shim serves it from there and falls back to a real
+   fetch() when the page is served over HTTP. */
+window.__PRELOADS__ = window.__PRELOADS__ || {};
+window.__localFetch = function (url) {
+  var d = window.__PRELOADS__[url];
+  if (d !== undefined) {
+    return Promise.resolve({ ok: true, status: 200,
+      json: function () { return Promise.resolve(d); },
+      text: function () { return Promise.resolve(JSON.stringify(d)); } });
+  }
+  return fetch(url);
+};
+</script>
+<script src="../Data/dashboards/isze_data.preload.js"></script>
 </head>
 <body>
 <div data-isze-stamp style="background:#1F2937;color:#F3F4F6;font:11px/1.5 Arial,sans-serif;padding:5px 14px;text-align:right;letter-spacing:.3px;border-bottom:2px solid #CC0E1E"><span style="opacity:.65">📅 File last updated:</span> <strong>2026-05-22</strong> <span style="opacity:.55">— verify underlying data freshness before sharing externally</span></div>
@@ -1650,7 +1668,7 @@ function initScraper() {
 
 (async function() {
   try {
-    const resp = await fetch('../Data/dashboards/isze_data.json');
+    const resp = await __localFetch('../Data/dashboards/isze_data.json');
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const j = await resp.json();
     segments = j.competitiveness.segments;
