@@ -1,0 +1,29 @@
+# 20260805T074747Z__sweep__launch_sensitivity
+
+- **kind** sweep · **scenario** launch_sensitivity
+- **utc** 2026-08-05T07:47:47.397933+00:00
+- **config sha** `cad6d3ca6e79c1e2`
+- **headline** 'split' is top tactic in 0% of 18 parameter combinations
+
+## Launch tactic sensitivity
+
+| model   |   iam_entry_year |   floor_sensitivity | best_scenario   |   best_gp_npv |   split_rank |
+|:--------|-----------------:|--------------------:|:----------------|--------------:|-------------:|
+| dmax_22 |                3 |                0.3  | harvest         |      14311870 |            2 |
+| dmax_22 |                3 |                0.45 | harvest         |      13821521 |            2 |
+| dmax_22 |                3 |                0.6  | harvest         |      13536140 |            2 |
+| dmax_22 |                4 |                0.3  | harvest         |      14456520 |            2 |
+| dmax_22 |                4 |                0.45 | harvest         |      13976025 |            2 |
+| dmax_22 |                4 |                0.6  | harvest         |      13700500 |            2 |
+| dmax_22 |                6 |                0.3  | harvest         |      15357121 |            2 |
+| dmax_22 |                6 |                0.45 | harvest         |      14971625 |            2 |
+| dmax_22 |                6 |                0.6  | harvest         |      14780178 |            2 |
+| p700    |                3 |                0.3  | harvest         |       8776893 |            2 |
+| p700    |                3 |                0.45 | harvest         |       8674709 |            2 |
+| p700    |                3 |                0.6  | harvest         |       8572523 |            2 |
+| p700    |                4 |                0.3  | harvest         |       9136594 |            2 |
+| p700    |                4 |                0.45 | harvest         |       9050759 |            2 |
+| p700    |                4 |                0.6  | harvest         |       8964925 |            2 |
+| p700    |                6 |                0.3  | harvest         |       9886847 |            2 |
+| p700    |                6 |                0.45 | harvest         |       9835114 |            2 |
+| p700    |                6 |                0.6  | harvest         |       9783383 |            2 |

@@ -1,0 +1,21 @@
+run_id,utc,kind,scenario,config_sha,input_sha,rows,headline,git_rev,note
+20260805T074552Z__launch__dmax_22,2026-08-05T07:45:52.780581+00:00,launch,dmax_22,dac60960e1fe42f8,d36b479288665b89,84,"dmax_22: best tactic 'split' NPV GP EUR 45,540,635",nogit,
+20260805T074731Z__launch__dmax_22,2026-08-05T07:47:31.551264+00:00,launch,dmax_22,cad6d3ca6e79c1e2,60a095bf8092d241,84,"dmax_22: best tactic 'harvest' NPV GP EUR 13,976,025",nogit,captive IAM entry now endogenous
+20260805T074747Z__sweep__launch_sensitivity,2026-08-05T07:47:47.397933+00:00,sweep,launch_sensitivity,cad6d3ca6e79c1e2,60a095bf8092d241,18,'split' is top tactic in 0% of 18 parameter combinations,nogit,launch tactic sensitivity
+20260805T074820Z__sweep__launch_sensitivity,2026-08-05T07:48:20.548665+00:00,sweep,launch_sensitivity,cad6d3ca6e79c1e2,60a095bf8092d241,18,"harvest leads split by 0.03-21.17% NPV across 18 combos, while split retains +9.9pp wear share at y10",nogit,margin not ranking
+20260805T074925Z__alloc__t1pct,2026-08-05T07:49:25.037511+00:00,alloc,t1pct,dd3402c0398f6380,ddd42787d6bb2aea,213,"target 1.0000% | base +3.95% | EUR 1,373,506 unbenchmarked takes +3.95%",nogit,target sweep
+20260805T074926Z__alloc__t2pct,2026-08-05T07:49:26.077048+00:00,alloc,t2pct,4b5a7f9093e93f71,ddd42787d6bb2aea,213,"target 2.0000% | base +4.95% | EUR 1,373,506 unbenchmarked takes +4.95%",nogit,target sweep
+20260805T074927Z__alloc__t3pct,2026-08-05T07:49:27.145408+00:00,alloc,t3pct,cad6d3ca6e79c1e2,ddd42787d6bb2aea,213,"target 3.0000% | base +5.95% | EUR 1,373,506 unbenchmarked takes +5.95%",nogit,target sweep
+20260805T075013Z__launch__dmax_22,2026-08-05T07:50:13.073778+00:00,launch,dmax_22,cad6d3ca6e79c1e2,60a095bf8092d241,84,"dmax_22: best tactic 'harvest' NPV GP EUR 13,976,025",nogit,final
+20260805T091021Z__launch__dmax_22,2026-08-05T09:10:21.515312+00:00,launch,dmax_22,2ed10d95e7c3c0ba,60a095bf8092d241,105,"dmax_22: best tactic 'split' NPV GP EUR 18,659,079",nogit,warranty channel + freeze tactic
+20260805T091118Z__launch__dmax_22,2026-08-05T09:11:18.612259+00:00,launch,dmax_22,1e28678ec3485a90,60a095bf8092d241,105,"dmax_22: best tactic 'split' NPV GP EUR 23,512,262",nogit,rolling warranty + role-targeted freeze
+20260805T091206Z__launch__dmax_22,2026-08-05T09:12:06.106477+00:00,launch,dmax_22,7816d01aecbc2cf6,60a095bf8092d241,126,"dmax_22: best tactic 'warranty_load' NPV GP EUR 23,554,297",nogit,warranty_load tactic
+20260805T091348Z__launch__dmax_22,2026-08-05T09:13:48.369901+00:00,launch,dmax_22,8ac2b06c4a0f2751,60a095bf8092d241,126,"dmax_22: best tactic 'warranty_load' NPV GP EUR 23,554,297",nogit,final v1.1
+20260805T091349Z__alloc__t3pct,2026-08-05T09:13:49.942923+00:00,alloc,t3pct,8ac2b06c4a0f2751,ddd42787d6bb2aea,213,"target 3.0000% | base +5.95% | EUR 1,373,506 unbenchmarked takes +5.95%",nogit,final v1.1
+20260805T094652Z__launch__dmax_22_short,2026-08-05T09:46:52.000261+00:00,launch,dmax_22_short,8ac2b06c4a0f2751,9332bb69a61a9c17,126,"dmax_22: best tactic 'warranty_load' NPV GP EUR 98,040,241",nogit,mileage fork
+20260805T094653Z__launch__dmax_22_base,2026-08-05T09:46:53.297056+00:00,launch,dmax_22_base,8ac2b06c4a0f2751,9332bb69a61a9c17,126,"dmax_22: best tactic 'warranty_load' NPV GP EUR 70,222,601",nogit,mileage fork
+20260805T094654Z__launch__dmax_22_long,2026-08-05T09:46:54.727318+00:00,launch,dmax_22_long,8ac2b06c4a0f2751,9332bb69a61a9c17,126,"dmax_22: best tactic 'warranty_load' NPV GP EUR 54,628,867",nogit,mileage fork
+20260806T035643Z__alloc__t3pct,2026-08-06T03:56:43.140586+00:00,alloc,t3pct,8ac2b06c4a0f2751,ddd42787d6bb2aea,213,"target 3.0000% | base +5.95% | EUR 1,373,506 unbenchmarked takes +5.95%",nogit,
+20260806T035644Z__launch__p700_base,2026-08-06T03:56:44.669781+00:00,launch,p700_base,8ac2b06c4a0f2751,9332bb69a61a9c17,114,"p700: best tactic 'split' NPV GP EUR 58,493,030",nogit,
+20260806T035851Z__sweep__launch_sensitivity,2026-08-06T03:58:51.092294+00:00,sweep,launch_sensitivity,f36e74a8b24965e5,3533b44de893fbc8,58,'fork' swings the answer 94.5% — vs 0.284% for tactic choice (54 combinations),nogit,full fix pass
+20260806T040009Z__alloc__t3pct,2026-08-06T04:00:09.023088+00:00,alloc,t3pct,bf722034630eb1b5,ddd42787d6bb2aea,213,"target 3.0000% | base +3.00% | EUR 5,768,025 unbenchmarked takes +3.00%",nogit,per-category premium with provenance gate

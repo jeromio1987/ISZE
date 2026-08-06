@@ -1,0 +1,7 @@
+scenario,fork,label,revenue_10y,rev_warranty_10y,gp_npv,gp_npv_wear,gp_npv_captive,capture_y10_wear,capture_y10_captive,captive_index_y10,vs_class_only,vs_class_only_pct
+warranty_load,base,"Load the warranty phase, then freeze captive (Jerome)",157936714,86860305,70222601,3619992,66602609,0.232,0.508,2.008,17182410,32.4
+split,base,"Habit on wear, harvest on captive",158969711,87028249,70131461,3619992,66511469,0.232,0.477,2.22,17091270,32.2
+harvest,base,Harvest the monopoly window,148289004,80445702,64018633,4400131,59618502,0.169,0.507,2.042,10978442,20.7
+split_freeze,base,"Split, then hold captive flat once warranty ends",147903766,80491174,63483631,3619992,59863639,0.232,0.532,1.859,10443440,19.7
+class_only,base,"Baseline - class factor as issued, no ISZE adjustment",132823023,69952788,53040191,3913942,49126249,0.194,0.553,1.776,0,0.0
+habit,base,Buy the dealer habit before IAM arrives,133585777,69798013,52746241,3619992,49126249,0.232,0.553,1.776,-293950,-0.6
