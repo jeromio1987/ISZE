@@ -28,13 +28,18 @@ def params_from_config(cfg: dict) -> "Params":
     Single source of truth: config.yaml. The defaults below exist only so the
     module is importable and testable standalone.
     """
+    from .theta import require_list
+
     a = cfg["allocation"]
     return Params(
         target=a["target"], cap=a["cap"], cap_top50=a["cap_top50"],
         floor=a["floor"], policy_premium=a["policy_premium"],
         min_n=a["min_n"], pos_gain=a["pos_gain"],
         tier_limit=dict(a["tier_limit"]), theta_delta=dict(a["theta_delta"]),
-        require_basis=list(a.get("require_basis", [])),
+        # a bare string here would degrade to a set of characters and hold
+        # every line flat without raising -- see require_list
+        require_basis=require_list(a.get("require_basis"),
+                                   "allocation.require_basis"),
     )
 
 
@@ -224,6 +229,12 @@ def run(df: pd.DataFrame, p: Params | None = None) -> tuple[pd.DataFrame, dict]:
         "n_unbenchmarked_premium": int(
             (~out["premium_basis"].isin(p.require_basis)).sum()),
     }
+    # theta provenance, when a momentum source has been attached. The engine
+    # does not own theta semantics -- it reports what came in, so a run can
+    # never look wired when it is not.
+    if "theta_basis" in out.columns:
+        summary["n_theta_unwired"] = int((out["theta_basis"] == "unwired").sum())
+        summary["n_theta_moving"] = int((out["theta_bucket"] != "stable").sum())
     return out, summary
 
 
@@ -257,7 +268,10 @@ def from_action_map(path: Path) -> pd.DataFrame:
             "capture": c["capture"], "gap_eur": c["gap"],
             "isze_premium": isze_prem, "evidence_n": n,
             "evidence_tier": tier,
-            "theta_bucket": "stable",   # not yet wired - needs UIO x interval
+            # Neutral default. theta.attach() overwrites this from the corrected
+            # car park; left alone, the frame is still valid and simply carries
+            # no momentum signal.
+            "theta_bucket": "stable",
             "is_top50": False,
         })
     df = pd.DataFrame(rows)

@@ -94,6 +94,47 @@ allocation:
     declining_below: 0.95
     growing_above: 1.10
 
+# ---------------------------------------------------------------- momentum
+# theta = expected forward volume / L12M volume. Spec section 6 factors it into
+# theta_parc x theta_interval x theta_cohort x theta_warranty.
+#
+# ONLY theta_parc is wired. theta_interval is blocked on the chassis-code ->
+# model-year / SCR mapping; theta_cohort and theta_warranty are Partial. The
+# other three sit at 1.0 rather than being filled with a plausible number - a
+# component nobody can source does not belong inside a price change.
+theta:
+  enabled: true
+
+  # Repo-relative. The corrected car park behind the GPS recalculation.
+  carpark: 01_data/00_derived/UIO_carpark_for_GPS_recalc_2026-07-30.csv
+
+  # The action map names a country for most cells but a distributor for the two
+  # markets that have more than one. Matched distributor-first, then country.
+  country_alias:
+    PORTUGAL: PORTUGL
+    UK: U KING
+
+  # The car park labels its own reliability, row by row. Carry that through
+  # rather than flattening it - these are not equally good numbers.
+  status_basis:
+    LOCKED_EXACT: uio_locked                          # IUK LCV 44,926, exact
+    OUT_OF_SCOPE_UK_CV: uio_cohort_model              # ITUK, proper survival model
+    ESTIMATE_CONSTANT_HAZARD: uio_constant_hazard     # sized estimate, 10.2/12.3%
+    NOT_FIXED_ISRAEL_CV_23PCT_LOW: uio_known_defect   # UTI, missing weight classes
+
+  # Which bases may move a price. Mirrors allocation.require_basis.
+  #
+  # 'uio_known_defect' is deliberately absent. Israel CV is ~23% below the
+  # Ministry of Transport figure because whole weight classes have no home in
+  # the model; a ratio taken across two years of the same defect is not
+  # obviously safe, since the missing classes need not grow like the present
+  # ones. Today this gate costs nothing - UTI's theta is 1.045, already stable -
+  # so it is a guard against a future car park revision, not a live haircut.
+  #
+  # Tighten to [uio_locked, uio_cohort_model] to see the allocation on measured
+  # parc only, and compare the two runs.
+  require_basis: [uio_locked, uio_cohort_model, uio_constant_hazard]
+
 # ---------------------------------------------------------------- market lists
 markets:
   PR00:

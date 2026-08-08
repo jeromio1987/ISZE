@@ -151,7 +151,7 @@ year's, so euros returned per basis point of index spent scale with θ.
 
 | Component | Meaning | Source | Status |
 |---|---|---|---|
-| θ_parc | Parc growth, market × model | `UIO_carpark_for_GPS_recalc_2026-07-30.csv`, UIO V19/V20 | **Available** |
+| θ_parc | Parc growth, market × model | `UIO_carpark_for_GPS_recalc_2026-07-30.csv`, UIO V19/V20 | **WIRED** — `theta.py` |
 | θ_interval | Service-frequency shift as generation mix changes | OEM maintenance schedules (4 read 2026-07-15) | **Blocked** — see below |
 | θ_cohort | First-replacement wave by registration cohort × part-family replacement age | DVLA/SMMT cohorts (UK), `attach_rates.csv` | Partial |
 | θ_warranty | Cohorts crossing out of warranty → warranty-billed becomes paid-billed | `distributor_warranty_expense_fiscal.csv` | Partial |
@@ -182,6 +182,37 @@ Until θ_interval and θ_cohort are wired, bucket rather than compute:
 | Declining | θ < 0.95 | −2pp |
 | Stable | 0.95 – 1.10 | 0 |
 | Growing | > 1.10 | +3pp |
+
+### Implementation status (θ_parc, wired 2026-08-06)
+
+`03_analytics/isze_pricing/theta.py`. θ_parc only; the other three components
+stay at 1.0 rather than carrying an unsourced number, so **the D-Max interval
+effect above is not yet in any engine output.**
+
+θ_parc is the wallet-weighted CY2026-corrected ÷ CY2025 ratio, which reconciles
+to the car park's own network totals (€60,218,250 / €60,785,305, −4.91% against
+its stated −4.9%). Weighting by wallet rather than units is deliberate: an LCV
+unit at €250/yr should not swing the answer as hard as an MD unit at €887.
+
+Joined distributor-first, then country — the action map mixes the two, and
+ITUK/IUK/UMI/UTI are €3.27M of €5.77M captured. IUK LCV −6.0% against ITUK CV
++4.8% means a single `U KING` θ would cancel both signals out.
+
+Each θ carries a basis mirroring `allocation.require_basis`. `uio_locked` (IUK
+44,926), `uio_cohort_model` (ITUK) and `uio_constant_hazard` may move a price;
+`uio_known_defect` (UTI, ~23% low on missing weight classes) may not. That gate
+is inert today — UTI's θ is 1.045, already stable — and exists against a future
+car park revision.
+
+**Caveat that governs how this should be read:** no category has a benchmarked
+premium, so all 213 cells are `NO_EVIDENCE_HOLD` with `d_pos = 0`, and θ_parc is
+currently the only differentiator in the allocation. It moves 60 cells —
+declining +1.3%, stable +3.4%, growing +6.3%, index still exactly 3.00%. €1.17M
+of the €1.75M declining bucket is the locked figure; all €0.59M of the growing
+bucket is constant-hazard estimate that the V20 cohort rebuild will move.
+
+θ is per market, not per category: categories sell across LD/MD/LCV in different
+proportions and no category → `model_type` mapping exists.
 
 ---
 
@@ -501,6 +532,9 @@ programme.
 Stated so reviewers do not assume otherwise:
 
 - **No elasticity coefficient.** Not measurable at ISZE level (C1)
+- **No full θ.** θ_parc is wired; θ_interval, θ_cohort and θ_warranty are 1.0.
+  The D-Max 15,000 km interval effect is documented in §6 but is in no output
+- **No per-category θ.** Per market only — needs a category → `model_type` map
 - **No realization / pocket-price waterfall.** Blocked on dated price history (C2)
 - **No discount vs SPA decomposition.** Blocked on gross + condition values (C3)
 - **No action on the 522 no-list PNs** (€4.96M, 15.1%). Data fix precedes pricing (C4)

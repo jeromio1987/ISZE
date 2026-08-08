@@ -22,6 +22,7 @@ python -m isze_pricing.cli sweep
 | `config.yaml` | **Every dial.** Nothing is hardcoded in the code. Change here, re-run, compare |
 | `launch_parts.csv` | Parts catalogue for launch pricing. The file Jerome populates |
 | `engine.py` | Allocation core — index solver, two-gate sign rules, evidence tiering |
+| `theta.py` | Momentum — θ_parc from the corrected car park, with its provenance gate |
 | `launch_book.py` | New-model lifecycle model — parc, capture erosion, discounted GP |
 | `runlog.py` | Run registry and reproducibility |
 | `cli.py` | Entry point |
@@ -97,6 +98,57 @@ Two unknowns sit underneath, respected rather than assumed away:
 each dimension actually moves the answer — currently mileage 94.5%, IAM entry
 2.6%, erosion 1.1%, tactic choice 0.28%.
 
+## Momentum is wired, but only one of its four components
+
+Spec §6 factors θ into `θ_parc × θ_interval × θ_cohort × θ_warranty`. **Only
+θ_parc is implemented.** θ_interval is still blocked on the chassis-code →
+model-year / SCR mapping; θ_cohort and θ_warranty are Partial. The other three
+sit at 1.0 rather than being filled with something plausible.
+
+θ_parc comes from `01_data/00_derived/UIO_carpark_for_GPS_recalc_2026-07-30.csv`
+— wallet-weighted CY2026-corrected ÷ CY2025, which reconciles to that file's own
+network total (€60,218,250 / €60,785,305, −4.91% vs its stated −4.9%).
+
+The join is distributor-first, then country. That is not cosmetic: the action map
+names a country for most cells but a distributor for the two markets that have
+more than one, and those four are €3.27M of €5.77M captured. **IUK's LCV parc is
+falling 6.0% while ITUK's CV parc rises 4.8%** — a single `U KING` θ would net
+them against each other and lose both signals.
+
+Each θ carries a basis, gated by `theta.require_basis` exactly as the premium is:
+
+| Basis | Source | Moves price? |
+|---|---|---|
+| `uio_locked` | IUK LCV 44,926 — the one exact figure | yes |
+| `uio_cohort_model` | ITUK, proper survival model, untouched by the fix | yes |
+| `uio_constant_hazard` | corrected by constant-hazard estimate (10.2 / 12.3%) | yes |
+| `uio_known_defect` | UTI — missing weight classes, ~23% low | **no** |
+
+**Read the spread before trusting it.** Because no category has a benchmarked
+premium, every one of the 213 cells is `NO_EVIDENCE_HOLD` and `d_pos` is zero —
+so θ_parc is currently the *only* thing differentiating the allocation. On the
+default gate it moves 60 cells: declining takes +1.3%, stable +3.4%, growing
++6.3%, and the 3.00% index still lands exactly. Of the €1.75M in the declining
+bucket, €1.17M is the locked IUK figure; the entire €0.59M growing bucket is
+constant-hazard estimate, which the car park's own documentation says the full
+V20 cohort rebuild will shift by a few per cent. The declining side is anchored,
+the growing side is not.
+
+To see the allocation on measured parc only:
+
+```bash
+python -m isze_pricing.cli --set theta.require_basis=[uio_locked,uio_cohort_model] alloc
+```
+
+That leaves IUK as the sole mover: 12 cells at +1.4% against +3.4% for everyone
+else. Gating `uio_known_defect` costs nothing today — UTI's θ is 1.045, already
+inside the stable band — so it is a guard against a future car park revision
+rather than a live haircut.
+
+θ is a **reallocation** device, not an addition. The index solve absorbs it: the
+euro-weighted θ contribution is −0.30pp, so base rises 3.00% → 3.30% and the
+declining cells' discount is carried by everyone else.
+
 ## Known limits
 
 - **No OEM benchmark exists yet.** Until one does, the allocation engine cannot
@@ -111,5 +163,14 @@ each dimension actually moves the answer — currently mileage 94.5%, IAM entry
   Rankings are usable, euro amounts are not.
 - Realization / pocket-price waterfall is absent — blocked on dated PR00 history.
 - 522 PNs / €4.96M billed with no PR00 entry are out of scope of any run here.
-- `theta_bucket` is hardcoded to `stable` — momentum is specified but not wired
-  to UIO, and contributes nothing to current output.
+- **θ is per distributor/country, not per category.** Categories sell across LD,
+  MD and LCV in different proportions and no category → `model_type` mapping
+  exists, so every category in a market takes that market's θ. Building that
+  mapping is the natural sibling of the chassis-code unblock.
+- **θ_interval, θ_cohort and θ_warranty are still 1.0.** Only θ_parc is wired,
+  so the D-Max 15,000 km service-interval effect — the largest known momentum
+  signal in the spec — is not in any number this engine prints.
+- `01_data/00_derived` sits outside the default sparse checkout. If the car park
+  file is missing the run does not fail: θ degrades to flat and `summary.md`
+  records `theta_source: MISSING::<path>`. Check that line before reading a
+  spread. To pull the data in: `git sparse-checkout add 01_data/00_derived`.

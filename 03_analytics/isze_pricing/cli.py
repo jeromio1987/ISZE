@@ -17,10 +17,11 @@ from pathlib import Path
 
 import pandas as pd
 
-from . import engine, launch_book
+from . import engine, launch_book, theta
 from .runlog import Run, load_config
 
 ROOT = Path(__file__).resolve().parent
+REPO_ROOT = ROOT.parents[1]        # <repo>/03_analytics/isze_pricing -> <repo>
 
 # Category x distributor evidence built by the existing dashboard pipeline.
 # Override with --set paths.action_map=... to point at PN-level input instead.
@@ -30,14 +31,44 @@ DEFAULT_ACTION_MAP = Path(
 
 
 def _parse_sets(pairs: list[str]) -> dict:
+    """Parse --set dotted.key=value. JSON first, then a bare-list fallback.
+
+    The fallback exists because shells eat quotes. PowerShell strips the inner
+    double quotes from --set theta.require_basis=["a","b"], JSON parsing then
+    fails, and the old behaviour handed the consumer the raw string '[a,b]'.
+    set() of a string is a set of characters, so every membership test failed
+    and a whole config layer silently held flat -- no error, just a wrong run.
+    Bare [a, b, c] is now parsed as a list, and consumers reject a string where
+    they need a list rather than degrading quietly.
+    """
     out = {}
     for p in pairs or []:
         k, _, v = p.partition("=")
         try:
             out[k] = json.loads(v)
+            continue
         except json.JSONDecodeError:
+            pass
+        s = v.strip()
+        if s.startswith("[") and s.endswith("]"):
+            items = [i.strip().strip("\"'") for i in s[1:-1].split(",")]
+            out[k] = [i for i in items if i]
+        else:
             out[k] = v
     return out
+
+
+def _carpark_path(cfg: dict) -> Path:
+    """Resolve theta.carpark. Repo-relative by default so the reference stays
+    the canonical 01_data copy; absolute paths pass through for a one-off.
+
+    Note 01_data/00_derived sits outside the default sparse checkout. If the
+    file is absent, theta.attach() degrades to flat and records MISSING -- it
+    does not fail the run. To pull it in:
+        git sparse-checkout add 01_data/00_derived
+    """
+    p = Path(cfg.get("theta", {}).get("carpark", ""))
+    return p if p.is_absolute() else REPO_ROOT / p
 
 
 def cmd_launch(args) -> None:
@@ -84,6 +115,9 @@ def cmd_alloc(args) -> None:
     run.input("action_map", src)
 
     df = engine.from_action_map(src)
+    df, theta_report = theta.attach(df, cfg, _carpark_path(cfg))
+    run.input("uio_carpark", _carpark_path(cfg))
+
     out, s = engine.run(df, engine.params_from_config(cfg))
     run.table("alloc_detail", out)
 
@@ -91,17 +125,26 @@ def cmd_alloc(args) -> None:
     run.headline(
         f"target {s['weighted_increase']*100:.4f}% | base {s['delta_base']*100:+.2f}% "
         f"| EUR {blind.weight.sum():,.0f} unbenchmarked takes "
-        f"{blind.delta.mean()*100:+.2f}%")
+        f"{blind.delta.mean()*100:+.2f}% "
+        f"| theta moves {s.get('n_theta_moving', 0)} cells")
 
     by_reason = out.groupby("reason_code").agg(
         cells=("weight", "size"), base_eur=("weight", "sum"),
         mean_delta=("delta", "mean"), rev_delta=("revenue_delta_eur", "sum"))
+    by_theta = out.groupby(["theta_bucket", "theta_basis"]).agg(
+        cells=("weight", "size"), base_eur=("weight", "sum"),
+        theta=("theta_parc", "mean"), d_theta=("d_theta", "mean"),
+        mean_delta=("delta", "mean"))
     md = ["## Allocation run\n", f"```\n{json.dumps(s, indent=2)}\n```\n",
-          "### By reason code\n", by_reason.round(4).to_markdown()]
+          "### By reason code\n", by_reason.round(4).to_markdown(),
+          "\n\n### Momentum (theta_parc)\n",
+          f"```\n{json.dumps(theta_report, indent=2)}\n```\n",
+          by_theta.round(4).to_markdown()]
     run.close("\n".join(md))
 
     print(json.dumps(s, indent=2))
     print("\n" + by_reason.round(4).to_string())
+    print("\n" + by_theta.round(4).to_string())
 
 
 def cmd_sweep(args) -> None:
