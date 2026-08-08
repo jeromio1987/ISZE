@@ -401,42 +401,42 @@ SP_EUR  = FOB_EUR / class_factor</div>
 
 <section>
   <h2><span class="num">03</span>What this analysis does not cover</h2>
-  <p class="lede">Everything that follows in sections 03 and 04 is built on the PMS
-  capture model. That model sees fourteen categories. The catalogue has 164,668 part
-  numbers.</p>
+  <p class="lede">Everything that follows in sections 04 and 05 is built on the PMS
+  capture model. That model sees fourteen categories. This is what the book actually
+  looks like, in euros.</p>
 
   <figure>
     <div class="fig-h">
-      <p class="fig-lab">Figure 03 · PR00 catalogue by AIM group, part-number count</p>
-      <p class="fig-t">The PMS categories are a slice of one group. Everything else has
-      never been through a pricing method.</p>
+      <p class="fig-lab">Figure 03 · CY2025 billed revenue by AIM group</p>
+      <p class="fig-t">Body is the largest group in the book &mdash; and it is the one
+      nobody has priced.</p>
     </div>
     <div class="legend">
-      <span><i class="swatch" style="background:var(--c4)"></i>Reachable by the PMS capture model</span>
+      <span><i class="swatch" style="background:var(--c4)"></i>Reached by the PMS capture model</span>
       <span><i class="swatch" style="background:var(--c1)"></i>Not covered at all</span>
     </div>
     <div class="fig-body"><div id="ch-scope"></div></div>
-    <figcaption>Counts from <code>aim_pn_classification.csv</code>, 164,668 rows.
-    <b>Accident parts — body panels, lighting, mirrors — is 30,921 part numbers</b>,
-    and "Accident parts › Body parts" at 24,979 is the single largest sub-group in the
-    catalogue. None of it appears in the capture model, the action map, or any figure
-    in section 04. <span class="assume">Caveat</span> Counts are part numbers, not
-    revenue. A revenue-weighted view by AIM group does not currently exist in a form
-    the pricing work can consume — which is itself part of the problem.</figcaption>
+    <figcaption><b>&euro;32,308,208 billed in CY2025, 100% classified</b> &mdash;
+    billing joined to <code>aim_pn_classification.csv</code>. <b>Body Exterior is the
+    single largest group at &euro;5.42M, 16.8% of revenue.</b> Body, lamps, panels and
+    mirrors together come to &euro;5.04M / 15.6%, against <b>&euro;4.10M / 12.7% for
+    the PMS-type sub-groups</b> this entire analysis is built on. Body is bigger than
+    PMS, and it has never been looked at.</figcaption>
     <details><summary>Show data</summary>
-      <table><thead><tr><th>AIM group</th><th class="n">Part numbers</th><th>Covered?</th></tr></thead>
+      <table><thead><tr><th>AIM group</th><th class="n">CY2025 &euro;m</th><th class="n">% of book</th><th>Covered?</th></tr></thead>
       <tbody>
-        <tr><td>Repair parts</td><td class="n">42,185</td><td>No</td></tr>
-        <tr><td>Competitive parts</td><td class="n">34,820</td><td>Partly — brakes, clutch, filters only</td></tr>
-        <tr><td>Accident parts (body, lighting, mirrors)</td><td class="n">30,921</td><td><b>No</b></td></tr>
-        <tr><td>Hardware &amp; consumables</td><td class="n">15,843</td><td>No</td></tr>
-        <tr><td>High value repair (transmission, injectors)</td><td class="n">9,992</td><td>No</td></tr>
-        <tr><td>Unclassified</td><td class="n">9,108</td><td>No</td></tr>
-        <tr><td>Comfort parts (air conditioning)</td><td class="n">2,830</td><td>No</td></tr>
-        <tr><td>Body Exterior › Panels</td><td class="n">2,715</td><td><b>No</b></td></tr>
-        <tr><td>Electrical</td><td class="n">1,665</td><td>No</td></tr>
-        <tr><td>Chassis frame</td><td class="n">1,405</td><td>No</td></tr>
-        <tr><td>Transmission</td><td class="n">911</td><td>No</td></tr>
+        <tr><td><b>Body Exterior</b></td><td class="n">5.42</td><td class="n">16.8</td><td><b>No</b></td></tr>
+        <tr><td>Intake / exhaust / emission</td><td class="n">4.90</td><td class="n">15.2</td><td>No</td></tr>
+        <tr><td>Brakes</td><td class="n">3.19</td><td class="n">9.9</td><td>Partly</td></tr>
+        <tr><td>Maintenance service</td><td class="n">3.10</td><td class="n">9.6</td><td>Partly</td></tr>
+        <tr><td>Electrical</td><td class="n">1.85</td><td class="n">5.7</td><td>No</td></tr>
+        <tr><td>Fuel system</td><td class="n">1.74</td><td class="n">5.4</td><td>No</td></tr>
+        <tr><td>Competitive parts</td><td class="n">1.55</td><td class="n">4.8</td><td>No</td></tr>
+        <tr><td>Repair parts</td><td class="n">1.52</td><td class="n">4.7</td><td>No</td></tr>
+        <tr><td>Steering</td><td class="n">1.49</td><td class="n">4.6</td><td>No</td></tr>
+        <tr><td>Wheels &amp; hub</td><td class="n">1.15</td><td class="n">3.6</td><td>No</td></tr>
+        <tr><td>Engine</td><td class="n">0.72</td><td class="n">2.2</td><td>No</td></tr>
+        <tr><td>Transmission</td><td class="n">0.60</td><td class="n">1.9</td><td>No</td></tr>
       </tbody></table>
     </details>
   </figure>
@@ -444,15 +444,35 @@ SP_EUR  = FOB_EUR / class_factor</div>
   <div class="note">
     <p class="h">Correction to scope</p>
     <p>The PMS capture model exists because PMS was the programme that needed it. It
-    was never a statement that PMS is the business. <strong>Roughly 8% of catalogue
-    part numbers and something on the order of 18% of revenue sit inside it</strong> —
-    €5.8M of captured PMS revenue against an AIM book of about €32M.</p>
-    <p>Body and lighting are not an edge case at the margin of the model. By part
-    count they are the <strong>largest single block in the catalogue</strong>, they
-    behave completely differently from wear parts — insurance-assessed, pattern-part
-    competed, damage-driven rather than mileage-driven — and Israel has already raised
-    price complaints there. They need their own benchmark and their own demand logic,
-    not an extension of the filter model.</p>
+    was never a statement that PMS is the business. On CY2025 billing,
+    <strong>PMS-type categories are &euro;4.10M &mdash; 12.7% of a &euro;32.3M
+    book.</strong></p>
+    <p><strong>Body is larger, at &euro;5.04M.</strong> It is not an edge case at the
+    margin of the model; it is the biggest single thing we sell. And it behaves nothing
+    like a wear part &mdash; insurance-assessed, pattern-part competed, damage-driven
+    rather than mileage-driven. It needs its own benchmark and its own demand logic,
+    not an extension of the filter model. Israel has already raised price complaints
+    there.</p>
+    <p>The top sub-groups make the same point: <b>Panels &euro;2.60M</b>, Sensors
+    &euro;1.98M, <b>Lamps &euro;1.32M</b>, Friction &euro;1.30M, Steering gear
+    &euro;1.14M, Discs &amp; drums &euro;1.07M, Filters &euro;1.03M.</p>
+  </div>
+
+  <div class="blocked">
+    <p class="h">Three data defects found while producing this figure</p>
+    <ul>
+      <li><b><code>cy2025_raw.csv</code> carries an embedded grand-total row.</b>
+      Summing the net value column naively returns &euro;66.0M instead of &euro;32.3M
+      &mdash; a 104% overstatement. The row has no sales type, which is the only way
+      to catch it.</li>
+      <li><b>That embedded total disagrees with its own lines.</b> It reads
+      &euro;33.71M against &euro;32.31M actually present &mdash; a &euro;1.4M / 4.3%
+      gap.</li>
+      <li><b>The part-number columns are transposed.</b> <code>Material</code> holds
+      the part number; <code>Material Number</code> holds the description. Joining on
+      the column named "Material Number" returns <b>zero</b> matches &mdash; which is
+      at least loud. A fuzzy join would have failed silently.</li>
+    </ul>
   </div>
 </section>
 
@@ -595,6 +615,58 @@ require_basis: [oem_benchmark, iam_derived]</div>
   </tbody></table>
   </div>
 
+  <h3>One route is closed, and one is open now</h3>
+
+  <p><strong>Closed:</strong> bridging equivalence through aftermarket
+  cross-references. The hope was that a single Febi or Bosch part listing both an
+  Isuzu OE number and a competitor OE number would give us the match for free.
+  Checked against a real part — oil filter 8982705240 — and the cross-reference lists
+  twelve aftermarket brands and <em>no</em> competitor OE numbers at all. That is not
+  an omission: a filter for a 4JJ1 does not fit a Fuso 4M42. <b>Competing OEMs' parts
+  are genuinely not interchangeable, so no free equivalence bridge exists.</b></p>
+
+  <p><strong>Open, and arguably better:</strong> compare the <em>job</em>, not the
+  part. Capped-price service plans are published, cover the whole basket, and sidestep
+  equivalence entirely — you are matching a service interval, not a part number. They
+  are also precisely what a fleet buyer and a tender actually score.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 06 · Published service-plan cost per 100,000 km</p>
+      <p class="fig-t">The longer interval does not win. We are the most expensive of
+      the three to maintain.</p>
+    </div>
+    <div class="fig-body"><div id="ch-oem"></div></div>
+    <figcaption>Australian capped-price servicing — the one public, like-for-like,
+    whole-market comparison available. <b>D-Max costs 18.5% more per kilometre than
+    Ranger and 11.9% more than HiLux.</b> Note what defeats the intuition: HiLux
+    services twice as often (10,000 km against our 15,000) and is <em>still</em>
+    cheaper per kilometre, because its per-visit price is around $268 against our
+    $449. <span class="assume">Caveat</span> Australia, not Europe; plans bundle parts
+    <em>and</em> labour and may be subsidised. Directional, not a parts-price
+    comparison — but directionally it is not flattering.</figcaption>
+    <details><summary>Show data</summary>
+      <table><thead><tr><th>Model</th><th class="n">Per service</th><th class="n">Interval</th><th class="n">Services / 100k km</th><th class="n">Per 100k km</th></tr></thead>
+      <tbody>
+        <tr><td><b>Isuzu D-Max</b></td><td class="n">$449</td><td class="n">15,000 km</td><td class="n">6.67</td><td class="n"><b>$2,993</b></td></tr>
+        <tr><td>Toyota HiLux</td><td class="n">~$268</td><td class="n">10,000 km</td><td class="n">10.00</td><td class="n">$2,675</td></tr>
+        <tr><td>Ford Ranger</td><td class="n">$379</td><td class="n">15,000 km</td><td class="n">6.67</td><td class="n">$2,527</td></tr>
+      </tbody></table>
+    </details>
+  </figure>
+
+  <div class="note">
+    <p class="h">This changes where the benchmark programme should start</p>
+    <p>Not with part prices. <strong>Start with published service-plan pricing</strong>
+    — it is free, comparable, needs no licence, and it is the number that decides a
+    vehicle purchase. The parts annuity follows the vehicle.</p>
+    <p>It also reframes the D-Max interval change. Going from 20,000 to 15,000 km
+    raises our parts revenue per vehicle by a third — and simultaneously
+    <strong>worsens our cost-per-kilometre position against exactly these
+    competitors</strong>. The same fact is an opportunity on one measure and an
+    exposure on the other, and only one of the two is currently being managed.</p>
+  </div>
+
   <p>The genuine difficulty is <strong>equivalence, not price collection</strong>.
   An Isuzu oil filter cannot be compared to a Mercedes oil filter by name — it has
   to be "the filter fitted to a 7.5-tonne Canter with a 3.0-litre engine" against
@@ -624,7 +696,7 @@ require_basis: [oem_benchmark, iam_derived]</div>
 
   <figure>
     <div class="fig-h">
-      <p class="fig-lab">Figure 06 · What each target rate costs</p>
+      <p class="fig-lab">Figure 07 · What each target rate costs</p>
       <p class="fig-t">Because the differentiation is net-negative, the base rate must
       climb — and it lands on lines we cannot benchmark.</p>
     </div>
@@ -885,7 +957,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 
   <figure>
     <div class="fig-h">
-      <p class="fig-lab">Figure 07 · The manual clutch business today, all distributors</p>
+      <p class="fig-lab">Figure 08 · The manual clutch business today, all distributors</p>
       <p class="fig-t">We see €536K of a €7.78M category. The aftermarket has the rest.</p>
     </div>
     <div class="fig-body"><div id="ch-clutch"></div></div>
@@ -937,7 +1009,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 
   <figure>
     <div class="fig-h">
-      <p class="fig-lab">Figure 08 · P700 — ten-year discounted gross profit by part</p>
+      <p class="fig-lab">Figure 09 · P700 — ten-year discounted gross profit by part</p>
       <p class="fig-t">Three of the top nine have no predecessor at all.</p>
     </div>
     <div class="legend">
@@ -961,7 +1033,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 
   <figure>
     <div class="fig-h">
-      <p class="fig-lab">Figure 09 · D-Max 2.2L — ten-year discounted GP by tactic</p>
+      <p class="fig-lab">Figure 10 · D-Max 2.2L — ten-year discounted GP by tactic</p>
       <p class="fig-t">The top two are separated by 0.13%. The ranking is not the
       finding.</p>
     </div>
@@ -983,7 +1055,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 
   <figure>
     <div class="fig-h">
-      <p class="fig-lab">Figure 10 · Competitive position over ten years, EGR valve</p>
+      <p class="fig-lab">Figure 11 · Competitive position over ten years, EGR valve</p>
       <p class="fig-t">The freeze holds position at 2.64× while the normal path drifts
       to 2.92×.</p>
     </div>
@@ -1013,7 +1085,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 
   <figure>
     <div class="fig-h">
-      <p class="fig-lab">Figure 11 · Parc under warranty, D-Max 2.2L</p>
+      <p class="fig-lab">Figure 12 · Parc under warranty, D-Max 2.2L</p>
       <p class="fig-t">Warranty runs three years from each vehicle's own registration,
       not from model launch.</p>
     </div>
@@ -1038,7 +1110,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 
   <figure>
     <div class="fig-h">
-      <p class="fig-lab">Figure 12 · Sensitivity to warranty term</p>
+      <p class="fig-lab">Figure 13 · Sensitivity to warranty term</p>
       <p class="fig-t">The tactic lives or dies on one fact we have not yet confirmed.</p>
     </div>
     <div class="fig-body"><div id="ch-warr"></div></div>
@@ -1072,7 +1144,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 
   <figure>
     <div class="fig-h">
-      <p class="fig-lab">Figure 13 · Ten-year GP under the replacement-mileage fork</p>
+      <p class="fig-lab">Figure 14 · Ten-year GP under the replacement-mileage fork</p>
       <p class="fig-t">A 60 to 75 point spread, against 0.13% for the entire tactic
       debate.</p>
     </div>
@@ -1539,30 +1611,58 @@ function svg(host,w,h){const s=mk("svg",{viewBox:`0 0 ${w} ${h}`,width:"100%",
 
 /* --- Fig 1 catalogue scope --- */
 (()=>{const rows=[
- {g:"Repair parts",v:42185,cov:0},
- {g:"Competitive parts",v:34820,cov:13000},
- {g:"Accident parts — body, lighting, mirrors",v:30921,cov:0},
- {g:"Hardware & consumables",v:15843,cov:0},
- {g:"High value repair",v:9992,cov:0},
- {g:"Unclassified",v:9108,cov:0},
- {g:"Comfort parts",v:2830,cov:0},
- {g:"Body Exterior — panels",v:2715,cov:0},
- {g:"Electrical",v:1665,cov:0},
- {g:"Chassis frame",v:1405,cov:0},
- {g:"Transmission",v:911,cov:0}];
- const W=760,rowH=32,H=rows.length*rowH+22,L=252,R=W-72;
+ {g:"Body Exterior — panels, lamps, mirrors",v:5.42,cov:0},
+ {g:"Intake / exhaust / emission",v:4.90,cov:0},
+ {g:"Brakes",v:3.19,cov:2.37},
+ {g:"Maintenance service",v:3.10,cov:1.73},
+ {g:"Electrical",v:1.85,cov:0},
+ {g:"Fuel system",v:1.74,cov:0},
+ {g:"Competitive parts",v:1.55,cov:0},
+ {g:"Repair parts",v:1.52,cov:0},
+ {g:"Steering",v:1.49,cov:0},
+ {g:"Wheels & hub",v:1.15,cov:0},
+ {g:"Engine",v:0.72,cov:0},
+ {g:"Transmission",v:0.60,cov:0}];
+ const W=760,rowH=30,H=rows.length*rowH+24,L=262,R=W-78;
  const s=svg("ch-scope",W,H),max=Math.max(...rows.map(d=>d.v)),sc=v=>v/max*(R-L);
  rows.forEach((d,i)=>{const y=i*rowH+8;
-  s.appendChild(mk("text",{x:0,y:y+14,class:"cl"})).textContent=d.g;
+  s.appendChild(mk("text",{x:0,y:y+13,class:"cl"})).textContent=d.g;
   const un=d.v-d.cov;
-  if(d.cov>0){const b=mk("rect",{x:L,y:y,width:Math.max(sc(d.cov),2),height:19,rx:3,
+  if(d.cov>0){const b=mk("rect",{x:L,y:y,width:Math.max(sc(d.cov),2),height:18,rx:3,
     style:"fill:var(--c4)"});s.appendChild(b);
-   bind(b,`<b>${d.g}</b><br>Reachable by the PMS model<br>~${d.cov.toLocaleString("en-GB")} part numbers`);}
-  const b2=mk("rect",{x:L+(d.cov>0?sc(d.cov)+2:0),y:y,width:Math.max(sc(un)-(d.cov>0?2:0),2),
-    height:19,rx:3,style:"fill:var(--c1)"});s.appendChild(b2);
-  bind(b2,`<b>${d.g}</b><br>Not covered<br>${un.toLocaleString("en-GB")} part numbers`);
-  s.appendChild(mk("text",{x:L+sc(d.v)+8,y:y+14,class:"vl"}))
-    .textContent=d.v.toLocaleString("en-GB");});
+   bind(b,`<b>${d.g}</b><br>Reached by the PMS model<br>EUR ${d.cov.toFixed(2)}m`);}
+  const b2=mk("rect",{x:L+(d.cov>0?sc(d.cov)+2:0),y:y,
+    width:Math.max(sc(un)-(d.cov>0?2:0),2),height:18,rx:3,style:"fill:var(--c1)"});
+  s.appendChild(b2);
+  bind(b2,`<b>${d.g}</b><br>Not covered<br>EUR ${un.toFixed(2)}m of ${d.v.toFixed(2)}m`);
+  s.appendChild(mk("text",{x:L+sc(d.v)+8,y:y+13,class:"vl"}))
+    .textContent="€"+d.v.toFixed(2)+"m";});
+})();
+
+/* --- Fig: OEM service-plan cost per 100k km --- */
+(()=>{const rows=[
+ {m:"Isuzu D-Max",per:449,iv:15000,c:2993,k:"c1"},
+ {m:"Toyota HiLux",per:268,iv:10000,c:2675,k:"c3"},
+ {m:"Ford Ranger",per:379,iv:15000,c:2527,k:"c4"}];
+ const W=760,rowH=54,H=rows.length*rowH+34,L=150,R=W-118;
+ const s=svg("ch-oem",W,H),max=3200,sc=v=>v/max*(R-L);
+ [0,1000,2000,3000].forEach(g=>{const x=L+sc(g);
+  s.appendChild(mk("line",{x1:x,y1:6,x2:x,y2:H-30,style:"stroke:var(--grid);stroke-width:1"}));
+  s.appendChild(mk("text",{x:x,y:H-14,class:"ax","text-anchor":"middle"}))
+    .textContent="$"+(g/1000)+"k";});
+ s.appendChild(mk("text",{x:(L+R)/2,y:H-1,class:"ax","text-anchor":"middle"}))
+   .textContent="service-plan cost per 100,000 km";
+ rows.forEach((d,i)=>{const y=i*rowH+14;
+  s.appendChild(mk("text",{x:0,y:y+14,class:"cl"})).textContent=d.m;
+  s.appendChild(mk("text",{x:0,y:y+29,class:"ax"}))
+    .textContent="$"+d.per+" every "+(d.iv/1000)+"k km";
+  const b=mk("rect",{x:L,y:y,width:sc(d.c),height:26,rx:3,style:`fill:var(--${d.k})`});
+  s.appendChild(b);
+  bind(b,`<b>${d.m}</b><br>$${d.per} per service every ${d.iv.toLocaleString("en-GB")} km<br>= $${d.c.toLocaleString("en-GB")} per 100,000 km`);
+  s.appendChild(mk("text",{x:L+sc(d.c)+9,y:y+18,class:"vl"}))
+    .textContent="$"+d.c.toLocaleString("en-GB");
+  if(i===0)s.appendChild(mk("text",{x:L,y:y+40,class:"ax",
+    style:"fill:var(--c1)"})).textContent="most expensive per kilometre of the three";});
 })();
 
 /* --- Fig 2 zones --- */
