@@ -11,6 +11,7 @@ meta:
 # Non-negotiable. SP = (BP_JPY / FX * source_discount) / class_factor
 formula:
   fx_rate: 163.7                # JPY/EUR, FY2026 (Oct 2025)
+  fx_as_of: '2025-10-01'        # audit checks this for staleness
   source_discount:
     J: 0.62                     # Japan / IML
     T: 0.611                    # Thailand / IMIT

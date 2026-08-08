@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from . import engine, launch_book, theta
+from . import audit, counterfactual, engine, launch_book, planes, theta
 from .runlog import Run, load_config
 
 ROOT = Path(__file__).resolve().parent
@@ -147,6 +147,81 @@ def cmd_alloc(args) -> None:
     print("\n" + by_theta.round(4).to_string())
 
 
+def cmd_audit(args) -> None:
+    """Audit the current allocation, and optionally reproduce a logged run."""
+    cfg = load_config(ROOT / "config.yaml", _parse_sets(args.set))
+    src = DEFAULT_ACTION_MAP
+    run = Run(ROOT, cfg, kind="audit", scenario=args.run or "current",
+              note=args.note)
+    run.input("action_map", src)
+
+    df = engine.from_action_map(src)
+    df, _ = theta.attach(df, cfg, _carpark_path(cfg))
+    params = engine.params_from_config(cfg)
+    out, s = engine.run(df, params)
+
+    table, verdict = audit.run_all(out, df, cfg, params,
+                                   cfg["allocation"]["target"])
+    run.table("audit_checks", table)
+    mat = audit.materiality(out)
+    run.table("materiality", mat)
+
+    if args.run:
+        rd = ROOT / cfg["runlog"]["dir"] / args.run
+        def rerun(c):
+            d = engine.from_action_map(src)
+            d, _ = theta.attach(d, c, _carpark_path(c))
+            o, _ = engine.run(d, engine.params_from_config(c))
+            return {"alloc_detail": o}
+        rep = pd.DataFrame(audit.reproduce(rd, rerun))
+        run.table("reproduce", rep)
+        table = pd.concat([table, rep], ignore_index=True)
+        if (rep.status == audit.FAIL).any():
+            verdict = audit.FAIL
+
+    run.headline(f"audit {verdict} - "
+                 f"{int((table.status=='PASS').sum())} pass / "
+                 f"{int((table.status=='WARN').sum())} warn / "
+                 f"{int((table.status=='FAIL').sum())} fail")
+    md = [f"## Audit\n\n**Verdict: {verdict}**\n",
+          table.to_markdown(index=False),
+          "\n\n### Lines carrying most of the impact\n",
+          mat.head(15).round(4).to_markdown(index=False)]
+    run.close("\n".join(md))
+    print(table.to_string(index=False))
+    print(f"\nVERDICT: {verdict}")
+
+
+def cmd_counterfactual(args) -> None:
+    """Turnover and margin under each pricing policy, plus the price bridge."""
+    cfg = load_config(ROOT / "config.yaml", _parse_sets(args.set))
+    run = Run(ROOT, cfg, kind="counterfactual",
+              scenario=f"t{cfg['allocation']['target']*100:g}pct", note=args.note)
+
+    src = Path(args.parts) if args.parts else ROOT / "counterfactual_parts.csv"
+    if not Path(src).exists():
+        print(f"No cost/price history at {src}.")
+        print("Needs per part: bp_jpy_prior/new, fx_prior/new, disc_prior/new,")
+        print("class_factor_prior/new, sp_actual_prior/new, units_prior, rev_prior.")
+        run.headline("skipped - no cost/price history available")
+        run.close("## Counterfactual\n\nBlocked: no dated cost/price history.")
+        return
+    run.input("counterfactual_parts", Path(src))
+    d = pd.read_csv(src)
+
+    br = counterfactual.bridge(d)
+    bs = counterfactual.bridge_summary(br)
+    ev = counterfactual.evaluate(
+        d, cfg, ["frozen", "cost_plus_strict", "uniform_target"])
+    run.table("bridge", br); run.table("policies", ev)
+    run.headline(f"ISZE decision component {bs.isze_decision*100:+.2f}pp of "
+                 f"{bs.total_change*100:+.2f}pp total")
+    md = ["## Price bridge\n", bs.to_frame("share").round(5).to_markdown(),
+          "\n\n## Policies\n", ev.round(4).to_markdown(index=False)]
+    run.close("\n".join(md))
+    print(bs.round(5).to_string()); print(); print(ev.round(4).to_string(index=False))
+
+
 def cmd_sweep(args) -> None:
     """Sensitivity across the three dimensions that carry real judgement.
 
@@ -221,6 +296,12 @@ def main() -> None:
     p = sub.add_parser("alloc"); p.add_argument("--source", default=None)
     p.set_defaults(func=cmd_alloc)
     p = sub.add_parser("sweep"); p.set_defaults(func=cmd_sweep)
+    p = sub.add_parser("audit")
+    p.add_argument("--run", default=None, help="run id to reproduce")
+    p.set_defaults(func=cmd_audit)
+    p = sub.add_parser("counterfactual")
+    p.add_argument("--parts", default=None, help="CSV with prior/new cost inputs")
+    p.set_defaults(func=cmd_counterfactual)
 
     args = ap.parse_args()
     args.func(args)
