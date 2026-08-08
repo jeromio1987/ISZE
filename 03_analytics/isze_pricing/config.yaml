@@ -75,6 +75,19 @@ allocation:
   # against a competitor OEM, the engine holds it flat.
   require_basis: [oem_benchmark, iam_derived]
 
+  # Evidence sufficient to VETO is a lower bar than evidence sufficient to ACT.
+  #
+  # The premium gate above stops delta_position firing without a benchmarked
+  # target. But theta was left ungated, so momentum could still push a line UP
+  # on a category we can see sits far above the aftermarket - raising brakes
+  # 3.3% at 2.38x IAM because the parc happens to be stable. Indefensible.
+  #
+  # So: where a street reading exists and is adverse, theta may not increase the
+  # line, even though the same reading is too weak to justify cutting it.
+  theta_veto:
+    enabled: true
+    premium_above: 0.60      # ISZE street >1.60x IAM -> theta cannot raise
+
   min_n: 3                      # benchmark observations required before any move
   pos_gain: 0.35                # sensitivity of d_pos to the premium gap
 

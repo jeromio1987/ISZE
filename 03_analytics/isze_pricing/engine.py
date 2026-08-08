@@ -40,6 +40,7 @@ def params_from_config(cfg: dict) -> "Params":
         # every line flat without raising -- see require_list
         require_basis=require_list(a.get("require_basis"),
                                    "allocation.require_basis"),
+        theta_veto=dict(a.get("theta_veto", {"enabled": False})),
     )
 
 
@@ -68,6 +69,7 @@ class Params:
         "default": {"value": 1.40, "basis": "placeholder"}, "by_category": {}})
     require_basis: list = field(default_factory=lambda: ["oem_benchmark",
                                                         "iam_derived"])
+    theta_veto: dict = field(default_factory=lambda: {"enabled": False})
 
     # minimum benchmark observations before a category may move at all
     min_n: int = 3
@@ -203,6 +205,18 @@ def run(df: pd.DataFrame, p: Params | None = None) -> tuple[pd.DataFrame, dict]:
 
     out["d_theta"] = out["theta_bucket"].map(p.theta_delta).fillna(0.0)
 
+    # theta veto: an adverse street reading blocks a momentum increase even
+    # when it is too thin to justify a cut. Asymmetric on purpose.
+    v = p.theta_veto or {}
+    if v.get("enabled"):
+        adverse = ((out.get("evidence_n", 0) >= p.min_n)
+                   & out["isze_premium"].notna()
+                   & (out["isze_premium"] > v.get("premium_above", 0.60)))
+        out["theta_vetoed"] = adverse & (out["d_theta"] > 0)
+        out["d_theta"] = np.where(out["theta_vetoed"], 0.0, out["d_theta"])
+    else:
+        out["theta_vetoed"] = False
+
     out["d_ex_base"] = out["d_pos"] + out["d_theta"]
     out["cap_eff"] = np.where(out.get("is_top50", False), p.cap_top50, p.cap)
     out["floor_eff"] = p.floor
@@ -228,6 +242,7 @@ def run(df: pd.DataFrame, p: Params | None = None) -> tuple[pd.DataFrame, dict]:
         "n_zero_evidence": int((out["evidence_tier"] == "T5_none").sum()),
         "n_unbenchmarked_premium": int(
             (~out["premium_basis"].isin(p.require_basis)).sum()),
+        "n_theta_vetoed": int(out["theta_vetoed"].sum()),
     }
     # theta provenance, when a momentum source has been attached. The engine
     # does not own theta semantics -- it reports what came in, so a run can
