@@ -141,6 +141,32 @@ code{font-family:var(--mono);font-size:.88em;background:var(--sunk);
 
 hr{border:0;border-top:1px solid var(--rule);margin:56px 0 0}
 
+/* ---- introduction & contents ---- */
+.intro{padding:44px 0 8px}
+.toc{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);
+  margin:30px 0 8px}
+@media(min-width:720px){.toc{grid-template-columns:1fr 1fr}}
+.toc a{display:block;background:var(--surface);padding:14px 18px;
+  text-decoration:none;color:var(--ink);transition:background .12s}
+.toc a:hover{background:var(--sunk)}
+.toc .tn{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  color:var(--accent);display:block;margin-bottom:4px}
+.toc .tt{font-weight:650;font-size:15px;letter-spacing:-.01em;display:block}
+.toc .td{font-size:13px;color:var(--ink2);display:block;margin-top:3px;
+  line-height:1.42}
+h2{scroll-margin-top:20px}
+
+/* ---- glossary ---- */
+.g{border-bottom:1px dotted var(--ink3);cursor:help;text-decoration:none;
+  color:inherit}
+.g:hover,.g:focus-visible{border-bottom-color:var(--accent);color:var(--accent)}
+#gloss{position:fixed;pointer-events:none;opacity:0;transition:opacity .12s;
+  background:var(--ink);color:var(--ground);font-size:13.5px;line-height:1.5;
+  padding:11px 14px;border-radius:4px;z-index:60;max-width:330px;
+  box-shadow:0 6px 22px rgba(0,0,0,.24)}
+#gloss b{display:block;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;opacity:.62;margin-bottom:5px}
+
 #tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
   background:var(--ink);color:var(--ground);font-family:var(--mono);
   font-size:11.5px;line-height:1.45;padding:7px 10px;border-radius:3px;
@@ -170,6 +196,45 @@ svg{display:block}
     <span><b>Engine</b> isze_pricing v1.0.0</span>
   </div>
 </header>
+
+<section class="intro">
+  <h2><span class="num">Inleiding</span>What this document argues, and where to find it</h2>
+
+  <p class="lede">Three claims, in order. First, the class factor cannot see what it
+  needs to see. Second, the money is not where the price round is looking. Third, the
+  two new models are the only place the method can be proven without spending a single
+  basis point of the increase.</p>
+
+  <p>Everything rests on data we hold, and where we do not hold it the engine is built
+  to <em>refuse to act</em> rather than to guess. That is why a full allocation run
+  today moves nothing at all — and why section 05 matters more than section 07.</p>
+
+  <p style="color:var(--ink2);font-size:15px">Terms with a dotted underline —
+  <span class="g" data-g="laspeyres">Laspeyres</span>, for instance — carry an
+  explanation on hover. Click any section below to jump to it.</p>
+
+  <nav class="toc">
+    <a href="#s01"><span class="tn">01</span><span class="tt">What the formula cannot see</span><span class="td">Why a class factor is blind to competition, demand and lifecycle</span></a>
+    <a href="#s02"><span class="tn">02</span><span class="tt">How everyone else prices</span><span class="td">Documented industry practice — and how often the market moves</span></a>
+    <a href="#s03"><span class="tn">03</span><span class="tt">What this analysis does not cover</span><span class="td">PMS is 8% of the catalogue. The rest has never been priced this way</span></a>
+    <a href="#s04"><span class="tn">04</span><span class="tt">Where the money is, within PMS</span><span class="td">€96K of headroom against €16M sitting at the aftermarket</span></a>
+    <a href="#s05"><span class="tn">05</span><span class="tt">Where we stand against the aftermarket</span><span class="td">Our street position, and the OEM benchmark we do not have</span></a>
+    <a href="#s06"><span class="tn">06</span><span class="tt">The 3% problem</span><span class="td">Why the target and correcting brakes cannot both happen</span></a>
+    <a href="#s07"><span class="tn">07</span><span class="tt">How the engine allocates</span><span class="td">A base rate, signed adjustments, and a reason code on every line</span></a>
+    <a href="#s08"><span class="tn">08</span><span class="tt">What the old way would have given</span><span class="td">Two kinds of cost-plus, and the bridge that separates them</span></a>
+    <a href="#s09"><span class="tn">09</span><span class="tt">Two planes</span><span class="td">Billing versus sell-out, and why the current index is self-biasing</span></a>
+    <a href="#s10"><span class="tn">10</span><span class="tt">D-Max 2.2L</span><span class="td">SCR arrives with no predecessor — the largest block of free pricing</span></a>
+    <a href="#s11"><span class="tn">11</span><span class="tt">P700</span><span class="td">The new N-Series. Engines carry over; the gearbox and electronics do not</span></a>
+    <a href="#s12"><span class="tn">12</span><span class="tt">Launch tactics</span><span class="td">Four ways to price a part nobody has bought before</span></a>
+    <a href="#s13"><span class="tn">13</span><span class="tt">Warranty sequencing</span><span class="td">Price when volume is low, then hold while it grows</span></a>
+    <a href="#s14"><span class="tn">14</span><span class="tt">The assumption that dominates</span><span class="td">Replacement mileage — worth 330× the entire tactic debate</span></a>
+    <a href="#s15"><span class="tn">15</span><span class="tt">The three price lists</span><span class="td">PR00, Israel, and the CIS grey-import question</span></a>
+    <a href="#s16"><span class="tn">16</span><span class="tt">How this gets audited</span><span class="td">Six layers, and the one that makes the other five mean anything</span></a>
+    <a href="#s17"><span class="tn">17</span><span class="tt">What we need</span><span class="td">Ranked by what each unlocks, not by effort</span></a>
+    <a href="#s18"><span class="tn">18</span><span class="tt">Everything still open</span><span class="td">Blocked data, decisions and unfinished work, gathered in one place</span></a>
+    <a href="#s19"><span class="tn">19</span><span class="tt">What this changes</span><span class="td">What the pricing round becomes</span></a>
+  </nav>
+</section>
 
 <section>
   <h2><span class="num">Summary</span>Three findings</h2>
@@ -266,7 +331,7 @@ SP_EUR  = FOB_EUR / class_factor</div>
   proposal:</p>
 
   <p><strong>New parts</strong> — no third party has tooled for them yet, so there is
-  no competitive ceiling. This is the launch book in section 10, and it is standard
+  no competitive ceiling. This is the launch book in section 12, and it is standard
   practice rather than an aggressive idea.</p>
 
   <p><strong>Parts leaving production</strong> — competitors stop manufacturing them
@@ -644,7 +709,126 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 </section>
 
 <section>
-  <h2><span class="num">08</span>D-Max 2.2L — the emissions windfall</h2>
+  <h2><span class="num">08</span>What the old way would have given</h2>
+  <p class="lede">Judging a new method on its own is not judging it. The engine has
+  to be measured against the alternative — and the alternative turns out not to be
+  one thing.</p>
+
+  <p>"Cost-plus" describes two different procedures that currently point in opposite
+  directions:</p>
+
+  <div class="tw">
+  <table><thead><tr><th>Method</th><th>What it does</th><th>Who chooses the increase</th></tr></thead>
+  <tbody>
+    <tr><td><b>Strict cost-plus</b></td><td>Re-derive SP = FOB / class factor each
+      year and accept the result</td><td>Cost and FX. Nobody chooses</td></tr>
+    <tr><td><b>Target markup</b></td><td>Apply a chosen percentage to last year's
+      price</td><td><b>We do.</b> It is a margin decision</td></tr>
+  </tbody></table>
+  </div>
+
+  <p>The difference is not academic. Holding IML base price constant, FX moving from
+  146.6 to 163.7 JPY/EUR makes the euro cost of a part <em>fall</em>. Strict cost-plus
+  would therefore have <strong>cut prices by about 10.4%</strong> over that period. The
+  applied increase was +5.3%.</p>
+
+  <p>Both can be true — IML base prices may have risen enough to cover the gap. The
+  point is that <strong>nobody currently knows the split</strong>, and a distributor
+  asking "why has this gone up when the yen moved in our favour?" is asking a fair
+  question we cannot presently answer per part.</p>
+
+  <div class="note">
+    <p class="h">The price bridge</p>
+    <p>Any price movement decomposes exactly into five terms:</p>
+    <p style="font-family:var(--mono);font-size:13px;margin:14px 0;line-height:1.8">
+    prior price<br>
+    &nbsp;&nbsp;+ IML base price effect<br>
+    &nbsp;&nbsp;+ FX effect<br>
+    &nbsp;&nbsp;+ source mix effect &nbsp;<span style="color:var(--ink3)">(Japan vs Thailand)</span><br>
+    &nbsp;&nbsp;+ class factor effect<br>
+    &nbsp;&nbsp;+ <b>ISZE decision</b> &nbsp;<span style="color:var(--ink3)">(the residual — the only part we chose)</span><br>
+    = new price</p>
+    <p>It reconciles by construction, so the terms sum to the headline percentage
+    rather than approximately to it. <strong>That residual is the number worth being
+    able to state.</strong> Everything above it is pass-through of decisions taken
+    elsewhere, and saying so precisely is a stronger position than absorbing the whole
+    increase as though it were ours.</p>
+  </div>
+
+  <p>The module also runs turnover and margin under each policy — frozen, strict
+  cost-plus, target markup, engine. One deliberate limitation:
+  <strong>volume is held constant.</strong> With no measured
+  <span class="g" data-g="elasticity">elasticity</span>, any volume response would
+  decide the comparison by assumption rather than by evidence. It becomes a genuine
+  backtest once sell-out history accumulates — the same function, with a real volume
+  term.</p>
+
+  <div class="blocked">
+    <p class="h">What this needs before it produces real numbers</p>
+    <ul>
+      <li><b>BP_JPY history</b> per part, one snapshot per revision</li>
+      <li><b>Dated PR00 snapshots</b> — the same blocker as the realisation waterfall</li>
+      <li>FX and class factors by year, which we already hold</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">09</span>Two planes — and why one of them is bent</h2>
+  <p class="lede">Everything so far runs on what ISZE invoices to distributors. That
+  measures distributor stocking behaviour, not end-market demand. Sell-out data from
+  January 2025 adds the second plane.</p>
+
+  <p>This is usually described as "more data." It is more than that — it corrects a
+  defect in the current measurement.</p>
+
+  <div class="note">
+    <p class="h">The weighted increase is currently self-biasing</p>
+    <p>The declared increase is a
+    <span class="g" data-g="laspeyres">Laspeyres index</span> weighted on the last
+    twelve months of ISZE→DB volume. Announce an increase with notice, and
+    distributors buy ahead of it. That <span class="g" data-g="pre-buy">pre-buy</span>
+    inflates recorded volume on precisely the parts that went up — which then
+    <strong>overweights those same parts in next year's index</strong>.</p>
+    <p>The measuring instrument is bent by the action it measures. A dealer does not
+    pre-buy on an ISZE price letter, so weighting on sell-out breaks the loop.</p>
+  </div>
+
+  <h3>Two more things the second plane settles</h3>
+
+  <p><strong>Pass-through becomes observable.</strong> A 3% list increase is currently
+  assumed to reach the market as 3%. It may arrive as 0% on competed lines the
+  distributor absorbs, and as 6% on captive lines where they take the opportunity.
+  Those are opposite problems needing opposite responses, and today we cannot tell
+  them apart.</p>
+
+  <p><strong>The street factor stops being a guess.</strong> We assume list × 1.40
+  distributor × 1.275 dealer = ×1.785, flat, across eighteen distributors whose gross
+  margins range from 40.8% to 47.1%. A flat factor across that spread is not a
+  measurement. Sell-out gives the real number per distributor per category.</p>
+
+  <p>Distributors set their own resale prices and this changes nothing about that —
+  the factor is an internal estimate used to compare our position against the
+  aftermarket, not a price we expect or recommend anyone to charge.</p>
+
+  <h3>The design rule</h3>
+
+  <p style="font-size:19px;line-height:1.45;max-width:44ch;margin:22px 0;
+    letter-spacing:-.015em"><strong>Optimise on the sell-out plane. Constrain on the
+  billing plane.</strong></p>
+
+  <p>Demand evidence, competitive position and elasticity come from what dealers
+  actually buy. The negotiated weighted increase stays declared and measured on
+  ISZE→DB, because that is the number a distributor can audit. The bridge between the
+  two planes is itself measurable, with its own diagnostics — pass-through, stocking
+  swing, and channel margin.</p>
+
+  <p>Until sell-out lands, every function degrades to the billing plane and records
+  its basis as <code>MISSING</code> rather than quietly substituting.</p>
+</section>
+
+<section>
+  <h2><span class="num">10</span>D-Max 2.2L — the emissions windfall</h2>
   <p class="lede">New part numbers carry zero weight in the Laspeyres index. The 3%
   does not bind on them, and there is no old price for a distributor to compare
   against.</p>
@@ -685,7 +869,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 </section>
 
 <section>
-  <h2><span class="num">09</span>P700 — a different windfall entirely</h2>
+  <h2><span class="num">11</span>P700 — a different windfall entirely</h2>
   <p class="lede">P700 is the new-generation N-Series: 3.5t, 7.5t and 13.5t chassis,
   the largest UK product overhaul in thirty years. It replaces the core of our parts
   business.</p>
@@ -770,7 +954,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 </section>
 
 <section>
-  <h2><span class="num">10</span>Launch tactics</h2>
+  <h2><span class="num">12</span>Launch tactics</h2>
   <p class="lede">Launch price is the one decision here that cannot be revisited. An
   existing part can rise 3% a year forever; a launch price set too low is never
   recovered.</p>
@@ -817,7 +1001,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 </section>
 
 <section>
-  <h2><span class="num">11</span>Warranty sequencing</h2>
+  <h2><span class="num">13</span>Warranty sequencing</h2>
   <p class="lede">A sequencing option that carries an internal cost. It should not be
   adopted without the agreement of the warranty function.</p>
 
@@ -882,7 +1066,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 </section>
 
 <section>
-  <h2><span class="num">12</span>The assumption that dominates everything</h2>
+  <h2><span class="num">14</span>The assumption that dominates everything</h2>
   <p class="lede">Replacement mileage. It moves the answer by two orders of magnitude
   more than the choice of pricing tactic.</p>
 
@@ -937,7 +1121,7 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 </section>
 
 <section>
-  <h2><span class="num">13</span>The three price lists</h2>
+  <h2><span class="num">15</span>The three price lists</h2>
 
   <h3>PR00</h3>
   <p>Full engine as described. 15,355 lines.</p>
@@ -990,7 +1174,57 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 </section>
 
 <section>
-  <h2><span class="num">14</span>What we need</h2>
+  <h2><span class="num">16</span>How this gets audited</h2>
+  <p class="lede">A pricing engine is worth what it can be challenged on. Six layers,
+  in the order a reviewer would work through them.</p>
+
+  <div class="tw">
+  <table><thead><tr><th class="n">#</th><th>Layer</th><th>Answers</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td class="n">1</td><td><b>Input</b></td><td>Is the data fit to price on at all?</td><td>Running</td></tr>
+    <tr><td class="n">2</td><td><b>Arithmetic</b></td><td>Does the engine do what it claims?</td><td>Running</td></tr>
+    <tr><td class="n">3</td><td><b>Provenance</b></td><td>Can every moving line name its evidence, and how old is it?</td><td>Partial</td></tr>
+    <tr><td class="n">4</td><td><b>Coherence</b></td><td>Do the prices make sense next to each other?</td><td>Not yet running</td></tr>
+    <tr><td class="n">5</td><td><b>Reproduce</b></td><td>Does a logged run re-execute to the same answer?</td><td><b>Running</b></td></tr>
+    <tr><td class="n">6</td><td><b>Materiality</b></td><td>Which lines actually need a human?</td><td>Running</td></tr>
+  </tbody></table>
+  </div>
+
+  <p>Layer 5 is the one that makes the rest mean anything. Recording a configuration
+  hash proves nothing unless something re-runs from it and compares. It does:
+  re-executing a logged allocation reproduces it to a
+  <strong>maximum numeric drift of 1.8 × 10⁻¹²</strong>, which is floating-point noise
+  from the solver rather than instability.</p>
+
+  <p>Current verdict is <strong>WARN</strong> — no failures, three honest gaps:</p>
+
+  <div class="blocked">
+    <p class="h">Open audit gaps</p>
+    <ul>
+      <li><b>Evidence age is untracked.</b> There is no <code>evidence_asof</code>
+      column, so a benchmark scraped last week cannot be distinguished from one
+      scraped last year. A price moving on stale evidence looks identical to one
+      moving on fresh evidence.</li>
+      <li><b>Coherence checks have nothing to run against.</b> Three checks are
+      written and idle: <b>price ladders</b> (a larger variant priced below a smaller
+      one), <b>kits priced above the sum of their components</b>, and
+      <b>supersession continuity</b>. The last is live — 800 part numbers and €1.82M
+      are billed on superseded numbers today.</li>
+      <li><b>Outcome audit needs the second plane.</b> Whether a price change produced
+      the revenue it was meant to cannot be checked from billing alone.</li>
+    </ul>
+  </div>
+
+  <p>Two governance points that are not code. <strong>Separation of duties</strong> —
+  whoever sets the policy dials should not be the only person who reviews the output,
+  and the sign-off belongs in the run record. And a <strong>challenge log</strong>: when
+  a distributor queries a line, record the query and the resolution. Over a couple of
+  cycles that becomes the evidence base for what is actually survivable per line,
+  which is currently a matter of opinion.</p>
+</section>
+
+<section>
+  <h2><span class="num">17</span>What we need</h2>
   <p class="lede">Ranked by what each unlocks, not by effort.</p>
 
   <div class="tw">
@@ -1027,7 +1261,64 @@ subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
 </section>
 
 <section>
-  <h2><span class="num">15</span>What this changes</h2>
+  <h2><span class="num">18</span>Everything that is still open</h2>
+  <p class="lede">One place to see it. Nothing here is hidden elsewhere in the
+  document — this is the same list, gathered.</p>
+
+  <h3>Blocked on data we do not have</h3>
+  <div class="tw">
+  <table><thead><tr><th>Item</th><th>Blocks</th><th>Severity</th></tr></thead>
+  <tbody>
+    <tr><td><b>OEM peer benchmark</b> — does not exist</td><td>The entire allocation engine. All 213 cells hold flat without it</td><td><b>Critical</b></td></tr>
+    <tr><td><b>Dated PR00 snapshots</b>, one per revision</td><td>Realisation waterfall <em>and</em> the price bridge</td><td>High</td></tr>
+    <tr><td><b>BP_JPY history</b> per part</td><td>The price bridge — separating IML movement from our decision</td><td>High</td></tr>
+    <tr><td><b>Gross value + condition types</b> on billing</td><td>Discount vs SPA vs mix decomposition</td><td>High</td></tr>
+    <tr><td><b>DB → DLR sell-out</b> (arriving from Jan 2025)</td><td>Elasticity, pass-through, measured street factor, outcome audit, unbiased index weights</td><td>High</td></tr>
+    <tr><td><b>Chassis code → model year / SCR</b></td><td>θ<sub>interval</sub> — the D-Max demand forecast</td><td>Medium</td></tr>
+    <tr><td><b>P700 maintenance schedule</b></td><td>DCT fluid interval, and the whole scheduled side of the P700 book</td><td>Medium</td></tr>
+    <tr><td><b>PR00 entries for 522 part numbers</b></td><td>€4.96M / 15.1% of revenue, outside any pricing action</td><td>Medium</td></tr>
+    <tr><td><b>Revenue-weighted view by AIM group</b></td><td>Knowing what the book is actually worth by category. Its absence is why the analysis drifted to PMS</td><td>Medium</td></tr>
+  </tbody></table>
+  </div>
+
+  <h3>Decisions only you can make</h3>
+  <div class="tw">
+  <table><thead><tr><th>Decision</th><th>Why it cannot be modelled</th></tr></thead>
+  <tbody>
+    <tr><td><b>Per-category premium targets</b></td><td>Commercial judgement about the market, once benchmarks exist</td></tr>
+    <tr><td><b>3% target vs correcting brakes</b></td><td>They are arithmetically incompatible at current coverage. One has to give</td></tr>
+    <tr><td><b>Per-line cap</b> — currently +8%</td><td>Political tolerance, not analysis</td></tr>
+    <tr><td><b>Warranty term and mileage cap, per market</b></td><td>Decides whether the load-then-freeze tactic pays at all. Below three years it does not</td></tr>
+    <tr><td><b>Class assignment input for new part numbers</b></td><td>Do we have a voice with IML? Worth more than the whole increase exercise</td></tr>
+    <tr><td><b>Bringing body into scope</b></td><td>Largest block in the catalogue, own benchmark, own demand logic</td></tr>
+  </tbody></table>
+  </div>
+
+  <h3>Built but not yet complete</h3>
+  <div class="tw">
+  <table><thead><tr><th>Item</th><th>State</th></tr></thead>
+  <tbody>
+    <tr><td>θ momentum</td><td>Only θ<sub>parc</sub> wired. Interval, cohort and warranty sit at 1.0 rather than being filled with invented numbers</td></tr>
+    <tr><td>Evidence age tracking</td><td>No <code>evidence_asof</code> column — stale and fresh benchmarks are indistinguishable</td></tr>
+    <tr><td>Coherence checks</td><td>Written and idle. Need family, kit and supersession columns</td></tr>
+    <tr><td>P700 emissions step</td><td>Euro VI Step E or Euro 7 — not published, ask IML</td></tr>
+    <tr><td>ISIM gearbox coverage</td><td>Confirmed 5.5–7.5t; unknown whether it reaches 3.5t</td></tr>
+  </tbody></table>
+  </div>
+
+  <h3>Specified but not started</h3>
+  <ul>
+    <li><b>CIS</b> — class-dependent factor table to replace the flat 0.40; marketplace
+    price scraping for Qingling-equivalent parts; re-export monitoring, which must be in
+    place <em>before</em> any cut</li>
+    <li><b>Israel</b> — per-category ZPR1 differential to replace the blanket 10%</li>
+    <li><b>Body and lighting</b> — benchmark source and demand model, both different in
+    kind from wear parts</li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="num">19</span>What this changes</h2>
   <p>The pricing round stops being a single negotiated percentage and becomes an
   allocation with a reason code on every line. That alone changes the distributor
   conversation from "3% across the board" to something checkable:</p>
@@ -1070,6 +1361,84 @@ another, it does not forecast a number. Figures marked
 
 </div>
 <div id="tip" role="status"></div>
+<div id="gloss" role="status"></div>
+
+<script>
+/* ---------------- glossary ---------------- */
+const GLOSS={
+ laspeyres:["Laspeyres index","A weighted average price change that holds quantities fixed at a base period. Ours weights every part by its last-twelve-months revenue share — so what you sold a lot of last year dominates the headline percentage."],
+ "class factor":["Class factor","The divisor IML assigns per part class. SP = FOB ÷ class factor, so a factor of 0.47 implies a 53% gross margin. It describes what kind of part it is, not what anyone will pay for it."],
+ "cost-plus":["Cost-plus","Applying a standard markup to landed cost. Its documented failure: buy a part cheaper, keep the same markup, and you silently become cheaper than your competitors without noticing."],
+ elasticity:["Price elasticity","How far demand moves when price moves. Not measurable at ISZE level — we sell to distributors, whose orders reflect stocking decisions rather than end-market demand."],
+ "pre-buy":["Pre-buy","Distributors ordering ahead of an announced increase to beat it. It inflates recorded volume on exactly the parts that went up, which then overweights them in next year's index."],
+ "capture rate":["Capture rate","The share of a category's total addressable demand that ISZE actually supplies. Below 45% we treat the wallet as lost to the aftermarket."],
+ TAM:["Total addressable market","All the demand a category could generate across the parc, whether or not we supply it. Modelled, not observed — so gaps derived from it are upper bounds."],
+ "street factor":["Street factor","Our internal estimate of list-to-street: ×1.40 distributor and ×1.275 dealer, so ×1.785. Used only to compare our position against aftermarket prices. Distributors set their own resale prices."],
+ IAM:["Independent aftermarket","Non-genuine parts — Febi, Blue Print and similar — sold through independent channels. The price floor, not the benchmark."],
+ FOB:["FOB","Free on board: the landed euro cost before margin. FOB = BP_JPY ÷ FX × source discount."],
+ BP_JPY:["BP_JPY","The base price IML sets in yen. The starting point of the whole formula and outside ISZE's control."],
+ PR00:["PR00","The main European price list — roughly 15,355 lines against a catalogue of 164,668 part numbers."],
+ ZPR1:["ZPR1","The Israel price list, currently a flat ~10% below PR00 and class-dependent."],
+ parc:["Parc","The population of vehicles in service. Parts demand is parc × service frequency × attach rate, so parc is the denominator under everything."],
+ UIO:["UIO","Units in operation — our measure of the parc, by market and model."],
+ "pass-through":["Pass-through","How much of an ISZE price change actually reaches the dealer. Below 1.0 the distributor is absorbing it; above 1.0 they are amplifying it."],
+ Eucon:["Eucon","The network competitive benchmark — 44 part numbers, so a category median often rests on three observations."],
+ SPA:["SPA","Special pricing agreement. A negotiated price for a distributor that sits below list, so a list increase on an SPA line may change nothing."],
+ BVP:["BVP","Best Value Parts — Isuzu's own value line. It competes with genuine, so raising genuine can push volume into it."],
+ DPF:["DPF / DPD","Diesel particulate filter. High value, low replacement frequency, and no aftermarket equivalent for years."],
+ SCR:["SCR","Selective catalytic reduction — the AdBlue system. Entirely new on the D-Max generation; long-standing on the trucks."],
+ DCT:["Dual-clutch transmission","The ISIM nine-speed on the new N-Series. Introduces a fluid service that did not exist, plus clutch packs and a mechatronic unit with no predecessor."],
+ NPV:["Net present value","Future gross profit discounted back to today, so a euro in year seven is not counted as a euro today."],
+ theta:["θ (theta)","Expected forward volume ÷ last-twelve-months volume. The index charges you on last year's volume while cash arrives on next year's, so θ says which parts are cheap to increase."],
+ materiality:["Materiality","Reviewing lines in order of absolute revenue impact rather than treating all 15,000 equally."],
+ provenance:["Provenance","Where a number came from and how old it is. A premium target carries its basis, and an unbenchmarked basis is not allowed to move a price."]};
+
+(function(){
+ const box=document.getElementById("gloss");
+ const SKIP=new Set(["SCRIPT","STYLE","A","ABBR","CODE","H1","H2","SUMMARY","svg","TEXT"]);
+ const terms=Object.keys(GLOSS).sort((a,b)=>b.length-a.length);
+ const done=new Set([...document.querySelectorAll('.g')]
+   .map(e=>e.dataset.g));
+ const walk=document.createTreeWalker(document.querySelector(".wrap"),NodeFilter.SHOW_TEXT);
+ const jobs=[];
+ let node;
+ while((node=walk.nextNode())){
+  let p=node.parentElement,bad=false;
+  while(p&&p!==document.body){if(SKIP.has(p.tagName)||p.classList?.contains("g")){bad=true;break}p=p.parentElement}
+  if(bad||!node.nodeValue.trim())continue;
+  for(const t of terms){
+   if(done.has(t))continue;
+   const i=node.nodeValue.indexOf(t);
+   if(i<0)continue;
+   jobs.push([node,i,t]);done.add(t);break;}
+ }
+ jobs.forEach(([n,i,t])=>{
+  const after=n.splitText(i),rest=after.splitText(t.length);
+  const sp=document.createElement("span");
+  sp.className="g";sp.dataset.g=t;sp.tabIndex=0;sp.textContent=after.nodeValue;
+  after.parentNode.replaceChild(sp,after);});
+
+ function show(e){
+  const el=e.target.closest?.(".g");if(!el)return;
+  const k=el.dataset.g,d=GLOSS[k]||GLOSS[k.toLowerCase()];if(!d)return;
+  box.innerHTML="<b>"+d[0]+"</b>"+d[1];box.style.opacity="1";
+  const r=el.getBoundingClientRect();
+  let x=Math.min(r.left,innerWidth-box.offsetWidth-14);
+  let y=r.top-box.offsetHeight-9;
+  if(y<8)y=r.bottom+9;
+  box.style.left=Math.max(8,x)+"px";box.style.top=y+"px";}
+ function hide(){box.style.opacity="0"}
+ document.addEventListener("pointerover",show);
+ document.addEventListener("pointerout",hide);
+ document.addEventListener("focusin",show);
+ document.addEventListener("focusout",hide);
+
+ document.querySelectorAll(".wrap > section").forEach((s,i)=>{
+  if(!s.classList.contains("intro")&&!s.id){
+   const num=s.querySelector("h2 .num");
+   if(num&&/^\d+$/.test(num.textContent))s.id="s"+num.textContent;}});
+})();
+</script>
 
 <script>
 const D={
