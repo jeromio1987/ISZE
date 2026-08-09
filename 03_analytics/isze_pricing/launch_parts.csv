@@ -1,0 +1,44 @@
+model,pn,description,role,predecessor,part_class,source,bp_jpy,repl_km_short,repl_km_base,repl_km_long,iam_street_eur,spec_confirmed,basis_note
+dmax_22,TBD-OF-22,ELEMENT; OIL FILTER,wear,carryover,C,J,844,svc,svc,svc,12.30,0,Every service. Tied to oil interval in config
+dmax_22,TBD-FF-22,ELEMENT KIT; FUEL FILTER,wear,carryover,C,J,1720,svc,svc2,svc3,10.50,0,Every 1-3 services
+dmax_22,TBD-AF-22,FILTER; ACL,wear,carryover,C,J,2630,svc,svc2,svc3,24.95,0,Dusty duty = every service
+dmax_22,TBD-CF-22,FILTER; BLOWER UNIT,wear,carryover,C,J,2030,svc,svc2,svc2,7.03,0,Heavy IAM undercut on this one
+dmax_22,TBD-UF-22,FILTER; UREA / DEF,wear,none,D,J,3100,60000,90000,120000,0,1,NEW - SCR did not exist on 4JJ3/RZ4E
+dmax_22,TBD-BPF-22,PAD KIT; CALIPER DISC BRK FRT,wear,carryover,F,J,9800,40000,55000,70000,59.71,0,Urban/laden short end
+dmax_22,TBD-BPR-22,PAD KIT; CALIPER DISC BRK RR,wear,carryover,F,J,8200,60000,75000,90000,52.00,0,Rear wears slower
+dmax_22,TBD-BRF-22,ROTOR; DISC BRK FRT,wear,carryover,F,J,10200,80000,100000,120000,87.99,0,~2 pad changes per disc
+dmax_22,TBD-BLT-22,BELT; DRIVE,wear,carryover,C,J,2400,100000,125000,150000,18.00,0,
+dmax_22,TBD-CLD-22,DISC; CLUTCH,wear,carryover,J,J,18500,120000,160000,200000,95.00,0,Duty-cycle dominated
+dmax_22,TBD-DPF-22,DPD / DPF ASM,captive,carryover,P,J,168000,150000,200000,250000,777.42,0,Replacement not regen. Wide fork
+dmax_22,TBD-SCR-22,CATALYST ASM; SCR,captive,none,P,J,142000,250000,320000,400000,0,1,NEW - no predecessor
+dmax_22,TBD-NOX1-22,SENSOR; NOX UPSTREAM,captive,none,P,J,31000,100000,150000,200000,0,1,NEW - known high-failure item
+dmax_22,TBD-NOX2-22,SENSOR; NOX DOWNSTREAM,captive,none,P,J,29500,120000,170000,220000,0,1,NEW - known high-failure item
+dmax_22,TBD-DEFP-22,PUMP ASM; DEF,captive,none,P,J,58000,150000,200000,250000,0,1,NEW - known high-failure item
+dmax_22,TBD-DEFI-22,INJECTOR; DEF,captive,none,P,J,24000,150000,200000,250000,0,1,NEW - no predecessor
+dmax_22,TBD-DEFL-22,SENSOR; DEF LEVEL / QUALITY,captive,none,D,J,26000,180000,250000,320000,0,1,NEW - no predecessor
+dmax_22,TBD-EGR-22,VALVE; EGR,captive,carryover,P,J,33500,120000,180000,250000,288.03,0,
+dmax_22,TBD-TRB-22,TURBOCHARGER ASM,captive,carryover,P,J,96000,200000,300000,400000,0,1,
+dmax_22,TBD-INJ-22,NOZZLE ASM; INJ,captive,carryover,P,J,55000,150000,220000,300000,269.48,0,
+dmax_22,TBD-ECU-22,ECU; ENGINE,captive,carryover,P,J,78000,300000,450000,600000,0,1,Rarely replaced
+p700,TBD-OF-P7,ELEMENT; OIL FILTER,wear,carryover,C,J,1900,svc,svc,svc,0,1,Engines carry over - 3.0L 150PS / 5.2L 190PS continue
+p700,TBD-FF-P7,ELEMENT KIT; FUEL FILTER,wear,carryover,C,J,3400,svc,svc,svc2,0,1,Engines carry over
+p700,TBD-AF-P7,FILTER; ACL,wear,carryover,C,J,5200,svc,svc2,svc2,0,1,Engines carry over
+p700,TBD-UF-P7,FILTER; UREA / DEF,wear,carryover,D,J,6100,100000,150000,200000,0,1,CARRYOVER - predecessor 4HK1E6C already ran DPD + SCR
+p700,TBD-BPF-P7,PAD KIT; BRAKE FRT,wear,carryover,F,J,24000,40000,60000,80000,0,1,7.5t urban multi-drop = short end
+p700,TBD-BSR-P7,SHOE KIT; BRAKE RR,wear,carryover,F,J,19000,60000,90000,120000,0,1,
+p700,TBD-BRF-P7,DISC; BRAKE FRT,wear,carryover,F,J,31000,100000,130000,160000,0,1,
+p700,TBD-BP135-P7,PAD KIT; BRAKE FRT 13.5T,wear,none,F,J,38000,35000,50000,70000,0,0,NEW weight class - no ISZE price history
+p700,TBD-DCTO-P7,OIL + FILTER KIT; ISIM DCT,wear,none,D,J,14000,40000,80000,120000,0,0,NEW - dual-clutch fluid service did not exist on outgoing manual. Interval is in the P700 schedule - get it
+p700,TBD-DCTC-P7,CLUTCH PACK ASM; ISIM DCT,captive,none,P,J,185000,200000,350000,500000,0,0,NEW - wet packs oil-cooled and electronically shifted; should outlast a manual disc
+p700,TBD-DCTM-P7,MECHATRONIC UNIT; ISIM DCT,captive,none,P,J,240000,250000,400000,600000,0,0,NEW - life coupled to fluid service discipline
+p700,TBD-DCTS-P7,SENSOR SET; ISIM DCT,captive,none,D,J,29000,250000,400000,550000,0,0,NEW - no predecessor
+p700,TBD-BSIS-P7,MODULE; BLIND SPOT INFO,captive,none,P,J,64000,300000,450000,600000,0,1,NEW - ADAS pack
+p700,TBD-DWS-P7,CAMERA; DRIVER WARNING,captive,none,P,J,61000,300000,450000,600000,0,1,NEW - ADAS pack
+p700,TBD-TSR-P7,CAMERA; TRAFFIC SIGN RECOG,captive,none,P,J,58000,300000,450000,600000,0,1,NEW - ADAS pack
+p700,TBD-TPMS-P7,SENSOR SET; TPMS,captive,none,D,J,21000,120000,180000,240000,0,1,NEW - battery life bounded
+p700,TBD-LED-P7,LAMP ASM; LED HEAD,captive,none,F,J,72000,200000,300000,400000,0,1,NEW - mostly damage-driven; IAM LED copies are poor
+p700,TBD-DPF-P7,DPD / DPF ASM,captive,carryover,P,J,310000,200000,300000,400000,0,1,CARRYOVER architecture - Euro VI since 2013
+p700,TBD-NOX1-P7,SENSOR; NOX UPSTREAM,captive,carryover,P,J,46000,150000,220000,300000,0,1,CARRYOVER architecture
+p700,TBD-DEFP-P7,PUMP ASM; DEF,captive,carryover,P,J,79000,150000,220000,300000,0,1,CARRYOVER architecture
+p700,TBD-INJ-P7,NOZZLE ASM; INJ,captive,carryover,P,J,88000,200000,300000,400000,0,1,CARRYOVER - 3.0L/5.2L continue
+p700,TBD-TRB-P7,TURBOCHARGER ASM,captive,carryover,P,J,165000,250000,375000,500000,0,1,CARRYOVER - 3.0L/5.2L continue
