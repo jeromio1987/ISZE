@@ -1,0 +1,215 @@
+meta:
+  version: 1.0.0
+  currency: EUR
+  fiscal_year: FY2027
+formula:
+  fx_rate: 163.7
+  source_discount:
+    J: 0.62
+    T: 0.611
+  class_factor:
+    C: 0.47
+    D: 0.48
+    F: 0.525
+    J: 0.555
+    M: 0.5
+    P: 0.44
+    V: 0.55
+    T: 0.8
+  street_factor: 1.785
+allocation:
+  target: 0.03
+  cap: 0.08
+  cap_top50: 0.05
+  floor: -0.12
+  policy_premium:
+    default:
+      value: 1.4
+      basis: placeholder
+    by_category:
+      oil_filter:
+        value: 1.4
+        basis: placeholder
+      fuel_filter:
+        value: 1.4
+        basis: placeholder
+      air_filter:
+        value: 1.4
+        basis: placeholder
+      blower_filter:
+        value: 1.4
+        basis: placeholder
+      urea_filter:
+        value: 1.4
+        basis: placeholder
+      brake_pad:
+        value: 1.4
+        basis: placeholder
+      brake_rotor:
+        value: 1.4
+        basis: placeholder
+      brake_shoe:
+        value: 1.4
+        basis: placeholder
+      clutch_disc:
+        value: 1.4
+        basis: placeholder
+      clutch_kit:
+        value: 1.4
+        basis: placeholder
+      body_panel:
+        value: 1.0
+        basis: excluded_blind_spot
+  require_basis:
+  - oem_benchmark
+  - iam_derived
+  min_n: 3
+  pos_gain: 0.35
+  tier_limit:
+    T1_ks_observed: 0.1
+    T2_ks_derived: 0.06
+    T3_eucon: 0.06
+    T4_coarse: 0.03
+    T5_none: 0.0
+  theta_delta:
+    declining: -0.02
+    stable: 0.0
+    growing: 0.03
+  theta_bounds:
+    declining_below: 0.95
+    growing_above: 1.1
+markets:
+  PR00:
+    enabled: true
+    note: Main EU distributors. Full engine.
+  ZPR1:
+    enabled: true
+    differential: -0.1
+    per_category_differential: false
+    note: Israel UMI 1797 / UTI 1799. Flat -10% today; spec calls for per-category.
+  CIS:
+    enabled: true
+    factor_flat: 0.4
+    class_dependent: false
+    qingling_overlap_gm: 0.45
+    no_overlap_gm: 0.6
+    note: GA Armenia, CBC Kazakhstan. EAEU customs union - goods circulate freely.
+launch:
+  horizon_years: 10
+  discount_rate: 0.08
+  iam_entry_year:
+    wear: 4
+    captive: 8
+    body: 5
+  entry_price_sensitivity: 2.5
+  entry_year_min: 2
+  max_multiplier: 1.35
+  min_multiplier: 0.7
+  erosion:
+    floor_base: 0.55
+    floor_sensitivity: 0.45
+    floor_min: 0.1
+    k_base: 0.35
+    k_sensitivity: 0.6
+  warranty:
+    years: 3
+    claim_share:
+      wear: 0.05
+      captive: 0.8
+      body: 0.3
+    capture: 1.0
+  price_path:
+    annual_increase: 0.03
+    iam_annual_drift: 0.0
+  models:
+    dmax_22:
+      label: D-Max 2.2L (RG21 / RZ4F-TC, SCR, Euro 6d/7)
+      spec_confirmed: true
+      source: 00_docs/ISZE_ROADMAP.md LCV bucket item, 4 OEM schedules read 2026-07-15
+      annual_registrations: 6000
+      ramp:
+      - 0.35
+      - 0.75
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      survival_rate: 0.97
+      oil_interval_km: 15000
+      annual_km: 20000
+      source_code: J
+    p700:
+      label: 'P700 (new-generation N-Series: 3.5t / 7.5t / 13.5t)'
+      spec_confirmed: true
+      source: 'Isuzu Truck UK / Transport Engineer / Commercial Motor, RTX 2026 (NAEC
+        Stoneleigh, 30 Jun - 2 Jul 2026). Biggest UK product overhaul in 30 years.
+        Rolled out in North America, Australia, Japan and Israel first.
+
+        '
+      benchmark_market: israel
+      benchmark_months: 15
+      benchmark_price_basis: ZPR1
+      zpr1_to_pr00_uplift: 0.1
+      annual_registrations: 1200
+      ramp:
+      - 0.25
+      - 0.6
+      - 0.9
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      - 1.0
+      survival_rate: 0.96
+      oil_interval_km: 40000
+      annual_km: 60000
+      source_code: J
+  scenarios:
+    harvest:
+      label: Harvest the monopoly window
+      wear: 1.15
+      captive: 1.15
+      body: 1.1
+      freeze_after_warranty: false
+    habit:
+      label: Buy the dealer habit before IAM arrives
+      wear: 0.85
+      captive: 1.0
+      body: 0.95
+      freeze_after_warranty: false
+    split:
+      label: Habit on wear, harvest on captive
+      wear: 0.85
+      captive: 1.25
+      body: 1.0
+      freeze_after_warranty: false
+    split_freeze:
+      label: Split, then hold captive flat once warranty ends
+      wear: 0.85
+      captive: 1.25
+      body: 1.0
+      freeze_after_warranty:
+      - captive
+    warranty_load:
+      label: Load the warranty phase, then freeze captive (Jerome)
+      wear: 0.85
+      captive: 1.35
+      body: 1.0
+      freeze_after_warranty:
+      - captive
+    class_only:
+      label: Baseline - class factor as issued, no ISZE adjustment
+      wear: 1.0
+      captive: 1.0
+      body: 1.0
+      freeze_after_warranty: false
+runlog:
+  dir: runs
+  registry: runs/REGISTRY.csv
+  write_summary_md: true

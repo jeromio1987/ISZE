@@ -1,0 +1,15 @@
+check,status,detail,n
+rows present,PASS,213 rows,213
+non-positive weight,PASS,0 rows carry zero or negative revenue weight,0
+benchmark coverage,PASS,54/213 rows have no competitive benchmark,54
+thin evidence gated,PASS,"71 rows below min_n=3, correctly held",71
+FX rate age,PASS,FX fixed 311 days ago,311
+index reconciles,PASS,delivered 3.000000% vs target 3.000000%,0
+caps respected,PASS,0 lines above their cap,0
+floors respected,PASS,0 lines below their floor,0
+sign rule respected,PASS,0 lines move against their own gate,0
+no NaN deltas,PASS,0 NaN,0
+no movement on unbenchmarked premium,PASS,0 lines moved without a benchmarked target,0
+every moving line has a reason code,PASS,0 moving lines with no reason,0
+evidence freshness,WARN,"no evidence_asof column - benchmark age is untracked, so a stale scrape cannot be distinguished from a fresh one",0
+coherence checks,WARN,no family / kit / supersession columns supplied - these checks did not run,0

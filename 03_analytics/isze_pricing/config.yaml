@@ -1,0 +1,329 @@
+# ISZE Pricing Engine — all dials live here.
+# Nothing in the code hardcodes a number. Change this file, re-run, compare runs.
+# Every value tagged [ASSUMPTION] is a modelling choice, not a measurement.
+
+meta:
+  version: "1.0.0"
+  currency: EUR
+  fiscal_year: FY2027
+
+# ---------------------------------------------------------------- IML formula
+# Non-negotiable. SP = (BP_JPY / FX * source_discount) / class_factor
+formula:
+  fx_rate: 163.7                # JPY/EUR, FY2026 (Oct 2025)
+  fx_as_of: '2025-10-01'        # audit checks this for staleness
+  source_discount:
+    J: 0.62                     # Japan / IML
+    T: 0.611                    # Thailand / IMIT
+  class_factor:                 # PR00 FY2026
+    C: 0.47                     # 53.0% GM
+    D: 0.48                     # 52.0%
+    F: 0.525                    # 47.5%
+    J: 0.555                    # 44.5%
+    M: 0.50                     # 50.0%
+    P: 0.44                     # 56.0%
+    V: 0.55                     # 45.0%
+    T: 0.80                     # 20.0%
+  # genuine street = list x DB margin x dealer margin
+  street_factor: 1.785          # 1.40 * 1.275
+
+# ---------------------------------------------------------------- allocation
+allocation:
+  target: 0.03                  # weighted increase on net-to-DB
+  cap: 0.08                     # per-line ceiling
+  cap_top50: 0.05               # tighter ceiling inside a DB's top-50 basket
+  floor: -0.12
+
+  # Target genuine premium over the reference price. NOT A FLAT RATE.
+  #
+  # A single premium across all categories repeats exactly the error the class
+  # factor makes: it prices a body panel and a NOx sensor the same way. A body
+  # panel competes with pattern parts and insurance assessors; a NOx sensor
+  # competes with nothing. They cannot share a target.
+  #
+  # Two unknowns sit underneath this and both must be respected:
+  #   1. We do not know whether IML has already embedded a premium in BP_JPY,
+  #      and whether that varies by part type. Layering a flat ISZE premium on
+  #      top of an unknown IML one compounds two errors.
+  #   2. The right reference is a competitor OEM genuine price, not an IAM
+  #      price. IAM is the floor; OEM peer is the benchmark. We currently
+  #      measure only against IAM.
+  #
+  # So: per category, each with an explicit basis. A category whose basis is
+  # still 'placeholder' DOES NOT MOVE - see require_basis below. A number you
+  # have not benchmarked is not a target, it is a guess with a decimal point.
+  policy_premium:
+    default: {value: 1.40, basis: placeholder}
+    by_category:
+      oil_filter:     {value: 1.40, basis: placeholder}
+      fuel_filter:    {value: 1.40, basis: placeholder}
+      air_filter:     {value: 1.40, basis: placeholder}
+      blower_filter:  {value: 1.40, basis: placeholder}
+      urea_filter:    {value: 1.40, basis: placeholder}
+      brake_pad:      {value: 1.40, basis: placeholder}
+      brake_rotor:    {value: 1.40, basis: placeholder}
+      brake_shoe:     {value: 1.40, basis: placeholder}
+      clutch_disc:    {value: 1.40, basis: placeholder}
+      clutch_kit:     {value: 1.40, basis: placeholder}
+      # Body is NOT in the 14 PMS categories and therefore not in the action
+      # map at all - yet it is where Israel has raised actual price complaints.
+      # Known blind spot. Do not price it from this engine until it is covered.
+      body_panel:     {value: 1.00, basis: excluded_blind_spot}
+
+  # Which bases are trusted enough to move a price.
+  # 'placeholder' is deliberately absent: until a category is benchmarked
+  # against a competitor OEM, the engine holds it flat.
+  require_basis: [oem_benchmark, iam_derived]
+
+  # Evidence sufficient to VETO is a lower bar than evidence sufficient to ACT.
+  #
+  # The premium gate above stops delta_position firing without a benchmarked
+  # target. But theta was left ungated, so momentum could still push a line UP
+  # on a category we can see sits far above the aftermarket - raising brakes
+  # 3.3% at 2.38x IAM because the parc happens to be stable. Indefensible.
+  #
+  # So: where a street reading exists and is adverse, theta may not increase the
+  # line, even though the same reading is too weak to justify cutting it.
+  theta_veto:
+    enabled: true
+    premium_above: 0.60      # ISZE street >1.60x IAM -> theta cannot raise
+
+  min_n: 3                      # benchmark observations required before any move
+  pos_gain: 0.35                # sensitivity of d_pos to the premium gap
+
+  # how far each evidence tier may move a line
+  tier_limit:
+    T1_ks_observed: 0.10
+    T2_ks_derived: 0.06
+    T3_eucon: 0.06
+    T4_coarse: 0.03
+    T5_none: 0.00
+
+  theta_delta:                  # momentum bucket -> pp contribution
+    declining: -0.02
+    stable: 0.0
+    growing: 0.03
+
+  theta_bounds:                 # bucket edges on theta = fwd volume / L12M volume
+    declining_below: 0.95
+    growing_above: 1.10
+
+# ---------------------------------------------------------------- momentum
+# theta = expected forward volume / L12M volume. Spec section 6 factors it into
+# theta_parc x theta_interval x theta_cohort x theta_warranty.
+#
+# ONLY theta_parc is wired. theta_interval is blocked on the chassis-code ->
+# model-year / SCR mapping; theta_cohort and theta_warranty are Partial. The
+# other three sit at 1.0 rather than being filled with a plausible number - a
+# component nobody can source does not belong inside a price change.
+theta:
+  enabled: true
+
+  # Repo-relative. The corrected car park behind the GPS recalculation.
+  carpark: 01_data/00_derived/UIO_carpark_for_GPS_recalc_2026-07-30.csv
+
+  # The action map names a country for most cells but a distributor for the two
+  # markets that have more than one. Matched distributor-first, then country.
+  country_alias:
+    PORTUGAL: PORTUGL
+    UK: U KING
+
+  # The car park labels its own reliability, row by row. Carry that through
+  # rather than flattening it - these are not equally good numbers.
+  status_basis:
+    LOCKED_EXACT: uio_locked                          # IUK LCV 44,926, exact
+    OUT_OF_SCOPE_UK_CV: uio_cohort_model              # ITUK, proper survival model
+    ESTIMATE_CONSTANT_HAZARD: uio_constant_hazard     # sized estimate, 10.2/12.3%
+    NOT_FIXED_ISRAEL_CV_23PCT_LOW: uio_known_defect   # UTI, missing weight classes
+
+  # Which bases may move a price. Mirrors allocation.require_basis.
+  #
+  # 'uio_known_defect' is deliberately absent. Israel CV is ~23% below the
+  # Ministry of Transport figure because whole weight classes have no home in
+  # the model; a ratio taken across two years of the same defect is not
+  # obviously safe, since the missing classes need not grow like the present
+  # ones. Today this gate costs nothing - UTI's theta is 1.045, already stable -
+  # so it is a guard against a future car park revision, not a live haircut.
+  #
+  # Tighten to [uio_locked, uio_cohort_model] to see the allocation on measured
+  # parc only, and compare the two runs.
+  require_basis: [uio_locked, uio_cohort_model, uio_constant_hazard]
+
+# ---------------------------------------------------------------- market lists
+markets:
+  PR00:
+    enabled: true
+    note: "Main EU distributors. Full engine."
+  ZPR1:
+    enabled: true
+    differential: -0.10         # current flat discount vs PR00
+    per_category_differential: false   # set true once Auto365 IL evidence is wired
+    note: "Israel UMI 1797 / UTI 1799. Flat -10% today; spec calls for per-category."
+  CIS:
+    enabled: true
+    factor_flat: 0.40           # SP = FOB / 0.40 -> 60% GM, class-independent
+    class_dependent: false      # <- the structural fix; flip to true to differentiate
+    qingling_overlap_gm: 0.45   # target GM where a Chinese equivalent exists
+    no_overlap_gm: 0.60         # hold where it cannot be followed
+    note: "GA Armenia, CBC Kazakhstan. EAEU customs union - goods circulate freely."
+
+# ---------------------------------------------------------------- launch book
+launch:
+  horizon_years: 10
+  discount_rate: 0.08           # [ASSUMPTION]
+
+  # IAM entry: nobody tools for a parc that does not exist yet.
+  # Year (from launch) at which an aftermarket alternative becomes available.
+  # Captive is LATE, not never: aftermarket DPFs, NOx sensors and injectors do
+  # exist, they just arrive years after filters. Setting captive to "never"
+  # gives the model an unbounded optimum -- it would price captive parts
+  # infinitely high because nothing pushes back. That is a modelling artifact,
+  # not a strategy.
+  iam_entry_year:
+    wear: 4                     # [ASSUMPTION] filters/brakes attract IAM first
+    captive: 8                  # [ASSUMPTION] complex parts, later entry
+    body: 5                     # [ASSUMPTION]
+
+  # Price pulls entry forward: a high genuine price is the signal that tells an
+  # IAM supplier a part is worth tooling for. Years earlier per 1.0 of price
+  # index above parity. This is what creates an interior optimum. [ASSUMPTION]
+  entry_price_sensitivity: 2.5
+  entry_year_min: 2
+
+  # Policy guardrail on how far launch price may deviate from class-implied.
+  max_multiplier: 1.35
+  min_multiplier: 0.70
+
+  # Capture erosion after IAM entry:
+  #   capture(t) = floor + (1 - floor) * exp(-k * (t - entry))
+  # floor and k both worsen as launch price rises above IAM street.
+  erosion:
+    floor_base: 0.55            # [ASSUMPTION] retained share at price parity
+    floor_sensitivity: 0.45     # floor lost per 1.0 of price index above parity
+    floor_min: 0.10
+    k_base: 0.35                # [ASSUMPTION] erosion speed at parity
+    k_sensitivity: 0.60
+
+  # ---- Warranty phase -------------------------------------------------------
+  # CORRECTION (Jerome, 2026-08-05): warranty parts are still ISZE revenue. The
+  # earlier version treated them as demand that simply vanished, which
+  # understated launch-phase revenue badly.
+  #
+  # Two things follow, and the second is the more important:
+  #   1. Warranty demand is billed, just to a different payer.
+  #   2. An aftermarket part CANNOT be fitted to a warranty repair. So in the
+  #      warranty channel there is no competitive erosion at any price.
+  #
+  # Note the split by role: warranty covers FAILURES, not scheduled servicing.
+  # A filter changed at a service is customer-paid even inside the warranty
+  # period. So this tactic reaches failure-driven parts, not wear parts.
+  warranty:
+    years: 3                    # [ASSUMPTION] confirm against ISZE terms
+    claim_share:                # share of demand billed to warranty, by role
+      wear: 0.05                # scheduled servicing - customer pays regardless
+      captive: 0.80             # failures - covered
+      body: 0.30
+    capture: 1.0                # no IAM substitution possible in this channel
+
+  # ---- Price path over the model's life -------------------------------------
+  price_path:
+    annual_increase: 0.03       # what a normal line receives each year
+    iam_annual_drift: 0.0       # [ASSUMPTION] IAM street held flat
+    # freeze_after_warranty is set per scenario below. Holding a line flat while
+    # everything else rises makes it progressively more competitive - and it
+    # arrives exactly when IAM does.
+
+  models:
+    dmax_22:
+      label: "D-Max 2.2L (RG21 / RZ4F-TC, SCR, Euro 6d/7)"
+      spec_confirmed: true
+      source: "00_docs/ISZE_ROADMAP.md LCV bucket item, 4 OEM schedules read 2026-07-15"
+      annual_registrations: 6000        # [ASSUMPTION] EU+Israel, replace with real plan
+      ramp: [0.35, 0.75, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+      survival_rate: 0.97               # [ASSUMPTION] annual
+      oil_interval_km: 15000            # CONFIRMED - was 20,000 on 4JJ3/RZ4E
+      annual_km: 20000                  # [ASSUMPTION]
+      source_code: J
+    p700:
+      label: "P700 (new-generation N-Series: 3.5t / 7.5t / 13.5t)"
+      spec_confirmed: true
+      source: >
+        Isuzu Truck UK / Transport Engineer / Commercial Motor, RTX 2026 (NAEC
+        Stoneleigh, 30 Jun - 2 Jul 2026). Biggest UK product overhaul in 30 years.
+        Rolled out in North America, Australia, Japan and Israel first.
+      # What is CARRYOVER (so no launch windfall - distributors hold a reference):
+      #   - Engines: 150 PS 3.0L and 190 PS 5.2L continue. New 175 PS 3.0L sits
+      #     between them on 7.5t. So filters, injectors, turbo, EGR carry over.
+      #   - AdBlue/SCR: predecessor 5.2L 4HK1E6C already ran DPD + SCR for Euro VI.
+      #     THERE IS NO SCR WINDFALL ON P700 - that is a D-Max story only.
+      # What is genuinely NEW (no predecessor part number):
+      #   - ISIM dual-clutch 9-speed (N-Series 5.5-7.5t): fluid+filter service,
+      #     clutch packs, mechatronic unit, sensors
+      #   - ADAS pack: BSIS, DWS, TSR, TPMS
+      #   - LED lighting, new narrow/day/crew cabs, first 6.5t crew cab
+      #   - 13.5t weight class - no ISZE price history at all
+      # NOT CONFIRMED: emissions step (Euro VI Step E vs Euro 7); whether the
+      #   ISIM gearbox reaches the 3.5t as well as 5.5-7.5t.
+      # Israel launched P700 ~15 months ago (approx. May 2025). That is the only
+      # real demand evidence available. Use it for DEMAND STRUCTURE - which parts
+      # move, how often, warranty claim mix - not for price level.
+      #   - 15 months sits entirely inside warranty: it says nothing about the
+      #     paid channel in years 4-7, which is where the money is.
+      #   - Israel prices on ZPR1 (~10% under PR00, class-dependent). Restate to
+      #     a PR00 basis before any UK / mainland read-across.
+      #   - IL street benchmarks already exist in auto365_results.csv.
+      benchmark_market: israel
+      benchmark_months: 15
+      benchmark_price_basis: ZPR1
+      zpr1_to_pr00_uplift: 0.10   # confirm per class before use
+      annual_registrations: 1200        # [ASSUMPTION - placeholder]
+      ramp: [0.25, 0.60, 0.90, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+      survival_rate: 0.96
+      oil_interval_km: 40000            # [ASSUMPTION] truck interval
+      annual_km: 60000                  # [ASSUMPTION]
+      source_code: J
+
+  # Launch price scenarios, expressed as a multiplier on the class-implied SP.
+  scenarios:
+    harvest:
+      label: "Harvest the monopoly window"
+      wear: 1.15
+      captive: 1.15
+      body: 1.10
+      freeze_after_warranty: false
+    habit:
+      label: "Buy the dealer habit before IAM arrives"
+      wear: 0.85
+      captive: 1.00
+      body: 0.95
+      freeze_after_warranty: false
+    split:
+      label: "Habit on wear, harvest on captive"
+      wear: 0.85
+      captive: 1.25
+      body: 1.00
+      freeze_after_warranty: false
+    split_freeze:
+      label: "Split, then hold captive flat once warranty ends"
+      wear: 0.85
+      captive: 1.25
+      body: 1.00
+      freeze_after_warranty: [captive]
+    warranty_load:
+      label: "Load the warranty phase, then freeze captive (Jerome)"
+      wear: 0.85
+      captive: 1.35            # at the policy ceiling
+      body: 1.00
+      freeze_after_warranty: [captive]
+    class_only:
+      label: "Baseline - class factor as issued, no ISZE adjustment"
+      wear: 1.00
+      captive: 1.00
+      body: 1.00
+      freeze_after_warranty: false
+
+# ---------------------------------------------------------------- run logging
+runlog:
+  dir: runs
+  registry: runs/REGISTRY.csv
+  write_summary_md: true
