@@ -32,8 +32,9 @@ takeaways_a = [
     "straight climb.",
     "BVP held 12-18% share through 2024, but 2025's decline is entirely Genuine "
     "(-EUR 71K) while BVP grew (+EUR 4K) — a Genuine-parts problem, not a BVP one.",
-    "2022 doesn't reconcile with the previously computed series (EUR 261K vs EUR 186K "
-    "net) — treat 2022 as directional; 2023-2025 corroborate closely.",
+    "2022's apparent mismatch against the previously computed series is resolved: "
+    "that figure was a Jan-Sep YTD cut (99.96% match through 5 Sep 2022), not the "
+    "full year — CY2022 here is the complete twelve months.",
     "The FY2027 base is disputed: corrected-survival shrinks the parc to 3,645 "
     "(-2.4%); UIO V19 grows it to 3,992 (+6.9%) — worth agreeing which.",
 ]
