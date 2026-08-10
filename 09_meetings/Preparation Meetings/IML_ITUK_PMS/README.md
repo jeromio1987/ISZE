@@ -12,3 +12,4 @@ This parent folder keeps builders (`build_iml_pms_study_xlsx.py`), peeks, GIDSS 
 | File | What |
 |------|------|
 | `ITUK_PMS_SPA_Scope_Study_2026-08-10.md` | Which PMS parts belong in the SPA — pack performance, SKU-mismatch findings, v2 scope (internal working note) |
+| `ITUK_PMS_SPA_Scope_Recommendation_2026-08-10.html` | Same study as a visual recommendation — Add/Keep/Drop/Review part list + genuine-vs-BVP study behind the brake priority. Open in a browser. |

@@ -1,0 +1,511 @@
+<title>ITUK SPA — Part Scope Recommendation</title>
+<style>
+  :root{
+    --paper:#f7f4ee;
+    --surface:#fffdf9;
+    --surface-2:#efe9dc;
+    --ink:#1a2b4a;
+    --ink-soft:#5c6675;
+    --ink-faint:#8a8f7d;
+    --line:#ddd6c9;
+    --line-strong:#c7bfae;
+    --accent:#b3452f;
+    --accent-soft:#f2e2da;
+    --good:#1d7a5c;
+    --good-soft:#e1f0e8;
+    --warn:#93690a;
+    --warn-soft:#f5ecd6;
+    --bad:#a83a34;
+    --bad-soft:#f6e2e0;
+    --grey:#78715f;
+    --grey-soft:#e9e4d6;
+    --genuine:#2a78d6;
+    --bvp:#eb6834;
+    --shadow: 0 1px 2px rgba(26,43,74,.06), 0 6px 20px rgba(26,43,74,.06);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#171512;
+      --surface:#1e1c18;
+      --surface-2:#26231e;
+      --ink:#f2ede2;
+      --ink-soft:#c4bda9;
+      --ink-faint:#8f8871;
+      --line:#3a352c;
+      --line-strong:#4a453a;
+      --accent:#e2795c;
+      --accent-soft:#3a241d;
+      --good:#4bbf95;
+      --good-soft:#193227;
+      --warn:#e0b64c;
+      --warn-soft:#332a12;
+      --bad:#e07a72;
+      --bad-soft:#382019;
+      --grey:#a39c86;
+      --grey-soft:#2c2921;
+      --genuine:#3987e5;
+      --bvp:#d95926;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#171512;
+    --surface:#1e1c18;
+    --surface-2:#26231e;
+    --ink:#f2ede2;
+    --ink-soft:#c4bda9;
+    --ink-faint:#8f8871;
+    --line:#3a352c;
+    --line-strong:#4a453a;
+    --accent:#e2795c;
+    --accent-soft:#3a241d;
+    --good:#4bbf95;
+    --good-soft:#193227;
+    --warn:#e0b64c;
+    --warn-soft:#332a12;
+    --bad:#e07a72;
+    --bad-soft:#382019;
+    --grey:#a39c86;
+    --grey-soft:#2c2921;
+    --genuine:#3987e5;
+    --bvp:#d95926;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Arial,sans-serif;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:Georgia,"Times New Roman",serif;
+    font-weight:600;
+    color:var(--ink);
+    text-wrap:balance;
+    margin:0;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:0 24px 96px;}
+  table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;}
+  .scroll{overflow-x:auto;}
+  a{color:var(--genuine);}
+
+  /* ---------- header ---------- */
+  header.top{
+    padding:52px 24px 34px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,var(--surface),var(--paper));
+  }
+  header.top .inner{max-width:960px;margin:0 auto;}
+  .eyebrow{
+    font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;
+    color:var(--accent);font-weight:700;margin-bottom:10px;
+  }
+  h1.title{font-size:34px;line-height:1.15;max-width:680px;}
+  .subtitle{color:var(--ink-soft);font-size:16px;margin-top:10px;max-width:620px;}
+  .meta-row{
+    display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:22px;
+    font-size:13px;color:var(--ink-soft);
+  }
+  .meta-row b{color:var(--ink);font-weight:600;}
+  .status-pill{
+    display:inline-flex;align-items:center;gap:7px;
+    background:var(--warn-soft);color:var(--warn);
+    border:1px solid color-mix(in srgb, var(--warn) 35%, transparent);
+    padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:700;
+    letter-spacing:.03em;text-transform:uppercase;margin-top:20px;
+  }
+  .status-pill::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--warn);}
+
+  /* ---------- verdict strip ---------- */
+  .verdict{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:12px;
+    overflow:hidden;margin-top:36px;box-shadow:var(--shadow);
+  }
+  .verdict .tile{background:var(--surface);padding:18px 18px 16px;}
+  .verdict .tile .n{font-family:Georgia,serif;font-size:30px;font-weight:600;line-height:1;}
+  .verdict .tile .lbl{font-size:12px;color:var(--ink-soft);margin-top:8px;letter-spacing:.02em;}
+  .verdict .tile.add .n{color:var(--good);}
+  .verdict .tile.keep .n{color:var(--genuine);}
+  .verdict .tile.drop .n{color:var(--bad);}
+  .verdict .tile.review .n{color:var(--warn);}
+
+  /* ---------- sections ---------- */
+  main{padding-top:44px;display:flex;flex-direction:column;gap:56px;}
+  section .sec-head{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;}
+  section .sec-num{font-family:Georgia,serif;font-size:13px;color:var(--ink-faint);}
+  h2.sec-title{font-size:22px;}
+  .sec-dek{color:var(--ink-soft);font-size:14.5px;max-width:680px;margin-top:8px;margin-bottom:22px;}
+
+  .callout{
+    border:1px solid var(--line-strong);border-left:4px solid var(--accent);
+    background:var(--accent-soft);border-radius:0 8px 8px 0;
+    padding:14px 18px;font-size:14px;color:var(--ink);margin:18px 0;
+  }
+  .callout b{font-weight:700;}
+  .callout.blue{border-left-color:var(--genuine);background:color-mix(in srgb, var(--genuine) 10%, var(--surface));}
+  .callout.grey{border-left-color:var(--grey);background:var(--grey-soft);}
+
+  /* ---------- recommendation table ---------- */
+  .rec-table th, .rec-table td{
+    text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);
+    font-size:13.5px;vertical-align:top;
+  }
+  .rec-table thead th{
+    font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);
+    font-weight:700;border-bottom:1px solid var(--line-strong);white-space:nowrap;
+  }
+  .rec-table td.num, .rec-table th.num{text-align:right;white-space:nowrap;}
+  .rec-table tr.group-row td{
+    background:var(--surface-2);font-weight:700;font-size:12px;
+    text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft);
+    padding:8px 14px;border-bottom:1px solid var(--line-strong);
+  }
+  .rec-table tbody tr:hover{background:color-mix(in srgb, var(--genuine) 5%, transparent);}
+  .pn{font-family:Consolas,"SF Mono",monospace;font-size:12.5px;color:var(--ink-soft);}
+  .chip{
+    display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;
+    font-weight:700;letter-spacing:.02em;white-space:nowrap;
+  }
+  .chip.add{background:var(--good-soft);color:var(--good);}
+  .chip.keep{background:color-mix(in srgb, var(--genuine) 16%, var(--surface));color:var(--genuine);}
+  .chip.drop{background:var(--bad-soft);color:var(--bad);}
+  .chip.review{background:var(--warn-soft);color:var(--warn);}
+
+  /* ---------- BVP chart ---------- */
+  .bvp-chart{margin-top:22px;}
+  .bvp-row{display:grid;grid-template-columns:150px 1fr 190px;align-items:center;gap:14px;padding:9px 0;}
+  .bvp-row .cat-label{font-size:13.5px;font-weight:600;}
+  .bvp-row .cat-note{display:block;font-size:11.5px;color:var(--ink-faint);font-weight:400;margin-top:1px;}
+  .bar-track{
+    height:22px;border-radius:5px;overflow:hidden;display:flex;
+    background:var(--surface-2);border:1px solid var(--line);
+  }
+  .bar-seg{height:100%;display:flex;align-items:center;}
+  .bar-seg.genuine{background:var(--genuine);}
+  .bar-seg.bvp{background:var(--bvp);}
+  .bvp-row .figs{font-size:12px;color:var(--ink-soft);text-align:right;font-variant-numeric:tabular-nums;}
+  .legend{display:flex;gap:20px;font-size:12.5px;color:var(--ink-soft);margin-top:16px;}
+  .legend span{display:inline-flex;align-items:center;gap:7px;}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block;}
+  .legend i.genuine{background:var(--genuine);}
+  .legend i.bvp{background:var(--bvp);}
+
+  /* ---------- key finding box ---------- */
+  .finding{
+    display:grid;grid-template-columns:auto 1fr;gap:16px;
+    background:var(--surface);border:1px solid var(--line-strong);border-radius:10px;
+    padding:20px 22px;box-shadow:var(--shadow);margin-top:24px;
+  }
+  .finding .mark{
+    font-family:Georgia,serif;font-size:26px;font-weight:700;color:var(--accent);
+    line-height:1;
+  }
+  .finding h3{font-size:15.5px;margin-bottom:6px;}
+  .finding p{font-size:13.5px;color:var(--ink-soft);margin:0;max-width:640px;}
+
+  /* ---------- gap / checklist ---------- */
+  .gap-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px;}
+  @media (max-width:720px){.gap-grid{grid-template-columns:1fr;}}
+  .gap-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px;
+  }
+  .gap-card h4{font-size:13.5px;margin:0 0 6px;color:var(--ink);}
+  .gap-card p{font-size:13px;color:var(--ink-soft);margin:0;}
+  .gap-card .status{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px;display:inline-block;}
+  .gap-card.missing .status{color:var(--bad);}
+  .gap-card.have .status{color:var(--good);}
+
+  ol.steps{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:0;}
+  ol.steps li{
+    display:grid;grid-template-columns:28px 1fr;gap:14px;
+    padding:13px 0;border-bottom:1px solid var(--line);font-size:13.5px;
+  }
+  ol.steps li:last-child{border-bottom:none;}
+  ol.steps li .idx{
+    font-family:Georgia,serif;font-weight:700;color:var(--accent);font-size:14px;
+  }
+  ol.steps li b{display:block;color:var(--ink);margin-bottom:2px;}
+  ol.steps li span.d{color:var(--ink-soft);}
+
+  footer{
+    max-width:960px;margin:64px auto 0;padding:20px 24px 0;
+    border-top:1px solid var(--line);font-size:12px;color:var(--ink-faint);
+  }
+  footer p{margin:4px 0;}
+</style>
+
+<header class="top">
+  <div class="inner">
+    <div class="eyebrow">ISZE · Parts &amp; Aftersales · ITUK</div>
+    <h1 class="title">Which parts belong in the ITUK SPA, and why</h1>
+    <p class="subtitle">A scope recommendation to review before any line is entered into <b>SPA Optimizer v3</b> — including a check of where Isuzu's own BVP (Best&nbsp;Value&nbsp;Parts) range changes the case.</p>
+    <div class="meta-row">
+      <span><b>For:</b> ITUK SPA v2 scope</span>
+      <span><b>Prepared:</b> 10 Aug 2026</span>
+      <span><b>Basis:</b> ITUK actuals CY2023–2026 (partial) + genuine/BVP catalogue crossref</span>
+    </div>
+    <div class="status-pill">Recommendation only — no lines entered into the Optimizer yet</div>
+  </div>
+</header>
+
+<div class="wrap">
+<main>
+
+  <div class="verdict">
+    <div class="tile add"><div class="n">4</div><div class="lbl">Lines to ADD — real ITUK demand, currently no SPA price</div></div>
+    <div class="tile keep"><div class="n">3</div><div class="lbl">Brake lines to KEEP — the core of the pack</div></div>
+    <div class="tile drop"><div class="n">2</div><div class="lbl">BVP lines to DROP — no fitment, zero sales</div></div>
+    <div class="tile review"><div class="n">2 + 12</div><div class="lbl">Lines to REVIEW or deprioritise (rear shoe SKUs, clutch)</div></div>
+  </div>
+
+  <section id="rec">
+    <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">The recommendation</h2></div>
+    <p class="sec-dek">Built on the 55-PN SPA pack audit (2026-08-10): 21 of those 55 lines have never sold to ITUK. Below is what changes for v2 — additions with a dollar case, the brake core that stays, and lines the data says to drop or question.</p>
+
+    <div class="scroll">
+    <table class="rec-table">
+      <thead>
+        <tr>
+          <th style="width:52px"></th>
+          <th>P/N</th>
+          <th>Description</th>
+          <th>Fig-key</th>
+          <th class="num">ITUK CY2025</th>
+          <th class="num">ITUK CY2026 YTD</th>
+          <th>Why</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="group-row"><td colspan="7">Add — real demand, zero SPA price support today</td></tr>
+        <tr>
+          <td><span class="chip add">ADD</span></td>
+          <td class="pn">8983507161</td>
+          <td>Urea (AdBlue) filter</td>
+          <td class="pn">873-042</td>
+          <td class="num">506 u · €34,566</td>
+          <td class="num">40 u · €2,767</td>
+          <td>Real, sizeable revenue sitting outside <em>both</em> the SPA pack and the 5-category Model B demand model. BVP alternative for this fig-key is negligible network-wide (1 catalogue pair) — genuine is the only real lever.</td>
+        </tr>
+        <tr>
+          <td><span class="chip add">ADD</span></td>
+          <td class="pn">fig 305-001<br><span style="color:var(--ink-faint);font-size:11px">PN — confirm via EQ-HIT</span></td>
+          <td>Shoe; BRK, RR</td>
+          <td class="pn">305-001</td>
+          <td class="num">164 u · €14,517</td>
+          <td class="num">93 u · €9,063</td>
+          <td>Real rear-shoe demand ITUK is already buying — see the mismatch below (§2). Not the fig-key currently priced in the pack.</td>
+        </tr>
+        <tr>
+          <td><span class="chip add">ADD</span></td>
+          <td class="pn">fig 301-001<br><span style="color:var(--ink-faint);font-size:11px">PN — confirm via EQ-HIT</span></td>
+          <td>Shoe ASM (front)</td>
+          <td class="pn">301-001</td>
+          <td class="num">79 u · €5,141</td>
+          <td class="num">116 u · €7,810</td>
+          <td>Growing — 2026 YTD already ahead of 2025's full-year pace. Not in the pack at all.</td>
+        </tr>
+        <tr>
+          <td><span class="chip add">ADD</span></td>
+          <td class="pn">fig 305-002<br><span style="color:var(--ink-faint);font-size:11px">PN — confirm via EQ-HIT</span></td>
+          <td>Lining set; RR BRK, standard</td>
+          <td class="pn">305-002</td>
+          <td class="num">16 u · €1,428</td>
+          <td class="num">6 u · €508</td>
+          <td>Small but real and unpriced — bundle with the 305-001 fix, same underlying issue.</td>
+        </tr>
+
+        <tr class="group-row"><td colspan="7">Keep — the core of the pack, no BVP fallback exists for this category</td></tr>
+        <tr>
+          <td><span class="chip keep">KEEP</span></td>
+          <td class="pn">8982447940</td>
+          <td>Brake Pad Kit</td>
+          <td class="pn">302-017</td>
+          <td class="num">8,932 u · €728,508<span style="color:var(--ink-faint)"> (4yr)</span></td>
+          <td class="num">—</td>
+          <td>34% of the <em>entire current pack's</em> revenue on its own. Brake pad runs 0% BVP at ITUK (§2) — genuine price is the only competitive lever against IAM here.</td>
+        </tr>
+        <tr>
+          <td><span class="chip keep">KEEP</span></td>
+          <td class="pn">8982169210</td>
+          <td>Rear Brake Pad Kit</td>
+          <td class="pn">302-017</td>
+          <td class="num">2,112 u · €195,432<span style="color:var(--ink-faint)"> (4yr)</span></td>
+          <td class="num">—</td>
+          <td>Same category, same logic.</td>
+        </tr>
+        <tr>
+          <td><span class="chip keep">KEEP</span></td>
+          <td class="pn">8982169220</td>
+          <td>Front Brake Pad Kit</td>
+          <td class="pn">302-017</td>
+          <td class="num">1,680 u · €134,563<span style="color:var(--ink-faint)"> (4yr)</span></td>
+          <td class="num">—</td>
+          <td>Same category, same logic.</td>
+        </tr>
+
+        <tr class="group-row"><td colspan="7">Drop — no vehicle fitment tag, zero sales, no BVP programme exists for this category</td></tr>
+        <tr>
+          <td><span class="chip drop">DROP</span></td>
+          <td class="pn">5876102380</td>
+          <td>Brake Pad BVP</td>
+          <td class="pn">302-017</td>
+          <td class="num">0 u</td>
+          <td class="num">0 u</td>
+          <td>Catalogue carries no vehicle_model tag for this pairing, and Isuzu's brake_pad BVP programme only ever pairs to TF*&nbsp;(D-Max) — never N-series. Not applicable to ITUK's fleet.</td>
+        </tr>
+        <tr>
+          <td><span class="chip drop">DROP</span></td>
+          <td class="pn">5876170050</td>
+          <td>Brake Pad BVP (related)</td>
+          <td class="pn">302-017</td>
+          <td class="num">0 u</td>
+          <td class="num">0 u</td>
+          <td>Same pairing, same reasoning.</td>
+        </tr>
+
+        <tr class="group-row"><td colspan="7">Review — genuine, zero ITUK sales, cause unconfirmed</td></tr>
+        <tr>
+          <td><span class="chip review">REVIEW</span></td>
+          <td class="pn">5878320440</td>
+          <td>Rear Brake Shoe Kit</td>
+          <td class="pn">305-218</td>
+          <td class="num">0 u</td>
+          <td class="num">0 u</td>
+          <td>Genuine, not BVP — no fitment disqualifier found. Possibly superseded by the 305-001 family recommended above. Check EQ-HIT before dropping.</td>
+        </tr>
+        <tr>
+          <td><span class="chip review">REVIEW</span></td>
+          <td class="pn">8973319320</td>
+          <td>Rear Brake Shoe ASM</td>
+          <td class="pn">305-124</td>
+          <td class="num">0 u</td>
+          <td class="num">0 u</td>
+          <td>Same review flag as above.</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="callout grey">
+      <b>Clutch (12 PNs currently in the pack, fig 201-001 / 201-002)</b> — not shown line-by-line above. Recommend dropping the whole family from SPA v2, for a reason the BVP data makes explicit rather than assumed — see §2.
+    </div>
+  </section>
+
+  <section id="bvp">
+    <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">The BVP study</h2></div>
+    <p class="sec-dek">BVP ("Best Value Parts") is Isuzu's own budget OEM range — not third-party aftermarket. Losing a sale to BVP keeps the revenue in-house at lower margin; losing it to IAM loses it entirely. The two are not the same threat, and the difference changes which categories an SPA — and an IML purchase-price ask — actually defend.</p>
+
+    <div class="bvp-chart">
+      <div class="bvp-row">
+        <div class="cat-label">Brake pad<span class="cat-note">no catalogue pairing for N-series</span></div>
+        <div class="bar-track"><div class="bar-seg genuine" style="width:100%"></div></div>
+        <div class="figs">3,402 genuine · 0 BVP</div>
+      </div>
+      <div class="bvp-row">
+        <div class="cat-label">Brake shoe<span class="cat-note">no NPR (N75) pairing</span></div>
+        <div class="bar-track"><div class="bar-seg genuine" style="width:100%"></div></div>
+        <div class="figs">69 genuine · 0 BVP</div>
+      </div>
+      <div class="bvp-row">
+        <div class="cat-label">Urea filter</div>
+        <div class="bar-track"><div class="bar-seg genuine" style="width:91.7%"></div><div class="bar-seg bvp" style="width:8.3%"></div></div>
+        <div class="figs">506 genuine · 46 BVP</div>
+      </div>
+      <div class="bvp-row">
+        <div class="cat-label">Fuel filter</div>
+        <div class="bar-track"><div class="bar-seg genuine" style="width:80.2%"></div><div class="bar-seg bvp" style="width:19.8%"></div></div>
+        <div class="figs">13,184 genuine · 3,260 BVP</div>
+      </div>
+      <div class="bvp-row">
+        <div class="cat-label">Air filter</div>
+        <div class="bar-track"><div class="bar-seg genuine" style="width:79%"></div><div class="bar-seg bvp" style="width:21%"></div></div>
+        <div class="figs">4,337 genuine · 1,155 BVP</div>
+      </div>
+      <div class="bvp-row">
+        <div class="cat-label">Oil filter</div>
+        <div class="bar-track"><div class="bar-seg genuine" style="width:73.6%"></div><div class="bar-seg bvp" style="width:26.4%"></div></div>
+        <div class="figs">9,406 genuine · 3,368 BVP</div>
+      </div>
+      <div class="bvp-row">
+        <div class="cat-label">Clutch kit</div>
+        <div class="bar-track"><div class="bar-seg genuine" style="width:43.5%"></div><div class="bar-seg bvp" style="width:56.5%"></div></div>
+        <div class="figs">347 genuine · 451 BVP</div>
+      </div>
+      <div class="legend">
+        <span><i class="genuine"></i>Genuine</span>
+        <span><i class="bvp"></i>BVP (Isuzu value line)</span>
+        <span style="color:var(--ink-faint)">ITUK, unit share, CY2025</span>
+      </div>
+    </div>
+
+    <div class="finding">
+      <div class="mark">0%</div>
+      <div>
+        <h3>Brake has no BVP fallback for N75 — genuine price is the only lever</h3>
+        <p>Isuzu's brake_pad BVP programme only pairs to TF*&nbsp;(D-Max); brake_shoe BVP only pairs to NHR/NKR/NLR/NMR — never NPR (N75). At ITUK, brake pad and brake shoe both run <b>0% BVP</b> today. If genuine brake isn't price-competitive against IAM, ITUK's dealers have nowhere to go except third-party — there's no in-house cushion the way there is for filters. This is the sharpest version of the case for discounting brake specifically, and for asking IML to help fund it: every unit lost here is lost completely, not partially.</p>
+      </div>
+    </div>
+
+    <div class="callout blue">
+      <b>Filters and clutch already have a BVP cushion — nuance the IML narrative accordingly.</b> Air, fuel, oil filter and clutch kit all show real BVP uptake (15–56% of units at ITUK CY2025). The standard IML-brief line — <em>"without SPA pricing, the distributor routes to IAM and IML/IMIT loses the volume entirely"</em> — is fully true for brake, but only partly true here: some of what looks like defection is actually landing on Isuzu's own BVP line, not external aftermarket. Worth correcting before it goes to Japan as a blanket claim.
+    </div>
+
+    <div class="callout">
+      <b>Clutch: the BVP data changes the recommendation, not just confirms it.</b> BVP already carries <b>56.5% of clutch-kit units and 73.4% of clutch-kit revenue</b> at ITUK — more revenue than genuine. Because BVP is Isuzu's own line, a genuine SPA discount on clutch mostly reshuffles which Isuzu product captures the sale — it doesn't clearly recover volume from IAM the way brake does. The "clutch deferred" call from the phase-one decision holds; this is why. Recommend dropping clutch from SPA v2 rather than pruning it to a handful of PNs.
+    </div>
+  </section>
+
+  <section id="gap">
+    <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">Before this goes into SPA Optimizer v3</h2></div>
+    <p class="sec-dek">The workbook's blue input cells need two things the derived data in this repo doesn't carry. Scope can be agreed now; the Optimizer itself can't be filled in yet.</p>
+    <div class="gap-grid">
+      <div class="gap-card missing">
+        <span class="status">Missing</span>
+        <h4>Purchase Price (€) per P/N — SAP cost data</h4>
+        <p>Column C of SPA Optimizer. Not in any derived CSV available here — needed for every GM%, break-even and IML-cut calculation on the sheet.</p>
+      </div>
+      <div class="gap-card missing">
+        <span class="status">Missing</span>
+        <h4>ISZE Sales Price (€) per P/N — current list</h4>
+        <p>Column D. The IE40 PR00 price list carries this but wasn't pulled to PN grain for the lines above — needed before any SPA price / saving % can be proposed.</p>
+      </div>
+      <div class="gap-card have">
+        <span class="status">Have</span>
+        <h4>L12 Qty &amp; Revenue — ITUK actuals</h4>
+        <p>Pulled above for every recommended line, CY2025 full year + CY2026 YTD. Ready to drop into columns E–F once cost data lands.</p>
+      </div>
+      <div class="gap-card have">
+        <span class="status">Have</span>
+        <h4>Category-level demand gap — Model B</h4>
+        <p><code>FACTS.md</code> §1 gives the oil/fuel/air/clutch/brake cover % and € gap already, for the business-case framing in the IML brief.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="next">
+    <div class="sec-head"><span class="sec-num">04</span><h2 class="sec-title">Next steps</h2></div>
+    <ol class="steps">
+      <li><span class="idx">1</span><div><b>Sign off scope</b><span class="d"> — confirm the Add / Keep / Drop / Review list above before any PN is entered into SPA Optimizer.</span></div></li>
+      <li><span class="idx">2</span><div><b>EQ-HIT: resolve the rear/front shoe P/Ns</b><span class="d"> — identify the exact ITUK-selling P/Ns under fig 305-001, 305-002, 301-001, and confirm whether 305-124 / 305-218 are superseded by them.</span></div></li>
+      <li><span class="idx">3</span><div><b>Pull Purchase Price + ISZE Sales Price</b><span class="d"> — per P/N, for the 7 Add/Keep lines above, from SAP/PR00. This unblocks columns C–D of the Optimizer.</span></div></li>
+      <li><span class="idx">4</span><div><b>Populate SPA Optimizer v3</b><span class="d"> — once 1–3 are done, enter the blue input cells; Assumptions → SPA Health Check will flag any line below the 25% GM floor automatically.</span></div></li>
+      <li><span class="idx">5</span><div><b>Adjust the IML_IMIT Brief narrative</b><span class="d"> — keep the "IML loses this volume entirely" argument for brake; soften it for filters/clutch per §2.</span></div></li>
+    </ol>
+  </section>
+
+</main>
+</div>
+
+<footer>
+  <p><b>Sources:</b> ITUK PMS SPA Scope Study (2026-08-10) · <code>01_data/00_derived/{sales_by_db_fig_key_year, ituk_pms_pn_audit, genuine_bvp_crossref, mix_genuine_bvp_pms, aim_pn_classification}.csv</code> · <code>03_analytics/Isuzu/prism/data/fig_key_taxonomy.yaml</code> · <code>05_memory/projects/aftermarket-intelligence.md</code> · <code>FACTS.md</code> §1</p>
+  <p>Internal working recommendation — not yet vetted for IML/ITUK sharing.</p>
+</footer>
