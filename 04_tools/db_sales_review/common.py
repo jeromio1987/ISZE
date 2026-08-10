@@ -17,10 +17,10 @@ import pandas as pd
 import yaml
 
 # --------------------------------------------------------------------- paths --
-ISZE = Path(r"C:\Users\jerom\Desktop\claude\ISZE")
+HERE = Path(__file__).resolve().parent
+ISZE = HERE.parent.parent
 DERIVED = ISZE / "01_data" / "00_derived"
 PRICING = ISZE / "01_data" / "01_Pricing"
-HERE = Path(__file__).resolve().parent
 PROFILES = HERE / "db_profiles.yaml"
 
 UIO_FILE = ISZE / "06_uio" / "_CURRENT" / "ISUZU_UIO_Overview_2026.xlsx"

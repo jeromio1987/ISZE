@@ -20,10 +20,11 @@ import io
 import json
 import os
 import sys
+from pathlib import Path
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-TOOLS = r"C:\Users\jerom\Desktop\claude\ISZE\04_tools\ppt_template_v2"
+TOOLS = str((Path(__file__).resolve().parent.parent / "ppt_template_v2"))
 sys.path.insert(0, TOOLS)
 
 import isze_chart_theme as ct          # noqa: E402
@@ -213,11 +214,19 @@ def build(dbkey: str):
     S = json.loads(sfile.read_text(encoding="utf-8"))
     d = S["defaults"]
     # Live reload so fleet / GPS / S2D growth pick up the carpark pack without
-    # forcing a full parts-analysis rebuild.
-    fy = C.load_fy27(p)
+    # forcing a full parts-analysis rebuild. Falls back to the frozen values in
+    # _summary.json when the source workbooks (UIO overview, FY27 target) are
+    # not present on this machine — same numbers build_parts_analysis.py cached.
+    try:
+        fy = C.load_fy27(p)
+        gps = C.load_segmented_gps(p)
+        uio_live = C.load_uio(p)
+    except (FileNotFoundError, SystemExit) as e:
+        print(f"[{p['key']}] WARNING: live reload unavailable ({e}); using cached _summary.json values.")
+        fy = S["fy27"]
+        gps = S["gps_segmented"]
+        uio_live = S["uio"]
     s2d = fy["s2d_target"]
-    gps = C.load_segmented_gps(p)
-    uio_live = C.load_uio(p)
     pbi_raw = S["pbi"]
     pbi_complete = bool(
         pbi_raw
@@ -278,15 +287,22 @@ def build(dbkey: str):
     uio = uio_live
     total = {int(k): v for k, v in uio["total"].items()}
     years = [y for y in sorted(total) if 2019 <= y <= 2026]
-    series = {}
+    namemap = {"lcv": "LCV / D-Max", "ld": "CV — LD", "md": "CV — MD", "f_series": "F-Series"}
     segs = {k: v for k, v in uio.items() if k != "total"}
-    if len(segs) > 1:
-        namemap = {"lcv": "LCV / D-Max", "ld": "CV — LD", "md": "CV — MD", "f_series": "F-Series"}
+    # Only segments with real weight inside the plotted window count as "mixed" —
+    # a segment that is zero across 2019-2026 (even if it had volume decades
+    # earlier, e.g. a phased-out LD line) would otherwise duplicate the Total
+    # line exactly and collide with its end-of-line label.
+    populated = {}
+    for seg, vals in segs.items():
+        vv = {int(k): v for k, v in vals.items()}
+        if sum(vv.get(y, 0) for y in years) > 0:
+            populated[namemap.get(seg, seg)] = vv
+    series = {}
+    if len(populated) > 1:
         series["Total fleet"] = [total.get(y, 0) for y in years]
-        for seg, vals in sorted(segs.items(), key=lambda kv: -sum(kv[1].values())):
-            vv = {int(k): v for k, v in vals.items()}
-            if sum(vv.values()) > 0:
-                series[namemap.get(seg, seg)] = [vv.get(y, 0) for y in years]
+        for label, vv in sorted(populated.items(), key=lambda kv: -sum(kv[1].values())):
+            series[label] = [vv.get(y, 0) for y in years]
     else:
         series["Fleet (units)"] = [total.get(y, 0) for y in years]
     ct.trend_line([str(y) for y in years], series, cp("uio.png"),
@@ -511,9 +527,7 @@ def build(dbkey: str):
     if S["ids"]:
         I = S["ids"]
         s = db.build_content(
-            prs, f"IDS 2026: {disp} averages {I['db_avg']:.1f}%, "
-                 f"{'above' if I['db_avg'] >= I['network_avg'] else 'below'} the "
-                 f"{I['network_avg']:.1f}% network benchmark",
+            prs, f"IDS 2026: {disp} {I['db_avg']:.1f}% vs {I['network_avg']:.1f}% network",
             eyebrow="IDS 2026 — Dealer Standard", page_no=page)
         rows = [["Dealer", "Total %", "Global rank"]]
         rows += [[str(x["dealer"]).title(), f"{x['pts']:.1f}%", f"#{x['grank']}"] for x in I["top"]]
