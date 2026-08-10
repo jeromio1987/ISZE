@@ -60,7 +60,8 @@ Visit 7–12 Apr 2026 (TVS Chorley, Warrington VC, JDS Manchester, CV Components
 | Calculator / deck | `Isuzu/Divers/ISZE_PMS_Coverage_Calculator.xlsx`, `PMS sales promotion ISZE_ISZJ.pptx` |
 | Cover ratio workbook | `Projects/Isuzu/pms-pilot/PMS Parts sales ITUK WS2025(update 260323).xlsx` |
 | Apr 2026 trip report | `01_data/03_PMS/ISZE_ITUK_PMS_TripReport_Apr2026_revised (1).docx` |
-| IML PMS SPA campaign packs | `01_data/PMS SPA study_ISZE (1).xlsx` (4 packs N75/N35; all 55 PNs in catalog + registry) |
+| IML PMS SPA campaign packs | `01_data/03_PMS/PMS SPA study_ISZE (1).xlsx` (4 packs N75/N35; 55 PNs — **not in this repo**, local file only, see SPA scope study below) |
+| SPA scope study (2026-08-10) | `09_meetings/Preparation Meetings/IML_ITUK_PMS/ITUK_PMS_SPA_Scope_Study_2026-08-10.md` — pack performance vs phase-one, rear-brake-shoe SKU mismatch, urea filter whitespace, v2 scope draft |
 | Competitiveness case | `Dashboards/ISZE_Competitiveness_Dashboard.html` |
 | Programme memory | `memory/projects/competitiveness.md` |
 | Business case (external, drives IML ask) | `03_analytics/Isuzu/pms-pilot/ITUK_PMS_BusinessCase_Apr2026_v3.docx` — ⚠ not built on PRISM data, see 2026-07-02 audit |
