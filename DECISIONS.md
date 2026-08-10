@@ -6,6 +6,33 @@
 
 ---
 
+## 2026-08-10 — SPA discounting confirmed negligible; C3 in the pricing spec resolved, not blocked
+
+**Status:** Accepted — Jerome confirmed directly, in response to the pricing engine's data-ask list.
+
+**Finding:** Almost no order lines run under an SPA; 99.99% of order lines bill at straight PR00
+(or ZPR1 in Israel) list price. This means `sales_fact.parquet`'s `net_sales_value` already
+≈ list price for the working population — there is no material discount/rebate gap to
+decompose. Constraint C3 in `00_docs/ISZE_Pricing_Spec_v1.md` previously framed "gross value +
+condition types on the SAP billing export" as the **largest unlock** in the data-asks table
+(§12, ranked #1); that ask is now dropped as unnecessary, not merely deprioritized.
+
+Also confirmed in the same exchange: purchase price is **not** a separate open ask. ISZE's cost
+(`FOB_EUR = BP_JPY/FX × source_discount`) is already derivable from the same PR00/IE40 list the
+engine reads today — `fx_rate`, `source_discount`, `class_factor` are already wired in
+`03_analytics/isze_pricing/config.yaml`.
+
+**Consequence — re-ranked data asks (§12):** #1 is now the **OEM competitor genuine-price
+benchmark** (not IAM), which was already the actual live blocker (every category's allocation
+premium reads `basis: placeholder`, holding all 213 cells `NO_EVIDENCE_HOLD`) but had not been
+itemized in the ranked list. Dated PR00/ZPR1 snapshots (was #3) become a cleaner ask than
+before — with no discount noise, two snapshots give a low-error, line-by-line split of IML
+BP_JPY/FX pass-through vs an actual ISZE decision.
+
+**Files updated:** `00_docs/ISZE_Pricing_Spec_v1.md` (C3, §11, §12).
+
+---
+
 ## 2026-07-21 — `country_overrides.factors` fixed on the bucketed PMS path; revenue_gap_eur quotable-KPI firewall added
 
 **Status:** Accepted — Jerome approved via "do all" on Safety&capital top-10. Fixes the "`country_overrides.factors` is dead config" roadmap row (found 2026-07-16, not fixed pending sign-off) and acts on the "Not done — `revenue_gap_eur` is still unsafe" note from the 2026-07-17 entry below.

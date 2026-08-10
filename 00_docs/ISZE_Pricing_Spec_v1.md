@@ -36,7 +36,7 @@ blocked items are on its critical path.**
 |---|---|---|
 | C1 | Elasticity is not quotable — "only possible with DB → DLR sales, ISZE is too far from the market" (Jerome, 2026-08-01). `price_volume_elasticity.csv` measures distributor *stocking*, not end-market response. | **V1 uses no elasticity coefficient.** Capture rate and street index are the proxies. |
 | C2 | No dated PR00 history. One snapshot only (`IE40 … 13.03.2026`, 164,380 rows). Applying it backwards gives realization 0.8865 → 0.8956 → 0.9185 → 0.9416, which is the 2026 increase applied backwards, not leakage. | **No realization/pocket-price waterfall in V1.** Must not be presented as leakage. |
-| C3 | `sales_fact.parquet` carries only `net_sales_value` — no gross, no discount, no SPA condition. | Discount vs SPA vs mix cannot be decomposed. V1 works on net-to-DB only. |
+| C3 | ~~`sales_fact.parquet` carries only `net_sales_value` — no gross, no discount, no SPA condition.~~ **Resolved 2026-08-10** — Jerome confirmed SPA discounting is negligible: almost no order lines run under an SPA, and 99.99% of order lines bill at straight PR00 (or ZPR1 in Israel) list. | `net_sales_value` ≈ list price already for the working population. No gross/condition decomposition needed; V1's net-to-DB is effectively list-to-DB. Purchase price (`FOB_EUR = BP_JPY/FX × source_discount`) is already wired from the same PR00 list — no separate purchase-price ask either. |
 | C4 | 522 PNs billed with no PR00 entry = **€4.96M, 15.1% of CY2025 revenue**. Plus 800 PNs / €1.82M on superseded numbers. | ~15% of the book is **outside the reach of any list-price action**. Data fix, not a pricing lever. |
 | C5 | Distributors react to the **worst single line**, not the weighted average. Some large increases are IML BP_JPY corrections or out-of-mass-production parts, not ISZE decisions. | Per-line cap + mandatory reason code separating ISZE action from IML pass-through. |
 | C6 | Weighted increase is Laspeyres on L12M volume. | Index cost ∝ **past** revenue; cash return ∝ **future** volume. This asymmetry is the engine's main lever. |
@@ -535,8 +535,7 @@ Stated so reviewers do not assume otherwise:
 - **No full θ.** θ_parc is wired; θ_interval, θ_cohort and θ_warranty are 1.0.
   The D-Max 15,000 km interval effect is documented in §6 but is in no output
 - **No per-category θ.** Per market only — needs a category → `model_type` map
-- **No realization / pocket-price waterfall.** Blocked on dated price history (C2)
-- **No discount vs SPA decomposition.** Blocked on gross + condition values (C3)
+- **No realization / pocket-price waterfall.** Blocked on dated price history (C2) — the block is now purely the second dated snapshot; no discount noise to filter out (C3 resolved)
 - **No action on the 522 no-list PNs** (€4.96M, 15.1%). Data fix precedes pricing (C4)
 - **No change to class factors.** IML-owned
 - **No CIS blanket cut.** See §8.3
@@ -545,11 +544,17 @@ Stated so reviewers do not assume otherwise:
 
 ## 12. Data asks, ranked by unlock value
 
+**2026-08-10:** gross value / condition types dropped from this list — Jerome confirmed SPA
+discounting is negligible (~0% of order lines), 99.99% bill at straight PR00/ZPR1 list, so
+`net_sales_value` already ≈ list price. See C3. Purchase price is also not an open ask —
+`FOB_EUR = BP_JPY/FX × source_discount` is already wired from the same PR00 list `config.yaml`
+reads today.
+
 | # | Ask | Unlocks |
 |---|---|---|
-| 1 | **Gross value + condition types on the SAP billing export** | Discount vs SPA vs mix decomposition. Largest single unlock; currently only `net_sales_value` exists |
+| 1 | **OEM competitor genuine-price benchmark** (not IAM), at least for the 14 PMS categories | Allocation basis — every category premium is currently `basis: placeholder`, so all 213 cells hold flat (`NO_EVIDENCE_HOLD`) regardless of the target rate. The live blocker, independent of any billing-data question |
 | 2 | **Chassis code → model year / SCR mapping** (RG, RG21, RT56, RT88_93) | θ_interval — the D-Max 2.2L demand forecast. Cheapest high-value unblock |
-| 3 | **Dated IE40 PR00 snapshots**, one per revision | Realization waterfall; separates concession from price movement |
+| 3 | **Dated IE40 PR00 / ZPR1 snapshots**, one per revision | Clean price-only vs volume/mix bridge — low-noise now that C3 is resolved; separates IML pass-through from an ISZE decision, line by line |
 | 4 | **DB → dealer sell-out beyond ITUK** | The only route to real elasticity. Ties to the FY2027 20% KPI support-payment condition |
 | 5 | **PR00 entries for the 522 billed PNs** | Brings 15.1% of revenue into scope of any pricing action |
 
