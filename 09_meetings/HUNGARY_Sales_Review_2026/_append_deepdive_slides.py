@@ -30,13 +30,12 @@ takeaways_a = [
     "GPS rose from about 30% in 2022 to a peak of 41.9% in 2024, then eased back to "
     "34.5% in 2025 and sits at 37.1% today (FY2026) — two years of erosion, not a "
     "straight climb.",
-    "Genuine parts have held 82-88% of billing every year since 2020 (BVP 12-18%) — "
-    "a stable mix, so it isn't what moved GPS.",
+    "BVP held 12-18% share through 2024, but 2025's decline is entirely Genuine "
+    "(-EUR 71K) while BVP grew (+EUR 4K) — a Genuine-parts problem, not a BVP one.",
     "2022 doesn't reconcile with the previously computed series (EUR 261K vs EUR 186K "
     "net) — treat 2022 as directional; 2023-2025 corroborate closely.",
-    "The FY2027 base is disputed: corrected-survival shows the parc shrinking to "
-    "3,645 (-2.4%); UIO V19 shows it growing to 3,992 (+6.9%). Worth agreeing which "
-    "one we plan against.",
+    "The FY2027 base is disputed: corrected-survival shrinks the parc to 3,645 "
+    "(-2.4%); UIO V19 grows it to 3,992 (+6.9%) — worth agreeing which.",
 ]
 db.build_two_col(
     prs, title="GPS since 2022: peaked at 42%, now easing back to 37%",
@@ -83,8 +82,8 @@ db.bullet_list(s2, [
     "quality issue, claims-logging change, or a specific campaign?",
     "Which fleet number should FY2027 use — the ~4,000-unit growing view or the "
     "~3,645-unit corrected-survival view?",
-    "BVP has held 13-18% of billing since 2020 — right mix, or room to push further "
-    "into price-sensitive segments?",
+    "Genuine parts fell EUR 71K in 2025 while BVP grew EUR 4K — is genuine business "
+    "moving to the aftermarket, or are dealers trading down within our own catalog?",
 ], Inches(0.32), Inches(4.90), Inches(12.7), Inches(1.75), size=12, line_spacing=1.05)
 
 # ------------------------------------------------- move closer back to the end --
