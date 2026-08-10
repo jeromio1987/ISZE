@@ -43,10 +43,38 @@ db.build_two_col(
     takeaways=takeaways_a, eyebrow="Deep Dive — GPS History", page_no=19,
     takeaway_heading="Takeaways")
 
+# ------------------------------------------------------------- slide C --
+ct.bar_chart(
+    ["2020", "2021", "2022", "2023", "2024", "2025"],
+    {"Genuine": [284645, 261754, 219907, 307321, 341055, 269922],
+     "BVP": [60456, 49649, 41054, 48276, 47898, 51951]},
+    f"{CHART_DIR}/bvp_genuine.png",
+    title="Hungary — Genuine vs BVP billing by year (EUR)",
+    ylabel="EUR", value_fmt="{:,.0f}")
+
+takeaways_c = [
+    "2025 is the only year since 2020 where Genuine and BVP move in opposite "
+    "directions: Genuine EUR 341K → EUR 270K (-71K); BVP EUR 48K → EUR 52K (+4K). "
+    "Every prior year they moved together.",
+    "Not just a pricing effect: Genuine volume also fell (9,216 → 7,372 units) and "
+    "breadth contracted (1,160 → 930 distinct genuine part numbers sold, -20%).",
+    "BVP held up on every measure over the same year — units flat (4,036 → 4,052), "
+    "SKU breadth grew (37 → 43) — so this isn't distributor-wide destocking, it's "
+    "specific to Genuine.",
+    "Worth cutting the 2025 genuine drop by category together before assuming it's "
+    "competitive leakage — a concentrated cause (e.g. one model, one dealer) reads "
+    "very differently from a broad-based one.",
+]
+db.build_two_col(
+    prs, title="Genuine vs BVP: 2025 breaks the pattern",
+    chart_path=f"{CHART_DIR}/bvp_genuine.png",
+    takeaways=takeaways_c, eyebrow="Deep Dive — Genuine vs BVP", page_no=20,
+    takeaway_heading="Takeaways")
+
 # ------------------------------------------------------------- slide B --
 s2 = db.build_content(
     prs, title="Where the gap is: competitive parts leaking to the aftermarket",
-    eyebrow="Deep Dive — Competitive Capture", page_no=20)
+    eyebrow="Deep Dive — Competitive Capture", page_no=21)
 
 rows = [["Category", "2023", "2024", "2025", "Network (2025)"]]
 data = [
@@ -68,9 +96,10 @@ db.bullet_list(s2, [
     "The gap isn't new — Hungary has sat 15-35 points below network on brake pad, "
     "brake rotor and fuel filter capture in every one of the last three full years. "
     "Air filter is the one category near parity.",
-    "Warranty claims jumped from near-zero (FY2024: EUR 225) to EUR 102,418 (FY2026) — "
-    "right where GPS started easing back. Worth separating a genuine quality trend "
-    "from a claims-logging change or a campaign.",
+    "Warranty claims (separate claims-system data, not part of the billing above) "
+    "jumped from near-zero (FY2024: EUR 225) to EUR 102,418 (FY2026) — right where "
+    "GPS started easing back. Worth checking if that's a genuine quality trend, a "
+    "claims-logging change, or a campaign.",
 ], Inches(0.32), Inches(3.30), Inches(12.7), Inches(1.15), size=12, line_spacing=1.1)
 
 db.txt(s2, "QUESTIONS FOR US TO WORK THROUGH TOGETHER", Inches(0.32), Inches(4.55),
