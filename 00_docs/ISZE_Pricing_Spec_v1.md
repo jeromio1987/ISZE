@@ -558,6 +558,15 @@ reads today.
 | 4 | **DB → dealer sell-out beyond ITUK** | The only route to real elasticity. Ties to the FY2027 20% KPI support-payment condition |
 | 5 | **PR00 entries for the 522 billed PNs** | Brings 15.1% of revenue into scope of any pricing action |
 
+**Ask #3, scoped down (2026-08-10):** rather than the full ~15,000-line list, Jerome is
+backfilling historical price points by hand for a manageable top-N set. Run
+`03_analytics/Isuzu/prism/scripts/build_top_pn_pricing_history_list.py --top 500` locally
+(needs `sales_fact.parquet`, not present in this git checkout by design) to produce
+`top500_pn_by_revenue_cy2025_price_history_template.csv` with blank `price_point_*` columns.
+Note the likely overlap with C4: several of the 522 no-list PNs (e.g. `7552348290` STEERING
+UNIT, €718,864) are high enough revenue to land in this same top-500 set — for those, a
+manually supplied price point also closes part of the C4 gap, not just the C2 one.
+
 ---
 
 ## 13. Open questions for Jerome
