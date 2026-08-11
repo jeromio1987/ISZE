@@ -124,7 +124,11 @@ class Run:
 
 def load_config(path: Path, overrides: dict | None = None) -> dict:
     """Load config.yaml and apply dotted-key overrides, e.g.
-    {"allocation.target": 0.02}. Overrides are what scenarios are built from."""
+    {"allocation.target": 0.02}. Overrides are what scenarios are built from.
+
+    After overrides, merge Eucon brand-tier % ceilings into
+    allocation.policy_premium.by_category (iam_derived where n>=3).
+    """
     cfg = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
     for dotted, val in (overrides or {}).items():
         node = cfg
@@ -132,4 +136,24 @@ def load_config(path: Path, overrides: dict | None = None) -> dict:
         for k in parents:
             node = node.setdefault(k, {})
         node[leaf] = val
+
+    # Brand-quality ceilings (Jerome % matrix) — soft-fail if feeds missing
+    try:
+        from .premiums import apply_ceilings_to_config_block, OEM_PEERS
+
+        pp = cfg.setdefault("allocation", {}).setdefault("policy_premium", {})
+        by_cat = pp.get("by_category", {})
+        basket_rel = (cfg.get("paths") or {}).get("oem_peer_basket")
+        basket_p = None
+        if basket_rel:
+            basket_p = Path(basket_rel)
+            if not basket_p.is_absolute():
+                # config.yaml lives in isze_pricing/ → parents[2] = workspace root
+                basket_p = Path(path).resolve().parents[2] / basket_rel
+        pp["by_category"] = apply_ceilings_to_config_block(
+            by_cat, oem_basket_path=basket_p
+        )
+        cfg.setdefault("oem_peers", OEM_PEERS)
+    except Exception as exc:  # noqa: BLE001 — run still valid, just flat premiums
+        cfg.setdefault("_warnings", []).append(f"premiums_merge_skipped: {exc}")
     return cfg

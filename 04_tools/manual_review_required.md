@@ -1,102 +1,90 @@
-⚠ GENERATED 2026-07-27 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
+⚠ GENERATED 2026-08-09 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
 
-# Manual Review Required — 2026-07-27
+# Manual Review Required — 2026-08-09
 
-**Resolved since 2026-07-19 (closing these out):**
+**Status vs. 2026-08-02 report:**
 
 | Item | Status |
 |------|--------|
-| 10a — KS pipeline refresh mechanism unclear | ✅ Confirmed: `refresh_and_check_drift.py` runs all five scrapers (KS/Tranzparts/TMC/Mekonomen/Auto365) as one unit. Verified from the 2026-07-26 manual run log (all five sections present sequentially in one log file) and `AUTOMATION_REGISTER.md`, which confirms `ISZE_PMS_IAM_Refresh` **is** this combined refresh. |
-| 10b — Task Scheduler import unverifiable | ✅ Confirmed registered: `AUTOMATION_REGISTER.md` shows `ISZE_PMS_IAM_Refresh` as live (Weekly Mon 07:00), with real last-run-result history. It is imported, not just sitting as an XML file. |
+| Old #2 — `ISZE_PMS_IAM_Refresh` scheduler interruption pattern | Still unconfirmed — folded into new Item 1 below, with a fresh (and more concrete) data point |
+| Old #3 — Israel RSS undefined entity | Unchanged failure, but now has a real proposed fix — see Item 3 below + `proposed_patch.diff` |
+| Old #4 — Belgium RSS non-XML response | Unchanged — see Item 4 below |
+| Old #5 — Doffin/HILMA API keys unset | Unchanged, informational — see Item 5 below |
+| Old #7 — `scrape_asof.json` not updated by 08-01 refresh | Clarified this run, not just carried forward — see Item 6 below |
 
-**Still open, unchanged since 2026-06-28 (Items 3–5 below) — carried forward again.**
-**New this run: Items 1, 2, 6.**
-
----
-
-## Item 1 (NEW, high priority) — Mekonomen scraper: Playwright browser executable missing
-
-**What happened:** Your manual refresh run 2026-07-26 ~21:28–21:52 (`_logs/refresh_manual_2026-07-26_2128.log`) shows KS, Tranzparts, TMC, and Auto365 all completed cleanly (0 errors). Mekonomen crashed:
-
-```
-File "...\04_tools\autodoc_scraper\mekonomen_scraper.py", line 264, in run
-    browser = pw.chromium.launch(...)
-playwright._impl._errors.Error: BrowserType.launch: Executable doesn't exist at
-C:\Users\jerom\AppData\Local\Temp\cursor-sandbox-cache\6bf1de55922f023df5f525ff28390a22\playwright\chromium_headless_shell-1208\chrome-headless-shell-win64\chrome-headless-shell.exe
-Looks like Playwright was just installed or updated. Please run:
-    playwright install
-```
-
-The pipeline's own safety net worked as designed: it detected zero rows, did **not** overwrite `mekonomen_results.csv`, and restored the good file from `mekonomen_results.csv.pre_reset.bak`. No data was lost — but the scraper itself is currently non-functional, and this is not something `isze-scraper-healthcheck-autofix` can fix: it's a missing browser binary, not a URL/selector bug, so it fails the auto-apply gate ("string updates only") even though `mekonomen_scraper.py` is on the allowlist. No diff is proposed for this reason — there's no line of code to change.
-
-**Why this happened (inference, not confirmed — I can't inspect your environment variables from here):** the failed path (`AppData\Local\Temp\cursor-sandbox-cache\...`) is not Playwright's normal cache location (normally `AppData\Local\ms-playwright\...`). This looks like a `PLAYWRIGHT_BROWSERS_PATH` environment variable pointing at a Cursor IDE sandbox temp folder, which then got cleared (temp cleanup or reboot), taking the browser binary with it.
-
-**Suggested fix (for you to run, not auto-applied):**
-1. Run `C:\Python314\python.exe -m playwright install chromium` — this is the exact interpreter the scraper traceback shows, so installing from it ensures the binary lands where the script will actually look.
-2. If that doesn't stick (i.e., it fails again next run), check `PLAYWRIGHT_BROWSERS_PATH` in your user/system environment variables — if it points into a Cursor temp/sandbox folder, either unset it or repoint it somewhere persistent (e.g. the Playwright default), then reinstall.
-
-**Time sensitivity:** `mekonomen_results.csv` is currently 11 days old (2026-07-16) — still inside the 14-day freshness window, but will breach it around **2026-07-30** if not fixed before then. The next scheduled attempt is next Monday (2026-08-03) unless you run it manually sooner.
+**New this run:** Item 2 (drift-history baseline bug) and Item 5 (DE DTVP — real but low-priority, wasn't tracked as its own item before).
 
 ---
 
-## Item 2 (NEW) — `ISZE_PMS_IAM_Refresh` scheduled task: interrupted-run pattern
+## Item 1 — Weekly refresh timing: this week's cycle hadn't landed as of this healthcheck (carries old Item 2)
 
-Per `AUTOMATION_REGISTER.md`, the previous scheduled run of this task (2026-07-20, weekly Mon 07:00) ended with result **`0xC000013A`** (interrupted) — nobody noticed until you ran the full pipeline manually by hand on 2026-07-26 evening. Today's scheduled run (2026-07-27 07:00) was **in progress at the time of this health check** (07:00–07:09, KS leg at row 119/300 when last observed) — I have no way to confirm from here whether it completed or was interrupted again.
+**What I found:** `ISZE_ScraperRefresh_WeeklyTask.xml` documents a Sunday 21:00 trigger, with the healthcheck meant to follow at 22:00. This run started ~22:04 CEST on Sunday 2026-08-09. As of that time, the newest competitive-pricing output on disk was still 2026-08-03 (last Sunday) — no CSV, snapshot, or log dated 2026-08-09 exists. I found no `.pre_reset.bak` or other evidence of a run currently in progress either.
 
-`0xC000013A` (`STATUS_CONTROL_C_EXIT`) most commonly shows up on scheduled tasks configured to run only in an interactive/logged-on session, when the session ends mid-run (sleep, lock, logoff) before the task finishes. Worth a two-minute check in Task Scheduler: does `ISZE_PMS_IAM_Refresh` have "Run whether user is logged on or not" and "Wake the computer to run this task" set? If it's set to logged-on-only and your machine sleeps or locks around 07:00–07:20, that would explain both the 07-20 interruption and would put today's run at the same risk. This is a guess based on the symptom, not a confirmed root cause — I can't inspect Task Scheduler settings from here.
+**Worth noting, not just "it's late":** actual historical run timestamps don't match a clean "Sunday 21:00" pattern at all — completions cluster Saturday night through Monday morning (2026-07-09 Thu, 07-13 Mon, 07-20 Mon, 07-26 Sun evening *manual*, 07-27 Mon, 08-01 Sat, 08-03 Mon). That's consistent with either normal jitter, a timezone mismatch between the stored `StartBoundary` and the machine's actual clock, or the live Windows Task Scheduler entry having drifted from what's in this XML file (editing the XML in the repo doesn't re-import it into Task Scheduler by itself). I can't tell which from this sandbox.
 
-**No patch proposed** — this is a scheduler/power-settings question, not a code bug.
+**Not urgent today** — the pipeline is still comfortably 🟢 fresh (6.6 days, well under the 14-day threshold), and this may simply resolve itself later tonight or by morning. But this is the second run in a row flagging scheduler-timing uncertainty (last report's Item 2 raised the same question about `ISZE_PMS_IAM_Refresh` after the 2026-07-20 `0xC000013A` interruption), and I still can't confirm from here whether `ISZE_PMS_IAM_Refresh` and `ISZE_ScraperRefresh_WeeklyTask` are the same task under two informal names or genuinely different tasks.
+
+**No patch proposed** — Task Scheduler isn't inspectable from this sandbox.
 
 ---
 
-## Item 3 — Israel RSS: undefined XML entity — still occurring, unchanged since 2026-06-28
+## Item 2 (NEW) — `refresh_and_check_drift.py`: drift alert is comparing against a stale, two-runs-back baseline
 
-**Fresh evidence this run:** `tender_data.json` (generated 2026-07-21T05:06:05Z, still the latest publish) shows `"No Israel results found": 1` in `source_counts`, consistent with the same failure mode logged 2026-07-20: `[IL] Error: undefined entity: line 11, column 0`.
+**What I found:** `_snapshots/drift_history.csv` logged the *same* TMC `fuel_filter` move — `32.74 → 27.32 (-16.6%, flagged)` — on both 2026-08-01 *and* 2026-08-03. The raw `tmc_results.csv` shows the price has actually been flat at 27.32 (£23.35 → converted) since 08-01; nothing moved between 08-01 and 08-03. So the 08-03 flag is a false repeat, not a second real move.
 
-**Root cause (unchanged):** `fetch_israel()` in `tender_scraper_v3.py` (~line 727) uses `ET.fromstring()`, a strict XML parser, against the `mr.gov.il` RSS feed, which embeds HTML entities (`&nbsp;`, `&laquo;`, etc.) that aren't valid XML.
+**Root cause (traced in `refresh_and_check_drift.py`, not on the auto-apply allowlist — this is diagnosis only):**
+- `main()` (lines 189–192) snapshots each CSV's **current on-disk content into a folder named after today's date** *before* that day's scraper runs. So a folder named e.g. `2026-08-03` actually contains 2026-08-01's output (whatever was on disk right before today's scrape overwrote it) — the folder name is one cycle ahead of its contents.
+- `_latest_prior_snapshot()` (lines 106–114) then searches for the most recent folder with a name *strictly less than* today's date to use as the comparison baseline. Because today's own (mislabeled) snapshot is excluded by that `<` filter, it falls through to the *previous* dated folder — which, by the same off-by-one, actually holds data from *two* runs back.
+- Net effect: every run's "old" price is one full cycle further back than intended. A real move gets flagged correctly the first time it's detected, then gets flagged *again* on the next run (comparing against the pre-move baseline a second time) even though the price has already stabilized.
 
-**Suggested approaches (unchanged, still not diffed — needs a live-feed smoke test this job can't run without web access):**
-```python
-try:
-    root = ET.fromstring(resp.content)
-except ET.ParseError:
-    from lxml import etree as lxml_ET
-    root = lxml_ET.fromstring(resp.content, parser=lxml_ET.XMLParser(recover=True))
-```
-or, without a new dependency:
-```python
-import re as _re
-content = _re.sub(rb'&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[0-9a-fA-F]+;)(\w+);', rb'&amp;\1;', resp.content)
-root = ET.fromstring(content)
-```
+**Impact:** false-repeat drift flags (alert-fatigue risk), not a data-quality problem — the underlying scraped prices in the CSVs themselves are correct. Could also mask a genuine second move in the same direction by making it look like "more of the same already-seen change."
+
+**Fix sketch (not diffed — this file is explicitly do-not-edit scope, even for proposals):** either (a) snapshot *after* each scraper runs instead of before, so the folder name matches its contents, or (b) keep snapshotting before but change `_latest_prior_snapshot`'s filter to `<=` and skip the just-created same-day snapshot by identity rather than by date comparison. Either is a small, self-contained change — flagging for you or a future coding session to apply deliberately.
+
+---
+
+## Item 3 — Israel RSS: undefined XML entity — unchanged, now has a proposed fix
+
+**Fresh evidence this run:** `tender_data.json` (generated 2026-08-03T05:33:29Z) still shows `"No Israel results found": 1` in `source_counts` — same failure mode as every prior run, and `tender_monitor_log.txt` still logs `[IL] Error: undefined entity: line 11, column 0`.
+
+**Root cause (unchanged):** `fetch_israel()` in `tender_scraper_v3.py` (line 735) calls `ET.fromstring()` directly against the `mr.gov.il` RSS feed, which embeds HTML entities (`&nbsp;`, `&laquo;`, etc.) that aren't valid bare XML.
+
+**This run, unlike the last two:** I wrote an actual diff — see `proposed_patch.diff`. It wraps the parse in a fallback that escapes non-standard entities and retries once, falling through to the existing `except Exception` handler (same as today) if that still fails. Still untested against the live feed (no web access here) — review and test before applying.
 
 ---
 
 ## Item 4 — Belgium RSS: non-XML response — still occurring, unchanged since 2026-06-28
 
-**Fresh evidence this run:** `tender_data.json` source_counts shows `"No Belgium RSS results — TED covers above-threshold BE": 1`, same failure mode logged 2026-07-20 on both URL candidates:
-```
-[BEL] RSS parse error: syntax error: line 1, column 0
-[BE] https://www.publicprocurement.be/supplier/feed/rss: 0 matches
-[BEL] RSS parse error: syntax error: line 1, column 0
-[BE] https://www.publicprocurement.be/en/rss: 0 matches
-```
-TED (BEL) still covers above-threshold Belgium contracts — partial, not total, loss for that market.
+**Fresh evidence this run:** `tender_data.json` source_counts still shows `"No Belgium RSS results — TED covers above-threshold BE": 1`. Log detail: `[BEL] RSS parse error: syntax error: line 1, column 0` for both candidate URLs — that error signature (column 0) means the response isn't XML at all (most likely an HTML error/redirect page), not malformed XML.
 
-**Suggested check (unchanged):** open either URL directly in a browser to see if it now redirects to a login/error page; if the URL has moved, update `BELGIUM_RSS_CANDIDATES` in `tender_scraper_v3.py` (~line 1048). A defensive Content-Type check before parsing was also suggested previously — still valid, still not diffed.
+**Why no diff this time either:** I traced this one level deeper than prior runs — `_parse_procurement_rss()` (the shared DE/BE/NL parser, line 1062) already catches `ET.ParseError` cleanly and returns no rows; it's not crashing or misbehaving. The Netherlands feed uses the exact same shared parser and works fine (25 matches), so the parser itself isn't the problem. This is specifically "both `BELGIUM_RSS_CANDIDATES` URLs are dead or moved" — the only real fix is finding the correct current feed URL, which needs a browser/live lookup this job doesn't have access to. A defensive content-type check would make the failure log cleaner but wouldn't recover any data, so I didn't bother proposing it as a diff.
+
+**No patch proposed.** TED (BEL) still covers above-threshold Belgium contracts, so this is partial, not total, loss for that market.
 
 ---
 
-## Item 5 — Doffin/HILMA API keys unset — informational, unchanged
+## Item 5 (NEW, low priority) — Germany DTVP portal: 404 on every run
 
-`DOFFIN_API_KEY` / `HILMA_API_KEY` empty, skipped gracefully (`source_counts` shows both "No results — add ... API key" entries in the 2026-07-21 JSON). Not a bug. No action needed unless Nordic coverage becomes a priority.
+**What I found:** Every run I can see in `tender_monitor_log.txt` (back to at least 2026-07-13) logs `[DE] DTVP RSS: HTTP 404 — portal may require browser access` and `[DE] NRW portal: HTTP 404 — skipping`. This is consistent and long-standing, not a new regression — it just hadn't been called out as its own tracked item before (it's separate from the Doffin/HILMA API-key gap below).
 
----
+**Why no patch:** the code already documents the likely cause (`DTVP_RSS_URL`, line 1053, with comments noting DTVP typically requires browser/session access, not a plain RSS fetch) and already has a fallback message pointing at "TED covers DE above-threshold contracts" — same treatment as Belgium. A 404 on what's supposed to be a public RSS endpoint isn't a one-line URL fix; it likely needs either a different (authenticated) API path or accepting this as a below-threshold coverage gap.
 
-## Item 6 (NEW, minor) — `tender_monitor_log.txt` doesn't reflect the latest publish
-
-`tender_monitor_log.txt` on disk stops at the 2026-07-20 07:35 run. But the live `tender_data.json` was republished 2026-07-21 07:06 (per its own `generated_at` and the `tender_data.backup_20260721_0706.json` snapshot) — a run that isn't reflected in the log file at all. Data-wise this is fine (2026-07-21 is the fresher of the two, and it's what I checked freshness against), but it means I can't fully audit console output for that specific run — I'm relying on the JSON's own `source_counts` instead, which is sufficient for Items 3–5 above but is a narrower view than a full log. Not urgent, just flagging the gap in case you want the two publish paths to log consistently.
+**No action needed unless below-threshold German tender coverage becomes a priority** — informational only, same tier as Item 6 below.
 
 ---
 
-*End of manual_review_required.md — 2026-07-27*
+## Item 6 — Doffin/HILMA API keys unset — informational, unchanged
+
+`DOFFIN_API_KEY` / `HILMA_API_KEY` still empty, still skipped gracefully. Not a bug. No action needed unless Nordic coverage becomes a priority.
+
+---
+
+## Item 7 — `scrape_asof.json`: confirmed orphaned (clarifies old Item 7)
+
+**Last run's open question:** "I can't find where `scrape_asof.json` is written." **This run, I confirmed it:** nothing in the current codebase writes it — `grep -r "scrape_asof"` across all `.py`/`.bat`/`.ps1`/`.xml` files in the live tree (excluding an old git worktree) returns zero hits outside the file itself. Its one and only known write was the 2026-07-26 manual run (`refresh_manual_2026-07-26_2128.log`, itself run by hand). It's now 12+ days stale and has been silently skipped by *two* consecutive automated refreshes (08-01 and 08-03) without anything erroring.
+
+**Conclusion:** this isn't a "gap in the pipeline" — it's a one-off leftover from a manual process that was never wired into `refresh_and_check_drift.py`. Safe to ignore. I haven't deleted it (not my call, and it's outside this job's allowed outputs) — worth a two-minute look only if some other tool or dashboard reads it for freshness instead of checking the CSVs directly; otherwise fine to delete whenever you're tidying up.
+
+---
+
+*End of manual_review_required.md — 2026-08-09*

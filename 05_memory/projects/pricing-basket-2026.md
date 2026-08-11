@@ -27,3 +27,18 @@
 - FX symmetry: ISZE has not reduced prices when JPY weakened without IML instruction.
 - The +5.3% increase is driven by IML raising BP_JPY (2030 Vision), not FX movements alone.
 - State facts only; do not soften the pricing position in automated reports.
+
+## DB→DLR response (2026-08-10)
+
+- Track: `01_data/00_derived/price_elasticity_db_dlr_ituk_uti.csv` — **ITUK + UTI only**, Israel = UTI not UMI.
+- True YoY elasticity **blocked** (one CY sell-out). Rows are `measure_kind=proxy`.
+- Price axis = **ASP / list pass-through** (lasting). Dealer invoice **not** a near-term ask.
+- Proceed with proxies: soft-wired via `paths.db_dlr_response` / `db_dlr_response.py` (diagnostic flags only).
+- Do **not** claim ISZE→DB elasticity; do not feed proxy `beta` into +3% allocation deltas.
+- Second CY sell-out still unlocks `measure_kind=elasticity` later — not a gate on the soft path.
+- OEM street arrange: `03_analytics/isze_pricing/OEM_STREET_ARRANGE.md` (22 OEs; **15/22** street filled 2026-08-10).
+- Alloc with street: `20260810T171626Z__alloc__t3pct` — +3.0000% exact; `oem_benchmark` on air_filter + oil_filter.
+- ZPR1 vs PR00 diagnostic (basket PNs): `01_data/00_derived/pricing_zpr1_pr00_diff_basket_20260810.csv` (UTI≠UMI).
+- Evening pass 2: Ford shoe 1713904 still open (Ford shop 2138025 ≠ proven supersession). Eucon COMPARABLE = DAF/Hilux/Ranger only — no L200/Transit/Sprinter/MAN/Crafter maps. No new alloc (no new street).
+- Readiness / street-vs-Isuze: `01_data/00_derived/oem_peer_readiness_20260810.json` · Mode B brief: `01_data/01_Pricing/PRICING_STATUS_BRIEF_2026-08-10.md`.
+- CLI: `python -m isze_pricing.cli diagnose`.

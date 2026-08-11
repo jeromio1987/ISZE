@@ -8,6 +8,10 @@
 
 ## [Unreleased]
 
+### Locked (2026-07-31 / logged 2026-08-10) — Tomoe Baumann MIDI average rule — NEVER FORGET
+- **On behalf of Tomoe Baumann:** red-marked FR+ES dealers in her ranking attachments → **exclude from averages only**; **IT + CH keep all dealers in**. Exact mail wording + full dealer list: `04_tools/ids_dealer_ranking/CHANGELOG.md` + `IDS_2026_LOGIC_CHECK.md` § MIDI Baumann rule. Attachments/body: `01_data/90_INBOX/tomoe_ids_mail_pull/20260731_0858_*`.
+- **Pending:** any list/HTML drop + pack **v1.4** needs Jerome explicit rebuild/ship — not done 2026-08-10.
+
 ### Changed (2026-07-28) — IDS dealer map: MIDI FR/IT/ES/CH + UK LCV geo
 - **`ids_dealer_geo.py`** — loads `MIDI_FR.xlsx` NETWORK (Town + lat/lon) for exact DLRName match; Switzerland uses Town city centres when NETWORK lat/lon blank; UK LCV residual dealers pinned from Isuzu Truck UK store pages. Geo sanity city floors for France/Italy/Spain/Switzerland.
 - **Map fitBounds** — initial zoom prefers dense pin core so France DOM-TOM outliers do not force a world view.

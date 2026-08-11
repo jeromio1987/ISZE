@@ -6,6 +6,20 @@
 
 ---
 
+## 2026-07-31 (logged 2026-08-10) — MIDI FR/ES red-marked dealers: exclude from averages (Baumann) — PENDING pack apply
+
+**Status:** Accepted as **Tomoe Baumann rule** for averages; **pack apply pending** (no v1.4 rebuild/ship without Jerome OK).
+
+**Source:** Tomoe → Jerome, 2026-07-31 08:58, `Re: IDS 2026 - MIDI dealer files (Excel + HTML)` + red-font marks on attached `France_dealer_ranking.xlsx` / `Spain_dealer_ranking.xlsx`.
+
+**Decision (averages):** Red-marked FR+ES dealers out of average calculation; IT+CH all dealers in. Mail does **not** require removing them from list/HTML — that is a separate Jerome call for a possible **v1.4**.
+
+**Durable docs:** `04_tools/ids_dealer_ranking/CHANGELOG.md`, `IDS_2026_LOGIC_CHECK.md` §0, root `CHANGELOG.md` Unreleased. Evidence: `01_data/90_INBOX/tomoe_ids_mail_pull/20260731_0858_*`.
+
+**Consequences:** Future MIDI rebuilds must not re-include her red FR/ES names in country/network averages. Do not claim v1.4 shipped until explicit rebuild/ship.
+
+---
+
 ## 2026-07-21 — `country_overrides.factors` fixed on the bucketed PMS path; revenue_gap_eur quotable-KPI firewall added
 
 **Status:** Accepted — Jerome approved via "do all" on Safety&capital top-10. Fixes the "`country_overrides.factors` is dead config" roadmap row (found 2026-07-16, not fixed pending sign-off) and acts on the "Not done — `revenue_gap_eur` is still unsafe" note from the 2026-07-17 entry below.

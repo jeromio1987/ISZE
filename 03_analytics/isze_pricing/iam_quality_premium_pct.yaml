@@ -1,0 +1,38 @@
+# IAM brand quality → max genuine premium vs that brand (Jerome, 2026-08-10)
+#
+# Language: percentages only.
+#   +30%  = genuine street may sit 30% above that brand's street price
+#   NOT a list-price increase. The FY27 list move stays a separate +3% weighted.
+#
+# Rule when several IAM brands appear on one PN:
+#   Use the HIGHEST-tier (best) brand present as the benchmark.
+#   Cheap Chinese alone must not green-light a fat premium if Bosch/Denso is also listed.
+#
+# Source brands: 04_tools/autodoc_scraper/iam_brand_tiers.csv (tier 4..2)
+# Unknown / unlisted / no-name CN → tier 1 ceiling.
+
+version: 1
+as_of: "2026-08-10"
+street_basis: "PR00_EUR × 1.785 vs IAM retail (channel rule)"
+
+# Max premium of Isuzu genuine street over the benchmark IAM brand street.
+# Engine internal ratio = 1 + pct/100  (e.g. +30 → 1.30) — do not quote ratios to Jerome.
+max_premium_pct_vs_benchmark:
+  tier_4_oe_premium: 30    # Bosch, Denso, Aisin, Febi, Donaldson, Hengst, …
+  tier_3_mainstream: 60    # Blue Print, Kavo, Japko, DT Spare Parts, Triscan, …
+  tier_2_budget: 150       # Ridex, Kamoka, Stark, Vegaz, Remsa, …
+  tier_1_noname_cn: 250    # unlisted / no-name Chinese / unknown
+
+notes:
+  - "+30% vs a well-known brand is a ceiling, not a target to sit at."
+  - "+250% vs junk means: do not chase Chinese price-down; quality is the sell."
+  - "LCV OEM peers (Hilux / Ranger / L200) sit beside this matrix as oem_benchmark."
+  - "CV OEM peers: propose per market from competition heat; Jerome approves before add."
+
+# Map scraper tier integers → ceiling key
+tier_map:
+  4: tier_4_oe_premium
+  3: tier_3_mainstream
+  2: tier_2_budget
+  1: tier_1_noname_cn
+  default: tier_1_noname_cn

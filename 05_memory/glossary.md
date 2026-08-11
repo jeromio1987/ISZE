@@ -8,7 +8,10 @@
 | IMIE | Isuzu Motors Intl Europe | Vehicle sales arm (separate from ISZE) |
 | IMIT | Isuzu Motors Intl Thailand | Source T — Thailand parts |
 | ITUK | Isuzu Truck UK Ltd | Primary UK distributor |
-| IMG | Isuzu Motors Germany | German distributor, also service/warranty |
+| IUK | Isuzu UK / DS/E International Motors Limited | UK pickup/LCV distributor (≠ ITUK truck) |
+| ISD / IMG | Isuzu Motors Germany / ISZJ DE | German distributor (PRISM DB = ISD); also service/warranty |
+| Petros | Petros / Loutsios Group (Greece) | Greek distributor; sellout / IDS packs under PETROS |
+| Harris Group | Harris Group (Ireland) | Irish distributor (Isuzu Ireland) — contact John Cummins parts/logistics |
 | IAS | Isuzu Accessories Supplier | Thailand-based, accessories |
 | MIDI / AIOS | Regional Isuzu entities | Lubricants model reference |
 | IIF | Isuzu training entity | Based in Dubai |
@@ -17,19 +20,27 @@
 | Abbreviation | Name | Role |
 |-------------|------|------|
 | JVDP / Jerome | Jérôme Van der Pluym | VP Sales, ISZE IE40 |
-| KM | — | ISZE colleague, Sales |
-| HT | — | ISZE colleague, Sales/Accessories |
+| KM / Koen | Koen Matheussen | ISZE Assistant Sales Manager — DB sales reviews / SPA / StD data |
+| HT / Hadi | Hadewijch Tibos | ISZE Sales Manager — 3-party host with IMIE; DB sales reviews |
 | DW | — | ISZE Accessories lead |
 | SZ / Saida | — | ISZE Accessories backup |
 | BVDB | — | ISZE Power BI reporting |
+| Jimmy Meskens | Jimmy Meskens | ISZE — EDI / data-exchange setup (Petros thread) |
 | James Marsh | James Marsh | Materials Expeditor, ITUK |
+| John Lennon | John Lennon | General Manager Parts — IUK |
+| Aaron Singh-Chutti | Aaron Singh-Chutti | Parts Inventory coordinator — IUK |
+| Phil Evans | Phil Evans | IUK Technical — national R&M / extended-warranty options |
+| Sebastian Müller | Sebastian Müller | Head of Aftersales — ISD (Germany) |
+| Björn Groß | Björn Groß | ISD Aftersales — joining as Thomas Spenlein retires (2026) |
+| Panagiotis Zoglopotitis | Panagiotis Zoglopotitis | Loutsios Group / Petros (Greece) — parts commercial contact |
+| John Cummins | John Cummins | Parts & Logistics Manager — Harris Group (Ireland) |
+| Keith Dempsey | Keith Dempsey | Ireland — fleet / vehicle-sales validation contact (with Carl) |
 | Ryusuke Tanaka | Ryusuke Tanaka | Product Marketing, IML International Parts |
 | Tomoaki Hiratsuka | Tomoaki Hiratsuka | IML International Parts Sales |
 | Nikola Broecker | Nikola Broecker | IMIE Sales & Marketing — 3-party pickup decks / D-Max regs |
 | Lucas Ganske | Lucas Ganske | IMIE — 3-party meeting circuit (with Nikola / Sonja) |
 | Sonja Baranowski | Sonja Baranowski | IMIE — often distributes 3-party English PDFs |
 | Łukasz Krzemiński | Łukasz Krzemiński | Poland aftersales — KPI/SPI monthly sheets (≠ Lucas IMIE) |
-| Hadewijch Tibos / Hadi | Hadewijch Tibos | ISZE Sales — 3-party host with IMIE |
 
 ## Parts & Technical
 | Term | Meaning |
@@ -51,6 +62,7 @@
 | Term | Meaning |
 |------|---------|
 | DB | Distributor |
+| IDS | Isuzu Dealer Standards (self-eval A–E) — visit triage, not wallet. OS: `05_memory/projects/ids-db-leverage-os.md` |
 | DLR / ASC | Dealer / Authorised Service Centre |
 | SPA | Special Price Agreement — discounted pricing for specific customer/model |
 | DLOD | Don't Lose Deal — ITUK program for competitive quotes |
@@ -58,6 +70,9 @@
 | CR | Cost Reduction |
 | SPLR | Supplier |
 | KPI | Key Performance Indicator matrix |
+| Genuine with BVP alternative | Display label for mix bucket `genuine_contested`: genuine PN that has a BVP catalogue pair. Use this in Mode A and all spoken/written comms — not “genuine contested” (sounds like AIM/street fight). Code/CSV field names may stay `genuine_contested_*`. |
+| Genuine only | Genuine PN with no BVP catalogue alternative |
+| BVP | Best Value Parts — ISZE value-tier SKU |
 
 ## Pricing
 | Term | Meaning |
@@ -149,5 +164,3 @@ Source J discount 0.62 · Source T discount 0.611 · SP = FOB / class_factor
 - **FY2026** = April 2025 – March 2026
 - **FY2027** = April 2026 – March 2027
 - **IGS** = Isuzu Global Summit (annual IML meeting)
-
-Extended company context for GPT/sparring: `Isuzu/_SKILL_UPDATE/isze-company-context.md`

@@ -4,6 +4,21 @@ _Last validated: 2026-07-06 (v19 canonical — `06_uio/_CURRENT/ISUZU_UIO_Overvi
 
 ## Status: Active — **v19 canonical** · JSON extract `01_data/91_build/uio_2026.json` · Dashboard HTML v18 (rebuild pending)
 
+## ⚠️ V20 rebuild in progress — one figure LOCKED, rest still draft (added 2026-08-03)
+
+`06_uio/_CURRENT/V20_SPEC.md` (drafted 27 Jul 2026, amended 30 Jul 2026) documents a forecast-methodology
+defect in the current v19 2026–2030 columns (flat 3% scrap assumption vs the ~10–12% the file's own
+survival curves and VIN-shipment data imply) — Grand Total overstated 7.8% (2026) rising to 37.7% (2030).
+**Rebuild status: draft, nothing built yet** — this is a flagged risk on the 2026–2030 columns, not a
+v19 replacement.
+
+**One figure is LOCKED (Jerome, 30 Jul 2026):** IUK LCV (sheet 1 row 25 — hardcoded, separate from the
+ITUK CV cohort model below, rows 22/24) CY2026F = **44,926** (was V19's 49,280 — confirmed wrong-direction,
+must not be used). This is the only V20 number currently authoritative; the rest of V20_SPEC.md's
+seven-problem list (Israel fleet ~25% understated, four low-confidence markets, GPS weight-class
+misclassification, pickup fleet direction, stale documentation) is analysis/plan, not yet applied to the
+workbook. Full detail: `06_uio/_CURRENT/V20_SPEC.md`.
+
 ## What
 Excel + Python tool calculating Isuzu vehicle population in service (UIO) by country, distributor, model type.
 Dual methodology:

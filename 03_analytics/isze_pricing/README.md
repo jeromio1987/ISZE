@@ -62,9 +62,29 @@ that produced it.
 Everything tagged `[ASSUMPTION]` in `config.yaml` is a modelling choice with no
 observed data behind it. That includes the whole erosion model in the launch book.
 
-**There is no elasticity coefficient anywhere in this package**, per Jerome's
-2026-08-01 finding that elasticity is not measurable at ISZE level. The launch
-book's value is in ranking tactics against each other, not in forecasting a number.
+**There is no elasticity coefficient in the allocation solver**, per Jerome's
+2026-08-01 finding that elasticity is not measurable at **ISZE→DB** level.
+DB→DLR response for **ITUK + UTI** is a labeled **proxy** on ASP / list
+pass-through (lasting basis — dealer invoice is not a near-term ask):
+
+- `01_data/00_derived/price_elasticity_db_dlr_ituk_uti.csv`
+- method: `01_data/01_Pricing/PRICE_ELASTICITY_DB_DLR_ITUK_UTI.md`
+- config: `paths.db_dlr_response` → soft join in `db_dlr_response.py` on `alloc`
+
+Soft signal only: run input hash, diagnostic table, exact (db, PMS cat) flags.
+Do **not** multiply allocation deltas by `beta` until `measure_kind=elasticity`
+exists with adequate n. The launch book's value is in ranking tactics, not
+forecasting a volume response.
+
+**OEM peer street:** fill `oem_peer_scrape_list.csv` → `ingest_oem_peer_street.py`
+→ basket → `apply_oem_benchmark`. Runbook: `OEM_STREET_ARRANGE.md`.
+
+```bash
+python -m isze_pricing.cli diagnose   # readiness + peer street vs Isuze (PR00×1.785)
+python 03_analytics/isze_pricing/scan_eucon_comparable_oem_gap.py
+```
+
+Mode B status brief: `01_data/01_Pricing/PRICING_STATUS_BRIEF_2026-08-10.md`.
 
 ## The premium is per category, and it is gated
 

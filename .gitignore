@@ -62,12 +62,27 @@
 01_data/dashboards/**
 !01_data/dashboards/README.md
 
-# Parquet everywhere
+# Parquet everywhere (default off) — allowlist engine tables for remote clones
 **/*.parquet
+!01_data/00_derived/sales_fact.parquet
+!01_data/00_derived/sales_with_crossref.parquet
+!01_data/00_derived/parts_catalog_dimension.parquet
+!01_data/00_derived/pms_capture_by_db_year.parquet
+!01_data/00_derived/bvp_pn_dimension.parquet
+!01_data/00_derived/genuine_bvp_crossref.parquet
+!01_data/00_derived/db_parts_mix_classification.parquet
+!01_data/00_derived/aim_gps_matrix.parquet
+!01_data/00_derived/pricing_*.parquet
+
+# Giant regenerable CSVs (use sibling .parquet on clones; GitHub ~100MB hard limit)
+01_data/00_derived/pricing_pn_enquiry_active.csv
+01_data/00_derived/pricing_revision_cd_changed.csv
+01_data/00_derived/pricing_list_pn.csv
 
 # Large derived / scraper / insight dumps
 **/*sales_detailed*.tsv
 01_data/derived/insights/**
+01_data/00_derived/insights/**
 02_dashboards/_archive/**
 04_tools/**/scrape_results/**
 04_tools/**/results/**
