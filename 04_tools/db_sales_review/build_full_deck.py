@@ -403,6 +403,14 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     if sold_to is None:
         raise SystemExit(f"Cannot resolve sold_to for {key} — set sold_to in db_profiles.yaml")
 
+    # Mode A (loaded into `prs` before this call) already ends on its own
+    # closing slide. Drop it here so the combined deck has exactly one
+    # closer — at the very end of the deep dive — instead of one mid-deck
+    # and a second one appended by build_closing() below.
+    mode_a_closer = prs.slides._sldIdLst[-1]
+    prs.slides._sldIdLst.remove(mode_a_closer)
+    page_start -= 1
+
     hu = load_hu_slice(sold_to)
     fy = fy_wallet_mix(hu)
     fy_pms = fy_pms_billing(hu)
@@ -424,7 +432,8 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     )
     bullets = [
         f"Extra detail for meeting prep — pick which slides to share with {partner}.",
-        "Mode A ends on the previous closing slide.",
+        f"This is the internal file. The client-safe deck without this section is "
+        f"ISZE_{key}_Sales_Review_FY2027_ModeA_only.pptx — send that one, not this one.",
         "Label in all charts: “Genuine with BVP alternative” "
         "(not “genuine contested”).",
     ]

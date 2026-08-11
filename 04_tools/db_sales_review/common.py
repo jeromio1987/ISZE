@@ -730,7 +730,13 @@ def load_fy27(profile: dict) -> dict:
     missing = [k for k in ("max_spend", "actual", "ext_target") if k not in out]
     if missing:
         raise SystemExit(f"FY27 tab '{tab}' is missing rows for: {missing}")
-    out["s2d_target"] = load_s2d_target(profile)
+    try:
+        out["s2d_target"] = load_s2d_target(profile)
+    except (FileNotFoundError, SystemExit):
+        # S2D is a separate track (Dashboard cols O:U) from the EXTENDED TARGET
+        # read above (cols A:J) -- a profile that skips S2D shouldn't fail the
+        # whole tab read just because the S2D-only UIO source is unavailable.
+        out["s2d_target"] = None
     return out
 
 
