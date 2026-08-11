@@ -22,6 +22,41 @@ DERIVED = ISZE / "01_data" / "00_derived"
 PRICING = ISZE / "01_data" / "01_Pricing"
 HERE = Path(__file__).resolve().parent
 PROFILES = HERE / "db_profiles.yaml"
+WARRANTY_GRAIN = DERIVED / "warranty_raw_grain.csv"
+
+# profile key → exact db_name values in warranty_raw_grain.csv
+# (ERP has no warranty doc type — claim grain is the PN-level exclusion source)
+WARRANTY_GRAIN_DB: dict[str, list[str]] = {
+    "IUK": ["ISUZU (UK)"],
+    "PORTUGAL": ["IMOTORS LDA", "PORTUGAL"],
+    "ISD": ["ISUZU SALES DEUTSCHLAND - ISD", "ISD"],
+    # IBX payer bills BE/NL/PL — include all Benelux claim rows
+    "IBX": [
+        "ISUZU BENELUX - BELGIUM",
+        "ISUZU BENELUX - NETHERLANDS",
+        "Isuzu Benelux NV (Poland)",
+    ],
+    "PETROS": ["PETROS PETROPOULOS"],
+    "IRELAND": ["Isuzu Ireland 2020 Unlimited Company", "IRELAND"],
+    "UMI": ["UMI"],
+    "NORWAY": ["RSA"],
+    "SWEDEN": ["Isuzu Sverige AB"],
+    "HUNGARY": ["WAE LTD.", "WAE"],
+    "FINLAND": ["Isuzu Motor Finland OY"],
+    "ROMANIA": ["ISUZU ROM AUTO SRL"],
+    "DENMARK": ["ISUZU Danmark"],
+    "ICELAND": ["BL ehf."],
+    "CYPRUS": ["A. LOUTSIOS & SONS", "CYPRUS"],
+    "MALTA": ["GASANZAMMIT MOTORS LIMITED", "MALTA"],
+}
+
+# Months of claim-assessment lag before the prior window (claims trail billing)
+WARRANTY_CLAIM_LAG_MONTHS = 3
+
+_WARRANTY_TEXT_RE = re.compile(
+    r"\bSENSOR\W*PM\b|\bPM\W*SENSOR\b|\bWARRANTY\b|\bCAMPAIGN\b|\bRECALL\b",
+    re.IGNORECASE,
+)
 
 UIO_FILE = ISZE / "06_uio" / "_CURRENT" / "ISUZU_UIO_Overview_2026.xlsx"
 FY27_FILE = ISZE / "01_data" / "ISZE_GPS_Extended_Target_FY27_V3.1.xlsx"
@@ -183,6 +218,85 @@ def fy_billing_derived(profile: dict, start="2025-04-01", end="2026-04-01") -> f
         df = df[(df["Billing Date"] >= start) & (df["Billing Date"] < end)]
         tot += float(pd.to_numeric(df["Net value"], errors="coerce").fillna(0).sum())
     return tot
+
+
+# ----------------------------------------------------------------- warranty --
+def is_warranty_campaign_text(pn_value, description) -> bool:
+    """PN/description heuristic for campaign / recall / PM-sensor style lines."""
+    text = f"{pn_value or ''} {description or ''}"
+    return bool(_WARRANTY_TEXT_RE.search(text))
+
+
+def _yyyymm(ts) -> int:
+    ts = pd.Timestamp(ts)
+    return int(ts.year) * 100 + int(ts.month)
+
+
+def _shift_yyyymm(yyyymm: int, months: int) -> int:
+    y, m = divmod(int(yyyymm), 100)
+    idx = y * 12 + (m - 1) + months
+    return (idx // 12) * 100 + (idx % 12) + 1
+
+
+def load_warranty_claim_pns(profile: dict,
+                            window_prior: tuple[str, str] | None = None,
+                            window_current: tuple[str, str] | None = None,
+                            lag_months: int = WARRANTY_CLAIM_LAG_MONTHS,
+                            ) -> dict:
+    """PN set from warranty_raw_grain for this DB over the analysis windows.
+
+    ERP billing has no warranty document type, so commercial H1 movers exclude
+    PNs that appear on claim lines for this distributor. Claim assessment dates
+    lag billing — the prior window is opened ``lag_months`` earlier.
+
+    Returns dict with keys: pns (set[str]), n_claim_lines, claim_eur, db_names,
+    assess_month_from, assess_month_to, source, available (bool).
+    """
+    d = profile["defaults"]
+    w25 = window_prior or tuple(d["window_prior"])
+    w26 = window_current or tuple(d["window_current"])
+    names = list(profile.get("warranty_grain_db") or WARRANTY_GRAIN_DB.get(profile["key"]) or [])
+    empty = {
+        "pns": set(), "n_claim_lines": 0, "claim_eur": 0.0, "db_names": names,
+        "assess_month_from": None, "assess_month_to": None,
+        "source": str(WARRANTY_GRAIN), "available": False,
+        "method": "claim_pn_match+text_heuristic",
+    }
+    if not names or not WARRANTY_GRAIN.exists():
+        return empty
+
+    grain = pd.read_csv(WARRANTY_GRAIN, low_memory=False,
+                        usecols=["assess_month", "db_name", "part_no", "claim_eur"])
+    hit = grain[grain["db_name"].isin(names)].copy()
+    if hit.empty:
+        return empty
+
+    start = _shift_yyyymm(_yyyymm(w25[0]), -lag_months)
+    end = _yyyymm(w26[1])  # exclusive end date → last month before end
+    # window end is exclusive (e.g. 2026-07-01) → include through prior month
+    end_inclusive = _shift_yyyymm(end, -1)
+    am = pd.to_numeric(hit["assess_month"], errors="coerce")
+    hit = hit[(am >= start) & (am <= end_inclusive)]
+    pns = {p for p in hit["part_no"].map(norm_pn) if p}
+    return {
+        "pns": pns,
+        "n_claim_lines": int(len(hit)),
+        "claim_eur": float(pd.to_numeric(hit["claim_eur"], errors="coerce").fillna(0).sum()),
+        "db_names": names,
+        "assess_month_from": int(start),
+        "assess_month_to": int(end_inclusive),
+        "source": str(WARRANTY_GRAIN),
+        "available": True,
+        "method": "claim_pn_match+text_heuristic",
+    }
+
+
+def is_warranty_pn(pn_value, description, claim_pns: set[str]) -> bool:
+    """True when PN is on a claim for this DB or matches the campaign heuristic."""
+    pn = norm_pn(pn_value)
+    if pn and pn in claim_pns:
+        return True
+    return is_warranty_campaign_text(pn_value, description)
 
 
 # ------------------------------------------------------------------ ITC map --
