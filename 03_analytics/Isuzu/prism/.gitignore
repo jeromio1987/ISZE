@@ -5,8 +5,9 @@ data/*.xlsx
 data/*.xls
 
 # Allow production data files â€” private repo, needed for Streamlit Cloud
-# !data/UIO.xlsx  # blocked at ISZE root — holiday laptop uses derived JSON
+# !data/UIO.xlsx  # blocked at ISZE root ï¿½ holiday laptop uses derived JSON
 !data/distributor_master_mapping.csv
+!data/db_name_and_sold_to_mapping.csv
 !data/sales_detailed_for_claude_full_fixed.tsv
 !data/dealer_sales/
 !data/dealer_sales/**

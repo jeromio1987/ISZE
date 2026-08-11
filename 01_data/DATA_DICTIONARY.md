@@ -74,6 +74,7 @@ Tender monitor feed. Built by `04_tools/ISZE_Tender_Monitor_Install/tender_scrap
 | `pms_category` | oil_filter, air_filter, fuel_filter, brake_pad, clutch, … |
 | `dq_flag` | Phase 1 DQ checks — see Phase 1 workbook |
 | Traffic light (GPS) | green ≥ €150 SPU, amber €50–150, red < €50 |
+| `distributor_code` (DB) — canonical codes, legal-entity name variants, and SAP sold-to/payer codes | `03_analytics/Isuzu/prism/data/db_name_and_sold_to_mapping.csv` (companion to `distributor_master_mapping.csv`; includes an "unresolved" section for SAP codes seen in billing but not yet confirmed — see file notes) |
 
 ---
 

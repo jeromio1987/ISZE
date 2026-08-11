@@ -29,6 +29,7 @@
 | **Weekly / analyst briefs** | `05_memory/briefs/` | Date in filename | n/a |
 | **PMS pilot workspace** | `03_analytics/Isuzu/pms-pilot/` | Project files | `_archive/` when closed |
 | **Distributor mapping CSV** | `03_analytics/Isuzu/prism/data/distributor_master_mapping.csv` | Git | n/a |
+| **DB name/alias/SAP sold-to reference** | `03_analytics/Isuzu/prism/data/db_name_and_sold_to_mapping.csv` | Git | n/a |
 
 ---
 
