@@ -1,6 +1,6 @@
 # ISZE Data manifest — sort-by-topic map
 
-**Last updated:** 2026-07-27 (JP VIN register filed under `07_UIO/vin/`) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
+**Last updated:** 2026-08-11 (pricing history parquets 2023–2025 under `00_derived/pricing_*_YYYY`) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
 
 This is the **data map**. Each subject has a numbered folder under `01_data/` — drop new files into the matching one (§1). A small **wired working-set stays flat at root** because build scripts read it from there (§3).
 
@@ -136,7 +136,7 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 |------|------|------|
 | KPI Master File june 2026.xlsx | `01_data/11_planning/` | ★ **newest** KPI master (april archived 2026-07-16) |
 | budget_per_DB_reviewed_24042026.xlsx | `01_data/11_planning/` | ★⚙ `load_bp_fy27.py` |
-| Action plan FY2027 VPACC_April update.xlsx · ISZE_DB_KPI_Targets_FY2627_v1.xlsx | `01_data/11_planning/` | |
+| Action plan FY2027 VPACC_July update.xlsx · April update · ISZE_DB_KPI_Targets_FY2627_v1.xlsx | `01_data/11_planning/` | July = newest local VPACC (xlsx off-git) |
 | ISZE PL Plan FY2026 2027 2028 20260205_2.xlsx | `01_data/11_planning/` | ★ ("- Copy" archived 2026-07-16) |
 
 ---

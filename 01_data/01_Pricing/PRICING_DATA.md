@@ -1,11 +1,11 @@
 # ISZE Pricing data — map for Spec v1 / engine enquiries
 
-**Last updated:** 2026-08-10 (OEM street 15/22; readiness dashboard; Mode B status brief)  
+**Last updated:** 2026-08-11 (PR00+ZPR1 dated history 2023–2025; current lists 2026)  
 **Spec:** `00_docs/ISZE_Pricing_Spec_v1.md` · **Engine:** `03_analytics/isze_pricing/`  
 **Readiness dashboard (Mode A):** `02_dashboards/pricing/ISZE_Pricing_Engine_Readiness_Dashboard.html`  
 **Dashboard data:** `01_data/14_dashboards/pricing_engine_readiness.json` · **Mode B notes:** `01_data/01_Pricing/PRICING_ENGINE_VS_CLASS_NOTES_B.md`
 
-Raw Excel stays immutable under `_raw/`. Day-to-day work uses the **parquet** tables in `01_data/00_derived/`.
+Raw Excel stays immutable under `_raw/`. Dated vintages also live in `history/` (see `history/README.md`). Day-to-day work uses the **parquet** tables in `01_data/00_derived/`.
 
 ---
 
@@ -18,6 +18,8 @@ Raw Excel stays immutable under `_raw/`. Day-to-day work uses the **parquet** ta
 | **L12M qty weights (Laspeyres / allocation)** | `pricing_simulation_2026_5pct.xlsx` → `PR00 simulation` | `pricing_sim_pr00_l12m.parquet` |
 | **IE40 PR00 list EUR (official condition)** | `Price_file_PR00_IE40_20260810.xlsx` ★ newest | `pricing_pr00_ie40.parquet` |
 | **ZPR1 / CIS customer list prices** | `EXPORT_ZPR1_20260810.xlsx` ★ newest | `pricing_zpr1.parquet` |
+| **ZPR1 dated history (customer-condition)** | `history/ZPR1_2023-01-03.xlsx`, `…_2024-01-03.xlsx`, `…_2025-02-01.xlsx` | `pricing_zpr1_2023/2024/2025.parquet` |
+| **PR00 dated history (IE40 list EUR)** | `history/IE40_PR00_2023-12-31.xlsx`, `…_2024-12-31.xlsx`, `…_2025-12-31.xlsx` | `pricing_pr00_ie40_2023/2024/2025.parquet` |
 | **ZPR1 customer dim** | same | `pricing_zpr1_customers.parquet` |
 | **Key ZPR1 SPs wide (UMI/UTI/RUS/CBC…)** | same | `pricing_zpr1_key_wide.parquet` |
 | **One join for chat / Spec checks** | — | `pricing_pn_enquiry.parquet` |
@@ -40,19 +42,45 @@ Keep using `Price_file_2026_full.xlsx` for **class + BP_JPY + FOB**.
 
 ---
 
+## 2026-08-11 — dated PR00 + ZPR1 history (2023–2025)
+
+| Source (Downloads) | Landed as | Notes |
+|--------------------|-----------|-------|
+| `2023.xlsx` (mixed) | `_raw/2023.xlsx` → split `history/ZPR1_2023-01-03.xlsx` + `history/IE40_PR00_2023-12-31.xlsx` | ZPR1 sheets 1799/1797/2372/2733/2734 (~312k rows; VF 2023-01-03 / 2023-03-01) · PR00 tab ~607k Material/EUR (7 `#VALUE!` → null) · parquet `pricing_*_2023.parquet` |
+| `ZPR1_UPLOAD_LAYOUT_2024.xlsx` | `_raw/ZPR1_UPLOAD_LAYOUT_2024.xlsx` + `history/ZPR1_2024-01-03.xlsx` | Valid From ~2024-01-03 · sheets 1799/1797/2372/2733/2734 · ~1.50M rows |
+| `ZPR1_UPLOAD_LAYOUT_.xlsx` (2025) | `_raw/ZPR1_UPLOAD_LAYOUT_2025.xlsx` + `history/ZPR1_2025-02-01.xlsx` | Valid From ~2025-02-01 · sheets 1799/1797/2372 · ~0.36M rows |
+| `PR00.xlsx` (tabs `2024` / `2025`) | `_raw/PR00_2024_2025.xlsx` + `history/IE40_PR00_2024-12-31.xlsx` / `IE40_PR00_2025-12-31.xlsx` | ~554k / ~523k PN rows |
+
+**Billing:** gross / SPA / condition columns **will not** be on `sales_fact` (Jerome 2026-08-11) — net-only for ISZE analytics.  
+**Do not quote** list-to-pocket leakage until year-matched PR00↔billing joins are validated.
+
+---
+
 ## Folder layout
 
 ```
 01_data/01_Pricing/
   PRICING_DATA.md
+  history/                               ← dated vintages PR00+ZPR1 2023–2025
+    README.md
+    ZPR1_2023-01-03.xlsx
+    ZPR1_2024-01-03.xlsx
+    ZPR1_2025-02-01.xlsx
+    IE40_PR00_2023-12-31.xlsx
+    IE40_PR00_2024-12-31.xlsx
+    IE40_PR00_2025-12-31.xlsx
   Price_file_2026_full.xlsx              ← calc book (class/BP)
   Price_file_PR00_IE40_20260810.xlsx     ← newest IE40 PR00 list
   EXPORT_ZPR1_20260810.xlsx              ← newest ZPR1 export
   _raw/                                  ← immutable as-received
+    2023.xlsx                            ← mixed PR00+ZPR1 (split into history/)
     CY2026_Price_Revision_PRICE_CD.xlsx
     Price_file_2026_full.xlsx
     Price_file_PR00_IE40_20260810.xlsx
     EXPORT_ZPR1_20260810.xlsx
+    PR00_2024_2025.xlsx
+    ZPR1_UPLOAD_LAYOUT_2024.xlsx
+    ZPR1_UPLOAD_LAYOUT_2025.xlsx
     pricing_simulation_2026_5pct.xlsx
     …
 
@@ -61,7 +89,10 @@ Keep using `Price_file_2026_full.xlsx` for **class + BP_JPY + FOB**.
   pricing_revision_cd.parquet
   pricing_sim_pr00_l12m.parquet
   pricing_pr00_ie40.parquet
-  pricing_zpr1.parquet
+  pricing_pr00_ie40_2023/2024/2025.parquet  ← history extracts (not engine-wired)
+  pricing_zpr1.parquet                   ← current 2026
+  pricing_zpr1_2023/2024/2025.parquet    ← history extracts (not engine-wired)
+  pricing_history_years.meta.json
   pricing_zpr1_customers.parquet|.csv
   pricing_zpr1_key_wide.parquet
   pricing_pn_enquiry.parquet
@@ -174,8 +205,9 @@ python 01_data/91_build/build_price_elasticity_db_dlr_ituk_uti.py
 
 ## Caveats (Spec-aligned)
 
-- PRICE CD is one revision snapshot, not multi-year PR00 history.
-- `EXPORT_ZPR1` is **customer-condition** list price (EUR), not BP_JPY. Restate vs PR00 before EU read-across (enquiry columns `zpr1_umi_vs_pr00` / `zpr1_uti_vs_pr00`).
+- PRICE CD is one revision snapshot; **ZPR1** and **PR00** dated history now cover **2023–2025** in `history/` (+ current 2026 lists). Year-matched joins still need validation before quoting leakage.
+- `EXPORT_ZPR1` / upload-layout ZPR1 are **customer-condition** list price (EUR), not BP_JPY. Restate vs PR00 before EU read-across (enquiry columns `zpr1_umi_vs_pr00` / `zpr1_uti_vs_pr00`).
 - UTI ≠ UMI — never blend Israel IDS/GPS with UTI ZPR1 rows.
 - ~15% billed revenue may still lack PR00 (`NO_LIST`).
+- Billing is **net-only** — no gross/SPA decompose (closed 2026-08-11).
 - Supersession: use `newest_pn` / `is_superseded_row`.
