@@ -176,7 +176,7 @@ def fy_pms_billing(hu: pd.DataFrame) -> dict[str, dict[int, float]]:
 
 
 def brake_pad_mix(hu: pd.DataFrame) -> list[dict]:
-    """Calendar-year genuine vs BVP pad qty/€ share."""
+    """Fiscal-year genuine vs BVP pad qty/€ share (FY-first)."""
     cat = C.load_catalog()
     xref = pd.read_csv(DER / "genuine_bvp_crossref.csv", dtype=str)
     bvp = set(xref["bvp_pn"].dropna().str.strip().map(C.norm_pn))
@@ -187,8 +187,8 @@ def brake_pad_mix(hu: pd.DataFrame) -> list[dict]:
     pads["is_bvp"] = pads["part_number"].isin(bvp)
     qty_col = "billing_qty" if "billing_qty" in pads.columns else None
     rows = []
-    for y in (2024, 2025):
-        g = pads[pads["cy"] == y]
+    for y in (2025, 2026):
+        g = pads[pads["fy"] == y]
         if g.empty:
             continue
         gen = g[~g["is_bvp"]]
@@ -198,6 +198,7 @@ def brake_pad_mix(hu: pd.DataFrame) -> list[dict]:
         tot = gen_eur + bvp_eur
         rows.append({
             "year": y,
+            "year_label": f"FY{y}",
             "gen_qty": float(gen[qty_col].sum()) if qty_col else 0.0,
             "bvp_qty": float(bv[qty_col].sum()) if qty_col else 0.0,
             "bvp_share_eur_pct": (bvp_eur / tot * 100) if tot else 0.0,
@@ -241,14 +242,14 @@ def top_pn_losers(hu: pd.DataFrame, n: int = 7) -> list[list[str]]:
     return rows, label
 
 
-def cy_genuine_hole(hu: pd.DataFrame) -> dict:
-    """CY2024→CY2025 genuine-only drop vs PMS-basket share."""
+def fy_genuine_hole(hu: pd.DataFrame) -> dict:
+    """FY2025→FY2026 genuine-only drop vs PMS-basket share (FY-first)."""
     hu = bucket_sales(hu)
     cat = C.load_catalog()
     j = hu.merge(cat[["part_number", "pms_category"]], on="part_number", how="left")
     out = {}
-    for y in (2024, 2025):
-        g = j[j["cy"] == y]
+    for y in (2025, 2026):
+        g = j[j["fy"] == y]
         out[y] = {
             "genuine_only": float(g.loc[g["bucket"] == "genuine_only", "net_sales_value"].sum()),
             "bvp": float(g.loc[g["bucket"] == "bvp", "net_sales_value"].sum()),
@@ -268,9 +269,9 @@ def cy_genuine_hole(hu: pd.DataFrame) -> dict:
                 g.loc[g["pms_category"].isin(PMS_CATS), "net_sales_value"].sum()
             ),
         }
-    d_go = out[2025]["genuine_only"] - out[2024]["genuine_only"]
-    d_pms_go = out[2025]["pms_genuine"] - out[2024]["pms_genuine"]
-    d_pms_bvp = out[2025]["pms_bvp"] - out[2024]["pms_bvp"]
+    d_go = out[2026]["genuine_only"] - out[2025]["genuine_only"]
+    d_pms_go = out[2026]["pms_genuine"] - out[2025]["pms_genuine"]
+    d_pms_bvp = out[2026]["pms_bvp"] - out[2025]["pms_bvp"]
     share = (d_pms_go / d_go) if d_go else 0.0
     return {
         "d_genuine_only": d_go,
@@ -278,6 +279,7 @@ def cy_genuine_hole(hu: pd.DataFrame) -> dict:
         "d_pms_bvp": d_pms_bvp,
         "outside_share": 1.0 - share if d_go < 0 else None,
         "by_year": out,
+        "label": "FY2025 → FY2026",
     }
 
 
@@ -296,34 +298,31 @@ def aim_rows(profile: dict) -> list[list[str]]:
     return rows
 
 
-def gps_cy_fy_chart(path: Path, profile: dict, display: str) -> dict:
-    """CY + FY + FY excl. warranty. Returns takeaway numbers."""
+def gps_fy_chart(path: Path, profile: dict, display: str) -> dict:
+    """Fiscal GPS % + fiscal GPS % excl. warranty only (max 2 lines). FY-first."""
     code = profile["pms_code"]
     ww = pd.read_csv(DER / "wallet_waterfall.csv")
     ww = ww[(ww["distributor_code"] == code) & (ww["year"] <= 2025)]
-    cy_by_y = {}
-    wallet_by_y = {}
-    for _, r in ww.iterrows():
-        y = int(r["year"])
-        v = float(r["gps_pct"])
-        cy_by_y[y] = round(v * 100, 1) if v <= 1.5 else round(v, 1)
-        wallet_by_y[y] = float(r["theoretical_wallet_eur"])
+    wallet_by_y = {
+        int(r["year"]): float(r["theoretical_wallet_eur"]) for _, r in ww.iterrows()
+    }
 
     gm = C.load_gps_master(profile)
     seg = C.load_segmented_gps(profile) or {}
     w25 = float(seg.get("wallet_2025") or wallet_by_y.get(2025) or gm.get("max_spend") or 1)
     fy_by_y = {
         2024: round(float(gm["gps_pct_FY2024"]) * 100, 1) if gm.get("gps_pct_FY2024") else np.nan,
-        2025: round(float(seg.get("gps_FY2025") or gm.get("gps_pct_FY2025") or 0) * 100, 1)
-              if (seg.get("gps_FY2025") or gm.get("gps_pct_FY2025")) else np.nan,
-        2026: round(float(seg.get("gps_FY2026") or gm.get("gps_pct_FY2026") or 0) * 100, 1)
-              if (seg.get("gps_FY2026") or gm.get("gps_pct_FY2026")) else np.nan,
+        2025: np.nan,
+        2026: np.nan,
     }
-    # Prefer segmented headline when available
     if seg.get("gps_FY2025") is not None:
         fy_by_y[2025] = round(float(seg["gps_FY2025"]) * 100, 1)
+    elif gm.get("gps_pct_FY2025") is not None:
+        fy_by_y[2025] = round(float(gm["gps_pct_FY2025"]) * 100, 1)
     if seg.get("gps_FY2026") is not None:
         fy_by_y[2026] = round(float(seg["gps_FY2026"]) * 100, 1)
+    elif gm.get("gps_pct_FY2026") is not None:
+        fy_by_y[2026] = round(float(gm["gps_pct_FY2026"]) * 100, 1)
 
     warr = warranty_row(profile)
     nets = {
@@ -341,17 +340,19 @@ def gps_cy_fy_chart(path: Path, profile: dict, display: str) -> dict:
         else:
             fy_ex[y] = round(max(n - w, 0) / denom * 100, 1)
 
-    years = [2023, 2024, 2025, 2026]
-    cy = [cy_by_y.get(y, np.nan) for y in years]
+    # X-axis = fiscal years with data (no empty CY slot)
+    years = [y for y in (2024, 2025, 2026) if not np.isnan(fy_by_y.get(y, np.nan))]
+    if not years:
+        years = [2024, 2025, 2026]
     fy = [fy_by_y.get(y, np.nan) for y in years]
     fy_x = [fy_ex.get(y, np.nan) for y in years]
 
     fig, ax = ct._base_fig((10.2, 4.3))
     x = np.arange(len(years))
+    # Max 2 lines: headline FY (red) + excl. warranty (charcoal)
     series = [
-        ("Calendar-year GPS %", cy, ct.RED, 2.8),
-        ("Fiscal-year GPS %", fy, ct.CHARCOAL, 1.8),
-        ("Fiscal-year GPS % excl. warranty", fy_x, ct.GRAY_MED, 1.8),
+        ("Fiscal-year GPS %", fy, ct.RED, 2.8),
+        ("Fiscal-year GPS % excl. warranty", fy_x, ct.CHARCOAL, 1.8),
     ]
     for name, vals, color, lw in series:
         arr = np.array(vals, dtype=float)
@@ -372,21 +373,20 @@ def gps_cy_fy_chart(path: Path, profile: dict, display: str) -> dict:
             fontweight="bold" if color == ct.RED else "normal",
         )
     ax.set_xticks(x)
-    ax.set_xticklabels([str(y) for y in years], fontsize=11, color=ct.CHARCOAL)
+    ax.set_xticklabels([f"FY{y}" for y in years], fontsize=11, color=ct.CHARCOAL)
     ax.margins(x=0.05)
     fig.subplots_adjust(right=0.72)
     ax.set_title(
-        f"{display} GPS % — calendar year, fiscal year, and fiscal excl. warranty",
+        f"{display} GPS % — fiscal year (headline vs excl. warranty)",
         fontsize=12, color=ct.CHARCOAL, loc="left", fontweight="bold", pad=12,
     )
     ct._save(fig, str(path))
 
-    cy_vals = [v for v in cy if not (isinstance(v, float) and np.isnan(v))]
     return {
-        "cy_peak": max(cy_vals) if cy_vals else None,
-        "cy_last": cy_by_y.get(2025),
+        "fy25": fy_by_y.get(2025),
         "fy26": fy_by_y.get(2026),
         "fy26_ex": fy_ex.get(2026),
+        "fy25_ex": fy_ex.get(2025),
         "warr26": warr["fy2026"],
         "net26": nets[2026],
         "show_pct": bool(seg.get("show_pct", True)),
@@ -406,7 +406,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     hu = load_hu_slice(sold_to)
     fy = fy_wallet_mix(hu)
     fy_pms = fy_pms_billing(hu)
-    hole = cy_genuine_hole(hu)
+    hole = fy_genuine_hole(hu)
     pads = brake_pad_mix(hu)
     pn_rows, pn_label = top_pn_losers(hu)
     chart_dir = out_dir(key) / "charts_out"
@@ -443,11 +443,11 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     db.bullet_list(
         s,
         [
-            "GPS — calendar year and fiscal year on one chart (incl. warranty)",
+            "GPS — fiscal year (headline vs excl. warranty; max two lines)",
             "FY2025 → FY2026 wallet mix (Genuine / Genuine with BVP alternative / BVP)",
-            "Where the money went — outside the service-parts basket",
-            "Service parts: calendar-year capture vs network + fiscal-year billing",
-            "Brake pads — BVP share of total brake pad sales",
+            "Where the money went — outside the service-parts basket (FY)",
+            "Service parts: CY capture vs network + FY billing (capture % is CY-only by design)",
+            "Brake pads — BVP share of total brake pad sales (FY)",
             "AIM exposure",
             "Warranty — two lenses",
             "How to use this in the meeting",
@@ -456,30 +456,30 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     )
     page += 1
 
-    # GPS chart
-    ginfo = gps_cy_fy_chart(chart_dir / "modeb_gps.png", profile, display)
+    # GPS chart — FY only, max 2 lines
+    ginfo = gps_fy_chart(chart_dir / "modeb_gps.png", profile, display)
     take = []
-    if ginfo.get("cy_peak") is not None and ginfo.get("cy_last") is not None:
+    if ginfo.get("fy25") is not None and ginfo.get("fy26") is not None:
         take.append(
-            f"Red = calendar-year GPS. Recent peak {ginfo['cy_peak']:.1f}%; "
-            f"CY2025 = {ginfo['cy_last']:.1f}%."
+            f"Red = fiscal-year GPS (frozen CY2025 wallet). "
+            f"FY25 {ginfo['fy25']:.1f}% → FY26 {ginfo['fy26']:.1f}%."
         )
-    if ginfo.get("fy26") is not None:
+    elif ginfo.get("fy26") is not None:
         take.append(
-            f"Black = fiscal-year GPS (frozen CY2025 wallet). FY26 headline "
+            f"Red = fiscal-year GPS (frozen CY2025 wallet). FY26 headline "
             f"{ginfo['fy26']:.1f}%."
         )
     if ginfo.get("fy26_ex") is not None and ginfo.get("warr26"):
         share = ginfo["warr26"] / ginfo["net26"] * 100 if ginfo["net26"] else 0
         take.append(
-            f"Grey = fiscal GPS after removing warranty parts (€). FY26 ≈ "
+            f"Black = fiscal GPS after removing warranty parts (€). FY26 ≈ "
             f"{ginfo['fy26_ex']:.1f}% "
             f"(warranty {eur(ginfo['warr26'])} ≈ {share:.0f}% of FY26 billing)."
         )
     if ginfo.get("uio_2025") and ginfo.get("uio_2026"):
         take.append(
             f"Fleet {ginfo['uio_2025']:,.0f} → {ginfo['uio_2026']:,.0f} "
-            "(working CY2026 estimate)."
+            "(working year-end estimate under the FY2027 target)."
         )
     for w in (profile.get("watch") or [])[:1]:
         if "GPS" in w or "gps" in w or "denominator" in w.lower():
@@ -487,7 +487,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
             break
     db.build_two_col(
         prs,
-        title="GPS: calendar year, fiscal year, and after warranty",
+        title="GPS: fiscal year headline vs after warranty",
         chart_path=str(chart_dir / "modeb_gps.png"),
         eyebrow="GPS",
         page_no=page,
@@ -560,10 +560,10 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
         )
         page += 1
 
-    # Drivers — plain English
+    # Drivers — plain English, FY-first
     s = db.build_content(
         prs,
-        "Where the genuine drop sits (calendar 2024 → 2025)",
+        "Where the genuine drop sits (FY2025 → FY2026)",
         eyebrow="Drivers",
         page_no=page,
     )
@@ -572,7 +572,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     d_bvp = hole["d_pms_bvp"]
     outside = hole.get("outside_share")
     driver_bullets = [
-        f"Genuine-only sales moved {eur(d_go)} from CY2024 to CY2025.",
+        f"Genuine-only sales moved {eur(d_go)} from FY2025 to FY2026.",
         f"Of that, the routine service basket (filters, pads, rotors) moved "
         f"{eur(d_pms)} on genuine-only; BVP in that basket moved {eur(d_bvp)}.",
     ]
@@ -580,6 +580,10 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
         driver_bullets.append(
             f"So about {outside * 100:.0f}% of the genuine-only drop sits "
             f"outside routine service parts."
+        )
+    elif d_go >= 0:
+        driver_bullets.append(
+            "Genuine-only did not fall on this FY cut — check category movers and H1 for pressure points."
         )
     driver_bullets.append(
         "Meeting line: check high-value assemblies / sensors before blaming "
@@ -667,19 +671,19 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
         )
         page += 1
 
-    # Brake pads
+    # Brake pads (FY)
     if pads:
         by_y = {r["year"]: r for r in pads}
-        y0, y1 = 2024, 2025
+        y0, y1 = 2025, 2026
         if y0 in by_y and y1 in by_y:
             s = db.build_content(
                 prs,
-                "Brake pads — BVP share of total brake pad sales",
+                "Brake pads — BVP share of total brake pad sales (FY)",
                 eyebrow="Brakes",
                 page_no=page,
             )
             pad_rows = [
-                ["", str(y0), str(y1)],
+                ["", "FY2025", "FY2026"],
                 ["Genuine qty", f"{by_y[y0]['gen_qty']:.0f}", f"{by_y[y1]['gen_qty']:.0f}"],
                 ["BVP qty", f"{by_y[y0]['bvp_qty']:.0f}", f"{by_y[y1]['bvp_qty']:.0f}"],
                 [

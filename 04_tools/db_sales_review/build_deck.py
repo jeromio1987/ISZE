@@ -289,19 +289,49 @@ def build(dbkey: str):
     years = [y for y in sorted(total) if 2019 <= y <= 2026]
     series = {}
     segs = {k: v for k, v in uio.items() if k != "total"}
-    if len(segs) > 1:
-        namemap = {"lcv": "LCV / D-Max", "ld": "CV — LD", "md": "CV — MD", "f_series": "F-Series"}
+    namemap = {"lcv": "LCV / D-Max", "ld": "CV — LD", "md": "CV — MD", "f_series": "F-Series"}
+    # Avoid Total ≈ dominant-segment double line (IBX: LCV ~98% of fleet).
+    # Plot Total only when one segment dominates; otherwise plot meaningful
+    # segments (≥5% of latest year) without a redundant Total series.
+    latest = years[-1] if years else None
+    tot_latest = float(total.get(latest, 0) or 0) if latest is not None else 0.0
+    seg_latest = {}
+    for seg, vals in segs.items():
+        vv = {int(k): v for k, v in vals.items()}
+        if sum(vv.values()) > 0:
+            seg_latest[seg] = float(vv.get(latest, 0) or 0)
+    dominant_share = (max(seg_latest.values()) / tot_latest) if tot_latest and seg_latest else 1.0
+    meaningful = [
+        seg for seg, v in seg_latest.items()
+        if tot_latest and (v / tot_latest) >= 0.05
+    ]
+    fleet_mix_note = None
+    if len(seg_latest) <= 1 or dominant_share >= 0.90 or len(meaningful) <= 1:
         series["Total fleet"] = [total.get(y, 0) for y in years]
-        for seg, vals in sorted(segs.items(), key=lambda kv: -sum(kv[1].values())):
-            vv = {int(k): v for k, v in vals.items()}
-            if sum(vv.values()) > 0:
-                series[namemap.get(seg, seg)] = [vv.get(y, 0) for y in years]
+        if seg_latest and tot_latest:
+            parts = [
+                f"{namemap.get(s, s)} {seg_latest[s]:,.0f}"
+                for s in sorted(seg_latest, key=lambda s: -seg_latest[s])
+            ]
+            fleet_mix_note = (
+                f"End-{latest} mix: " + "; ".join(parts) + "."
+            )
     else:
-        series["Fleet (units)"] = [total.get(y, 0) for y in years]
+        for seg in sorted(meaningful, key=lambda s: -seg_latest[s]):
+            vv = {int(k): v for k, v in segs[seg].items()}
+            series[namemap.get(seg, seg)] = [vv.get(y, 0) for y in years]
+        tiny = [s for s in seg_latest if s not in meaningful]
+        if tiny:
+            fleet_mix_note = (
+                "Smaller segments not plotted (<5% of fleet): "
+                + ", ".join(f"{namemap.get(s, s)} {seg_latest[s]:,.0f}" for s in tiny)
+                + "."
+            )
     ct.trend_line([str(y) for y in years], series, cp("uio.png"),
                   title=f"{disp} fleet — {total[years[0]]:,} ({years[0]}) to "
                         f"{total[years[-1]]:,} ({years[-1]} forecast)",
                   value_fmt="{:,.0f}")
+    S["fleet_mix_note"] = fleet_mix_note
 
     # -------------------------------------------------------------- deck --
     prs = db.new_presentation()
@@ -549,21 +579,28 @@ def build(dbkey: str):
     growth = (total.get(2026, 0) / total.get(2025, 1) - 1) if total.get(2025) else 0
     fleet_title = ("The fleet is expected to decline in 2026" if growth < 0
                    else "The fleet is expected to grow in 2026")
+    fleet_takes = [
+        f"Fleet size (calendar year): {total.get(2025, 0):,} vehicles in 2025 → "
+        f"{total.get(2026, 0):,} working estimate for end-2026 ({growth:+.1%}).",
+        "The chart is calendar years 2019–2026 only. 2026 is a working year-end estimate, "
+        "not a fiscal-year figure.",
+    ]
+    if S.get("fleet_mix_note"):
+        fleet_takes.append(S["fleet_mix_note"])
+    fleet_takes.append(
+        f"The FY2027 Sales-to-Dealer target starts from that fleet change, then applies "
+        f"a {s2d['price']:.0%} price adjustment and {s2d['additional']:.1%} additional growth."
+    )
+    fleet_takes.append(
+        "So the target is built from a slightly smaller fleet — not from an assumed growth story."
+        if growth < 0 else
+        "The target reflects the working fleet outlook without extending the chart beyond 2026."
+    )
     db.build_two_col(
         prs, title=fleet_title,
         chart_path=cp("uio.png"), eyebrow="Fleet & FY2027 Target", page_no=page,
         takeaway_heading="What this means for FY2027",
-        takeaways=[
-            f"Fleet size (calendar year): {total.get(2025, 0):,} vehicles in 2025 → "
-            f"{total.get(2026, 0):,} working estimate for end-2026 ({growth:+.1%}).",
-            "The chart is calendar years 2019–2026 only. 2026 is a working year-end estimate, "
-            "not a fiscal-year figure.",
-            f"The FY2027 Sales-to-Dealer target starts from that fleet change, then applies "
-            f"a {s2d['price']:.0%} price adjustment and {s2d['additional']:.1%} additional growth.",
-            ("So the target is built from a slightly smaller fleet — not from an assumed growth story."
-             if growth < 0 else
-             "The target reflects the working fleet outlook without extending the chart beyond 2026."),
-        ])
+        takeaways=fleet_takes)
     page += 1
 
     # ---- target build-up ---------------------------------------------------

@@ -54,6 +54,9 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
 
 ### Locked FY2027 lenses
 
+- **FY-first:** Prefer fiscal-year figures on every customer slide when available;
+  use calendar year only as fallback. Exception: parts H1 / slide-3 window stays
+  **CY H1** (Jan–Jun). PMS **capture %** stays complete-CY (no FY capture model).
 - The customer-facing target is **Sales-to-Dealer** from Dashboard columns P:U:
   `FY2026 Sales-to-Dealer × (1 + fleet movement) × 1.05 × 1.018`.
   If FY2026 Sales-to-Dealer is unavailable, use FY2026 ISZE billing divided by 0.65
@@ -66,6 +69,9 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
 - Fleet charts show **2019–2026 only**. The 2026 point is labelled as a working
   year-end estimate. UK LCV CY2026 is fixed at **44,926 units**, about **6% below**
   2025, and the title must state decline rather than imply continued growth.
+- **No Total≈segment double line.** If one segment is ≥90% of the latest fleet
+  (e.g. IBX LCV ~98%), plot **Total fleet only** and put the mix in a takeaway
+  bullet. Only plot multiple segment lines when two or more are each ≥5% of fleet.
 
 ---
 
@@ -209,21 +215,23 @@ Outputs under `09_meetings\<DB>_Sales_Review_2026\`:
 
 1. Divider — prep detail; pick slides to share  
 2. Agenda  
-3. **GPS** — three lines on one chart: calendar-year GPS %, fiscal-year GPS %, fiscal GPS **excl. warranty**  
+3. **GPS** — **max two FY lines**: fiscal-year GPS % + fiscal GPS **excl. warranty** (no calendar-year GPS line on the chart)  
 4–5. FY25→FY26 wallet mix (Genuine only / Genuine with BVP alternative / BVP)  
-6–7. Drivers — plain English where the genuine drop sits; top PN losers outside PMS  
-8. Service-parts **CY capture %** vs network (complete calendar year only — never YTD vs full-year expected)  
+6–7. Drivers — plain English where the genuine drop sits **on FY**; top PN losers outside PMS  
+8. Service-parts **CY capture %** vs network (complete calendar year only — never YTD vs full-year expected; capture % has no FY twin)  
 9. Same five lines as **FY € billing** (so fiscal is visible even though capture % is CY)  
-10. Brake pads — **BVP share of total brake pad sales (€)**, not PMS capture  
+10. Brake pads — **BVP share of total brake pad sales (€)** on **FY**, not PMS capture  
 11. AIM exposure from `aim_gps_matrix.csv`  
 12. Warranty — claim-price CY vs fiscal GPS expense (two lenses, labelled)  
 13. Meeting bridge table  
 
 ### Locked language / lenses (from Hungary round)
 
+- **FY-first on all customer slides.** Prefer fiscal-year numbers when available; fall back to calendar year only when FY does not exist. **Exception:** Mode A slide 3 / parts H1 window stays **CY H1** (Jan–Jun like-for-like).  
+- **GPS deep-dive chart:** max **two** lines — FY GPS % and FY GPS % excl. warranty. Never a third CY GPS series.  
 - **Genuine with BVP alternative** — never “genuine contested” on slides.  
-- PMS primary = **total** capture.  
-- Fleet chart = calendar years; FY2027 target bullets say so explicitly.  
+- PMS primary = **total** capture; capture % remains **complete CY only** (by design).  
+- Fleet chart = calendar years (UIO source); FY2027 target bullets say so explicitly. No Total≈dominant-segment double line (≥90% → Total only + mix takeaway).  
 - No `INTERNAL` eyebrow — deep dive may be shared selectively.  
 - Israel: **UMI ≠ UTI** on any IDS-linked slide.  
 - PMS year = `latest_complete_pms_year()` (full CY only).
