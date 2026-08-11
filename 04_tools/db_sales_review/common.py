@@ -339,12 +339,29 @@ def load_segmented_gps(profile: dict) -> dict | None:
     }
 
 
+def latest_complete_pms_year(years) -> int:
+    """Latest full calendar year in a PMS series.
+
+    Mid-year rows (e.g. CY2026 YTD in Aug 2026) keep a full-year expected_qty
+    denominator. Pairing that with a partial numerator crushes capture %
+    (Hungary brake rotor: 5.1% on 2026 YTD vs 36.1% on CY2025 full year — same
+    file, same model). Decks and peer bars must use a complete year only.
+    """
+    from datetime import date
+    ys = sorted({int(y) for y in years if pd.notna(y)})
+    if not ys:
+        raise SystemExit("No PMS years available")
+    cy = date.today().year
+    complete = [y for y in ys if y < cy]
+    return max(complete) if complete else max(ys)
+
+
 def load_pms(profile: dict, year: int | None = None):
     p = pd.read_csv(DERIVED / "pms_capture_by_db_year.csv")
     p = p[(p["distributor_code"] == profile["pms_code"]) & (p["line_type"] == "total")]
     if p.empty:
         raise SystemExit(f"pms_code '{profile['pms_code']}' not in pms_capture_by_db_year.csv")
-    year = year or int(p["year"].max())
+    year = year or latest_complete_pms_year(p["year"])
     return year, p[p["year"] == year].reset_index(drop=True)
 
 
@@ -356,7 +373,7 @@ def pms_vs_network(profile: dict, categories=None, year: int | None = None) -> d
                                 "brake_pad", "brake_rotor"]
     p = pd.read_csv(DERIVED / "pms_capture_by_db_year.csv")
     p = p[p["line_type"] == "total"]
-    year = year or int(p["year"].max())
+    year = year or latest_complete_pms_year(p["year"])
     p = p[p["year"] == year]
     code = profile["pms_code"]
     out = {}

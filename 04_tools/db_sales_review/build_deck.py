@@ -187,6 +187,12 @@ QUESTIONS = {
     "Injectors": [
         "Is this fewer failures, or repairs moving out of the network?",
         "Is the exchange/reman route competing with new parts here?",
+        "Are dealers still quoting these part numbers, or have they dropped off the workshop menu?",
+    ],
+    "Turbo": [
+        "Is this fewer turbo failures, or jobs moving to independents?",
+        "Is reman / exchange competing with new units on price or lead time?",
+        "Any availability problems on the fast-moving turbo lines?",
     ],
     "Suspension": [
         "Is this pricing against the independent aftermarket?",
@@ -266,13 +272,16 @@ def build(dbkey: str):
     plabels = {"oil_filter": "Oil filter", "fuel_filter": "Fuel filter", "air_filter": "Air filter",
                "brake_pad": "Brake pad", "brake_rotor": "Brake rotor"}
     pkeys = [k for k in plabels if k in peers]
+    pms_yr = S.get("pms_year")
     ct.bar_chart(
         [plabels[k] for k in pkeys],
         {disp: [peers[k]["db"] for k in pkeys],
          "Network (all other markets)": [peers[k]["network"] for k in pkeys],
          "Best market in the network": [peers[k]["best"] for k in pkeys]},
         cp("pms.png"),
-        title=f"Service-parts capture by category — {disp} vs the rest of the network (%)",
+        title=(f"Service-parts capture by category — {disp} vs network "
+               f"(CY{pms_yr} full year, %)" if pms_yr else
+               f"Service-parts capture by category — {disp} vs the rest of the network (%)"),
         ylabel="% of fleet service demand captured", value_fmt="{:,.1f}", figsize=(10.2, 4.5))
 
     uio = uio_live
@@ -297,15 +306,23 @@ def build(dbkey: str):
     # -------------------------------------------------------------- deck --
     prs = db.new_presentation()
     db.build_cover(prs, title=f"{disp} Sales Review\n& FY2027 Target",
-                   subtitle=f"{S['name']}  ·  July 2026",
+                   subtitle=f"{S['name']}  ·  August 2026",
                    eyebrow=f"ISZE  ·  {S['country'].upper()}  ·  {p['key']}")
 
-    decliners = [c for c in cats if c["d"] < 0][:2]
+    # Skip catch-all / junk categories on the deep-dive stage (e.g. radio + DEF
+    # under Miscellaneous). Prefer real commodity drops: brakes, injectors, turbo.
+    _DECLINE_SKIP = {"Miscellaneous", "UNCLASSIFIED", "Hardware", "Belts"}
+    decliners = [c for c in cats if c["d"] < 0 and c["cat"] not in _DECLINE_SKIP][:3]
     agenda = ["Q1 FY2027 Sales Review"] if PBI else []
     agenda += ["Parts Performance — category movers"]
     agenda += [f"Parts Performance — {c['cat']}" for c in decliners]
     agenda += ["Parts Performance — where volume grew"]
-    if S["new_business"]:
+    _nb_agenda = [
+        x for x in (S.get("new_business") or [])
+        if str(x.get("pn") or "").strip().upper() not in {"TRANSPORT", "FREIGHT", "SHIPPING"}
+        and "transport" not in str(x.get("desc") or "").lower()
+    ]
+    if _nb_agenda:
         agenda += ["New Business — validation queue"]
     agenda += ["Sales-to-Dealer Outlook"]
     if gps:
@@ -376,8 +393,6 @@ def build(dbkey: str):
     page += 1
 
     # ---- one slide per material declining category ------------------------
-    bvp = S["bvp"]
-    bvp_fell = bvp["bvp_current"] < bvp["bvp_prior"]
     for n_cat, cat in enumerate(decliners):
         rows = [r for r in S["top_decl_itc"] if r["cat"] == cat["cat"]][:3]
         # Title-case the category so "Brake parts" does not read "Brake parts Performance"
@@ -389,18 +404,8 @@ def build(dbkey: str):
         for r in rows:
             q = f", {abs(r['dq']):,.0f} fewer pieces" if r["dq"] < 0 else ""
             bullets.append(f"{r['pn']} ({r['desc']}): {eur(r['prior'])} to {eur(r['current'])}{q}.")
-        # The genuine-vs-BVP read is a whole-window fact, not a per-category one —
-        # state it once, on the first decline slide only. Repeating it verbatim on
-        # every decline slide reads as padding.
-        if bvp["bvp_prior"] > 0 and n_cat == 0:
-            bullets.append(
-                f"The value-tier range moved the same way, not the other way: BVP billing went from "
-                f"{eur(bvp['bvp_prior'])} to {eur(bvp['bvp_current'])} across the window. "
-                "So this does not read as a switch from genuine to value tier."
-                if bvp_fell else
-                f"BVP billing rose over the same window ({eur(bvp['bvp_prior'])} to "
-                f"{eur(bvp['bvp_current'])}) — worth checking how much of this is a move to the "
-                "value tier rather than lost business.")
+        # Do NOT attach whole-window BVP movement to a single category decline —
+        # that BVP total is cross-category and reads as a false value-tier proof.
         db.bullet_list(s, bullets, Inches(0.32), Inches(1.32), Inches(12.7), Inches(2.9), size=14)
         db.txt(s, "Questions for us to work through together", Inches(0.32), Inches(4.20),
                Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
@@ -422,19 +427,26 @@ def build(dbkey: str):
         gbul.append(", ".join(f"{c['cat']} {c['dp']:+.0%}" for c in risers if c["dp"] is not None)
                     + " — where the volume went.")
     if S.get("warranty_claim"):
-        gbul.append(f"Several of these are the kind of item that also moves on a campaign or claim. "
-                    f"{S['country']} warranty parts ran to {eur(S['warranty_claim'], True)} across "
-                    "CY2025, so we would not read this list as purely commercial growth without "
-                    "checking it against claims together.")
+        gbul.append(
+            f"Several of these are the kind of item that also moves on a campaign or claim. "
+            f"{S['country']} CY2025 warranty parts (claim-price basis) were "
+            f"{eur(S['warranty_claim'], True)} — separate from fiscal GPS warranty expense. "
+            "Do not read this growth list as purely commercial without checking claims together."
+        )
     gbul.append("Worth agreeing which of these are repeatable and which were one-off.")
     db.bullet_list(s, gbul, Inches(0.32), Inches(4.20), Inches(12.7), Inches(2.4), size=14)
     page += 1
 
     # ---- New Business quarantine ------------------------------------------
-    if S["new_business"]:
+    new_biz = [
+        x for x in (S.get("new_business") or [])
+        if str(x.get("pn") or "").strip().upper() not in {"TRANSPORT", "FREIGHT", "SHIPPING"}
+        and "transport" not in str(x.get("desc") or "").lower()
+    ]
+    if new_biz:
         s = db.build_content(prs, f"New Business — validation queue ({L26})",
                              eyebrow="Parts Performance", page_no=page)
-        nb = S["new_business"][:6]
+        nb = new_biz[:6]
         rows = [["Part", "Description", "Current sales", "Review"]]
         rows += [[x["pn"], str(x["desc"])[:31], eur(x["current"]),
                   "Warranty / campaign" if x.get("warranty_campaign") else "Validate"]
@@ -542,12 +554,13 @@ def build(dbkey: str):
         chart_path=cp("uio.png"), eyebrow="Fleet & FY2027 Target", page_no=page,
         takeaway_heading="What this means for FY2027",
         takeaways=[
-            f"Parc {total.get(2025, 0):,} in 2025 and {total.get(2026, 0):,} in the 2026 "
-            f"working year-end estimate — {growth:+.1%}.",
-            "The chart shows 2019–2026 only. The 2026 point is a working year-end estimate.",
-            f"The FY2027 Sales-to-Dealer target applies this fleet movement, a "
-            f"{s2d['price']:.0%} price adjustment and {s2d['additional']:.1%} additional growth.",
-            ("The target therefore starts from a contracting fleet, not an assumed growth story."
+            f"Fleet size (calendar year): {total.get(2025, 0):,} vehicles in 2025 → "
+            f"{total.get(2026, 0):,} working estimate for end-2026 ({growth:+.1%}).",
+            "The chart is calendar years 2019–2026 only. 2026 is a working year-end estimate, "
+            "not a fiscal-year figure.",
+            f"The FY2027 Sales-to-Dealer target starts from that fleet change, then applies "
+            f"a {s2d['price']:.0%} price adjustment and {s2d['additional']:.1%} additional growth.",
+            ("So the target is built from a slightly smaller fleet — not from an assumed growth story."
              if growth < 0 else
              "The target reflects the working fleet outlook without extending the chart beyond 2026."),
         ])
@@ -575,8 +588,8 @@ def build(dbkey: str):
                  [Inches(6.2), Inches(3.2)], size=12.5)
     foot = [
         f"The FY2027 target is {up:+.1%} versus the FY2026 Sales-to-Dealer base.",
-        ("The FY2026 base is imputed from ISZE billing divided by 0.65 because no usable "
-         "Sales-to-Dealer KPI was available." if s2d["s2d_imputed"] else
+        ("The FY2026 base is a working estimate (ISZE billing ÷ 0.65): the KPI Dashboard has "
+         "no usable Sales-to-Dealer row for this market." if s2d["s2d_imputed"] else
          "The FY2026 base is the reported Sales-to-Dealer KPI."),
     ]
     db.bullet_list(s, foot, Inches(0.32), Inches(4.35), Inches(12.7),
@@ -598,10 +611,12 @@ def build(dbkey: str):
                      ["FY2027 Sales-to-Dealer target", eur(s2d["fy27"])],
                      [f"vs FY2026 Sales-to-Dealer ({eur(base)})", f"{up:+.1%}"]],
                  Inches(0.32), Inches(4.14), Inches(9.4), Inches(1.35), [Inches(5.5), Inches(3.9)])
-    db.bullet_list(s, ["As in previous cycles we would expect an incentive to sit alongside this "
-                       "adjustment — that approval is still pending on our side. We will confirm "
-                       "as soon as we have it."],
-                   Inches(0.32), Inches(5.70), Inches(12.7), Inches(0.9), size=12.5)
+    db.bullet_list(s, [
+        "As in previous cycles we would expect an incentive to sit alongside this adjustment — "
+        "that approval is still pending on our side.",
+        "Until the incentive is confirmed, treat the FY2027 target as the working bridge "
+        "(fleet × price × additional growth), not a locked commercial commitment.",
+    ], Inches(0.32), Inches(5.55), Inches(12.7), Inches(1.05), size=12.5)
     page += 1
 
     # ---- SPA ---------------------------------------------------------------
@@ -652,11 +667,19 @@ def build(dbkey: str):
 
     # ---- next steps -------------------------------------------------------
     s = db.build_content(prs, "Next steps", eyebrow="Summary", page_no=page)
-    steps = [f"Confirm FY2027 Sales-to-Dealer target: {eur(s2d['fy27'])} "
-             f"({up:+.1%} vs FY2026 Sales-to-Dealer).",
-             "Confirm the incentive alongside the price adjustment once approved on our side."]
+    if S.get("incentive_fy27") is None:
+        steps = [
+            "Align on the FY2027 Sales-to-Dealer bridge (fleet, price, additional growth) — "
+            f"working figure {eur(s2d['fy27'])} ({up:+.1%} vs FY2026 base).",
+            "Confirm the incentive alongside the price adjustment; lock the target once that "
+            "approval is through.",
+        ]
+    else:
+        steps = [f"Confirm FY2027 Sales-to-Dealer target: {eur(s2d['fy27'])} "
+                 f"({up:+.1%} vs FY2026 Sales-to-Dealer).",
+                 "Confirm the incentive alongside the price adjustment once approved on our side."]
     if decliners:
-        steps.append(f"{' and '.join(c['cat'] for c in decliners)}: agree which category we tackle "
+        steps.append(f"{' / '.join(c['cat'] for c in decliners)}: agree which category we tackle "
                      "first, and what the joint action is.")
     steps.append("Agree part-level Sales-to-Dealer data sharing, effective 01/01/2025.")
     steps.append(f"SPA: {p['key']} proposal, ISZE review and counter-proposal cycle to follow.")
@@ -668,7 +691,10 @@ def build(dbkey: str):
 
     db.build_closing(prs)
 
-    out = str(out_dir / f"ISZE_{p['key']}_Sales_Review_FY2027.pptx")
+    import os
+    out = os.environ.get("ISZE_DECK_OUT") or str(
+        out_dir / f"ISZE_{p['key']}_Sales_Review_FY2027.pptx"
+    )
     prs.save(out)
     print(f"[{p['key']}] saved {out}   ({len(prs.slides)} slides)")
     if gps:

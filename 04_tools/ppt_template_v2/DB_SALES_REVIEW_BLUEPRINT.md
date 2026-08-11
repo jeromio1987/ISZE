@@ -175,3 +175,62 @@ They are listed here because they will bite again in any hand-rolled analysis.
 | IBX | The GPS number is overstated by construction (BE/NL/PL/LUX billing over a Belgium-only denominator). Lead with that honestly or the whole target discussion is contestable. |
 | PETROS | Q1 CY26 down ~41%. That is the meeting. Get the Power BI cut before presenting anything. |
 | IRELAND | GPS reads over 100%. No percentage anywhere in the deck — amounts only, and offer to agree the per-unit rate. |
+| HUNGARY | Fleet working estimate 3,645 (−2.4%). S2D imputed ÷0.65 until Dashboard has a row. Deep dive: genuine hole outside PMS; pads = local BVP exception. |
+| UMI | IDS Israel = UMI only — never blend UTI. Warranty fiscal is large vs net — always show GPS excl. warranty. |
+
+---
+
+## 7. Full deck (Mode A + deep dive) — Aug 2026 blueprint
+
+After Hungary (AutoWallis), the standard pack is **Mode A meeting deck + deep-dive annex** in one PPTX. Same shape for every DB.
+
+### Run order
+
+```bash
+cd 04_tools\db_sales_review
+python preflight.py --db IBX
+python build_parts_analysis.py --db IBX
+python build_full_deck.py --db IBX
+# same for UMI, HUNGARY, …
+```
+
+Outputs under `09_meetings\<DB>_Sales_Review_2026\`:
+
+| File | Role |
+|------|------|
+| `ISZE_<DB>_Sales_Review_FY2027.pptx` | Full = Mode A + deep dive |
+| `ISZE_<DB>_Sales_Review_FY2027_ModeA_only.pptx` | Customer-safe Mode A only |
+| `_full_deck_manifest.json` | Slide counts + paths |
+| `_summary.json` | Parts / GPS / PMS inputs |
+
+`build_hungary_full_deck.py` is a thin wrapper around `build_full_deck.py --db HUNGARY`.
+
+### Deep-dive slide set (customer-shareable — no “INTERNAL” stamp)
+
+1. Divider — prep detail; pick slides to share  
+2. Agenda  
+3. **GPS** — three lines on one chart: calendar-year GPS %, fiscal-year GPS %, fiscal GPS **excl. warranty**  
+4–5. FY25→FY26 wallet mix (Genuine only / Genuine with BVP alternative / BVP)  
+6–7. Drivers — plain English where the genuine drop sits; top PN losers outside PMS  
+8. Service-parts **CY capture %** vs network (complete calendar year only — never YTD vs full-year expected)  
+9. Same five lines as **FY € billing** (so fiscal is visible even though capture % is CY)  
+10. Brake pads — **BVP share of total brake pad sales (€)**, not PMS capture  
+11. AIM exposure from `aim_gps_matrix.csv`  
+12. Warranty — claim-price CY vs fiscal GPS expense (two lenses, labelled)  
+13. Meeting bridge table  
+
+### Locked language / lenses (from Hungary round)
+
+- **Genuine with BVP alternative** — never “genuine contested” on slides.  
+- PMS primary = **total** capture.  
+- Fleet chart = calendar years; FY2027 target bullets say so explicitly.  
+- No `INTERNAL` eyebrow — deep dive may be shared selectively.  
+- Israel: **UMI ≠ UTI** on any IDS-linked slide.  
+- PMS year = `latest_complete_pms_year()` (full CY only).
+
+### Adding another customer
+
+1. Ensure `db_profiles.yaml` has `sold_to` (or resolvable `gps_key` in `gps_billing_fy_ALLCUSTOMERS.csv`).  
+2. Run the four commands above.  
+3. Read watch list + contact sheets; sharpen Mode A wording before send.  
+4. Ship only on explicit rebuild/ship OK from Jerome.

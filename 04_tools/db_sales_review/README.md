@@ -34,7 +34,15 @@ python build_deck.py --db ISD
 python qa_contact_sheet.py --pptx "..\..\09_meetings\ISD_Sales_Review_2026\ISZE_ISD_Sales_Review_FY2027.pptx"
 ```
 
-The deck lands in its `09_meetings\<DB>_Sales_Review_2026\` folder. The QA step exports the PDF and stitches the slides into
+**Full pack (Mode A + deep dive)** — preferred for Hungary / IBX / UMI and next DBs:
+
+```bash
+python build_full_deck.py --db IBX
+```
+
+See blueprint §7. Lands `ISZE_<DB>_Sales_Review_FY2027.pptx` plus `_ModeA_only.pptx`.
+
+The Mode A-only deck lands in its `09_meetings\<DB>_Sales_Review_2026\` folder. The QA step exports the PDF and stitches the slides into
 3×2 contact sheets — read those instead of opening 18 separate images. The mandatory
 visual QA pass in the blueprint is satisfied by looking at the sheets.
 

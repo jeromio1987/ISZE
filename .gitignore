@@ -142,6 +142,11 @@ cloudflared.exe
 # Meeting decks (track changelogs in 09_meetings; not pptx by default)
 09_meetings/**/*.pptx
 09_meetings/**/*.pdf
+# Exception: FY2027 sales-review decks (Mode A + full) — tracked for GitHub share
+!09_meetings/*_Sales_Review_2026/
+!09_meetings/*_Sales_Review_2026/ISZE_*_Sales_Review_FY2027*.pptx
+!09_meetings/*_Sales_Review_2026/_full_deck_manifest.json
+!09_meetings/*_Sales_Review_2026/_summary.json
 
 # --- Python / Node / Evidence build noise ---
 .venv/

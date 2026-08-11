@@ -256,6 +256,13 @@ def build(dbkey: str):
         "Review as new model, supersession or timing before classifying",
     )
     new_biz = new_biz.nlargest(40, f"net_eur|{L26}")
+    # Freight / surcharge codes are not commercial "new business".
+    pn_u = new_biz["Material"].astype(str).str.strip().str.upper()
+    desc_l = new_biz["Description"].astype(str).str.lower()
+    new_biz = new_biz[
+        ~pn_u.isin(["TRANSPORT", "FREIGHT", "SHIPPING"])
+        & ~desc_l.str.contains("transport", na=False)
+    ].copy()
 
     pms_year, pms = C.load_pms(p)
     peers = C.pms_vs_network(p, year=pms_year)
@@ -622,6 +629,11 @@ def build(dbkey: str):
             "bottom": [{"dealer": r["Dealer"], "pts": float(r["Points achieved %"]),
                         "grank": int(r["Global rank"])} for _, r in ids[0].tail(3).iterrows()]},
         "warranty_claim": p.get("warranty_cy2025_claim"),
+        "warranty_note": (
+            "CY2025 claim-price parts (Warranty_CY2025_by_DB.md). "
+            "Distinct from fiscal GPS warranty expense in "
+            "distributor_warranty_expense_fiscal.csv (AutoWallis FY24/25/26)."
+        ),
         "incentive_fy27": p.get("incentive_fy27"),
         "watch": p.get("watch") or [],
         "defaults": d,
