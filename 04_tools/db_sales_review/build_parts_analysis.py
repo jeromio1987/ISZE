@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import io
 import json
-import re
 import sys
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
@@ -186,7 +185,7 @@ def build(dbkey: str):
     catalog = C.load_catalog()
     bvp_pns = C.load_bvp_pns()
 
-    gross = sales[~sales["is_credit"]]
+    gross = sales[~sales["is_credit"]].copy()
     g25 = float(gross.loc[gross["period"] == L25, "net_eur"].sum())
     g26 = float(gross.loc[gross["period"] == L26, "net_eur"].sum())
     n25 = float(sales.loc[sales["period"] == L25, "net_eur"].sum())
@@ -195,8 +194,46 @@ def build(dbkey: str):
     print(f"  gross {g25:,.0f} -> {g26:,.0f} ({(g26/g25-1)*100:+.1f}%)   "
           f"net {n25:,.0f} -> {n26:,.0f} ({(n26/n25-1)*100:+.1f}%)")
 
-    pn = aggregate_pn(gross, catalog, desc_by_newest, itc_map, L25, L26)
+    warr_meta = C.load_warranty_claim_pns(p)
+    claim_pns = warr_meta["pns"]
+    # Line-level commercial cut: claim-matched PN or campaign/recall text heuristic
+    sap_by_mat = (gross.dropna(subset=["Material"])
+                  .assign(_a=lambda d: d["net_eur"].abs())
+                  .sort_values("_a", ascending=False)
+                  .drop_duplicates("Material")
+                  .set_index("Material")["sap_desc"].to_dict())
+    gross["is_warranty"] = [
+        C.is_warranty_pn(m, sap_by_mat.get(m, d), claim_pns)
+        for m, d in zip(gross["Material"], gross["sap_desc"])
+    ]
+    commercial = gross[~gross["is_warranty"]].copy()
+    c25 = float(commercial.loc[commercial["period"] == L25, "net_eur"].sum())
+    c26 = float(commercial.loc[commercial["period"] == L26, "net_eur"].sum())
+    w25 = g25 - c25
+    w26 = g26 - c26
+    c_pct = f"{(c26 / c25 - 1) * 100:+.1f}%" if c25 else "n/a"
+    print(f"  commercial (ex-warranty) {c25:,.0f} -> {c26:,.0f} ({c_pct})   "
+          f"warranty/campaign stripped {w25:,.0f} / {w26:,.0f}   "
+          f"claim PNs {len(claim_pns):,} ({warr_meta['n_claim_lines']:,} claim lines)")
+
+    # Full PN table (blended) keeps warranty flags for New Business / Warranty sheet
+    pn_all = aggregate_pn(gross, catalog, desc_by_newest, itc_map, L25, L26)
+    pn_all["Warranty_campaign"] = [
+        C.is_warranty_pn(a, b, claim_pns)
+        for a, b in zip(pn_all["Material"], pn_all["Description"])
+    ]
+    pn_all["Warranty_source"] = np.where(
+        pn_all["Material"].isin(claim_pns),
+        "claim grain",
+        np.where(pn_all["Warranty_campaign"], "text heuristic", ""),
+    )
+
+    # Movers / categories / BVP = commercial only (ex-warranty / campaign)
+    pn = aggregate_pn(commercial, catalog, desc_by_newest, itc_map, L25, L26)
+    pn["Warranty_campaign"] = False
+    pn["Warranty_source"] = ""
     fam = aggregate_itc(pn, desc_by_newest, L25, L26)
+    fam["Warranty_campaign"] = False
     net = netting(pn, fam, L25, L26)
     assert abs(fam[f"Net|{L25}"].sum() - pn[f"net_eur|{L25}"].sum()) < 0.05
     assert abs(fam[f"Net|{L26}"].sum() - pn[f"net_eur|{L26}"].sum()) < 0.05
@@ -212,36 +249,12 @@ def build(dbkey: str):
     def not_rebate(m, ds):
         return "REBATE" not in str(m or "").upper() and "REBATE" not in str(ds or "").upper()
 
-    def is_warranty_campaign(pn_value, description):
-        text = f"{pn_value or ''} {description or ''}".upper()
-        return bool(
-            re.search(r"\bSENSOR\W*PM\b|\bPM\W*SENSOR\b|\bWARRANTY\b|"
-                      r"\bCAMPAIGN\b|\bRECALL\b", text)
-        )
-
     pn_ex = pn[[not_rebate(a, b) for a, b in zip(pn["Material"], pn["Description"])]]
     fam_ex = fam[[not_rebate(a, b) for a, b in zip(fam["Newest_PN"], fam["Description"])]]
-    pn["Warranty_campaign"] = [
-        is_warranty_campaign(a, b) for a, b in zip(pn["Material"], pn["Description"])
-    ]
-    fam["Warranty_campaign"] = [
-        is_warranty_campaign(f"{a} {members}", b)
-        for a, members, b in zip(fam["Newest_PN"], fam["Member_PNs"], fam["Description"])
-    ]
-    pn_ex = pn[[not_rebate(a, b) for a, b in zip(pn["Material"], pn["Description"])]]
-    fam_ex = fam[[not_rebate(a, b) for a, b in zip(fam["Newest_PN"], fam["Description"])]]
-    grow_pn = pn_ex[
-        (pn_ex[f"net_eur|{L25}"] > 0)
-        & (pn_ex["Delta_EUR"] > 0)
-        & (~pn_ex["Warranty_campaign"])
-    ]
-    grow_fam = fam_ex[
-        (fam_ex[f"Net|{L25}"] > 0)
-        & (fam_ex["Delta_EUR"] > 0)
-        & (~fam_ex["Warranty_campaign"])
-    ]
+    grow_pn = pn_ex[(pn_ex[f"net_eur|{L25}"] > 0) & (pn_ex["Delta_EUR"] > 0)]
+    grow_fam = fam_ex[(fam_ex[f"Net|{L25}"] > 0) & (fam_ex["Delta_EUR"] > 0)]
 
-    # BVP split — answers "is this a value-tier switch or real loss?"
+    # BVP split — commercial basis (same cut as movers)
     pn["is_bvp"] = pn["Material"].isin(bvp_pns)
     bvp = {"bvp_prior": float(pn.loc[pn["is_bvp"], f"net_eur|{L25}"].sum()),
            "bvp_current": float(pn.loc[pn["is_bvp"], f"net_eur|{L26}"].sum()),
@@ -250,12 +263,13 @@ def build(dbkey: str):
 
     # Prior-zero lines are quarantined from growth. They may be genuinely new,
     # but may equally be a supersession, timing effect, or warranty campaign.
-    new_biz = pn[
-        (pn[f"net_eur|{L25}"] == 0) & (pn[f"net_eur|{L26}"] > 0)
+    # Use blended PN table so claim-matched first sales still surface for review.
+    new_biz = pn_all[
+        (pn_all[f"net_eur|{L25}"] == 0) & (pn_all[f"net_eur|{L26}"] > 0)
     ].copy()
     new_biz["Review_reason"] = np.where(
         new_biz["Warranty_campaign"],
-        "Warranty/campaign heuristic — validate against claims",
+        "Warranty / campaign PN (claim grain or heuristic) — not commercial growth",
         "Review as new model, supersession or timing before classifying",
     )
     new_biz = new_biz.nlargest(40, f"net_eur|{L26}")
@@ -287,11 +301,20 @@ def build(dbkey: str):
         "",
         "RECONCILIATION (all billing lines in the windows):",
         f"  Gross parts billing   {L25} EUR {g25:,.2f}   {L26} EUR {g26:,.2f}   ({(g26/g25-1)*100:+.1f}%)",
+        f"  of which warranty/campaign PN (stripped from movers)",
+        f"                         {L25} EUR {w25:,.2f}   {L26} EUR {w26:,.2f}",
+        (
+            f"  Commercial (ex-warr.) {L25} EUR {c25:,.2f}   {L26} EUR {c26:,.2f}   "
+            f"({(c26 / c25 - 1) * 100:+.1f}%)"
+            if c25 else
+            f"  Commercial (ex-warr.) {L25} EUR {c25:,.2f}   {L26} EUR {c26:,.2f}"
+        ),
         f"  Credit memos (G2/CR)  {L25} EUR {cr25:,.2f}   {L26} EUR {cr26:,.2f}",
         f"  Net billing           {L25} EUR {n25:,.2f}   {L26} EUR {n26:,.2f}   ({(n26/n25-1)*100:+.1f}%)",
         "  Credit memos carry a POSITIVE Net value in the raw SAP export but are economically",
-        "  negative — signed here, matching net_value_gps_signed in the tagged extract. The PN /",
-        "  ITC / category sheets are cut on GROSS parts lines only.",
+        "  negative — signed here, matching net_value_gps_signed in the tagged extract. Credits",
+        "  stay on the net bridge and are kept out of mover lists as a commercial adjustment.",
+        "  Category / PN / ITC mover sheets use COMMERCIAL gross (ex-warranty/campaign) only.",
         "",
         "Sources:",
         rf"- {L26}: 01_data\00_derived\cy2026_q1.csv (Payer.1 = '{p['payer']}')",
@@ -302,9 +325,15 @@ def build(dbkey: str):
         rf"- GPS: 01_data\00_derived\gps_master.csv row '{p['gps_key']}'",
         rf"- FY2027 target: 01_data\ISZE_GPS_Extended_Target_FY27_V3.1.xlsx tab '{p['fy27_tab']}'",
         r"- UIO: 06_uio\_CURRENT\ISUZU_UIO_Overview_2026.xlsx, '1.UIO Overview'",
-        r"- Warranty: 01_data\06_Warranty\Warranty_CY2025_by_DB.md",
+        r"- Warranty claims (PN cut): 01_data\00_derived\warranty_raw_grain.csv",
+        r"- Warranty CY totals: 01_data\06_Warranty\Warranty_CY2025_by_DB.md",
         "",
-        f"ITC coverage: PN rows {len(pn):,} | unmapped {int((~pn['mapped']).sum()):,} | "
+        f"Warranty exclusion: {len(claim_pns):,} claim PNs from grain names "
+        f"{', '.join(warr_meta['db_names']) or '(none mapped)'}; "
+        f"assess {warr_meta['assess_month_from']}–{warr_meta['assess_month_to']} "
+        f"({warr_meta['n_claim_lines']:,} lines, claim-price EUR {warr_meta['claim_eur']:,.0f}); "
+        f"plus PN/description text heuristic (PM sensor / warranty / campaign / recall).",
+        f"ITC coverage (commercial): PN rows {len(pn):,} | unmapped {int((~pn['mapped']).sum()):,} | "
         f"families {len(fam):,} | multi-member {net['multi']:,} | "
         f"|Delta| cancelled EUR {net['total']:,.2f}",
         "",
@@ -312,11 +341,15 @@ def build(dbkey: str):
     ] + [f"  · {w}" for w in (p.get("watch") or ["(none recorded)"])] + [
         "",
         "Caveats:",
-        "  - Warranty is embedded in normal commercial billing; ERP has no warranty document type,",
-        "    so it cannot be split out of the movers below.",
+        "  - ERP has no warranty document type; warranty parts ride normal orders. Exclusion is",
+        "    PN-level from claim grain (+ text heuristic), not a true warranty-flagged invoice line.",
+        "  - Claim-matched PNs drop ALL billing of that PN in the window (commercial + warranty).",
+        "    Preferable to blended demand for a sales review; residual unmapped warranty may remain.",
+        "  - Claim assessment months lag billing; prior window opens 3 months early on the grain.",
+        "  - Grain coverage is uneven by year/DB (e.g. sparse H1 2025 assess months for some markets).",
         "  - Some sold PNs are absent from the price file -> ITC family = self.",
-        "  - Mover lists exclude REBATE lines.",
-        "  - Growth requires prior-period sales > 0 and excludes warranty/campaign heuristics.",
+        "  - Mover lists exclude REBATE lines and warranty/campaign PNs.",
+        "  - Growth requires prior-period sales > 0.",
         "  - Prior-zero/current-positive lines are quarantined on New Business, not counted as growth.",
         "",
         "Rebuild:  python build_parts_analysis.py --db " + p["key"],
@@ -380,38 +413,54 @@ def build(dbkey: str):
     ren_pn = {"Newest_PN": "Newest P/N", f"qty|{L25}": f"Qty {L25}", f"net_eur|{L25}": f"Net EUR {L25}",
               f"qty|{L26}": f"Qty {L26}", f"net_eur|{L26}": f"Net EUR {L26}", "Delta_EUR": "Delta EUR",
               "Delta_Qty": "Delta Qty", "Delta_Pct": "Delta %", "mapped": "In price file",
-              "is_bvp": "BVP line", "Warranty_campaign": "Warranty campaign heuristic"}
+              "is_bvp": "BVP line", "Warranty_campaign": "Warranty / campaign",
+              "Warranty_source": "Warranty source"}
     ren_fam = {"Newest_PN": "Newest P/N", f"Qty|{L25}": f"Qty {L25}", f"Net|{L25}": f"Net EUR {L25}",
                f"Qty|{L26}": f"Qty {L26}", f"Net|{L26}": f"Net EUR {L26}", "Delta_EUR": "Delta EUR",
                "Delta_Qty": "Delta Qty", "Delta_Pct": "Delta %", "Member_PNs": "Member PNs",
                "Member_count": "Member count", "Any_unmapped_member": "Any unmapped member",
-               "Warranty_campaign": "Warranty campaign heuristic"}
+               "Warranty_campaign": "Warranty / campaign"}
     CUR = {f"Net EUR {L25}", f"Net EUR {L26}", "Delta EUR"}
     QTY = {f"Qty {L25}", f"Qty {L26}", "Delta Qty"}
 
     ws = wb.create_sheet("PN Detail")
+    ws.cell(1, 1, f"Commercial PNs only (warranty/campaign excluded) — {L26} vs {L25}").font = TITLE_FONT
     write_df(ws, pn.rename(columns=ren_pn)[
         ["Material", "Newest P/N", "Description", "Category", "PMS Category", "BVP line",
-         "Warranty campaign heuristic",
          f"Qty {L25}", f"Net EUR {L25}", f"Qty {L26}", f"Net EUR {L26}",
          "Delta EUR", "Delta Qty", "Delta %", "In price file"]].sort_values("Delta EUR"),
-        currency=CUR, qty=QTY, pct={"Delta %"})
+        start_row=2, currency=CUR, qty=QTY, pct={"Delta %"})
 
     ws = wb.create_sheet("ITC Family Detail")
+    ws.cell(1, 1, f"Commercial ITC families (warranty/campaign excluded) — {L26} vs {L25}").font = TITLE_FONT
     write_df(ws, fam.rename(columns=ren_fam)[
         ["Newest P/N", "Description", "Category", "PMS Category", "Member count", "Member PNs",
-         "Warranty campaign heuristic",
          f"Qty {L25}", f"Net EUR {L25}", f"Qty {L26}", f"Net EUR {L26}",
          "Delta EUR", "Delta Qty", "Delta %", "Any unmapped member"]].sort_values("Delta EUR"),
-        currency=CUR, qty=QTY, pct={"Delta %"})
+        start_row=2, currency=CUR, qty=QTY, pct={"Delta %"})
+
+    stripped = pn_all[pn_all["Warranty_campaign"]].copy()
+    stripped["is_bvp"] = stripped["Material"].isin(bvp_pns)
+    ws = wb.create_sheet("Warranty PNs Stripped")
+    ws.cell(1, 1, "PNs removed from commercial movers (claim grain and/or text heuristic)").font = TITLE_FONT
+    if len(stripped):
+        write_df(ws, stripped.rename(columns=ren_pn)[
+            ["Material", "Newest P/N", "Description", "Category", "Warranty source",
+             f"Qty {L25}", f"Net EUR {L25}", f"Qty {L26}", f"Net EUR {L26}",
+             "Delta EUR", "Delta Qty"]].sort_values("Delta EUR"),
+            start_row=2, currency=CUR, qty=QTY)
+    else:
+        ws.cell(3, 1, "No warranty/campaign PNs matched for this DB in the claim window.")
 
     def movers(name, decl, grow, ren, cols, label):
         w = wb.create_sheet(name)
         dd, gg = decl.rename(columns=ren)[cols], grow.rename(columns=ren)[cols]
-        w.cell(1, 1, f"TOP {TOP_N} DECLINING {label} ({L26} vs {L25})").font = TITLE_FONT
+        w.cell(1, 1, f"TOP {TOP_N} DECLINING {label} — commercial / ex-warranty "
+                     f"({L26} vs {L25})").font = TITLE_FONT
         write_df(w, dd, start_row=2, currency=CUR, qty=QTY)
         sg = 2 + len(dd) + 3
-        w.cell(sg - 1, 1, f"TOP {TOP_N} GROWING {label} ({L26} vs {L25}, excl. REBATE)").font = TITLE_FONT
+        w.cell(sg - 1, 1, f"TOP {TOP_N} GROWING {label} — commercial / ex-warranty "
+                          f"({L26} vs {L25}, excl. REBATE)").font = TITLE_FONT
         write_df(w, gg, start_row=sg, currency=CUR, qty=QTY)
         w.auto_filter.ref = f"A2:{get_column_letter(len(cols))}{2 + len(dd)}"
 
@@ -434,13 +483,14 @@ def build(dbkey: str):
         ws.cell(4, 1, "No material multi-member cancellations found.")
 
     ws = wb.create_sheet("Category Summary")
+    ws.cell(1, 1, "Commercial category rollup (warranty/campaign PNs excluded)").font = TITLE_FONT
     write_df(ws, cat.rename(columns={f"Net|{L25}": f"Net EUR {L25}", f"Net|{L26}": f"Net EUR {L26}",
                                      f"Qty|{L25}": f"Qty {L25}", f"Qty|{L26}": f"Qty {L26}",
                                      "Delta_EUR": "Delta EUR", "Delta_Pct": "Delta %"}),
-             currency=CUR, qty={f"Qty {L25}", f"Qty {L26}"}, pct={"Delta %"})
+             start_row=2, currency=CUR, qty={f"Qty {L25}", f"Qty {L26}"}, pct={"Delta %"})
 
     ws = wb.create_sheet("Genuine vs BVP")
-    ws.cell(1, 1, "Genuine vs value-tier (BVP) split — the value-tier-switch test").font = TITLE_FONT
+    ws.cell(1, 1, "Genuine vs value-tier (BVP) — commercial / ex-warranty basis").font = TITLE_FONT
     rows = [["Line type", f"Net EUR {L25}", f"Net EUR {L26}", "Delta EUR", "Delta %"],
             ["Genuine", bvp["gen_prior"], bvp["gen_current"],
              bvp["gen_current"] - bvp["gen_prior"],
@@ -554,21 +604,36 @@ def build(dbkey: str):
 
     ws = wb.create_sheet("Warranty")
     w = p.get("warranty_cy2025_claim")
-    lines = [["Warranty indication — " + p["name"]], [],
+    lines = [["Warranty exclusion for commercial movers — " + p["name"]], [],
              ["Question", "Answer"],
-             ["Can warranty be split from these billing lines?",
+             ["Can warranty be split by ERP document type?",
               "No — ERP has no warranty document type; warranty parts flow through normal orders."],
+             ["How movers are made commercial / ex-warranty",
+              "Exclude billing of PNs that appear on warranty_raw_grain claim lines for this DB "
+              f"(assess {warr_meta['assess_month_from']}–{warr_meta['assess_month_to']}, "
+              f"{C.WARRANTY_CLAIM_LAG_MONTHS}m lag before prior window) plus PN/description "
+              "text heuristic (PM sensor / warranty / campaign / recall)."],
+             ["Grain DB names used", ", ".join(warr_meta["db_names"]) or "(none mapped)"],
+             ["Claim lines in window", warr_meta["n_claim_lines"]],
+             ["Claim-price EUR in window", round(warr_meta["claim_eur"], 2)],
+             ["Distinct claim PNs", len(claim_pns)],
+             ["Billing stripped (gross) " + L25, round(w25, 2)],
+             ["Billing stripped (gross) " + L26, round(w26, 2)],
+             ["Commercial gross " + L25, round(c25, 2)],
+             ["Commercial gross " + L26, round(c26, 2)],
              ["SaTy codes observed", ", ".join(sorted(sales["SaTy"].dropna().unique()))],
              ["CY2025 warranty parts, claim-price basis (EUR)", w],
              ["  approx. ISZE-net equivalent (x0.74) (EUR)", round(w * 0.74, 2) if w else None],
              ["Note at source", p.get("warranty_note", "—")],
-             ["Source", r"01_data\06_Warranty\Warranty_CY2025_by_DB.md"],
-             [f"{L25} Net EUR (this analysis)", round(n25, 2)],
-             [f"{L26} Net EUR (this analysis)", round(n26, 2)], [],
-             ["Implication for the mover lists",
-              "Warranty demand sits in the same billing lines. A PN decline can be a campaign "
-              "ending rather than lost commercial business — do not read the movers as purely "
-              "commercial without a claim-level join, which is not available at this grain."]]
+             ["Claim grain source", r"01_data\00_derived\warranty_raw_grain.csv"],
+             ["CY total source", r"01_data\06_Warranty\Warranty_CY2025_by_DB.md"],
+             [f"{L25} Net EUR (blended, with credits)", round(n25, 2)],
+             [f"{L26} Net EUR (blended, with credits)", round(n26, 2)], [],
+             ["Limitation",
+              "PN-level exclusion removes all billing of a claim PN in the window, including any "
+              "genuine commercial demand for that PN. Residual warranty on unmapped PNs can remain. "
+              "Grain assess-month coverage is uneven (some H1 prior windows are thin). Credits stay "
+              "on the net bridge and are not re-labelled as warranty."]]
     for r_i, row in enumerate(lines, 1):
         for c_i, v in enumerate(row, 1):
             cell = ws.cell(r_i, c_i, v)
@@ -603,6 +668,10 @@ def build(dbkey: str):
         "segment": p["segment"], "label_prior": L25, "label_current": L26,
         "gross_prior": round(g25, 2), "gross_current": round(g26, 2),
         "gross_delta_pct": round(g26 / g25 - 1, 4) if g25 else None,
+        "commercial_prior": round(c25, 2), "commercial_current": round(c26, 2),
+        "commercial_delta_pct": round(c26 / c25 - 1, 4) if c25 else None,
+        "warranty_stripped_prior": round(w25, 2), "warranty_stripped_current": round(w26, 2),
+        "movers_basis": "commercial_ex_warranty",
         "credits_prior": round(cr25, 2), "credits_current": round(cr26, 2),
         "net_prior": round(n25, 2), "net_current": round(n26, 2),
         "net_delta_pct": round(n26 / n25 - 1, 4) if n25 else None,
@@ -633,10 +702,22 @@ def build(dbkey: str):
                         "grank": int(r["Global rank"])} for _, r in ids[0].tail(3).iterrows()]},
         "warranty_claim": p.get("warranty_cy2025_claim"),
         "warranty_note": (
-            "CY2025 claim-price parts (Warranty_CY2025_by_DB.md). "
-            "Distinct from fiscal GPS warranty expense in "
-            "distributor_warranty_expense_fiscal.csv (AutoWallis FY24/25/26)."
+            "Movers exclude claim-matched PNs from warranty_raw_grain (+ text heuristic). "
+            "CY2025 claim-price total below is from Warranty_CY2025_by_DB.md — distinct from "
+            "fiscal GPS warranty expense in distributor_warranty_expense_fiscal.csv."
         ),
+        "warranty_exclusion": {
+            "method": warr_meta["method"],
+            "available": warr_meta["available"],
+            "db_names": warr_meta["db_names"],
+            "n_claim_pns": len(claim_pns),
+            "n_claim_lines": warr_meta["n_claim_lines"],
+            "claim_eur": round(warr_meta["claim_eur"], 2),
+            "assess_month_from": warr_meta["assess_month_from"],
+            "assess_month_to": warr_meta["assess_month_to"],
+            "billing_stripped_prior": round(w25, 2),
+            "billing_stripped_current": round(w26, 2),
+        },
         "incentive_fy27": p.get("incentive_fy27"),
         "watch": p.get("watch") or [],
         "defaults": d,
@@ -646,7 +727,7 @@ def build(dbkey: str):
                         encoding="utf-8")
     print(f"  wrote {out_json}")
 
-    print("\n  category movers (>|5,000| EUR):")
+    print("\n  commercial category movers (>|5,000| EUR):")
     for _, r in cat.iterrows():
         if abs(r["Delta_EUR"]) > 5000:
             dp = "" if pd.isna(r["Delta_Pct"]) else f"{r['Delta_Pct']*100:+.1f}%"

@@ -266,7 +266,7 @@ def build(dbkey: str):
     pick = cats[:5] + cats[-4:] if len(cats) > 9 else cats
     diverging_bar([wrap_label(c["cat"], 9) for c in pick], [c["d"] for c in pick],
                   cp("category_movers.png"),
-                  title=f"{disp} {L26} vs {L25} — biggest category moves (EUR)")
+                  title=f"{disp} {L26} vs {L25} — commercial category moves, ex-warranty (EUR)")
 
     peers = S["pms_peers"]
     plabels = {"oil_filter": "Oil filter", "fuel_filter": "Fuel filter", "air_filter": "Air filter",
@@ -402,22 +402,38 @@ def build(dbkey: str):
             eyebrow=f"{PBI['quarter']} Sales Review", page_no=page, takeaways=takeaways[:4])
         page += 1
 
-    # ---- category movers --------------------------------------------------
-    gp, gc = S["gross_prior"], S["gross_current"]
+    # ---- category movers (commercial / ex-warranty) -----------------------
+    # Prefer commercial totals when present; fall back to blended gross for older summaries.
+    gp = S.get("commercial_prior", S["gross_prior"])
+    gc = S.get("commercial_current", S["gross_current"])
+    g_pct = S.get("commercial_delta_pct", S["gross_delta_pct"])
     cred = S["credits_current"]
-    take = [f"Parts billing {eur(gc, True)} against {eur(gp, True)} a year earlier — "
-            f"{S['gross_delta_pct']:+.1%}."]
+    w_strip = S.get("warranty_stripped_current") or 0
+    take = [
+        f"Commercial parts billing (warranty/campaign excluded) {eur(gc, True)} against "
+        f"{eur(gp, True)} a year earlier — {g_pct:+.1%}."
+    ]
     if abs(cred) > 1000:
-        take[0] += f" After {eur(abs(cred), True)} of credit notes the net figure is {eur(S['net_current'], True)}."
+        take.append(
+            f"Credit notes of {eur(abs(cred), True)} remain a separate commercial adjustment "
+            f"on the net bridge (net {eur(S['net_current'], True)}); they are not in the movers."
+        )
+    elif w_strip and abs(w_strip) > 1000:
+        take.append(
+            f"About {eur(abs(w_strip), True)} of current-window billing on claim-matched PNs "
+            "was stripped so this chart reviews aftermarket demand, not warranty."
+        )
     if decliners:
-        take.append("Biggest declines: " + "; ".join(
+        take.append("Biggest commercial declines: " + "; ".join(
             f"{c['cat']} {eur(c['d'], True)}" for c in decliners) + ".")
     risers = [c for c in cats if c["d"] > 0][-3:][::-1]
     if risers:
         take.append("Growing: " + ", ".join(
             f"{c['cat']} {c['dp']:+.0%}" for c in risers if c["dp"] is not None) + ".")
-    take.append(f"{L26} against {L25} (calendar Jan–Jun, Q1+Q2) — like-for-like half-year cut.")
-    db.build_two_col(prs, title=f"Parts Performance — {L26} vs {L25}",
+    take.append(
+        f"{L26} against {L25} (calendar Jan–Jun) — commercial / ex-warranty category cut."
+    )
+    db.build_two_col(prs, title=f"Parts Performance — {L26} vs {L25} (commercial, ex-warranty)",
                      chart_path=cp("category_movers.png"),
                      eyebrow="Parts Performance", page_no=page, takeaways=take[:4])
     page += 1
@@ -427,7 +443,7 @@ def build(dbkey: str):
         rows = [r for r in S["top_decl_itc"] if r["cat"] == cat["cat"]][:3]
         # Title-case the category so "Brake parts" does not read "Brake parts Performance"
         cat_title = cat["cat"][0].upper() + cat["cat"][1:]
-        s = db.build_content(prs, f"{cat_title} — {L26} vs {L25}",
+        s = db.build_content(prs, f"{cat_title} — {L26} vs {L25} (commercial, ex-warranty)",
                              eyebrow=f"Parts Performance — {cat['cat']}", page_no=page)
         bullets = [f"{eur(cat['prior'])} ({L25}) to {eur(cat['current'])} ({L26}), "
                    f"down {eur(abs(cat['d']))}" + (f" ({cat['dp']:.0%})." if cat['dp'] else ".")]
@@ -444,7 +460,7 @@ def build(dbkey: str):
         page += 1
 
     # ---- growth ------------------------------------------------------------
-    s = db.build_content(prs, f"Where volume grew — {L26} vs {L25}",
+    s = db.build_content(prs, f"Where volume grew — {L26} vs {L25} (commercial, ex-warranty)",
                          eyebrow="Parts Performance — Growth", page_no=page)
     grow = S["top_grow_itc"][:6]
     rows = [["Part", "Description", L25, L26]] + [
@@ -455,13 +471,17 @@ def build(dbkey: str):
     gbul = []
     if risers:
         gbul.append(", ".join(f"{c['cat']} {c['dp']:+.0%}" for c in risers if c["dp"] is not None)
-                    + " — where the volume went.")
-    if S.get("warranty_claim"):
+                    + " — where the commercial volume went.")
+    wx = S.get("warranty_exclusion") or {}
+    if wx.get("n_claim_pns"):
         gbul.append(
-            f"Several of these are the kind of item that also moves on a campaign or claim. "
+            f"Claim-matched PNs ({wx['n_claim_pns']:,} distinct) and campaign/recall text matches "
+            "are already excluded from this growth list. Residual warranty on unmapped PNs can remain."
+        )
+    elif S.get("warranty_claim"):
+        gbul.append(
             f"{S['country']} CY2025 warranty parts (claim-price basis) were "
-            f"{eur(S['warranty_claim'], True)} — separate from fiscal GPS warranty expense. "
-            "Do not read this growth list as purely commercial without checking claims together."
+            f"{eur(S['warranty_claim'], True)} — separate from fiscal GPS warranty expense."
         )
     gbul.append("Worth agreeing which of these are repeatable and which were one-off.")
     db.bullet_list(s, gbul, Inches(0.32), Inches(4.20), Inches(12.7), Inches(2.4), size=14)

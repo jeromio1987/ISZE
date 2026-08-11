@@ -9,6 +9,12 @@
   "gross_prior": 1056681.16,
   "gross_current": 1234677.63,
   "gross_delta_pct": 0.1684,
+  "commercial_prior": 828001.52,
+  "commercial_current": 1029487.71,
+  "commercial_delta_pct": 0.2433,
+  "warranty_stripped_prior": 228679.64,
+  "warranty_stripped_current": 205189.92,
+  "movers_basis": "commercial_ex_warranty",
   "credits_prior": 0.0,
   "credits_current": -25200.0,
   "net_prior": 1056681.16,
@@ -41,60 +47,67 @@
   },
   "categories": [
     {
-      "cat": "Steering",
-      "prior": 96368.47,
-      "current": 42053.19,
-      "d": -54315.28,
-      "dp": -0.5636
+      "cat": "Brake parts",
+      "prior": 42206.07,
+      "current": 29058.28,
+      "d": -13147.79,
+      "dp": -0.3115
     },
     {
-      "cat": "Brake parts",
-      "prior": 90882.16,
-      "current": 81977.93,
-      "d": -8904.23,
-      "dp": -0.098
+      "cat": "Injectors",
+      "prior": 10590.99,
+      "current": 5795.01,
+      "d": -4795.98,
+      "dp": -0.4528
     },
     {
       "cat": "Fuel system",
       "prior": 9894.02,
-      "current": 5765.79,
-      "d": -4128.23,
-      "dp": -0.4172
+      "current": 5547.61,
+      "d": -4346.41,
+      "dp": -0.4393
     },
     {
       "cat": "Cooling",
-      "prior": 23953.56,
-      "current": 20638.92,
-      "d": -3314.64,
-      "dp": -0.1384
-    },
-    {
-      "cat": "Injectors",
-      "prior": 15856.51,
-      "current": 13935.27,
-      "d": -1921.24,
-      "dp": -0.1212
-    },
-    {
-      "cat": "UNCLASSIFIED",
-      "prior": 2410.94,
-      "current": 1380.47,
-      "d": -1030.47,
-      "dp": -0.4274
+      "prior": 18583.38,
+      "current": 16687.97,
+      "d": -1895.41,
+      "dp": -0.102
     },
     {
       "cat": "Starter / alternator",
-      "prior": 4466.13,
-      "current": 3802.03,
-      "d": -664.1,
-      "dp": -0.1487
+      "prior": 3944.78,
+      "current": 2318.46,
+      "d": -1626.32,
+      "dp": -0.4123
+    },
+    {
+      "cat": "UNCLASSIFIED",
+      "prior": 2352.3,
+      "current": 1380.47,
+      "d": -971.83,
+      "dp": -0.4131
     },
     {
       "cat": "Belts",
-      "prior": 1047.97,
-      "current": 1214.25,
-      "d": 166.28,
-      "dp": 0.1587
+      "prior": 405.92,
+      "current": 624.37,
+      "d": 218.45,
+      "dp": 0.5382
+    },
+    {
+      "cat": "Air conditioning",
+      "prior": 51377.73,
+      "current": 51750.81,
+      "d": 373.08,
+      "dp": 0.0073
+    },
+    {
+      "cat": "Clutch parts",
+      "prior": 26762.64,
+      "current": 27187.06,
+      "d": 424.42,
+      "dp": 0.0159
     },
     {
       "cat": "Consumables",
@@ -102,20 +115,6 @@
       "current": 1595.71,
       "d": 549.01,
       "dp": 0.5245
-    },
-    {
-      "cat": "Clutch parts",
-      "prior": 27681.62,
-      "current": 28263.26,
-      "d": 581.64,
-      "dp": 0.021
-    },
-    {
-      "cat": "Air conditioning",
-      "prior": 52438.21,
-      "current": 53667.34,
-      "d": 1229.13,
-      "dp": 0.0234
     },
     {
       "cat": "Air system",
@@ -126,10 +125,10 @@
     },
     {
       "cat": "Turbo",
-      "prior": 5471.09,
-      "current": 8231.36,
-      "d": 2760.27,
-      "dp": 0.5045
+      "prior": 2811.75,
+      "current": 4843.74,
+      "d": 2031.99,
+      "dp": 0.7227
     },
     {
       "cat": "Engine parts",
@@ -139,100 +138,98 @@
       "dp": 0.3268
     },
     {
-      "cat": "Suspension",
-      "prior": 16124.95,
-      "current": 19588.02,
-      "d": 3463.07,
-      "dp": 0.2148
-    },
-    {
       "cat": "Gaskets / seals",
-      "prior": 12606.33,
-      "current": 16131.27,
-      "d": 3524.94,
-      "dp": 0.2796
+      "prior": 11597.91,
+      "current": 15356.71,
+      "d": 3758.8,
+      "dp": 0.3241
     },
     {
-      "cat": "Mirrors",
-      "prior": 12809.0,
-      "current": 17361.18,
-      "d": 4552.18,
-      "dp": 0.3554
-    },
-    {
-      "cat": "Hardware",
-      "prior": 10048.77,
-      "current": 14703.27,
-      "d": 4654.5,
-      "dp": 0.4632
-    },
-    {
-      "cat": "Miscellaneous",
-      "prior": 57792.49,
-      "current": 65353.37,
-      "d": 7560.88,
-      "dp": 0.1308
-    },
-    {
-      "cat": "Filters",
-      "prior": 32008.93,
-      "current": 42598.72,
-      "d": 10589.79,
-      "dp": 0.3308
-    },
-    {
-      "cat": "Hydraulic / mechanical",
-      "prior": 38616.93,
-      "current": 51918.38,
-      "d": 13301.45,
-      "dp": 0.3444
-    },
-    {
-      "cat": "Transmission parts",
-      "prior": 37932.65,
-      "current": 53014.78,
-      "d": 15082.13,
-      "dp": 0.3976
-    },
-    {
-      "cat": "Lighting",
-      "prior": 89706.54,
-      "current": 106532.31,
-      "d": 16825.77,
-      "dp": 0.1876
+      "cat": "Suspension",
+      "prior": 14690.95,
+      "current": 18723.64,
+      "d": 4032.69,
+      "dp": 0.2745
     },
     {
       "cat": "Electrical sensors",
-      "prior": 67909.61,
-      "current": 93374.53,
-      "d": 25464.92,
-      "dp": 0.375
+      "prior": 26224.33,
+      "current": 30610.06,
+      "d": 4385.73,
+      "dp": 0.1672
+    },
+    {
+      "cat": "Hardware",
+      "prior": 9935.6,
+      "current": 14328.53,
+      "d": 4392.93,
+      "dp": 0.4421
+    },
+    {
+      "cat": "Mirrors",
+      "prior": 12539.2,
+      "current": 17235.52,
+      "d": 4696.32,
+      "dp": 0.3745
+    },
+    {
+      "cat": "Steering",
+      "prior": 19611.22,
+      "current": 24606.49,
+      "d": 4995.27,
+      "dp": 0.2547
+    },
+    {
+      "cat": "Transmission parts",
+      "prior": 33517.35,
+      "current": 42114.47,
+      "d": 8597.12,
+      "dp": 0.2565
+    },
+    {
+      "cat": "Miscellaneous",
+      "prior": 43572.94,
+      "current": 52776.07,
+      "d": 9203.13,
+      "dp": 0.2112
+    },
+    {
+      "cat": "Filters",
+      "prior": 29465.73,
+      "current": 42042.16,
+      "d": 12576.43,
+      "dp": 0.4268
+    },
+    {
+      "cat": "Hydraulic / mechanical",
+      "prior": 37635.28,
+      "current": 51623.91,
+      "d": 13988.63,
+      "dp": 0.3717
+    },
+    {
+      "cat": "Lighting",
+      "prior": 79400.89,
+      "current": 102368.99,
+      "d": 22968.1,
+      "dp": 0.2893
     },
     {
       "cat": "Exhaust",
-      "prior": 38458.54,
-      "current": 71017.98,
-      "d": 32559.44,
-      "dp": 0.8466
+      "prior": 33795.29,
+      "current": 57556.11,
+      "d": 23760.82,
+      "dp": 0.7031
     },
     {
       "cat": "Body parts",
-      "prior": 291219.83,
-      "current": 395478.16,
-      "d": 104258.33,
-      "dp": 0.358
+      "prior": 286109.34,
+      "current": 388275.42,
+      "d": 102166.08,
+      "dp": 0.3571
     }
   ],
   "top_decl_itc": [
-    {
-      "pn": "7552348290",
-      "desc": "STEERING UNIT",
-      "cat": "Steering",
-      "prior": 75208.5,
-      "current": 16009.83,
-      "d": -59198.67,
-      "dq": -29.0
-    },
     {
       "pn": "5878316930",
       "desc": "SHOE KIT; BRAKE,RR",
@@ -241,24 +238,6 @@
       "current": 0.0,
       "d": -12755.48,
       "dq": -62.0
-    },
-    {
-      "pn": "7552422500",
-      "desc": "CONTROL UNIT",
-      "cat": "Electrical sensors",
-      "prior": 8017.46,
-      "current": 692.49,
-      "d": -7324.97,
-      "dq": -10.0
-    },
-    {
-      "pn": "8983287985",
-      "desc": "LAMP ASM; RR COMB",
-      "cat": "Lighting",
-      "prior": 8431.6,
-      "current": 1107.56,
-      "d": -7324.04,
-      "dq": -43.0
     },
     {
       "pn": "8974725274",
@@ -279,15 +258,6 @@
       "dq": -33.0
     },
     {
-      "pn": "8974807977",
-      "desc": "RADIO CONTROL ASM; STEREO,AM-F",
-      "cat": "Miscellaneous",
-      "prior": 4199.13,
-      "current": 0.0,
-      "d": -4199.13,
-      "dq": -9.0
-    },
-    {
       "pn": "8976607440",
       "desc": "TRANSMISSION ASM; MANUAL",
       "cat": "Transmission parts",
@@ -297,15 +267,6 @@
       "dq": -1.0
     },
     {
-      "pn": "8975546610",
-      "desc": "PAD KIT; CALIPER,DISC BRK,FRT",
-      "cat": "Brake parts",
-      "prior": 9647.65,
-      "current": 5842.5,
-      "d": -3805.15,
-      "dq": -44.0
-    },
-    {
       "pn": "8983939000",
       "desc": "TRANSMISSION ASM; AUTO",
       "cat": "Transmission parts",
@@ -313,6 +274,15 @@
       "current": 0.0,
       "d": -3656.39,
       "dq": -1.0
+    },
+    {
+      "pn": "7552422500",
+      "desc": "CONTROL UNIT",
+      "cat": "Electrical sensors",
+      "prior": 3644.3,
+      "current": 0.0,
+      "d": -3644.3,
+      "dq": -5.0
     },
     {
       "pn": "8978406940",
@@ -358,6 +328,42 @@
       "current": 1136.18,
       "d": -2885.9,
       "dq": -11.0
+    },
+    {
+      "pn": "8981943932",
+      "desc": "RADIATOR ASM",
+      "cat": "Cooling",
+      "prior": 3230.11,
+      "current": 359.46,
+      "d": -2870.65,
+      "dq": -8.0
+    },
+    {
+      "pn": "8981901150",
+      "desc": "DRIVE ASM; FINAL,RR",
+      "cat": "Transmission parts",
+      "prior": 2743.77,
+      "current": 0.0,
+      "d": -2743.77,
+      "dq": -2.0
+    },
+    {
+      "pn": "8979461312",
+      "desc": "STEERING UNIT",
+      "cat": "Steering",
+      "prior": 2700.16,
+      "current": 0.0,
+      "d": -2700.16,
+      "dq": -4.0
+    },
+    {
+      "pn": "8981045609",
+      "desc": "PANEL; SIDE GATE",
+      "cat": "Body parts",
+      "prior": 3211.76,
+      "current": 547.98,
+      "d": -2663.78,
+      "dq": -11.0
     }
   ],
   "top_grow_itc": [
@@ -396,15 +402,6 @@
       "current": 8352.09,
       "d": 6229.35,
       "dq": 3.0
-    },
-    {
-      "pn": "8983682091",
-      "desc": "PIPE; EXH",
-      "cat": "Exhaust",
-      "prior": 2725.26,
-      "current": 7917.42,
-      "d": 5192.16,
-      "dq": 4.0
     },
     {
       "pn": "8983320764",
@@ -495,6 +492,15 @@
       "current": 5887.75,
       "d": 3109.72,
       "dq": 60.0
+    },
+    {
+      "pn": "8978249035",
+      "desc": "LAMP ASM; HEAD",
+      "cat": "Lighting",
+      "prior": 351.39,
+      "current": 3442.81,
+      "d": 3091.42,
+      "dq": 9.0
     }
   ],
   "new_business": [
@@ -603,15 +609,15 @@
       "cat": "Transmission parts",
       "current": 2654.65,
       "qty": 2.0,
-      "warranty_campaign": false,
-      "review_reason": "Review as new model, supersession or timing before classifying"
+      "warranty_campaign": true,
+      "review_reason": "Warranty / campaign PN (claim grain or heuristic) — not commercial growth"
     }
   ],
   "bvp": {
-    "bvp_prior": 112894.08,
-    "bvp_current": 123642.59,
-    "gen_prior": 943787.08,
-    "gen_current": 1111035.04
+    "bvp_prior": 98079.48,
+    "bvp_current": 110589.09,
+    "gen_prior": 729922.04,
+    "gen_current": 918898.62
   },
   "pms_year": 2025,
   "pms_peers": {
@@ -930,7 +936,23 @@
     ]
   },
   "warranty_claim": 74677,
-  "warranty_note": "CY2025 claim-price parts (Warranty_CY2025_by_DB.md). Distinct from fiscal GPS warranty expense in distributor_warranty_expense_fiscal.csv (AutoWallis FY24/25/26).",
+  "warranty_note": "Movers exclude claim-matched PNs from warranty_raw_grain (+ text heuristic). CY2025 claim-price total below is from Warranty_CY2025_by_DB.md — distinct from fiscal GPS warranty expense in distributor_warranty_expense_fiscal.csv.",
+  "warranty_exclusion": {
+    "method": "claim_pn_match+text_heuristic",
+    "available": true,
+    "db_names": [
+      "ISUZU BENELUX - BELGIUM",
+      "ISUZU BENELUX - NETHERLANDS",
+      "Isuzu Benelux NV (Poland)"
+    ],
+    "n_claim_pns": 187,
+    "n_claim_lines": 843,
+    "claim_eur": 60620.02,
+    "assess_month_from": 202410,
+    "assess_month_to": 202606,
+    "billing_stripped_prior": 228679.64,
+    "billing_stripped_current": 205189.92
+  },
   "incentive_fy27": 28000,
   "watch": [
     "ISUZU BENELUX NV bills for BE/NL/PL/LUX but the FY27 max spend uses the BELGIUM UIO rows only. GPS 95-98% is therefore likely OVERSTATED — numerator covers a parc the denominator excludes. Do not present the % without stating that, or widen the denominator first (UIO rows NL 30/31/32, LUX 36/37/38, Poland 69).",

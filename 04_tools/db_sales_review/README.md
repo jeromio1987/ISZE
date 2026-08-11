@@ -69,13 +69,19 @@ Build-enabled profiles: `IUK`, `ISD`, `IBX`, `PETROS`, `IRELAND`, `UMI`, `NORWAY
 - **Credit memos** (`BillT` G2 / `SaTy` CR) are signed negative. They carry a *positive*
   Net value in the raw exports, so an unsigned read turns a rebate credit into a gain.
   They are then excluded from the mover lists as a commercial adjustment.
-- **Movers** are cut on gross parts lines for **CY H1 (Jan–Jun, Q1+Q2)** vs prior-year H1,
-  rolled up to ITC family (Newest P/N) as well as raw PN, joined on `Material` (the column
-  *labelled* `Material Number` holds the description — the headers are swapped in these exports).
-  CY2026 H1 = `cy2026_q1.csv` (Jan–Mar) + `q1fy2027_billing_tagged.csv` (Apr–Jun).
-- **Growth is incremental only:** prior-period sales must be above zero. Warranty/campaign
-  heuristics are excluded, while prior-zero/current-positive lines are quarantined on the
-  New Business slide for validation as a new model, supersession, timing item or campaign.
+- **Movers** are cut on **commercial** gross parts lines for **CY H1 (Jan–Jun, Q1+Q2)** vs
+  prior-year H1 — warranty/campaign PNs excluded — rolled up to ITC family (Newest P/N) as
+  well as raw PN, joined on `Material` (the column *labelled* `Material Number` holds the
+  description — the headers are swapped in these exports). CY2026 H1 = `cy2026_q1.csv`
+  (Jan–Mar) + `q1fy2027_billing_tagged.csv` (Apr–Jun).
+- **Warranty exclusion (all DBs):** ERP has no warranty doc type. Movers drop PNs that appear
+  on `warranty_raw_grain.csv` claim lines for that DB (assess-month window with a 3-month lag
+  before the prior H1) plus a PN/description text heuristic (PM sensor / warranty / campaign /
+  recall). Mode A takeaways label the chart **commercial / ex-warranty**. Limitation: all
+  billing of a claim-matched PN is dropped, not only the claim units.
+- **Growth is incremental only:** prior-period sales must be above zero. Prior-zero /
+  current-positive lines are quarantined on the New Business slide for validation as a new
+  model, supersession, timing item or campaign.
 - **FY2027 target uses the Sales-to-Dealer lens:** Dashboard columns P:U, with the locked
   fleet movement, 5% price adjustment and 1.8% additional growth. Missing FY2026
   Sales-to-Dealer KPI is clearly imputed from FY2026 ISZE billing divided by 0.65.

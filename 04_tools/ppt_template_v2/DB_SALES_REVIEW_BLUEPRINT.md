@@ -37,8 +37,8 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
 1. Cover
 2. Agenda
 3. Q period Sales Review — actual vs budget, actual vs prior year, by month. **Use official/accounting figures if the user supplies them, not a self-derived cut.**
-4. Parts Performance — category-level H1/period movers, waterfall or bar chart, both up and down
-5+. One slide per material problem category (each ~-15% or worse) — see tone rules below for exact structure
+4. Parts Performance — **commercial / ex-warranty** category-level H1 movers (bar chart, up and down). Never review blended warranty+commercial demand as the sales cut.
+5+. One slide per material problem category (each ~-15% or worse) — same commercial basis; see tone rules below for exact structure
    - One slide for "New Business" — PNs with zero sales in prior years, cross-checked they don't just have a timing/backdated-invoice artifact, and cross-checked against warranty claims before calling them "new" wins
 6. GPS Capture — one line, the clean number, nothing else (see tone rules)
 7. PMS Coverage — filter categories with real km intervals labeled, wear-item categories with confidence caveats
@@ -62,10 +62,20 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
   If FY2026 Sales-to-Dealer is unavailable, use FY2026 ISZE billing divided by 0.65
   and label the base as a working estimate. ISZE-to-distributor billing remains an
   internal reconciliation measure, not the headline target.
-- Growth tables require **prior-period sales above zero** and exclude credit notes
-  and warranty/campaign heuristics. Prior-zero/current-positive parts move to a
-  **New Business validation** slide; they are not described as incremental growth
-  until new model, supersession, timing and campaign explanations are checked.
+- Growth tables require **prior-period sales above zero** and exclude credit notes.
+  Prior-zero/current-positive parts move to a **New Business validation** slide;
+  they are not described as incremental growth until new model, supersession,
+  timing and campaign explanations are checked.
+- **Commercial / ex-warranty on Parts Performance (slides 3–4+):** ERP has no
+  warranty document type, so warranty rides normal orders. Category / PN / ITC
+  movers use **commercial** billing only — exclude PNs that appear on
+  `warranty_raw_grain.csv` claim lines for that DB (assess-month window = prior
+  H1 opened 3 months early through current H1 end) **plus** the PN/description
+  text heuristic (PM sensor / warranty / campaign / recall). Credits stay on the
+  net bridge (signed negative, out of movers). Label Mode A takeaways
+  **commercial / ex-warranty**. Limitation: claim-matched PN exclusion drops all
+  billing of that PN (including any genuine commercial demand); residual warranty
+  on unmapped PNs can remain; grain assess-month coverage is uneven by DB/year.
 - Fleet charts show **2019–2026 only**. The 2026 point is labelled as a working
   year-end estimate. UK LCV CY2026 is fixed at **44,926 units**, about **6% below**
   2025, and the title must state decline rather than imply continued growth.
@@ -126,13 +136,17 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
 All of these are handled by `04_tools\db_sales_review\common.py` and flagged by `preflight.py`.
 They are listed here because they will bite again in any hand-rolled analysis.
 
+- **Warranty contaminates commercial movers unless excluded.** Locked rule (Aug 2026): Parts
+  Performance / decline / growth slides are **commercial / ex-warranty**. Method in
+  `common.load_warranty_claim_pns` + text heuristic; implemented in `build_parts_analysis.py`
+  for every DB. Do not present blended H1 category movers as a sales review.
 - **Credit memos carry a POSITIVE `Net value`.** `BillT` G2 / `SaTy` CR rows are economically
   negative but stored positive in `cy2025_raw.csv` / `cy2026_q1.csv` / the raw extracts; only
   `q1fy2027_billing_tagged.csv` signs them, in `net_value_gps_signed`. Unsigned, IUK's EUR 95,000
   rebate credit turned a -9.8% quarter into a reported -4.5%. **This is network-wide, not an IUK
   quirk** — Q1 2026 alone carries credits for ITUK (142K), UMI (113K), IUK (96K), RSA (47K), ISD
   (30K), IBX (25K), Sverige (24K), Portugal (20K), Ireland (0.7K). Sign them, then keep them out
-  of the mover lists as a commercial adjustment.
+  of the mover lists as a commercial adjustment (separate from the warranty PN cut).
   ⚠ The July 2026 Portugal deck reported H1 2026 at EUR 935,636 with its EUR 20,000 rebate counted
   as a positive — the correct figure is EUR 40,000 lower. Fix before that deck is reused.
 - **A quarter's SAP extract can be badly short, by a DB-specific amount.** `Q1FY2027.XLSX` holds
