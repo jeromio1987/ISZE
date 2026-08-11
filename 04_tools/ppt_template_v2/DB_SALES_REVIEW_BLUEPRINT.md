@@ -37,8 +37,9 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
 1. Cover
 2. Agenda
 3. Q period Sales Review — actual vs budget, actual vs prior year, by month. **Use official/accounting figures if the user supplies them, not a self-derived cut.**
-4. Parts Performance — **commercial / ex-warranty** category-level H1 movers (bar chart, up and down). Never review blended warranty+commercial demand as the sales cut.
-5+. One slide per material problem category (each ~-15% or worse) — same commercial basis; see tone rules below for exact structure
+4. Parts Performance — **commercial / ex-warranty** category-level H1 movers (bar chart, up and down) **plus the largest-EUR PN drivers** for the increase and the decrease (PN + short description; model/application only when present in workspace BVP/PMS tables). Never review blended warranty+commercial demand as the sales cut.
+5+. One slide per material problem category (each ~-15% or worse) — same commercial basis; lead with category total then the **top PNs by EUR delta** driving that category move; see tone rules below for exact structure
+   - Growth slide: top growing PNs by EUR delta (prior > 0), not category totals alone
    - One slide for "New Business" — PNs with zero sales in prior years, cross-checked they don't just have a timing/backdated-invoice artifact, and cross-checked against warranty claims before calling them "new" wins
 6. GPS Capture — one line, the clean number, nothing else (see tone rules)
 7. PMS Coverage — filter categories with real km intervals labeled, wear-item categories with confidence caveats
@@ -76,6 +77,15 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
   **commercial / ex-warranty**. Limitation: claim-matched PN exclusion drops all
   billing of that PN (including any genuine commercial demand); residual warranty
   on unmapped PNs can remain; grain assess-month coverage is uneven by DB/year.
+- **PN drivers on movers slides:** “Most common” = **largest EUR contribution**
+  to the H1 commercial move (qty as secondary). Category overview + each
+  decline/growth deep-dive must name those PNs with a short description.
+- **Model / application attribution:** fill `vehicle_model` from existing
+  `genuine_bvp_crossref.csv` / `bvp_addressable_basket.csv` when the PN is in
+  that basket. Do **not** invent fitment. `parts_catalog_dimension.csv` has no
+  model field. Browser EPC/GIDSS is **not** required for the PN-EUR movers
+  story; only needed if Jerome wants full fitment for PNs outside the BVP/PMS
+  application tables.
 - Fleet charts show **2019–2026 only**. The 2026 point is labelled as a working
   year-end estimate. UK LCV CY2026 is fixed at **44,926 units**, about **6% below**
   2025, and the title must state decline rather than imply continued growth.

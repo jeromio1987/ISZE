@@ -20,6 +20,7 @@ import io
 import json
 import os
 import sys
+from pathlib import Path
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
@@ -155,6 +156,22 @@ def eur(v, k=False):
     if v is None:
         return "—"
     return f"EUR {v/1000:,.0f}K" if k else f"EUR {v:,.0f}"
+
+
+def _pn_label(r, desc_len=28):
+    """Short PN + description (+ model when known) for takeaway bullets."""
+    desc = str(r.get("desc") or "")[:desc_len]
+    model = str(r.get("model") or "").strip()
+    base = f"{r['pn']} ({desc})" if desc else str(r["pn"])
+    return f"{base} [{model}]" if model else base
+
+
+def _fmt_pn_delta(r, desc_len=28):
+    q = ""
+    dq = r.get("dq")
+    if dq is not None and abs(dq) >= 1:
+        q = f", {abs(dq):,.0f} {'fewer' if dq < 0 else 'more'} pcs"
+    return f"{_pn_label(r, desc_len)} {eur(r['d'], True)}{q}"
 
 
 # ------------------------------------------------ per-category question bank --
@@ -409,30 +426,45 @@ def build(dbkey: str):
     g_pct = S.get("commercial_delta_pct", S["gross_delta_pct"])
     cred = S["credits_current"]
     w_strip = S.get("warranty_stripped_current") or 0
+    top_decl_pn = list(S.get("top_decl_pn") or [])
+    top_grow_pn = list(S.get("top_grow_pn") or [])
+    # Fallback for older summaries that only carried ITC movers
+    if not top_decl_pn:
+        top_decl_pn = list(S.get("top_decl_itc") or [])
+    if not top_grow_pn:
+        top_grow_pn = list(S.get("top_grow_itc") or [])
+    cat_pn = S.get("category_pn_drivers") or {}
+
+    risers = [c for c in cats if c["d"] > 0][-3:][::-1]
     take = [
         f"Commercial parts billing (warranty/campaign excluded) {eur(gc, True)} against "
-        f"{eur(gp, True)} a year earlier — {g_pct:+.1%}."
+        f"{eur(gp, True)} a year earlier — {g_pct:+.1%} "
+        f"({L26} vs {L25}, Jan–Jun)."
     ]
+    if top_decl_pn:
+        take.append("Largest PN drops: " + "; ".join(
+            _fmt_pn_delta(r, 20) for r in top_decl_pn[:3]) + ".")
+    elif decliners:
+        take.append("Biggest commercial declines: " + "; ".join(
+            f"{c['cat']} {eur(c['d'], True)}" for c in decliners) + ".")
+    if top_grow_pn:
+        take.append("Largest PN gains: " + "; ".join(
+            _fmt_pn_delta(r, 20) for r in top_grow_pn[:3]) + ".")
+    elif risers:
+        take.append("Growing: " + ", ".join(
+            f"{c['cat']} {c['dp']:+.0%}" for c in risers if c["dp"] is not None) + ".")
     if abs(cred) > 1000:
         take.append(
-            f"Credit notes of {eur(abs(cred), True)} remain a separate commercial adjustment "
-            f"on the net bridge (net {eur(S['net_current'], True)}); they are not in the movers."
+            f"Credit notes of {eur(abs(cred), True)} stay on the net bridge "
+            f"(net {eur(S['net_current'], True)}); not in the movers."
         )
     elif w_strip and abs(w_strip) > 1000:
         take.append(
-            f"About {eur(abs(w_strip), True)} of current-window billing on claim-matched PNs "
-            "was stripped so this chart reviews aftermarket demand, not warranty."
+            f"About {eur(abs(w_strip), True)} of claim-matched PN billing was stripped "
+            "so this chart is aftermarket demand, not warranty."
         )
-    if decliners:
-        take.append("Biggest commercial declines: " + "; ".join(
-            f"{c['cat']} {eur(c['d'], True)}" for c in decliners) + ".")
-    risers = [c for c in cats if c["d"] > 0][-3:][::-1]
-    if risers:
-        take.append("Growing: " + ", ".join(
-            f"{c['cat']} {c['dp']:+.0%}" for c in risers if c["dp"] is not None) + ".")
-    take.append(
-        f"{L26} against {L25} (calendar Jan–Jun) — commercial / ex-warranty category cut."
-    )
+    else:
+        take.append("PNs ranked by EUR contribution to the commercial move.")
     db.build_two_col(prs, title=f"Parts Performance — {L26} vs {L25} (commercial, ex-warranty)",
                      chart_path=cp("category_movers.png"),
                      eyebrow="Parts Performance", page_no=page, takeaways=take[:4])
@@ -440,19 +472,28 @@ def build(dbkey: str):
 
     # ---- one slide per material declining category ------------------------
     for n_cat, cat in enumerate(decliners):
-        rows = [r for r in S["top_decl_itc"] if r["cat"] == cat["cat"]][:3]
+        # Prefer per-category largest-EUR PNs; fall back to global ITC filter
+        drivers = (cat_pn.get(cat["cat"]) or {}).get("decl") or []
+        if not drivers:
+            drivers = [r for r in S.get("top_decl_itc") or [] if r["cat"] == cat["cat"]][:5]
+        drivers = drivers[:4]
         # Title-case the category so "Brake parts" does not read "Brake parts Performance"
         cat_title = cat["cat"][0].upper() + cat["cat"][1:]
         s = db.build_content(prs, f"{cat_title} — {L26} vs {L25} (commercial, ex-warranty)",
                              eyebrow=f"Parts Performance — {cat['cat']}", page_no=page)
         bullets = [f"{eur(cat['prior'])} ({L25}) to {eur(cat['current'])} ({L26}), "
                    f"down {eur(abs(cat['d']))}" + (f" ({cat['dp']:.0%})." if cat['dp'] else ".")]
-        for r in rows:
-            q = f", {abs(r['dq']):,.0f} fewer pieces" if r["dq"] < 0 else ""
-            bullets.append(f"{r['pn']} ({r['desc']}): {eur(r['prior'])} to {eur(r['current'])}{q}.")
+        bullets.append("Largest part numbers driving the decline (by EUR):")
+        for r in drivers:
+            q = f", {abs(r['dq']):,.0f} fewer pieces" if r.get("dq") is not None and r["dq"] < 0 else ""
+            model = f" · {r['model']}" if r.get("model") else ""
+            bullets.append(
+                f"{r['pn']} ({str(r.get('desc') or '')[:40]}{model}): "
+                f"{eur(r['prior'])} to {eur(r['current'])}{q}."
+            )
         # Do NOT attach whole-window BVP movement to a single category decline —
         # that BVP total is cross-category and reads as a false value-tier proof.
-        db.bullet_list(s, bullets, Inches(0.32), Inches(1.32), Inches(12.7), Inches(2.9), size=14)
+        db.bullet_list(s, bullets, Inches(0.32), Inches(1.32), Inches(12.7), Inches(2.9), size=13)
         db.txt(s, "Questions for us to work through together", Inches(0.32), Inches(4.20),
                Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
         db.bullet_list(s, QUESTIONS.get(cat["cat"], GENERIC_QUESTIONS),
@@ -462,12 +503,26 @@ def build(dbkey: str):
     # ---- growth ------------------------------------------------------------
     s = db.build_content(prs, f"Where volume grew — {L26} vs {L25} (commercial, ex-warranty)",
                          eyebrow="Parts Performance — Growth", page_no=page)
-    grow = S["top_grow_itc"][:6]
-    rows = [["Part", "Description", L25, L26]] + [
-        [g["pn"], str(g["desc"])[:34], eur(g["prior"]), eur(g["current"])] for g in grow]
-    styled_table(s, rows, Inches(0.32), Inches(1.32), Inches(12.7), Inches(2.6),
-                 [Inches(2.4), Inches(4.9), Inches(2.7), Inches(2.7)],
-                 bold_last=False, size=12, left_cols=(0, 1))
+    # Prefer raw PN by EUR delta; fall back to ITC family rows
+    grow = (top_grow_pn or S.get("top_grow_itc") or [])[:6]
+    has_model = any(str(g.get("model") or "").strip() for g in grow)
+    if has_model:
+        rows = [["Part", "Description", "Model", L25, L26, "Δ EUR"]] + [
+            [g["pn"], str(g.get("desc") or "")[:28],
+             str(g.get("model") or "—")[:16],
+             eur(g["prior"]), eur(g["current"]), eur(g["d"])]
+            for g in grow]
+        styled_table(s, rows, Inches(0.32), Inches(1.32), Inches(12.7), Inches(2.6),
+                     [Inches(1.9), Inches(3.2), Inches(1.8), Inches(1.9), Inches(1.9), Inches(2.0)],
+                     bold_last=False, size=11, left_cols=(0, 1, 2))
+    else:
+        rows = [["Part", "Description", L25, L26, "Δ EUR"]] + [
+            [g["pn"], str(g.get("desc") or "")[:34],
+             eur(g["prior"]), eur(g["current"]), eur(g["d"])]
+            for g in grow]
+        styled_table(s, rows, Inches(0.32), Inches(1.32), Inches(12.7), Inches(2.6),
+                     [Inches(2.2), Inches(4.2), Inches(2.1), Inches(2.1), Inches(2.1)],
+                     bold_last=False, size=12, left_cols=(0, 1))
     gbul = []
     if risers:
         gbul.append(", ".join(f"{c['cat']} {c['dp']:+.0%}" for c in risers if c["dp"] is not None)
@@ -483,7 +538,10 @@ def build(dbkey: str):
             f"{S['country']} CY2025 warranty parts (claim-price basis) were "
             f"{eur(S['warranty_claim'], True)} — separate from fiscal GPS warranty expense."
         )
-    gbul.append("Worth agreeing which of these are repeatable and which were one-off.")
+    gbul.append(
+        "PNs ranked by largest EUR increase (prior-period sales > 0). "
+        "Worth agreeing which of these are repeatable and which were one-off."
+    )
     db.bullet_list(s, gbul, Inches(0.32), Inches(4.20), Inches(12.7), Inches(2.4), size=14)
     page += 1
 
@@ -749,10 +807,34 @@ def build(dbkey: str):
     db.build_closing(prs)
 
     import os
-    out = os.environ.get("ISZE_DECK_OUT") or str(
+    from datetime import datetime, timezone
+    preferred = os.environ.get("ISZE_DECK_OUT") or str(
         out_dir / f"ISZE_{p['key']}_Sales_Review_FY2027.pptx"
     )
-    prs.save(out)
+    candidates = [preferred]
+    stem = Path(preferred)
+    candidates += [
+        str(stem.with_name(stem.stem + "_share.pptx")),
+        str(stem.with_name(
+            stem.stem + f"_rebuild_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.pptx"
+        )),
+    ]
+    # de-dupe while preserving order
+    seen, out = set(), None
+    for cand in candidates:
+        if cand in seen:
+            continue
+        seen.add(cand)
+        try:
+            prs.save(cand)
+            out = cand
+            if cand != preferred:
+                print(f"[{p['key']}] (preferred PPTX locked — wrote → {Path(cand).name})")
+            break
+        except PermissionError:
+            continue
+    if out is None:
+        raise SystemExit(f"[{p['key']}] cannot save PPTX — all candidates locked: {candidates}")
     print(f"[{p['key']}] saved {out}   ({len(prs.slides)} slides)")
     if gps:
         g = gps["gps_FY2026"]

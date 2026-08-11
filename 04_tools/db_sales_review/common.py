@@ -344,6 +344,44 @@ def load_catalog() -> pd.DataFrame:
     return cat[["part_number", "pr00_group", "pms_category"]].drop_duplicates("part_number")
 
 
+def load_pn_vehicle_models() -> dict[str, str]:
+    """Best-effort PN → vehicle_model from existing BVP/PMS application tables.
+
+    Coverage is the addressable BVP basket / genuine↔BVP crossref only — not a
+    full EPC. Returns {} when sources are missing. Never invents a model.
+    """
+    frames: list[pd.DataFrame] = []
+    xref = DERIVED / "genuine_bvp_crossref.csv"
+    basket = DERIVED / "bvp_addressable_basket.csv"
+    if xref.exists():
+        df = pd.read_csv(xref, dtype=str)
+        for col in ("genuine_pn", "bvp_pn"):
+            if col in df.columns and "vehicle_model" in df.columns:
+                part = df[[col, "vehicle_model"]].rename(columns={col: "pn"})
+                frames.append(part)
+    if basket.exists():
+        df = pd.read_csv(basket, dtype=str)
+        for col in ("genuine_pn", "bvp_pn"):
+            if col in df.columns and "vehicle_model" in df.columns:
+                part = df[[col, "vehicle_model"]].rename(columns={col: "pn"})
+                frames.append(part)
+    if not frames:
+        return {}
+    all_ = pd.concat(frames, ignore_index=True)
+    all_["pn"] = all_["pn"].map(norm_pn)
+    all_["vehicle_model"] = all_["vehicle_model"].fillna("").astype(str).str.strip()
+    all_ = all_[(all_["pn"].notna()) & (all_["vehicle_model"] != "")
+                & (all_["vehicle_model"].str.lower() != "nan")]
+    if all_.empty:
+        return {}
+    # Prefer the most frequent non-blank label per PN
+    ranked = (all_.groupby(["pn", "vehicle_model"]).size()
+              .reset_index(name="n")
+              .sort_values(["pn", "n"], ascending=[True, False]))
+    return (ranked.drop_duplicates("pn")
+            .set_index("pn")["vehicle_model"].to_dict())
+
+
 def load_bvp_pns() -> set[str]:
     bvp = pd.read_csv(DERIVED / "bvp_pn_dimension.csv", dtype=str)
     return set(bvp["part_number"].dropna().map(norm_pn).dropna())

@@ -87,9 +87,12 @@ Build-enabled profiles: `IUK`, `ISD`, `IBX`, `PETROS`, `IRELAND`, `UMI`, `NORWAY
   Sales-to-Dealer KPI is clearly imputed from FY2026 ISZE billing divided by 0.65.
 - **Fleet charts stop at 2026.** The 2026 point is a working year-end estimate. UK LCV is
   locked at 44,926 units (about -6%); near-term estimates use the corrected survival basis.
-- **Decline slides** are generated for the top two declining categories, with per-category
-  question sets from the bank in `build_deck.py`. The genuine-vs-BVP read is stated once,
-  on the first decline slide only.
+- **Decline slides** are generated for the top declining categories, with per-category
+  question sets from the bank in `build_deck.py`. Each movers / decline / growth slide
+  names the **largest-EUR PN drivers** (increase and decrease). Optional `vehicle_model`
+  is joined from BVP/PMS application tables when the PN is in that basket — not a full
+  EPC; browser catalogue is not required for the PN-EUR story.
+- The genuine-vs-BVP read is stated once on the first decline slide only.
 - **Slides degrade rather than lie.** No IDS data → no dealer slide (ISD and Ireland have
   none). No Sales-to-Dealer figure → the data-request slide changes its framing. GPS over
   100% → the amount-based variant, no percentage quoted anywhere (Ireland).

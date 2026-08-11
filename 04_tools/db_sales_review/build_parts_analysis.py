@@ -13,6 +13,8 @@ Method (identical for every DB — see ..\\ppt_template_v2\\DB_SALES_REVIEW_BLUE
     warranty document type, so claim-matched PN exclusion is the line-level cut
   · parts rolled up to ITC family (Newest P/N) as well as raw PN
   · join on 'Material'; 'Material Number' holds the description, not a PN
+  · Mode A movers carry largest-EUR PN drivers (increase and decrease);
+    optional vehicle_model from BVP/PMS application tables when present
 """
 from __future__ import annotations
 
@@ -232,8 +234,26 @@ def build(dbkey: str):
     pn = aggregate_pn(commercial, catalog, desc_by_newest, itc_map, L25, L26)
     pn["Warranty_campaign"] = False
     pn["Warranty_source"] = ""
+    model_by_pn = C.load_pn_vehicle_models()
+    pn["Vehicle_model"] = pn["Material"].map(
+        lambda m: model_by_pn.get(m) or model_by_pn.get(itc_map.get(m, m), "") or ""
+    )
     fam = aggregate_itc(pn, desc_by_newest, L25, L26)
     fam["Warranty_campaign"] = False
+    fam["Vehicle_model"] = fam["Newest_PN"].map(
+        lambda m: model_by_pn.get(m, "") if m else ""
+    )
+    # Prefer a member PN's model when the newest PN itself is unmapped
+    if model_by_pn:
+        for i, row in fam.iterrows():
+            if row.get("Vehicle_model"):
+                continue
+            members = [x.strip() for x in str(row.get("Member_PNs") or "").split(";") if x.strip()]
+            for m in members:
+                hit = model_by_pn.get(m)
+                if hit:
+                    fam.at[i, "Vehicle_model"] = hit
+                    break
     net = netting(pn, fam, L25, L26)
     assert abs(fam[f"Net|{L25}"].sum() - pn[f"net_eur|{L25}"].sum()) < 0.05
     assert abs(fam[f"Net|{L26}"].sum() - pn[f"net_eur|{L26}"].sum()) < 0.05
@@ -656,12 +676,45 @@ def build(dbkey: str):
     print(f"  wrote {out_xlsx}")
 
     # ------------------------------------------------------------ summary json --
+    def _model(r, pn_key="Newest_PN"):
+        m = str(r.get("Vehicle_model") or "").strip()
+        if m:
+            return m
+        return model_by_pn.get(r.get(pn_key)) or ""
+
     def famrows(df, n):
         return [{"pn": r["Newest_PN"], "desc": r["Description"], "cat": r["Category"],
+                 "model": _model(r, "Newest_PN"),
                  "prior": round(float(r[f"Net|{L25}"]), 2),
                  "current": round(float(r[f"Net|{L26}"]), 2),
                  "d": round(float(r["Delta_EUR"]), 2), "dq": round(float(r["Delta_Qty"]), 1)}
                 for _, r in df.head(n).iterrows()]
+
+    def pnrows(df, n):
+        return [{"pn": r["Material"], "newest": r["Newest_PN"], "desc": r["Description"],
+                 "cat": r["Category"], "model": _model(r, "Material") or _model(r, "Newest_PN"),
+                 "prior": round(float(r[f"net_eur|{L25}"]), 2),
+                 "current": round(float(r[f"net_eur|{L26}"]), 2),
+                 "d": round(float(r["Delta_EUR"]), 2), "dq": round(float(r["Delta_Qty"]), 1)}
+                for _, r in df.head(n).iterrows()]
+
+    decl_pn = pn_ex.nsmallest(TOP_N, "Delta_EUR")
+    grow_pn_ranked = grow_pn.nlargest(TOP_N, "Delta_EUR")
+
+    # Per-category largest EUR PN drivers (commercial) for Mode A deep-dives
+    category_pn_drivers = {}
+    for cat_name, g in pn_ex.groupby("Category", dropna=False):
+        if not cat_name or cat_name in {"UNCLASSIFIED"}:
+            continue
+        d_sub = g[g["Delta_EUR"] < 0].nsmallest(5, "Delta_EUR")
+        # Incremental growers only (prior > 0), same rule as overall growth list
+        g_sub = g[(g[f"net_eur|{L25}"] > 0) & (g["Delta_EUR"] > 0)].nlargest(5, "Delta_EUR")
+        if d_sub.empty and g_sub.empty:
+            continue
+        category_pn_drivers[str(cat_name)] = {
+            "decl": pnrows(d_sub, 5),
+            "grow": pnrows(g_sub, 5),
+        }
 
     summary = {
         "db": p["key"], "name": p["name"], "country": p["country"], "display": p["display"],
@@ -683,6 +736,20 @@ def build(dbkey: str):
                        for _, r in cat.iterrows()],
         "top_decl_itc": famrows(fam_ex.nsmallest(TOP_N, "Delta_EUR"), 15),
         "top_grow_itc": famrows(grow_fam.nlargest(TOP_N, "Delta_EUR"), 15),
+        "top_decl_pn": pnrows(decl_pn, 15),
+        "top_grow_pn": pnrows(grow_pn_ranked, 15),
+        "category_pn_drivers": category_pn_drivers,
+        "model_attribution": {
+            "source": "genuine_bvp_crossref + bvp_addressable_basket (vehicle_model)",
+            "coverage": "BVP/PMS addressable basket only - not full EPC/GIDSS",
+            "n_mapped_pns": len(model_by_pn),
+            "browser_catalogue_required": False,
+            "note": (
+                "PN EUR drivers come from SAP billing. Model is filled only when the PN "
+                "appears in the BVP/PMS application tables; blank otherwise. Full fitment "
+                "for arbitrary PNs would need EPC/GIDSS - not required for the movers slides."
+            ),
+        },
         "new_business": [{"pn": r["Material"], "desc": r["Description"], "cat": r["Category"],
                           "current": round(float(r[f"net_eur|{L26}"]), 2),
                           "qty": round(float(r[f"qty|{L26}"]), 1),

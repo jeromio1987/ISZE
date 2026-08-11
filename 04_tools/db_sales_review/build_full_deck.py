@@ -795,16 +795,26 @@ def build_full(db_key: str) -> Path:
     odir.mkdir(parents=True, exist_ok=True)
 
     print(f"[{key}] rebuilding Mode A …")
+    from datetime import datetime, timezone
     canonical = odir / f"ISZE_{key}_Sales_Review_FY2027.pptx"
     share = odir / f"ISZE_{key}_Sales_Review_FY2027_share.pptx"
-    target = canonical
-    try:
-        if canonical.exists():
-            with open(canonical, "a"):
-                pass
-    except PermissionError:
-        target = share
-        print(f"  (canonical PPTX locked — writing → {share.name})")
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    rebuild = odir / f"ISZE_{key}_Sales_Review_FY2027_rebuild_{stamp}.pptx"
+
+    def _writable(path: Path) -> bool:
+        try:
+            if path.exists():
+                with open(path, "a"):
+                    pass
+            else:
+                path.parent.mkdir(parents=True, exist_ok=True)
+            return True
+        except PermissionError:
+            return False
+
+    target = next((p for p in (canonical, share, rebuild) if _writable(p)), rebuild)
+    if target != canonical:
+        print(f"  (canonical PPTX locked — writing → {target.name})")
 
     os.environ["ISZE_DECK_OUT"] = str(target)
     mode_a_path = Path(build_mode_a(key))
@@ -819,13 +829,18 @@ def build_full(db_key: str) -> Path:
     prs = Presentation(str(mode_a_path))
     n_a = len(prs.slides)
     append_deep_dive(prs, profile, page_start=n_a + 1)
-    try:
-        prs.save(str(target))
-        full = target
-    except PermissionError:
-        prs.save(str(share))
-        full = share
-        print(f"  (save locked — wrote → {share.name})")
+    full = None
+    for cand in (target, share, rebuild):
+        try:
+            prs.save(str(cand))
+            full = cand
+            if cand != target:
+                print(f"  (save locked — wrote → {cand.name})")
+            break
+        except PermissionError:
+            continue
+    if full is None:
+        raise SystemExit(f"[{key}] cannot save full deck — PPTX files locked")
 
     # Write a short manifest for GitHub / other agents
     manifest = {
