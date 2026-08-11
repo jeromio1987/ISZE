@@ -23,6 +23,7 @@
 01_data/13_models/**
 01_data/models/**
 01_data/11_planning/**
+!01_data/11_planning/README.md
 01_data/planning/**
 01_data/92_archive/**
 01_data/_archive/**
@@ -46,6 +47,8 @@
 
 # Small reference allowlist (explicit only — review before init)
 !03_analytics/Isuzu/prism/data/distributor_master_mapping.csv
+# FY2027 VPACC July action plan (planning workbook on git)
+!01_data/11_planning/Action plan FY2027 VPACC_July update.xlsx
 
 # --- Derived data (regenerable; default off) ---
 01_data/derived/**
@@ -73,6 +76,8 @@
 !01_data/00_derived/db_parts_mix_classification.parquet
 !01_data/00_derived/aim_gps_matrix.parquet
 !01_data/00_derived/pricing_*.parquet
+!01_data/00_derived/vpacc_*.parquet
+!01_data/00_derived/vpacc_*.meta.json
 
 # Giant regenerable CSVs (use sibling .parquet on clones; GitHub ~100MB hard limit)
 01_data/00_derived/pricing_pn_enquiry_active.csv
