@@ -436,23 +436,40 @@ def build(dbkey: str):
     cat_pn = S.get("category_pn_drivers") or {}
 
     risers = [c for c in cats if c["d"] > 0][-3:][::-1]
+    # Biggest EUR-growing category (category chart is sorted by delta ascending)
+    top_rising_cat = max((c for c in cats if c.get("d") and c["d"] > 0),
+                         key=lambda c: c["d"], default=None)
     take = [
         f"Commercial parts billing (warranty/campaign excluded) {eur(gc, True)} against "
         f"{eur(gp, True)} a year earlier — {g_pct:+.1%} "
         f"({L26} vs {L25}, Jan–Jun)."
     ]
     if top_decl_pn:
-        take.append("Largest PN drops: " + "; ".join(
+        take.append("Largest PN drops (all categories): " + "; ".join(
             _fmt_pn_delta(r, 20) for r in top_decl_pn[:3]) + ".")
     elif decliners:
         take.append("Biggest commercial declines: " + "; ".join(
             f"{c['cat']} {eur(c['d'], True)}" for c in decliners) + ".")
     if top_grow_pn:
-        take.append("Largest PN gains: " + "; ".join(
+        take.append("Largest PN gains (all categories): " + "; ".join(
             _fmt_pn_delta(r, 20) for r in top_grow_pn[:3]) + ".")
     elif risers:
         take.append("Growing: " + ", ".join(
             f"{c['cat']} {c['dp']:+.0%}" for c in risers if c["dp"] is not None) + ".")
+    # Category +~EUR move is a sum of many PNs — surface top PNs inside the
+    # biggest growing category so the takeaways don't look like they "explain"
+    # the bar with three global (cross-category) PN lines.
+    if top_rising_cat:
+        within = (cat_pn.get(top_rising_cat["cat"]) or {}).get("grow") or []
+        if within:
+            take.append(
+                f"Within {top_rising_cat['cat']} "
+                f"({eur(top_rising_cat['d'], True)}"
+                + (f", {top_rising_cat['dp']:+.0%}" if top_rising_cat.get("dp") is not None else "")
+                + "): "
+                + "; ".join(_fmt_pn_delta(r, 20) for r in within[:3])
+                + "."
+            )
     if abs(cred) > 1000:
         take.append(
             f"Credit notes of {eur(abs(cred), True)} stay on the net bridge "
