@@ -8,6 +8,9 @@ build_deck.py consumes. Run preflight.py first.
 Method (identical for every DB — see ..\\ppt_template_v2\\DB_SALES_REVIEW_BLUEPRINT.md):
   · window from db_profiles.yaml defaults; movers cut on GROSS parts lines only
   · credit memos signed negative and excluded from the mover lists
+  · commercial / ex-warranty: PNs on warranty_raw_grain claims (plus campaign
+    text heuristic) are stripped from category / PN / ITC movers — ERP has no
+    warranty document type, so claim-matched PN exclusion is the line-level cut
   · parts rolled up to ITC family (Newest P/N) as well as raw PN
   · join on 'Material'; 'Material Number' holds the description, not a PN
 """
