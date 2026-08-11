@@ -1,35 +1,32 @@
-distributor_code,legal_entity,country,region,status,cv_lcv_scope,name_variants,sap_sold_to_codes,sap_payer_codes,notes
-ARMENIA,Grand Avto LLC,Armenia,CIS,active,CV only,Grand Avto LLC,2733,2731,In scope - mainly CV. Sold-to 2733 and payer 2731 both confirmed via DB_Sales_Order_Study pack + q1fy2027 export.
-BELGIUM,ISUZU BENELUX NV,Belgium,Benelux,active,CV+LCV (mainly LCV),ISUZU BENELUX NV; IBX (V13 workbook label),90,90,"Covers BE/NL/PL/LUX under one legal entity. See NETHERLANDS/POLAND/LUXEMBOURG rows below — same legal entity, rolled up here in code (SOLD_TO_OVERRIDES), no separate SAP sold-to observed for those three."
-CYPRUS,LOUTSIOS A & SONS LTD,Cyprus,Med,active,CV+LCV,LOUTSIOS A & SONS LTD,393,393,CV + LCV
-DENMARK,ISUZU DANMARK A/S,Denmark,Nordics,active,LCV only,ISUZU DANMARK A/S; Isuzu Denmark (V13 workbook label),2027; 2751,2027 (payer for both sold-to points),"LCV only. Two sold-to points observed: 2027 (main, 2,876 lines FY23-27) and 2751 (secondary, 1,353 lines)."
-FINLAND,Nordic Automotive trading oy.,Finland,Nordics,active,LCV only,Nordic Automotive trading oy.; Nordic Auto. (V13 workbook label),2679,2679,LCV only
-GERMANY,ISUZU SALES DEUTSCHLAND GMBH,Germany,DACH,active,Mainly LCV,ISUZU SALES DEUTSCHLAND GMBH; XXX ISUZU SALES DEUTSCHLAND GMBH (legacy SAP prefix); ISD-Lang (V13 workbook label),601; 2516,93,Mainly LCV. Distinct from GERMANY_SERVICE below (internal service dept) — do not merge the two.
-GERMANY_SERVICE,Isuzu Motors Germany GmbH,Germany,DACH,"EXCLUDED — internal service dept, not distributor sales",n/a,Isuzu Motors Germany GmbH,105,105,"In EXCLUDED_CODES. Sold-to 105 newly confirmed here via q1fy2027 export (Payer_name match, 64 lines) — this code had no source in the repo's committed mapping files before this reference was built."
-GREECE,PETROS PETROPOULOS S.A.,Greece,Med,active,LCV & CV,PETROS PETROPOULOS S.A.; PETROS PETROPOULOS S.A. (VEHICLE); Petros Petropoulos (V13 workbook label),66,66,LCV & CV
-HUNGARY,AW Distribution Kft.,Hungary,CEE,active,LCV only,AW Distribution Kft.; AutoWallis (V13 workbook label),537,537,LCV only
-ICELAND,BL. EHF.,Iceland,Nordics,active,LCV only,BL. EHF.; BL (V13 workbook label),1576,1576,LCV only
-IRELAND,Isuzu Ireland,Ireland,UK/IE,active,CV+LCV,Isuzu Ireland; ISUZU IRELAND,76,76,"CV + LCV. UNCONFIRMED nearby code 77 (11 billing lines total, no Payer_name match found in q1fy2027 sample) — possible legacy/typo variant of 76, do not assume without checking SAP directly. See 'UNRESOLVED' rows at bottom."
-ITUK,ISUZU TRUCK (UK) LIMITED,United Kingdom,UK/IE,active,CV only (N75 trucks) — main entity,ISUZU TRUCK (UK) LIMITED; ISUZU TRUCK UK LIMITED (variant spelling); ITUK (V13 workbook label),"2575; 146 (rare/legacy, 3 lines, name variant 'ISUZU TRUCK UK LIMITED')",2194,"FLAG — needs confirmation: payer code 2194 resolves to ITUK here (Payer_name=ISUZU TRUCK (UK) LIMITED, 4,509 lines in q1fy2027 export), but 03_analytics/Isuzu/prism/scripts/build_sap_sold_to_mapping.py hardcodes sold-to 2194 as MIDI ('SAP 2194; CY billing; EXCLUDED_CODES'). q1fy2027 separately shows MIDI EUROPE S.R.L. at a DIFFERENT code, 88. The two sources disagree on what 2194 represents — confirm in SAP before trusting either the MIDI exclusion or ITUK totals that touch code 2194."
-IUK,I.M. PARTS & SERVICE Limited,United Kingdom,UK/IE,active,LCV only (D-Max) — separate from ITUK,I.M. PARTS & SERVICE Limited; IUK (V13 workbook label),2574,89,"LCV only. Highest-volume sold-to code in the whole dataset (65,605 billing lines FY23-27)."
-KAZAKHSTAN,CBC-Trans LLP,Kazakhstan,CIS,active,Mainly CV,CBC-Trans LLP,2734,2732,In scope - mainly CV
-LUXEMBOURG,ISUZU BENELUX NV,Luxembourg,Benelux,EXCLUDED — UIO = 0,CV+LCV (nominal),ISUZU BENELUX NV,"— (rolled into BELGIUM, code 90; no distinct sold-to observed)",,Same legal entity as BELGIUM. In EXCLUDED_CODES.
-MALTA,GASANZAMMIT MOTORS LTD,Malta,Med,active,CV+LCV,GASANZAMMIT MOTORS LTD; GasanZammit (V13 workbook label),1759,1759,CV + LCV
-MIDI,MIDI EUROPE S.R.L.,Multi-country (Italy),Med,EXCLUDED — no ISZE sales data usable (Italy UIO 92k units not usable for GPS),CV+LCV (nominal),MIDI EUROPE S.R.L.,"88 (confirmed via q1fy2027 Payer_name match, 592 lines)",88,See FLAG under ITUK (code 2194) — build_sap_sold_to_mapping.py's hardcoded '2194 = MIDI' looks inconsistent with the q1fy2027 export and needs SAP confirmation.
-NETHERLANDS,ISUZU BENELUX NV,Netherlands,Benelux,"EXCLUDED — UIO ≈ 1, covered under BELGIUM entity sales",CV+LCV (nominal),ISUZU BENELUX NV,"— (rolled into BELGIUM, code 90; no distinct sold-to observed)",,Same legal entity as BELGIUM. In EXCLUDED_CODES.
-NORWAY,RUTEBILEIERNES STANDARDISERING AS,Norway,Nordics,active,LCV only,RUTEBILEIERNES STANDARDISERING AS; RSA (V13 workbook label),86,86,LCV only
-PALESTINE,KIMA LATEJARET AL MARKABAT CO,Palestine,MENA,active,LCV only,KIMA LATEJARET AL MARKABAT CO,2372,2372,LCV only
-POLAND,ISUZU BENELUX NV,Poland,CEE,functionally merged into BELGIUM (not a distinct SAP identity in code),CV+LCV (nominal),ISUZU BENELUX NV,"— (rolled into BELGIUM, code 90)",,"Master CSV carries a POLAND row, but modules/data_prep.py SOLD_TO_OVERRIDES always resolves 'ISUZU BENELUX NV' billing lines to BELGIUM (code comment: 'POLAND entry comes last so overwrites BELGIUM in dict — override here'). POLAND is not reachable as a distinct distributor_code from billing data today."
-PORTUGAL,I Motors,Portugal,Iberia,active,CV & LCV — separate entity,I Motors; IMOTORS - Importacao e Comercio; Imotors (V13 workbook label),92; 519,92,"CV & LCV. Two sold-to points: 92 (10,236 lines) and 519 (35,538 lines, larger)."
-ROMANIA,ISUZU ROM AUTO SRL,Romania,CEE,active,TOTAL (not split by segment),ISUZU ROM AUTO SRL; Isuzu Rom Auto (V13 workbook label),396,396,Not in distributor_master_mapping.csv — added programmatically via EXTRA_DISTRIBUTORS in modules/data_prep.py.
-SWEDEN,ISUZU SVERIGE AB,Sweden,Nordics,active,LCV only,ISUZU SVERIGE AB; ISUZU MOTORS SWEDEN AB; Isuzu Sverige (V13 workbook label),"2181; 2929 (rare, 1 line)",2181,LCV only
-TURKEY,ANADOLU ISUZU OTOMOTIV,Turkey,CIS,"EXCLUDED — not an ISZE customer, exclude from all analysis",CV+LCV (nominal),ANADOLU ISUZU OTOMOTIV,none observed in FY23-27 billing samples reviewed,,"Full range nominally, but excluded per EXCLUDED_CODES."
-UKRAINE,KOMTRANSKOMPLEKT LLC,Ukraine,CIS,active,Mainly CV,KOMTRANSKOMPLEKT LLC,2294,2294,Mainly CV
-UMI,UNIVERSAL MOTORS ISRAEL LTD,Israel,MENA,active,LCV only (D-Max),UNIVERSAL MOTORS ISRAEL LTD; UMI,1797,1797,LCV only - sap 1797. Also appears as the resolved 'sold_to' value on a portion of UTI's (1799) billing lines — shared Israeli group sold-to point; see UTI note.
-UTI,UNIVERSAL TRUCKS ISRAEL LTD,Israel,MENA,active,CV only,UNIVERSAL TRUCKS ISRAEL LTD; UTI,1799,1799,"CV only - sap 1799. In sales_fact.csv, payer 1799 lines carry sold_to=1797 (UMI's code) for 23,199 of the lines — a shared sold-to address between the UMI/UTI Israeli group entities. distributor_code assignment is payer-based (1799→UTI), so this does not miscount UTI, but a raw 'sold_to' filter for 1799 alone would undercount."
-IML_INTERNAL,ISUZU MOTORS LIMITED,Japan,HQ,"EXCLUDED — internal/parent transfers, not a distributor",n/a,ISUZU MOTORS LIMITED,"unconfirmed — possible match: 373 (Payer_name 'ISUZU MOTORS INT OPERATIONS', 2 lines, see UNRESOLVED rows)",,Japan parent.
-RUSSIA_EXCLUDE,JSC ISUZU RUS,Russia,CIS,"EXCLUDED — zero sales, no UIO",n/a,JSC ISUZU RUS,none observed,,
-FORLOG_EXCLUDE,Forlog NV,,,"EXCLUDED — micro, not a distributor",n/a,Forlog NV,none observed,,
-UNRESOLVED-77,unknown,,,needs SAP confirmation,,no Payer_name match found in exports reviewed,"77 (11 billing lines, sales_fact.csv FY23-27)",,"Numerically adjacent to IRELAND's 76 — plausible legacy/typo duplicate, not confirmed. Do not fold into IRELAND without checking SAP."
-UNRESOLVED-373,unknown (candidate: IML_INTERNAL),,,needs SAP confirmation,,ISUZU MOTORS INT OPERATIONS (q1fy2027 Payer_name),"373 (2 lines, q1fy2027 export)",373,"Looks like an internal/HQ operations entity, not a country distributor — candidate match for IML_INTERNAL, not confirmed."
-UNRESOLVED-2970,unknown,,,needs SAP confirmation,,no Payer_name match found (not present in q1fy2027 sample period),"payer 2970 / sold_to 2686 (1 line, sales_fact.csv FY23-27)",2970,Single line only; likely a one-off correction or micro account. No name evidence found in the sources checked for this reference.
+db_code,legal_entity,also_known_as,country,vehicle_scope,sap_sold_to_codes,rolled_up_under,status,notes
+ARMENIA,Grand Avto LLC,,Armenia,CV,2733,,Active,
+BELGIUM,ISUZU BENELUX NV,IBX,Belgium,CV+LCV,90,,Active,Group entity for Belgium/Netherlands/Poland/Luxembourg — see those rows
+CYPRUS,LOUTSIOS A & SONS LTD,,Cyprus,CV+LCV,393,,Active,
+DENMARK,ISUZU DANMARK A/S,,Denmark,LCV,2027 / 2751,,Active,Two sold-to codes in use
+FINLAND,Nordic Automotive trading oy.,,Finland,LCV,2679,,Active,
+GERMANY,ISUZU SALES DEUTSCHLAND GMBH,XXX ISUZU SALES DEUTSCHLAND GMBH,Germany,LCV,601 / 2516,,Active,Not the same as Germany Service below
+GERMANY_SERVICE,Isuzu Motors Germany GmbH,,Germany,—,105,,Excluded,"Internal service department, not a distributor"
+GREECE,PETROS PETROPOULOS S.A.,PETROS PETROPOULOS S.A. (VEHICLE),Greece,CV+LCV,66,,Active,
+HUNGARY,AW Distribution Kft.,,Hungary,LCV,537,,Active,
+ICELAND,BL. EHF.,,Iceland,LCV,1576,,Active,
+IRELAND,Isuzu Ireland,ISUZU IRELAND,Ireland,CV+LCV,76,,Active,
+ITUK,ISUZU TRUCK (UK) LIMITED,ISUZU TRUCK UK LIMITED,United Kingdom,CV,2575,,Active,Trucks only — separate company from IUK
+IUK,I.M. PARTS & SERVICE Limited,,United Kingdom,LCV,2574,,Active,D-Max only — separate company from ITUK
+KAZAKHSTAN,CBC-Trans LLP,,Kazakhstan,CV,2734,,Active,
+LUXEMBOURG,ISUZU BENELUX NV,,Luxembourg,CV+LCV,,BELGIUM,Excluded,"Near-zero volume, billed under Belgium"
+MALTA,GASANZAMMIT MOTORS LTD,,Malta,CV+LCV,1759,,Active,
+MIDI,MIDI EUROPE S.R.L.,,Italy,CV+LCV,88,,Excluded,No usable ISZE sales data — see question below
+NETHERLANDS,ISUZU BENELUX NV,,Netherlands,CV+LCV,,BELGIUM,Excluded,"Billed under Belgium, no separate sold-to code"
+NORWAY,RUTEBILEIERNES STANDARDISERING AS,,Norway,LCV,86,,Active,
+PALESTINE,KIMA LATEJARET AL MARKABAT CO,,Palestine,LCV,2372,,Active,
+POLAND,ISUZU BENELUX NV,,Poland,CV+LCV,,BELGIUM,Excluded,"Billed under Belgium/IBX, no separate sold-to code"
+PORTUGAL,I Motors,IMOTORS - Importacao e Comercio,Portugal,CV+LCV,92 / 519,,Active,Two sold-to codes in use
+ROMANIA,ISUZU ROM AUTO SRL,,Romania,CV+LCV,396,,Active,
+SWEDEN,ISUZU SVERIGE AB,ISUZU MOTORS SWEDEN AB,Sweden,LCV,2181 / 2929,,Active,
+TURKEY,ANADOLU ISUZU OTOMOTIV,,Turkey,CV+LCV,,,Excluded,Not an ISZE customer
+UKRAINE,KOMTRANSKOMPLEKT LLC,,Ukraine,CV,2294,,Active,
+UMI,UNIVERSAL MOTORS ISRAEL LTD,,Israel,LCV,1797,,Active,D-Max only — separate company from UTI
+UTI,UNIVERSAL TRUCKS ISRAEL LTD,,Israel,CV,1799,,Active,Trucks only — separate company from UMI
+IML_INTERNAL,ISUZU MOTORS LIMITED,,Japan,—,,,Excluded,"Parent company, internal transfers — not a distributor"
+RUSSIA_EXCLUDE,JSC ISUZU RUS,,Russia,—,,,Excluded,Zero sales
+FORLOG_EXCLUDE,Forlog NV,,,—,,,Excluded,"Micro account, not a distributor"
