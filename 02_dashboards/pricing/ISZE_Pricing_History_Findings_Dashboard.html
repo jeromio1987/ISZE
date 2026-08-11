@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ISZE · Pricing History Findings</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#1A1A1A;font:15px/1.55 "Segoe UI",Arial,sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px 80px}
+header{border-bottom:3px solid #CC0E1E;padding:36px 0 18px;margin-bottom:28px}
+.brand{font:800 13px/1 Arial Black,Arial;letter-spacing:.22em;color:#CC0E1E;margin-bottom:14px}
+h1{font-size:30px;margin:0 0 8px;letter-spacing:-.3px}
+.sub{color:#5A5A5A;max-width:820px}
+.stamp{color:#5A5A5A;font-size:12.5px;margin-top:12px}
+.callout{border-left:4px solid #B45309;background:#FEF8F0;padding:14px 16px;margin:0 0 22px}
+.callout b{color:#B45309}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:0 0 28px}
+.kpi{border:1px solid #E4E4E7;border-top:3px solid #CC0E1E;padding:14px}
+.kpi .v{font-size:28px;font-weight:800;letter-spacing:-1px}
+.kpi .l{font-size:11px;color:#5A5A5A;text-transform:uppercase;letter-spacing:.06em;margin-top:6px;font-weight:600}
+.kpi.amber{border-top-color:#B45309}.kpi.amber .v{color:#B45309}
+h2{font-size:20px;margin:36px 0 8px}
+.lead{color:#5A5A5A;font-size:14px;margin:0 0 14px;max-width:860px}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px}
+th{background:#CC0E1E;color:#fff;text-align:left;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+td{padding:7px 10px;border-bottom:1px solid #F0F0F0}
+tbody tr:nth-child(even){background:#FAFAFA}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+td.sm{font-size:12px;color:#5A5A5A} td.mono{font-family:Consolas,monospace;font-size:12px}
+.foot{margin-top:48px;padding-top:16px;border-top:1px solid #E4E4E7;font-size:11.5px;color:#5A5A5A}
+.badge{display:inline-block;padding:4px 10px;background:#FEF8F0;color:#B45309;font-weight:700;font-size:12px;border:1px solid #F0D7B0}
+</style></head><body>
+<div class="wrap">
+<header>
+  <div class="brand">ISUZU · ISZE</div>
+  <h1>Pricing history findings</h1>
+  <div class="sub">Year-matched PR00 realization (2023–2025 + 2026 YTD), ZPR1 vs PR00 for key payers,
+  KPI MOS stock days, NO_LIST gap, and VPACC action status. Internal QA pack.</div>
+  <div class="stamp">Built 2026-08-11T06:16:29Z · Integrity score <b>53/100</b> (weak) ·
+  <span class="badge">Provisional — not externally quotable</span></div>
+</header>
+
+<div class="callout"><b>Conclusion.</b> Year-matched PR00 realization is provisional (integrity 53/100). CY2025 matched coverage 84.1%; realization on matched lines 96.0%. NO_LIST gap ≈ €4,955,737.0M (15.1% of CY2025 parts). Do not quote list-to-pocket externally until QA closes.</div>
+
+<div class="kpis">
+  <div class="kpi amber"><div class="v">53</div><div class="l">Integrity / 100</div></div>
+  <div class="kpi"><div class="v">96.0%</div><div class="l">CY2025 realization (matched)</div></div>
+  <div class="kpi amber"><div class="v">84.1%</div><div class="l">CY2025 list coverage</div></div>
+  <div class="kpi amber"><div class="v">251</div><div class="l">NO_LIST PNs CY2025</div></div>
+  <div class="kpi"><div class="v">121</div><div class="l">VPACC open actions</div></div>
+</div>
+
+<h2>1. Year-matched PR00 realization</h2>
+<p class="lead">Billing net ÷ (qty × year PR00 list) on matched lines only. Coverage footnote = matched € / all parts €.
+2026 uses current IE40 PR00 extract. Status: provisional QA pending.</p>
+<table><thead><tr><th>Year</th><th>Period</th><th class="n">Parts €</th><th class="n">Coverage</th>
+<th class="n">Realization</th><th class="n">NO_LIST €</th><th>Billing end</th></tr></thead>
+<tbody><tr><td>2023</td><td>CY</td><td class='n'>€30,422,371.9M</td><td class='n'>83.6%</td><td class='n'>96.8%</td><td class='n'>€4,988,928.1M</td><td class='sm'>2023-12-28</td></tr><tr><td>2024</td><td>CY</td><td class='n'>€34,699,409.4M</td><td class='n'>89.7%</td><td class='n'>94.9%</td><td class='n'>€3,561,957.0M</td><td class='sm'>2024-12-30</td></tr><tr><td>2025</td><td>CY</td><td class='n'>€33,707,573.8M</td><td class='n'>84.1%</td><td class='n'>96.0%</td><td class='n'>€5,351,222.8M</td><td class='sm'>2025-12-30</td></tr><tr><td>2026</td><td>CY_YTD</td><td class='n'>€9,987,601.4M</td><td class='n'>72.3%</td><td class='n'>94.0%</td><td class='n'>€2,764,663.0M</td><td class='sm'>2026-03-31</td></tr></tbody></table>
+
+<h2>2. ZPR1 vs PR00 (UTI / UMI — never blend)</h2>
+<p class="lead">Customer-condition list vs network PR00 for the same year. Optional payer 2372 included when present.
+Median gap vs PR00 and YoY ZPR1 change on common part numbers.</p>
+<table><thead><tr><th>Year</th><th>Payer</th><th class="n">PNs vs PR00</th><th class="n">Median vs PR00</th><th class="n">P25–P75</th></tr></thead>
+<tbody><tr><td>2023</td><td>UTI (1799)</td><td class='n'>90,988</td><td class='n'>-12.3%</td><td class='n'>-12.3% … -10.9%</td></tr><tr><td>2023</td><td>UMI (1797)</td><td class='n'>110,040</td><td class='n'>-14.2%</td><td class='n'>-14.2% … -11.2%</td></tr><tr><td>2023</td><td>2372 (2372)</td><td class='n'>107,434</td><td class='n'>-33.3%</td><td class='n'>-33.4% … -32.3%</td></tr><tr><td>2024</td><td>UTI (1799)</td><td class='n'>100,891</td><td class='n'>-10.6%</td><td class='n'>-10.8% … -10.6%</td></tr><tr><td>2024</td><td>UMI (1797)</td><td class='n'>37,762</td><td class='n'>-9.3%</td><td class='n'>-10.6% … -9.3%</td></tr><tr><td>2024</td><td>2372 (2372)</td><td class='n'>121,896</td><td class='n'>-34.4%</td><td class='n'>-34.4% … -34.3%</td></tr><tr><td>2025</td><td>UTI (1799)</td><td class='n'>127,758</td><td class='n'>-10.6%</td><td class='n'>-12.2% … -10.6%</td></tr><tr><td>2025</td><td>UMI (1797)</td><td class='n'>111,709</td><td class='n'>-15.3%</td><td class='n'>-15.8% … -9.5%</td></tr><tr><td>2025</td><td>2372 (2372)</td><td class='n'>111,709</td><td class='n'>-32.9%</td><td class='n'>-35.7% … -32.5%</td></tr><tr><td>2026</td><td>UTI (1799)</td><td class='n'>58,816</td><td class='n'>-13.9%</td><td class='n'>-14.0% … -12.4%</td></tr><tr><td>2026</td><td>UMI (1797)</td><td class='n'>53,171</td><td class='n'>-5.2%</td><td class='n'>-5.5% … -3.9%</td></tr><tr><td>2026</td><td>2372 (2372)</td><td class='n'>60,724</td><td class='n'>-40.3%</td><td class='n'>-42.1% … -37.9%</td></tr></tbody></table>
+<table><thead><tr><th>YoY</th><th>Payer</th><th class="n">Common PNs</th><th class="n">Median ZPR1 YoY</th></tr></thead>
+<tbody><tr><td>2023→2024</td><td>UTI (1799)</td><td class='n'>64,903</td><td class='n'>+3.8%</td></tr><tr><td>2024→2025</td><td>UTI (1799)</td><td class='n'>99,738</td><td class='n'>+1.4%</td></tr><tr><td>2025→2026</td><td>UTI (1799)</td><td class='n'>124,626</td><td class='n'>+8.2%</td></tr><tr><td>2023→2024</td><td>UMI (1797)</td><td class='n'>29,886</td><td class='n'>+6.1%</td></tr><tr><td>2024→2025</td><td>UMI (1797)</td><td class='n'>36,300</td><td class='n'>+1.4%</td></tr><tr><td>2025→2026</td><td>UMI (1797)</td><td class='n'>110,315</td><td class='n'>+20.2%</td></tr><tr><td>2023→2024</td><td>2372 (2372)</td><td class='n'>92,134</td><td class='n'>+0.1%</td></tr><tr><td>2024→2025</td><td>2372 (2372)</td><td class='n'>99,032</td><td class='n'>+3.9%</td></tr><tr><td>2025→2026</td><td>2372 (2372)</td><td class='n'>111,453</td><td class='n'>+0.0%</td></tr></tbody></table>
+
+<h2>3. MOS response 2025–26 (KPI stock days)</h2>
+<p class="lead"><b>Not market elasticity.</b> KPI “Days of Parts in Stock” is a warehouse / ordering response signal.
+ISZE→DB volume elasticity remains non-quotable. Source: KPI Master File June 2026 · Parts Handling.</p>
+<table><thead><tr><th>Distributor</th><th class="n">n 2025</th><th class="n">Avg MOS 2025</th>
+<th class="n">n 2026 YTD</th><th class="n">Avg MOS 2026</th><th class="n">Δ days</th></tr></thead>
+<tbody><tr><td>MIDI</td><td class='n'>12</td><td class='n'>312</td><td class='n'>5</td><td class='n'>295</td><td class='n'>-17</td></tr><tr><td>BL ehf</td><td class='n'>12</td><td class='n'>148</td><td class='n'>6</td><td class='n'>112</td><td class='n'>-36</td></tr><tr><td>UMI</td><td class='n'>1</td><td class='n'>147</td><td class='n'>0</td><td class='n'>nan</td><td class='n'>+nan</td></tr><tr><td>UTI</td><td class='n'>9</td><td class='n'>143</td><td class='n'>5</td><td class='n'>144</td><td class='n'>+1</td></tr><tr><td>ITUK</td><td class='n'>11</td><td class='n'>131</td><td class='n'>6</td><td class='n'>138</td><td class='n'>+6</td></tr><tr><td>Isuzu Ireland</td><td class='n'>12</td><td class='n'>130</td><td class='n'>6</td><td class='n'>121</td><td class='n'>-9</td></tr><tr><td>GasanZammit</td><td class='n'>12</td><td class='n'>126</td><td class='n'>6</td><td class='n'>116</td><td class='n'>-10</td></tr><tr><td>ISD</td><td class='n'>1</td><td class='n'>126</td><td class='n'>0</td><td class='n'>nan</td><td class='n'>+nan</td></tr><tr><td>Isuzu Rom Auto</td><td class='n'>12</td><td class='n'>112</td><td class='n'>5</td><td class='n'>119</td><td class='n'>+7</td></tr><tr><td>Imotors</td><td class='n'>12</td><td class='n'>100</td><td class='n'>6</td><td class='n'>85</td><td class='n'>-15</td></tr><tr><td>AIOS</td><td class='n'>12</td><td class='n'>100</td><td class='n'>5</td><td class='n'>166</td><td class='n'>+66</td></tr><tr><td>WAE</td><td class='n'>12</td><td class='n'>98</td><td class='n'>3</td><td class='n'>94</td><td class='n'>-5</td></tr><tr><td>RSA</td><td class='n'>11</td><td class='n'>94</td><td class='n'>4</td><td class='n'>104</td><td class='n'>+9</td></tr><tr><td>IUK</td><td class='n'>12</td><td class='n'>88</td><td class='n'>6</td><td class='n'>75</td><td class='n'>-13</td></tr><tr><td>Isuzu Sverige</td><td class='n'>12</td><td class='n'>81</td><td class='n'>6</td><td class='n'>45</td><td class='n'>-36</td></tr><tr><td>Petros Petropoulos</td><td class='n'>5</td><td class='n'>60</td><td class='n'>0</td><td class='n'>nan</td><td class='n'>+nan</td></tr><tr><td>IBX (BENELUX)</td><td class='n'>9</td><td class='n'>38</td><td class='n'>6</td><td class='n'>47</td><td class='n'>+10</td></tr><tr><td>IMF</td><td class='n'>9</td><td class='n'>33</td><td class='n'>0</td><td class='n'>nan</td><td class='n'>+nan</td></tr></tbody></table>
+
+<h2>4. NO_LIST gap (CY2025)</h2>
+<p class="lead">251 part numbers · €4,955,737.0M ·
+15.1% of CY2025 parts revenue without usable PR00 price.</p>
+<table><thead><tr><th>Part</th><th>Description</th><th class="n">CY2025 €</th><th>Reason</th></tr></thead>
+<tbody><tr><td class='mono'>7552348290</td><td>STEERING UNIT</td><td class='n'>€718,864</td><td class='sm'>on_list_no_usable_price</td></tr><tr><td class='mono'>550047337</td><td>Rim R4L15W40 CK4_3*5L</td><td class='n'>€433,820</td><td class='sm'>absent_from_pr00</td></tr><tr><td class='mono'>8982878080</td><td>FILTER ASM</td><td class='n'>€276,848</td><td class='sm'>on_list_no_usable_price</td></tr><tr><td class='mono'>8975359391</td><td>DPD ASM</td><td class='n'>€272,210</td><td class='sm'>on_list_no_usable_price</td></tr><tr><td class='mono'>7552348280</td><td>STEERING UNIT</td><td class='n'>€259,369</td><td class='sm'>on_list_no_usable_price</td></tr><tr><td class='mono'>8983682091</td><td>PIPE; EXH</td><td class='n'>€228,584</td><td class='sm'>on_list_no_usable_price</td></tr><tr><td class='mono'>8982688122</td><td>PUMP ASM; DEF,DCM SPLY</td><td class='n'>€178,723</td><td class='sm'>on_list_no_usable_price</td></tr><tr><td class='mono'>8975077751</td><td>PUMP ASM; DEF,DCM SPLY</td><td class='n'>€119,490</td><td class='sm'>on_list_no_usable_price</td></tr><tr><td class='mono'>8972746690</td><td>TANK ASM; DEF</td><td class='n'>€116,501</td><td class='sm'>on_list_no_usable_price</td></tr><tr><td class='mono'>8981901180</td><td>DRIVE ASM; FINAL,RR</td><td class='n'>€104,331</td><td class='sm'>on_list_no_usable_price</td></tr><tr><td class='mono'>8975293230</td><td>ENGINE ASM</td><td class='n'>€100,349</td><td class='sm'>on_list_no_usable_price</td></tr><tr><td class='mono'>8983320764</td><td>DPD ASM</td><td class='n'>€95,174</td><td class='sm'>on_list_no_usable_price</td></tr></tbody></table>
+
+<h2>5. VPACC action status (FY2027 July update)</h2>
+<p class="lead">Light link — status snapshot only (121 actions).
+Open/in progress: <b>121</b> · Completed &amp; eval: <b>0</b>.
+Join to pricing metrics is thin (PIC / stream keys, not dealer).</p>
+
+<h2>Integrity score breakdown</h2>
+<p class="lead">Start 100; explicit deductions below. Band: <b>weak</b>. External quote: <b>no</b>.</p>
+<table><thead><tr><th>Pts</th><th>Item</th><th>Detail</th></tr></thead>
+<tbody><tr><td>−0</td><td>PN match quality</td><td class='sm'>Avg unique-PN match 94.7% vs billed</td></tr><tr><td>−9</td><td>List coverage %</td><td class='sm'>Avg matched revenue coverage 82.4% (NO_LIST gap)</td></tr><tr><td>−5</td><td>Blank PR00 prices (#VALUE!/null)</td><td class='sm'>7 blank/unusable Price_EUR in 2023–2025 history extracts</td></tr><tr><td>−4</td><td>2026 PR00 unusable prices</td><td class='sm'>4562 blank/non-positive SP on active current PR00 rows</td></tr><tr><td>−10</td><td>Year alignment assumptions</td><td class='sm'>PR00 history stamps are year-end conventional (2024/2025 sheet labels; 2023 mixed workbook). Intra-year list changes not dated.</td></tr><tr><td>−6</td><td>2026 list vintage</td><td class='sm'>2026 YTD joins current IE40 PR00 extract (2026-08-10), not a 2026-01 list snapshot</td></tr><tr><td>−5</td><td>FY vs CY caveat</td><td class='sm'>Realization is calendar-year; VPACC/KPI MOS mix FY labels — do not blend without care</td></tr><tr><td>−8</td><td>First-pass join (QA pending)</td><td class='sm'>Year-matched joins not independently validated — provisional / internal QA only</td></tr></tbody></table>
+
+<div class="foot">
+Sources: sales_fact.parquet · pricing_pr00_ie40_YYYY.parquet · pricing_zpr1_YYYY.parquet ·
+no_pr00_gap_cy2025_ranked.csv · KPI Master File june 2026.xlsx · vpacc_fy2027_action_plan_july.parquet.<br>
+Mode A pack · UTI and UMI kept separate · Built 2026-08-11T06:16:29Z
+</div>
+</div>
+</body></html>

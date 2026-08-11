@@ -6,6 +6,60 @@
 
 ---
 
+## 2026-08-11 — Year-matched PR00 realization: QA pending / not quotable
+
+**Status:** Accepted (provisional build only).
+
+**What:** First-pass year-matched list-to-pocket via `build_pricing_history_findings.py` + Mode A HTML dashboard. Integrity score logged in `pricing_history_findings.meta.json` (expect weak until joins validated).
+
+**Gate:** Realization / list-to-pocket remains **internal QA / provisional** — do **not** quote externally while integrity is weak. NO_LIST coverage gap and year-stamp assumptions stay as footnotes. MOS KPI days ≠ market elasticity; ISZE→DB volume elasticity stays non-quotable.
+
+**Supersedes quoting gate only in practice:** prior “do not quote until validated” still stands; this pack is the QA artefact, not a green light.
+
+---
+
+## 2026-08-11 — PR00+ZPR1 2023 history landed (mixed workbook split)
+
+**Status:** Accepted (land + document only).
+
+**Source:** Downloads `2023.xlsx` — sheets `1799`/`1797`/`2372`/`2733`/`2734` (ZPR1) + `PR00`.  
+**Landed:** `_raw/2023.xlsx` (immutable as-received); `history/ZPR1_2023-01-03.xlsx` (ZPR1 only); `history/IE40_PR00_2023-12-31.xlsx` (PR00 with `Material`/`Price_EUR`).  
+**Extracts:** `00_derived/pricing_pr00_ie40_2023.parquet` (~607k), `pricing_zpr1_2023.parquet` (~312k).  
+**Coverage now:** PR00 + ZPR1 for **2023 / 2024 / 2025** + current **2026** lists.  
+**Gate:** do **not** quote list-to-pocket / leakage until year-matched joins are validated. No full pricing-engine rebuild from this drop.
+
+---
+
+## 2026-08-11 — Roadmap decisions: elasticity DB→DLR only; AIM billing CY+FY; IDS v1.4 ship; brake pending; PR00 landed
+
+**Status:** Accepted.
+
+**Elasticity:** Do not use ISZE→DB `price_volume_elasticity.csv` as market elasticity (MOS / warehouse / campaigns noise). Future work = **DB→DLR sell-out only** when coverage improves. File annotated `00_derived/price_volume_elasticity.README.md`.
+
+**AIM CY2026:** Billing-only is fine (no AIM workbook). Structure dual windows: CY + FY (Apr–Mar) via `01_data/91_build/build_aim_billing_windows.py` → `aim_billing_windows.json` / `aim_billing_by_db_window.csv`.
+
+**IDS Tomoe Baumann rule:** **Rebuild + ship v1.4** — FR/ES red-marked excluded from averages (stay on list/map); IT/CH all scored dealers in averages. Packs: `09_meetings/IDS_2026_Country_Packs_v1.4/`. Outlook **draft** to Tomoe (not Sent): `draft_ids_midi_v14.py`.
+
+**ITUK brake 0.4 vs 0.8:** Keep pending — expect data from ITUK soon. Do not change factor.
+
+**LCV generation intervals:** OEM schedules already stored under `01_data/03_PMS/service_schedules/` (+ mail pull). Still need chassis/reg-year cutoffs for SCR vs non-SCR parc weighting before changing `pms_capture_assumptions.yaml`.
+
+**PR00 history:** Landed from Downloads `PR00.xlsx` (tabs `2024` / `2025`) → `history/IE40_PR00_2024-12-31.xlsx` + `…_2025-12-31.xlsx`. Year-matched list-to-pocket now unblocked for those years.
+
+**Gross/SPA on billing:** Closed earlier same day — net-only forever.
+
+---
+
+## 2026-08-11 — ZPR1 dated history landed; no gross/SPA on billing; PR00 history still pending
+
+**Status:** Superseded same day by entry above (PR00 arrived; elasticity / IDS / AIM decisions logged).
+
+**ZPR1 history:** Jerome supplied `ZPR1_UPLOAD_LAYOUT_2024.xlsx` and `ZPR1_UPLOAD_LAYOUT_.xlsx` (2025). Landed under `01_data/01_Pricing/_raw/` (as-received) and `01_data/01_Pricing/history/` as `ZPR1_2024-01-03.xlsx` / `ZPR1_2025-02-01.xlsx`.
+
+**Gross + SPA/condition on billing:** **Closed — will not get.** `sales_fact` stays net-only.
+
+---
+
 ## 2026-07-31 (logged 2026-08-10) — MIDI FR/ES red-marked dealers: exclude from averages (Baumann) — PENDING pack apply
 
 **Status:** Accepted as **Tomoe Baumann rule** for averages; **pack apply pending** (no v1.4 rebuild/ship without Jerome OK).

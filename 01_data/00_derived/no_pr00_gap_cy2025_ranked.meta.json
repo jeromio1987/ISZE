@@ -1,0 +1,21 @@
+{
+  "measured_at_utc": "2026-08-11T05:46:38Z",
+  "definition": "CY2025 sales_fact PNs (normalized, numeric-only) with no usable IE40 PR00 sp_eur>0",
+  "sales_source": "01_data/00_derived/sales_fact.parquet",
+  "pr00_source": "01_data/00_derived/pricing_pr00_ie40.parquet (Price_file_PR00_IE40_20260810.xlsx)",
+  "pn_count": 251,
+  "gap_eur": 4955736.95,
+  "cy2025_parts_eur": 32854932.68,
+  "gap_share_of_parts": 0.1508,
+  "published_2026_08_01": {
+    "pn_count": 522,
+    "gap_eur": 4957089,
+    "share": 0.151
+  },
+  "largest_pn": "7552348290",
+  "largest_eur": 718864.32,
+  "gap_reason_counts": {
+    "on_list_no_usable_price": 216,
+    "absent_from_pr00": 35
+  }
+}
