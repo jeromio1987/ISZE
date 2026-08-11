@@ -1,0 +1,2173 @@
+{
+  "built_at_utc": "2026-08-11T06:23:55Z",
+  "status": "provisional_qa_pending",
+  "quotable_externally": false,
+  "mode": "A",
+  "title": "ISZE Pricing \u00b7 Full Analysis Pack",
+  "integrity": {
+    "score": 48,
+    "band": "weak",
+    "quotable_externally": false,
+    "label": "Internal QA / provisional \u2014 do not quote list-to-pocket externally",
+    "deductions": [
+      {
+        "item": "PN match quality",
+        "deduction": 0,
+        "detail": "Avg unique-PN match 94.7% vs billed"
+      },
+      {
+        "item": "List coverage %",
+        "deduction": 9,
+        "detail": "Avg matched revenue coverage 82.4% (NO_LIST gap)"
+      },
+      {
+        "item": "Blank PR00 prices (#VALUE!/null)",
+        "deduction": 5,
+        "detail": "7 blank/unusable Price_EUR in 2023\u20132025 history extracts"
+      },
+      {
+        "item": "2026 PR00 unusable prices",
+        "deduction": 4,
+        "detail": "4562 blank/non-positive SP on active current PR00 rows"
+      },
+      {
+        "item": "Year alignment assumptions",
+        "deduction": 10,
+        "detail": "PR00 history stamps are year-end conventional (2024/2025 sheet labels; 2023 mixed workbook). Intra-year list changes not dated."
+      },
+      {
+        "item": "2026 list vintage",
+        "deduction": 6,
+        "detail": "2026 YTD joins current IE40 PR00 extract (2026-08-10), not a 2026-01 list snapshot"
+      },
+      {
+        "item": "FY vs CY caveat",
+        "deduction": 5,
+        "detail": "Realization is calendar-year; VPACC/KPI MOS mix FY labels \u2014 do not blend without care"
+      },
+      {
+        "item": "First-pass join (QA pending)",
+        "deduction": 8,
+        "detail": "Year-matched joins not independently validated \u2014 provisional / internal QA only"
+      },
+      {
+        "item": "UMI ZPR1 YoY anomaly",
+        "deduction": 3,
+        "detail": "UMI median ZPR1 YoY +20.2% (2025\u21922026) \u2014 composition/coverage risk until PN audit"
+      },
+      {
+        "item": "Open PRISM assumptions (note)",
+        "deduction": 2,
+        "detail": "Air-filter interval provisional (IML confirm open); brake pad/shoe factors pending IML/ITUK"
+      }
+    ],
+    "deduction_sum": 52,
+    "start": 100,
+    "built_at_utc": "2026-08-11T06:23:55Z"
+  },
+  "findings_core": {
+    "network": [
+      {
+        "year": 2023,
+        "period": "CY",
+        "billing_end": "2023-12-28",
+        "parts_eur": 30422371.85,
+        "lines": 132932,
+        "matched_eur": 25433443.74,
+        "no_list_eur": 4988928.11,
+        "coverage_pct": 83.6,
+        "list_value_eur": 26266864.92,
+        "realization_pct": 96.83,
+        "pr00_blank_prices": 7,
+        "pr00_source": "pricing_pr00_ie40_2023.parquet",
+        "status": "provisional_qa_pending"
+      },
+      {
+        "year": 2024,
+        "period": "CY",
+        "billing_end": "2024-12-30",
+        "parts_eur": 34699409.37,
+        "lines": 154519,
+        "matched_eur": 31137452.35,
+        "no_list_eur": 3561957.02,
+        "coverage_pct": 89.73,
+        "list_value_eur": 32812370.81,
+        "realization_pct": 94.9,
+        "pr00_blank_prices": 0,
+        "pr00_source": "pricing_pr00_ie40_2024.parquet",
+        "status": "provisional_qa_pending"
+      },
+      {
+        "year": 2025,
+        "period": "CY",
+        "billing_end": "2025-12-30",
+        "parts_eur": 33707573.78,
+        "lines": 148778,
+        "matched_eur": 28356351.0,
+        "no_list_eur": 5351222.78,
+        "coverage_pct": 84.12,
+        "list_value_eur": 29552482.8,
+        "realization_pct": 95.95,
+        "pr00_blank_prices": 0,
+        "pr00_source": "pricing_pr00_ie40_2025.parquet",
+        "status": "provisional_qa_pending"
+      },
+      {
+        "year": 2026,
+        "period": "CY_YTD",
+        "billing_end": "2026-03-31",
+        "parts_eur": 9987601.43,
+        "lines": 41276,
+        "matched_eur": 7222938.38,
+        "no_list_eur": 2764663.05,
+        "coverage_pct": 72.32,
+        "list_value_eur": 7684885.21,
+        "realization_pct": 93.99,
+        "pr00_blank_prices": 4562,
+        "pr00_source": "pricing_pr00_ie40.parquet",
+        "status": "provisional_qa_pending"
+      }
+    ],
+    "realization_details": [
+      {
+        "year": 2023,
+        "pr00_meta": {
+          "year": 2023,
+          "blank_prices": 7,
+          "rows": 607096,
+          "source": "pricing_pr00_ie40_2023.parquet"
+        },
+        "pn_match_rate": 94.68,
+        "unique_pns_billed": 16312,
+        "unique_pns_matched": 15444
+      },
+      {
+        "year": 2024,
+        "pr00_meta": {
+          "year": 2024,
+          "blank_prices": 0,
+          "rows": 554309,
+          "source": "pricing_pr00_ie40_2024.parquet"
+        },
+        "pn_match_rate": 96.95,
+        "unique_pns_billed": 16338,
+        "unique_pns_matched": 15840
+      },
+      {
+        "year": 2025,
+        "pr00_meta": {
+          "year": 2025,
+          "blank_prices": 0,
+          "rows": 522571,
+          "source": "pricing_pr00_ie40_2025.parquet"
+        },
+        "pn_match_rate": 91.85,
+        "unique_pns_billed": 16840,
+        "unique_pns_matched": 15467
+      },
+      {
+        "year": 2026,
+        "pr00_meta": {
+          "year": 2026,
+          "blank_prices": 4562,
+          "rows": 165347,
+          "source": "pricing_pr00_ie40.parquet"
+        },
+        "pn_match_rate": 95.28,
+        "unique_pns_billed": 9829,
+        "unique_pns_matched": 9365
+      }
+    ],
+    "nolist": {
+      "built_at_utc": "2026-08-11T06:16:29Z",
+      "source_csv": "01_data/00_derived/no_pr00_gap_cy2025_ranked.csv",
+      "pn_count": 251,
+      "gap_eur": 4955736.95,
+      "gap_share_of_parts": 0.1508,
+      "by_reason": [
+        {
+          "gap_reason": "on_list_no_usable_price",
+          "pn_count": 216,
+          "gap_eur": 4360217.47
+        },
+        {
+          "gap_reason": "absent_from_pr00",
+          "pn_count": 35,
+          "gap_eur": 595519.48
+        }
+      ],
+      "top_pn": "7552348290"
+    },
+    "nolist_top": [
+      {
+        "rank": 1,
+        "part_number": 7552348290,
+        "description": "STEERING UNIT",
+        "cy2025_eur": 718864.32,
+        "share_of_gap": 0.145057,
+        "share_of_cy2025_parts": 0.02188,
+        "billed_qty": 361.0,
+        "n_lines": 111,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 2,
+        "part_number": 550047337,
+        "description": "Rim R4L15W40 CK4_3*5L",
+        "cy2025_eur": 433820.16,
+        "share_of_gap": 0.087539,
+        "share_of_cy2025_parts": 0.013204,
+        "billed_qty": 9168.0,
+        "n_lines": 166,
+        "gap_reason": "absent_from_pr00",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 3,
+        "part_number": 8982878080,
+        "description": "FILTER ASM",
+        "cy2025_eur": 276847.99,
+        "share_of_gap": 0.055864,
+        "share_of_cy2025_parts": 0.008426,
+        "billed_qty": 270.0,
+        "n_lines": 28,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 4,
+        "part_number": 8975359391,
+        "description": "DPD ASM",
+        "cy2025_eur": 272209.63,
+        "share_of_gap": 0.054928,
+        "share_of_cy2025_parts": 0.008285,
+        "billed_qty": 130.0,
+        "n_lines": 38,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 5,
+        "part_number": 7552348280,
+        "description": "STEERING UNIT",
+        "cy2025_eur": 259369.49,
+        "share_of_gap": 0.052337,
+        "share_of_cy2025_parts": 0.007894,
+        "billed_qty": 134.0,
+        "n_lines": 20,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 6,
+        "part_number": 8983682091,
+        "description": "PIPE; EXH",
+        "cy2025_eur": 228583.54,
+        "share_of_gap": 0.046125,
+        "share_of_cy2025_parts": 0.006957,
+        "billed_qty": 184.0,
+        "n_lines": 80,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 7,
+        "part_number": 8982688122,
+        "description": "PUMP ASM; DEF,DCM SPLY",
+        "cy2025_eur": 178722.96,
+        "share_of_gap": 0.036064,
+        "share_of_cy2025_parts": 0.00544,
+        "billed_qty": 171.0,
+        "n_lines": 42,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 8,
+        "part_number": 8975077751,
+        "description": "PUMP ASM; DEF,DCM SPLY",
+        "cy2025_eur": 119490.38,
+        "share_of_gap": 0.024112,
+        "share_of_cy2025_parts": 0.003637,
+        "billed_qty": 112.0,
+        "n_lines": 15,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 9,
+        "part_number": 8972746690,
+        "description": "TANK ASM; DEF",
+        "cy2025_eur": 116501.04,
+        "share_of_gap": 0.023508,
+        "share_of_cy2025_parts": 0.003546,
+        "billed_qty": 107.0,
+        "n_lines": 65,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 10,
+        "part_number": 8981901180,
+        "description": "DRIVE ASM; FINAL,RR",
+        "cy2025_eur": 104331.26,
+        "share_of_gap": 0.021053,
+        "share_of_cy2025_parts": 0.003176,
+        "billed_qty": 81.0,
+        "n_lines": 32,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 11,
+        "part_number": 8975293230,
+        "description": "ENGINE ASM",
+        "cy2025_eur": 100348.58,
+        "share_of_gap": 0.020249,
+        "share_of_cy2025_parts": 0.003054,
+        "billed_qty": 7.0,
+        "n_lines": 5,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 12,
+        "part_number": 8983320764,
+        "description": "DPD ASM",
+        "cy2025_eur": 95173.78,
+        "share_of_gap": 0.019205,
+        "share_of_cy2025_parts": 0.002897,
+        "billed_qty": 55.0,
+        "n_lines": 19,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 13,
+        "part_number": 550047252,
+        "description": "Rim R4 L 15W40 CJ4_1*209L",
+        "cy2025_eur": 75636.08,
+        "share_of_gap": 0.015262,
+        "share_of_cy2025_parts": 0.002302,
+        "billed_qty": 136.0,
+        "n_lines": 16,
+        "gap_reason": "absent_from_pr00",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 14,
+        "part_number": 8981974530,
+        "description": "DRIVE ASM; FINAL,RR",
+        "cy2025_eur": 70208.06,
+        "share_of_gap": 0.014167,
+        "share_of_cy2025_parts": 0.002137,
+        "billed_qty": 55.0,
+        "n_lines": 26,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 15,
+        "part_number": 8976880340,
+        "description": "GENERATOR ASM",
+        "cy2025_eur": 64991.55,
+        "share_of_gap": 0.013114,
+        "share_of_cy2025_parts": 0.001978,
+        "billed_qty": 65.0,
+        "n_lines": 20,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 16,
+        "part_number": 8976607440,
+        "description": "TRANSMISSION ASM; MANUAL",
+        "cy2025_eur": 63473.12,
+        "share_of_gap": 0.012808,
+        "share_of_cy2025_parts": 0.001932,
+        "billed_qty": 14.0,
+        "n_lines": 13,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 17,
+        "part_number": 8982932120,
+        "description": "DRIVE ASM; FINAL,RR",
+        "cy2025_eur": 61110.53,
+        "share_of_gap": 0.012331,
+        "share_of_cy2025_parts": 0.00186,
+        "billed_qty": 49.0,
+        "n_lines": 12,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 18,
+        "part_number": 8981776324,
+        "description": "DPD ASM",
+        "cy2025_eur": 60198.34,
+        "share_of_gap": 0.012147,
+        "share_of_cy2025_parts": 0.001832,
+        "billed_qty": 55.0,
+        "n_lines": 19,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 19,
+        "part_number": 1884058030,
+        "description": "BESCO CLEAN SUPER (200L)",
+        "cy2025_eur": 59019.38,
+        "share_of_gap": 0.011909,
+        "share_of_cy2025_parts": 0.001796,
+        "billed_qty": 46.0,
+        "n_lines": 3,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 20,
+        "part_number": 8981901150,
+        "description": "DRIVE ASM; FINAL,RR",
+        "cy2025_eur": 56654.81,
+        "share_of_gap": 0.011432,
+        "share_of_cy2025_parts": 0.001724,
+        "billed_qty": 44.0,
+        "n_lines": 29,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 21,
+        "part_number": 5873112438,
+        "description": "ENGINE ASM; PARTIAL",
+        "cy2025_eur": 49610.64,
+        "share_of_gap": 0.010011,
+        "share_of_cy2025_parts": 0.00151,
+        "billed_qty": 11.0,
+        "n_lines": 7,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 22,
+        "part_number": 8976671380,
+        "description": "ENGINE ASM; PARTIAL",
+        "cy2025_eur": 43801.5,
+        "share_of_gap": 0.008839,
+        "share_of_cy2025_parts": 0.001333,
+        "billed_qty": 14.0,
+        "n_lines": 14,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 23,
+        "part_number": 8975536860,
+        "description": "BODY ASM; REAR",
+        "cy2025_eur": 41475.9,
+        "share_of_gap": 0.008369,
+        "share_of_cy2025_parts": 0.001262,
+        "billed_qty": 29.0,
+        "n_lines": 23,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 24,
+        "part_number": 8982049420,
+        "description": "FILTER ASM",
+        "cy2025_eur": 40966.24,
+        "share_of_gap": 0.008266,
+        "share_of_cy2025_parts": 0.001247,
+        "billed_qty": 63.0,
+        "n_lines": 15,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      },
+      {
+        "rank": 25,
+        "part_number": 8976485430,
+        "description": "ENGINE ASM",
+        "cy2025_eur": 37171.4,
+        "share_of_gap": 0.007501,
+        "share_of_cy2025_parts": 0.001131,
+        "billed_qty": 3.0,
+        "n_lines": 3,
+        "gap_reason": "on_list_no_usable_price",
+        "pr00_sp_eur_max": NaN
+      }
+    ],
+    "zpr1_level": [
+      {
+        "year": 2023,
+        "customer": 1799,
+        "payer": "UTI",
+        "n_zpr1_pns": 91336,
+        "n_vs_pr00": 90988,
+        "median_zpr1_vs_pr00_pct": -12.29,
+        "p25_zpr1_vs_pr00_pct": -12.33,
+        "p75_zpr1_vs_pr00_pct": -10.87,
+        "note": "UTI\u2260UMI; never blend"
+      },
+      {
+        "year": 2023,
+        "customer": 1797,
+        "payer": "UMI",
+        "n_zpr1_pns": 110419,
+        "n_vs_pr00": 110040,
+        "median_zpr1_vs_pr00_pct": -14.18,
+        "p25_zpr1_vs_pr00_pct": -14.22,
+        "p75_zpr1_vs_pr00_pct": -11.19,
+        "note": "UTI\u2260UMI; never blend"
+      },
+      {
+        "year": 2023,
+        "customer": 2372,
+        "payer": "2372",
+        "n_zpr1_pns": 107763,
+        "n_vs_pr00": 107434,
+        "median_zpr1_vs_pr00_pct": -33.32,
+        "p25_zpr1_vs_pr00_pct": -33.35,
+        "p75_zpr1_vs_pr00_pct": -32.34,
+        "note": "UTI\u2260UMI; never blend"
+      },
+      {
+        "year": 2024,
+        "customer": 1799,
+        "payer": "UTI",
+        "n_zpr1_pns": 100891,
+        "n_vs_pr00": 100891,
+        "median_zpr1_vs_pr00_pct": -10.6,
+        "p25_zpr1_vs_pr00_pct": -10.84,
+        "p75_zpr1_vs_pr00_pct": -10.57,
+        "note": "UTI\u2260UMI; never blend"
+      },
+      {
+        "year": 2024,
+        "customer": 1797,
+        "payer": "UMI",
+        "n_zpr1_pns": 37762,
+        "n_vs_pr00": 37762,
+        "median_zpr1_vs_pr00_pct": -9.32,
+        "p25_zpr1_vs_pr00_pct": -10.61,
+        "p75_zpr1_vs_pr00_pct": -9.28,
+        "note": "UTI\u2260UMI; never blend"
+      },
+      {
+        "year": 2024,
+        "customer": 2372,
+        "payer": "2372",
+        "n_zpr1_pns": 121896,
+        "n_vs_pr00": 121896,
+        "median_zpr1_vs_pr00_pct": -34.43,
+        "p25_zpr1_vs_pr00_pct": -34.44,
+        "p75_zpr1_vs_pr00_pct": -34.31,
+        "note": "UTI\u2260UMI; never blend"
+      },
+      {
+        "year": 2025,
+        "customer": 1799,
+        "payer": "UTI",
+        "n_zpr1_pns": 128901,
+        "n_vs_pr00": 127758,
+        "median_zpr1_vs_pr00_pct": -10.61,
+        "p25_zpr1_vs_pr00_pct": -12.18,
+        "p75_zpr1_vs_pr00_pct": -10.56,
+        "note": "UTI\u2260UMI; never blend"
+      },
+      {
+        "year": 2025,
+        "customer": 1797,
+        "payer": "UMI",
+        "n_zpr1_pns": 112936,
+        "n_vs_pr00": 111709,
+        "median_zpr1_vs_pr00_pct": -15.28,
+        "p25_zpr1_vs_pr00_pct": -15.76,
+        "p75_zpr1_vs_pr00_pct": -9.51,
+        "note": "UTI\u2260UMI; never blend"
+      },
+      {
+        "year": 2025,
+        "customer": 2372,
+        "payer": "2372",
+        "n_zpr1_pns": 112936,
+        "n_vs_pr00": 111709,
+        "median_zpr1_vs_pr00_pct": -32.85,
+        "p25_zpr1_vs_pr00_pct": -35.71,
+        "p75_zpr1_vs_pr00_pct": -32.51,
+        "note": "UTI\u2260UMI; never blend"
+      },
+      {
+        "year": 2026,
+        "customer": 1799,
+        "payer": "UTI",
+        "n_zpr1_pns": 136989,
+        "n_vs_pr00": 58816,
+        "median_zpr1_vs_pr00_pct": -13.92,
+        "p25_zpr1_vs_pr00_pct": -13.96,
+        "p75_zpr1_vs_pr00_pct": -12.37,
+        "note": "UTI\u2260UMI; never blend"
+      },
+      {
+        "year": 2026,
+        "customer": 1797,
+        "payer": "UMI",
+        "n_zpr1_pns": 122954,
+        "n_vs_pr00": 53171,
+        "median_zpr1_vs_pr00_pct": -5.24,
+        "p25_zpr1_vs_pr00_pct": -5.49,
+        "p75_zpr1_vs_pr00_pct": -3.86,
+        "note": "UTI\u2260UMI; never blend"
+      },
+      {
+        "year": 2026,
+        "customer": 2372,
+        "payer": "2372",
+        "n_zpr1_pns": 143105,
+        "n_vs_pr00": 60724,
+        "median_zpr1_vs_pr00_pct": -40.27,
+        "p25_zpr1_vs_pr00_pct": -42.15,
+        "p75_zpr1_vs_pr00_pct": -37.9,
+        "note": "UTI\u2260UMI; never blend"
+      }
+    ],
+    "zpr1_yoy": [
+      {
+        "from_year": 2023,
+        "to_year": 2024,
+        "customer": 1799,
+        "payer": "UTI",
+        "n_common_pns": 64903,
+        "median_zpr1_yoy_pct": 3.82,
+        "p25_zpr1_yoy_pct": 3.78,
+        "p75_zpr1_yoy_pct": 4.23
+      },
+      {
+        "from_year": 2024,
+        "to_year": 2025,
+        "customer": 1799,
+        "payer": "UTI",
+        "n_common_pns": 99738,
+        "median_zpr1_yoy_pct": 1.42,
+        "p25_zpr1_yoy_pct": 1.01,
+        "p75_zpr1_yoy_pct": 1.42
+      },
+      {
+        "from_year": 2025,
+        "to_year": 2026,
+        "customer": 1799,
+        "payer": "UTI",
+        "n_common_pns": 124626,
+        "median_zpr1_yoy_pct": 8.21,
+        "p25_zpr1_yoy_pct": 8.06,
+        "p75_zpr1_yoy_pct": 10.48
+      },
+      {
+        "from_year": 2023,
+        "to_year": 2024,
+        "customer": 1797,
+        "payer": "UMI",
+        "n_common_pns": 29886,
+        "median_zpr1_yoy_pct": 6.06,
+        "p25_zpr1_yoy_pct": 3.44,
+        "p75_zpr1_yoy_pct": 6.14
+      },
+      {
+        "from_year": 2024,
+        "to_year": 2025,
+        "customer": 1797,
+        "payer": "UMI",
+        "n_common_pns": 36300,
+        "median_zpr1_yoy_pct": 1.42,
+        "p25_zpr1_yoy_pct": 1.29,
+        "p75_zpr1_yoy_pct": 1.43
+      },
+      {
+        "from_year": 2025,
+        "to_year": 2026,
+        "customer": 1797,
+        "payer": "UMI",
+        "n_common_pns": 110315,
+        "median_zpr1_yoy_pct": 20.19,
+        "p25_zpr1_yoy_pct": 13.58,
+        "p75_zpr1_yoy_pct": 26.46
+      },
+      {
+        "from_year": 2023,
+        "to_year": 2024,
+        "customer": 2372,
+        "payer": "2372",
+        "n_common_pns": 92134,
+        "median_zpr1_yoy_pct": 0.13,
+        "p25_zpr1_yoy_pct": 0.0,
+        "p75_zpr1_yoy_pct": 0.21
+      },
+      {
+        "from_year": 2024,
+        "to_year": 2025,
+        "customer": 2372,
+        "payer": "2372",
+        "n_common_pns": 99032,
+        "median_zpr1_yoy_pct": 3.85,
+        "p25_zpr1_yoy_pct": -4.16,
+        "p75_zpr1_yoy_pct": 3.88
+      },
+      {
+        "from_year": 2025,
+        "to_year": 2026,
+        "customer": 2372,
+        "payer": "2372",
+        "n_common_pns": 111453,
+        "median_zpr1_yoy_pct": 0.0,
+        "p25_zpr1_yoy_pct": 0.0,
+        "p75_zpr1_yoy_pct": 0.0
+      }
+    ],
+    "mos_summary": [
+      {
+        "distributor": "MIDI",
+        "n_months_2025": 12,
+        "avg_mos_days_2025": 311.67,
+        "n_months_2026_ytd": 5,
+        "avg_mos_days_2026_ytd": 294.8,
+        "delta_days_2026_vs_2025": -16.87,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "BL ehf",
+        "n_months_2025": 12,
+        "avg_mos_days_2025": 147.5,
+        "n_months_2026_ytd": 6,
+        "avg_mos_days_2026_ytd": 112.0,
+        "delta_days_2026_vs_2025": -35.5,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "UMI",
+        "n_months_2025": 1,
+        "avg_mos_days_2025": 147.0,
+        "n_months_2026_ytd": 0,
+        "avg_mos_days_2026_ytd": NaN,
+        "delta_days_2026_vs_2025": NaN,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "UTI",
+        "n_months_2025": 9,
+        "avg_mos_days_2025": 143.44,
+        "n_months_2026_ytd": 5,
+        "avg_mos_days_2026_ytd": 144.4,
+        "delta_days_2026_vs_2025": 0.96,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "ITUK",
+        "n_months_2025": 11,
+        "avg_mos_days_2025": 131.43,
+        "n_months_2026_ytd": 6,
+        "avg_mos_days_2026_ytd": 137.83,
+        "delta_days_2026_vs_2025": 6.41,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "Isuzu Ireland",
+        "n_months_2025": 12,
+        "avg_mos_days_2025": 130.44,
+        "n_months_2026_ytd": 6,
+        "avg_mos_days_2026_ytd": 121.17,
+        "delta_days_2026_vs_2025": -9.27,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "GasanZammit",
+        "n_months_2025": 12,
+        "avg_mos_days_2025": 126.12,
+        "n_months_2026_ytd": 6,
+        "avg_mos_days_2026_ytd": 115.67,
+        "delta_days_2026_vs_2025": -10.46,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "ISD",
+        "n_months_2025": 1,
+        "avg_mos_days_2025": 126.0,
+        "n_months_2026_ytd": 0,
+        "avg_mos_days_2026_ytd": NaN,
+        "delta_days_2026_vs_2025": NaN,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "Isuzu Rom Auto",
+        "n_months_2025": 12,
+        "avg_mos_days_2025": 111.67,
+        "n_months_2026_ytd": 5,
+        "avg_mos_days_2026_ytd": 118.8,
+        "delta_days_2026_vs_2025": 7.13,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "Imotors",
+        "n_months_2025": 12,
+        "avg_mos_days_2025": 100.12,
+        "n_months_2026_ytd": 6,
+        "avg_mos_days_2026_ytd": 85.0,
+        "delta_days_2026_vs_2025": -15.12,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "AIOS",
+        "n_months_2025": 12,
+        "avg_mos_days_2025": 100.0,
+        "n_months_2026_ytd": 5,
+        "avg_mos_days_2026_ytd": 166.0,
+        "delta_days_2026_vs_2025": 66.0,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "WAE",
+        "n_months_2025": 12,
+        "avg_mos_days_2025": 98.5,
+        "n_months_2026_ytd": 3,
+        "avg_mos_days_2026_ytd": 93.67,
+        "delta_days_2026_vs_2025": -4.83,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "RSA",
+        "n_months_2025": 11,
+        "avg_mos_days_2025": 94.36,
+        "n_months_2026_ytd": 4,
+        "avg_mos_days_2026_ytd": 103.75,
+        "delta_days_2026_vs_2025": 9.39,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "IUK",
+        "n_months_2025": 12,
+        "avg_mos_days_2025": 87.75,
+        "n_months_2026_ytd": 6,
+        "avg_mos_days_2026_ytd": 74.83,
+        "delta_days_2026_vs_2025": -12.92,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "Isuzu Sverige",
+        "n_months_2025": 12,
+        "avg_mos_days_2025": 80.75,
+        "n_months_2026_ytd": 6,
+        "avg_mos_days_2026_ytd": 45.0,
+        "delta_days_2026_vs_2025": -35.75,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "Petros Petropoulos",
+        "n_months_2025": 5,
+        "avg_mos_days_2025": 60.0,
+        "n_months_2026_ytd": 0,
+        "avg_mos_days_2026_ytd": NaN,
+        "delta_days_2026_vs_2025": NaN,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "IBX (BENELUX)",
+        "n_months_2025": 9,
+        "avg_mos_days_2025": 37.6,
+        "n_months_2026_ytd": 6,
+        "avg_mos_days_2026_ytd": 47.17,
+        "delta_days_2026_vs_2025": 9.57,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "IMF",
+        "n_months_2025": 9,
+        "avg_mos_days_2025": 32.56,
+        "n_months_2026_ytd": 0,
+        "avg_mos_days_2026_ytd": NaN,
+        "delta_days_2026_vs_2025": NaN,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "KIMA",
+        "n_months_2025": 5,
+        "avg_mos_days_2025": 30.0,
+        "n_months_2026_ytd": 2,
+        "avg_mos_days_2026_ytd": 30.0,
+        "delta_days_2026_vs_2025": 0.0,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "Isuzu Danmark",
+        "n_months_2025": 0,
+        "avg_mos_days_2025": NaN,
+        "n_months_2026_ytd": 0,
+        "avg_mos_days_2026_ytd": NaN,
+        "delta_days_2026_vs_2025": NaN,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "Isuzu Polska",
+        "n_months_2025": 0,
+        "avg_mos_days_2025": NaN,
+        "n_months_2026_ytd": 0,
+        "avg_mos_days_2026_ytd": NaN,
+        "delta_days_2026_vs_2025": NaN,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      },
+      {
+        "distributor": "Loutsios Group",
+        "n_months_2025": 0,
+        "avg_mos_days_2025": NaN,
+        "n_months_2026_ytd": 0,
+        "avg_mos_days_2026_ytd": NaN,
+        "delta_days_2026_vs_2025": NaN,
+        "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+      }
+    ],
+    "mos_meta": {
+      "source": "01_data/11_planning/KPI Master File june 2026.xlsx",
+      "metric": "Days of Parts in Stock (MOS days)",
+      "caveat": "Warehouse / ordering response proxy only \u2014 not end-market price elasticity",
+      "built_at_utc": "2026-08-11T06:16:29Z",
+      "dbs_with_any_2025": 19,
+      "dbs_with_any_2026": 15
+    },
+    "vpacc": {
+      "built_at_utc": "2026-08-11T06:16:29Z",
+      "source": "01_data/00_derived/vpacc_fy2027_action_plan_july.parquet",
+      "total_actions": 121,
+      "open_or_in_progress": 121,
+      "completed_and_eval": 0,
+      "by_status": {
+        "blank": 59,
+        "plan_made": 36,
+        "started": 12,
+        "not_started_or_blank": 11,
+        "started_and_in_progress": 3
+      },
+      "by_stream": {
+        "ACC": 53,
+        "VP": 68
+      },
+      "note": "Status snapshot only \u2014 thin join to pricing metrics; PIC-keyed not dealer-keyed"
+    }
+  },
+  "aim": {
+    "meta": {
+      "generated_at": "2026-08-11T05:40:04Z",
+      "source": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\sales_fact.parquet",
+      "basis": "Actual SAP net sales (sales_fact) \u2014 billing only, no AIM Qty\u00d7PR00 scoring",
+      "fiscal_rule": "FY = Apr\u2013Mar (JP/ISZE). FY2025 = 2025-04-01 \u2026 2026-03-31.",
+      "max_billing_date": "2026-03-31"
+    },
+    "windows": [
+      {
+        "window": "CY2024",
+        "start": "2024-01-01",
+        "end": "2024-12-31",
+        "status": "ok",
+        "eur": 33145516,
+        "rows": 150791,
+        "coverage_pct": 100.0
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "status": "ok",
+        "eur": 32381312,
+        "rows": 145046,
+        "coverage_pct": 100.0
+      },
+      {
+        "window": "CY2026_YTD",
+        "start": "2026-01-01",
+        "end": "2026-03-31",
+        "status": "ok",
+        "eur": 9184979,
+        "rows": 39966,
+        "coverage_pct": 97.8
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "status": "ok",
+        "eur": 33373315,
+        "rows": 148679,
+        "coverage_pct": 99.4
+      },
+      {
+        "window": "FY2026_YTD",
+        "start": "2026-04-01",
+        "end": "2026-03-31",
+        "status": "empty_future",
+        "eur": 0,
+        "rows": 0
+      }
+    ],
+    "top_db_cy2025": [
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "IUK",
+        "net_sales_eur": 6131920.41
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "ITUK",
+        "net_sales_eur": 5564543.92
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "UTI",
+        "net_sales_eur": 3331511.94
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "UMI",
+        "net_sales_eur": 3319344.16
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "GERMANY",
+        "net_sales_eur": 2535931.82
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "BELGIUM",
+        "net_sales_eur": 2109331.62
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "PORTUGAL",
+        "net_sales_eur": 1709793.99
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "NORWAY",
+        "net_sales_eur": 1416551.93
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "SWEDEN",
+        "net_sales_eur": 1278462.18
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "IRELAND",
+        "net_sales_eur": 1187458.62
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "UKRAINE",
+        "net_sales_eur": 1160671.97
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "GREECE",
+        "net_sales_eur": 520303.94
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "CYPRUS",
+        "net_sales_eur": 428443.11
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "HUNGARY",
+        "net_sales_eur": 330030.58
+      },
+      {
+        "window": "CY2025",
+        "start": "2025-01-01",
+        "end": "2025-12-31",
+        "distributor_code": "FINLAND",
+        "net_sales_eur": 277920.61
+      }
+    ],
+    "top_db_fy2025": [
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "ITUK",
+        "net_sales_eur": 6804822.08
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "IUK",
+        "net_sales_eur": 5953308.97
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "UTI",
+        "net_sales_eur": 3201813.88
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "UMI",
+        "net_sales_eur": 3055221.22
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "GERMANY",
+        "net_sales_eur": 2685140.49
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "BELGIUM",
+        "net_sales_eur": 2171568.89
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "PORTUGAL",
+        "net_sales_eur": 1829617.46
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "NORWAY",
+        "net_sales_eur": 1476295.71
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "SWEDEN",
+        "net_sales_eur": 1294163.25
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "IRELAND",
+        "net_sales_eur": 1113474.09
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "UKRAINE",
+        "net_sales_eur": 1007043.7
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "GREECE",
+        "net_sales_eur": 467429.88
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "CYPRUS",
+        "net_sales_eur": 411154.83
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "HUNGARY",
+        "net_sales_eur": 348282.8
+      },
+      {
+        "window": "FY2025",
+        "start": "2025-04-01",
+        "end": "2026-03-31",
+        "distributor_code": "FINLAND",
+        "net_sales_eur": 272761.19
+      }
+    ],
+    "note": "Actual SAP net sales by CY/FY window \u2014 billing only, not AIM Qty\u00d7PR00 scoring"
+  },
+  "pms": {
+    "primary": "total",
+    "network_by_year": [
+      {
+        "year": 2023,
+        "actual_qty": 240401.0,
+        "expected_qty": 996890.1,
+        "actual_rev_eur": 4919727.39,
+        "capture_rate": 0.24115095535606182
+      },
+      {
+        "year": 2024,
+        "actual_qty": 285247.0,
+        "expected_qty": 996890.1,
+        "actual_rev_eur": 5784183.44,
+        "capture_rate": 0.28613685701162045
+      },
+      {
+        "year": 2025,
+        "actual_qty": 282796.0,
+        "expected_qty": 996890.1,
+        "actual_rev_eur": 5768026.33,
+        "capture_rate": 0.28367821086797834
+      },
+      {
+        "year": 2026,
+        "actual_qty": 66429.0,
+        "expected_qty": 996890.1,
+        "actual_rev_eur": 1434122.89,
+        "capture_rate": 0.06663623201795263
+      }
+    ],
+    "top_db_cy2025": [
+      {
+        "year": 2025,
+        "distributor_code": "IRELAND",
+        "actual_qty": 11913.0,
+        "expected_qty": 11602.199999999999,
+        "actual_rev_eur": 272660.48,
+        "capture_rate": 1.0267880229611626
+      },
+      {
+        "year": 2025,
+        "distributor_code": "ITUK",
+        "actual_qty": 49651.0,
+        "expected_qty": 75337.1,
+        "actual_rev_eur": 1229349.71,
+        "capture_rate": 0.6590511182405481
+      },
+      {
+        "year": 2025,
+        "distributor_code": "CYPRUS",
+        "actual_qty": 7244.0,
+        "expected_qty": 14462.8,
+        "actual_rev_eur": 138183.24,
+        "capture_rate": 0.5008712005973948
+      },
+      {
+        "year": 2025,
+        "distributor_code": "UTI",
+        "actual_qty": 41583.0,
+        "expected_qty": 85918.0,
+        "actual_rev_eur": 627170.66,
+        "capture_rate": 0.48398472962592237
+      },
+      {
+        "year": 2025,
+        "distributor_code": "GREECE",
+        "actual_qty": 9824.0,
+        "expected_qty": 24390.9,
+        "actual_rev_eur": 154619.53,
+        "capture_rate": 0.40277316540185065
+      },
+      {
+        "year": 2025,
+        "distributor_code": "ROMANIA",
+        "actual_qty": 2571.0,
+        "expected_qty": 7015.2,
+        "actual_rev_eur": 48663.28,
+        "capture_rate": 0.3664899076291481
+      },
+      {
+        "year": 2025,
+        "distributor_code": "MALTA",
+        "actual_qty": 1984.0,
+        "expected_qty": 6028.4,
+        "actual_rev_eur": 37866.87,
+        "capture_rate": 0.3291088846128326
+      },
+      {
+        "year": 2025,
+        "distributor_code": "PORTUGAL",
+        "actual_qty": 12803.0,
+        "expected_qty": 39528.6,
+        "actual_rev_eur": 316318.86,
+        "capture_rate": 0.323892068021635
+      },
+      {
+        "year": 2025,
+        "distributor_code": "ICELAND",
+        "actual_qty": 804.0,
+        "expected_qty": 2659.3,
+        "actual_rev_eur": 16141.59,
+        "capture_rate": 0.3023352009927424
+      },
+      {
+        "year": 2025,
+        "distributor_code": "DENMARK",
+        "actual_qty": 1681.0,
+        "expected_qty": 5570.6,
+        "actual_rev_eur": 47102.54,
+        "capture_rate": 0.3017628262664704
+      },
+      {
+        "year": 2025,
+        "distributor_code": "FINLAND",
+        "actual_qty": 2283.0,
+        "expected_qty": 7886.2,
+        "actual_rev_eur": 42802.369999999995,
+        "capture_rate": 0.28949303847226804
+      },
+      {
+        "year": 2025,
+        "distributor_code": "NORWAY",
+        "actual_qty": 13956.0,
+        "expected_qty": 51934.8,
+        "actual_rev_eur": 333934.5,
+        "capture_rate": 0.26872155086762634
+      },
+      {
+        "year": 2025,
+        "distributor_code": "BELGIUM",
+        "actual_qty": 16196.0,
+        "expected_qty": 62469.5,
+        "actual_rev_eur": 339980.57,
+        "capture_rate": 0.2592625201098136
+      },
+      {
+        "year": 2025,
+        "distributor_code": "SWEDEN",
+        "actual_qty": 13298.0,
+        "expected_qty": 55301.8,
+        "actual_rev_eur": 268549.17000000004,
+        "capture_rate": 0.24046233576483947
+      },
+      {
+        "year": 2025,
+        "distributor_code": "UMI",
+        "actual_qty": 25916.0,
+        "expected_qty": 121450.1,
+        "actual_rev_eur": 244060.77,
+        "capture_rate": 0.21338804990691648
+      }
+    ],
+    "uti_umi_cy2025": [
+      {
+        "year": 2025,
+        "distributor_code": "UTI",
+        "actual_qty": 41583.0,
+        "expected_qty": 85918.0,
+        "actual_rev_eur": 627170.66,
+        "capture_rate": 0.48398472962592237
+      },
+      {
+        "year": 2025,
+        "distributor_code": "UMI",
+        "actual_qty": 25916.0,
+        "expected_qty": 121450.1,
+        "actual_rev_eur": 244060.77,
+        "capture_rate": 0.21338804990691648
+      }
+    ],
+    "genuine_bvp_extra_lens_cy2025": {
+      "genuine_rev_eur": 4536346.48,
+      "bvp_rev_eur": 1231679.85,
+      "bvp_share_of_lens_eur": 0.2135,
+      "note": "Extra mix lens only \u2014 headline remains PMS total capture"
+    }
+  },
+  "gps": {
+    "cy2025_top": [
+      {
+        "distributor_code": "IRELAND",
+        "country": "Ireland",
+        "total_sales_eur": 1187458.62,
+        "uio_units": 3056.0,
+        "spend_per_unit_eur": 388.57,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "UTI",
+        "country": "Israel",
+        "total_sales_eur": 3331511.94,
+        "uio_units": 10336.0,
+        "spend_per_unit_eur": 322.32,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "ITUK",
+        "country": "United Kingdom",
+        "total_sales_eur": 5564543.92,
+        "uio_units": 22389.0,
+        "spend_per_unit_eur": 248.54,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "FINLAND",
+        "country": "Finland",
+        "total_sales_eur": 277920.61,
+        "uio_units": 1204.0,
+        "spend_per_unit_eur": 230.83,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "BELGIUM",
+        "country": "Belgium",
+        "total_sales_eur": 2109331.62,
+        "uio_units": 9594.0,
+        "spend_per_unit_eur": 219.86,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "ICELAND",
+        "country": "Iceland",
+        "total_sales_eur": 85281.57,
+        "uio_units": 406.0,
+        "spend_per_unit_eur": 210.05,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "PORTUGAL",
+        "country": "Portugal",
+        "total_sales_eur": 1709793.99,
+        "uio_units": 8176.0,
+        "spend_per_unit_eur": 209.12,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "MALTA",
+        "country": "Malta",
+        "total_sales_eur": 206502.27,
+        "uio_units": 1040.0,
+        "spend_per_unit_eur": 198.56,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "GERMANY",
+        "country": "Germany",
+        "total_sales_eur": 2535931.82,
+        "uio_units": 12855.0,
+        "spend_per_unit_eur": 197.27,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "CYPRUS",
+        "country": "Cyprus",
+        "total_sales_eur": 428443.11,
+        "uio_units": 2308.0,
+        "spend_per_unit_eur": 185.63,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "UMI",
+        "country": "Israel",
+        "total_sales_eur": 3319344.16,
+        "uio_units": 18542.0,
+        "spend_per_unit_eur": 179.02,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "NORWAY",
+        "country": "Norway",
+        "total_sales_eur": 1416551.93,
+        "uio_units": 7929.0,
+        "spend_per_unit_eur": 178.65,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "DENMARK",
+        "country": "Denmark",
+        "total_sales_eur": 148220.51,
+        "uio_units": 851.0,
+        "spend_per_unit_eur": 174.17,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "ROMANIA",
+        "country": "Romania",
+        "total_sales_eur": 175218.43,
+        "uio_units": 1071.0,
+        "spend_per_unit_eur": 163.6,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "SWEDEN",
+        "country": "Sweden",
+        "total_sales_eur": 1278462.18,
+        "uio_units": 8443.0,
+        "spend_per_unit_eur": 151.42,
+        "traffic_light": "green"
+      },
+      {
+        "distributor_code": "GREECE",
+        "country": "Greece",
+        "total_sales_eur": 520303.94,
+        "uio_units": 3742.0,
+        "spend_per_unit_eur": 139.04,
+        "traffic_light": "amber"
+      },
+      {
+        "distributor_code": "IUK",
+        "country": "United Kingdom",
+        "total_sales_eur": 6131920.41,
+        "uio_units": 47783.0,
+        "spend_per_unit_eur": 128.33,
+        "traffic_light": "amber"
+      },
+      {
+        "distributor_code": "HUNGARY",
+        "country": "Hungary",
+        "total_sales_eur": 330030.58,
+        "uio_units": 3734.0,
+        "spend_per_unit_eur": 88.39,
+        "traffic_light": "amber"
+      }
+    ],
+    "uti_spu": 322.32,
+    "umi_spu": 179.02
+  },
+  "aim_gps": {
+    "quadrant_counts_cy2025": {
+      "defend": 6,
+      "priority_target": 6,
+      "insufficient_data": 4,
+      "wallet_gap": 3,
+      "attach_gap": 3
+    },
+    "rows_cy2025": [
+      {
+        "distributor_code": "ARMENIA",
+        "gps_spu_eur": NaN,
+        "pms_capture_all": NaN,
+        "quadrant": "insufficient_data",
+        "quadrant_label": "Insufficient data (no GPS and/or no capture basis)",
+        "net_sales_eur": 274583.25
+      },
+      {
+        "distributor_code": "BELGIUM",
+        "gps_spu_eur": 219.86,
+        "pms_capture_all": 0.2593,
+        "quadrant": "attach_gap",
+        "quadrant_label": "Attach gap (high GPS - low capture)",
+        "net_sales_eur": 2143951.9
+      },
+      {
+        "distributor_code": "CYPRUS",
+        "gps_spu_eur": 185.63,
+        "pms_capture_all": 0.5009,
+        "quadrant": "wallet_gap",
+        "quadrant_label": "Wallet gap (low GPS - high capture)",
+        "net_sales_eur": 429512.03
+      },
+      {
+        "distributor_code": "DENMARK",
+        "gps_spu_eur": 174.17,
+        "pms_capture_all": 0.3018,
+        "quadrant": "priority_target",
+        "quadrant_label": "Priority target (low GPS - low capture)",
+        "net_sales_eur": 170239.79
+      },
+      {
+        "distributor_code": "FINLAND",
+        "gps_spu_eur": 230.83,
+        "pms_capture_all": 0.2895,
+        "quadrant": "attach_gap",
+        "quadrant_label": "Attach gap (high GPS - low capture)",
+        "net_sales_eur": 333914.22
+      },
+      {
+        "distributor_code": "GERMANY",
+        "gps_spu_eur": 197.27,
+        "pms_capture_all": 0.1395,
+        "quadrant": "attach_gap",
+        "quadrant_label": "Attach gap (high GPS - low capture)",
+        "net_sales_eur": 2577765.9
+      },
+      {
+        "distributor_code": "GREECE",
+        "gps_spu_eur": 139.04,
+        "pms_capture_all": 0.4028,
+        "quadrant": "wallet_gap",
+        "quadrant_label": "Wallet gap (low GPS - high capture)",
+        "net_sales_eur": 528390.82
+      },
+      {
+        "distributor_code": "HUNGARY",
+        "gps_spu_eur": 88.39,
+        "pms_capture_all": 0.1911,
+        "quadrant": "priority_target",
+        "quadrant_label": "Priority target (low GPS - low capture)",
+        "net_sales_eur": 331737.02
+      },
+      {
+        "distributor_code": "ICELAND",
+        "gps_spu_eur": 210.05,
+        "pms_capture_all": 0.3023,
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS - high capture)",
+        "net_sales_eur": 87259.89
+      },
+      {
+        "distributor_code": "IRELAND",
+        "gps_spu_eur": 388.57,
+        "pms_capture_all": 1.0268,
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS - high capture)",
+        "net_sales_eur": 1232201.34
+      },
+      {
+        "distributor_code": "ITUK",
+        "gps_spu_eur": 248.54,
+        "pms_capture_all": 0.6591,
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS - high capture)",
+        "net_sales_eur": 5580413.87
+      },
+      {
+        "distributor_code": "IUK",
+        "gps_spu_eur": 128.33,
+        "pms_capture_all": 0.173,
+        "quadrant": "priority_target",
+        "quadrant_label": "Priority target (low GPS - low capture)",
+        "net_sales_eur": 6221920.41
+      },
+      {
+        "distributor_code": "KAZAKHSTAN",
+        "gps_spu_eur": NaN,
+        "pms_capture_all": NaN,
+        "quadrant": "insufficient_data",
+        "quadrant_label": "Insufficient data (no GPS and/or no capture basis)",
+        "net_sales_eur": 161948.74
+      },
+      {
+        "distributor_code": "MALTA",
+        "gps_spu_eur": 198.56,
+        "pms_capture_all": 0.3291,
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS - high capture)",
+        "net_sales_eur": 211943.38
+      },
+      {
+        "distributor_code": "NORWAY",
+        "gps_spu_eur": 178.65,
+        "pms_capture_all": 0.2687,
+        "quadrant": "priority_target",
+        "quadrant_label": "Priority target (low GPS - low capture)",
+        "net_sales_eur": 1558105.94
+      },
+      {
+        "distributor_code": "PALESTINE",
+        "gps_spu_eur": NaN,
+        "pms_capture_all": NaN,
+        "quadrant": "insufficient_data",
+        "quadrant_label": "Insufficient data (no GPS and/or no capture basis)",
+        "net_sales_eur": 27335.98
+      },
+      {
+        "distributor_code": "PORTUGAL",
+        "gps_spu_eur": 209.12,
+        "pms_capture_all": 0.3239,
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS - high capture)",
+        "net_sales_eur": 1712790.96
+      },
+      {
+        "distributor_code": "ROMANIA",
+        "gps_spu_eur": 163.6,
+        "pms_capture_all": 0.3665,
+        "quadrant": "wallet_gap",
+        "quadrant_label": "Wallet gap (low GPS - high capture)",
+        "net_sales_eur": 183524.35
+      },
+      {
+        "distributor_code": "SWEDEN",
+        "gps_spu_eur": 151.42,
+        "pms_capture_all": 0.2405,
+        "quadrant": "priority_target",
+        "quadrant_label": "Priority target (low GPS - low capture)",
+        "net_sales_eur": 1413075.33
+      },
+      {
+        "distributor_code": "UKRAINE",
+        "gps_spu_eur": NaN,
+        "pms_capture_all": NaN,
+        "quadrant": "insufficient_data",
+        "quadrant_label": "Insufficient data (no GPS and/or no capture basis)",
+        "net_sales_eur": 1160671.97
+      },
+      {
+        "distributor_code": "UMI",
+        "gps_spu_eur": 179.02,
+        "pms_capture_all": 0.2134,
+        "quadrant": "priority_target",
+        "quadrant_label": "Priority target (low GPS - low capture)",
+        "net_sales_eur": 3388801.28
+      },
+      {
+        "distributor_code": "UTI",
+        "gps_spu_eur": 322.32,
+        "pms_capture_all": 0.484,
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS - high capture)",
+        "net_sales_eur": 3402116.94
+      }
+    ],
+    "israel_uti_umi": [
+      {
+        "distributor_code": "UMI",
+        "gps_spu_eur": 179.02,
+        "pms_capture_all": 0.2134,
+        "quadrant": "priority_target",
+        "quadrant_label": "Priority target (low GPS - low capture)",
+        "net_sales_eur": 3388801.28
+      },
+      {
+        "distributor_code": "UTI",
+        "gps_spu_eur": 322.32,
+        "pms_capture_all": 0.484,
+        "quadrant": "defend",
+        "quadrant_label": "Defend (high GPS - high capture)",
+        "net_sales_eur": 3402116.94
+      }
+    ]
+  },
+  "mix": {
+    "network_bvp_share_eur_cy2025": 0.3669,
+    "by_family_cy2025": [
+      {
+        "product_family": "electrical",
+        "bvp_eur": 22048.38,
+        "genuine_eur": 16155.85,
+        "total_eur": 38204.23,
+        "bvp_share_eur": 0.5771188164242546
+      },
+      {
+        "product_family": "clutch",
+        "bvp_eur": 252172.53,
+        "genuine_eur": 222471.97,
+        "total_eur": 474644.5,
+        "bvp_share_eur": 0.5312871633401419
+      },
+      {
+        "product_family": "engine_cooling",
+        "bvp_eur": 14459.810000000001,
+        "genuine_eur": 14098.529999999999,
+        "total_eur": 28558.34,
+        "bvp_share_eur": 0.5063252976188393
+      },
+      {
+        "product_family": "filters",
+        "bvp_eur": 904713.99,
+        "genuine_eur": 1527733.55,
+        "total_eur": 2432447.54,
+        "bvp_share_eur": 0.3719356636155861
+      },
+      {
+        "product_family": "cab",
+        "bvp_eur": 23919.16,
+        "genuine_eur": 50479.86,
+        "total_eur": 74399.02,
+        "bvp_share_eur": 0.321498320811215
+      },
+      {
+        "product_family": "brakes",
+        "bvp_eur": 319304.58,
+        "genuine_eur": 690159.63,
+        "total_eur": 1009464.21,
+        "bvp_share_eur": 0.316310946774428
+      },
+      {
+        "product_family": "suspension",
+        "bvp_eur": 70253.07,
+        "genuine_eur": 251266.34,
+        "total_eur": 321519.41,
+        "bvp_share_eur": 0.21850335567610055
+      }
+    ]
+  },
+  "pr00_by_db_cy2025": [
+    {
+      "year": 2025,
+      "db": "IUK",
+      "parts_eur": 6221920.41,
+      "matched_eur": 5453785.6,
+      "no_list_eur": 768134.81,
+      "coverage_pct": 87.65,
+      "list_value_eur": 5781716.93,
+      "realization_pct": 94.33
+    },
+    {
+      "year": 2025,
+      "db": "ITUK",
+      "parts_eur": 5580413.87,
+      "matched_eur": 5196324.55,
+      "no_list_eur": 384089.32,
+      "coverage_pct": 93.12,
+      "list_value_eur": 5414227.68,
+      "realization_pct": 95.98
+    },
+    {
+      "year": 2025,
+      "db": "UTI",
+      "parts_eur": 3402116.94,
+      "matched_eur": 2611368.88,
+      "no_list_eur": 790748.06,
+      "coverage_pct": 76.76,
+      "list_value_eur": 3031997.66,
+      "realization_pct": 86.13
+    },
+    {
+      "year": 2025,
+      "db": "UMI",
+      "parts_eur": 3388801.28,
+      "matched_eur": 2400296.02,
+      "no_list_eur": 988505.26,
+      "coverage_pct": 70.83,
+      "list_value_eur": 2669944.58,
+      "realization_pct": 89.9
+    },
+    {
+      "year": 2025,
+      "db": "GERMANY",
+      "parts_eur": 2577765.9,
+      "matched_eur": 2135774.08,
+      "no_list_eur": 441991.82,
+      "coverage_pct": 82.85,
+      "list_value_eur": 2063398.16,
+      "realization_pct": 103.51
+    },
+    {
+      "year": 2025,
+      "db": "BELGIUM",
+      "parts_eur": 2143951.9,
+      "matched_eur": 1856250.98,
+      "no_list_eur": 287700.92,
+      "coverage_pct": 86.58,
+      "list_value_eur": 1802578.54,
+      "realization_pct": 102.98
+    },
+    {
+      "year": 2025,
+      "db": "PORTUGAL",
+      "parts_eur": 1712790.96,
+      "matched_eur": 1561544.68,
+      "no_list_eur": 151246.28,
+      "coverage_pct": 91.17,
+      "list_value_eur": 1608569.07,
+      "realization_pct": 97.08
+    },
+    {
+      "year": 2025,
+      "db": "NORWAY",
+      "parts_eur": 1558105.94,
+      "matched_eur": 1158031.03,
+      "no_list_eur": 400074.91,
+      "coverage_pct": 74.32,
+      "list_value_eur": 1208731.05,
+      "realization_pct": 95.81
+    },
+    {
+      "year": 2025,
+      "db": "SWEDEN",
+      "parts_eur": 1413075.33,
+      "matched_eur": 1068123.86,
+      "no_list_eur": 344951.47,
+      "coverage_pct": 75.59,
+      "list_value_eur": 1085138.68,
+      "realization_pct": 98.43
+    },
+    {
+      "year": 2025,
+      "db": "IRELAND",
+      "parts_eur": 1232201.34,
+      "matched_eur": 1127810.86,
+      "no_list_eur": 104390.48,
+      "coverage_pct": 91.53,
+      "list_value_eur": 1141731.82,
+      "realization_pct": 98.78
+    },
+    {
+      "year": 2025,
+      "db": "UKRAINE",
+      "parts_eur": 1160671.97,
+      "matched_eur": 1074312.21,
+      "no_list_eur": 86359.76,
+      "coverage_pct": 92.56,
+      "list_value_eur": 1123168.25,
+      "realization_pct": 95.65
+    },
+    {
+      "year": 2025,
+      "db": "MIDI",
+      "parts_eur": 554544.46,
+      "matched_eur": 300440.87,
+      "no_list_eur": 254103.59,
+      "coverage_pct": 54.18,
+      "list_value_eur": 317954.75,
+      "realization_pct": 94.49
+    },
+    {
+      "year": 2025,
+      "db": "GREECE",
+      "parts_eur": 528390.82,
+      "matched_eur": 479683.68,
+      "no_list_eur": 48707.14,
+      "coverage_pct": 90.78,
+      "list_value_eur": 474944.84,
+      "realization_pct": 101.0
+    },
+    {
+      "year": 2025,
+      "db": "CYPRUS",
+      "parts_eur": 429512.03,
+      "matched_eur": 394037.64,
+      "no_list_eur": 35474.39,
+      "coverage_pct": 91.74,
+      "list_value_eur": 389072.19,
+      "realization_pct": 101.28
+    },
+    {
+      "year": 2025,
+      "db": "FINLAND",
+      "parts_eur": 333914.22,
+      "matched_eur": 244944.71,
+      "no_list_eur": 88969.51,
+      "coverage_pct": 73.36,
+      "list_value_eur": 246917.8,
+      "realization_pct": 99.2
+    },
+    {
+      "year": 2025,
+      "db": "HUNGARY",
+      "parts_eur": 331737.02,
+      "matched_eur": 280301.85,
+      "no_list_eur": 51435.17,
+      "coverage_pct": 84.5,
+      "list_value_eur": 279546.36,
+      "realization_pct": 100.27
+    },
+    {
+      "year": 2025,
+      "db": "ARMENIA",
+      "parts_eur": 274583.25,
+      "matched_eur": 267015.59,
+      "no_list_eur": 7567.66,
+      "coverage_pct": 97.24,
+      "list_value_eur": 201168.18,
+      "realization_pct": 132.73
+    },
+    {
+      "year": 2025,
+      "db": "MALTA",
+      "parts_eur": 211943.38,
+      "matched_eur": 188040.88,
+      "no_list_eur": 23902.5,
+      "coverage_pct": 88.72,
+      "list_value_eur": 188269.6,
+      "realization_pct": 99.88
+    },
+    {
+      "year": 2025,
+      "db": "ROMANIA",
+      "parts_eur": 183524.35,
+      "matched_eur": 143525.86,
+      "no_list_eur": 39998.49,
+      "coverage_pct": 78.21,
+      "list_value_eur": 139702.53,
+      "realization_pct": 102.74
+    },
+    {
+      "year": 2025,
+      "db": "DENMARK",
+      "parts_eur": 170239.79,
+      "matched_eur": 137211.39,
+      "no_list_eur": 33028.4,
+      "coverage_pct": 80.6,
+      "list_value_eur": 131661.06,
+      "realization_pct": 104.22
+    }
+  ],
+  "zpr1_flags": {
+    "umi_yoy_2025_2026_median_pct": 20.19,
+    "uti_yoy_2025_2026_median_pct": 8.21,
+    "umi_vs_pr00_2025": -15.28,
+    "umi_vs_pr00_2026": -5.24,
+    "uti_vs_pr00_2025": -10.61,
+    "uti_vs_pr00_2026": -13.92,
+    "suspicion": "UMI ZPR1 median YoY +20.2% (2025\u21922026) with vs-PR00 gap narrowing from \u221215.3% to \u22125.2%. Treat as list-composition / coverage change until PN-level audit \u2014 do not blend with UTI.",
+    "uti_umi_never_blend": true
+  },
+  "mos_movers": [
+    {
+      "distributor": "Isuzu Sverige",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 80.75,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 45.0,
+      "delta_days_2026_vs_2025": -35.75,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "BL ehf",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 147.5,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 112.0,
+      "delta_days_2026_vs_2025": -35.5,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "MIDI",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 311.67,
+      "n_months_2026_ytd": 5,
+      "avg_mos_days_2026_ytd": 294.8,
+      "delta_days_2026_vs_2025": -16.87,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "Imotors",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 100.12,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 85.0,
+      "delta_days_2026_vs_2025": -15.12,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "IUK",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 87.75,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 74.83,
+      "delta_days_2026_vs_2025": -12.92,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "GasanZammit",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 126.12,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 115.67,
+      "delta_days_2026_vs_2025": -10.46,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "Isuzu Ireland",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 130.44,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 121.17,
+      "delta_days_2026_vs_2025": -9.27,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "WAE",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 98.5,
+      "n_months_2026_ytd": 3,
+      "avg_mos_days_2026_ytd": 93.67,
+      "delta_days_2026_vs_2025": -4.83,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    }
+  ],
+  "vpacc_hooks": [
+    {
+      "stream": "VP",
+      "n_actions": 68,
+      "metric_hooks": "PR00 realization coverage \u00b7 NO_LIST gap \u00b7 ZPR1 vs PR00 (UTI/UMI separate)",
+      "join_quality": "thin \u2014 PIC/stream keyed, not dealer"
+    },
+    {
+      "stream": "ACC",
+      "n_actions": 53,
+      "metric_hooks": "PMS total capture \u00b7 AIM\u00d7GPS quadrant \u00b7 genuine/BVP mix (extra lens)",
+      "join_quality": "thin \u2014 status snapshot only"
+    }
+  ],
+  "prism_flags_open": [
+    {
+      "id": "C_air_interval",
+      "status": "provisional",
+      "note": "Air-filter consumable_factor 0.5 provisional \u2014 IML-confirmed ratio still open"
+    },
+    {
+      "id": "brake_factors",
+      "status": "pending",
+      "note": "Brake pad/shoe interval factors pending IML/ITUK \u2014 do not treat as locked"
+    },
+    {
+      "id": "H_credit_notes",
+      "status": "acted_judgment",
+      "note": "CR/RE exclusion is documented judgment, not ERP-confirmed"
+    }
+  ],
+  "verification": {
+    "ok": true,
+    "summary": {
+      "pass": 106,
+      "warn": 0,
+      "fail": 0,
+      "ok": true
+    },
+    "metrics_snapshot_as_of": "2026-08-03T06:18:29Z",
+    "note": "Green verification anchors PRISM KPIs; list-to-pocket remains provisional"
+  },
+  "risks": [
+    "List-to-pocket integrity 48/100 (weak) \u2014 not externally quotable.",
+    "CY2025 NO_LIST \u2248 \u20ac5.0M (15.1% of parts) \u2014 steering/DPD/oil SKUs dominate.",
+    "UMI ZPR1 median YoY +20.2% (2025\u21922026) with vs-PR00 gap narrowing from \u221215.3% to \u22125.2%. Treat as list-composition / coverage change until PN-level audit \u2014 do not blend with UTI.",
+    "UTI and UMI remain separate Israel distributors \u2014 never blend for IDS/GPS/pricing.",
+    "PMS headline uses total capture; genuine/BVP is an extra mix lens only.",
+    "KPI MOS = Days of Parts in Stock (warehouse response) \u2014 not market elasticity; ISZE\u2192DB volume elasticity remains non-quotable.",
+    "VPACC\u2192metric join is thin (PIC/stream, not dealer).",
+    "Open: air-filter interval provisional; brake factors pending IML/ITUK (note only).",
+    "2026 YTD PR00 uses current IE40 extract (not Jan-2026 snapshot) \u2014 coverage depressed.",
+    "Year-end PR00 stamps: intra-year list changes not dated."
+  ],
+  "next_asks": [
+    "QA year-matched PR00 joins (spot-check top NO_LIST PNs + UTI/UMI realization).",
+    "PN-level audit of UMI ZPR1 2025\u21922026 (+20% median) \u2014 list rebuild vs true price move?",
+    "Confirm air-filter interval with IML; confirm brake pad/shoe factors with IML/ITUK.",
+    "Decide whether 2026 list-vintage needs a frozen Jan snapshot for YTD realization.",
+    "Map priority VPACC PIC items to NO_LIST / capture / GPS SPU owners."
+  ],
+  "outputs": {
+    "pricing_pack_pms_total_by_db_year.csv": "01_data/00_derived/pricing_pack_pms_total_by_db_year.csv",
+    "pricing_pack_mix_family_cy2025.csv": "01_data/00_derived/pricing_pack_mix_family_cy2025.csv",
+    "pricing_pack_aim_gps_cy2025.csv": "01_data/00_derived/pricing_pack_aim_gps_cy2025.csv",
+    "pricing_pack_aim_billing_top_cy2025.csv": "01_data/00_derived/pricing_pack_aim_billing_top_cy2025.csv"
+  },
+  "html": "02_dashboards/pricing/ISZE_Pricing_Full_Analysis_Pack.html",
+  "related_html": [
+    "02_dashboards/pricing/ISZE_Pricing_History_Findings_Dashboard.html",
+    "02_dashboards/pricing/ISZE_Pricing_BI_Dashboard.html"
+  ]
+}

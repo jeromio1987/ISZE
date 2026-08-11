@@ -8,6 +8,13 @@
 
 ## [Unreleased]
 
+### Added (2026-08-11) — Pricing FULL analysis pack (Mode A) + audit + self-Send
+- Mega-pack builder `01_data/91_build/build_pricing_full_analysis_pack.py` → `02_dashboards/pricing/ISZE_Pricing_Full_Analysis_Pack.html` (PR00 realization, ZPR1 UTI≠UMI, AIM CY/FY, PMS **total** capture, GPS SPU, AIM×GPS, mix extra lens, MOS not-elasticity, NO_LIST, VPACC hooks, integrity).
+- Meta/CSVs under `01_data/00_derived/pricing_full_analysis_pack.meta.json` + `pricing_pack_*`.
+- Independent audit `01_data/91_build/audit_pricing_full_pack.py` → `_pricing_full_pack_audit.md` (**PASS_WITH_CAVEATS**; integrity **48/100** weak).
+- Self-Send only to `jerome.van.der.pluym@isuzu-e.com` at 2026-08-11T06:25:53Z (no colleagues).
+- Thin findings HTML now points to the full pack.
+
 ### Added (2026-08-11) — Pricing history findings dashboard (provisional)
 - Builder `01_data/91_build/build_pricing_history_findings.py` → derived CSVs + `pricing_history_findings.meta.json`.
 - Mode A HTML: `02_dashboards/pricing/ISZE_Pricing_History_Findings_Dashboard.html` (year-matched PR00 realization 2023–2026 YTD, ZPR1 UTI/UMI/2372, KPI MOS stock days, NO_LIST, VPACC status, integrity score).
