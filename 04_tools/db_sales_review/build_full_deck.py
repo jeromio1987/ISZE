@@ -26,7 +26,7 @@ import pandas as pd
 from pptx import Presentation
 from pptx.util import Inches
 
-ROOT = Path(r"C:\Users\jerom\Desktop\claude\ISZE")
+ROOT = Path(__file__).resolve().parent.parent.parent
 TOOLS = ROOT / "04_tools" / "ppt_template_v2"
 DBSR = ROOT / "04_tools" / "db_sales_review"
 DER = ROOT / "01_data" / "00_derived"
@@ -406,8 +406,13 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     # Mode A (loaded into `prs` before this call) already ends on its own
     # closing slide. Drop it here so the combined deck has exactly one
     # closer — at the very end of the deep dive — instead of one mid-deck
-    # and a second one appended by build_closing() below.
+    # and a second one appended by build_closing() below. Removing the
+    # <p:sldId> alone leaves the slideN.xml part orphaned but still in the
+    # package, which collides with the filename python-pptx assigns the
+    # next new slide ("Duplicate name" on save) -- drop the relationship
+    # too so the part is actually excised.
     mode_a_closer = prs.slides._sldIdLst[-1]
+    prs.part.drop_rel(mode_a_closer.rId)
     prs.slides._sldIdLst.remove(mode_a_closer)
     page_start -= 1
 

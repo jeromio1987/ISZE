@@ -287,7 +287,7 @@ distributors:
     dashboard_key: "HUNGARY"
     ids_code: "Hungary"
     uio_rows: {ld: 73, md: 74, f_series: null, lcv: 75}
-    uio_cy2026_method: "corrected_survival"
+    uio_2026_fixed: {lcv: 3992}
     warranty_cy2025_claim: 77434
     warranty_note: "LCV warranty."
     incentive_fy27: null
@@ -295,7 +295,7 @@ distributors:
     target_track: "ext_target"
     watch:
       - "S2D dropped from this deck: Dashboard has no usable Hungary/AutoWallis row (KPI DB->DLR figure runs 2.2-3.7x ISZE billing, an implausible margin), and the imputed fallback (billing/0.65) has no real data behind it either. Target uses the ISZE->DB EXTENDED TARGET (Dashboard col I) instead."
-      - "UIO for CY2026/FY27: kept at corrected-survival (3,645, shrinking), NOT the source workbook's raw V19 figure (3,992, growing) -- the carpark pack that feeds this deck's GPS/fleet slides explicitly labels the V19 figure 'uio_CY2026_V19_DO_NOT_USE'. The EXTENDED TARGET's own Max Spend still uses the unadjusted 3,992 from the source workbook as submitted -- flagged, not reconciled, pending Jerome's call on which fleet basis is right."
+      - "UIO for CY2026/FY27 uses V19 (3,992, growing), per Jerome's explicit call -- overrides the carpark pack's corrected-survival figure (3,645, shrinking), which labels the V19 number 'uio_CY2026_V19_DO_NOT_USE'. Both the fleet chart and the EXTENDED TARGET's Max Spend are now on the same 3,992 basis."
 
   FINLAND:
     name: "Nordic Automotive Trading"

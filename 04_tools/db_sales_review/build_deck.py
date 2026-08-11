@@ -248,7 +248,23 @@ def build(dbkey: str):
         fy = S["fy27"]
         gps = S["gps_segmented"]
         uio_live = S["uio"]
-    s2d = fy["s2d_target"]
+    use_ext_target = p.get("target_track") == "ext_target"
+    s2d = None if use_ext_target else fy["s2d_target"]
+    ext = None
+    if use_ext_target:
+        ext = {
+            "bp_fy27": fy["actual"]["fy27"],
+            "max_spend_fy27": fy["max_spend"]["fy27"],
+            "gps_fy27": fy["gps"]["fy27"],
+            "stretch_pct": fy["stretch_pct"]["fy27"],
+            "stretch_eur": fy["stretch_eur"]["fy27"],
+            "new_gps": fy["gps_new"]["fy27"],
+            "target_fy27": fy["ext_target"]["fy27"],
+            "billing_fy26": fy["actual"]["fy26"],
+        }
+        ext["growth_vs_fy26"] = (
+            ext["target_fy27"] / ext["billing_fy26"] - 1 if ext["billing_fy26"] else 0
+        )
     pbi_raw = S["pbi"]
     pbi_complete = bool(
         pbi_raw
@@ -380,7 +396,8 @@ def build(dbkey: str):
     ]
     if _nb_agenda:
         agenda += ["New Business — validation queue"]
-    agenda += ["Sales-to-Dealer Outlook"]
+    agenda += (["FY2027 Extended Target — ISZE to " + p["key"]] if use_ext_target
+               else ["Sales-to-Dealer Outlook"])
     if gps:
         agenda += ["GPS Capture"]
     agenda += ["Service-Parts Coverage"]
@@ -595,18 +612,35 @@ def build(dbkey: str):
         ], Inches(0.32), Inches(4.45), Inches(12.7), Inches(1.5), size=14)
         page += 1
 
-    # ---- Sales-to-Dealer lens ---------------------------------------------
-    s = db.build_content(prs, "Sales-to-Dealer outlook — FY2027",
-                         eyebrow="Sales-to-Dealer", page_no=page)
-    base_label = "working estimate" if s2d["s2d_imputed"] else "reported KPI"
-    db.bullet_list(s, [
-        f"FY2026 Sales-to-Dealer is {eur(s2d['fy26'])} ({base_label}).",
-        f"The working fleet movement into FY2027 is {s2d['uio_growth']:+.1%}.",
-        f"Applying fleet movement, the 5% price adjustment and 1.8% additional growth gives "
-        f"a FY2027 Sales-to-Dealer target of {eur(s2d['fy27'])}.",
-        "The discussion is held in Sales-to-Dealer amounts; ISZE billing remains an internal "
-        "reconciliation measure.",
-    ], Inches(0.32), Inches(1.35), Inches(11.9), Inches(4.2), size=15)
+    # ---- FY2027 target lens: Sales-to-Dealer, or ISZE->DB Extended Target --
+    if use_ext_target:
+        s = db.build_content(prs, f"FY2027 Extended Target: {eur(ext['target_fy27'])}",
+                             eyebrow="FY2027 Extended Target", page_no=page)
+        db.bullet_list(s, [
+            f"FY2026 ISZE billing was {eur(ext['billing_fy26'])}. The FY2027 base plan is "
+            f"{eur(ext['bp_fy27'])}, plus a {ext['stretch_pct']:.1%} stretch "
+            f"({eur(ext['stretch_eur'])}) — {eur(ext['target_fy27'])} in total, "
+            f"{ext['growth_vs_fy26']:+.1%} versus FY2026.",
+            f"That stretch lifts your GPS share of fleet potential from "
+            f"{ext['gps_fy27']*100:.1f}% to {ext['new_gps']*100:.1f}%.",
+            "This is the ISZE→AutoWallis commercial target — separate from what you sell on to "
+            "your own dealers.",
+            "ISZE management has submitted a financial incentive tied to reaching this stretch "
+            "target for FY2027 — not yet approved by Japan. We'll confirm as soon as that's "
+            "through.",
+        ], Inches(0.32), Inches(1.35), Inches(11.9), Inches(4.4), size=15)
+    else:
+        s = db.build_content(prs, "Sales-to-Dealer outlook — FY2027",
+                             eyebrow="Sales-to-Dealer", page_no=page)
+        base_label = "working estimate" if s2d["s2d_imputed"] else "reported KPI"
+        db.bullet_list(s, [
+            f"FY2026 Sales-to-Dealer is {eur(s2d['fy26'])} ({base_label}).",
+            f"The working fleet movement into FY2027 is {s2d['uio_growth']:+.1%}.",
+            f"Applying fleet movement, the 5% price adjustment and 1.8% additional growth gives "
+            f"a FY2027 Sales-to-Dealer target of {eur(s2d['fy27'])}.",
+            "The discussion is held in Sales-to-Dealer amounts; ISZE billing remains an internal "
+            "reconciliation measure.",
+        ], Inches(0.32), Inches(1.35), Inches(11.9), Inches(4.2), size=15)
     page += 1
 
     # ---- GPS Capture (Portugal-style: one clean number, no recon trail) ----
@@ -689,10 +723,16 @@ def build(dbkey: str):
     ]
     if S.get("fleet_mix_note"):
         fleet_takes.append(S["fleet_mix_note"])
-    fleet_takes.append(
-        f"The FY2027 Sales-to-Dealer target starts from that fleet change, then applies "
-        f"a {s2d['price']:.0%} price adjustment and {s2d['additional']:.1%} additional growth."
-    )
+    if use_ext_target:
+        fleet_takes.append(
+            f"That fleet growth feeds the FY2027 Extended Target's max-spend potential "
+            f"({eur(ext['max_spend_fy27'])}), which the base plan plus stretch is measured against."
+        )
+    else:
+        fleet_takes.append(
+            f"The FY2027 Sales-to-Dealer target starts from that fleet change, then applies "
+            f"a {s2d['price']:.0%} price adjustment and {s2d['additional']:.1%} additional growth."
+        )
     fleet_takes.append(
         "So the target is built from a slightly smaller fleet — not from an assumed growth story."
         if growth < 0 else
@@ -708,54 +748,101 @@ def build(dbkey: str):
     # ---- target build-up ---------------------------------------------------
     s = db.build_content(prs, "How the FY2027 target is built",
                          eyebrow="Fleet & FY2027 Target", page_no=page)
-    db.txt(s, "Sales-to-Dealer amount bridge",
-           Inches(0.32), Inches(1.28), Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
-    base = s2d["fy26"]
-    after_uio = base * (1 + s2d["uio_growth"])
-    after_price = after_uio * (1 + s2d["price"])
-    up = s2d["fy27"] / base - 1 if base else 0
-    trows = [
-        ["Step", "Amount"],
-        [f"FY2026 Sales-to-Dealer ({'working estimate' if s2d['s2d_imputed'] else 'reported KPI'})",
-         eur(base)],
-        [f"After fleet movement ({s2d['uio_growth']:+.1%})", eur(after_uio)],
-        [f"After price adjustment (+{s2d['price']:.0%})", eur(after_price)],
-        [f"FY2027 target after additional growth (+{s2d['additional']:.1%})",
-         eur(s2d["fy27"])],
-    ]
-    styled_table(s, trows, Inches(0.32), Inches(1.65), Inches(9.4), Inches(2.35),
-                 [Inches(6.2), Inches(3.2)], size=12.5)
-    foot = [
-        f"The FY2027 target is {up:+.1%} versus the FY2026 Sales-to-Dealer base.",
-        ("The FY2026 base is a working estimate (ISZE billing ÷ 0.65): the KPI Dashboard has "
-         "no usable Sales-to-Dealer row for this market." if s2d["s2d_imputed"] else
-         "The FY2026 base is the reported Sales-to-Dealer KPI."),
-    ]
-    db.bullet_list(s, foot, Inches(0.32), Inches(4.35), Inches(12.7),
-                   Inches(1.3), size=13)
+    if use_ext_target:
+        db.txt(s, "ISZE → AutoWallis Extended Target bridge",
+               Inches(0.32), Inches(1.28), Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
+        up = ext["growth_vs_fy26"]
+        trows = [
+            ["Step", "Amount"],
+            ["FY2026 ISZE billing (actual)", eur(ext["billing_fy26"])],
+            ["FY2027 base plan (BP FY27, reviewed with ISZE)", eur(ext["bp_fy27"])],
+            [f"After stretch (+{ext['stretch_pct']:.1%} of {eur(ext['max_spend_fy27'])} fleet "
+             "potential)", eur(ext["target_fy27"])],
+        ]
+        styled_table(s, trows, Inches(0.32), Inches(1.65), Inches(9.4), Inches(1.9),
+                     [Inches(6.2), Inches(3.2)], size=12.5)
+        foot = [
+            f"The Extended Target is {up:+.1%} versus FY2026 ISZE billing.",
+            "This bridge is the ISZE→AutoWallis commercial track — a separate figure from what "
+            "you sell on to your own dealers, which this deck does not target this cycle.",
+            "ISZE management has submitted a financial incentive tied to reaching the stretch "
+            "portion of this target — not yet approved by Japan.",
+        ]
+        db.bullet_list(s, foot, Inches(0.32), Inches(3.75), Inches(12.7),
+                       Inches(1.9), size=13)
+    else:
+        db.txt(s, "Sales-to-Dealer amount bridge",
+               Inches(0.32), Inches(1.28), Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
+        base = s2d["fy26"]
+        after_uio = base * (1 + s2d["uio_growth"])
+        after_price = after_uio * (1 + s2d["price"])
+        up = s2d["fy27"] / base - 1 if base else 0
+        trows = [
+            ["Step", "Amount"],
+            [f"FY2026 Sales-to-Dealer ({'working estimate' if s2d['s2d_imputed'] else 'reported KPI'})",
+             eur(base)],
+            [f"After fleet movement ({s2d['uio_growth']:+.1%})", eur(after_uio)],
+            [f"After price adjustment (+{s2d['price']:.0%})", eur(after_price)],
+            [f"FY2027 target after additional growth (+{s2d['additional']:.1%})",
+             eur(s2d["fy27"])],
+        ]
+        styled_table(s, trows, Inches(0.32), Inches(1.65), Inches(9.4), Inches(2.35),
+                     [Inches(6.2), Inches(3.2)], size=12.5)
+        foot = [
+            f"The FY2027 target is {up:+.1%} versus the FY2026 Sales-to-Dealer base.",
+            ("The FY2026 base is a working estimate (ISZE billing ÷ 0.65): the KPI Dashboard has "
+             "no usable Sales-to-Dealer row for this market." if s2d["s2d_imputed"] else
+             "The FY2026 base is the reported Sales-to-Dealer KPI."),
+        ]
+        db.bullet_list(s, foot, Inches(0.32), Inches(4.35), Inches(12.7),
+                       Inches(1.3), size=13)
     page += 1
 
     # ---- growth / price / incentive ---------------------------------------
     s = db.build_content(prs, "What the FY2027 target reflects",
                          eyebrow="FY2027 Target", page_no=page)
-    card(s, Inches(0.32), Inches(1.35), Inches(6.0), Inches(2.2), "1", "Your fleet",
-         [f"The working fleet movement used in the target is {s2d['uio_growth']:+.1%}."])
-    card(s, Inches(6.5), Inches(1.35), Inches(6.5), Inches(2.2), "2", "The price move",
-         [f"ISZE is applying a {d['price_increase_fy27']:.0%} price adjustment for FY2027, "
-          "consistent with every ISZE market this year.",
-          "It is built into the per-vehicle rate above, not added separately on top."])
-    db.txt(s, "What it means for your target", Inches(0.32), Inches(3.80), Inches(9.4),
-           Inches(0.3), size=13, bold=True, color=RED)
-    styled_table(s, [["", "Value"],
-                     ["FY2027 Sales-to-Dealer target", eur(s2d["fy27"])],
-                     [f"vs FY2026 Sales-to-Dealer ({eur(base)})", f"{up:+.1%}"]],
-                 Inches(0.32), Inches(4.14), Inches(9.4), Inches(1.35), [Inches(5.5), Inches(3.9)])
-    db.bullet_list(s, [
-        "As in previous cycles we would expect an incentive to sit alongside this adjustment — "
-        "that approval is still pending on our side.",
-        "Until the incentive is confirmed, treat the FY2027 target as the working bridge "
-        "(fleet × price × additional growth), not a locked commercial commitment.",
-    ], Inches(0.32), Inches(5.55), Inches(12.7), Inches(1.05), size=12.5)
+    if use_ext_target:
+        card(s, Inches(0.32), Inches(1.35), Inches(6.0), Inches(2.2), "1", "Your fleet potential",
+             [f"Max spend for FY2027 is {eur(ext['max_spend_fy27'])} — {total.get(2026, 0):,} "
+              f"units × the FY27 ISZE-net rate (FY26 rate +5%)."])
+        card(s, Inches(6.5), Inches(1.35), Inches(6.5), Inches(2.2), "2", "The stretch ask",
+             [f"ISZE is asking for a {ext['stretch_pct']:.1%} stretch on top of the base plan — "
+              f"{eur(ext['stretch_eur'])}.",
+              f"That lifts your GPS share from {ext['gps_fy27']*100:.1f}% to "
+              f"{ext['new_gps']*100:.1f}% of fleet potential."])
+        db.txt(s, "What it means for your target", Inches(0.32), Inches(3.80), Inches(9.4),
+               Inches(0.3), size=13, bold=True, color=RED)
+        styled_table(s, [["", "Value"],
+                         ["FY2027 Extended Target", eur(ext["target_fy27"])],
+                         [f"vs FY2026 ISZE billing ({eur(ext['billing_fy26'])})",
+                          f"{ext['growth_vs_fy26']:+.1%}"]],
+                     Inches(0.32), Inches(4.14), Inches(9.4), Inches(1.35), [Inches(5.5), Inches(3.9)])
+        db.bullet_list(s, [
+            "ISZE management has submitted a financial incentive tied to reaching this stretch "
+            "target for FY2027 — not yet approved by Japan. We'll confirm as soon as that's "
+            "through.",
+            "Until the incentive is confirmed, treat the Extended Target as the working bridge "
+            "(base plan + stretch), not a locked commercial commitment.",
+        ], Inches(0.32), Inches(5.55), Inches(12.7), Inches(1.05), size=12.5)
+    else:
+        card(s, Inches(0.32), Inches(1.35), Inches(6.0), Inches(2.2), "1", "Your fleet",
+             [f"The working fleet movement used in the target is {s2d['uio_growth']:+.1%}."])
+        card(s, Inches(6.5), Inches(1.35), Inches(6.5), Inches(2.2), "2", "The price move",
+             [f"ISZE is applying a {d['price_increase_fy27']:.0%} price adjustment for FY2027, "
+              "consistent with every ISZE market this year.",
+              "It is built into the per-vehicle rate above, not added separately on top."])
+        db.txt(s, "What it means for your target", Inches(0.32), Inches(3.80), Inches(9.4),
+               Inches(0.3), size=13, bold=True, color=RED)
+        styled_table(s, [["", "Value"],
+                         ["FY2027 Sales-to-Dealer target", eur(s2d["fy27"])],
+                         [f"vs FY2026 Sales-to-Dealer ({eur(base)})", f"{up:+.1%}"]],
+                     Inches(0.32), Inches(4.14), Inches(9.4), Inches(1.35), [Inches(5.5), Inches(3.9)])
+        db.bullet_list(s, [
+            "As in previous cycles we would expect an incentive to sit alongside this adjustment — "
+            "that approval is still pending on our side.",
+            "Until the incentive is confirmed, treat the FY2027 target as the working bridge "
+            "(fleet × price × additional growth), not a locked commercial commitment.",
+        ], Inches(0.32), Inches(5.55), Inches(12.7), Inches(1.05), size=12.5)
     page += 1
 
     # ---- SPA ---------------------------------------------------------------
@@ -786,7 +873,7 @@ def build(dbkey: str):
     page += 1
 
     # ---- data request -----------------------------------------------------
-    has_s2d = not s2d["s2d_imputed"]
+    has_s2d = False if use_ext_target else not s2d["s2d_imputed"]
     s = db.build_content(prs, "Part-level Sales-to-Dealer Data", eyebrow="Ask", page_no=page)
     first = ("You already report Sales-to-Dealer monthly. The ask is the same data at "
              "part-number level." if has_s2d else
@@ -806,7 +893,13 @@ def build(dbkey: str):
 
     # ---- next steps -------------------------------------------------------
     s = db.build_content(prs, "Next steps", eyebrow="Summary", page_no=page)
-    if S.get("incentive_fy27") is None:
+    if use_ext_target:
+        steps = [
+            f"Align on the FY2027 Extended Target (base plan + stretch) — working figure "
+            f"{eur(ext['target_fy27'])} ({up:+.1%} vs FY2026 ISZE billing).",
+            "Confirm the incentive tied to the stretch target once approved by Japan.",
+        ]
+    elif S.get("incentive_fy27") is None:
         steps = [
             "Align on the FY2027 Sales-to-Dealer bridge (fleet, price, additional growth) — "
             f"working figure {eur(s2d['fy27'])} ({up:+.1%} vs FY2026 base).",
