@@ -23,7 +23,7 @@ CY_FILES = [
 MANUAL = [
     (2574, "I.M. PARTS & SERVICE Limited", "IUK", "AIM confirmed"),
     (2575, "ISUZU TRUCK (UK) LIMITED", "ITUK", "AIM confirmed"),
-    (2194, "MIDI EUROPE S.R.L.", "MIDI", "SAP 2194; CY billing; EXCLUDED_CODES"),
+    (2194, "ISUZU TRUCK (UK) LIMITED", "ITUK", "Jerome confirmed 2026-08-11 — was previously mislabeled MIDI"),
 ]
 
 
