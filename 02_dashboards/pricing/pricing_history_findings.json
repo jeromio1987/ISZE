@@ -1,0 +1,961 @@
+{
+  "built_at_utc": "2026-08-11T06:16:29Z",
+  "status": "provisional_qa_pending",
+  "quotable_externally": false,
+  "network": [
+    {
+      "year": 2023,
+      "period": "CY",
+      "billing_end": "2023-12-28",
+      "parts_eur": 30422371.85,
+      "lines": 132932,
+      "matched_eur": 25433443.74,
+      "no_list_eur": 4988928.11,
+      "coverage_pct": 83.6,
+      "list_value_eur": 26266864.92,
+      "realization_pct": 96.83,
+      "pr00_blank_prices": 7,
+      "pr00_source": "pricing_pr00_ie40_2023.parquet",
+      "status": "provisional_qa_pending"
+    },
+    {
+      "year": 2024,
+      "period": "CY",
+      "billing_end": "2024-12-30",
+      "parts_eur": 34699409.37,
+      "lines": 154519,
+      "matched_eur": 31137452.35,
+      "no_list_eur": 3561957.02,
+      "coverage_pct": 89.73,
+      "list_value_eur": 32812370.81,
+      "realization_pct": 94.9,
+      "pr00_blank_prices": 0,
+      "pr00_source": "pricing_pr00_ie40_2024.parquet",
+      "status": "provisional_qa_pending"
+    },
+    {
+      "year": 2025,
+      "period": "CY",
+      "billing_end": "2025-12-30",
+      "parts_eur": 33707573.78,
+      "lines": 148778,
+      "matched_eur": 28356351.0,
+      "no_list_eur": 5351222.78,
+      "coverage_pct": 84.12,
+      "list_value_eur": 29552482.8,
+      "realization_pct": 95.95,
+      "pr00_blank_prices": 0,
+      "pr00_source": "pricing_pr00_ie40_2025.parquet",
+      "status": "provisional_qa_pending"
+    },
+    {
+      "year": 2026,
+      "period": "CY_YTD",
+      "billing_end": "2026-03-31",
+      "parts_eur": 9987601.43,
+      "lines": 41276,
+      "matched_eur": 7222938.38,
+      "no_list_eur": 2764663.05,
+      "coverage_pct": 72.32,
+      "list_value_eur": 7684885.21,
+      "realization_pct": 93.99,
+      "pr00_blank_prices": 4562,
+      "pr00_source": "pricing_pr00_ie40.parquet",
+      "status": "provisional_qa_pending"
+    }
+  ],
+  "realization_details": [
+    {
+      "year": 2023,
+      "pr00_meta": {
+        "year": 2023,
+        "blank_prices": 7,
+        "rows": 607096,
+        "source": "pricing_pr00_ie40_2023.parquet"
+      },
+      "pn_match_rate": 94.68,
+      "unique_pns_billed": 16312,
+      "unique_pns_matched": 15444
+    },
+    {
+      "year": 2024,
+      "pr00_meta": {
+        "year": 2024,
+        "blank_prices": 0,
+        "rows": 554309,
+        "source": "pricing_pr00_ie40_2024.parquet"
+      },
+      "pn_match_rate": 96.95,
+      "unique_pns_billed": 16338,
+      "unique_pns_matched": 15840
+    },
+    {
+      "year": 2025,
+      "pr00_meta": {
+        "year": 2025,
+        "blank_prices": 0,
+        "rows": 522571,
+        "source": "pricing_pr00_ie40_2025.parquet"
+      },
+      "pn_match_rate": 91.85,
+      "unique_pns_billed": 16840,
+      "unique_pns_matched": 15467
+    },
+    {
+      "year": 2026,
+      "pr00_meta": {
+        "year": 2026,
+        "blank_prices": 4562,
+        "rows": 165347,
+        "source": "pricing_pr00_ie40.parquet"
+      },
+      "pn_match_rate": 95.28,
+      "unique_pns_billed": 9829,
+      "unique_pns_matched": 9365
+    }
+  ],
+  "zpr1_level": [
+    {
+      "year": 2023,
+      "customer": 1799,
+      "payer": "UTI",
+      "n_zpr1_pns": 91336,
+      "n_vs_pr00": 90988,
+      "median_zpr1_vs_pr00_pct": -12.29,
+      "p25_zpr1_vs_pr00_pct": -12.33,
+      "p75_zpr1_vs_pr00_pct": -10.87,
+      "note": "UTI\u2260UMI; never blend"
+    },
+    {
+      "year": 2023,
+      "customer": 1797,
+      "payer": "UMI",
+      "n_zpr1_pns": 110419,
+      "n_vs_pr00": 110040,
+      "median_zpr1_vs_pr00_pct": -14.18,
+      "p25_zpr1_vs_pr00_pct": -14.22,
+      "p75_zpr1_vs_pr00_pct": -11.19,
+      "note": "UTI\u2260UMI; never blend"
+    },
+    {
+      "year": 2023,
+      "customer": 2372,
+      "payer": "2372",
+      "n_zpr1_pns": 107763,
+      "n_vs_pr00": 107434,
+      "median_zpr1_vs_pr00_pct": -33.32,
+      "p25_zpr1_vs_pr00_pct": -33.35,
+      "p75_zpr1_vs_pr00_pct": -32.34,
+      "note": "UTI\u2260UMI; never blend"
+    },
+    {
+      "year": 2024,
+      "customer": 1799,
+      "payer": "UTI",
+      "n_zpr1_pns": 100891,
+      "n_vs_pr00": 100891,
+      "median_zpr1_vs_pr00_pct": -10.6,
+      "p25_zpr1_vs_pr00_pct": -10.84,
+      "p75_zpr1_vs_pr00_pct": -10.57,
+      "note": "UTI\u2260UMI; never blend"
+    },
+    {
+      "year": 2024,
+      "customer": 1797,
+      "payer": "UMI",
+      "n_zpr1_pns": 37762,
+      "n_vs_pr00": 37762,
+      "median_zpr1_vs_pr00_pct": -9.32,
+      "p25_zpr1_vs_pr00_pct": -10.61,
+      "p75_zpr1_vs_pr00_pct": -9.28,
+      "note": "UTI\u2260UMI; never blend"
+    },
+    {
+      "year": 2024,
+      "customer": 2372,
+      "payer": "2372",
+      "n_zpr1_pns": 121896,
+      "n_vs_pr00": 121896,
+      "median_zpr1_vs_pr00_pct": -34.43,
+      "p25_zpr1_vs_pr00_pct": -34.44,
+      "p75_zpr1_vs_pr00_pct": -34.31,
+      "note": "UTI\u2260UMI; never blend"
+    },
+    {
+      "year": 2025,
+      "customer": 1799,
+      "payer": "UTI",
+      "n_zpr1_pns": 128901,
+      "n_vs_pr00": 127758,
+      "median_zpr1_vs_pr00_pct": -10.61,
+      "p25_zpr1_vs_pr00_pct": -12.18,
+      "p75_zpr1_vs_pr00_pct": -10.56,
+      "note": "UTI\u2260UMI; never blend"
+    },
+    {
+      "year": 2025,
+      "customer": 1797,
+      "payer": "UMI",
+      "n_zpr1_pns": 112936,
+      "n_vs_pr00": 111709,
+      "median_zpr1_vs_pr00_pct": -15.28,
+      "p25_zpr1_vs_pr00_pct": -15.76,
+      "p75_zpr1_vs_pr00_pct": -9.51,
+      "note": "UTI\u2260UMI; never blend"
+    },
+    {
+      "year": 2025,
+      "customer": 2372,
+      "payer": "2372",
+      "n_zpr1_pns": 112936,
+      "n_vs_pr00": 111709,
+      "median_zpr1_vs_pr00_pct": -32.85,
+      "p25_zpr1_vs_pr00_pct": -35.71,
+      "p75_zpr1_vs_pr00_pct": -32.51,
+      "note": "UTI\u2260UMI; never blend"
+    },
+    {
+      "year": 2026,
+      "customer": 1799,
+      "payer": "UTI",
+      "n_zpr1_pns": 136989,
+      "n_vs_pr00": 58816,
+      "median_zpr1_vs_pr00_pct": -13.92,
+      "p25_zpr1_vs_pr00_pct": -13.96,
+      "p75_zpr1_vs_pr00_pct": -12.37,
+      "note": "UTI\u2260UMI; never blend"
+    },
+    {
+      "year": 2026,
+      "customer": 1797,
+      "payer": "UMI",
+      "n_zpr1_pns": 122954,
+      "n_vs_pr00": 53171,
+      "median_zpr1_vs_pr00_pct": -5.24,
+      "p25_zpr1_vs_pr00_pct": -5.49,
+      "p75_zpr1_vs_pr00_pct": -3.86,
+      "note": "UTI\u2260UMI; never blend"
+    },
+    {
+      "year": 2026,
+      "customer": 2372,
+      "payer": "2372",
+      "n_zpr1_pns": 143105,
+      "n_vs_pr00": 60724,
+      "median_zpr1_vs_pr00_pct": -40.27,
+      "p25_zpr1_vs_pr00_pct": -42.15,
+      "p75_zpr1_vs_pr00_pct": -37.9,
+      "note": "UTI\u2260UMI; never blend"
+    }
+  ],
+  "zpr1_yoy": [
+    {
+      "from_year": 2023,
+      "to_year": 2024,
+      "customer": 1799,
+      "payer": "UTI",
+      "n_common_pns": 64903,
+      "median_zpr1_yoy_pct": 3.82,
+      "p25_zpr1_yoy_pct": 3.78,
+      "p75_zpr1_yoy_pct": 4.23
+    },
+    {
+      "from_year": 2024,
+      "to_year": 2025,
+      "customer": 1799,
+      "payer": "UTI",
+      "n_common_pns": 99738,
+      "median_zpr1_yoy_pct": 1.42,
+      "p25_zpr1_yoy_pct": 1.01,
+      "p75_zpr1_yoy_pct": 1.42
+    },
+    {
+      "from_year": 2025,
+      "to_year": 2026,
+      "customer": 1799,
+      "payer": "UTI",
+      "n_common_pns": 124626,
+      "median_zpr1_yoy_pct": 8.21,
+      "p25_zpr1_yoy_pct": 8.06,
+      "p75_zpr1_yoy_pct": 10.48
+    },
+    {
+      "from_year": 2023,
+      "to_year": 2024,
+      "customer": 1797,
+      "payer": "UMI",
+      "n_common_pns": 29886,
+      "median_zpr1_yoy_pct": 6.06,
+      "p25_zpr1_yoy_pct": 3.44,
+      "p75_zpr1_yoy_pct": 6.14
+    },
+    {
+      "from_year": 2024,
+      "to_year": 2025,
+      "customer": 1797,
+      "payer": "UMI",
+      "n_common_pns": 36300,
+      "median_zpr1_yoy_pct": 1.42,
+      "p25_zpr1_yoy_pct": 1.29,
+      "p75_zpr1_yoy_pct": 1.43
+    },
+    {
+      "from_year": 2025,
+      "to_year": 2026,
+      "customer": 1797,
+      "payer": "UMI",
+      "n_common_pns": 110315,
+      "median_zpr1_yoy_pct": 20.19,
+      "p25_zpr1_yoy_pct": 13.58,
+      "p75_zpr1_yoy_pct": 26.46
+    },
+    {
+      "from_year": 2023,
+      "to_year": 2024,
+      "customer": 2372,
+      "payer": "2372",
+      "n_common_pns": 92134,
+      "median_zpr1_yoy_pct": 0.13,
+      "p25_zpr1_yoy_pct": 0.0,
+      "p75_zpr1_yoy_pct": 0.21
+    },
+    {
+      "from_year": 2024,
+      "to_year": 2025,
+      "customer": 2372,
+      "payer": "2372",
+      "n_common_pns": 99032,
+      "median_zpr1_yoy_pct": 3.85,
+      "p25_zpr1_yoy_pct": -4.16,
+      "p75_zpr1_yoy_pct": 3.88
+    },
+    {
+      "from_year": 2025,
+      "to_year": 2026,
+      "customer": 2372,
+      "payer": "2372",
+      "n_common_pns": 111453,
+      "median_zpr1_yoy_pct": 0.0,
+      "p25_zpr1_yoy_pct": 0.0,
+      "p75_zpr1_yoy_pct": 0.0
+    }
+  ],
+  "zpr1_meta": {
+    "issues": [],
+    "payers": {
+      "1799": "UTI",
+      "1797": "UMI",
+      "2372": "2372"
+    },
+    "built_at_utc": "2026-08-11T06:16:29Z"
+  },
+  "mos_summary": [
+    {
+      "distributor": "MIDI",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 311.67,
+      "n_months_2026_ytd": 5,
+      "avg_mos_days_2026_ytd": 294.8,
+      "delta_days_2026_vs_2025": -16.87,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "BL ehf",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 147.5,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 112.0,
+      "delta_days_2026_vs_2025": -35.5,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "UMI",
+      "n_months_2025": 1,
+      "avg_mos_days_2025": 147.0,
+      "n_months_2026_ytd": 0,
+      "avg_mos_days_2026_ytd": NaN,
+      "delta_days_2026_vs_2025": NaN,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "UTI",
+      "n_months_2025": 9,
+      "avg_mos_days_2025": 143.44,
+      "n_months_2026_ytd": 5,
+      "avg_mos_days_2026_ytd": 144.4,
+      "delta_days_2026_vs_2025": 0.96,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "ITUK",
+      "n_months_2025": 11,
+      "avg_mos_days_2025": 131.43,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 137.83,
+      "delta_days_2026_vs_2025": 6.41,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "Isuzu Ireland",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 130.44,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 121.17,
+      "delta_days_2026_vs_2025": -9.27,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "GasanZammit",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 126.12,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 115.67,
+      "delta_days_2026_vs_2025": -10.46,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "ISD",
+      "n_months_2025": 1,
+      "avg_mos_days_2025": 126.0,
+      "n_months_2026_ytd": 0,
+      "avg_mos_days_2026_ytd": NaN,
+      "delta_days_2026_vs_2025": NaN,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "Isuzu Rom Auto",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 111.67,
+      "n_months_2026_ytd": 5,
+      "avg_mos_days_2026_ytd": 118.8,
+      "delta_days_2026_vs_2025": 7.13,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "Imotors",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 100.12,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 85.0,
+      "delta_days_2026_vs_2025": -15.12,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "AIOS",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 100.0,
+      "n_months_2026_ytd": 5,
+      "avg_mos_days_2026_ytd": 166.0,
+      "delta_days_2026_vs_2025": 66.0,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "WAE",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 98.5,
+      "n_months_2026_ytd": 3,
+      "avg_mos_days_2026_ytd": 93.67,
+      "delta_days_2026_vs_2025": -4.83,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "RSA",
+      "n_months_2025": 11,
+      "avg_mos_days_2025": 94.36,
+      "n_months_2026_ytd": 4,
+      "avg_mos_days_2026_ytd": 103.75,
+      "delta_days_2026_vs_2025": 9.39,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "IUK",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 87.75,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 74.83,
+      "delta_days_2026_vs_2025": -12.92,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "Isuzu Sverige",
+      "n_months_2025": 12,
+      "avg_mos_days_2025": 80.75,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 45.0,
+      "delta_days_2026_vs_2025": -35.75,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "Petros Petropoulos",
+      "n_months_2025": 5,
+      "avg_mos_days_2025": 60.0,
+      "n_months_2026_ytd": 0,
+      "avg_mos_days_2026_ytd": NaN,
+      "delta_days_2026_vs_2025": NaN,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "IBX (BENELUX)",
+      "n_months_2025": 9,
+      "avg_mos_days_2025": 37.6,
+      "n_months_2026_ytd": 6,
+      "avg_mos_days_2026_ytd": 47.17,
+      "delta_days_2026_vs_2025": 9.57,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "IMF",
+      "n_months_2025": 9,
+      "avg_mos_days_2025": 32.56,
+      "n_months_2026_ytd": 0,
+      "avg_mos_days_2026_ytd": NaN,
+      "delta_days_2026_vs_2025": NaN,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "KIMA",
+      "n_months_2025": 5,
+      "avg_mos_days_2025": 30.0,
+      "n_months_2026_ytd": 2,
+      "avg_mos_days_2026_ytd": 30.0,
+      "delta_days_2026_vs_2025": 0.0,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "Isuzu Danmark",
+      "n_months_2025": 0,
+      "avg_mos_days_2025": NaN,
+      "n_months_2026_ytd": 0,
+      "avg_mos_days_2026_ytd": NaN,
+      "delta_days_2026_vs_2025": NaN,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "Isuzu Polska",
+      "n_months_2025": 0,
+      "avg_mos_days_2025": NaN,
+      "n_months_2026_ytd": 0,
+      "avg_mos_days_2026_ytd": NaN,
+      "delta_days_2026_vs_2025": NaN,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    },
+    {
+      "distributor": "Loutsios Group",
+      "n_months_2025": 0,
+      "avg_mos_days_2025": NaN,
+      "n_months_2026_ytd": 0,
+      "avg_mos_days_2026_ytd": NaN,
+      "delta_days_2026_vs_2025": NaN,
+      "label": "KPI Days of Parts in Stock \u2014 NOT market elasticity; ISZE\u2192DB volume elasticity non-quotable"
+    }
+  ],
+  "mos_meta": {
+    "source": "01_data/11_planning/KPI Master File june 2026.xlsx",
+    "metric": "Days of Parts in Stock (MOS days)",
+    "caveat": "Warehouse / ordering response proxy only \u2014 not end-market price elasticity",
+    "built_at_utc": "2026-08-11T06:16:29Z",
+    "dbs_with_any_2025": 19,
+    "dbs_with_any_2026": 15
+  },
+  "nolist": {
+    "built_at_utc": "2026-08-11T06:16:29Z",
+    "source_csv": "01_data/00_derived/no_pr00_gap_cy2025_ranked.csv",
+    "pn_count": 251,
+    "gap_eur": 4955736.95,
+    "gap_share_of_parts": 0.1508,
+    "by_reason": [
+      {
+        "gap_reason": "on_list_no_usable_price",
+        "pn_count": 216,
+        "gap_eur": 4360217.47
+      },
+      {
+        "gap_reason": "absent_from_pr00",
+        "pn_count": 35,
+        "gap_eur": 595519.48
+      }
+    ],
+    "top_pn": "7552348290"
+  },
+  "nolist_top": [
+    {
+      "rank": 1,
+      "part_number": 7552348290,
+      "description": "STEERING UNIT",
+      "cy2025_eur": 718864.32,
+      "share_of_gap": 0.145057,
+      "share_of_cy2025_parts": 0.02188,
+      "billed_qty": 361.0,
+      "n_lines": 111,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 2,
+      "part_number": 550047337,
+      "description": "Rim R4L15W40 CK4_3*5L",
+      "cy2025_eur": 433820.16,
+      "share_of_gap": 0.087539,
+      "share_of_cy2025_parts": 0.013204,
+      "billed_qty": 9168.0,
+      "n_lines": 166,
+      "gap_reason": "absent_from_pr00",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 3,
+      "part_number": 8982878080,
+      "description": "FILTER ASM",
+      "cy2025_eur": 276847.99,
+      "share_of_gap": 0.055864,
+      "share_of_cy2025_parts": 0.008426,
+      "billed_qty": 270.0,
+      "n_lines": 28,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 4,
+      "part_number": 8975359391,
+      "description": "DPD ASM",
+      "cy2025_eur": 272209.63,
+      "share_of_gap": 0.054928,
+      "share_of_cy2025_parts": 0.008285,
+      "billed_qty": 130.0,
+      "n_lines": 38,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 5,
+      "part_number": 7552348280,
+      "description": "STEERING UNIT",
+      "cy2025_eur": 259369.49,
+      "share_of_gap": 0.052337,
+      "share_of_cy2025_parts": 0.007894,
+      "billed_qty": 134.0,
+      "n_lines": 20,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 6,
+      "part_number": 8983682091,
+      "description": "PIPE; EXH",
+      "cy2025_eur": 228583.54,
+      "share_of_gap": 0.046125,
+      "share_of_cy2025_parts": 0.006957,
+      "billed_qty": 184.0,
+      "n_lines": 80,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 7,
+      "part_number": 8982688122,
+      "description": "PUMP ASM; DEF,DCM SPLY",
+      "cy2025_eur": 178722.96,
+      "share_of_gap": 0.036064,
+      "share_of_cy2025_parts": 0.00544,
+      "billed_qty": 171.0,
+      "n_lines": 42,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 8,
+      "part_number": 8975077751,
+      "description": "PUMP ASM; DEF,DCM SPLY",
+      "cy2025_eur": 119490.38,
+      "share_of_gap": 0.024112,
+      "share_of_cy2025_parts": 0.003637,
+      "billed_qty": 112.0,
+      "n_lines": 15,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 9,
+      "part_number": 8972746690,
+      "description": "TANK ASM; DEF",
+      "cy2025_eur": 116501.04,
+      "share_of_gap": 0.023508,
+      "share_of_cy2025_parts": 0.003546,
+      "billed_qty": 107.0,
+      "n_lines": 65,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 10,
+      "part_number": 8981901180,
+      "description": "DRIVE ASM; FINAL,RR",
+      "cy2025_eur": 104331.26,
+      "share_of_gap": 0.021053,
+      "share_of_cy2025_parts": 0.003176,
+      "billed_qty": 81.0,
+      "n_lines": 32,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 11,
+      "part_number": 8975293230,
+      "description": "ENGINE ASM",
+      "cy2025_eur": 100348.58,
+      "share_of_gap": 0.020249,
+      "share_of_cy2025_parts": 0.003054,
+      "billed_qty": 7.0,
+      "n_lines": 5,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 12,
+      "part_number": 8983320764,
+      "description": "DPD ASM",
+      "cy2025_eur": 95173.78,
+      "share_of_gap": 0.019205,
+      "share_of_cy2025_parts": 0.002897,
+      "billed_qty": 55.0,
+      "n_lines": 19,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 13,
+      "part_number": 550047252,
+      "description": "Rim R4 L 15W40 CJ4_1*209L",
+      "cy2025_eur": 75636.08,
+      "share_of_gap": 0.015262,
+      "share_of_cy2025_parts": 0.002302,
+      "billed_qty": 136.0,
+      "n_lines": 16,
+      "gap_reason": "absent_from_pr00",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 14,
+      "part_number": 8981974530,
+      "description": "DRIVE ASM; FINAL,RR",
+      "cy2025_eur": 70208.06,
+      "share_of_gap": 0.014167,
+      "share_of_cy2025_parts": 0.002137,
+      "billed_qty": 55.0,
+      "n_lines": 26,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 15,
+      "part_number": 8976880340,
+      "description": "GENERATOR ASM",
+      "cy2025_eur": 64991.55,
+      "share_of_gap": 0.013114,
+      "share_of_cy2025_parts": 0.001978,
+      "billed_qty": 65.0,
+      "n_lines": 20,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 16,
+      "part_number": 8976607440,
+      "description": "TRANSMISSION ASM; MANUAL",
+      "cy2025_eur": 63473.12,
+      "share_of_gap": 0.012808,
+      "share_of_cy2025_parts": 0.001932,
+      "billed_qty": 14.0,
+      "n_lines": 13,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 17,
+      "part_number": 8982932120,
+      "description": "DRIVE ASM; FINAL,RR",
+      "cy2025_eur": 61110.53,
+      "share_of_gap": 0.012331,
+      "share_of_cy2025_parts": 0.00186,
+      "billed_qty": 49.0,
+      "n_lines": 12,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 18,
+      "part_number": 8981776324,
+      "description": "DPD ASM",
+      "cy2025_eur": 60198.34,
+      "share_of_gap": 0.012147,
+      "share_of_cy2025_parts": 0.001832,
+      "billed_qty": 55.0,
+      "n_lines": 19,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 19,
+      "part_number": 1884058030,
+      "description": "BESCO CLEAN SUPER (200L)",
+      "cy2025_eur": 59019.38,
+      "share_of_gap": 0.011909,
+      "share_of_cy2025_parts": 0.001796,
+      "billed_qty": 46.0,
+      "n_lines": 3,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 20,
+      "part_number": 8981901150,
+      "description": "DRIVE ASM; FINAL,RR",
+      "cy2025_eur": 56654.81,
+      "share_of_gap": 0.011432,
+      "share_of_cy2025_parts": 0.001724,
+      "billed_qty": 44.0,
+      "n_lines": 29,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 21,
+      "part_number": 5873112438,
+      "description": "ENGINE ASM; PARTIAL",
+      "cy2025_eur": 49610.64,
+      "share_of_gap": 0.010011,
+      "share_of_cy2025_parts": 0.00151,
+      "billed_qty": 11.0,
+      "n_lines": 7,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 22,
+      "part_number": 8976671380,
+      "description": "ENGINE ASM; PARTIAL",
+      "cy2025_eur": 43801.5,
+      "share_of_gap": 0.008839,
+      "share_of_cy2025_parts": 0.001333,
+      "billed_qty": 14.0,
+      "n_lines": 14,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 23,
+      "part_number": 8975536860,
+      "description": "BODY ASM; REAR",
+      "cy2025_eur": 41475.9,
+      "share_of_gap": 0.008369,
+      "share_of_cy2025_parts": 0.001262,
+      "billed_qty": 29.0,
+      "n_lines": 23,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 24,
+      "part_number": 8982049420,
+      "description": "FILTER ASM",
+      "cy2025_eur": 40966.24,
+      "share_of_gap": 0.008266,
+      "share_of_cy2025_parts": 0.001247,
+      "billed_qty": 63.0,
+      "n_lines": 15,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    },
+    {
+      "rank": 25,
+      "part_number": 8976485430,
+      "description": "ENGINE ASM",
+      "cy2025_eur": 37171.4,
+      "share_of_gap": 0.007501,
+      "share_of_cy2025_parts": 0.001131,
+      "billed_qty": 3.0,
+      "n_lines": 3,
+      "gap_reason": "on_list_no_usable_price",
+      "pr00_sp_eur_max": NaN
+    }
+  ],
+  "vpacc": {
+    "built_at_utc": "2026-08-11T06:16:29Z",
+    "source": "01_data/00_derived/vpacc_fy2027_action_plan_july.parquet",
+    "total_actions": 121,
+    "open_or_in_progress": 121,
+    "completed_and_eval": 0,
+    "by_status": {
+      "blank": 59,
+      "plan_made": 36,
+      "started": 12,
+      "not_started_or_blank": 11,
+      "started_and_in_progress": 3
+    },
+    "by_stream": {
+      "ACC": 53,
+      "VP": 68
+    },
+    "note": "Status snapshot only \u2014 thin join to pricing metrics; PIC-keyed not dealer-keyed"
+  },
+  "integrity": {
+    "score": 53,
+    "band": "weak",
+    "quotable_externally": false,
+    "label": "Internal QA / provisional \u2014 do not quote list-to-pocket externally",
+    "deductions": [
+      {
+        "item": "PN match quality",
+        "deduction": 0,
+        "detail": "Avg unique-PN match 94.7% vs billed"
+      },
+      {
+        "item": "List coverage %",
+        "deduction": 9,
+        "detail": "Avg matched revenue coverage 82.4% (NO_LIST gap)"
+      },
+      {
+        "item": "Blank PR00 prices (#VALUE!/null)",
+        "deduction": 5,
+        "detail": "7 blank/unusable Price_EUR in 2023\u20132025 history extracts"
+      },
+      {
+        "item": "2026 PR00 unusable prices",
+        "deduction": 4,
+        "detail": "4562 blank/non-positive SP on active current PR00 rows"
+      },
+      {
+        "item": "Year alignment assumptions",
+        "deduction": 10,
+        "detail": "PR00 history stamps are year-end conventional (2024/2025 sheet labels; 2023 mixed workbook). Intra-year list changes not dated."
+      },
+      {
+        "item": "2026 list vintage",
+        "deduction": 6,
+        "detail": "2026 YTD joins current IE40 PR00 extract (2026-08-10), not a 2026-01 list snapshot"
+      },
+      {
+        "item": "FY vs CY caveat",
+        "deduction": 5,
+        "detail": "Realization is calendar-year; VPACC/KPI MOS mix FY labels \u2014 do not blend without care"
+      },
+      {
+        "item": "First-pass join (QA pending)",
+        "deduction": 8,
+        "detail": "Year-matched joins not independently validated \u2014 provisional / internal QA only"
+      }
+    ],
+    "built_at_utc": "2026-08-11T06:16:29Z"
+  },
+  "outputs": {
+    "pr00_realization_network_cy.csv": "01_data/00_derived/pr00_realization_network_cy.csv",
+    "pr00_realization_by_db_cy.csv": "01_data/00_derived/pr00_realization_by_db_cy.csv",
+    "zpr1_vs_pr00_by_payer_year.csv": "01_data/00_derived/zpr1_vs_pr00_by_payer_year.csv",
+    "zpr1_yoy_by_payer.csv": "01_data/00_derived/zpr1_yoy_by_payer.csv",
+    "kpi_mos_days_2025_2026_long.csv": "01_data/00_derived/kpi_mos_days_2025_2026_long.csv",
+    "kpi_mos_response_summary_2025_2026.csv": "01_data/00_derived/kpi_mos_response_summary_2025_2026.csv",
+    "no_pr00_gap_top25_summary.csv": "01_data/00_derived/no_pr00_gap_top25_summary.csv",
+    "vpacc_fy2027_status_by_stream.csv": "01_data/00_derived/vpacc_fy2027_status_by_stream.csv"
+  },
+  "html": "02_dashboards/pricing/ISZE_Pricing_History_Findings_Dashboard.html"
+}

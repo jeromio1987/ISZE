@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from . import audit, counterfactual, engine, launch_book, planes, theta
+from . import audit, counterfactual, db_dlr_response, engine, launch_book, planes, premiums, theta
 from .runlog import Run, load_config
 
 ROOT = Path(__file__).resolve().parent
@@ -25,9 +25,14 @@ REPO_ROOT = ROOT.parents[1]        # <repo>/03_analytics/isze_pricing -> <repo>
 
 # Category x distributor evidence built by the existing dashboard pipeline.
 # Override with --set paths.action_map=... to point at PN-level input instead.
-DEFAULT_ACTION_MAP = Path(
-    r"C:\Users\jerome1\Desktop\claude\Dashboards\ISZE\pricing\_build"
-    r"\pricing_action_map.json")
+DEFAULT_ACTION_MAP = REPO_ROOT / "02_dashboards" / "pricing" / "_build" / "pricing_action_map.json"
+
+
+def _md_table(df: pd.DataFrame) -> str:
+    try:
+        return df.to_markdown()
+    except ImportError:
+        return "```\n" + df.to_string() + "\n```"
 
 
 def _parse_sets(pairs: list[str]) -> dict:
@@ -118,15 +123,26 @@ def cmd_alloc(args) -> None:
     df, theta_report = theta.attach(df, cfg, _carpark_path(cfg))
     run.input("uio_carpark", _carpark_path(cfg))
 
+    # Soft join ITUK/UTI sell-out proxies AFTER engine solve — never scales delta.
+    dlr_path = db_dlr_response.resolve_path(cfg, REPO_ROOT)
+    dlr_df = db_dlr_response.load_db_dlr_response(dlr_path)
+    run.input("db_dlr_response", dlr_path)
+
     out, s = engine.run(df, engine.params_from_config(cfg))
+    out, dlr_report = db_dlr_response.attach_soft_signal(out, dlr_df)
+    s["db_dlr_soft"] = dlr_report
     run.table("alloc_detail", out)
+    if not dlr_df.empty:
+        run.table("db_dlr_response_proxy", dlr_df)
 
     blind = out[out.evidence_tier == "T5_none"]
+    n_flag = dlr_report.get("n_cells_flagged_adverse", 0)
     run.headline(
         f"target {s['weighted_increase']*100:.4f}% | base {s['delta_base']*100:+.2f}% "
         f"| EUR {blind.weight.sum():,.0f} unbenchmarked takes "
         f"{blind.delta.mean()*100:+.2f}% "
-        f"| theta moves {s.get('n_theta_moving', 0)} cells")
+        f"| theta moves {s.get('n_theta_moving', 0)} cells "
+        f"| db_dlr proxy flags {n_flag}")
 
     by_reason = out.groupby("reason_code").agg(
         cells=("weight", "size"), base_eur=("weight", "sum"),
@@ -135,16 +151,28 @@ def cmd_alloc(args) -> None:
         cells=("weight", "size"), base_eur=("weight", "sum"),
         theta=("theta_parc", "mean"), d_theta=("d_theta", "mean"),
         mean_delta=("delta", "mean"))
+    basket_rel = (cfg.get("paths") or {}).get("oem_peer_basket")
+    basket_p = None
+    if basket_rel:
+        basket_p = Path(basket_rel)
+        if not basket_p.is_absolute():
+            basket_p = REPO_ROOT / basket_rel
     md = ["## Allocation run\n", f"```\n{json.dumps(s, indent=2)}\n```\n",
-          "### By reason code\n", by_reason.round(4).to_markdown(),
+          "### By reason code\n", _md_table(by_reason.round(4)),
           "\n\n### Momentum (theta_parc)\n",
           f"```\n{json.dumps(theta_report, indent=2)}\n```\n",
-          by_theta.round(4).to_markdown()]
+          _md_table(by_theta.round(4)),
+          premiums.oem_readiness_markdown(
+              basket_p, min_n=int(cfg.get("allocation", {}).get("min_n", 3))
+          ),
+          db_dlr_response.summary_markdown(dlr_report, dlr_df)]
     run.close("\n".join(md))
 
     print(json.dumps(s, indent=2))
     print("\n" + by_reason.round(4).to_string())
     print("\n" + by_theta.round(4).to_string())
+    if n_flag:
+        print(f"\ndb_dlr soft flags (proxy, not applied): {n_flag} cells")
 
 
 def cmd_audit(args) -> None:
@@ -220,6 +248,13 @@ def cmd_counterfactual(args) -> None:
           "\n\n## Policies\n", ev.round(4).to_markdown(index=False)]
     run.close("\n".join(md))
     print(bs.round(5).to_string()); print(); print(ev.round(4).to_string(index=False))
+
+
+def cmd_diagnose(args) -> None:
+    """OEM peer readiness + street-vs-Isuze (no invent; writes derived CSVs)."""
+    from . import diagnose_oem_peer_readiness as diag
+
+    diag.main()
 
 
 def cmd_sweep(args) -> None:
@@ -302,6 +337,11 @@ def main() -> None:
     p = sub.add_parser("counterfactual")
     p.add_argument("--parts", default=None, help="CSV with prior/new cost inputs")
     p.set_defaults(func=cmd_counterfactual)
+    p = sub.add_parser(
+        "diagnose",
+        help="OEM peer readiness + peer street vs Isuze street (PR00×1.785)",
+    )
+    p.set_defaults(func=cmd_diagnose)
 
     args = ap.parse_args()
     args.func(args)

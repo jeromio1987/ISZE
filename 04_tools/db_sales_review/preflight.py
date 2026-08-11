@@ -173,6 +173,16 @@ def main():
         print(f"  CY2025 warranty parts   EUR {w:>12,.0f} (claim price basis)")
         print(f"    ISZE-net equivalent   EUR {w*0.74:>12,.0f} (x0.74)")
         print(f"    note: {p.get('warranty_note', '—')}")
+    wx = C.load_warranty_claim_pns(p)
+    print(f"  Claim-grain PN exclusion  {len(wx['pns']):,} PNs / {wx['n_claim_lines']:,} lines "
+          f"(assess {wx['assess_month_from']}–{wx['assess_month_to']})")
+    if wx["db_names"]:
+        print(f"    grain names: {', '.join(wx['db_names'])}")
+    if not wx["available"]:
+        warnings.append("No warranty_raw_grain rows for this DB — movers fall back to text "
+                        "heuristic only; residual warranty may remain in commercial cut.")
+    else:
+        print("    movers basis: commercial / ex-warranty (claim PN + text heuristic)")
     inc = p.get("incentive_fy27")
     print(f"  FY2027 incentive budget EUR {inc:>12,.0f}" if inc
           else "  FY2027 incentive budget none on record")

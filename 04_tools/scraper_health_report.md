@@ -1,48 +1,52 @@
-⚠ GENERATED 2026-07-27 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
+⚠ GENERATED 2026-08-09 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
 
-# ISZE SCRAPER HEALTH REPORT — 2026-07-27
+# ISZE SCRAPER HEALTH REPORT — 2026-08-09
 
-**Prior real run: 2026-07-19** (the 2026-07-26 file timestamps on this report/manual-review/diff were a bulk touch, not a regenerate — content was still the 07-19 text). This is the first run under the 2026-07-24 allowlist auto-apply policy. No auto-apply was needed this run — nothing diagnosed was a string-only URL/selector bug.
+**Prior run: 2026-08-02.** Good news / real news, in that order: everything monitored is still comfortably fresh and nothing needed a code auto-apply this run. But two things are worth your attention beyond the routine check — this week's scheduled refresh hadn't landed as of this run (not urgent, just later than expected), and I traced a genuine logic bug in the drift-alert baseline that's been double-flagging the same TMC price move since 2026-08-01. Details below; nothing was Edited on disk.
 
 ## Verifier
 
 | Check | Result | Evidence |
 |-------|--------|----------|
-| Tender JSON ≤14d | PASS | `tender_data.json` `generated_at`: 2026-07-21T05:06:05Z (6 days old) |
-| KS CSV ≤14d | PASS | Mid-refresh at check time (Monday 07:00 scheduled run `ISZE_PMS_IAM_Refresh`), 119/300 rows written by 07:08:36, 0 errors so far. Prior complete file was 2026-07-26 (manual run, 300/300, 0 errors). |
-| Auto-apply compile | N/A | No auto-applies this run (nothing needed patching). Ran `py_compile` read-only on all 5 allowlisted scripts as a diagnostic sanity check — all 5 OK. |
+| Tender JSON ≤14d | PASS | `tender_data.json` (`01_data/14_dashboards/`, canonical path per `paths.yaml`) `meta.generated_at`: 2026-08-03T05:33:29.90Z (~6.6 days old) |
+| KS CSV ≤14d | PASS | `ks_results.csv` mtime 2026-08-03 07:20 (~6.6 days old). All four other pipeline CSVs (Tranzparts, TMC, Mekonomen, Auto365) refreshed the same morning, cross-confirmed by `_snapshots/2026-08-03/`, matching `drift_history.csv` entries, and `_logs/refresh_2026-08-03.log` (300/300 PNs, 0 errors). |
+| Auto-apply compile | N/A | No auto-applies this run — nothing diagnosed on the allowlist was a URL/selector/XPath bug. Ran `py_compile` read-only on all 5 allowlisted scripts plus `tender_scraper_v3.py` as a sanity check anyway — all 6 OK. |
 | Allowlist scope | PASS | No Edits made this run — nothing outside or inside the allowlist was touched. |
 
 | Scraper | Status | Last output | Action |
 |---------|--------|-------------|--------|
-| Tender | 🟢 Fresh (6 days) | `tender_data.json` generated 2026-07-21T05:06:05Z. Israel RSS and Belgium RSS still fail every run (unchanged since 2026-06-28) — partial, not total, data loss. | none (propose-only scope; carried-forward manual review) |
-| Competitive pricing (KS pipeline) | 🟢 Fresh overall, with one exception | See breakdown below — 4 of 5 sources fresh and clean; Mekonomen's data is still inside the 14-day window but the scraper itself is confirmed broken. | none auto-applied — see manual review |
+| Tender | 🟢 Fresh (~6.6 days) | `tender_data.json` generated 2026-08-03T05:33:29Z — 747 raw notices, 664 opportunities, 7 in the action queue. Israel/Belgium/DE gaps unchanged (see manual review). | Israel: new fix proposed (`proposed_patch.diff`). Belgium/DE: propose-only, no code fix available — manual review only. |
+| Competitive pricing (KS pipeline) | 🟢 Fresh, all 5 sources (~6.6 days) | All five CSVs + `drift_history.csv` refreshed clean 2026-08-03, 0 errors logged. | none — nothing to patch |
 
 ### KS pipeline breakdown
 
 | Source | File | Status | Note |
 |--------|------|--------|------|
-| KS International | `ks_results.csv` | 🟢 Fresh — refreshing now | Monday 07:00 scheduled run in progress at time of this check (119/300 rows, 0 errors so far). Prior full run 2026-07-26: 300/300, 0 errors. |
-| Tranzparts (UK) | `tranzparts_results.csv` | 🟢 Fresh (<1 day) | Refreshed 2026-07-26 21:50 — 20 priced products, 0 errors. |
-| T&M Commercials (UK) | `tmc_results.csv` | 🟢 Fresh (<1 day) | Refreshed 2026-07-26 21:50 — 38 priced products, 0 errors. |
-| Auto 365 (Israel) | `auto365_results.csv` | 🟢 Fresh (<1 day) | Refreshed 2026-07-26 21:52 — 204 priced products, 0 errors. |
-| Mekonomen | `mekonomen_results.csv` | 🟢 data (11 days) / 🔴 scraper broken | Playwright browser executable missing — crashed on 2026-07-26 21:xx attempt (full traceback in manual review). Pipeline correctly kept the last-good file rather than overwriting with empty data. Data will breach the 14-day window ~2026-07-30 if not fixed. |
+| KS International | `ks_results.csv` | 🟢 Fresh (~6.6 days) | 300/300 PNs processed, 0 errors (log says so explicitly). Mostly `no results` per-PN — expected for parts KS doesn't stock, not an error. |
+| Tranzparts (UK) | `tranzparts_results.csv` | 🟢 Fresh (~6.6 days) | Refreshed 2026-08-03 07:20, no drift ≥15%. |
+| T&M Commercials (UK) | `tmc_results.csv` | 🟢 Fresh (~6.6 days) | Refreshed 2026-08-03 07:20. Drift check re-flagged `fuel_filter` at -16.6% — **this is a false repeat, not a new move** (see Item 2 in manual review: the underlying price has been flat at £27.32 since 08-01, the drift script's baseline logic is comparing against a stale two-runs-back reference). |
+| Mekonomen | `mekonomen_results.csv` | 🟢 Fresh (~6.6 days) | Refreshed 2026-08-03 08:40, no drift ≥15%. Last run's Playwright issue remains resolved. |
+| Auto 365 (Israel) | `auto365_results.csv` | 🟢 Fresh (~6.6 days) | Refreshed 2026-08-03 08:41, no drift ≥15%. |
 
 ## Auto-applied this run
-None. No allowlisted script had a URL/selector/XPath bug — KS/Tranzparts/TMC/Auto365 ran with 0 errors, and Mekonomen's failure is an environment issue (missing browser binary), not a string fix, so it doesn't qualify even though the file is on the allowlist.
+None. Nothing diagnosed on the allowlisted scripts was a URL/selector/XPath bug — all five ran clean, produced full row counts, and compiled fine as-is.
 
 ## Proposed (not applied)
-None new — see `proposed_patch.diff`. Israel RSS and Belgium RSS fixes remain suggested-but-untested (unchanged since 2026-06-28, still need a live-feed smoke test this job can't perform without web access).
+One new diff this run: **Israel RSS undefined-entity fix** for `fetch_israel()` in `tender_scraper_v3.py` — see `proposed_patch.diff`. Untested against the live `mr.gov.il` feed (no web access from this job); please review and test before applying. Belgium RSS remains without a proposed fix — root cause is dead/moved candidate URLs, not parseable XML, so there's nothing to diff without a live lookup for the correct current endpoint.
 
 ## Manual review
-See `manual_review_required.md` — full detail on all items. Summary:
-- **Item 1 (new, time-sensitive):** Mekonomen — Playwright browser executable missing. Fix is a `playwright install` + possible `PLAYWRIGHT_BROWSERS_PATH` check, not a code patch.
-- **Item 2 (new):** `ISZE_PMS_IAM_Refresh` scheduled task was interrupted (`0xC000013A`) last Monday (2026-07-20); today's run was still in progress when this check completed — unconfirmed whether it finished cleanly.
-- **Items 3–5 (carried forward, unchanged since 2026-06-28):** Israel RSS undefined-entity parse error, Belgium RSS non-XML response, Doffin/HILMA API keys unset (informational only).
-- **Item 6 (new, minor):** `tender_monitor_log.txt` doesn't cover the 2026-07-21 publish that's actually live.
-- **Resolved since 2026-07-19:** prior Items 10a/10b (KS refresh-path ambiguity, Task Scheduler import unverified) are both now confirmed — `refresh_and_check_drift.py` runs all five scrapers as one unit, and `ISZE_PMS_IAM_Refresh` is confirmed registered and live.
+See `manual_review_required.md` for full detail. Summary:
+- **Item 1 (scheduler timing):** this week's competitive-pricing refresh hadn't landed as of this run (22:04 CEST Sun 2026-08-09) — last completed run is still 2026-08-03. Not urgent (6.6 days, well under the 14-day threshold), but the second run in a row flagging scheduler-timing uncertainty; actual historical run times don't cleanly match the documented "Sunday 21:00" trigger.
+- **Item 2 (NEW):** `refresh_and_check_drift.py`'s drift-history baseline has an off-by-one — it's comparing each run against data from *two* runs back instead of one, because snapshots are taken before that day's scrape but filed under that day's date. Confirmed by tracing the code (lines 106–114 and 189–192) against the TMC `fuel_filter` false-repeat flag. This file is do-not-edit scope even for proposals, so this is diagnosis-only — fix sketch is in the manual review doc.
+- **Item 3 (Israel RSS):** unchanged failure, but now has an actual proposed diff (see above).
+- **Item 4 (Belgium RSS):** unchanged, no fix possible without a live URL lookup.
+- **Item 5 (NEW, low priority):** Germany DTVP portal 404s on every run, long-standing, not previously tracked as its own item. TED still covers above-threshold DE contracts.
+- **Item 6 (Doffin/HILMA):** unchanged, informational only.
+- **Item 7 (`scrape_asof.json`):** clarified this run — confirmed orphaned (no script in the repo writes it anymore), not a live pipeline gap. Safe to ignore.
 
 ## Waiting on Jerome
-1. **Mekonomen scraper is broken** (missing Playwright browser) — run `C:\Python314\python.exe -m playwright install chromium`; if it fails again, check for a `PLAYWRIGHT_BROWSERS_PATH` env var pointing at a Cursor sandbox temp folder. Data goes stale ~2026-07-30 if untouched. (manual_review_required.md Item 1)
-2. **Check Task Scheduler settings for `ISZE_PMS_IAM_Refresh`** — last week's run was interrupted mid-way; today's run was still going when I checked. Worth confirming "run whether logged on or not" / wake-on-run settings, and separately confirming today's run actually finished (glance at `_logs/refresh_2026-07-27.log` — should end with a drift-check summary, not cut off mid-scrape). (Item 2)
-3. **Israel RSS / Belgium RSS in `tender_scraper_v3.py`** — unchanged since 2026-06-28, still returning zero results every run. Suggested fixes are on file (Items 3–4) but need a live-feed test I can't run.
+1. **This week's refresh timing** — no 2026-08-09 output yet as of this run (last completed: 08-03). Not urgent, but worth 2 minutes in Task Scheduler to confirm `ISZE_ScraperRefresh_WeeklyTask` (and whether it's the same task as `ISZE_PMS_IAM_Refresh` from the last report) is actually enabled and firing — actual run timestamps haven't matched a clean weekly pattern for a while now. (Item 1)
+2. **New: drift-alert baseline bug in `refresh_and_check_drift.py`** — real logic bug, not a data problem, traced to a specific off-by-one in the snapshot/comparison code. Do-not-edit file, so I've only diagnosed it, not patched it — see Item 2 for the fix sketch when you're ready to apply it. (Item 2)
+3. **Belgium RSS** — both candidate URLs in `tender_scraper_v3.py` are dead or moved (non-XML responses). No code fix possible without the correct current feed URL. (Item 4)
+4. **Israel RSS** — first real proposed diff in a while, in `proposed_patch.diff`. Please review and test against the live feed before applying — I can't test it from here. (Item 3)
+5. **Low priority / FYI only:** Germany DTVP portal 404s every run (TED covers above-threshold DE), and `scrape_asof.json` is confirmed orphaned and safe to ignore or delete. No action needed on either. (Items 5, 7)

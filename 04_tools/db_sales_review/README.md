@@ -34,7 +34,15 @@ python build_deck.py --db ISD
 python qa_contact_sheet.py --pptx "..\..\09_meetings\ISD_Sales_Review_2026\ISZE_ISD_Sales_Review_FY2027.pptx"
 ```
 
-The deck lands in its `09_meetings\<DB>_Sales_Review_2026\` folder. The QA step exports the PDF and stitches the slides into
+**Full pack (Mode A + deep dive)** — preferred for Hungary / IBX / UMI and next DBs:
+
+```bash
+python build_full_deck.py --db IBX
+```
+
+See blueprint §7. Lands `ISZE_<DB>_Sales_Review_FY2027.pptx` plus `_ModeA_only.pptx`.
+
+The Mode A-only deck lands in its `09_meetings\<DB>_Sales_Review_2026\` folder. The QA step exports the PDF and stitches the slides into
 3×2 contact sheets — read those instead of opening 18 separate images. The mandatory
 visual QA pass in the blueprint is satisfied by looking at the sheets.
 
@@ -61,21 +69,30 @@ Build-enabled profiles: `IUK`, `ISD`, `IBX`, `PETROS`, `IRELAND`, `UMI`, `NORWAY
 - **Credit memos** (`BillT` G2 / `SaTy` CR) are signed negative. They carry a *positive*
   Net value in the raw exports, so an unsigned read turns a rebate credit into a gain.
   They are then excluded from the mover lists as a commercial adjustment.
-- **Movers** are cut on gross parts lines for **CY H1 (Jan–Jun, Q1+Q2)** vs prior-year H1,
-  rolled up to ITC family (Newest P/N) as well as raw PN, joined on `Material` (the column
-  *labelled* `Material Number` holds the description — the headers are swapped in these exports).
-  CY2026 H1 = `cy2026_q1.csv` (Jan–Mar) + `q1fy2027_billing_tagged.csv` (Apr–Jun).
-- **Growth is incremental only:** prior-period sales must be above zero. Warranty/campaign
-  heuristics are excluded, while prior-zero/current-positive lines are quarantined on the
-  New Business slide for validation as a new model, supersession, timing item or campaign.
+- **Movers** are cut on **commercial** gross parts lines for **CY H1 (Jan–Jun, Q1+Q2)** vs
+  prior-year H1 — warranty/campaign PNs excluded — rolled up to ITC family (Newest P/N) as
+  well as raw PN, joined on `Material` (the column *labelled* `Material Number` holds the
+  description — the headers are swapped in these exports). CY2026 H1 = `cy2026_q1.csv`
+  (Jan–Mar) + `q1fy2027_billing_tagged.csv` (Apr–Jun).
+- **Warranty exclusion (all DBs):** ERP has no warranty doc type. Movers drop PNs that appear
+  on `warranty_raw_grain.csv` claim lines for that DB (assess-month window with a 3-month lag
+  before the prior H1) plus a PN/description text heuristic (PM sensor / warranty / campaign /
+  recall). Mode A takeaways label the chart **commercial / ex-warranty**. Limitation: all
+  billing of a claim-matched PN is dropped, not only the claim units.
+- **Growth is incremental only:** prior-period sales must be above zero. Prior-zero /
+  current-positive lines are quarantined on the New Business slide for validation as a new
+  model, supersession, timing item or campaign.
 - **FY2027 target uses the Sales-to-Dealer lens:** Dashboard columns P:U, with the locked
   fleet movement, 5% price adjustment and 1.8% additional growth. Missing FY2026
   Sales-to-Dealer KPI is clearly imputed from FY2026 ISZE billing divided by 0.65.
 - **Fleet charts stop at 2026.** The 2026 point is a working year-end estimate. UK LCV is
   locked at 44,926 units (about -6%); near-term estimates use the corrected survival basis.
-- **Decline slides** are generated for the top two declining categories, with per-category
-  question sets from the bank in `build_deck.py`. The genuine-vs-BVP read is stated once,
-  on the first decline slide only.
+- **Decline slides** are generated for the top declining categories, with per-category
+  question sets from the bank in `build_deck.py`. Each movers / decline / growth slide
+  names the **largest-EUR PN drivers** (increase and decrease). Optional `vehicle_model`
+  is joined from BVP/PMS application tables when the PN is in that basket — not a full
+  EPC; browser catalogue is not required for the PN-EUR story.
+- The genuine-vs-BVP read is stated once on the first decline slide only.
 - **Slides degrade rather than lie.** No IDS data → no dealer slide (ISD and Ireland have
   none). No Sales-to-Dealer figure → the data-request slide changes its framing. GPS over
   100% → the amount-based variant, no percentage quoted anywhere (Ireland).

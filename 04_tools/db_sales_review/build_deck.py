@@ -158,6 +158,22 @@ def eur(v, k=False):
     return f"EUR {v/1000:,.0f}K" if k else f"EUR {v:,.0f}"
 
 
+def _pn_label(r, desc_len=28):
+    """Short PN + description (+ model when known) for takeaway bullets."""
+    desc = str(r.get("desc") or "")[:desc_len]
+    model = str(r.get("model") or "").strip()
+    base = f"{r['pn']} ({desc})" if desc else str(r["pn"])
+    return f"{base} [{model}]" if model else base
+
+
+def _fmt_pn_delta(r, desc_len=28):
+    q = ""
+    dq = r.get("dq")
+    if dq is not None and abs(dq) >= 1:
+        q = f", {abs(dq):,.0f} {'fewer' if dq < 0 else 'more'} pcs"
+    return f"{_pn_label(r, desc_len)} {eur(r['d'], True)}{q}"
+
+
 # ------------------------------------------------ per-category question bank --
 # Framed as questions, never as an asserted cause — distributors essentially
 # never source competitively at DB level, so lead with price/service/stock.
@@ -188,6 +204,12 @@ QUESTIONS = {
     "Injectors": [
         "Is this fewer failures, or repairs moving out of the network?",
         "Is the exchange/reman route competing with new parts here?",
+        "Are dealers still quoting these part numbers, or have they dropped off the workshop menu?",
+    ],
+    "Turbo": [
+        "Is this fewer turbo failures, or jobs moving to independents?",
+        "Is reman / exchange competing with new units on price or lead time?",
+        "Any availability problems on the fast-moving turbo lines?",
     ],
     "Suspension": [
         "Is this pricing against the independent aftermarket?",
@@ -269,19 +291,22 @@ def build(dbkey: str):
     pick = cats[:5] + cats[-4:] if len(cats) > 9 else cats
     diverging_bar([wrap_label(c["cat"], 9) for c in pick], [c["d"] for c in pick],
                   cp("category_movers.png"),
-                  title=f"{disp} {L26} vs {L25} — biggest category moves (EUR)")
+                  title=f"{disp} {L26} vs {L25} — commercial category moves, ex-warranty (EUR)")
 
     peers = S["pms_peers"]
     plabels = {"oil_filter": "Oil filter", "fuel_filter": "Fuel filter", "air_filter": "Air filter",
                "brake_pad": "Brake pad", "brake_rotor": "Brake rotor"}
     pkeys = [k for k in plabels if k in peers]
+    pms_yr = S.get("pms_year")
     ct.bar_chart(
         [plabels[k] for k in pkeys],
         {disp: [peers[k]["db"] for k in pkeys],
          "Network (all other markets)": [peers[k]["network"] for k in pkeys],
          "Best market in the network": [peers[k]["best"] for k in pkeys]},
         cp("pms.png"),
-        title=f"Service-parts capture by category — {disp} vs the rest of the network (%)",
+        title=(f"Service-parts capture by category — {disp} vs network "
+               f"(CY{pms_yr} full year, %)" if pms_yr else
+               f"Service-parts capture by category — {disp} vs the rest of the network (%)"),
         ylabel="% of fleet service demand captured", value_fmt="{:,.1f}", figsize=(10.2, 4.5))
 
     uio = uio_live
@@ -289,39 +314,71 @@ def build(dbkey: str):
     years = [y for y in sorted(total) if 2019 <= y <= 2026]
     namemap = {"lcv": "LCV / D-Max", "ld": "CV — LD", "md": "CV — MD", "f_series": "F-Series"}
     segs = {k: v for k, v in uio.items() if k != "total"}
-    # Only segments with real weight inside the plotted window count as "mixed" —
-    # a segment that is zero across 2019-2026 (even if it had volume decades
-    # earlier, e.g. a phased-out LD line) would otherwise duplicate the Total
-    # line exactly and collide with its end-of-line label.
-    populated = {}
+    # Avoid Total ≈ dominant-segment double line (IBX: LCV ~98% of fleet;
+    # Hungary: LD/MD phased out to zero within the plotted window).
+    # Plot Total only when one segment dominates; otherwise plot meaningful
+    # segments (≥5% of latest year) without a redundant Total series.
+    series = {}
+    latest = years[-1] if years else None
+    tot_latest = float(total.get(latest, 0) or 0) if latest is not None else 0.0
+    seg_latest = {}
     for seg, vals in segs.items():
         vv = {int(k): v for k, v in vals.items()}
-        if sum(vv.get(y, 0) for y in years) > 0:
-            populated[namemap.get(seg, seg)] = vv
-    series = {}
-    if len(populated) > 1:
+        if sum(vv.values()) > 0:
+            seg_latest[seg] = float(vv.get(latest, 0) or 0)
+    dominant_share = (max(seg_latest.values()) / tot_latest) if tot_latest and seg_latest else 1.0
+    meaningful = [
+        seg for seg, v in seg_latest.items()
+        if tot_latest and (v / tot_latest) >= 0.05
+    ]
+    fleet_mix_note = None
+    if len(seg_latest) <= 1 or dominant_share >= 0.90 or len(meaningful) <= 1:
         series["Total fleet"] = [total.get(y, 0) for y in years]
-        for label, vv in sorted(populated.items(), key=lambda kv: -sum(kv[1].values())):
-            series[label] = [vv.get(y, 0) for y in years]
+        if seg_latest and tot_latest:
+            parts = [
+                f"{namemap.get(s, s)} {seg_latest[s]:,.0f}"
+                for s in sorted(seg_latest, key=lambda s: -seg_latest[s])
+            ]
+            fleet_mix_note = (
+                f"End-{latest} mix: " + "; ".join(parts) + "."
+            )
     else:
-        series["Fleet (units)"] = [total.get(y, 0) for y in years]
+        for seg in sorted(meaningful, key=lambda s: -seg_latest[s]):
+            vv = {int(k): v for k, v in segs[seg].items()}
+            series[namemap.get(seg, seg)] = [vv.get(y, 0) for y in years]
+        tiny = [s for s in seg_latest if s not in meaningful]
+        if tiny:
+            fleet_mix_note = (
+                "Smaller segments not plotted (<5% of fleet): "
+                + ", ".join(f"{namemap.get(s, s)} {seg_latest[s]:,.0f}" for s in tiny)
+                + "."
+            )
     ct.trend_line([str(y) for y in years], series, cp("uio.png"),
                   title=f"{disp} fleet — {total[years[0]]:,} ({years[0]}) to "
                         f"{total[years[-1]]:,} ({years[-1]} forecast)",
                   value_fmt="{:,.0f}")
+    S["fleet_mix_note"] = fleet_mix_note
 
     # -------------------------------------------------------------- deck --
     prs = db.new_presentation()
     db.build_cover(prs, title=f"{disp} Sales Review\n& FY2027 Target",
-                   subtitle=f"{S['name']}  ·  July 2026",
+                   subtitle=f"{S['name']}  ·  August 2026",
                    eyebrow=f"ISZE  ·  {S['country'].upper()}  ·  {p['key']}")
 
-    decliners = [c for c in cats if c["d"] < 0][:2]
+    # Skip catch-all / junk categories on the deep-dive stage (e.g. radio + DEF
+    # under Miscellaneous). Prefer real commodity drops: brakes, injectors, turbo.
+    _DECLINE_SKIP = {"Miscellaneous", "UNCLASSIFIED", "Hardware", "Belts"}
+    decliners = [c for c in cats if c["d"] < 0 and c["cat"] not in _DECLINE_SKIP][:3]
     agenda = ["Q1 FY2027 Sales Review"] if PBI else []
     agenda += ["Parts Performance — category movers"]
     agenda += [f"Parts Performance — {c['cat']}" for c in decliners]
     agenda += ["Parts Performance — where volume grew"]
-    if S["new_business"]:
+    _nb_agenda = [
+        x for x in (S.get("new_business") or [])
+        if str(x.get("pn") or "").strip().upper() not in {"TRANSPORT", "FREIGHT", "SHIPPING"}
+        and "transport" not in str(x.get("desc") or "").lower()
+    ]
+    if _nb_agenda:
         agenda += ["New Business — validation queue"]
     agenda += ["Sales-to-Dealer Outlook"]
     if gps:
@@ -371,53 +428,98 @@ def build(dbkey: str):
             eyebrow=f"{PBI['quarter']} Sales Review", page_no=page, takeaways=takeaways[:4])
         page += 1
 
-    # ---- category movers --------------------------------------------------
-    gp, gc = S["gross_prior"], S["gross_current"]
+    # ---- category movers (commercial / ex-warranty) -----------------------
+    # Prefer commercial totals when present; fall back to blended gross for older summaries.
+    gp = S.get("commercial_prior", S["gross_prior"])
+    gc = S.get("commercial_current", S["gross_current"])
+    g_pct = S.get("commercial_delta_pct", S["gross_delta_pct"])
     cred = S["credits_current"]
-    take = [f"Parts billing {eur(gc, True)} against {eur(gp, True)} a year earlier — "
-            f"{S['gross_delta_pct']:+.1%}."]
-    if abs(cred) > 1000:
-        take[0] += f" After {eur(abs(cred), True)} of credit notes the net figure is {eur(S['net_current'], True)}."
-    if decliners:
-        take.append("Biggest declines: " + "; ".join(
-            f"{c['cat']} {eur(c['d'], True)}" for c in decliners) + ".")
+    w_strip = S.get("warranty_stripped_current") or 0
+    top_decl_pn = list(S.get("top_decl_pn") or [])
+    top_grow_pn = list(S.get("top_grow_pn") or [])
+    # Fallback for older summaries that only carried ITC movers
+    if not top_decl_pn:
+        top_decl_pn = list(S.get("top_decl_itc") or [])
+    if not top_grow_pn:
+        top_grow_pn = list(S.get("top_grow_itc") or [])
+    cat_pn = S.get("category_pn_drivers") or {}
+
     risers = [c for c in cats if c["d"] > 0][-3:][::-1]
-    if risers:
+    # Biggest EUR-growing category (category chart is sorted by delta ascending)
+    top_rising_cat = max((c for c in cats if c.get("d") and c["d"] > 0),
+                         key=lambda c: c["d"], default=None)
+    take = [
+        f"Commercial parts billing (warranty/campaign excluded) {eur(gc, True)} against "
+        f"{eur(gp, True)} a year earlier — {g_pct:+.1%} "
+        f"({L26} vs {L25}, Jan–Jun)."
+    ]
+    if top_decl_pn:
+        take.append("Largest PN drops (all categories): " + "; ".join(
+            _fmt_pn_delta(r, 20) for r in top_decl_pn[:3]) + ".")
+    elif decliners:
+        take.append("Biggest commercial declines: " + "; ".join(
+            f"{c['cat']} {eur(c['d'], True)}" for c in decliners) + ".")
+    if top_grow_pn:
+        take.append("Largest PN gains (all categories): " + "; ".join(
+            _fmt_pn_delta(r, 20) for r in top_grow_pn[:3]) + ".")
+    elif risers:
         take.append("Growing: " + ", ".join(
             f"{c['cat']} {c['dp']:+.0%}" for c in risers if c["dp"] is not None) + ".")
-    take.append(f"{L26} against {L25} (calendar Jan–Jun, Q1+Q2) — like-for-like half-year cut.")
-    db.build_two_col(prs, title=f"Parts Performance — {L26} vs {L25}",
+    # Category +~EUR move is a sum of many PNs — surface top PNs inside the
+    # biggest growing category so the takeaways don't look like they "explain"
+    # the bar with three global (cross-category) PN lines.
+    if top_rising_cat:
+        within = (cat_pn.get(top_rising_cat["cat"]) or {}).get("grow") or []
+        if within:
+            take.append(
+                f"Within {top_rising_cat['cat']} "
+                f"({eur(top_rising_cat['d'], True)}"
+                + (f", {top_rising_cat['dp']:+.0%}" if top_rising_cat.get("dp") is not None else "")
+                + "): "
+                + "; ".join(_fmt_pn_delta(r, 20) for r in within[:3])
+                + "."
+            )
+    if abs(cred) > 1000:
+        take.append(
+            f"Credit notes of {eur(abs(cred), True)} stay on the net bridge "
+            f"(net {eur(S['net_current'], True)}); not in the movers."
+        )
+    elif w_strip and abs(w_strip) > 1000:
+        take.append(
+            f"About {eur(abs(w_strip), True)} of claim-matched PN billing was stripped "
+            "so this chart is aftermarket demand, not warranty."
+        )
+    else:
+        take.append("PNs ranked by EUR contribution to the commercial move.")
+    db.build_two_col(prs, title=f"Parts Performance — {L26} vs {L25} (commercial, ex-warranty)",
                      chart_path=cp("category_movers.png"),
                      eyebrow="Parts Performance", page_no=page, takeaways=take[:4])
     page += 1
 
     # ---- one slide per material declining category ------------------------
-    bvp = S["bvp"]
-    bvp_fell = bvp["bvp_current"] < bvp["bvp_prior"]
     for n_cat, cat in enumerate(decliners):
-        rows = [r for r in S["top_decl_itc"] if r["cat"] == cat["cat"]][:3]
+        # Prefer per-category largest-EUR PNs; fall back to global ITC filter
+        drivers = (cat_pn.get(cat["cat"]) or {}).get("decl") or []
+        if not drivers:
+            drivers = [r for r in S.get("top_decl_itc") or [] if r["cat"] == cat["cat"]][:5]
+        drivers = drivers[:4]
         # Title-case the category so "Brake parts" does not read "Brake parts Performance"
         cat_title = cat["cat"][0].upper() + cat["cat"][1:]
-        s = db.build_content(prs, f"{cat_title} — {L26} vs {L25}",
+        s = db.build_content(prs, f"{cat_title} — {L26} vs {L25} (commercial, ex-warranty)",
                              eyebrow=f"Parts Performance — {cat['cat']}", page_no=page)
         bullets = [f"{eur(cat['prior'])} ({L25}) to {eur(cat['current'])} ({L26}), "
                    f"down {eur(abs(cat['d']))}" + (f" ({cat['dp']:.0%})." if cat['dp'] else ".")]
-        for r in rows:
-            q = f", {abs(r['dq']):,.0f} fewer pieces" if r["dq"] < 0 else ""
-            bullets.append(f"{r['pn']} ({r['desc']}): {eur(r['prior'])} to {eur(r['current'])}{q}.")
-        # The genuine-vs-BVP read is a whole-window fact, not a per-category one —
-        # state it once, on the first decline slide only. Repeating it verbatim on
-        # every decline slide reads as padding.
-        if bvp["bvp_prior"] > 0 and n_cat == 0:
+        bullets.append("Largest part numbers driving the decline (by EUR):")
+        for r in drivers:
+            q = f", {abs(r['dq']):,.0f} fewer pieces" if r.get("dq") is not None and r["dq"] < 0 else ""
+            model = f" · {r['model']}" if r.get("model") else ""
             bullets.append(
-                f"The value-tier range moved the same way, not the other way: BVP billing went from "
-                f"{eur(bvp['bvp_prior'])} to {eur(bvp['bvp_current'])} across the window. "
-                "So this does not read as a switch from genuine to value tier."
-                if bvp_fell else
-                f"BVP billing rose over the same window ({eur(bvp['bvp_prior'])} to "
-                f"{eur(bvp['bvp_current'])}) — worth checking how much of this is a move to the "
-                "value tier rather than lost business.")
-        db.bullet_list(s, bullets, Inches(0.32), Inches(1.32), Inches(12.7), Inches(2.9), size=14)
+                f"{r['pn']} ({str(r.get('desc') or '')[:40]}{model}): "
+                f"{eur(r['prior'])} to {eur(r['current'])}{q}."
+            )
+        # Do NOT attach whole-window BVP movement to a single category decline —
+        # that BVP total is cross-category and reads as a false value-tier proof.
+        db.bullet_list(s, bullets, Inches(0.32), Inches(1.32), Inches(12.7), Inches(2.9), size=13)
         db.txt(s, "Questions for us to work through together", Inches(0.32), Inches(4.20),
                Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
         db.bullet_list(s, QUESTIONS.get(cat["cat"], GENERIC_QUESTIONS),
@@ -425,32 +527,60 @@ def build(dbkey: str):
         page += 1
 
     # ---- growth ------------------------------------------------------------
-    s = db.build_content(prs, f"Where volume grew — {L26} vs {L25}",
+    s = db.build_content(prs, f"Where volume grew — {L26} vs {L25} (commercial, ex-warranty)",
                          eyebrow="Parts Performance — Growth", page_no=page)
-    grow = S["top_grow_itc"][:6]
-    rows = [["Part", "Description", L25, L26]] + [
-        [g["pn"], str(g["desc"])[:34], eur(g["prior"]), eur(g["current"])] for g in grow]
-    styled_table(s, rows, Inches(0.32), Inches(1.32), Inches(12.7), Inches(2.6),
-                 [Inches(2.4), Inches(4.9), Inches(2.7), Inches(2.7)],
-                 bold_last=False, size=12, left_cols=(0, 1))
+    # Prefer raw PN by EUR delta; fall back to ITC family rows
+    grow = (top_grow_pn or S.get("top_grow_itc") or [])[:6]
+    has_model = any(str(g.get("model") or "").strip() for g in grow)
+    if has_model:
+        rows = [["Part", "Description", "Model", L25, L26, "Δ EUR"]] + [
+            [g["pn"], str(g.get("desc") or "")[:28],
+             str(g.get("model") or "—")[:16],
+             eur(g["prior"]), eur(g["current"]), eur(g["d"])]
+            for g in grow]
+        styled_table(s, rows, Inches(0.32), Inches(1.32), Inches(12.7), Inches(2.6),
+                     [Inches(1.9), Inches(3.2), Inches(1.8), Inches(1.9), Inches(1.9), Inches(2.0)],
+                     bold_last=False, size=11, left_cols=(0, 1, 2))
+    else:
+        rows = [["Part", "Description", L25, L26, "Δ EUR"]] + [
+            [g["pn"], str(g.get("desc") or "")[:34],
+             eur(g["prior"]), eur(g["current"]), eur(g["d"])]
+            for g in grow]
+        styled_table(s, rows, Inches(0.32), Inches(1.32), Inches(12.7), Inches(2.6),
+                     [Inches(2.2), Inches(4.2), Inches(2.1), Inches(2.1), Inches(2.1)],
+                     bold_last=False, size=12, left_cols=(0, 1))
     gbul = []
     if risers:
         gbul.append(", ".join(f"{c['cat']} {c['dp']:+.0%}" for c in risers if c["dp"] is not None)
-                    + " — where the volume went.")
-    if S.get("warranty_claim"):
-        gbul.append(f"Several of these are the kind of item that also moves on a campaign or claim. "
-                    f"{S['country']} warranty parts ran to {eur(S['warranty_claim'], True)} across "
-                    "CY2025, so we would not read this list as purely commercial growth without "
-                    "checking it against claims together.")
-    gbul.append("Worth agreeing which of these are repeatable and which were one-off.")
+                    + " — where the commercial volume went.")
+    wx = S.get("warranty_exclusion") or {}
+    if wx.get("n_claim_pns"):
+        gbul.append(
+            f"Claim-matched PNs ({wx['n_claim_pns']:,} distinct) and campaign/recall text matches "
+            "are already excluded from this growth list. Residual warranty on unmapped PNs can remain."
+        )
+    elif S.get("warranty_claim"):
+        gbul.append(
+            f"{S['country']} CY2025 warranty parts (claim-price basis) were "
+            f"{eur(S['warranty_claim'], True)} — separate from fiscal GPS warranty expense."
+        )
+    gbul.append(
+        "PNs ranked by largest EUR increase (prior-period sales > 0). "
+        "Worth agreeing which of these are repeatable and which were one-off."
+    )
     db.bullet_list(s, gbul, Inches(0.32), Inches(4.20), Inches(12.7), Inches(2.4), size=14)
     page += 1
 
     # ---- New Business quarantine ------------------------------------------
-    if S["new_business"]:
+    new_biz = [
+        x for x in (S.get("new_business") or [])
+        if str(x.get("pn") or "").strip().upper() not in {"TRANSPORT", "FREIGHT", "SHIPPING"}
+        and "transport" not in str(x.get("desc") or "").lower()
+    ]
+    if new_biz:
         s = db.build_content(prs, f"New Business — validation queue ({L26})",
                              eyebrow="Parts Performance", page_no=page)
-        nb = S["new_business"][:6]
+        nb = new_biz[:6]
         rows = [["Part", "Description", "Current sales", "Review"]]
         rows += [[x["pn"], str(x["desc"])[:31], eur(x["current"]),
                   "Warranty / campaign" if x.get("warranty_campaign") else "Validate"]
@@ -551,20 +681,28 @@ def build(dbkey: str):
     growth = (total.get(2026, 0) / total.get(2025, 1) - 1) if total.get(2025) else 0
     fleet_title = ("The fleet is expected to decline in 2026" if growth < 0
                    else "The fleet is expected to grow in 2026")
+    fleet_takes = [
+        f"Fleet size (calendar year): {total.get(2025, 0):,} vehicles in 2025 → "
+        f"{total.get(2026, 0):,} working estimate for end-2026 ({growth:+.1%}).",
+        "The chart is calendar years 2019–2026 only. 2026 is a working year-end estimate, "
+        "not a fiscal-year figure.",
+    ]
+    if S.get("fleet_mix_note"):
+        fleet_takes.append(S["fleet_mix_note"])
+    fleet_takes.append(
+        f"The FY2027 Sales-to-Dealer target starts from that fleet change, then applies "
+        f"a {s2d['price']:.0%} price adjustment and {s2d['additional']:.1%} additional growth."
+    )
+    fleet_takes.append(
+        "So the target is built from a slightly smaller fleet — not from an assumed growth story."
+        if growth < 0 else
+        "The target reflects the working fleet outlook without extending the chart beyond 2026."
+    )
     db.build_two_col(
         prs, title=fleet_title,
         chart_path=cp("uio.png"), eyebrow="Fleet & FY2027 Target", page_no=page,
         takeaway_heading="What this means for FY2027",
-        takeaways=[
-            f"Parc {total.get(2025, 0):,} in 2025 and {total.get(2026, 0):,} in the 2026 "
-            f"working year-end estimate — {growth:+.1%}.",
-            "The chart shows 2019–2026 only. The 2026 point is a working year-end estimate.",
-            f"The FY2027 Sales-to-Dealer target applies this fleet movement, a "
-            f"{s2d['price']:.0%} price adjustment and {s2d['additional']:.1%} additional growth.",
-            ("The target therefore starts from a contracting fleet, not an assumed growth story."
-             if growth < 0 else
-             "The target reflects the working fleet outlook without extending the chart beyond 2026."),
-        ])
+        takeaways=fleet_takes)
     page += 1
 
     # ---- target build-up ---------------------------------------------------
@@ -589,8 +727,8 @@ def build(dbkey: str):
                  [Inches(6.2), Inches(3.2)], size=12.5)
     foot = [
         f"The FY2027 target is {up:+.1%} versus the FY2026 Sales-to-Dealer base.",
-        ("The FY2026 base is imputed from ISZE billing divided by 0.65 because no usable "
-         "Sales-to-Dealer KPI was available." if s2d["s2d_imputed"] else
+        ("The FY2026 base is a working estimate (ISZE billing ÷ 0.65): the KPI Dashboard has "
+         "no usable Sales-to-Dealer row for this market." if s2d["s2d_imputed"] else
          "The FY2026 base is the reported Sales-to-Dealer KPI."),
     ]
     db.bullet_list(s, foot, Inches(0.32), Inches(4.35), Inches(12.7),
@@ -612,10 +750,12 @@ def build(dbkey: str):
                      ["FY2027 Sales-to-Dealer target", eur(s2d["fy27"])],
                      [f"vs FY2026 Sales-to-Dealer ({eur(base)})", f"{up:+.1%}"]],
                  Inches(0.32), Inches(4.14), Inches(9.4), Inches(1.35), [Inches(5.5), Inches(3.9)])
-    db.bullet_list(s, ["As in previous cycles we would expect an incentive to sit alongside this "
-                       "adjustment — that approval is still pending on our side. We will confirm "
-                       "as soon as we have it."],
-                   Inches(0.32), Inches(5.70), Inches(12.7), Inches(0.9), size=12.5)
+    db.bullet_list(s, [
+        "As in previous cycles we would expect an incentive to sit alongside this adjustment — "
+        "that approval is still pending on our side.",
+        "Until the incentive is confirmed, treat the FY2027 target as the working bridge "
+        "(fleet × price × additional growth), not a locked commercial commitment.",
+    ], Inches(0.32), Inches(5.55), Inches(12.7), Inches(1.05), size=12.5)
     page += 1
 
     # ---- SPA ---------------------------------------------------------------
@@ -666,11 +806,19 @@ def build(dbkey: str):
 
     # ---- next steps -------------------------------------------------------
     s = db.build_content(prs, "Next steps", eyebrow="Summary", page_no=page)
-    steps = [f"Confirm FY2027 Sales-to-Dealer target: {eur(s2d['fy27'])} "
-             f"({up:+.1%} vs FY2026 Sales-to-Dealer).",
-             "Confirm the incentive alongside the price adjustment once approved on our side."]
+    if S.get("incentive_fy27") is None:
+        steps = [
+            "Align on the FY2027 Sales-to-Dealer bridge (fleet, price, additional growth) — "
+            f"working figure {eur(s2d['fy27'])} ({up:+.1%} vs FY2026 base).",
+            "Confirm the incentive alongside the price adjustment; lock the target once that "
+            "approval is through.",
+        ]
+    else:
+        steps = [f"Confirm FY2027 Sales-to-Dealer target: {eur(s2d['fy27'])} "
+                 f"({up:+.1%} vs FY2026 Sales-to-Dealer).",
+                 "Confirm the incentive alongside the price adjustment once approved on our side."]
     if decliners:
-        steps.append(f"{' and '.join(c['cat'] for c in decliners)}: agree which category we tackle "
+        steps.append(f"{' / '.join(c['cat'] for c in decliners)}: agree which category we tackle "
                      "first, and what the joint action is.")
     steps.append("Agree part-level Sales-to-Dealer data sharing, effective 01/01/2025.")
     steps.append(f"SPA: {p['key']} proposal, ISZE review and counter-proposal cycle to follow.")
@@ -682,8 +830,35 @@ def build(dbkey: str):
 
     db.build_closing(prs)
 
-    out = str(out_dir / f"ISZE_{p['key']}_Sales_Review_FY2027.pptx")
-    prs.save(out)
+    import os
+    from datetime import datetime, timezone
+    preferred = os.environ.get("ISZE_DECK_OUT") or str(
+        out_dir / f"ISZE_{p['key']}_Sales_Review_FY2027.pptx"
+    )
+    candidates = [preferred]
+    stem = Path(preferred)
+    candidates += [
+        str(stem.with_name(stem.stem + "_share.pptx")),
+        str(stem.with_name(
+            stem.stem + f"_rebuild_{datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')}.pptx"
+        )),
+    ]
+    # de-dupe while preserving order
+    seen, out = set(), None
+    for cand in candidates:
+        if cand in seen:
+            continue
+        seen.add(cand)
+        try:
+            prs.save(cand)
+            out = cand
+            if cand != preferred:
+                print(f"[{p['key']}] (preferred PPTX locked — wrote → {Path(cand).name})")
+            break
+        except PermissionError:
+            continue
+    if out is None:
+        raise SystemExit(f"[{p['key']}] cannot save PPTX — all candidates locked: {candidates}")
     print(f"[{p['key']}] saved {out}   ({len(prs.slides)} slides)")
     if gps:
         g = gps["gps_FY2026"]

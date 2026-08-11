@@ -8,6 +8,22 @@
 
 ## [Unreleased]
 
+### Added (2026-08-11) — Pricing history findings dashboard (provisional)
+- Builder `01_data/91_build/build_pricing_history_findings.py` → derived CSVs + `pricing_history_findings.meta.json`.
+- Mode A HTML: `02_dashboards/pricing/ISZE_Pricing_History_Findings_Dashboard.html` (year-matched PR00 realization 2023–2026 YTD, ZPR1 UTI/UMI/2372, KPI MOS stock days, NO_LIST, VPACC status, integrity score).
+- Status: **internal QA / provisional** — list-to-pocket not externally quotable while integrity is weak.
+
+### Added (2026-08-11) — PR00+ZPR1 history; IDS MIDI v1.4; AIM CY/FY windows
+- Landed ZPR1 2024/2025 + PR00 tabs 2024/2025 under `01_data/01_Pricing/history/`.
+- **Also 2023:** Downloads `2023.xlsx` (mixed PR00+ZPR1) → `_raw/2023.xlsx` + split `history/ZPR1_2023-01-03.xlsx` / `IE40_PR00_2023-12-31.xlsx`; parquet `pricing_pr00_ie40_2023.parquet` / `pricing_zpr1_2023.parquet`. Not engine-wired; no leakage quotes until year-matched joins validated.
+- **IDS v1.4:** Baumann FR/ES red-marked out of averages (20/5); IT/CH all dealers in averages (incl. zero shells — corrected after verify); MIDI packs in `09_meetings/IDS_2026_Country_Packs_v1.4/`; Outlook draft to Tomoe (not Sent).
+- **AIM billing:** `aim_billing_windows.json` / `aim_billing_by_db_window.csv` (CY + FY Apr–Mar).
+- Elasticity deferred to DB→DLR; brake 0.4/0.8 pending ITUK; gross/SPA closed (net-only).
+
+### Locked (2026-07-31 / logged 2026-08-10) — Tomoe Baumann MIDI average rule — NEVER FORGET
+- **On behalf of Tomoe Baumann:** red-marked FR+ES dealers in her ranking attachments → **exclude from averages only**; **IT + CH keep all dealers in** (including zero-score shells). Exact mail wording + full dealer list: `04_tools/ids_dealer_ranking/CHANGELOG.md` + `IDS_2026_LOGIC_CHECK.md` § MIDI Baumann rule. Attachments/body: `01_data/90_INBOX/tomoe_ids_mail_pull/20260731_0858_*`.
+- **v1.4 applied 2026-08-11** (rebuild+ship OK): averages-only; list/map keep reds.
+
 ### Changed (2026-07-28) — IDS dealer map: MIDI FR/IT/ES/CH + UK LCV geo
 - **`ids_dealer_geo.py`** — loads `MIDI_FR.xlsx` NETWORK (Town + lat/lon) for exact DLRName match; Switzerland uses Town city centres when NETWORK lat/lon blank; UK LCV residual dealers pinned from Isuzu Truck UK store pages. Geo sanity city floors for France/Italy/Spain/Switzerland.
 - **Map fitBounds** — initial zoom prefers dense pin core so France DOM-TOM outliers do not force a world view.

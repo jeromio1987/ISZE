@@ -113,28 +113,36 @@ def solve_base(w: np.ndarray, d_ex_base: np.ndarray, cap: np.ndarray,
 
 
 # ---------------------------------------------------------------- components
-def premium_for(cat: str, p: Params) -> tuple[float, str]:
-    """Target premium and its provenance for one category.
+def premium_for(cat: str, p: Params) -> tuple[float, str, float]:
+    """Target premium for one category.
 
-    Provenance travels with the number on purpose. A premium nobody has
-    benchmarked is a guess, and the engine must be able to tell the difference.
+    Returns (excess_fraction, basis, max_premium_pct).
+      excess_fraction 0.30 == +30% above benchmark (Jerome language).
+      Internal config may still store value as ratio 1.30; we prefer
+      max_premium_pct when present.
+
+    Provenance travels with the number: a premium nobody has benchmarked
+    is a guess, and the engine must be able to tell the difference.
     """
     e = p.policy_premium.get("by_category", {}).get(
-        cat, p.policy_premium.get("default", {"value": 1.40,
-                                              "basis": "placeholder"}))
-    return float(e["value"]), str(e["basis"])
+        cat, p.policy_premium.get("default", {"value": 1.30,
+                                              "basis": "placeholder",
+                                              "max_premium_pct": 30}))
+    basis = str(e["basis"])
+    if "max_premium_pct" in e and e["max_premium_pct"] is not None:
+        pct = float(e["max_premium_pct"])
+        return pct / 100.0, basis, pct
+    ratio = float(e["value"])
+    return ratio - 1.0, basis, (ratio - 1.0) * 100.0
 
 
 def street_position(row, p: Params) -> tuple[float, str, float]:
     """Return (premium_gap, evidence_tier, tier_limit).
 
-    premium_gap = ISZE premium over IAM street  minus  the policy target premium.
+    isze_premium is already an excess fraction
+      (street/IAM - 1), e.g. 0.30 = +30% above IAM.
+    premium_gap = observed excess − allowed excess (from brand-quality %).
     Positive = priced above where policy says genuine should sit.
-
-    The target is a stated policy dial, not a measurement. Genuine parts carry a
-    legitimate premium, so parity with IAM is the wrong target -- but the data is
-    far too thin to estimate the tolerated premium, so it is set explicitly and
-    defended as a decision instead of dressed up as a finding.
     """
     isze_prem = row.get("isze_premium")
     tier = row.get("evidence_tier", "T5_none")
@@ -145,11 +153,11 @@ def street_position(row, p: Params) -> tuple[float, str, float]:
     if n is None or n < p.min_n:
         return 0.0, "T5_none", 0.0        # thin evidence == no evidence
 
-    target, basis = premium_for(row.get("cat", ""), p)
+    target_excess, basis, _pct = premium_for(row.get("cat", ""), p)
     if basis not in p.require_basis:
         # no benchmarked target for this category -> hold, do not guess
         return 0.0, "T5_none", 0.0
-    return float(isze_prem) - (target - 1.0), tier, p.tier_limit.get(tier, 0.0)
+    return float(isze_prem) - target_excess, tier, p.tier_limit.get(tier, 0.0)
 
 
 def sign_rule(zone: str, premium_gap: float, tier: str) -> tuple[float, str]:
@@ -187,9 +195,14 @@ def run(df: pd.DataFrame, p: Params | None = None) -> tuple[pd.DataFrame, dict]:
                              for _, r in out.iterrows()]
     out["premium_basis"] = [premium_for(r.get("cat", ""), p)[1]
                             for _, r in out.iterrows()]
+    out["max_premium_pct"] = [premium_for(r.get("cat", ""), p)[2]
+                              for _, r in out.iterrows()]
     out["premium_gap"] = gaps
     out["evidence_tier"] = tiers
     out["tier_limit"] = limits
+    # Jerome-facing: observed excess as %
+    out["isze_premium_pct"] = out["isze_premium"] * 100.0
+    out["premium_gap_pp"] = out["premium_gap"] * 100.0
 
     mults, reasons = zip(*(sign_rule(r.zone, r.premium_gap, r.evidence_tier)
                            for _, r in out.iterrows()))

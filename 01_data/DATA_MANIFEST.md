@@ -1,6 +1,6 @@
 # ISZE Data manifest — sort-by-topic map
 
-**Last updated:** 2026-07-27 (JP VIN register filed under `07_UIO/vin/`) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
+**Last updated:** 2026-08-11 (pricing history 2023–2025 + VPACC July action plan parquet) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
 
 This is the **data map**. Each subject has a numbered folder under `01_data/` — drop new files into the matching one (§1). A small **wired working-set stays flat at root** because build scripts read it from there (§3).
 
@@ -28,10 +28,14 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 ### 01 · Pricing → `01_Pricing/`
 | File | Path | Flag |
 |------|------|------|
-| IE40 Price list …PR00_3_level_classified_GPT.xlsx | `01_data/` (root, wired) | ⚙ `04_tools/autodoc_scraper/aim_gap_closer.py` |
-| Price file 2026_full.xlsx · preliminary_pricefile2026.xlsx · BPFY2027.XLSX · SPA_2026_UTI_… | `01_data/01_Pricing/` | pricing drop zone |
+| **`PRICING_DATA.md`** | `01_data/01_Pricing/` | 📄 map for Spec v1 — which raw → which parquet |
+| **`_raw/` CY2026 PRICE CD · Price_file_2026_full · PR00 IE40 20260810 · EXPORT_ZPR1 20260810 · sim 5% · Eucon PriceSurvey UK/ITUK 2023 OEM+IAM** | `01_data/01_Pricing/_raw/` | ★ lists 2026-08-10; ★ 2023 survey rawdata filed 2026-08-10 |
+| `pricing_list_pn` · `pricing_revision_cd` · `pricing_sim_pr00_l12m` · `pricing_pr00_ie40` · `pricing_zpr1*` · `pricing_pn_enquiry` | `01_data/00_derived/` | ⚙ `91_build/build_pricing_enquiry_tables.py` |
+| `Price_file_2026_full.xlsx` · `Price_file_PR00_IE40_20260810.xlsx` · `EXPORT_ZPR1_20260810.xlsx` | `01_data/01_Pricing/` | ★ calc book + newest PR00/ZPR1 lists |
+| IE40 … PR00_3_level_classified_GPT.xlsx | `01_data/01_Pricing/` (+ root wired copy if present) | ⚙ taxonomy / `aim_gap_closer.py` |
+| preliminary_pricefile2026.xlsx · BPFY2027.XLSX · SPA_2026_UTI_… | `01_data/01_Pricing/` | pricing drop zone |
 | Margin analysis report.xlsx · Customer order sales - VP.xlsx | `01_data/raw/reference/` | 🔒 |
-| **Code/tool:** SPA/NOx optimizer | `04_tools/isze-tools/pages/5_NOx_SPA_Optimizer.py` | |
+| **Code/tool:** SPA/NOx optimizer · **Spec/engine** | `04_tools/isze-tools/pages/5_NOx_SPA_Optimizer.py` · `00_docs/ISZE_Pricing_Spec_v1.md` · `03_analytics/isze_pricing/` | |
 
 ### 02 · GPS → `02_GPS/`
 | File | Path | Flag |
@@ -73,11 +77,15 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | CY2024-2025.XLSX | `01_data/` (root, wired) | ⚙ more-complete 2025 re-export (supersedes CY2025 in pipeline) |
 | Extra ad-hoc billing extracts | `01_data/04_sales/` | topic drop (not `12_raw/sales/`) |
 
-### 05 · Dealer sell-out → `05_Dealer_sellout/`
+### 05 · Dealer sell-out / sales-to-dealer → `05_Dealer_sellout/` + `12_raw/dealer_sales/`
 | File | Path | Flag |
 |------|------|------|
-| UTIPartSales_2025-* | `01_data/raw/dealer_sales/UTI/` | ⚙ sell-out pipeline |
-| DEALER_SELL_OUT.md | `01_data/raw/dealer_sales/` | 📄 method + BVP rules |
+| **Canonical raw (all DBs)** | `01_data/12_raw/dealer_sales/<DB>/` | ★ ITUK · UTI · **GREECE (Petros)** |
+| `_registry.yaml` · `DEALER_SELL_OUT.md` | `01_data/12_raw/dealer_sales/` | 📄 intake + canonical long schema |
+| `Petros_Parts_Sold_Qties_2025.xlsx` | `01_data/12_raw/dealer_sales/GREECE/` | ★ D-MAX qty CY2025 · flag `pn_newest_rollup` |
+| `dealer_sellout_long_GREECE_CY2025.csv` | `01_data/00_derived/` | ⚙ normalized long (Petros adapter) |
+| UTIPartSales_2025-* | `01_data/12_raw/dealer_sales/UTI/` | ⚙ sell-out pipeline |
+| Topic copies | `01_data/05_Dealer_sellout/` | optional working copies |
 
 ### 06 · Warranty (⚙ all read by warranty/GPS builds — do not move)
 | File | Path | Flag |
@@ -128,7 +136,9 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 |------|------|------|
 | KPI Master File june 2026.xlsx | `01_data/11_planning/` | ★ **newest** KPI master (april archived 2026-07-16) |
 | budget_per_DB_reviewed_24042026.xlsx | `01_data/11_planning/` | ★⚙ `load_bp_fy27.py` |
-| Action plan FY2027 VPACC_April update.xlsx · ISZE_DB_KPI_Targets_FY2627_v1.xlsx | `01_data/11_planning/` | |
+| **Action plan FY2027 VPACC_July update.xlsx** | `01_data/11_planning/` | ★ newest VPACC (git-allowlisted) · `91_build/build_vpacc_fy2027_action_plan.py` → `00_derived/vpacc_*.parquet` · join on `pic` / `progress_status` / `stream` |
+| Action plan FY2027 VPACC_April update.xlsx · ISZE_DB_KPI_Targets_FY2627_v1.xlsx | `01_data/11_planning/` | prior monthly / KPI targets |
+| `11_planning/README.md` | `01_data/11_planning/` | 📄 VPACC folder map |
 | ISZE PL Plan FY2026 2027 2028 20260205_2.xlsx | `01_data/11_planning/` | ★ ("- Copy" archived 2026-07-16) |
 
 ---
@@ -223,6 +233,10 @@ See `05_memory/projects/sales-analytics-pipeline.md`.
 
 ## §8 — Migration log
 
+- **2026-08-10** — Eucon 2023 Price Survey rawdata (UK OEM, ITUK OEM, UK IAM) → `01_Pricing/_raw/Eucon_PriceSurvey_*` + hard QA `_raw/Eucon_PriceSurvey_2023_QA.md` (crossrefs safe; prices list-not-street); **21** basket `peer_oe_pn` fills (`mapped_oe_pn`).
+- **2026-08-10** — Latest lists: `EXPORT_ZPR1` + `Price file 202610082026` → `_raw/EXPORT_ZPR1_20260810.xlsx` + `Price_file_PR00_IE40_20260810.xlsx`; derived `pricing_zpr1*.parquet` + `pricing_pr00_ie40.parquet`.
+- **2026-08-09** — Pricing drop (PRICE CD, Price file 2026_full, sim 5%, parts master, UTI final) → `01_Pricing/_raw/`; enquiry parquets in `00_derived/pricing_*.parquet`. See `01_Pricing/PRICING_DATA.md`.
+- **2026-08-09** — Petros `Petros_Parts_Sold_Qties_2025.xlsx` filed under `12_raw/dealer_sales/GREECE/`; multi-DB sell-out intake (`_registry.yaml` + canonical long schema). Normalized → `00_derived/dealer_sellout_long_GREECE_CY2025.csv`.
 - **2026-07-16** — **Root de-clutter + INBOX rule (§0).** ~30 loose files re-filed from `01_data/` root into numbered folders; older duplicates → `92_archive/dedupe_2026-07-16/`; junk → `92_archive/junk_2026-07-16/`. Service PDFs → `03_PMS/service_schedules/`; Mainz conf → `09_meetings/European_Conference_2026_Mainz/`; stretch pilots → `02_GPS/` (newest per family); distributor studies → `08_Distributor/`; KPI/PL/budget → `11_planning/`. ITUK study newest (today) promoted to canonical. Root now holds only §3 wired files + docs. See `CHANGELOG.md` 2026-07-16.
 - **2026-06-18** — Numbered `01_data` subfolders + resolver in `_shared/paths.py` + `prism/config.py`. Manifest reorganised by topic (§1) + wired-file watchlist (§3).
 - **2026-05-15** — All 10 files from `new files/` filed (`migration-log.txt`).

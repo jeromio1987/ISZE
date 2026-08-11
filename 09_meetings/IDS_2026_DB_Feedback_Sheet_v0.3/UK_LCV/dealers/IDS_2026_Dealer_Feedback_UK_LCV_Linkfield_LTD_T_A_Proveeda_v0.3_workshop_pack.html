@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IDS 2026 dealer workshop pack — Linkfield LTD T/A Proveeda</title>
+<style>
+:root {
+  --navy:#1A2744; --terracotta:#C45C3E; --good:#2D8A5E; --amber:#C48A1A;
+  --grey:#6B7A90; --light:#F4F6F9; --line:#d4dae3;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:#eef1f5; color:var(--navy);
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:10.2pt; line-height:1.35;
+}
+.page {
+  background:#fff; width:210mm; min-height:296mm; margin:8mm auto; padding:11mm 12mm;
+  box-shadow:0 2px 10px rgba(26,39,68,.12);
+}
+.head { border-bottom:2.5px solid var(--navy); padding-bottom:6px; margin-bottom:9px;
+        display:flex; justify-content:space-between; align-items:flex-end; gap:12px; }
+.head h1 { margin:0; font-size:15.5pt; letter-spacing:-.2px; }
+.head .sub { margin:2px 0 0; font-size:9pt; color:var(--grey); }
+.head .right { text-align:right; font-size:8.6pt; color:var(--grey); white-space:nowrap; }
+.head .right strong { display:block; color:var(--navy); font-size:10pt; }
+h2 { font-size:10.6pt; margin:0 0 6px; text-transform:uppercase; letter-spacing:.5px;
+     color:var(--navy); border-bottom:1px solid var(--line); padding-bottom:3px; }
+.block { margin-bottom:9px; }
+.kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
+.kpi { background:var(--light); border-left:3.5px solid var(--terracotta);
+       border-radius:5px; padding:7px 9px; }
+.kpi .v { font-size:16pt; font-weight:700; line-height:1.05; }
+.kpi .v.fill { display:block; width:100%; min-width:0; height:21px;
+               border-bottom:1px dotted #8f9db0; margin-bottom:2px; }
+.kpi .l { font-size:7.8pt; color:var(--grey); text-transform:uppercase; letter-spacing:.4px; }
+.kpi .n { font-size:8.2pt; color:var(--grey); }
+.bandstrip { display:flex; align-items:center; gap:10px; background:var(--light);
+             border-radius:5px; padding:8px 11px; margin-top:7px; font-size:9pt; }
+.pill { display:inline-block; font-size:9pt; font-weight:700; border-radius:4px;
+        padding:2px 9px; white-space:nowrap; }
+.pill.good { background:#e5f4ec; color:var(--good); }
+.pill.medium { background:#f9f0d8; color:var(--amber); }
+.pill.weak { background:#f8e6e1; color:var(--terracotta); }
+.pill.blank { background:#fff; color:var(--grey); border:1px dashed var(--line); padding:2px 26px; }
+.scale { color:var(--grey); font-size:8.4pt; }
+table { width:100%; border-collapse:collapse; font-size:9.1pt; }
+th { text-align:left; font-size:7.8pt; text-transform:uppercase; letter-spacing:.4px;
+     color:#fff; background:var(--navy); padding:5px 6px; font-weight:600; }
+td { padding:4.5px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+tr:nth-child(even) td { background:#fafbfd; }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+td.sec { font-weight:700; white-space:nowrap; }
+td.q { color:#33415c; }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+.panel { border:1px solid var(--line); border-radius:6px; padding:9px 11px; }
+.panel h3 { margin:0 0 6px; font-size:9.4pt; text-transform:uppercase; letter-spacing:.4px; }
+.panel.pos h3 { color:var(--good); }
+.panel.neg h3 { color:var(--terracotta); }
+.panel ol { margin:0; padding-left:16px; }
+.panel li { margin-bottom:4px; }
+.panel li .ref { font-weight:700; }
+.panel li .meta { color:var(--grey); font-size:8.4pt; }
+.fill { border-bottom:1px dotted #9aa7b8; display:inline-block; min-width:60px; }
+.ident { display:flex; gap:18px; font-size:8.6pt; color:var(--grey);
+         background:var(--light); border-radius:5px; padding:5px 10px; margin-bottom:8px; }
+.ident span.fill { min-width:110px; }
+.fillrow td { height:22px; }
+.hint { font-size:8.2pt; color:var(--grey); margin:-2px 0 5px; }
+.suggest td { padding:3.5px 6px; font-size:8.7pt; }
+.suggest td.action { color:#33415c; }
+.note { font-size:8.0pt; color:var(--grey); border-top:1px solid var(--line);
+        padding-top:6px; margin-top:8px; }
+.note strong { color:var(--navy); }
+.reading { font-size:8.4pt; color:var(--grey); background:var(--light);
+           border-left:3px solid var(--mid, #d4dae3); border-radius:4px;
+           padding:6px 9px; margin:7px 0 0; }
+.dist { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+@media print {
+  @page { size:A4 portrait; margin:10mm; }
+  body { background:#fff; font-size:9.6pt; }
+  .page { width:auto; min-height:0; margin:0; padding:0; box-shadow:none;
+          page-break-after:always; }
+  .page:last-child { page-break-after:auto; }
+  .block, .panel, table { page-break-inside:avoid; }
+}
+</style>
+</head>
+<body>
+<section class="page">
+<div class="head"><div><h1>Linkfield LTD T/A Proveeda</h1><p class="sub">Isuzu Dealer Standards 2026 · executive summary · UK LCV</p></div><div class="right"><strong>Rank 32 of 45</strong>Built 2026-08-11 · v0.3</div></div>
+<div class="ident"><div>Evaluation date 2026-03-13</div><div>Address 519 London Rd, Ipswich, Suffolk, IP20ST</div></div>
+<div class="block">
+  <h2>Result</h2>
+  <div class="kpis"><div class="kpi"><div class="v">76.1%</div><div class="l">Total score</div><div class="n">213 / 280 points</div></div><div class="kpi"><div class="v">81.5%</div><div class="l">UK LCV average</div><div class="n">45 of 45 dealers in average</div></div><div class="kpi"><div class="v">-5.5 pp</div><div class="l">Difference vs average</div><div class="n">percentage points</div></div><div class="kpi"><div class="v">32</div><div class="l">Rank in UK LCV</div><div class="n">of 45 dealers</div></div></div>
+  <div class="bandstrip"><span>Band</span><span class="pill medium">Medium</span>
+    <span class="scale">Bands: Good 80% and above · Medium 60% to under 80% · Needs improvement below 60%</span></div>
+</div>
+<div class="block two">
+  <div class="panel pos"><h3>Top 3 strengths</h3><ol><li><span class="ref">B.2-6</span> Is there at least one trained Mechanic who can work on ISUZU Vehicles?<div class="meta">Section B · 3 / 3 points · country average 88.1%</div></li><li><span class="ref">B.4-7</span> Are certificates regarding the handling and servicing of Battery Electric Vehicles available?<div class="meta">Section B · 3 / 3 points · country average 71.1%</div></li><li><span class="ref">C.4-8</span> Do you provide a job order with a job order sheet to the mechanic?<div class="meta">Section C · 3 / 3 points · country average 92.1%</div></li></ol></div>
+  <div class="panel neg"><h3>Top 3 gaps</h3><ol><li><span class="ref">C.4-20</span> Are the number of incoming vehicles and maintenances provided to the distributor?<div class="meta">Section C · 0 / 3 points · country average 53.2%</div></li><li><span class="ref">A.3-1</span> Do all reception staffs wear the service advisor uniform? (Confirm if main Brand allow to wear ISUZU Uniform)<div class="meta">Section A · 1 / 3 points · country average 54.1%</div></li><li><span class="ref">B.1-5</span> Is the specific business plan developed to achieve the established parts annual target? Is the annual target for parts sales and pr…<div class="meta">Section B · 1 / 3 points · country average 55.6%</div></li></ol></div>
+</div>
+<div class="block">
+  <h2>Suggested next steps — edit in the meeting</h2>
+  <p class="hint">Starters from the largest checklist gaps above. Change, drop or add
+    actions in the meeting. Owner, target date and proof stay blank until agreed.</p>
+  <table>
+    <thead><tr><th style="width:52%">Action</th><th style="width:18%">Owner (role)</th>
+    <th style="width:15%">Target date</th><th style="width:15%">Proof</th></tr></thead>
+    <tbody>
+      <tr class="suggest"><td class="action"><strong>C.4-20</strong> — Are the number of incoming vehicles and maintenances provided to the distributor?</td><td></td><td></td><td></td></tr><tr class="suggest"><td class="action"><strong>A.3-1</strong> — Do all reception staffs wear the service advisor uniform? (Confirm if main Brand allow to wear ISUZ…</td><td></td><td></td><td></td></tr><tr class="suggest"><td class="action"><strong>B.1-5</strong> — Is the specific business plan developed to achieve the established parts annual target? Is the annu…</td><td></td><td></td><td></td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="note"><strong>Average basis.</strong> The UK LCV average shown here is calculated on <strong>all 45</strong> evaluated dealers. No dealer is excluded: every evaluated dealer counts towards this average. Source: 2026 IDS evaluation result report, UK LCV. Maximum score 280 points.</div>
+</section>
+<section class="page">
+<div class="head"><div><h1>Dealer workshop pack</h1><p class="sub">Isuzu Dealer Standards 2026 · Linkfield LTD T/A Proveeda · UK LCV</p></div><div class="right"><strong>Section scorecard and actions</strong>2026-08-11 v0.3</div></div>
+<div class="block">
+  <h2>Section scorecard A–E</h2>
+  <table>
+    <thead><tr><th style="width:4%">&nbsp;</th><th>Section</th>
+    <th class="num" style="width:13%">Points</th><th class="num" style="width:10%">Score</th>
+    <th class="num" style="width:15%">Country average</th>
+    <th class="num" style="width:12%">Difference</th></tr></thead>
+    <tbody><tr><td class="sec">A</td><td>Premises, facility and clothing</td><td class="num">31 / 46</td><td class="num">67.4%</td><td class="num">79.6%</td><td class="num">-12.2 pp</td></tr><tr><td class="sec">B</td><td>Organisation, management, personnel</td><td class="num">60 / 80</td><td class="num">75.0%</td><td class="num">80.1%</td><td class="num">-5.1 pp</td></tr><tr><td class="sec">C</td><td>Service</td><td class="num">64 / 80</td><td class="num">80.0%</td><td class="num">82.2%</td><td class="num">-2.2 pp</td></tr><tr><td class="sec">D</td><td>Parts and accessories</td><td class="num">35 / 47</td><td class="num">74.5%</td><td class="num">81.7%</td><td class="num">-7.3 pp</td></tr><tr><td class="sec">E</td><td>Vehicle sales</td><td class="num">23 / 27</td><td class="num">85.2%</td><td class="num">87.3%</td><td class="num">-2.1 pp</td></tr></tbody>
+  </table>
+  <p class="reading">How to read sections A–E: in the 2026 results the five sections move closely together — a dealer who scores well on one section usually scores well on the others. Use the section table as structure for the conversation, not as five independent capabilities, and do not read a single section as a verdict on that part of the business. The actions are therefore built from the individual checklist items where points were actually lost.</p>
+</div>
+<div class="block">
+  <h2>Kaizen actions — agree 3 to 5 with the dealer</h2>
+  <table>
+    <thead><tr><th style="width:4%">#</th><th style="width:6%">Sec.</th>
+    <th>Action (largest scored gaps are pre-filled)</th>
+    <th style="width:14%">Owner (role)</th><th style="width:12%">Target date</th>
+    <th style="width:14%">Proof / evidence</th></tr></thead>
+    <tbody><tr><td class="num">1</td><td class="sec">C</td><td><strong>C.4-20</strong> Are the number of incoming vehicles and maintenances provided to the distributor?<br><span class="meta" style="color:#6b7a90;font-size:8.4pt">Now 0 / 3 points · 3 point(s) available</span></td><td></td><td></td><td></td></tr><tr><td class="num">2</td><td class="sec">A</td><td><strong>A.3-1</strong> Do all reception staffs wear the service advisor uniform? (Confirm if main Brand allow to wear ISUZU Uniform)<br><span class="meta" style="color:#6b7a90;font-size:8.4pt">Now 1 / 3 points · 2 point(s) available</span></td><td></td><td></td><td></td></tr><tr><td class="num">3</td><td class="sec">B</td><td><strong>B.1-5</strong> Is the specific business plan developed to achieve the established parts annual target? Is the annual target for parts sales and profit established?<br><span class="meta" style="color:#6b7a90;font-size:8.4pt">Now 1 / 3 points · 2 point(s) available</span></td><td></td><td></td><td></td></tr><tr><td class="num">4</td><td class="sec">D</td><td><strong>D.2-9</strong> Do you have targets for orders and sales and monitor actual values on a monthly basis?<br><span class="meta" style="color:#6b7a90;font-size:8.4pt">Now 1 / 3 points · 2 point(s) available</span></td><td></td><td></td><td></td></tr><tr><td class="num">5</td><td class="sec">A</td><td><strong>A.1-19</strong> Does the Dealer display a sign detailing the warranty terms and conditions for ISUZU parts and accessories<br><span class="meta" style="color:#6b7a90;font-size:8.4pt">Now 0 / 2 points · 2 point(s) available</span></td><td></td><td></td><td></td></tr></tbody>
+  </table>
+</div>
+<div class="block">
+  <h2>Dealer confirmation</h2>
+  <table>
+    <thead><tr><th>Dealer representative (role)</th><th>Distributor representative (role)</th>
+    <th style="width:18%">Date</th><th style="width:18%">Next review</th></tr></thead>
+    <tbody><tr class="fillrow"><td></td><td></td><td></td><td></td></tr></tbody>
+  </table>
+</div>
+<div class="note"><strong>Average basis.</strong> The UK LCV average shown here is calculated on <strong>all 45</strong> evaluated dealers. No dealer is excluded: every evaluated dealer counts towards this average. Source: 2026 IDS evaluation result report, UK LCV. Maximum score 280 points.</div>
+</section>
+</body>
+</html>

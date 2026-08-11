@@ -1,0 +1,772 @@
+{
+  "files": {
+    "UK_OEM": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\_raw\\Eucon_PriceSurvey_UK_2023_OEM_rawdata_20240109.xlsx",
+    "UK_OEM_bytes": 57698,
+    "ITUK_OEM": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\_raw\\Eucon_PriceSurvey_ITUK_2023_OEM_rawdata.xlsx",
+    "ITUK_OEM_bytes": 22215,
+    "UK_IAM": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\_raw\\Eucon_PriceSurvey_UK_2023_IAM_rawdata_20240109.xlsx",
+    "UK_IAM_bytes": 25402
+  },
+  "integrity": {
+    "uk_oem": {
+      "rows": 212,
+      "isuzu_pn_null": 0,
+      "peer_oe_null": 0,
+      "isze_main_null": 211,
+      "comp_gbp_null": 21,
+      "isuzu_all_10digit": true,
+      "currency": {
+        "GBP": 212
+      },
+      "comparability": {
+        "NOT COMPARABLE": 22,
+        "COMPARABLE": 179,
+        "NOT AVAILABLE": 11
+      },
+      "brands": {
+        "Ford": 37,
+        "Toyota": 37,
+        "DAF": 138
+      }
+    },
+    "ituk_oem": {
+      "rows": 138,
+      "isuzu_pn_null": 0,
+      "peer_oe_null": 0,
+      "isze_main_null": 138,
+      "comp_gbp_null": 18,
+      "isuzu_all_10digit": true,
+      "currency": {
+        "GBP": 138
+      },
+      "comparability": {
+        "COMPARABLE": 109,
+        "NOT AVAILABLE": 10,
+        "NOT COMPARABLE": 19
+      },
+      "brands": {
+        "DAF": 138
+      }
+    },
+    "iam": {
+      "rows": 236,
+      "isuzu_null": 0,
+      "iam_pn_null": 105,
+      "list_null": 110,
+      "workshop_null": 105,
+      "both_prices": 126,
+      "not_available_comments": 105,
+      "unique_isuzu": 143
+    }
+  },
+  "main_isze_col_types": {
+    "formula": 13,
+    "None": 199
+  },
+  "main_isze_samples": [
+    [
+      2,
+      "=VLOOKUP(N2,[1]Sheet1!$B:$E,4,FALSE)"
+    ],
+    [
+      5,
+      "=VLOOKUP(N5,#REF!,4,FALSE)"
+    ],
+    [
+      9,
+      "=VLOOKUP(N9,#REF!,4,FALSE)"
+    ],
+    [
+      13,
+      "=VLOOKUP(N13,#REF!,4,FALSE)"
+    ],
+    [
+      14,
+      "=VLOOKUP(N14,#REF!,4,FALSE)"
+    ]
+  ],
+  "sheet1_E2_formula": "=D2/C2",
+  "helper_fx_median_eur_per_gbp": 1.1627916666666667,
+  "helper_formula": "Sheet1!E = D/C = Price_in_EUR / ISZE_price (competitiveness ratio). EXCHG rate header present but value cell empty; implied EUR/GBP from D/F.",
+  "pricing_point": {
+    "oem_CompetitorPrice": "GBP OEM peer list (Currency=GBP on every OEM row)",
+    "oem_ISZE_price": "Helper Sheet1 col C filled for all unique PNs; main sheet mostly blank. Appears EUR list-side vs 2026 PR00 (see match_stats) \u2014 NOT street x1.785",
+    "iam_Competitor_List_Price": "IAM list",
+    "iam_Workshop_Purchase_Price": "IAM trade/workshop; median workshop/list=0.650",
+    "no_1785_factor_in_sheets": true
+  },
+  "match_stats_survey_isze_vs_pr00_2026": {
+    "n_with_both": 111,
+    "near_list_15pct": 104,
+    "near_street_15pct": 0,
+    "near_trade_15pct": 0,
+    "far": 7,
+    "median_ratio": NaN,
+    "p10": 0.9189980895775843,
+    "p90": 1.001209921355112
+  },
+  "spot_checks": [
+    {
+      "pn": "8974995480",
+      "survey_isze": 21.47,
+      "pr00_sp_eur": 21.18,
+      "list_sp_eur": 21.18,
+      "gap_ie40": 21.18,
+      "vs_pr00_pct": 1.369216241737492,
+      "vs_street1785_pct": -43.210523113872554,
+      "survey_looks_like": "near_PR00_list_EUR"
+    },
+    {
+      "pn": "8975546610",
+      "survey_isze": 83.35,
+      "pr00_sp_eur": 82.25,
+      "list_sp_eur": 82.25,
+      "gap_ie40": 82.25,
+      "vs_pr00_pct": 1.3373860182370745,
+      "vs_street1785_pct": -43.22835517185598,
+      "survey_looks_like": "near_PR00_list_EUR"
+    },
+    {
+      "pn": "8975554500",
+      "survey_isze": 16.57,
+      "pr00_sp_eur": 16.33,
+      "list_sp_eur": 16.33,
+      "gap_ie40": 16.33,
+      "vs_pr00_pct": 1.4696876913655954,
+      "vs_street1785_pct": -43.15423658747025,
+      "survey_looks_like": "near_PR00_list_EUR"
+    },
+    {
+      "pn": "8978354480",
+      "survey_isze": 36.82,
+      "pr00_sp_eur": 36.33,
+      "list_sp_eur": 36.33,
+      "gap_ie40": null,
+      "vs_pr00_pct": 1.3487475915221703,
+      "vs_street1785_pct": -43.22199014480551,
+      "survey_looks_like": "near_PR00_list_EUR"
+    },
+    {
+      "pn": "8980618131",
+      "survey_isze": 69.02,
+      "pr00_sp_eur": 72.49,
+      "list_sp_eur": 72.49,
+      "gap_ie40": 72.49,
+      "vs_pr00_pct": -4.7868671540902135,
+      "vs_street1785_pct": -46.65930933002252,
+      "survey_looks_like": "near_PR00_list_EUR"
+    },
+    {
+      "pn": "8981919560",
+      "survey_isze": 142.12,
+      "pr00_sp_eur": 162.02,
+      "list_sp_eur": 162.02,
+      "gap_ie40": null,
+      "vs_pr00_pct": -12.282434267374398,
+      "vs_street1785_pct": -50.8585065923666,
+      "survey_looks_like": "near_PR00_list_EUR"
+    },
+    {
+      "pn": "8982447940",
+      "survey_isze": 89.85,
+      "pr00_sp_eur": 89.11,
+      "list_sp_eur": 89.11,
+      "gap_ie40": null,
+      "vs_pr00_pct": 0.8304342946919396,
+      "vs_street1785_pct": -43.51236173966838,
+      "survey_looks_like": "near_PR00_list_EUR"
+    },
+    {
+      "pn": "8982488951",
+      "survey_isze": 139.31,
+      "pr00_sp_eur": 158.83,
+      "list_sp_eur": 158.83,
+      "gap_ie40": null,
+      "vs_pr00_pct": -12.289869671976328,
+      "vs_street1785_pct": -50.862672085140794,
+      "survey_looks_like": "near_PR00_list_EUR"
+    },
+    {
+      "pn": "8982705240",
+      "survey_isze": 4.99,
+      "pr00_sp_eur": 6.8,
+      "list_sp_eur": 6.8,
+      "gap_ie40": 6.8,
+      "vs_pr00_pct": -26.617647058823522,
+      "vs_street1785_pct": -58.88943812819245,
+      "survey_looks_like": "neither_list_nor_street"
+    },
+    {
+      "pn": "8982984040",
+      "survey_isze": 14.37,
+      "pr00_sp_eur": 14.25,
+      "list_sp_eur": 14.25,
+      "gap_ie40": null,
+      "vs_pr00_pct": 0.8421052631578885,
+      "vs_street1785_pct": -43.505823381984364,
+      "survey_looks_like": "near_PR00_list_EUR"
+    },
+    {
+      "pn": "8983767550",
+      "survey_isze": 77.97,
+      "pr00_sp_eur": 79.26,
+      "list_sp_eur": 79.26,
+      "gap_ie40": 79.26,
+      "vs_pr00_pct": -1.6275548826646613,
+      "vs_street1785_pct": -44.88938648888776,
+      "survey_looks_like": "near_PR00_list_EUR"
+    },
+    {
+      "pn": "8983989321",
+      "survey_isze": 118.08,
+      "pr00_sp_eur": 116.53,
+      "list_sp_eur": 116.53,
+      "gap_ie40": null,
+      "vs_pr00_pct": 1.3301295803655577,
+      "vs_street1785_pct": -43.23242040315654,
+      "survey_looks_like": "near_PR00_list_EUR"
+    }
+  ],
+  "uk_ituk_overlap_pn_count": 92,
+  "uk_ituk_overlap_pns": [
+    "1096253312",
+    "1096255690",
+    "1098122060",
+    "1098122070",
+    "1312203772",
+    "1313100120",
+    "1313100260",
+    "1423153610",
+    "1423153951",
+    "1423507670",
+    "1471704830",
+    "1471704851",
+    "1832270192",
+    "1833150462",
+    "1878312953",
+    "5876100341",
+    "5878324000",
+    "8970388313",
+    "8973634780",
+    "8974051752",
+    "8974056285",
+    "8974060399",
+    "8974075094",
+    "8974101813",
+    "8974653951",
+    "8975255622",
+    "8975425390",
+    "8975425400",
+    "8976880340",
+    "8978551390",
+    "8979032120",
+    "8979488920",
+    "8980021650",
+    "8980127530",
+    "8980127824",
+    "8980302303",
+    "8980431741",
+    "8980431761",
+    "8980537790",
+    "8980701700",
+    "8980714210",
+    "8980788061",
+    "8980788201",
+    "8980799660",
+    "8980979760",
+    "8980982575",
+    "8981059591",
+    "8981113600",
+    "8981226950",
+    "8981254244",
+    "8981412063",
+    "8981554590",
+    "8981649171",
+    "8981682150",
+    "8981712540",
+    "8981772710",
+    "8981914890",
+    "8981919560",
+    "8981942080",
+    "8982029120",
+    "8982057090",
+    "8982185991",
+    "8982201260",
+    "8982236160",
+    "8982261381",
+    "8982261810",
+    "8982318983",
+    "8982349332",
+    "8982395150",
+    "8982447940",
+    "8982452581",
+    "8982460031",
+    "8982488951",
+    "8982605971",
+    "8982605980",
+    "8982606011",
+    "8982606020",
+    "8982687932",
+    "8982688121",
+    "8982688122",
+    "8982878080",
+    "8982984040",
+    "8983034650",
+    "8983035100",
+    "8983282070",
+    "8983294300",
+    "8983300950",
+    "8983304211",
+    "8983407580",
+    "8983528480",
+    "8983615741",
+    "9000931720"
+  ],
+  "uk_ituk_shared_brand_keys": 68,
+  "uk_ituk_agree_peer": 68,
+  "uk_ituk_conflicts": [],
+  "dup_uk": {
+    "dup_key_count": 13,
+    "dup_row_extra": 46,
+    "samples": [
+      {
+        "key": [
+          "5878324000",
+          "Kit5021516502023111579",
+          "DAF"
+        ],
+        "n": 23,
+        "vehicles": [
+          "LF LF 180 FA 8t - 12t - platform truck|N-Serie VI NPR75 platform truck"
+        ],
+        "comparabilities": {
+          "COMPARABLE": 23
+        }
+      },
+      {
+        "key": [
+          "1878312953",
+          "Kit5021516502023111698",
+          "DAF"
+        ],
+        "n": 12,
+        "vehicles": [
+          "LF LF 180 FA 8t - 12t - platform truck|F-Serie FRR 110 platform truck"
+        ],
+        "comparabilities": {
+          "COMPARABLE": 12
+        }
+      },
+      {
+        "key": [
+          "8974056285",
+          "Kit502151013202311151348",
+          "DAF"
+        ],
+        "n": 3,
+        "vehicles": [
+          "LF LF 180 FA 8t - 12t - platform truck|N-Serie VI NPR75 platform truck"
+        ],
+        "comparabilities": {
+          "NOT COMPARABLE": 3
+        }
+      },
+      {
+        "key": [
+          "8979032120",
+          "Kit502151013202311151348",
+          "DAF"
+        ],
+        "n": 3,
+        "vehicles": [
+          "LF LF 180 FA 8t - 12t - platform truck|F-Serie FRR 110 platform truck"
+        ],
+        "comparabilities": {
+          "NOT COMPARABLE": 3
+        }
+      },
+      {
+        "key": [
+          "8982878080",
+          "0002137442",
+          "DAF"
+        ],
+        "n": 2,
+        "vehicles": [
+          "LF LF 180 FA 8t - 12t - platform truck|F-Serie FRR 110 platform truck",
+          "LF LF 180 FA 8t - 12t - platform truck|N-Serie VI NPR75 platform truck"
+        ],
+        "comparabilities": {
+          "COMPARABLE": 2
+        }
+      }
+    ]
+  },
+  "dup_ituk": {
+    "dup_key_count": 13,
+    "dup_row_extra": 46,
+    "samples": [
+      {
+        "key": [
+          "5878324000",
+          "Kit5021516502023111579",
+          "DAF"
+        ],
+        "n": 23,
+        "vehicles": [
+          "LF LF 180 FA 8t - 12t - platform truck|"
+        ],
+        "comparabilities": {
+          "COMPARABLE": 23
+        }
+      },
+      {
+        "key": [
+          "1878312953",
+          "Kit5021516502023111698",
+          "DAF"
+        ],
+        "n": 12,
+        "vehicles": [
+          "LF LF 180 FA 8t - 12t - platform truck|"
+        ],
+        "comparabilities": {
+          "COMPARABLE": 12
+        }
+      },
+      {
+        "key": [
+          "8974056285",
+          "Kit502151013202311151348",
+          "DAF"
+        ],
+        "n": 3,
+        "vehicles": [
+          "LF LF 180 FA 8t - 12t - platform truck|"
+        ],
+        "comparabilities": {
+          "NOT COMPARABLE": 3
+        }
+      },
+      {
+        "key": [
+          "8979032120",
+          "Kit502151013202311151348",
+          "DAF"
+        ],
+        "n": 3,
+        "vehicles": [
+          "LF LF 180 FA 8t - 12t - platform truck|"
+        ],
+        "comparabilities": {
+          "NOT COMPARABLE": 3
+        }
+      },
+      {
+        "key": [
+          "8982878080",
+          "0002137442",
+          "DAF"
+        ],
+        "n": 2,
+        "vehicles": [
+          "LF LF 180 FA 8t - 12t - platform truck|"
+        ],
+        "comparabilities": {
+          "COMPARABLE": 2
+        }
+      }
+    ]
+  },
+  "basket_mappable_1to1": 27,
+  "basket_ambiguous": 0,
+  "basket_no_hit": 423,
+  "basket_mappable_sample": [
+    {
+      "isze_pn": "8974995480",
+      "peer_oem": "Toyota",
+      "peer_market": "LCV",
+      "peer_oe_pn": "178010L040",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8974995480",
+      "peer_oem": "Ford",
+      "peer_market": "LCV",
+      "peer_oe_pn": "0002562972",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8974995480",
+      "peer_oem": "Ford",
+      "peer_market": "IUK",
+      "peer_oe_pn": "0002562972",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8975554500",
+      "peer_oem": "Toyota",
+      "peer_market": "LCV",
+      "peer_oe_pn": "871390K070",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8975554500",
+      "peer_oem": "Ford",
+      "peer_market": "LCV",
+      "peer_oe_pn": "0002586463",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8975554500",
+      "peer_oem": "Ford",
+      "peer_market": "IUK",
+      "peer_oe_pn": "0002586463",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8975546610",
+      "peer_oem": "Toyota",
+      "peer_market": "LCV",
+      "peer_oe_pn": "044650K580",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8975546610",
+      "peer_oem": "Ford",
+      "peer_market": "LCV",
+      "peer_oe_pn": "0002586105",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8975546610",
+      "peer_oem": "Ford",
+      "peer_market": "IUK",
+      "peer_oe_pn": "0002586105",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8982447940",
+      "peer_oem": "DAF",
+      "peer_market": "IUK",
+      "peer_oe_pn": "0001436901",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8982447940",
+      "peer_oem": "DAF",
+      "peer_market": "GERMANY",
+      "peer_oe_pn": "0001436901",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8983767550",
+      "peer_oem": "Toyota",
+      "peer_market": "LCV",
+      "peer_oe_pn": "435120K230",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8983767550",
+      "peer_oem": "Ford",
+      "peer_market": "LCV",
+      "peer_oe_pn": "0002557964",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8983767550",
+      "peer_oem": "Ford",
+      "peer_market": "IUK",
+      "peer_oe_pn": "0002557964",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8981919560",
+      "peer_oem": "DAF",
+      "peer_market": "IUK",
+      "peer_oe_pn": "0001408672",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8981919560",
+      "peer_oem": "DAF",
+      "peer_market": "GERMANY",
+      "peer_oe_pn": "0001408672",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8982488951",
+      "peer_oem": "DAF",
+      "peer_market": "IUK",
+      "peer_oe_pn": "0001703801",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8982488951",
+      "peer_oem": "DAF",
+      "peer_market": "GERMANY",
+      "peer_oe_pn": "0001703801",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8978354480",
+      "peer_oem": "Toyota",
+      "peer_market": "LCV",
+      "peer_oe_pn": "044950K120",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8978354480",
+      "peer_oem": "Ford",
+      "peer_market": "LCV",
+      "peer_oe_pn": "0001713904",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8978354480",
+      "peer_oem": "Ford",
+      "peer_market": "IUK",
+      "peer_oe_pn": "0001713904",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8983989321",
+      "peer_oem": "Toyota",
+      "peer_market": "LCV",
+      "peer_oe_pn": "312100K310",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8982705240",
+      "peer_oem": "Toyota",
+      "peer_market": "LCV",
+      "peer_oe_pn": "90915YZZJ3",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8982705240",
+      "peer_oem": "Ford",
+      "peer_market": "LCV",
+      "peer_oe_pn": "0001720612",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8982705240",
+      "peer_oem": "Ford",
+      "peer_market": "IUK",
+      "peer_oe_pn": "0001720612",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8982984040",
+      "peer_oem": "DAF",
+      "peer_market": "IUK",
+      "peer_oe_pn": "0001399494",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    },
+    {
+      "isze_pn": "8982984040",
+      "peer_oem": "DAF",
+      "peer_market": "GERMANY",
+      "peer_oe_pn": "0001399494",
+      "status_now": "needs_map",
+      "current_peer_oe": ""
+    }
+  ],
+  "basket_ambiguous_sample": [],
+  "survey_clear_11_isuzu_brand": 138,
+  "survey_multi_peer_same_brand": 0,
+  "multi_sample": [],
+  "iam_spot_vs_gap": [
+    {
+      "pn": "8975554500",
+      "iam_workshop_avg": 12.545,
+      "iam_list_avg": 23.75,
+      "pr00": 16.33,
+      "street_1785": 29.149049999999995,
+      "gap_avg_comp": 7.03
+    },
+    {
+      "pn": "8976526220",
+      "iam_workshop_avg": 74.005,
+      "iam_list_avg": 170.2,
+      "pr00": 64.45,
+      "street_1785": 115.04325,
+      "gap_avg_comp": 74.01
+    },
+    {
+      "pn": "8979488071",
+      "iam_workshop_avg": 36.03,
+      "iam_list_avg": 90.5325,
+      "pr00": 90.47,
+      "street_1785": 161.48895,
+      "gap_avg_comp": 66.84
+    },
+    {
+      "pn": "8980618131",
+      "iam_workshop_avg": 59.519999999999996,
+      "iam_list_avg": 110.10857142857142,
+      "pr00": 72.49,
+      "street_1785": 129.39464999999998,
+      "gap_avg_comp": 63.31
+    },
+    {
+      "pn": "8981596930",
+      "iam_workshop_avg": 10.8575,
+      "iam_list_avg": 26.165,
+      "pr00": 13.85,
+      "street_1785": 24.72225,
+      "gap_avg_comp": 10.06
+    },
+    {
+      "pn": "8982601090",
+      "iam_workshop_avg": 313.94,
+      "iam_list_avg": 670.93,
+      "pr00": 257.37,
+      "street_1785": 459.40545,
+      "gap_avg_comp": 269.48
+    },
+    {
+      "pn": "8982705240",
+      "iam_workshop_avg": 9.655,
+      "iam_list_avg": 23.61,
+      "pr00": 6.8,
+      "street_1785": 12.138,
+      "gap_avg_comp": 12.32
+    },
+    {
+      "pn": "8983767550",
+      "iam_workshop_avg": 49.486666666666665,
+      "iam_list_avg": 136.68666666666667,
+      "pr00": 79.26,
+      "street_1785": 141.47910000000002,
+      "gap_avg_comp": 87.99
+    }
+  ]
+}

@@ -27,14 +27,16 @@ All paths under `$env:ISZE_ROOT/01_data/`:
 |------|------|
 | Manifest | `01_data/DATA_MANIFEST.md` |
 | Data dictionary | `01_data/DATA_DICTIONARY.md` |
-| Raw CY billing | `raw/sales/CY2023-2024.XLSX`, `raw/sales/CY2025.XLSX` |
-| Reference | `raw/reference/` (BVP catalog, margin, FY27 order VP) |
-| Phase models | `models/Phase1_Sales_Clean_Model_Starter.xlsx` … `Phase3_Demand_Stocking_Model.xlsx` |
-| Planning | `planning/` (KPI Master, FY2027 VPACC) |
-| Derived | `derived/sales_fact.parquet`, `derived/pms_capture_by_db_year.csv`, etc. |
-| GPT-safe slices | `gpt_safe/` |
-| Dashboard JSON | `dashboards/isze_data.json`, `dashboards/tender_data.json` |
-| Ingest staging | `_INBOX/` |
+| Raw CY billing | `12_raw/sales/CY2023-2024.XLSX`, `12_raw/sales/CY2024-2025.XLSX` (supersedes old `CY2025.XLSX` — still on disk, not canonical) |
+| Reference | `12_raw/reference/` (BVP catalog, margin, FY27 order VP) |
+| Phase models | `13_models/Phase1_Sales_Clean_Model_Starter.xlsx` … `Phase3_Demand_Stocking_Model.xlsx` |
+| Planning | `11_planning/` (KPI Master, FY2027 VPACC) |
+| Derived | `00_derived/sales_fact.parquet`, `00_derived/pms_capture_by_db_year.csv`, etc. |
+| GPT-safe slices | `15_gpt_safe/` |
+| Dashboard JSON | `14_dashboards/isze_data.json`, `14_dashboards/tender_data.json` |
+| Ingest staging | `90_INBOX/` |
+
+_Path prefixes corrected 2026-08-10 — table previously used pre-reorg names (`raw/`, `derived/`, etc.); confirmed no such entries exist under `01_data/` (numbered folders only) and updated to the real numbered paths, per Jerome's request._
 
 **Do not** re-copy CY files into `new files/`, duplicate trees, or legacy `Isuzu/data/` paths.
 
@@ -63,7 +65,7 @@ All paths under `$env:ISZE_ROOT/01_data/`:
 
 ## Next actions
 
-- [x] Clear current verify **fails** in `_verification_report.md` — **confirmed clear 2026-07-27**: report generated 2026-07-26T20:05:36Z shows 106 pass / 0 warn / 0 fail
+- [x] Clear current verify **fails** in `_verification_report.md` — **confirmed clear 2026-07-27**: report generated 2026-07-26T20:05:36Z shows 106 pass / 0 warn / 0 fail. **Reconfirmed 2026-08-03** (report generated 2026-08-03T06:13:45Z): still 106/0/0; `_facts_drift_report.md` (same run) shows 0 drifted / 0 missing / 12 aligned.
 - [ ] Refresh `gpt_safe/` aggregates after green verify
 - [ ] Keep `DATA_MANIFEST.md` “Last refreshed” row current when CY files change
 - [ ] Jerome: confirm GitHub PAT revoked (Settings → Developer settings → PATs) — archive files in `90_archive/root_files/` still contain old token until scrubbed — **done 2026-06-13** (template + living-copy paths documented)

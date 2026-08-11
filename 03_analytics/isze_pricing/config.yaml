@@ -34,45 +34,41 @@ allocation:
   cap_top50: 0.05               # tighter ceiling inside a DB's top-50 basket
   floor: -0.12
 
-  # Target genuine premium over the reference price. NOT A FLAT RATE.
+  # Target genuine position vs the benchmark brand — IN PERCENT, then stored
+  # as ratio for the solver (ratio = 1 + pct/100). Always talk to Jerome in %.
   #
-  # A single premium across all categories repeats exactly the error the class
-  # factor makes: it prices a body panel and a NOx sensor the same way. A body
-  # panel competes with pattern parts and insurance assessors; a NOx sensor
-  # competes with nothing. They cannot share a target.
+  # Authority for brand → % ceiling:
+  #   iam_quality_premium_pct.yaml  (+ iam_brand_tiers.csv)
+  #     tier 4 OE/premium  → +30%
+  #     tier 3 mainstream  → +60%
+  #     tier 2 budget      → +150%
+  #     tier 1 no-name CN  → +250%
+  # Benchmark = highest-tier IAM brand on the PN (not the cheapest listing).
   #
-  # Two unknowns sit underneath this and both must be respected:
-  #   1. We do not know whether IML has already embedded a premium in BP_JPY,
-  #      and whether that varies by part type. Layering a flat ISZE premium on
-  #      top of an unknown IML one compounds two errors.
-  #   2. The right reference is a competitor OEM genuine price, not an IAM
-  #      price. IAM is the floor; OEM peer is the benchmark. We currently
-  #      measure only against IAM.
+  # FY27 list move is SEPARATE: allocation.target = +3% weighted. Do not mix.
   #
-  # So: per category, each with an explicit basis. A category whose basis is
-  # still 'placeholder' DOES NOT MOVE - see require_basis below. A number you
-  # have not benchmarked is not a target, it is a guess with a decimal point.
+  # Until PN-level brand ceilings are wired, category defaults stay placeholder
+  # (hold). Wiring uses iam_derived / oem_benchmark only.
   policy_premium:
-    default: {value: 1.40, basis: placeholder}
+    # value = 1 + pct/100  (internal). Comment states Jerome's %.
+    default: {value: 1.30, basis: placeholder, max_premium_pct: 30}  # +30% vs good brand
     by_category:
-      oil_filter:     {value: 1.40, basis: placeholder}
-      fuel_filter:    {value: 1.40, basis: placeholder}
-      air_filter:     {value: 1.40, basis: placeholder}
-      blower_filter:  {value: 1.40, basis: placeholder}
-      urea_filter:    {value: 1.40, basis: placeholder}
-      brake_pad:      {value: 1.40, basis: placeholder}
-      brake_rotor:    {value: 1.40, basis: placeholder}
-      brake_shoe:     {value: 1.40, basis: placeholder}
-      clutch_disc:    {value: 1.40, basis: placeholder}
-      clutch_kit:     {value: 1.40, basis: placeholder}
-      # Body is NOT in the 14 PMS categories and therefore not in the action
-      # map at all - yet it is where Israel has raised actual price complaints.
-      # Known blind spot. Do not price it from this engine until it is covered.
-      body_panel:     {value: 1.00, basis: excluded_blind_spot}
+      oil_filter:     {value: 1.30, basis: placeholder, max_premium_pct: 30}
+      fuel_filter:    {value: 1.30, basis: placeholder, max_premium_pct: 30}
+      air_filter:     {value: 1.30, basis: placeholder, max_premium_pct: 30}
+      blower_filter:  {value: 1.30, basis: placeholder, max_premium_pct: 30}
+      urea_filter:    {value: 1.30, basis: placeholder, max_premium_pct: 30}
+      brake_pad:      {value: 1.30, basis: placeholder, max_premium_pct: 30}
+      brake_rotor:    {value: 1.30, basis: placeholder, max_premium_pct: 30}
+      brake_shoe:     {value: 1.30, basis: placeholder, max_premium_pct: 30}
+      clutch_disc:    {value: 1.30, basis: placeholder, max_premium_pct: 30}
+      clutch_kit:     {value: 1.30, basis: placeholder, max_premium_pct: 30}
+      clutch_pressure_plate: {value: 1.30, basis: placeholder, max_premium_pct: 30}
+      # Body is NOT in the 14 PMS categories — Israel complaints blind spot.
+      body_panel:     {value: 1.00, basis: excluded_blind_spot, max_premium_pct: 0}
 
   # Which bases are trusted enough to move a price.
-  # 'placeholder' is deliberately absent: until a category is benchmarked
-  # against a competitor OEM, the engine holds it flat.
+  # 'placeholder' absent on purpose — no move until brand/% evidence is attached.
   require_basis: [oem_benchmark, iam_derived]
 
   # Evidence sufficient to VETO is a lower bar than evidence sufficient to ACT.
@@ -321,6 +317,22 @@ launch:
       captive: 1.00
       body: 1.00
       freeze_after_warranty: false
+
+# ---------------------------------------------------------------- optional paths
+# Override on CLI with --set paths.action_map=... etc.
+paths:
+  # Default also hardcoded in cli.py; keep in sync when moving the action map.
+  action_map: 02_dashboards/pricing/_build/pricing_action_map.json
+  # ITUK+UTI sell-out CY2025 response proxies (measure_kind=proxy|blocked).
+  # Consumed by alloc as a SOFT SIGNAL only (db_dlr_response.py):
+  #   - registers input hash + writes diagnostic table into the run folder
+  #   - joins exact (db, PMS cat) proxy beta / list-shock % onto alloc_detail
+  #   - flags adverse cross-section beta (< -0.5, powered) — never scales delta
+  # Price axis = ASP / list pass-through (lasting basis). Not dealer invoice.
+  # Do NOT feed beta into the solver until measure_kind=elasticity with n.
+  db_dlr_response: 01_data/00_derived/price_elasticity_db_dlr_ituk_uti.csv
+  oem_peer_basket: 03_analytics/isze_pricing/oem_peer_basket.csv
+  oem_peer_scrape_list: 03_analytics/isze_pricing/oem_peer_scrape_list.csv
 
 # ---------------------------------------------------------------- run logging
 runlog:
