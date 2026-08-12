@@ -414,7 +414,49 @@ h_recovered hours of chase/rework per slipped commitment  → MEASURE
 
 ---
 
-## 9. P4 — Account health scoring
+## 8.6 P3 dependencies on P2b (implicit commitments)
+
+Tasks 3.1–3.7 all require intent classification + implicit-commitment detection (P2b tasks 2b.3–2b.4). Until B1b (Cowork clearance) lands, P3 is blocked. P2a output can support daily digest *stubs* (volume count, routine acknowledgements of known-PN orders) but no intent-based routing.
+
+---
+
+## 9. P4 — Deterministic operational signals
+
+**Objective:** convert P2a tables (interaction_fact, commitment_fact, stakeholder_dim) into account-ops signals — response SLA, commitment tracking, churn risk — deployable immediately, with no model.
+
+**Output:** account_health.parquet (one row per DB + month). 8 deterministic metrics + alert routing.
+
+| Signal | Data source | Method | Ready now? |
+|---|---|---|---|
+| Response latency p50/p90 | interaction_fact | timestamp arithmetic, rolling 30d | ✅ yes |
+| Commitment met-rate | commitment_fact | status='met' / (met + missed), rolling 90d | ✅ yes |
+| Signal→order latency | interaction_fact + sales_fact | PN regex ts(mail) → order_date, rolling 90d | ✅ yes (join exists) |
+| Stakeholder churn % | stakeholder_dim | churn_flag aggregated per DB, rolling 90d | ✅ yes |
+| Escalation cadence | interaction_fact | threads with CC-depth ≥3, rolling 30d | ⚠️ cc_depth not extracted yet |
+| Topic entropy | interaction_fact | Shannon entropy of topic[], rolling 90d | ✅ yes |
+| Activity volume | interaction_fact | count per day, rolling 30d | ✅ yes |
+| Overdue commitments | commitment_fact | count(status='open' AND due_date < today) | ✅ yes |
+
+**Schema, methods, alert thresholds, build task list:** [`P4_DETERMINISTIC_SIGNALS.md`](P4_DETERMINISTIC_SIGNALS.md)
+
+**Blockers:** CC-depth extraction (P2a.9, trivial collector extension).
+
+**Effort:** 1.5 weeks (6–7 d dev + 1 d you: calibration).
+
+**When:** immediately after P2a, before B1b lands. Gives ops team a working baseline while waiting for model.
+
+| # | Task | Effort |
+|---|---|---|
+| 4.0 | Extract cc_depth from interaction_fact (collector P2a.9) | 0.5 d |
+| 4.1–4.8 | Implement signal calculators + alert router (see P4_DETERMINISTIC_SIGNALS.md) | 5 d |
+| 4.9 | Manual calibration on 6mo backfill (you: threshold tuning) | 1 d |
+| 4.10 | Dashboard / ops runbook integration | 1 d |
+
+**Exit criteria:** account_health.parquet shipping monthly, no false alerts from malformed data, top-3 accounts flagged monthly.
+
+---
+
+## 10. P4 — Account health scoring (predictive model)
 
 **Objective:** rank accounts for attention. Replaces "lead scoring", which has no referent here.
 
@@ -441,14 +483,14 @@ interaction: inbound_volume_delta_qoq, pricing_complaint_rate, sentiment_slope_2
 | 4.2 | Feature pipeline from existing derived files + P2 tables | 4 d |
 | 4.3 | Train / temporal backtest / calibration | 3 d |
 | 4.4 | SHAP + output contract + JSON schema | 2 d |
-| 4.5 | PRISM page: Account Cockpit + Portfolio Triage (§12) | 4 d |
+| 4.5 | PRISM page: Account Cockpit + Portfolio Triage (§13) | 4 d |
 | 4.6 | Band thresholds set by **capacity**, not by the model | 0.5 d |
 
 **Risk:** scores get treated as truth in a meeting. Mitigation: drivers + evidence mandatory on every display; band = "how many accounts can you actually work this month", not a probability cut-off.
 
 ---
 
-## 10. P5 — Forecasting
+## 11. P5 — Forecasting
 
 **Objective:** a reconciled, auditable demand forecast. First honest one, if no baseline exists.
 
@@ -478,7 +520,7 @@ KPI       : WAPE + bias, rolling-origin backtest, reported per horizon (1/3/6 mo
 
 ---
 
-## 11. P6 — Engagement playbooks
+## 12. P6 — Engagement playbooks
 
 **Objective:** systematise how each account is worked. **Renamed from "personality-driven" deliberately — the rename is the risk control.**
 
