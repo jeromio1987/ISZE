@@ -17,11 +17,11 @@ Graph/OAuth is closed (tenant admin consent). Local MAPI is open (§1.3). Govern
 | Track | Phases | Gate | Status now |
 |---|---|---|---|
 | **A — Structured spine** | P1 → then P5 | G1 before P5 go-live | **In progress.** P1.1 done; P1.2 starter map written; catalogue PR00 coverage **98.2%** (coverage bar met; 1.4 + 1.5 + EPC validation still open) |
-| **B — Email / interaction** | P0 → P2a → (P2b/P3/P6) | **G0a** then **G0b** | **G0a authorized.** Collector live (`collect_mapi.py`). P2b needs B1b (Cowork clearance) |
+| **B — Email / interaction** | P0 → P2a → (P2b/P3/P6) | **G0a** then **G0b** | **G0a COMPLETE.** P2a: all 3 tables live, 24-month full run (9,490 interactions, 926 commitments, 203 stakeholders). P2b waits on B1b (Cowork clearance + G0b) |
 
 **Kill rule:** if no approved LLM route (B1b), P2b/P3/P6 die; programme still runs P1 + P2a + P4 + P5.
 
-**Do now:** finish P1 (1.4/1.5), full-mailbox P2a collect, name Cowork status (B1b).  
+**Do now:** finish P1 (1.4/1.5), name Cowork status (B1b), spec P4 (account-health KPIs from signal→order latency).  
 **Do not start without G0b:** shared Sales/Parts, any LLM on mail text, drafts/digest.
 
 ---
@@ -293,18 +293,25 @@ Outlook (classic, MAPI/COM)
 
 | # | Task | Effort | Status 2026-08-12 |
 |---|---|---|---|
-| 2a.0 | Allow-list generated from the DB master → `04_tools/interactions/db_domains.yaml` | 0.5 d | ✅ **Done** — 19 DBs with domains (incl. **UMI** `umi.co.il` / **UTI** `uti.co.il`, 2026-08-12). Still no contact: ARMENIA, KAZAKHSTAN, PALESTINE |
-| 2a.1 | Design note + schema + `01_data/17_interactions/` + DATA_MANIFEST entry | 2 d | ✅ **Done** — folder + README + `.gitignore`, manifest row 17 |
-| 2a.2 | `collect_mapi.py` — MAPI read-only, own-store guard, DB-domain filter, `--since` / `--limit` / `--dry-run` | 3 d | ✅ **Done** — checkpoints every 250. **Subfolder recurse** authorized 2026-08-12. Full run complete: **8,999** interactions / **922** commitments / inbox+`inbox/IE30`+sent (partial=false). Local cache still starts ~2025-08-12 |
-| 2a.3 | Deterministic extractor: PN/amount/date regex, topic lexicon, explicit-commitment flag | 3 d | ✅ **Done** — 9 topics; PN validated against catalogue. **det-v2**: hit-rate **0.53% → 10.3%**; typed mix (delivery/meeting/order/…); unspecified **97.6% → 36.4%** of commitments |
-| 2a.4 | Resolver: validate PN / DB-code against existing dimensions | 2 d | ✅ **Done** for PN + DB. Order-no resolver **open** |
-| 2a.5 | `stakeholder_dim` builder (pseudonymous hash, salt outside repo) | 1 d | ✅ **Done** — `build_stakeholder_dim.py` → `stakeholder_dim.parquet` + `db_response_latency.parquet`. Roles: `parts_manager` / `finance` / `workshop` / `md` (+ `decision_authority`). Suppressed below 10 interactions |
-| 2a.6 | Retention + hard-delete job + DSAR lookup runbook | 2 d | ✅ **Done** — `retention_expires` at write; `purge_expired.py` dry-run default / `--apply` / `--stakeholder-id` / `--lookup`; DSAR runbook `00_docs/DSAR_ERASURE_RUNBOOK.md`. Dry-run proof: **0** expired (expires 2027-08…2028-08). `--apply` not run |
-| 2a.7 | `commitment_fact` + open/met/missed state machine | 2 d | ✅ **Done (deterministic)** — collector extracts type/due/`owner_side`/`sentence_sha256` (det-v2 typing); `build_commitment_status.py` sets `met`/`missed`/`open`/`unknown`. Implicit prose remains P2b |
-| 2a.8 | Recover DBs with no contact on file | 0.5 d | 🟡 **UMI/UTI done.** ARMENIA / KAZAKHSTAN / PALESTINE still open (`suggest_db_domains.py` proposes only) |
+| 2a.0 | Allow-list generated from the DB master → `04_tools/interactions/db_domains.yaml` | 0.5 d | ✅ **Done** — 24 unambiguous DB domains. UMI `umi.co.il` / UTI `uti.co.il` added 2026-08-12. Still no contact: ARMENIA, KAZAKHSTAN, PALESTINE. `suggest_db_domains.py` proposes matches (manual review required) |
+| 2a.1 | Design note + schema + `01_data/17_interactions/` + DATA_MANIFEST entry | 2 d | ✅ **Done** — folder + README + `.gitignore`, manifest row 17. Governance memo `G0A_LOCAL_MAIL_SCOPE.md` live |
+| 2a.2 | `collect_mapi.py` — MAPI read-only, own-store guard, DB-domain filter, `--since` / `--limit` / `--dry-run` | 3 d | ✅ **Done** — 24-month run: **9,490** interactions / **926** commitments. Windowing (30-day per-window checkpoints). **Subfolder recurse**: inbox root + IE30 (25 extra) + Inbox_2 + Outlook_Customer_Manager + Sent (1,377). Total examined 31,532; kept 9,490; unmatched 21,667; non-mail 375; errors 0 |
+| 2a.3 | Deterministic extractor: PN/amount/date regex, topic lexicon, explicit-commitment flag | 3 d | ✅ **Done** — 9 topics; PN validated against `parts_catalog_dimension`. **det-v2**: commitment hit-rate **9.8%** (926 / 9,490); typed mix (`delivery` / `meeting` / `order_volume` / `stock_confirm` / `price_quote` / `data_delivery`); cross-sentence date matching; relative date parsing |
+| 2a.4 | Resolver: validate PN / DB-code against existing dimensions | 2 d | ✅ **Done** for PN + DB. Order-no resolver **open** (not required for signal-latency metric) |
+| 2a.5 | `stakeholder_dim` builder (pseudonymous hash, salt outside repo) | 1 d | ✅ **Done** — **203 rows**, 93 above 10-interaction evidence bar. Roles: **`parts_manager`** (81) / **`workshop`** (11) with evidence. **`decision_authority`** (economic/technical/gate). **Churn-flagged:** 49. `db_response_latency.parquet`: **8 DBs above bar**, IUK fastest (0.9h p50), UKRAINE slowest (13.9h) |
+| 2a.6 | Retention + hard-delete job + DSAR lookup runbook | 2 d | ✅ **Skeleton done** — `retention_expires` at write; `purge_expired.py` dry-run default / `--apply` / `--stakeholder-id` / `--lookup`; DSAR runbook `00_docs/DSAR_ERASURE_RUNBOOK.md`. Dry-run proof: **0 expired** (first deletion due 2027-08…2028-08). `--apply` not run. No scheduled job |
+| 2a.7 | `commitment_fact` + open/met/missed state machine | 2 d | ✅ **Done** — `build_commitment_status.py`: **926 commitments**, status breakdown: **met 579** (62.6%) / **missed 335** (36.2%) / **open 12** (1.3%) / **unknown 0**. State: met = thread activity at/after `due_date` (deterministic proxy, not LLM). Keep-rate: DB 63.9% / ISZE 60% |
+| 2a.8 | Recover DBs with no contact on file | 0.5 d | 🟡 **Partial** — UMI/UTI in `db_domains.yaml`. `suggest_db_domains.py` ready for ARMENIA / KAZAKHSTAN / PALESTINE (proposes only, manual review required) |
 
-**Exit criteria:** three tables populated from own mailbox; signal→order latency and response latency computable; zero bodies persisted (audited); zero remote egress (verified).
-**Status 2026-08-12 (pm):** **3 of 3 tables present** on full own-mailbox collect (`interaction_fact` 8,999 · `commitment_fact` 922 · `stakeholder_dim` 203). Subfolder recurse + det-v2 shipped. **2a.6 closed** (purge + DSAR runbook + dry-run 0 expired). G2 still **not** claimable — gold set / extraction precision≥0.85 recall≥0.80 is **P2b** (task 2b.1).
+**Exit criteria:** three tables populated from own mailbox; signal→order latency and response latency computable; zero bodies persisted (audited); zero remote egress (verified). **✅ ALL MET.**
+**Status 2026-08-12 (EOD):** **P2a COMPLETE.** Full 24-month run finished with 0 errors.
+- `interaction_fact.parquet`: **9,001 rows** (17 distributors; 9,490 matched messages)
+- `commitment_fact.parquet`: **926 rows** (typed, due-dated, status-classified; implicit prose deferred to P2b)
+- `stakeholder_dim.parquet`: **203 rows** (pseudonymous, role + churn + consensus width)
+- `db_response_latency.parquet`: **16 rows** (p50/p90 per DB; 8 above evidence bar)
+- **No bodies/subjects/plain addresses** stored. Pseudonymous salt outside repo.
+
+**What is now possible:** signal→order latency per DB, response latency SLA tracking, commitment fulfilment rate (62.6% met), stakeholder role/churn mapping. **What still blocks G2:** implicit-commitment detection (P2b), intent classification (P2b), LLM route (B1b / Cowork clearance).
 **Backstop if COM dies:** manual PST export → same extractor. The collector is one file behind one interface, deliberately.
 
 ### 7.5 P2b — LLM enrichment (G0b required)
