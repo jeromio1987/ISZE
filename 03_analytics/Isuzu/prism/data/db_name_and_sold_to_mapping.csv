@@ -15,7 +15,7 @@ IUK,I.M. PARTS & SERVICE Limited,,United Kingdom,LCV,2574,,Active,D-Max only —
 KAZAKHSTAN,CBC-Trans LLP,,Kazakhstan,CV,2734,,Active,
 LUXEMBOURG,ISUZU BENELUX NV,,Luxembourg,CV+LCV,,BELGIUM,Excluded,"Near-zero volume, billed under Belgium"
 MALTA,GASANZAMMIT MOTORS LTD,,Malta,CV+LCV,1759,,Active,
-MIDI,MIDI EUROPE S.R.L.,,Italy,CV+LCV,,,Excluded,No SAP sold-to code — no usable ISZE sales data
+MIDI,MIDI EUROPE S.R.L.,,Italy,CV+LCV,,,Excluded,"No SAP sold-to code per Jerome (2026-08-11) — flag: full FY23-26 billing scan shows 6,635 lines under this name at code 88, worth a second look if that volume matters"
 NETHERLANDS,ISUZU BENELUX NV,,Netherlands,CV+LCV,,BELGIUM,Excluded,"Billed under Belgium, no separate sold-to code"
 NORWAY,RUTEBILEIERNES STANDARDISERING AS,,Norway,LCV,86,,Active,
 PALESTINE,KIMA LATEJARET AL MARKABAT CO,,Palestine,LCV,2372,,Active,
@@ -29,6 +29,5 @@ UMI,UNIVERSAL MOTORS ISRAEL LTD,,Israel,LCV,1797,,Active,D-Max only — separate
 UTI,UNIVERSAL TRUCKS ISRAEL LTD,,Israel,CV,1799,,Active,Trucks only — separate company from UMI
 IML_INTERNAL,ISUZU MOTORS LIMITED,,Japan,—,,,Excluded,"Parent company, internal transfers — not a distributor"
 RUSSIA_EXCLUDE,JSC ISUZU RUS,,Russia,—,,,Excluded,Zero sales
-FORLOG_EXCLUDE,Forlog NV,,,—,,,Excluded,"Micro account, not a distributor"
-UNKNOWN,,,,,373,,Unidentified,Not identified — 2 lines seen in billing
-UNKNOWN,,,,,2970,,Unidentified,Not identified — 1 line seen in billing
+FORLOG_EXCLUDE,Forlog NV,,,—,2970,,Excluded,"Micro account, not a distributor"
+ISUZU_INT_OPERATIONS,ISUZU MOTORS INT OPERATIONS,,,—,373,,Excluded,"Internal/HQ operations entity, not a country distributor — 1 line seen in billing"
