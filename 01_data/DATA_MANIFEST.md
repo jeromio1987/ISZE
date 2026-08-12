@@ -1,6 +1,6 @@
 # ISZE Data manifest — sort-by-topic map
 
-**Last updated:** 2026-08-11 (pricing history 2023–2025 + VPACC July action plan parquet) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
+**Last updated:** 2026-08-12 (IUK Monthly Demand → dealer_sales) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
 
 This is the **data map**. Each subject has a numbered folder under `01_data/` — drop new files into the matching one (§1). A small **wired working-set stays flat at root** because build scripts read it from there (§3).
 
@@ -80,8 +80,10 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 ### 05 · Dealer sell-out / sales-to-dealer → `05_Dealer_sellout/` + `12_raw/dealer_sales/`
 | File | Path | Flag |
 |------|------|------|
-| **Canonical raw (all DBs)** | `01_data/12_raw/dealer_sales/<DB>/` | ★ ITUK · UTI · **GREECE (Petros)** |
+| **Canonical raw (all DBs)** | `01_data/12_raw/dealer_sales/<DB>/` | ★ ITUK · **IUK** · UTI · **GREECE (Petros)** |
 | `_registry.yaml` · `DEALER_SELL_OUT.md` | `01_data/12_raw/dealer_sales/` | 📄 intake + canonical long schema |
+| `IUK_Monthly_Demand_2025_2026YTD_July.xlsx` | `01_data/12_raw/dealer_sales/IUK/` | ★ LCV D-Max network PN qty · CY2025 + CY2026 YTD Jul · ≠ ITUK |
+| `dealer_sellout_long_IUK_CY2025.csv` · `…_CY2026YTD.csv` | `01_data/00_derived/` | ⚙ normalized long (IUK adapter) |
 | `Petros_Parts_Sold_Qties_2025.xlsx` | `01_data/12_raw/dealer_sales/GREECE/` | ★ D-MAX qty CY2025 · flag `pn_newest_rollup` |
 | `dealer_sellout_long_GREECE_CY2025.csv` | `01_data/00_derived/` | ⚙ normalized long (Petros adapter) |
 | UTIPartSales_2025-* | `01_data/12_raw/dealer_sales/UTI/` | ⚙ sell-out pipeline |
@@ -163,6 +165,7 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | 14 | `14_dashboards/` | `isze_data.json`, `tender_data.json`, **`kosha/`** — alias junction `dashboards/` (§6) |
 | 15 | `15_gpt_safe/` | Small MD/CSV only — the **only** source for GPT uploads |
 | 16 | `16_exports/` | Ad-hoc exports |
+| 17 | `17_interactions/` | **G0a local mail facts** (derived only; gitignored). Collector: `04_tools/interactions/collect_mapi.py` |
 | 90 | `90_INBOX/` | **Drop zone** for all new files — sort per §1 (see §0) |
 | 91 | `91_build/` | One-off extract/build scripts (GPS v9, warranty extractors, BP loader) |
 | 92 | `92_archive/` | Deduped / superseded data files (general) |
@@ -233,6 +236,7 @@ See `05_memory/projects/sales-analytics-pipeline.md`.
 
 ## §8 — Migration log
 
+- **2026-08-12** — IUK `IUK Monthly Demand - July 2026 - Copy.xlsx` (unsorted root) → `12_raw/dealer_sales/IUK/IUK_Monthly_Demand_2025_2026YTD_July.xlsx`; registered in `_registry.yaml`; normalized → `00_derived/dealer_sellout_long_IUK_CY2025.csv` + `…_CY2026YTD.csv` (adapter `91_build/normalize_dealer_sellout_iuk.py`). **IUK ≠ ITUK.**
 - **2026-08-10** — Eucon 2023 Price Survey rawdata (UK OEM, ITUK OEM, UK IAM) → `01_Pricing/_raw/Eucon_PriceSurvey_*` + hard QA `_raw/Eucon_PriceSurvey_2023_QA.md` (crossrefs safe; prices list-not-street); **21** basket `peer_oe_pn` fills (`mapped_oe_pn`).
 - **2026-08-10** — Latest lists: `EXPORT_ZPR1` + `Price file 202610082026` → `_raw/EXPORT_ZPR1_20260810.xlsx` + `Price_file_PR00_IE40_20260810.xlsx`; derived `pricing_zpr1*.parquet` + `pricing_pr00_ie40.parquet`.
 - **2026-08-09** — Pricing drop (PRICE CD, Price file 2026_full, sim 5%, parts master, UTI final) → `01_Pricing/_raw/`; enquiry parquets in `00_derived/pricing_*.parquet`. See `01_Pricing/PRICING_DATA.md`.
