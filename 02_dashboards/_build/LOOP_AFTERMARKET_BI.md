@@ -1,25 +1,49 @@
-# Aftermarket BI — 10-minute verify loop
+﻿# Aftermarket BI Command Center — 10-minute SSR loop
 
-**Purpose:** Re-check SSR command center every 10 minutes; rebuild if hero/charts/table regress.
+## What it does
 
-**Loop tick prompt:** verify hero KPIs, bar-rows in network cards, top-50 table; `python 02_dashboards/_build/build_aftermarket_bi_command_center.py --all` if broken.
+Every **10 minutes** the background loop prints an `AGENT_LOOP_TICK_aftermarket_bi` line so the agent can re-run SSR smoke checks (hero KPIs, network chart cards, top-50 table) and rebuild if charts are empty.
 
-## Commands
+The **immediate** verify/build on loop start is separate; the first tick fires **600s after** the loop starts (no tick at T=0).
+
+## Rebuild (full stack)
 
 ```powershell
-cd C:\Users\jerom\Desktop\claude\ISZE
-python 02_dashboards\_build\verify_aftermarket_bi_command_center.py
-python 02_dashboards\_build\verify_tier_a_html_json.py
-python 02_dashboards\_build\build_aftermarket_bi_command_center.py --all
+Set-Location C:\Users\jerom\Desktop\claude\ISZE
+python 02_dashboards/_build/build_aftermarket_bi_command_center.py --all
 ```
 
-**Open:** `02_dashboards\sales\OPEN_Aftermarket_BI_Command_Center.cmd` · hard refresh **Ctrl+F5** if cached.
+Verify only:
+
+```powershell
+python 02_dashboards/_build/verify_aftermarket_bi_command_center.py
+python 02_dashboards/_build/verify_tier_a_html_json.py
+```
+
+Open dashboard:
+
+```powershell
+C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\sales\OPEN_Aftermarket_BI_Command_Center.cmd
+```
+
+## Start loop
+
+```powershell
+powershell -NoProfile -File C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\_build\run_loop_aftermarket_bi.ps1
+```
+
+PID is written to `02_dashboards/_build/.loop_aftermarket_bi.pid`.
 
 ## Stop loop
 
-Read PID: `02_dashboards/_build/.loop_aftermarket_bi.pid`  
-Kill: `Stop-Process -Id (Get-Content ...\.loop_aftermarket_bi.pid)` or tell agent **stop loop**.
+```powershell
+$pid = Get-Content C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\_build\.loop_aftermarket_bi.pid
+Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
+Remove-Item C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\_build\.loop_aftermarket_bi.pid -ErrorAction SilentlyContinue
+```
 
-## Root cause (2026-08-19 SSR fix)
+If the PID file is stale, find the process:
 
-Duplicate `let sortKey` / `let sortDir` in one script block → SyntaxError → entire JS dead → empty UI. Fix: build-time SSR (no JSON payload on command center).
+```powershell
+Get-CimInstance Win32_Process -Filter "Name='powershell.exe'" | Where-Object { $_.CommandLine -like '*run_loop_aftermarket_bi.ps1*' }
+```
