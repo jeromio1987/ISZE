@@ -20,6 +20,9 @@ reference:
   scheduled_ops: 00_docs/agent/NOTES.md
   ai_stack: 00_docs/agent/AI_STACK.md
   automation_register: 00_docs/AUTOMATION_REGISTER.md
+  # Career / agentic self sits outside ISZE — stub only
+  personal_bridge_stub: 00_docs/PERSONAL_BRIDGE.md
+  personal_bridge_canonical: ../docs/BRIDGE_PRIVATE_ISZE.md  # workspace root docs/
 
 roadmaps:
   hub: 00_docs/ISZE_ROADMAP.md
@@ -28,6 +31,7 @@ roadmaps:
   gps: 00_docs/roadmaps/gps.md
   tools: 00_docs/roadmaps/tools.md
   ai_sales_intelligence: 00_docs/roadmaps/ai_sales_intelligence.md
+  aim_prism_reinvention: 00_docs/roadmaps/aim_prism_reinvention.md
 
 memory:
   projects: 05_memory/projects/
@@ -50,6 +54,11 @@ data_spine:
   verify: 01_data/00_derived/_verification_report.json
   facts: FACTS.md
   dashboards: 01_data/14_dashboards/   # alias junction: 01_data/dashboards/ (load-bearing, keep)
+  os_data_map:
+    yaml: 00_docs/ISZE_OS_DATA_MAP.yaml
+    html: 02_dashboards/ops/ISZE_OS_Data_Map.html
+    rebuild: 02_dashboards/ops/build_os_data_map.py
+    open: 02_dashboards/ops/OPEN_ISZE_OS_Data_Map.cmd
 
 code_spine:
   prism: 03_analytics/Isuzu/prism/

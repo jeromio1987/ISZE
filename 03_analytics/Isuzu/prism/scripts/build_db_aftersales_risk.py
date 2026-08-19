@@ -1,10 +1,15 @@
 """Build per-distributor composite AFTERSALES-RISK ranking.
 
+PARKED 2026-08-18 — not a validated KPI. Face-valid 0–100 on a 44-PN file
+(PartsPool Autodoc DE/NO 2026-03-29, not Eucon 2023) plus year.max().
+Do not promote as the AIM-scoring replacement. Early Warning is the call list.
+The CSV may still be rebuilt for the PRISM ranking page (labelled unvalidated).
+
 Answers: "which customers carry the most aftersales risk?" by blending four
 per-DB signals into one weighted intensity index (0-100), latest year.
 
 Signals (each min-max normalised 0..1 across DBs; higher = more risk):
-  1. Eucon street-undercut exposure  — price level, channel-grossed (EXTERNAL walk-out)
+  1. Eucon undercut vs reference sell-out  — price level, channel-grossed (EXTERNAL walk-out)
   2. AIM scraper high-risk %          — direct aftermarket flag        (EXTERNAL)
   3. Contested BVP capture            — own genuine<->BVP crossref     (INTERNAL down-trade)
   4. VOR / urgent line share          — stocking-miss urgency proxy
@@ -12,9 +17,9 @@ Signals (each min-max normalised 0..1 across DBs; higher = more risk):
 PRICE LEVEL — we sit upstream in the circle. ISZE prices are IE40 list to the
 distributor. To compare apples-to-apples against aftermarket at the counter we
 gross up through the channel: distributor +40%, then dealer +27.5%
-  street genuine = list x 1.40 x 1.275 = x1.785
-Eucon undercut = aftermarket avg price < street genuine price. At list level only
-25/44 benchmarked PNs are undercut; at street level 40/44 are -- that channel
+  reference sell-out = list x 1.40 x 1.275 = x1.785
+Eucon undercut = aftermarket avg price < reference sell-out. At list level only
+25/44 benchmarked PNs are undercut; at reference sell-out 40/44 are -- that channel
 effect is the whole point of this view.
 
 NOTE: the composite is a weighted INTENSITY index, not a euro sum. Internal
@@ -98,7 +103,7 @@ def main() -> None:
     ).fillna(0.0)
     vor_share = vor_share.reset_index()[["distributor_code", "vor_urgent_share"]]
 
-    # ---- 4. Eucon street-undercut exposure, rolled up per DB ----------------
+    # ---- 4. Eucon undercut vs reference sell-out, rolled up per DB ----------------
     eu = pd.read_csv(derived / "eucon_price_gap.csv")
     eu["street_price"] = eu["ISZE_IE40_Price_EUR"] * STREET_FACTOR
     eu["street_undercut"] = eu["Avg_Competitor_EUR"] < eu["street_price"]

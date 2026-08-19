@@ -49,6 +49,13 @@ h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:normal;}
   padding:8px 16px;border-radius:9px;cursor:pointer;transition:all .25s;
 }
 #modebtn:hover{border-color:var(--terra-lit);color:var(--terra-lit);}
+#modes{display:flex;border:1px solid var(--card-line);border-radius:9px;overflow:hidden;flex-shrink:0;}
+#modes span,#modes a{
+  font:600 11.5px "Segoe UI",sans-serif;letter-spacing:.06em;text-transform:uppercase;
+  padding:8px 14px;text-decoration:none;color:var(--muted);
+}
+#modes .on{background:var(--terra);color:#fff;}
+#modes a:hover{color:var(--terra-lit);}
 kbd{font:600 10px "Segoe UI",sans-serif;color:var(--faint);border:1px solid var(--card-line);border-radius:4px;padding:1px 5px;margin-left:6px;}
 
 /* ─── stage ──────────────────────────────────────────────────────────── */

@@ -166,9 +166,9 @@ else:
 st.subheader("DI items the pipeline does not yet check")
 st.markdown(
     """
-- **DI-2** UIO v17 file lives in 3 places — no automated cross-check
+- **DI-2** Canonical UIO is **v19** (`06_uio/_CURRENT/`). Duplicate-path cross-check is still not automated.
 - **DI-7** Two parallel "Competitiveness" definitions (static HTML vs ISZE_Dashboard) — no cross-system check
-- **DI-8** AIM dashboard frozen at CY2025 — needs CY2026 refresh script
+- **DI-8** AIM CY2026 billing dashboard shipped 2026-07-02 (`sales/AIM_Dashboard_CY2026.html`). Country-pack vintage labels still need a rebuild/ship when asked.
 - **DI-9** `isze-tools` and `prism` don't share `sales_fact.parquet` — risk of dual price
 - **DI-11** Kosha plan tracker missing realistic trajectory line
 

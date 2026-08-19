@@ -16,6 +16,7 @@ Output: ks_results.csv  (incremental, resumes on restart)
 
 Usage:
     python ks_scraper.py [--top N] [--delay MIN MAX]
+    python ks_scraper.py --pn-file ks_umi_germany_filters_missing.csv [--delay MIN MAX]
 """
 
 import argparse
@@ -201,7 +202,22 @@ def summarise_group(products: list) -> dict:
 
 # ─── Main ──────────────────────────────────────────────────────────────────────
 
-def run(top_n: int, delay_min: float, delay_max: float):
+def load_pn_file(path: str):
+    """Bounded PN list (column PN). Extra columns optional — same names as top-N seed."""
+    import pandas as pd
+    df = pd.read_csv(path, dtype={"PN": str})
+    if "PN" not in df.columns:
+        sys.exit(f"ERROR: {path} has no PN column")
+    df["PN"] = df["PN"].astype(str).str.replace(r"\.0$", "", regex=True).str.zfill(10)
+    df = df[df["PN"].str.len() > 0].drop_duplicates("PN")
+    for col in ("Description", "PR00_EUR", "Rev_CY2025_EUR", "Qty_CY2025",
+                "Source", "Class", "AIM_Category"):
+        if col not in df.columns:
+            df[col] = ""
+    return df.reset_index(drop=True)
+
+
+def run(top_n: int, delay_min: float, delay_max: float, pn_file: str | None = None):
     try:
         import requests
         from bs4 import BeautifulSoup  # noqa – just verify installed
@@ -209,7 +225,11 @@ def run(top_n: int, delay_min: float, delay_max: float):
         sys.exit(f"❌  Missing package: {e}. Run: pip install requests beautifulsoup4")
 
     writer = _make_writer()
-    pn_df = load_top_pns(top_n, extra_columns=True)
+    if pn_file:
+        pn_df = load_pn_file(pn_file)
+        print(f"  PN file: {pn_file}  ({len(pn_df)} PNs)")
+    else:
+        pn_df = load_top_pns(top_n, extra_columns=True)
     done = writer.done_keys()
     pending = pn_df[~pn_df["PN"].isin(done)]
 
@@ -313,14 +333,20 @@ def run(top_n: int, delay_min: float, delay_max: float):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="KS International price scraper")
     parser.add_argument("--top",   type=int, default=300)
+    parser.add_argument("--pn-file", default=None,
+                        help="CSV with a PN column — scrape this list instead of top-N")
     parser.add_argument("--delay", type=float, nargs=2, default=[1, 3],
                         metavar=("MIN", "MAX"))
     args = parser.parse_args()
 
     print("=" * 60)
     print("  ISZE KS International Price Scraper")
-    print(f"  Top {args.top} PNs | delay {args.delay[0]}–{args.delay[1]}s")
+    if args.pn_file:
+        print(f"  PN file {args.pn_file} | delay {args.delay[0]}–{args.delay[1]}s")
+    else:
+        print(f"  Top {args.top} PNs | delay {args.delay[0]}–{args.delay[1]}s")
     print("  Scrapes both aftermarket AND genuine OEM prices")
     print("=" * 60 + "\n")
 
-    run(top_n=args.top, delay_min=args.delay[0], delay_max=args.delay[1])
+    run(top_n=args.top, delay_min=args.delay[0], delay_max=args.delay[1],
+        pn_file=args.pn_file)

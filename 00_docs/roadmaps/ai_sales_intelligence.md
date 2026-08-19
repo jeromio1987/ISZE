@@ -422,6 +422,8 @@ Tasks 3.1–3.7 all require intent classification + implicit-commitment detectio
 
 ## 9. P4 — Deterministic operational signals
 
+**Status 2026-08-18:** builder live (`04_tools/interactions/build_account_health.py` → gitignored `account_health.parquet`). Draft flags. **Not a KPI** until task 4.9. Escalation uses `n_cc` (P2a.9 collector change not required). Mail-to-order NULL after `sales_fact` ends 2026-03-31.
+
 **Objective:** convert P2a tables (interaction_fact, commitment_fact, stakeholder_dim) into account-ops signals — response SLA, commitment tracking, churn risk — deployable immediately, with no model.
 
 **Output:** account_health.parquet (one row per DB + month). 8 deterministic metrics + alert routing.
@@ -432,25 +434,25 @@ Tasks 3.1–3.7 all require intent classification + implicit-commitment detectio
 | Commitment met-rate | commitment_fact | status='met' / (met + missed), rolling 90d | ✅ yes |
 | Signal→order latency | interaction_fact + sales_fact | PN regex ts(mail) → order_date, rolling 90d | ✅ yes (join exists) |
 | Stakeholder churn % | stakeholder_dim | churn_flag aggregated per DB, rolling 90d | ✅ yes |
-| Escalation cadence | interaction_fact | threads with CC-depth ≥3, rolling 30d | ⚠️ cc_depth not extracted yet |
+| Escalation cadence | interaction_fact | max `n_cc` per thread ≥ 3, rolling 30d | ✅ yes (`n_cc` already collected) |
 | Topic entropy | interaction_fact | Shannon entropy of topic[], rolling 90d | ✅ yes |
 | Activity volume | interaction_fact | count per day, rolling 30d | ✅ yes |
-| Overdue commitments | commitment_fact | count(status='open' AND due_date < today) | ✅ yes |
+| Overdue commitments | commitment_fact | db-side missed with due_date in last 30d | ✅ yes |
 
 **Schema, methods, alert thresholds, build task list:** [`P4_DETERMINISTIC_SIGNALS.md`](P4_DETERMINISTIC_SIGNALS.md)
 
-**Blockers:** CC-depth extraction (P2a.9, trivial collector extension).
+**Blockers:** none for the parquet. P2a.9 collector change not required. Mail-to-order waits on a newer `sales_fact` (ends 2026-03-31). Task 4.9 (your calibration) before anyone uses the flags as a call list.
 
-**Effort:** 1.5 weeks (6–7 d dev + 1 d you: calibration).
+**Effort:** 1.5 weeks (6–7 d dev + 1 d you: calibration). Builder 4.1–4.8 done 2026-08-18; 4.9 still yours.
 
 **When:** immediately after P2a, before B1b lands. Gives ops team a working baseline while waiting for model.
 
 | # | Task | Effort |
 |---|---|---|
-| 4.0 | Extract cc_depth from interaction_fact (collector P2a.9) | 0.5 d |
-| 4.1–4.8 | Implement signal calculators + alert router (see P4_DETERMINISTIC_SIGNALS.md) | 5 d |
-| 4.9 | Manual calibration on 6mo backfill (you: threshold tuning) | 1 d |
-| 4.10 | Dashboard / ops runbook integration | 1 d |
+| 4.0 | Extract cc_depth — **skipped**; `n_cc` already on interaction_fact | done |
+| 4.1–4.8 | Signal calculators + alert router | **done 2026-08-18** |
+| 4.9 | Manual calibration on 6mo backfill (you: threshold tuning) | 1 d — **open** |
+| 4.10 | Dashboard / ops runbook integration | 1 d — after 4.9; no Mode A until you say ship |
 
 **Exit criteria:** account_health.parquet shipping monthly, no false alerts from malformed data, top-3 accounts flagged monthly.
 

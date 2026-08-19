@@ -188,8 +188,16 @@ def main():
     prior_paths: dict[str, Path | None] = {}
     for _, csv_name, _, _, _, _ in JOBS:
         csv_path = SCRIPT_DIR / csv_name
-        _snapshot_existing(csv_path, stamp)
-        prior_paths[csv_name] = _latest_prior_snapshot(csv_name, stamp)
+        # _snapshot_existing() copies today's *pre-refresh* file (i.e. the
+        # previous run's output) into _snapshots/{stamp}/ and returns that
+        # path — that IS the correct comparison baseline for this run, so use
+        # it directly. Previously this discarded that return value and called
+        # _latest_prior_snapshot() instead, which explicitly excludes any
+        # snapshot dated `stamp` (the one just written above) and so always
+        # fell back to the run before that — every comparison was one cycle
+        # further back than intended (fixed 2026-08-11, see
+        # manual_review_required.md 2026-08-09 Item 2).
+        prior_paths[csv_name] = _snapshot_existing(csv_path, stamp)
 
     for script, csv_name, _, _, needs_reset, timeout_s in JOBS:
         print(f"\n--- {script} ---")

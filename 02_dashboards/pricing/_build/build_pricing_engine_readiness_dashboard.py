@@ -28,7 +28,7 @@ BRAND_TIERS = [
     {"tier": 4, "label": "OE / premium IAM", "ceiling_pct": 30, "example": "Bosch, Delphi, Febi OE-tier"},
     {"tier": 3, "label": "Mainstream IAM", "ceiling_pct": 60, "example": "Solid mid brands"},
     {"tier": 2, "label": "Budget IAM", "ceiling_pct": 150, "example": "Value brands"},
-    {"tier": 1, "label": "No-name / CN", "ceiling_pct": 250, "example": "Lowest-quality street"},
+    {"tier": 1, "label": "No-name / CN", "ceiling_pct": 250, "example": "Lowest-quality brands"},
 ]
 
 CLASS_FACTORS = [

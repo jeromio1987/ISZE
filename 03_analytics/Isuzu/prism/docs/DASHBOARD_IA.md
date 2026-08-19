@@ -1,6 +1,7 @@
 # PRISM Dashboard IA — target information architecture
 
-**Date:** 2026-07-17 · **Status:** proposal on paper — no code changed
+**Date:** 2026-07-17 · **Status (2026-08-18):** phases 0–2 + Early Warning shipped; `capture_trajectory` partial-year bug **fixed**; Decision dual-writer **already landed in HEAD**. Phases 3–8 **not started — paused for sign-off** (scope has moved: Early Warning is its own nav, AIM pricing-risk axis retired 2026-07-17, three rendering surfaces still exist). Canonical shipped product: **Streamlit on 8503** — see §7.
+
 **Scope:** 19 pages under `prism/pages/` + `app.py` cockpit. Goal: ≤10 visible nav entries without losing a single insight. Portability rule: IA is path-neutral (everything reads `config.DERIVED_DIR`); `FACTS.md` stays the quote gate for any number leaving the app.
 
 ---
@@ -186,7 +187,7 @@ No new models (elasticity/attach untouched, only relocated). No hosting/auth ass
 
 ### Mechanism
 
-**`st.navigation` + `st.Page`** (Streamlit 1.55 installed; requirements already pin ≥1.36). Declaring navigation in `app.py` replaces the file-based `pages/` auto-sidebar entirely — visible entries, grouping, and hidden pages become code, and page files never need renaming for order. The entrypoint runs on every page load, so the shared frame (page config, CSS, beta banner, internal gate) hoists into `app.py` once; per-page `st.set_page_config` calls die (only offender: `18_Decision_Models.py:29`). `st.Page(url_path=…)` preserves bookmarked slugs for pages that keep their identity (GPS, PMS, BVP, UIO).
+**`st.navigation` + `st.Page`** (Streamlit 1.55 installed; requirements already pin ≥1.36). Declaring navigation in `app.py` replaces the file-based `pages/` auto-sidebar entirely — visible entries, grouping, and hidden pages become code, and page files never need renaming for order. The entrypoint runs on every page load, so the shared frame (page config, CSS, beta banner, internal gate) hoists into `app.py` once; per-page `st.set_page_config` calls die (Decision Models no longer calls it). `st.Page(url_path=…)` preserves bookmarked slugs for pages that keep their identity (GPS, PMS, BVP, UIO).
 
 **Internal gate**: `INTERNAL_MODE = os.getenv("PRISM_INTERNAL", "false").lower() == "true"` in `config.py`, cloning the `BETA_MODE` pattern (config.py:182). Default **off** → the app is MD-safe by default; internal entries (dealer leakage, attach, elasticity, demand-flow Sankey, aftermarket scrape) simply don't register in `st.navigation` / don't render as tabs. New launcher `run_prism_internal.ps1` sets the env var; existing `run_prism.ps1` stays the sanitized default.
 
@@ -198,21 +199,20 @@ No new models (elasticity/attach untouched, only relocated). No hosting/auth ass
 | 1 | Nav shell | ✅ **done** `a626249` | `app.py`: `st.navigation({section: [st.Page(...)]})` in the (now 10-entry, see §2) layout. Fixed the Decision-Models orphan | 0.5 |
 | — | **Early Warning** *(not in original plan — built out-of-band)* | ✅ **done** `d68cffa` | New top-nav entry, ahead of the Network Intelligence merge: `scripts/build_early_warning.py` + `pages/0_Early_Warning.py`. Ranks silence (`defection_alerts.csv`) × capture slope (recomputed, partial-year + level-gated) × VOR stress (`vor_seasonality.csv`) into one priority list, €307K exposed at last build. Supersedes NI tab 1 "Most exposed" (§4.2) and Decision → Defection (§4.3). Design + data-trap writeup: `docs/EARLY_WARNING_DESIGN.md` | 1 (unplanned) |
 | 2 | Extraction | ✅ **done** `d8fac81` | Render functions extracted to `modules/`: `strategic_charts.py`, `insights_charts.py`, `aim_review_charts.py`, `asp_charts.py`, `customer_risk_charts.py` (`15_Customer_Risk.py` 364→147 lines). Mechanical lift-and-shift, no visual changes | 1.5–2 |
-| 2b | **Decision trim (partial)** *(pulled forward from phase 6, alongside Early Warning)* | ⏳ **verified, blocked on commit** | Defection tab removed from `18_Decision_Models.py`, st.info pointer to Early Warning added. 5 tabs, 0 exceptions, smoke green. **Cannot commit yet** — the same file has an unrelated in-flight waterfall rework (`over_target_eur`) from another writer in the shared working tree; commit once that lands, or split the hunks | 0.2 (mostly done) |
-| **NEW** | **`capture_trajectory` partial-year fix** *(discovered building Early Warning — not in original scope)* | 🔄 **in progress** (background task, spawned 2026-07-17) | `modules/strategic_build.build_capture_trajectory()` regresses through the current partial year → 35 declining alerts, 29 of them (83%) artifacts (network median capture 2026 = 0.019 vs 0.094 in 2025; 0 real declines hidden when excluded). New `modules/year_coverage.py` (`latest_complete_year()` / `is_partial()`) has landed as shared infra; the actual fix inside `build_capture_trajectory()` has not yet. **Blast radius wider than the Strategic tab**: `modules/scorecard_pdf.py` and `modules/review_pack_pdf.py` both read `trend_slope_pp_per_year` / `alert_declining` straight from the CSV — the same 83% false-alarm rate is printing into the distributor scorecard and QBR review-pack PDFs today. Fixing the builder + re-running `scripts/build_strategic_contracts.py` fixes the PDFs for free; verify the fix targets the builder, not just the page render | 0.5 (in flight) |
-| 3 | Network Intelligence | ⏳ **not started** | New `pages/network_intelligence.py`: **7 tabs** (§4.2 — tab 1 dropped, absorbed by Early Warning) calling the phase-2 extracted fns; one shared sidebar scope. Deregister 5_Insights, 5_Strategic, 12_Offset, 7_AIM, 8_ASP, 16_Matrix; files → `_archive/`. **15_Customer_Risk is a partial deregister only**: its Ranking is superseded by Early Warning, but Threat map / Signal breakdown / Aftermarket scrape are real analyst views Early Warning does not cover — they need the Tools internal shelf (phase 7), not deletion | 1 |
-| 4 | Mix | ⏳ not started | `4_BVP.py`: drop tabs "PMS capture", "GPS / SPU", "AIM risk" (cross-link captions instead); new tab "DB mix split" = body of `13_DB_Parts_Mix.py` as a function; archive 13 | 0.5 |
-| 5 | ITUK hub | ⏳ not started | New `pages/ituk.py`: tabs = Story (4 sections of `11_ITUK_PMS_Story.py`) · PN audit (`6_ITUK_PMS_Audit.py` body) · Incentive (block from `3_PMS.py:684`) · *internal:* Dealer leakage + Attach (from `18_Decision_Models.py`). IML v7 €2.0M reconcile sentence surfaces in the visible "Recoverable €" tab | 1 |
-| 6 | Decision (remainder) | ⏳ **Defection done (see 2b)**, rest not started | Remove `st.set_page_config` (line 29 — still there); Elasticity render → internal shelf. Waterfall/Runway already MD-safe as-is | 0.3 (reduced — Defection already out) |
-| 7 | Tools | ⏳ not started | Tools nav section: Review Pack (+ "scorecard only" checkbox; retire `6_Scorecard.py`) · Tender Pipeline · Data Integrity · PMS Marketing Calendar (block from `3_PMS.py:751`) · *internal shelf page*: Demand-flow Sankey + Customer-Risk Threat map/Breakdown/Aftermarket scrape (see phase 3 note) + Elasticity | 1 |
-| 8 | Polish & verify | ⏳ not started | Export tabs → `st.download_button` (GPS, AIM — Customer Risk's is arguably now redundant with Early Warning's export). Migrate remaining `use_container_width=`. Update README/ARCHITECTURE/`dashboard_contracts.md`. AppTest parity sweep + real-browser render before calling it done | 0.5 |
+| 2b | **Decision trim (partial)** *(pulled forward from phase 6, alongside Early Warning)* | ✅ **done in HEAD** (2026-08-18 check) | Defection tab gone, Early Warning pointer in place, waterfall `over_target_eur` identity closed. Dual-writer block from 2026-07-17 is resolved on the folded-monorepo commit; no remaining conflict. Attach / Leakage / Elasticity gated behind PRISM_INTERNAL (2026-08-18). | 0.2 (closed) |
+| **NEW** | **`capture_trajectory` partial-year fix** *(discovered building Early Warning — not in original scope)* | ✅ **done 2026-08-18** | Builder fits complete years only (`year_coverage.is_partial`). Live re-measure: **33 declining alerts unguarded → 5 guarded; 28 artifacts; 0 real declines hidden.** CSV rebuilt; scorecard + review-pack PDFs inherit it. Tests: `tests/test_capture_trajectory.py`. | 0.5 |
+| 3 | Network Intelligence | ⏳ **not started — paused 2026-08-18, needs sign-off** | New `pages/network_intelligence.py`: **7 tabs** (§4.2 — tab 1 dropped, absorbed by Early Warning) calling the phase-2 extracted fns; one shared sidebar scope. Deregister 5_Insights, 5_Strategic, 12_Offset, 7_AIM, 8_ASP, 16_Matrix; files → `_archive/`. **15_Customer_Risk is a partial deregister only**: its Ranking is superseded by Early Warning, but Threat map / Signal breakdown / Aftermarket scrape are real analyst views Early Warning does not cover — they need the Tools internal shelf (phase 7), not deletion | 1 |
+| 4 | Mix | ⏳ not started — paused 2026-08-18, needs sign-off | `4_BVP.py`: drop tabs "PMS capture", "GPS / SPU", "AIM risk" (cross-link captions instead); new tab "DB mix split" = body of `13_DB_Parts_Mix.py` as a function; archive 13 | 0.5 |
+| 5 | ITUK hub | ⏳ not started — paused 2026-08-18, needs sign-off | New `pages/ituk.py`: tabs = Story (4 sections of `11_ITUK_PMS_Story.py`) · PN audit (`6_ITUK_PMS_Audit.py` body) · Incentive (block from `3_PMS.py:684`) · *internal:* Dealer leakage + Attach (from `18_Decision_Models.py`). IML €2.0M reconcile sentence surfaces in the visible "Recoverable €" tab | 1 |
+| 6 | Decision (remainder) | ✅ **done 2026-08-18** | Elasticity / Attach / Leakage hidden unless `PRISM_INTERNAL=true`. Launcher: `run_prism_internal.ps1`. Offset Demand-Flow and Customer Risk aftermarket scrape gated the same way. Waterfall/Runway stay on the default page. | 0.3 |
+| 7 | Tools | ⏳ not started — paused 2026-08-18, needs sign-off | Tools nav section: Review Pack (+ "scorecard only" checkbox; retire `6_Scorecard.py`) · Tender Pipeline · Data Integrity · PMS Marketing Calendar (block from `3_PMS.py:751`) · *internal shelf page*: Demand-flow Sankey + Customer-Risk Threat map/Breakdown/Aftermarket scrape (see phase 3 note) + Elasticity | 1 |
+| 8 | Polish & verify | ⏳ not started — paused 2026-08-18, needs sign-off | Export tabs → `st.download_button` (GPS, AIM — Customer Risk's is arguably now redundant with Early Warning's export). Migrate remaining `use_container_width=`. Update README/ARCHITECTURE/`dashboard_contracts.md`. AppTest parity sweep + real-browser render before calling it done | 0.5 |
 
-**Remaining ≈ 3.5–4 sessions** (phases 3–5, 6-remainder, 7–8) **+ the in-flight capture_trajectory fix**. Phases 0–2 plus the unplanned Early Warning delivered same-day; most of the perceived MD-facing value (nav fixed, one ranked risk list, Decision Models slimmed) already shipped.
+**Remaining:** internal tabs are gated (see **§8** item 1, done 2026-08-18). Phases 3–5 and 7–8 are an optional later tidy-up, not the default next work.
 
 ### Housekeeping blocking clean commits (not architectural, but on the critical path)
 
-- **Shared working tree, ≥4 concurrent writers** as of 2026-07-17 (this session, the extraction commits, the capture_trajectory background task, and whoever owns the uncommitted waterfall rework). `git status` carries unrelated in-flight changes (`config.py`, several `data/*.yaml`, deleted `mockups/*`, deleted `run-prism.ps1`) — not this roadmap's concern, but don't `git add -A` on this branch without reviewing the diff first.
-- `18_Decision_Models.py` specifically has two independent uncommitted changes stacked (Defection removal + the waterfall `over_target_eur` rework) — resolve by whoever owns the waterfall change committing first, then Decision's trim commits clean on top.
+- **Shared working tree as of 2026-07-17 is stale.** The Decision dual-writer (`18_Decision_Models.py` Defection removal + waterfall `over_target_eur`) is resolved in HEAD (folded-monorepo commit `8a35cc3`). The capture_trajectory background worktree is superseded by the 2026-08-18 builder fix. Still: don't `git add -A` without reviewing the ISZE-root dirty tree.
 
 ### Risks / gotchas
 
@@ -222,3 +222,45 @@ No new models (elasticity/attach untouched, only relocated). No hosting/auth ass
 - **Cache behaviour improves**: today 6+ pages each trigger `load_bvp_bundle()`; post-merge one page shares one cached bundle.
 - **Zero pipeline risk**: no build script or derived CSV changes anywhere in the plan.
 - **Portability**: everything routes through `config.py` (`paths.yaml` + FACTS.md root discovery) — no new absolute paths; survives the work-environment migration as-is.
+
+---
+
+## 7 · Canonical rendering surface (2026-08-18)
+
+Three surfaces exist. Only one is the shipped product.
+
+| Surface | What it is today | Used by Jerome? | Recommendation |
+|---|---|---|---|
+| **Streamlit** `run_prism.ps1` **:8503** | Live 10-section nav, Early Warning, GPS/PMS/BVP, scorecard/QBR PDFs, INTERNAL_MODE gate | **Yes — daily** | **Canonical shipped product.** All new views land here. |
+| **Dash** `dash_app/` **:8050** | Offset Insights charts already on Streamlit `12_Offset_Insights.py` | No evidence of daily use | **Freeze.** Do not add charts. Do not delete until phase 3 archives Offset; then delete or mark `_archive`. |
+| **Evidence.dev** `evidence-app/` | SQL-templated UIO→GPS→PMS prototype (`evidence-app/.devlog.txt` confirms it ran). Never shared outside the workspace. | No | **Freeze as a diagnostic prototype.** Do not maintain a second KPI spine. Keep the repo; do not point anyone at it. |
+
+**Tradeoff, stated plainly:** Streamlit is not the "diagnostic BI" architecture Evidence is aiming at (SQL-templated, distributable site). It is what is actually opened. Shipping a second product that nobody has seen, while the first one still has a live false-alarm bug (now fixed) and 20 destinations, is how the surface fragments. Evidence can be revisited if Jerome wants a shareable read-only site; that is a new project, not a silent dual-maintain.
+
+**Phases 3–8 are no longer the default next work.** They remain a valid later tidy-up. What to do instead: **§8**.
+
+**Wallet-share scorecard** (GPS + PMS + mailbox response latency): proposal only — see DECISIONS.md 2026-08-18. Do not build. Touches distributor commercial terms and is gated behind G0b for the mailbox file.
+
+---
+
+## 8 · What we actually do next (2026-08-18, plain English)
+
+The July 17 prompt asked for two big things: (A) collapse 20 pages / 3 apps into one product, (B) replace the flat service-interval with a fitted demand curve. **(B) failed the backtest. (A) is filing, not a new brain.**
+
+PRISM already answers the commercial questions: Early Warning = who to call this cycle; GPS / PMS / Mix / Decision waterfall = spend, capture, quality, wallet. Scorecards no longer print a fake decline cliff.
+
+| Do | What it is | Benefit | Don’t |
+|---|---|---|---|
+| **1. Hide internal tabs** | Leakage Sankey, Attach, Elasticity, Aftermarket scrape stay in the app but only when `PRISM_INTERNAL=true`. Done 2026-08-18. Launcher: run_prism_internal.ps1 (same window as usual PRISM; close the other one first). | You can open PRISM with a distributor in the room without Mode B charts on screen. Gated. | Leave them on Decision / Offset / Customer Risk for every user |
+| **2. Optional: kill duplicate tabs** | ✅ **done 2026-08-18.** Dropped Strategic Most exposed + Basket correlation, Insights BVP × Capture, BVP PMS/GPS/AIM tabs. Cross-links to Early Warning / AIM × GPS Matrix / PMS / GPS / AIM Review. Pages not merged. | Less hunting. Same numbers. | The 7-tab Network Intelligence rewrite (phases 3–8 as a block) |
+| **3. Freeze the other two apps** | Streamlit :8503 is the product. Dash :8050 and Evidence.dev: no new charts, no second KPI spine. | Agents stop “improving” apps you don’t open | Rebuild PRISM in Evidence |
+
+**Closed — do not reopen without new data**
+
+- Capture-trajectory partial-year bug (33 fake declining alerts → 5 real).
+- AIM pricing-risk as a decision surface (Prompt 1 null).
+- Fitted oil-filter hazard vs flat 0.5/1.0 (Prompt 2 null). Shipping a “fitted” λ would hide under-capture.
+
+**Not PRISM-nav, but worth more than the merge if you want better numbers:** ITUK brake 0.4 vs 0.8 (pending their data); air-filter 0.5 still provisional pending IML; LCV 15k vs 20k still blocked on which trucks have SCR.
+
+**Wallet-share scorecard / mailbox latency:** wait for your steer. It is a commercial instrument, not a dashboard tab.

@@ -79,6 +79,10 @@
 !01_data/00_derived/vpacc_*.parquet
 !01_data/00_derived/vpacc_*.meta.json
 
+# Interaction layer (G0a) — local derived mail facts; never commit content hashes at scale without review
+01_data/17_interactions/**
+!01_data/17_interactions/README.md
+
 # Giant regenerable CSVs (use sibling .parquet on clones; GitHub ~100MB hard limit)
 01_data/00_derived/pricing_pn_enquiry_active.csv
 01_data/00_derived/pricing_revision_cd_changed.csv

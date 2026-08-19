@@ -145,6 +145,56 @@ def aggregate_pn(df: pd.DataFrame, qty_col: str) -> pd.DataFrame:
     return g
 
 
+def sellout_long_path(derived_dir: Path, distributor_code: str, year: int) -> Path | None:
+    """Resolve canonical long CSV for a DB×year (CY full year preferred over YTD name)."""
+    code = str(distributor_code).strip().upper()
+    candidates = [
+        derived_dir / f"dealer_sellout_long_{code}_CY{year}.csv",
+        derived_dir / f"dealer_sellout_long_{code}_CY{year}YTD.csv",
+    ]
+    for p in candidates:
+        if p.exists():
+            return p
+    return None
+
+
+def discover_sellout_long_dists(derived_dir: Path, year: int) -> list[str]:
+    """Distributor codes that have a normalized long file for the calendar year."""
+    found: list[str] = []
+    for p in sorted(derived_dir.glob(f"dealer_sellout_long_*_CY{year}.csv")):
+        # dealer_sellout_long_IRELAND_CY2025.csv
+        stem = p.stem  # dealer_sellout_long_IRELAND_CY2025
+        mid = stem.removeprefix("dealer_sellout_long_").removesuffix(f"_CY{year}")
+        if mid and mid not in found:
+            found.append(mid)
+    return found
+
+
+def load_sellout_long_pn(
+    distributor_code: str,
+    year: int,
+    derived_dir: Path,
+) -> pd.DataFrame:
+    """Load canonical long sell-out → PN × qty_year (network aggregate)."""
+    path = sellout_long_path(derived_dir, distributor_code, year)
+    if path is None:
+        return pd.DataFrame(columns=["part_number", "qty_year"])
+    df = pd.read_csv(path, dtype={"part_number": str}, low_memory=False)
+    if df.empty or "part_number" not in df.columns or "qty" not in df.columns:
+        return pd.DataFrame(columns=["part_number", "qty_year"])
+    if "year" in df.columns:
+        df = df[pd.to_numeric(df["year"], errors="coerce") == year]
+    df = df.copy()
+    df["part_number"] = df["part_number"].map(normalize_pn)
+    df["qty"] = pd.to_numeric(df["qty"], errors="coerce").fillna(0)
+    df = df.dropna(subset=["part_number"])
+    return (
+        df.groupby("part_number", as_index=False)["qty"]
+        .sum()
+        .rename(columns={"qty": "qty_year"})
+    )
+
+
 def load_all_uti_snapshots() -> list[tuple[pd.DataFrame, dict[str, Any]]]:
     """Load every UTI file found (canonical + legacy Data/ names)."""
     seen: set[str] = set()

@@ -6,6 +6,133 @@
 
 ---
 
+## 2026-08-18 — P4 account-health parquet from P2a (draft flags, not a KPI)
+
+**Status:** Accepted — Jerome: yes please (next real build after internal-tab gate).
+
+**What changed.** `04_tools/interactions/build_account_health.py` (`p4-v1`) writes `01_data/17_interactions/account_health.parquet` (gitignored, own-mailbox). One row per DB × month, Aug 2025–Aug 2026. Alerts are NONE/AMBER/RED from the draft table in `P4_DETERMINISTIC_SIGNALS.md`, with P2a-style evidence bars (latency/churn/CC need n≥10; keep-rate n≥5). Not a 0–100. UMI and UTI stay separate. CC uses existing `n_cc` (no collector change). Mail-to-order is NULL after `sales_fact` ends (2026-03-31).
+
+**Latest snapshot (2026-08, partial through 12 Aug):** 10 RED / 6 AMBER / 1 NONE (Belgium — too thin to flag). Draft thresholds still fire on most of the book — that is why 4.9 (your calibration) is required before anyone treats this as a call list. Early Warning stays the sales call list.
+
+**Not shipped:** no PRISM page, no Mode A pack, no FACTS.md, no classifier change.
+
+---
+
+## 2026-08-18 — PRISM duplicate tabs dropped (cross-link, not merge)
+
+**Status:** Accepted — Jerome: start on the duplicate one.
+
+**What changed.** Did not merge 7 pages into Network Intelligence. Dropped only the overlapping tabs and pointed at the surviving view:
+
+- Strategic: Most exposed → Early Warning; Basket correlation parked (`basket_correlation.csv` still builds).
+- Insights: BVP × Capture → AIM × GPS Matrix.
+- BVP: PMS capture / GPS / SPU / AIM risk → PMS, GPS, AIM Review. Autodoc Class C moved to Catalog.
+
+**Still do not:** IA phases 3–8 as a block; Dash/Evidence; `pms_engine` frequencies.
+
+---
+
+## 2026-08-18 — PRISM internal tabs gated; `db_aftersales_risk` parked; competitor vintage on builders
+
+**Status:** Accepted — Jerome: proceed (roadmap item 1).
+
+**What changed.** Default PRISM (`run_prism.ps1`) no longer shows Attach, ITUK Leakage, Elasticity, Offset Demand-Flow, or Customer Risk aftermarket scrape. Those return only with `run_prism_internal.ps1` (`PRISM_INTERNAL=true`). Close the usual PRISM window first — same address. Customer Risk ranking stays visible but is labelled unvalidated; Early Warning is the call list. `build_db_aftersales_risk.py` parked in its docstring. Builder labels for `eucon_price_gap.csv` now say PartsPool Autodoc DE/NO **2026-03-29**, not Eucon 2023 (`position_engine.py`, `build_ledger.py` limitation, IAM quality-positioning builder). Country packs / live HTML not rebuilt.
+
+**Still do not:** P4 `account_health.parquet`; IA phases 3–8; wallet scorecard; KS scrape expand; fold 20 pages into 10; change `pms_engine` frequencies; new 0–100.
+
+---
+
+## 2026-08-18 — Replacement programme after AIM scoring (and PRISM pilots) failed
+
+**Status:** Accepted — Jerome: old way is wrong, set up a roadmap from the prompt.
+
+**What changed:** Prompt 1 null + Prompt 2 null/fixes are no longer an open “try another score.” They are a closed kill plus a sequenced replacement. Canonical file: `00_docs/roadmaps/aim_prism_reinvention.md`. Wired from `ISZE_ROADMAP.md`, `MAP_REGISTRY.yaml`, `MAPS.md`, `ROUTING.yaml` task `aim_prism_reinvention`. `gps.md` V3 scoring plan marked superseded.
+
+**Do instead (order):** (1) INTERNAL_MODE launcher so PRISM is safe with a distributor in the room; (2) P4 account-health from live P2a tables — G0b not required — this is “who went quiet,” not pricing-risk; (3) competitor prices at PN grain with honest vintages (PartsPool 2026-03-29 ≠ Eucon UK 2023; KS expand only with scrape OK); (4) Streamlit :8503 stays the product; IA phases 3–8 only on separate sign-off. Optional duplicate-tab trim, not a 7-tab rewrite.
+
+**Still do not:** new 0–100, promote `db_aftersales_risk`, change `pms_engine` frequencies off the oil-filter pilot, treat Auto365/TMC as PN indexes, splice J.D. Power/NADA/DataMac into a capture target, build the wallet-share scorecard without an explicit steer.
+
+**Not shipped:** no page, classifier, or FACTS.md change in this pass.
+
+---
+
+## 2026-08-18 — AIM pricing-risk ambition retired: no fitted candidate cleared backtest
+
+**Status:** Accepted as the finding of Prompt 1 (`00_docs/AIM_PRISM_REINVENTION_PROMPTS.md`). No live page shipped; `modules/aim_pn_classifier.py` not touched. Supersedes the *open question* left by 2026-07-17 (axis retired, scoring layer kept as context) with an outcome-validated null on a replacement model.
+
+**What the scoring layer actually is.** AIM classification (Category L1/L2/L3) works — residual unclassified revenue 1.6% / 1.8% (CY2024 / CY2025, `aim_classification_gap_report.md`). The pricing-risk layer does not. Parts Master Pricing Risk is almost entirely `"Below 2026 List"` (2,557) or `"OK"` (1,916); real flags are a handful of Margin Leakage / Class Distortion / Competitive Overpricing rows. PRISM rolls those through a **description join** into `aim_high_risk_pct`. CY2025 max among UIO-ok books is **0.0213** (Hungary); median **0.0089**; network still ~1% (€316k). The 0.12 gate from before 2026-07-17 still never fires. Strategic Score (mean 46.1) is a face-valid 0–100 and is not the matrix axis. This is a sparse hand label, not a statistically fit pricing-risk model.
+
+**Backtest (pre-registered).** Complete CY2023–2025 only; CY2026 excluded (partial). GPS tests drop Armenia / Kazakhstan / Palestine / Ukraine (no UIO). n = 18. Outcomes: GPS SPU and PMS **total** capture (Σ actual / Σ expected). Naive baselines: last year’s own outcome (persistence), train-median, Δ = 0. A candidate clears holdout (2024-lagged feature → 2025) only if Spearman |ρ| ≥ 0.47 with the hypothesized sign (higher feature → worse GPS/PMS), OLS MAE ≥10% better than the matching naive, and Spearman strictly better than lagged `aim_high_risk_pct`. Persistence already dominates: GPS ρ = **0.92**, PMS total ρ = **0.75**.
+
+| Candidate | 2025 GPS ρ | 2025 PMS total ρ | ΔGPS / ΔPMS ρ | Clears? |
+|-----------|-----------:|-----------------:|---------------|---------|
+| C1 — 2023 Eucon UK IAM workshop undercut (34 PNs, lagged € weights) | −0.44 (p=0.069) | −0.48 (p=0.044) | −0.09 / −0.06 | **No** — PMS level looks like a hit until lagged AIM is stronger (−0.57) and Δ is null. OLS vs median only +5.9%. |
+| C1b — lagged € share in those exposed PNs | −0.41 | −0.13 | −0.03 / −0.27 | **No** |
+| C2 — lagged BVP capture of contested demand (existing genuine/BVP split) | +0.23 | +0.17 | +0.08 / −0.14 | **No** (wrong sign vs “risk”). vs PMS *genuine* ρ = −0.53 is mix persistence, not a total-capture / GPS model; primary stays **total**. |
+| C3 — lagged commodity-contested € share (BVP-catalog PNs excluding Maintenance / safety L1 + Demand Type) | +0.23 | **+0.63** (p=0.005) | −0.23 / +0.04 | **No** — wrong sign: more contested mix associates with *higher* total capture (BVP counts in the numerator). |
+
+Lagged AIM high-risk vs 2025 PMS total is ρ = **−0.57** (p=0.014) but loses to persistence (0.75) and does not predict ΔPMS (ρ = −0.24, p=0.33). Same failure mode as 2026-07-17, restated as a continuous rank: it restates who already captures little, it does not forecast who will.
+
+**Competitor-file honesty (used as labelled, not as 2023).** `eucon_price_gap.csv` is PartsPool Autodoc DE/NO dated **2026-03-29** (44 PNs) — already flagged in `eucon_price_gap.meta.json` (csv left untouched). Contemporaneous Spearman vs 2025 GPS/PMS = −0.27 (n=17). KS International is PN-indexed (43 PNs, scraped 2026-08-10) but cannot forecast CY2025; contemporaneous vs PMS ρ = −0.58. Mekonomen: 7 PNs, **0** filter-role hits. Auto365: no OEM PN join (closed, `AUTO365_PN_JOIN.md`). sales_fact stays net-only (closed 2026-08-11).
+
+**Decision: formally retire AIM’s pricing-risk ambition as a decision surface.** Keep the classification layer. Keep `aim_high_risk_pct` as the **context column** already decided 2026-07-17 — do not re-fit a 0–100 onto `pages/16_AIM_GPS_Matrix.py` or `pages/7_AIM_Review.py`. “Who needs attention” at DB grain is GPS × PMS total capture (live) plus the P4 deterministic account-health spec (`00_docs/P4_DETERMINISTIC_SIGNALS.md`), which is a different already-specified approach. Do **not** promote `build_db_aftersales_risk.py` (another hand-weighted 0–100 on the mislabeled 44-PN file and `year.max()`). Competitor gaps stay on PN operating views with correct vintages. Fitted price *response* remains the deferred DB→DLR elasticity path.
+
+**Files:** `03_analytics/Isuzu/prism/scripts/backtest_aim_pricing_risk.py` (read-only analysis), `docs/AIM_PRICING_RISK_BACKTEST_2026-08-18.md` + `.json` + panel CSV. Classifier, FACTS.md, and Streamlit pages unchanged.
+
+---
+
+## 2026-08-18 — `capture_trajectory` partial-year guard: 33 declining alerts → 5 (0 real declines hidden)
+
+**Status:** Accepted — Prompt 2 of `00_docs/aim_prism_reinvention_prompts.md` (execute). Isolated correctness fix; FACTS.md not touched.
+
+**Finding (first logged 2026-07-17 in `docs/EARLY_WARNING_DESIGN.md`):** `modules/strategic_build.build_capture_trajectory()` regressed `capture_rate ~ year` over every year in `pms_capture_by_db_year.csv`, including the current **partial** year. Partial-year capture is a fraction of annual demand (CY2026 coverage **0.2466** as of this fix; network median was 0.019 vs 0.094 in 2025). The slope read that as a cliff. Early Warning already guarded its own recompute; the CSV, Strategic "Capture trend" tab, `scorecard_pdf.py`, and `review_pack_pdf.py` still consumed the contaminated `alert_declining` flag.
+
+**Fix:** fit slope / R² / `alert_declining` on complete years only (`modules/year_coverage.is_partial`). Partial-year actuals still emit (`is_projected=False`) so charts can show the truncated year; they do not enter the regression. Contract gate unchanged: `slope < -0.05` and `r2 > 0.5`. CSV rebuilt: `01_data/00_derived/capture_trajectory.csv`. Scorecard and QBR packs read that CSV — no PDF code change. Early Warning **still recomputes** locally because of its capture-level gate (latest complete-year capture ≤ 100%), which Contract 7 does not apply.
+
+**Verified on live `pms_capture_by_db_year.csv` (2026-08-18):** **33** unique distributor×category declining alerts with 2026 in the fit, **5** with it out. **28 artifacts; 0 real declines hidden.** Remaining five: IRELAND clutch_kit, ITUK brake_rotor, ROMANIA brake_rotor, ROMANIA clutch_kit, UTI clutch_kit. July 17 measurement was 35→6 / 29 artifacts — same shape, one month of data drift. Unit tests: `tests/test_capture_trajectory.py` (3 passed).
+
+**Does not change:** PMS expected-demand constants, FACTS.md oil-filter anchors, Early Warning ranking math.
+
+---
+
+## 2026-08-18 — PRISM canonical surface is Streamlit; IA phases 3–8 paused; oil-filter hazard null
+
+**Status:** Accepted as a decision + documented pilots — Prompt 2. Phases 3–8 of `docs/DASHBOARD_IA.md` are **not executed**; they need a separate OK.
+
+**1. Dual-writer on `pages/18_Decision_Models.py`.** The 2026-07-17 block (Defection-tab removal vs in-flight waterfall `over_target_eur`) is already resolved in HEAD (folded-monorepo commit). File has five tabs, Early Warning pointer, waterfall identity closed with `over_target_eur`. No remaining conflict to merge. Nav caption no longer advertises Defection. Attach / ITUK Leakage / Elasticity still render for every user — that is phase 6 remainder (`INTERNAL_MODE`), not done here.
+
+**2. Canonical shipped product: Streamlit (`run_prism.ps1`, port 8503).** Dash `:8050` duplicates Offset Insights already on `12_Offset_Insights.py` — freeze, do not add charts. Evidence.dev `evidence-app/` is a working SQL-templated prototype that has never been shared — freeze as diagnostic, do not maintain a second KPI spine. Tradeoff: Streamlit is what is opened daily; Evidence is the cleaner "diagnostic BI" architecture but is not a product until someone is pointed at it. Detail: `docs/DASHBOARD_IA.md` §7.
+
+**3. IA phases 3–8 paused.** Scope has moved since 2026-07-17 (Early Warning as own nav, AIM pricing-risk axis retired, this surface call). The 7-tab Network Intelligence merge is still the right IA; it is a 3.5–4 session nav rewrite with widget-key blast radius. Sign-off required before executing.
+
+**4. Oil-filter hazard-function pilot: null.** Fitted bucket intensities vs current `expected_qty`, rolling-origin holdout 2024 and 2025, complete years only. All-DB OLS beats MAE but recodes under-capture as lower frequency (LCV λ ~0.34–0.45 vs assumed 1.0) — shipping it would hide the gap. High-capture spec (capture ≥80%, the only identification that could be a frequency) **loses both folds** and overfits F-Series (λ ≈ 18 on n=3/8). No VIN-level sales, no telematics, UIO mix is a 2025E snapshot — closed constraints. **Do not change `pms_engine` frequencies.** Writeup: `docs/pilot_oil_filter_hazard.md`. Brake front/rear, `country_overrides`, and provisional air_filter 0.5 were not touched.
+
+**5. Wallet-share scorecard — proposal only, do not build.** A composite dealer/DB score (GPS SPU + PMS **total** capture + IDS where the network ran it + response latency from `01_data/17_interactions/db_response_latency.parquet` once G0b/shared-mailbox is cleared) is how other OEMs manage genuine-parts capture: a commercial scorecard, not a dashboard read. Structural sketch:
+
+- GPS: spend per unit vs the DB's own complete-year history (not an external J.D. Power / NADA / DataMac "healthy %" — those are three different metrics; none is an ISZE target).
+- PMS: **total** capture first (`line_type=total`); genuine share as a mix lens only.
+- IDS: country pack score vs country average, UTI≠UMI, only where that DB sat the round.
+- Latency: p50/p90 hours inbound→reply, mailbox scope gated — out of this task.
+- Do **not** turn this into distributor commercial terms without an explicit steer. Track B email/LLM (`00_docs/roadmaps/ai_sales_intelligence.md`) stays behind G0b.
+
+---
+
+## 2026-08-12 — UMI Sales Review: sold-to gate + Mode A QA (hooks/rules/skill)
+
+**Status:** Accepted.
+
+**Incident:** UMI Mode A nearly shipped on payer-name sales that blended UTI (1799) into UMI (1797) → fake commercial boom vs PBI −14%. Secondary failures: IBX pattern copy, SaTy Mode B jargon, PMS Best>100%, stale `_summary.json`, Shell 5500* buried, deep-dive qty column zeros.
+
+**Locks:**
+- `load_sales` filters `sold_to` when set; Apr+ prefer `q1fy2027_export_with_saty` by Sold_to.
+- PBI months must reconcile (~€2K) before Mode A narrative.
+- Never plot PMS Best when best >100%; no category exclude without Jerome OK.
+- Artefacts: `.cursor/rules/isze-db-sales-review.mdc`, skill `isze-db-sales-review`, hooks `db-sales-review-*.mjs`, retro `09_meetings/UMI_Sales_Review_2026/RETRO_2026-08-12_UTI_blend_and_ModeA_failures.md`.
+
+**Does not waive:** `isze-no-ship-without-ok.mdc` / UTI≠UMI / Mode A language.
+
+---
+
 ## 2026-08-11 — Year-matched PR00 realization: QA pending / not quotable
 
 **Status:** Accepted (provisional build only).

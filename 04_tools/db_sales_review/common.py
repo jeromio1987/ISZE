@@ -153,38 +153,78 @@ def load_sales(profile: dict) -> pd.DataFrame:
     economically negative; they are signed here so a rebate credit cannot read
     as a gain. Verified against net_value_gps_signed in the tagged extract.
 
-    CY2026 current window spanning past 31 Mar pulls Apr–Jun from
-    q1fy2027_billing_tagged.csv (same payer / Net value / credit convention).
+    CY2026 current window spanning past 31 Mar pulls Apr–Jun from the
+    reconciled `q1fy2027_export_with_saty.csv` when `sold_to` is set (PBI-aligned),
+    else `q1fy2027_billing_tagged.csv` by payer name.
+
+    Israel: payer name UNIVERSAL MOTORS ISRAEL LTD covers both UMI (1797) and
+    UTI (1799). Always filter `Sold-to pt` / `Sold_to` when profile.sold_to is set.
     """
     d = profile["defaults"]
     payer = profile["payer"]
+    sold_to = profile.get("sold_to")
+    sold_to_s = str(int(sold_to)) if sold_to is not None else None
     L25, L26 = d["window_label_prior"], d["window_label_current"]
     w25, w26 = d["window_prior"], d["window_current"]
     frames = []
 
-    usecols_cur = ["Billing Date", "Payer.1", "Material", "Material Number",
+    def _filter_sold_to(df: pd.DataFrame, col: str) -> pd.DataFrame:
+        if not sold_to_s or col not in df.columns:
+            return df
+        st = df[col].astype(str).str.replace(r"\.0$", "", regex=True).str.strip()
+        return df[st == sold_to_s].copy()
+
+    usecols_cur = ["Billing Date", "Payer.1", "Sold-to pt", "Material", "Material Number",
                    "Billed Quantity", "Net value", "SaTy", "BillT"]
 
     def _slice_cur(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
         out = df[df["Payer.1"] == payer].copy()
+        out = _filter_sold_to(out, "Sold-to pt")
         out["Billing Date"] = _dates(out["Billing Date"])
         out = out[(out["Billing Date"] >= start) & (out["Billing Date"] < end)]
         out["period"] = L26
         return out.rename(columns={"Billed Quantity": "qty", "Net value": "net_eur"})
 
-    # CY current: Jan–Mar from cy2026_q1, Apr+ from q1fy2027 tagged extract
+    # CY current: Jan–Mar from cy2026_q1 (payer + sold_to)
     cur_q1 = pd.read_csv(DERIVED / "cy2026_q1.csv", low_memory=False, usecols=usecols_cur)
     frames.append(_slice_cur(cur_q1, w26[0], min(w26[1], "2026-04-01")))
 
+    # Apr+: prefer reconciled export (Sold_to) when profile has sold_to — matches PBI.
+    # Tagged extract by payer alone blends UMI 1797 + UTI 1799 under the same payer name.
     if w26[1] > "2026-04-01":
-        cur_q2 = pd.read_csv(DERIVED / "q1fy2027_billing_tagged.csv", low_memory=False,
-                             usecols=usecols_cur)
-        frames.append(_slice_cur(cur_q2, max(w26[0], "2026-04-01"), w26[1]))
+        start_q2 = max(w26[0], "2026-04-01")
+        used_export = False
+        exp_path = DERIVED / "q1fy2027_export_with_saty.csv"
+        if sold_to_s and exp_path.exists():
+            exp = pd.read_csv(
+                exp_path, low_memory=False,
+                usecols=["Billing Date", "Sold_to", "Material", "Material_Number",
+                         "Quantity", "EUR_Amount", "SaTy", "BillT", "Payer_name"],
+            )
+            exp = exp[exp["Sold_to"].astype(str).str.replace(r"\.0$", "", regex=True) == sold_to_s].copy()
+            if not exp.empty:
+                exp["Billing Date"] = _dates(exp["Billing Date"])
+                exp = exp[(exp["Billing Date"] >= start_q2) & (exp["Billing Date"] < w26[1])]
+                if not exp.empty:
+                    exp = exp.rename(columns={
+                        "Quantity": "qty",
+                        "EUR_Amount": "net_eur",
+                        "Material_Number": "Material Number",
+                    })
+                    exp["period"] = L26
+                    exp["Payer.1"] = exp.get("Payer_name", payer)
+                    frames.append(exp)
+                    used_export = True
+        if not used_export:
+            cur_q2 = pd.read_csv(
+                DERIVED / "q1fy2027_billing_tagged.csv", low_memory=False, usecols=usecols_cur)
+            frames.append(_slice_cur(cur_q2, start_q2, w26[1]))
 
     pri = pd.read_csv(DERIVED / "cy2025_raw.csv", low_memory=False,
-                      usecols=["Billing Date", "DB", "Material", "Material Number",
+                      usecols=["Billing Date", "DB", "Sold-to pt", "Material", "Material Number",
                                "Billed Quantity", "Net value", "SaTy"])
     pri = pri[pri["DB"] == payer].copy()
+    pri = _filter_sold_to(pri, "Sold-to pt")
     pri["Billing Date"] = _dates(pri["Billing Date"])
     pri = pri[(pri["Billing Date"] >= w25[0]) & (pri["Billing Date"] < w25[1])]
     pri["period"] = L25
@@ -193,7 +233,11 @@ def load_sales(profile: dict) -> pd.DataFrame:
 
     all_ = pd.concat(frames, ignore_index=True)
     if all_.empty:
-        raise SystemExit(f"No billing rows found for payer '{payer}'. Check the profile.")
+        raise SystemExit(
+            f"No billing rows found for payer '{payer}'"
+            + (f" sold_to={sold_to_s}" if sold_to_s else "")
+            + ". Check the profile."
+        )
 
     all_["sap_desc"] = all_["Material Number"].astype(str).str.strip()
     all_["Material"] = all_["Material"].map(norm_pn)

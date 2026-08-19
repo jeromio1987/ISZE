@@ -1,7 +1,9 @@
 """
 PRISM — Strategic Views
 
-All 15 strategic dashboards from docs/dashboard_contracts.md.
+All 13 remaining dashboards from docs/dashboard_contracts.md.
+Most-exposed (Contract 4) lives on Early Warning. Basket correlation
+(Contract 8) is parked — CSV still built, tab dropped 2026-08-18.
 """
 
 from __future__ import annotations
@@ -17,9 +19,9 @@ if str(APP_DIR) not in sys.path:
     sys.path.insert(0, str(APP_DIR))
 
 from config import DERIVED_DIR  # noqa: E402
+from modules.ui_links import page_link  # noqa: E402
 from modules.bvp_dashboard_data import load_bvp_bundle  # noqa: E402
 from modules.strategic_charts import (  # noqa: E402
-    render_basket_correlation,
     render_capture_recovery,
     render_capture_trajectory,
     render_geographic_risk,
@@ -30,7 +32,6 @@ from modules.strategic_charts import (  # noqa: E402
     render_revenue_concentration,
     render_revenue_waterfall,
     render_substitution_timeline,
-    render_triple_threat,
     render_vor_airfreight,
     render_vor_profile,
     render_vor_seasonality,
@@ -65,6 +66,16 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+page_link(
+    "pages/0_Early_Warning.py",
+    "Early Warning — who to call this cycle",
+    "🚨",
+)
+st.caption(
+    "Triple-threat scatter is not on this page — Early Warning is the call list. "
+    "Basket correlation is parked (`basket_correlation.csv` still builds)."
+)
+
 
 @st.cache_data(show_spinner="Loading strategic bundle…")
 def _load():
@@ -90,7 +101,6 @@ with st.sidebar:
     latest_y = max(year_sel) if year_sel else (max(years_avail) if years_avail else None)
 
 (
-    tab_triple,
     tab_opp,
     tab_pct,
     tab_gold,
@@ -101,13 +111,11 @@ with st.sidebar:
     tab_gini,
     tab_water,
     tab_prem,
-    tab_basket,
     tab_sub,
     tab_geo,
     tab_rec,
 ) = st.tabs(
     [
-        "Most exposed (triple threat)",
         "PMS opportunity (€)",
         "Network ranking",
         "Airfreight cost (emergency)",
@@ -118,15 +126,11 @@ with st.sidebar:
         "Revenue concentration",
         "Revenue bridge",
         "Price vs aftermarket",
-        "Basket correlation",
         "Aftermarket substitution",
         "Geographic risk",
         "Capture recovery (€)",
     ]
 )
-
-with tab_triple:
-    render_triple_threat(bundle, year_sel, highlight, latest_y)
 
 with tab_opp:
     render_pms_opportunity(bundle.get("pms_opportunity"), year_sel, highlight, latest_y)
@@ -157,9 +161,6 @@ with tab_water:
 
 with tab_prem:
     render_price_premium(bundle.get("price_premium"), year_sel, highlight, latest_y)
-
-with tab_basket:
-    render_basket_correlation(bundle.get("basket_correlation"), year_sel, highlight, latest_y)
 
 with tab_sub:
     render_substitution_timeline(bundle.get("substitution_timeline"), year_sel, highlight)

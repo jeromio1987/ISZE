@@ -1,0 +1,20 @@
+---
+description: Pricing language — never say "street" / "street fills" to Jerome or in Mode A UI
+globs: 02_dashboards/pricing/**,02_dashboards/sales/**,01_data/01_Pricing/**,03_analytics/isze_pricing/**
+alwaysApply: true
+---
+
+# Pricing language — no "street"
+
+Jerome asked to **stop saying "street fills"** (and avoid "street" as the working label).
+
+| Forbidden in chat + Mode A UI | Say instead |
+|---|---|
+| street / street fills / street € | **OEM peer retail** / **dealer sell-out price** / **reference sell-out** |
+| street index | **price index** (shop ÷ reference sell-out) |
+| undercut street | **below our reference sell-out** |
+| fill the street | **get OEM peer retail prices** / **complete peer price coverage** |
+
+**Reference sell-out €** = PR00 × 1.40 × 1.275 (= ×1.785). Hover/footnote OK.
+
+JSON / code field names (`peer_street_eur`, `street_index`) may stay for pipeline compatibility — **spoken and written labels to Jerome and in dashboards must not say street**.

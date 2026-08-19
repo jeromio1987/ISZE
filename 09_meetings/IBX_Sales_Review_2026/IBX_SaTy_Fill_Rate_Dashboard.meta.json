@@ -1,0 +1,220 @@
+{
+  "db": "IBX",
+  "display": "IBX (Benelux)",
+  "built_utc": "2026-08-12T11:34:23Z",
+  "mode": "A",
+  "saty": {
+    "title": "Order type mix over time (SaTy)",
+    "subtitle": "Share of billed \u20ac by order type \u2014 stock (SOR) vs urgent (VOR). Coded lines only.",
+    "months": [
+      {
+        "ym": "2025-07",
+        "label": "Jul 2025",
+        "sor_pct": 66.7,
+        "vor_pct": 33.3,
+        "rush_pct": 0.0,
+        "coded_eur": 249586.88,
+        "source": "sales_fact.parquet"
+      },
+      {
+        "ym": "2025-08",
+        "label": "Aug 2025",
+        "sor_pct": 44.1,
+        "vor_pct": 55.9,
+        "rush_pct": 0.0,
+        "coded_eur": 108282.5,
+        "source": "sales_fact.parquet"
+      },
+      {
+        "ym": "2025-09",
+        "label": "Sep 2025",
+        "sor_pct": 51.1,
+        "vor_pct": 48.9,
+        "rush_pct": 0.0,
+        "coded_eur": 227466.36,
+        "source": "sales_fact.parquet"
+      },
+      {
+        "ym": "2025-10",
+        "label": "Oct 2025",
+        "sor_pct": 35.5,
+        "vor_pct": 64.5,
+        "rush_pct": 0.0,
+        "coded_eur": 132700.38,
+        "source": "sales_fact.parquet"
+      },
+      {
+        "ym": "2025-11",
+        "label": "Nov 2025",
+        "sor_pct": 54.4,
+        "vor_pct": 45.6,
+        "rush_pct": 0.0,
+        "coded_eur": 192208.5,
+        "source": "sales_fact.parquet"
+      },
+      {
+        "ym": "2025-12",
+        "label": "Dec 2025",
+        "sor_pct": 48.4,
+        "vor_pct": 51.6,
+        "rush_pct": 0.0,
+        "coded_eur": 151056.44,
+        "source": "sales_fact.parquet"
+      },
+      {
+        "ym": "2026-01",
+        "label": "Jan 2026",
+        "sor_pct": 46.7,
+        "vor_pct": 53.3,
+        "rush_pct": 0.0,
+        "coded_eur": 226003.83,
+        "source": "sales_fact.parquet"
+      },
+      {
+        "ym": "2026-02",
+        "label": "Feb 2026",
+        "sor_pct": 64.4,
+        "vor_pct": 35.6,
+        "rush_pct": 0.0,
+        "coded_eur": 248331.66,
+        "source": "sales_fact.parquet"
+      },
+      {
+        "ym": "2026-03",
+        "label": "Mar 2026",
+        "sor_pct": 73.4,
+        "vor_pct": 26.6,
+        "rush_pct": 0.0,
+        "coded_eur": 296832.57,
+        "source": "sales_fact.parquet"
+      },
+      {
+        "ym": "2026-04",
+        "label": "Apr 2026",
+        "sor_pct": 15.6,
+        "vor_pct": 84.4,
+        "rush_pct": 0.0,
+        "coded_eur": 91651.7,
+        "source": "q1fy2027_export_with_saty.csv"
+      },
+      {
+        "ym": "2026-05",
+        "label": "May 2026",
+        "sor_pct": 50.8,
+        "vor_pct": 49.2,
+        "rush_pct": 0.0,
+        "coded_eur": 140492.82,
+        "source": "q1fy2027_export_with_saty.csv"
+      },
+      {
+        "ym": "2026-06",
+        "label": "Jun 2026",
+        "sor_pct": 63.7,
+        "vor_pct": 36.3,
+        "rush_pct": 0.0,
+        "coded_eur": 231365.05,
+        "source": "q1fy2027_export_with_saty.csv"
+      }
+    ],
+    "sources": [
+      {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\sales_fact.parquet",
+        "window": "Jul 2025 \u2013 Mar 2026",
+        "filter": "sold_to 90 \u00b7 coded SaTy SOR/VOR/RUSH/SVOR/PRD"
+      },
+      {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\q1fy2027_export_with_saty.csv",
+        "window": "Apr 2026 \u2013 Jun 2026",
+        "filter": "Sold_to 90 \u00b7 coded SaTy"
+      }
+    ],
+    "note": "Jul 2026 SaTy not yet in the reconciled Apr+ billing export. Customer satisfaction (KPI Master) is N/A for IBX \u2014 SaTy here is order type."
+  },
+  "fill_rate": {
+    "title": "Individual Fill Rate",
+    "subtitle": "IBX \u00b7 Jul 2025 \u2013 Jul 2026",
+    "months": [
+      {
+        "ym": "2025-07",
+        "label": "Jul 2025",
+        "pct": 86
+      },
+      {
+        "ym": "2025-08",
+        "label": "Aug 2025",
+        "pct": 91
+      },
+      {
+        "ym": "2025-09",
+        "label": "Sep 2025",
+        "pct": 89
+      },
+      {
+        "ym": "2025-10",
+        "label": "Oct 2025",
+        "pct": 89
+      },
+      {
+        "ym": "2025-11",
+        "label": "Nov 2025",
+        "pct": 91
+      },
+      {
+        "ym": "2025-12",
+        "label": "Dec 2025",
+        "pct": 85
+      },
+      {
+        "ym": "2026-01",
+        "label": "Jan 2026",
+        "pct": 94
+      },
+      {
+        "ym": "2026-02",
+        "label": "Feb 2026",
+        "pct": 91
+      },
+      {
+        "ym": "2026-03",
+        "label": "Mar 2026",
+        "pct": 87
+      },
+      {
+        "ym": "2026-04",
+        "label": "Apr 2026",
+        "pct": 86
+      },
+      {
+        "ym": "2026-05",
+        "label": "May 2026",
+        "pct": 88
+      },
+      {
+        "ym": "2026-06",
+        "label": "Jun 2026",
+        "pct": 91
+      },
+      {
+        "ym": "2026-07",
+        "label": "Jul 2026",
+        "pct": 93
+      }
+    ],
+    "kpi_master_gap": {
+      "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\11_planning\\KPI Master File june 2026.xlsx",
+      "metric": "First Fill Rate \u00b7 IBX (BENELUX)",
+      "status": "N/D from Apr 2025 onward in KPI Master File june 2026.xlsx",
+      "fill_cur_target_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\11_planning\\ISZE_DB_KPI_Targets_FY2627_v1.xlsx",
+      "fill_cur_snapshot": 0.85,
+      "fill_target": 0.9,
+      "dashboard_fill_source": "Digitized labeled points from Jerome Individual Fill Rate chart (Jul 2025\u2013Jul 2026), attached 2026-08-12"
+    },
+    "style_note": "Chart style aligned to Jerome Individual Fill Rate visual."
+  },
+  "ids": {
+    "ibx_country": "Belgium (Benelux); Netherlands is a separate IDS bucket",
+    "v14_midi": "MIDI Country Packs v1.4 = FR/IT/ES/CH; Belgium has its own IDS_2026_Belgium_v1.4 pack (corrected network averages)",
+    "attachment": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\IDS_2026_Belgium_v1.4\\IDS_2026_Belgium_v1.4.zip",
+    "version": "v1.4 Belgium pack (corrected network averages; IBX-relevant)"
+  }
+}

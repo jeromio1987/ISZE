@@ -1,0 +1,45 @@
+---
+description: DB Sales Review Mode A — hard QA gates after UMI 2026-08-12 retro (UTI blend, PBI align, PMS Best, SaTy)
+alwaysApply: true
+---
+
+# DB Sales Review / Mode A decks (always on)
+
+Triggered by: `04_tools/db_sales_review/`, `09_meetings/*_Sales_Review_*`, `build_deck.py`, `build_full_deck.py`, `build_parts_analysis.py`.
+
+Skill (checklist + gate script): `.cursor/skills/isze-db-sales-review/SKILL.md`  
+Retro log: `09_meetings/UMI_Sales_Review_2026/RETRO_2026-08-12_UTI_blend_and_ModeA_failures.md`
+
+## Hard failures (do not claim done)
+
+1. **Sold-to when set** — `load_sales` / analysis MUST filter `sold_to` (UMI **1797** ≠ UTI **1799**). Payer name alone under `UNIVERSAL MOTORS ISRAEL LTD` blends both. Never blend UTI into UMI / IDS Israel.
+2. **PBI first when profile has `pbi:`** — Mode A opens on official Power BI cut. Do not lead with CY H1 commercial boom while PBI is −YoY.
+3. **Align before narrating** — If PBI months exist, prove Apr–Jun (or stated window) SAP vs PBI within ~€2K **before** writing takeaways. Do not invent “PBI ≠ SAP” bridges until that reconcile fails for a real definition gap.
+4. **No category exclude** unless Jerome explicitly asked for that DB. Copying IBX “exclude Body” to another DB is forbidden.
+5. **PMS Best** — Never plot “Best market” when best **> 100%**. Skip the series.
+6. **SaTy on GPS (Mode A)** — Customer line = coded SOR/VOR(/RUSH) shares only. No “sold-to”, “export”, “SaTy-blank %”, or internal file names on the slide.
+7. **Hand-written % in `saty_note`** — Must match live coded mix within ~2 pt, or leave blank.
+8. **Data change ⇒ re-run analysis** — After loader/filter fixes: `build_parts_analysis` **before** `build_full_deck`. Never rebuild PPTX on stale `_summary.json`.
+9. **Shell oils** — `5500*` = Shell lubricants (not bumper “SHELL;”, not Isuzu gear oil). Do not hide in UNCLASSIFIED without a Mode A callout.
+10. **Orders on PBI** — Omit order bars/takeaways when `deck.skip_pbi_orders: true` (or Jerome says skip orders).
+
+## Rebuild order (mandatory)
+
+```
+preflight (optional) → build_parts_analysis.py --db X
+→ qa gate (skill script) → build_full_deck.py --db X
+→ spot-check PBI / movers / PMS / GPS SaTy / EXT TARGET col I
+```
+
+## Mode A language — for the audience
+
+Follow `isze-external-iml-language.mdc` + skill `presentation.md`.
+
+- Write for the **distributor in the room**, not for agents.
+- No pipeline / SAP / export / sold-to / blank-% / file-name jargon on slides or takeaways.
+- Prefer plain business words: stock vs urgent, official sales, on hold, dealer score vs country average.
+- If a bullet needs a glossary to land, it fails Mode A — rewrite before claiming done.
+
+## Authority
+
+Still gated by `isze-no-ship-without-ok.mdc` (rebuild/ship only on explicit ask).

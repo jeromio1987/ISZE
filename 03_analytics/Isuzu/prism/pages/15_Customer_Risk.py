@@ -1,9 +1,9 @@
 """PRISM - Customer Aftersales-Risk Ranking.
 
-Which distributors carry the most aftersales risk? Blends four per-DB signals
-(Eucon street-undercut price exposure, AIM scraper high-risk %, contested BVP
-capture, VOR/urgent share) into one weighted intensity index. Re-weight live in
-the sidebar. Source: db_aftersales_risk.csv (build_db_aftersales_risk.py).
+Parked 2026-08-18: unvalidated hand-weighted 0–100. Not a KPI. Early Warning
+is the call list. Aftermarket scrape stays behind the internal launcher.
+
+Source: db_aftersales_risk.csv (build_db_aftersales_risk.py).
 """
 
 from __future__ import annotations
@@ -18,7 +18,8 @@ APP_DIR = Path(__file__).resolve().parent.parent
 if str(APP_DIR) not in sys.path:
     sys.path.insert(0, str(APP_DIR))
 
-from config import DERIVED_DIR  # noqa: E402
+from config import DERIVED_DIR, is_internal_mode  # noqa: E402
+from modules.internal_gate import CUSTOMER_RISK_SCRAPE, customer_risk_tab_labels  # noqa: E402
 from modules.customer_risk_charts import (  # noqa: E402
     DEFAULT_W,
     STREET_FACTOR,
@@ -49,8 +50,9 @@ st.markdown(
     """
 <div class="cr-hero">
   <h1>Customer Aftersales-Risk Ranking</h1>
-  <p>Which customers are most likely to defect to aftermarket — ranked by price exposure, competitive pressure and urgency.
-  Prices grossed to street (list ×1.40 ×1.275 = ×1.785), since ISZE sits upstream.</p>
+  <p>Four aftersales signals, ranked. This is <b>not</b> a validated forecast —
+  Early Warning is the call list. Prices compared at reference sell-out
+  (list ×1.40 ×1.275 = ×1.785).</p>
 </div>
 """,
     unsafe_allow_html=True,
@@ -75,13 +77,21 @@ if df.empty:
 
 year = int(df["year"].iloc[0])
 
+st.warning(
+    "This 0–100 ranking is an unvalidated hand-weighted rubric. It is not a KPI "
+    "and it did not beat last year on a holdout. Use **Early Warning** for who "
+    "to call this cycle."
+)
+
 # --------------------------------------------------------------------------
 # Sidebar -- live re-weighting (recomputes score from stored n_* components)
 # --------------------------------------------------------------------------
 with st.sidebar:
     st.markdown(f"### Risk weights - {year}")
     st.caption("Re-weight the four signals. They are renormalised to sum to 1.")
-    w_eucon = st.slider("Eucon price undercut (street)", 0.0, 1.0, DEFAULT_W["eucon"], 0.05)
+    w_eucon = st.slider(
+        "Aftermarket undercut vs reference sell-out", 0.0, 1.0, DEFAULT_W["eucon"], 0.05
+    )
     w_aim = st.slider("AIM scraper high-risk %", 0.0, 1.0, DEFAULT_W["aim"], 0.05)
     w_contested = st.slider("Contested BVP capture", 0.0, 1.0, DEFAULT_W["contested"], 0.05)
     w_vor = st.slider("VOR / urgent share", 0.0, 1.0, DEFAULT_W["vor"], 0.05)
@@ -114,17 +124,18 @@ st.caption(
     "as euros - euro columns are shown separately for context."
 )
 
-tab_rank, tab_break, tab_map, tab_scrape, tab_export = st.tabs(
-    ["Ranking", "Signal breakdown", "Threat map", "Aftermarket scrape", "Export"]
-)
+internal = is_internal_mode()
+tab_names = customer_risk_tab_labels(internal=internal)
+tabs = st.tabs(tab_names)
+tab_by_name = dict(zip(tab_names, tabs))
 
-with tab_rank:
+with tab_by_name["Ranking"]:
     render_ranking_table(df)
 
-with tab_break:
+with tab_by_name["Signal breakdown"]:
     render_signal_breakdown(df)
 
-with tab_map:
+with tab_by_name["Threat map"]:
     render_threat_map(df)
 
 @st.cache_data(show_spinner="Loading scrape...")
@@ -132,10 +143,14 @@ def _load_eucon() -> pd.DataFrame:
     return load_eucon_scrape(DERIVED_DIR, STREET_FACTOR)
 
 
-with tab_scrape:
-    render_aftermarket_scrape(_load_eucon(), STREET_FACTOR)
+if CUSTOMER_RISK_SCRAPE in tab_by_name:
+    with tab_by_name[CUSTOMER_RISK_SCRAPE]:
+        st.caption(
+            "PartsPool Autodoc DE/NO dated 29 Mar 2026 — not the 2023 UK workshop survey."
+        )
+        render_aftermarket_scrape(_load_eucon(), STREET_FACTOR)
 
-with tab_export:
+with tab_by_name["Export"]:
     st.caption(f"Weights applied: {', '.join(f'{k} {v:.0%}' for k, v in W.items())}")
     st.dataframe(df, width="stretch", hide_index=True)
     st.download_button(
@@ -144,4 +159,7 @@ with tab_export:
         file_name=f"ISZE_Customer_Risk_{year}.csv", mime="text/csv",
     )
 
-st.caption(f"Customer Risk - {year} - source: db_aftersales_risk.csv - street factor x{STREET_FACTOR}")
+st.caption(
+    f"Customer Risk - {year} - source: db_aftersales_risk.csv - "
+    f"reference sell-out factor ×{STREET_FACTOR} (unvalidated ranking)"
+)

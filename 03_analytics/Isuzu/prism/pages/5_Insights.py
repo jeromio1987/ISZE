@@ -26,7 +26,6 @@ from modules.sales_loader import load_prism_sales
 from modules.gps_engine import calculate_multiyear_trends
 from modules.pms_engine import classify_pms_sales
 from modules.insights_charts import (
-    render_bvp_capture_quadrant,
     render_capture_trajectory,
     render_displacement_severity,
     render_growth_decomposition,
@@ -35,6 +34,7 @@ from modules.insights_charts import (
     render_pareto,
     render_seasonal_pattern,
 )
+from modules.ui_links import page_link
 
 # ---------------------------------------------------------------------------
 # CSS and beta banner
@@ -71,6 +71,15 @@ st.markdown("""
   <p>The signals that only surface when genuine-parts spend, service capture and aftermarket pressure are read together.</p>
 </div>
 """, unsafe_allow_html=True)
+
+page_link(
+    "pages/16_AIM_GPS_Matrix.py",
+    "AIM × GPS Matrix — spend vs capture quadrant",
+    "📐",
+)
+st.caption(
+    "The BVP × Capture quadrant is not repeated here. The surviving quadrant is AIM × GPS Matrix."
+)
 
 # ---------------------------------------------------------------------------
 # Data loading (all cached)
@@ -179,9 +188,8 @@ with st.sidebar:
 # Tabs
 # ---------------------------------------------------------------------------
 
-tab_opp, tab_quad, tab_growth, tab_traj, tab_bench, tab_disp, tab_seas, tab_pareto = st.tabs([
+tab_opp, tab_growth, tab_traj, tab_bench, tab_disp, tab_seas, tab_pareto = st.tabs([
     "🎯 Opportunity Matrix",
-    "📐 BVP × Capture",
     "📈 Growth Decomp",
     "🔥 Trajectory",
     "🏆 Benchmark",
@@ -192,9 +200,6 @@ tab_opp, tab_quad, tab_growth, tab_traj, tab_bench, tab_disp, tab_seas, tab_pare
 
 with tab_opp:
     render_opportunity_matrix(pms_all, aim_db, mix_sub, dist_sel, dists_avail, latest_y)
-
-with tab_quad:
-    render_bvp_capture_quadrant(pms_all, mix_sub, dist_sel, dists_avail, latest_y)
 
 with tab_growth:
     if not sales_ok:

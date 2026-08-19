@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 import numpy as np
 import pandas as pd
 from scipy import stats
@@ -209,19 +211,51 @@ def build_vor_profile() -> pd.DataFrame:
 
 # ── Contract 7 ──────────────────────────────────────────────────────────────
 
-def build_capture_trajectory() -> pd.DataFrame:
-    pms = pd.read_csv(PMS_CAPTURE_BY_DB_CSV)
+def build_capture_trajectory(
+    pms: pd.DataFrame | None = None,
+    *,
+    is_partial_year: Callable[[int], bool] | None = None,
+) -> pd.DataFrame:
+    """Capture-rate trend per distributor × PMS category (Contract 7).
+
+    Fits slope / R² / ``alert_declining`` on **complete billing years only**.
+    A partial current year is a fraction of annual demand and reads as a cliff
+    if included — measured 2026-07-17: 35 declining alerts with the partial
+    year in, 6 with it out (29/35 artifacts; 0 real declines hidden). See
+    ``docs/EARLY_WARNING_DESIGN.md`` finding 1 and ``modules/year_coverage.py``.
+
+    Partial-year actuals are still emitted (``is_projected=False``) so charts
+    can show the truncated year; they do not enter the regression. Contract
+    gate is unchanged: ``slope < -0.05`` and ``r2 > 0.5``.
+    """
+    from modules.year_coverage import is_partial as _default_is_partial
+
+    if is_partial_year is None:
+        is_partial_year = _default_is_partial
+    if pms is None:
+        pms = pd.read_csv(PMS_CAPTURE_BY_DB_CSV)
+
     hist = pms[pms["line_type"] == "total"].copy()
+    hist["year"] = hist["year"].astype(int)
     rows = []
     for (dist, cat), g in hist.groupby(["distributor_code", "pms_category"]):
         g = g.sort_values("year")
-        if len(g) < 2:
-            continue
-        years = g["year"].astype(float).values
-        caps = g["capture_rate"].astype(float).values
-        slope, intercept, r, _, _ = stats.linregress(years, caps)
-        r2 = r**2
-        alert = slope < -0.05 and r2 > 0.5
+        fit = g[~g["year"].map(lambda y: bool(is_partial_year(int(y))))]
+        slope = intercept = r2 = float("nan")
+        alert = False
+        can_project = False
+        if len(fit) >= 2:
+            years = fit["year"].astype(float).values
+            caps = fit["capture_rate"].astype(float).values
+            if np.isfinite(caps).all() and float(np.nanmax(caps)) > 0:
+                slope, intercept, r, _, _ = stats.linregress(years, caps)
+                r2 = float(r) ** 2
+                alert = bool(slope < -0.05 and r2 > 0.5)
+                can_project = True
+
+        slope_out = round(float(slope), 4) if np.isfinite(slope) else np.nan
+        r2_out = round(float(r2), 4) if np.isfinite(r2) else np.nan
+
         for _, r0 in g.iterrows():
             rows.append(
                 {
@@ -230,26 +264,26 @@ def build_capture_trajectory() -> pd.DataFrame:
                     "year": int(r0["year"]),
                     "capture_rate": round(float(r0["capture_rate"]), 4),
                     "is_projected": False,
-                    "trend_slope_pp_per_year": round(float(slope), 4),
-                    "trend_r2": round(float(r2), 4),
+                    "trend_slope_pp_per_year": slope_out,
+                    "trend_r2": r2_out,
                     "alert_declining": alert,
                 }
             )
-        for py in (2026, 2027):
-            pred = intercept + slope * py
-            pred = float(np.clip(pred, 0.0, 1.05))
-            rows.append(
-                {
-                    "distributor_code": dist,
-                    "pms_category": cat,
-                    "year": py,
-                    "capture_rate": round(pred, 4),
-                    "is_projected": True,
-                    "trend_slope_pp_per_year": round(float(slope), 4),
-                    "trend_r2": round(float(r2), 4),
-                    "alert_declining": alert,
-                }
-            )
+        if can_project:
+            for py in (2026, 2027):
+                pred = float(np.clip(intercept + slope * py, 0.0, 1.05))
+                rows.append(
+                    {
+                        "distributor_code": dist,
+                        "pms_category": cat,
+                        "year": py,
+                        "capture_rate": round(pred, 4),
+                        "is_projected": True,
+                        "trend_slope_pp_per_year": slope_out,
+                        "trend_r2": r2_out,
+                        "alert_declining": alert,
+                    }
+                )
     return pd.DataFrame(rows)
 
 

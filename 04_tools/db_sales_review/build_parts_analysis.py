@@ -120,6 +120,9 @@ def aggregate_pn(gross, catalog, desc_by_newest, itc, L25, L26):
             .drop(columns=["part_number"], errors="ignore")
             .rename(columns={"pr00_group": "Category", "pms_category": "PMS Category"}))
     wide.loc[wide["Category"].isna() | (wide["Category"] == ""), "Category"] = "UNCLASSIFIED"
+    # Shell lubricants = 5500* (UMI/UTI convention) — do not leave in UNCLASSIFIED.
+    shell_mask = wide["Material"].astype(str).str.startswith("5500")
+    wide.loc[shell_mask, "Category"] = "Shell lubricants"
     wide["Delta_EUR"] = wide[f"net_eur|{L26}"] - wide[f"net_eur|{L25}"]
     wide["Delta_Qty"] = wide[f"qty|{L26}"] - wide[f"qty|{L25}"]
     wide["Delta_Pct"] = np.where(wide[f"net_eur|{L25}"] != 0,
@@ -707,8 +710,8 @@ def build(dbkey: str):
         if not cat_name or cat_name in {"UNCLASSIFIED"}:
             continue
         d_sub = g[g["Delta_EUR"] < 0].nsmallest(5, "Delta_EUR")
-        # Incremental growers only (prior > 0), same rule as overall growth list
-        g_sub = g[(g[f"net_eur|{L25}"] > 0) & (g["Delta_EUR"] > 0)].nlargest(5, "Delta_EUR")
+        # Prefer largest EUR growers including first-seen-in-window (prior=0).
+        g_sub = g[g["Delta_EUR"] > 0].nlargest(5, "Delta_EUR")
         if d_sub.empty and g_sub.empty:
             continue
         category_pn_drivers[str(cat_name)] = {

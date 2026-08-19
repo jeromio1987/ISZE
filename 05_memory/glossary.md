@@ -1,5 +1,9 @@
 # Full Glossary — ISZE Parts Sales
 
+_Last validated: 2026-08-17 (content cross-checked against pricing-basket-2026.md and all in-scope
+05_memory/projects/*.md files during this pass — no discrepancies found; missing field itself was
+flagged in memory_review_W30_2026.txt through memory_review_W34_2026.txt)_
+
 ## Companies & Entities
 | Term | Full Name | Notes |
 |------|-----------|-------|

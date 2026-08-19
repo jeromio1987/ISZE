@@ -3,7 +3,11 @@
 **Last updated:** 2026-08-11 (PR00+ZPR1 dated history 2023–2025; current lists 2026)  
 **Spec:** `00_docs/ISZE_Pricing_Spec_v1.md` · **Engine:** `03_analytics/isze_pricing/`  
 **Readiness dashboard (Mode A):** `02_dashboards/pricing/ISZE_Pricing_Engine_Readiness_Dashboard.html`  
-**Dashboard data:** `01_data/14_dashboards/pricing_engine_readiness.json` · **Mode B notes:** `01_data/01_Pricing/PRICING_ENGINE_VS_CLASS_NOTES_B.md`
+**Dashboard data:** `01_data/14_dashboards/pricing_engine_readiness.json` · **Mode B notes:** `01_data/01_Pricing/PRICING_ENGINE_VS_CLASS_NOTES_B.md`  
+**Part-Groups Sales Explorer (slim hub):** `02_dashboards/sales/ISZE_PartGroups_Sales_Explorer.html` — tabs Sales / Competitive (Eucon) / GPS+PMS / Aftermarket scrape. Data: `01_data/14_dashboards/partgroups_explorer/` (+ sibling `02_dashboards/sales/partgroups_data/`). Rebuild: `python 02_dashboards/sales/_build/build_partgroups_sales_explorer.py`. HTML shell budget &lt;500 KB.
+
+- **GPS+PMS:** Ireland UIO forced to V20 carpark (`UIO_carpark_for_GPS_recalc_2026-07-30.csv` = 2,161 CY2025); pack 3,056 rejected; prefer capture-vs-wallet. PMS &gt;100% flagged as expected-qty basis breach.
+- **Aftermarket (A+B):** tab in explorer + dedicated `02_dashboards/pricing/ISZE_Aftermarket_Live_Pricing_Dashboard.html` (**self-contained — scrape JSON embedded at build**; double-click OK). Explorer needs `02_dashboards/sales/OPEN_PartGroups_Explorer.cmd` (never file:// for multi-MB JSON).
 
 Raw Excel stays immutable under `_raw/`. Dated vintages also live in `history/` (see `history/README.md`). Day-to-day work uses the **parquet** tables in `01_data/00_derived/`.
 
@@ -53,6 +57,22 @@ Keep using `Price_file_2026_full.xlsx` for **class + BP_JPY + FOB**.
 
 **Billing:** gross / SPA / condition columns **will not** be on `sales_fact` (Jerome 2026-08-11) — net-only for ISZE analytics.  
 **Do not quote** list-to-pocket leakage until year-matched PR00↔billing joins are validated.
+
+---
+
+## 2026-08-12 — Spec C4 gap PR00 pull return (Jerome)
+
+| Source | Landed as | Derived |
+|--------|-----------|---------|
+| `Downloads/SAP_Pull_PN_Validity_List (1).xlsx` | `_raw/SAP_Pull_PN_Validity_List_PR00_return_20260812.xlsx` | `01_data/00_derived/pricing_pr00_gap_pull_return_20260812.csv` (+ `.meta.json`) |
+
+**Coverage:** 251 Spec C4 PNs × windows → **220** have ≥1 usable PR00; **31** never (`#N/A` all windows). Window_2025 (01/02/2025–17/03/2026): **220 ok / 30 #N/A / 1 zero**.  
+**Locked:** `#N/A` = no PR00 in SAP for that PN/window — **do not re-request**. Remaining gaps → ZPR1 if present, else NO_EVIDENCE hold.  
+**Applied 2026-08-12 (step 1):** `_apply_pr00_gap_pull_return.py` → upserted 220 into `pricing_pr00_ie40.parquet` (+ year history 2023/24/25) → rebuilt `pricing_pn_enquiry.parquet`. Spec C4 ranked list now **31 remaining** (~€592k); closed audit `no_pr00_gap_cy2025_closed_20260812.csv`. Hook: `apply_pr00_gap_pull_return_if_present()` after IE40 rebuild in `build_pricing_enquiry_tables.py`.  
+**Flagged (Jerome 2026-08-12):** keep the 31 open. **UMI Shell/lube** (~€526k of that, Rim*/Rimula/Tellus) = most important but **business off → parked** (`flag=UMI_SHELL_LUBE_PARKED`). Remainder = ZPR1-path hardware, still `NO_PR00_IN_SAP`. Do not re-chase PR00.  
+**ZPR1 check (non-Shell 24):** `00_derived/no_pr00_gap_remaining_zpr1_check_20260812.csv` — 14 have ZPR1 SP; 10 neither PR00 nor ZPR1 (~€54k).  
+**Chassis→interval:** `03_analytics/isze_pricing/chassis_generation_interval_map.yaml` + `CHASSIS_INTERVAL_UNBLOCK.md` (θ_interval still blocked — no LCV mix in car park).  
+**Language:** never say “street fills” to Jerome / Mode A — use OEM peer retail / reference sell-out.
 
 ---
 

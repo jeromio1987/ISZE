@@ -145,6 +145,14 @@ theta:
   # parc only, and compare the two runs.
   require_basis: [uio_locked, uio_cohort_model, uio_constant_hazard]
 
+  # θ_interval — from Jerome service schedules (RG21 15k SCR vs 20k legacy).
+  # mode: off | simple | extended
+  # Live money move only if schedule_assumed_mix / schedule_measured_mix is
+  # added to require_basis above (default: diagnostic only).
+  interval:
+    mode: simple                 # compute factors; do not fold into bucket yet
+    apply_to_bucket: false       # set true + allow basis to move δ_θ
+
 # ---------------------------------------------------------------- market lists
 markets:
   PR00:

@@ -8,7 +8,7 @@ last_validated: 2026-07-03
 # Project: PMS Coverage
 
 > **ITUK headline (IML v7 / Model B):** Oil filter **35.1%** cover · PMS gap **€2.04M** (5 cat) · UIO 22,389 full DVLA · 1.25× filters / 0.5× wear · 100% addressable. Source: `prism/data/iml_v7_ituk_cy2025.yaml` + v7 workbook.  
-> **PRISM lane (internal network KPI only):** `pms_capture_by_db_year.csv` after green verify — 0.5 svc/yr × 70% addressable. Do not quote PRISM ITUK figures to IML without footnote.
+> **PRISM lane (internal network KPI only):** `pms_capture_by_db_year.csv` after green verify — bucketed UIO split (cv_std 22,190.9 + f_series 877.0 = 23,068) × **100% addressable**, re-based 2026-07-15 — supersedes the old flat-UIO 22,389 × 0.5 svc/yr × 70% addressable figure (see `FACTS.md` §1b, `00_docs/ITUK_PRISM_LANE_BRIDGE.md`). Do not quote PRISM ITUK figures to IML without footnote. ⚠ `metric_dictionary.md`'s own PRISM-lane table (§"ITUK oil filter — PRISM internal lane") has not been updated to match this re-base and should not be used for current PRISM-lane figures.
 
 ## Status
 

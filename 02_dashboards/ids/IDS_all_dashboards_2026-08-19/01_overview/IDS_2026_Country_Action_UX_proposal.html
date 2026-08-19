@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IDS — two files, empty UX proposal</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#e8e4dc;color:#222;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.45}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;font-weight:400;margin:0;color:#1a2b4a}
+.banner{background:#15233c;color:#f7f4ee;padding:18px 28px 22px}
+.banner .k{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.75}
+.banner h1{color:#f7f4ee;font-size:28px;margin:6px 0 8px;max-width:28ch}
+.banner .rule{width:56px;height:3px;background:#c0552d;margin:0 0 10px}
+.banner p{margin:0;max-width:72ch;color:#f7f4ee;opacity:.95}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 20px 40px}
+.note{background:#f7f4ee;border-left:3px solid #c0552d;padding:12px 14px;margin:0 0 16px;color:#222}
+.note b{color:#1a2b4a}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.file{background:#fff;box-shadow:0 1px 6px rgba(0,0,0,.08);min-height:280px}
+.filehead{background:#1a2b4a;color:#f7f4ee;padding:10px 14px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.filehead h2{color:#f7f4ee;font-size:18px}
+.filehead .tag{font-size:10px;letter-spacing:.06em;text-transform:uppercase;background:#c0552d;color:#f7f4ee;padding:3px 8px}
+.filehead .tag.keep{background:#1d9e75}
+.filebody{padding:14px}
+.ghost{background:#eef3f9;border:1px dashed #9aa8bc;color:#1a2b4a;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;min-height:88px;font-size:12px}
+.ghost.map{min-height:160px;background:repeating-linear-gradient(45deg,#eef3f9,#eef3f9 8px,#e4ebf4 8px,#e4ebf4 16px);position:relative}
+.pin{position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid #15233c;background:#f7f4ee}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.kpi{background:#f7f4ee;border-top:3px solid #1a2b4a;padding:8px 10px;position:relative;cursor:help}
+.kpi .l{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:#6b6256}
+.kpi .v{font-family:Georgia,serif;font-size:18px;color:#9aa8bc;margin-top:4px}
+.kpi .s{font-size:11px;color:#6b6256}
+.tip{display:none;position:absolute;left:8px;right:8px;top:100%;z-index:5;margin-top:6px;background:#15233c;color:#f7f4ee;padding:8px 10px;font-size:11px;border-top:3px solid #c0552d}
+.kpi:hover .tip{display:block}
+.tabs{display:flex;gap:0;margin:12px 0 0;border-bottom:2px solid #1a2b4a}
+.tabs button{background:#fff;border:0;border-bottom:2px solid transparent;margin-bottom:-2px;padding:8px 14px;font-size:13px;color:#1a2b4a;cursor:pointer;font-family:inherit}
+.tabs button.on{border-bottom-color:#c0552d;font-weight:700}
+.room{display:none;padding-top:12px}
+.room.on{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.card h3{font-size:14px;margin:0 0 8px;color:#1a2b4a}
+.emptyrow{display:grid;grid-template-columns:1.2fr 1fr 1fr .8fr;gap:6px;margin:6px 0}
+.emptyrow span{background:#eef3f9;border:1px dashed #9aa8bc;height:28px}
+.legend{font-size:12px;color:#6b6256;margin:8px 0 0}
+.sec{margin:22px 0 8px;padding-bottom:6px;border-bottom:2px solid #1a2b4a;font-size:20px}
+.sec .no{color:#c0552d}
+.os{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.os .cell{background:#fff;padding:10px;min-height:72px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.os .cell .n{font-family:Georgia,serif;color:#c0552d;font-size:16px}
+.os .cell p{margin:4px 0 0;font-size:12px;color:#222}
+.foot{margin-top:22px;padding-top:10px;border-top:1px solid #d9d3c8;font-size:11px;color:#6b6256}
+.drop{font-size:13px;color:#222}
+.drop li{margin:4px 0}
+@media(max-width:900px){.split,.g2,.os,.kpis{grid-template-columns:1fr}.emptyrow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="banner">
+  <div class="k">Proposal · empty UX · 19 August 2026 · not a live dashboard</div>
+  <h1>Two files. Not eight studies.</h1>
+  <div class="rule"></div>
+  <p>Keep the IDS overview with the map. Add one country action board that folds the other graphs into pairing + actions. Example market on this mock: Greece. No numbers yet.</p>
+</div>
+<div class="wrap">
+  <p class="note"><b>What this page is.</b> Wireframe only — grey boxes, no invented scores. Left = the file you already called perfect. Right = the new country file. Below that = the other template Cursor received from Claude (the one-distributor operating dashboard), as an example of rooms we can steal from, not a second product to mail.</p>
+
+  <h2 class="sec"><span class="no">1.</span> The two files</h2>
+  <div class="split">
+    <article class="file">
+      <div class="filehead">
+        <h2>File A · Network + country overview</h2>
+        <span class="tag keep">Keep as-is</span>
+      </div>
+      <div class="filebody">
+        <p class="legend">IDS dealer compare — map, dealer vs country, anonymous network average, section heatmap. Already exists. Do not rebuild for this proposal.</p>
+        <div class="ghost map" aria-hidden="true">
+          Map + pins stay here
+          <span class="pin" style="left:28%;top:42%"></span>
+          <span class="pin" style="left:46%;top:33%"></span>
+          <span class="pin" style="left:61%;top:55%"></span>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="l">Country average</div><div class="v">—</div><div class="s">empty</div><div class="tip">Live figure comes from the existing IDS compare. Not filled on this mock.</div></div>
+          <div class="kpi"><div class="l">Network average</div><div class="v">—</div><div class="s">empty</div><div class="tip">Anonymous network average. Hover on the live file already explains Section E rules.</div></div>
+          <div class="kpi"><div class="l">Dealers</div><div class="v">—</div><div class="s">empty</div><div class="tip">Count for the selected country.</div></div>
+          <div class="kpi"><div class="l">Section filter</div><div class="v">A–E</div><div class="s">as today</div><div class="tip">Same UI as the live compare.</div></div>
+        </div>
+      </div>
+    </article>
+    <article class="file">
+      <div class="filehead">
+        <h2>File B · One country · pair + act</h2>
+        <span class="tag">New combine</span>
+      </div>
+      <div class="filebody">
+        <p class="legend">Example: Greece. Country selector would sit here. This is the combination of Kaizen, parts posture, sales-market pairing, and the dealer hit list — not 29 separate feedback HTMLs.</p>
+        <div class="kpis">
+          <div class="kpi"><div class="l">Parts (D) vs country</div><div class="v">—</div><div class="s">empty</div><div class="tip">Country Section D vs that country’s dealers. Formula and snapshot only when built.</div></div>
+          <div class="kpi"><div class="l">PMS total capture</div><div class="v">—</div><div class="s">empty · total first</div><div class="tip">Primary = total sales / total capture. Genuine is an extra lens, never the headline.</div></div>
+          <div class="kpi"><div class="l">GPS € (no % if unsigned)</div><div class="v">—</div><div class="s">empty</div><div class="tip">Euros from the GPS extract. No GPS% unless UIO for this DB is signed.</div></div>
+          <div class="kpi"><div class="l">Open actions</div><div class="v">3–5</div><div class="s">slots, not numbers</div><div class="tip">Kaizen actions for this distributor. Owner + date when we have minutes.</div></div>
+        </div>
+        <div class="tabs" role="tablist">
+          <button class="on" type="button" data-tab="pair">Pair</button>
+          <button type="button" data-tab="act">Act</button>
+          <button type="button" data-tab="extra">Other data</button>
+        </div>
+        <div class="room on" id="pair">
+          <div class="g2">
+            <div class="card">
+              <h3>IDS Parts vs commercial capture</h3>
+              <div class="ghost" style="min-height:140px">Scatter placeholder<br>this country circled · peers as grey dots<br>from the sales-market pairing chart</div>
+            </div>
+            <div class="card">
+              <h3>Sections vs country / network</h3>
+              <div class="ghost" style="min-height:140px">Radar or bar placeholder<br>A Service · B · C · D Parts · E<br>label “not scored” if they did not sit the section</div>
+            </div>
+          </div>
+          <p class="legend">Best graph from the pairing study (IDS × sales) + best from posture (one DB page), not the full network league table.</p>
+        </div>
+        <div class="room" id="act">
+          <div class="card">
+            <h3>Three to five actions for this distributor</h3>
+            <div class="emptyrow"><span></span><span></span><span></span><span></span></div>
+            <div class="emptyrow"><span></span><span></span><span></span><span></span></div>
+            <div class="emptyrow"><span></span><span></span><span></span><span></span></div>
+            <p class="legend">Columns: action · why (which section / which commercial gap) · owner · confirm-by date. Shape taken from the Kaizen pack (3 dealers / 3 points) and from Masumi’s ask — without shipping a separate Kaizen HTML.</p>
+          </div>
+          <div class="card" style="margin-top:10px">
+            <h3>Dealer hit list (this country only)</h3>
+            <div class="ghost" style="min-height:100px">Matrix placeholder — bottom dealers vs country average on Parts and Service. One table, not a zip of workshop packs.</div>
+          </div>
+        </div>
+        <div class="room" id="extra">
+          <div class="g2">
+            <div class="card">
+              <h3>If we have it</h3>
+              <div class="ghost">Sales-to-dealer · fill · stock vs urgent mix · last meeting follow-ups</div>
+            </div>
+            <div class="card">
+              <h3>If we do not</h3>
+              <div class="ghost">Empty state + one ask card<br>(what they should send — not a data dump)</div>
+            </div>
+          </div>
+          <p class="legend">This tab is optional extra data. It is not a second operating dashboard. If the operating dashboard already covers GPS/PMS for this DB, File B only links or repeats the two chips that change the IDS action.</p>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <h2 class="sec"><span class="no">2.</span> The other template Cursor received from Claude</h2>
+  <p class="drop">Claude’s brief was: one HTML per distributor for a DB meeting — chart-first, honest gaps, no invented GPS%. Cursor already built that as the <b>operating dashboard</b> (Greece example below). That is a commercial OS, not an IDS pack. Proposal: do not mail it as a ninth IDS dashboard. Steal its <i>rooms</i> only where File B needs a commercial pair.</p>
+  <div class="os">
+    <div class="cell"><div class="n">00</div><p>Open issues / minutes</p></div>
+    <div class="cell"><div class="n">01</div><p>Plan tracking</p></div>
+    <div class="cell"><div class="n">02–03</div><p>GPS spine + PMS capture</p></div>
+    <div class="cell"><div class="n">04</div><p>Genuine vs Best Value</p></div>
+    <div class="cell"><div class="n">05</div><p>Order pattern ~80/20</p></div>
+    <div class="cell"><div class="n">06</div><p>Three gap lanes — never summed</p></div>
+    <div class="cell"><div class="n">07–08</div><p>Family strategy + aftermarket PNs</p></div>
+    <div class="cell"><div class="n">H</div><p>IDS country vs network (already in File A)</p></div>
+  </div>
+  <p class="legend">Example file on disk: Greece operating dashboard. Same skeleton exists for other DBs. File B should not clone all of those rooms.</p>
+
+  <h2 class="sec"><span class="no">3.</span> What we drop from the eight</h2>
+  <ul class="drop">
+    <li>Full-network Kaizen HTML, parts-Kaizen HTML, posture HTML, sales-market eval HTML — charts reused inside File B Pair / Act, files themselves not mailed.</li>
+    <li>Explainer, Masumi briefing, Portugal standalone map, dealer-fiche zip, blank feedback templates.</li>
+    <li>Per-dealer workshop packs — hit list on File B instead.</li>
+  </ul>
+
+  <p class="foot">Empty UX. No scores. House colours navy / terracotta / paper. Sources, when built: IDS 2026 country compare, PMS total capture, GPS euros, Kaizen action list, operating-dashboard ledger only for chips that already exist for that DB.</p>
+</div>
+<script>
+document.querySelectorAll('.tabs button').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tabs button').forEach(function(b){ b.classList.remove('on'); });
+    document.querySelectorAll('.room').forEach(function(r){ r.classList.remove('on'); });
+    btn.classList.add('on');
+    document.getElementById(btn.getAttribute('data-tab')).classList.add('on');
+  });
+});
+</script>
+</body>
+</html>

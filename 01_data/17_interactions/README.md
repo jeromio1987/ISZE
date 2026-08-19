@@ -15,6 +15,8 @@
 | `commitment_fact.meta.json` | Status counts + keep-rate by owner_side | `build_commitment_status.py` |
 | `stakeholder_dim.parquet` | Pseudonymous contacts: role, activity, consensus width, churn flag | `build_stakeholder_dim.py` |
 | `db_response_latency.parquet` | Hours from inbound to our reply, p50 / p90 per DB | `build_stakeholder_dim.py` |
+| `account_health.parquet` | One row per DB × month. Eight deterministic signals + NONE/AMBER/RED from draft thresholds. **Not a KPI until Jerome calibrates.** | `build_account_health.py` |
+| `account_health.meta.json` | Builder version, threshold copy, coverage notes | `build_account_health.py` |
 
 ## Rules
 
@@ -37,6 +39,7 @@ python -u $env:ISZE_ROOT\04_tools\interactions\collect_mapi.py --since 2024-08-0
 
 python $env:ISZE_ROOT\04_tools\interactions\build_commitment_status.py
 python $env:ISZE_ROOT\04_tools\interactions\build_stakeholder_dim.py
+python $env:ISZE_ROOT\04_tools\interactions\build_account_health.py
 
 # Retention hard-delete (2a.6) — dry-run first; never touches Outlook
 python $env:ISZE_ROOT\04_tools\interactions\purge_expired.py

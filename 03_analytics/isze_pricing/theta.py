@@ -190,7 +190,14 @@ def attach(df: pd.DataFrame, cfg: dict, carpark_path: Path | None = None
         "weighted_theta_parc": float((w * out.theta_parc.fillna(1.0)).sum()),
         "by_bucket": out.groupby("theta_bucket").weight.sum().round(0).to_dict(),
         "by_basis": out.groupby("theta_basis").weight.sum().round(0).to_dict(),
-        "components_wired": "theta_parc only "
-                            "(interval blocked, cohort/warranty partial)",
+        "components_wired": "theta_parc + theta_interval (see interval_mode)",
     })
+
+    # θ_interval: simple / extended / off (default off — no money move until basis allowed)
+    from isze_pricing.theta_interval import attach_interval
+
+    out, irep = attach_interval(out, cfg)
+    report["interval"] = irep
+    if "theta" not in out.columns:
+        out["theta"] = out["theta_parc"].fillna(1.0)
     return out, report

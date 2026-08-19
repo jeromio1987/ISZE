@@ -1,5 +1,7 @@
 # Start PRISM Streamlit (opens browser on Windows).
+# Legacy port 8501. Canonical daily launcher is ..\run_prism.ps1 (8503).
 $ErrorActionPreference = "Stop"
+$env:PRISM_INTERNAL = "false"
 $PrismRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 Set-Location $PrismRoot
 

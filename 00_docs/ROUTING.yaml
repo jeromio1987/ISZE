@@ -66,6 +66,7 @@ tasks:
       - 03_analytics/Isuzu/prism/ARCHITECTURE.md
     run:
       - 03_analytics/Isuzu/prism/run_prism.ps1
+      - 03_analytics/Isuzu/prism/run_prism_internal.ps1
 
   decision_models:
     description: Waterfall, runway, defection, attach, leakage, elasticity
@@ -89,11 +90,39 @@ tasks:
     data:
       - 03_analytics/Isuzu/pms-pilot/
 
+  aftermarket_bi_build:
+    description: What to build next — dealer sell-out, replenishment, forecast, pricing revision (no alloc unless explicit)
+    read:
+      - 00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md
+      - 01_data/01_Pricing/DB_DLR_COMMERCIAL_STACK.md
+      - 00_docs/P5_FORECAST_BUILD_PLAN.md
+      - 00_docs/roadmaps/ai_sales_intelligence.md
+    data:
+      - 01_data/00_derived/demand_series.parquet
+      - 01_data/00_derived/revision_book_b_top_review.csv
+      - 01_data/00_derived/replenishment_bridge.parquet
+    open:
+      - 02_dashboards/sales/OPEN_Aftermarket_BI_Command_Center.cmd
+    rebuild:
+      - python 02_dashboards/_build/build_aftermarket_bi_command_center.py --all
+
   pricing:
-    description: IE40, SPA, basket pricing
+    description: IE40, SPA, basket pricing, DB→DLR commercial stack
     read:
       - 05_memory/projects/competitiveness.md
+      - 01_data/01_Pricing/DB_DLR_COMMERCIAL_STACK.md
       - FACTS.md
+
+  aim_prism_reinvention:
+    description: After AIM scoring failed — replacement programme (P4, PN prices, PRISM surface)
+    read:
+      - 00_docs/roadmaps/aim_prism_reinvention.md
+      - DECISIONS.md
+    optional:
+      - 00_docs/P4_DETERMINISTIC_SIGNALS.md
+      - 03_analytics/Isuzu/prism/docs/DASHBOARD_IA.md
+    never:
+      - 03_analytics/Isuzu/prism/modules/aim_pn_classifier.py
 
   uio_workbook:
     description: UIO v19 logic (06_uio/_CURRENT), ITUK parc, forecast cache caveats
@@ -140,6 +169,17 @@ tasks:
     read:
       - 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
       - 01_data/derived/_verification_report.md
+
+  data_os_map:
+    description: Isuzu OS capability × data map (what we have / still need / must not re-ask)
+    read:
+      - 00_docs/ISZE_OS_DATA_MAP.yaml
+    optional:
+      - 02_dashboards/ops/ISZE_OS_Data_Map.html
+      - 01_data/DATA_MANIFEST.md
+      - 00_docs/roadmaps/ai_sales_intelligence.md
+    rebuild:
+      - 02_dashboards/ops/build_os_data_map.py
 
   eu_conf_deck:
     description: EU Conf 26 Parts Sales deck and MH review

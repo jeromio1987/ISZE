@@ -65,10 +65,10 @@ python build_ids_dashboard.py
 
 | Market | Action on rebuild |
 |--------|-------------------|
-| **FR + ES** | Exclude her **red-marked** dealers (zeros + very low / “not completed”) from **averages** |
-| **IT + CH** | Include **all** dealers in averages |
+| **FR + ES** | Exclude her **red-marked** dealers (zeros + very low / “not completed”) from **averages** only — expect **FR=20 / ES=5** `excluded_from_average_count` |
+| **IT + CH** | Include **all** dealers in averages — **including zero-score shells** (`excluded_from_average_count` = **0**). Do **not** apply zero-shell hygiene to IT/CH. |
 
-**Scope:** her words = **averages only** (not automatic drop from dealer list/HTML). List/HTML removal + **v1.4** pack bump = Jerome pending — no silent rebuild/ship.
+**Scope:** her words = **averages only** (not automatic drop from dealer list/HTML). **v1.4** (rebuild+ship OK from Jerome): FR/ES reds out of averages; IT/CH all in; list/map keep everyone.
 
 **Sources:** `01_data/90_INBOX/tomoe_ids_mail_pull/20260731_0858_France_dealer_ranking.xlsx`, `…Spain_dealer_ranking.xlsx`, body `…_MIDI_exclude_mail_body.txt`, list `…_red_marked_dealers.json` (FR 20 / ES 5).
 

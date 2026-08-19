@@ -16,7 +16,9 @@ from streamlit.testing.v1 import AppTest
 
 PRISM_ROOT = Path(__file__).resolve().parent.parent
 
-PAGES = sorted((PRISM_ROOT / "pages").glob("*.py"))
+PAGES = sorted(
+    p for p in (PRISM_ROOT / "pages").glob("*.py") if not p.name.startswith("_")
+)
 
 # Generous timeout — several pages load Excel/parquet on first cache miss.
 RUN_TIMEOUT = 90.0

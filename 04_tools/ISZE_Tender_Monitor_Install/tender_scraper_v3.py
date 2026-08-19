@@ -732,7 +732,21 @@ def fetch_israel(session: requests.Session) -> List[Dict[str, Any]]:
         if not resp:
             print("[IL] Failed to fetch RSS.")
             return []
-        root = ET.fromstring(resp.content)
+        raw = resp.content
+        try:
+            root = ET.fromstring(raw)
+        except ET.ParseError:
+            # mr.gov.il embeds HTML entities (e.g. &nbsp;, &laquo;) that are not
+            # valid bare XML entities. Escape anything that isn't a standard or
+            # numeric XML entity, then retry once before giving up (falls through
+            # to the except-Exception handler below if this also fails).
+            import re
+            sanitized = re.sub(
+                rb"&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[0-9a-fA-F]+;)(\w+);",
+                rb"&amp;\1;",
+                raw,
+            )
+            root = ET.fromstring(sanitized)
         results: List[Dict[str, Any]] = []
         for item in root.findall(".//item"):
             title = extract_text(item.findtext("title"))
@@ -1032,9 +1046,16 @@ def fetch_contracts_finder(session: requests.Session, from_dt: datetime) -> List
 # platforms, NOT TED. TED covers DEU above ~€215k — that's why we see only
 # 4 German results vs 62 Romanian ones.
 #
-# DTVP (Deutsche TenderVergabePlattform) is the largest German multi-state
-# aggregator with a public RSS feed — no API key required.
-# URL pattern: https://www.dtvp.de/Center/company/public/procurement/rss
+# DTVP (Deutsches Vergabeportal) is the largest German multi-state aggregator.
+# CORRECTION (researched 2026-08-11, see manual_review_required.md 2026-08-09
+# Item 5): DTVP does NOT offer a free/anonymous public RSS feed — the URL
+# below 404s every run and, per dtvp.de's own tenderer pages, the automated
+# e-mail notification service requires a paid "Professional Edition or
+# higher" subscription (from EUR49/month); basic search is free but
+# web-only, no feed. TED (DEU) still covers above-threshold German
+# contracts. This is a real, structural gap for below-threshold DE
+# coverage, not a URL typo — fixing it means either a paid DTVP
+# subscription or manual portal registration, not a code change.
 #
 # Vergabe.NRW covers North-Rhine Westphalia (18M people), Germany's most
 # populous state, via a public search interface.
@@ -1053,6 +1074,16 @@ GERMANY_SEARCH_TERMS_DE = [
 DTVP_RSS_URL = "https://www.dtvp.de/Center/company/public/procurement/rss"
 NRW_SEARCH_URL = "https://www.vergabe.nrw.de/VMPSatellite/satellite.vm"
 TENDERNED_RSS_URL = "https://www.tenderned.nl/papi/tenderned-rs-tns/rss/laatste-publicatie.rss"
+# CORRECTION (researched 2026-08-11, see manual_review_required.md 2026-08-09
+# Item 4): both candidates below return non-XML (HTML error/redirect) pages,
+# not malformed XML — per BOSA's own e-Procurement documentation, Belgium's
+# "e-Notification" module has never exposed a public/anonymous RSS feed.
+# The only notification mechanism is a free personal account on
+# publicprocurement.be with a CPV/region-based search profile, which sends
+# daily results by e-mail — there is no URL fix available here, only an
+# account-based alternative outside this script's scope. TED (BEL) still
+# covers above-threshold Belgian contracts. Kept as a best-effort probe in
+# case Belgium adds a public feed later; failures are cheap and logged.
 BELGIUM_RSS_CANDIDATES = [
     "https://www.publicprocurement.be/supplier/feed/rss",
     "https://www.publicprocurement.be/en/rss",

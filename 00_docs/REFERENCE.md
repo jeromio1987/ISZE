@@ -20,6 +20,7 @@
 | PMS / GPS / BVP / UIO metrics | `03_analytics/Isuzu/prism/docs/metric_dictionary.md` |
 | PRISM dashboard CSV contracts | `03_analytics/Isuzu/prism/docs/dashboard_contracts.md` |
 | Data integrity flags | `03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md` |
+| **Isuzu OS data map** (capability × Have/Partial/Need/Closed) | `00_docs/ISZE_OS_DATA_MAP.yaml` · HTML `02_dashboards/ops/ISZE_OS_Data_Map.html` |
 | BVP strategy narrative | `03_analytics/Isuzu/prism/docs/BVP_Strategy_Report_2026-05-28.md` |
 | Pipeline verify output | `01_data/derived/_verification_report.md` (sign-off only when `ok`) |
 | Sales / phase models (Excel + derived) | `05_memory/projects/sales-analytics-pipeline.md` |
@@ -36,6 +37,7 @@
 | HTML dashboard detail | `docs/roadmaps/html.md` |
 | Scrapers programme | `docs/roadmaps/scrapers.md` |
 | GPS / fig-key programme | `docs/roadmaps/gps.md` |
+| After AIM scoring failed | `00_docs/roadmaps/aim_prism_reinvention.md` |
 | Jarvis / tools programme | `docs/roadmaps/tools.md` |
 | Claude vs GPT / tier protocol | `docs/agent/AI_STACK.md` (full memo: `AI_Stack_Architecture_Apr2026.md`) |
 | Weekly briefs | `05_memory/briefs/` |

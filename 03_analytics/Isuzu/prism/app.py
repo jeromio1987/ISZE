@@ -49,6 +49,8 @@ NAV_SECTIONS: list[dict] = [
      "blurb": "The denominator under every metric.", "tiles": [
         ("pages/1_UIO.py", "🚛", "UIO — Units in Operation",
          "Fleet size by distributor, model & registration year."),
+        ("pages/19_Forecast.py", "📈", "Demand Forecast",
+         "P5 baseline — DB × category outlook, backtest WAPE, no LLM."),
      ]},
     {"key": "Spend", "accent": "#2C5AA0",
      "blurb": "Genuine Parts Share: net sales € per truck per year.", "tiles": [
@@ -63,7 +65,7 @@ NAV_SECTIONS: list[dict] = [
     {"key": "Mix", "accent": "#B5651D",
      "blurb": "Genuine vs Best Value — the second line: capture more parc, defend on price.", "tiles": [
         ("pages/4_BVP.py", "⚡", "BVP Intelligence",
-         "Genuine vs Best Value mix, capture split, SPU & AIM pricing risk."),
+         "Genuine vs Best Value mix and substitution — capture/GPS/AIM live on their pages."),
         ("pages/13_DB_Parts_Mix.py", "🧩", "DB Parts Mix",
          "Per-distributor genuine / contested / BVP split."),
      ]},
@@ -71,12 +73,12 @@ NAV_SECTIONS: list[dict] = [
      "blurb": "Where revenue and risk concentrate across the network.", "tiles": [
         ("pages/5_Insights.py", "🧠", "Cross-Module Insights",
          "GPS × PMS × BVP signals fused across distributors & time."),
-        ("pages/5_Strategic.py", "🎯", "Strategic Views · 15",
-         "Fifteen cross-cutting strategic dashboards in one cockpit."),
+        ("pages/5_Strategic.py", "🎯", "Strategic Views · 13",
+         "Capture, stockouts, premium and aftermarket — Early Warning is the call list."),
         ("pages/12_Offset_Insights.py", "🔀", "Offset Insights",
-         "Movement, airfreight lumpiness, demand Sankey, VOR power."),
+         "Movement, airfreight lumpiness, VOR power, capture ceiling."),
         ("pages/15_Customer_Risk.py", "⚠️", "Customer Risk Ranking",
-         "Weighted aftersales-risk index blending four signals."),
+         "Unvalidated intensity ranking — Early Warning is the call list."),
         ("pages/7_AIM_Review.py", "💶", "AIM Risk Review",
          "AIM classification & pricing-risk exposure by family."),
         ("pages/16_AIM_GPS_Matrix.py", "📐", "AIM × GPS Matrix",
@@ -92,9 +94,9 @@ NAV_SECTIONS: list[dict] = [
          "Line-level part-number audit behind the story."),
      ]},
     {"key": "Decision", "accent": "#0E7C66",
-     "blurb": "MD-safe: the € identity, the runway, and who's going quiet.", "tiles": [
+     "blurb": "MD-safe: the € identity and the runway. Defection lives on Early Warning.", "tiles": [
         ("pages/18_Decision_Models.py", "🧭", "Decision Models",
-         "€ Waterfall · Revenue Runway · Defection alerts."),
+         "€ Waterfall · Revenue Runway."),
      ]},
     {"key": "Tools", "accent": "#555F6E",
      "blurb": "Generators and pipeline governance — collapsed by default.", "tiles": [
@@ -246,7 +248,11 @@ def render_home() -> None:
     if BETA_MODE:
         st.warning("BETA MODE — running against beta UIO file. Not for distribution.", icon="⚠️")
     if INTERNAL_MODE:
-        st.info("INTERNAL MODE — internal-only tabs (leakage, attach, elasticity) are visible.", icon="🔒")
+        st.info(
+            "INTERNAL MODE — extra tabs visible: attach, ITUK leakage, elasticity, "
+            "demand-flow, aftermarket scrape.",
+            icon="🔒",
+        )
 
     # ─── Hero ──────────────────────────────────────────────────────────────
     today = datetime.now().strftime("%d %b %Y")

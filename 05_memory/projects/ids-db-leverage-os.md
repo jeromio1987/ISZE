@@ -1,3 +1,10 @@
+---
+topic: ids-db-leverage-os
+read_when: [ids, db leverage, mode b, rollup, pull scorecard, baumann, kaizen]
+canonical_metrics: 04_tools/ids_dealer_ranking/CHANGELOG.md
+last_validated: 2026-08-11
+---
+
 # DB leverage OS — Mode B one-pager
 
 **Status:** v0.4 rollup is the working primary artefact (2026-08-11). Proposal discipline blijft: geen mail, geen silent overwrite, packs alleen op expliciete rebuild/ship.  

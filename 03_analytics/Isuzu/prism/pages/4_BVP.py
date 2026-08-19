@@ -2,7 +2,7 @@
 PRISM — BVP Intelligence (Genuine vs Best Value Parts)
 
 BVP catalog-wide (8 product groups, ~27 subgroups). Mix scope per distributor =
-lifetime Genuine sales via bvp_addressable_basket.csv. PMS capture tab stays strict-PMS.
+lifetime Genuine sales via bvp_addressable_basket.csv. Capture / GPS / AIM live on their home pages.
 """
 
 from __future__ import annotations
@@ -13,7 +13,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objects as go
 import streamlit as st
 
 APP_DIR = Path(__file__).parent.parent
@@ -45,6 +44,7 @@ from modules.bvp_product_nav import (  # noqa: E402
     subgroup_label,
 )
 from modules.bvp_substitution_story import render_substitution_story  # noqa: E402
+from modules.ui_links import page_link  # noqa: E402
 
 st.markdown(
     """
@@ -255,7 +255,7 @@ with st.sidebar:
     n_addr = len(addr_sg) if addr_sg else 0
     st.caption(
         f"**{highlight}:** {n_addr} addressable subgroups from lifetime Genuine sales. "
-        "PMS capture tab = strict PMS categories only."
+        "Capture rates, spend per unit, and AIM risk live on PMS / GPS / AIM Review."
     )
     st.divider()
     for label, ok in status.items():
@@ -281,19 +281,11 @@ bench_sub = filter_mix_addressable(
     ),
     highlight,
 )
-gps_pms = bundle["gps_pms"]
-if not gps_pms.empty and "pms_category" in gps_pms.columns:
-    gps_pms = _years_dists(gps_pms, year_sel, dist_sel)
-    gps_pms = gps_pms[gps_pms["pms_category"].isin(sub_pick)]
-
-tab_ov, tab_cap, tab_mix, tab_sub, tab_gps, tab_aim, tab_cat = st.tabs(
+tab_ov, tab_mix, tab_sub, tab_cat = st.tabs(
     [
         "Overview",
-        "PMS capture",
         "Mix & trends",
         "Substitution story",
-        "GPS / SPU",
-        "AIM risk",
         "Catalog",
     ]
 )
@@ -332,6 +324,15 @@ with tab_ov:
         c3.metric("BVP unit share", "—")
         c4.metric("Untapped € (total)", "—")
 
+    st.caption("Full capture, spend-per-unit, and AIM pricing-risk charts are not repeated here.")
+    l1, l2, l3 = st.columns(3)
+    with l1:
+        page_link("pages/3_PMS.py", "PMS — Capture Rate", "🔧")
+    with l2:
+        page_link("pages/2_GPS.py", "GPS — Spend per Unit", "📊")
+    with l3:
+        page_link("pages/7_AIM_Review.py", "AIM Risk Review", "💶")
+
     col_l, col_r = st.columns(2)
     with col_l:
         if not pms.empty and latest_y:
@@ -365,94 +366,6 @@ with tab_ov:
             )
             _finish_chart(fig2, "BVP unit share (mix)")
             st.plotly_chart(fig2, width='stretch')
-
-# ── PMS capture ───────────────────────────────────────────────────────────────
-with tab_cap:
-    st.markdown(CAPTURE_HELP)
-    st.caption("ITUK UIO override: DVLA **22,389** trucks (`ituk_dvla_2026`).")
-
-    sub_one = st.selectbox(
-        "Subcategory (detail)",
-        sub_pick,
-        format_func=subgroup_label,
-        key="cap_sub",
-    )
-    pc = pms[pms["pms_category"] == sub_one] if sub_one else pms
-
-    if not pc.empty and latest_y:
-        pc_y = pc[pc["year"] == latest_y]
-        fig = go.Figure()
-        for lt, color, name in [
-            ("total", COLOR_TOTAL, "Total capture"),
-            ("genuine", COLOR_GENUINE, "Genuine capture"),
-        ]:
-            sub = pc_y[pc_y["line_type"] == lt]
-            yvals = sub["capture_rate"].clip(upper=1.0)
-            fig.add_trace(
-                go.Bar(
-                    name=name,
-                    x=sub["distributor_code"],
-                    y=yvals,
-                    marker_color=color,
-                    text=sub["capture_rate"].apply(lambda x: f"{x*100:.0f}%"),
-                    textposition="outside",
-                )
-            )
-        fig.update_layout(barmode="group")
-        _finish_chart(
-            fig,
-            f"{subgroup_label(sub_one)} — total vs genuine capture ({latest_y})",
-            legend_below=True,
-        )
-        st.plotly_chart(fig, width='stretch')
-
-        if not mix_sub.empty:
-            mx = mix_sub[
-                (mix_sub["product_subgroup"] == sub_one) & (mix_sub["year"] == latest_y)
-            ]
-            if not mx.empty:
-                st.caption(
-                    "BVP **mix** (not capture): "
-                    + ", ".join(
-                        f"{r['distributor_code']} {r['bvp_share_units']*100:.1f}%"
-                        for _, r in mx.iterrows()
-                    )
-                )
-
-        c1, c2 = st.columns(2)
-        with c1:
-            sub = pc[pc["line_type"] == "total"]
-            fig_a = px.scatter(
-                sub,
-                x="expected_qty",
-                y="actual_qty",
-                size="actual_rev_eur",
-                color="distributor_code",
-                hover_data=["year", "revenue_gap_eur"],
-                title="Actual vs expected units",
-            )
-            mx = max(sub["expected_qty"].max(), sub["actual_qty"].max()) * 1.05
-            fig_a.add_shape(type="line", x0=0, y0=0, x1=mx, y1=mx, line=dict(dash="dash", color="#999"))
-            _finish_chart(fig_a, "Actual vs expected units (total basket)", y_pct=False)
-            st.plotly_chart(fig_a, width='stretch')
-        with c2:
-            show = pc[pc["distributor_code"] == highlight].sort_values(["year", "line_type"])
-            st.dataframe(
-                show[
-                    [
-                        "year",
-                        "line_type",
-                        "actual_qty",
-                        "expected_qty",
-                        "capture_rate",
-                        "revenue_gap_eur",
-                        "uio_units",
-                        "uio_source",
-                    ]
-                ],
-                width='stretch',
-                hide_index=True,
-            )
 
 # ── Mix ───────────────────────────────────────────────────────────────────────
 with tab_mix:
@@ -667,83 +580,6 @@ with tab_sub:
                 hide_index=True,
             )
 
-# ── GPS ───────────────────────────────────────────────────────────────────────
-with tab_gps:
-    gps_db = _years_dists(bundle["gps_db"], year_sel, dist_sel)
-    if not gps_db.empty:
-        fig = px.bar(
-            gps_db.sort_values("spend_per_unit_eur"),
-            x="spend_per_unit_eur",
-            y="distributor_code",
-            color="traffic_light",
-            orientation="h",
-            title="Total spend per unit (all parts)",
-            color_discrete_map={"green": "#2E7D32", "amber": "#F9A825", "red": "#C62828"},
-        )
-        fig.update_layout(**PLOTLY)
-        st.plotly_chart(fig, width='stretch')
-
-    if not gps_pms.empty:
-        sub_g = st.selectbox("Subcategory", sub_pick, format_func=subgroup_label, key="gps_sub")
-        gp = gps_pms[gps_pms["pms_category"] == sub_g] if "pms_category" in gps_pms.columns else gps_pms
-        if not gp.empty and "spu_eur" in gp.columns:
-            fig2 = px.line(
-                gp,
-                x="year",
-                y="spu_eur",
-                color="distributor_code",
-                markers=True,
-                title=f"SPU — {subgroup_label(sub_g)}",
-            )
-            fig2.update_layout(**PLOTLY)
-            st.plotly_chart(fig2, width='stretch')
-
-# ── AIM ───────────────────────────────────────────────────────────────────────
-with tab_aim:
-    st.caption("AIM join on part description. Family view uses catalog `product_family`.")
-
-    aim_db = _years_dists(bundle["aim_db"], year_sel, dist_sel)
-    if not aim_db.empty:
-        fig = px.bar(
-            aim_db.sort_values("high_risk_rev_pct"),
-            x="high_risk_rev_pct",
-            y="distributor_code",
-            orientation="h",
-            title="AIM high-risk revenue share",
-            color_continuous_scale=["#2E7D32", "#E87722"],
-        )
-        fig.update_layout(**PLOTLY, xaxis_tickformat=".1%")
-        st.plotly_chart(fig, width='stretch')
-
-    fam_internal = PRODUCT_GROUPS[group_pick]["product_family"]
-    aim_fam = _years_dists(bundle["aim_family"], year_sel, dist_sel)
-    af = aim_fam[aim_fam["product_family"] == fam_internal] if not aim_fam.empty else aim_fam
-    if not af.empty:
-        fig2 = px.scatter(
-            af,
-            x="bvp_share_eur",
-            y="aim_high_risk_rev_pct",
-            size="catalog_sales_eur",
-            color="distributor_code",
-            hover_data=["year"],
-            title=f"AIM vs BVP € share — {group_labels[group_pick]}",
-        )
-        fig2.update_layout(**PLOTLY)
-        st.plotly_chart(fig2, width='stretch')
-
-    st.markdown("#### Autodoc Class C substitution risk")
-    st.caption("Competitor min price under 75% of PR00 (scraped sample). Run `build_competitiveness_autodoc_risk.py`.")
-    if COMPETITIVENESS_AUTODOC_RISK_CSV.exists():
-        ad = pd.read_csv(COMPETITIVENESS_AUTODOC_RISK_CSV)
-        st.metric("Flagged PNs (sample)", f"{len(ad):,}")
-        show_ad = ad.head(100)
-        if "ratio" in show_ad.columns:
-            show_ad = show_ad.copy()
-            show_ad["ratio_pct"] = (pd.to_numeric(show_ad["ratio"], errors="coerce") * 100).round(0)
-        st.dataframe(show_ad, use_container_width=True, hide_index=True)
-    else:
-        st.info("Missing competitiveness_autodoc_risk.csv — run the build script after Autodoc scrape.")
-
 # ── Catalog (PMS in-scope PNs only) ─────────────────────────────────────────
 with tab_cat:
     dim = bundle["dimension"]
@@ -802,6 +638,23 @@ with tab_cat:
             width='stretch',
             hide_index=True,
         )
+
+
+    st.markdown("#### Autodoc Class C substitution risk")
+    st.caption(
+        "Competitor min price under 75% of PR00 (scraped sample). "
+        "Run `build_competitiveness_autodoc_risk.py`."
+    )
+    if COMPETITIVENESS_AUTODOC_RISK_CSV.exists():
+        ad = pd.read_csv(COMPETITIVENESS_AUTODOC_RISK_CSV)
+        st.metric("Flagged PNs (sample)", f"{len(ad):,}")
+        show_ad = ad.head(100)
+        if "ratio" in show_ad.columns:
+            show_ad = show_ad.copy()
+            show_ad["ratio_pct"] = (pd.to_numeric(show_ad["ratio"], errors="coerce") * 100).round(0)
+        st.dataframe(show_ad, width="stretch", hide_index=True)
+    else:
+        st.info("Missing competitiveness_autodoc_risk.csv — run the build script after Autodoc scrape.")
 
 st.caption(
     f"BVP Intelligence · PMS in-scope only · Data: `{DERIVED_DIR}` · "

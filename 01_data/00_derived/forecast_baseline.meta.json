@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-08-19T15:42:22+00:00",
+  "builder_version": "p5.2-v1",
+  "series": 636,
+  "candidate_rows": 15264,
+  "horizon_months": 6,
+  "models": [
+    "ets",
+    "arima",
+    "naive",
+    "parc"
+  ],
+  "note": "ets=Holt/seasonal-naive; arima=linear trend proxy (no statsmodels)",
+  "backtest_series": 548,
+  "backtest_wape_median": 49.44,
+  "outputs": {
+    "forecast_candidates": "01_data\\00_derived\\forecast_candidates.parquet",
+    "backtest_report": "01_data\\00_derived\\backtest_report.parquet"
+  }
+}

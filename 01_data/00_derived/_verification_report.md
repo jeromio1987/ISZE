@@ -1,11 +1,11 @@
 # ISZE derived pipeline verification
 
-**Generated:** 2026-08-03T06:13:45Z
+**Generated:** 2026-08-18T15:12:22Z
 **Data root:** `C:\Users\jerom\Desktop\claude\ISZE\01_data`
 
 | Pass | Warn | Fail |
 |------|------|------|
-| 106 | 0 | 0 |
+| 108 | 0 | 0 |
 
 ## Checks
 
@@ -74,8 +74,10 @@
 - ✅ **p1.ituk.uio** — ITUK uio_units [np.int64(23068)] (expected 23068)
 - ✅ **p1.ituk.oil_filter.2024** — ITUK oil_filter 2024 capture 83.5% (band 82%–92%)
 - ✅ **p1.ituk.oil_filter.2025** — ITUK oil_filter 2025 capture 116.4% (band 115%–128%)
-- ✅ **p1.distributor_count** — PMS capture 18 distributors @ 2026 (min 18)
+- ✅ **p1.distributor_count** — PMS capture 18 distributors @ complete 2025 (min 18)
 - ✅ **pms.summary.rows** — pms_summary_by_db 18 distributors (min 18)
+- ✅ **pms.summary.complete_year** — pms_summary_by_db year [2025] == complete 2025
+- ✅ **pms.summary.not_partial** — pms_summary_by_db is a complete billing year
 - ✅ **pms.summary.schema** — PMS summary schema OK
 - ✅ **gps.warranty.schema** — GPS warranty columns OK
 - ✅ **gps.warranty.coverage** — CY2025 warranty on 18 DBs (min 17)
@@ -105,7 +107,7 @@
 - ✅ **contract.vor_airfreight_risk** — vor_airfreight_risk 502 rows
 - ✅ **contract.vor_seasonality** — vor_seasonality 3,127 rows
 - ✅ **contract.vor_profile** — vor_profile 228 rows
-- ✅ **contract.capture_trajectory** — capture_trajectory 1,512 rows
+- ✅ **contract.capture_trajectory** — capture_trajectory 1,460 rows
 - ✅ **contract.part_lifecycle** — part_lifecycle 505 rows
 - ✅ **contract.revenue_concentration** — revenue_concentration 260 rows
 - ✅ **contract.revenue_waterfall** — revenue_waterfall 228 rows

@@ -1,8 +1,19 @@
 # PRISM launcher — use this instead of "streamlit" from an unknown Python.
 # Double-click or:  powershell -ExecutionPolicy Bypass -File run_prism.ps1
+# Internal tabs (attach / leakage / elasticity / Sankey / scrape):
+#   .\run_prism_internal.ps1   (same port; close this window first)
+
+param(
+    [switch]$Internal
+)
 
 $ErrorActionPreference = "Stop"
 $PrismRoot = $PSScriptRoot
+if ($Internal) {
+    $env:PRISM_INTERNAL = "true"
+} else {
+    $env:PRISM_INTERNAL = "false"
+}
 $IszeRootPs1 = Join-Path (Split-Path (Split-Path (Split-Path $PrismRoot -Parent) -Parent) -Parent) '04_tools\workspace\isze_root.ps1'
 . $IszeRootPs1
 $Port = 8503
@@ -31,8 +42,13 @@ if (-not (Test-Path $parquet)) {
 & $Python -m pip install -q -r requirements.txt 2>$null
 
 Write-Host ""
-Write-Host "Starting PRISM on http://localhost:$Port" -ForegroundColor Green
-Write-Host "(Not Jarvis — Jarvis often uses port 8501)" -ForegroundColor DarkGray
+if ($Internal) {
+    Write-Host "Starting PRISM INTERNAL on http://localhost:$Port" -ForegroundColor Yellow
+    Write-Host "Extra tabs on: attach, ITUK leakage, elasticity, demand-flow, scrape." -ForegroundColor Yellow
+} else {
+    Write-Host "Starting the usual PRISM window (http://localhost:$Port)" -ForegroundColor Green
+    Write-Host "MD-safe default. Extra tabs: double-click run_prism_internal.ps1" -ForegroundColor DarkGray
+}
 Write-Host "Press Ctrl+C to stop." -ForegroundColor DarkGray
 Write-Host ""
 

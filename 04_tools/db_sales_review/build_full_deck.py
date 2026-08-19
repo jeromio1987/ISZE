@@ -185,7 +185,7 @@ def brake_pad_mix(hu: pd.DataFrame) -> list[dict]:
     if pads.empty:
         return []
     pads["is_bvp"] = pads["part_number"].isin(bvp)
-    qty_col = "billing_qty" if "billing_qty" in pads.columns else None
+    qty_col = next((c for c in ("billed_qty", "billing_qty", "qty") if c in pads.columns), None)
     rows = []
     for y in (2025, 2026):
         g = pads[pads["fy"] == y]
@@ -204,6 +204,7 @@ def brake_pad_mix(hu: pd.DataFrame) -> list[dict]:
             "bvp_share_eur_pct": (bvp_eur / tot * 100) if tot else 0.0,
             "gen_eur": gen_eur,
             "bvp_eur": bvp_eur,
+            "tot_eur": tot,
         })
     return rows
 
@@ -684,27 +685,36 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
             )
             pad_rows = [
                 ["", "FY2025", "FY2026"],
+                ["Genuine pad sales (€)", eur(by_y[y0]["gen_eur"]), eur(by_y[y1]["gen_eur"])],
+                ["BVP pad sales (€)", eur(by_y[y0]["bvp_eur"]), eur(by_y[y1]["bvp_eur"])],
                 ["Genuine qty", f"{by_y[y0]['gen_qty']:.0f}", f"{by_y[y1]['gen_qty']:.0f}"],
                 ["BVP qty", f"{by_y[y0]['bvp_qty']:.0f}", f"{by_y[y1]['bvp_qty']:.0f}"],
                 [
-                    "BVP share of total brake pad sales (€)",
+                    "BVP share of pad sales (€)",
                     f"{by_y[y0]['bvp_share_eur_pct']:.0f}%",
                     f"{by_y[y1]['bvp_share_eur_pct']:.0f}%",
                 ],
             ]
             styled_table(
-                s, pad_rows, Inches(0.32), Inches(1.4), Inches(7.2), Inches(2.4),
+                s, pad_rows, Inches(0.32), Inches(1.4), Inches(7.2), Inches(2.8),
                 [Inches(3.6), Inches(1.8), Inches(1.8)],
-                bold_last=False, size=13, left_cols=(0,),
+                bold_last=False, size=12, left_cols=(0,),
+            )
+            pad_notes = [
+                "BVP share = BVP € ÷ all brake-pad € billed (genuine + BVP). "
+                "Not a PMS capture %.",
+            ]
+            if by_y[y1]["bvp_eur"] < 1 and by_y[y1]["gen_eur"] > 0:
+                pad_notes.append(
+                    f"UMI pad sales are genuine-only in this cut "
+                    f"(~{eur(by_y[y1]['gen_eur'], True)} FY26) — no BVP pad lines billed."
+                )
+            pad_notes.append(
+                f"Wallet-level BVP is still only ~{f26['bvp_pct']*100:.1f}% of FY26 — "
+                "do not generalise a pad story to the whole wallet."
             )
             db.bullet_list(
-                s,
-                [
-                    "BVP share = BVP € ÷ all brake-pad € billed (genuine + BVP). "
-                    "Not a PMS capture %.",
-                    f"Wallet-level BVP is still only ~{f26['bvp_pct']*100:.1f}% of FY26 — "
-                    "do not generalise a pad story to the whole wallet.",
-                ],
+                s, pad_notes,
                 Inches(7.7), Inches(1.3), Inches(5.1), Inches(4.5), size=13,
             )
             page += 1

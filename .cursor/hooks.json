@@ -1,8 +1,19 @@
 {
-
   "version": 1,
-
-  "hooks": {}
-
+  "hooks": {
+    "afterShellExecution": [
+      {
+        "command": "node .cursor/hooks/db-sales-review-after-build.mjs",
+        "matcher": "db_sales_review|build_full_deck\\.py|build_deck\\.py|build_parts_analysis\\.py"
+      }
+    ],
+    "stop": [
+      {
+        "command": "node .cursor/hooks/db-sales-review-on-stop.mjs"
+      },
+      {
+        "command": "node .cursor/hooks/mypens-verify-on-stop.mjs"
+      }
+    ]
+  }
 }
-

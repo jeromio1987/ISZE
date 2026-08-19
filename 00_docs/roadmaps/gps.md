@@ -1,6 +1,6 @@
 # GPS dashboard — roadmap
 
-**Last updated:** 2026-06-13  
+**Last updated:** 2026-08-18  
 **Hub:** [`ISZE_ROADMAP.md`](../../ISZE_ROADMAP.md)  
 **Live app:** PRISM `pages/2_GPS.py` · `03_analytics/Isuzu/gps_dashboard/` (legacy Dash)
 
@@ -44,15 +44,11 @@ GPS / Spend per Unit baseline dashboard:
 
 ---
 
-## V3 — AIM integration & strategic scoring
+## V3 — AIM integration & strategic scoring — **superseded 2026-08-18**
 
-- AIM-sourced classification in Part Explorer
-- Distributor strategic profile (% ABC:A, Class C exposure)
-- Opportunity Engine tab (demand vs actual by category)
-- AIM × GPS matrix quadrant
-- AIM-enriched Excel export
+**Do not build this.** The scoring layer (Strategic Score, Pricing Risk Map, AIM×GPS as a risk axis) failed in production (2026-07-17) and again as a fitted model (2026-08-18). Classification stays; the quadrant stays as **GPS × PMS total capture**.
 
-**Dependencies:** AIM CY2025 dataset, PN → AIM category linkage
+Replacement programme: [`aim_prism_reinvention.md`](aim_prism_reinvention.md).
 
 ---
 

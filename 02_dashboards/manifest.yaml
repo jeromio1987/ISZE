@@ -1,53 +1,105 @@
-# ISZE HTML dashboard layout — source folders (deploy is flat via sync_to_deploys.ps1)
-# Agent sync: 2026-06-13
+# ISZE HTML dashboard layout — regenerated from disk 2026-08-13
+# Deploy is flat via sync_to_deploys.ps1 (does not read this file for the copy list).
+# Stubs are listed separately; they are not dashboards.
 
-version: 1
+version: 2
 
 folders:
+  _working: Working / scratch
+  _composable: PRISM map + master desk
+  fleet: UIO, ZEV, plan tracker, year-end, GPS canonical
+  gps: GPS stubs + kickback (canonical GPS lives in fleet/)
   hub: Entry points and navigation
-  sales: AIM, competitiveness, sell-out, monthly sales, SPA
-  fleet: UIO, ZEV, plan tracker, year-end
-  gps: GPS / SPU / target study
+  ids: IDS 2026 dealer evaluation
+  md_pack: MD pack
   ops: Tender, AI tools, legal map
+  pricing: Pricing engine, live, history, proposals
+  sales: AIM, competitiveness, sell-out, monthly sales, SPA
   side: Non-ISZE (PROPERTIQ)
 
 files:
-  hub:
-    - PROJECT_HUB.html
-    - MASTER_DASHBOARD.html
+  _composable:
+    - dist/prism_map.html
+    - dist/isze_cockpit.internal.html
+    - dist/isze_cockpit.customer.html
+  _working:
     - index.html
-    - AI_Operations_Explorer.html
-  sales:
-    - AIM_Dashboard_CY2025.html
-    - ISZE_Competitiveness_Dashboard.html
-    - ISZE_Risk_Cockpit.html
-    - Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html
-    - Dealer_Sellout_UTI_vs_ITUK.html
-    - ISZE_Monthly_Sales_Tracker.html
-    - ISZE_SPA_RunRate_UTI.html
   fleet:
     - ISUZU_UIO_Dashboard_2026.html
-    - ISZE_GPS_Dashboard.html
-    - ITUK_ZEV_Golden_Window_Dashboard.html
-    - ISZE_Plan_Tracker_2030.html
     - ISZE_FY2026_YearEnd_Review.html
+    - ISZE_GPS_Dashboard.html
+    - ISZE_Plan_Tracker_2030.html
+    - ITUK_ZEV_Golden_Window_Dashboard.html
   gps:
-    - ISZE_GPS_TargetStudy_Reconciliation_Dashboard.html
-    - ISZE_GPS_Network_SPU_Dashboard.html
     - ISZE_GPS_Kickback_Stretch_Proposal_FY27.html
+  hub:
+    - AI_Operations_Explorer.html
+    - index.html
+    - MASTER_DASHBOARD.html
+    - PROJECT_HUB.html
+  ids:
+    - IDS_2026_Audit_Sales_Market_Evaluation.html
+    - IDS_2026_dealer_compare.html
+    - IDS_2026_dealer_compare_Belgium.html
+    - IDS_2026_dealer_compare_Cyprus.html
+    - IDS_2026_dealer_compare_Denmark.html
+    - IDS_2026_dealer_compare_France.html
+    - IDS_2026_dealer_compare_Greece.html
+    - IDS_2026_dealer_compare_Hungary.html
+    - IDS_2026_dealer_compare_Israel_LCV.html
+    - IDS_2026_dealer_compare_Italy.html
+    - IDS_2026_dealer_compare_Luxembourg.html
+    - IDS_2026_dealer_compare_Malta.html
+    - IDS_2026_dealer_compare_Netherlands.html
+    - IDS_2026_dealer_compare_Norway.html
+    - IDS_2026_dealer_compare_Poland.html
+    - IDS_2026_dealer_compare_Portugal.html
+    - IDS_2026_dealer_compare_Romania.html
+    - IDS_2026_dealer_compare_Spain.html
+    - IDS_2026_dealer_compare_Switzerland.html
+    - IDS_2026_dealer_compare_UK_CV.html
+    - IDS_2026_dealer_compare_UK_LCV.html
+    - IDS_2026_Portugal_dealer_map.html
+  md_pack:
+    - ISZE_MD_Pack_Capture_FY27_FY28.html
   ops:
+    - ISZE_AI_Tools_Overview.html
+    - ISZE_Commercial_Model_Map.html
     - ISZE_Tender_Monitor_v2.html
     - ISZE_Tools_Legal_Map.html
-    - ISZE_AI_Tools_Overview.html
+  pricing:
+    - ISZE_Aftermarket_Live_Pricing_Dashboard.html
+    - ISZE_Pricing_Action_Map.html
+    - ISZE_Pricing_BI_Dashboard.html
+    - ISZE_Pricing_Engine_Readiness_Dashboard.html
+    - ISZE_Pricing_Full_Analysis_Pack.html
+    - ISZE_Pricing_History_Findings_Dashboard.html
+    - ISZE_Pricing_Proposal_v1.html
+    - ISZE_Scraped_Price_Intelligence_Dashboard.html
+  sales:
+    - AIM_Dashboard_CY2025.html
+    - AIM_Dashboard_CY2026.html
+    - Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html
+    - Dealer_Sellout_UTI_vs_ITUK.html
+    - ISZE_Competitiveness_Dashboard.html
+    - ISZE_Monthly_Sales_Tracker.html
+    - ISZE_PartGroups_Sales_Explorer.html
+    - ISZE_PartGroups_Sales_Explorer_OFFLINE.html
+    - ISZE_Risk_Cockpit.html
+    - ISZE_SPA_RunRate_UTI.html
+    - ISZE_UTI_Replenishment_H2_2025.html
   side:
     - PROPERTIQ.html
 
-archive:
-  - ISUZU_UIO_Dashboard_2026_v17.html
+stubs:
+  - fleet/ISUZU_UIO_Dashboard_2026_v18.html
+  - fleet/ISZE_GPS_Dashboard_v9.html
+  - gps/ISZE_GPS_Network_SPU_Dashboard.html
+  - gps/ISZE_GPS_TargetStudy_Reconciliation_Dashboard.html
 
 deploy:
-  # Published URLs stay flat: /MASTER_DASHBOARD.html (GitHub Pages)
   flatten_on_sync: true
   skip_dirs:
     - _archive
     - _build
+    - Data

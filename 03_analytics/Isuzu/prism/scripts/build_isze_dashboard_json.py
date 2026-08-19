@@ -112,7 +112,8 @@ def _build_pms_block() -> dict:
     if ituk.empty:
         raise SystemExit("No ITUK rows in pms_capture_by_db_year.csv")
 
-    latest_year = int(ituk["year"].max())
+    # Same guard as GPS: year.max() publishes a partial CY2026 as the PRISM lane.
+    latest_year = latest_complete_year([int(y) for y in ituk["year"].dropna().unique()])
     yr = ituk[ituk["year"] == latest_year].copy()
     yr = yr.sort_values("pms_category")
 
@@ -140,9 +141,12 @@ def _build_pms_block() -> dict:
     by_db: list[dict] = []
     if PMS_SUMMARY_CSV.exists():
         summ = pd.read_csv(PMS_SUMMARY_CSV)
+        if "year" in summ.columns:
+            summ = summ[summ["year"] == latest_year]
         for _, row in summ.sort_values("revenue_gap_eur_sum", ascending=False).iterrows():
             code = str(row["distributor_code"])
             entry = {
+                "year": latest_year,
                 "distributor_code": code,
                 "country": str(row.get("country", "")),
                 "uio_units": int(row.get("uio_units", 0) or 0),
@@ -169,6 +173,7 @@ def _build_pms_block() -> dict:
         ),
         "source_file": iml["source_workbook"],
         "prism_source_file": "Data/derived/pms_capture_by_db_year.csv",
+        "league_year": latest_year,
         "distributor_count": len(by_db),
         "by_distributor": by_db,
         "ituk": ituk_iml,
@@ -278,15 +283,31 @@ def main() -> int:
         print(f"WARNING: risk_cockpit viz skipped: {exc}", flush=True)
 
     ISZE_DATA_JSON.parent.mkdir(parents=True, exist_ok=True)
-    ISZE_DATA_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    body = json.dumps(payload, ensure_ascii=False, indent=2)
+    ISZE_DATA_JSON.write_text(body, encoding="utf-8")
+    preload = ISZE_DATA_JSON.with_suffix(".preload.js")
+    compact = json.dumps(payload, ensure_ascii=False, allow_nan=True)
+    preload.write_text(
+        "window.__PRELOADS__ = window.__PRELOADS__ || {};\n"
+        f'window.__PRELOADS__["../Data/dashboards/isze_data.json"] = {compact};\n',
+        encoding="utf-8",
+    )
 
     pms = payload["pms"]["ituk"]
+    prism = payload["pms"].get("ituk_prism_lane") or {}
     print(f"Wrote {ISZE_DATA_JSON}")
+    print(f"Wrote {preload}")
     print(
         f"  ITUK {pms['year']} (IML v7): UIO {pms['uio_dvla']:,} | "
         f"gap €{pms['revenue_gap_eur_sum']:,.0f} | "
         f"oil {pms['oil_filter']['capture_rate_raw_pct']}% cover"
     )
+    if prism:
+        oil = (prism.get("oil_filter") or {}).get("capture_rate_raw_pct")
+        print(
+            f"  ITUK {prism.get('year')} (PRISM lane): oil {oil}% | "
+            f"gap €{prism.get('revenue_gap_eur_sum', 0):,.0f}"
+        )
     if payload.get("gps", {}).get("ituk"):
         g = payload["gps"]["ituk"]
         print(f"  GPS ITUK SPU €{g['spend_per_unit_eur']:,.0f} ({g['traffic_light']})")

@@ -158,6 +158,7 @@ def render_bvp_capture_quadrant(
     dists_avail: list[str],
     latest_y: int | None,
 ) -> None:
+    """Parked 2026-08-18 — Insights tab dropped; surviving quadrant is AIM × GPS Matrix."""
     st.markdown("#### 📐 BVP Mix × PMS Capture — Quadrant Analysis")
     st.caption(
         "**Formula: X = BVP unit share = BVP qty ÷ (Genuine + BVP qty)** "

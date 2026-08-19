@@ -1,0 +1,115 @@
+{
+  "built_at_utc": "2026-08-11T06:04:33Z",
+  "source_path": "01_data/11_planning/Action plan FY2027 VPACC_July update.xlsx",
+  "source_filename": "Action plan FY2027 VPACC_July update.xlsx",
+  "update_label": "July",
+  "fy": "FY2027",
+  "builder": "01_data/91_build/build_vpacc_fy2027_action_plan.py",
+  "sheet_map": {
+    "Action Plan VP": {
+      "role": "main_actions_vehicle_parts",
+      "stream": "VP",
+      "action_rows": 68,
+      "join_keys": [
+        "pic",
+        "progress_status",
+        "objective",
+        "action_point"
+      ],
+      "pic_col": "E",
+      "progress_col": "R"
+    },
+    "Action Plan ACC": {
+      "role": "main_actions_accessories",
+      "stream": "ACC",
+      "action_rows": 53,
+      "join_keys": [
+        "pic",
+        "progress_status",
+        "deadline",
+        "objective",
+        "action_point"
+      ],
+      "pic_col": "F",
+      "progress_col": "S",
+      "deadline_col": "E"
+    },
+    "Sheet1": {
+      "role": "ancillary_order_lines",
+      "rows": 5
+    },
+    "2018": {
+      "role": "monthly_db_eur_blocks",
+      "rows": 267,
+      "note": "Sheet name legacy misnomer; block_index=2 has no year label",
+      "years": [
+        2025
+      ]
+    }
+  },
+  "join_hints": {
+    "owner_field": "pic",
+    "status_fields": [
+      "progress_status",
+      "progress_filled",
+      "progress_raw"
+    ],
+    "stream_field": "stream",
+    "streams": [
+      "VP",
+      "ACC"
+    ],
+    "pics_seen": [
+      "BS",
+      "BS/JVDP/KM",
+      "DW",
+      "DW / HT",
+      "DW/ HT",
+      "DW/HT",
+      "DW/HT/MH",
+      "DW/SZ",
+      "IMG",
+      "JVDP",
+      "JVDP / IMG",
+      "JVDP/KM",
+      "KM",
+      "KM/JVDP",
+      "KM/JVDP/BS",
+      "SZ",
+      "SZ (lead)",
+      "SZ/DW",
+      "Sales / IMG"
+    ],
+    "note": "Join later work on pic initials / stream; not dealer-keyed"
+  },
+  "outputs": {
+    "actions": {
+      "path": "01_data/00_derived/vpacc_fy2027_action_plan_july.parquet",
+      "rows": 121,
+      "vp_rows": 68,
+      "acc_rows": 53
+    },
+    "orders_sheet1": {
+      "path": "01_data/00_derived/vpacc_fy2027_orders_sheet1.parquet",
+      "rows": 5
+    },
+    "monthly_db_block": {
+      "path": "01_data/00_derived/vpacc_fy2027_monthly_db_block.parquet",
+      "rows": 267
+    }
+  },
+  "progress_legend": {
+    "■□□□": "plan_made",
+    "■■□□": "started",
+    "■■■□": "started_and_in_progress",
+    "■■■■": "completed_and_eval",
+    "□□□□": "not_started_or_blank"
+  },
+  "ambiguous_columns": [
+    "ACC T–V are CY2023 DEC/NOV report residue (comments_legacy_* / status_vs_oct)",
+    "Sheet tab '2018' misnamed; block_index=2 has no year label",
+    "Month cells mixed flags x/X/G/Y stored as-is in m_*",
+    "DM Report / Objective forward-filled from sparse section headers"
+  ],
+  "prior_workbook": "01_data/11_planning/Action plan FY2027 VPACC_April update.xlsx"
+}

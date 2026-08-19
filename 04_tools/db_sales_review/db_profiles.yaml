@@ -7,7 +7,8 @@
 #
 # Field notes
 #   payer          exact string in cy2025_raw.csv 'DB' and cy2026_q1.csv 'Payer.1'
-#   sold_to        SAP sold-to code (sanity check only)
+#   sold_to        SAP sold-to code — REQUIRED filter in load_sales when set
+#                  (Israel: 1797=UMI, 1799=UTI; payer name alone blends both)
 #   gps_key        row key in 00_derived/gps_master.csv (column 'Unnamed: 0')
 #   pms_code       distributor_code in 00_derived/pms_capture_by_db_year.csv
 #   fy27_tab       tab in 01_data/ISZE_GPS_Extended_Target_FY27_V3.1.xlsx
@@ -142,16 +143,36 @@ distributors:
     warranty_cy2025_claim: 74677
     warranty_note: "IBX Belgium only; no CV warranty rows in the source file."
     incentive_fy27: 28000
+    # Locked from ISZE_GPS_Extended_Target_FY27_V3.1.xlsx Dashboard!I17 (EXT TARGET)
+    ext_target_v31: 2340133.51489776
+    ext_target_source: "V3.1 Dashboard col I BELGIUM"
+    # Poland UIO10 from Łukasz (SAMAR) 2026-07-30 — no Bavo wait for NL/LUX (still 0 in carpark)
+    gps_uio_adders:
+      - label: "Poland UIO10 (Łukasz / SAMAR 2025)"
+        uio: 1167
+        rate: 250
+    saty_note: "Q1 FY2027 IBX order mix ~39% SOR / ~39% VOR by € — VOR urgency pricing lifts billed amount."
+    deck:
+      skip_s2d: true
+      skip_new_business: true
+      skip_next_steps: true
+      exclude_movers_cats: ["Body parts"]
+      exclude_movers_jerome_ok: true  # Jerome asked Body out of IBX movers (deep-dive separate)
+      body_deep_dive: true
+      use_isze_ext_target: true   # FY27 slides use V3.1 col I, not S2D
     pbi:
-      quarter: "Q1 FY2027"
-      months: ["Apr", "May", "Jun"]
-      sales: [209000, 157000, 230000]
-      budget: [null, null, null]
-      prev_year: [null, null, null]
-      order_intake_total: null
-      source: "Power BI Q1 FY2027 report, IBX row — sales supplied by Jerome 2026-07-30; budget/prior pending"
+      quarter: "FY2027 YTD (Apr–Jul)"
+      months: ["Apr", "May", "Jun", "Jul"]
+      sales: [203000, 157000, 235000, 131000]
+      budget: [200000, 155000, 233000, 129000]
+      prev_year: [63000, 62000, 220000, 250000]
+      order_intake: [144000, 164000, 185000, 138000]
+      order_intake_total: 631000
+      original_bp: [183000, 174000, 201000, 210000]
+      source: "Power BI IBX cut Apr–Jul FY2027 — Jerome screenshot 2026-08-11"
     watch:
-      - "ISUZU BENELUX NV bills for BE/NL/PL/LUX but the FY27 max spend uses the BELGIUM UIO rows only. GPS 95-98% is therefore likely OVERSTATED — numerator covers a parc the denominator excludes. Do not present the % without stating that, or widen the denominator first (UIO rows NL 30/31/32, LUX 36/37/38, Poland 69)."
+      - "FY27 EXT TARGET locked to V3.1 Dashboard I17 (€2,340,134). Do not recompute from S2D."
+      - "GPS capture slide adds Poland UIO10 1,167 (Łukasz). NL/LUX still 0 in carpark — not waited on Bavo."
       - "IDS 2026 splits Benelux across 'BE' and 'NL' country buckets — decide which the meeting covers before pulling the dealer table."
       - "Q1 2026 carries a EUR 25,200 credit memo — signed by the loader."
 
@@ -227,10 +248,38 @@ distributors:
     warranty_cy2025_claim: 1791020
     warranty_note: "Dedicated UMI claim file; UMI only, never blended with UTI."
     incentive_fy27: null
-    pbi: null
+    # Locked from ISZE_GPS_Extended_Target_FY27_V3.1.xlsx Dashboard!I8 (EXT TARGET)
+    ext_target_v31: 3051651.97536192
+    ext_target_source: "V3.1 Dashboard col I UMI"
+    # GPS SaTy: coded mix only. Not an IBX-like VOR lift.
+    saty_note: "Q1 FY2027 order mix is routine stock — SOR ~97% / VOR ~3% of coded €. Urgency mix is not lifting GPS here."
+    deck:
+      skip_s2d: true
+      skip_new_business: true
+      skip_next_steps: true
+      skip_pbi_orders: true
+      # No exclude_movers_cats — Jerome did not ask to drop any category from the UMI chart.
+      body_deep_dive: false
+      use_isze_ext_target: true
+    # Locked from Jerome PBI screenshot 2026-08-12 (FY2027 Apr–Jul).
+    pbi:
+      quarter: "FY2027 YTD (Apr–Jul)"
+      months: ["Apr", "May", "Jun", "Jul"]
+      sales: [126000, 348000, 170000, 231000]
+      budget: [121000, 343000, 165000, 226000]
+      prev_year: [219000, 251000, 174000, 373000]
+      order_intake: [239000, 125000, 213000, 296000]
+      order_intake_total: 873000
+      original_bp: [237000, 225000, 261000, 272000]
+      source: "Power BI UMI cut Apr–Jul FY2027 — Jerome screenshot 2026-08-12; Shell lubricants on hold"
     watch:
+      - "FY27 EXT TARGET locked to V3.1 Dashboard I8 (€3,051,652). Do not recompute from S2D."
       - "IDS Israel is the UMI dealer network. Never blend UTI into an IDS-linked view."
-      - "Dashboard S2D is unavailable; FY2026 S2D is imputed from ISZE billing / 0.65."
+      - "CRITICAL: sold_to 1797 = UMI; 1799 = UTI. load_sales MUST filter Sold-to — payer name alone blends both."
+      - "Apr–Jun SAP must match PBI sales within ~€1K via q1fy2027_export_with_saty Sold_to 1797 (not tagged payer)."
+      - "Dashboard S2D is unavailable; FY2026 S2D is imputed from ISZE billing / 0.65 — S2D slide skipped."
+      - "Shell oils are 5500* PNs; Feb–Mar billed, Apr+ quiet (on hold). Do not hide in UNCLASSIFIED without a callout."
+      - "July PBI is in the screenshot; line billing export may lag — PBI slide still shows Jul."
 
   NORWAY:
     name: "Rutebileiernes Standardisering"

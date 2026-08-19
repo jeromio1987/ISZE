@@ -348,10 +348,10 @@ def render_portugal_html(payload: dict[str, Any], *, built_at: str) -> str:
         "<h2>Portugal dealer map</h2>",
         1,
     )
+    # Template v1.3+ map hint — name the Portugal benchmark explicitly.
     html = html.replace(
-        "Interactive map (Leaflet + OpenStreetMap / CARTO). Hover a pin for dealer total score %, that country’s national average %, and the delta in percentage points. Pins follow the country / search filters above. Locations are approximate city centres (or a country centre when the dealer name has no place token) — not surveyed street addresses. Map tiles require an internet connection. Dealers without coordinates stay in the tables only.",
-        "Interactive map (Leaflet + OpenStreetMap / CARTO). Hover a pin to see that dealer’s total score vs the Portugal national average (and the delta in percentage points). Click opens the same detail. Pins are approximate city centres — not surveyed street addresses. Map tiles require an internet connection. Network-average charts elsewhere still use the full IDS network as an anonymous benchmark.",
-        1,
+        "Pins are coloured by dealer total vs that country’s national average",
+        "Pins are coloured by dealer total vs the Portugal national average",
     )
     html = html.replace(
         'aria-label="IDS network dealer interactive map"',

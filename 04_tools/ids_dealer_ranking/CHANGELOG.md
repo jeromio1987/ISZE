@@ -9,6 +9,42 @@ Newest first. Append only.
 
 ## [Unreleased]
 
+### Section E not_scored (2026-08-15) — leave E out of scoring, record it
+
+- Israel LCV (UMI): all 29 dealers 0/18 questions, 0/27 points, **fill not_scored**.
+  Not a vehicle-sales fail. Totals restated on **A–D only** (max 253).
+- Those 29 zeros are **excluded** from the network Section E average and from
+  the network total (no fake fail in the 280-point mix).
+- Hover on the network-average figure in **every** live IDS HTML explains the
+  exclusion. Heatmap shows NS (grey), not 0% red.
+- Operating headline for Israel remains **Section D (Parts)** vs the network.
+- Live HTML restamped: `02_dashboards/ids/` + `09_meetings/IDS_2026_Country_Packs_v1.4/`.
+  v1.3 / archive packs not rewritten.
+
+### Full country pack v1.4 (2026-08-15) — all dealer sheets, one network average
+
+- Authorized rebuild of **all 19 country packs** into `09_meetings/IDS_2026_Country_Packs_v1.4/`
+  (Belgium, NL, LUX, DK, PL, GR, NO, HU, RO, MT, CY, UK CV, UK LCV, Portugal,
+  Israel LCV, FR, IT, ES, CH). Benelux rollup not rebuilt.
+- Anonymous **network average 79.0%** on every sheet (FR 20 / ES 5 red-marked out of
+  averages; IT/CH all-in). Section E network 73.2% still includes UMI’s 29 zeros —
+  scoring change for Israel LCV Section E is a Masumi decision, not applied here.
+- Mirrored HTML → `02_dashboards/ids/`. Full-network compare rebuilt (564 dealers).
+- Master zip rewritten. INDEX scope text corrected (no longer claims UK LCV / Portugal /
+  Israel / MIDI are excluded).
+
+### Belgium country pack v1.4 (2026-08-12) — corrected network averages
+
+- Authorized rebuild: **Belgium v1.4** under `09_meetings/IDS_2026_Belgium_v1.4/`
+  (does **not** overwrite `IDS_2026_Country_Packs_v1.3/Belgium`).
+- Same average codepath as MIDI v1.4 / Baumann wave (`build_ids_country_packs_v13.py`
+  + `ids_report_extract.py`). BE has no FR/ES red-mark exclusions.
+- **National avg unchanged** ~78.5% (34 dealers). **Network avg** ~75.7% → ~79.0%
+  (anonymous full-network benchmark after FR/ES reds out / IT+CH all in).
+- Mirrored HTML → `02_dashboards/ids/IDS_2026_dealer_compare_Belgium.html`.
+- Outlook **draft** to Jerome via `draft_ids_belgium_v14.py` (Save — not Sent).
+- IBX SaTy Fill draft attach updated to prefer Belgium **v1.4** zip.
+
 ### DB feedback sheet v0.4 (2026-08-11) — DB rollup leverage OS blocks
 
 - Generator `VERSION = v0.4` → `09_meetings/IDS_2026_DB_Feedback_Sheet_v0.4/`
@@ -45,9 +81,9 @@ Newest first. Append only.
 | Market | Rule |
 |--------|------|
 | **France + Spain** | Red-marked dealers (font red in her ranking attachments) → **exclude from averages** (country / network / section avgs). |
-| **Italy + Switzerland** | **Keep all dealers in** averages. |
+| **Italy + Switzerland** | **Keep all dealers in** averages — **including zero-score shells** (no zero-shell hygiene on IT/CH). |
 
-**Scope from her words:** averages only. She did **not** say remove them from the dealer list / HTML. Jerome’s later plan to also drop them from list/HTML + bump **v1.4** is a **pending decision** — do **not** rebuild or ship until he says rebuild/ship and confirms list vs avg-only.
+**Scope from her words:** averages only. She did **not** say remove them from the dealer list / HTML.
 
 **Canonical red-marked list (her attachments):**
 
@@ -59,4 +95,4 @@ Newest first. Append only.
 - **France (20):** LABESQUE VEHICULES INDUSTRIELS… (35%), CHAUMONT POIDS LOURDS… (23.21%), GARAGE PRESTIGE AUTOS SARL (17.14%), THEOBALD AUTOMOBILES S.A.S. (16.43%), ZENITH MOTORS SAS (11.07%), UTILITAIRE SERVICE S.A.S. (7.86%), plus **14 at 0%**: AUBERT DIFFUSION, AUTO CONSEIL LOCATION (ACL), BAYI TRUCKS, BEKE GASPARD, CARS 2000-1, ESSONNE POIDS LOURDS (ESPL), GARAGE AUBREE, LEFEVRE LORRAINE, LOGIC AUTOMOBILES, MANTES VEHICULES INDUSTRIELS (MVI), MDH SA, SOCIETE DES GRANDS GARAGES DU GARD, SORELOC, TRANS-SERVICES.
 - **Spain (5):** CAMIONES DEL PISUERGA SA (6.79%), ESPAWAGEN SAU (0), GAURSA ARABAUTO S.L. (0), MIDI SPAIN AUTOMOCION SL (0), TALAUTO PLUS S.L. (0).
 
-**Status 2026-08-10:** Documented only. No v1.4 rebuild/ship. Workspace ranking copies under `IDS_2026/rankings/` are unmarked; always prefer Tomoe’s Jul-31 attachment copies above for the red list.
+**Status 2026-08-11:** **Applied in v1.4** — `ids_report_extract.py`: FR/ES red-marked out of averages (20 / 5); **IT/CH all dealers in** (zeros included). First v1.4 build wrongly dropped IT/CH zero shells — corrected same day under authorized v1.4 rebuild. Packs: `09_meetings/IDS_2026_Country_Packs_v1.4/`. Outlook **draft** to Tomoe (not Sent) via `draft_ids_midi_v14.py`. Jerome must Send.

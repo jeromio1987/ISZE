@@ -17,8 +17,9 @@ APP_DIR = Path(__file__).parent.parent
 if str(APP_DIR) not in sys.path:
     sys.path.insert(0, str(APP_DIR))
 
-from config import DERIVED_DIR  # noqa: E402
+from config import DERIVED_DIR, is_internal_mode  # noqa: E402
 from modules import advanced_visuals as av  # noqa: E402
+from modules.internal_gate import OFFSET_DEMAND_FLOW, offset_tab_labels  # noqa: E402
 
 st.markdown(
     """
@@ -29,7 +30,7 @@ st.markdown(
   .ofs-hero p{color:#E8F0FA;margin:.35rem 0 0;font-size:.9rem;}
 </style>
 <div class="ofs-hero"><h1>Offset Insights</h1>
-<p>Six views on where parts revenue moves, leaks to aftermarket, and can be recovered.</p></div>
+<p>Where parts revenue moves and what can be recovered.</p></div>
 """,
     unsafe_allow_html=True,
 )
@@ -45,31 +46,33 @@ dists = _distributors()
 default_ix = dists.index("ITUK") if "ITUK" in dists else 0
 highlight = st.selectbox("Highlight distributor", dists, index=default_ix)
 
-st.caption(
-    "⚠️ The Sankey 'Leakage' leg and any leakage figure are an INFERENCE "
-    "(under-service gap), not a measured competitor number — internal use only."
-)
+internal = is_internal_mode()
+if internal:
+    st.caption(
+        "⚠️ The Sankey 'Leakage' leg and any leakage figure are an INFERENCE "
+        "(under-service gap), not a measured competitor number — internal use only."
+    )
 
-t1, t2, t3, t4, t5, t6 = st.tabs([
-    "1 · Movement", "2 · Lumpiness→Airfreight", "3 · Demand-Flow",
-    "4 · VOR Pricing Power", "5 · Premium vs Defection", "6 · Capture Ceiling",
-])
+tab_names = offset_tab_labels(internal=internal)
+tabs = st.tabs(tab_names)
+tab_by_name = dict(zip(tab_names, tabs))
 
-with t1:
+with tab_by_name["1 · Movement"]:
     st.markdown("Each distributor's path 2023→2025 on GPS/SPU × capture. **Arrow = direction of travel.**")
     st.plotly_chart(av.fig_trajectory_quiver(DERIVED_DIR, highlight), width='stretch')
-with t2:
+with tab_by_name["2 · Lumpiness→Airfreight"]:
     st.markdown("Offset of demand-class work × VOR data: do families with lumpy demand generate more airfreight?")
     st.plotly_chart(av.fig_lumpiness_airfreight(DERIVED_DIR), width='stretch')
-with t3:
-    st.markdown("Parc-implied demand (TAM) → genuine / BVP / leakage, by category.")
-    st.plotly_chart(av.fig_demand_flow_sankey(DERIVED_DIR), width='stretch')
-with t4:
+if OFFSET_DEMAND_FLOW in tab_by_name:
+    with tab_by_name[OFFSET_DEMAND_FLOW]:
+        st.markdown("Parc-implied demand (TAM) → genuine / BVP / leakage, by category.")
+        st.plotly_chart(av.fig_demand_flow_sankey(DERIVED_DIR), width='stretch')
+with tab_by_name["4 · VOR Pricing Power"]:
     st.markdown("Who runs high expedited volume at **zero premium** (bottom-right) — the repricing call list.")
     st.plotly_chart(av.fig_vor_pricing_power(DERIVED_DIR, highlight), width='stretch')
-with t5:
+with tab_by_name["5 · Premium vs Defection"]:
     st.markdown("Does a higher genuine premium correlate with **lower** genuine unit share? (defection test)")
     st.plotly_chart(av.fig_premium_defection(DERIVED_DIR, highlight), width='stretch')
-with t6:
+with tab_by_name["6 · Capture Ceiling"]:
     st.markdown(f"Current genuine € → recoverable layers → TAM ceiling for **{highlight}**.")
     st.plotly_chart(av.fig_capture_ceiling(DERIVED_DIR, highlight), width='stretch')

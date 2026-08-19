@@ -37,6 +37,7 @@ from config import (  # noqa: E402
 )
 from modules.bvp_analytics import UIO_OVERRIDES  # noqa: E402
 from modules.bvp_dashboard_data import is_ready, load_bvp_bundle  # noqa: E402
+from modules.year_coverage import is_partial, latest_complete_year  # noqa: E402
 
 FIXTURES_PATH = PRISM_ROOT / "data" / "verification_fixtures.yaml"
 REPORT_JSON = DERIVED_DIR / "_verification_report.json"
@@ -437,15 +438,17 @@ def check_pms_all_distributors(report: Report, fx: dict[str, Any]) -> None:
     if pms_path.exists() and cfg_cap.get("min_distributors"):
         df = pd.read_csv(pms_path)
         totals = df[df["line_type"] == "total"]
-        yr = int(totals["year"].max())
-        dbs = totals[totals["year"] == yr]["distributor_code"].nunique()
+        years = [int(y) for y in totals["year"].dropna().unique()]
+        complete_yr = latest_complete_year(years)
+        dbs = totals[totals["year"] == complete_yr]["distributor_code"].nunique()
         need = int(cfg_cap["min_distributors"])
         _chk(
             report,
             "p1.distributor_count",
             dbs >= need,
-            f"PMS capture {dbs} distributors @ {yr} (min {need})",
+            f"PMS capture {dbs} distributors @ complete {complete_yr} (min {need})",
             distributors=dbs,
+            year=complete_yr,
         )
 
     if not summ_path.exists() or not cfg_sum:
@@ -460,6 +463,28 @@ def check_pms_all_distributors(report: Report, fx: dict[str, Any]) -> None:
         f"pms_summary_by_db {n} distributors (min {need})",
         rows=n,
     )
+    if "year" in df.columns and n:
+        summ_years = sorted({int(y) for y in df["year"].dropna().unique()})
+        capture_years = [int(y) for y in pd.read_csv(pms_path)["year"].dropna().unique()] if pms_path.exists() else summ_years
+        complete_yr = latest_complete_year(capture_years)
+        _chk(
+            report,
+            "pms.summary.complete_year",
+            summ_years == [complete_yr],
+            f"pms_summary_by_db year {summ_years} == complete {complete_yr}"
+            if summ_years == [complete_yr]
+            else f"pms_summary_by_db year {summ_years} is not latest complete {complete_yr} (partial-year trap)",
+            years=summ_years,
+            complete_year=complete_yr,
+        )
+        _chk(
+            report,
+            "pms.summary.not_partial",
+            not any(is_partial(y) for y in summ_years),
+            "pms_summary_by_db is a complete billing year"
+            if not any(is_partial(y) for y in summ_years)
+            else f"pms_summary_by_db includes partial year {summ_years}",
+        )
     req = set(cfg_sum.get("required_columns", []))
     missing = req - set(df.columns)
     _chk(

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IDS 2026 — how we read the network</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;background:#e8e4dc;font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0}
+.cover{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:48px 44px 52px;max-width:1100px;margin:0 auto 18px}
+.cover h1{color:#fff;font-size:36px;line-height:1.12;max-width:20ch;font-weight:400}
+.cover .rule{width:64px;height:3px;background:#c0552d;margin:18px 0 16px}
+.cover .meta{font-size:14px;opacity:.92;max-width:64ch}
+.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.page{max-width:1100px;margin:0 auto 18px;background:#fff;padding:32px 36px 40px;box-shadow:0 1px 6px rgba(0,0,0,.08)}
+h2.sec{font-size:22px;margin:0 0 8px;padding-bottom:8px;border-bottom:2px solid #1a2b4a}
+h2.sec .no{color:#c0552d}
+h3{font-size:16px;margin:18px 0 8px;color:#1a2b4a}
+.lead{color:#6b6256;font-size:14px;margin:0 0 18px}
+.callout{border-left:3px solid #c0552d;background:#f7f4ee;padding:14px 16px;margin:0 0 18px}
+.callout.navy{border-left-color:#1a2b4a;background:#f3f5f8}
+.callout.ok{border-left-color:#1d9e75;background:#eef7f3}
+.callout b{color:#1a2b4a}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0}
+.kpi{background:#f7f4ee;padding:14px 16px;border-top:3px solid #1a2b4a;position:relative;cursor:help}
+.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#6b6256}
+.kpi .val{font-family:Georgia,serif;font-size:26px;color:#1a2b4a;margin-top:4px}
+.kpi .sub{font-size:12px;color:#6b6256;margin-top:4px}
+.kpi.gap{border-top-color:#c0552d}.kpi.gap .val{color:#c0552d}
+.kpi.ok{border-top-color:#1d9e75}
+.kpi.amber{border-top-color:#eda100}
+.tip{display:none;position:absolute;left:12px;right:12px;top:100%;z-index:40;margin-top:8px;background:#15233c;color:#f7f4ee;padding:10px 12px;font-size:12px;line-height:1.45;border-top:3px solid #c0552d}
+.kpi:hover .tip{display:block}
+table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:13px}
+th{background:#1a2b4a;color:#f7f4ee;text-align:left;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+td{padding:8px 10px;border-bottom:1px solid #d9d3c8;color:#222}
+tbody tr:nth-child(even){background:#f7f4ee}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.footer{margin-top:22px;padding-top:10px;border-top:1px solid #d9d3c8;font-size:11px;color:#6b6256;line-height:1.5}
+ul.tight{margin:8px 0 0;padding-left:18px}
+ul.tight li{margin:6px 0}
+.say{font-size:14px;margin:0 0 10px}
+.barrow{display:flex;align-items:center;gap:10px;margin:7px 0}
+.barrow .n{width:110px;font-size:12px;color:#1a2b4a}
+.barrow .track{flex:1;height:20px;background:#eeeae3;position:relative}
+.barrow .fill{height:20px;background:#2a78d6}
+.barrow .fill.terra{background:#c0552d}
+.barrow .fill.green{background:#1d9e75}
+.barrow .fill.grey{background:#888780}
+.barrow .fill.net{background:#15233c;opacity:.35;position:absolute;top:0;height:20px}
+.barrow .v{width:72px;text-align:right;font-variant-numeric:tabular-nums;font-size:12px;color:#222}
+.tl{margin:0;padding:0;list-style:none}
+.tl li{display:grid;grid-template-columns:7.5rem 1fr;gap:12px;padding:10px 0;border-bottom:1px solid #d9d3c8}
+.tl li:nth-child(even){background:#f7f4ee;margin:0 -8px;padding-left:8px;padding-right:8px}
+.tl .when{font-weight:700;color:#1a2b4a;font-size:13px}
+.tl .what{color:#222;font-size:14px}
+.road{display:grid;grid-template-columns:2.2rem 1fr;gap:10px;margin:10px 0;align-items:start}
+.road .n{font-family:Georgia,serif;font-size:22px;color:#c0552d;line-height:1}
+.road p{margin:0;color:#222}
+.road b{color:#1a2b4a}
+.ns{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:#e8ecf2;color:#15233c;padding:2px 7px}
+@media(max-width:800px){.grid2,.grid3{grid-template-columns:1fr}.tl li{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="kicker">ISZE · IDS 2026 · internal briefing note</div>
+  <h1>How we read the network — and what to put on the roadmap</h1>
+  <div class="rule"></div>
+  <p class="meta">15 August 2026 · Jérôme Van der Pluym. Sibling to the Masumi briefing. Section E for Israel LCV (UMI) is recorded, not scored. The operating headline is Section D — Parts.</p>
+</div>
+
+<div class="page">
+  <h2 class="sec"><span class="no">1.</span> Lead with Parts, not vehicle sales</h2>
+  <p class="lead">Israel LCV (UMI) is below the network on aftersales. That is the conversation. Section E is missing from the evaluation — it is not a fail, and it is no longer in the average.</p>
+  <div class="grid3">
+    <div class="kpi gap"><div class="lbl">Section D — Parts</div><div class="val">61.6%</div><div class="sub">vs network 78.7% · −17.1 pp</div>
+      <div class="tip">Israel LCV country average on Section D (Parts &amp; Accessories), 29 dealers. Network 78.7% is the anonymous full-network average after Tomoe’s France/Spain red-mark rule. Snapshot 15 Aug 2026 from the IDS evaluation extracts. Not a live occupancy or GPS figure.</div></div>
+    <div class="kpi"><div class="lbl">Israel LCV total</div><div class="val">69.3%</div><div class="sub">A–D only · max 253</div>
+      <div class="tip">Mean of 29 dealer totals restated on sections A–D (253 points). The Excel 280-point figure of 62.6% treated Section E as zero and is not used for ranking or awards. 0/27 on E is fill not_scored, not a fail.</div></div>
+    <div class="kpi ok"><div class="lbl">Network average</div><div class="val">79.3%</div><div class="sub">E missing customers excluded</div>
+      <div class="tip">Anonymous full-network average after France 20 and Spain 5 red-marked dealers are left out of the average (Italy and Switzerland keep everyone in). Section E for Israel LCV (UMI) is not scored — 29 dealers, 18 questions / 27 points — and is excluded from this average. UK LCV: 3 dealers blank on E (omitted from Section E only). Hover the same note on every country HTML.</div></div>
+  </div>
+
+  <h3>Israel LCV versus the network (A–D scored; E recorded)</h3>
+  <div class="barrow"><div class="n">D Parts</div><div class="track"><div class="fill net" style="width:78.7%"></div><div class="fill terra" style="width:61.6%"></div></div><div class="v">61.6</div></div>
+  <div class="barrow"><div class="n">B Organisation</div><div class="track"><div class="fill net" style="width:75.9%"></div><div class="fill" style="width:64.1%"></div></div><div class="v">64.1</div></div>
+  <div class="barrow"><div class="n">A Premises</div><div class="track"><div class="fill net" style="width:75.6%"></div><div class="fill" style="width:71.9%"></div></div><div class="v">71.9</div></div>
+  <div class="barrow"><div class="n">C Service</div><div class="track"><div class="fill net" style="width:84.6%"></div><div class="fill green" style="width:77.3%"></div></div><div class="v">77.3</div></div>
+  <div class="barrow"><div class="n">E Vehicle sales</div><div class="track"><div class="fill grey" style="width:4%"></div></div><div class="v"><span class="ns">Not scored</span></div></div>
+  <p class="lead">Solid bar = Israel LCV. Pale navy = network. Terracotta is the gap that belongs to aftersales: Parts (−17.1 pp). Service is −7.3 pp. Grey is “not assessed”, not “failed”.</p>
+
+  <div class="callout navy">
+    <b>How Section E is treated now</b>
+    <p class="say">All 29 UMI dealers: 0/18 questions, 0/27 points, fill <b>not_scored</b>. They stay on the list and the map. Their totals are A–D only. Those zeros are out of the network Section E average (now 77.8%, was 73.2%) and out of the network total (now 79.3%, was 79.0%). We do not invent marks. If UMI HQ completes E as a second wave, we rebuild Israel only.</p>
+  </div>
+</div>
+
+<div class="page">
+  <h2 class="sec"><span class="no">2.</span> Short timeline</h2>
+  <p class="lead">The compare tool exists because the result workbooks were not a network you could sit in front of a distributor with.</p>
+  <ol class="tl">
+    <li><span class="when">Until 2026</span><span class="what">IDS evaluations arrive as Excel result sheets. About five colleagues process the files — ranking lists, country packs, follow-up. Readable as a pile of workbooks, not as one network.</span></li>
+    <li><span class="when">Jerome builds HTML</span><span class="what">The dealer-compare sheets are built in-house: one country, a map, the dealer versus the national average, and a quiet anonymous network benchmark. Same reading layer on every market. No second scoring system — a reading tool for feedback meetings.</span></li>
+    <li><span class="when">Dealers respond</span><span class="what">Distributors and dealers are happy with the compare tool. They can see themselves against their own country and against the network without opening twenty Excel files.</span></li>
+    <li><span class="when">31 Jul 2026</span><span class="what">Tomoe Baumann (IMG): red-marked dealers in France (20) and Spain (5) stay on the list and map but are left out of averages. Italy and Switzerland keep everyone in.</span></li>
+    <li><span class="when">15 Aug 2026</span><span class="what">v1.4: one network average on all 19 country sheets. Then Section E for UMI is recorded as not scored and taken out of that average — so 0/27 cannot be read as a vehicle-sales fail.</span></li>
+  </ol>
+</div>
+
+<div class="page">
+  <h2 class="sec"><span class="no">3.</span> Roadmap — what to put on it</h2>
+  <p class="lead">Keep the compare tool. Use IDS as leverage on dealer scores. Do not turn a missing section into an awards penalty.</p>
+  <div class="road"><div class="n">1</div><p><b>Keep the HTML compare tool as the reading layer.</b> Do not go back to Excel-only for DB feedback. Country pack + map + national average + anonymous network average is what dealers already accept.</p></div>
+  <div class="road"><div class="n">2</div><p><b>Section E policy, then stop arguing 62.6%.</b> Either UMI HQ completes E as a second wave (Shelly’s line), or IMG formally scopes E out of the 280-point awards scale. Until then: A–D only, fill not_scored, no ranking on a section they did not sit.</p></div>
+  <div class="road"><div class="n">3</div><p><b>Use IDS as leverage to improve dealer scores — not as a sales forecast.</b> Diagnose (hit list), contract (3–5 actions with owner and date), pull (monthly return). Checklist gaps drive Kaizen. Do not claim “IDS up → parts sales up”.</p></div>
+  <div class="road"><div class="n">4</div><p><b>Israel operating work is Section D (Parts).</b> 61.6% vs 78.7%. Stock, counter, genuine display, fill tracking, monthly targets — the D questions. Do not chase 29 workshops to back-fill a vehicle-sales checklist they were never asked to run.</p></div>
+  <div class="road"><div class="n">5</div><p><b>Incomplete / not-scored lane stays visible.</b> France and Spain red-marks, UK LCV blanks, UMI Section E. Record them. Never paint them as a fail in the average.</p></div>
+  <div class="road"><div class="n">6</div><p><b>Do not invent live stats.</b> No occupancy %, no GPS capture on these sheets. Portugal 63.3% stays on the Portugal pack only. Hover every derived figure for the formula and the snapshot date.</p></div>
+</div>
+
+<div class="page">
+  <h2 class="sec"><span class="no">4.</span> Discussions we want with the DB</h2>
+  <p class="lead">The distributor is the lever. IDS opens the door; the OS keeps it open until actions close.</p>
+  <div class="callout">
+    <b>Talking line</b>
+    <p class="say">“We are not here to argue a total score. We are here to pick the dealers who are below the country average, agree three actions, and come back next month to see what closed. On UMI, the aftersales gap is Parts — not vehicle sales. Section E was not assessed; it is out of the average.”</p>
+  </div>
+  <div class="grid2">
+    <div class="callout navy">
+      <b>In the room</b>
+      <ul class="tight">
+        <li>Open the country HTML. Map first, then the hit list (below national average and/or Needs improvement).</li>
+        <li>Agree 3–5 dealer actions from the largest checklist gaps. Owner, target date, proof — blank until they fill them.</li>
+        <li>For UMI: walk Section D, not Section E. Ask how they will lift parts process at the weak names.</li>
+        <li>Monthly pull: % visited, % actions closed, incomplete cleared, escalations still open.</li>
+      </ul>
+    </div>
+    <div class="callout ok">
+      <b>Do not</b>
+      <ul class="tight">
+        <li>Quote Israel 62.6% in an awards or PIC conversation.</li>
+        <li>Treat 0/27 on E as a vehicle-sales fail.</li>
+        <li>Ask 29 workshops to invent Section E marks.</li>
+        <li>Promise that a higher IDS score will move GPS or fill rate. Those files stay separate.</li>
+      </ul>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>Market</th><th class="num">National %</th><th>How we read it</th></tr></thead>
+    <tbody>
+      <tr><td>Portugal</td><td class="num">86.7</td><td>Strongest completed pack</td></tr>
+      <tr><td>Spain</td><td class="num">85.1</td><td>5 red-marked dealers out of the average (Tomoe)</td></tr>
+      <tr><td>UK LCV</td><td class="num">81.5</td><td>3 dealers blank on E — omitted from Section E only</td></tr>
+      <tr><td>France</td><td class="num">79.8</td><td>20 red-marked dealers out of the average (Tomoe)</td></tr>
+      <tr><td>Belgium</td><td class="num">78.5</td><td>Network 79.3 on this sheet (hover the figure)</td></tr>
+      <tr><td>Israel LCV (UMI)</td><td class="num">69.3</td><td>A–D only. E not scored. Headline = Parts 61.6%</td></tr>
+    </tbody>
+  </table>
+  <p class="footer">Sources: IDS 2026 evaluation extracts, 15 Aug 2026 restamp (Section E not_scored). Network average after Tomoe Baumann rule (31 Jul) plus UMI Section E exclusion. Hover any KPI chip for the formula. No occupancy or GPS figures on this page. Confidential — ISZE internal.</p>
+</div>
+
+</body>
+</html>

@@ -188,6 +188,11 @@ QUESTIONS = {
         "How much servicing do you estimate is happening outside the franchised network?",
         "Would a service-pack offer on oil and fuel filters be workable for your dealers?",
     ],
+    "Shell lubricants": [
+        "When can the Shell price discussion close so lubricant orders restart?",
+        "How much of the Original BP gap is lubricants vs the rest of the basket?",
+        "Is any Shell volume moving outside ISZE while the hold continues?",
+    ],
     "Clutch parts": [
         "Is clutch pricing a barrier against local competition for you?",
         "What would make the biggest difference to keep this business with us?",
@@ -235,13 +240,17 @@ def build(dbkey: str):
         raise SystemExit(f"No {sfile} — run:  python build_parts_analysis.py --db {p['key']}")
     S = json.loads(sfile.read_text(encoding="utf-8"))
     d = S["defaults"]
+    deck_opt = dict(p.get("deck") or {})
     # Live reload so fleet / GPS / S2D growth pick up the carpark pack without
     # forcing a full parts-analysis rebuild.
     fy = C.load_fy27(p)
     s2d = fy["s2d_target"]
     gps = C.load_segmented_gps(p)
     uio_live = C.load_uio(p)
-    pbi_raw = S["pbi"]
+    # Profile PBI wins when complete (meeting cut can be newer than summary.json).
+    pbi_raw = p.get("pbi") if p.get("pbi") else S.get("pbi")
+    if p.get("pbi"):
+        S["pbi"] = p["pbi"]
     pbi_complete = bool(
         pbi_raw
         and pbi_raw.get("sales")
@@ -261,6 +270,30 @@ def build(dbkey: str):
     L26 = p["defaults"].get("window_label_current") or S["label_current"]
     disp = S["display"]
 
+    # Optional UIO adders (e.g. IBX Poland UIO10) — widen GPS denominator without
+    # waiting on missing NL/LUX rows.
+    gps_adders = list(p.get("gps_uio_adders") or [])
+    if gps and gps_adders:
+        add_uio = sum(int(a.get("uio") or 0) for a in gps_adders)
+        add_wallet = sum(float(a.get("uio") or 0) * float(a.get("rate") or 250) for a in gps_adders)
+        gps = dict(gps)
+        gps["uio_2025_base"] = gps["uio_2025"]
+        gps["wallet_2025_base"] = gps["wallet_2025"]
+        gps["uio_2025"] = int(gps["uio_2025"]) + add_uio
+        gps["wallet_2025"] = float(gps["wallet_2025"]) + add_wallet
+        if gps["wallet_2025"]:
+            gps["gps_FY2026"] = float(gps["net_FY2026"]) / float(gps["wallet_2025"])
+            gps["show_pct"] = gps["gps_FY2026"] <= 1.05
+        gps["adder_note"] = "; ".join(
+            f"{a.get('label') or 'adder'}: +{int(a.get('uio') or 0):,} UIO"
+            for a in gps_adders
+        )
+
+    ext_target = p.get("ext_target_v31")
+    if ext_target is None and fy.get("ext_target"):
+        ext_target = fy["ext_target"].get("fy27")
+    use_ext = bool(deck_opt.get("use_isze_ext_target") and ext_target)
+
     chart_dir = out_dir / "charts_out"
     chart_dir.mkdir(parents=True, exist_ok=True)
 
@@ -269,32 +302,56 @@ def build(dbkey: str):
 
     # ------------------------------------------------------------- charts --
     if PBI:
+        series = {
+            f"Sales (EUR K)": [v // 1000 for v in PBI["sales"]],
+            "Budget (EUR K)": [v // 1000 for v in PBI["budget"]],
+            "Prior year (EUR K)": [v // 1000 for v in PBI["prev_year"]],
+        }
+        if (
+            not deck_opt.get("skip_pbi_orders")
+            and PBI.get("order_intake")
+            and len(PBI["order_intake"]) == len(PBI["months"])
+        ):
+            series = {
+                "Orders (EUR K)": [v // 1000 for v in PBI["order_intake"]],
+                **series,
+            }
         ct.bar_chart(
-            PBI["months"],
-            {f"Sales (EUR K)": [v // 1000 for v in PBI["sales"]],
-             "Budget (EUR K)": [v // 1000 for v in PBI["budget"]],
-             "Prior year (EUR K)": [v // 1000 for v in PBI["prev_year"]]},
-            cp("quarter.png"),
+            PBI["months"], series, cp("quarter.png"),
             title=f"{disp} {PBI['quarter']} — sales vs budget vs prior year (EUR K)",
             ylabel="EUR K", value_fmt="{:,.0f}", figsize=(10.2, 4.5))
 
-    cats = [c for c in S["categories"] if c["cat"] != "UNCLASSIFIED" and abs(c["d"]) > 1000]
-    cats = sorted(cats, key=lambda c: c["d"])
-    pick = cats[:5] + cats[-4:] if len(cats) > 9 else cats
+    exclude_movers = set(deck_opt.get("exclude_movers_cats") or [])
+    cats_all = [c for c in S["categories"] if c["cat"] != "UNCLASSIFIED" and abs(c["d"]) > 1000]
+    cats_all = sorted(cats_all, key=lambda c: c["d"])
+    cats = [c for c in cats_all if c["cat"] not in exclude_movers]
+    # Chart scale: exclude mega-categories when requested (IBX Body), keep full list for takeaways.
+    pick_src = cats if exclude_movers else cats_all
+    pick = pick_src[:5] + pick_src[-4:] if len(pick_src) > 9 else pick_src
+    movers_title = f"{disp} {L26} vs {L25} — commercial category moves, ex-warranty (EUR)"
+    if exclude_movers:
+        movers_title += f" — excl. {', '.join(sorted(exclude_movers))}"
     diverging_bar([wrap_label(c["cat"], 9) for c in pick], [c["d"] for c in pick],
                   cp("category_movers.png"),
-                  title=f"{disp} {L26} vs {L25} — commercial category moves, ex-warranty (EUR)")
+                  title=movers_title)
+    cats = cats_all  # decline / growth logic still uses full commercial set
 
     peers = S["pms_peers"]
     plabels = {"oil_filter": "Oil filter", "fuel_filter": "Fuel filter", "air_filter": "Air filter",
                "brake_pad": "Brake pad", "brake_rotor": "Brake rotor"}
     pkeys = [k for k in plabels if k in peers]
     pms_yr = S.get("pms_year")
+    pms_series = {
+        disp: [peers[k]["db"] for k in pkeys],
+        "Network (all other markets)": [peers[k]["network"] for k in pkeys],
+    }
+    # Never plot "Best market" when any best > 100% (capture model artefact).
+    best_vals = [peers[k]["best"] for k in pkeys]
+    if best_vals and max(best_vals) <= 100:
+        pms_series["Best market in the network"] = best_vals
     ct.bar_chart(
         [plabels[k] for k in pkeys],
-        {disp: [peers[k]["db"] for k in pkeys],
-         "Network (all other markets)": [peers[k]["network"] for k in pkeys],
-         "Best market in the network": [peers[k]["best"] for k in pkeys]},
+        pms_series,
         cp("pms.png"),
         title=(f"Service-parts capture by category — {disp} vs network "
                f"(CY{pms_yr} full year, %)" if pms_yr else
@@ -360,25 +417,42 @@ def build(dbkey: str):
     # under Miscellaneous). Prefer real commodity drops: brakes, injectors, turbo.
     _DECLINE_SKIP = {"Miscellaneous", "UNCLASSIFIED", "Hardware", "Belts"}
     decliners = [c for c in cats if c["d"] < 0 and c["cat"] not in _DECLINE_SKIP][:3]
-    agenda = ["Q1 FY2027 Sales Review"] if PBI else []
+    agenda = [f"{PBI['quarter']} Sales Review"] if PBI else []
     agenda += ["Parts Performance — category movers"]
     agenda += [f"Parts Performance — {c['cat']}" for c in decliners]
+    # Deep-dive agenda: excluded mega-movers + optional Body + Shell lubricants.
+    _dd_agenda = []
+    for excl in sorted(exclude_movers):
+        if any(c["cat"] == excl for c in cats):
+            _dd_agenda.append(f"Parts Performance — {excl}")
+    if (
+        deck_opt.get("body_deep_dive")
+        and any(c["cat"] == "Body parts" for c in cats)
+        and "Body parts" not in exclude_movers
+    ):
+        _dd_agenda.append("Parts Performance — Body parts")
+    if any(c["cat"] == "Shell lubricants" for c in cats):
+        _dd_agenda.append("Parts Performance — Shell lubricants")
+    agenda += _dd_agenda
     agenda += ["Parts Performance — where volume grew"]
     _nb_agenda = [
         x for x in (S.get("new_business") or [])
         if str(x.get("pn") or "").strip().upper() not in {"TRANSPORT", "FREIGHT", "SHIPPING"}
         and "transport" not in str(x.get("desc") or "").lower()
     ]
-    if _nb_agenda:
+    if _nb_agenda and not deck_opt.get("skip_new_business"):
         agenda += ["New Business — validation queue"]
-    agenda += ["Sales-to-Dealer Outlook"]
+    if not deck_opt.get("skip_s2d"):
+        agenda += ["Sales-to-Dealer Outlook"]
     if gps:
         agenda += ["GPS Capture"]
     agenda += ["Service-Parts Coverage"]
     if S["ids"]:
         agenda += ["IDS 2026 — Dealer Standard"]
     agenda += ["Fleet & FY2027 Target", "SPA — status", "R&M — market discussion",
-               "Data request: part-level Sales-to-Dealer", "Next steps"]
+               "Data request: part-level Sales-to-Dealer"]
+    if not deck_opt.get("skip_next_steps"):
+        agenda += ["Next steps"]
     s = db.build_content(prs, "Agenda", eyebrow=f"{p['key']} Meeting", page_no=2)
     # 13+ items at size 16 overflow behind the footer logo — scale to fit the
     # 5.2in content band rather than letting the last items disappear.
@@ -397,26 +471,50 @@ def build(dbkey: str):
         takeaways = [
             f"Sales {eur(tot_s, True)} against a {eur(tot_b, True)} budget — {tot_s/tot_b-1:+.0%}, "
             f"and {tot_s/tot_p-1:+.0%} on last year's {eur(tot_p, True)}."]
-        if others_below and var[best] > 0:
+        if PBI.get("original_bp") and all(v is not None for v in PBI["original_bp"]):
+            tot_bp = sum(PBI["original_bp"])
             takeaways.append(
-                f"The beat is entirely {PBI['months'][best]}: {eur(PBI['sales'][best], True)} against "
-                f"{eur(PBI['budget'][best], True)}. " +
-                " and ".join(f"{PBI['months'][i]} {var[i]:+.0%}"
-                             for i in range(len(var)) if i != best) + " are both below budget.")
-        else:
-            takeaways.append("By month vs budget: " + ", ".join(
-                f"{PBI['months'][i]} {var[i]:+.0%}" for i in range(len(var))) + ".")
-        if PBI.get("order_intake_total"):
+                f"Against Original BP {eur(tot_bp, True)} the period is {tot_s/tot_bp-1:+.0%}."
+            )
+        yoy = [PBI["sales"][i] / PBI["prev_year"][i] - 1
+               for i in range(len(PBI["months"])) if PBI["prev_year"][i]]
+        shell_hold = "shell" in str(PBI.get("source") or "").lower() and "hold" in str(PBI.get("source") or "").lower()
+        if yoy and yoy[-1] < -0.2:
+            if shell_hold:
+                takeaways.append(
+                    f"{PBI['months'][-1]} is {yoy[-1]:+.0%} YoY — Shell lubricants on hold "
+                    "(price not agreed) is the stated turnover gap into August."
+                )
+            else:
+                takeaways.append(
+                    f"{PBI['months'][-1]} softened ({yoy[-1]:+.0%} YoY) — holiday timing / stock "
+                    "build can explain a quiet month after a strong spring."
+                )
+        if (
+            not deck_opt.get("skip_pbi_orders")
+            and PBI.get("order_intake_total")
+        ):
             oi = PBI["order_intake_total"]
-            takeaways.append(f"Order intake for the quarter was {eur(oi, True)} against "
-                             f"{eur(tot_s, True)} billed — orders ran at about {oi/tot_s:.0%} "
-                             "of shipments.")
-        takeaways.append("Worth walking through the shape of the quarter together, and what the "
-                         "order book looks like from here.")
+            takeaways.append(
+                f"Order intake {eur(oi, True)} against {eur(tot_s, True)} billed "
+                f"(orders ~{oi/tot_s:.0%} of shipments)."
+            )
+        if len(takeaways) < 4:
+            if others_below and var[best] > 0:
+                takeaways.append(
+                    f"The beat is entirely {PBI['months'][best]}: {eur(PBI['sales'][best], True)} against "
+                    f"{eur(PBI['budget'][best], True)}. " +
+                    " and ".join(f"{PBI['months'][i]} {var[i]:+.0%}"
+                                 for i in range(len(var)) if i != best) + " are both below budget.")
+            else:
+                takeaways.append("By month vs budget: " + ", ".join(
+                    f"{PBI['months'][i]} {var[i]:+.0%}" for i in range(len(var))) + ".")
+        if len(takeaways) < 4:
+            takeaways.append("Worth walking through the shape of the period together.")
         db.build_two_col(
             prs, title=f"{PBI['quarter']}: {eur(tot_s, True)}, {tot_s/tot_b-1:+.0%} vs budget",
             chart_path=cp("quarter.png"),
-            eyebrow=f"{PBI['quarter']} Sales Review", page_no=page, takeaways=takeaways[:4])
+            eyebrow="Power BI — official cut", page_no=page, takeaways=takeaways[:4])
         page += 1
 
     # ---- category movers (commercial / ex-warranty) -----------------------
@@ -470,6 +568,18 @@ def build(dbkey: str):
                 + "; ".join(_fmt_pn_delta(r, 20) for r in within[:3])
                 + "."
             )
+    if exclude_movers:
+        for excl in sorted(exclude_movers):
+            hit = next((c for c in cats_all if c["cat"] == excl), None)
+            if hit:
+                take.insert(
+                    1,
+                    (
+                        f"{excl} {eur(hit['d'], True)}"
+                        + (f" ({hit['dp']:+.0%})" if hit.get("dp") is not None else "")
+                        + " is excluded from the chart scale — covered on the deep-dive slide."
+                    ),
+                )
     if abs(cred) > 1000:
         take.append(
             f"Credit notes of {eur(abs(cred), True)} stay on the net bridge "
@@ -515,6 +625,63 @@ def build(dbkey: str):
                Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
         db.bullet_list(s, QUESTIONS.get(cat["cat"], GENERIC_QUESTIONS),
                        Inches(0.32), Inches(4.55), Inches(12.7), Inches(1.9), size=14)
+        page += 1
+
+    # ---- Growth deep dives: excluded mega-movers + optional Body ---------
+    BODY_GROWTH_Q = [
+        "Is this collision / glass volume from a few fleet events, or a sustained workshop pattern?",
+        "Are windshields and bumpers staying with the network, or is bodywork leaking to IAM?",
+        "Which models drive the glass and bumper PNs — and is stock aligned?",
+    ]
+    deep_dive_cats = []
+    for excl in sorted(exclude_movers):
+        hit = next((c for c in cats if c["cat"] == excl and c["d"] > 0), None)
+        if hit:
+            deep_dive_cats.append(hit)
+    if (
+        deck_opt.get("body_deep_dive")
+        and "Body parts" not in exclude_movers
+    ):
+        body = next((c for c in cats if c["cat"] == "Body parts" and c["d"] > 0), None)
+        if body:
+            deep_dive_cats.append(body)
+    # Shell lubricants (5500*) — always deep-dive when it moves; often prior=0 / New Business.
+    shell = next((c for c in cats if c["cat"] == "Shell lubricants" and abs(c["d"]) > 1000), None)
+    if shell and shell not in deep_dive_cats:
+        deep_dive_cats.append(shell)
+    for body in deep_dive_cats:
+        cat_name = body["cat"]
+        grow_b = (cat_pn.get(cat_name) or {}).get("grow") or []
+        decl_b = (cat_pn.get(cat_name) or {}).get("decl") or []
+        cat_title = cat_name[0].upper() + cat_name[1:]
+        s = db.build_content(
+            prs, f"{cat_title} — {L26} vs {L25} (commercial, ex-warranty)",
+            eyebrow=f"Parts Performance — {cat_name}", page_no=page)
+        bullets = [
+            f"{eur(body['prior'])} ({L25}) to {eur(body['current'])} ({L26}), "
+            f"up {eur(body['d'])}"
+            + (f" ({body['dp']:+.0%})." if body.get("dp") is not None else "."),
+            "Largest part numbers driving the increase (by EUR):",
+        ]
+        for r in grow_b[:4]:
+            q = (f", {r['dq']:+,.0f} pcs" if r.get("dq") is not None else "")
+            bullets.append(
+                f"{r['pn']} ({str(r.get('desc') or '')[:40]}): "
+                f"{eur(r['prior'])} to {eur(r['current'])}{q}."
+            )
+        if decl_b:
+            bullets.append(
+                f"Largest {cat_name} declines: "
+                + "; ".join(_fmt_pn_delta(r, 18) for r in decl_b[:2]) + "."
+            )
+        db.bullet_list(s, bullets, Inches(0.32), Inches(1.32), Inches(12.7), Inches(3.2), size=13)
+        db.txt(s, "Questions for us to work through together", Inches(0.32), Inches(4.55),
+               Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
+        qs = (
+            BODY_GROWTH_Q if cat_name == "Body parts"
+            else QUESTIONS.get(cat_name, GENERIC_QUESTIONS)
+        )
+        db.bullet_list(s, qs, Inches(0.32), Inches(4.90), Inches(12.7), Inches(1.6), size=14)
         page += 1
 
     # ---- growth ------------------------------------------------------------
@@ -568,7 +735,7 @@ def build(dbkey: str):
         if str(x.get("pn") or "").strip().upper() not in {"TRANSPORT", "FREIGHT", "SHIPPING"}
         and "transport" not in str(x.get("desc") or "").lower()
     ]
-    if new_biz:
+    if new_biz and not deck_opt.get("skip_new_business"):
         s = db.build_content(prs, f"New Business — validation queue ({L26})",
                              eyebrow="Parts Performance", page_no=page)
         nb = new_biz[:6]
@@ -587,44 +754,63 @@ def build(dbkey: str):
         page += 1
 
     # ---- Sales-to-Dealer lens ---------------------------------------------
-    s = db.build_content(prs, "Sales-to-Dealer outlook — FY2027",
-                         eyebrow="Sales-to-Dealer", page_no=page)
-    base_label = "working estimate" if s2d["s2d_imputed"] else "reported KPI"
-    db.bullet_list(s, [
-        f"FY2026 Sales-to-Dealer is {eur(s2d['fy26'])} ({base_label}).",
-        f"The working fleet movement into FY2027 is {s2d['uio_growth']:+.1%}.",
-        f"Applying fleet movement, the 5% price adjustment and 1.8% additional growth gives "
-        f"a FY2027 Sales-to-Dealer target of {eur(s2d['fy27'])}.",
-        "The discussion is held in Sales-to-Dealer amounts; ISZE billing remains an internal "
-        "reconciliation measure.",
-    ], Inches(0.32), Inches(1.35), Inches(11.9), Inches(4.2), size=15)
-    page += 1
+    if not deck_opt.get("skip_s2d"):
+        s = db.build_content(prs, "Sales-to-Dealer outlook — FY2027",
+                             eyebrow="Sales-to-Dealer", page_no=page)
+        base_label = "working estimate" if s2d["s2d_imputed"] else "reported KPI"
+        db.bullet_list(s, [
+            f"FY2026 Sales-to-Dealer is {eur(s2d['fy26'])} ({base_label}).",
+            f"The working fleet movement into FY2027 is {s2d['uio_growth']:+.1%}.",
+            f"Applying fleet movement, the 5% price adjustment and 1.8% additional growth gives "
+            f"a FY2027 Sales-to-Dealer target of {eur(s2d['fy27'])}.",
+            "The discussion is held in Sales-to-Dealer amounts; ISZE billing remains an internal "
+            "reconciliation measure.",
+        ], Inches(0.32), Inches(1.35), Inches(11.9), Inches(4.2), size=15)
+        page += 1
 
     # ---- GPS Capture (Portugal-style: one clean number, no recon trail) ----
     if gps:
         g26 = gps["gps_FY2026"]
+        saty = p.get("saty_note")
         if gps["show_pct"]:
             pct_lab = f"{g26 * 100:.1f}%"
             s = db.build_content(prs, f"GPS Capture: {pct_lab}",
                                  eyebrow="GPS", page_no=page)
-            db.bullet_list(s, [
+            gbullets = [
                 "GPS measures your actual parts purchases against the full potential of your fleet.",
                 f"{disp} today: {pct_lab} (FY2026 purchases against the CY2025 fleet potential).",
                 f"Fleet potential: {eur(gps['wallet_2025'], True)} on {gps['uio_2025']:,} vehicles.",
-                f"Real, sustained headroom above {pct_lab} — the service-parts and SPA discussion "
-                "are both direct levers on it.",
-            ], Inches(0.32), Inches(1.35), Inches(11.5), Inches(3.5), size=15)
+            ]
+            if gps.get("adder_note"):
+                gbullets.append(
+                    f"Denominator widened vs Belgium-only file: {gps['adder_note']} "
+                    f"(base was {gps.get('uio_2025_base', 0):,} / "
+                    f"{eur(gps.get('wallet_2025_base', 0), True)}). NL/LUX still 0 in carpark."
+                )
+            if saty:
+                gbullets.append(saty)
+            else:
+                gbullets.append(
+                    f"Real, sustained headroom above {pct_lab} — the service-parts and SPA "
+                    "discussion are both direct levers on it."
+                )
+            db.bullet_list(s, gbullets[:5], Inches(0.32), Inches(1.35), Inches(11.5),
+                           Inches(4.0), size=14)
         else:
             s = db.build_content(prs, "GPS — amount view",
                                  eyebrow="GPS", page_no=page)
-            db.bullet_list(s, [
+            gbullets = [
                 "GPS compares actual parts purchases to the theoretical potential of the fleet.",
                 f"FY2026 purchases: {eur(gps['net_FY2026'], True)}.",
                 f"CY2025 fleet potential: {eur(gps['wallet_2025'], True)} "
                 f"({gps['uio_2025']:,} vehicles).",
                 "Purchases sit above that theoretical potential — we discuss the amount and the "
                 "per-vehicle rate, not a capture percentage.",
-            ], Inches(0.32), Inches(1.35), Inches(11.5), Inches(3.5), size=15)
+            ]
+            if saty:
+                gbullets.append(saty)
+            db.bullet_list(s, gbullets[:5], Inches(0.32), Inches(1.35), Inches(11.5),
+                           Inches(4.0), size=14)
         page += 1
 
     # ---- PMS ---------------------------------------------------------------
@@ -682,10 +868,17 @@ def build(dbkey: str):
     ]
     if S.get("fleet_mix_note"):
         fleet_takes.append(S["fleet_mix_note"])
-    fleet_takes.append(
-        f"The FY2027 Sales-to-Dealer target starts from that fleet change, then applies "
-        f"a {s2d['price']:.0%} price adjustment and {s2d['additional']:.1%} additional growth."
-    )
+    if use_ext:
+        fleet_takes.append(
+            f"The FY2027 extended target (ISZE→DB) applies a {s2d['price']:.0%} price "
+            f"adjustment and {s2d['additional']:.1%} stretch — locked at {eur(ext_target)} "
+            f"from GPS Extended Target V3.1 (Dashboard column I)."
+        )
+    else:
+        fleet_takes.append(
+            f"The FY2027 Sales-to-Dealer target starts from that fleet change, then applies "
+            f"a {s2d['price']:.0%} price adjustment and {s2d['additional']:.1%} additional growth."
+        )
     fleet_takes.append(
         "So the target is built from a slightly smaller fleet — not from an assumed growth story."
         if growth < 0 else
@@ -699,34 +892,64 @@ def build(dbkey: str):
     page += 1
 
     # ---- target build-up ---------------------------------------------------
-    s = db.build_content(prs, "How the FY2027 target is built",
-                         eyebrow="Fleet & FY2027 Target", page_no=page)
-    db.txt(s, "Sales-to-Dealer amount bridge",
-           Inches(0.32), Inches(1.28), Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
-    base = s2d["fy26"]
-    after_uio = base * (1 + s2d["uio_growth"])
-    after_price = after_uio * (1 + s2d["price"])
-    up = s2d["fy27"] / base - 1 if base else 0
-    trows = [
-        ["Step", "Amount"],
-        [f"FY2026 Sales-to-Dealer ({'working estimate' if s2d['s2d_imputed'] else 'reported KPI'})",
-         eur(base)],
-        [f"After fleet movement ({s2d['uio_growth']:+.1%})", eur(after_uio)],
-        [f"After price adjustment (+{s2d['price']:.0%})", eur(after_price)],
-        [f"FY2027 target after additional growth (+{s2d['additional']:.1%})",
-         eur(s2d["fy27"])],
-    ]
-    styled_table(s, trows, Inches(0.32), Inches(1.65), Inches(9.4), Inches(2.35),
-                 [Inches(6.2), Inches(3.2)], size=12.5)
-    foot = [
-        f"The FY2027 target is {up:+.1%} versus the FY2026 Sales-to-Dealer base.",
-        ("The FY2026 base is a working estimate (ISZE billing ÷ 0.65): the KPI Dashboard has "
-         "no usable Sales-to-Dealer row for this market." if s2d["s2d_imputed"] else
-         "The FY2026 base is the reported Sales-to-Dealer KPI."),
-    ]
-    db.bullet_list(s, foot, Inches(0.32), Inches(4.35), Inches(12.7),
-                   Inches(1.3), size=13)
-    page += 1
+    bp27 = (fy.get("actual") or {}).get("fy27")
+    stretch_pct = (fy.get("stretch_pct") or {}).get("fy27") or s2d.get("additional") or 0.018
+    stretch_eur = (fy.get("stretch_eur") or {}).get("fy27")
+    max27 = (fy.get("max_spend") or {}).get("fy27")
+    if use_ext:
+        s = db.build_content(prs, "How the FY2027 extended target is built",
+                             eyebrow="Fleet & FY2027 Target", page_no=page)
+        db.txt(s, "ISZE → DB extended target (V3.1 Dashboard column I)",
+               Inches(0.32), Inches(1.28), Inches(11.5), Inches(0.3), size=13, bold=True,
+               color=RED)
+        trows = [["Step", "Amount"]]
+        if bp27 is not None:
+            trows.append(["Business Plan / actual FY27 base", eur(bp27)])
+        if max27 is not None:
+            trows.append(["Market potential (max spend FY27)", eur(max27)])
+        if stretch_eur is not None:
+            trows.append([f"Stretch (+{stretch_pct:.1%} of max spend)", eur(stretch_eur)])
+        trows.append(["FY2027 EXTENDED TARGET (locked)", eur(ext_target)])
+        styled_table(s, trows, Inches(0.32), Inches(1.65), Inches(9.4), Inches(2.55),
+                     [Inches(6.2), Inches(3.2)], size=12.5)
+        db.bullet_list(s, [
+            f"Extended target = BP + stretch; stretch default is {stretch_pct:.1%} "
+            "(network rule from GPS Extended Target V3.1).",
+            f"Figure locked from {p.get('ext_target_source') or 'V3.1 Dashboard column I'}: "
+            f"{eur(ext_target)}.",
+        ], Inches(0.32), Inches(4.45), Inches(12.7), Inches(1.4), size=13)
+        up = (ext_target / bp27 - 1) if bp27 else 0
+        base = bp27 or ext_target
+        page += 1
+    else:
+        s = db.build_content(prs, "How the FY2027 target is built",
+                             eyebrow="Fleet & FY2027 Target", page_no=page)
+        db.txt(s, "Sales-to-Dealer amount bridge",
+               Inches(0.32), Inches(1.28), Inches(9.4), Inches(0.3), size=13, bold=True, color=RED)
+        base = s2d["fy26"]
+        after_uio = base * (1 + s2d["uio_growth"])
+        after_price = after_uio * (1 + s2d["price"])
+        up = s2d["fy27"] / base - 1 if base else 0
+        trows = [
+            ["Step", "Amount"],
+            [f"FY2026 Sales-to-Dealer ({'working estimate' if s2d['s2d_imputed'] else 'reported KPI'})",
+             eur(base)],
+            [f"After fleet movement ({s2d['uio_growth']:+.1%})", eur(after_uio)],
+            [f"After price adjustment (+{s2d['price']:.0%})", eur(after_price)],
+            [f"FY2027 target after additional growth (+{s2d['additional']:.1%})",
+             eur(s2d["fy27"])],
+        ]
+        styled_table(s, trows, Inches(0.32), Inches(1.65), Inches(9.4), Inches(2.35),
+                     [Inches(6.2), Inches(3.2)], size=12.5)
+        foot = [
+            f"The FY2027 target is {up:+.1%} versus the FY2026 Sales-to-Dealer base.",
+            ("The FY2026 base is a working estimate (ISZE billing ÷ 0.65): the KPI Dashboard has "
+             "no usable Sales-to-Dealer row for this market." if s2d["s2d_imputed"] else
+             "The FY2026 base is the reported Sales-to-Dealer KPI."),
+        ]
+        db.bullet_list(s, foot, Inches(0.32), Inches(4.35), Inches(12.7),
+                       Inches(1.3), size=13)
+        page += 1
 
     # ---- growth / price / incentive ---------------------------------------
     s = db.build_content(prs, "What the FY2027 target reflects",
@@ -739,10 +962,19 @@ def build(dbkey: str):
           "It is built into the per-vehicle rate above, not added separately on top."])
     db.txt(s, "What it means for your target", Inches(0.32), Inches(3.80), Inches(9.4),
            Inches(0.3), size=13, bold=True, color=RED)
-    styled_table(s, [["", "Value"],
-                     ["FY2027 Sales-to-Dealer target", eur(s2d["fy27"])],
-                     [f"vs FY2026 Sales-to-Dealer ({eur(base)})", f"{up:+.1%}"]],
-                 Inches(0.32), Inches(4.14), Inches(9.4), Inches(1.35), [Inches(5.5), Inches(3.9)])
+    if use_ext:
+        styled_table(s, [["", "Value"],
+                         ["FY2027 extended target (V3.1 col I)", eur(ext_target)],
+                         [f"vs BP FY27 ({eur(base)})", f"{up:+.1%}"],
+                         [f"Stretch included", f"+{stretch_pct:.1%}"]],
+                     Inches(0.32), Inches(4.14), Inches(9.4), Inches(1.55),
+                     [Inches(5.5), Inches(3.9)])
+    else:
+        styled_table(s, [["", "Value"],
+                         ["FY2027 Sales-to-Dealer target", eur(s2d["fy27"])],
+                         [f"vs FY2026 Sales-to-Dealer ({eur(base)})", f"{up:+.1%}"]],
+                     Inches(0.32), Inches(4.14), Inches(9.4), Inches(1.35),
+                     [Inches(5.5), Inches(3.9)])
     db.bullet_list(s, [
         "As in previous cycles we would expect an incentive to sit alongside this adjustment — "
         "that approval is still pending on our side.",
@@ -798,28 +1030,35 @@ def build(dbkey: str):
     page += 1
 
     # ---- next steps -------------------------------------------------------
-    s = db.build_content(prs, "Next steps", eyebrow="Summary", page_no=page)
-    if S.get("incentive_fy27") is None:
-        steps = [
-            "Align on the FY2027 Sales-to-Dealer bridge (fleet, price, additional growth) — "
-            f"working figure {eur(s2d['fy27'])} ({up:+.1%} vs FY2026 base).",
-            "Confirm the incentive alongside the price adjustment; lock the target once that "
-            "approval is through.",
-        ]
-    else:
-        steps = [f"Confirm FY2027 Sales-to-Dealer target: {eur(s2d['fy27'])} "
-                 f"({up:+.1%} vs FY2026 Sales-to-Dealer).",
-                 "Confirm the incentive alongside the price adjustment once approved on our side."]
-    if decliners:
-        steps.append(f"{' / '.join(c['cat'] for c in decliners)}: agree which category we tackle "
-                     "first, and what the joint action is.")
-    steps.append("Agree part-level Sales-to-Dealer data sharing, effective 01/01/2025.")
-    steps.append(f"SPA: {p['key']} proposal, ISZE review and counter-proposal cycle to follow.")
-    if S["ids"]:
-        steps.append("IDS 2026: agree dealer visit dates, starting with the lower-scoring dealers.")
-    if PBI and PBI.get("order_intake_total"):
-        steps.append("Q2 outlook: review the order book against the Q1 shipment pattern.")
-    db.bullet_list(s, steps, Inches(0.32), Inches(1.35), Inches(12.7), Inches(4.6), size=15)
+    if not deck_opt.get("skip_next_steps"):
+        s = db.build_content(prs, "Next steps", eyebrow="Summary", page_no=page)
+        if use_ext:
+            steps = [
+                f"Confirm FY2027 extended target: {eur(ext_target)} "
+                f"(V3.1 Dashboard column I, +{stretch_pct:.1%} stretch).",
+                "Confirm the incentive alongside the price adjustment once approved on our side.",
+            ]
+        elif S.get("incentive_fy27") is None:
+            steps = [
+                "Align on the FY2027 Sales-to-Dealer bridge (fleet, price, additional growth) — "
+                f"working figure {eur(s2d['fy27'])} ({up:+.1%} vs FY2026 base).",
+                "Confirm the incentive alongside the price adjustment; lock the target once that "
+                "approval is through.",
+            ]
+        else:
+            steps = [f"Confirm FY2027 Sales-to-Dealer target: {eur(s2d['fy27'])} "
+                     f"({up:+.1%} vs FY2026 Sales-to-Dealer).",
+                     "Confirm the incentive alongside the price adjustment once approved on our side."]
+        if decliners:
+            steps.append(f"{' / '.join(c['cat'] for c in decliners)}: agree which category we tackle "
+                         "first, and what the joint action is.")
+        steps.append("Agree part-level Sales-to-Dealer data sharing, effective 01/01/2025.")
+        steps.append(f"SPA: {p['key']} proposal, ISZE review and counter-proposal cycle to follow.")
+        if S["ids"]:
+            steps.append("IDS 2026: agree dealer visit dates, starting with the lower-scoring dealers.")
+        if PBI and PBI.get("order_intake_total"):
+            steps.append("Outlook: review the order book against the recent shipment pattern.")
+        db.bullet_list(s, steps, Inches(0.32), Inches(1.35), Inches(12.7), Inches(4.6), size=15)
 
     db.build_closing(prs)
 

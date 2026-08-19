@@ -293,6 +293,27 @@ def build_pr00_ie40() -> Path:
     return out
 
 
+def apply_pr00_gap_pull_return_if_present() -> None:
+    """Re-apply Jerome SAP gap-fill prices after IE40 rebuild (idempotent)."""
+    apply_script = (
+        ISZE / "01_data" / "01_Pricing" / "_apply_pr00_gap_pull_return.py"
+    )
+    ret = DERIVED / "pricing_pr00_gap_pull_return_20260812.csv"
+    if not apply_script.exists() or not ret.exists():
+        return
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "apply_pr00_gap_pull_return", apply_script
+    )
+    mod = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(mod)
+    fills = mod.load_ok_fills()
+    stats = mod.apply_to_ie40(fills)
+    print(f"apply_pr00_gap_pull_return: {stats}")
+
+
 def build_zpr1() -> Path:
     path = RAW / "EXPORT_ZPR1_20260810.xlsx"
     if not path.exists():
@@ -464,6 +485,7 @@ def main() -> None:
     build_revision_cd()
     build_sim_pr00()
     build_pr00_ie40()
+    apply_pr00_gap_pull_return_if_present()
     build_zpr1()
     build_enquiry_view()
     print("done")

@@ -17,6 +17,7 @@ PRISM_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PRISM_ROOT))
 
 from config import DERIVED_DIR, PMS_CAPTURE_BY_DB_CSV  # noqa: E402
+from modules.year_coverage import latest_complete_year  # noqa: E402
 
 OUTPUT_CSV = DERIVED_DIR / "pms_summary_by_db.csv"
 
@@ -28,7 +29,9 @@ def build_pms_db_summary(pms_path: Path = PMS_CAPTURE_BY_DB_CSV) -> pd.DataFrame
     df = pd.read_csv(pms_path)
     totals = df[df["line_type"] == "total"].copy()
     genuine = df[df["line_type"] == "genuine"].copy()
-    latest_year = int(totals["year"].max())
+    # Latest COMPLETE year, not year.max(). Partial CY2026 (Jan-Mar) vs a
+    # full-year expected_qty silently collapses capture (ITUK oil 116% → 28%).
+    latest_year = latest_complete_year([int(y) for y in totals["year"].dropna().unique()])
 
     rows: list[dict] = []
     for dist in sorted(totals["distributor_code"].dropna().unique()):

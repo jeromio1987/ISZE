@@ -18,7 +18,10 @@ Cross-refs (do not duplicate): Mode A/B → `isze-external-iml-language.mdc`; Is
 3. **No Weak-sector clutter** — No dark “Weak sector” radar overlays or similar diagnostic clutter in client-facing HTML.
 4. **Geo sanity always** — Run geo clustering check (`ids_dealer_geo.sanity_check_geo_clustering` via `build_ids_dashboard.py`). **Do not ship** if ≥50% of a country’s pins are country-centre clustered (Poland Łódź-class blobs). Fix city/address mapping; `--skip-geo-sanity` only if Jerome explicitly allows.
 5. **All listed countries** — After “all countries OK”, spot-check residual networks (esp. FR / IT / ES / CH). No leftover country-centre blobs.
-6. **English UI only** — Country names and labels in English (`France`, `Belgium`, …). No Dutch UI (`goed`/`slecht`) and no folder codes (`MIDI_CH`, `BE`, `NL`) as user-facing country names.
+6. **English only — every IDS client artifact** — Applies to dealer-compare output, ranking sheets (Excel/CSV column headers, cell values, legends), HTML UI and country packs alike.
+   - No Dutch anywhere client-facing: `goed` → **good**, `slecht` → **weak**. Sweep for residual Dutch strings before shipping — they leak from older templates.
+   - Country names spelled out in English: `MIDI_CH` → **Switzerland**, `BE` → **Belgium**, `NL` → **Netherlands**, `FR` → **France**. Never leave a folder/internal code as a user-facing country label.
+   - Internal codes may stay as JSON/pipeline field names; only the **displayed** label must be English.
 7. **Map placement** — If Jerome asks for the map **in** dealer compare, merge it — do not ship a separate map page as the answer. Hover must show **dealer score vs national (country) average**.
 8. **Locked GPS figures** — If Jerome locks a slide/pack figure (e.g. Portugal **63.3%**), use that number. Do not silently replace with unverified pipeline GPS.
 9. **Sanity before “done”** — Never claim done without the map/geo/UI checks above (or an explicit waiver). Lead chat replies with a clear conclusion.

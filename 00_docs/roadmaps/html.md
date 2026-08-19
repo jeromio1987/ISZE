@@ -1,6 +1,6 @@
 # HTML dashboards — roadmap & inventory
 
-**Last updated:** 2026-06-13  
+**Last updated:** 2026-08-18  
 **Hub:** [`ISZE_ROADMAP.md`](../../ISZE_ROADMAP.md) · **Routing:** `00_docs/ROUTING.yaml` → `edit_html_dashboard`
 
 ---
@@ -23,6 +23,7 @@
 | ZEV Golden Window | `fleet/ITUK_ZEV_Golden_Window_Dashboard.html` | ICE parc window 2025–2032 | Active |
 | Tools Legal Map | `ops/ISZE_Tools_Legal_Map.html` | Tool/data legal compliance | Reference |
 | AI Tools Overview | `ops/ISZE_AI_Tools_Overview.html` | AI tool landscape | Reference |
+| **OS data map** | `ops/ISZE_OS_Data_Map.html` | Capability × data (Have/Partial/Need/Closed/Org) · integrity overlay | Internal planning — YAML `00_docs/ISZE_OS_DATA_MAP.yaml` · rebuild `ops/build_os_data_map.py` |
 
 Paths relative to `02_dashboards/`. GPS specs: [`gps.md`](gps.md)
 

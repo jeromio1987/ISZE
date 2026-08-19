@@ -1,0 +1,147 @@
+{
+  "built_at_utc": "2026-08-14T14:37:20Z",
+  "source_xlsx": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\_raw\\Eucon_PriceSurvey_UK_2023_IAM_rawdata_20240109.xlsx",
+  "pricing_point": "UK IAM workshop purchase GBP 2023 (median across brands); list if no workshop",
+  "fx_gbp_eur": 1.17,
+  "fx_source": "sources.yaml as_of 2026-05-01",
+  "not": [
+    "Not 2026 street / projected retail.",
+    "Not PartsPool Autodoc DE/NO (that is eucon_price_gap.csv).",
+    "Not OEM GBP list from the 2023 OEM survey sheets."
+  ],
+  "sign": "delta_pct=(IAM_eur - ISZE_net)/ISZE_net ; positive = ISZE cheaper",
+  "proj_retail": "proj_retail_eur = ISZE_net \u00d7 1.785",
+  "iam_priced_unique_pns": 38,
+  "join_rows": 270,
+  "unique_pns_joined": 34,
+  "by_db": {
+    "ITUK": {
+      "matches": 24,
+      "book_pns": 3809,
+      "book_eur": 5575757.47,
+      "matched_eur": 699770.69,
+      "coverage_pct": 12.55
+    },
+    "IUK": {
+      "matches": 13,
+      "book_pns": 3766,
+      "book_eur": 6131009.1,
+      "matched_eur": 581756.68,
+      "coverage_pct": 9.49
+    },
+    "UTI": {
+      "matches": 8,
+      "book_pns": 2201,
+      "book_eur": 3337116.94,
+      "matched_eur": 98951.83,
+      "coverage_pct": 2.97
+    },
+    "UMI": {
+      "matches": 5,
+      "book_pns": 2373,
+      "book_eur": 3301443.03,
+      "matched_eur": 33681.78,
+      "coverage_pct": 1.02
+    },
+    "BELGIUM": {
+      "matches": 22,
+      "book_pns": 4383,
+      "book_eur": 2118951.9,
+      "matched_eur": 133523.51,
+      "coverage_pct": 6.3
+    },
+    "GERMANY": {
+      "matches": 27,
+      "book_pns": 4129,
+      "book_eur": 2543905.15,
+      "matched_eur": 162022.45,
+      "coverage_pct": 6.37
+    },
+    "NORWAY": {
+      "matches": 9,
+      "book_pns": 1828,
+      "book_eur": 1415844.11,
+      "matched_eur": 174020.23,
+      "coverage_pct": 12.29
+    },
+    "SWEDEN": {
+      "matches": 10,
+      "book_pns": 2114,
+      "book_eur": 1289345.7,
+      "matched_eur": 168156.79,
+      "coverage_pct": 13.04
+    },
+    "IRELAND": {
+      "matches": 30,
+      "book_pns": 3272,
+      "book_eur": 1192762.03,
+      "matched_eur": 122450.83,
+      "coverage_pct": 10.27
+    },
+    "PORTUGAL": {
+      "matches": 18,
+      "book_pns": 5015,
+      "book_eur": 1712224.74,
+      "matched_eur": 103212.97,
+      "coverage_pct": 6.03
+    },
+    "GREECE": {
+      "matches": 23,
+      "book_pns": 2545,
+      "book_eur": 523358.45,
+      "matched_eur": 53486.38,
+      "coverage_pct": 10.22
+    },
+    "CYPRUS": {
+      "matches": 22,
+      "book_pns": 1954,
+      "book_eur": 429512.03,
+      "matched_eur": 41228.75,
+      "coverage_pct": 9.6
+    },
+    "HUNGARY": {
+      "matches": 9,
+      "book_pns": 973,
+      "book_eur": 330012.88,
+      "matched_eur": 43749.74,
+      "coverage_pct": 13.26
+    },
+    "FINLAND": {
+      "matches": 8,
+      "book_pns": 927,
+      "book_eur": 285912.53,
+      "matched_eur": 19687.32,
+      "coverage_pct": 6.89
+    },
+    "MALTA": {
+      "matches": 12,
+      "book_pns": 1625,
+      "book_eur": 204937.33,
+      "matched_eur": 18725.73,
+      "coverage_pct": 9.14
+    },
+    "ROMANIA": {
+      "matches": 8,
+      "book_pns": 770,
+      "book_eur": 176893.82,
+      "matched_eur": 17634.34,
+      "coverage_pct": 9.97
+    },
+    "DENMARK": {
+      "matches": 14,
+      "book_pns": 723,
+      "book_eur": 149812.04,
+      "matched_eur": 25597.89,
+      "coverage_pct": 17.09
+    },
+    "ICELAND": {
+      "matches": 8,
+      "book_pns": 681,
+      "book_eur": 87259.89,
+      "matched_eur": 8747.42,
+      "coverage_pct": 10.02
+    }
+  },
+  "grain": "db \u00d7 PN \u00b7 CY2025 billed book \u2229 2023 UK IAM priced PNs",
+  "israel": "UMI sold-to 1797 \u2260 UTI sold-to 1799"
+}

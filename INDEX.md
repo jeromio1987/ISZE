@@ -39,17 +39,18 @@ Everything else lives in numbered folders below.
 | **Drop / sort new data** | `01_data/90_INBOX/` → file per `01_data/DATA_MANIFEST.md` §0–§1 |
 | Task routing | `00_docs/ROUTING.yaml` |
 | Maps / registry | `00_docs/MAPS.md` · `00_docs/MAP_REGISTRY.yaml` |
-| Programme roadmap | `00_docs/ISZE_ROADMAP.md` |
+| Programme roadmap | `00_docs/ISZE_ROADMAP.md` → `00_docs/roadmaps/aim_prism_reinvention.md` after AIM score kill |
 | Versioned filenames | `00_docs/CANONICAL.md` |
 | **Excel pre-delivery check** | `00_docs/EXCEL_PRE_DELIVERY_CHECK.md` |
 | Headline metrics | `01_data/derived/metrics_snapshot.json` + `FACTS.md` |
 | Workspace root | `$env:ISZE_ROOT` (see `paths.yaml`) |
-| PRISM | `03_analytics/Isuzu/prism/run_prism.ps1` (**8503**) |
+| PRISM | `03_analytics/Isuzu/prism/run_prism.ps1` (**8503**, MD-safe) · `run_prism_internal.ps1` (extra tabs) |
 | Human onboarding | `00_docs/HUMAN_ONBOARDING.md` |
 | **Holiday laptop / GitHub clones** | `00_docs/HOLIDAY_LAPTOP.md` |
 | Monthly refresh runbook | `00_docs/RUNBOOK_MONTHLY_REFRESH.md` |
 | Automation register | `00_docs/AUTOMATION_REGISTER.md` |
 | Data dictionary | `01_data/DATA_DICTIONARY.md` |
+| **Isuzu OS data map** | `00_docs/ISZE_OS_DATA_MAP.yaml` · `02_dashboards/ops/ISZE_OS_Data_Map.html` |
 | Changelog | `CHANGELOG.md` |
 | Decision log | `DECISIONS.md` |
 | Workspace scripts | `04_tools/workspace/` |

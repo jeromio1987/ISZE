@@ -133,12 +133,12 @@ alert_declining          bool   slope < -0.05 AND r2 > 0.5
 
 **Logic:**
 - Source: `pms_capture_by_db_year.csv`, line_type=total only
-- For each distributor × pms_category with ≥2 years of data:
-  - Fit linear regression: capture_rate ~ year
-  - Store slope (in percentage points per year), R²
-  - Project years 2026 and 2027 using the regression line (clip at [0, 1.05])
+- For each distributor × pms_category:
+  - Fit linear regression on **complete billing years only** (`modules/year_coverage.is_partial`). Partial-year actuals are still emitted (`is_projected=False`) but do not enter the slope, R², or `alert_declining` flag. Guard added 2026-08-18 after Early Warning showed 83% of declining alerts were partial-year artifacts (re-measured 33→5, 0 real declines hidden).
+  - Store slope (misnomer: values are capture-rate fractions per year, not percentage points), R²
+  - Project years 2026 and 2027 using the complete-year regression line (clip at [0, 1.05])
   - Flag alert_declining = True when slope < -0.05 AND r2 > 0.5
-- Use `scipy.stats.linregress` or `numpy.polyfit`
+- Use `scipy.stats.linregress`
 
 **Verify fixture to add:**
 ```yaml

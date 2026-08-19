@@ -430,6 +430,7 @@ def render_price_premium(df: pd.DataFrame, year_sel: list[int], highlight: str, 
 
 
 def render_basket_correlation(df: pd.DataFrame, year_sel: list[int], highlight: str, latest_y: int | None) -> None:
+    """Contract 8 — parked 2026-08-18 (no decision attached). CSV still built; tab dropped."""
     if df.empty:
         _missing("Basket Correlation")
         return

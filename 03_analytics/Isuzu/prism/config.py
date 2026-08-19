@@ -181,10 +181,19 @@ AIM_WORKBOOK_CANDIDATES = [
 
 BETA_MODE = os.getenv("PRISM_BETA", "false").lower() == "true"
 
-# Internal-only content gate (docs/DASHBOARD_IA.md §6). Default OFF — the app
-# is MD-safe unless launched with PRISM_INTERNAL=true (dealer leakage, attach
-# lift, elasticity, demand-flow Sankey, aftermarket scrape).
-INTERNAL_MODE = os.getenv("PRISM_INTERNAL", "false").lower() == "true"
+
+def is_internal_mode() -> bool:
+    """True only when launched with PRISM_INTERNAL=true.
+
+    Read at call time (not import time) so pages and tests see the live env.
+    Default OFF: dealer leakage, attach, elasticity, demand-flow Sankey, and
+    aftermarket scrape stay off the distributor-facing app.
+    """
+    return os.getenv("PRISM_INTERNAL", "false").lower() in ("true", "1", "yes")
+
+
+# Snapshot for the Home banner (process start). Pages should call is_internal_mode().
+INTERNAL_MODE = is_internal_mode()
 
 # Canonical UIO filenames — no version suffix (version tracked on Changelog sheet inside the file)
 UIO_FILE_PROD = str(_ROOT / "data" / "UIO.xlsx")

@@ -82,7 +82,7 @@ def main() -> int:
         "warnings": geo_sanity["warnings"],
         "countries": geo_sanity["countries"],
     }
-    payload["version"] = "v1.3"
+    payload["version"] = "v1.4"
 
     qa_errors = validate_dashboard_payload(payload)
     print(format_qa_report(payload, qa_errors))

@@ -1,5 +1,11 @@
 # P4 — Account-health KPIs
 
+**Status 2026-08-18:** builder live — `04_tools/interactions/build_account_health.py` writes gitignored `01_data/17_interactions/account_health.parquet` (`p4-v1`). Draft thresholds. **Not a KPI.** No Mode A / PRISM widget until task 4.9 (your calibration) then 2.3/4.10.
+
+**CC-depth:** uses existing `n_cc` (P2a.9 collector change not required).
+
+**Mail-to-order:** NULL on months after `sales_fact` ends (currently 2026-03-31).
+
 **Objective:** convert signal→order latency + commitment tracking into actionable account signals for sales ops.
 
 **Input:** P2a tables (interaction_fact, commitment_fact, stakeholder_dim, db_response_latency).

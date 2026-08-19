@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-27T15:28:58Z",
+  "generated_at": "2026-08-18T15:12:22Z",
   "data_root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data",
   "summary": {
-    "pass": 106,
+    "pass": 108,
     "warn": 0,
     "fail": 0,
     "ok": true
@@ -546,9 +546,10 @@
     {
       "id": "p1.distributor_count",
       "status": "pass",
-      "message": "PMS capture 18 distributors @ 2026 (min 18)",
+      "message": "PMS capture 18 distributors @ complete 2025 (min 18)",
       "detail": {
-        "distributors": 18
+        "distributors": 18,
+        "year": 2025
       }
     },
     {
@@ -558,6 +559,23 @@
       "detail": {
         "rows": 18
       }
+    },
+    {
+      "id": "pms.summary.complete_year",
+      "status": "pass",
+      "message": "pms_summary_by_db year [2025] == complete 2025",
+      "detail": {
+        "years": [
+          2025
+        ],
+        "complete_year": 2025
+      }
+    },
+    {
+      "id": "pms.summary.not_partial",
+      "status": "pass",
+      "message": "pms_summary_by_db is a complete billing year",
+      "detail": {}
     },
     {
       "id": "pms.summary.schema",
@@ -770,9 +788,9 @@
     {
       "id": "contract.capture_trajectory",
       "status": "pass",
-      "message": "capture_trajectory 1,512 rows",
+      "message": "capture_trajectory 1,460 rows",
       "detail": {
-        "rows": 1512
+        "rows": 1460
       }
     },
     {

@@ -41,6 +41,7 @@ All paths above are under **`00_docs/`** unless noted as ISZE root.
 | `00_docs/CANONICAL.md` | Which filename is authoritative; pending renames |
 | `00_docs/MAPS.md` | This file — navigation confusion |
 | `00_docs/MAP_REGISTRY.yaml` | Machine index of all maps |
+| `00_docs/PERSONAL_BRIDGE.md` | Career/agentic self → outside ISZE (`docs/BRIDGE_PRIVATE_ISZE.md`) |
 | `00_docs/agent/NOTES.md` | Scheduled tasks, decision-model caveats |
 | `00_docs/agent/AI_STACK.md` | Claude vs GPT routing, tier protocol |
 
@@ -51,7 +52,9 @@ All paths above are under **`00_docs/`** unless noted as ISZE root.
 | `00_docs/ISZE_ROADMAP.md` | Programme hub — links to all roadmaps |
 | `00_docs/roadmaps/html.md` | Static HTML dashboards |
 | `00_docs/roadmaps/scrapers.md` | Tender, Autodoc, KS, discount |
-| `00_docs/roadmaps/gps.md` | GPS / fig-key / AIM integration |
+| `00_docs/roadmaps/gps.md` | GPS / fig-key (AIM *scoring* V3 superseded) |
+| `00_docs/roadmaps/aim_prism_reinvention.md` | After AIM scoring failed — P4, PN prices, PRISM surface |
+| `00_docs/roadmaps/ai_sales_intelligence.md` | Email → action; P4 account health |
 | `00_docs/roadmaps/tools.md` | Jarvis, isze-tools, IDS ranking |
 
 ## Tier 4 — Memory & data (topic-specific)

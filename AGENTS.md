@@ -22,7 +22,7 @@
    - Never invent KPIs. Do not quote legacy PMS capture from old HTML without PRISM check.
 5. **Pipeline changes:** run `.cursor/skills/isze-verify-pipeline` (or `03_analytics/Isuzu/prism/scripts/run_pipeline_and_verify.ps1`) before citing capture %, GPS, or BVP mix.
 6. **Excel deliverables:** run checks in `00_docs/EXCEL_PRE_DELIVERY_CHECK.md` before shipping any workbook to Jerome.
-7. **IDS HTML / maps / client packs:** `.cursor/rules/isze-ids-delivery.mdc` + `04_tools/ids_dealer_ranking/IDS_2026_LOGIC_CHECK.md` §6b (tiles, geo sanity, Mode A UI) before claiming done.
+7. **IDS HTML / maps / client packs:** `.cursor/rules/isze-ids-delivery.mdc` + `04_tools/ids_dealer_ranking/IDS_2026_LOGIC_CHECK.md` §6b (tiles, geo sanity, Mode A UI) before claiming done. Any HTML/map/chart/slide: open the rendered output and confirm it paints with its data rows — `.cursor/rules/isze-verify-rendered-output.mdc`.
 8. **GPS / ITUK:** read `01_data/91_build/GPS_FILE_LINEAGE.md` and `.cursor/rules/isze-gps-ituk.mdc` — ITUK never on kickback or Other DBs tabs; dealer £ ≠ ISZE € wallet.
 9. **Deploy mirror:** never read or edit `07_deploy/Master Dashboard/context/` — regenerated from `00_docs/context_sync_whitelist.txt`.
 

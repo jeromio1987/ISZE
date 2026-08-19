@@ -1,0 +1,163 @@
+{
+  "verdict": "PASS_WITH_CAVEATS",
+  "fails": 0,
+  "caveats": 1,
+  "integrity_score": 48,
+  "integrity_band": "weak",
+  "html": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Pricing_Full_Analysis_Pack.html",
+  "audit_md": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_pricing_full_pack_audit.md",
+  "timestamp_utc": "2026-08-11T06:25:15Z",
+  "items": [
+    {
+      "name": "HTML exists",
+      "status": "PASS",
+      "detail": "ISZE_Pricing_Full_Analysis_Pack.html (42,974 bytes)"
+    },
+    {
+      "name": "HTML not stub",
+      "status": "PASS",
+      "detail": "size=42974"
+    },
+    {
+      "name": "Meta JSON exists",
+      "status": "PASS",
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\pricing_full_analysis_pack.meta.json"
+    },
+    {
+      "name": "CY2025 parts \u20ac match",
+      "status": "PASS",
+      "detail": "recompute=33,707,573.78 meta=33707573.78"
+    },
+    {
+      "name": "CY2025 coverage match",
+      "status": "PASS",
+      "detail": "recompute=84.12 meta=84.12"
+    },
+    {
+      "name": "CY2025 realization match",
+      "status": "PASS",
+      "detail": "recompute=95.95 meta=95.95"
+    },
+    {
+      "name": "NO_LIST \u20ac vs ranked CSV",
+      "status": "PASS",
+      "detail": "csv_sum=4,955,737 meta=4,955,737"
+    },
+    {
+      "name": "NO_LIST vs realization no_list (order of magnitude)",
+      "status": "PASS_WITH_CAVEAT",
+      "detail": "ranked=4,955,737 recompute_nolist=5,351,223 (ranked file may use stricter usable-price rule \u2014 caveat if within 15%)"
+    },
+    {
+      "name": "ZPR1 UTI 2025 vs PR00 median",
+      "status": "PASS",
+      "detail": "recompute=-10.61 meta=-10.61"
+    },
+    {
+      "name": "ZPR1 UMI 2025 vs PR00 median",
+      "status": "PASS",
+      "detail": "recompute=-15.28 meta=-15.28"
+    },
+    {
+      "name": "ZPR1 UTI 2026 vs PR00 median",
+      "status": "PASS",
+      "detail": "recompute=-13.92 meta=-13.92"
+    },
+    {
+      "name": "ZPR1 UMI 2026 vs PR00 median",
+      "status": "PASS",
+      "detail": "recompute=-5.24 meta=-5.24"
+    },
+    {
+      "name": "UMI YoY 25\u219226",
+      "status": "PASS",
+      "detail": "recompute=20.19 meta=20.19"
+    },
+    {
+      "name": "UTI YoY 25\u219226",
+      "status": "PASS",
+      "detail": "recompute=8.21 meta=8.21"
+    },
+    {
+      "name": "UTI\u2260UMI never blended",
+      "status": "PASS",
+      "detail": "blended_hit=False separation_language=True"
+    },
+    {
+      "name": "PMS total-primary headline",
+      "status": "PASS",
+      "detail": "meta.primary=total total_in_html=True genuine_headline=False"
+    },
+    {
+      "name": "Integrity score = 100 \u2212 deductions",
+      "status": "PASS",
+      "detail": "score=48 expected=48 deduction_sum=52 meta_sum=52"
+    },
+    {
+      "name": "Integrity band matches score",
+      "status": "PASS",
+      "detail": "score=48 band=weak"
+    },
+    {
+      "name": "External quotability false",
+      "status": "PASS",
+      "detail": "False"
+    },
+    {
+      "name": "HTML contains CY2025 coverage",
+      "status": "PASS",
+      "detail": "looked for 84.1%"
+    },
+    {
+      "name": "HTML contains CY2025 realization",
+      "status": "PASS",
+      "detail": "looked for 96.0%"
+    },
+    {
+      "name": "HTML contains integrity score",
+      "status": "PASS",
+      "detail": "score=48"
+    },
+    {
+      "name": "HTML \u20ac formatting (no raw+ M)",
+      "status": "PASS",
+      "detail": "bad_samples=[]"
+    },
+    {
+      "name": "Mode A language (no IML v7 / Model B)",
+      "status": "PASS",
+      "detail": "scanned"
+    },
+    {
+      "name": "PRISM verification green",
+      "status": "PASS",
+      "detail": "{'pass': 106, 'warn': 0, 'fail': 0, 'ok': True}"
+    },
+    {
+      "name": "Pack separates green verification from list-to-pocket",
+      "status": "PASS",
+      "detail": "provisional language + verification note present"
+    },
+    {
+      "name": "GPS UTI\u2260UMI values distinct",
+      "status": "PASS",
+      "detail": "UTI=322 UMI=179"
+    }
+  ],
+  "recompute_cy2025": {
+    "parts_eur": 33707573.78,
+    "matched_eur": 28356351.0,
+    "no_list_eur": 5351222.78,
+    "coverage_pct": 84.12,
+    "realization_pct": 95.95,
+    "list_value_eur": 29552482.8
+  },
+  "zpr1": {
+    "UTI_2025": -10.61,
+    "UMI_2025": -15.28,
+    "UTI_2026": -13.92,
+    "UMI_2026": -5.24,
+    "UTI_yoy_25_26": 8.21,
+    "UMI_yoy_25_26": 20.19
+  }
+}

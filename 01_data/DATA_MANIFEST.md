@@ -1,6 +1,6 @@
 # ISZE Data manifest — sort-by-topic map
 
-**Last updated:** 2026-08-12 (IUK Monthly Demand → dealer_sales) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
+**Last updated:** 2026-08-13 (IRELAND Harris StD → dealer_sales) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
 
 This is the **data map**. Each subject has a numbered folder under `01_data/` — drop new files into the matching one (§1). A small **wired working-set stays flat at root** because build scripts read it from there (§3).
 
@@ -80,10 +80,12 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 ### 05 · Dealer sell-out / sales-to-dealer → `05_Dealer_sellout/` + `12_raw/dealer_sales/`
 | File | Path | Flag |
 |------|------|------|
-| **Canonical raw (all DBs)** | `01_data/12_raw/dealer_sales/<DB>/` | ★ ITUK · **IUK** · UTI · **GREECE (Petros)** |
+| **Canonical raw (all DBs)** | `01_data/12_raw/dealer_sales/<DB>/` | ★ ITUK · **IUK** · **IRELAND (Harris)** · UTI · **GREECE (Petros)** |
 | `_registry.yaml` · `DEALER_SELL_OUT.md` | `01_data/12_raw/dealer_sales/` | 📄 intake + canonical long schema |
 | `IUK_Monthly_Demand_2025_2026YTD_July.xlsx` | `01_data/12_raw/dealer_sales/IUK/` | ★ LCV D-Max network PN qty · CY2025 + CY2026 YTD Jul · ≠ ITUK |
 | `dealer_sellout_long_IUK_CY2025.csv` · `…_CY2026YTD.csv` | `01_data/00_derived/` | ⚙ normalized long (IUK adapter) |
+| `IRELAND_Sales_to_Dealer_2025_2026YTD_Jul.xlsx` | `01_data/12_raw/dealer_sales/IRELAND/` | ★ Harris StD line-level · CY2025 + CY2026 YTD Jul · ≠ IUK ≠ IMIE |
+| `dealer_sellout_long_IRELAND_CY2025.csv` · `…_CY2026YTD.csv` | `01_data/00_derived/` | ⚙ normalized long (Ireland adapter) |
 | `Petros_Parts_Sold_Qties_2025.xlsx` | `01_data/12_raw/dealer_sales/GREECE/` | ★ D-MAX qty CY2025 · flag `pn_newest_rollup` |
 | `dealer_sellout_long_GREECE_CY2025.csv` | `01_data/00_derived/` | ⚙ normalized long (Petros adapter) |
 | UTIPartSales_2025-* | `01_data/12_raw/dealer_sales/UTI/` | ⚙ sell-out pipeline |
@@ -119,6 +121,7 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | BO OVERVIEW - UNIVERSAL TRUCKS ISRAEL LTD 01-07-2026 (1).xlsx | `01_data/08_Distributor/` | Israel/UTI back-order overview (filed 2026-07-16) |
 | **IDS 2026 dealer eval packs** (NL / DK / LUX drop 2026-07-24) | `01_data/90_INBOX/IDS_2026/` | ⚙ `04_tools/ids_dealer_ranking/` — NL unchanged (identical); DK 20 dealers filed; LUX Autopolis in `LUX/` pending BE/Benelux mapping |
 | **Meetings prep per DB:** | `09_meetings/Preparation Meetings/<DB>/` | |
+| **`distributor_dimension.csv`** + `.md` | `01_data/00_derived/` | ★⚙ **canonical DB key** — `91_build/build_distributor_dimension.py`. Join on **`sold_to_sap`**, never on `payer_code` (1797 = both UMI *and* UTI). Maps SAP entity names (`IBX`, `ISD`, `Danmark`) ↔ DB codes (`BELGIUM`, `GERMANY`, `DENMARK`). Read by `02_dashboards/_composable/build.mjs`. |
 
 ### 09 · Meetings & minutes → `09_meetings/`
 | File | Path | Flag |
@@ -236,6 +239,7 @@ See `05_memory/projects/sales-analytics-pipeline.md`.
 
 ## §8 — Migration log
 
+- **2026-08-13** — Ireland Harris StD from Outlook (`RE: Business review` / John Cummins / `XT - 2026-08-13T114222.149.xlsx`) → `12_raw/dealer_sales/IRELAND/IRELAND_Sales_to_Dealer_2025_2026YTD_Jul.xlsx`; registered; normalized → `00_derived/dealer_sellout_long_IRELAND_CY2025.csv` + `…_CY2026YTD.csv` (adapter `91_build/normalize_dealer_sellout_ireland.py`). **Wired second layer** (AIM/GPS): `build_dealer_sellout_aim_gps.py` now multi-DB (ITUK, UTI, IRELAND, IUK, GREECE). Standing rule in `12_raw/dealer_sales/DEALER_SELL_OUT.md`. **IRELAND ≠ IUK ≠ IMIE.**
 - **2026-08-12** — IUK `IUK Monthly Demand - July 2026 - Copy.xlsx` (unsorted root) → `12_raw/dealer_sales/IUK/IUK_Monthly_Demand_2025_2026YTD_July.xlsx`; registered in `_registry.yaml`; normalized → `00_derived/dealer_sellout_long_IUK_CY2025.csv` + `…_CY2026YTD.csv` (adapter `91_build/normalize_dealer_sellout_iuk.py`). **IUK ≠ ITUK.**
 - **2026-08-10** — Eucon 2023 Price Survey rawdata (UK OEM, ITUK OEM, UK IAM) → `01_Pricing/_raw/Eucon_PriceSurvey_*` + hard QA `_raw/Eucon_PriceSurvey_2023_QA.md` (crossrefs safe; prices list-not-street); **21** basket `peer_oe_pn` fills (`mapped_oe_pn`).
 - **2026-08-10** — Latest lists: `EXPORT_ZPR1` + `Price file 202610082026` → `_raw/EXPORT_ZPR1_20260810.xlsx` + `Price_file_PR00_IE40_20260810.xlsx`; derived `pricing_zpr1*.parquet` + `pricing_pr00_ie40.parquet`.

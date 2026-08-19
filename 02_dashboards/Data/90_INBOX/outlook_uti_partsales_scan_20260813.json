@@ -1,0 +1,26 @@
+﻿{
+  "scan_date": "2026-08-13",
+  "mailbox": "jerome.van.der.pluym@isuzu-e.com",
+  "method": "Outlook COM Restrict Inbox+Sent+Archive (UTIPartSales / PartSales / uti.co.il)",
+  "never_send": true,
+  "uti_sap_sold_to": 1799,
+  "not_umi": 1797,
+  "job_rule": "executed 01/MM/YYYY reports previous calendar month",
+  "inbox_utisales_jobs": [
+    {"received": "2025-09-01", "executed": "2025-09-01", "report": "2025-08", "filed": "UTIPartSales_2025-08.xlsx"},
+    {"received": "2025-10-01", "executed": "2025-10-01", "report": "2025-09", "filed": "UTIPartSales_2025-09.xlsx"},
+    {"received": "2025-11-01", "executed": "2025-11-01", "report": "2025-10", "filed": "UTIPartSales_2025-10.xlsx"},
+    {"received": "2025-12-01", "executed": "2025-12-01", "report": "2025-11", "filed": "UTIPartSales_2025-11.xlsx"},
+    {"received": "2026-01-01", "executed": "2026-01-01", "report": "2025-12", "filed": null, "note": "smaller than canonical UTIPartSales_2025-12_YTD.xlsx — not replaced"},
+    {"received": "2026-02-01", "executed": "2026-02-01", "report": "2026-01", "filed": "UTIPartSales_2026-01.xlsx"},
+    {"received": "2026-03-01", "executed": "2026-03-01", "report": "2026-02", "filed": "UTIPartSales_2026-02.xlsx"},
+    {"received": "2026-04-01", "executed": "2026-04-01", "report": "2026-03", "filed": "UTIPartSales_2026-03.xlsx"},
+    {"received": "2026-05-01", "executed": "2026-05-01", "report": "2026-04", "filed": "UTIPartSales_2026-04.xlsx"},
+    {"received": "2026-06-01", "executed": "2026-06-01", "report": "2026-05", "filed": "UTIPartSales_2026-05.xlsx"},
+    {"received": "2026-07-21", "executed": "2026-07-01", "report": "2026-06", "filed": "UTIPartSales_2026-06.xlsx", "note": "FW in Inbox"}
+  ],
+  "archive_utisales_count": 0,
+  "still_missing_cy2025": ["2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07"],
+  "still_missing_cy2026": ["2026-07", "2026-08"],
+  "dump_dir": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\UTI_PartSales_mail_20260813"
+}

@@ -596,7 +596,9 @@ try:
             "Run `run_pipeline_and_verify.ps1`."
         )
     else:
-        ly = int(league["year"].max())
+        from modules.year_coverage import latest_complete_year
+
+        ly = latest_complete_year([int(y) for y in league["year"].dropna().unique()])
         league = league[league["year"] == ly].copy()
         league["conf"] = league["distributor_code"].apply(_pms_confidence)
         conf_color = {"HIGH": "#1B3A6B", "MED": "#8FA9C9", "LOW": "#C62828"}
