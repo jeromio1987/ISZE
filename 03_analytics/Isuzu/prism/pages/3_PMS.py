@@ -14,7 +14,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from pathlib import Path
 import sys
-from datetime import datetime
 
 APP_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(APP_DIR))
@@ -25,6 +24,7 @@ from config import (
     DATA_ROOT,
     DERIVED_DIR,
     PMS_SUMMARY_BY_DB_CSV,
+    data_freshness_date,
     resolve_mapping_path,
     resolve_uio_path,
 )
@@ -45,6 +45,7 @@ from modules.pms_engine import (
     LCV_DISTRIBUTORS,
     parc_config_for_distributor,
 )
+from modules.plotly_style import style
 
 # set_page_config is handled by app.py — do not call it in sub-pages
 
@@ -266,7 +267,7 @@ with st.sidebar:
         st.caption("📌 UIO: V17 Excel + ITUK DVLA override (22,389)")
     st.caption("🔧 PMS Phase 1: N75 (NPR75/4HK1 + NPR88/4JZ1)")
     st.caption("📐 Intervals: prism/data/pms_capture_assumptions.yaml")
-    st.caption(f"🔄 Built: {datetime.now().strftime('%d %b %Y')}")
+    st.caption(f"🔄 Built: {data_freshness_date()}")
     st.caption("📖 Metrics: prism/docs/metric_dictionary.md")
 
 # ── Apply filters ─────────────────────────────────────────────────────────────
@@ -463,7 +464,7 @@ else:
                 plot_bgcolor="white",
                 paper_bgcolor="white",
             )
-            st.plotly_chart(fig_cap, width='stretch')
+            st.plotly_chart(style(fig_cap), width='stretch')
         else:
             st.info("No Phase 1 category data available for the capture rate chart.")
     except Exception as e:
@@ -550,7 +551,7 @@ else:
                 yaxis=dict(gridcolor="#F0F0F0", tickprefix="€", tickformat=",.0f"),
                 legend=dict(orientation="h", yanchor="bottom", y=-0.35),
             )
-            st.plotly_chart(fig_dist, width='stretch')
+            st.plotly_chart(style(fig_dist), width='stretch')
         else:
             # Single or filtered distributor: show detail table
             dist_show = dist_summary[[
@@ -602,8 +603,17 @@ try:
         league = league[league["year"] == ly].copy()
         league["conf"] = league["distributor_code"].apply(_pms_confidence)
         conf_color = {"HIGH": "#1B3A6B", "MED": "#8FA9C9", "LOW": "#C62828"}
-        net_gap = float(league["revenue_gap_eur_sum"].sum())
-        top3_gap = float(league.nlargest(3, "revenue_gap_eur_sum")["revenue_gap_eur_sum"].sum())
+        # Quotable-KPI firewall (DECISIONS.md 2026-07-21 Fix 2): rank on the gap sum
+        # that EXCLUDES zero-actual-sales categories (their €0 gap is a hidden gap,
+        # not a small one). Fall back to the plain sum until the summary is rebuilt.
+        gap_col = (
+            "revenue_gap_eur_sum_quotable"
+            if "revenue_gap_eur_sum_quotable" in league.columns
+            else "revenue_gap_eur_sum"
+        )
+        nonq_col = "n_nonquotable_categories" if "n_nonquotable_categories" in league.columns else None
+        net_gap = float(league[gap_col].sum())
+        top3_gap = float(league.nlargest(3, gap_col)[gap_col].sum())
 
         k1, k2, k3 = st.columns(3)
         with k1:
@@ -613,9 +623,9 @@ try:
         with k3:
             st.metric("Top 3 share", f"{top3_gap / net_gap * 100:.0f}%" if net_gap else "—")
 
-        league_chart = league.sort_values("revenue_gap_eur_sum", ascending=True)
+        league_chart = league.sort_values(gap_col, ascending=True)
         fig_league = go.Figure(go.Bar(
-            x=league_chart["revenue_gap_eur_sum"],
+            x=league_chart[gap_col],
             y=league_chart["distributor_code"],
             orientation="h",
             marker_color=[conf_color[c] for c in league_chart["conf"]],
@@ -626,6 +636,7 @@ try:
                 league_chart["capture_rate_genuine_wtd"] * 100,
                 league_chart["uio_units"],
                 league_chart["conf"],
+                league_chart[nonq_col] if nonq_col else [0] * len(league_chart),
             )),
             hovertemplate=(
                 "<b>%{y}</b><br>"
@@ -633,7 +644,8 @@ try:
                 "Total capture: %{customdata[0]:.1f}%<br>"
                 "Genuine capture: %{customdata[1]:.1f}%<br>"
                 "UIO: %{customdata[2]:,.0f}<br>"
-                "Confidence: %{customdata[3]}<extra></extra>"
+                "Confidence: %{customdata[3]}<br>"
+                "Non-quotable categories: %{customdata[4]}<extra></extra>"
             ),
         ))
         fig_league.update_layout(
@@ -645,23 +657,26 @@ try:
             plot_bgcolor="white",
             paper_bgcolor="white",
         )
-        st.plotly_chart(fig_league, width='stretch')
+        st.plotly_chart(style(fig_league), width='stretch')
         st.caption(
             "Bar colour = capture-number confidence — **Blue** HIGH (own DVLA UIO, ITUK) · "
             "**Grey** MED (central v18 parc model) · **Red** LOW (BVP-only / genuine-data gap — UMI, UTI; € gap directional only)."
         )
 
-        league_tbl = league.sort_values("revenue_gap_eur_sum", ascending=False).copy()
+        league_tbl = league.sort_values(gap_col, ascending=False).copy()
         league_tbl["UIO"] = league_tbl["uio_units"].apply(lambda x: f"{int(x):,}")
         league_tbl["Total cap"] = league_tbl["capture_rate_total_wtd"].apply(lambda x: f"{x * 100:.1f}%")
         league_tbl["Genuine cap"] = league_tbl["capture_rate_genuine_wtd"].apply(lambda x: f"{x * 100:.1f}%")
         league_tbl["Oil cap"] = league_tbl["oil_filter_capture"].apply(lambda x: f"{x * 100:.0f}%")
-        league_tbl["€ gap"] = league_tbl["revenue_gap_eur_sum"].apply(lambda x: _fmt_eur(x, 0))
+        league_tbl["€ gap"] = league_tbl[gap_col].apply(lambda x: _fmt_eur(x, 0))
+        if nonq_col:
+            league_tbl["Non-quotable"] = league_tbl[nonq_col].astype(int)
         st.dataframe(
             league_tbl.rename(columns={
                 "distributor_code": "Distributor",
                 "conf": "Conf",
-            })[["Distributor", "UIO", "Total cap", "Genuine cap", "Oil cap", "€ gap", "Conf"]],
+            })[["Distributor", "UIO", "Total cap", "Genuine cap", "Oil cap", "€ gap"]
+               + (["Non-quotable"] if nonq_col else []) + ["Conf"]],
             width='stretch',
             hide_index=True,
         )
@@ -669,7 +684,8 @@ try:
             "€ gap is a gross-SP **ceiling** to 100% capture — before any realistic pilot target "
             "(+1% filters / +3% wear) and **before netting BVP in-tent retention (BVP is not leakage)**, "
             "so the winnable slice is materially smaller. Air-filter demand uses a provisional 0.5× interval "
-            "factor (~every 2nd service — flag C, pending IML confirmation); brake-shoe ~0% capture network-wide is fitment/availability, not a winnable gap."
+            "factor (~every 2nd service — flag C, pending IML confirmation); brake-shoe ~0% capture network-wide is fitment/availability, not a winnable gap. "
+            "**Non-quotable** = categories with zero actual sales whose € gap is excluded from the ranking (DECISIONS.md 2026-07-21)."
         )
 except Exception as e:
     st.warning(f"Network capture league unavailable: {e}")
@@ -749,47 +765,12 @@ if show_ituk_panel:
 
 st.divider()
 
-# ── Section 7: 2026 PMS Marketing Calendar ───────────────────────────────────
-st.markdown("#### 2026 PMS Marketing Calendar")
-current_month = datetime.now().month
-
-
-def _campaign_status(months: list) -> str:
-    return "ACTIVE" if current_month in months else ""
-
-
-campaigns = [
-    {
-        "Quarter":   "Q2",
-        "Campaign":  "Spring into Service",
-        "Period":    "Apr – Jun 2026",
-        "PMS Focus": "Filters + Brakes (10–20% off)",
-        "Status":    _campaign_status([4, 5, 6]),
-    },
-    {
-        "Quarter":   "Q3",
-        "Campaign":  "Parts Basket Pricing",
-        "Period":    "Aug – Sep 2026",
-        "PMS Focus": "Fleet basket kits",
-        "Status":    _campaign_status([8, 9]),
-    },
-    {
-        "Quarter":   "Q3",
-        "Campaign":  "Brakes & Safety",
-        "Period":    "Sep – Oct 2026",
-        "PMS Focus": "Brakes + Lights",
-        "Status":    _campaign_status([9, 10]),
-    },
-]
-df_campaigns = pd.DataFrame(campaigns)
-st.dataframe(df_campaigns, width='stretch', hide_index=True)
-st.caption("ACTIVE = campaign running in current calendar month.")
-
 # ── Footer ────────────────────────────────────────────────────────────────────
 st.markdown(
     '<div class="footer-note">'
     "PRISM PMS Coverage | Layer 2B | Phase 1: N75 | "
-    "Metrics: prism/docs/metric_dictionary.md | PN Authority: ITUK Apr 2026"
+    "Metrics: prism/docs/metric_dictionary.md | PN Authority: ITUK Apr 2026 | "
+    "Marketing calendar moved to Tools."
     "</div>",
     unsafe_allow_html=True,
 )

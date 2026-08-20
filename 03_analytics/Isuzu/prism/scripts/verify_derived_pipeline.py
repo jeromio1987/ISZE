@@ -801,6 +801,50 @@ def check_config_status(report: Report) -> None:
     _chk(report, "config.bvp_catalog", BVP_CATALOG_XLSX.exists(), f"BVP catalog at {BVP_CATALOG_XLSX.name}")
 
 
+def check_uio_canonical(report: Report, fx: dict[str, Any]) -> None:
+    """DI-2: canonical UIO resolves to 06_uio/_CURRENT (v19, unversioned) and no
+    stale v17/v18 copy sits in a fallback path where it could shadow it."""
+    from config import UIO_CANDIDATES, resolve_uio_path
+
+    try:
+        resolved = resolve_uio_path()
+    except FileNotFoundError as e:
+        _chk(report, "uio.canonical", False, "Canonical UIO not found", error=str(e))
+        return
+
+    canonical = UIO_CANDIDATES[0] if UIO_CANDIDATES else None
+    is_canonical = canonical is not None and resolved.resolve() == canonical.resolve()
+    _chk(
+        report,
+        "uio.canonical",
+        is_canonical,
+        f"UIO resolves to canonical {resolved.name}"
+        if is_canonical
+        else f"UIO resolved to non-canonical {resolved.name} (expected {canonical.name})",
+        path=str(resolved),
+    )
+
+    # A versioned v17/v18 (or older) copy anywhere in a candidate/archive path is
+    # a stale shadow: if the canonical ever goes missing, resolve_uio_path would
+    # fall through to it and silently re-base every UIO-denominator metric.
+    stale: list[str] = []
+    scan_roots = {Path(c).parent for c in UIO_CANDIDATES if Path(c).parent.exists()}
+    for root in scan_roots:
+        for p in root.glob("*UIO*"):
+            if p.is_file() and ("v18" in p.name.lower() or "v17" in p.name.lower() or "v16" in p.name.lower()):
+                stale.append(str(p))
+    _chk(
+        report,
+        "uio.stale_copies",
+        not stale,
+        "No stale v16/v17/v18 UIO copies in fallback paths"
+        if not stale
+        else f"Stale UIO copies on disk: {stale}",
+        warn=bool(stale),
+        stale=stale,
+    )
+
+
 def write_reports(report: Report) -> None:
     DERIVED_DIR.mkdir(parents=True, exist_ok=True)
     payload = {
@@ -857,6 +901,7 @@ def main() -> int:
     check_raw_files(report, fx)
     check_derived_files(report, fx)
     check_config_status(report)
+    check_uio_canonical(report, fx)
     check_sales_fact(report, fx)
     check_dimension(report, fx)
     check_crossref(report, fx)

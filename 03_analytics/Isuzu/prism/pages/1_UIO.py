@@ -23,6 +23,7 @@ import plotly.express as px
 
 from config import BETA_MODE, resolve_uio_path
 from modules.data_prep import load_uio_from_excel
+from modules.plotly_style import style
 
 # ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -205,7 +206,7 @@ fig_ctry.update_layout(
     **CHART_LAYOUT, xaxis_title="Vehicles in operation", yaxis_title="",
     height=max(360, 26 * len(bc)),
 )
-st.plotly_chart(fig_ctry, width="stretch")
+st.plotly_chart(style(fig_ctry), width="stretch")
 st.caption("UK and Israel highlighted — the two largest markets and the focus of current parts analysis.")
 
 st.divider()
@@ -225,7 +226,7 @@ fig_tr.update_layout(
     **CHART_LAYOUT, xaxis_title="Year", yaxis_title="Total fleet (UIO)", height=380,
 )
 fig_tr.update_xaxes(dtick=1, tickformat="d")
-st.plotly_chart(fig_tr, width="stretch")
+st.plotly_chart(style(fig_tr), width="stretch")
 st.caption("Total Isuzu fleet on the road, all markets. 2020–2024 actuals (IML V17). 2025/26 use 2024 as proxy.")
 
 st.divider()

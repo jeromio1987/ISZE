@@ -27,6 +27,7 @@ if str(APP_DIR) not in sys.path:
 
 from config import DERIVED_DIR  # noqa: E402
 from modules.strategic_build import PMS_CAPTURE_BY_DB_CSV  # noqa: E402
+from modules.plotly_style import style  # noqa: E402
 
 ISZE_BLUE = "#1B3A6B"
 ISZE_ORANGE = "#E87722"
@@ -61,6 +62,11 @@ st.markdown(
 </div>
 """,
     unsafe_allow_html=True,
+)
+
+st.caption(
+    "VOR = **Vehicle Off Road** — urgent/expedited orders where the vehicle "
+    "cannot wait for the normal replenishment cycle."
 )
 
 
@@ -270,7 +276,7 @@ if not cap_sigs.empty:
     )
     # Years are integers — without dtick plotly interpolates 2,023.5 ticks.
     fig.update_xaxes(dtick=1, tickformat="d")
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(style(fig), width="stretch")
 
 # --- weekly VOR series -----------------------------------------------------
 vh = _vor_hist()
@@ -298,7 +304,7 @@ if not vh.empty and row["level"] == "distributor":
             margin=dict(l=10, r=10, t=40, b=10),
         )
         figv.update_xaxes(showticklabels=False)
-        st.plotly_chart(figv, width="stretch")
+        st.plotly_chart(style(figv), width="stretch")
         st.caption(
             "VOR share is weighted by order count, so a thin week cannot swing the read. "
             "A DB that always ships VOR is not an alarm — only movement against its own "

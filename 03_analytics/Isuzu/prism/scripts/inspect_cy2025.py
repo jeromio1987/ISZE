@@ -1,6 +1,6 @@
 import pandas as pd
 from pathlib import Path
-p = Path(r"C:\Users\jerom\Desktop\claude\ISZE\Data\raw\sales\CY2025.XLSX")
+p = Path(r"C:\Users\jerom\Desktop\claude\ISZE\01_data\12_raw\sales\CY2025.XLSX")
 xl = pd.ExcelFile(p)
 print("SHEETS", xl.sheet_names)
 for name in xl.sheet_names:

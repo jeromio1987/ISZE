@@ -25,7 +25,10 @@ $Targets    = @(
     (Join-Path $IszeRoot 'publish-site')
 ) | Select-Object -Unique | Where-Object { Test-Path $_ }
 
-$SkipDirs = @('_archive', '_build')
+# Reduced copy set (consolidation 2026-08-20): skip scratch, internal SPA, and
+# the mirrored Data folder (JSON feeds are copied separately below). _composable
+# stays in the deploy set (PRISM map + master desk are still shipped).
+$SkipDirs = @('_archive', '_build', '_working', 'spa_internal', 'Data')
 
 function Convert-ToDeployHtml {
     param([string]$Content)

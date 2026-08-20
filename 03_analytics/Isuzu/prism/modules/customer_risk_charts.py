@@ -19,6 +19,7 @@ ISZE_BLUE = "#1B3A6B"
 ISZE_ORANGE = "#E87722"
 ISZE_RED = "#E2231A"
 ISZE_GREY = "#9AA0A6"
+from modules.plotly_style import style
 
 # Default weights -- mirror build_db_aftersales_risk.py
 DEFAULT_W = {"eucon": 0.35, "aim": 0.25, "contested": 0.25, "vor": 0.15}
@@ -101,7 +102,7 @@ def render_signal_breakdown(df: pd.DataFrame) -> None:
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         margin=dict(l=10, r=10, t=40, b=10),
     )
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(style(fig), width="stretch")
 
 
 def render_threat_map(df: pd.DataFrame) -> None:
@@ -136,7 +137,7 @@ def render_threat_map(df: pd.DataFrame) -> None:
         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="#FAFBFC", height=560,
         xaxis_tickformat=".0%", yaxis_tickformat=".0%",
     )
-    st.plotly_chart(fig2, width="stretch")
+    st.plotly_chart(style(fig2), width="stretch")
 
 
 def load_eucon_scrape(derived_dir, street_factor: float = STREET_FACTOR) -> pd.DataFrame:
@@ -195,7 +196,7 @@ def render_aftermarket_scrape(eu: pd.DataFrame, street_factor: float = STREET_FA
         height=max(360, 22 * len(lead)), xaxis_title="ISZE PNs undercut at reference sell-out",
         margin=dict(l=10, r=10, t=10, b=10),
     )
-    st.plotly_chart(figb, width="stretch")
+    st.plotly_chart(style(figb), width="stretch")
 
     # --- Price position scatter (street-based)
     st.markdown("##### Price position - revenue vs gap to reference sell-out")
@@ -215,7 +216,7 @@ def render_aftermarket_scrape(eu: pd.DataFrame, street_factor: float = STREET_FA
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     )
     figs.add_hline(y=0, line_dash="dash", line_color="#555")
-    st.plotly_chart(figs, width="stretch")
+    st.plotly_chart(style(figs), width="stretch")
 
     # --- Detail table
     st.markdown("##### Undercut parts (reference sell-out) - the defend list")

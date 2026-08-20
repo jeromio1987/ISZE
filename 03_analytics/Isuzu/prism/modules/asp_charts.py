@@ -13,6 +13,7 @@ import streamlit as st
 
 ISZE_BLUE = "#1B3A6B"
 ISZE_ORANGE = "#E87722"
+from modules.plotly_style import style
 
 FLAG_COLORS = {
     "alert": "#FFCDD2",
@@ -101,7 +102,7 @@ def render_deviation_heatmap(asp_df: pd.DataFrame, selected_year: int) -> None:
         margin=dict(l=100, r=40, t=40, b=100),
         xaxis=dict(tickangle=-40),
     )
-    st.plotly_chart(fig_heat, width='stretch')
+    st.plotly_chart(style(fig_heat), width='stretch')
 
 
 def render_alert_table(asp_df: pd.DataFrame, threshold_pct: int, selected_year: int) -> None:
@@ -225,4 +226,4 @@ def render_distributor_drilldown(
         showlegend=False,
         height=380,
     )
-    st.plotly_chart(fig_drill, width='stretch')
+    st.plotly_chart(style(fig_drill), width='stretch')

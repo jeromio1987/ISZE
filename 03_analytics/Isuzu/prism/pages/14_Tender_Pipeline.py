@@ -14,6 +14,7 @@ if str(APP_DIR) not in sys.path:
 
 from config import DERIVED_DIR  # noqa: E402
 from modules import advanced_visuals as av  # noqa: E402
+from modules.plotly_style import style  # noqa: E402
 
 
 SRC = DERIVED_DIR / "tender_pipeline.csv"
@@ -54,11 +55,11 @@ st.warning(
     icon="⚠️",
 )
 
-st.plotly_chart(av.fig_tender_funnel(DERIVED_DIR), use_container_width=True)
+st.plotly_chart(style(av.fig_tender_funnel(DERIVED_DIR)), width="stretch")
 col1, col2 = st.columns(2)
-col1.plotly_chart(av.fig_tender_country(DERIVED_DIR), use_container_width=True)
-col2.plotly_chart(av.fig_tender_owner(DERIVED_DIR), use_container_width=True)
-st.plotly_chart(av.fig_tender_scatter(DERIVED_DIR), use_container_width=True)
+col1.plotly_chart(style(av.fig_tender_country(DERIVED_DIR)), width="stretch")
+col2.plotly_chart(style(av.fig_tender_owner(DERIVED_DIR)), width="stretch")
+st.plotly_chart(style(av.fig_tender_scatter(DERIVED_DIR)), width="stretch")
 
 st.subheader("Action queue — top Attack / Selective opportunities")
 queue = (
@@ -69,7 +70,7 @@ queue = (
 )
 st.dataframe(
     queue,
-    use_container_width=True,
+    width="stretch",
     hide_index=True,
     column_config={"url": st.column_config.LinkColumn("Notice", display_text="Open ↗")},
 )

@@ -3,7 +3,7 @@
 from pathlib import Path
 import pandas as pd
 
-p = Path(r"C:\Users\jerom\Desktop\claude\ITUK Parts Sales Target Study.xlsx")
+p = Path(r"C:\Users\jerom\Desktop\claude\ISZE\01_data\08_Distributor\ITUK Parts Sales Target Study.xlsx")
 out = Path(__file__).resolve().parent.parent / "data" / "_ituk_study_dump.txt"
 lines = [f"exists={p.exists()}", f"path={p}"]
 if p.exists():

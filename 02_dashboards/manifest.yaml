@@ -1,14 +1,18 @@
-# ISZE HTML dashboard layout — regenerated from disk 2026-08-13
+# ISZE HTML dashboard layout — regenerated from disk 2026-08-20 (BI-tools consolidation)
 # Deploy is flat via sync_to_deploys.ps1 (does not read this file for the copy list).
 # Stubs are listed separately; they are not dashboards.
+# Archived (2026-08-20 → _archive/, deploy-skip): UIO v18, GPS v9, GPS Network_SPU,
+#   GPS TargetStudy, AIM_CY2025, PartGroups_OFFLINE, since_2026-06-01/ snapshot.
+# Nested duplicate not deployed (2 levels deep): ids/IDS_all_dashboards_2026-08-19/.
 
-version: 2
+version: 3
 
 folders:
   _working: Working / scratch
   _composable: PRISM map + master desk
+  bi: New BI tools — static twins of PRISM pages 20-23
   fleet: UIO, ZEV, plan tracker, year-end, GPS canonical
-  gps: GPS stubs + kickback (canonical GPS lives in fleet/)
+  gps: GPS proposals
   hub: Entry points and navigation
   ids: IDS 2026 dealer evaluation
   md_pack: MD pack
@@ -24,6 +28,11 @@ files:
     - dist/isze_cockpit.customer.html
   _working:
     - index.html
+  bi:
+    - Warranty_Intelligence.html
+    - Price_Realization.html
+    - Parc_Cohorts.html
+    - Dealer_Sellout.html
   fleet:
     - ISUZU_UIO_Dashboard_2026.html
     - ISZE_FY2026_YearEnd_Review.html
@@ -34,11 +43,12 @@ files:
     - ISZE_GPS_Kickback_Stretch_Proposal_FY27.html
   hub:
     - AI_Operations_Explorer.html
+    - BI_PACKS.html
     - index.html
     - MASTER_DASHBOARD.html
     - PROJECT_HUB.html
   ids:
-    - IDS_2026_Audit_Sales_Market_Evaluation.html
+    - IDS_2026_Country_Action_UX_proposal.html
     - IDS_2026_dealer_compare.html
     - IDS_2026_dealer_compare_Belgium.html
     - IDS_2026_dealer_compare_Cyprus.html
@@ -59,16 +69,24 @@ files:
     - IDS_2026_dealer_compare_Switzerland.html
     - IDS_2026_dealer_compare_UK_CV.html
     - IDS_2026_dealer_compare_UK_LCV.html
+    - IDS_2026_Explainer.html
+    - IDS_2026_Kaizen_Belgium.html
     - IDS_2026_Portugal_dealer_map.html
   md_pack:
     - ISZE_MD_Pack_Capture_FY27_FY28.html
   ops:
     - ISZE_AI_Tools_Overview.html
     - ISZE_Commercial_Model_Map.html
+    - ISZE_OS_Data_Map.html
     - ISZE_Tender_Monitor_v2.html
     - ISZE_Tools_Legal_Map.html
   pricing:
     - ISZE_Aftermarket_Live_Pricing_Dashboard.html
+    - ISZE_IAM_Quality_Positioning_Engine.html
+    - ISZE_IAM_Quality_Positioning_Engine_IMOTORS.html
+    - ISZE_IAM_Quality_Positioning_Engine_ISD.html
+    - ISZE_IAM_Quality_Positioning_Engine_ITUK.html
+    - ISZE_IAM_Quality_Positioning_Overview.html
     - ISZE_Pricing_Action_Map.html
     - ISZE_Pricing_BI_Dashboard.html
     - ISZE_Pricing_Engine_Readiness_Dashboard.html
@@ -77,14 +95,14 @@ files:
     - ISZE_Pricing_Proposal_v1.html
     - ISZE_Scraped_Price_Intelligence_Dashboard.html
   sales:
-    - AIM_Dashboard_CY2025.html
     - AIM_Dashboard_CY2026.html
     - Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html
     - Dealer_Sellout_UTI_vs_ITUK.html
+    - ISZE_Aftermarket_BI_Command_Center.html
     - ISZE_Competitiveness_Dashboard.html
+    - ISZE_DB_DLR_Replenishment_CY2025.html
     - ISZE_Monthly_Sales_Tracker.html
     - ISZE_PartGroups_Sales_Explorer.html
-    - ISZE_PartGroups_Sales_Explorer_OFFLINE.html
     - ISZE_Risk_Cockpit.html
     - ISZE_SPA_RunRate_UTI.html
     - ISZE_UTI_Replenishment_H2_2025.html
@@ -92,10 +110,7 @@ files:
     - PROPERTIQ.html
 
 stubs:
-  - fleet/ISUZU_UIO_Dashboard_2026_v18.html
-  - fleet/ISZE_GPS_Dashboard_v9.html
-  - gps/ISZE_GPS_Network_SPU_Dashboard.html
-  - gps/ISZE_GPS_TargetStudy_Reconciliation_Dashboard.html
+  []
 
 deploy:
   flatten_on_sync: true
@@ -103,3 +118,5 @@ deploy:
     - _archive
     - _build
     - Data
+    - _working
+    - spa_internal

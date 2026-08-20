@@ -9,14 +9,14 @@ from pathlib import Path
 
 PRISM_ROOT = Path(__file__).resolve().parent.parent
 EVIDENCE_SOURCES = PRISM_ROOT / "evidence-app" / "sources" / "prism"
-OLD_PREFIX = r"C:/Users/jerom/Desktop/claude/ISZE/Data/derived"
+OLD_PREFIX = r"C:/Users/jerom/Desktop/claude/ISZE/01_data/00_derived"
 
 
 def resolve_derived() -> Path:
     if env := os.environ.get("ISZE_DERIVED"):
         return Path(env).resolve()
     # Repo layout: evidence-app + data/derived at repo root
-    candidate = PRISM_ROOT.parent.parent.parent.parent / "Data" / "derived"
+    candidate = PRISM_ROOT.parent.parent.parent.parent / "01_data" / "00_derived"
     if candidate.is_dir():
         return candidate.resolve()
     return (PRISM_ROOT / "data" / "derived").resolve()

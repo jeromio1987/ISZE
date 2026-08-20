@@ -28,12 +28,7 @@ GREEN = "#2E7D32"
 RED = "#C62828"
 GREY = "#94A3B8"
 
-_LAYOUT = dict(
-    template="plotly_white",
-    font=dict(family="Segoe UI, sans-serif", size=12),
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="#FAFBFC",
-)
+from modules.plotly_style import BASE_LAYOUT as _LAYOUT
 
 def _default_derived() -> Path:
     import os

@@ -47,8 +47,8 @@ def test_is_internal_mode_reads_live_env(monkeypatch):
 @pytest.mark.parametrize(
     "rel",
     [
-        "pages/12_Offset_Insights.py",
-        "pages/15_Customer_Risk.py",
+        "pages/network_intelligence.py",
+        "pages/internal_shelf.py",
         "pages/18_Decision_Models.py",
     ],
 )

@@ -19,6 +19,7 @@ import streamlit as st
 
 ISZE_BLUE = "#1B3A6B"
 ISZE_ORANGE = "#E87722"
+from modules.plotly_style import style
 
 
 def render_network_overview(
@@ -150,7 +151,7 @@ def render_network_overview(
         showlegend=False,
         height=380,
     )
-    st.plotly_chart(fig, width='stretch')
+    st.plotly_chart(style(fig), width='stretch')
 
 
 def render_family_detail(aim_family: pd.DataFrame, selected_year: int, key: str = "fam_dist_sel") -> None:
@@ -275,7 +276,7 @@ def render_family_detail(aim_family: pd.DataFrame, selected_year: int, key: str 
         plot_bgcolor="#FAFBFC",
         height=420,
     )
-    st.plotly_chart(fig2, width='stretch')
+    st.plotly_chart(style(fig2), width='stretch')
 
 
 def render_gap_closer(derived_dir) -> None:

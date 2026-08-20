@@ -20,6 +20,12 @@
 | PMS assumptions (editable) | `prism/data/pms_capture_assumptions.yaml` |
 | Static HTML refresh | `build_isze_dashboard_json.py` + `inject_dashboard_overlays.py` |
 | Data integrity audit | `pages/10_Data_Integrity.py` · `mislabelled_sku_audit.csv` |
+| Warranty Intelligence | `pages/20_Warranty.py` · `distributor_warranty_expense_fiscal.csv` |
+| Price Realization | `pages/21_Realization.py` · `pr00_realization_*_cy.csv` · `zpr1_vs_pr00_by_payer_year.csv` |
+| Parc Cohorts | `pages/22_Parc_Cohort.py` · `07_UIO/vin/VIN_register.csv` (JP cohort, not UIO v19) |
+| Dealer Sell-out | `pages/23_Dealer_Sellout.py` · `sellout_aim_network_mix_2025.csv` · `sellout_aim_by_subgroup_2025.csv` |
+| VPACC tracker | `pages/24_VPACC.py` · `vpacc_fy2027_action_plan_july.parquet` (July update) · `vpacc_fy2027_monthly_db_block.parquet` (legacy) |
+| Static twins (HTML) | `02_dashboards/bi/` (4 self-contained snapshots, built by `_build_bi_twins.py`) |
 
 Run PRISM: `03_analytics/Isuzu/prism/run_prism.ps1` (port **8503**)
 
@@ -53,7 +59,7 @@ Run PRISM: `03_analytics/Isuzu/prism/run_prism.ps1` (port **8503**)
 | P4 account-health (who went quiet) — AIM-replacement queue | **Next real build.** Spec ready; P2a tables live; **G0b not required.** ~1.5 weeks + 1 day calibration. | [`P4_DETERMINISTIC_SIGNALS.md`](P4_DETERMINISTIC_SIGNALS.md) · AIM/P4 |
 | PRISM INTERNAL_MODE launcher (hide leakage/attach/elasticity/scrape) | ✅ **done 2026-08-18** — `run_prism.ps1` MD-safe; `run_prism_internal.ps1` extra tabs. | PRISM |
 | Competitor file vintages on Mode A (PartsPool 2026-03-29 ≠ Eucon UK 2023) | Meta already flags; UI label needs rebuild/ship when asked. | Pricing |
-| PRISM IA phases 3–8 (Network Intelligence merge) | **Paused — needs separate sign-off.** Prefer optional duplicate-tab trim. Canonical surface = Streamlit :8503. | PRISM |
+| PRISM IA phases 3–8 (Network Intelligence merge) | ✅ **done 2026-08-20.** Phases 3–8 shipped: Network Intelligence merged (7 tabs), Mix absorbed DB-mix-split, ITUK hub, Tools retired Scorecard/Customer-Risk + added Marketing Calendar + internal shelf. Archived source pages to `pages/_archive/`. 71 tests green. Canonical surface = Streamlit :8503. | PRISM |
 | Fitted oil-filter service frequency (replace flat 0.5/1.0) | **Closed 2026-08-18 — null.** All-DB OLS beats MAE by absorbing under-capture into λ; high-capture spec loses both holdouts. Leave bucketed constants. `docs/pilot_oil_filter_hazard.md`. | PRISM / PMS |
 | `capture_trajectory` partial-year false alarms | ✅ **Fixed 2026-08-18.** 33 declining alerts → 5; 28 artifacts; 0 real declines hidden. Scorecard/QBR inherit the CSV. | PRISM |
 

@@ -33,13 +33,18 @@ Write-Host "Using: $Python" -ForegroundColor Cyan
 Set-Location $PrismRoot
 
 $dataRoot = Get-IszePath -Key 'data' -Legacy 'Data'
-$parquet = Join-Path $dataRoot 'derived\sales_fact.parquet'
+$parquet = Join-Path $dataRoot '00_derived\sales_fact.parquet'
 if (-not (Test-Path $parquet)) {
     Write-Host "WARNING: Missing $parquet" -ForegroundColor Yellow
     Write-Host "Run: python scripts\build_sales_fact_from_cy.py" -ForegroundColor Yellow
 }
 
-& $Python -m pip install -q -r requirements.txt 2>$null
+# Deps are installed already; a pip failure must never abort the launch.
+try {
+    & $Python -m pip install -q -r requirements.txt 2>$null
+} catch {
+    Write-Host "pip install skipped (deps already present)." -ForegroundColor DarkGray
+}
 
 Write-Host ""
 if ($Internal) {

@@ -49,6 +49,8 @@ NAV_SECTIONS: list[dict] = [
      "blurb": "The denominator under every metric.", "tiles": [
         ("pages/1_UIO.py", "🚛", "UIO — Units in Operation",
          "Fleet size by distributor, model & registration year."),
+        ("pages/22_Parc_Cohort.py", "🚚", "Parc Cohorts",
+         "JP VIN shipment cohort (rolling 60m) — parc aging into the PMS window."),
         ("pages/19_Forecast.py", "📈", "Demand Forecast",
          "P5 baseline — DB × category outlook, backtest WAPE, no LLM."),
      ]},
@@ -65,53 +67,66 @@ NAV_SECTIONS: list[dict] = [
     {"key": "Mix", "accent": "#B5651D",
      "blurb": "Genuine vs Best Value — the second line: capture more parc, defend on price.", "tiles": [
         ("pages/4_BVP.py", "⚡", "BVP Intelligence",
-         "Genuine vs Best Value mix and substitution — capture/GPS/AIM live on their pages."),
-        ("pages/13_DB_Parts_Mix.py", "🧩", "DB Parts Mix",
-         "Per-distributor genuine / contested / BVP split."),
+         "Genuine vs Best Value mix and substitution — capture/GPS/AIM live on their pages (incl. DB mix split)."),
      ]},
     {"key": "Network Intelligence", "accent": "#E87722",
-     "blurb": "Where revenue and risk concentrate across the network.", "tiles": [
-        ("pages/5_Insights.py", "🧠", "Cross-Module Insights",
-         "GPS × PMS × BVP signals fused across distributors & time."),
-        ("pages/5_Strategic.py", "🎯", "Strategic Views · 13",
-         "Capture, stockouts, premium and aftermarket — Early Warning is the call list."),
-        ("pages/12_Offset_Insights.py", "🔀", "Offset Insights",
-         "Movement, airfreight lumpiness, VOR power, capture ceiling."),
-        ("pages/15_Customer_Risk.py", "⚠️", "Customer Risk Ranking",
-         "Unvalidated intensity ranking — Early Warning is the call list."),
-        ("pages/7_AIM_Review.py", "💶", "AIM Risk Review",
-         "AIM classification & pricing-risk exposure by family."),
-        ("pages/16_AIM_GPS_Matrix.py", "📐", "AIM × GPS Matrix",
-         "Defend vs grow: spend per unit vs PMS capture quadrant."),
-        ("pages/8_ASP_Monitor.py", "📉", "ASP Deviation Monitor",
-         "Average selling-price drift vs benchmark."),
+     "blurb": "Where revenue and risk concentrate across the network — one merged surface (IA phase 3).", "tiles": [
+        ("pages/network_intelligence.py", "🧠", "Network Intelligence",
+         "Capture, spend, pricing, substitution and supply stress fused across distributors & time."),
+        ("pages/23_Dealer_Sellout.py", "🏪", "Dealer Sell-out",
+         "Multi-DB sell-through vs billing: genuine / contested / BVP mix + SPU."),
      ]},
     {"key": "ITUK", "accent": "#8E2DE2",
      "blurb": "The mix-not-capture story, with the receipts.", "tiles": [
-        ("pages/11_ITUK_PMS_Story.py", "📖", "ITUK PMS Story",
-         "The mix-not-capture narrative for ITUK's PMS book."),
-        ("pages/6_ITUK_PMS_Audit.py", "🔍", "ITUK PMS PN Audit",
-         "Line-level part-number audit behind the story."),
+        ("pages/ituk.py", "📖", "ITUK Hub",
+         "Story · PN audit · incentive — plus internal attach & dealer leakage."),
      ]},
     {"key": "Decision", "accent": "#0E7C66",
      "blurb": "MD-safe: the € identity and the runway. Defection lives on Early Warning.", "tiles": [
         ("pages/18_Decision_Models.py", "🧭", "Decision Models",
          "€ Waterfall · Revenue Runway."),
      ]},
+    {"key": "Realization", "accent": "#C0552D",
+     "blurb": "Where list price becomes retained € — warranty erosion and pocket realization.", "tiles": [
+        ("pages/20_Warranty.py", "🛡️", "Warranty Intelligence",
+         "Warranty-parts expense per distributor & fiscal year — the erosion of net GPS."),
+        ("pages/21_Realization.py", "💶", "Price Realization",
+         "List → pocket by DB & year, plus the ZPR1 dealer-channel gap below list."),
+     ]},
     {"key": "Tools", "accent": "#555F6E",
      "blurb": "Generators and pipeline governance — collapsed by default.", "tiles": [
+        ("pages/24_VPACC.py", "🗂️", "VPACC Tracker",
+         "FY2027 VPACC action plan — owner, progress, deadlines."),
         ("pages/9_Review_Pack.py", "📦", "Review Pack",
          "Full distributor review pack for QBR meetings (incl. one-page scorecard)."),
-        ("pages/6_Scorecard.py", "🏆", "Distributor Scorecard",
-         "One-page performance scorecard PDF per distributor."),
         ("pages/14_Tender_Pipeline.py", "📋", "Tender Pipeline",
          "Fleet R&M tender opportunities by distributor."),
         ("pages/10_Data_Integrity.py", "🛡️", "Data Integrity",
          "Pipeline checks & cross-system distributor reconciliation."),
+        ("pages/tools_marketing_calendar.py", "📅", "PMS Marketing Calendar",
+         "2026 service-part campaigns by quarter."),
+        ("pages/internal_shelf.py", "🔒", "Internal shelf",
+         "Customer-risk breakdown, aftermarket scrape, inferred leakage, elasticity."),
      ]},
 ]
 
 TOTAL_MODULES = sum(len(s["tiles"]) for s in NAV_SECTIONS)
+
+# Dealer-margin / sell-through surfaces are internal-only. Realization
+# (list->pocket + ZPR1 dealer-channel gap) reveals ISZE discounting; Dealer
+# Sell-out exposes DB->dealer sell-through; Internal shelf hosts the gated
+# analyst views. Strip from nav in MD-safe mode (they remain reachable if
+# PRISM_INTERNAL=true via run_prism_internal.ps1).
+INTERNAL_ONLY_PAGES = {
+    "pages/21_Realization.py",
+    "pages/23_Dealer_Sellout.py",
+    "pages/internal_shelf.py",
+}
+if not INTERNAL_MODE:
+    for _sec in NAV_SECTIONS:
+        _sec["tiles"] = [t for t in _sec["tiles"] if t[0] not in INTERNAL_ONLY_PAGES]
+    # Drop any section that lost all its tiles.
+    NAV_SECTIONS[:] = [s for s in NAV_SECTIONS if s["tiles"]]
 
 LIGHT_COLOR = {"green": "#1f9d6b", "amber": "#d99e2b", "red": "#c0392b", "unknown": "#9aa0aa"}
 

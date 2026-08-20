@@ -30,6 +30,7 @@ import streamlit as st
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from config import DERIVED_DIR, is_internal_mode  # noqa: E402
 from modules.internal_gate import decision_tab_labels  # noqa: E402
+from modules.plotly_style import style  # noqa: E402
 
 # set_page_config is handled by app.py — do not call it in sub-pages
 st.title("Decision Models")
@@ -113,8 +114,12 @@ with tab_wf:
                 net["over_target_eur"],  # closes identity to ~0
             ],
         ))
-        fig.update_layout(title=f"Network € identity — CY{year}", height=420)
-        st.plotly_chart(fig, width="stretch")
+        fig.update_layout(
+            title=f"Network € identity — CY{year}",
+            height=420,
+            margin=dict(l=40, r=20, t=40, b=20),
+        )
+        st.plotly_chart(style(fig), width="stretch")
 
         st.dataframe(
             w.sort_values("addressable_uncaptured_eur", ascending=False),
@@ -137,7 +142,7 @@ with tab_rw:
         fig = px.line(ser, x="year", y=["wallet_eur", "projected_capture_eur"],
                       title=f"{pick} — wallet ceiling vs projected capture (CY2025 GPS% held flat)")
         fig.update_layout(height=420, yaxis_title="EUR")
-        st.plotly_chart(fig, width="stretch")
+        st.plotly_chart(style(fig), width="stretch")
         st.caption(rw["scenario_note"].iloc[0])
         peaks = rw.drop_duplicates("distributor_code")[
             ["distributor_code", "peak_wallet_year", "peak_wallet_eur",
@@ -168,7 +173,7 @@ if internal:
                          title=f"Attach lift: dealers buying {cat} also buy …")
             fig.add_hline(y=1.0, line_dash="dash")
             fig.update_layout(height=380)
-            st.plotly_chart(fig, width="stretch")
+            st.plotly_chart(style(fig), width="stretch")
             st.dataframe(sub.drop(columns=["method_note"]), width="stretch", hide_index=True)
 
     with tab_leak:
@@ -185,7 +190,7 @@ if internal:
             fig = px.bar(top, x="gap_eur", y="dealer_name", orientation="h",
                          title="ITUK dealers — relative mix gap € (call list, not IML gap)")
             fig.update_layout(height=480, yaxis=dict(autorange="reversed"))
-            st.plotly_chart(fig, width="stretch")
+            st.plotly_chart(style(fig), width="stretch")
             drop_cols = [c for c in ("benchmark_note",) if c in dl.columns]
             st.dataframe(
                 dl.drop(columns=drop_cols).head(200),
@@ -205,5 +210,5 @@ if internal:
                          title="Price-volume response by category (beta, qty-weighted)")
             fig.add_vline(x=0, line_dash="dash")
             fig.update_layout(height=560)
-            st.plotly_chart(fig, width="stretch")
+            st.plotly_chart(style(fig), width="stretch")
             st.dataframe(view.drop(columns=["method_note"]), width="stretch", hide_index=True)

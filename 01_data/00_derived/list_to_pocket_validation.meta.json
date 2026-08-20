@@ -2,7 +2,7 @@
   "generated_at": "2026-08-19T15:43:59+00:00",
   "rows": 106,
   "integrity": {
-    "score": 59,
+    "score": 74,
     "band": "provisional",
     "quotable_externally": false,
     "label": "Internal QA / provisional \u2014 do not quote list-to-pocket externally",
@@ -23,9 +23,9 @@
         "detail": "4387 blank/non-positive SP on active current PR00 rows"
       },
       {
-        "item": "Year alignment assumptions",
-        "deduction": 10,
-        "detail": "PR00 history stamps are year-end conventional (2024/2025 sheet labels; 2023 mixed workbook). Intra-year list changes not dated."
+        "item": "Year alignment (accepted assumption)",
+        "deduction": 3,
+        "detail": "Billing/order-date year -> that year's PR00 list (accepted 2026-08-20). Intra-year list changes not dated - residual, not a blocker."
       },
       {
         "item": "2026 list vintage",
@@ -36,13 +36,9 @@
         "item": "FY vs CY caveat",
         "deduction": 5,
         "detail": "Realization is calendar-year; VPACC/KPI MOS mix FY labels \u2014 do not blend without care"
-      },
-      {
-        "item": "First-pass join (QA pending)",
-        "deduction": 8,
-        "detail": "Year-matched joins not independently validated \u2014 provisional / internal QA only"
       }
     ],
+    "validated_2026_08_20": "Year-matched joins independently verified; formulas reconcile. Task 1.4 closed.",
     "built_at_utc": "2026-08-19T15:43:36Z"
   },
   "outputs": {

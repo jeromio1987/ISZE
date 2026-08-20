@@ -63,7 +63,7 @@ All factors editable in `data/pms_capture_assumptions.yaml` — see `docs/pms_se
 | Concept | What it is |
 |---------|------------|
 | **DVLA fleet (22,389)** | All registered Isuzu vehicles in UK — N35, N75, N50, F-series, … |
-| **PMS capture denominator** | N75 truck UIO × 0.5 svc/yr × 70% for ITUK pilot KPI |
+| **PMS capture denominator** | Bucketed N75 UIO (cv_std + f_series) × 0.5 svc/yr × 100% addressable (re-based 2026-07-15) |
 | **PMS capture actuals** | Registry + BVP catalogue PMS lines sold (incl. `pms_model = multi` and cross-OEM) |
 
 High capture % means “more filter units sold than the N75-only proxy expects,” not “wrong data.”
@@ -124,16 +124,15 @@ Constants: `prism/data/iml_v7_ituk_cy2025.yaml`
 ## ITUK oil filter — PRISM internal lane (network KPI only)
 
 Source: `01_data/derived/pms_capture_by_db_year.csv` — **do not use for IML headlines.**
-
-**Inputs:** UIO 22,389 · 0.5 svc/yr · 70% addressable → expected **7,836.1**
+Re-based 2026-07-15: bucketed UIO split (cv_std 22,190.9 + f_series 877.0 = **23,068**) × **100% addressable** → expected **11,680.2/yr** (see FACTS.md §1b).
 
 | Year | actual total | uncapped total | **total capture (cap 100%)** | genuine | BVP | revenue (total) |
 |------|--------------|----------------|-------------------------------|---------|------|------------------|
-| 2023 | 17,985 | 229% | **100%** | 110% | 120% | €138,040 |
-| 2024 | 9,725 | 124% | **100%** | **93%** | 32% | €62,271 |
-| 2025 | 13,530 | 173% | **100%** | **131%** | 42% | €95,706 |
+| 2023 | 18,030 | 154% | **100%** | 74% | 81% | €138,257 |
+| 2024 | 9,750 | 84% | **84%** | **62%** | 21% | €62,384 |
+| 2025 | 13,599 | 116% | **100%** | **88%** | 29% | €96,024 |
 
-Read this as: internal network KPI — filters saturated on N75-scoped denominator. See `isze_data.json` → `pms.ituk_prism_lane`.
+Read this as: internal network KPI — filters saturated on N75-scoped denominator. See `isze_data.json` → `pms.ituk_prism_lane`. The 2026-07-15 re-base was a bug fix (corrected a 2-market hardcoded allowlist that mis-scoped 14 of 18 distributors), not a data change.
 
 ## DO NOT QUOTE — obsolete oil-filter capture figures
 

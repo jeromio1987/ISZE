@@ -18,6 +18,7 @@ if str(APP_DIR) not in sys.path:
     sys.path.insert(0, str(APP_DIR))
 
 from config import DERIVED_DIR  # noqa: E402
+from modules.plotly_style import style
 
 ISZE_BLUE = "#1B3A6B"
 ISZE_ORANGE = "#E87722"
@@ -36,6 +37,12 @@ st.markdown(
 </div>
 """,
     unsafe_allow_html=True,
+)
+
+st.caption(
+    "**WAPE** = how wrong the forecast was in backtest (lower is better). "
+    "**P5 baseline** = the deterministic P5 forecast — Holt/seasonal-naive + linear "
+    "trend + parc proxy, no LLM."
 )
 
 
@@ -65,7 +72,7 @@ c1, c2, c3, c4 = st.columns(4)
 c1.metric("Series", sub[["category"]].nunique())
 c2.metric("Horizon rows", len(sub))
 c3.metric("Next month units", int(sub.loc[sub["horizon_step"] == 1, "units_forecast"].sum()))
-c4.metric("Next month €", f"{sub.loc[sub['horizon_step'] == 1, 'revenue_forecast'].sum():,.0f}")
+c4.metric("Next month €", f"€{sub.loc[sub['horizon_step'] == 1, 'revenue_forecast'].sum():,.0f}")
 
 if not backtest.empty:
     bt_db = backtest[backtest["db_code"] == db]
@@ -81,7 +88,7 @@ if not backtest.empty:
             labels={"wape_best": "WAPE %", "category": "Category"},
         )
         fig.update_layout(xaxis_tickangle=-45, height=420)
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(style(fig), width="stretch")
 
 st.subheader("Next 6 months — top categories by €")
 top_cat = (
@@ -100,14 +107,14 @@ fig2 = px.line(
     title=f"{db} unit forecast (best model per series)",
 )
 fig2.update_layout(height=440)
-st.plotly_chart(fig2, use_container_width=True)
+st.plotly_chart(style(fig2), width="stretch")
 
 with st.expander("Full forecast table"):
     st.dataframe(
         sub.sort_values(["category", "horizon_step"])[
             ["category", "forecast_month", "units_forecast", "revenue_forecast", "best_model", "wape_best"]
         ],
-        use_container_width=True,
+        width="stretch",
         hide_index=True,
     )
 

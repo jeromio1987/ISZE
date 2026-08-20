@@ -1,4 +1,11 @@
-"""Duplicate-tab trim — §8 item 2. Tabs dropped, pages not merged."""
+"""Duplicate-tab trim — §8 item 2 + IA phase 3 merge (2026-08-20).
+
+The duplicate tabs were dropped 2026-08-18; the 6 pages that carried them were
+merged into `network_intelligence.py` 2026-08-20 (5_Insights, 5_Strategic,
+12_Offset, 7_AIM_Review, 8_ASP_Monitor, 16_AIM_GPS_Matrix → pages/_archive/).
+These assertions now target the merged page: the dropped/duplicated views must
+NOT reappear there, and the surviving cross-links must be present.
+"""
 
 from __future__ import annotations
 
@@ -15,23 +22,17 @@ def test_bvp_dropped_home_page_duplicates():
     assert '"AIM risk"' not in src
     assert "pages/3_PMS.py" in src
     assert "pages/2_GPS.py" in src
-    assert "pages/7_AIM_Review.py" in src
 
 
-def test_insights_dropped_bvp_capture_tab():
-    src = (PAGES / "5_Insights.py").read_text(encoding="utf-8")
-    assert "BVP × Capture" not in src or "not repeated" in src
+def test_network_intelligence_dropped_duplicates():
+    """The merged page must not resurrect the dropped views."""
+    src = (PAGES / "network_intelligence.py").read_text(encoding="utf-8")
+    # BVP × Capture quadrant and basket-correlation are dropped/parked.
+    assert "BVP × Capture" not in src
     assert "render_bvp_capture_quadrant" not in src
-    assert "pages/16_AIM_GPS_Matrix.py" in src
-    assert '"📐 BVP × Capture"' not in src
-
-
-def test_strategic_dropped_exposed_and_basket():
-    src = (PAGES / "5_Strategic.py").read_text(encoding="utf-8")
-    assert "Most exposed (triple threat)" not in src
-    assert "Basket correlation" not in src or "parked" in src
-    assert "render_triple_threat" not in src
     assert "render_basket_correlation" not in src
-    assert "pages/0_Early_Warning.py" in src
-    assert src.count("st.tabs") == 1
-    assert '"PMS opportunity (€)"' in src
+    # Triple threat is superseded by Early Warning.
+    assert "Most exposed (triple threat)" not in src
+    assert "render_triple_threat" not in src
+    # Surviving cross-link to the call list.
+    assert "Early Warning" in src

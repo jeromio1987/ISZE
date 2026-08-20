@@ -9,7 +9,9 @@ Layout (numbered, preferred):
 
 from __future__ import annotations
 
+import json
 import os
+from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
 from typing import Optional
@@ -278,3 +280,25 @@ def data_status() -> dict[str, bool]:
         "bvp_gps_db": GPS_SPU_BY_DB_CSV.exists(),
         "bvp_aim_exposure": AIM_EXPOSURE_BY_DB_CSV.exists(),
     }
+
+
+@lru_cache(maxsize=1)
+def data_freshness_date() -> str:
+    """Human-readable pipeline snapshot date, read from the verification report.
+
+    Reads ``01_data/00_derived/_verification_report.json`` ``generated_at`` (an
+    ISO timestamp like ``2026-08-18T15:12:22Z``) and formats it as ``18 Aug 2026``.
+    Returns ``"unknown"`` if the report is missing or unreadable. Cached so every
+    page shares a single read.
+    """
+    report = DERIVED_DIR / "_verification_report.json"
+    try:
+        if not report.is_file():
+            return "unknown"
+        with report.open(encoding="utf-8") as fh:
+            payload = json.load(fh)
+        raw = payload.get("generated_at") or ""
+        dt = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+        return f"{dt.day} {dt.strftime('%b %Y')}"
+    except Exception:
+        return "unknown"

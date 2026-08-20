@@ -60,6 +60,14 @@ def build_pms_db_summary(pms_path: Path = PMS_CAPTURE_BY_DB_CSV) -> pd.DataFrame
         )
 
         gap_sum = float(t["revenue_gap_eur"].fillna(0).sum())
+
+        # Quotable-KPI firewall (DECISIONS.md 2026-07-21 Fix 2): a category with
+        # zero actual sales books €0 gap (avg_sp=0), which hides the worst real
+        # outcome. Exclude those rows from the €-ranking sum and surface the
+        # count so callers don't league-table a distributor on a silent €0.
+        quotable = t["revenue_gap_quotable"].astype(bool) if "revenue_gap_quotable" in t.columns else pd.Series(True, index=t.index)
+        gap_sum_quotable = float(t.loc[quotable, "revenue_gap_eur"].fillna(0).sum())
+        n_nonquotable = int((~quotable).sum())
         oil = t[t["pms_category"] == "oil_filter"]
         oil_cap = float(oil["capture_rate"].iloc[0]) if not oil.empty else np.nan
 
@@ -81,6 +89,8 @@ def build_pms_db_summary(pms_path: Path = PMS_CAPTURE_BY_DB_CSV) -> pd.DataFrame
                 "capture_rate_total_wtd": round(wtd_total, 4),
                 "capture_rate_genuine_wtd": round(wtd_gen, 4),
                 "revenue_gap_eur_sum": round(gap_sum, 0),
+                "revenue_gap_eur_sum_quotable": round(gap_sum_quotable, 0),
+                "n_nonquotable_categories": n_nonquotable,
                 "oil_filter_capture": round(oil_cap, 4) if not np.isnan(oil_cap) else None,
                 "top_gap_categories": "|".join(top_gap),
             }

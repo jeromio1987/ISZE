@@ -148,6 +148,20 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 
 ---
 
+### 18 · PRISM BI surfaces (pages 20–23) — read-only over derived files
+
+Added 2026-08-20 (consolidation plan). No new derived file, no pipeline change — these pages read existing files.
+
+| PRISM page | Reads | Source file(s) |
+|------------|-------|----------------|
+| `03_analytics/Isuzu/prism/pages/20_Warranty.py` | Warranty expense per DB / FY | `00_derived/distributor_warranty_expense_fiscal.csv` |
+| `…/21_Realization.py` | List→pocket realization + ZPR1 gap | `00_derived/pr00_realization_network_cy.csv` · `pr00_realization_by_db_cy.csv` · `zpr1_vs_pr00_by_payer_year.csv` |
+| `…/22_Parc_Cohort.py` | JP VIN shipment cohort (rolling 60m) | `07_UIO/vin/VIN_register.csv` |
+| `…/23_Dealer_Sellout.py` | Multi-DB sell-out mix + SPU | `00_derived/sellout_aim_network_mix_2025.csv` · `sellout_aim_by_subgroup_2025.csv` |
+| `…/24_VPACC.py` | FY2027 VPACC action plan (121 items, stream/owner/status) | `00_derived/vpacc_fy2027_action_plan_july.parquet` · `vpacc_fy2027_monthly_db_block.parquet` (legacy) |
+
+Static HTML twins of pages 20–23 (self-contained, no CDN) live in `02_dashboards/bi/`, built by `02_dashboards/bi/_build_bi_twins.py`. Tender-pipeline *value* is already served by `pages/14_Tender_Pipeline.py` (value coverage is thin — 56/708 rows — and flagged there).
+
 ## §2 — Physical folder layout (numbered)
 
 | # | Folder | Purpose |

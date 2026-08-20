@@ -13,6 +13,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import streamlit as st
 
 APP_DIR = Path(__file__).parent.parent
@@ -74,12 +75,7 @@ st.markdown(
 if st.session_state.get("beta_mode", BETA_MODE):
     st.warning("BETA MODE — not for distribution", icon="⚠️")
 
-PLOTLY = dict(
-    template="plotly_white",
-    font=dict(family="Segoe UI, sans-serif", size=12),
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="#FAFBFC",
-)
+from modules.plotly_style import BASE_LAYOUT as PLOTLY, style
 ISZE_BLUE = "#1B3A6B"
 
 CAPTURE_HELP = """
@@ -199,7 +195,7 @@ if not is_ready(bundle):
     st.error(
         "Derived BVP files missing. Run (full paths):\n\n"
         "```\n"
-        "cd C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Projects\\Isuzu\\prism\n"
+        "cd C:\\Users\\jerom\\Desktop\\claude\\ISZE\\03_analytics\\Isuzu\\prism\n"
         "python scripts\\build_sales_fact_from_cy.py\n"
         "python scripts\\build_bvp_p0_p1.py\n"
         "python scripts\\build_bvp_crossref_sales.py\n"
@@ -281,12 +277,13 @@ bench_sub = filter_mix_addressable(
     ),
     highlight,
 )
-tab_ov, tab_mix, tab_sub, tab_cat = st.tabs(
+tab_ov, tab_mix, tab_sub, tab_cat, tab_db = st.tabs(
     [
         "Overview",
         "Mix & trends",
         "Substitution story",
         "Catalog",
+        "DB mix split",
     ]
 )
 
@@ -331,7 +328,7 @@ with tab_ov:
     with l2:
         page_link("pages/2_GPS.py", "GPS — Spend per Unit", "📊")
     with l3:
-        page_link("pages/7_AIM_Review.py", "AIM Risk Review", "💶")
+        page_link("pages/network_intelligence.py", "Network Intelligence — AIM & pricing", "💶")
 
     col_l, col_r = st.columns(2)
     with col_l:
@@ -351,8 +348,12 @@ with tab_ov:
                 category_orders={"subcategory": [subgroup_label(s) for s in sub_pick]},
             )
             _finish_chart(fig, f"Total PMS capture — {group_labels[group_pick]} ({latest_y})")
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(style(fig), width='stretch')
     with col_r:
+        st.caption(
+            "Higher BVP share in *contested* categories = good (we captured the value "
+            "shopper with our own cheaper line); genuine-only categories have no BVP alternative."
+        )
         if not mix_sub.empty:
             mplot = mix_sub.copy()
             mplot["year"] = mplot["year"].astype(int)
@@ -365,7 +366,7 @@ with tab_ov:
                 markers=True,
             )
             _finish_chart(fig2, "BVP unit share (mix)")
-            st.plotly_chart(fig2, width='stretch')
+            st.plotly_chart(style(fig2), width='stretch')
 
 # ── Mix ───────────────────────────────────────────────────────────────────────
 with tab_mix:
@@ -385,9 +386,13 @@ with tab_mix:
             title=f"BVP share — {group_labels[group_pick]} (selected subcategories)",
         )
         _finish_chart(fig_h, fig_h.layout.title.text, y_pct=False)
-        st.plotly_chart(fig_h, width='stretch')
+        st.plotly_chart(style(fig_h), width='stretch')
 
         if not bench_sub.empty:
+            st.caption(
+                "**pp** = percentage points (a gap of +10 pp = 10 points above the network "
+                "median, not 10%). Above median in *contested* categories = good."
+            )
             b = bench_sub[bench_sub["year"] == bench_sub["year"].max()]
             fig_b = px.bar(
                 b.sort_values("vs_network_median_pp"),
@@ -400,7 +405,7 @@ with tab_mix:
             )
             fig_b.for_each_trace(lambda t: t.update(name=subgroup_label(t.name)))
             _finish_chart(fig_b, "vs network median BVP mix (pp)", y_pct=False)
-            st.plotly_chart(fig_b, width='stretch')
+            st.plotly_chart(style(fig_b), width='stretch')
     elif not mix_grp.empty:
         mg = mix_grp[mix_grp["product_group"] == group_pick]
         fig_g = px.line(
@@ -412,7 +417,7 @@ with tab_mix:
             title=f"Group roll-up — {group_labels[group_pick]} (all PMS subcategories)",
         )
         _finish_chart(fig_g, fig_g.layout.title.text)
-        st.plotly_chart(fig_g, width='stretch')
+        st.plotly_chart(style(fig_g), width='stretch')
 
     flags = mix_sub[mix_sub["substitution_flag"] if "substitution_flag" in mix_sub.columns else pd.Series(False, index=mix_sub.index)]
     if not flags.empty:
@@ -511,7 +516,7 @@ with tab_sub:
                 color_discrete_sequence=[ISZE_BLUE],
             )
             fig_sub.update_layout(**PLOTLY, xaxis_tickformat=".0%", height=max(320, 22 * len(top)))
-            st.plotly_chart(fig_sub, width='stretch')
+            st.plotly_chart(style(fig_sub), width='stretch')
 
         with st.expander("By subcategory (highlight DB)", expanded=True):
             if latest_y and not sub_db.empty:
@@ -660,3 +665,83 @@ st.caption(
     f"BVP Intelligence · PMS in-scope only · Data: `{DERIVED_DIR}` · "
     "Rebuild: `build_bvp_p0_p1.py` -> `build_bvp_crossref_sales.py` -> `build_bvp_p2_mix.py`"
 )
+
+
+# ── DB mix split (absorbed from 13_DB_Parts_Mix.py, IA phase 4) ────────────────
+with tab_db:
+    MIX_CSV = DERIVED_DIR / "db_parts_mix_classification.csv"
+    if not MIX_CSV.exists():
+        st.error(f"Missing {MIX_CSV.name}. Run scripts/build_db_parts_classification.py first.")
+    else:
+        dfmix = pd.read_csv(MIX_CSV)
+        mix_years = sorted(dfmix["year"].unique())
+        mix_year = st.selectbox("Year", mix_years, index=len(mix_years) - 1, key="dbmix_year")
+        dm = dfmix[dfmix["year"] == mix_year].copy()
+
+        net = dm["total_eur"].sum()
+        bvp = dm["bvp_eur"].sum()
+        contested = dm["contested_eur"].sum()
+        k1, k2, k3 = st.columns(3)
+        k1.metric("Network parts revenue", f"€{net:,.0f}")
+        k2.metric("BVP share of total", f"{bvp / net:.1%}" if net else "—")
+        k3.metric("BVP share of contested basket", f"{bvp / contested:.1%}" if contested else "—")
+
+        st.info(
+            "**Contested** = genuine parts with a BVP equivalent in the catalogue — "
+            "the conquerable basket. **Genuine only** has no BVP alternative. "
+            "Non-Isuzu aftermarket brands never touch the invoice and are not shown.",
+            icon="ℹ️",
+        )
+
+        _BUCKET_COLORS = {
+            "BVP": "#E2231A",
+            "Genuine (contested)": ISZE_BLUE,
+            "Genuine only": "#E87722",
+        }
+        plot = dm.sort_values("total_eur", ascending=True)
+        fig_mix = go.Figure()
+        for col, name in (
+            ("bvp_pct", "BVP"),
+            ("genuine_contested_pct", "Genuine (contested)"),
+            ("genuine_only_pct", "Genuine only"),
+        ):
+            fig_mix.add_bar(
+                y=plot["distributor_code"], x=plot[col], name=name,
+                orientation="h", marker_color=_BUCKET_COLORS[name],
+            )
+        fig_mix.update_layout(
+            barmode="stack", height=620, title=f"Parts mix per distributor (CY{mix_year})",
+            xaxis_title="Share of total parts revenue", xaxis_tickformat=".0%",
+            legend_orientation="h", legend_y=-0.12, margin=dict(l=10, r=10, t=50, b=10),
+        )
+        st.plotly_chart(style(fig_mix), width="stretch")
+
+        dbs = dm.sort_values("total_eur", ascending=False)["distributor_code"].tolist()
+        pick = st.selectbox("Distributor", dbs, key="dbmix_dist")
+        row = dm[dm["distributor_code"] == pick].iloc[0]
+        d1, d2, d3, d4 = st.columns(4)
+        d1.metric("Parts revenue", f"€{row.total_eur:,.0f}")
+        d2.metric("BVP %", f"{row.bvp_pct:.1%}")
+        d3.metric("Contested %", f"{row.genuine_contested_pct:.1%}")
+        d4.metric(
+            "Contested BVP capture",
+            f"{row.contested_bvp_capture:.1%}" if pd.notna(row.contested_bvp_capture) else "—",
+        )
+        donut = px.pie(
+            names=["BVP", "Genuine (contested)", "Genuine only"],
+            values=[row.bvp_eur, row.genuine_contested_eur, row.genuine_only_eur],
+            color=["BVP", "Genuine (contested)", "Genuine only"],
+            color_discrete_map=_BUCKET_COLORS, hole=0.55,
+        )
+        donut.update_layout(height=380, title=f"{pick} — revenue by bucket (CY{mix_year})")
+        st.plotly_chart(style(donut), width="stretch")
+
+        st.dataframe(
+            dm[
+                [
+                    "distributor_code", "total_eur", "bvp_pct",
+                    "genuine_contested_pct", "genuine_only_pct", "contested_bvp_capture",
+                ]
+            ].sort_values("total_eur", ascending=False),
+            width="stretch", hide_index=True,
+        )

@@ -12,12 +12,7 @@ from modules.bvp_dashboard_data import fmt_eur, fmt_pct
 ISZE_BLUE = "#1B3A6B"
 ISZE_ORANGE = "#E87722"
 
-PLOTLY = dict(
-    template="plotly_white",
-    font=dict(family="Segoe UI, sans-serif", size=12),
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="#FAFBFC",
-)
+from modules.plotly_style import BASE_LAYOUT as PLOTLY
 
 LIFECYCLE_COLORS = {
     "emerging": "#2E7D32",
@@ -38,93 +33,17 @@ def _missing(name: str) -> None:
     st.warning(f"**{name}** data not built yet. Run `python scripts/build_strategic_contracts.py`.")
 
 
-def render_triple_threat(
-    bundle: dict,
-    year_sel: list[int],
-    highlight: str,
-    latest_y: int | None,
-) -> None:
-    gps_db = bundle.get("gps_db", pd.DataFrame())
-    pms_capture = bundle.get("pms_capture", pd.DataFrame())
-    aim_db = bundle.get("aim_db", pd.DataFrame())
-
-    st.markdown(
-        "**GPS/SPU** vs **PMS capture** vs **AIM risk** — one dot per distributor × year. "
-        "Size = fleet (UIO). Colour = AIM high-risk %."
-    )
-    if gps_db.empty or pms_capture.empty:
-        st.error("GPS or PMS capture missing — run full pipeline.")
-        return
-
-    gps = _years(gps_db, year_sel)[
-        ["year", "distributor_code", "spend_per_unit_eur", "uio_units", "country", "region", "traffic_light"]
-    ]
-    cap_raw = pms_capture[(pms_capture["year"].isin(year_sel)) & (pms_capture["line_type"] == "total")]
-    cap = (
-        cap_raw.groupby(["year", "distributor_code"], as_index=False)
-        .agg(actual_qty=("actual_qty", "sum"), expected_qty=("expected_qty", "sum"))
-    )
-    cap["capture_rate"] = (cap["actual_qty"] / cap["expected_qty"].replace(0, float("nan"))).clip(upper=1.05)
-    aim = (
-        _years(aim_db, year_sel)[["year", "distributor_code", "high_risk_rev_pct"]]
-        if not aim_db.empty
-        else pd.DataFrame(columns=["year", "distributor_code", "high_risk_rev_pct"])
-    )
-
-    df = gps.merge(cap[["year", "distributor_code", "capture_rate"]], on=["year", "distributor_code"], how="inner")
-    df = df.merge(aim, on=["year", "distributor_code"], how="left")
-    df["high_risk_rev_pct"] = df["high_risk_rev_pct"].fillna(0.0)
-    df = df.dropna(subset=["spend_per_unit_eur", "capture_rate"])
-    if df.empty:
-        st.warning("No data for selected years.")
-        return
-
-    if latest_y:
-        df_y = df[df["year"] == latest_y]
-        hl = df_y[df_y["distributor_code"] == highlight]
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Distributors", f"{df_y['distributor_code'].nunique()}")
-        c2.metric(f"{highlight} GPS/SPU", fmt_eur(hl["spend_per_unit_eur"].iloc[0]) if not hl.empty else "—")
-        c3.metric(f"{highlight} PMS capture", fmt_pct(hl["capture_rate"].iloc[0]) if not hl.empty else "—")
-        c4.metric(f"{highlight} AIM risk", fmt_pct(hl["high_risk_rev_pct"].iloc[0]) if not hl.empty else "—")
-
-    view_y = st.select_slider(
-        "Quadrant year",
-        options=sorted(df["year"].unique().tolist()),
-        value=latest_y or int(df["year"].max()),
-    )
-    dq = df[df["year"] == view_y].copy()
-    med_x, med_y = dq["spend_per_unit_eur"].median(), dq["capture_rate"].median()
-    dq["symbol"] = dq["distributor_code"].apply(lambda d: "star" if d == highlight else "circle")
-    dq["size_scaled"] = dq["uio_units"].clip(lower=500)
-
-    fig = px.scatter(
-        dq,
-        x="spend_per_unit_eur",
-        y="capture_rate",
-        size="size_scaled",
-        color="high_risk_rev_pct",
-        color_continuous_scale=["#2E7D32", "#F9A825", "#C62828"],
-        symbol="symbol",
-        symbol_map={"star": "star", "circle": "circle"},
-        hover_name="distributor_code",
-        labels={
-            "spend_per_unit_eur": "GPS / SPU (€)",
-            "capture_rate": "PMS capture",
-            "high_risk_rev_pct": "AIM risk",
-        },
-    )
-    fig.add_vline(x=med_x, line_dash="dot", line_color="#94A3B8")
-    fig.add_hline(y=med_y, line_dash="dot", line_color="#94A3B8")
-    fig.update_layout(**PLOTLY, title=f"Triple Threat ({view_y})", yaxis_tickformat=".0%")
-    st.plotly_chart(fig, width='stretch')
+# render_triple_threat removed 2026-08-20 (superseded by Early Warning; duplicate-tab trim)
 
 
 def render_pms_opportunity(df: pd.DataFrame, year_sel: list[int], highlight: str, latest_y: int | None) -> None:
     if df.empty:
         _missing("PMS Opportunity Matrix")
         return
-    st.markdown("Capture vs **TAM (€)** by PMS category — colour = BVP share of capture (pp).")
+    st.markdown(
+        "Capture vs **Total Addressable Market (TAM, €)** — the full € of expected "
+        "service demand — by PMS category; colour = BVP share of capture (pp)."
+    )
     d = _years(df, year_sel)
     y = latest_y or int(d["year"].max())
     d = d[d["year"] == y]
@@ -132,6 +51,18 @@ def render_pms_opportunity(df: pd.DataFrame, year_sel: list[int], highlight: str
         st.warning("No rows for selected year.")
         return
     d = d.copy()
+    # Quotable-KPI firewall (DECISIONS.md 2026-07-21): zero-actual-sales categories
+    # book TAM=€0 (avg_sp=0), which plots them as "no opportunity" when the real
+    # gap is unknowable. Exclude them from the TAM axis and surface the count.
+    if "revenue_gap_quotable" in d.columns:
+        d["_quotable"] = d["revenue_gap_quotable"].fillna(True).astype(bool)
+        n_nonq = int((~d["_quotable"]).sum())
+        d = d[d["_quotable"]]
+        if n_nonq:
+            st.caption(
+                f"{n_nonq} category row(s) with zero actual sales excluded from the TAM axis "
+                f"(their € gap is not quotable)."
+            )
     d["highlight"] = d["distributor_code"].apply(lambda x: "★ " + x if x == highlight else x)
     fig = px.scatter(
         d,
@@ -148,7 +79,16 @@ def render_pms_opportunity(df: pd.DataFrame, year_sel: list[int], highlight: str
         },
         color_continuous_scale=["#1B3A6B", "#E87722"],
     )
-    fig.update_layout(**PLOTLY, title=f"PMS Opportunity Matrix ({y})")
+    # Facet grid with wrap=3: give each row of subplots enough height or the
+    # ~11 category facets collapse into Plotly's 450px default and become
+    # unreadable (IA phase-3 merge regression).
+    n_cats = d["pms_category"].nunique()
+    n_rows = max(1, (n_cats + 2) // 3)
+    fig.update_layout(
+        **PLOTLY,
+        title=f"PMS Opportunity Matrix ({y})",
+        height=240 * n_rows + 80,
+    )
     fig.update_xaxes(tickformat=".0%")
     st.plotly_chart(fig, width='stretch')
 
@@ -354,7 +294,7 @@ def render_revenue_concentration(df: pd.DataFrame, year_sel: list[int], highligh
         x="distributor_code",
         y="gini_coefficient",
         color="distributor_code",
-        labels={"gini_coefficient": "Gini (PN revenue concentration)"},
+        labels={"gini_coefficient": "Revenue concentration (0 = even, 1 = one part is everything)"},
         title=f"Revenue concentration — network ({y})",
     )
     if highlight in d["distributor_code"].values:
@@ -367,6 +307,10 @@ def render_revenue_concentration(df: pd.DataFrame, year_sel: list[int], highligh
         )
     fig.update_layout(**PLOTLY, showlegend=False)
     st.plotly_chart(fig, width='stretch')
+    st.caption(
+        "Gini coefficient: **higher = more revenue riding on fewer part numbers = "
+        "more concentration risk** (0 = every part bills evenly, 1 = a single part is everything)."
+    )
     hl = df[(df["distributor_code"] == highlight) & (df["year"] == y)]
     if not hl.empty:
         st.dataframe(hl, width='stretch', hide_index=True)
@@ -429,31 +373,7 @@ def render_price_premium(df: pd.DataFrame, year_sel: list[int], highlight: str, 
     st.plotly_chart(fig, width='stretch')
 
 
-def render_basket_correlation(df: pd.DataFrame, year_sel: list[int], highlight: str, latest_y: int | None) -> None:
-    """Contract 8 — parked 2026-08-18 (no decision attached). CSV still built; tab dropped."""
-    if df.empty:
-        _missing("Basket Correlation")
-        return
-    y = latest_y or int(df["year"].max())
-    d = df[(df["distributor_code"] == highlight) & (df["year"] == y)]
-    if d.empty:
-        st.warning("No correlation rows.")
-        return
-    cats = sorted(set(d["pms_cat_a"]) | set(d["pms_cat_b"]))
-    mat = pd.DataFrame(1.0, index=cats, columns=cats)
-    for _, r in d.iterrows():
-        mat.loc[r["pms_cat_a"], r["pms_cat_b"]] = r["correlation"]
-        mat.loc[r["pms_cat_b"], r["pms_cat_a"]] = r["correlation"]
-    fig = px.imshow(
-        mat.astype(float),
-        color_continuous_scale="RdBu_r",
-        zmin=-1,
-        zmax=1,
-        title=f"PMS basket correlations — {highlight} ({y})",
-        labels=dict(color="Pearson r"),
-    )
-    fig.update_layout(**PLOTLY)
-    st.plotly_chart(fig, width='stretch')
+# render_basket_correlation removed 2026-08-20 (parked Contract 8; CSV still builds but tab dropped)
 
 
 def render_substitution_timeline(df: pd.DataFrame, year_sel: list[int], highlight: str) -> None:

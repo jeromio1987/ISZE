@@ -102,6 +102,20 @@ Scrapers (`*-tender-scrape`, `*-ks-scrape`, `scraper-healthcheck-autofix`) abort
 
 ---
 
+## PRISM analytics pages (not scheduled jobs)
+
+Added 2026-08-20 as part of the BI-tools consolidation. Read-only Streamlit pages over existing derived files — no schedule, no egress, no new pipeline. Entry point: `03_analytics/Isuzu/prism/app.py` NAV sections.
+
+| Page | Data source | Notes |
+|------|-------------|-------|
+| `pages/20_Warranty.py` | `00_derived/distributor_warranty_expense_fiscal.csv` | Warranty erodes net GPS; MIDI toggled off by default |
+| `pages/21_Realization.py` | `00_derived/pr00_realization_*_cy.csv`, `zpr1_vs_pr00_by_payer_year.csv` | Net-only; `provisional_qa_pending` banner shown |
+| `pages/22_Parc_Cohort.py` | `07_UIO/vin/VIN_register.csv` | JP cohort, ex ITUK/UTI — labelled NOT UIO v19 |
+| `pages/23_Dealer_Sellout.py` | `00_derived/sellout_aim_network_mix_2025.csv`, `sellout_aim_by_subgroup_2025.csv` | IUK ≠ ITUK ≠ IMIE |
+| `pages/24_VPACC.py` | `00_derived/vpacc_fy2027_action_plan_july.parquet`, `vpacc_fy2027_monthly_db_block.parquet` | Action plan = July update; monthly block = legacy sheet, directional only |
+
+Static HTML twins: `02_dashboards/bi/{Warranty_Intelligence,Price_Realization,Parc_Cohorts,Dealer_Sellout}.html` — self-contained, rebuilt by `02_dashboards/bi/_build_bi_twins.py`.
+
 ## Cross-references
 
 - Extended agent notes: [00_docs/agent/NOTES.md](agent/NOTES.md)
