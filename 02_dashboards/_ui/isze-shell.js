@@ -2,18 +2,26 @@
   if (new URLSearchParams(location.search).get('embed') === '1') return;
   if (document.getElementById('isze-editorial-chrome')) return;
 
-  var path = (location.pathname || '').split('/').pop() || 'index.html';
-  var isHub = path === 'PROJECT_HUB.html';
-  var isPropertiq = path.indexOf('PROPERTIQ') === 0;
-  var isMaster = path === 'MASTER_DASHBOARD.html';
+  // Canonical ISZE home = hub/index.html. All hub pages live in hub/.
+  // In the grouped source layout a page sits in hub/ or a sibling folder;
+  // in the flattened deploy layout everything sits in one folder. Resolve a
+  // correct relative prefix for hub links at runtime so file:// and deploy
+  // both work.
+  var path = (location.pathname || '').replace(/\\/g, '/');
+  var file = path.split('/').pop() || 'index.html';
+  var dir = path.split('/').slice(0, -1).join('/');
+  var folder = (dir.split('/').filter(Boolean).pop() || '').toLowerCase();
+  var known = ['hub','sales','fleet','gps','ops','pricing','ids','md_pack','bi','side','_composable','spa_internal'];
+  var prefix = (known.indexOf(folder) !== -1 && folder !== 'hub') ? '../hub/' : '';
+
+  var isPropertiq = file.indexOf('PROPERTIQ') === 0;
 
   var links = [
-    { href: 'PROJECT_HUB.html', label: 'Hub', match: ['PROJECT_HUB.html'] },
-    { href: 'MASTER_DASHBOARD.html', label: 'Mission Control', match: ['MASTER_DASHBOARD.html'] },
-    { href: 'AI_Operations_Explorer.html', label: 'AI Ops', match: ['AI_Operations_Explorer.html'] },
-    { href: 'PROPERTIQ.html', label: 'PROPERTIQ', match: ['PROPERTIQ.html', 'v01_split_hero.html'] },
-    { href: 'AIM_Dashboard_CY2025.html', label: 'AIM', match: ['AIM_Dashboard_CY2025.html'] },
-    { href: 'ISZE_Competitiveness_Dashboard.html', label: 'Pricing', match: ['ISZE_Competitiveness_Dashboard.html'] }
+    { href: prefix + 'index.html', label: 'Home', match: ['index.html'] },
+    { href: prefix + 'BI_PACKS.html', label: 'Dashboard Index', match: ['BI_PACKS.html'] },
+    { href: prefix + 'MASTER_DASHBOARD.html', label: 'Mission Control', match: ['MASTER_DASHBOARD.html'] },
+    { href: prefix + 'PROJECT_HUB.html', label: 'Project Hub', match: ['PROJECT_HUB.html'] },
+    { href: prefix + 'AI_Operations_Explorer.html', label: 'AI Ops', match: ['AI_Operations_Explorer.html'] }
   ];
 
   var chrome = document.createElement('header');
@@ -21,7 +29,7 @@
 
   var logo = document.createElement('a');
   logo.className = 'ed-logo';
-  logo.href = 'PROJECT_HUB.html';
+  logo.href = prefix + 'index.html';
   logo.innerHTML = '<span>ISZE</span> Intelligence';
 
   var nav = document.createElement('nav');
@@ -29,7 +37,7 @@
     var a = document.createElement('a');
     a.href = l.href;
     a.textContent = l.label;
-    if (l.match.indexOf(path) !== -1) a.className = 'active';
+    if (l.match.indexOf(file) !== -1) a.className = 'active';
     nav.appendChild(a);
   });
 
@@ -43,7 +51,7 @@
   document.body.insertBefore(chrome, document.body.firstChild);
   document.body.classList.add('isze-editorial');
 
-  if (isHub || isPropertiq) {
+  if (isPropertiq) {
     document.body.style.paddingTop = '48px';
   }
 })();

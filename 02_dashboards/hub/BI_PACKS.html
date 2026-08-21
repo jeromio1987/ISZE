@@ -54,15 +54,58 @@
   .pack a .tag { display: inline-block; margin-left: .4rem; font-size: .64rem; letter-spacing: .04em;
     text-transform: uppercase; color: var(--terracotta); border: 1px solid #e6c2ae; border-radius: 999px; padding: .05rem .45rem; }
   .foot { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .78rem; }
+
+  /* ── top chrome nav (consistent with ISZE Home) ── */
+  .chrome { background: var(--navy); color: var(--paper); position: sticky; top: 0; z-index: 50;
+            border-bottom: 3px solid var(--terracotta); }
+  .chrome-in { max-width: 1180px; margin: 0 auto; display: flex; align-items: center; gap: 22px;
+               padding: 0 1.6rem; height: 54px; flex-wrap: wrap; }
+  .chrome .brand { font-family: Georgia, 'Times New Roman', serif; font-size: 1.05rem; font-weight: 700;
+                   letter-spacing: .02em; white-space: nowrap; }
+  .chrome .brand span { color: #e8b48c; }
+  .chrome nav { display: flex; gap: 4px; flex-wrap: wrap; }
+  .chrome nav a { color: #c9cedb; text-decoration: none; font-size: .82rem; padding: 6px 11px; border-radius: 6px; }
+  .chrome nav a:hover { color: #fff; background: rgba(255,255,255,.08); }
+  .chrome nav a.active { color: #fff; background: var(--terracotta); }
+
+  /* ── New BI tools sub-group ── */
+  .pack li.group { padding: .65rem .1rem .3rem .7rem; font-size: .66rem; font-weight: 700;
+                   letter-spacing: .1em; text-transform: uppercase; color: var(--terracotta); border-bottom: 0; }
+
+  /* ── non-Isuzu / side ── */
+  .side { margin-top: 2rem; border: 1px dashed #d8b59d; background: #fbf0e7; border-radius: 12px; padding: 1.2rem 1.4rem; }
+  .side .label { font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--terracotta);
+                 font-weight: 700; display: flex; align-items: center; gap: .5rem; }
+  .side .label::before { content: "◈"; }
+  .side a { display: flex; align-items: center; gap: 1rem; text-decoration: none; color: inherit;
+            background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: .9rem 1.1rem; margin-top: .9rem; }
+  .side a:hover { border-color: var(--terracotta); }
+  .side .mark { flex-shrink: 0; font-size: .6rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+                color: #fff; background: var(--terracotta); border-radius: 6px; padding: .3rem .5rem; }
+  .side h3 { font-family: Georgia, serif; font-size: 1rem; color: var(--navy); }
+  .side p { font-size: .82rem; color: var(--muted); margin-top: .15rem; }
 </style>
 </head>
 <body>
 
+<header class="chrome">
+  <div class="chrome-in">
+    <div class="brand"><span>ISZE</span> · Isuzu Parts Intelligence</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="BI_PACKS.html" class="active">Dashboard Index</a>
+      <a href="MASTER_DASHBOARD.html">Mission Control</a>
+      <a href="PROJECT_HUB.html">Project Hub</a>
+      <a href="AI_Operations_Explorer.html">AI Ops</a>
+    </nav>
+  </div>
+</header>
+
 <div class="hero">
   <div class="kicker">ISZE · Isuzu Parts Intelligence</div>
-  <h1>BI Packs</h1>
-  <p>One entry point into every ISZE dashboard, grouped by audience. Live analytics live in PRISM (Streamlit :8503) — the static HTML below is the deck / share layer.</p>
-  <div class="meta">Single index · canonical dashboards only · superseded files archived to <code>_archive/</code> · 2026-08-20</div>
+  <h1>Dashboard Index — BI Packs</h1>
+  <p>Every ISZE dashboard, grouped by audience. One level below <a href="index.html" style="color:#e8b48c">ISZE Home</a>. Live analytics live in PRISM (Streamlit :8503) — the static HTML below is the deck / share layer.</p>
+  <div class="meta">Dashboard index · canonical dashboards only · superseded files archived to <code>_archive/</code> · 2026-08-20</div>
 </div>
 
 <div class="wrap">
@@ -81,10 +124,12 @@
       </div>
       <div class="body">
         <ul>
+          <li class="group">New BI tools</li>
           <li><a href="../bi/Warranty_Intelligence.html">Warranty Intelligence <span class="tag">new</span></a></li>
           <li><a href="../bi/Price_Realization.html">Price Realization <span class="tag">new</span></a></li>
           <li><a href="../bi/Parc_Cohorts.html">Parc Cohorts <span class="tag">new</span></a></li>
           <li><a href="../bi/Dealer_Sellout.html">Dealer Sell-out (multi-DB) <span class="tag">new</span></a></li>
+          <li class="group">Existing dashboards</li>
           <li><a href="../hub/MASTER_DASHBOARD.html">Master Dashboard <span class="tag">hub</span></a></li>
           <li><a href="../fleet/ISZE_GPS_Dashboard.html">GPS Dashboard</a></li>
           <li><a href="../fleet/ISUZU_UIO_Dashboard_2026.html">UIO Dashboard (v19)</a></li>
@@ -94,8 +139,6 @@
           <li><a href="../sales/ISZE_Competitiveness_Dashboard.html">Competitiveness</a></li>
           <li><a href="../sales/ISZE_PartGroups_Sales_Explorer.html">Part-Groups Sales Explorer</a></li>
           <li><a href="../sales/AIM_Dashboard_CY2026.html">AIM Dashboard CY2026</a></li>
-          <li><a href="../sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html">Dealer Sell-out (ITUK / UTI)</a></li>
-          <li><a href="../sales/ISZE_SPA_RunRate_UTI.html">SPA Run-Rate (UTI)</a></li>
           <li><a href="../sales/ISZE_Aftermarket_BI_Command_Center.html">Aftermarket BI Command Center</a></li>
           <li><a href="../pricing/ISZE_Aftermarket_Live_Pricing_Dashboard.html">Aftermarket Live Pricing</a></li>
           <li><a href="../pricing/ISZE_Pricing_BI_Dashboard.html">Pricing BI</a></li>
@@ -144,6 +187,17 @@
       </div>
     </div>
 
+  </div>
+
+  <div class="side">
+    <div class="label">Non-Isuzu · side project</div>
+    <a href="../side/PROPERTIQ.html">
+      <span class="mark">Non-Isuzu</span>
+      <div>
+        <h3>PROPERTIQ</h3>
+        <p>Personal real-estate simulator (Antwerp portfolio). Unrelated to Isuzu — kept separate from the Isuzu dashboard hierarchy.</p>
+      </div>
+    </a>
   </div>
 
   <div class="foot">
