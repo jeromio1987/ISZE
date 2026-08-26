@@ -1,13 +1,14 @@
 ---
 description: Static HTML dashboards — source, JSON feeds, deploy sync
-globs: Dashboards/**
+globs: 02_dashboards/**
 alwaysApply: false
 ---
 
 # ISZE HTML dashboards
 
-- **Edit only** `Dashboards/*.html` at repo root — never `Master Dashboard/` or `publish-site/` (overwritten on sync).
-- **Deploy:** `Dashboards/sync_to_deploys.ps1` after HTML changes.
-- **JSON feeds:** `Data/dashboards/isze_data.json`, `tender_data.json` — build via PRISM scripts / tender publish, not `Dashboards/*.json`.
-- **Contracts:** `Projects/Isuzu/prism/docs/dashboard_contracts.md` for CSV/JSON field names.
-- **Roadmap:** `ISZE_ROADMAP.md` + `Dashboards/ROADMAP.md`.
+- **Edit only** `02_dashboards/**/*.html` — never `07_deploy/Master Dashboard/` or `publish-site/` (overwritten on sync).
+- **Deploy:** `02_dashboards/sync_to_deploys.ps1` after HTML changes.
+- **JSON feeds:** `01_data/14_dashboards/isze_data.json`, `tender_data.json` (legacy alias `01_data/dashboards/` if junction exists) — build via PRISM scripts / tender publish, not HTML-side JSON.
+- **Contracts:** `03_analytics/Isuzu/prism/docs/dashboard_contracts.md` for CSV/JSON field names.
+- **Roadmap:** `00_docs/ISZE_ROADMAP.md` + `02_dashboards/ROADMAP.md`.
+- **Openable:** follow `isze-html-openable.mdc` + ship gate; Chart.js = inline only (no CDN). Plotly: prefer local `_ui/plotly.min.js`.

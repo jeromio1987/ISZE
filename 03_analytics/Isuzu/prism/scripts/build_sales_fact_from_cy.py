@@ -6,14 +6,15 @@ Run from prism folder:
   python scripts/build_sales_fact_from_cy.py
 
 Requires: pandas, openpyxl, pyarrow
-Sources: ISZE/Data/raw/sales/CY2023-2024.XLSX, CY2024-2025.XLSX, sales_2026tillApril.XLSX
+Sources: 12_raw/sales/CY2023-2024.XLSX, CY2024-2025.XLSX,
+         sales_2026tillApril.XLSX (2026 Jan–Mar), Q1FY2027.XLSX (2026 Apr–Jun).
 """
 
 from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 import pandas as pd
 
@@ -28,10 +29,19 @@ from config import DERIVED_DIR, RAW_SALES_DIR, SALES_FACT_PARQUET  # noqa: E402
 # a more complete re-export, 148,778 vs the old CY2025.XLSX's 147,409), the
 # later file wins and the older file's rows for that year are dropped so we
 # never double-count. CY2025.XLSX is kept on disk but no longer loaded.
+#
+# 2026 split (audit 2026-08-25): sales_2026tillApril = Jan–Mar;
+# Q1FY2027.XLSX = Apr–Jun (Isuzu FY2027 Q1). Month filter below prevents overlap.
 CY_FILE_YEARS: dict[str, set[int]] = {
     "CY2023-2024.XLSX": {2023},
     "CY2024-2025.XLSX": {2024, 2025},
     "sales_2026tillApril.XLSX": {2026},
+    "Q1FY2027.XLSX": {2026},
+}
+# Optional (year, month) allow-list per file. None = all months in owned years.
+CY_FILE_MONTHS: dict[str, Optional[set[int]]] = {
+    "sales_2026tillApril.XLSX": {1, 2, 3},
+    "Q1FY2027.XLSX": {4, 5, 6},
 }
 CY_FILES = [RAW_SALES_DIR / name for name in CY_FILE_YEARS]
 
@@ -80,8 +90,13 @@ def load_cy_file(path: Path) -> pd.DataFrame:
             break
     if "Billed Quantity" in df.columns:
         out["billed_qty"] = df["Billed Quantity"]
+    elif "QUANTITY" in df.columns:
+        # Q1FY2027-style extract
+        out["billed_qty"] = df["QUANTITY"]
     if "Net value" in df.columns:
         out["net_sales_value"] = df["Net value"]
+    elif "EUR Amount" in df.columns:
+        out["net_sales_value"] = df["EUR Amount"]
     elif "Net price" in df.columns:
         out["net_sales_value"] = df["Net price"]
     if "SaTy" in df.columns:
@@ -146,13 +161,23 @@ def main() -> int:
         print(f"Loading {path.name} …", flush=True)
         chunk = load_cy_file(path)
         owned_years = CY_FILE_YEARS.get(path.name)
+        owned_months = CY_FILE_MONTHS.get(path.name)
         if owned_years and "billing_date" in chunk.columns:
-            chunk_year = pd.to_datetime(chunk["billing_date"], dayfirst=True, errors="coerce").dt.year
+            bd = pd.to_datetime(chunk["billing_date"], dayfirst=True, errors="coerce")
+            chunk_year = bd.dt.year
             before = len(chunk)
-            chunk = chunk[chunk_year.isin(owned_years)].reset_index(drop=True)
+            mask = chunk_year.isin(owned_years)
+            if owned_months is not None:
+                mask = mask & bd.dt.month.isin(owned_months)
+            chunk = chunk[mask].reset_index(drop=True)
             dropped = before - len(chunk)
             if dropped:
-                print(f"  -> {len(chunk):,} rows (dropped {dropped:,} rows outside owned years {sorted(owned_years)} — superseded by another source file)", flush=True)
+                month_note = f", months {sorted(owned_months)}" if owned_months else ""
+                print(
+                    f"  -> {len(chunk):,} rows (dropped {dropped:,} outside owned years "
+                    f"{sorted(owned_years)}{month_note})",
+                    flush=True,
+                )
             else:
                 print(f"  -> {len(chunk):,} rows", flush=True)
         else:

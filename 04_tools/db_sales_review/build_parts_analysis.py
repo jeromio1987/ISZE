@@ -187,6 +187,11 @@ def build(dbkey: str):
     print(f"[{p['key']}] loading ...")
     itc_map, desc_by_newest = C.load_itc_map()
     sales = C.load_sales(p)
+    # Freight / surcharge pseudo-materials (e.g. TRANSPORT "Transporting Cost")
+    # are revenue but not parts. Drop them here so they cannot inflate the
+    # category / mover / UNCLASSIFIED rollups. PBI reconciliation in the QA gate
+    # uses load_sales directly (freight included) — which is why the two agree.
+    sales = sales[~sales["Material"].isin(C.FREIGHT_MATERIAL_CODES)].copy()
     catalog = C.load_catalog()
     bvp_pns = C.load_bvp_pns()
 
@@ -618,10 +623,12 @@ def build(dbkey: str):
     ws.column_dimensions["B"].width = 20
 
     if ids is not None:
-        mine, net_avg, db_avg = ids
+        mine, net_avg, db_avg, n_skipped = ids
         ws = wb.create_sheet("IDS 2026")
-        ws.cell(1, 1, f"IDS 2026 — {p['key']} dealers ({len(mine)}). DB average {db_avg:.1f}% vs "
-                      f"network average {net_avg:.1f}%").font = TITLE_FONT
+        skip_note = (f" {n_skipped} dealer(s) excluded — assessment not returned."
+                     if n_skipped else "")
+        ws.cell(1, 1, f"IDS 2026 — {p['key']} dealers ({len(mine)} assessed). DB average "
+                      f"{db_avg:.1f}% vs network average {net_avg:.1f}%.{skip_note}").font = TITLE_FONT
         write_df(ws, mine[["Rank (country)", "Global rank", "Dealer",
                            "Points achieved %", "Items scored %"]], start_row=2)
 
@@ -766,6 +773,7 @@ def build(dbkey: str):
         "gps_segmented": C.load_segmented_gps(p),
         "ids": None if ids is None else {
             "n": int(len(ids[0])), "network_avg": round(ids[1], 1), "db_avg": round(ids[2], 1),
+            "n_not_assessed": int(ids[3]),
             "top": [{"dealer": r["Dealer"], "pts": float(r["Points achieved %"]),
                      "grank": int(r["Global rank"])} for _, r in ids[0].head(3).iterrows()],
             "bottom": [{"dealer": r["Dealer"], "pts": float(r["Points achieved %"]),

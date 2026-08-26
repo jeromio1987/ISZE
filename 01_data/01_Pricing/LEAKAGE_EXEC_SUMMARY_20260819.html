@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Leakage executive summary · CY2025</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;background:#f7f4ee;font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0}
+.hero{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:42px 28px 28px}
+.hero-inner{max-width:1180px;margin:0 auto}
+.brand{font-family:Georgia,serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#c9d4e6;margin-bottom:14px}
+.hero h1{color:#fff;font-size:34px;line-height:1.12;margin:0 0 12px;font-weight:400}
+.hero .rule{width:64px;height:3px;background:#c0552d;margin:0 0 16px}
+.hero .lead{max-width:760px;font-size:15.5px;color:#d5dce8;margin:0 0 22px}
+.hero-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.hk{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:14px 16px;position:relative;cursor:help}
+.hk .v{font-size:28px;font-weight:700;letter-spacing:-.5px;color:#fff}
+.hk .v.sm{font-size:20px;line-height:1.2}
+.hk .l{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#aeb9cb;margin-top:4px}
+.hk .n{font-size:12px;color:#9aa8bd;margin-top:6px;line-height:1.35}
+.hk .tip{display:none;position:absolute;left:0;top:calc(100% + 8px);width:min(320px,70vw);
+  background:#15233c;color:#f7f4ee;border-top:3px solid #c0552d;padding:12px 14px;
+  font-size:12.5px;line-height:1.45;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.hk:hover .tip,.hk:focus-within .tip{display:block}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-width:1180px;margin:0 auto;padding:16px 28px;background:#f7f4ee;border-bottom:1px solid #d9d3c8;position:sticky;top:0;z-index:20}
+.toolbar label{font-size:13px;color:#6b6256}
+.toolbar input,.toolbar select{padding:7px 10px;font:inherit;font-size:13px;border:1px solid #d9d3c8;background:#fff}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filters button{appearance:none;border:1px solid #d9d3c8;background:#fff;color:#222;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
+.filters button.on{background:#15233c;color:#f7f4ee;border-color:#15233c}
+.filters button:hover{border-color:#c0552d}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 28px 80px}
+h2{font-size:22px;margin:8px 0 8px;padding-bottom:8px;border-bottom:2px solid #1a2b4a}
+h2 .no{color:#c0552d}
+.lead{color:#6b6256;margin:0 0 18px;max-width:820px}
+.callout{border-left:3px solid #c0552d;background:#fff;padding:14px 16px;margin:0 0 20px;font-size:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.card{background:#fff;border:1px solid #d9d3c8;padding:18px 18px 14px}
+.card h3{font-size:15px;margin:0 0 6px;font-family:Georgia,serif}
+.card .cap{font-size:12.5px;color:#6b6256;margin:0 0 12px}
+.chart-wrap{position:relative;width:100%;min-height:280px;height:300px}
+.chart-wrap canvas{display:block;width:100%!important;min-height:280px}
+.fallback-bars{display:flex;flex-direction:column;gap:6px;padding:4px 0}
+.fb-row{display:grid;grid-template-columns:minmax(60px,28%) 1fr minmax(56px,18%);gap:8px;align-items:center;font-size:12px}
+.fb-lb{color:#52514e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fb-track{background:#eceae4;height:18px;border-radius:2px;overflow:hidden}
+.fb-bar{height:100%;min-width:2px;border-radius:2px}
+.fb-val{text-align:right;font-variant-numeric:tabular-nums;color:#222}
+.chart-status{margin-top:12px;padding:10px 14px;font-size:12px;color:#8a3030;background:#f8e4dc;border-left:3px solid #c0552d;display:none}
+.chart-status.show{display:block}
+table.matrix{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+.matrix thead th{background:#1a2b4a;color:#f7f4ee;text-align:left;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:56px;z-index:6;cursor:pointer;user-select:none}
+.matrix thead th.num,.matrix td.num{text-align:right;font-variant-numeric:tabular-nums}
+.matrix td{padding:8px 10px;border-bottom:1px solid #e8e4dc;color:#222;vertical-align:top}
+.matrix tbody tr:nth-child(even) td{background:#faf8f4;color:#222}
+.matrix tbody tr.is-hide{display:none}
+.matrix tbody tr:hover td{background:#eef3f9}
+.table-scroll{overflow-x:auto;margin-bottom:8px;-webkit-overflow-scrolling:touch}
+.matrix th[data-key="bucket"],.matrix td.bucket{min-width:200px;white-space:nowrap}
+.tabs{display:flex;gap:0;max-width:1180px;margin:0 auto;padding:0 28px;background:#f7f4ee;border-bottom:1px solid #d9d3c8;position:sticky;top:0;z-index:25}
+.tabs button{appearance:none;border:0;background:transparent;padding:14px 20px;font:inherit;font-size:14px;color:#6b6256;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button.active{color:#1a2b4a;font-weight:600;border-bottom-color:#c0552d}
+.tabs button:hover{color:#1a2b4a}
+.panel{display:none}
+.panel.active{display:block}
+.monday-list{margin:0;padding:0;list-style:none}
+.monday-list li{background:#fff;border:1px solid #d9d3c8;border-left:3px solid #c0552d;padding:10px 14px;margin-bottom:8px;font-size:14px}
+.pill{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;font-weight:700;white-space:nowrap}
+.pill.leak{background:#f8e4dc;color:#8a3030}
+.pill.over{background:#eceae4;color:#444}
+.pill.bal{background:#e4f5ee;color:#1d6b4f}
+.pill.act{background:#dcecfc;color:#1a4a7a}
+.pill.hold{background:#eceae4;color:#666}
+.pill.aim{background:#eef3f9;color:#1a2b4a;font-size:10px;text-transform:none;letter-spacing:0;font-weight:600}
+.row-count{font-size:13px;color:#6b6256;margin-left:auto}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid #d9d3c8;font-size:11.5px;color:#6b6256;line-height:1.65}
+@media(max-width:900px){.hero-kpis,.grid2{grid-template-columns:1fr}.hero h1{font-size:26px}.wrap,.hero,.toolbar,.tabs{padding-left:16px;padding-right:16px}}
+@media print{.tabs,.toolbar .filters{display:none}.panel{display:block!important}}
+
+.ssr-chart{width:100%;min-height:120px}
+.bar-rows{display:flex;flex-direction:column;gap:5px;padding:4px 0}
+.bar-row{display:flex;align-items:center;gap:8px;font-size:12px;line-height:1.2}
+.bar-row .lbl{flex:0 0 auto;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#52514e;font-size:11px}
+.bar-row .track{flex:1;height:16px;background:#eef3f9;border-radius:2px;overflow:hidden;min-width:40px}
+.bar-row .fill{height:100%;border-radius:2px;min-width:2px}
+.bar-row .val{flex:0 0 76px;text-align:right;font-variant-numeric:tabular-nums;color:#222;font-size:11px}
+.ssr-svg{display:block;width:100%;height:auto;max-height:320px}
+.ssr-legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:10px;font-size:11px;color:#52514e}
+.ssr-legend span{display:inline-flex;align-items:center;gap:5px}
+.ssr-legend i{display:inline-block;width:10px;height:10px;border-radius:2px}
+.mix-bar{display:flex;height:22px;border-radius:3px;overflow:hidden;margin:8px 0 4px}
+.mix-seg{height:100%;min-width:2px}
+.donut-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:8px 0}
+.donut-svg{flex:0 0 auto;width:120px;height:120px}
+.donut-legend{flex:1 1 140px;font-size:11px;color:#52514e;display:flex;flex-direction:column;gap:6px}
+.donut-legend span{display:inline-flex;align-items:center;gap:6px}
+.donut-legend i{display:inline-block;width:10px;height:10px;border-radius:50%}
+.db-compare-strip{display:flex;gap:8px;align-items:flex-end;padding:12px 4px;min-height:160px}
+.db-compare-col{flex:1 1 0;min-width:72px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.db-compare-col .bar{ width:100%;max-width:88px;border-radius:3px 3px 0 0;min-height:4px;background:#c0552d}
+.db-compare-col .lbl{font-size:10px;color:#52514e;text-align:center;font-weight:600}
+.db-compare-col .val{font-size:11px;color:#15233c;font-variant-numeric:tabular-nums;text-align:center}
+.db-compare-note{font-size:10px;color:#6b6256;margin:4px 0 0;text-align:center;font-style:italic}
+.db-compare-col.is-dominant .bar{opacity:.92;box-shadow:0 0 0 1px rgba(192,85,45,.35)}
+.data-unavail{background:#fff3d6;border-left:4px solid #eda100;padding:14px 16px;margin:0 0 16px;font-size:14px;color:#222;border-radius:2px}
+.data-unavail.greece{background:#eef3f9;border-left:4px solid #15233c;color:#15233c}
+.data-unavail strong{color:#8a6500;font-family:Georgia,serif}
+.data-unavail.greece strong{color:#15233c}
+.chart-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:900px){.chart-grid3{grid-template-columns:1fr}}
+.ssr-line-chart .grid-line{stroke:#e1e0d9;stroke-width:1}
+.ssr-line-chart .line-bill{fill:none;stroke:#15233c;stroke-width:2}
+.ssr-line-chart .line-sell{fill:none;stroke:#c0552d;stroke-width:2}
+.ssr-line-chart text{font-size:10px;fill:#52514e}
+.ssr-waterfall{display:flex;flex-direction:column;gap:6px;padding:4px 0}
+.wf-step{display:grid;grid-template-columns:120px 1fr 88px;gap:8px;align-items:center;font-size:12px}
+.wf-step .lbl{color:#52514e;font-weight:600}
+.wf-step .track{height:20px;background:#eef3f9;border-radius:2px;overflow:hidden}
+.wf-step .fill{height:100%;border-radius:2px;min-width:2px}
+.wf-step .val{text-align:right;font-variant-numeric:tabular-nums;color:#222}
+.wf-step.wf-total .lbl{color:#15233c;font-family:Georgia,serif}
+.spark-strip{display:flex;gap:10px;flex-wrap:wrap;padding:6px 0}
+.spark-cell{flex:1 1 140px;min-width:120px;background:#faf8f4;border:1px solid #e8e4dc;padding:8px 10px}
+.spark-cell .sl{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#6b6256}
+.spark-cell .sv{font-size:13px;font-weight:700;color:#15233c;margin-top:2px}
+.money-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:12px 0}
+.money-card{background:linear-gradient(145deg,#c0552d 0%,#a84826 100%);color:#f7f4ee;padding:16px 14px;border-radius:2px;min-height:120px;position:relative}
+.money-card .rank{font-family:Georgia,serif;font-size:28px;opacity:.35;position:absolute;top:8px;right:12px}
+.money-card .pn{font-family:Consolas,monospace;font-size:15px;font-weight:700;margin-bottom:4px}
+.money-card .eur{font-size:22px;font-weight:700;letter-spacing:-.3px}
+.money-card .meta{font-size:11px;opacity:.9;margin-top:8px;line-height:1.4}
+.money-card .badge{display:inline-block;margin-top:8px;font-size:10px;text-transform:uppercase;letter-spacing:.06em;background:rgba(255,255,255,.18);padding:3px 8px}
+.bullet-chart{padding:8px 0}
+.bullet-row{margin-bottom:14px}
+.bullet-row .bl{font-size:12px;color:#52514e;margin-bottom:4px;display:flex;justify-content:space-between}
+.bullet-track{height:22px;background:#eef3f9;position:relative;border-radius:2px;overflow:visible}
+.bullet-fill{height:100%;background:#15233c;border-radius:2px}
+.bullet-mark{position:absolute;top:-4px;bottom:-4px;width:3px;background:#c0552d;z-index:2}
+.bullet-legend{font-size:11px;color:#6b6256;margin-top:8px}
+.treemap-wrap{display:flex;flex-wrap:wrap;gap:3px;padding:4px 0;min-height:140px}
+.treemap-cell{display:flex;flex-direction:column;justify-content:flex-end;padding:8px;color:#f7f4ee;font-size:11px;min-width:48px;min-height:48px;border-radius:2px}
+.treemap-cell .ta{font-weight:700;font-size:12px}
+.treemap-cell .tv{font-variant-numeric:tabular-nums;margin-top:2px}
+.leaderboard{list-style:none;margin:0;padding:0}
+.leaderboard li{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-bottom:1px solid #e8e4dc;font-size:13px;background:#fff}
+.leaderboard li:nth-child(even){background:#faf8f4}
+.leaderboard .rk{font-family:Georgia,serif;color:#c0552d;font-size:18px;text-align:center}
+.leaderboard .nm{font-weight:600;color:#15233c}
+.leaderboard .ev{font-variant-numeric:tabular-nums;color:#222;font-weight:600}
+.section-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px;padding:10px 0;position:sticky;top:48px;z-index:15;background:#f7f4ee;border-bottom:1px solid #d9d3c8}
+.section-nav a{font-size:12px;color:#1a2b4a;text-decoration:none;background:#fff;border:1px solid #d9d3c8;padding:6px 12px}
+.section-nav a:hover{border-color:#c0552d;color:#c0552d}
+.so-what{border-left:3px solid #c0552d;background:#fff8f4;padding:8px 12px;margin:8px 0 12px;font-size:13px;color:#52514e;line-height:1.45}
+.so-what strong{color:#c0552d;font-weight:600}
+.radar-wrap{margin:4px 0}
+.radar-toggle{display:flex;flex-wrap:wrap;gap:8px 14px;margin:0 0 10px;font-size:12px;color:#52514e}
+.radar-toggle label{display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.radar-toggle input{accent-color:#c0552d}
+.heatmap-legend{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 0;font-size:11px;color:#52514e}
+.heatmap-legend span{display:inline-flex;align-items:center;gap:4px}
+.heatmap-legend i{display:inline-block;width:14px;height:14px;border-radius:2px}
+.chart-footnote{font-size:10px;color:#6b6256;font-style:italic;margin:6px 0 0}
+.spark-partial{font-size:9px;color:#c0552d;margin-top:2px}
+
+.hero-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:900px){.hero-kpis{grid-template-columns:1fr}}
+.db-section{margin-bottom:48px;padding-top:8px;border-top:1px solid #d9d3c8}
+.fam-list{margin:0 0 12px;padding-left:18px;font-size:14px}
+.fam-list li{margin-bottom:8px}
+.matrix td.vehicle{font-size:12px;color:#52514e;max-width:280px}
+.network-bar{margin:20px 0 32px}
+.chart-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:900px){.chart-grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="brand">Isuzu Europe · Pricing · Mode B internal</div>
+    <h1>Where we leak sales — executive summary</h1>
+    <div class="rule"></div>
+    <p class="lead">Dealer sell-out vs ISZE bill · € gap = positive qty gap × reference sell-out (PR00 × 1.785). Five DBs with sell-out files. UTI≠UMI · IUK≠ITUK · IRELAND≠IUK.</p>
+    <div class="hero-kpis">
+      <div class="hk" tabindex="0"><div class="v">€11.9M</div><div class="l">Network leakage €</div><div class="n">Sum across five DBs</div><div class="tip">revision_exception_queue CY2025 · not alloc-weighted.</div></div>
+      <div class="hk" tabindex="0"><div class="v">IUK</div><div class="l">Largest DB</div><div class="n">79% of network € gap</div><div class="tip">Share of total positive qty gap × ref sell-out.</div></div>
+      <div class="hk" tabindex="0"><div class="v">4</div><div class="l">DBs with leakage €</div><div class="n">GREECE currently zero sell-out</div><div class="tip">Pipeline register still holds GREECE rows for IAM/overstock review.</div></div>
+    </div>
+  </div>
+</div>
+<div class="wrap">
+  <div class="callout"><strong>Network total:</strong> €11,938,690 leakage € (qty gap × reference sell-out = PR00 × 1.785). <strong>IUK</strong> carries 79% of leakage (€9,443,615) because intake/exhaust, body, and brakes families dominate high-volume workshop sell-out with bill lag on the largest PNs. <strong>IRELAND</strong> is next at 11%; <strong>ITUK</strong> and <strong>UTI</strong> are smaller but structurally different (dealer grain / Israel sold_to 1799). <strong>GREECE</strong> has no measurable leakage until sell-out reports.</div>
+  <nav class="section-nav" aria-label="Section navigation"><a href="#sec-ITUK">ITUK</a><a href="#sec-UTI">UTI</a><a href="#sec-IRELAND">IRELAND</a><a href="#sec-IUK">IUK</a><a href="#sec-GREECE">GREECE</a></nav>
+  <div class="card network-bar">
+    <h3>Network comparison · € leakage by DB</h3>
+    <p class="cap">Five DBs side-by-side · reference sell-out valuation · GREECE €0 until sell-out feed validates</p>
+    <p class="so-what"><strong>So what?</strong> IUK dominates € but ITUK/UTI patterns differ — log scale keeps smaller DBs visible.</p>
+    <div class="ssr-fallback"><div class="db-compare-strip ssr-chart ssr-db-compare" role="img" aria-label="DB leakage comparison"><div class="db-compare-col" title="ITUK: €937k"><div class="val">€937k</div><div class="bar" style="height:102px;background:#c0552d"></div><div class="lbl">ITUK</div></div><div class="db-compare-col" title="UTI: €240k"><div class="val">€240k</div><div class="bar" style="height:92px;background:#c0552d"></div><div class="lbl">UTI</div></div><div class="db-compare-col" title="IRELAND: €1.3M"><div class="val">€1.3M</div><div class="bar" style="height:105px;background:#c0552d"></div><div class="lbl">IRELAND</div></div><div class="db-compare-col is-dominant" title="IUK: €9.4M"><div class="val">€9.4M</div><div class="bar" style="height:119px;background:#c0552d"></div><div class="lbl">IUK</div></div><div class="db-compare-col" title="GREECE: €0"><div class="val">€0</div><div class="bar" style="height:4px;background:#e1e0d9"></div><div class="lbl">GREECE</div></div></div><p class="db-compare-note">Bar height log-scaled — labels show exact values · IUK-scale outlier visible</p></div>
+  </div>
+  <div class="hero-kpis" style="margin-bottom:28px"><div class="hk" tabindex="0"><div class="v">€9.4M</div><div class="l">IUK</div><div class="n">79% of network · ST 1.97×</div><div class="tip">Leakage € at reference sell-out · CY2025 revision queue.</div></div><div class="hk" tabindex="0"><div class="v">€1.3M</div><div class="l">IRELAND</div><div class="n">11% of network · ST 2.43×</div><div class="tip">Leakage € at reference sell-out · CY2025 revision queue.</div></div><div class="hk" tabindex="0"><div class="v">€937k</div><div class="l">ITUK</div><div class="n">8% of network · ST 1.09×</div><div class="tip">Leakage € at reference sell-out · CY2025 revision queue.</div></div><div class="hk" tabindex="0"><div class="v">€240k</div><div class="l">UTI</div><div class="n">2% of network · ST 0.74×</div><div class="tip">Leakage € at reference sell-out · CY2025 revision queue.</div></div><div class="hk" tabindex="0"><div class="v">€0</div><div class="l">GREECE</div><div class="n">0% of network · ST 0.00×</div><div class="tip">Leakage € at reference sell-out · CY2025 revision queue.</div></div></div>
+  
+<section class="db-section" id="sec-ITUK">
+  <h2><span class="no">ITUK</span> · €937,060 leakage · sell-through 1.09×</h2>
+  
+  <div class="callout">ITUK shows ~€937,060 leakage € (8% of network) with sell-through 1.09× bill qty. UK truck network — dealer grain available; leakage concentrated in exhaust/emission and suspension wear.</div>
+  <div class="chart-grid3">
+    <div class="card">
+      <h3>Top 10 PNs · € gap</h3>
+      <p class="cap">Horizontal bars · reference sell-out valuation</p>
+      <p class="so-what"><strong>So what?</strong> These PNs are the Monday call list — confirm bill lag vs parallel supply before any price move.</p>
+      <div class="ssr-fallback"><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl" style="width:120px" title="5878324000">5878324000</span><span class="track"><span class="fill" style="width:32.5%;background:#c0552d"></span></span><span class="val">€21,105</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="5876101170">5876101170</span><span class="track"><span class="fill" style="width:34.5%;background:#c0552d"></span></span><span class="val">€22,403</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8975452010">8975452010</span><span class="track"><span class="fill" style="width:37.4%;background:#c0552d"></span></span><span class="val">€24,273</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8983320621">8983320621</span><span class="track"><span class="fill" style="width:43.6%;background:#c0552d"></span></span><span class="val">€28,326</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8978410420">8978410420</span><span class="track"><span class="fill" style="width:47.8%;background:#c0552d"></span></span><span class="val">€31,045</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8982878080">8982878080</span><span class="track"><span class="fill" style="width:49.3%;background:#c0552d"></span></span><span class="val">€31,987</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8975425400">8975425400</span><span class="track"><span class="fill" style="width:55.3%;background:#c0552d"></span></span><span class="val">€35,872</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8978410450">8978410450</span><span class="track"><span class="fill" style="width:66.0%;background:#c0552d"></span></span><span class="val">€42,838</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8983615741">8983615741</span><span class="track"><span class="fill" style="width:78.3%;background:#c0552d"></span></span><span class="val">€50,853</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8983300950">8983300950</span><span class="track"><span class="fill" style="width:100.0%;background:#c0552d"></span></span><span class="val">€64,906</span></div></div></div>
+    </div>
+    <div class="card">
+      <h3>AIM L1 families · € gap</h3>
+      <p class="cap">Where money leaks by AIM family</p>
+      <p class="so-what"><strong>So what?</strong> Family view tells you whether to fix one workshop cluster or run a portfolio review.</p>
+      <div class="ssr-fallback"><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl" style="width:140px" title="Intake Exhaust Emission">Intake Exhaust Emission</span><span class="track"><span class="fill" style="width:100.0%;background:#2a78d6"></span></span><span class="val">€219,803</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Maintenance Service">Maintenance Service</span><span class="track"><span class="fill" style="width:62.8%;background:#2a78d6"></span></span><span class="val">€137,994</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Suspension">Suspension</span><span class="track"><span class="fill" style="width:43.2%;background:#2a78d6"></span></span><span class="val">€95,053</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Fuel System">Fuel System</span><span class="track"><span class="fill" style="width:30.3%;background:#2a78d6"></span></span><span class="val">€66,684</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Brakes">Brakes</span><span class="track"><span class="fill" style="width:28.1%;background:#2a78d6"></span></span><span class="val">€61,840</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Competitive parts">Competitive parts</span><span class="track"><span class="fill" style="width:21.6%;background:#2a78d6"></span></span><span class="val">€47,381</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Engine">Engine</span><span class="track"><span class="fill" style="width:20.1%;background:#2a78d6"></span></span><span class="val">€44,119</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Steering">Steering</span><span class="track"><span class="fill" style="width:17.9%;background:#2a78d6"></span></span><span class="val">€39,250</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Repair parts">Repair parts</span><span class="track"><span class="fill" style="width:17.7%;background:#2a78d6"></span></span><span class="val">€38,871</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Electrical">Electrical</span><span class="track"><span class="fill" style="width:14.2%;background:#2a78d6"></span></span><span class="val">€31,217</span></div></div></div>
+    </div>
+    <div class="card">
+      <h3>Pipeline mix</h3>
+      <p class="cap">Leakage vs overstock vs balanced · € or PN-weight</p>
+      <p class="so-what"><strong>So what?</strong> Leakage € is sell-out ahead of bill; overstock € is bill without matching sell-out.</p>
+      <div class="ssr-fallback"><div class="donut-wrap ssr-chart ssr-donut" role="img" aria-label="Pipeline mix donut"><svg class="donut-svg" viewBox="0 0 120 120"><path d="M 60.00 13.00 A 47.00 47.00 0 0 1 95.84 29.59" fill="none" stroke="#c0552d" stroke-width="22" stroke-linecap="butt"/><path d="M 95.84 29.59 A 47.00 47.00 0 0 1 106.09 50.78" fill="none" stroke="#15233c" stroke-width="22" stroke-linecap="butt"/><path d="M 106.09 50.78 A 47.00 47.00 0 1 1 60.00 13.00" fill="none" stroke="#1d9e75" stroke-width="22" stroke-linecap="butt"/></svg><div class='donut-legend'><span><i style='background:#c0552d'></i>Leakage €: €781,647 (14%)</span><span><i style='background:#15233c'></i>Overstock €: €456,120 (8%)</span><span><i style='background:#1d9e75'></i>Balanced €: €4,425,198 (78%)</span></div></div></div>
+    </div>
+  </div>
+  
+  <div class="card">
+    <h3>ITUK · top 10 dealers by € gap</h3>
+    <p class="cap">Dealer grain · replenishment_bridge_ituk_dealer · CY2025</p>
+    <p class="so-what"><strong>So what?</strong> Dealer names show where exhaust/emission leakage concentrates — call these workshops before network-wide list moves.</p>
+    <div class="ssr-fallback"><ol class="leaderboard ssr-chart ssr-leaderboard"><li><span class="rk">1</span><span class="nm">WARRINGTON VEHICLE CENTRE LTD</span><span class="ev">€195,943</span></li><li><span class="rk">2</span><span class="nm">SW COMMERCIALS LTD</span><span class="ev">€160,028</span></li><li><span class="rk">3</span><span class="nm">DT TRUCKS LTD</span><span class="ev">€155,303</span></li><li><span class="rk">4</span><span class="nm">MOTUS GROUP UK LTD</span><span class="ev">€146,117</span></li><li><span class="rk">5</span><span class="nm">FERNDOWN COMMERCIALS LTD</span><span class="ev">€139,319</span></li><li><span class="rk">6</span><span class="nm">HARRY MOORE COMMERCIALS LTD</span><span class="ev">€120,862</span></li><li><span class="rk">7</span><span class="nm">MC TRUCK &amp; BUS LTD (MAIDSTONE)</span><span class="ev">€117,221</span></li><li><span class="rk">8</span><span class="nm">AQUILA TRUCK CENTRES LTD (TIPTON)</span><span class="ev">€107,019</span></li><li><span class="rk">9</span><span class="nm">JDS TRUCKS LIMITED - LEEDS</span><span class="ev">€94,873</span></li><li><span class="rk">10</span><span class="nm">T.I.M. COMMERCIALS</span><span class="ev">€92,082</span></li></ol></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Where money leaks — top AIM L1 families</h3>
+      <ul class="fam-list"><li><strong>Intake Exhaust Emission</strong> — €219,803 · Emission-era wear and DPD/SCR parts — high workshop velocity vs ISZE bill.</li><li><strong>Maintenance Service</strong> — €137,994 · PMS basket leakage — service schedule parts moving off official bill.</li><li><strong>Suspension</strong> — €95,053 · Truck/LCV wear — check fleet parc and dealer stock covers.</li></ul>
+    </div>
+    <div class="card">
+      <h3>What to do Monday</h3>
+      <ul class="monday-list"><li>Call top 3 ITUK dealers on 8983300950 / 8983615741 exhaust PNs — confirm whether bill lag or genuine parallel supply.</li><li>Prioritise intake/exhaust &amp; suspension leakage list with ITUK sales lead — €220k+ in those AIM families alone.</li><li>Cross-check N75 / P700 launch buckets on top-10 PNs before any list move — several are carryover wear parts.</li></ul>
+    </div>
+  </div>
+  <h3>Top 10 part numbers</h3>
+  <p class="cap">€ gap = max(0, sell-out − bill) qty × reference sell-out € · vehicle notes are proxies unless VIN-level sell-out exists.</p>
+  <div class="table-scroll">
+  <table class="matrix">
+    <thead><tr><th>PN</th><th>Description</th><th>AIM L1</th><th>AIM L2</th><th class="num">€ gap</th><th class="num">Qty gap</th><th>Pipeline</th><th>Vehicle / parc note</th></tr></thead>
+    <tbody><tr><td>8983300950</td><td>SENSOR; PM</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€64,906</td><td class="num">94</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">Likely N75/truck wear (AIM proxy) — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8983615741</td><td>SENSOR ASM; DEF TANK</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€50,853</td><td class="num">82</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">Likely N75/truck wear (AIM proxy) — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8978410450</td><td>SPRING ASM; LEAF,FRT</td><td><span class="pill aim">Suspension</span></td><td>—</td><td class="num">€42,838</td><td class="num">39</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Suspension — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8975425400</td><td>ELEMENT; FUEL FILTER</td><td><span class="pill aim">Maintenance Service</span></td><td>fuel_filter</td><td class="num">€35,872</td><td class="num">1,600</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8982878080</td><td>FILTER ASM</td><td><span class="pill aim">Maintenance Service</span></td><td>—</td><td class="num">€31,987</td><td class="num">16</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8978410420</td><td>SPRING ASM; LEAF,FRT</td><td><span class="pill aim">Suspension</span></td><td>—</td><td class="num">€31,045</td><td class="num">47</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Suspension — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8983320621</td><td>PUMP ASM; FUEL,SUPPLY</td><td><span class="pill aim">Fuel System</span></td><td>—</td><td class="num">€28,326</td><td class="num">16</td><td><span class="pill leak">Leakage — sell-out without b</span></td><td class="vehicle">AIM family: Fuel System — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8975452010</td><td>SENSOR ASM; DEF TANK</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€24,273</td><td class="num">74</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">Likely N75/truck wear (AIM proxy) — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>5876101170</td><td>ELEMENT; OIL FILTER</td><td><span class="pill aim">Maintenance Service</span></td><td>oil_filter</td><td class="num">€22,403</td><td class="num">1,260</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>5878324000</td><td>KING PIN KIT</td><td><span class="pill aim">Steering</span></td><td>king_pin</td><td class="num">€21,105</td><td class="num">277</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Steering — not VIN-level unless dealer grain says otherwise</td></tr></tbody>
+  </table>
+  </div>
+</section>
+<section class="db-section" id="sec-UTI">
+  <h2><span class="no">UTI</span> · €239,942 leakage · sell-through 0.74×</h2>
+  
+  <div class="callout">UTI shows ~€239,942 leakage € (2% of network) with sell-through 0.74× bill qty. Israel UTI only (sold_to 1799) — not UMI. Sell-through below bill suggests stocking drag as well as leakage.</div>
+  <div class="chart-grid3">
+    <div class="card">
+      <h3>Top 10 PNs · € gap</h3>
+      <p class="cap">Horizontal bars · reference sell-out valuation</p>
+      <p class="so-what"><strong>So what?</strong> These PNs are the Monday call list — confirm bill lag vs parallel supply before any price move.</p>
+      <div class="ssr-fallback"><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl" style="width:120px" title="5876100201">5876100201</span><span class="track"><span class="fill" style="width:23.8%;background:#c0552d"></span></span><span class="val">€7,649</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8982688122">8982688122</span><span class="track"><span class="fill" style="width:24.7%;background:#c0552d"></span></span><span class="val">€7,940</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8982979331">8982979331</span><span class="track"><span class="fill" style="width:27.2%;background:#c0552d"></span></span><span class="val">€8,730</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8982753180">8982753180</span><span class="track"><span class="fill" style="width:29.9%;background:#c0552d"></span></span><span class="val">€9,619</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8982074350">8982074350</span><span class="track"><span class="fill" style="width:34.8%;background:#c0552d"></span></span><span class="val">€11,174</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8983300950">8983300950</span><span class="track"><span class="fill" style="width:45.1%;background:#c0552d"></span></span><span class="val">€14,500</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8975425390">8975425390</span><span class="track"><span class="fill" style="width:58.9%;background:#c0552d"></span></span><span class="val">€18,910</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8982049420">8982049420</span><span class="track"><span class="fill" style="width:62.2%;background:#c0552d"></span></span><span class="val">€19,992</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8982447940">8982447940</span><span class="track"><span class="fill" style="width:64.4%;background:#c0552d"></span></span><span class="val">€20,678</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="5876101170">5876101170</span><span class="track"><span class="fill" style="width:100.0%;background:#c0552d"></span></span><span class="val">€32,128</span></div></div></div>
+    </div>
+    <div class="card">
+      <h3>AIM L1 families · € gap</h3>
+      <p class="cap">Where money leaks by AIM family</p>
+      <p class="so-what"><strong>So what?</strong> Family view tells you whether to fix one workshop cluster or run a portfolio review.</p>
+      <div class="ssr-fallback"><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl" style="width:140px" title="Maintenance Service">Maintenance Service</span><span class="track"><span class="fill" style="width:100.0%;background:#2a78d6"></span></span><span class="val">€73,482</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Intake Exhaust Emission">Intake Exhaust Emission</span><span class="track"><span class="fill" style="width:45.4%;background:#2a78d6"></span></span><span class="val">€33,381</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Brakes">Brakes</span><span class="track"><span class="fill" style="width:39.5%;background:#2a78d6"></span></span><span class="val">€29,016</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Fuel System">Fuel System</span><span class="track"><span class="fill" style="width:31.2%;background:#2a78d6"></span></span><span class="val">€22,940</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Competitive parts">Competitive parts</span><span class="track"><span class="fill" style="width:31.0%;background:#2a78d6"></span></span><span class="val">€22,744</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Body Exterior">Body Exterior</span><span class="track"><span class="fill" style="width:17.5%;background:#2a78d6"></span></span><span class="val">€12,835</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Wheels Hub">Wheels Hub</span><span class="track"><span class="fill" style="width:13.8%;background:#2a78d6"></span></span><span class="val">€10,169</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Fluids Chemicals">Fluids Chemicals</span><span class="track"><span class="fill" style="width:10.4%;background:#2a78d6"></span></span><span class="val">€7,649</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Steering">Steering</span><span class="track"><span class="fill" style="width:9.4%;background:#2a78d6"></span></span><span class="val">€6,892</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Repair parts">Repair parts</span><span class="track"><span class="fill" style="width:7.7%;background:#2a78d6"></span></span><span class="val">€5,638</span></div></div></div>
+    </div>
+    <div class="card">
+      <h3>Pipeline mix</h3>
+      <p class="cap">Leakage vs overstock vs balanced · € or PN-weight</p>
+      <p class="so-what"><strong>So what?</strong> Leakage € is sell-out ahead of bill; overstock € is bill without matching sell-out.</p>
+      <div class="ssr-fallback"><div class="donut-wrap ssr-chart ssr-donut" role="img" aria-label="Pipeline mix donut"><svg class="donut-svg" viewBox="0 0 120 120"><path d="M 60.00 13.00 A 47.00 47.00 0 0 1 74.42 15.27" fill="none" stroke="#c0552d" stroke-width="22" stroke-linecap="butt"/><path d="M 74.42 15.27 A 47.00 47.00 0 0 1 80.49 102.30" fill="none" stroke="#15233c" stroke-width="22" stroke-linecap="butt"/><path d="M 80.49 102.30 A 47.00 47.00 0 1 1 60.00 13.00" fill="none" stroke="#1d9e75" stroke-width="22" stroke-linecap="butt"/></svg><div class='donut-legend'><span><i style='background:#c0552d'></i>Leakage €: €165,501 (5%)</span><span><i style='background:#15233c'></i>Overstock €: €1,262,176 (38%)</span><span><i style='background:#1d9e75'></i>Balanced €: €1,906,309 (57%)</span></div></div></div>
+    </div>
+  </div>
+  
+  <div class="grid2">
+    <div class="card">
+      <h3>Where money leaks — top AIM L1 families</h3>
+      <ul class="fam-list"><li><strong>Maintenance Service</strong> — €73,482 · PMS basket leakage — service schedule parts moving off official bill.</li><li><strong>Intake Exhaust Emission</strong> — €33,381 · Emission-era wear and DPD/SCR parts — high workshop velocity vs ISZE bill.</li><li><strong>Brakes</strong> — €29,016 · Fast-moving safety parts — classic sell-out ahead of bill pattern.</li></ul>
+    </div>
+    <div class="card">
+      <h3>What to do Monday</h3>
+      <ul class="monday-list"><li>Review 5876101170 and 8975425390 with UTI — high qty gaps on filters; confirm distributor stock vs workshop sell-out.</li><li>Do not conflate with UMI IDS network — this cut is UTI sold_to 1799 only.</li><li>Maintenance-service AIM family is #1 € gap — align PMS capture conversation with leakage register.</li></ul>
+    </div>
+  </div>
+  <h3>Top 10 part numbers</h3>
+  <p class="cap">€ gap = max(0, sell-out − bill) qty × reference sell-out € · vehicle notes are proxies unless VIN-level sell-out exists.</p>
+  <div class="table-scroll">
+  <table class="matrix">
+    <thead><tr><th>PN</th><th>Description</th><th>AIM L1</th><th>AIM L2</th><th class="num">€ gap</th><th class="num">Qty gap</th><th>Pipeline</th><th>Vehicle / parc note</th></tr></thead>
+    <tbody><tr><td>5876101170</td><td>ELEMENT; OIL FILTER</td><td><span class="pill aim">Maintenance Service</span></td><td>oil_filter</td><td class="num">€32,128</td><td class="num">1,807</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8982447940</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td><span class="pill aim">Brakes</span></td><td>—</td><td class="num">€20,678</td><td class="num">130</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Brakes — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8982049420</td><td>FILTER ASM</td><td><span class="pill aim">Maintenance Service</span></td><td>—</td><td class="num">€19,992</td><td class="num">10</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8975425390</td><td>ELEMENT KIT; FUEL FILTER</td><td><span class="pill aim">Maintenance Service</span></td><td>—</td><td class="num">€18,910</td><td class="num">989</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8983300950</td><td>SENSOR; PM</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€14,500</td><td class="num">21</td><td><span class="pill leak">Balanced</span></td><td class="vehicle">AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8982074350</td><td>NOZZLE ASM; INJ</td><td><span class="pill aim">Fuel System</span></td><td>—</td><td class="num">€11,174</td><td class="num">32</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Fuel System — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8982753180</td><td>CLUTCH ASM</td><td><span class="pill aim">Competitive parts</span></td><td>—</td><td class="num">€9,619</td><td class="num">8</td><td><span class="pill leak">Balanced</span></td><td class="vehicle">AIM family: Competitive parts — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8982979331</td><td>NOZZLE ASM; INJ</td><td><span class="pill aim">Fuel System</span></td><td>—</td><td class="num">€8,730</td><td class="num">25</td><td><span class="pill leak">Balanced</span></td><td class="vehicle">AIM family: Fuel System — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8982688122</td><td>PUMP ASM; DEF,DCM SPLY</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€7,940</td><td class="num">4</td><td><span class="pill leak">Balanced</span></td><td class="vehicle">AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>5876100201</td><td>ELEMENT; AIR CLEANER</td><td><span class="pill aim">Fluids Chemicals</span></td><td>—</td><td class="num">€7,649</td><td class="num">245</td><td><span class="pill leak">Balanced</span></td><td class="vehicle">AIM family: Fluids Chemicals — not VIN-level unless dealer grain says otherwise</td></tr></tbody>
+  </table>
+  </div>
+</section>
+<section class="db-section" id="sec-IRELAND">
+  <h2><span class="no">IRELAND</span> · €1,318,074 leakage · sell-through 2.43×</h2>
+  
+  <div class="callout">IRELAND shows ~€1,318,074 leakage € (11% of network) with sell-through 2.43× bill qty. Harris Ireland — high sell-through ratio flags sell-out running ahead of ISZE bill on many PNs.</div>
+  <div class="chart-grid3">
+    <div class="card">
+      <h3>Top 10 PNs · € gap</h3>
+      <p class="cap">Horizontal bars · reference sell-out valuation</p>
+      <p class="so-what"><strong>So what?</strong> These PNs are the Monday call list — confirm bill lag vs parallel supply before any price move.</p>
+      <div class="ssr-fallback"><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl" style="width:120px" title="8982127181">8982127181</span><span class="track"><span class="fill" style="width:24.0%;background:#c0552d"></span></span><span class="val">€13,394</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8981596930">8981596930</span><span class="track"><span class="fill" style="width:24.5%;background:#c0552d"></span></span><span class="val">€13,670</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8980139111">8980139111</span><span class="track"><span class="fill" style="width:26.1%;background:#c0552d"></span></span><span class="val">€14,567</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8982688122">8982688122</span><span class="track"><span class="fill" style="width:28.5%;background:#c0552d"></span></span><span class="val">€15,880</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8982447940">8982447940</span><span class="track"><span class="fill" style="width:41.3%;background:#c0552d"></span></span><span class="val">€23,064</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8981772710">8981772710</span><span class="track"><span class="fill" style="width:44.3%;background:#c0552d"></span></span><span class="val">€24,743</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8978808250">8978808250</span><span class="track"><span class="fill" style="width:45.6%;background:#c0552d"></span></span><span class="val">€25,464</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8983767550">8983767550</span><span class="track"><span class="fill" style="width:47.2%;background:#c0552d"></span></span><span class="val">€26,315</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8978808270">8978808270</span><span class="track"><span class="fill" style="width:52.6%;background:#c0552d"></span></span><span class="val">€29,349</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8983528481">8983528481</span><span class="track"><span class="fill" style="width:100.0%;background:#c0552d"></span></span><span class="val">€55,798</span></div></div></div>
+    </div>
+    <div class="card">
+      <h3>AIM L1 families · € gap</h3>
+      <p class="cap">Where money leaks by AIM family</p>
+      <p class="so-what"><strong>So what?</strong> Family view tells you whether to fix one workshop cluster or run a portfolio review.</p>
+      <div class="ssr-fallback"><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl" style="width:140px" title="Intake Exhaust Emission">Intake Exhaust Emission</span><span class="track"><span class="fill" style="width:100.0%;background:#2a78d6"></span></span><span class="val">€253,549</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Body Exterior">Body Exterior</span><span class="track"><span class="fill" style="width:67.6%;background:#2a78d6"></span></span><span class="val">€171,364</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Brakes">Brakes</span><span class="track"><span class="fill" style="width:67.5%;background:#2a78d6"></span></span><span class="val">€171,238</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Maintenance Service">Maintenance Service</span><span class="track"><span class="fill" style="width:58.5%;background:#2a78d6"></span></span><span class="val">€148,295</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Competitive parts">Competitive parts</span><span class="track"><span class="fill" style="width:30.0%;background:#2a78d6"></span></span><span class="val">€76,045</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Wheels Hub">Wheels Hub</span><span class="track"><span class="fill" style="width:26.3%;background:#2a78d6"></span></span><span class="val">€66,760</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Repair parts">Repair parts</span><span class="track"><span class="fill" style="width:25.4%;background:#2a78d6"></span></span><span class="val">€64,451</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Electrical">Electrical</span><span class="track"><span class="fill" style="width:23.9%;background:#2a78d6"></span></span><span class="val">€60,524</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Fuel System">Fuel System</span><span class="track"><span class="fill" style="width:20.8%;background:#2a78d6"></span></span><span class="val">€52,783</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Steering">Steering</span><span class="track"><span class="fill" style="width:20.4%;background:#2a78d6"></span></span><span class="val">€51,668</span></div></div></div>
+    </div>
+    <div class="card">
+      <h3>Pipeline mix</h3>
+      <p class="cap">Leakage vs overstock vs balanced · € or PN-weight</p>
+      <p class="so-what"><strong>So what?</strong> Leakage € is sell-out ahead of bill; overstock € is bill without matching sell-out.</p>
+      <div class="ssr-fallback"><div class="donut-wrap ssr-chart ssr-donut" role="img" aria-label="Pipeline mix donut"><svg class="donut-svg" viewBox="0 0 120 120"><path d="M 60.00 13.00 A 47.00 47.00 0 1 1 18.25 38.41" fill="none" stroke="#c0552d" stroke-width="22" stroke-linecap="butt"/><path d="M 18.25 38.41 A 47.00 47.00 0 0 1 23.12 30.86" fill="none" stroke="#15233c" stroke-width="22" stroke-linecap="butt"/><path d="M 23.12 30.86 A 47.00 47.00 0 0 1 60.00 13.00" fill="none" stroke="#1d9e75" stroke-width="22" stroke-linecap="butt"/></svg><div class='donut-legend'><span><i style='background:#c0552d'></i>Leakage €: €1,310,345 (83%)</span><span><i style='background:#15233c'></i>Overstock €: €48,316 (3%)</span><span><i style='background:#1d9e75'></i>Balanced €: €227,777 (14%)</span></div></div></div>
+    </div>
+  </div>
+  
+  <div class="grid2">
+    <div class="card">
+      <h3>Where money leaks — top AIM L1 families</h3>
+      <ul class="fam-list"><li><strong>Intake Exhaust Emission</strong> — €253,549 · Emission-era wear and DPD/SCR parts — high workshop velocity vs ISZE bill.</li><li><strong>Body Exterior</strong> — €171,364 · Accident / panel demand often billed late or via alternate PN.</li><li><strong>Brakes</strong> — €171,238 · Fast-moving safety parts — classic sell-out ahead of bill pattern.</li></ul>
+    </div>
+    <div class="card">
+      <h3>What to do Monday</h3>
+      <ul class="monday-list"><li>Body exterior + brakes workshops: top PNs 8983528481, 8978808270 — verify bill timing vs Harris sell-out reporting.</li><li>Intake/exhaust €254k gap — check whether DPD/SCR parts are billed under different PN aliases.</li><li>Set monthly reconcile Harris sell-out vs SAP bill for top 20 leakage rows.</li></ul>
+    </div>
+  </div>
+  <h3>Top 10 part numbers</h3>
+  <p class="cap">€ gap = max(0, sell-out − bill) qty × reference sell-out € · vehicle notes are proxies unless VIN-level sell-out exists.</p>
+  <div class="table-scroll">
+  <table class="matrix">
+    <thead><tr><th>PN</th><th>Description</th><th>AIM L1</th><th>AIM L2</th><th class="num">€ gap</th><th class="num">Qty gap</th><th>Pipeline</th><th>Vehicle / parc note</th></tr></thead>
+    <tbody><tr><td>8983528481</td><td>SENSOR; NOX</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€55,798</td><td class="num">121</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8978808270</td><td>SENSOR; PM</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€29,349</td><td class="num">68</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8983767550</td><td>ROTOR; DISC BRK,FRT</td><td><span class="pill aim">Brakes</span></td><td>—</td><td class="num">€26,315</td><td class="num">186</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Brakes — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8978808250</td><td>SENSOR; PM</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€25,464</td><td class="num">59</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8981772710</td><td>FILTER; ACL</td><td><span class="pill aim">Maintenance Service</span></td><td>air_filter</td><td class="num">€24,743</td><td class="num">442</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8982447940</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td><span class="pill aim">Brakes</span></td><td>—</td><td class="num">€23,064</td><td class="num">145</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Brakes — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8982688122</td><td>PUMP ASM; DEF,DCM SPLY</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€15,880</td><td class="num">8</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8980139111</td><td>VALVE; EGR</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€14,567</td><td class="num">52</td><td><span class="pill leak">Leakage — sell-out without b</span></td><td class="vehicle">AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8981596930</td><td>ELEMENT KIT; FUEL FILTER</td><td><span class="pill aim">Maintenance Service</span></td><td>fuel_filter</td><td class="num">€13,670</td><td class="num">553</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8982127181</td><td>COOLER ASM; EGR</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€13,394</td><td class="num">29</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise</td></tr></tbody>
+  </table>
+  </div>
+</section>
+<section class="db-section" id="sec-IUK">
+  <h2><span class="no">IUK</span> · €9,443,615 leakage · sell-through 1.97×</h2>
+  
+  <div class="callout">IUK shows ~€9,443,615 leakage € (79% of network) with sell-through 1.97× bill qty. Mainland UK — dominates network € gap; body, brakes, and intake/exhaust families drive the story.</div>
+  <div class="chart-grid3">
+    <div class="card">
+      <h3>Top 10 PNs · € gap</h3>
+      <p class="cap">Horizontal bars · reference sell-out valuation</p>
+      <p class="so-what"><strong>So what?</strong> These PNs are the Monday call list — confirm bill lag vs parallel supply before any price move.</p>
+      <div class="ssr-fallback"><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl" style="width:120px" title="8981901180">8981901180</span><span class="track"><span class="fill" style="width:23.3%;background:#c0552d"></span></span><span class="val">€133,726</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8974995480">8974995480</span><span class="track"><span class="fill" style="width:26.6%;background:#c0552d"></span></span><span class="val">€152,677</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8975554500">8975554500</span><span class="track"><span class="fill" style="width:31.5%;background:#c0552d"></span></span><span class="val">€180,730</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8975056801">8975056801</span><span class="track"><span class="fill" style="width:32.2%;background:#c0552d"></span></span><span class="val">€184,406</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8982705240">8982705240</span><span class="track"><span class="fill" style="width:35.7%;background:#c0552d"></span></span><span class="val">€204,535</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8975359391">8975359391</span><span class="track"><span class="fill" style="width:35.9%;background:#c0552d"></span></span><span class="val">€205,666</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8978808270">8978808270</span><span class="track"><span class="fill" style="width:78.0%;background:#c0552d"></span></span><span class="val">€447,138</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8978808250">8978808250</span><span class="track"><span class="fill" style="width:80.0%;background:#c0552d"></span></span><span class="val">€458,359</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="7552348280">7552348280</span><span class="track"><span class="fill" style="width:97.0%;background:#c0552d"></span></span><span class="val">€555,970</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="8983767550">8983767550</span><span class="track"><span class="fill" style="width:100.0%;background:#c0552d"></span></span><span class="val">€573,277</span></div></div></div>
+    </div>
+    <div class="card">
+      <h3>AIM L1 families · € gap</h3>
+      <p class="cap">Where money leaks by AIM family</p>
+      <p class="so-what"><strong>So what?</strong> Family view tells you whether to fix one workshop cluster or run a portfolio review.</p>
+      <div class="ssr-fallback"><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl" style="width:140px" title="Intake Exhaust Emission">Intake Exhaust Emission</span><span class="track"><span class="fill" style="width:100.0%;background:#2a78d6"></span></span><span class="val">€1,964,037</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Brakes">Brakes</span><span class="track"><span class="fill" style="width:73.5%;background:#2a78d6"></span></span><span class="val">€1,444,424</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Body Exterior">Body Exterior</span><span class="track"><span class="fill" style="width:69.4%;background:#2a78d6"></span></span><span class="val">€1,363,063</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Fuel System">Fuel System</span><span class="track"><span class="fill" style="width:33.3%;background:#2a78d6"></span></span><span class="val">€654,664</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Maintenance Service">Maintenance Service</span><span class="track"><span class="fill" style="width:32.8%;background:#2a78d6"></span></span><span class="val">€643,562</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Steering">Steering</span><span class="track"><span class="fill" style="width:30.1%;background:#2a78d6"></span></span><span class="val">€590,218</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Cabin Interior">Cabin Interior</span><span class="track"><span class="fill" style="width:19.0%;background:#2a78d6"></span></span><span class="val">€373,030</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Electrical">Electrical</span><span class="track"><span class="fill" style="width:18.5%;background:#2a78d6"></span></span><span class="val">€362,376</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Driveline Axle">Driveline Axle</span><span class="track"><span class="fill" style="width:18.0%;background:#2a78d6"></span></span><span class="val">€352,640</span></div><div class="bar-row"><span class="lbl" style="width:140px" title="Wheels Hub">Wheels Hub</span><span class="track"><span class="fill" style="width:15.9%;background:#2a78d6"></span></span><span class="val">€311,481</span></div></div></div>
+    </div>
+    <div class="card">
+      <h3>Pipeline mix</h3>
+      <p class="cap">Leakage vs overstock vs balanced · € or PN-weight</p>
+      <p class="so-what"><strong>So what?</strong> Leakage € is sell-out ahead of bill; overstock € is bill without matching sell-out.</p>
+      <div class="ssr-fallback"><div class="donut-wrap ssr-chart ssr-donut" role="img" aria-label="Pipeline mix donut"><svg class="donut-svg" viewBox="0 0 120 120"><path d="M 60.00 13.00 A 47.00 47.00 0 1 1 47.71 14.64" fill="none" stroke="#c0552d" stroke-width="22" stroke-linecap="butt"/><path d="M 47.71 14.64 A 47.00 47.00 0 0 1 55.40 13.23" fill="none" stroke="#15233c" stroke-width="22" stroke-linecap="butt"/><path d="M 55.40 13.23 A 47.00 47.00 0 0 1 60.00 13.00" fill="none" stroke="#1d9e75" stroke-width="22" stroke-linecap="butt"/></svg><div class='donut-legend'><span><i style='background:#c0552d'></i>Leakage €: €9,413,164 (96%)</span><span><i style='background:#15233c'></i>Overstock €: €260,444 (3%)</span><span><i style='background:#1d9e75'></i>Balanced €: €153,456 (2%)</span></div></div></div>
+    </div>
+  </div>
+  
+  <div class="grid2">
+    <div class="card">
+      <h3>Where money leaks — top AIM L1 families</h3>
+      <ul class="fam-list"><li><strong>Intake Exhaust Emission</strong> — €1,964,037 · Emission-era wear and DPD/SCR parts — high workshop velocity vs ISZE bill.</li><li><strong>Brakes</strong> — €1,444,424 · Fast-moving safety parts — classic sell-out ahead of bill pattern.</li><li><strong>Body Exterior</strong> — €1,363,063 · Accident / panel demand often billed late or via alternate PN.</li></ul>
+    </div>
+    <div class="card">
+      <h3>What to do Monday</h3>
+      <ul class="monday-list"><li>Steering unit 7552348280 (~€556k gap) — commercial owner + LCV parc check before pricing action.</li><li>Body/exterior cluster (8983767550, 8978808250/8270) — largest single-PN euro gaps; workshop walk with IUK sales.</li><li>Brakes + intake/exhaust AIM families each &gt;€1.3M gap — treat as portfolio review, not PN-by-PN firefight.</li></ul>
+    </div>
+  </div>
+  <h3>Top 10 part numbers</h3>
+  <p class="cap">€ gap = max(0, sell-out − bill) qty × reference sell-out € · vehicle notes are proxies unless VIN-level sell-out exists.</p>
+  <div class="table-scroll">
+  <table class="matrix">
+    <thead><tr><th>PN</th><th>Description</th><th>AIM L1</th><th>AIM L2</th><th class="num">€ gap</th><th class="num">Qty gap</th><th>Pipeline</th><th>Vehicle / parc note</th></tr></thead>
+    <tbody><tr><td>8983767550</td><td>ROTOR; DISC BRK,FRT</td><td><span class="pill aim">Brakes</span></td><td>—</td><td class="num">€573,277</td><td class="num">4,052</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Brakes — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>7552348280</td><td>STEERING UNIT</td><td><span class="pill aim">Steering</span></td><td>—</td><td class="num">€555,970</td><td class="num">157</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Steering — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8978808250</td><td>SENSOR; PM</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€458,359</td><td class="num">1,062</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8978808270</td><td>SENSOR; PM</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€447,138</td><td class="num">1,036</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8975359391</td><td>DPD ASM</td><td><span class="pill aim">Intake Exhaust Emission</span></td><td>—</td><td class="num">€205,666</td><td class="num">52</td><td><span class="pill leak">Leakage — sell-out without b</span></td><td class="vehicle">AIM family: Intake Exhaust Emission — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8982705240</td><td>ELEMENT; OIL FILTER</td><td><span class="pill aim">Maintenance Service</span></td><td>oil_filter</td><td class="num">€204,535</td><td class="num">16,848</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8975056801</td><td>PAD KIT; CALIPER,DISC BRK,FRT</td><td><span class="pill aim">Brakes</span></td><td>—</td><td class="num">€184,406</td><td class="num">1,256</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Brakes — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8975554500</td><td>FILTER; BLOWER UNIT</td><td><span class="pill aim">Cabin Interior</span></td><td>blower_filter</td><td class="num">€180,730</td><td class="num">6,200</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Cabin Interior — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8974995480</td><td>FILTER; ACL</td><td><span class="pill aim">Maintenance Service</span></td><td>air_filter</td><td class="num">€152,677</td><td class="num">4,038</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Maintenance Service — not VIN-level unless dealer grain says otherwise</td></tr><tr><td>8981901180</td><td>DRIVE ASM; FINAL,RR</td><td><span class="pill aim">Driveline Axle</span></td><td>—</td><td class="num">€133,726</td><td class="num">60</td><td><span class="pill leak">Leakage — high sell-through</span></td><td class="vehicle">AIM family: Driveline Axle — not VIN-level unless dealer grain says otherwise</td></tr></tbody>
+  </table>
+  </div>
+</section>
+<section class="db-section" id="sec-GREECE">
+  <h2><span class="no">GREECE</span> · €0 leakage · sell-through 0.00×</h2>
+  <div class="data-unavail greece" role="alert"><strong>GREECE — DATA UNAVAILABLE for leakage €</strong><br/>CY2025 sell-out file reports zero movement — leakage € is not measurable until sell-out arrives.<br/><strong>2,545</strong> overstock / no-sell-out PNs · <strong>45</strong> PNs with IAM (KS) quotes · <strong>27,221</strong> bill qty in register</div>
+  <div class="callout">GREECE shows ~€0 leakage € (0% of network) with sell-through 0.00× bill qty. Petros Greece — CY2025 sell-out file reports zero movement; leakage € not measurable until sell-out arrives.</div>
+  <div class="chart-grid3">
+    <div class="card">
+      <h3>Top 10 PNs · € gap</h3>
+      <p class="cap">Horizontal bars · reference sell-out valuation</p>
+      <p class="so-what"><strong>So what?</strong> These PNs are the Monday call list — confirm bill lag vs parallel supply before any price move.</p>
+      <div class="ssr-fallback"><p class="cap">No leakage PNs — see register below.</p></div>
+    </div>
+    <div class="card">
+      <h3>AIM L1 families · € gap</h3>
+      <p class="cap">Where money leaks by AIM family</p>
+      <p class="so-what"><strong>So what?</strong> Family view tells you whether to fix one workshop cluster or run a portfolio review.</p>
+      <div class="ssr-fallback"><p class="cap">No AIM family leakage € in this DB cut.</p></div>
+    </div>
+    <div class="card">
+      <h3>Pipeline mix</h3>
+      <p class="cap">Leakage vs overstock vs balanced · € or PN-weight</p>
+      <p class="so-what"><strong>So what?</strong> Leakage € is sell-out ahead of bill; overstock € is bill without matching sell-out.</p>
+      <div class="ssr-fallback"><div class="donut-wrap ssr-chart ssr-donut" role="img" aria-label="Pipeline mix donut"><svg class="donut-svg" viewBox="0 0 120 120"><path d="M 60.00 13.00 A 47.00 47.00 0 1 1 60.00 13.00" fill="none" stroke="#15233c" stroke-width="22" stroke-linecap="butt"/></svg><div class='donut-legend'><span><i style='background:#c0552d'></i>Leakage €: €0 (0%)</span><span><i style='background:#15233c'></i>Overstock €: €523,358 (100%)</span><span><i style='background:#1d9e75'></i>Balanced €: €0 (0%)</span></div></div></div>
+    </div>
+  </div>
+  
+  <div class="grid2">
+    <div class="card">
+      <h3>Where money leaks — top AIM L1 families</h3>
+      <ul class="fam-list"><li>No positive leakage € in this DB cut.</li></ul>
+    </div>
+    <div class="card">
+      <h3>What to do Monday</h3>
+      <ul class="monday-list"><li>Hold pricing moves tied to leakage until Petros sell-out CY2025 feed is validated — current file is all zero sell-out.</li><li>Separate IAM undercut review (KS quotes exist) from leakage story — overstock/no-sell-out dominates register.</li><li>Re-run replenishment bridge after next sell-out drop — GREECE rows are in queue but € gap is not yet provable.</li></ul>
+    </div>
+  </div>
+  <h3>Top 10 part numbers</h3>
+  <p class="cap">Top 10 by bill qty — overstock / no-sell-out register (leakage € not provable).</p>
+  <div class="table-scroll">
+  <table class="matrix">
+    <thead><tr><th>PN</th><th>Description</th><th>AIM L1</th><th class="num">Bill qty</th><th class="num">Bill €</th><th>IAM</th><th>Pipeline</th></tr></thead>
+    <tbody><tr><td>8982705240</td><td>ELEMENT; OIL FILTER</td><td><span class="pill aim">Maintenance Service</span></td><td class="num">2,170</td><td class="num">€10,835</td><td>KS quote</td><td><span class="pill over">Overstock — no sell-out</span></td></tr><tr><td>5876150170</td><td>ELEMENT KIT; FUEL FILTER</td><td><span class="pill aim">Maintenance Service</span></td><td class="num">1,435</td><td class="num">€9,961</td><td>—</td><td><span class="pill over">Overstock — no sell-out</span></td></tr><tr><td>8979125310</td><td>GASKET; DRAIN PLUG</td><td><span class="pill aim">Lubrication</span></td><td class="num">1,379</td><td class="num">€555</td><td>—</td><td><span class="pill over">Overstock — no sell-out</span></td></tr><tr><td>8983160931</td><td>GASKET; DRAIN PLUG</td><td><span class="pill aim">Lubrication</span></td><td class="num">844</td><td class="num">€593</td><td>—</td><td><span class="pill over">Overstock — no sell-out</span></td></tr><tr><td>8973574920</td><td>BUSHING; SHACKLE,RR SPR</td><td><span class="pill aim">Suspension</span></td><td class="num">528</td><td class="num">€716</td><td>—</td><td><span class="pill over">Overstock — no sell-out</span></td></tr><tr><td>5876150000</td><td>ELEMENT; OIL FILTER</td><td><span class="pill aim">Maintenance Service</span></td><td class="num">517</td><td class="num">€2,368</td><td>—</td><td><span class="pill over">Overstock — no sell-out</span></td></tr><tr><td>8975554500</td><td>FILTER; BLOWER UNIT</td><td><span class="pill aim">Cabin Interior</span></td><td class="num">497</td><td class="num">€8,361</td><td>—</td><td><span class="pill over">Overstock — no sell-out</span></td></tr><tr><td>8974995480</td><td>FILTER; ACL</td><td><span class="pill aim">Maintenance Service</span></td><td class="num">488</td><td class="num">€10,429</td><td>KS quote</td><td><span class="pill over">Overstock — no sell-out</span></td></tr><tr><td>5876150050</td><td>ELEMENT; OIL FILTER</td><td><span class="pill aim">Maintenance Service</span></td><td class="num">445</td><td class="num">€2,668</td><td>—</td><td><span class="pill over">Overstock — no sell-out</span></td></tr><tr><td>8981815400</td><td>GASKET; INJ NOZZLE</td><td><span class="pill aim">Fuel System</span></td><td class="num">441</td><td class="num">€456</td><td>—</td><td><span class="pill over">Overstock — no sell-out</span></td></tr></tbody>
+  </table>
+  </div>
+</section>
+  <p class="foot">Built 2026-08-19 · Sources: revision_exception_queue.csv, book_b_provisional_weights.csv, sellout_aim_by_subgroup_2025.csv · Internal Mode B · no alloc run.</p>
+</div>
+</body>
+</html>

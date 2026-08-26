@@ -76,4 +76,5 @@ Chart-first view: € leakage by DB/AIM, ISZE Director vs DB Director tabs, Book
 
 - Elasticity rows remain **`measure_kind=proxy`** until a second full CY sell-out exists per DB.
 - KS index uses GBP→EUR **1.17** diagnostic; shop = min(KS AM, GEN) where quoted.
+- KS join (2026-08-25): `ks_status=crawl_union_20260825`; **302** queue rows with `ks_has_quote=True` (**126** unique PNs). Catalog tree expand `01_data/01_Pricing/_raw/ks_catalog_tree_expand_20260825.csv` (69 rows / 50 unique SKUs). Autodoc scrape still frozen.
 - Reference sell-out = PR00 × **1.785** (not “street” in Mode A labels).

@@ -8,6 +8,12 @@
 
 ## [Unreleased]
 
+### Fixed (2026-08-25) — Overnight process audit (workspace OS)
+- Prism verify **green** 116/0/0; junctions restored; `sales_fact` through **2026-06-30**; SaTy min 92% with Q1 hole documented.
+- Action Ledger `BILLING_HORIZON` now reads `max(sales_fact.billing_date)` (was hard-coded 2026-03-31).
+- Nordics keys **CLOSED** for Jerome asks — SteerCo / exec one-pager / OPERATOR_INDEX purged of paste-key spam; SSOT `_NORDICS_BLOCKED.md`.
+- Durable pack: `docs/OVERNIGHT_PROCESS_AUDIT_2026-08-25.md` + morning brief + command card.
+
 ### Added (2026-08-11) — Pricing FULL analysis pack (Mode A) + audit + self-Send
 - Mega-pack builder `01_data/91_build/build_pricing_full_analysis_pack.py` → `02_dashboards/pricing/ISZE_Pricing_Full_Analysis_Pack.html` (PR00 realization, ZPR1 UTI≠UMI, AIM CY/FY, PMS **total** capture, GPS SPU, AIM×GPS, mix extra lens, MOS not-elasticity, NO_LIST, VPACC hooks, integrity).
 - Meta/CSVs under `01_data/00_derived/pricing_full_analysis_pack.meta.json` + `pricing_pack_*`.

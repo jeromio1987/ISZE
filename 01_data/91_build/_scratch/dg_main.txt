@@ -1,0 +1,85 @@
+=== cross-check recomputed DG vs provided Is DG ===
+provided True count: 265
+recomputed True count: 265
+mismatch count: 0
+mismatch sample (first 20):
+Empty DataFrame
+Columns: [Material, Description, Is DG, DG_recomputed]
+Index: []
+
+=== genuine shipped lines (F2, excl REBATE) === 44934
+=== genuine DG lines === 257
+=== distinct DG materials shipped (genuine) === 42
+
+========== DG PART INVENTORY (genuine shipped, sorted by value) ==========
+count of distinct shipped DG parts = 42
+  Material      canon                             desc                        family                                  un               cls                                                   psn                    airrest         hs  lines  air_lines  sea_lines  truck_lines  qty   weight    value  net_weight_unit
+1884057860 1884057860                     GEAR OIL LSD       Bulk lubricant/chemical  Not IATA-regulated (flash pt >60C)               n/a                      Lubricating oil (not DG for air)               Passenger OK 2710198190     11          2          9            0  888 3640.800 25675.68            4.100
+7552752270 7552422500                     CONTROL UNIT              SRS control unit      Not regulated (unless Li cell)               n/a                               Electronic control unit               Passenger OK 8517620000     21         10         11            0   28   13.972 17720.33            0.499
+8974715785 8974715787              BELT; SEAT,RR OUTER Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000     25          6         17            0   77  181.181 11715.77            2.353
+8980979700 8980979700                   BELT ASM; SEAT Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000     17          3         14            0   39   54.210 11315.32            1.390
+8974715805 8974715807              BELT; SEAT,RR OUTER Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000     14          3         11            0   59  138.237  8976.99            2.343
+8974715766 8974715768           BELT; SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000     23          9         14            0   55  117.700  8310.55            2.140
+8974715747 8974715748           BELT; SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000     12          1         11            0   40   85.600  5921.52            2.140
+8974236662 8974236662           BELT; SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      9          0          9            0   39   39.000  3992.05            1.000
+8974236632 8974236632           BELT; SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      8          1          7            0   35   35.000  3704.99            1.000
+8983322334 8983322334                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      9          4          5            0   10   24.100  3501.38            2.410
+8974715746 8974715748           BELT; SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000     14          6          8            0   23   49.220  3442.57            2.140
+8974719842 8974719842                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      9          1          8            0   11   66.000  3259.78            6.000
+8974715806 8974715807              BELT; SEAT,RR OUTER Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      4          0          4            0   20   46.860  2935.08            2.343
+8972763920 7552422500                     CONTROL UNIT              SRS control unit      Not regulated (unless Li cell)               n/a                               Electronic control unit               Passenger OK 8517620000      2          1          1            0    4    1.896  2663.22            0.474
+8974715786 8974715787              BELT; SEAT,RR OUTER Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      3          0          3            0   16   37.648  2567.20            2.353
+8983322324 8983322324                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      5          2          3            0    6   14.490  2005.83            2.415
+8979030481 8979030481                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      4          1          3            0    7   10.010  1773.23            1.430
+8974163301 8974163301           BELT; SEAT,BUCKLE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      7          1          6            0    8    4.744  1624.85            0.593
+8981471006 8981471006                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      4          1          3            0    4   12.644  1557.76            3.161
+7474997720 7474997720                 AIR BAG ASM; P/S        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      5          1          4            0    5   18.300  1478.40            3.660
+8983319644 8983319644                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      3          0          3            0    5    8.275  1472.35            1.655
+8974715767 8974715768           BELT; SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      2          0          2            0    9   19.260  1444.05            2.140
+8974284561 8974284563 BELT; PASSENGER SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000     13          0         13            0   18   33.480  1366.68            1.860
+8981471016 8981471016                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      2          0          2            0    2    6.000   762.82            3.000
+8974174017 8974174018                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      1          0          1            0    2    8.720   719.74            4.360
+8979371452 8979371452                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      1          0          1            0    3    4.440   709.47            1.480
+8974269813 8974269813                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      3          0          3            0    4    7.040   708.52            1.760
+7552422500 7552422500                     CONTROL UNIT              SRS control unit      Not regulated (unless Li cell)               n/a                               Electronic control unit               Passenger OK 8517620000      1          1          0            0    1    0.498   689.20            0.498
+8974163291 8974163291           BELT; SEAT,BUCKLE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      3          3          0            0    3    1.779   664.04            0.593
+8979038423 8979038424                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      3          0          3            0    3    5.280   560.06            1.760
+8974166416 8974166416                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      1          0          1            0    2    2.588   542.64            1.294
+8978864602 8978864602                 AIR BAG ASM; P/S        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      2          0          2            0    2    6.000   520.77            3.000
+8974283912 8974283912                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      2          0          2            0    2    3.460   372.04            1.730
+8974761872 8974761872                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      2          1          1            0    2    3.520   315.52            1.760
+8979009401 8979009403           BELT; SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      4          0          4            0    4    7.000   310.88            1.750
+8979341084 8979341084 BELT; PASSENGER SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      1          0          1            0    4    6.760   285.56            1.690
+8979362233 8979362233           BELT; SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      2          0          2            0    3    5.070   244.13            1.690
+8979354241 8979354241                 AIR BAG ASM; P/S        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      1          0          1            0    1    3.450   234.75            3.450
+8974691612 8974691612                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      1          0          1            0    1    1.780   186.06            1.780
+8974269812 8974269813                     AIR BAG UNIT        Airbag module/inflator UN3353 (hist. UN3268 / UN0503 1.4S)           Class 9                           Air bag inflators / modules           CAO (cargo-only) 8708959990      1          1          0            0    1    1.760   184.01            1.760
+8974766283 8974766283 BELT; PASSENGER SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      1          0          1            0    1    1.750    81.50            1.750
+8974766281 8974766283 BELT; PASSENGER SEAT,TONGUE SIDE Seatbelt pretensioner/webbing UN3353 (hist. UN3268 / UN0503 1.4S) Class 9 (or 1.4S) Seat-belt pretensioners / safety devices, pyrotechnic CAO (cargo-only) typically 8708219000      1          0          1            0    1    1.750    76.97            1.750
+
+=== total DG value === 136594.26
+=== total DG weight === 4731.27
+=== total DG lines === 257
+=== DG parts by family (value) ===
+                               n_parts  lines     value    weight
+family                                                           
+Seatbelt pretensioner/webbing       19    163  68980.70   866.249
+Bulk lubricant/chemical              1     11  25675.68  3640.800
+SRS control unit                     3     24  21072.75    16.366
+Airbag module/inflator              19     59  20865.13   207.857
+
+=== GEAR OIL LSD outlier ===
+  Material      canon         desc                  family                                 un cls                              psn      airrest         hs  lines  air_lines  sea_lines  truck_lines  qty  weight    value  net_weight_unit
+1884057860 1884057860 GEAR OIL LSD Bulk lubricant/chemical Not IATA-regulated (flash pt >60C) n/a Lubricating oil (not DG for air) Passenger OK 2710198190     11          2          9            0  888  3640.8 25675.68              4.1
+  Material Bill.Doc. MoT  Qty  Gross weight (kg)  EUR Amount Billing Date
+1884057860 202445896 Sea  108              442.8     3051.00   2024-01-02
+1884057860 202446125 Air   36              147.6     1121.76   2024-01-11
+1884057860 202446131 Sea  108              442.8     3144.96   2024-01-11
+1884057860 202543373 Sea  108              442.8     3144.96   2024-08-27
+1884057860 202548263 Sea  162              664.2     4576.50   2025-03-12
+1884057860 202548294 Air   36              147.6     1127.52   2025-03-13
+1884057860 202548390 Sea   59              241.9     1726.93   2025-03-18
+1884057860 202548390 Sea   54              221.4     1525.50   2025-03-18
+1884057860 202642165 Sea    1                4.1       29.27   2025-07-07
+1884057860 202645941 Sea  108              442.8     3161.16   2025-12-16
+1884057860 202741821 Sea  108              442.8     3066.12   2026-06-22

@@ -1,0 +1,77 @@
+# Country -> distributor_code mapping for GPS/PMS opportunity linkage.
+# Reviewable config — do not bury in code. Null/missing = no linkage (emit nulls).
+# Where multiple distributors share a country, pick the commercial primary used in
+# gps_spu_by_distributor.csv for that market (latest year with SPU).
+#
+# P1 audit 2026-08-25: FR / PL / IT / ES / NL / CZ / AT / most CEE have NO SPU row
+# in gps_spu_by_distributor.csv — yaml stays null (do not invent). Belgium and every
+# other country with a real SPU row are already wired below.
+
+country_to_distributor:
+  Austria: null          # no SPU in gps_spu_by_distributor.csv
+  Belgium: BELGIUM
+  Bulgaria: null
+  Croatia: null
+  Cyprus: CYPRUS
+  Czechia: null
+  Denmark: DENMARK
+  Estonia: null
+  Finland: FINLAND
+  France: null           # no SPU in source pack — leave null
+  Germany: GERMANY
+  Greece: GREECE
+  Hungary: HUNGARY
+  Iceland: ICELAND
+  Ireland: IRELAND
+  Israel: UTI            # UTI has SPU; UMI also Israel — UTI used as primary in GPS file
+  Italy: null            # no SPU in source pack — leave null
+  Kazakhstan: null       # country rows exist but uio/SPU empty → no usable SPU
+  Latvia: null
+  Lithuania: null
+  Luxembourg: null
+  Malta: MALTA
+  Netherlands: null
+  Norway: NORWAY
+  Poland: null           # no SPU in source pack — leave null
+  Portugal: PORTUGAL
+  Romania: ROMANIA
+  Slovakia: null
+  Slovenia: null
+  Spain: null            # no SPU in source pack — leave null
+  Sweden: SWEDEN
+  United Kingdom: ITUK   # ITUK is UK parts channel in GPS file
+
+# ISO3 aliases (optional lookup)
+iso3_to_country:
+  AUT: Austria
+  BEL: Belgium
+  BGR: Bulgaria
+  CYP: Cyprus
+  CZE: Czechia
+  DEU: Germany
+  DNK: Denmark
+  ESP: Spain
+  EST: Estonia
+  FIN: Finland
+  FRA: France
+  GBR: United Kingdom
+  GRC: Greece
+  HRV: Croatia
+  HUN: Hungary
+  IRL: Ireland
+  ISR: Israel
+  ISL: Iceland
+  ITA: Italy
+  KAZ: Kazakhstan
+  LTU: Lithuania
+  LUX: Luxembourg
+  LVA: Latvia
+  MLT: Malta
+  NLD: Netherlands
+  NOR: Norway
+  POL: Poland
+  PRT: Portugal
+  ROU: Romania
+  SVK: Slovakia
+  SVN: Slovenia
+  SWE: Sweden

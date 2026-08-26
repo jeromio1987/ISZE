@@ -1,11 +1,11 @@
 # ISZE derived pipeline verification
 
-**Generated:** 2026-08-18T15:12:22Z
+**Generated:** 2026-08-25T17:19:54Z
 **Data root:** `C:\Users\jerom\Desktop\claude\ISZE\01_data`
 
 | Pass | Warn | Fail |
 |------|------|------|
-| 108 | 0 | 0 |
+| 116 | 0 | 0 |
 
 ## Checks
 
@@ -49,12 +49,14 @@
 - ✅ **derived.aim_gps_matrix.csv** — Found aim_gps_matrix.csv
 - ✅ **config.data_status** — Core data_status OK
 - ✅ **config.bvp_catalog** — BVP catalog at BVP PARTS CATALOG.xlsx
-- ✅ **sales_fact.row_count** — Row count 477,505 (expected ~477,505, Δ 0.00%)
+- ✅ **uio.canonical** — UIO resolves to canonical ISUZU_UIO_Overview_2026.xlsx
+- ✅ **uio.stale_copies** — No stale v16/v17/v18 UIO copies in fallback paths
+- ✅ **sales_fact.row_count** — Row count 514,037 (expected ~514,037, Δ 0.00%)
 - ✅ **sales_fact.schema** — Schema OK
 - ✅ **sales_fact.years** — Years present: [2023, 2024, 2025, 2026]
-- ✅ **sales_fact.saty** — SaTy populated on 100.0% of rows (min 95.0%)
+- ✅ **sales_fact.saty** — SaTy populated on 92.9% of rows (min 92.0%)
 - ✅ **sales_fact.fig_key** — fig_key populated on 98.6% of rows (min 90.0%)
-- ✅ **sales_fact.unmapped** — UNMAPPED 4 (0.00%) after distributor map
+- ✅ **sales_fact.unmapped** — UNMAPPED 6 (0.00%) after distributor map
 - ✅ **p0.rows** — Dimension 919 PNs
 - ✅ **p0.pms_flagged** — PMS-flagged 496
 - ✅ **p0.line_type** — line_type values OK
@@ -116,6 +118,12 @@
 - ✅ **contract.substitution_timeline** — substitution_timeline 502 rows
 - ✅ **contract.capture_recovery_model** — capture_recovery_model 252 rows
 - ✅ **contract.distributor_geo** — distributor_geo 23 rows
+- ✅ **action_ledger.artefacts** — P8 artefacts present
+- ✅ **action_ledger.nonempty** — ledger rows=23236
+- ✅ **action_ledger.lineage** — monetary rows with full lineage: 3507
+- ✅ **action_ledger.rejects** — rejects.csv rows=0 has_reason=True
+- ✅ **action_ledger.language** — co-movement wording only
+- ✅ **action_ledger.html** — dashboard HTML at ISZE_Action_Ledger.html
 - ✅ **prism.bvp_bundle** — BVP dashboard bundle ready
 
 ## Claude / Cursor workflow

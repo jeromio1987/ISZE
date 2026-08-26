@@ -1,108 +1,110 @@
 ============================================================
-  ISZE TENDER MONITOR — SETUP INSTRUCTIONS
-  Version 3  |  March 2026
+  ISZE TENDER MONITOR — OPERATOR SETUP
+  Version 4  |  August 2026
 ============================================================
 
 WHAT THIS DOES
 --------------
-Scrapes public procurement portals across Europe, the UK,
-and Israel every week. Finds tenders for pickup trucks,
-light commercial vehicles, and fleet maintenance contracts.
-Scores each opportunity and builds a clickable HTML dashboard.
+Weekly scrape of public procurement portals across ISZE markets.
+Keeps notices that fit Isuzu commercially: D-Max / N-Series / LCV
+supply and real fleet R&M (parts pull). Scores Fit / Win / Econ,
+links sized fleets to GPS addressable wallet, builds dashboards.
 
-FILES IN THIS FOLDER
---------------------
-  tender_scraper_v3.py        — fetches tenders from all sources
-  isze_core_v3.py             — scoring engine (do not edit)
-  build_dashboard_v2.py       — builds the HTML dashboard
-  run_tender_monitor.bat      — double-click to run everything
-  ISZE_TenderMonitor_WeeklyTask.xml — auto-schedule (optional)
-  SETUP.txt                   — this file
+  Notices in the commercial net are gated (core CPV or LCV signal).
+  Transport-services CPV, SEND/passenger routes, and generic car
+  R&M without an LCV signal are dropped — not merely ranked lower.
+  GPS € applies only to pickup/truck product-fit (not pure van/LCV).
 
 
-STEP 1 — INSTALL PYTHON
-------------------------
-Download Python 3.10 or newer from: https://www.python.org/downloads/
-During install, check the box: "Add Python to PATH"
+FILES (this folder)
+-------------------
+  tender_scraper_v3.py              — fetchers + Isuzu gate at write time
+  isze_core_v3.py                   — scoring, extraction, selection gate
+  gps_pms_linkage.py                — GPS/PMS addressable fields
+  ids_dealer_linkage.py             — IDS dealer / distributor MAP fields
+  nordics_keys.py                   — Doffin/HILMA key loader
+  build_dashboard_v2.py             — classic tender OS (v2)
+  build_dashboard_v4.py             — GPS/PMS opportunity dashboard (v4)
+  run_tender_monitor.bat            — double-click weekly run
+  OPEN_isze_dashboard_v4_opportunity.cmd — open v4 offline
+  OPEN_00_EXEC_ONE_PAGER.cmd        — SteerCo one-pager
+  _source_health.json               — OK / AWAITING_KEY / RETIRED / SUSPECT / BROKEN
+  _GODTIER_CHECKLIST.md             — quality bar status
+  OPERATOR_INDEX.md                 — operator hub
+  _IDS_DEALER_MODULE.md             — IDS dealer ↔ MAP facts
+  01_OPERATOR_RUNBOOK.md            — run / keys / health vocabulary
+  NORDICS_API_KEYS.md               — how to register Nordics keys
+  nordics_api_keys.env.example      — copy to nordics_api_keys.env
+  verify_nordics_keys.py            — smoke-test keys (never prints them)
 
 
-STEP 2 — INSTALL REQUIRED LIBRARIES
--------------------------------------
-Open Command Prompt (Win key, type cmd, press Enter).
-Copy and paste this line, then press Enter:
+STEP 1 — PYTHON
+---------------
+Python 3.10+ on PATH. Then once:
 
   pip install requests openpyxl beautifulsoup4 lxml
 
-Wait for it to finish. You only need to do this once.
 
-
-STEP 3 — COPY THIS FOLDER TO YOUR LAPTOP
------------------------------------------
-Put this entire folder somewhere stable, e.g.:
-  C:\Users\<your name>\Desktop\ISZE_Tender_Monitor\
-
-Do NOT move individual files out of the folder.
-All three Python scripts must be in the same folder.
-
-
-STEP 4 — RUN IT
-----------------
+STEP 2 — RUN
+------------
 Double-click: run_tender_monitor.bat
 
 It will:
-  1. Fetch tenders from the last 30 days (takes 2-5 minutes)
-  2. Build the dashboard HTML file
-  3. Open-ready: isze_dashboard_v2.html
+  1. Scrape (TED + national feeds; 10–20+ min if Contracts Finder rate-limits)
+  2. Publish live JSON under ISZE data dashboards
+  3. Build v2 HTML
+  4. Build v4 GPS/PMS HTML
 
-Open isze_dashboard_v2.html in Chrome or Edge when done.
+Open the v4 dashboard:
+  Double-click OPEN_isze_dashboard_v4_opportunity.cmd
 
-
-STEP 5 — SCHEDULE WEEKLY (OPTIONAL)
--------------------------------------
-To run automatically every Monday at 07:30:
-  1. Open Task Scheduler (search in Start menu)
-  2. Click "Import Task" on the right panel
-  3. Select: ISZE_TenderMonitor_WeeklyTask.xml
-  4. Edit the path inside the XML if your folder location
-     is different from C:\Users\jerom\Desktop\claude\...
-
-     To change the path: open the XML in Notepad, find the
-     line with "run_tender_monitor.bat" and update the path.
+Path:
+  C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\OPEN_isze_dashboard_v4_opportunity.cmd
 
 
-OPTIONAL API KEYS (free — more coverage)
------------------------------------------
-Norway (Doffin) and Finland (HILMA) need free API keys.
-Without them the script skips those two countries silently.
+STEP 3 — NORDICS KEYS (optional but needed for NO/FI national)
+--------------------------------------------------------------
+Without keys, Norway (Doffin) and Finland (HILMA) are SKIPPED loudly
+(source health = AWAITING_KEY — not a dead endpoint). TED still covers
+some Nordics above-threshold notices.
 
-  Norway:  https://docs.doffin.no  — register, get key
-  Finland: https://www.hankintailmoitukset.fi/en/docs/api
+  1. Read: NORDICS_API_KEYS.md
+  2. Copy nordics_api_keys.env.example → nordics_api_keys.env
+  3. Paste Primary keys as ISZE_DOFFIN_API_KEY / ISZE_HILMA_API_KEY
+  4. python verify_nordics_keys.py
+  5. Never commit nordics_api_keys.env
 
-Once you have a key, open tender_scraper_v3.py in Notepad.
-Find these lines near the top and paste your key inside "":
+Do NOT paste keys into tender_scraper_v3.py.
 
-  DOFFIN_API_KEY = ""     <- paste Norway key here
-  HILMA_API_KEY  = ""     <- paste Finland key here
 
-Save and close. Next run will include those countries.
+WHAT THE NUMBERS MEAN
+---------------------
+  Addressable GPS / year = fleet_size × (max_spend_eur / uio_units)
+    → full genuine wallet per unit for that distributor year.
+    → ONLY on pickup/truck product-fit when a GPS map row exists.
+    → NOT expected revenue. No win rate applied.
+  Capture at current rate = fleet_size × actual spend_per_unit_eur
+  Contract value = published Est. Value when the notice carried one.
+    Missing stays null / "—" — never forced to 0.
+  GPS column empty for most rows = no fleet size and/or no SPU map
+    and/or van/LCV product-fit (null ≠ 0).
+
+
+STILL LIMITED
+-------------
+  Belgium RSS RETIRED — live national is publicprocurement.be SEA (OK)
+  Germany DTVP RETIRED — TED + service.bund; paid DTVP for full below-threshold
+  Nordics national APIs AWAITING_KEY until keys registered
+  Israel CKAN secondary / SUSPECT — live mr.gov.il is primary
+  TED detail enrichment off (auth required)
 
 
 TROUBLESHOOTING
 ---------------
-Script crashes immediately:
-  → Python not installed, or not added to PATH.
-  → Re-install Python and tick "Add Python to PATH".
-
-"ModuleNotFoundError: requests":
-  → Libraries not installed. Repeat Step 2.
-
-Dashboard shows 0 results:
-  → Check tender_monitor_log.txt in the same folder.
-  → If TED shows errors, it may be rate-limiting — try again.
-
-"UnicodeEncodeError" in the log:
-  → Fixed in this version. If it still appears, run from
-  → the .bat file rather than double-clicking the .py file.
+Script crashes immediately → Python not on PATH.
+ModuleNotFoundError → repeat pip install line.
+Dashboard 0 / empty → read tender_monitor_log.txt + source banner.
+UnicodeEncodeError → always run via the .bat file.
 
 ============================================================
 Questions: jerome.van.der.pluym@isuzu-e.com

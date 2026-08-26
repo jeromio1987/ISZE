@@ -1,0 +1,20 @@
+---
+description: NEVER ask Jerome for Nordics tender API keys again
+alwaysApply: true
+---
+
+# Nordics tender API keys — closed topic
+
+**Jerome decision 2026-08-25:** Stop asking. He has been spammed repeatedly with the same Doffin/HILMA / `nordics_api_keys.env` setup sheet. Keys are **already done**.
+
+## Hard rules
+
+1. **Never** ask Jerome to register, paste, confirm, or re-do Norway Doffin / Finland HILMA API keys.
+2. **Never** open with “you still need Nordics keys” / “AWAITING_KEY — Jerome must…” / re-send `NORDICS_API_KEYS.md` setup steps unless he **explicitly** asks how keys work.
+3. If a scrape shows `AWAITING_KEY` or missing env: **diagnose silently** — check that `ISZE/04_tools/ISZE_Tender_Monitor_Install/nordics_api_keys.env` exists and `verify_nordics_keys.py` passes. Fix loader/path/process env yourself. Only escalate if verify fails **and** you have a new root cause (not “please paste keys again”).
+4. SSOT status: `ISZE/04_tools/ISZE_Tender_Monitor_Install/_NORDICS_BLOCKED.md` (title is historical — content is **DONE**). Backlog: `_OPEN_BACKLOG_ARRANGED.md` P0 Nordics = **DONE**.
+5. Same rule for any agent, audit, overnight loop, or “waiting on Jerome” list: **do not re-add Nordics keys as an open human gate.**
+
+## Accurate reason to mention (rare)
+
+Only if verify fails with evidence, e.g. “`verify_nordics_keys.py` returned FAIL on HILMA 401 — key rejected by gateway; last OK was &lt;date&gt;.” Not “please fill the env file from the sheet.”

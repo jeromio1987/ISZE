@@ -96,7 +96,7 @@ def write_html(payload: dict) -> None:
     rows = payload.get("rows") or []
 
     hero = SSR.hero_kpis([
-        (SSR.fmt_eur(H.get("total_gap_eur")), "Network € leakage", "Reference sell-out × qty gap",
+        (SSR.fmt_eur_compact(H.get("total_gap_eur")), "Network € leakage", "Reference sell-out × qty gap",
          "Sum of € at risk from revision queue join. PR00×1.785 reference sell-out where priced."),
         (SSR.esc(H.get("top_pn", "—")), "Top leakage PN", f'{SSR.esc(H.get("top_pn_db", ""))} · {SSR.fmt_eur(H.get("top_pn_gap_eur"))}',
          "Highest € gap in exception register."),
@@ -115,10 +115,16 @@ def write_html(payload: dict) -> None:
     db_chips = '<button type="button" class="on" data-db="">All DBs</button>' + "".join(
         f'<button type="button" data-db="{SSR.esc(d.get("db"))}">{SSR.esc(d.get("db"))}</button>' for d in dist
     )
-    eur_chart = SSR.vertical_bar_svg(dist, label_key="db", value_key="gap_eur", color=SSR.COLORS["leak"])
+    eur_chart = SSR.leakage_db_comparison(dist, label_key="db", value_key="gap_eur")
     mix_chart = SSR.pipeline_mix_bar(
         {"leakage": mix.get("leakage"), "overstock": mix.get("overstock"), "balanced": mix.get("balanced")},
         labels=("Leakage PNs", "Overstock PNs", "Balanced PNs"),
+        value_fmt=lambda v: SSR.fmt_int(v),
+    )
+    pipe_donut = SSR.pipeline_donut_svg(
+        {"leakage": mix.get("leakage"), "overstock": mix.get("overstock"), "balanced": mix.get("balanced")},
+        labels=("Leakage PNs", "Overstock PNs", "Balanced PNs"),
+        value_fmt=lambda v: SSR.fmt_int(v),
     )
     leak_over = []
     for d in dist:
@@ -133,8 +139,7 @@ def write_html(payload: dict) -> None:
             f"</span></div>"
         )
     st_items = [{"db": d.get("db"), "pct": round(float(d.get("sell_through") or 0) * 100)} for d in dist]
-    st_chart = SSR.horizontal_bar_rows(st_items, label_key="db", value_key="pct", color=SSR.COLORS["blue"],
-        value_fn=lambda v: f"{int(v)}%")
+    st_chart = SSR.sell_through_bars(st_items, label_key="db", value_key="pct", cap_pct=200.0)
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -163,10 +168,11 @@ def write_html(payload: dict) -> None:
 <div class="wrap">
   <div class="callout" id="leakCallout">{callout}</div>
   <div class="grid2">
-    <div class="card"><h3>€ leakage by DB</h3><p class="cap">Reference sell-out × qty gap · CY2025</p>{eur_chart}</div>
-    <div class="card"><h3>Pipeline mix</h3><p class="cap">Leakage vs overstock vs balanced · PN counts</p>{mix_chart}</div>
+    <div class="card"><h3>Network comparison · € leakage by DB</h3><p class="cap">Five DBs side-by-side · reference sell-out × qty gap</p>{eur_chart}</div>
+    <div class="card"><h3>Pipeline donut · PN counts</h3><p class="cap">Leakage vs overstock vs balanced</p>{pipe_donut}</div>
   </div>
   <div class="grid2">
+    <div class="card"><h3>Pipeline mix bar</h3><p class="cap">Leakage vs overstock vs balanced · PN counts</p>{mix_chart}</div>
     <div class="card"><h3>Pipeline signal mix by DB</h3><p class="cap">Leakage vs overstock PN counts</p><div class="bar-rows">{mix_db_html}</div></div>
     <div class="card"><h3>Sell-through by DB</h3><p class="cap">Dealer sell-out qty ÷ ISZE bill qty</p>{st_chart}</div>
   </div>

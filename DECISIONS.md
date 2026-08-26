@@ -6,6 +6,28 @@
 
 ---
 
+## 2026-08-25 — Never re-ask Jerome for Nordics tender API keys
+
+**Status:** Accepted — Jerome (overnight chat): spammed repeatedly with the same Doffin/HILMA setup sheet; stop unless a new accurate failure reason exists.
+
+**Decision:** Nordics Primary keys are **DONE**. Do not put “paste Nordics keys” / re-send `NORDICS_API_KEYS.md` setup / “AWAITING_KEY — Jerome must…” on any waiting-on-Jerome list, audit, or overnight brief. Agents diagnose `nordics_api_keys.env` + `verify_nordics_keys.py` silently. Escalate only with a **new** evidenced failure (e.g. 401 after previously OK), not the setup sheet again.
+
+**Evidence:** `_NORDICS_BLOCKED.md` (DONE) · `_OPEN_BACKLOG_ARRANGED.md` P0 Nordics DONE · Cursor rule `isze-nordics-keys-closed.mdc`.
+
+**Supersedes:** Any stale backlog lines that still said Nordics BLOCKED / AWAITING_KEY / “Jerome paste”.
+
+---
+
+## 2026-08-25 — Leakage € stays Mode B until list-to-pocket signed
+
+**Status:** Accepted — audit Week-1 execute (Jerome: please execute).
+
+**Decision.** Do not quote dealer-leakage / list-to-pocket leakage euros externally (Mode A decks, DB packs, FACTS headlines) until year-matched PR00/ZPR1 → net joins are validated and signed off in writing. Internal Mode B / Action Ledger / PRISM internal shelf may keep using source-cell stakes with mixed-basis labels. Does not reopen gross/SPA on billing.
+
+**Also this execute batch:** `raw_cy2025` verify flag accepts `CY2024-2025.XLSX`; `sales_fact` extended with `Q1FY2027.XLSX` (2026 Apr–Jun); dealer_sellout_long CSVs re-emitted for ITUK/UTI/IUK/IRELAND/GREECE.
+
+---
+
 ## 2026-08-18 — P4 account-health parquet from P2a (draft flags, not a KPI)
 
 **Status:** Accepted — Jerome: yes please (next real build after internal-tab gate).

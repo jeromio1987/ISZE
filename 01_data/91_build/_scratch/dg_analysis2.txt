@@ -1,0 +1,345 @@
+=== Dangerous goods raw shape === (832, 6)
+=== columns === ['Material', 'Newest material no.', 'Material Description', 'Shipping Location', 'Net Weight', 'WUn']
+=== WUn value counts (non-empty) ===
+NONE populated
+=== WUn empty count === 832 of 832
+=== distinct materials in raw === 320
+
+=== rows where WUn non-empty ===
+Empty DataFrame
+Columns: [Material, Material Description, WUn]
+Index: []
+
+=== DG list (deduped) full 319 rows ===
+       Material Newest material no.                       Description Shipping location  Net weight  UN number
+0    1867738610          1867738614         INJECTER CLEANER 400ML BF                 J       0.460        NaN
+1    1867738611          1867738614         INJECTER CLEANER 400ML BF                 J       0.460        NaN
+2    1867738612          1867738614         INJECTOR CLEANER 400ML BF                 J       0.460        NaN
+3    1867738613          1867738614         INJECTOR CLEANER 400ML BF                 J       0.460        NaN
+4    1884055250          1884055250          FLUID; AUTO TM, ATF 3309                 T       0.860        NaN
+5    1884057520          1884057520                   T AXLE OIL  20L                 J      19.700        NaN
+6    1884057860          1884057860                      GEAR OIL LSD                 J       4.100        NaN
+7    1884058000          1884058000                 BESCO CLEAN (20L)                 J      18.800        NaN
+8    1884058010          1884058010                BESCO CLEAN (200L)                 J     200.000        NaN
+9    1884058020          1884058020           BESCO CLEAN SUPER (20L)                 J      18.850        NaN
+10   1884058030          1884058030          BESCO CLEAN SUPER (200L)                 J     199.000        NaN
+11   1884059040          1884059040                      GEAR OIL 20L                 J      19.200        NaN
+12   1884059120          1884059120               BESCO ATF3 OIL (4L)                 J       3.850        NaN
+13   1884059130          1884059130              BESCO ATF3 OIL (20L)                 J      18.720        NaN
+14   1884405400          1884405400           SILICON GASKET TB-1207C                 J       0.150        NaN
+15   7474981230          7474981233            BELT; SEAT,TONGUE SIDE                 J       0.000        NaN
+16   7474981231          7474981233            BELT; SEAT,TONGUE SIDE                 J       1.750        NaN
+17   7474981233          7474981233            BELT; SEAT,TONGUE SIDE                 J       1.750        NaN
+18   7474981250          7474981253            BELT; SEAT,TONGUE SIDE                 J       0.000        NaN
+19   7474981251          7474981253            BELT; SEAT,TONGUE SIDE                 J       0.000        NaN
+20   7474981252          7474981253            BELT; SEAT,TONGUE SIDE                 J       0.000        NaN
+21   7474981253          7474981253            BELT; SEAT,TONGUE SIDE                 J       1.750        NaN
+22   7474982610          7474982611                      AIR BAG UNIT                 T       0.000        NaN
+23   7474982611          7474982611                      AIR BAG UNIT                 T       1.417        NaN
+24   7474997710          7474997710                  AIR BAG ASM; P/S                 J       3.000        NaN
+25   7474997720          7474997720                  AIR BAG ASM; P/S                 J       3.660        NaN
+26   7475000370          7475000370                  AIR BAG ASM; P/S                 J       3.500        NaN
+27   7475005920          7475005921                      AIR BAG UNIT                 T       0.000        NaN
+28   7475005921          7475005921                      AIR BAG UNIT                 T       1.470        NaN
+29   7475437700          7475437701            BELT; SEAT,TONGUE SIDE                 T       1.635        NaN
+30   7475437710          7475437711            BELT; SEAT,TONGUE SIDE                 T       1.635        NaN
+31   7552422500          7552422500                      CONTROL UNIT                 T       0.498        NaN
+32   7552422510          7552422510                      CONTROL UNIT                 T       0.478        NaN
+33   7552430350          7552430350                      CONTROL UNIT                 T       0.495        NaN
+34   7552430370          7552430370                           BATTERY                 B       0.413        NaN
+35   7552752270          7552422500                      CONTROL UNIT                 T       0.499        NaN
+36   7552752290          7552430350                      CONTROL UNIT                 T       0.498        NaN
+37   8971327943          8971327943                    BELT ASM; SEAT                 J       0.500        NaN
+38   8971327953          8971327953                    BELT ASM; SEAT                 J       0.500        NaN
+39   8971553100          8971555712                      AIR BAG UNIT                 J       0.000        NaN
+40   8971555710          8971555712                      AIR BAG UNIT                 J       5.200        NaN
+41   8971555711          8971555712                      AIR BAG UNIT                 J       5.200        NaN
+42   8971555712          8971555712                      AIR BAG UNIT                 J       2.300        NaN
+43   8971596080          8971596080                      AIR BAG UNIT                 J       1.500        NaN
+44   8971986634          8971986634                      AIR BAG UNIT                 J       1.500        NaN
+45   8971986664          8971986664                      AIR BAG UNIT                 J       1.634        NaN
+46   8972665791          7552430350                      CONTROL UNIT                 T       0.000        NaN
+47   8972763920          7552422500                      CONTROL UNIT                 T       0.474        NaN
+48   8972763940          7552422510                      CONTROL UNIT                 T       0.348        NaN
+49   8972936033          8972936033                    BELT ASM; SEAT                 J       0.700        NaN
+50   8972936043          8972936043                    BELT ASM; SEAT                 J       0.620        NaN
+51   8972936073          8972936073                    BELT ASM; SEAT                 J       0.700        NaN
+52   8972939163          8974220600                      AIR BAG UNIT                 T       4.470        NaN
+53   8972940685          8973978451                      AIR BAG UNIT                 T       1.680        NaN
+54   8973957490          8974220600                      AIR BAG UNIT                 T       4.250        NaN
+55   8973962000          8973984980            BELT; SEAT,BUCKLE SIDE                 T       0.700        NaN
+56   8973962010          8974163301            BELT; SEAT,BUCKLE SIDE                 T       0.700        NaN
+57   8973968400          8974220600                      AIR BAG UNIT                 T       5.200        NaN
+58   8973968401          8974220600                      AIR BAG UNIT                 T       5.200        NaN
+59   8973969310          8973978451                      AIR BAG UNIT                 T       1.800        NaN
+60   8973978450          8973978451                      AIR BAG UNIT                 T       1.580        NaN
+61   8973978451          8973978451                      AIR BAG UNIT                 T       1.550        NaN
+62   8973979260          8973978451                      AIR BAG UNIT                 T       1.580        NaN
+63   8973984980          8973984980            BELT; SEAT,BUCKLE SIDE                 T       0.586        NaN
+64   8973984990          8974163301            BELT; SEAT,BUCKLE SIDE                 T       0.700        NaN
+65   8974033330          8974182980                      AIR BAG UNIT                 T       1.602        NaN
+66   8974033331          8974182980                      AIR BAG UNIT                 T       1.602        NaN
+67   8974039300          8974220620                      AIR BAG UNIT                 T       4.000        NaN
+68   8974039301          8974220620                      AIR BAG UNIT                 T       4.620        NaN
+69   8974052661          7475000370                  AIR BAG ASM; P/S                 J       3.660        NaN
+70   8974052662          7475000370                  AIR BAG ASM; P/S                 J       3.660        NaN
+71   8974052663          7475000370                  AIR BAG ASM; P/S                 J       3.660        NaN
+72   8974052664          7475000370                  AIR BAG ASM; P/S                 J       3.660        NaN
+73   8974052665          7475000370                  AIR BAG ASM; P/S                 J       3.660        NaN
+74   8974062063          8974062068            BELT; SEAT,TONGUE SIDE                 J       1.560        NaN
+75   8974062064          8974062068            BELT; SEAT,TONGUE SIDE                 J       1.560        NaN
+76   8974062065          8974062068            BELT; SEAT,TONGUE SIDE                 J       1.560        NaN
+77   8974062066          8974062068            BELT; SEAT,TONGUE SIDE                 J       1.560        NaN
+78   8974062067          8974062068            BELT; SEAT,TONGUE SIDE                 J       1.665        NaN
+79   8974062742          7475000360                  AIR BAG ASM; P/S                 J       3.200        NaN
+80   8974062743          7475000360                  AIR BAG ASM; P/S                 J       0.000        NaN
+81   8974062744          7475000360                  AIR BAG ASM; P/S                 J       3.000        NaN
+82   8974062745          7475000360                  AIR BAG ASM; P/S                 J       3.200        NaN
+83   8974075790          8974163291            BELT; SEAT,BUCKLE SIDE                 T       0.591        NaN
+84   8974076820          8974163301            BELT; SEAT,BUCKLE SIDE                 T       0.800        NaN
+85   8974076870          8974163291            BELT; SEAT,BUCKLE SIDE                 T       0.800        NaN
+86   8974077211          8974077211                      AIR BAG UNIT                 J       1.650        NaN
+87   8974088660          8974163301            BELT; SEAT,BUCKLE SIDE                 T       0.590        NaN
+88   8974088670          8974163291            BELT; SEAT,BUCKLE SIDE                 T       0.591        NaN
+89   8974088680          8974163301            BELT; SEAT,BUCKLE SIDE                 T       0.750        NaN
+90   8974088690          8974163291           BELT; SEAT,BUCKLE YSIDE                 T       0.595        NaN
+91   8974088980          8974182980                      AIR BAG UNIT                 T       1.630        NaN
+92   8974089010          8974220620                      AIR BAG UNIT                 T       4.610        NaN
+93   8974089011          8974220620                      AIR BAG UNIT                 T       4.900        NaN
+94   8974089020          8974220630                      AIR BAG UNIT                 T       0.000        NaN
+95   8974089021          8974220630                      AIR BAG UNIT                 T       0.000        NaN
+96   8974089030          8974220600                      AIR BAG UNIT                 T       4.610        NaN
+97   8974089031          8974220600                      AIR BAG UNIT                 T       3.500        NaN
+98   8974097831          7475000370                  AIR BAG ASM; P/S                 J       3.660        NaN
+99   8974097832          7475000370                  AIR BAG ASM; P/S                 J       3.660        NaN
+100  8974097833          7475000370                  AIR BAG ASM; P/S                 J       3.660        NaN
+101  8974163170          8974163301            BELT; SEAT,BUCKLE SIDE                 T       0.590        NaN
+102  8974163171          8974163301            BELT; SEAT,BUCKLE SIDE                 T       0.593        NaN
+103  8974163180          8974163291            BELT; SEAT,BUCKLE SIDE                 T       0.593        NaN
+104  8974163181          8974163291            BELT; SEAT,BUCKLE SIDE                 T       0.593        NaN
+105  8974163290          8974163291            BELT; SEAT,BUCKLE SIDE                 T       0.585        NaN
+106  8974163291          8974163291            BELT; SEAT,BUCKLE SIDE                 T       0.593        NaN
+107  8974163300          8974163301            BELT; SEAT,BUCKLE SIDE                 T       0.800        NaN
+108  8974163301          8974163301            BELT; SEAT,BUCKLE SIDE                 T       0.593        NaN
+109  8974166414          8974166416                      AIR BAG UNIT                 T       1.300        NaN
+110  8974166415          8974166416                      AIR BAG UNIT                 T       1.300        NaN
+111  8974166416          8974166416                      AIR BAG UNIT                 T       1.294        NaN
+112  8974166425          8974166428                      AIR BAG UNIT                 T       3.525        NaN
+113  8974166426          8974166428                      AIR BAG UNIT                 T       3.525        NaN
+114  8974166427          8974166428                      AIR BAG UNIT                 T       2.864        NaN
+115  8974166442          8974236622            BELT; SEAT,TONGUE SIDE                 T       1.614        NaN
+116  8974166482          8974236662            BELT; SEAT,TONGUE SIDE                 T       1.000        NaN
+117  8974171942          8974236632            BELT; SEAT,TONGUE SIDE                 T       1.000        NaN
+118  8974171952          8974236672            BELT; SEAT,TONGUE SIDE                 T       1.614        NaN
+119  8974172740          8974182980                      AIR BAG UNIT                 T       1.602        NaN
+120  8974174016          8974174018                      AIR BAG UNIT                 T       1.000        NaN
+121  8974174017          8974174018                      AIR BAG UNIT                 T       4.360        NaN
+122  8974174018          8974174018                      AIR BAG UNIT                 T       1.000        NaN
+123  8974181000          8974181000                      AIR BAG UNIT                 J       1.920        NaN
+124  8974182980          8974182980                      AIR BAG UNIT                 T       1.803        NaN
+125  8974220600          8974220600                      AIR BAG UNIT                 T       5.048        NaN
+126  8974220620          8974220620                      AIR BAG UNIT                 T       5.097        NaN
+127  8974220630          8974220630                      AIR BAG UNIT                 T       5.158        NaN
+128  8974236620          8974236622            BELT; SEAT,TONGUE SIDE                 T       1.517        NaN
+129  8974236621          8974236622            BELT; SEAT,TONGUE SIDE                 T       1.614        NaN
+130  8974236622          8974236622            BELT; SEAT,TONGUE SIDE                 T       1.614        NaN
+131  8974236630          8974236632            BELT; SEAT,TONGUE SIDE                 T       1.502        NaN
+132  8974236631          8974236632            BELT; SEAT,TONGUE SIDE                 T       1.000        NaN
+133  8974236632          8974236632            BELT; SEAT,TONGUE SIDE                 T       1.000        NaN
+134  8974236660          8974236662            BELT; SEAT,TONGUE SIDE                 T       1.977        NaN
+135  8974236661          8974236662            BELT; SEAT,TONGUE SIDE                 T       1.000        NaN
+136  8974236662          8974236662            BELT; SEAT,TONGUE SIDE                 T       1.000        NaN
+137  8974236670          8974236672            BELT; SEAT,TONGUE SIDE                 T       1.504        NaN
+138  8974236671          8974236672            BELT; SEAT,TONGUE SIDE                 T       1.614        NaN
+139  8974236672          8974236672            BELT; SEAT,TONGUE SIDE                 T       1.614        NaN
+140  8974238930          8974238932                      AIR BAG UNIT                 T       1.160        NaN
+141  8974238931          8974238932                      AIR BAG UNIT                 T       0.000        NaN
+142  8974238932          8974238932                      AIR BAG UNIT                 T       1.304        NaN
+143  8974239991          8974239991                      AIR BAG UNIT                 J       2.360        NaN
+144  8974269810          8974269813                      AIR BAG UNIT                 J       1.760        NaN
+145  8974269811          8974269813                      AIR BAG UNIT                 J       1.760        NaN
+146  8974269812          8974269813                      AIR BAG UNIT                 J       1.760        NaN
+147  8974269813          8974269813                      AIR BAG UNIT                 J       1.760        NaN
+148  8974283910          8974283912                      AIR BAG UNIT                 J       1.730        NaN
+149  8974283911          8974283912                      AIR BAG UNIT                 J       1.730        NaN
+150  8974283912          8974283912                      AIR BAG UNIT                 J       1.730        NaN
+151  8974283941          8974283943  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.600        NaN
+152  8974284560          8974284563  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.680        NaN
+153  8974284561          8974284563  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.860        NaN
+154  8974284563          8974284563  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.860        NaN
+155  8974653951          8974653953            BELT; SEAT,TONGUE SIDE                 J       1.690        NaN
+156  8974663290          8974663293  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.690        NaN
+157  8974663291          8974663293  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.690        NaN
+158  8974663292          8974663293  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.690        NaN
+159  8974663293          8974663293  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.690        NaN
+160  8974689620          8974689621                      AIR BAG UNIT                 T       3.300        NaN
+161  8974689630          8974689631                      AIR BAG UNIT                 T       4.884        NaN
+162  8974689631          8974689631                      AIR BAG UNIT                 T       4.884        NaN
+163  8974691610          8974691612                      AIR BAG UNIT                 J       1.780        NaN
+164  8974691612          8974691612                      AIR BAG UNIT                 J       1.780        NaN
+165  8974715743          8974715748            BELT; SEAT,TONGUE SIDE                 T       0.000        NaN
+166  8974715744          8974715748            BELT; SEAT,TONGUE SIDE                 T       2.140        NaN
+167  8974715745          8974715748            BELT; SEAT,TONGUE SIDE                 T       2.140        NaN
+168  8974715746          8974715748            BELT; SEAT,TONGUE SIDE                 T       2.140        NaN
+169  8974715747          8974715748            BELT; SEAT,TONGUE SIDE                 T       2.140        NaN
+170  8974715763          8974715768            BELT; SEAT,TONGUE SIDE                 T       0.000        NaN
+171  8974715764          8974715768            BELT; SEAT,TONGUE SIDE                 T       2.140        NaN
+172  8974715765          8974715768            BELT; SEAT,TONGUE SIDE                 T       2.140        NaN
+173  8974715766          8974715768            BELT; SEAT,TONGUE SIDE                 T       2.140        NaN
+174  8974715767          8974715768            BELT; SEAT,TONGUE SIDE                 T       2.140        NaN
+175  8974715783          8974715787               BELT; SEAT,RR OUTER                 T       2.353        NaN
+176  8974715784          8974715787               BELT; SEAT,RR OUTER                 T       2.353        NaN
+177  8974715785          8974715787               BELT; SEAT,RR OUTER                 T       2.353        NaN
+178  8974715786          8974715787               BELT; SEAT,RR OUTER                 T       2.353        NaN
+179  8974715803          8974715807               BELT; SEAT,RR OUTER                 T       2.343        NaN
+180  8974715804          8974715807               BELT; SEAT,RR OUTER                 T       2.343        NaN
+181  8974715805          8974715807               BELT; SEAT,RR OUTER                 T       2.343        NaN
+182  8974715806          8974715807               BELT; SEAT,RR OUTER                 T       2.343        NaN
+183  8974715872          8974715873                      AIR BAG UNIT                 T       1.385        NaN
+184  8974715931          8974715932                      AIR BAG UNIT                 T       5.992        NaN
+185  8974715932          8974715932                      AIR BAG UNIT                 T       5.992        NaN
+186  8974719841          8974719842                      AIR BAG UNIT                 T       6.000        NaN
+187  8974719842          8974719842                      AIR BAG UNIT                 T       6.000        NaN
+188  8974720522          7475437701            BELT; SEAT,TONGUE SIDE                 T       0.000        NaN
+189  8974720523          7475437701            BELT; SEAT,TONGUE SIDE                 T       0.000        NaN
+190  8974720524          7475437701            BELT; SEAT,TONGUE SIDE                 T       0.000        NaN
+191  8974720525          7475437701            BELT; SEAT,TONGUE SIDE                 T       0.000        NaN
+192  8974720526          7475437701            BELT; SEAT,TONGUE SIDE                 T       2.135        NaN
+193  8974720527          7475437701            BELT; SEAT,TONGUE SIDE                 T       2.135        NaN
+194  8974720528          7475437701            BELT; SEAT,TONGUE SIDE                 T       2.135        NaN
+195  8974720529          7475437701            BELT; SEAT,TONGUE SIDE                 T       2.135        NaN
+196  8974720542          7475437711            BELT; SEAT,TONGUE SIDE                 T       0.000        NaN
+197  8974720543          7475437711            BELT; SEAT,TONGUE SIDE                 T       0.000        NaN
+198  8974720544          7475437711            BELT; SEAT,TONGUE SIDE                 T       0.000        NaN
+199  8974720545          7475437711            BELT; SEAT,TONGUE SIDE                 T       0.000        NaN
+200  8974720546          7475437711            BELT; SEAT,TONGUE SIDE                 T       2.130        NaN
+201  8974720547          7475437711            BELT; SEAT,TONGUE SIDE                 T       2.130        NaN
+202  8974720548          7475437711            BELT; SEAT,TONGUE SIDE                 T       2.130        NaN
+203  8974720549          7475437711            BELT; SEAT,TONGUE SIDE                 T       2.130        NaN
+204  8974754910          8974754913            BELT; SEAT,TONGUE SIDE                 T       2.135        NaN
+205  8974754911          8974754913            BELT; SEAT,TONGUE SIDE                 T       1.665        NaN
+206  8974754912          8974754913            BELT; SEAT,TONGUE SIDE                 T       1.665        NaN
+207  8974754913          8974754913            BELT; SEAT,TONGUE SIDE                 T       1.665        NaN
+208  8974754930          8974754933            BELT; SEAT,TONGUE SIDE                 T       2.208        NaN
+209  8974754931          8974754933            BELT; SEAT,TONGUE SIDE                 T       1.640        NaN
+210  8974754932          8974754933            BELT; SEAT,TONGUE SIDE                 T       1.640        NaN
+211  8974754933          8974754933            BELT; SEAT,TONGUE SIDE                 T       1.640        NaN
+212  8974761870          8974761872                      AIR BAG UNIT                 J       1.760        NaN
+213  8974761871          8974761872                      AIR BAG UNIT                 J       1.760        NaN
+214  8974761872          8974761872                      AIR BAG UNIT                 J       1.760        NaN
+215  8974761894          7474997720                  AIR BAG ASM; P/S                 J       3.660        NaN
+216  8974761895          7474997720                  AIR BAG ASM; P/S                 J       3.660        NaN
+217  8974762074          7474997710                  AIR BAG ASM; P/S                 J       3.000        NaN
+218  8974762075          7474997710                  AIR BAG ASM; P/S                 J       3.000        NaN
+219  8974766281          8974766283  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.750        NaN
+220  8974766282          8974766283  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.750        NaN
+221  8974766283          8974766283  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.750        NaN
+222  8974774510          8974774512    BELT; PASSENGER SEAT,TONGUE SI                 J       1.677        NaN
+223  8976547891          8976547892                  AIRBAG; FRT SEAT                 T       3.000        NaN
+224  8976547892          8976547892                  AIRBAG; FRT SEAT                 T       1.570        NaN
+225  8976547902          8976547902                  AIRBAG; FRT SEAT                 T       1.550        NaN
+226  8976571530          7552422500                      CONTROL UNIT                 T       0.388        NaN
+227  8976571531          7552422500                      CONTROL UNIT                 T       0.388        NaN
+228  8976634340          7552430370                           BATTERY                 T       0.222        NaN
+229  8978267390          7552422510                      CONTROL UNIT                 T       0.480        NaN
+230  8978864602          8978864602                  AIR BAG ASM; P/S                 J       3.000        NaN
+231  8979009383          7474997720                  AIR BAG ASM; P/S                 J       3.660        NaN
+232  8979009401          8979009403            BELT; SEAT,TONGUE SIDE                 J       1.750        NaN
+233  8979009403          8979009403            BELT; SEAT,TONGUE SIDE                 J       1.750        NaN
+234  8979013740          8979013743            BELT; SEAT,TONGUE SIDE                 J       1.750        NaN
+235  8979013741          8979013743            BELT; SEAT,TONGUE SIDE                 J       1.750        NaN
+236  8979013743          8979013743            BELT; SEAT,TONGUE SIDE                 J       1.750        NaN
+237  8979030480          8979030481                      AIR BAG UNIT                 T       1.430        NaN
+238  8979030481          8979030481                      AIR BAG UNIT                 T       1.430        NaN
+239  8979038422          8979038424                      AIR BAG UNIT                 J       1.760        NaN
+240  8979038423          8979038424                      AIR BAG UNIT                 J       1.760        NaN
+241  8979040550          8979040553                      AIR BAG UNIT                 T       0.000        NaN
+242  8979040551          8979040553                      AIR BAG UNIT                 T       1.445        NaN
+243  8979040552          8979040553                      AIR BAG UNIT                 T       1.445        NaN
+244  8979040553          8979040553                      AIR BAG UNIT                 T       1.445        NaN
+245  8979040560          8979040563                      AIR BAG UNIT                 T       0.000        NaN
+246  8979040561          8979040563                      AIR BAG UNIT                 T       1.445        NaN
+247  8979040562          8979040563                      AIR BAG UNIT                 T       1.445        NaN
+248  8979040563          8979040563                      AIR BAG UNIT                 T       1.445        NaN
+249  8979341081          8979341084  BELT; PASSENGER SEAT,TONGUE SIDE                 J       0.000        NaN
+250  8979341082          8979341084  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.690        NaN
+251  8979341084          8979341084  BELT; PASSENGER SEAT,TONGUE SIDE                 J       1.690        NaN
+252  8979354241          8979354241                  AIR BAG ASM; P/S                 J       3.450        NaN
+253  8979362232          8979362233            BELT; SEAT,TONGUE SIDE                 J       1.690        NaN
+254  8979362233          8979362233            BELT; SEAT,TONGUE SIDE                 J       1.690        NaN
+255  8979371451          8979371452                      AIR BAG UNIT                 T       1.480        NaN
+256  8979371452          8979371452                      AIR BAG UNIT                 T       1.480        NaN
+257  8980979700          8980979700                    BELT ASM; SEAT                 J       1.390        NaN
+258  8980979710          8980979710                    BELT ASM; SEAT                 J       1.390        NaN
+259  8981421980          8981421980                        ENGINE ASM                 J     440.000        NaN
+260  8981470961          8981470965                      AIR BAG UNIT                 T       1.000        NaN
+261  8981470962          8981470965                      AIR BAG UNIT                 T       2.795        NaN
+262  8981470963          8981470965                      AIR BAG UNIT                 T       2.795        NaN
+263  8981470964          8981470965                      AIR BAG UNIT                 T       2.295        NaN
+264  8981470965          8981470965                      AIR BAG UNIT                 T       1.000        NaN
+265  8981470971          8981470975                      AIR BAG UNIT                 T       1.000        NaN
+266  8981470972          8981470975                      AIR BAG UNIT                 T       2.795        NaN
+267  8981470973          8981470975                      AIR BAG UNIT                 T       2.795        NaN
+268  8981470974          8981470975                      AIR BAG UNIT                 T       2.290        NaN
+269  8981470975          8981470975                      AIR BAG UNIT                 T       1.000        NaN
+270  8981470981          8981470986                      AIR BAG UNIT                 T       1.000        NaN
+271  8981470982          8981470986                      AIR BAG UNIT                 T       1.730        NaN
+272  8981470983          8981470986                      AIR BAG UNIT                 T       3.230        NaN
+273  8981470984          8981470986                      AIR BAG UNIT                 T       3.230        NaN
+274  8981470985          8981470986                      AIR BAG UNIT                 T       2.758        NaN
+275  8981470986          8981470986                      AIR BAG UNIT                 T       1.000        NaN
+276  8981470991          8981470996                      AIR BAG UNIT                 T       1.000        NaN
+277  8981470992          8981470996                      AIR BAG UNIT                 T       3.230        NaN
+278  8981470993          8981470996                      AIR BAG UNIT                 T       3.230        NaN
+279  8981470994          8981470996                      AIR BAG UNIT                 T       3.230        NaN
+280  8981470995          8981470996                      AIR BAG UNIT                 T       2.783        NaN
+281  8981470996          8981470996                      AIR BAG UNIT                 T       1.000        NaN
+282  8981471001          8981471006                      AIR BAG UNIT                 T       1.000        NaN
+283  8981471002          8981471006                      AIR BAG UNIT                 T       3.535        NaN
+284  8981471003          8981471006                      AIR BAG UNIT                 T       3.535        NaN
+285  8981471004          8981471006                      AIR BAG UNIT                 T       3.535        NaN
+286  8981471005          8981471006                      AIR BAG UNIT                 T       3.051        NaN
+287  8981471006          8981471006                      AIR BAG UNIT                 T       3.161        NaN
+288  8981471011          8981471016                      AIR BAG UNIT                 T       1.000        NaN
+289  8981471012          8981471016                      AIR BAG UNIT                 T       3.535        NaN
+290  8981471013          8981471016                      AIR BAG UNIT                 T       3.535        NaN
+291  8981471014          8981471016                      AIR BAG UNIT                 T       3.535        NaN
+292  8981471015          8981471016                      AIR BAG UNIT                 T       3.070        NaN
+293  8981471016          8981471016                      AIR BAG UNIT                 T       3.000        NaN
+294  8982100821          8974236622            BELT; SEAT,TONGUE SIDE                 T       2.026        NaN
+295  8982100841          8974236672            BELT; SEAT,TONGUE SIDE                 T       2.018        NaN
+296  8982128241          8974236662            BELT; SEAT,TONGUE SIDE                 T       1.000        NaN
+297  8982128251          8974236632            BELT; SEAT,TONGUE SIDE                 T       1.910        NaN
+298  8983035100          8983035100                    BELT ASM; SEAT                 J       1.390        NaN
+299  8983313110          8983035100                    BELT ASM; SEAT                 J       1.400        NaN
+300  8983319643          8983319644                      AIR BAG UNIT                 T       1.655        NaN
+301  8983319644          8983319644                      AIR BAG UNIT                 T       1.655        NaN
+302  8983322281          8983322282                      AIR BAG UNIT                 T       5.980        NaN
+303  8983322291          8983322292                      AIR BAG UNIT                 T       5.980        NaN
+304  8983322300          8983322301                      AIR BAG UNIT                 T       5.640        NaN
+305  8983322301          8983322301                      AIR BAG UNIT                 T       6.180        NaN
+306  8983322310          8983322311                      AIR BAG UNIT                 T       6.180        NaN
+307  8983322311          8983322311                      AIR BAG UNIT                 T       6.180        NaN
+308  8983322323          8983322324                      AIR BAG UNIT                 T       2.415        NaN
+309  8983322324          8983322324                      AIR BAG UNIT                 T       2.415        NaN
+310  8983322333          8983322334                      AIR BAG UNIT                 T       5.820        NaN
+311  8983322334          8983322334                      AIR BAG UNIT                 T       2.410        NaN
+312  8983322343          8983322344                  AIRBAG; FRT SEAT                 T       0.930        NaN
+313  8983322344          8983322344                  AIRBAG; FRT SEAT                 T       0.950        NaN
+314  8983322353          8983322354                  AIRBAG; FRT SEAT                 T       0.933        NaN
+315  8983322354          8983322354                  AIRBAG; FRT SEAT                 T       0.950        NaN
+316  8983322731          8983322732                  AIRBAG; FRT SEAT                 T       2.300        NaN
+317  8983322732          8983322732                  AIRBAG; FRT SEAT                 T       1.550        NaN
+318  8983322742          8983322742                  AIRBAG; FRT SEAT                 T       1.896        NaN
+
+=== DG list distinct newest material no. === 110
+=== DG list distinct material === 319
+=== DG list Net weight describe ===
+count    319.000000
+mean       4.853715
+std       29.103538
+min        0.000000
+25%        1.000000
+50%        1.690000
+75%        2.829500
+max      440.000000

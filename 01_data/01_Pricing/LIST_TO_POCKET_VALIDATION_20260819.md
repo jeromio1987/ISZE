@@ -1,29 +1,28 @@
-# List-to-pocket validation (Mode B · 2026-08-19)
+# List-to-pocket validation — year-matched joins (Mode B)
 
-PR00 list vs realized net billing by CY 2023–2025. **Provisional — QA pending.**
+**Validated 2026-08-20.** Task 1.4 closed: the year-matched PR00/ZPR1 list-to-pocket joins are independently verified. Jerome accepted the standing assumption: **a sale is matched to the PR00 list of its billing/order-date year** — intra-year list changes are not dated, and are accepted as immaterial for this purpose.
 
-Integrity score (pricing history pack): **59/100** (provisional)
+## Independent verification (2026-08-20)
 
-## Network realization
+| Year | PR00 source (list used) | Realization | Coverage | Formula check |
+|------|------------------------|-------------|----------|---------------|
+| 2023 | `pricing_pr00_ie40_2023.parquet` | 97.13% | 86.65% | ✓ consistent |
+| 2024 | `pricing_pr00_ie40_2024.parquet` | 95.18% | 91.39% | ✓ consistent |
+| 2025 | `pricing_pr00_ie40_2025.parquet` | 96.29% | 88.41% | ✓ consistent |
+| 2026 (YTD) | `pricing_pr00_ie40.parquet` (current) | 94.71% | 84.10% | ✓ consistent |
 
-- **CY2023**: list €0 → realized €0 (97.1%)
-- **CY2024**: list €0 → realized €0 (95.2%)
-- **CY2025**: list €0 → realized €0 (96.3%)
-- **CY2026**: list €0 → realized €0 (94.7%)
+- **Year-matching confirmed:** each billing year joins only that year's PR00 extract (`pr00_source` column), no cross-year contamination.
+- **Formulas confirmed:** `realization = matched_eur ÷ list_value_eur` and `coverage = matched_eur ÷ parts_eur` reconcile exactly against the stored values.
 
-## ZPR1 vs PR00 (payer-year)
+## What this does NOT close
 
-- UTI CY2023: median gap n/a%
-- UMI CY2023: median gap n/a%
-- 2372 CY2023: median gap n/a%
-- UTI CY2024: median gap n/a%
-- UMI CY2024: median gap n/a%
-- 2372 CY2024: median gap n/a%
-- UTI CY2025: median gap n/a%
-- UMI CY2025: median gap n/a%
-- 2372 CY2025: median gap n/a%
-- UTI CY2026: median gap n/a%
+The joins are valid, but the pack stays **internal / provisional** for external quoting because of independent limitations that remain:
 
-CSV: `list_to_pocket_validation_2023_2025.csv` · Full pack: `build_pricing_history_findings.py`
+- **Coverage ~86–91%** — the NO_LIST gap (billed PNs with no usable PR00 price) is still real.
+- **7 blank PR00 prices** in the 2023–2025 history extracts.
+- **2026 uses the current (2026-08-10) list**, not a 2026-01 snapshot.
+- ZPR1 customer coverage gaps + MOS sample size.
 
-Do not quote externally until integrity band is green.
+Do **not** quote list-to-pocket realization externally until the NO_LIST gap is closed (task 1.3, still open).
+
+CSV: `01_data/00_derived/list_to_pocket_validation_2023_2025.csv` · Network: `pr00_realization_network_cy.csv` · By-DB: `pr00_realization_by_db_cy.csv`

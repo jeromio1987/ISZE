@@ -147,6 +147,8 @@
 .env.*
 !.env.example
 *.env
+!nordics_api_keys.env.example
+nordics_api_keys.env
 secrets.toml
 **/secrets.toml
 *credentials*
@@ -202,3 +204,34 @@ Thumbs.db
 
 # --- Cursor local state (optional: track rules/skills explicitly via git add) ---
 # .cursor/ is NOT ignored — rules and verify skill should be tracked
+
+# --- 01_data legacy junction paths (NTFS junctions -> numbered folders) ---
+# These are on-disk backward-compat aliases created by 04_tools/workspace, each
+# pointing at the canonical numbered folder (paths.yaml). Git follows junctions
+# on Windows and would store every file twice. Track ONLY the numbered folder.
+# Confirmed 2026-08-26: no legacy path has ever been tracked in HEAD.
+01_data/dashboards/
+01_data/Dealer_sellout/
+01_data/derived/
+01_data/Distributor/
+01_data/exports/
+01_data/gpt_safe/
+01_data/models/
+01_data/planning/
+01_data/PMS/
+01_data/Pricing/
+01_data/raw/
+01_data/sales data/
+01_data/Tender/
+01_data/UIO/
+01_data/Warranty/
+01_data/_build/
+01_data/_INBOX/
+
+# --- Action Ledger transient build artefacts ---
+# One .txt per build run; the curated ACTION_LEDGER_BUILD_LOG_*.md is tracked.
+01_data/00_derived/action_ledger_build_log_*.txt
+01_data/00_derived/_p8_*
+
+# --- Rolling dashboard JSON snapshots (the live file is tracked) ---
+01_data/14_dashboards/*.backup_*.json

@@ -1,52 +1,20 @@
-⚠ GENERATED 2026-08-09 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
+⚠ GENERATED 2026-08-23 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
 
-# One diff hunk this run: Israel RSS undefined-entity parse fix (below).
-# Everything else diagnosed this run has no diffable code fix — see
-# manual_review_required.md for why:
+# No diff this run.
 #
-#   - KS / Tranzparts / TMC / Mekonomen / Auto365 (all allowlisted): all five
-#     refreshed cleanly on 2026-08-03 (KS 300/300 PNs, 0 errors). py_compile
-#     passed on all five scripts. No bug found, nothing to patch.
-#   - Belgium RSS (tender_scraper_v3.py): both candidate URLs return non-XML
-#     content (dead/moved endpoints, not malformed XML) — the only real fix
-#     is the correct current feed URL, which needs live web research this
-#     job can't do. No diff proposed — see manual_review_required.md Item 4.
-#   - refresh_and_check_drift.py (wrapper, do not edit regardless): has a
-#     genuine off-by-one bug in its snapshot/baseline comparison, diagnosed
-#     this run — see manual_review_required.md Item 2. No diff included
-#     here on purpose: this file is explicitly "do not edit" scope even for
-#     proposals, so the fix sketch lives in prose only, for you or a future
-#     coding session to apply deliberately.
+# The 2026-08-09 diff in this file (Israel "undefined entity" fallback) was
+# applied interactively on 2026-08-11 — see applied_patches_log.md — and is
+# confirmed present in the current tender_scraper_v3.py. That old diff has
+# been removed from this file so it doesn't get mistaken for an outstanding
+# proposal.
 #
-# Israel fix below is UNTESTED against the live mr.gov.il feed (no web
-# access from this job). tender_scraper_v3.py is propose-only regardless of
-# confidence — this was never a candidate for auto-apply. Review and test
-# before applying.
-
---- a/04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py
-+++ b/04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py
-@@ -730,9 +730,21 @@ def fetch_israel(session: requests.Session) -> List[Dict[str, Any]]:
-     try:
-         resp = get_with_retry(session, url)
-         if not resp:
-             print("[IL] Failed to fetch RSS.")
-             return []
--        root = ET.fromstring(resp.content)
-+        raw = resp.content
-+        try:
-+            root = ET.fromstring(raw)
-+        except ET.ParseError:
-+            # mr.gov.il embeds HTML entities (e.g. &nbsp;, &laquo;) that are not
-+            # valid bare XML entities. Escape anything that isn't a standard or
-+            # numeric XML entity, then retry once before giving up (falls through
-+            # to the existing outer except-Exception handler if this also fails).
-+            import re
-+            sanitized = re.sub(
-+                rb"&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[0-9a-fA-F]+;)(\w+);",
-+                rb"&amp;\1;",
-+                raw,
-+            )
-+            root = ET.fromstring(sanitized)
-         results: List[Dict[str, Any]] = []
-         for item in root.findall(".//item"):
-             title = extract_text(item.findtext("title"))
+# All five allowlisted competitive scrapers (KS, Tranzparts, TMC, Mekonomen,
+# Auto365) refreshed cleanly on 2026-08-17 with 0 errors and no drift — no
+# fix needed, nothing to propose.
+#
+# One real issue remains open on the Israel tender feed (a second, different
+# XML malformation surfaced after the Aug 11 fix — "mismatched tag" instead
+# of "undefined entity"). No diff is proposed for it because this job has no
+# web access to see the actual malformed feed content, and guessing at the
+# fix risks corrupting/dropping entries. See manual_review_required.md Item 1
+# for the full diagnosis and evidence.

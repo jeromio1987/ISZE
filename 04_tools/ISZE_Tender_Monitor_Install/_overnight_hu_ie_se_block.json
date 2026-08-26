@@ -1,0 +1,104 @@
+{
+  "probed_at": "2026-08-25T17:50:58.065238+00:00",
+  "note": "HTTP-only; no browser; Nordics not touched",
+  "probes": [
+    {
+      "name": "HU_ekr_home",
+      "http": 200,
+      "bytes": 209801,
+      "final": "https://ekr.gov.hu/index.html",
+      "jsonish": false,
+      "loginish": false,
+      "preview": "<!DOCTYPE html> <html> <head>  <meta charset=\"utf-8\"> <meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\">  <title>EKR</title>  <script type=\"text/javascript\" data-dt"
+    },
+    {
+      "name": "HU_ekr_api",
+      "http": 200,
+      "bytes": 209801,
+      "final": "https://ekr.gov.hu/index.html?q=jarmu",
+      "jsonish": false,
+      "loginish": false,
+      "preview": "<!DOCTYPE html> <html> <head>  <meta charset=\"utf-8\"> <meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\">  <title>EKR</title>  <script type=\"text/javascript\" data-dt"
+    },
+    {
+      "name": "HU_kozbeszerzes_rss",
+      "http": 404,
+      "bytes": 212253,
+      "final": "https://www.kozbeszerzes.hu/ertesito/rss/",
+      "jsonish": false,
+      "loginish": false,
+      "preview": "   <!DOCTYPE html> <html lang=\"hu\" class=\"\"> <head> \t<meta charset=\"utf-8\">  \t  \t<title> \t\t \t\t\t \t\t \t\t \t\t\t \t\t\t\t \t\t\t \t\t \t</title> \t<meta name=\"description\" content=\"\"> \t<meta name=\"v"
+    },
+    {
+      "name": "IE_home",
+      "http": 200,
+      "bytes": 25332,
+      "final": "https://www.etenders.gov.ie/epps/home.do",
+      "jsonish": false,
+      "loginish": false,
+      "preview": "                          \t                                 <!DOCTYPE html>              <!-- ceproc.ok -->           \t<html>   \t<head> \t\t<!--  --> \t\t<meta http-equiv=\"Content-Type"
+    },
+    {
+      "name": "IE_search_truck",
+      "http": 200,
+      "bytes": 39845,
+      "final": "https://www.etenders.gov.ie/epps/quickSearchAction.do?searchType=cft&keyword=truck",
+      "jsonish": false,
+      "loginish": false,
+      "preview": "                          \t                                 <!DOCTYPE html>              <!-- ceproc.ok -->           \t<html>   \t<head> \t\t<!--  --> \t\t<meta http-equiv=\"Content-Type"
+    },
+    {
+      "name": "IE_rss",
+      "http": 500,
+      "bytes": 14951,
+      "final": "https://www.etenders.gov.ie/epps/cft/listContractNoticesRSS.do",
+      "jsonish": false,
+      "loginish": false,
+      "preview": "                          \t                                 <!DOCTYPE html>           \t<html>   \t<head> \t\t<!--  --> \t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ut"
+    },
+    {
+      "name": "SE_uhmd",
+      "http": 200,
+      "bytes": 156642,
+      "final": "https://www.upphandlingsmyndigheten.se/",
+      "jsonish": false,
+      "loginish": true,
+      "preview": "\r \r \r <!DOCTYPE html>\r <html lang=\"sv\">\r <head>\r \r     <meta name=\"robots\" content=\"index, follow\">\r \t\r \r \r \r     <script id=\"CookieConsent\" src=\"https://policy.app.cookieinformati"
+    },
+    {
+      "name": "SE_dataportal",
+      "http": 404,
+      "bytes": 54444,
+      "final": "https://www.dataportal.se/api/datasets?q=upphandling&limit=5",
+      "jsonish": false,
+      "loginish": true,
+      "preview": "<!DOCTYPE html><html lang=\"sv\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width\"/><meta name=\"next-head-count\" content=\"2\"/><script nonce=\"s39CVWh9xkV"
+    },
+    {
+      "name": "SE_kommers",
+      "http": 200,
+      "bytes": 7443,
+      "final": "https://www.kommersannons.se/",
+      "jsonish": false,
+      "loginish": false,
+      "preview": "<!DOCTYPE html>\r <html lang=\"en\">\r <head>\r     <meta charset=\"utf-8\" />\r     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\r     <title>Home page - Antiri"
+    }
+  ],
+  "verdict": {
+    "HU": {
+      "status": "BLOCKED",
+      "why": "EKR is login/SPA shell; no free public list/API confirmed this pass",
+      "unblock": "Operator EKR registration + API docs, or licensed aggregator"
+    },
+    "IE": {
+      "status": "BLOCKED",
+      "why": "eTenders HTML/search returns pages but no stable machine list/RSS (RSS 500); parse brittle",
+      "unblock": "OGP structured feed or HTML parser with session cookies after manual confirm"
+    },
+    "SE": {
+      "status": "BLOCKED",
+      "why": "No single state gazette — commercial annonsdatabaser (TendSign/Mercell/e-Avrop) are the channel",
+      "unblock": "Paid multi-platform monitoring or UHM open-data dump if published"
+    }
+  }
+}

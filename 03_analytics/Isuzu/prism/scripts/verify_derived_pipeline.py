@@ -770,6 +770,94 @@ def check_aim_gps_matrix(report: Report, fx: dict[str, Any]) -> None:
         _chk(report, "aim_gps.quadrants", ok, "Quadrant values OK")
 
 
+def check_action_ledger(report: Report) -> None:
+    """P8 Action Ledger — presence, lineage, horizon honesty, language."""
+    ledger_pq = DERIVED_DIR / "action_ledger.parquet"
+    history_pq = DERIVED_DIR / "action_ledger_history.parquet"
+    open_csv = DERIVED_DIR / "action_ledger_open.csv"
+    rejects_csv = DERIVED_DIR / "action_ledger_rejects.csv"
+    decisions_csv = DERIVED_DIR / "action_ledger_decisions.csv"
+    meta_json = DERIVED_DIR / "action_ledger.meta.json"
+    # Path: .../ISZE/03_analytics/Isuzu/prism/scripts → parents[4] = ISZE
+    isze_root = Path(__file__).resolve().parents[4]
+    html = isze_root / "02_dashboards" / "ops" / "ISZE_Action_Ledger.html"
+
+    required = [ledger_pq, history_pq, open_csv, rejects_csv, decisions_csv, meta_json]
+    missing = [p.name for p in required if not p.is_file()]
+    _chk(
+        report,
+        "action_ledger.artefacts",
+        len(missing) == 0,
+        f"P8 artefacts present" if not missing else f"missing {missing}",
+        missing=missing,
+    )
+    if missing:
+        return
+
+    ledger = pd.read_parquet(ledger_pq)
+    _chk(
+        report,
+        "action_ledger.nonempty",
+        len(ledger) > 0,
+        f"ledger rows={len(ledger)}",
+        n=len(ledger),
+    )
+
+    # Lineage on monetary rows
+    mon = ledger[ledger["eur_at_stake"].notna()]
+    if len(mon):
+        lineage_ok = (
+            mon["source_file"].notna().all()
+            and mon["source_column"].notna().all()
+            and mon["source_as_of"].notna().all()
+        )
+    else:
+        lineage_ok = True
+    _chk(
+        report,
+        "action_ledger.lineage",
+        bool(lineage_ok),
+        f"monetary rows with full lineage: {len(mon)}",
+        monetary=len(mon),
+    )
+
+    # Rejects file exists and has reason column
+    rej = pd.read_csv(rejects_csv)
+    has_reason = "reason" in rej.columns
+    _chk(
+        report,
+        "action_ledger.rejects",
+        has_reason,
+        f"rejects.csv rows={len(rej)} has_reason={has_reason}",
+        n=len(rej),
+    )
+
+    # Language ban in HTML + open CSV
+    banned = ["delivered by", "caused", "drove", "thanks to", "attributable to"]
+    hits: list[str] = []
+    for path in [html, open_csv]:
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore").lower()
+        for phrase in banned:
+            if phrase in text:
+                hits.append(f"{path.name}:{phrase}")
+    _chk(
+        report,
+        "action_ledger.language",
+        len(hits) == 0,
+        "co-movement wording only" if not hits else f"banned hits {hits}",
+        hits=hits,
+    )
+
+    _chk(
+        report,
+        "action_ledger.html",
+        html.is_file() and "Open by" in html.read_text(encoding="utf-8", errors="ignore"),
+        f"dashboard HTML at {html.name}" if html.is_file() else "HTML missing",
+    )
+
+
 def check_prism_bundle(report: Report) -> None:
     try:
         bundle = load_bvp_bundle()
@@ -916,6 +1004,7 @@ def main() -> int:
     check_sales_by_fig_key(report, fx)
     check_aim_gps_matrix(report, fx)
     check_strategic_contracts(report, fx)
+    check_action_ledger(report)
     check_prism_bundle(report)
     write_reports(report)
 

@@ -310,36 +310,39 @@ def gps_fy_chart(path: Path, profile: dict, display: str) -> dict:
 
     gm = C.load_gps_master(profile)
     seg = C.load_segmented_gps(profile) or {}
-    w25 = float(seg.get("wallet_2025") or wallet_by_y.get(2025) or gm.get("max_spend") or 1)
-    fy_by_y = {
-        2024: round(float(gm["gps_pct_FY2024"]) * 100, 1) if gm.get("gps_pct_FY2024") else np.nan,
-        2025: np.nan,
-        2026: np.nan,
-    }
-    if seg.get("gps_FY2025") is not None:
-        fy_by_y[2025] = round(float(seg["gps_FY2025"]) * 100, 1)
-    elif gm.get("gps_pct_FY2025") is not None:
-        fy_by_y[2025] = round(float(gm["gps_pct_FY2025"]) * 100, 1)
-    if seg.get("gps_FY2026") is not None:
-        fy_by_y[2026] = round(float(seg["gps_FY2026"]) * 100, 1)
-    elif gm.get("gps_pct_FY2026") is not None:
-        fy_by_y[2026] = round(float(gm["gps_pct_FY2026"]) * 100, 1)
+    # ONE wallet for both lines, and it must be the wallet the headline GPS % is
+    # already built on. Dividing the ex-warranty line by a different-year wallet
+    # made the gap between the two lines read as a warranty effect when most of
+    # it was a change of fleet base.
+    w25 = float(seg.get("wallet_2025") or gm.get("max_spend") or 1)
+    fy_frac = {2024: np.nan, 2025: np.nan, 2026: np.nan}
+    if gm.get("gps_pct_FY2024") is not None:
+        fy_frac[2024] = float(gm["gps_pct_FY2024"])
+    for y in (2025, 2026):
+        if seg.get(f"gps_FY{y}") is not None:
+            fy_frac[y] = float(seg[f"gps_FY{y}"])
+        elif gm.get(f"gps_pct_FY{y}") is not None:
+            fy_frac[y] = float(gm[f"gps_pct_FY{y}"])
+    fy_by_y = {y: (round(v * 100, 1) if not np.isnan(v) else np.nan)
+               for y, v in fy_frac.items()}
 
+    # Warranty is removed once, not twice. gps_master's net_FY* already has its
+    # own (smaller) warranty figure taken out; the fiscal GPS warranty expense is
+    # the fuller measure, so only the part not already removed comes off here.
     warr = warranty_row(profile)
-    nets = {
-        2024: float(gm.get("net_FY2024") or 0),
-        2025: float(gm.get("net_FY2025") or 0),
-        2026: float(gm.get("net_FY2026") or 0),
-    }
-    fy_ex = {}
+    bills = {y: float(gm.get(f"bill_FY{y}") or 0) for y in (2024, 2025, 2026)}
+    nets = {y: float(gm.get(f"net_FY{y}") or 0) for y in (2024, 2025, 2026)}
+    fy_ex, warr_used = {}, {}
     for y, wk in ((2024, "fy2024"), (2025, "fy2025"), (2026, "fy2026")):
-        n = nets[y]
-        w = float(warr[wk])
-        denom = w25 if y >= 2025 else float(wallet_by_y.get(y) or w25)
-        if denom <= 0:
+        if np.isnan(fy_frac[y]) or w25 <= 0:
             fy_ex[y] = np.nan
-        else:
-            fy_ex[y] = round(max(n - w, 0) / denom * 100, 1)
+            warr_used[y] = 0.0
+            continue
+        num = fy_frac[y] * w25                              # reproduces the headline exactly
+        already_out = max(bills[y] - num, 0.0)              # warranty/credits already netted off
+        extra = max(float(warr[wk]) - already_out, 0.0)     # the incremental bite only
+        warr_used[y] = max(float(warr[wk]), already_out)
+        fy_ex[y] = round(max(num - extra, 0) / w25 * 100, 1)
 
     # X-axis = fiscal years with data (no empty CY slot)
     years = [y for y in (2024, 2025, 2026) if not np.isnan(fy_by_y.get(y, np.nan))]
@@ -388,8 +391,9 @@ def gps_fy_chart(path: Path, profile: dict, display: str) -> dict:
         "fy26": fy_by_y.get(2026),
         "fy26_ex": fy_ex.get(2026),
         "fy25_ex": fy_ex.get(2025),
-        "warr26": warr["fy2026"],
+        "warr26": warr_used.get(2026) or warr["fy2026"],
         "net26": nets[2026],
+        "wallet": w25,
         "show_pct": bool(seg.get("show_pct", True)),
         "uio_2025": seg.get("uio_2025"),
         "uio_2026": seg.get("uio_2026"),
@@ -473,9 +477,13 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     if ginfo.get("fy26_ex") is not None and ginfo.get("warr26"):
         share = ginfo["warr26"] / ginfo["net26"] * 100 if ginfo["net26"] else 0
         take.append(
-            f"Black = fiscal GPS after removing warranty parts (€). FY26 ≈ "
+            f"Black = the same GPS after removing warranty parts (€). FY26 ≈ "
             f"{ginfo['fy26_ex']:.1f}% "
             f"(warranty {eur(ginfo['warr26'])} ≈ {share:.0f}% of FY26 billing)."
+        )
+        take.append(
+            f"Both lines divide by the same wallet ({eur(ginfo['wallet'])}), so the gap "
+            "between them is warranty and nothing else."
         )
     if ginfo.get("uio_2025") and ginfo.get("uio_2026"):
         take.append(
@@ -612,9 +620,11 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
         )
         page += 1
 
-    # PMS CY capture
-    if peers:
-        keys = [k for k in PMS_CATS if k in peers]
+    # PMS CY capture — categories whose rate breaches the model ceiling are
+    # withheld here exactly as they are on the Mode A coverage slide.
+    pms_ok, pms_withheld = C.quotable_pms(peers) if peers else ([], [])
+    if peers and len(pms_ok) >= 3:
+        keys = [k for k in PMS_CATS if k in pms_ok]
         ct.bar_chart(
             [PMS_LABELS[k] for k in keys],
             {
@@ -635,9 +645,15 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
             f"Capture % is calendar-year (full CY{pms_year}). Fleet demand is modelled "
             "on calendar years — there is no matching fiscal-year capture %.",
             "; ".join(gaps[:3]) + ".",
-            "Next slide: fiscal-year € billing in the same five categories.",
-            "Primary lens = total capture (not genuine-only).",
+            f"Next slide: fiscal-year € billing in the same {len(keys)} categories.",
         ]
+        if pms_withheld:
+            take.append(
+                f"{', '.join(PMS_LABELS[k] for k in pms_withheld)} withheld — the modelled "
+                "demand base does not hold for this market, so the rate is not quotable."
+            )
+        else:
+            take.append("Primary lens = total capture (not genuine-only).")
         db.build_two_col(
             prs,
             title="Service-parts capture vs network (calendar year)",
@@ -655,12 +671,12 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
                 "FY2026 €K": [fy_pms[k][2026] / 1000 for k in keys],
             },
             str(chart_dir / "modeb_pms_fy.png"),
-            title="Same five categories — fiscal-year billing (EUR K)",
+            title=f"Same {len(keys)} categories — fiscal-year billing (EUR K)",
             ylabel="EUR K", value_fmt="{:,.1f}", figsize=(10.2, 4.3),
         )
         db.build_two_col(
             prs,
-            title="Service-parts billing by fiscal year (same five lines)",
+            title=f"Service-parts billing by fiscal year (same {len(keys)} lines)",
             chart_path=str(chart_dir / "modeb_pms_fy.png"),
             eyebrow="Service parts · FY",
             page_no=page,
@@ -706,7 +722,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
             ]
             if by_y[y1]["bvp_eur"] < 1 and by_y[y1]["gen_eur"] > 0:
                 pad_notes.append(
-                    f"UMI pad sales are genuine-only in this cut "
+                    f"{partner} pad sales are genuine-only in this cut "
                     f"(~{eur(by_y[y1]['gen_eur'], True)} FY26) — no BVP pad lines billed."
                 )
             pad_notes.append(

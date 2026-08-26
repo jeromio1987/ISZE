@@ -1,0 +1,44 @@
+---
+description: HARD LOCK — builder exit 0 ≠ done; paint check + verify scripts before done/fixed/shipped
+alwaysApply: true
+---
+
+# Ship gate — exit 0 is not done
+
+Applies to **all** Mode A HTML, dashboards, meeting packs, and rebuilds under `02_dashboards/` / `09_meetings/`. Complements (do not duplicate): permission → `isze-no-ship-without-ok.mdc`; `file://` / launcher → `isze-html-openable.mdc`; paint evidence → `isze-verify-rendered-output.mdc`; IDS tiles/geo → `isze-ids-delivery.mdc`.
+
+## Hard rule
+
+**Builder or script exit 0 ≠ done.** Never write **done**, **fixed**, **shipped**, or **open** until the ship-gate procedure passes on the **rendered artifact**, not the source script.
+
+Banned substitute: "build succeeded" / "verify passed" without stating what paints in the HTML.
+
+## Procedure — run before claiming done
+
+1. **Verify scripts** — run the relevant checker(s); each must exit 0. For Aftermarket BI tier-A HTML:
+   ```
+   python 02_dashboards/_build/verify_aftermarket_bi_command_center.py
+   python 02_dashboards/_build/verify_tier_a_html_json.py
+   ```
+   Or one shot: `powershell -File 02_dashboards/_build/ship_gate_check.ps1` (must print `SHIP_GATE_OK`).
+
+2. **Paint check (HTML)** — inspect the built file, not the builder:
+   - Hero / headline KPIs show numbers (e.g. `€` leakage in hero).
+   - Charts: `class="bar-row"` count > 0 **or** embedded SVG/chart markers present.
+   - Tables: `<tbody>` has `<tr>` rows **or** an explicit **DATA UNAVAILABLE** / amber banner — never a blank Top N shell.
+
+3. **Payload sanity** — no `NaN` in embedded JSON; no JS-only first paint without SSR fallback for `file://` open.
+
+4. **Launcher** — sibling `OPEN_*.cmd` exists next to the HTML; run it in the same turn **or** state what is unverified.
+
+5. **Chat reply** — before telling Jerome to double-click the `.cmd`, include **"What you should see"** (≤3 bullets): concrete visible evidence from step 2 (counts, labels, banners).
+
+6. **Empty DB sections** — zero sell-out / no peer data (e.g. GREECE): **amber banner** required; forbidden = blank Top N table or empty panel with no explanation.
+
+## Repeat-failure
+
+If Jerome flagged the **same artifact** twice, do **not** reply until the full procedure (steps 1–5) passes. Re-running the builder alone does not count as verification.
+
+## IDS / other packs
+
+After this gate, still run IDS-specific checks in `isze-ids-delivery.mdc` (tiles, geo clustering, English UI) when the artifact is an IDS pack or dealer map.

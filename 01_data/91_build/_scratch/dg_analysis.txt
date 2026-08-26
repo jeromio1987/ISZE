@@ -1,0 +1,37 @@
+=== Data (joined) shape === (45613, 18)
+=== columns === ['Billing Date', 'Year', 'Bill.Doc.', 'Sales Doc.', 'Material', 'Description', 'Qty', 'EUR Amount', 'MoT', 'Sold-to pt', 'Entity', 'BillT', 'Is DG', 'Unit weight (kg)', 'Gross weight (kg)', 'Unit volume (m3)', 'Volume (m3)', 'Commodity code']
+=== dtypes ===
+Billing Date         datetime64[ns]
+Year                        float64
+Bill.Doc.                   float64
+Sales Doc.                  float64
+Material                     object
+Description                  object
+Qty                           int64
+EUR Amount                  float64
+MoT                          object
+Sold-to pt                  float64
+Entity                       object
+BillT                        object
+Is DG                          bool
+Unit weight (kg)            float64
+Gross weight (kg)           float64
+Unit volume (m3)            float64
+Volume (m3)                 float64
+Commodity code              float64
+
+=== Is DG raw distinct values (first 20) === [False  True]
+=== BillT values === {'F2': 44934, 'S1': 657, 'G2': 21, 'nan': 1}
+=== MoT values === {'Sea': 34382, 'Air': 10828, 'nan': 396, 'Truck': 7}
+=== Entity values === {'UMI': 25813, 'UTI': 19799, 'nan': 1}
+=== Sold-to pt values === {'1797.0': 25813, '1799.0': 19799, 'nan': 1}
+=== Year values === {2024.0: 16908, 2025.0: 17595, 2026.0: 11109, nan: 1}
+=== total rows === 45613
+
+=== DG list shape === (319, 6)
+=== DG list UN number value counts (non-empty) ===
+NONE populated
+=== DG list UN number null/empty count === 319 of 319
+
+=== Master data shape === (6723, 9)
+=== Master columns === ['P/N', 'Newest P/N', 'Description', 'Weight', 'Length', 'Width', 'Height', 'Commodity Code', 'Country of Origin']

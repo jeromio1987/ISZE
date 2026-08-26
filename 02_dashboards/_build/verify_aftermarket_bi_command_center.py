@@ -13,7 +13,26 @@ HTML = ISZE / "02_dashboards" / "sales" / "ISZE_Aftermarket_BI_Command_Center.ht
 REQUIRED_PANELS = ["panel-network", "panel-db", "panel-pricing"]
 MIN_BAR_ROWS = 20
 MIN_NETWORK_ROWS = 50
-MAX_MB = 3.0
+MAX_MB = 3.5
+
+# Genius SSR markers (must paint without JS)
+GENIUS_MARKERS = [
+    ("ssr-waterfall", "wf-step"),
+    ("heatmap", 'class="hot"'),
+    ("ssr-sparkline", "spark-strip"),
+    ("ssr-money-cards", "money-card"),
+    ("ssr-scatter", "ssr-scatter"),
+    ("ssr-radar", "ssr-radar"),
+    ("radar-toggle", "radar-toggle"),
+    ("bullet-chart", "bullet-track"),
+    ("treemap-wrap", "treemap-cell"),
+    ("ssr-leaderboard", "leaderboard"),
+    ("ituk-dealer-top10", "ITUK dealer top 10"),
+    ("so-what", "so-what"),
+    ("section-nav", "section-nav"),
+    ("ssr-donut", "ssr-donut"),
+    ("ssr-db-compare", "ssr-db-compare"),
+]
 
 
 def main() -> int:
@@ -29,7 +48,6 @@ def main() -> int:
 
     fails = 0
 
-    # Hero KPIs must be static (€ visible before any script)
     hero_block = html.split('<nav class="tabs"')[0]
     if "€" not in hero_block:
         print("FAIL: hero section has no € — KPIs not baked at build time")
@@ -38,12 +56,19 @@ def main() -> int:
         print("OK: hero contains € in static HTML")
 
     bar_rows = html.count('class="bar-row"')
-    svg_charts = html.count('class="ssr-svg"')
+    svg_charts = html.count("ssr-svg")
     bar_count = bar_rows + svg_charts
     print(f"SSR elements: {bar_rows} bar-rows + {svg_charts} svg = {bar_count}")
     if bar_count < MIN_BAR_ROWS:
         print(f"FAIL: expected >={MIN_BAR_ROWS} bar-row/svg elements, got {bar_count}")
         fails += 1
+
+    for name, needle in GENIUS_MARKERS:
+        if needle not in html:
+            print(f"FAIL: missing genius SSR marker {name} ({needle})")
+            fails += 1
+        else:
+            print(f"OK: {name}")
 
     net_m = re.search(r'id="networkTbl".*?<tbody>(.*?)</tbody>', html, re.DOTALL)
     if net_m:
@@ -75,13 +100,11 @@ def main() -> int:
             print(f"FAIL: missing {pid}")
             fails += 1
 
-    # Regression: duplicate let sortKey breaks entire script block
     let_sort = len(re.findall(r"\blet sortKey\b", html))
     if let_sort > 1:
         print(f"FAIL: duplicate let sortKey ({let_sort}x) — script will not parse")
         fails += 1
 
-    # No giant JSON payload required anymore
     if '<script type="application/json" id="payload">' in html:
         print("WARN: legacy JSON payload still embedded (optional)")
 

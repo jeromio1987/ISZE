@@ -93,10 +93,77 @@ table.matrix{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
 .ssr-legend i{display:inline-block;width:10px;height:10px;border-radius:2px}
 .mix-bar{display:flex;height:22px;border-radius:3px;overflow:hidden;margin:8px 0 4px}
 .mix-seg{height:100%;min-width:2px}
+.donut-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:8px 0}
+.donut-svg{flex:0 0 auto;width:120px;height:120px}
+.donut-legend{flex:1 1 140px;font-size:11px;color:#52514e;display:flex;flex-direction:column;gap:6px}
+.donut-legend span{display:inline-flex;align-items:center;gap:6px}
+.donut-legend i{display:inline-block;width:10px;height:10px;border-radius:50%}
+.db-compare-strip{display:flex;gap:8px;align-items:flex-end;padding:12px 4px;min-height:160px}
+.db-compare-col{flex:1 1 0;min-width:72px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.db-compare-col .bar{ width:100%;max-width:88px;border-radius:3px 3px 0 0;min-height:4px;background:#c0552d}
+.db-compare-col .lbl{font-size:10px;color:#52514e;text-align:center;font-weight:600}
+.db-compare-col .val{font-size:11px;color:#15233c;font-variant-numeric:tabular-nums;text-align:center}
+.db-compare-note{font-size:10px;color:#6b6256;margin:4px 0 0;text-align:center;font-style:italic}
+.db-compare-col.is-dominant .bar{opacity:.92;box-shadow:0 0 0 1px rgba(192,85,45,.35)}
+.data-unavail{background:#fff3d6;border-left:4px solid #eda100;padding:14px 16px;margin:0 0 16px;font-size:14px;color:#222;border-radius:2px}
+.data-unavail.greece{background:#eef3f9;border-left:4px solid #15233c;color:#15233c}
+.data-unavail strong{color:#8a6500;font-family:Georgia,serif}
+.data-unavail.greece strong{color:#15233c}
+.chart-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:900px){.chart-grid3{grid-template-columns:1fr}}
 .ssr-line-chart .grid-line{stroke:#e1e0d9;stroke-width:1}
 .ssr-line-chart .line-bill{fill:none;stroke:#15233c;stroke-width:2}
 .ssr-line-chart .line-sell{fill:none;stroke:#c0552d;stroke-width:2}
 .ssr-line-chart text{font-size:10px;fill:#52514e}
+.ssr-waterfall{display:flex;flex-direction:column;gap:6px;padding:4px 0}
+.wf-step{display:grid;grid-template-columns:120px 1fr 88px;gap:8px;align-items:center;font-size:12px}
+.wf-step .lbl{color:#52514e;font-weight:600}
+.wf-step .track{height:20px;background:#eef3f9;border-radius:2px;overflow:hidden}
+.wf-step .fill{height:100%;border-radius:2px;min-width:2px}
+.wf-step .val{text-align:right;font-variant-numeric:tabular-nums;color:#222}
+.wf-step.wf-total .lbl{color:#15233c;font-family:Georgia,serif}
+.spark-strip{display:flex;gap:10px;flex-wrap:wrap;padding:6px 0}
+.spark-cell{flex:1 1 140px;min-width:120px;background:#faf8f4;border:1px solid #e8e4dc;padding:8px 10px}
+.spark-cell .sl{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#6b6256}
+.spark-cell .sv{font-size:13px;font-weight:700;color:#15233c;margin-top:2px}
+.money-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:12px 0}
+.money-card{background:linear-gradient(145deg,#c0552d 0%,#a84826 100%);color:#f7f4ee;padding:16px 14px;border-radius:2px;min-height:120px;position:relative}
+.money-card .rank{font-family:Georgia,serif;font-size:28px;opacity:.35;position:absolute;top:8px;right:12px}
+.money-card .pn{font-family:Consolas,monospace;font-size:15px;font-weight:700;margin-bottom:4px}
+.money-card .eur{font-size:22px;font-weight:700;letter-spacing:-.3px}
+.money-card .meta{font-size:11px;opacity:.9;margin-top:8px;line-height:1.4}
+.money-card .badge{display:inline-block;margin-top:8px;font-size:10px;text-transform:uppercase;letter-spacing:.06em;background:rgba(255,255,255,.18);padding:3px 8px}
+.bullet-chart{padding:8px 0}
+.bullet-row{margin-bottom:14px}
+.bullet-row .bl{font-size:12px;color:#52514e;margin-bottom:4px;display:flex;justify-content:space-between}
+.bullet-track{height:22px;background:#eef3f9;position:relative;border-radius:2px;overflow:visible}
+.bullet-fill{height:100%;background:#15233c;border-radius:2px}
+.bullet-mark{position:absolute;top:-4px;bottom:-4px;width:3px;background:#c0552d;z-index:2}
+.bullet-legend{font-size:11px;color:#6b6256;margin-top:8px}
+.treemap-wrap{display:flex;flex-wrap:wrap;gap:3px;padding:4px 0;min-height:140px}
+.treemap-cell{display:flex;flex-direction:column;justify-content:flex-end;padding:8px;color:#f7f4ee;font-size:11px;min-width:48px;min-height:48px;border-radius:2px}
+.treemap-cell .ta{font-weight:700;font-size:12px}
+.treemap-cell .tv{font-variant-numeric:tabular-nums;margin-top:2px}
+.leaderboard{list-style:none;margin:0;padding:0}
+.leaderboard li{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-bottom:1px solid #e8e4dc;font-size:13px;background:#fff}
+.leaderboard li:nth-child(even){background:#faf8f4}
+.leaderboard .rk{font-family:Georgia,serif;color:#c0552d;font-size:18px;text-align:center}
+.leaderboard .nm{font-weight:600;color:#15233c}
+.leaderboard .ev{font-variant-numeric:tabular-nums;color:#222;font-weight:600}
+.section-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px;padding:10px 0;position:sticky;top:48px;z-index:15;background:#f7f4ee;border-bottom:1px solid #d9d3c8}
+.section-nav a{font-size:12px;color:#1a2b4a;text-decoration:none;background:#fff;border:1px solid #d9d3c8;padding:6px 12px}
+.section-nav a:hover{border-color:#c0552d;color:#c0552d}
+.so-what{border-left:3px solid #c0552d;background:#fff8f4;padding:8px 12px;margin:8px 0 12px;font-size:13px;color:#52514e;line-height:1.45}
+.so-what strong{color:#c0552d;font-weight:600}
+.radar-wrap{margin:4px 0}
+.radar-toggle{display:flex;flex-wrap:wrap;gap:8px 14px;margin:0 0 10px;font-size:12px;color:#52514e}
+.radar-toggle label{display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.radar-toggle input{accent-color:#c0552d}
+.heatmap-legend{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 0;font-size:11px;color:#52514e}
+.heatmap-legend span{display:inline-flex;align-items:center;gap:4px}
+.heatmap-legend i{display:inline-block;width:14px;height:14px;border-radius:2px}
+.chart-footnote{font-size:10px;color:#6b6256;font-style:italic;margin:6px 0 0}
+.spark-partial{font-size:9px;color:#c0552d;margin-top:2px}
 </style>
 </head>
 <body>
@@ -117,6 +184,10 @@ table.matrix{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
 </div>
 <div class="wrap">
   <div class="callout" id="leakCallout"><strong>Headline:</strong> 289 REVIEW_LEAKAGE rows · 331 ambition/guardrail conflicts · top PN <strong>8944627340</strong> gaps 25,628 units. No alloc run.</div>
+  <div class="grid2">
+    <div class="card"><h3>Leakage unit gap by DB</h3><p class="cap">REVIEW_LEAKAGE rows · qty gap sum</p><div class="db-compare-strip ssr-chart ssr-db-compare" role="img" aria-label="DB leakage comparison"><div class="db-compare-col" title="ITUK: 6,227"><div class="val">6,227</div><div class="bar" style="height:87px;background:#c0552d"></div><div class="lbl">ITUK</div></div><div class="db-compare-col" title="UTI: 2,003"><div class="val">2,003</div><div class="bar" style="height:76px;background:#c0552d"></div><div class="lbl">UTI</div></div><div class="db-compare-col" title="IRELAND: 13,055"><div class="val">13,055</div><div class="bar" style="height:94px;background:#c0552d"></div><div class="lbl">IRELAND</div></div><div class="db-compare-col is-dominant" title="IUK: 160,909"><div class="val">160,909</div><div class="bar" style="height:120px;background:#c0552d"></div><div class="lbl">IUK</div></div><div class="db-compare-col" title="GREECE: 6,941"><div class="val">6,941</div><div class="bar" style="height:88px;background:#c0552d"></div><div class="lbl">GREECE</div></div></div><p class="db-compare-note">Bar height log-scaled — labels show exact values · IUK-scale outlier visible</p></div>
+    <div class="card"><h3>Register donut</h3><p class="cap">Leakage vs guardrail vs other · row counts</p><div class="donut-wrap ssr-chart ssr-donut" role="img" aria-label="Pipeline mix donut"><svg class="donut-svg" viewBox="0 0 120 120"><path d="M 60.00 13.00 A 47.00 47.00 0 0 1 69.93 105.94" fill="none" stroke="#c0552d" stroke-width="22" stroke-linecap="butt"/><path d="M 69.93 105.94 A 47.00 47.00 0 1 1 60.00 13.00" fill="none" stroke="#15233c" stroke-width="22" stroke-linecap="butt"/></svg><div class='donut-legend'><span><i style='background:#c0552d'></i>REVIEW_LEAKAGE rows: 289 (47%)</span><span><i style='background:#15233c'></i>Guardrail conflicts: 331 (53%)</span><span><i style='background:#1d9e75'></i>Other rows: 0 (0%)</span></div></div></div>
+  </div>
   <div class="grid2">
     <div class="card"><h3>Book B bucket × action</h3><p class="cap">Stacked counts · ambition vs guardrail visible</p><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl">other_gf_1_0</span><span class="track" style="display:flex;height:16px"><span class="fill" style="width:16.9%;background:#c0552d" title="REVIEW_HIGH_LIST_EXPOSURE"></span><span class="fill" style="width:1.8%;background:#15233c" title="REVIEW_IAM_UNDERCUT"></span><span class="fill" style="width:74.7%;background:#2a78d6" title="REVIEW_LEAKAGE"></span><span class="fill" style="width:1.2%;background:#1d9e75" title="REVIEW_OVERSTOCK"></span><span class="fill" style="width:5.4%;background:#eda100" title="REVIEW_PROXY_ADVERSE"></span></span></div><div class="bar-row"><span class="lbl">p700_carryover</span><span class="track" style="display:flex;height:16px"><span class="fill" style="width:38.7%;background:#c0552d" title="REVIEW_HIGH_LIST_EXPOSURE"></span><span class="fill" style="width:3.6%;background:#15233c" title="REVIEW_IAM_UNDERCUT"></span><span class="fill" style="width:41.4%;background:#2a78d6" title="REVIEW_LEAKAGE"></span><span class="fill" style="width:0.9%;background:#1d9e75" title="REVIEW_OVERSTOCK"></span><span class="fill" style="width:15.3%;background:#eda100" title="REVIEW_PROXY_ADVERSE"></span></span></div><div class="bar-row"><span class="lbl">p700_carryover+uti_x</span><span class="track" style="display:flex;height:16px"><span class="fill" style="width:21.3%;background:#c0552d" title="REVIEW_HIGH_LIST_EXPOSURE"></span><span class="fill" style="width:4.9%;background:#15233c" title="REVIEW_IAM_UNDERCUT"></span><span class="fill" style="width:45.9%;background:#2a78d6" title="REVIEW_LEAKAGE"></span><span class="fill" style="width:1.1%;background:#1d9e75" title="REVIEW_OVERSTOCK"></span><span class="fill" style="width:26.8%;background:#eda100" title="REVIEW_PROXY_ADVERSE"></span></span></div><div class="bar-row"><span class="lbl">rg21_first_failure</span><span class="track" style="display:flex;height:16px"><span class="fill" style="width:95.2%;background:#2a78d6" title="REVIEW_LEAKAGE"></span><span class="fill" style="width:4.8%;background:#eda100" title="REVIEW_PROXY_ADVERSE"></span></span></div><div class="bar-row"><span class="lbl">rg21_first_failure+u</span><span class="track" style="display:flex;height:16px"><span class="fill" style="width:50.0%;background:#c0552d" title="REVIEW_HIGH_LIST_EXPOSURE"></span><span class="fill" style="width:50.0%;background:#2a78d6" title="REVIEW_LEAKAGE"></span></span></div><div class="bar-row"><span class="lbl">rg21_interval</span><span class="track" style="display:flex;height:16px"><span class="fill" style="width:7.7%;background:#15233c" title="REVIEW_IAM_UNDERCUT"></span><span class="fill" style="width:84.6%;background:#2a78d6" title="REVIEW_LEAKAGE"></span><span class="fill" style="width:7.7%;background:#eda100" title="REVIEW_PROXY_ADVERSE"></span></span></div><div class="bar-row"><span class="lbl">rg21_interval+uti_x1</span><span class="track" style="display:flex;height:16px"><span class="fill" style="width:75.0%;background:#2a78d6" title="REVIEW_LEAKAGE"></span><span class="fill" style="width:25.0%;background:#eda100" title="REVIEW_PROXY_ADVERSE"></span></span></div></div></div>
     <div class="card"><h3>Recommended action mix</h3><p class="cap">Top 500 review pack · no alloc</p><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl" style="width:120px" title="REVIEW_LEAKAGE">REVIEW_LEAKAGE</span><span class="track"><span class="fill" style="width:100.0%;background:#2a78d6"></span></span><span class="val">289</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="REVIEW_HIGH_LIST_EXPOSURE">REVIEW_HIGH_LIST_EXPOSURE</span><span class="track"><span class="fill" style="width:38.4%;background:#2a78d6"></span></span><span class="val">111</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="REVIEW_PROXY_ADVERSE">REVIEW_PROXY_ADVERSE</span><span class="track"><span class="fill" style="width:27.0%;background:#2a78d6"></span></span><span class="val">78</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="REVIEW_IAM_UNDERCUT">REVIEW_IAM_UNDERCUT</span><span class="track"><span class="fill" style="width:5.9%;background:#2a78d6"></span></span><span class="val">17</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="REVIEW_OVERSTOCK">REVIEW_OVERSTOCK</span><span class="track"><span class="fill" style="width:1.7%;background:#2a78d6"></span></span><span class="val">5</span></div></div></div>

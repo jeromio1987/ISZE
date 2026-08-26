@@ -30,8 +30,6 @@ OUT_CMD = ISZE / "02_dashboards" / "sales" / "OPEN_Aftermarket_BI_Command_Center
 DEFAULT_DB = "IUK"
 
 EXTRA_CSS = SSR.SSR_CHART_CSS + """
-.hero-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-@media(min-width:1100px){.hero-kpis{grid-template-columns:repeat(4,1fr)}}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
 @media(max-width:900px){.grid3{grid-template-columns:1fr}}
 .heatmap td,.heatmap th{text-align:center;min-width:72px}
@@ -46,7 +44,11 @@ EXTRA_CSS = SSR.SSR_CHART_CSS + """
 .boot-error{background:#f8e4dc;border-left:3px solid #8a3030;padding:14px 18px;margin:16px 28px;font-size:14px}
 .db-panel{display:none}
 .db-panel.active{display:block}
-.ssr-fallback{min-height:200px}
+#panel-db.active .db-panel.active{display:block}
+.ssr-fallback{min-height:120px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
+@media(max-width:1100px){.grid4{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.grid4,.grid3{grid-template-columns:1fr}}
 """
 
 INTERACT_JS = r"""
@@ -149,21 +151,21 @@ document.querySelectorAll('#tbl thead th[data-key]').forEach(th=>{
 def _hero_html(hero: dict) -> str:
     h = hero or {}
     chips = [
-        (SSR.fmt_eur(h.get("total_gap_eur")), "Network € leakage", "Qty gap × reference sell-out €",
+        (SSR.fmt_eur_compact(h.get("total_gap_eur")), "Network € leakage", "Qty gap × reference sell-out €",
          "Sum of positive (sell-out − bill) × ref sell-out across five DBs. CY2025."),
-        (SSR.fmt_eur(h.get("total_overstock_eur")), "Overstock €", "Bill qty &gt; sell-out · ref €",
+        (SSR.fmt_eur_compact(h.get("total_overstock_eur")), "Overstock €", "Bill qty &gt; sell-out · ref €",
          "Inventory risk where ISZE bill exceeds dealer sell-out, valued at reference sell-out."),
         (SSR.fmt_int(h.get("pn_count")), "PNs in queue", "Revision exception register",
          "Distinct PN×DB rows in revision_exception_queue.csv."),
         (SSR.fmt_int(h.get("db_count")), "DBs with sell-out", "ITUK · UTI · IRELAND · IUK · GREECE",
          "Five-network cut. UTI≠UMI · IUK≠ITUK · IRELAND≠IUK."),
-        (SSR.fmt_eur(h.get("book_b_weighted_eur")), "Book B weighted €", "Provisional forecast weights",
+        (SSR.fmt_eur_compact(h.get("book_b_weighted_eur")), "Book B weighted €", "Provisional forecast weights",
          "Sum of forecast_weight_eur from book_b_bucket_summary — no alloc run."),
         (SSR.fmt_int(h.get("iam_undercut_count")), "IAM undercut PNs", "KS index &lt; 1 vs ref sell-out",
          "Peer shop below our reference sell-out — guardrail review list."),
-        (SSR.fmt_eur(h.get("high_list_exposure_eur")), "High list exposure €", "Category list % ≥ 5",
+        (SSR.fmt_eur_compact(h.get("high_list_exposure_eur")), "High list exposure €", "Category list % ≥ 5",
          "€ gap on PNs flagged for high planned-list exposure."),
-        (SSR.fmt_eur(h.get("book_b_blocked_eur")), "Ambition blocked €", "Growth bucket × guardrail",
+        (SSR.fmt_eur_compact(h.get("book_b_blocked_eur")), "Ambition blocked €", "Growth bucket × guardrail",
          "Book B growth/carryover bucket rows with HOLD / leakage / IAM / list guardrails."),
     ]
     return SSR.hero_kpis(chips)
@@ -242,8 +244,15 @@ def _db_panel_html(db: str, panel: dict, ituk_dealers: list[dict], default: bool
         [{"db": "Leakage €", "gap_eur": panel.get("leakage_eur")}, {"db": "Overstock €", "gap_eur": panel.get("overstock_eur")}],
         label_key="db", value_key="gap_eur", color=SSR.COLORS["leak"],
     )
-    top_bars = SSR.horizontal_bar_rows(top15, label_key="pn", value_key="gap_eur", color=SSR.COLORS["leak"], reverse=True)
-    aim_bars = SSR.horizontal_bar_rows(aim_mix, label_key="aim", value_key="gap_eur", color=SSR.COLORS["blue"], reverse=True)
+    pipe_donut = SSR.pipeline_donut_svg(
+        {
+            "leakage": panel.get("leakage_eur") or 0,
+            "overstock": panel.get("overstock_eur") or 0,
+            "balanced": panel.get("balanced_eur") or 0,
+        }
+    )
+    top_bars = SSR.horizontal_bar_rows(top15, label_key="pn", value_key="gap_eur", color=SSR.COLORS["leak"], reverse=True, max_items=10)
+    aim_bars = SSR.aim_family_bars(aim_mix, max_items=10)
 
     ituk_block = ""
     if db == "ITUK" and ituk_dealers:
@@ -254,8 +263,9 @@ def _db_panel_html(db: str, panel: dict, ituk_dealers: list[dict], default: bool
         )
         ituk_block = f"""
   <div id="itukDealerBox">
-    <h3>ITUK · top dealers by € gap</h3>
+    <h3>ITUK · top 10 dealers by € gap</h3>
     <p class="cap">Dealer grain from replenishment_bridge_ituk_dealer · CY2025</p>
+    {SSR.so_what("Rank dealers by € gap before PN-level pricing — workshop behaviour shows here first.")}
     <div class="table-scroll"><table class="matrix" id="itukDealerTbl"><thead><tr>
       <th>Dealer</th><th class="num">€ gap</th><th class="num">Sell-out qty</th><th class="num">Bill €</th>
     </tr></thead><tbody>{dealer_rows}</tbody></table></div>
@@ -267,10 +277,16 @@ def _db_panel_html(db: str, panel: dict, ituk_dealers: list[dict], default: bool
     <strong>{SSR.esc(db)}</strong> · leakage {SSR.fmt_eur(panel.get('leakage_eur'))} · overstock {SSR.fmt_eur(panel.get('overstock_eur'))}
     · {SSR.fmt_int(panel.get('leakage_pn'))} leakage PNs · {SSR.fmt_int(panel.get('overstock_pn'))} overstock PNs.
   </div>
-  <div class="grid3">
-    <div class="card"><h3>Leakage vs overstock €</h3><p class="cap">Selected DB · € split</p><div class="ssr-fallback">{split_bars}</div></div>
-    <div class="card"><h3>Top 15 leakage PNs</h3><p class="cap">By € gap in selected DB</p><div class="ssr-fallback">{top_bars}</div></div>
-    <div class="card"><h3>AIM family mix €</h3><p class="cap">Leakage € by AIM L1</p><div class="ssr-fallback">{aim_bars}</div></div>
+  <div class="grid3" id="db-split">
+    <div class="card"><h3>Pipeline donut · € split</h3><p class="cap">Leakage vs overstock vs balanced</p><div class="ssr-fallback">{pipe_donut}</div></div>
+    <div class="card"><h3>Top 10 leakage PNs</h3><p class="cap">By € gap in selected DB</p><div class="ssr-fallback">{top_bars}</div></div>
+    <div class="card"><h3>AIM L1 families · € gap</h3><p class="cap">Leakage € by AIM family</p><div class="ssr-fallback">{aim_bars}</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Leakage vs overstock €</h3><p class="cap">Selected DB · vertical bars</p><div class="ssr-fallback">{split_bars}</div></div>
+    <div class="card"><h3>Register counts</h3><p class="cap">{SSR.fmt_int(panel.get('leakage_pn'))} leakage PNs · {SSR.fmt_int(panel.get('overstock_pn'))} overstock PNs</p>
+      <ul class="monday-list"><li>Leakage € {SSR.fmt_eur(panel.get('leakage_eur'))}</li><li>Overstock € {SSR.fmt_eur(panel.get('overstock_eur'))}</li></ul>
+    </div>
   </div>
   {ituk_block}
   <h3>What to fix Monday</h3>
@@ -283,6 +299,21 @@ def _pricing_html(payload: dict) -> str:
     bb = payload.get("book_b") or {}
     blocked = bb.get("conflict_blocked_eur") or 0
     n = bb.get("conflict_count") or 0
+    hero = payload.get("hero") or {}
+    bullets = SSR.bullet_chart_dual(
+        [
+            {
+                "label": "Book B weighted ambition",
+                "actual_eur": hero.get("book_b_weighted_eur") or 0,
+                "blocked_eur": blocked,
+            },
+            {
+                "label": "Guardrail-blocked growth rows",
+                "actual_eur": blocked,
+                "blocked_eur": blocked,
+            },
+        ]
+    )
     conflict_callout = (
         f"<strong>{SSR.fmt_int(n)}</strong> rows · <strong>{SSR.fmt_eur(blocked)}</strong> "
         "weighted ambition blocked by guardrails (HOLD / REVIEW_LEAKAGE / IAM / list exposure)."
@@ -341,17 +372,21 @@ def _pricing_html(payload: dict) -> str:
     )
 
     return f"""
-  <div class="callout">{conflict_callout}</div>
-  <ul class="monday-list" style="margin-bottom:20px">{conflict_summary}</ul>
+  {SSR.section_nav([("pricing-guardrails","Guardrails"),("pricing-heatmap","Bucket heatmap"),("pricing-iam","IAM register"),("pricing-list","List exposure")])}
+  <div class="callout" id="pricing-guardrails">{conflict_callout}</div>
   <div class="grid2">
+    <div class="card"><h3>Ambition vs guardrail</h3><p class="cap">Weighted € vs blocked € · no alloc run</p><div class="ssr-fallback">{bullets}</div></div>
+    <div class="card"><h3>Conflict summary</h3><p class="cap">Growth bucket rows stopped by guardrail</p><ul class="monday-list">{conflict_summary or '<li>No conflicts flagged.</li>'}</ul></div>
+  </div>
+  <div class="grid2" id="pricing-heatmap">
     <div class="card"><h3>Bucket × action heatmap</h3><p class="cap">PN counts · darker = more rows</p>{heatmap}</div>
     <div class="card"><h3>Book B bucket × action (stacked)</h3><p class="cap">Growth/ambition buckets vs guardrail actions</p>{stacked_html}</div>
   </div>
-  <div class="section-label">IAM undercut · full register · {len(bb.get('iam_undercut') or [])} rows</div>
+  <div class="section-label" id="pricing-iam">IAM undercut · full register · {len(bb.get('iam_undercut') or [])} rows</div>
   <div class="table-scroll"><table class="matrix" id="iamTbl"><thead><tr>
     <th>PN</th><th>DB</th><th>Bucket</th><th class="num">KS index</th><th class="num">Forecast €</th><th class="num">L12M €</th>
   </tr></thead><tbody>{iam_rows}</tbody></table></div>
-  <div class="section-label">High list exposure · top 30</div>
+  <div class="section-label" id="pricing-list">High list exposure · top 30</div>
   <div class="table-scroll"><table class="matrix" id="listTbl"><thead><tr>
     <th>PN</th><th>DB</th><th>Bucket</th><th class="num">Forecast €</th><th>Action</th>
   </tr></thead><tbody>{list_rows}</tbody></table></div>
@@ -373,19 +408,35 @@ def write_html(payload: dict) -> None:
     network50 = payload.get("network_top50") or []
     drill500 = payload.get("revision_rows") or []
     db_panels = payload.get("db_panels") or {}
-    ituk_dealers = payload.get("ituk_dealers_top5") or []
+    ituk_dealers = payload.get("ituk_dealers_top10") or payload.get("ituk_dealers_top5") or []
+    waterfall = payload.get("waterfall_steps") or []
+    pipe_heat = payload.get("pipeline_db_heatmap") or []
+    iam_scatter = payload.get("iam_scatter") or []
+    db_radar = payload.get("db_radar") or []
+    spark_db = payload.get("sparkline_by_db") or []
+    money5 = payload.get("money_top5") or []
 
-    db_gap_chart = SSR.vertical_bar_svg(by_db, label_key="db", value_key="gap_eur", color=SSR.COLORS["leak"])
+    db_gap_chart = SSR.leakage_db_comparison(by_db, label_key="db", value_key="gap_eur")
     mix_chart = SSR.pipeline_mix_bar(mix_eur)
+    pipe_donut_net = SSR.pipeline_donut_svg(mix_eur)
     aim_chart = SSR.horizontal_bar_rows(aim_gap, label_key="aim", value_key="gap_eur", color=SSR.COLORS["blue"], max_items=15)
+    aim_treemap = SSR.treemap_cells(aim_gap, label_key="aim", value_key="gap_eur")
     top_pn_chart = SSR.horizontal_bar_rows(top_pn, label_key="pn", value_key="gap_eur", color=SSR.COLORS["leak"], max_items=20,
         label_fn=lambda t: f"{t.get('pn','')} ({t.get('db','')})")
     monthly_chart = SSR.line_chart_svg(monthly)
+    spark_strip = SSR.sparkline_strip(spark_db)
     bb_bucket_chart = SSR.horizontal_bar_rows(
         sorted(bb_buckets, key=lambda x: float(x.get("weight_eur") or 0), reverse=True),
         label_key="bucket", value_key="weight_eur", color=SSR.COLORS["blue"], max_items=12,
         label_fn=lambda b: (b.get("bucket") or "")[:24],
     )
+    wf_chart = SSR.waterfall_steps(waterfall)
+    pipe_hm = SSR.pipeline_db_heatmap(pipe_heat)
+    scatter = SSR.scatter_svg(iam_scatter, x_label="KS price index", y_label="€ gap")
+    radar = SSR.radar_lite_svg(db_radar)
+    money_cards = SSR.money_on_table_cards(money5)
+    ituk_lb = SSR.mini_leaderboard(ituk_dealers[:10])
+    book_b_bullets = SSR.bullet_chart_dual(payload.get("book_b_bullets") or [])
 
     db_options = "".join(
         f'<option value="{SSR.esc(d.get("db"))}"{" selected" if d.get("db")==DEFAULT_DB else ""}>{SSR.esc(d.get("db"))}</option>'
@@ -429,20 +480,68 @@ def write_html(payload: dict) -> None:
 <div class="wrap">
 
 <div id="panel-network" class="panel active" role="tabpanel">
+  {SSR.section_nav([("net-money","Money on table"),("net-waterfall","Waterfall"),("net-heatmap","Pipeline heatmap"),("net-trends","Trends"),("net-compare","DB compare"),("net-register","Top 50")])}
   <div class="callout" id="networkCallout">{_network_callout(hero)}</div>
-  <div class="grid2">
-    <div class="card"><h3>€ leakage by DB</h3><p class="cap">All five DBs · qty gap × reference sell-out · CY2025</p><div class="ssr-fallback">{db_gap_chart}</div></div>
-    <div class="card"><h3>Pipeline mix (€)</h3><p class="cap">Leakage vs overstock vs balanced sell-out €</p><div class="ssr-fallback">{mix_chart}</div></div>
+  <div id="net-money">
+    <h3>Money on the table · top 5 leakage PNs</h3>
+    <p class="cap">Ranked by € gap × reference sell-out · CY2025 five-network cut</p>
+    {SSR.so_what("These five PNs are where Monday pricing calls start — IUK may dominate € but each card shows its DB.")}
+    <div class="ssr-fallback">{money_cards}</div>
+  </div>
+  <div class="grid2" id="net-waterfall">
+    <div class="card"><h3>€ leakage waterfall</h3><p class="cap">Network → DB → top PN decomposition</p>
+      {SSR.so_what("Waterfall shows where network € lands — small DB bars are real money, not noise.")}
+      <div class="ssr-fallback">{wf_chart}</div></div>
+    <div class="card"><h3>Pipeline mix (€)</h3><p class="cap">Leakage vs overstock vs balanced sell-out €</p>
+      {SSR.so_what("Roughly half the register € is leakage; overstock is the stocking-drag counter-story.")}
+      <div class="ssr-fallback">{mix_chart}</div></div>
+  </div>
+  <div class="grid2" id="net-heatmap">
+    <div class="card"><h3>Pipeline heatmap · DB × class</h3><p class="cap">Cell = € · leakage / overstock / balanced</p>
+      {SSR.so_what("GREECE leakage column is blank until sell-out validates — overstock € still shows bill risk.")}
+      <div class="ssr-fallback">{pipe_hm}</div></div>
+    <div class="card"><h3>AIM L1 treemap · € at risk</h3><p class="cap">Area ∝ positive qty gap × reference sell-out</p>
+      {SSR.so_what("Large unmapped AIM block means family tagging gap — not missing data.")}
+      <div class="ssr-fallback">{aim_treemap}</div></div>
+  </div>
+  <div class="grid2" id="net-trends">
+    <div class="card"><h3>Monthly bill vs sell-out</h3><p class="cap">Network aggregate · replenishment_bridge</p>
+      {SSR.so_what("Dec bill cliff is partial-month reporting — do not read as demand collapse.")}
+      <div class="ssr-fallback">{monthly_chart}</div></div>
+    <div class="card"><h3>Monthly sparkline strip · sell-out € by DB</h3><p class="cap">Last month value shown · SVG polyline</p>
+      {SSR.so_what("Flat UTI sparkline = honest zero sell-out months, not a broken chart.")}
+      <div class="ssr-fallback">{spark_strip}</div></div>
+  </div>
+  <div class="grid2" id="net-compare">
+    <div class="card"><h3>Network comparison · € leakage by DB</h3><p class="cap">Five DBs side-by-side · reference sell-out · log-scaled bars</p>
+      {SSR.so_what("Log scale keeps ITUK/UTI visible beside IUK — read the € labels for exact values.")}
+      <div class="ssr-fallback">{db_gap_chart}</div></div>
+    <div class="card"><h3>Pipeline donut · network €</h3><p class="cap">Leakage vs overstock vs balanced sell-out €</p>
+      {SSR.so_what("Donut is the one-screen split for director briefings — percentages are €-weighted.")}
+      <div class="ssr-fallback">{pipe_donut_net}</div></div>
   </div>
   <div class="grid2">
-    <div class="card"><h3>AIM L1 — € at risk</h3><p class="cap">Top families by positive qty gap × reference sell-out</p><div class="ssr-fallback">{aim_chart}</div></div>
+    <div class="card"><h3>DB comparison radar</h3><p class="cap">Toggle DBs · default top 3 by gap share · normalized metrics</p>
+      {SSR.so_what("Turn off IUK to compare ITUK vs UTI shape — five overlays without toggle is unreadable.")}
+      <div class="ssr-fallback">{radar}</div></div>
+    <div class="card"><h3>IAM price index scatter</h3><p class="cap">KS index vs € gap · top 30 with quote</p>
+      {SSR.so_what("Below index=1 means IAM undercuts our reference sell-out — guardrail before list moves.")}
+      <div class="ssr-fallback">{scatter}</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>AIM L1 — € at risk (bars)</h3><p class="cap">Top families by positive gap</p><div class="ssr-fallback">{aim_chart}</div></div>
     <div class="card"><h3>Top 20 PNs — € at risk</h3><p class="cap">Highest € gap network-wide</p><div class="ssr-fallback">{top_pn_chart}</div></div>
   </div>
   <div class="grid2">
-    <div class="card"><h3>Monthly bill vs sell-out</h3><p class="cap">Network aggregate from replenishment_bridge · sell-out € estimated from ref unit</p><div class="ssr-fallback">{monthly_chart}</div></div>
+    <div class="card"><h3>Book B ambition vs guardrail</h3><p class="cap">Weighted forecast € vs blocked growth rows</p><div class="ssr-fallback">{book_b_bullets}</div></div>
     <div class="card"><h3>Book B bucket weights</h3><p class="cap">Forecast € + PN count by provisional bucket</p><div class="ssr-fallback">{bb_bucket_chart}</div></div>
   </div>
-  <div class="section-label">Top 50 PNs · network register</div>
+  <div class="grid2">
+    <div class="card"><h3>ITUK dealer top 10 · € gap</h3><p class="cap">Dealer grain · replenishment_bridge_ituk_dealer</p>
+      {SSR.so_what("Only ITUK has dealer grain — use this list for workshop calls before network-wide actions.")}
+      <div class="ssr-fallback">{ituk_lb}</div></div>
+  </div>
+  <div class="section-label" id="net-register">Top 50 PNs · network register</div>
   <div class="toolbar" style="position:static;padding:0 0 12px;border:0">
     <label>DB <select id="fDb">{fdb_options}</select></label>
     <label>Search PN <input id="fPn" placeholder="part number"/></label>
@@ -461,6 +560,7 @@ def write_html(payload: dict) -> None:
 
 <div id="panel-db" class="panel" role="tabpanel">
   <h2><span class="no">DB</span> · Your network only</h2>
+  {SSR.section_nav([("db-select","Select DB"),("db-split","Leakage split"),("db-monday","Monday fix")])}
   <div class="db-select-wrap">
     <label for="dbTabSelect"><strong>Distributor</strong></label>
     <select id="dbTabSelect">{db_options}</select>

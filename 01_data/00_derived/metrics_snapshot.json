@@ -1,24 +1,24 @@
 {
-  "as_of": "2026-08-17T06:23:49Z",
+  "as_of": "2026-08-25T17:21:01Z",
   "generator": "scripts/build_metrics_snapshot.py",
   "metrics": {
     "sales_fact.rows": {
-      "value": 477505,
+      "value": 514037,
       "source": "sales_fact.parquet",
       "note": ""
     },
     "sales_fact.raw_total_eur": {
-      "value": 108816956.0,
+      "value": 117536189.0,
       "source": "sales_fact.parquet",
       "note": "includes internal/excluded codes"
     },
     "sales.gps_facing_all_lines_eur": {
-      "value": 105002413.0,
+      "value": 113641005.0,
       "source": "load_prism_sales after distributor exclusion, ex-credit-notes/returns",
       "note": ""
     },
     "sales.parts_base_eur": {
-      "value": 103573715.0,
+      "value": 112089307.0,
       "source": "GPS-facing, parts only (line_kind=part), ex-credit-notes/returns",
       "note": "the parts base"
     },
@@ -253,7 +253,7 @@
       "note": "relative benchmark vs network-median dealer mix"
     },
     "verify.pass": {
-      "value": 106,
+      "value": 116,
       "source": "_verification_report.json",
       "note": ""
     },
@@ -263,7 +263,7 @@
       "note": ""
     },
     "verify.generated": {
-      "value": "2026-08-17T06:17:28Z",
+      "value": "2026-08-25T17:19:54Z",
       "source": "_verification_report.json",
       "note": ""
     }

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ISZE Action Ledger Hub · Mode B</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;background:#f7f4ee;font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0}
+.hero{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:42px 28px 28px}
+.hero-inner{max-width:1180px;margin:0 auto}
+.brand{font-family:Georgia,serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#c9d4e6;margin-bottom:14px}
+.hero h1{color:#fff;font-size:34px;line-height:1.12;margin:0 0 12px;font-weight:400}
+.hero .rule{width:64px;height:3px;background:#c0552d;margin:0 0 16px}
+.hero .lead{max-width:820px;font-size:15.5px;color:#d5dce8;margin:0 0 22px}
+.hero-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.hk{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:14px 16px;position:relative;cursor:help}
+.hk .v{font-size:28px;font-weight:700;letter-spacing:-.5px;color:#fff}
+.hk .v.sm{font-size:20px;line-height:1.2}
+.hk .l{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#aeb9cb;margin-top:4px}
+.hk .tip{display:none;position:absolute;left:0;top:calc(100% + 8px);width:min(320px,70vw);
+  background:#15233c;color:#f7f4ee;border-top:3px solid #c0552d;padding:12px 14px;
+  font-size:12.5px;line-height:1.45;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.hk:hover .tip,.hk:focus-within .tip{display:block}
+.hk .sub{font-size:11px;color:#c9d4e6;margin-top:6px;line-height:1.35;font-weight:400}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 28px 80px}
+h2{font-size:22px;margin:28px 0 8px;padding-bottom:8px;border-bottom:2px solid #1a2b4a}
+h2 .no{color:#c0552d}
+.lead{color:#6b6256;margin:0 0 18px;max-width:900px}
+.callout{border-left:3px solid #c0552d;background:#fff;padding:14px 16px;margin:0 0 20px;font-size:14px;color:#222}
+.steps{margin:0;padding-left:1.2em;color:#222}
+.steps li{margin-bottom:8px}
+.artefacts{list-style:none;margin:0;padding:0}
+.artefacts li{background:#fff;border:1px solid #d9d3c8;border-left:3px solid #c0552d;padding:12px 14px;margin-bottom:10px}
+.artefacts a{color:#15233c;font-weight:600;text-decoration:underline}
+.artefacts a:hover{color:#c0552d}
+.artefacts .path{font-size:12px;color:#6b6256;margin-top:4px;word-break:break-all;font-family:Consolas,"Courier New",monospace}
+.artefacts .note{font-size:13px;color:#6b6256;margin-top:4px}
+.miss{display:inline-block;margin-left:8px;font-size:11px;text-transform:uppercase;letter-spacing:.04em;
+  background:#f8e4dc;color:#8a3030;padding:2px 8px;font-weight:700}
+table.matrix{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+.matrix thead th{background:#1a2b4a;color:#f7f4ee;text-align:left;padding:8px 10px;font-size:11px;
+  text-transform:uppercase;letter-spacing:.05em;position:sticky;top:0;z-index:6}
+.matrix thead th.num,.matrix td.num{text-align:right;font-variant-numeric:tabular-nums}
+.matrix td{padding:8px 10px;border-bottom:1px solid #e8e4dc;color:#222;vertical-align:top}
+.matrix tbody tr:nth-child(even) td{background:#faf8f4;color:#222}
+.matrix tbody tr:hover td{background:#eef3f9}
+.table-scroll{overflow-x:auto;margin-bottom:8px;-webkit-overflow-scrolling:touch}
+.score-grid{display:grid;grid-template-columns:minmax(280px,380px) 1fr;gap:20px;align-items:start;margin:0 0 24px}
+.radar-panel{background:#fff;border:1px solid #d9d3c8;padding:12px 14px 8px}
+.radar-panel .legend{font-size:12px;color:#6b6256;margin:0 0 8px}
+.radar-panel .lg{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:4px}
+.radar-panel .lg.today{background:#2a78d6}
+.radar-panel .lg.target{background:#c0552d;background-image:repeating-linear-gradient(90deg,#c0552d 0 6px,transparent 6px 10px)}
+.radar-svg{width:100%;max-width:360px;height:auto;display:block;margin:0 auto}
+.radar-svg .ring-lab{font-size:9px;fill:#6b6256}
+.radar-svg .axis-lab{font-size:9px;fill:#15233c;font-family:Georgia,serif}
+.tip-chip{position:relative;cursor:help}
+.tip-chip .tip{display:none;position:absolute;left:0;bottom:calc(100% + 8px);width:min(320px,70vw);
+  background:#15233c;color:#f7f4ee;border-top:3px solid #c0552d;padding:12px 14px;
+  font-size:12.5px;line-height:1.45;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.tip-chip:hover .tip,.tip-chip:focus-within .tip{display:block}
+.axis-tips td.num{font-weight:700;color:#15233c}
+code{font-size:12px;background:#eceae4;padding:1px 5px;color:#222}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid #d9d3c8;font-size:11.5px;color:#6b6256;line-height:1.65}
+@media(max-width:900px){.hero-kpis{grid-template-columns:1fr 1fr}.hero h1{font-size:26px}.wrap,.hero{padding-left:16px;padding-right:16px}.score-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.hero-kpis{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="brand">ISZE · Mode B · Ops</div>
+    <h1>Action Ledger Hub</h1>
+    <div class="rule"></div>
+    <p class="lead">
+      P8 closed the loop: one opportunity → decision → outcome spine over 9 existing
+      surfaces. Source euros are re-stated unchanged (no re-estimation). Billing horizon for
+      measurable outcomes is <strong style="color:#fff">2026-06-30</strong>.
+      This hub is the door — click artefacts below; you do not need to read raw CSVs first.
+    </p>
+    <div class="hero-kpis" tabindex="0">
+      <div class="hk" tabindex="0">
+        <div class="v">23,236</div>
+        <div class="l">Open action rows</div>
+        <div class="sub">Not euros — triage inventory</div>
+        <div class="tip">Open action rows (NEW / TRIAGED / ACTIONED) — not a euro figure.
+          20,572 of 23,236 are PRICE_REVISION
+          exception-queue lines. € at stake is the neighbouring KPI (€22,110,563.54, mixed bases).
+          Source: action_ledger.meta.json · 2026-08-25T17:52:29Z.</div>
+      </div>
+      <div class="hk" tabindex="0">
+        <div class="v sm">€22,110,563.54</div>
+        <div class="l">€ at stake (open)</div>
+        <div class="tip">Sum of eur_at_stake on open rows — mixed bases (L12M, CY2025, annualised, trailing). Not one wallet; nulls treated as 0 in the sum. Snapshot from action_ledger_open.csv · 2026-08-25T17:52:29Z.</div>
+      </div>
+      <div class="hk" tabindex="0">
+        <div class="v">0</div>
+        <div class="l">Rejects</div>
+        <div class="tip">Rows rejected this build run (action_ledger_rejects.csv / meta counts.rejects). Zero means adapters passed lineage without drops this run.</div>
+      </div>
+      <div class="hk" tabindex="0">
+        <div class="v">0</div>
+        <div class="l">Not measurable</div>
+        <div class="tip">Outcome rows marked NOT_MEASURABLE when the billing window cannot close past the horizon. Outcomes stay empty until a decision is ACTIONED and billing is past the horizon — realised_eur is never estimated. Current outcomes count: 0.</div>
+      </div>
+      <div class="hk" tabindex="0">
+        <div class="v sm">2026-06-30</div>
+        <div class="l">Billing horizon</div>
+        <div class="tip">sales_fact billing horizon used for outcome measurability (meta billing_horizon). Past this date, closed windows can score; before it, unmeasurable outcomes stay NOT_MEASURABLE with realised_eur NULL.</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <h2><span class="no">01</span> What this is / what changed</h2>
+  <p class="lead">
+    Before P8, signals lived on separate surfaces. The Action Ledger co-moved those into one
+    spine so triage and later outcomes share the same opportunity_id. Euros on the ledger are
+    the source cells re-stated as-is — attribution stays co-movement language only.
+  </p>
+  <div class="callout">
+    Run <code>20260825T175229Z_48a077</code> · produced
+    <code>2026-08-25T17:52:29Z</code> · 9 adapters · Mode B only.
+  </div>
+
+  
+  <h2><span class="no">01b</span> Executive scorecard</h2>
+  <p class="lead">
+    Scale is 0–100. Blue = honest Today. Orange dashed = best-in-class ambition (outer ring, usually 85–95) —
+    not a sad mid-chart ring. Hover an axis or score for what is dragging it. Maturity is not painted green.
+  </p>
+  <div class="score-grid">
+    <div class="radar-panel">
+      <div class="legend"><span class="lg today"></span> Today &nbsp; <span class="lg target"></span> Best-in-class target</div>
+      <svg class="radar-svg" viewBox="0 0 320 320" role="img" aria-label="Programme scorecard radar 0 to 100">
+<polygon points="160.0,132.5 179.4,140.6 187.5,160.0 179.4,179.4 160.0,187.5 140.6,179.4 132.5,160.0 140.6,140.6" fill="none" stroke="#e1e0d9" stroke-width="1"/>
+<polygon points="160.0,105.0 198.9,121.1 215.0,160.0 198.9,198.9 160.0,215.0 121.1,198.9 105.0,160.0 121.1,121.1" fill="none" stroke="#e1e0d9" stroke-width="1"/>
+<text x="164" y="108" class="ring-lab">50</text>
+<polygon points="160.0,77.5 218.3,101.7 242.5,160.0 218.3,218.3 160.0,242.5 101.7,218.3 77.5,160.0 101.7,101.7" fill="none" stroke="#e1e0d9" stroke-width="1"/>
+<polygon points="160.0,50.0 237.8,82.2 270.0,160.0 237.8,237.8 160.0,270.0 82.2,237.8 50.0,160.0 82.2,82.2" fill="none" stroke="rgba(192,85,45,0.35)" stroke-width="1"/>
+<text x="164" y="53" class="ring-lab">100</text>
+<line x1="160.0" y1="160.0" x2="160.0" y2="50.0" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="160.0" y1="160.0" x2="237.8" y2="82.2" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="160.0" y1="160.0" x2="270.0" y2="160.0" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="160.0" y1="160.0" x2="237.8" y2="237.8" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="160.0" y1="160.0" x2="160.0" y2="270.0" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="160.0" y1="160.0" x2="82.2" y2="237.8" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="160.0" y1="160.0" x2="50.0" y2="160.0" stroke="#e1e0d9" stroke-width="1"/>
+<line x1="160.0" y1="160.0" x2="82.2" y2="82.2" stroke="#e1e0d9" stroke-width="1"/>
+<polygon points="160.0,61.0 205.1,114.9 190.8,160.0 202.8,202.8 160.0,212.8 142.9,177.1 110.5,160.0 96.2,96.2" fill="rgba(42,120,214,0.14)" stroke="#2a78d6" stroke-width="2.5"/>
+<polygon points="160.0,55.5 230.0,90.0 259.0,160.0 226.1,226.1 160.0,253.5 90.0,230.0 66.5,160.0 86.1,86.1" fill="none" stroke="#c0552d" stroke-width="2.5" stroke-dasharray="6 4"/>
+<g tabindex="0"><title>Core data integrity: Today 90/100 · Target 95/100 — Spine on PRISM is production-grade. Not the commercial blocker.</title><circle cx="160.0" cy="61.0" r="4.5" fill="#2a78d6"/><circle cx="160.0" cy="55.5" r="3.5" fill="#c0552d"/><text x="160.0" y="28.0" class="axis-lab" text-anchor="middle">Core data</text></g>
+<g tabindex="0"><title>Freshness: Today 58/100 · Target 90/100 — Billing through Jun 2026; Jul–Aug SAP extract still missing.</title><circle cx="205.1" cy="114.9" r="4.5" fill="#2a78d6"/><circle cx="230.0" cy="90.0" r="3.5" fill="#c0552d"/><text x="253.3" y="66.7" class="axis-lab" text-anchor="middle">Freshness</text></g>
+<g tabindex="0"><title>Sell-out coverage: Today 28/100 · Target 90/100 — 5 DBs only. UMI + DE/BE/PT/Nordics missing — SoW/elasticity blocked.</title><circle cx="190.8" cy="160.0" r="4.5" fill="#2a78d6"/><circle cx="259.0" cy="160.0" r="3.5" fill="#c0552d"/><text x="292.0" y="160.0" class="axis-lab" text-anchor="middle">Sell-out</text></g>
+<g tabindex="0"><title>Price honesty: Today 55/100 · Target 85/100 — Lists landed; list-to-pocket joins not signed off.</title><circle cx="202.8" cy="202.8" r="4.5" fill="#2a78d6"/><circle cx="226.1" cy="226.1" r="3.5" fill="#c0552d"/><text x="253.3" y="253.3" class="axis-lab" text-anchor="middle">Price honesty</text></g>
+<g tabindex="0"><title>Mail→action: Today 48/100 · Target 85/100 — G0a live; PartSales/StD intake still manual.</title><circle cx="160.0" cy="212.8" r="4.5" fill="#2a78d6"/><circle cx="160.0" cy="253.5" r="3.5" fill="#c0552d"/><text x="160.0" y="292.0" class="axis-lab" text-anchor="middle">Mail→action</text></g>
+<g tabindex="0"><title>Ops loop: Today 22/100 · Target 90/100 — Ledger built; 0 outcomes until Monday triage closes loops.</title><circle cx="142.9" cy="177.1" r="4.5" fill="#2a78d6"/><circle cx="90.0" cy="230.0" r="3.5" fill="#c0552d"/><text x="66.7" y="253.3" class="axis-lab" text-anchor="middle">Ops loop</text></g>
+<g tabindex="0"><title>Tender honesty: Today 45/100 · Target 85/100 — Thin sized set + incomplete portals — not market potential.</title><circle cx="110.5" cy="160.0" r="4.5" fill="#2a78d6"/><circle cx="66.5" cy="160.0" r="3.5" fill="#c0552d"/><text x="28.0" y="160.0" class="axis-lab" text-anchor="middle">Tender honesty</text></g>
+<g tabindex="0"><title>Quote / verify gate: Today 82/100 · Target 95/100 — Verify green 116/0/0; keep process bar for external decks.</title><circle cx="96.2" cy="96.2" r="4.5" fill="#2a78d6"/><circle cx="86.1" cy="86.1" r="3.5" fill="#c0552d"/><text x="66.7" y="66.7" class="axis-lab" text-anchor="middle">Quote gate</text></g>
+</svg>
+    </div>
+    <div class="table-scroll"><table class="matrix axis-tips">
+      <thead><tr><th>Axis</th><th class="num">Today</th><th class="num">Target</th><th>What is dragging it</th></tr></thead>
+      <tbody>
+        <tr><td>Core data integrity</td><td class="num tip-chip" tabindex="0">90<div class="tip">Spine on PRISM is production-grade. Not the commercial blocker.</div></td><td class="num">95</td><td>Spine on PRISM is production-grade. Not the commercial blocker.</td></tr><tr><td>Freshness</td><td class="num tip-chip" tabindex="0">58<div class="tip">Billing through Jun 2026; Jul–Aug SAP extract still missing.</div></td><td class="num">90</td><td>Billing through Jun 2026; Jul–Aug SAP extract still missing.</td></tr><tr><td>Sell-out coverage</td><td class="num tip-chip" tabindex="0">28<div class="tip">5 DBs only. UMI + DE/BE/PT/Nordics missing — SoW/elasticity blocked.</div></td><td class="num">90</td><td>5 DBs only. UMI + DE/BE/PT/Nordics missing — SoW/elasticity blocked.</td></tr><tr><td>Price honesty</td><td class="num tip-chip" tabindex="0">55<div class="tip">Lists landed; list-to-pocket joins not signed off.</div></td><td class="num">85</td><td>Lists landed; list-to-pocket joins not signed off.</td></tr><tr><td>Mail→action</td><td class="num tip-chip" tabindex="0">48<div class="tip">G0a live; PartSales/StD intake still manual.</div></td><td class="num">85</td><td>G0a live; PartSales/StD intake still manual.</td></tr><tr><td>Ops loop</td><td class="num tip-chip" tabindex="0">22<div class="tip">Ledger built; 0 outcomes until Monday triage closes loops.</div></td><td class="num">90</td><td>Ledger built; 0 outcomes until Monday triage closes loops.</td></tr><tr><td>Tender honesty</td><td class="num tip-chip" tabindex="0">45<div class="tip">Thin sized set + incomplete portals — not market potential.</div></td><td class="num">85</td><td>Thin sized set + incomplete portals — not market potential.</td></tr><tr><td>Quote / verify gate</td><td class="num tip-chip" tabindex="0">82<div class="tip">Verify green 116/0/0; keep process bar for external decks.</div></td><td class="num">95</td><td>Verify green 116/0/0; keep process bar for external decks.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+
+  <h2><span class="no">02</span> Artefacts (clickable)</h2>
+  <p class="lead">Links work when this page is opened via OPEN_ACTION_LEDGER_HUB.cmd.</p>
+  <ul class="artefacts">
+<li><a href="ISZE_Action_Ledger.html">Main Action Ledger (4-view HTML)</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\ops\ISZE_Action_Ledger.html</div><div class="note">Open / triage / outcomes / rejects views</div></li>
+<li><a href="OPEN_ACTION_LEDGER.cmd">OPEN_ACTION_LEDGER.cmd</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\ops\OPEN_ACTION_LEDGER.cmd</div><div class="note">Double-click launcher for the main ledger</div></li>
+<li><a href="file:///C:/Users/jerom/Desktop/claude/ISZE/01_data/00_derived/ACTION_LEDGER_REVIEW_20260825.md">ACTION_LEDGER_REVIEW_20260825.md</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\ACTION_LEDGER_REVIEW_20260825.md</div><div class="note">Plain-English review of this ledger run</div></li>
+<li><a href="file:///C:/Users/jerom/Desktop/claude/ISZE/01_data/00_derived/action_ledger_open.csv">action_ledger_open.csv</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\action_ledger_open.csv</div><div class="note">Current open book (NEW / TRIAGED / ACTIONED)</div></li>
+<li><a href="file:///C:/Users/jerom/Desktop/claude/ISZE/01_data/00_derived/action_ledger_decisions.csv">action_ledger_decisions.csv</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\action_ledger_decisions.csv</div><div class="note">Human-editable — triage and close decisions here</div></li>
+<li><a href="file:///C:/Users/jerom/Desktop/claude/ISZE/01_data/00_derived/action_ledger_rejects.csv">action_ledger_rejects.csv</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\action_ledger_rejects.csv</div><div class="note">Rows dropped this run with reason</div></li>
+<li><a href="file:///C:/Users/jerom/Desktop/claude/ISZE/01_data/00_derived/action_ledger.meta.json">action_ledger.meta.json</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\action_ledger.meta.json</div><div class="note">Run id, horizon, adapter counts</div></li>
+<li><a href="file:///C:/Users/jerom/Desktop/claude/ISZE/01_data/00_derived">action_ledger.parquet</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\action_ledger.parquet</div><div class="note">May not open in browser — link opens the derived folder in Explorer</div></li>
+<li><a href="file:///C:/Users/jerom/Desktop/claude/ISZE/01_data/00_derived">action_ledger_history.parquet</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\action_ledger_history.parquet</div><div class="note">History spine — open derived folder (Explorer)</div></li>
+<li><a href="file:///C:/Users/jerom/Desktop/claude/ISZE/01_data/91_build/build_action_ledger.py">build_action_ledger.py</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\01_data\91_build\build_action_ledger.py</div><div class="note">Ledger builder</div></li>
+<li><a href="file:///C:/Users/jerom/Desktop/claude/ISZE/01_data/91_build/action_ledger_adapters.py">action_ledger_adapters.py</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\01_data\91_build\action_ledger_adapters.py</div><div class="note">Nine surface adapters</div></li>
+<li><a href="file:///C:/Users/jerom/Desktop/claude/ISZE/00_docs/PROMPT_ACTION_LEDGER_P8.md">PROMPT_ACTION_LEDGER_P8.md</a><div class="path">C:\Users\jerom\Desktop\claude\ISZE\00_docs\PROMPT_ACTION_LEDGER_P8.md</div><div class="note">P8 closed-loop prompt / contract</div></li>
+</ul>
+
+  <h2><span class="no">03</span> Top open by € (readable preview)</h2>
+  <p class="lead">
+    Top 25 open opportunities by eur_at_stake — not a substitute for the full ledger,
+    just enough to see what is on the book without opening the CSV.
+  </p>
+  <div class="table-scroll"><table class="matrix">
+<thead><tr>
+<th>Signal</th><th>DB</th><th>Entity</th>
+<th class="num">€ at stake</th>
+<th>Source file</th><th>Source column</th>
+<th>Recommended action</th><th>Opportunity id</th>
+</tr></thead><tbody>
+<tr><td>BOOK_B</td><td>IUK</td><td>8983767550</td><td class="num">€639,901.78</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>8336fe9a6dce4d33</code></td></tr>
+<tr><td>BOOK_B</td><td>GREECE</td><td>8983767550</td><td class="num">€639,901.78</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>a65f48abce0561c5</code></td></tr>
+<tr><td>BOOK_B</td><td>IRELAND</td><td>8983767550</td><td class="num">€639,901.78</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>a97f7a60b0742682</code></td></tr>
+<tr><td>LEAKAGE</td><td>IUK</td><td>8983767550</td><td class="num">€573,277.00</td><td>leakage_monday_actions_20260819.csv</td><td>gap_eur</td><td>REVIEW_LEAKAGE</td><td><code>3b4361608b685ff0</code></td></tr>
+<tr><td>LEAKAGE</td><td>IUK</td><td>7552348280</td><td class="num">€555,970.00</td><td>leakage_monday_actions_20260819.csv</td><td>gap_eur</td><td>REVIEW_LEAKAGE</td><td><code>635017e34dec6292</code></td></tr>
+<tr><td>LEAKAGE</td><td>IUK</td><td>8978808250</td><td class="num">€458,359.00</td><td>leakage_monday_actions_20260819.csv</td><td>gap_eur</td><td>REVIEW_LEAKAGE</td><td><code>9130cba985b4ed1e</code></td></tr>
+<tr><td>LEAKAGE</td><td>IUK</td><td>8978808270</td><td class="num">€447,138.00</td><td>leakage_monday_actions_20260819.csv</td><td>gap_eur</td><td>REVIEW_LEAKAGE</td><td><code>bc20b124a5f34cd7</code></td></tr>
+<tr><td>CATALOGUE_GAP</td><td>—</td><td>550047337</td><td class="num">€433,820.16</td><td>no_pr00_gap_cy2025_ranked.csv</td><td>cy2025_eur</td><td>UMI_SHELL_LUBE_PARKED</td><td><code>32169937e7643606</code></td></tr>
+<tr><td>BOOK_B</td><td>UTI</td><td>8982447940</td><td class="num">€355,338.39</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>268803f1ca0ad0cd</code></td></tr>
+<tr><td>BOOK_B</td><td>IRELAND</td><td>8982447940</td><td class="num">€355,338.39</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>5b5d9593d115e304</code></td></tr>
+<tr><td>REPLENISHMENT</td><td>IUK</td><td>8983767550</td><td class="num">€266,699.80</td><td>replenishment_exceptions_cy2025.csv</td><td>bill_eur</td><td>—</td><td><code>afff0d9c23dc34e4</code></td></tr>
+<tr><td>BOOK_B</td><td>IUK</td><td>8974995480</td><td class="num">€266,146.78</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>b6ec08c4a9c080fd</code></td></tr>
+<tr><td>BOOK_B</td><td>IRELAND</td><td>8974995480</td><td class="num">€266,146.78</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>42da0fab34b308af</code></td></tr>
+<tr><td>BOOK_B</td><td>GREECE</td><td>8974995480</td><td class="num">€266,146.78</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>c048e62f5798bfb3</code></td></tr>
+<tr><td>DEFECTION</td><td>ITUK</td><td>ITUK|fuel_filter</td><td class="num">€232,926.57</td><td>defection_alerts.csv</td><td>trailing_12m_rev_eur</td><td>—</td><td><code>e0b4ce354adfe311</code></td></tr>
+<tr><td>BOOK_B</td><td>IRELAND</td><td>8975554500</td><td class="num">€222,107.83</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>1fa80a062597fbb8</code></td></tr>
+<tr><td>BOOK_B</td><td>GREECE</td><td>8975554500</td><td class="num">€222,107.83</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>6dae2e48e3457e21</code></td></tr>
+<tr><td>BOOK_B</td><td>IUK</td><td>8975554500</td><td class="num">€222,107.83</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>700f26aea09f0a07</code></td></tr>
+<tr><td>BOOK_B</td><td>IUK</td><td>8981596930</td><td class="num">€219,442.73</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>bd2c4c4d0b782afc</code></td></tr>
+<tr><td>BOOK_B</td><td>IRELAND</td><td>8981596930</td><td class="num">€219,442.73</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>c7db79aa7ba9cb92</code></td></tr>
+<tr><td>LEAKAGE</td><td>IUK</td><td>8975359391</td><td class="num">€205,666.00</td><td>leakage_monday_actions_20260819.csv</td><td>gap_eur</td><td>REVIEW_LEAKAGE</td><td><code>56f25954cb65f91a</code></td></tr>
+<tr><td>LEAKAGE</td><td>IUK</td><td>8982705240</td><td class="num">€204,535.00</td><td>leakage_monday_actions_20260819.csv</td><td>gap_eur</td><td>REVIEW_LEAKAGE</td><td><code>197a382ef73ae4f0</code></td></tr>
+<tr><td>BOOK_B</td><td>GREECE</td><td>8982705240</td><td class="num">€204,375.72</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>85d8f34e34e42400</code></td></tr>
+<tr><td>BOOK_B</td><td>ITUK</td><td>8982705240</td><td class="num">€204,375.72</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_HIGH_LIST_EXPOSURE</td><td><code>9b93e8435294a051</code></td></tr>
+<tr><td>BOOK_B</td><td>IUK</td><td>8982705240</td><td class="num">€204,375.72</td><td>revision_book_b_top_review.csv</td><td>l12m_eur</td><td>REVIEW_LEAKAGE</td><td><code>02f63c0f73c7dcf8</code></td></tr>
+</tbody></table></div>
+
+  <h2><span class="no">04</span> Your next step</h2>
+  <div class="callout">
+    <ol class="steps">
+      <li>Open <strong>action_ledger_decisions.csv</strong> (human-editable) and set states:
+        <code>TRIAGED</code> → <code>ACTIONED</code> → <code>CLOSED_*</code>.</li>
+      <li>Re-run the ledger builder after edits so the open book and history pick up decisions.</li>
+      <li>Outcomes stay empty until a row is <code>ACTIONED</code> and billing is past the horizon
+        (2026-06-30). Unmeasurable windows land as
+        <code>NOT_MEASURABLE</code> with realised_eur NULL — never estimated.</li>
+      <li>Use the main 4-view ledger HTML for day-to-day review; use this hub to find files fast.</li>
+    </ol>
+  </div>
+
+  <p class="foot">
+    Mode B · internal ops hub · no CDN · house navy/terra · attribution: co-moved, never delivered/caused/drove.
+    Rebuild: <code>python 02_dashboards/_build/build_action_ledger_hub.py</code>
+  </p>
+</main>
+</body>
+</html>

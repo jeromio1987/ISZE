@@ -1,0 +1,180 @@
+ISZE MEMORY REVIEW — Week 35, 2026
+Generated: 2026-08-24
+
+Scope note: per standing instruction (2026-07-13), lubricants.md and action-plan-fy*.md remain
+permanently out of scope. lubricants.md still doesn't exist under 05_memory/projects/.
+action-plan-fy2027.md still present, not opened, read, or referenced this run. Same pre-existing
+internal link inside pms-coverage.md pointing at a wrong-FY action-plan path — skipped silently
+again, not listed as a finding.
+
+## Verifier
+| Check | Result | Evidence |
+|-------|--------|----------|
+| Brief written this run | PASS | 05_memory/briefs/memory_review_W35_2026.txt |
+| Stale files remaining | FAIL | 8 of 11 in-scope project files STALE by clock (up from 7 at W34 — competitiveness.md and imie_3party_2025_2026.md newly crossed the 3-week line) |
+| Off-scope untouched | PASS | lubricants absent; action-plan-fy2027.md present but untouched |
+| Applied log updated | PASS | 05_memory/briefs/memory_applied_log.md (3 new entries) |
+
+## Memory Health
+
+Three real fixes landed upstream this week and are now reflected in memory. One large new
+finding (AIM pricing-risk retirement) needs Jerome's own pass rather than an automated edit.
+
+1. **metric_dictionary.md's PRISM-lane table — the W34 finding is now resolved.** Commit `953e2a4`
+   (2026-08-20, "Add PRISM BI tools and consolidate dashboards") rewrote the ITUK oil-filter
+   PRISM-lane table in `metric_dictionary.md` to the same bucketed-UIO (23,068) / 100%-addressable
+   formula `pms-coverage.md` was already carrying. Verified by diff — the two sources agree again
+   (CY2025: 13,599 actual / 116% uncapped, both places). Removed the now-false ⚠ flag in
+   `pms-coverage.md` that said `metric_dictionary.md` hadn't caught up. This closes a gap that had
+   stood unresolved outside this task's edit scope since W34.
+2. **`_verification_report.md` moved 106→108 pass, still 0 warn / 0 fail** (regenerated
+   2026-08-18T15:12:22Z). Two new checks added, nothing regressed. Logged as a third reconfirmation
+   on `sales-analytics-pipeline.md`'s existing checklist line.
+3. **Q1FY2027 canonical swap — closed, not just circumstantial anymore.** This has been carried as
+   "still needs Jerome's one-word confirmation" for 4+ weeks running. This run checked the actual
+   files directly: `12_raw/sales/Q1FY2027.XLSX` is now byte-identical (md5) to the complete export
+   `04_sales/EXPORT.XLSX`, the old partial file is archived at
+   `12_raw/sales/_archive/Q1FY2027_PARTIAL_archived_2026-07-06.XLSX`, and
+   `_data_integrity_open_issues.md` (touched 2026-08-19) no longer carries a
+   Q1FY27-CANONICAL-SWAP line. Updated `monthly-sales-report-fy2027.md` accordingly.
+4. **New, not auto-applied — AIM's pricing-risk layer was formally retired 2026-08-18.**
+   `DECISIONS.md` logged eight entries that day under an "AIM/PRISM reinvention" sequence. The
+   consequential one for memory: a pre-registered backtest (n=18, CY2023–2025 complete years) found
+   no candidate pricing-risk feature clears holdout against persistence (GPS ρ=0.92, PMS total
+   ρ=0.75 for the naive baseline alone) — `aim_high_risk_pct` is being kept only as a context column,
+   not re-fit as a 0–100 decision layer. `aftermarket-intelligence.md` still describes "Pricing Risk
+   Map" and "Opportunity Engine" as live scoring outputs with no mention of this retirement — that's
+   a real content gap, but it's a multi-paragraph finding (backtest methodology, what's kept vs
+   killed, the P4 account-health replacement direction) that needs a considered rewrite, not a
+   one-line factual sync. Flagged in Suggested Updates rather than applied.
+5. **New — Eucon/PartsPool mislabeling, relevant to competitiveness.md and glossary.md.** Per
+   `eucon_price_gap.meta.json` (relabelled 2026-08-14): the file long called "Eucon" data is
+   actually PartsPool Autodoc DE/NO (44 PNs, as-of 2026-03-29) — explicitly "not the 2023 UK/ITUK
+   Eucon Price Survey." `competitiveness.md`'s own text still says "Eucon/AutoDoc IAM benchmark
+   (44 PNs)," and `glossary.md`'s "Eucon" entry doesn't distinguish the real Eucon survey from this
+   file. Flagged, not fixed — naming clarity call, several files touched.
+6. **New — ids-db-leverage-os.md is behind its own project's shipped state.** The file's Section 4
+   table still lists IDS v1.4 as "Pending... Jerome-besluit," and "Open beslissingen" still lists
+   "v1.4 compare: alleen avg-exclude of ook uit list/HTML?" as open. `ids_dealer_ranking/CHANGELOG.md`
+   shows v1.4 country packs were actually built and shipped as zips on 2026-08-15 (Baumann
+   avg-exclude rule applied, IT/CH zero-shell bug caught and fixed same day) — only the Outlook
+   draft to Tomoe is still unsent (a genuine Jerome action, not a memory gap). This is Jerome's own
+   Dutch decision-tracking file — flagged for his pass rather than auto-edited, since telling which
+   of the 6 open items are now resolved needs his judgment, not just file-timestamp evidence.
+7. **Automation drift — the 3-week 267009 failure pattern looks resolved, not worse.** W34 flagged
+   `ISZE_PMS_IAM_Refresh` / `ISZE_LiveStateAudit_Weekly` failing exit 267009 for 3 consecutive weeks.
+   The 2026-08-20 audit (between last review and this one) showed both tasks with **Last result 0**
+   — a real pass. Today's audit shows 267009 again, but now explicitly explained as LOW severity,
+   "task still running when audit queried" (the ~1h43m refresh job overlapping the 08:00 audit
+   window) — not the earlier HIGH-severity genuine-failure read. Worth a one-time log check to
+   confirm, but this reads like a timing artifact the audit script now handles correctly, not a
+   renewed failure.
+8. **imie_3party_2025_2026.md and competitiveness.md both crossed the 3-week staleness line this
+   week** (25 and 28 days since last_validated respectively — competitiveness.md was flagged "right
+   on the edge" at W34). No new IMIE 3-party packs found on disk since 2026-07-30; no accuracy
+   issues found on cross-check of either file. Clock-stale, not content-stale.
+
+STALE (>3 weeks since last validated) — 8 of 11:
+- sales-analytics-pipeline.md — 2026-06-13 (72 days) — one reconfirmation applied this run
+- pricing-basket-2026.md — 2026-06-29 (56 days) — still behind the 2026-08-11 DECISIONS.md batch
+  (see Suggested Updates #8, carried from W34, unresolved)
+- aftermarket-intelligence.md — 2026-07-02 (53 days) — new content gap this week, see #4 above
+- gps-reconciliation.md — 2026-07-03 (52 days) — no new content, no contradictions found
+- pms-coverage.md — 2026-07-03 (52 days) — one correction applied this run (see Applied this run)
+- monthly-sales-report-fy2027.md — 2026-07-05 (50 days) — one correction applied this run; still no
+  July PDF on disk (checked `01_data/04_sales/` directly again)
+- competitiveness.md — 2026-07-27 (28 days) — newly stale; see #5, #8 above
+- imie_3party_2025_2026.md — 2026-07-30 (25 days) — newly stale; see #8 above
+
+NOT STALE:
+- uio.md — 2026-08-17 (7 days). V20_SPEC.md and V20_SPEC_v2_DRAFT.md both untouched since last
+  review (12/9 Aug respectively) — no movement to report.
+- ids-db-leverage-os.md — 2026-08-11 (13 days) — see #6 above.
+- db-sales-review-mode-a.md — 2026-08-12 (12 days) — matches DECISIONS.md 2026-08-12 entry, no drift.
+
+## Applied this run
+
+1. `05_memory/projects/pms-coverage.md` — removed the now-resolved ⚠ flag about `metric_dictionary.md`
+   lagging the PRISM-lane re-base (see Memory Health #1). `Last validated` left at 2026-07-03 —
+   targeted sync, not a re-validation.
+2. `05_memory/projects/sales-analytics-pipeline.md` — appended a third reconfirmation to the "clear
+   verify fails" line: 108/0/0 as of the 2026-08-18 report (see Memory Health #2). `Last validated`
+   left at 2026-06-13.
+3. `05_memory/projects/monthly-sales-report-fy2027.md` — closed the Q1FY2027 canonical-swap open item
+   with direct file-system evidence (md5 match + archive path) rather than carrying it as
+   circumstantial again (see Memory Health #3). `Last validated` left at 2026-07-05.
+
+Full detail logged to `05_memory/briefs/memory_applied_log.md`.
+
+## Open Items Still Unresolved
+
+Carried forward, no movement unless noted:
+- EQ-HIT PN→service-schedule mapping (pms-coverage.md) — still pending.
+- CY2025 full PMS basket gap revalidation (pms-coverage.md) — still pending.
+- VKWRT load for SPA-adjusted AIM scoring (aftermarket-intelligence.md) — still open.
+- Other-DB sell-out data collection for AIM, FY2027 20% KPI (aftermarket-intelligence.md) — still open.
+- GPS v9 snapshot re-basing decision — still needs Jerome's call (gps-reconciliation.md).
+- MIDI contribution (uio.md, ~92,585 units 2024) — still "treat as estimate," unverified since v17.
+- Re-deploy the two `07_deploy` competitiveness copies from the corrected canonical file — still
+  carrying the old chain-factor bug per `competitiveness.md`'s own text; not independently re-checked
+  on disk this run.
+- ids-db-leverage-os.md's own "Open beslissingen" — 6 unresolved calls, at least one (v1.4 scope)
+  now likely stale per Memory Health #6 — Jerome's to resolve/update, noted for visibility.
+- `V20_SPEC_v2_DRAFT.md`'s "Problem 8" (arithmetically impossible live-dashboard KPI) — still not
+  visibly merged into `V20_SPEC.md`, unchanged since last flagged.
+- New: Outlook draft to Tomoe Baumann (IDS v1.4 country packs) still sitting unsent
+  (`draft_ids_midi_v14.py`) — Jerome action, not a memory error.
+- New: verify the 2026-08-24 267009 automation readings are genuinely benign overlap and not a
+  renewed failure (see Memory Health #7) — one log check closes this.
+
+## Suggested Updates
+
+(Jerome homework — global CLAUDE.md is outside this task's edit scope; everything below needs a human
+hand or a separate pass.)
+
+1. Global CLAUDE.md "Key confirmed data" PMS line — still shows the rejected 0.3% / €3.5M+ figures.
+   Replace with Model B's 35.1% oil-filter / €2.04M gap. Unresolved 5th week running.
+2. Global CLAUDE.md AIM line — still shows CY2024-only 93.5% framing; current standard is residual
+   closed to 1.6% CY2024 / 1.8% CY2025 — and per Memory Health #4, AIM's pricing-risk layer is now
+   formally retired, which the global file doesn't reflect either. Unresolved 5th week running.
+3. Global CLAUDE.md UIO Tool row — still reads "(v9) / Apr 2026 / awaiting data"; actual is v19
+   canonical with V20 still on a second draft. Pricing-row path still reads
+   `memory/projects/pricing-2026.md` — actual is `05_memory/projects/pricing-basket-2026.md`.
+   Unresolved 5th week / 4th week respectively.
+4. New (high value, low effort): rewrite `aftermarket-intelligence.md`'s "What it does" section to
+   note the AIM pricing-risk retirement (Memory Health #4) — the file currently reads as if Pricing
+   Risk Map / Opportunity Engine are live decision layers; per `DECISIONS.md` 2026-08-18 they are
+   context-only now. Source material is all in one place: `DECISIONS.md` 2026-08-18 "AIM pricing-risk
+   ambition retired" entry + `docs/AIM_PRICING_RISK_BACKTEST_2026-08-18.md`.
+5. `pricing-basket-2026.md` still needs the five 2026-08-11 `DECISIONS.md` entries incorporated
+   (year-matched PR00 QA-pending/not-quotable; PR00 history now 2023–2025; elasticity DB→DLR only;
+   gross/SPA closed net-only forever; IDS v1.4 shipped). Unresolved 3rd week running.
+6. `ids-db-leverage-os.md` — Section 4 + "Open beslissingen" need a pass against
+   `ids_dealer_ranking/CHANGELOG.md`'s 2026-08-11/15 entries; v1.4 country packs are built and
+   shipped, only the Tomoe send is outstanding (see Memory Health #6).
+7. New: `competitiveness.md` and `glossary.md`'s "Eucon" term both conflate the real Eucon 2023
+   UK/ITUK Price Survey with the PartsPool Autodoc DE/NO file that was explicitly relabelled away
+   from the "Eucon" name on 2026-08-14 (see Memory Health #5). Worth a naming pass across both files.
+8. ITUK pricing dispute status still ambiguous (global CLAUDE.md: active/"will resolve";
+   pricing-basket-2026.md: silent on dispute status) — carried, no new evidence either way this week.
+9. ~~Frontmatter gap on `imie_3party_2025_2026.md` / `db-sales-review-mode-a.md` /
+   `ids-db-leverage-os.md`~~ — already fixed 2026-08-17 (see `memory_applied_log.md`); all three
+   carry the standard `topic`/`read_when`/`canonical_metrics`/`last_validated` block. W34's brief
+   carried this item forward by mistake; dropped here.
+10. Low priority: `Sales to Dealers_ITUK_CY2025.xlsx` (2.4MB) still sits directly in
+    `05_memory/projects/` — intentional per `aftermarket-intelligence.md`'s own note, still worth
+    confirming long-term.
+11. Low priority, not editable under this task's scope: both `CLAUDE.md` bootstrap files still
+    reference the pre-reorg path `.../raw/sales/*.XLSX` instead of `01_data/12_raw/sales/`.
+
+## No action needed
+
+- **uio.md** — 7 days, fresh, V20 unchanged since last review.
+- **db-sales-review-mode-a.md** — 12 days, matches its source `DECISIONS.md` entry.
+- **monthly-sales-report-fy2027.md** — content current for the latest available PDF (June); no July
+  PDF yet; canonical-swap item closed this run.
+- **gps-reconciliation.md, aftermarket-intelligence.md (factual content), pricing-basket-2026.md
+  (existing figures)** — clock-stale, cross-checked this week, no new contradictions found beyond
+  what's already listed in Suggested Updates.
+- **glossary.md content** (terms, discount factors, FX/pricing figures) — cross-checked, consistent,
+  aside from the Eucon naming point above.

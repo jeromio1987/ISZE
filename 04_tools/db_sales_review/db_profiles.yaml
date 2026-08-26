@@ -194,11 +194,27 @@ distributors:
     warranty_cy2025_claim: 56159
     warranty_note: "CV EUR 1,450 + LCV EUR 54,708."
     incentive_fy27: null
-    pbi: null
+    deck:
+      skip_s2d: true
+      use_isze_ext_target: true   # FY27 target = BP + 1.8% stretch (V3.1), not S2D
+    ext_target_v31: 592794.62751728
+    ext_target_source: "GPS Extended Target FY27 V3.1, Dashboard column I (GREECE)"
+    pbi:
+      quarter: "FY2027 YTD (Apr–Jul)"
+      months: ["Apr", "May", "Jun", "Jul"]
+      # 'budget' was read equal to sales in all four months — not a real reading.
+      # Dropped; the plan line comes from the BP workbook instead.
+      sales: [31000, 59000, 71000, 57000]
+      prev_year: [34000, 50000, 51000, 41000]
+      order_uptake: [31000, 64000, 70000, 56000]
+      order_uptake_total: 221000
+      original_bp: [46000, 43000, 50000, 53000]
+      source: "Power BI ISZE MONTHLY REPORT VP page MALTA/GREECE/HUNGARY (Apr–Jul FY2027), read from open browser 2026-08-25 — display rounded to nearest €K; customer row PETROS"
     watch:
-      - "LIVE SOURCE BUG: Greece's billing sits under payer 66, which gps_billing_fy_ALLCUSTOMERS.csv labels 'RSA'. The warranty file uses 'RSA' for NORWAY. Joining the two on that name merges Greece into Norway. Confirmed by Jerome 17-07-2026. Never join those files on the name."
+      - "LIVE SOURCE BUG: Greece's billing sits under payer 66, which gps_billing_fy_ALLCUSTOMERS.csv labels 'RSA'. The warranty file uses 'RSA' for Norway. Joining the two on that name merges Greece into Norway. Confirmed by Jerome 17-07-2026. Never join those files on the name."
       - "KPI DB-to-DLR stale since Jun'25 — no FY26 Sales-to-Dealer figure."
-      - "Q1 2026 billing is down about 40% on Q1 2025 — expect that to be the whole meeting, check it against the Power BI cut first."
+      - "In GPS dimension / billing labels this DB is often called RSA — that is Greece (Petros), not Norway."
+
 
   IRELAND:
     name: "Isuzu Ireland"
@@ -287,7 +303,7 @@ distributors:
     display: "Norway"
     segment: "mixed"
     payer: "RUTEBILEIERNES STANDARDISERING AS"
-    sold_to: null
+    sold_to: 86
     gps_key: "RSA"
     pms_code: "NORWAY"
     fy27_tab: "NORWAY"
@@ -298,7 +314,21 @@ distributors:
     warranty_cy2025_claim: 290712
     warranty_note: "LCV warranty; keep separate from Greece payer-label issue."
     incentive_fy27: null
-    pbi: null
+    deck:
+      skip_s2d: true
+      use_isze_ext_target: true   # FY27 target = BP + 1.8% stretch (V3.1), not S2D
+    ext_target_source: "GPS Extended Target FY27 V3.1, Dashboard column I (NORWAY)"
+    pbi:
+      quarter: "FY2027 YTD (Apr–Jul)"
+      months: ["Apr", "May", "Jun", "Jul"]
+      # No 'budget' series: the Power BI budget bars are a browser read with no
+      # file behind them. The plan line comes from the BP workbook instead.
+      sales: [116000, 108000, 173000, 86000]
+      prev_year: [115000, 149000, 122000, 101000]
+      order_intake: [90000, 115000, 164000, 75000]
+      order_intake_total: 444000
+      original_bp: [141000, 134000, 155000, 162000]
+      source: "Power BI ISZE MONTHLY REPORT VP (Apr–Jul FY2027), read from open browser 2026-08-24 — display rounded to nearest €K"
     watch:
       - "Warranty RSA means Norway; a separate billing source labels Greece payer 66 as RSA. Never join those sources on RSA alone."
 
@@ -372,7 +402,7 @@ distributors:
     display: "Romania"
     segment: "mixed"
     payer: "ISUZU ROM AUTO SRL"
-    sold_to: null
+    sold_to: 396
     gps_key: "ROM Auto"
     pms_code: "ROMANIA"
     fy27_tab: "ROMANIA"
@@ -383,7 +413,21 @@ distributors:
     warranty_cy2025_claim: 19377
     warranty_note: "LCV warranty."
     incentive_fy27: null
-    pbi: null
+    deck:
+      skip_s2d: true
+      use_isze_ext_target: true   # FY27 target = BP + 1.8% stretch (V3.1), not S2D
+    ext_target_source: "GPS Extended Target FY27 V3.1, Dashboard column I (ROMANIA)"
+    pbi:
+      quarter: "FY2027 YTD (Apr–Jul)"
+      months: ["Apr", "May", "Jun", "Jul"]
+      # 'budget' was read equal to sales in all four months — not a real reading.
+      # Dropped; the plan line comes from the BP workbook instead.
+      sales: [13000, 13000, 15000, 21000]
+      prev_year: [15000, 22000, 14000, 13000]
+      order_intake: [15000, 14000, 17000, 18000]
+      order_intake_total: 64000
+      original_bp: [17000, 16000, 19000, 20000]
+      source: "Power BI ISZE MONTHLY REPORT VP (Apr–Jul FY2027), read from open browser 2026-08-24 — display rounded to nearest €K"
     watch: []
 
   DENMARK:
@@ -412,7 +456,7 @@ distributors:
     display: "Iceland"
     segment: "mixed"
     payer: "BL. EHF."
-    sold_to: null
+    sold_to: 1576
     gps_key: "BL Iceland"
     pms_code: "ICELAND"
     fy27_tab: "ICELAND"
@@ -423,7 +467,21 @@ distributors:
     warranty_cy2025_claim: 7035
     warranty_note: "LCV warranty."
     incentive_fy27: null
-    pbi: null
+    deck:
+      skip_s2d: true
+      use_isze_ext_target: true   # FY27 target = BP + 1.8% stretch (V3.1), not S2D
+    ext_target_source: "GPS Extended Target FY27 V3.1, Dashboard column I (ICELAND)"
+    pbi:
+      quarter: "FY2027 YTD (Apr–Jul)"
+      months: ["Apr", "May", "Jun", "Jul"]
+      # 'budget' was read equal to sales in all four months — not a real reading.
+      # Dropped; the plan line comes from the BP workbook instead.
+      sales: [6000, 5000, 8000, 3000]
+      prev_year: [7000, 8000, 8000, 7000]
+      order_intake: [8000, 5000, 6000, 5000]
+      order_intake_total: 24000
+      original_bp: [8000, 8000, 9000, 10000]
+      source: "Power BI ISZE MONTHLY REPORT VP (Apr–Jul FY2027), read from open browser 2026-08-24 — display rounded to nearest €K"
     watch:
       - "No IDS 2026 assessment is available for Iceland."
 
@@ -454,7 +512,7 @@ distributors:
     display: "Malta"
     segment: "mixed"
     payer: "GASANZAMMIT MOTORS LTD"
-    sold_to: null
+    sold_to: 1759
     gps_key: "GasanZammit"
     pms_code: "MALTA"
     fy27_tab: "MALTA"
@@ -465,5 +523,20 @@ distributors:
     warranty_cy2025_claim: 18219
     warranty_note: "CV and LCV warranty."
     incentive_fy27: null
-    pbi: null
+    deck:
+      skip_s2d: true
+      use_isze_ext_target: true   # FY27 target = BP + 1.8% stretch (V3.1), not S2D
+    ext_target_v31: 240250.45496256
+    ext_target_source: "GPS Extended Target FY27 V3.1, Dashboard column I (MALTA)"
+    pbi:
+      quarter: "FY2027 YTD (Apr–Jul)"
+      months: ["Apr", "May", "Jun", "Jul"]
+      # 'budget' was read equal to sales in all four months — not a real reading.
+      # Dropped; the plan line comes from the BP workbook instead.
+      sales: [13000, 22000, 23000, 21000]
+      prev_year: [16000, 11000, 23000, 21000]
+      order_intake: [20000, 20000, 17000, 27000]
+      order_uptake_total: 85000
+      original_bp: [19000, 18000, 20000, 21000]
+      source: "Power BI ISZE MONTHLY REPORT VP page MALTA/GREECE/HUNGARY (Apr–Jul FY2027), read from open browser 2026-08-25 — display rounded to nearest €K; customer row GASANZAMMIT MOTORS LTD"
     watch: []

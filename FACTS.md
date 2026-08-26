@@ -4,8 +4,8 @@
 
 **Role:** This is the **one authoritative source** for ISZE headline figures. When a number here conflicts with anything in a deck, email, GPT knowledge file, or memory note, **this file wins** — fix the other copy, not this one.
 
-**Last verified:** 2026-06-10 (re-synced to pipeline after 2026-06-02 line_type classification fix)
-**Drift enforcement:** `03_analytics\Isuzu\prism\scripts\verify_facts_drift.py` checks this file's headline figures (pinned in `03_analytics\Isuzu\prism\data\facts_anchor.yaml`) against `01_data\derived\metrics_snapshot.json` on every run. When the pipeline legitimately changes a number, update this file AND the anchor together.
+**Last verified:** 2026-08-25 (overnight — green `00_derived/_verification_report.json`)
+**Drift enforcement:** `03_analytics\Isuzu\prism\scripts\verify_facts_drift.py` checks this file's headline figures (pinned in `03_analytics\Isuzu\prism\data\facts_anchor.yaml`) against `01_data\00_derived\metrics_snapshot.json` on every run. When the pipeline legitimately changes a number, update this file AND the anchor together.
 **Stores that must reconcile to this file:**
 - `05_memory\`
 - `08_gpt\2_KNOWLEDGE_FILES\`
@@ -27,10 +27,10 @@
 | Genuine/BVP authoritative split | `01_data\derived\genuine_bvp_crossref.csv` |
 | BVP mix | `01_data\derived\mix_genuine_bvp_pms.csv` |
 | GPS spend per unit | `01_data\derived\gps_spu_by_distributor.csv` |
-| **Sign-off** | green run of `03_analytics\Isuzu\prism\scripts\run_pipeline_and_verify.ps1` → `01_data\derived\_verification_report.md` shows **0 fail**
+| **Sign-off** | green run of `03_analytics\Isuzu\prism\scripts\run_pipeline_and_verify.ps1` → `01_data\00_derived\_verification_report.md` shows **0 fail**
 
-Last green verify: **106 pass / 0 fail, 2026-07-06** (addressable_pct **100%**).
-Headline metrics machine-readable: `01_data\derived\metrics_snapshot.json` (build: `03_analytics\Isuzu\prism\scripts\build_metrics_snapshot.py`).
+Last green verify: **116 pass / 0 warn / 0 fail, 2026-08-25T17:19:54Z** (`sales_fact` 514,037 rows · billing through **2026-06-30**). ⚠ Apr–Jun 2026 from `Q1FY2027.XLSX` has **no SaTy column** — fixture min lowered to 92%; overall SaTy ~92.9%. Prefer SAP re-export with SaTy when available.
+Headline metrics machine-readable: `01_data\00_derived\metrics_snapshot.json` (build: `03_analytics\Isuzu\prism\scripts\build_metrics_snapshot.py`).
 
 ---
 
@@ -92,17 +92,17 @@ Capture = `actual_qty ÷ expected_qty` (CSV uncapped; headline tiles cap at 100%
 - `bvp_share_units` = bvp_qty ÷ (genuine_qty + bvp_qty); `bvp_share_eur` analogous. BVP has **no** capture rate.
 - GPS `spend_per_unit_eur` = net parts sales ÷ uio_units. Traffic light: green ≥ €150, amber €50–150, red < €50.
 
-## 4. Revenue base (sales_fact, 2026-07-03)
+## 4. Revenue base (sales_fact, 2026-08-25)
 
 | Figure | Value | Note |
 |--------|-------|------|
-| Raw `sales_fact.parquet` total | €108,816,956 | 477,505 rows, 2023-2026 (2026 = Jan-Mar partial); includes internal/excluded codes and credit notes/returns |
-| GPS-facing, all lines | €105.00M | after distributor exclusion, **ex-credit-notes/returns** (snapshot 2026-07-03) |
-| GPS-facing, parts only | **€103.57M** | use this as the parts base (snapshot 2026-07-03; prior €94.26M was 2023-2025 only, no CR/RE exclusion) |
+| Raw `sales_fact.parquet` total | €117,536,189 | **514,037** rows, 2023-01-03 → **2026-06-30** (2026 = Jan–Jun; Apr–Jun from `Q1FY2027.XLSX`); includes internal/excluded codes and credit notes/returns |
+| GPS-facing, all lines | €113.64M | after distributor exclusion, **ex-credit-notes/returns** (snapshot 2026-08-25) |
+| GPS-facing, parts only | **€112.09M** | use this as the parts base (snapshot 2026-08-25; prior €103.57M was through 2026-03-31 only) |
 
 Non-part lines excluded: TRANSPORT, REBATE, LATE PAYMENT INTEREST (€1.14M combined, 2023-2025 baseline).
-**Credit notes / returns excluded since 2026-07-03** (flag H): SaTy `CR`/`RE` lines, 280 rows / **€1,651,149** network-wide 2023-2026 — see flag H below.
-**2023-2025 sub-total is not directly comparable to the pre-2026-07-03 €94.26M figure** — the row count, year range, and exclusion rules all changed in the same rebuild; don't compute a delta between them as if only one variable moved.
+**Credit notes / returns excluded since 2026-07-03** (flag H): SaTy `CR`/`RE` lines — Q1FY2027 extract has **no SaTy column**, so CR/RE exclusion for Apr–Jun 2026 is net-value-sign based only until the next SAP extract includes SaTy.
+**Prior €103.57M / 477,505-row base (2026-07-03)** is superseded — do not delta as if only one variable moved.
 
 ## 5. AIM classification
 

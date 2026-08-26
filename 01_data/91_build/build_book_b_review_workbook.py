@@ -142,6 +142,15 @@ def write_html(payload: dict) -> None:
     action_items = [{"action": k, "count": v} for k, v in sorted(by_action.items(), key=lambda x: -x[1])[:8]]
     action_chart = SSR.horizontal_bar_rows(action_items, label_key="action", value_key="count", color=SSR.COLORS["blue"],
         value_fn=lambda v: str(int(v)))
+    leak_by_db = []
+    for db in dbs:
+        leak_by_db.append({"db": db, "units": sum(float(r.get("qty_gap") or 0) for r in rows if r.get("db") == db and "LEAKAGE" in (r.get("action") or "").upper())})
+    db_compare = SSR.leakage_db_comparison(leak_by_db, value_key="units", label_key="db", value_fmt=lambda v: SSR.fmt_int(v))
+    pipe_donut = SSR.pipeline_donut_svg(
+        {"leakage": H.get("leakage_rows"), "overstock": H.get("book_b_conflicts"), "balanced": max(0, H.get("row_count", 0) - H.get("leakage_rows", 0) - H.get("book_b_conflicts", 0))},
+        labels=("REVIEW_LEAKAGE rows", "Guardrail conflicts", "Other rows"),
+        value_fmt=lambda v: SSR.fmt_int(v),
+    )
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -169,6 +178,10 @@ def write_html(payload: dict) -> None:
 </div>
 <div class="wrap">
   <div class="callout" id="leakCallout">{callout}</div>
+  <div class="grid2">
+    <div class="card"><h3>Leakage unit gap by DB</h3><p class="cap">REVIEW_LEAKAGE rows · qty gap sum</p>{db_compare}</div>
+    <div class="card"><h3>Register donut</h3><p class="cap">Leakage vs guardrail vs other · row counts</p>{pipe_donut}</div>
+  </div>
   <div class="grid2">
     <div class="card"><h3>Book B bucket × action</h3><p class="cap">Stacked counts · ambition vs guardrail visible</p>{stacked_html}</div>
     <div class="card"><h3>Recommended action mix</h3><p class="cap">Top 500 review pack · no alloc</p>{action_chart}</div>

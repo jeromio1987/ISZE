@@ -1,0 +1,116 @@
+{
+  "zp_obj": [
+    "zp={VZ:Os.EFORMS_FORM_GROUP_VZ,PROFIL:Os.EFORMS_FORM_GROUP_PROFIL}"
+  ],
+  "Mp_obj": [
+    "Mp={HLAVNI:\"vz\",PROFIL:\"profil\",ZADOST:\"vvz-zadost\",ZADOST_EDIT:\"vvz-zadost-edit\",ZADOST2:\"vvz2-zadost\"}"
+  ],
+  "FormGroup_assign": [],
+  "VZ_uuid": [],
+  "PROFIL_uuid": [],
+  "HLAVNI_uuid": [],
+  "any_uuid_near_VZ": [],
+  "VZ_ctx": [
+    "e,{})}),this._initializeModules()}},zp={VZ:Os.EFORMS_FORM_GROUP_VZ,PROFIL:Os.EFORMS_FORM_GROUP_PROFIL},Ip=e=>e===Mp.PROFIL",
+    "?zp.PROFIL:zp.VZ,Mp={HLAVNI:\"vz\",PROFIL:\"profil\",ZADOST:\"vvz-zadost\",ZADOST_EDIT:\"vvz-zadost-edi",
+    "sion.getSubmissionsSearch({formGroup:zp.VZ,form:Mp.HLAVNI,page:1,limit:1,variableId:this.evCisloFormulare}).then((e=>e.dat",
+    ":e(\"filterContracts.nazev_vz\",\"N\\xe1zev VZ/\\u010d\\xe1sti\")}),(0,kd.jsx)(_f,{name:\"data.druhVz\",label:e(\"filterContracts.dr",
+    "uh_vz\",\"Druh VZ\"),options:ZM})]})]})},XM=\"PLATNY\",eL=\"NEAKTIVNI\",tL=\"ZRUSENY\",nL=(e,t)=>{const ",
+    "o\",\"label\":\"Jedn\\xe1 se o nadlimitn\\xed VZ?\",\"options\":{\"radioCssColumns\":\"2\",\"radioCssAlign\":\"left\"}},{\"scope\":\"#/aktivit",
+    "dio\",\"label\":\"Zad\\xe1v\\xe1te sektorovou VZ?\",\"options\":{\"radioCssColumns\":\"2\",\"radioCssAlign\":\"left\"}},{\"scope\":\"#/aktivit",
+    "\",\"type\":\"Radio\",\"label\":\"Jedn\\xe1 se o VZ v oblasti obrany nebo bezpe\\u010dnosti?\",\"options\":{\"radioCssColumns\":\"2\",\"radi",
+    "dio\",\"label\":\"Zad\\xe1v\\xe1te sektorovou VZ?\",\"options\":{\"radioCssColumns\":\"2\",\"radioCssAlign\":\"left\"}}]}]},{\"type\":\"Group\"",
+    "ev_vz\",\"Eviden\\u010dn\\xed \\u010d\\xedslo VZ\")}),(0,kd.jsx)(wf,{name:\"data.nazevVzACasti\",label:e(\"filterContracts.nazev_vz\"",
+    ",\"N\\xe1zev VZ/\\u010d\\xe1sti\")})]}),(0,kd.jsxs)(\"div\",{className:\"custom-form__wrap\",children:",
+    "tracts.popis_vz\",\"Stru\\u010dn\\xfd popis VZ/\\u010d\\xe1sti\")}),(0,kd.jsx)(wf,{name:\"data.cpvVzACasti\",label:e(\"filterContrac",
+    "ts.cpv_vz\",\"CPV k\\xf3d VZ/\\u010d\\xe1sti\")})]}),(0,kd.jsxs)(\"div\",{className:\"custom-form__wrap\",children:",
+    "label:e(\"filterContracts.druh_vz\",\"Druh VZ\"),options:ZM})]}),(0,kd.jsxs)(\"div\",{className:\"custom-form__wrap\",children:[(0",
+    "isto_vz_popis\",\"M\\xedsto pln\\u011bn\\xed VZ/\\u010d\\xe1sti \\u2013 popis\")}),(0,kd.jsx)(wf,{name:\"data.mistoPlneniVzACastiNut",
+    "misto_vz-nuts\",\"M\\xedsto pln\\u011bn\\xed VZ/\\u010d\\xe1sti \\u2013 NUTS k\\xf3d\")})]}),(0,kd.jsxs)(\"div\",{className:\"custom-fo",
+    "sion.getSubmissionsSearch({formGroup:zp.VZ,form:Mp.HLAVNI,page:1,limit:1,variableId:t}).then((e=>e.data.length?e.data[0]:L",
+    "),Lp.others.exportRequest({formGroup:zp.VZ,form:Mp.HLAVNI,...p.filter}).then((e=>PV.export(t,e.token).then((()=>{l(!0)})).",
+    "ev_vz\":\"Eviden\\u010dn\\xed \\u010d\\xedslo VZ\",\"nazev_vz\":\"N\\xe1zev VZ/\\u010d\\xe1sti\",\"popis_vz\":\"Stru\\u010dn\\xfd popis VZ/\\u",
+    "010d\\xe1sti\",\"cpv_vz\":\"CPV k\\xf3d VZ/\\u010d\\xe1sti\",\"lhuta_nabidky_od\":\"Lh\\u016fta pro pod\\xe1n\\xed nab\\xeddek/\\u017"
+  ],
+  "VZ_nums": [],
+  "uuids_in_ctx": [],
+  "freeze": [],
+  "tries": [
+    {
+      "params": {
+        "formGroup": "VZ",
+        "form": "HLAVNI",
+        "page": 1,
+        "limit": 5
+      },
+      "http": 400,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"detail\":\"Invalid filter \\u0022formGroup\\u0022 value: Invalid filter \\u0022App\\\\Entity\\\\FormGroup\\u0022 value: "
+    },
+    {
+      "params": {
+        "formGroup": "VZ",
+        "page": 1,
+        "limit": 5
+      },
+      "http": 400,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"detail\":\"Invalid filter \\u0022formGroup\\u0022 value: Invalid filter \\u0022App\\\\Entity\\\\FormGroup\\u0022 value: "
+    },
+    {
+      "params": {
+        "formGroup": "1",
+        "form": "HLAVNI",
+        "page": 1,
+        "limit": 5
+      },
+      "http": 400,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"detail\":\"Invalid filter \\u0022formGroup\\u0022 value: Invalid filter \\u0022App\\\\Entity\\\\FormGroup\\u0022 value: "
+    },
+    {
+      "params": {
+        "formGroup": "1",
+        "page": 1,
+        "limit": 5
+      },
+      "http": 400,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"detail\":\"Invalid filter \\u0022formGroup\\u0022 value: Invalid filter \\u0022App\\\\Entity\\\\FormGroup\\u0022 value: "
+    },
+    {
+      "params": {
+        "formGroup": "2",
+        "form": "HLAVNI",
+        "page": 1,
+        "limit": 5
+      },
+      "http": 400,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"detail\":\"Invalid filter \\u0022formGroup\\u0022 value: Invalid filter \\u0022App\\\\Entity\\\\FormGroup\\u0022 value: "
+    },
+    {
+      "params": {
+        "formGroup": "2",
+        "page": 1,
+        "limit": 5
+      },
+      "http": 400,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"detail\":\"Invalid filter \\u0022formGroup\\u0022 value: Invalid filter \\u0022App\\\\Entity\\\\FormGroup\\u0022 value: "
+    },
+    {
+      "params": {
+        "formGroup": "3",
+        "form": "HLAVNI",
+        "page": 1,
+        "limit": 5
+      },
+      "http": 400,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"detail\":\"Invalid filter \\u0022formGroup\\u0022 value: Invalid filter \\u0022App\\\\Entity\\\\FormGroup\\u0022 value: "
+    },
+    {
+      "params": {
+        "formGroup": "3",
+        "page": 1,
+        "limit": 5
+      },
+      "http": 400,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"detail\":\"Invalid filter \\u0022formGroup\\u0022 value: Invalid filter \\u0022App\\\\Entity\\\\FormGroup\\u0022 value: "
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+IDS 2026 — Full Audit Summary
+Generated: 2026-07-16
+
+Pipeline run (from 04_tools/ids_dealer_ranking):
+  1. run_ids_result_reports.py   — rebuilt all 13 country evaluation result reports + delta files
+  2. ids_report_qa.py (via --qa) — layout QA vs DK template
+  3. ids_logic_check.py          — score/%/section arithmetic checks
+  4. build_global_ranking_files.py — rebuilt TOTAL + B1 global rankings
+  5. combine_all_rankings.py     — rebuilt multi-tab country rankings workbook
+  6. combine_evaluation_result_reports.py (new) — combined all 13 evaluation result reports into one workbook
+  7. build_ids_dashboard.py      — rebuilt offline HTML dashboard
+
+Layout QA results (ids_report_qa.py, run via --qa flag):
+  BE       QA ok=True issues=0   dealers=34
+  NL       QA ok=True issues=0   dealers=9
+  Poland   QA ok=True issues=0   dealers=23
+  Petros   QA ok=True issues=0   dealers=34
+  RSA      QA ok=True issues=0   dealers=38
+  IUK      QA ok=True issues=0   dealers=45
+  ITUK     QA ok=True issues=0   dealers=44
+  Israel   QA ok=True issues=0   dealers=29
+  Malta    QA ok=True issues=0   dealers=1
+  Cyprus   QA ok=True issues=0   dealers=1
+  Romania  QA ok=True issues=0   dealers=15
+  Portugal QA ok=True issues=0   dealers=16
+  Hungary  QA ok=True issues=0   dealers=19
+  -> 13/13 countries pass layout QA, 0 issues total
+
+Logic check results (ids_logic_check.py — score caps, % <= 100, section-sum arithmetic):
+  BE OK, NL OK, Poland OK, Petros OK, RSA OK, IUK OK, ITUK OK, Israel OK,
+  Malta OK, Cyprus OK, Romania OK, Portugal OK, Hungary OK
+  -> 13/13 passed, 0 issues
+
+Dealer count reconciliation:
+  Sum of per-country dealers (QA report)      = 308
+  Dashboard dealer_count (build_ids_dashboard) = 308
+  Combined workbook (combine_evaluation_result_reports.py) = 308
+  -> Consistent across all three sources (matches expected ~308 per project docs;
+     no duplicate/" - Copy.xls" inflation detected).
+
+Notes:
+  - Denmark and MIDI are ranking-only exports (no per-dealer evaluation workbook in
+    inbox), so they are not part of the 13-country evaluation result set above.
+    They ARE included in the global TOTAL/B1 ranking workbooks (17 countries, 458
+    and 457 dealers respectively) and in IDS_2026_all_country_rankings.xlsx.
+  - No regressions found against the known error register in IDS_2026_LOGIC_CHECK.md
+    (score-cap bug, section-formula bug, rubric-fallback bug, layout/column bugs,
+    duplicate-file dashboard inflation — none reproduced in this run).
+  - Harmless openpyxl "print area" warnings appeared for several source dealer
+    workbooks (defined-name print areas referencing missing sheet indices) — cosmetic
+    only, does not affect output; documented as E11 in the logic-check doc.
+
+Update 2026-07-16 (later same day) — percentage formatting fix:
+  Root cause found: build_ids_result_report.py captured each row's cell STYLE
+  (font/border/fill/protection) from the DK template but dropped the NUMBER
+  FORMAT when writing the "Score (One hundred perfect score conversion)" row
+  (dealer %) and the "Ave. %" column — both ended up "General" format, so a
+  score of 0.739 displayed as the raw decimal "0.73" instead of "73.9%".
+  Cells were also locked (though sheet protection itself was confirmed OFF
+  via Excel COM — ProtectContents=False on every sheet/workbook).
+
+  Fix applied in build_ids_result_report.py: percentage cells now get an
+  explicit "0.0%" number format and are explicitly unlocked. All 13 country
+  reports were rebuilt with the fix; layout QA and logic check both re-run
+  and still pass 13/13, 0 issues.
+
+  combine_evaluation_result_reports.py was also rewritten to read source
+  values via Excel COM (win32com) instead of xlrd, because the Score % and
+  Ave. % cells are live formulas with no cached value in the raw .xls —
+  xlrd (no formula engine) read them as blank. Opening via Excel resolves
+  the formulas correctly before copying into the combined workbook, which
+  now also carries the "0.0%" format on those cells.
+
+  Not changed: the `_delta/*_Delta.xlsx` files remain plain decimals (e.g.
+  0.0294) — these are an internal QA aid, explicitly excluded from review/
+  export, so left as-is. Rankings\*.xlsx files already store percentages
+  on a 0-100 scale (e.g. 95.71, not 0.9571) so were not affected by this bug.
+
+Export contents:
+  /Evaluation Result Reports/   13 per-country .xls reports (source of truth for review)
+  /Rankings/                    IDS_2026_TOTAL_ranking_all.xlsx, IDS_2026_B1_ranking_all.xlsx,
+                                 IDS_2026_all_country_rankings.xlsx (multi-tab, 17 countries)
+  IDS_2026_Evaluation_Result_Reports_COMBINED.xlsx   1 workbook, 1 tab per country (13 tabs + Index), 308 dealers
+  IDS_2026_dealer_compare.html                        offline dashboard, 308 dealers / 13 countries

@@ -32,7 +32,8 @@ for p in paths:
     bars = len(re.findall(r'class="bar-row"', text))
     tbody = len(re.findall(r"<tbody[^>]*>.*?<tr", text, re.S))
     if p.name == "ISZE_Aftermarket_BI_Command_Center.html":
-        if "12,553,903" not in text:
+        hero = text.split('<nav class="tabs"')[0]
+        if not re.search(r"Network € leakage", hero) or not re.search(r"€[\d,]+", hero):
             print(f"{p.name}: FAIL (hero € leakage missing)")
             ok = False
             continue

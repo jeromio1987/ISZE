@@ -94,7 +94,10 @@ def parse_ks_page(html: str, pn: str) -> dict:
 
     soup = BeautifulSoup(html, "html.parser")
 
-    # Result count
+    # Result count from toolbar when present. Magento often omits toolbar on
+    # thin result sets — do NOT treat missing toolbar as "no results" if real
+    # product cards (named links) exist. Cart-sidebar .product-item stubs have
+    # no .product-item-name and must be ignored.
     count_el = soup.select_one(".toolbar-amount")
     result_count = 0
     if count_el:
@@ -102,21 +105,16 @@ def parse_ks_page(html: str, pn: str) -> dict:
         if m:
             result_count = int(m.group(1))
 
-    # No results page
-    if result_count == 0:
-        no_res = soup.select_one(".message.empty, .search-no-results")
-        return {
-            "result_count": 0,
-            "aftermarket": [],
-            "genuine": [],
-            "notes": "No results",
-        }
-
     products = []
     for item in soup.select(".product-item"):
-        name = (item.select_one(".product-item-name a") or
-                item.select_one(".product-item-name"))
+        name = (
+            item.select_one("a.product-item-link")
+            or item.select_one(".product-item-name a")
+            or item.select_one(".product-item-name")
+        )
         name_text = name.get_text(strip=True) if name else ""
+        if not name_text:
+            continue
 
         # SKU
         sku_el = item.select_one(".product-sku")
@@ -172,11 +170,19 @@ def parse_ks_page(html: str, pn: str) -> dict:
                 "in_stock": not out_of_stock,
             })
 
+    if not products:
+        return {
+            "result_count": 0,
+            "aftermarket": [],
+            "genuine": [],
+            "notes": "No results",
+        }
+
     aftermarket = [p for p in products if not p["is_genuine"]]
     genuine     = [p for p in products if p["is_genuine"]]
 
     return {
-        "result_count": result_count,
+        "result_count": result_count or len(products),
         "aftermarket": aftermarket,
         "genuine": genuine,
         "notes": "",

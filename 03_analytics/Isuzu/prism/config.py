@@ -267,7 +267,12 @@ def data_status() -> dict[str, bool]:
         "sales_parquet": SALES_FACT_PARQUET.exists(),
         "sales_csv_derived": SALES_FACT_CSV.exists(),
         "sales_legacy": resolve_first_existing(LEGACY_SALES_CANDIDATES[2:]) is not None,
-        "raw_cy2025": (RAW_SALES_DIR / "CY2025.XLSX").exists(),
+        # CY2024-2025.XLSX supersedes old CY2025.XLSX (DECISIONS 2026-07-03).
+        # Accept either filename so verify stays green after the rename.
+        "raw_cy2025": (
+            (RAW_SALES_DIR / "CY2024-2025.XLSX").exists()
+            or (RAW_SALES_DIR / "CY2025.XLSX").exists()
+        ),
         "raw_cy2023_24": (RAW_SALES_DIR / "CY2023-2024.XLSX").exists(),
         "bvp_dimension": BVP_PN_DIMENSION_CSV.exists(),
         "bvp_pms_capture": PMS_CAPTURE_BY_DB_CSV.exists(),

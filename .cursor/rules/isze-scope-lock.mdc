@@ -1,0 +1,28 @@
+---
+description: Scope lock — keep Jerome's agreed exclusions excluded in every later pass. Use when he narrows scope with "we agreed to skip oil", "DVLA is not applicable", "leave the rest out of it", "as mentioned", "focus on his layer", "N75 only", "skip sverige 2", "Shell moet eruit blijven", "we don't do oil", "who did refer to oil?", or any "only X" / "not Y" narrowing — and again before every follow-up deliverable (canvas, deck, HTML, Excel, masterplan, cleanup) in that same thread.
+alwaysApply: false
+---
+
+# Scope lock — agreed exclusions stay excluded
+
+Jerome narrows scope once and expects it to hold. The recurring failure is a later pass quietly putting the excluded topic back on the table, forcing him to repeat himself ("as mentioned leave the rest out of it?", "what about oil, skip it, we don't do oil, who did refer to oil?").
+
+## Steps
+
+1. **Write the scope ledger before analysing.** First lines of the reply, three buckets, in his words:
+   - **IN** — what this deliverable covers (e.g. his layer: N75 events, warehouse demand, dealer conversion).
+   - **OUT** — every topic he has excluded so far in this thread, each with his reason (e.g. `oil — agreed to skip`, `DVLA — not applicable`, `Sverige 2 — secret Isuzu entity, no sales`, `Shell — must stay out`).
+   - **CONDITIONAL** — allowed but qualified (e.g. `Chevron — may appear, but does not come via ISZE`; `UIO — not yet fixed`; `V20 spec — needs approval first`).
+   This satisfies the mandatory BUITEN SCOPE line; never write "n.v.t." there.
+2. **Carry the ledger forward unchanged.** On every later turn of the same thread, restate OUT as-is before producing anything. An exclusion expires only when Jerome explicitly puts the topic back. "New deliverable", "different angle", "for completeness" and "it's relevant context" are not expiry conditions.
+3. **Filter the artifact, not just the chat.** Before writing any canvas, deck, HTML, Excel, masterplan or cleanup output, grep your own draft for each OUT term. An excluded topic must not appear as a slide, tab, column, row, chart series, filter or bullet. If a data pull naturally contains it, exclude the rows and say so in one line.
+4. **Reopening is a question, never a re-add.** If an excluded topic genuinely changes the answer, do not build with it. Write one line — `Oil is out per your call; including it would change X — reopen?` — deliver the rest fully inside scope, and wait.
+5. **Do not widen off a single named example.** When he says "focus on his layer and his assumptions", answer that layer only. Do not supply the counter-layer, the adjacent market, the other phase or the other DB as helpful extra unless he asked.
+6. **Correct the framing when the exclusion reveals a wrong axis.** If he removes an item you were using as a dimension (DVLA as the second layer), name the correct axis explicitly rather than silently keeping the old one.
+
+## Verify
+
+- The reply opens with IN / OUT / CONDITIONAL, and OUT lists every exclusion from earlier turns — not only the newest one.
+- No OUT term appears anywhere in the produced file: no slide, tab, column, series, or bullet.
+- CONDITIONAL items carry their qualifier wherever they appear (Chevron shown as not-via-ISZE, V20 spec marked approval-pending, UIO marked not fixed).
+- Jerome did not have to repeat an exclusion he already gave in this thread.

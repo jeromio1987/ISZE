@@ -1,6 +1,6 @@
 # ISZE Data manifest — sort-by-topic map
 
-**Last updated:** 2026-08-13 (IRELAND Harris StD → dealer_sales) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
+**Last updated:** 2026-08-25 (INBOX hygiene: mail hunts archived; IDS→08_Distributor)
 
 This is the **data map**. Each subject has a numbered folder under `01_data/` — drop new files into the matching one (§1). A small **wired working-set stays flat at root** because build scripts read it from there (§3).
 
@@ -119,7 +119,7 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | ITUK_ExecutiveSummary_Jan2026.pptx | `01_data/08_Distributor/` | also Meetings (§09) |
 | Imotors_Portugal_UIO_GPS_PMS_Study.xlsx | `01_data/08_Distributor/` | Portugal (Imotors) study (filed 2026-07-16) |
 | BO OVERVIEW - UNIVERSAL TRUCKS ISRAEL LTD 01-07-2026 (1).xlsx | `01_data/08_Distributor/` | Israel/UTI back-order overview (filed 2026-07-16) |
-| **IDS 2026 dealer eval packs** (NL / DK / LUX drop 2026-07-24) | `01_data/90_INBOX/IDS_2026/` | ⚙ `04_tools/ids_dealer_ranking/` — NL unchanged (identical); DK 20 dealers filed; LUX Autopolis in `LUX/` pending BE/Benelux mapping |
+| **IDS 2026 dealer eval packs** (NL / DK / LUX drop 2026-07-24) | `01_data/08_Distributor/IDS_2026/` | ⚙ `04_tools/ids_dealer_ranking/` — NL unchanged (identical); DK 20 dealers filed; LUX Autopolis in `LUX/` pending BE/Benelux mapping |
 | **Meetings prep per DB:** | `09_meetings/Preparation Meetings/<DB>/` | |
 | **`distributor_dimension.csv`** + `.md` | `01_data/00_derived/` | ★⚙ **canonical DB key** — `91_build/build_distributor_dimension.py`. Join on **`sold_to_sap`**, never on `payer_code` (1797 = both UMI *and* UTI). Maps SAP entity names (`IBX`, `ISD`, `Danmark`) ↔ DB codes (`BELGIUM`, `GERMANY`, `DENMARK`). Read by `02_dashboards/_composable/build.mjs`. |
 
@@ -166,7 +166,7 @@ Static HTML twins of pages 20–23 (self-contained, no CDN) live in `02_dashboar
 
 | # | Folder | Purpose |
 |---|--------|---------|
-| 00 | `00_derived/` | Machine exports: `sales_fact.parquet`, phase summaries, verify reports |
+| 00 | `00_derived/` | Machine exports: `sales_fact.parquet`, phase summaries, verify reports, **P8 `action_ledger*.parquet/csv`** |
 | 01 | `01_Pricing/` | Price lists, SPA, BPFY (topic drop zone) |
 | 02 | `02_GPS/` | GPS working files — sales-share stretch pilots (newest per family) |
 | 03 | `03_PMS/` | PMS studies, meeting feedback, **`service_schedules/`** (OEM PDFs) |
@@ -184,7 +184,7 @@ Static HTML twins of pages 20–23 (self-contained, no CDN) live in `02_dashboar
 | 16 | `16_exports/` | Ad-hoc exports |
 | 17 | `17_interactions/` | **G0a local mail facts** (derived only; gitignored). Collector: `04_tools/interactions/collect_mapi.py` |
 | 90 | `90_INBOX/` | **Drop zone** for all new files — sort per §1 (see §0) |
-| 91 | `91_build/` | One-off extract/build scripts (GPS v9, warranty extractors, BP loader) |
+| 91 | `91_build/` | One-off extract/build scripts (GPS v9, warranty extractors, BP loader, **`build_action_ledger.py` + `action_ledger_adapters.py`**) |
 | 92 | `92_archive/` | Deduped / superseded data files (general) |
 
 **Also present:** `_archive/` — a **separate, GPS-lineage-only** archive holding `ISZE_GPS_v6_mistaken_fork_2026-07-03.xlsx`, referenced by name in `91_build/GPS_FILE_LINEAGE.md`. Left as-is to avoid editing that authority doc; all **new** archival goes to `92_archive/`.
@@ -229,14 +229,14 @@ See `05_memory/projects/sales-analytics-pipeline.md`.
 
 | Dataset | Last refreshed | Rows (approx) | Owner |
 |---------|----------------|---------------|-------|
-| Sales_Fact (derived) | 2026-07-03 | 477,505 | Jerome |
+| Sales_Fact (derived) | 2026-08-25 | 514,037 | Jerome |
 
 ---
 
 ## §6 — Dashboard JSON paths & the `dashboards` junction
 
 **Local source:** `01_data/14_dashboards/isze_data.json`, `tender_data.json`
-**Alias:** `01_data/dashboards/` is a **healthy NTFS junction → `14_dashboards/`** (verified 2026-07-16). It is **load-bearing** — `publish_tender.ps1`, `publish_live_tender_json.ps1`, and `sync_to_deploys.ps1` reference the `dashboards\` alias. Do **not** delete it. (The 2026-07-12 scraper health-check "I/O error on `dashboards`" was a sandbox mount artifact, not a real break.)
+**Alias:** `01_data/dashboards/` is an NTFS junction → `14_dashboards/` (**recreated 2026-08-25 overnight** via `reorganize_data_layout.ps1 -CreateJunctions`; same for `derived`→`00_derived`, `_INBOX`→`90_INBOX`, and other legacy aliases). Load-bearing for freshness skills and older publish paths. Prefer numbered paths in new code.
 **Deploy-side compatibility** (GitHub Pages — not local edit paths): `../Data/dashboards/isze_data.json`, `../Data/dashboards/tender_data.json`
 
 ---
@@ -252,7 +252,9 @@ See `05_memory/projects/sales-analytics-pipeline.md`.
 ---
 
 ## §8 — Migration log
+- **2026-08-25** - INBOX hygiene (priority clear wins): mail hunts `UTI_PartSales_mail_20260813`, `_ireland_sales_mail_20260813`, `dealer_sales_mail_20260813` → `92_archive/mail_hunts_20260813/` (`12_raw/dealer_sales` already had UTI/IRELAND canonicals; July UTI PartSales was SHA256-identical to `UTIPartSales_2026-06.xlsx` so not promoted). Scratch `dg_*.py` / `analyze_*.py` → `91_build/_scratch/`. Quarantined `03_analytics/Isuzu/prism/data/UIO_v17.xlsx` → `92_archive/uio_stale/`. Relocated whole `IDS_2026` (970 files) → `08_Distributor/IDS_2026/`.
 
+- **2026-08-25** — **P8 Action Ledger** shipped: `91_build/action_ledger_adapters.py` + `build_action_ledger.py` → `00_derived/action_ledger*.parquet/csv` + `02_dashboards/ops/ISZE_Action_Ledger.html`. Nine adapters only; `portfolio_triage_20260819.csv` excluded (rollup). Decisions CSV is human-owned.
 - **2026-08-13** — Ireland Harris StD from Outlook (`RE: Business review` / John Cummins / `XT - 2026-08-13T114222.149.xlsx`) → `12_raw/dealer_sales/IRELAND/IRELAND_Sales_to_Dealer_2025_2026YTD_Jul.xlsx`; registered; normalized → `00_derived/dealer_sellout_long_IRELAND_CY2025.csv` + `…_CY2026YTD.csv` (adapter `91_build/normalize_dealer_sellout_ireland.py`). **Wired second layer** (AIM/GPS): `build_dealer_sellout_aim_gps.py` now multi-DB (ITUK, UTI, IRELAND, IUK, GREECE). Standing rule in `12_raw/dealer_sales/DEALER_SELL_OUT.md`. **IRELAND ≠ IUK ≠ IMIE.**
 - **2026-08-12** — IUK `IUK Monthly Demand - July 2026 - Copy.xlsx` (unsorted root) → `12_raw/dealer_sales/IUK/IUK_Monthly_Demand_2025_2026YTD_July.xlsx`; registered in `_registry.yaml`; normalized → `00_derived/dealer_sellout_long_IUK_CY2025.csv` + `…_CY2026YTD.csv` (adapter `91_build/normalize_dealer_sellout_iuk.py`). **IUK ≠ ITUK.**
 - **2026-08-10** — Eucon 2023 Price Survey rawdata (UK OEM, ITUK OEM, UK IAM) → `01_Pricing/_raw/Eucon_PriceSurvey_*` + hard QA `_raw/Eucon_PriceSurvey_2023_QA.md` (crossrefs safe; prices list-not-street); **21** basket `peer_oe_pn` fills (`mapped_oe_pn`).

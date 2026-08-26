@@ -23,6 +23,23 @@ STREET_FACTOR = 1.785
 GBP_EUR = 1.17  # diagnostic only; label in meta
 
 NETWORK_DBS = ("ITUK", "UTI", "IRELAND", "IUK", "GREECE")
+SELL_NETWORK_MONTHLY_COLS = (
+    "distributor_code",
+    "part_number",
+    "year_month",
+    "sellout_qty",
+    "grain",
+    "dealer_name",
+)
+SELL_NETWORK_ANNUAL_COLS = ("distributor_code", "part_number", "sellout_qty")
+
+
+def _empty_sell_network_monthly(db: str) -> pd.DataFrame:
+    return pd.DataFrame(columns=list(SELL_NETWORK_MONTHLY_COLS)).assign(distributor_code=db)
+
+
+def _empty_sell_network_annual(db: str) -> pd.DataFrame:
+    return pd.DataFrame(columns=list(SELL_NETWORK_ANNUAL_COLS)).assign(distributor_code=db)
 YEAR = 2025
 
 MONTH_NAME_TO_NUM = {
@@ -218,8 +235,10 @@ def load_sellout_network_monthly(db: str, year: int = YEAR) -> pd.DataFrame:
         net, _ = load_ituk_sellout_monthly(year)
         return net
     if db == "UTI":
-        return load_uti_sellout_monthly()
-    return load_sellout_long_monthly(db, year)
+        out = load_uti_sellout_monthly()
+        return out if not out.empty else _empty_sell_network_monthly(db)
+    out = load_sellout_long_monthly(db, year)
+    return out if not out.empty else _empty_sell_network_monthly(db)
 
 
 def load_sellout_network_annual(db: str, year: int = YEAR) -> pd.DataFrame:
@@ -246,7 +265,7 @@ def load_sellout_network_annual(db: str, year: int = YEAR) -> pd.DataFrame:
     else:
         g = load_sellout_long_pn(db, year, DERIVED_DIR).rename(columns={"qty_year": "sellout_qty"})
     if g.empty:
-        return pd.DataFrame()
+        return _empty_sell_network_annual(db)
     g["part_number"] = g["part_number"].map(normalize_pn_scalar)
     g = g.dropna(subset=["part_number"])
     g["sellout_qty"] = pd.to_numeric(g["sellout_qty"], errors="coerce").fillna(0)
@@ -366,6 +385,58 @@ def load_ks_pn_index() -> pd.DataFrame:
             g["ks_source"] = "iam_live_quotes"
             parts.append(g)
 
+    # Inbox PMS PN-search products (durable copy under _raw if present)
+    for prod_path in (
+        KS_RAW_DIR / "ks_pms_products_20260819.csv",
+        ISZE_ROOT
+        / "02_dashboards"
+        / "Data"
+        / "90_INBOX"
+        / "ks_pms_scan_20260819"
+        / "products.csv",
+    ):
+        if not prod_path.exists():
+            continue
+        prod = pd.read_csv(prod_path, dtype=str)
+        if "pn" not in prod.columns:
+            continue
+        prod["part_number"] = prod["pn"].map(normalize_pn_scalar)
+        gen = pd.to_numeric(prod.get("gen_gbp"), errors="coerce")
+        iam = pd.to_numeric(prod.get("iam_gbp"), errors="coerce")
+        prod["shop_gbp"] = pd.concat([gen, iam], axis=1).min(axis=1)
+        prod = prod.dropna(subset=["part_number", "shop_gbp"])
+        prod = prod[prod["shop_gbp"] > 0]
+        if not prod.empty:
+            g = prod.groupby("part_number", as_index=False)["shop_gbp"].min()
+            g["ks_source"] = "ks_pms_products_20260819"
+            parts.append(g)
+        break
+
+    # Inbox compare file — matched ISZE/ITUK PNs with KS GBP
+    for cmp_path in (
+        KS_RAW_DIR / "ks_aftermarket_price_compare_20260819.csv",
+        ISZE_ROOT
+        / "02_dashboards"
+        / "Data"
+        / "90_INBOX"
+        / "ks_pms_scan_20260819"
+        / "ks_aftermarket_price_compare_20260819.csv",
+    ):
+        if not cmp_path.exists():
+            continue
+        cmp = pd.read_csv(cmp_path, dtype=str)
+        if "matched_isze_ituk_pn" not in cmp.columns:
+            continue
+        cmp["part_number"] = cmp["matched_isze_ituk_pn"].map(normalize_pn_scalar)
+        cmp["shop_gbp"] = pd.to_numeric(cmp.get("ks_gbp_exvat"), errors="coerce")
+        cmp = cmp.dropna(subset=["part_number", "shop_gbp"])
+        cmp = cmp[cmp["shop_gbp"] > 0]
+        if not cmp.empty:
+            g = cmp.groupby("part_number", as_index=False)["shop_gbp"].min()
+            g["ks_source"] = "ks_aftermarket_compare_20260819"
+            parts.append(g)
+        break
+
     if not parts:
         return pd.DataFrame()
 
@@ -392,7 +463,7 @@ def load_ks_pn_index() -> pd.DataFrame:
         np.nan,
     )
     agg["ks_has_quote"] = agg["shop_gbp"].notna() & (agg["shop_gbp"] > 0)
-    agg["ks_status"] = "crawl_union_20260819"
+    agg["ks_status"] = "crawl_union_20260825"
     return agg[
         [
             "part_number",

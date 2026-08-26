@@ -254,16 +254,31 @@ def build(dbkey: str):
     pbi_complete = bool(
         pbi_raw
         and pbi_raw.get("sales")
-        and pbi_raw.get("budget")
         and pbi_raw.get("prev_year")
-        and all(v is not None for k in ("sales", "budget", "prev_year")
+        and all(v is not None for k in ("sales", "prev_year")
                 for v in pbi_raw.get(k, []))
-        and len(pbi_raw["sales"]) == len(pbi_raw["months"])
-        == len(pbi_raw["budget"]) == len(pbi_raw["prev_year"])
+        and len(pbi_raw["sales"]) == len(pbi_raw["months"]) == len(pbi_raw["prev_year"])
     )
     PBI = pbi_raw if pbi_complete else None
     if pbi_raw and not pbi_complete:
         print(f"[{p['key']}] WARNING: incomplete Power BI cut — sales-review slide skipped.")
+
+    # Plan line for the official-cut slide. The BP workbook is a file we can
+    # point at; the Power BI "budget" bars are a browser read with nothing
+    # behind them in the workspace, so BP wins wherever the DB has a BP row.
+    ref = ref_label = None
+    if PBI:
+        bp_month = C.load_bp_monthly(p)
+        if bp_month:
+            cand = [bp_month.get(m) for m in PBI["months"]]
+            if all(v is not None for v in cand):
+                ref, ref_label = cand, "BP"
+        if ref is None and PBI.get("budget") and all(
+                v is not None for v in PBI["budget"]) and len(PBI["budget"]) == len(PBI["months"]):
+            ref, ref_label = PBI["budget"], "budget"
+        if ref is None:
+            print(f"[{p['key']}] WARNING: no BP or budget series — official-cut slide "
+                  "shows sales vs prior year only.")
     # Live labels from profile defaults so CY vs FY wording stays current
     # (summary.json may still hold the old "Q1 2026" strings).
     L25 = p["defaults"].get("window_label_prior") or S["label_prior"]
@@ -302,11 +317,11 @@ def build(dbkey: str):
 
     # ------------------------------------------------------------- charts --
     if PBI:
-        series = {
-            f"Sales (EUR K)": [v // 1000 for v in PBI["sales"]],
-            "Budget (EUR K)": [v // 1000 for v in PBI["budget"]],
-            "Prior year (EUR K)": [v // 1000 for v in PBI["prev_year"]],
-        }
+        series = {f"Sales (EUR K)": [v // 1000 for v in PBI["sales"]]}
+        if ref:
+            series[f"{'BP FY2027' if ref_label == 'BP' else 'Budget'} (EUR K)"] = [
+                round(v / 1000) for v in ref]
+        series["Prior year (EUR K)"] = [v // 1000 for v in PBI["prev_year"]]
         if (
             not deck_opt.get("skip_pbi_orders")
             and PBI.get("order_intake")
@@ -318,7 +333,9 @@ def build(dbkey: str):
             }
         ct.bar_chart(
             PBI["months"], series, cp("quarter.png"),
-            title=f"{disp} {PBI['quarter']} — sales vs budget vs prior year (EUR K)",
+            title=(f"{disp} {PBI['quarter']} — sales vs "
+                   f"{'BP' if ref_label == 'BP' else 'budget'} vs prior year (EUR K)"
+                   if ref else f"{disp} {PBI['quarter']} — sales vs prior year (EUR K)"),
             ylabel="EUR K", value_fmt="{:,.0f}", figsize=(10.2, 4.5))
 
     exclude_movers = set(deck_opt.get("exclude_movers_cats") or [])
@@ -339,24 +356,33 @@ def build(dbkey: str):
     peers = S["pms_peers"]
     plabels = {"oil_filter": "Oil filter", "fuel_filter": "Fuel filter", "air_filter": "Air filter",
                "brake_pad": "Brake pad", "brake_rotor": "Brake rotor"}
-    pkeys = [k for k in plabels if k in peers]
+    # Categories whose capture rate breaches the model ceiling are withheld, not
+    # plotted — see C.quotable_pms for why.
+    _ok, _drop = C.quotable_pms({k: peers[k] for k in plabels if k in peers})
+    pkeys = [k for k in plabels if k in _ok]
+    pms_dropped = [plabels[k] for k in plabels if k in _drop]
+    show_pms = len(pkeys) >= 3
+    if pms_dropped:
+        print(f"[{p['key']}] capture >100% withheld: {', '.join(pms_dropped)}"
+              + ("" if show_pms else " — coverage slide dropped (under 3 usable categories)"))
     pms_yr = S.get("pms_year")
-    pms_series = {
-        disp: [peers[k]["db"] for k in pkeys],
-        "Network (all other markets)": [peers[k]["network"] for k in pkeys],
-    }
-    # Never plot "Best market" when any best > 100% (capture model artefact).
-    best_vals = [peers[k]["best"] for k in pkeys]
-    if best_vals and max(best_vals) <= 100:
-        pms_series["Best market in the network"] = best_vals
-    ct.bar_chart(
-        [plabels[k] for k in pkeys],
-        pms_series,
-        cp("pms.png"),
-        title=(f"Service-parts capture by category — {disp} vs network "
-               f"(CY{pms_yr} full year, %)" if pms_yr else
-               f"Service-parts capture by category — {disp} vs the rest of the network (%)"),
-        ylabel="% of fleet service demand captured", value_fmt="{:,.1f}", figsize=(10.2, 4.5))
+    if show_pms:
+        pms_series = {
+            disp: [peers[k]["db"] for k in pkeys],
+            "Network (all other markets)": [peers[k]["network"] for k in pkeys],
+        }
+        # Never plot "Best market" when any best > 100% (same artefact).
+        best_vals = [peers[k]["best"] for k in pkeys]
+        if best_vals and max(best_vals) <= 100:
+            pms_series["Best market in the network"] = best_vals
+        ct.bar_chart(
+            [plabels[k] for k in pkeys],
+            pms_series,
+            cp("pms.png"),
+            title=(f"Service-parts capture by category — {disp} vs network "
+                   f"(CY{pms_yr} full year, %)" if pms_yr else
+                   f"Service-parts capture by category — {disp} vs the rest of the network (%)"),
+            ylabel="% of fleet service demand captured", value_fmt="{:,.1f}", figsize=(10.2, 4.5))
 
     uio = uio_live
     total = {int(k): v for k, v in uio["total"].items()}
@@ -446,7 +472,8 @@ def build(dbkey: str):
         agenda += ["Sales-to-Dealer Outlook"]
     if gps:
         agenda += ["GPS Capture"]
-    agenda += ["Service-Parts Coverage"]
+    if show_pms:
+        agenda += ["Service-Parts Coverage"]
     if S["ids"]:
         agenda += ["IDS 2026 — Dealer Standard"]
     agenda += ["Fleet & FY2027 Target", "SPA — status", "R&M — market discussion",
@@ -464,14 +491,24 @@ def build(dbkey: str):
 
     # ---- official quarter --------------------------------------------------
     if PBI:
-        tot_s, tot_b, tot_p = sum(PBI["sales"]), sum(PBI["budget"]), sum(PBI["prev_year"])
-        var = [PBI["sales"][i] / PBI["budget"][i] - 1 for i in range(len(PBI["months"]))]
-        best = max(range(len(var)), key=lambda i: var[i])
-        others_below = all(var[i] < 0 for i in range(len(var)) if i != best)
-        takeaways = [
-            f"Sales {eur(tot_s, True)} against a {eur(tot_b, True)} budget — {tot_s/tot_b-1:+.0%}, "
-            f"and {tot_s/tot_p-1:+.0%} on last year's {eur(tot_p, True)}."]
-        if PBI.get("original_bp") and all(v is not None for v in PBI["original_bp"]):
+        tot_s, tot_p = sum(PBI["sales"]), sum(PBI["prev_year"])
+        tot_b = sum(ref) if ref else None
+        var = ([PBI["sales"][i] / ref[i] - 1 for i in range(len(PBI["months"]))]
+               if ref else [])
+        best = max(range(len(var)), key=lambda i: var[i]) if var else 0
+        others_below = bool(var) and all(var[i] < 0 for i in range(len(var)) if i != best)
+        if ref:
+            takeaways = [
+                f"Sales {eur(tot_s, True)} against {ref_label} {eur(tot_b, True)} — "
+                f"{tot_s/tot_b-1:+.0%}, and {tot_s/tot_p-1:+.0%} on last year's "
+                f"{eur(tot_p, True)}."]
+        else:
+            takeaways = [f"Sales {eur(tot_s, True)} — {tot_s/tot_p-1:+.0%} on last year's "
+                         f"{eur(tot_p, True)}."]
+        # Original BP and the BP plan line are the same series — only quote it
+        # separately when the plan line came from the Power BI budget instead.
+        if (ref_label != "BP" and PBI.get("original_bp")
+                and all(v is not None for v in PBI["original_bp"])):
             tot_bp = sum(PBI["original_bp"])
             takeaways.append(
                 f"Against Original BP {eur(tot_bp, True)} the period is {tot_s/tot_bp-1:+.0%}."
@@ -499,20 +536,24 @@ def build(dbkey: str):
                 f"Order intake {eur(oi, True)} against {eur(tot_s, True)} billed "
                 f"(orders ~{oi/tot_s:.0%} of shipments)."
             )
-        if len(takeaways) < 4:
+        if len(takeaways) < 4 and var:
             if others_below and var[best] > 0:
+                rest = [f"{PBI['months'][i]} {var[i]:+.0%}"
+                        for i in range(len(var)) if i != best]
+                joined = (" and ".join(rest) if len(rest) < 3
+                          else ", ".join(rest[:-1]) + " and " + rest[-1])
                 takeaways.append(
                     f"The beat is entirely {PBI['months'][best]}: {eur(PBI['sales'][best], True)} against "
-                    f"{eur(PBI['budget'][best], True)}. " +
-                    " and ".join(f"{PBI['months'][i]} {var[i]:+.0%}"
-                                 for i in range(len(var)) if i != best) + " are both below budget.")
+                    f"{eur(ref[best], True)}. {joined} "
+                    f"{'are' if len(rest) > 1 else 'is'} below {ref_label}.")
             else:
-                takeaways.append("By month vs budget: " + ", ".join(
+                takeaways.append(f"By month vs {ref_label}: " + ", ".join(
                     f"{PBI['months'][i]} {var[i]:+.0%}" for i in range(len(var))) + ".")
         if len(takeaways) < 4:
             takeaways.append("Worth walking through the shape of the period together.")
         db.build_two_col(
-            prs, title=f"{PBI['quarter']}: {eur(tot_s, True)}, {tot_s/tot_b-1:+.0%} vs budget",
+            prs, title=(f"{PBI['quarter']}: {eur(tot_s, True)}, {tot_s/tot_b-1:+.0%} vs {ref_label}"
+                        if ref else f"{PBI['quarter']}: {eur(tot_s, True)}"),
             chart_path=cp("quarter.png"),
             eyebrow="Power BI — official cut", page_no=page, takeaways=takeaways[:4])
         page += 1
@@ -814,28 +855,37 @@ def build(dbkey: str):
         page += 1
 
     # ---- PMS ---------------------------------------------------------------
-    below = sorted(peers.items(), key=lambda kv: kv[1]["db"] - kv[1]["network"])
-    worst = below[:2]
-    ptake = [f"{plabels[k]} {v['db']:.1f}% against {v['network']:.1f}% for the rest of the network."
-             for k, v in worst]
-    ptake.append("Every market here is measured on the same fleet-and-interval model, so the "
-                 "comparison is like-for-like even where the underlying interval assumption is "
-                 "debatable.")
-    ptake.append("Worth agreeing which category we tackle first, and what the joint action is.")
-    above = [k for k, v in peers.items() if v["db"] >= v["network"]]
-    title_pms = ("Service-parts coverage sits below the network on every routine category"
-                 if not above else
-                 f"Service-parts coverage: {plabels[worst[0][0]].lower()} is the clear gap")
-    db.build_two_col(prs, title=title_pms, chart_path=cp("pms.png"),
-                     eyebrow="Service-Parts Coverage", page_no=page, takeaways=ptake[:4])
-    page += 1
+    if show_pms:
+        shown = {k: peers[k] for k in pkeys}
+        below = sorted(shown.items(), key=lambda kv: kv[1]["db"] - kv[1]["network"])
+        worst = below[:2]
+        ptake = [f"{plabels[k]} {v['db']:.1f}% against {v['network']:.1f}% for the rest of the network."
+                 for k, v in worst]
+        ptake.append("Every market here is measured on the same fleet-and-interval model, so the "
+                     "comparison is like-for-like even where the underlying interval assumption is "
+                     "debatable.")
+        if pms_dropped:
+            ptake.append(
+                f"{', '.join(pms_dropped)} is not shown: the modelled demand base for that "
+                "category does not hold for this market, so the rate is not quotable.")
+        ptake.append("Worth agreeing which category we tackle first, and what the joint action is.")
+        above = [k for k, v in shown.items() if v["db"] >= v["network"]]
+        title_pms = ("Service-parts coverage sits below the network on every routine category"
+                     if not above else
+                     f"Service-parts coverage: {plabels[worst[0][0]].lower()} is the clear gap")
+        db.build_two_col(prs, title=title_pms, chart_path=cp("pms.png"),
+                         eyebrow="Service-Parts Coverage", page_no=page, takeaways=ptake[:4])
+        page += 1
 
     # ---- IDS ---------------------------------------------------------------
     if S["ids"]:
         I = S["ids"]
+        # Round before comparing: 79.44 vs 79.41 must not print as "above" when
+        # both render as 79.4.
+        _gap = round(I["db_avg"], 1) - round(I["network_avg"], 1)
+        _dir = "above" if _gap > 0 else ("below" if _gap < 0 else "in line with")
         s = db.build_content(
-            prs, f"IDS 2026: {disp} averages {I['db_avg']:.1f}%, "
-                 f"{'above' if I['db_avg'] >= I['network_avg'] else 'below'} the "
+            prs, f"IDS 2026: {disp} averages {I['db_avg']:.1f}%, {_dir} the "
                  f"{I['network_avg']:.1f}% network benchmark",
             eyebrow="IDS 2026 — Dealer Standard", page_no=page)
         rows = [["Dealer", "Total %", "Global rank"]]
@@ -846,14 +896,26 @@ def build(dbkey: str):
         styled_table(s, rows, Inches(0.32), Inches(1.32), Inches(12.7), Inches(3.0),
                      [Inches(7.1), Inches(2.8), Inches(2.8)], bold_last=False, size=11.5)
         spread = I["top"][0]["pts"] - I["bottom"][-1]["pts"]
-        db.bullet_list(s, [
-            f"{I['n']} dealers assessed across Premises, Organisation, Service, Parts and Vehicle Sales.",
-            f"The country average sits {abs(I['db_avg']-I['network_avg']):.1f} points "
-            f"{'above' if I['db_avg'] >= I['network_avg'] else 'below'} the network.",
-            f"The spread is the point: {spread:.0f} points between the strongest and weakest dealer.",
+        n_skipped = I.get("n_not_assessed") or 0
+        ids_notes = [
+            f"{I['n']} dealers assessed across Premises, Organisation, Service, Parts and Vehicle Sales."
+            + ((f" {n_skipped} further dealer did not return an assessment and is excluded "
+                "from every figure on this slide." if n_skipped == 1 else
+                f" {n_skipped} further dealers did not return an assessment and are excluded "
+                "from every figure on this slide.") if n_skipped else ""),
+            (f"The country average sits {abs(_gap):.1f} points "
+             f"{'above' if _gap > 0 else 'below'} the network — both averages are taken on "
+             "assessed dealers only."
+             if _gap else
+             "The country average is level with the network — both averages are taken on "
+             "assessed dealers only."),
+            f"The spread is the point: {spread:.0f} points between the strongest and weakest "
+            "assessed dealer.",
             "Dealer-by-dealer detail and individual feedback are available as a separate pack — "
             "worth agreeing which dealers to visit, and when.",
-        ], Inches(0.32), Inches(4.55), Inches(12.7), Inches(2.2), size=13.5)
+        ]
+        db.bullet_list(s, ids_notes, Inches(0.32), Inches(4.55), Inches(12.7), Inches(2.2),
+                       size=13.5)
         page += 1
 
     # ---- fleet -------------------------------------------------------------
@@ -954,8 +1016,14 @@ def build(dbkey: str):
     # ---- growth / price / incentive ---------------------------------------
     s = db.build_content(prs, "What the FY2027 target reflects",
                          eyebrow="FY2027 Target", page_no=page)
-    card(s, Inches(0.32), Inches(1.35), Inches(6.0), Inches(2.2), "1", "Your fleet",
-         [f"The working fleet movement used in the target is {s2d['uio_growth']:+.1%}."])
+    card(s, Inches(0.32), Inches(1.35), Inches(6.0), Inches(2.2), "1",
+         "The FY2027 business plan" if use_ext else "Your fleet",
+         ([f"The target starts from the FY2027 Business Plan for this market, "
+           f"{eur(bp27)}." if bp27 else "The target starts from the FY2027 Business Plan.",
+           f"Your fleet outlook ({growth:+.1%}) sets the market potential the stretch is "
+           "measured against."]
+          if use_ext else
+          [f"The working fleet movement used in the target is {s2d['uio_growth']:+.1%}."]))
     card(s, Inches(6.5), Inches(1.35), Inches(6.5), Inches(2.2), "2", "The price move",
          [f"ISZE is applying a {d['price_increase_fy27']:.0%} price adjustment for FY2027, "
           "consistent with every ISZE market this year.",
@@ -978,8 +1046,10 @@ def build(dbkey: str):
     db.bullet_list(s, [
         "As in previous cycles we would expect an incentive to sit alongside this adjustment — "
         "that approval is still pending on our side.",
-        "Until the incentive is confirmed, treat the FY2027 target as the working bridge "
-        "(fleet × price × additional growth), not a locked commercial commitment.",
+        ("Until the incentive is confirmed, treat the FY2027 extended target as the working "
+         "figure (BP + stretch), not a locked commercial commitment." if use_ext else
+         "Until the incentive is confirmed, treat the FY2027 target as the working bridge "
+         "(fleet × price × additional growth), not a locked commercial commitment."),
     ], Inches(0.32), Inches(5.55), Inches(12.7), Inches(1.05), size=12.5)
     page += 1
 

@@ -48,6 +48,7 @@ tasks:
       - 03_analytics/Isuzu/prism/docs/dashboard_contracts.md
     workflow:
       - Edit 02_dashboards/
+      - Run 02_dashboards/_build/ship_gate_check.ps1 (after rebuild; must print SHIP_GATE_OK)
       - Run 02_dashboards/sync_to_deploys.ps1
 
   refresh_dashboard_json:
@@ -90,6 +91,34 @@ tasks:
     data:
       - 03_analytics/Isuzu/pms-pilot/
 
+  action_ledger:
+    description: P8 Opportunity→Action→Outcome ledger over existing derived euro surfaces (Mode B)
+    read:
+      - 00_docs/PROMPT_ACTION_LEDGER_P8.md
+      - 00_docs/roadmaps/ai_sales_intelligence.md
+      - 00_docs/AUTOMATION_REGISTER.md
+    data:
+      - 01_data/00_derived/action_ledger.parquet
+      - 01_data/00_derived/action_ledger_history.parquet
+      - 01_data/00_derived/action_ledger_open.csv
+      - 01_data/00_derived/action_ledger_decisions.csv
+      - 01_data/00_derived/action_ledger_rejects.csv
+      - 01_data/00_derived/dealer_leakage_ituk.csv
+      - 01_data/00_derived/revision_exception_queue.csv
+      - 01_data/00_derived/replenishment_exceptions_cy2025.csv
+      - 01_data/00_derived/early_warning.csv
+      - 01_data/00_derived/defection_alerts.csv
+      - 01_data/00_derived/no_pr00_gap_cy2025_ranked.csv
+      - 01_data/00_derived/revision_book_b_top_review.csv
+      - 01_data/00_derived/leakage_monday_actions_20260819.csv
+      - 01_data/17_interactions/account_health_latest_flagged.csv
+    open:
+      - 02_dashboards/ops/OPEN_ACTION_LEDGER.cmd
+    rebuild:
+      - python 01_data/91_build/build_action_ledger.py --all --backfill
+    critique:
+      - 01_data/00_derived/ACTION_LEDGER_REVIEW_20260825.md
+
   aftermarket_bi_build:
     description: What to build next — dealer sell-out, replenishment, forecast, pricing revision (no alloc unless explicit)
     read:
@@ -101,10 +130,17 @@ tasks:
       - 01_data/00_derived/demand_series.parquet
       - 01_data/00_derived/revision_book_b_top_review.csv
       - 01_data/00_derived/replenishment_bridge.parquet
+      - 01_data/00_derived/leakage_monday_actions_20260819.csv
     open:
       - 02_dashboards/sales/OPEN_Aftermarket_BI_Command_Center.cmd
+      - 01_data/01_Pricing/OPEN_LEAKAGE_EXEC_SUMMARY.cmd
     rebuild:
       - python 02_dashboards/_build/build_aftermarket_bi_command_center.py --all
+    critique:
+      - 02_dashboards/_build/CHART_CRITIQUE_20260819.md
+    loop:
+      - 02_dashboards/_build/LOOP_AFTERMARKET_BI.md
+      - 02_dashboards/_build/status_loop_aftermarket_bi.ps1
 
   pricing:
     description: IE40, SPA, basket pricing, DB→DLR commercial stack

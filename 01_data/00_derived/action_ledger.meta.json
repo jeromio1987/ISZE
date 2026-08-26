@@ -1,0 +1,87 @@
+{
+  "run_id": "20260825T175229Z_48a077",
+  "produced_at": "2026-08-25T17:52:29Z",
+  "billing_horizon": "2026-06-30",
+  "adapter_stats": [
+    {
+      "adapter": "dealer_leakage_ituk",
+      "source_file": "dealer_leakage_ituk.csv",
+      "count_in": 260,
+      "count_out": 260,
+      "status": "ok"
+    },
+    {
+      "adapter": "revision_exception_queue",
+      "source_file": "revision_exception_queue.csv",
+      "count_in": 20572,
+      "count_out": 20572,
+      "status": "ok"
+    },
+    {
+      "adapter": "replenishment_exceptions_cy2025",
+      "source_file": "replenishment_exceptions_cy2025.csv",
+      "count_in": 1595,
+      "count_out": 1595,
+      "status": "ok"
+    },
+    {
+      "adapter": "early_warning",
+      "source_file": "early_warning.csv",
+      "count_in": 19,
+      "count_out": 19,
+      "status": "ok"
+    },
+    {
+      "adapter": "defection_alerts",
+      "source_file": "defection_alerts.csv",
+      "count_in": 265,
+      "count_out": 265,
+      "status": "ok"
+    },
+    {
+      "adapter": "no_pr00_gap_cy2025_ranked",
+      "source_file": "no_pr00_gap_cy2025_ranked.csv",
+      "count_in": 31,
+      "count_out": 31,
+      "status": "ok"
+    },
+    {
+      "adapter": "revision_book_b_top_review",
+      "source_file": "revision_book_b_top_review.csv",
+      "count_in": 500,
+      "count_out": 500,
+      "status": "ok"
+    },
+    {
+      "adapter": "leakage_monday_actions",
+      "source_file": "leakage_monday_actions_20260819.csv",
+      "count_in": 40,
+      "count_out": 40,
+      "status": "ok"
+    },
+    {
+      "adapter": "account_health_latest_flagged",
+      "source_file": "account_health_latest_flagged.csv",
+      "count_in": 16,
+      "count_out": 16,
+      "status": "ok"
+    }
+  ],
+  "counts": {
+    "adapter_rows": 23298,
+    "after_lineage": 23298,
+    "after_dedupe": 23236,
+    "open": 23236,
+    "rejects": 0,
+    "outcomes": 0,
+    "history": 23307
+  },
+  "excluded": [
+    "portfolio_triage_20260819.csv \u2014 rollup of early_warning + account_health; excluded to avoid double-count"
+  ],
+  "data_sufficiency_verdict": "Sufficient to build and backfill (nine surfaces, green pipeline, sales_fact billing through 2026-06-30). Insufficient for measurable outcomes past billing horizon 2026-06-30 \u2014 those rows stay NOT_MEASURABLE with realised_eur NULL; never estimated.",
+  "versions": {
+    "builder": "p8-v1",
+    "adapters": "p8-v1"
+  }
+}

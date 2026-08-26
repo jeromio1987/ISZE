@@ -58,12 +58,29 @@ _WARRANTY_TEXT_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Material codes that are not parts. ERP bills freight/delivery surcharges as a
+# line with a non-numeric Material code (e.g. TRANSPORT). These are real revenue
+# and must stay in load_sales so PBI reconciliation works; they are excluded at
+# the parts-aggregation stage (build_parts_analysis) so they cannot leak into
+# category / mover / UNCLASSIFIED totals.
+FREIGHT_MATERIAL_CODES = frozenset(
+    {"TRANSPORT", "FREIGHT", "SHIPPING", "CARRIAGE", "DELIVERY", "SURCHARGE", "HANDLING"}
+)
+
 UIO_FILE = ISZE / "06_uio" / "_CURRENT" / "ISUZU_UIO_Overview_2026.xlsx"
 FY27_FILE = ISZE / "01_data" / "ISZE_GPS_Extended_Target_FY27_V3.1.xlsx"
 IDS_FILE = (ISZE / "01_data" / "90_INBOX" / "IDS_2026" / "rankings"
             / "IDS_2026_TOTAL_ranking_all.xlsx")
 BUDGET_FILE = ISZE / "01_data" / "11_planning" / "budget_per_DB_reviewed_24042026.xlsx"
+BP_FILE = ISZE / "01_data" / "11_planning" / "FY2027  BP VP&ACC.xlsx"
 CARPARK_FILE = DERIVED / "UIO_carpark_for_GPS_recalc_2026-07-30.csv"
+
+# A dealer that never returned an IDS assessment scores nothing on every item, so
+# "Items scored %" and "Points achieved %" both collapse to ~0. Those rows are
+# non-returns, not failures: naming them as the weakest dealers is wrong, and
+# leaving them in drags both the country and the network average down (30 of 518
+# rows network-wide, worth ~4.6 points on the benchmark).
+IDS_MIN_SCORED_PCT = 5.0
 
 OUT_ROOT = ISZE / "09_meetings"
 
@@ -587,6 +604,21 @@ def pms_vs_network(profile: dict, categories=None, year: int | None = None) -> d
     return out
 
 
+def quotable_pms(peers: dict) -> tuple[list[str], list[str]]:
+    """(categories safe to show, categories withheld) from a pms_vs_network dict.
+
+    A capture rate over 100% is an artefact of the service-interval assumption in
+    the expected-quantity base, not real over-capture — 12 DB/category pairs
+    across the network breach it on the CY2025 cut. It cannot be defended in
+    front of a distributor, so the category is withheld everywhere rather than
+    plotted. Fixing the base means changing the network-wide interval model.
+    """
+    keep, drop = [], []
+    for k, v in peers.items():
+        (drop if (v["db"] > 100 or v["network"] > 100) else keep).append(k)
+    return keep, drop
+
+
 def load_uio(profile: dict) -> dict:
     """{segment: {year: units}} straight from 06_uio/_CURRENT. Years are the
     literal header labels with the E/F suffix stripped (2025E -> 2025).
@@ -779,13 +811,54 @@ def load_fy27(profile: dict) -> dict:
 
 
 def load_ids(profile: dict):
-    """(this DB's dealers, network average, DB average) or None when the DB has
-    no IDS 2026 assessment."""
+    """(assessed dealers, network average, DB average, n_not_assessed) or None
+    when the DB has no IDS 2026 assessment.
+
+    Non-returns are dropped before any average is taken — see IDS_MIN_SCORED_PCT.
+    Both averages are computed on the same assessed-only population so the
+    country-vs-network comparison is like-for-like.
+    """
     if not profile.get("ids_code"):
         return None
     df = pd.read_excel(IDS_FILE, sheet_name=0)
-    mine = df[df["Country"] == profile["ids_code"]].copy()
+    scored = df[df["Items scored %"] >= IDS_MIN_SCORED_PCT]
+    n_all = int((df["Country"] == profile["ids_code"]).sum())
+    mine = scored[scored["Country"] == profile["ids_code"]].copy()
     if mine.empty:
         return None
     mine = mine.sort_values("Rank (country)")
-    return mine, float(df["Points achieved %"].mean()), float(mine["Points achieved %"].mean())
+    return (mine,
+            float(scored["Points achieved %"].mean()),
+            float(mine["Points achieved %"].mean()),
+            n_all - int(len(mine)))
+
+
+def load_bp_monthly(profile: dict) -> dict[str, float] | None:
+    """{month_abbr: EUR} FY2027 Business Plan for one DB, from the BP workbook.
+
+    Sheet 'VP FY27' carries one row per SAP sold-to ("86 - RSA"), Apr..Mar.
+    This is the only monthly plan series in the workspace that traces to a file;
+    the 'budget' bars in the Power BI monthly report are a browser read with no
+    source here, so BP is what the decks quote against.
+    """
+    sold_to = profile.get("sold_to")
+    if sold_to is None or not BP_FILE.exists():
+        return None
+    import openpyxl
+    wb = openpyxl.load_workbook(BP_FILE, data_only=True, read_only=True)
+    try:
+        rows = list(wb["VP FY27"].iter_rows(values_only=True))
+    finally:
+        wb.close()
+    months, hit = None, None
+    for r in rows:
+        label = str(r[1] or "").strip()
+        if label == "Vehicle Parts":
+            months = [str(v).strip() for v in r[3:15]]
+        elif label.split(" - ")[0].strip() == str(int(sold_to)):
+            hit = r
+    if hit is None or not months:
+        return None
+    out = {m: float(hit[3 + i]) for i, m in enumerate(months)
+           if isinstance(hit[3 + i], (int, float))}
+    return out or None

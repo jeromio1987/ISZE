@@ -7,6 +7,7 @@ Reference sell-out = PR00 × 1.785 (field: reference_sellout_eur).
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 import pandas as pd
@@ -139,6 +140,135 @@ def load_book_b_bucket_summary(derived: Any) -> pd.DataFrame:
     return pd.read_csv(path, low_memory=False)
 
 
+def load_pn_descriptions(derived: Any) -> dict[str, str]:
+    """PN → description from pricing parts master / IE40; fallback book_b weights."""
+    out: dict[str, str] = {}
+    for name in ("pricing_parts_master.parquet", "pricing_pr00_ie40.parquet"):
+        path = derived / name
+        if not path.is_file():
+            continue
+        df = pd.read_parquet(path)
+        if "part_number" not in df.columns or "description" not in df.columns:
+            continue
+        for _, r in df.iterrows():
+            pn = norm_pn_scalar(str(r.get("part_number") or ""))
+            desc = str(r.get("description") or "").strip()
+            if pn and desc and desc.lower() not in ("nan", "none") and pn not in out:
+                out[pn] = desc
+    bb = derived / "book_b_provisional_weights.csv"
+    if bb.is_file():
+        bdf = pd.read_csv(bb, low_memory=False)
+        if "pn" in bdf.columns and "description" in bdf.columns:
+            for _, r in bdf.iterrows():
+                pn = norm_pn_scalar(str(r.get("pn") or ""))
+                desc = str(r.get("description") or "").strip()
+                if pn and desc and pn not in out:
+                    out[pn] = desc
+    return out
+
+
+BUCKET_PLAIN: dict[str, str] = {
+    "p700_launch": "P700 launch parts",
+    "rg21_2_2l": "RG21 2.2L engine parts",
+    "uti_p700_rec_x1_25": "UTI P700 recommended ×1.25",
+    "dmax_lcv": "D-Max LCV parc",
+    "n75_truck_wear": "N75 truck wear parts",
+    "other_gf_1_0": "Other growth factor 1.0",
+    "carryover_1_0": "Carryover baseline",
+}
+
+
+def vehicle_plain_label(
+    db: str,
+    pn: str,
+    aim_l1: str,
+    bucket: str,
+    hint: str,
+    *,
+    desc_map: dict[str, str] | None = None,
+) -> str:
+    """Plain vehicle/parc label from Book B bucket + AIM — not VIN-level."""
+    parts: list[str] = []
+    b = (bucket or "").lower()
+    h = (hint or "").lower()
+    a = (aim_l1 or "").lower()
+    if b:
+        plain = BUCKET_PLAIN.get(b)
+        if plain:
+            parts.append(plain)
+        elif "p700" in b:
+            parts.append("P700 launch parts")
+        elif "rg21" in b:
+            parts.append("RG21 2.2L engine parts")
+        elif "uti" in b and "1.25" in b:
+            parts.append("UTI P700 recommended ×1.25")
+        elif "dmax" in b or "lcv" in b:
+            parts.append("D-Max LCV parc")
+        else:
+            parts.append(f"Book B bucket: {bucket.replace('_', ' ')}")
+    if db == "ITUK" and ("n75" in h or "truck" in a or "intake" in a):
+        parts.append("Likely N75/truck wear (AIM proxy)")
+    if db == "IUK" and ("lcv" in b or "d-max" in h or "dmax" in h):
+        parts.append("D-Max LCV parc")
+    if db == "GREECE":
+        parts.append("No sell-out in CY2025 file")
+    if not parts and a:
+        parts.append(f"AIM family: {aim_l1}")
+    if not parts:
+        parts.append("Launch bucket / AIM family proxy")
+    note = " · ".join(parts)
+    return f"{note} — not VIN-level unless dealer grain says otherwise"
+
+
+def build_monday_actions_csv(
+    rev: pd.DataFrame,
+    aim_map: dict[str, dict[str, str]],
+    derived: Any,
+    out_path: Any,
+    *,
+    top_per_db: int = 10,
+    bucket_map: dict[str, str] | None = None,
+    hint_map: dict[str, str] | None = None,
+) -> int:
+    """Export top leakage rows per DB for Monday stand-up."""
+    if rev.empty:
+        return 0
+    bucket_map = bucket_map or {}
+    hint_map = hint_map or {}
+    rows_out: list[dict[str, Any]] = []
+    for db in DB_ORDER:
+        g = rev.loc[(rev["distributor_code"] == db) & (rev["gap_eur"] > 0)].copy()
+        if g.empty:
+            continue
+        g = g.nlargest(top_per_db, "gap_eur")
+        for pri, (_, r) in enumerate(g.iterrows(), start=1):
+            pn = str(r.get("part_number") or "")
+            aim = aim_chip(pn, aim_map)
+            sig = str(r.get("pipeline_signal") or "")
+            rows_out.append(
+                {
+                    "db": db,
+                    "pn": pn,
+                    "aim_l1": aim,
+                    "gap_eur": round(float(r.get("gap_eur") or 0)),
+                    "gap_qty": round(float(r.get("qty_gap") or 0)),
+                    "pipeline": PIPELINE_LABEL.get(sig, sig),
+                    "recommended_action": str(r.get("recommended_action") or ""),
+                    "vehicle_note": vehicle_plain_label(
+                        db, pn, aim, bucket_map.get(pn, ""), hint_map.get(pn, "")
+                    ),
+                    "monday_priority": pri,
+                }
+            )
+    if not rows_out:
+        return 0
+    out = pd.DataFrame(rows_out)
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out.to_csv(out_path, index=False)
+    return len(out)
+
+
 def build_monthly_trend(bridge: pd.DataFrame, rev: pd.DataFrame) -> list[dict[str, Any]]:
     if bridge.empty:
         return []
@@ -184,7 +314,7 @@ def build_monthly_trend(bridge: pd.DataFrame, rev: pd.DataFrame) -> list[dict[st
     return out
 
 
-def build_ituk_dealer_top(dealer: pd.DataFrame, rev: pd.DataFrame, top_n: int = 5) -> list[dict[str, Any]]:
+def build_ituk_dealer_top(dealer: pd.DataFrame, rev: pd.DataFrame, top_n: int = 10) -> list[dict[str, Any]]:
     if dealer.empty:
         return []
     d = dealer.copy()
@@ -250,6 +380,7 @@ def build_db_panel(rev: pd.DataFrame, aim_map: dict[str, dict[str, str]], db: st
             "db": db,
             "leakage_eur": 0,
             "overstock_eur": 0,
+            "balanced_eur": 0,
             "leakage_pn": 0,
             "overstock_pn": 0,
             "top15": [],
@@ -261,6 +392,7 @@ def build_db_panel(rev: pd.DataFrame, aim_map: dict[str, dict[str, str]], db: st
 
     leakage = g.loc[g["pipe_bucket"] == "leakage"]
     overstock = g.loc[g["pipe_bucket"] == "overstock"]
+    balanced = g.loc[g["pipe_bucket"] == "balanced"]
 
     top15 = g.nlargest(15, "gap_eur")
     aim_mix = (
@@ -288,6 +420,7 @@ def build_db_panel(rev: pd.DataFrame, aim_map: dict[str, dict[str, str]], db: st
         "db": db,
         "leakage_eur": safe_float(leakage["gap_eur"].sum(), ndigits=0),
         "overstock_eur": safe_float(overstock["overstock_eur"].sum(), ndigits=0),
+        "balanced_eur": safe_float(balanced["sellout_eur_est"].sum(), ndigits=0),
         "leakage_pn": int(len(leakage)),
         "overstock_pn": int(len(overstock)),
         "top15": [_pn_row(r) for _, r in top15.iterrows()],
@@ -660,10 +793,163 @@ def build_full_payload(derived: Any) -> dict[str, Any]:
     net["book_b"] = bb_agg
     net["monthly_trend"] = build_monthly_trend(bridge, rev)
     net["book_b_buckets"] = build_book_b_bucket_chart(bb_summary)
-    net["ituk_dealers_top5"] = build_ituk_dealer_top(dealer, rev)
+    net["ituk_dealers_top10"] = build_ituk_dealer_top(dealer, rev, top_n=10)
+    net["ituk_dealers_top5"] = net["ituk_dealers_top10"][:5]
     net["db_panels"] = {db: build_db_panel(rev, aim_map, db) for db in DB_ORDER if not rev.empty}
     net["network_top50"] = revision_rows_for_table(rev, aim_map, limit=50)
     net["revision_rows"] = revision_rows_for_table(rev, aim_map, limit=500)
     net["revision_row_total"] = int(len(rev))
     net["replenishment_exception_count"] = int(len(exc))
+    net.update(build_genius_charts(rev, aim_map, bridge, bb_agg, net))
     return net
+
+
+def build_genius_charts(
+    rev: pd.DataFrame,
+    aim_map: dict[str, dict[str, str]],
+    bridge: pd.DataFrame,
+    bb_agg: dict[str, Any],
+    net: dict[str, Any],
+) -> dict[str, Any]:
+    """Aggregates for Command Center genius SSR charts."""
+    out: dict[str, Any] = {
+        "waterfall_steps": [],
+        "pipeline_db_heatmap": [],
+        "iam_scatter": [],
+        "db_radar": [],
+        "sparkline_by_db": [],
+        "money_top5": [],
+    }
+    if rev.empty:
+        return out
+
+    rev = rev.copy()
+    rev["pipe_bucket"] = rev["pipeline_signal"].map(pipeline_bucket)
+    rev["aim_l1"] = rev["pn_norm"].map(lambda p: aim_chip(p, aim_map))
+
+    hero = net.get("hero") or {}
+    total_gap = float(hero.get("total_gap_eur") or rev["gap_eur"].sum())
+    biggest = rev.nlargest(1, "gap_eur").iloc[0]
+    out["waterfall_steps"] = [{"label": "Network leakage", "eur": total_gap, "is_total": True, "color": "#c0552d"}]
+    for db in DB_ORDER:
+        g = rev.loc[rev["distributor_code"] == db]
+        if g.empty:
+            continue
+        out["waterfall_steps"].append(
+            {"label": db, "eur": safe_float(g["gap_eur"].sum(), ndigits=0), "color": "#15233c"}
+        )
+    out["waterfall_steps"].append(
+        {
+            "label": f"Top PN {biggest.get('part_number')}",
+            "eur": safe_float(biggest.get("gap_eur"), ndigits=0),
+            "color": "#c0552d",
+        }
+    )
+
+    heat_rows: list[dict[str, Any]] = []
+    for db in DB_ORDER:
+        g = rev.loc[rev["distributor_code"] == db]
+        if g.empty:
+            continue
+        for cls in ("leakage", "overstock", "balanced"):
+            sub = g.loc[g["pipe_bucket"] == cls]
+            if cls == "leakage":
+                eur = safe_float(sub["gap_eur"].sum(), ndigits=0)
+            elif cls == "overstock":
+                eur = safe_float(sub["overstock_eur"].sum(), ndigits=0)
+            else:
+                eur = safe_float(sub["sellout_eur_est"].sum(), ndigits=0)
+            heat_rows.append({"db": db, "pipe_class": cls, "eur": eur or 0})
+    out["pipeline_db_heatmap"] = heat_rows
+
+    scatter_src = rev.loc[
+        pd.to_numeric(rev.get("ks_price_index"), errors="coerce").notna()
+        & (rev["gap_eur"] > 0)
+    ].nlargest(30, "gap_eur")
+    out["iam_scatter"] = [
+        {
+            "pn": str(r.get("part_number") or ""),
+            "db": str(r.get("distributor_code") or ""),
+            "ks_index": safe_float(r.get("ks_price_index")),
+            "gap_eur": safe_float(r.get("gap_eur"), ndigits=0),
+        }
+        for _, r in scatter_src.iterrows()
+    ]
+
+    by_db = net.get("by_db") or []
+    max_gap = max(float(d.get("gap_eur") or 0) for d in by_db) or 1.0
+    max_over = max(float(d.get("overstock_eur") or 0) for d in by_db) or 1.0
+    max_pn = max(float(d.get("pn_count") or 0) for d in by_db) or 1.0
+    radar: list[dict[str, Any]] = []
+    for d in by_db:
+        leak = float(d.get("gap_eur") or 0)
+        over = float(d.get("overstock_eur") or 0)
+        st = float(d.get("sell_through") or 0)
+        radar.append(
+            {
+                "db": d.get("db"),
+                "leakage_pct": min(100.0, 100.0 * leak / max_gap),
+                "overstock_pct": min(100.0, 100.0 * over / max_over),
+                "sell_through": min(100.0, st * 100),
+                "pn_density": min(100.0, 100.0 * float(d.get("pn_count") or 0) / max_pn),
+                "gap_share": min(100.0, 100.0 * leak / max(total_gap, 1)),
+            }
+        )
+    out["db_radar"] = radar
+
+    top5 = rev.nlargest(5, "gap_eur")
+    out["money_top5"] = [
+        {
+            "pn": str(r.get("part_number") or ""),
+            "db": str(r.get("distributor_code") or ""),
+            "gap_eur": safe_float(r.get("gap_eur"), ndigits=0),
+            "aim": str(r.get("aim_l1") or "—"),
+            "action": str(r.get("recommended_action") or ""),
+            "signal": PIPELINE_LABEL.get(str(r.get("pipeline_signal") or ""), ""),
+        }
+        for _, r in top5.iterrows()
+    ]
+
+    if not bridge.empty:
+        b = bridge.copy()
+        b["bill_eur_n"] = pd.to_numeric(b.get("bill_eur"), errors="coerce").fillna(0)
+        b["sellout_qty_n"] = pd.to_numeric(b.get("sellout_qty"), errors="coerce").fillna(0)
+        unit_lookup: dict[tuple[str, str], float] = {}
+        for _, r in rev.iterrows():
+            u = safe_float(r.get("unit_eur"))
+            if u:
+                unit_lookup[(str(r.get("distributor_code")), str(r.get("part_number")))] = u
+
+        def _so_eur(row: pd.Series) -> float:
+            db = str(row.get("distributor_code") or "")
+            pn = str(row.get("part_number") or "")
+            u = unit_lookup.get((db, pn))
+            bq = float(row.get("bill_qty") or 0) if pd.notna(row.get("bill_qty")) else 0
+            be = float(row.get("bill_eur_n") or 0)
+            if u is None and bq > 0:
+                u = be / bq
+            return float(row.get("sellout_qty_n") or 0) * float(u or 0)
+
+        b["sellout_eur_est"] = b.apply(_so_eur, axis=1)
+        strips: list[dict[str, Any]] = []
+        for db in DB_ORDER:
+            sub = b.loc[b["distributor_code"] == db]
+            if sub.empty:
+                continue
+            g = (
+                sub.groupby("year_month", dropna=False)
+                .agg(sellout_eur=("sellout_eur_est", "sum"))
+                .reset_index()
+                .sort_values("year_month")
+            )
+            pts = [{"sellout_eur": safe_float(r["sellout_eur"], ndigits=0)} for _, r in g.iterrows()]
+            strips.append({"label": db, "points": pts})
+        out["sparkline_by_db"] = strips
+
+    weighted = float((net.get("hero") or {}).get("book_b_weighted_eur") or 0)
+    blocked = float(bb_agg.get("conflict_blocked_eur") or 0)
+    out["book_b_bullets"] = [
+        {"label": "Book B weighted ambition", "actual_eur": weighted, "blocked_eur": blocked},
+        {"label": "Growth bucket conflicts", "actual_eur": blocked, "blocked_eur": blocked},
+    ]
+    return out

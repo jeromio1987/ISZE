@@ -20,7 +20,7 @@ Hard rules: **UTI ≠ UMI** · **IUK ≠ ITUK** · **IRELAND ≠ IUK** · refere
 | A4 | **Book B revision review workbook** | ✅ | `01_data/01_Pricing/BOOK_B_REVISION_REVIEW_20260819.html`, `OPEN_BOOK_B_REVISION_REVIEW.cmd` · aligned to command-center shell |
 | **A15** | **Aftermarket BI Command Center** | ✅ | `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html` · **SSR build-time** (0.41 MB) — duplicate `let sortKey` JS bug fixed 2026-08-19 · loop: `02_dashboards/_build/LOOP_AFTERMARKET_BI.md` |
 | A5 | **GREECE in commercial stack** (5th DB) | ✅ | `build_db_dlr_commercial_stack.py` → 5 DBs incl. GREECE 2,723 PNs |
-| A6 | **KS/IAM index refresh** | ✅ | KS matches **277** (was ~148) in `revision_exception_queue.csv` |
+| A6 | **KS/IAM index refresh** | ✅ | KS matches **302** (126 unique PNs; was 277) in `revision_exception_queue.csv` — catalog tree expand 2026-08-25 (`ks_catalog_tree_expand_20260825.csv`, 69 rows); status `crawl_union_20260825`; Autodoc still frozen |
 | A7 | **P1.3 supersession delta** | ✅ | `01_data/00_derived/supersession_billing_delta.csv`, `01_data/01_Pricing/SUPERSESSION_DELTA_NOTE_20260819.md` |
 | A8 | **P1.4 list-to-pocket validation** | ✅ | `01_data/00_derived/list_to_pocket_validation_2023_2025.csv`, `LIST_TO_POCKET_VALIDATION_20260819.md` |
 | A9 | **Account-health ops pack** | ✅ | `01_data/17_interactions/account_health_ops_triage.csv`, `ACCOUNT_HEALTH_OPS_TRIAGE_20260819.md` |
@@ -111,6 +111,6 @@ Hard rules: **UTI ≠ UMI** · **IUK ≠ ITUK** · **IRELAND ≠ IUK** · refere
 | IRELAND | ✅ Harris | ✅ | ≠ IUK |
 | GREECE | ✅ Petros | ✅ | A5 done 2026-08-19 |
 | UMI | ❌ | ❌ | IDS Israel only |
-| KS/IAM | ~500 SKUs crawled | **277 in queue** | A6 refresh (was ~148) |
+| KS/IAM | ~500 SKUs crawled | **302 in queue** (126 unique PNs) | catalog expand 2026-08-25; Autodoc frozen |
 
 **PRISM:** 19 pages; no forecast page yet; account health not wired; internal-only leakage/elasticity/scrape.

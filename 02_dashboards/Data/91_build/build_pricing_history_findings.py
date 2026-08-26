@@ -498,14 +498,17 @@ def integrity_score(ctx: dict) -> dict:
             }
         )
 
-    # Year alignment assumptions
-    d = 10
+    # Year alignment — ACCEPTED assumption (Jerome 2026-08-20): a sale is matched
+    # to the list of its billing/order-date year. Intra-year list changes are not
+    # dated (residual risk), but this is a documented standing assumption, not an
+    # open QA blocker. Reduced from -10 to -3.
+    d = 3
     score -= d
     deductions.append(
         {
-            "item": "Year alignment assumptions",
+            "item": "Year alignment (accepted assumption)",
             "deduction": d,
-            "detail": "PR00 history stamps are year-end conventional (2024/2025 sheet labels; 2023 mixed workbook). Intra-year list changes not dated.",
+            "detail": "Billing/order-date year -> that year's PR00 list (accepted 2026-08-20). Intra-year list changes not dated — residual, not a blocker.",
         }
     )
 
