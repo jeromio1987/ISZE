@@ -127,12 +127,14 @@ foreach ($target in $Targets) {
             }
         }
     }
+    # Copy to the CURRENT target only. This used to re-loop over $Targets while
+    # already inside the outer foreach, reusing the same $target variable: it
+    # clobbered the loop variable and copied the file once per target, per target.
     $dataJs = Join-Path (Join-Path $Dashboards 'sales') 'risk_cockpit.data.js'
     if (Test-Path $dataJs) {
-        foreach ($target in $Targets) {
-            Copy-Item $dataJs (Join-Path $target 'risk_cockpit.data.js') -Force
-            Write-Host "    risk_cockpit.data.js -> $target"
-        }
+        Copy-Item $dataJs (Join-Path $target 'risk_cockpit.data.js') -Force
+        Write-Host "    risk_cockpit.data.js"
+        $count++
     }
     Write-Host "  $count files copied"
 }
