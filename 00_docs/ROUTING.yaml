@@ -1,6 +1,6 @@
 # ISZE task routing — read this after INDEX.md + AGENTS.md when the task type is clear.
 # Stop reading as soon as the task is answered. Do not glob the repo.
-# Agent sync: 2026-06-13
+# Agent sync: 2026-08-26
 
 version: 1
 
@@ -14,6 +14,20 @@ global_ignore:
   - 90_archive/**
 
 tasks:
+  roadmap:
+    description: What is open / next / already decided across the programme
+    read:
+      - 00_docs/ISZE_ROADMAP.md
+    optional:
+      - 00_docs/roadmaps/aim_prism_reinvention.md
+      - 00_docs/roadmaps/ai_sales_intelligence.md
+      - 00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md
+      - DECISIONS.md
+    rules:
+      - Hub section 1 is the queue; section 2 is waiting on Jerome; section 5 is closed.
+      - Never re-propose anything in hub section 5. Rationale is in DECISIONS.md, not in the roadmap.
+      - Status disagreement between hub and a domain roadmap - hub wins, fix the domain file.
+
   holiday_laptop:
     description: Set up another PC / holiday laptop (clone, Cursor sync, secrets)
     read:
@@ -23,8 +37,8 @@ tasks:
   quote_kpi:
     description: Answer a headline metric (capture %, GPS, BVP mix, revenue)
     read:
-      - 01_data/derived/_verification_report.json
-      - 01_data/derived/metrics_snapshot.json
+      - 01_data/00_derived/_verification_report.json
+      - 01_data/00_derived/metrics_snapshot.json
       - FACTS.md
     optional:
       - 03_analytics/Isuzu/prism/docs/metric_dictionary.md
@@ -75,12 +89,12 @@ tasks:
       - 00_docs/agent/NOTES.md
       - 03_analytics/Isuzu/prism/data/decision_model_assumptions.yaml
     data:
-      - 01_data/derived/wallet_waterfall.csv
-      - 01_data/derived/revenue_runway.csv
-      - 01_data/derived/defection_alerts.csv
-      - 01_data/derived/attach_rates.csv
-      - 01_data/derived/dealer_leakage_ituk.csv
-      - 01_data/derived/price_volume_elasticity.csv
+      - 01_data/00_derived/wallet_waterfall.csv
+      - 01_data/00_derived/revenue_runway.csv
+      - 01_data/00_derived/defection_alerts.csv
+      - 01_data/00_derived/attach_rates.csv
+      - 01_data/00_derived/dealer_leakage_ituk.csv
+      - 01_data/00_derived/price_volume_elasticity.csv
 
   pms_programme:
     description: ITUK PMS pilot, capture analysis, IML joint programme
@@ -170,17 +184,16 @@ tasks:
   data_ingest:
     description: New SAP export, inbox, parquet rebuild
     read:
-      - 01_data/DATA_MANIFEST.md
-      - 01_data/_INBOX/README.md
+      - 01_data/DATA_MANIFEST.md      # sections 0-1 = dump-then-sort rule
     drop_zone:
-      - 01_data/_INBOX/
+      - 01_data/90_INBOX/             # legacy alias 01_data/_INBOX/ is an NTFS junction
 
   tender_monitor:
     description: v3 tender scraper and publish
     read:
       - 04_tools/ISZE_Tender_Monitor_Install/
     feed:
-      - 01_data/dashboards/tender_data.json
+      - 01_data/14_dashboards/tender_data.json   # alias 01_data/dashboards/ is a junction
     never:
       - 91_legacy/tender scraper/
 
@@ -204,7 +217,7 @@ tasks:
     description: What is safe to quote externally
     read:
       - 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
-      - 01_data/derived/_verification_report.md
+      - 01_data/00_derived/_verification_report.md
 
   data_os_map:
     description: Isuzu OS capability × data map (what we have / still need / must not re-ask)
