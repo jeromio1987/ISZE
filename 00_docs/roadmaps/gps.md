@@ -31,9 +31,11 @@ GPS / Spend per Unit baseline dashboard:
 - `build_pr00_classification.py` → `pr00_classification.csv`
 - Spec: `prism/docs/gps_v2_fig_key.md`
 
+**Fig-key dimension is stale (measured 2026-08-27)** — 1,841 blank `fig_key` fillable from the IE40 already on disk (97.71% → 98.83%), and 1,618 PNs disagree with the current SAP figure (supersession ruled out; the builder has not re-run since the 2026-08-10 IE40 landed). Audit: [`FIG_KEY_PR00_AUDIT_20260827.md`](../../01_data/00_derived/FIG_KEY_PR00_AUDIT_20260827.md) · reproduce `python 01_data/91_build/audit_fig_key_vs_pr00.py`.
+
 **Still to add:**
 
-- Bulk PN → fig key from SAP / IE40 PR00 column
+- ~~Bulk PN → fig key from SAP / IE40 PR00 column~~ — the column is there (`fig_no` + `key_no`, 99.7% of rows); it is a **rebuild**, not a build
 - EPC basket rows into overrides
 - Wire Part Explorer to `parts_catalog_dimension`
 - Optional rollups by `fig_key` × distributor × year

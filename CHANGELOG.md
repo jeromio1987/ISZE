@@ -8,6 +8,15 @@
 
 ## [Unreleased]
 
+### Added (2026-08-27) — Fig-key vs PR00 audit; two roadmap facts corrected
+- **New audit** `01_data/91_build/audit_fig_key_vs_pr00.py` (read-only) → `00_derived/fig_key_pr00_audit.json` + `fig_key_pr00_disagreements.csv` (1,618 rows) + note `FIG_KEY_PR00_AUDIT_20260827.md`.
+- **Finding 1:** 1,841 of 3,778 blank `fig_key` in `parts_catalog_dimension` are fillable from the SAP `fig_no`/`key_no` already on disk — coverage **97.71% → 98.83%** on a rebuild, no new data needed.
+- **Finding 2:** where both carry a figure, they agree on 98.99%; **1,618 PNs disagree**, supersession ruled out explicitly (1 of 1,619 explained), 1,565 of them on rows the catalogue says it took *from* PR00. Vintage, not corruption — the dimension predates `Price_file_PR00_IE40_20260810.xlsx`, and `gps_v2_fig_key.md` already requires a re-run when a new IE40 lands. `sales_fact.fig_key` joins from this dimension, so the stale figure propagates.
+- **No rebuild performed** — that needs `build_pr00_classification.py` + `build_fig_key_dimension.py` + `run_pipeline_and_verify.ps1` on the workspace.
+- **Roadmap corrected (2026-08-26 reorganisation was wrong on two points):**
+  - Tender P0 said "8/29 countries live, wire ES + IT + DE". Per `_source_health.json` (20 sources OK) and `_COUNTRY_TENDER_PORTALS_MAP.md`, it is **16/29 LIVE**; IT PNCP and DE oeffentlichevergabe were already wired 2026-08-25. The real P0 is **ES PLACSP egress** — fetcher written, `CODE_READY`, blocked by WAF on the runner. The 8/29 figure came from `_OPEN_BACKLOG_ARRANGED.md`, a snapshot from earlier the same day.
+  - Fig-key item said "bulk PN→fig key from SAP IE40 PR00 column" as an open build. The column exists at 99.7%; it is a rebuild, now sized as above.
+
 ### Changed (2026-08-26) — Roadmap reorganised: one queue, one closed list
 - **`00_docs/ISZE_ROADMAP.md` rewritten.** The old "Build now" table mixed ~15 shipped/closed items with ~8 open ones and carried multi-paragraph rationale inside table cells. Now six sections: **1 Open queue** (14 items, each with the single thing that unblocks it), **2 Waiting on Jerome** (13 decisions, sourced from the Aftermarket BI Tier B list + AI-sales gates), **3 Live now**, **4 Shipped** (dated one-liners), **5 Closed — do not reopen**, **6 Domain roadmaps**. Rationale stays in `DECISIONS.md`; the hub is a queue, not an archive.
 - **Caught up to 2026-08-25.** The hub had stopped at 2026-08-18 and did not mention PRISM IA phases 3–8 (2026-08-20), the Aftermarket BI Tier A batch (2026-08-19, 14/15 built), P5 forecast, the P8 Action Ledger, or the overnight audit (verify 116/0/0, `sales_fact` to 2026-06-30).
