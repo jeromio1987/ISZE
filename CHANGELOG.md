@@ -9,7 +9,7 @@
 ## [Unreleased]
 
 ### Added (2026-08-27) — Fig-key vs PR00 audit; two roadmap facts corrected
-- **New audit** `01_data/91_build/audit_fig_key_vs_pr00.py` (read-only) → `00_derived/fig_key_pr00_audit.json` + `fig_key_pr00_disagreements.csv` (1,618 rows) + note `FIG_KEY_PR00_AUDIT_20260827.md`.
+- **New audit** `01_data/91_build/audit_fig_key_vs_pr00.py` (read-only) → `00_derived/fig_key_pr00_audit.json` + `fig_key_pr00_audit.meta.json` + `fig_key_pr00_disagreements.csv` (1,618 rows) + note `FIG_KEY_PR00_AUDIT_20260827.md`. Findings JSON carries **no timestamp** — re-running is byte-identical unless a number moved, so a diff there is signal; the run time lives in the `.meta.json` sidecar per the `00_derived` convention.
 - **Finding 1:** 1,841 of 3,778 blank `fig_key` in `parts_catalog_dimension` are fillable from the SAP `fig_no`/`key_no` already on disk — coverage **97.71% → 98.83%** on a rebuild, no new data needed.
 - **Finding 2:** where both carry a figure, they agree on 98.99%; **1,618 PNs disagree**, supersession ruled out explicitly (1 of 1,619 explained), 1,565 of them on rows the catalogue says it took *from* PR00. Vintage, not corruption — the dimension predates `Price_file_PR00_IE40_20260810.xlsx`, and `gps_v2_fig_key.md` already requires a re-run when a new IE40 lands. `sales_fact.fig_key` joins from this dimension, so the stale figure propagates.
 - **No rebuild performed** — that needs `build_pr00_classification.py` + `build_fig_key_dimension.py` + `run_pipeline_and_verify.ps1` on the workspace.

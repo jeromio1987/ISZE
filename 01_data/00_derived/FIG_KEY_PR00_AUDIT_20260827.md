@@ -2,7 +2,7 @@
 
 **Mode B · internal.** Read-only measurement, no rebuild performed.
 **Reproduce:** `python 01_data/91_build/audit_fig_key_vs_pr00.py`
-**Evidence:** `fig_key_pr00_audit.json` · `fig_key_pr00_disagreements.csv` (1,618 rows)
+**Evidence:** `fig_key_pr00_audit.json` (findings — no timestamp, so a re-run only diffs when a number moves) · `fig_key_pr00_audit.meta.json` (run metadata) · `fig_key_pr00_disagreements.csv` (1,618 rows)
 **Roadmap:** closes the sizing question on `00_docs/ISZE_ROADMAP.md` §1 item 8 (fig-key V2 remainder).
 
 ---

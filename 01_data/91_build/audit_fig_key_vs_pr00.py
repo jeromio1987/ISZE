@@ -12,8 +12,12 @@ Read-only. Answers two questions the fig-key V2 roadmap item leaves open:
 Supersession is ruled out explicitly: a PN whose catalogue figure matches its
 ``newest_pn`` figure is counted as explained, not as drift.
 
-Writes a JSON summary + the disagreeing rows as CSV next to the other derived
-audits. It does NOT rebuild the dimension — that is
+Writes the findings as JSON, the run metadata as a ``.meta.json`` sidecar (the
+``00_derived`` convention), and the disagreeing rows as CSV. The findings file
+carries no timestamp on purpose: re-running produces a byte-identical file
+unless a number actually moved, so a diff on it is signal rather than noise.
+
+It does NOT rebuild the dimension — that is
 ``prism/scripts/build_pr00_classification.py`` +
 ``build_fig_key_dimension.py`` followed by ``run_pipeline_and_verify.ps1``.
 
@@ -39,6 +43,7 @@ from _shared.paths import DERIVED_DIR  # noqa: E402
 CATALOGUE = DERIVED_DIR / "parts_catalog_dimension.parquet"
 PR00 = DERIVED_DIR / "pricing_pr00_ie40.parquet"
 OUT_JSON = DERIVED_DIR / "fig_key_pr00_audit.json"
+OUT_META = DERIVED_DIR / "fig_key_pr00_audit.meta.json"
 OUT_CSV = DERIVED_DIR / "fig_key_pr00_disagreements.csv"
 
 
@@ -87,7 +92,6 @@ def main() -> int:
     )
 
     summary = {
-        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "inputs": {
             "catalogue": CATALOGUE.name,
             "catalogue_pns": int(len(catalogue)),
@@ -121,7 +125,28 @@ def main() -> int:
         ),
     }
 
+    # Findings: no timestamp, so a re-run only produces a diff when a number moved.
     OUT_JSON.write_text(json.dumps(summary, indent=1), encoding="utf-8")
+
+    # Run metadata sidecar — the 00_derived convention. This one does change per run.
+    root = DERIVED_DIR.parents[1]
+    meta = {
+        "measured_at_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "source": "parts_catalog_dimension.fig_key vs pricing_pr00_ie40 fig_no/key_no",
+        "builder": "01_data/91_build/audit_fig_key_vs_pr00.py",
+        "read_only": True,
+        "pr00_source_files": summary["inputs"]["pr00_source_files"],
+        "fillable_from_sap": summary["fillable_blanks"]["fillable_from_sap"],
+        "coverage_now_pct": summary["fillable_blanks"]["coverage_now_pct"],
+        "coverage_after_fill_pct": summary["fillable_blanks"]["coverage_after_fill_pct"],
+        "unexplained_drift": summary["disagreements"]["unexplained_drift"],
+        "outputs": {
+            k: str(v.relative_to(root).as_posix())
+            for k, v in {"findings": OUT_JSON, "disagreements": OUT_CSV}.items()
+        },
+    }
+    OUT_META.write_text(json.dumps(meta, indent=1), encoding="utf-8")
+
     drift[
         ["pn", "fk", "sap_fig_key", "is_superseded_row", "classification_source"]
     ].rename(columns={"pn": "part_number", "fk": "catalogue_fig_key"}).to_csv(
@@ -129,7 +154,7 @@ def main() -> int:
     )
 
     print(json.dumps(summary, indent=1))
-    print(f"\nwrote {OUT_JSON}\nwrote {OUT_CSV}  ({len(drift):,} rows)")
+    print(f"\nwrote {OUT_JSON}\nwrote {OUT_META}\nwrote {OUT_CSV}  ({len(drift):,} rows)")
     return 0
 
 
