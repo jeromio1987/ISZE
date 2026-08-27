@@ -1,11 +1,13 @@
 # After AIM scoring failed — what we do instead
 
-**Last updated:** 2026-08-18  
+**Last updated:** 2026-08-26
 **Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md)  
 **Prompts:** [`AIM_PRISM_REINVENTION_PROMPTS.md`](../AIM_PRISM_REINVENTION_PROMPTS.md)  
 **Decisions:** `DECISIONS.md` 2026-08-18 (Prompt 1 null · Prompt 2 surface + hazard null · capture-trajectory fix)
 
 **Status:** both research prompts are answered. This file is the working programme. Do not invent a new 0–100.
+
+**Where it stands 2026-08-26:** section 1 is fully shipped (1.1–1.4). Section 2 has its builder live and is **stuck on one thing — your threshold pass (4.9 / hub B5)**; nothing downstream of P4 moves until that lands. Section 4 shipped ahead of plan: IA phases 3–8 went in 2026-08-20. Section 3 is unstarted and stays gated.
 
 ---
 
@@ -68,7 +70,7 @@ Rebuild / ship of HTML or live pages still needs the words **rebuild** or **ship
 | 1.1 | ✅ **INTERNAL_MODE launcher** — hide leakage / attach / elasticity / scrape unless `PRISM_INTERNAL=true`. `run_prism_internal.ps1` shipped 2026-08-18. | Done | You can open PRISM with a distributor in the room |
 | 1.2 | ✅ **Park `db_aftersales_risk`** — page caption + builder docstring: unvalidated rubric, not a KPI | Done | Stops agents treating it as the AIM replacement |
 | 1.3 | ✅ **Vintage on competitor files (builders)** — `eucon_price_gap.csv` labelled PartsPool Autodoc DE/NO **2026-03-29**, not “Eucon 2023”. Country packs not rebuilt. | Builder labels done; HTML/pack rebuild only when you ask | Stops a 2026 DE/NO scrape posing as a 2023 UK survey |
-| 1.4 | **Optional tab trim** — drop the documented duplicates (Strategic “Most exposed” / “Basket correlation”, Insights “BVP × Capture”, BVP extra PMS/GPS/AIM tabs). Cross-link. | Your OK | Less hunting. Not the 7-tab Network Intelligence rewrite |
+| 1.4 | ✅ **Tab trim** — duplicates dropped by cross-link 2026-08-18: Strategic “Most exposed” → Early Warning, basket correlation parked, Insights “BVP × Capture” → AIM × GPS, BVP extra tabs → PMS / GPS / AIM Review, Autodoc Class C → Catalog. | Done | Less hunting. Was not the 7-tab rewrite — that came separately on 2026-08-20 |
 
 ### 2 — Next real build: who has gone quiet (P4)
 
@@ -79,6 +81,7 @@ This is the Prompt 1 redirect: “who needs attention” without a fake price-ri
 | 2.1 | ✅ **Build `account_health.parquet`** from existing P2a (2026-08-18). Draft NONE/AMBER/RED — not a KPI. | Done (builder). **Your 1-day threshold pass still open.** | Who went quiet, without a fake price-risk score |
 | 2.2 | CC-depth — **not required**; `n_cc` already on `interaction_fact` | Closed for P4 | Escalation uses max CC per thread |
 | 2.3 | Surface: internal CSV / PRISM widget **after** 2.1 is calibrated — not a Mode A pack until you say ship | Your OK after 4.9 | Mode A: no pipeline jargon |
+| 2.4 | ✅ **Account-health ops triage pack** (2026-08-19) — `01_data/17_interactions/account_health_ops_triage.csv` + note. Draft thresholds, internal only | Done | Feeds the calibration conversation; still not a call list |
 
 Detail and task list stay in `00_docs/roadmaps/ai_sales_intelligence.md` §9. This roadmap only says: **P4 is now first in the AIM-replacement queue**, not a side quest.
 
@@ -99,7 +102,7 @@ A future DB-year price-risk model is allowed only if it beats last-year persiste
 | # | Work | Gate | Notes |
 |---|------|------|--------|
 | 4.1 | Canonical surface = **Streamlit :8503** | Already decided | Freeze Dash :8050 and Evidence.dev — no second KPI spine |
-| 4.2 | IA phases 3–8 (Network Intelligence merge, Mix trim, ITUK hub, Tools) | **Separate sign-off** | Valid filing; not the default next work. Prefer 1.1 + 1.4 |
+| 4.2 | ✅ **IA phases 3–8** shipped 2026-08-20 — Network Intelligence merged (7 tabs), Mix absorbed the DB-mix split, ITUK hub, Tools re-cut (Scorecard + Customer Risk retired, Marketing Calendar + internal shelf added). Source pages archived to `pages/_archive/`; 71 tests green | Done | Filing, as stated — no new brain, no new score |
 | 4.3 | PMS frequencies | Do not change from the oil-filter pilot | Air-filter 0.5 still provisional; ITUK brake 0.4 vs 0.8 pending their data; LCV 15k vs 20k blocked on SCR mix |
 | 4.4 | Wallet-share scorecard | Your explicit steer | GPS + PMS **total** + IDS (UTI≠UMI) + latency after G0b. Commercial terms, not a dashboard tab |
 

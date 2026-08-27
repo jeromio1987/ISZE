@@ -1,6 +1,6 @@
 # ISZE workspace index
 
-**Parent workspace:** [`../../INDEX.md`](../../INDEX.md) · **Layout:** [`paths.yaml`](paths.yaml) · **Agent sync:** 2026-07-16.
+**Parent workspace:** [`../../INDEX.md`](../../INDEX.md) · **Layout:** [`paths.yaml`](paths.yaml) · **Agent sync:** 2026-08-26.
 
 ## Root (bootstrap only)
 
@@ -39,10 +39,10 @@ Everything else lives in numbered folders below.
 | **Drop / sort new data** | `01_data/90_INBOX/` → file per `01_data/DATA_MANIFEST.md` §0–§1 |
 | Task routing | `00_docs/ROUTING.yaml` |
 | Maps / registry | `00_docs/MAPS.md` · `00_docs/MAP_REGISTRY.yaml` |
-| Programme roadmap | `00_docs/ISZE_ROADMAP.md` → `00_docs/roadmaps/aim_prism_reinvention.md` after AIM score kill |
+| **Programme roadmap (the queue)** | `00_docs/ISZE_ROADMAP.md` — open work §1, decisions waiting on Jerome §2, live §3, closed §5. Domain depth: `00_docs/roadmaps/` |
 | Versioned filenames | `00_docs/CANONICAL.md` |
 | **Excel pre-delivery check** | `00_docs/EXCEL_PRE_DELIVERY_CHECK.md` |
-| Headline metrics | `01_data/derived/metrics_snapshot.json` + `FACTS.md` |
+| Headline metrics | `01_data/00_derived/metrics_snapshot.json` + `FACTS.md` |
 | Workspace root | `$env:ISZE_ROOT` (see `paths.yaml`) |
 | PRISM | `03_analytics/Isuzu/prism/run_prism.ps1` (**8503**, MD-safe) · `run_prism_internal.ps1` (extra tabs) |
 | Human onboarding | `00_docs/HUMAN_ONBOARDING.md` |

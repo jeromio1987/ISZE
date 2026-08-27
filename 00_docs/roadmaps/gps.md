@@ -1,8 +1,10 @@
 # GPS dashboard — roadmap
 
-**Last updated:** 2026-08-18  
-**Hub:** [`ISZE_ROADMAP.md`](../../ISZE_ROADMAP.md)  
-**Live app:** PRISM `pages/2_GPS.py` · `03_analytics/Isuzu/gps_dashboard/` (legacy Dash)
+**Last updated:** 2026-08-26
+**Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md) — open items also appear in the hub queue (§1 items 5–8)
+**Live app:** PRISM `pages/2_GPS.py` (port 8503, canonical) · `03_analytics/Isuzu/gps_dashboard/` legacy Dash — **frozen, do not build on it**
+
+**Open here:** fig-key V2 remainder (hub item 8) · interval-aware air factor still provisional (hub item 5) · LCV generation split blocked on chassis/reg-year cutoffs (hub item 7).
 
 ---
 
@@ -38,15 +40,16 @@ GPS / Spend per Unit baseline dashboard:
 
 **PMS capture (PRISM — do not use 1.5 svc/yr):**
 
-- Expected: **UIO × 0.5 svc/yr × 70%**
-- ITUK UIO override: **22,389** (DVLA Mar 2026)
+- Expected: **UIO × 0.5 svc/yr × 70%** (N75 0.5 / LCV 1.0 — bucketed)
+- **ITUK UIO: two lanes, never blend them.** PRISM capture lane = **23,068** (`verification_fixtures.yaml` + `facts_anchor.yaml`, confirmed 2026-07-17). The IML / `iml_v7_ituk_cy2025.yaml` lane keeps **22,389** (DVLA Mar 2026). Do not "fix" one to match the other — `DECISIONS.md` 2026-07-17, `DATA_MANIFEST.md` §7
 - Capture **>100%** allowed (cross-OEM, multi-segment PNs)
+- Headline is **total** capture, not per-category
 
 ---
 
 ## V3 — AIM integration & strategic scoring — **superseded 2026-08-18**
 
-**Do not build this.** The scoring layer (Strategic Score, Pricing Risk Map, AIM×GPS as a risk axis) failed in production (2026-07-17) and again as a fitted model (2026-08-18). Classification stays; the quadrant stays as **GPS × PMS total capture**.
+**Do not build this.** The scoring layer (Strategic Score, Pricing Risk Map, AIM×GPS as a risk axis) failed in production (2026-07-17) and again as a fitted model (2026-08-18). Classification stays; the quadrant stays as **GPS × PMS total capture** and now lives as a tab in `pages/network_intelligence.py` (source archived to `pages/_archive/16_AIM_GPS_Matrix.py`, 2026-08-20).
 
 Replacement programme: [`aim_prism_reinvention.md`](aim_prism_reinvention.md).
 

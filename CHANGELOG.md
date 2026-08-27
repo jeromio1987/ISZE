@@ -8,6 +8,19 @@
 
 ## [Unreleased]
 
+### Changed (2026-08-26) — Roadmap reorganised: one queue, one closed list
+- **`00_docs/ISZE_ROADMAP.md` rewritten.** The old "Build now" table mixed ~15 shipped/closed items with ~8 open ones and carried multi-paragraph rationale inside table cells. Now six sections: **1 Open queue** (14 items, each with the single thing that unblocks it), **2 Waiting on Jerome** (13 decisions, sourced from the Aftermarket BI Tier B list + AI-sales gates), **3 Live now**, **4 Shipped** (dated one-liners), **5 Closed — do not reopen**, **6 Domain roadmaps**. Rationale stays in `DECISIONS.md`; the hub is a queue, not an archive.
+- **Caught up to 2026-08-25.** The hub had stopped at 2026-08-18 and did not mention PRISM IA phases 3–8 (2026-08-20), the Aftermarket BI Tier A batch (2026-08-19, 14/15 built), P5 forecast, the P8 Action Ledger, or the overnight audit (verify 116/0/0, `sales_fact` to 2026-06-30).
+- **Stale surface references fixed:** `pages/16_AIM_GPS_Matrix.py` is archived — the quadrant is a tab in `network_intelligence.py`; `pages/_archive/` is retired and must not be linked as live.
+- **`roadmaps/scrapers.md` rewritten** (was 2026-07-26 and contradicted an accepted decision): Nordics API keys listed as open issue #1 while `DECISIONS.md` 2026-08-25 closed them permanently. National portal coverage (8/29 countries live) is now the stated P0, per `_OPEN_BACKLOG_ARRANGED.md`.
+- **`roadmaps/gps.md`:** ITUK UIO landmine documented — PRISM capture lane **23,068**, IML lane **22,389**, never blended (the file previously showed only 22,389).
+- **`roadmaps/html.md` rebuilt** from the actual `02_dashboards/` tree (was missing the Command Center, replenishment, Action Ledger, pricing packs, BI twins, IDS).
+- **`roadmaps/aim_prism_reinvention.md` + `ai_sales_intelligence.md`:** status blocks reconciled with what actually shipped; AI-sales blockers re-scored (B5 moved from build to sign-off; EPC validation and P4 thresholds opened).
+- **Broken links fixed:** 4 domain roadmaps pointed at `../../ISZE_ROADMAP.md` (repo root, no such file); all 4 redirect stubs pointed at a non-existent `docs/` folder; `REFERENCE.md` used `docs/roadmaps/*` and `Tools/SCRAPERS_ROADMAP.md`; the P4 spec link in `ai_sales_intelligence.md` was missing `../`.
+- **Navigation:** new `roadmap` task key in `ROUTING.yaml`; `MAP_REGISTRY.yaml` gains `roadmap_specs` (P4/P5/P8/tender backlog) and orders roadmaps active-first; `MAPS.md` states the hub-wins rule; `INDEX.md` + `REFERENCE.md` describe the roadmap as the queue.
+- **Legacy `01_data/derived/` alias** replaced with `01_data/00_derived/` in `ROUTING.yaml`, `MAPS.md`, `INDEX.md` (the junction stays load-bearing on Jerome's machine; only the numbered path exists in a fresh clone). Same for `_INBOX` → `90_INBOX` and `dashboards` → `14_dashboards` in `ROUTING.yaml`.
+- **No numbers were changed.** Every figure in the roadmap traces to `DECISIONS.md`, `CHANGELOG.md`, the build menu, or a derived artefact; no pipeline, KPI, or dashboard was touched.
+
 ### Fixed (2026-08-25) — Overnight process audit (workspace OS)
 - Prism verify **green** 116/0/0; junctions restored; `sales_fact` through **2026-06-30**; SaTy min 92% with Q1 hole documented.
 - Action Ledger `BILLING_HORIZON` now reads `max(sales_fact.billing_date)` (was hard-coded 2026-03-31).

@@ -1,5 +1,5 @@
 # ISZE map registry — machine-readable index of all navigation maps
-# Human diagram: 00_docs/MAPS.md | Agent sync: 2026-07-16
+# Human diagram: 00_docs/MAPS.md | Agent sync: 2026-08-26
 
 version: 3
 
@@ -25,13 +25,22 @@ reference:
   personal_bridge_canonical: ../docs/BRIDGE_PRIVATE_ISZE.md  # workspace root docs/
 
 roadmaps:
+  # The hub is the only queue. Domain files hold depth; specs hold build detail.
   hub: 00_docs/ISZE_ROADMAP.md
+  aim_prism_reinvention: 00_docs/roadmaps/aim_prism_reinvention.md   # active programme
+  ai_sales_intelligence: 00_docs/roadmaps/ai_sales_intelligence.md   # active programme
+  aftermarket_bi_menu: 00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md # Tier A built / Tier B = decisions
+  gps: 00_docs/roadmaps/gps.md
   html: 00_docs/roadmaps/html.md
   scrapers: 00_docs/roadmaps/scrapers.md
-  gps: 00_docs/roadmaps/gps.md
   tools: 00_docs/roadmaps/tools.md
-  ai_sales_intelligence: 00_docs/roadmaps/ai_sales_intelligence.md
-  aim_prism_reinvention: 00_docs/roadmaps/aim_prism_reinvention.md
+
+roadmap_specs:
+  # Build specs feeding the hub queue — detail, not status
+  p4_account_health: 00_docs/P4_DETERMINISTIC_SIGNALS.md
+  p5_forecast: 00_docs/P5_FORECAST_BUILD_PLAN.md
+  p8_action_ledger: 00_docs/PROMPT_ACTION_LEDGER_P8.md
+  tender_backlog: 04_tools/ISZE_Tender_Monitor_Install/_OPEN_BACKLOG_ARRANGED.md
 
 memory:
   projects: 05_memory/projects/

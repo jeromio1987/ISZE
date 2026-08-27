@@ -1,9 +1,22 @@
 # AI sales intelligence — roadmap
 
-**Last updated:** 2026-08-12
+**Last updated:** 2026-08-26
 **Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md) · **Registry:** [`MAP_REGISTRY.yaml`](../MAP_REGISTRY.yaml)
 **Scope:** joining the existing structured sales spine (billing, UIO, pricing, sell-out) to the unstructured corpus (email) to improve wallet share, cycle time, forecast accuracy and admin efficiency.
-**Status:** **ACTIVE — Track A (P1) progressing; Track B waits on G0a (local) / G0b (egress+shared).**
+**Status:** **ACTIVE — Track A built out to P5; Track B stops dead at B1b / G0b.**
+
+> **Read this first (2026-08-26).** The phase table in §3 is the original plan, not the current state. What is actually true today:
+>
+> | Phase | Where it really is |
+> |---|---|
+> | **P1** | Catalogue PR00 coverage **98.2%**. Supersession delta and list-to-pocket validation both ran 2026-08-19. Residual: 24 PN / €67k ZPR1-path + admin non-PN; EPC validation of the 925-PN supersession map still open |
+> | **P2a** | **Complete.** 3 tables, 24-month run, DSAR/purge job proven. Local, deterministic, zero egress |
+> | **P2b / P3 / P6** | **Zero code, and correctly so.** Blocked on B1b (named LLM route) then G0b |
+> | **P4** | Builder live (`p4-v1`, gitignored parquet) + ops triage pack. **Blocked on Jerome's threshold calibration (4.9)** — draft flags fire on 10 RED / 6 AMBER of 17 DBs, so they are not a call list |
+> | **P5** | Built ahead of the plan: 548 series, median WAPE 49.4%, `pages/19_Forecast.py` live as a surface. **Pre-G1** — not a decision surface until G1 + override policy are signed |
+> | **P8** | Not in the original phase list. Action Ledger shipped 2026-08-25 over nine derived surfaces — the operating layer these phases were pointing at |
+>
+> The programme's single largest open dependency is not engineering. It is B1b + the P4 thresholds.
 
 > **Numbers:** `../../FACTS.md` wins over any deck, memory or GPT file. Pipeline: green `01_data/00_derived/_verification_report.json` → `metrics_snapshot.json`.
 > **Estimates:** every effort figure below is engineering estimate, not measurement. Every business figure is cited with source + date or left as a named input slot. Do not quote an unfilled slot.
@@ -439,7 +452,7 @@ Tasks 3.1–3.7 all require intent classification + implicit-commitment detectio
 | Activity volume | interaction_fact | count per day, rolling 30d | ✅ yes |
 | Overdue commitments | commitment_fact | db-side missed with due_date in last 30d | ✅ yes |
 
-**Schema, methods, alert thresholds, build task list:** [`P4_DETERMINISTIC_SIGNALS.md`](P4_DETERMINISTIC_SIGNALS.md)
+**Schema, methods, alert thresholds, build task list:** [`P4_DETERMINISTIC_SIGNALS.md`](../P4_DETERMINISTIC_SIGNALS.md)
 
 **Blockers:** none for the parquet. P2a.9 collector change not required. Mail-to-order waits on a newer `sales_fact` (ends 2026-03-31). Task 4.9 (your calibration) before anyone uses the flags as a call list.
 
@@ -700,7 +713,7 @@ Model tier: all of these are **CHEAP** except P6 profile generation, which is **
 
 ---
 
-## 18. Blockers — open, dated 2026-08-12
+## 18. Blockers — open, reviewed 2026-08-26
 
 | # | Blocker | Impact if unresolved | Owner | Status |
 |---|---|---|---|---|
@@ -711,7 +724,9 @@ Model tier: all of these are **CHEAP** except P6 profile generation, which is **
 | **B2** | CRM elsewhere in ISZE/IML not visible here? | Changes §7 schema | You | Open |
 | **B3** | Current forecast process with measurable error? | P5 improves vs creates baseline | You | **Workspace: none** (P5.1) — confirm external |
 | **B4** | DPO for ISZE, or via IML legal? | P0 is 2 weeks or 8 | You | Open |
-| **B5** | Year-matched PR00/ZPR1 list-to-pocket joins not validated | Do not quote leakage; task 1.4 | Data eng | Open — **next Track A** |
+| **B5** | Year-matched PR00/ZPR1 list-to-pocket joins not signed off | Do not quote leakage euros in Mode A | Data eng → Jerome | **Validation ran 2026-08-19** (`list_to_pocket_validation_2023_2025.csv`). Now waiting on written sign-off — `DECISIONS.md` 2026-08-25 |
+| **B6** | EPC validation of the supersession map (925 PN / €2.48M billed-on-old) | Supersession € stays indicative | Data eng | Open — buildable today |
+| **B7** | P4 alert thresholds are drafts that fire on most of the book | Account health cannot be used as a call list | Jerome | Open — hub §2 B5 |
 
 ---
 
@@ -743,3 +758,6 @@ Model tier: all of these are **CHEAP** except P6 profile generation, which is **
 | 2026-08-12 | **UMI/UTI allow-list fixed.** Own-mailbox probe (domains only): `umi.co.il` / `uti.co.il`. Master xlsx + `db_domains.yaml` updated; Armenia/Kazakhstan/Palestine still no contact. Kept as separate DBs (never blend). |
 | 2026-08-12 | **2a.5 + 2a.7 built.** `build_stakeholder_dim.py` → `stakeholder_dim.parquet` (functional role from topic mix, `consensus_width`, `stakeholder_churn_flag`, 10-interaction evidence bar) + `db_response_latency.parquet` (p50/p90 inbound→reply per DB). Commitment extraction moved into the collector: type, `due_date`, `owner_side`, `has_amount`, `sentence_sha256` — **explicit dated promises only, no met/missed status**. `suggest_db_domains.py` added for the three DBs still without contacts (proposes, never writes). 24-month collect re-run so both fact tables come from one pass. **G2 still not claimable** — 2a.6 (delete job) and the 2a.7 state machine remain open. |
 | 2026-08-12 | **2a.6 closed.** DSAR runbook `00_docs/DSAR_ERASURE_RUNBOOK.md`; `purge_expired.py` hardened (dry-run default, `--apply`, `--stakeholder-id`, `--lookup`; retention cascade only deletes rows tied to expired ids — never re-syncs dim to a partial fact). Retention dry-run: **0** expired across interaction/commitment/stakeholder. `--apply` not run. **G2 still blocked on P2b gold set** (not on 2a.6). |
+| 2026-08-19 | **Track A executed further.** P1.3 supersession delta (`supersession_billing_delta.csv`) and P1.4 list-to-pocket validation (`list_to_pocket_validation_2023_2025.csv`) built. P5.2 + P5.6 forecast built out of order (548 series, median WAPE 49.4%) with `pages/19_Forecast.py`. P4 ops triage pack added. All Mode B. |
+| 2026-08-25 | **P8 Action Ledger** shipped over nine derived surfaces — 23,236 opportunities, €22.1M of mixed-basis source cells (never one wallet). Leakage euros held in Mode B until list-to-pocket is signed. |
+| 2026-08-26 | Status block added at the top: §3's phase table is the plan, not the state. Blockers §18 re-scored — B5 moved from build to sign-off; B6 (EPC validation) and B7 (P4 thresholds) opened. |

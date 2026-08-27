@@ -31,15 +31,17 @@
 | FY action plans | `05_memory/projects/action-plan-fy2026.md`, `action-plan-fy2027.md` |
 | AIM / competitiveness / lubricants | `05_memory/projects/aftermarket-intelligence.md`, `competitiveness.md`, `lubricants.md` |
 | Terms & entities | `05_memory/glossary.md` |
-| Map registry / diagram | `docs/MAP_REGISTRY.yaml`, `docs/MAPS.md` |
+| Map registry / diagram | `00_docs/MAP_REGISTRY.yaml`, `00_docs/MAPS.md` |
 | Versioned filenames | `00_docs/CANONICAL.md` |
-| Roadmap (consolidated) | `00_docs/ISZE_ROADMAP.md` → `00_docs/roadmaps/` |
-| HTML dashboard detail | `docs/roadmaps/html.md` |
-| Scrapers programme | `docs/roadmaps/scrapers.md` |
-| GPS / fig-key programme | `docs/roadmaps/gps.md` |
-| After AIM scoring failed | `00_docs/roadmaps/aim_prism_reinvention.md` |
-| Jarvis / tools programme | `docs/roadmaps/tools.md` |
-| Claude vs GPT / tier protocol | `docs/agent/AI_STACK.md` (full memo: `AI_Stack_Architecture_Apr2026.md`) |
+| **What is open / next / closed** | `00_docs/ISZE_ROADMAP.md` — the queue. Domain depth in `00_docs/roadmaps/` |
+| AIM replacement programme | `00_docs/roadmaps/aim_prism_reinvention.md` |
+| AI sales intelligence (mail, account health, forecast) | `00_docs/roadmaps/ai_sales_intelligence.md` |
+| Aftermarket BI build menu | `00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md` |
+| GPS / fig-key programme | `00_docs/roadmaps/gps.md` |
+| HTML dashboard detail + inventory | `00_docs/roadmaps/html.md` |
+| Scrapers / tender programme | `00_docs/roadmaps/scrapers.md` |
+| Jarvis / tools programme | `00_docs/roadmaps/tools.md` |
+| Claude vs GPT / tier protocol | `00_docs/agent/AI_STACK.md` (full memo: `AI_Stack_Architecture_Apr2026.md`) |
 | Weekly briefs | `05_memory/briefs/` |
 | PMS pilot artefacts | `03_analytics/Isuzu/pms-pilot/` |
 | PMS OKF assessment (fig-key completeness, leakage) | `03_analytics/Isuzu/_OKF_assessment/` (moved from root 2026-07-16) |
@@ -115,8 +117,8 @@ Live routing: `INDEX.md` + `docs/ROUTING.yaml` — refresh tooling map quarterly
 | `Projects/Isuzu/data/distributor_master_mapping.csv` | `03_analytics/Isuzu/prism/data/distributor_master_mapping.csv` |
 | `upload_*.py` / `run_*_upload.bat` (ISZE root) | `04_tools/github_upload/` (moved 2026-07-16; token now `$ISZE_GH_TOKEN`) |
 | `_OKF_assessment/` (ISZE root) | `03_analytics/Isuzu/_OKF_assessment/` (moved 2026-07-16) |
-| `02_dashboards/ROADMAP.md` | `00_docs/roadmaps/html.md` |
-| `Tools/SCRAPERS_ROADMAP.md` | `00_docs/roadmaps/scrapers.md` |
+| `02_dashboards/ROADMAP.md` (stub) | `00_docs/roadmaps/html.md` |
+| `04_tools/SCRAPERS_ROADMAP.md` (stub) | `00_docs/roadmaps/scrapers.md` |
 | `tender scraper/` (root v2) | `04_tools/ISZE_Tender_Monitor_Install/` v3 |
 | `02_dashboards/*.json` | `01_data/dashboards/*.json` only |
 | `Tools/tender scraper/` | `90_archive/Tools_tender_scraper_legacy/` |

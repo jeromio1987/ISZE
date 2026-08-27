@@ -1,7 +1,8 @@
 # Jarvis / isze-tools — roadmap
 
-**Last updated:** 2026-07-17  
-**Hub:** [`ISZE_ROADMAP.md`](../../ISZE_ROADMAP.md)  
+**Last updated:** 2026-08-26
+**Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md)
+**Status:** low priority. Jarvis is a side tool — PRISM :8503 is the analytical product. V2.2 onward is unstarted and unscheduled; nothing here blocks the programme.  
 **Stack:** Streamlit + Python, Claude API  
 **Run:** `cd 04_tools/isze-tools` → `python -m streamlit run app.py` (port **8501**)  
 **Knowledge files:** `03_analytics/Isuzu/JARVIS/` (not the app)
@@ -61,4 +62,6 @@ YTD vs plan, run-rate, gap to Kosha €52.1M FY2031.
 
 ---
 
-*Hygiene done. V2 items are next high-leverage step — under a day combined.*
+**V4 note:** Supabase items here share the same blocker as HTML V4 — schema + credentials (hub §1 item 11). Do not start V4 before that.
+
+*Hygiene done. V2.2 / V2.3 remain the cheapest wins — under a day combined — but stay behind the hub queue.*
