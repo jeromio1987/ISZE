@@ -8,6 +8,23 @@
 
 ## [Unreleased]
 
+### Added (2026-08-27) — Lubricant-SKU audit + two workspace guards
+- **Lubricant audit** `01_data/91_build/audit_lubricant_skus.py` → `lubricant_sku_audit.json` + `.meta.json` + `lubricant_sku_audit_uncovered.csv` + note `LUBRICANT_SKU_AUDIT_20260827.md`. Closes the standing "wider lubricant-SKU audit still advisable" note on integrity **flag B** (open since 2026-05-28).
+  - The GPS exclusion keys on part-number prefix `55004*`/`55007*` (Shell Rimula). Description-based sweep finds **15 further fluid SKUs / €400,159** it cannot see — the **BESCO / ISUZU ATF** genuine-fluid family. Largest: `1884058030` BESCO CLEAN SUPER 200L €189,804.
+  - **The Israel assumption breaks:** these sit on **13 distributors**, and the largest exposure is **ARMENIA €189,804**, ahead of UMI €67,013 and ITUK €58,454.
+  - **PMS capture is clean** — 0 of the 15 are in `parts_catalog_dimension`, so only the GPS parts base is affected. No GPS figure computed or restated; extending the rule is a pipeline change and a decision.
+- **Found on the way — the GPS-auditor skill's "known inconsistency" is stale.** It states CY2025 carries no transport/lubricants/CR while 2023–24 do, and instructs agents to caveat multi-year GPS trends with "CY2024 overstated by ~€1.4M". On the current parquet all four years carry these items (CY2025: lubricants €524,096, transport €343,187, CR/RE €509,348). The asymmetry was real in June 2026; the parquet has been rebuilt since. Applying that caveat today misstates the trend in the opposite direction.
+- **Also found:** `sold_to` carries two representations of the same distributor (numeric `1797.0` and `UNIVERSAL MOTORS ISRAEL LTD`), which splits any group-by on that column. Join on `sold_to_sap` via `distributor_dimension.csv`.
+
+### Added (2026-08-27) — Workspace map verifier
+- **`04_tools/workspace/verify_workspace_maps.py`** — checks that every path in `ROUTING.yaml` and `MAP_REGISTRY.yaml` resolves, that relative links in the bootstrap + roadmap docs resolve, and that every Tier 0 `01_data/` ignore rule has a `02_dashboards/Data/` mirror rule. Exits non-zero, so it can gate CI. Gitignored-and-absent paths are reported as INFO, not failure — they are real on the workspace and expected missing in a clone.
+- **First run found two dead routes:** `memory_topic` mapped `lubricants` → `05_memory/projects/lubricants.md` and `action_fy2026` → `action-plan-fy2026.md`; neither file exists anywhere, including the archive. `lubricants` now points at `aftermarket-intelligence.md` (where the content actually lives); the FY2026 entry is dropped — it retired with the fiscal year. `REFERENCE.md` corrected to match.
+- Now green: 107 routing paths, 49 registry paths, 68 links, 6 mirror rules.
+
+### Added (2026-08-27) — Derived sidecar drift check
+- **`01_data/91_build/verify_derived_meta.py`** — re-tests the headline numbers `00_derived/*.meta.json` sidecars claim against their partner data files (10 declared checks over supersession, PR00 gap, lubricant and fig-key artefacts). Exits non-zero on drift; verified with a negative test.
+- **Checks are declared, never guessed.** Sidecars legitimately mix current measurements with historical context — `no_pr00_gap_cy2025_ranked` carries both `remaining_pn` (31, the CSV) and `pn_count` (251, the original 2026-08-01 measurement) — so a checker that assumed every count describes the partner file would fire on the second and be wrong.
+
 ### Added (2026-08-27) — Fig-key vs PR00 audit; two roadmap facts corrected
 - **New audit** `01_data/91_build/audit_fig_key_vs_pr00.py` (read-only) → `00_derived/fig_key_pr00_audit.json` + `fig_key_pr00_audit.meta.json` + `fig_key_pr00_disagreements.csv` (1,618 rows) + note `FIG_KEY_PR00_AUDIT_20260827.md`. Findings JSON carries **no timestamp** — re-running is byte-identical unless a number moved, so a diff there is signal; the run time lives in the `.meta.json` sidecar per the `00_derived` convention.
 - **Finding 1:** 1,841 of 3,778 blank `fig_key` in `parts_catalog_dimension` are fillable from the SAP `fig_no`/`key_no` already on disk — coverage **97.71% → 98.83%** on a rebuild, no new data needed.

@@ -1,0 +1,13 @@
+{
+ "measured_at_utc": "2026-08-27T20:42:33+00:00",
+ "source": "sales_fact.parquet description sweep vs 55004*/55007* prefix rule",
+ "builder": "01_data/91_build/audit_lubricant_skus.py",
+ "read_only": true,
+ "follow_up_to": "DATA_INTEGRITY_FLAGS_2026-05-28.md flag B",
+ "uncovered_pns": 15,
+ "uncovered_eur": 400159.14,
+ "outputs": {
+  "findings": "01_data/00_derived/lubricant_sku_audit.json",
+  "uncovered_skus": "01_data/00_derived/lubricant_sku_audit_uncovered.csv"
+ }
+}

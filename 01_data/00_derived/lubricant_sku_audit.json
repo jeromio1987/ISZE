@@ -1,0 +1,47 @@
+{
+ "scope": "sales_fact.parquet, all years present in the file",
+ "rule_audited": "GPS lubricant exclusion keyed on part-number prefix 55004*/55007*",
+ "fluids_total": {
+  "part_numbers": 17,
+  "eur": 698031.58
+ },
+ "covered_by_prefix_rule": {
+  "part_numbers": 2,
+  "eur": 297872.44
+ },
+ "not_covered": {
+  "part_numbers": 15,
+  "eur": 400159.14,
+  "rows": 460,
+  "by_year": {
+   "2023": 86720.75,
+   "2024": 125858.18,
+   "2025": 111171.15,
+   "2026": 76409.06
+  },
+  "by_distributor": {
+   "ARMENIA": 189803.5,
+   "UMI": 67013.47,
+   "ITUK": 58454.26,
+   "NORWAY": 30131.61,
+   "PORTUGAL": 26057.99,
+   "HUNGARY": 18921.0,
+   "GERMANY": 4655.73,
+   "FINLAND": 2558.85,
+   "ROMANIA": 1000.8,
+   "BELGIUM": 831.41,
+   "GREECE": 553.76,
+   "UNMAPPED": 111.84,
+   "DENMARK": 64.92
+  },
+  "distributors_touched": 13
+ },
+ "pms_catalogue_contamination": {
+  "uncovered_pns_in_pms_catalogue": 0,
+  "note": "0 means these fluids sit in the GPS parts base only and do not inflate PMS capture actuals."
+ },
+ "caveats": [
+  "Description-based detection. A fluid with no fluid marker in its description is not caught; a hardware part named like a fluid is.",
+  "Sizes an exclusion gap only. No GPS percentage is computed or restated here."
+ ]
+}
