@@ -59,7 +59,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
   <div class="rule"></div>
   <div class="sub">CY2025 · 18 distributor markets · PMS wear-part wallet + whole-base price posture.
   Every euro on this page is either invoiced revenue or a capture gap from the verified sales pipeline — no estimated market shares.</div>
-  <div class="assume"><b>Apples-to-apples assumption:</b> genuine street price = ISZE list (IE40/PR00) × 1.40 (distributor) × 1.275 (dealer) = <b>× 1.785</b>, compared against observed aftermarket <i>retail</i> prices (Eucon panel + live shop scrapes). <b>BVP is not leakage:</b> capture = genuine + BVP together; only aftermarket defection counts as loss.</div>
+  <div class="assume"><b>Apples-to-apples assumption:</b> reference sell-out = ISZE list (IE40/PR00) × 1.40 (distributor) × 1.275 (dealer) = <b>× 1.785</b>, compared against observed aftermarket <i>retail</i> prices (Eucon panel + live shop scrapes). <b>BVP is not leakage:</b> capture = genuine + BVP together; only aftermarket defection counts as loss.</div>
 </div>
 
 <div class="wrap">
@@ -72,14 +72,14 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
   </div>
 
   <h2 class="sec"><span class="no">1 ·</span> The decision map</h2>
-  <p class="lead">Each bubble is one part family in one market; size = CY2025 wallet (expected demand × price). Right = we already own the wallet (pricing headroom). Left = the customer already buys aftermarket (price cuts alone won't win them back — act on availability, range and BVP). Vertical position = how far our genuine street price sits above the aftermarket for that family.</p>
+  <p class="lead">Each bubble is one part family in one market; size = CY2025 wallet (expected demand × price). Right = we already own the wallet (pricing headroom). Left = the customer already buys aftermarket (price cuts alone won't win them back — act on availability, range and BVP). Vertical position = how far our reference sell-out sits above the aftermarket for that family.</p>
   <div class="card">
     <div class="controls">
       <label for="dbSel">Market:</label>
       <select id="dbSel"><option value="ALL">All markets</option></select>
       <span class="small" id="quadNote"></span>
     </div>
-    <div class="chartbox" style="height:520px;"><canvas id="quad" role="img" aria-label="Decision map: capture vs street price premium per family and market">Decision map chart</canvas></div>
+    <div class="chartbox" style="height:520px;"><canvas id="quad" role="img" aria-label="Decision map: capture vs reference sell-out premium per family and market">Decision map chart</canvas></div>
     <div class="legend">
       <span><span class="sw" style="background:#e24b4a"></span>Defend / win back (&lt;45% capture)</span>
       <span><span class="sw" style="background:#eda100"></span>Contested (45–80%)</span>
@@ -111,11 +111,11 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
   </div>
 
   <h2 class="sec"><span class="no">4 ·</span> Street price reality check — genuine vs aftermarket at the counter</h2>
-  <p class="lead">Median genuine street premium per family. Two independent measurements: the Eucon competitor panel (network level, ×1.785 on list) and live UK trade-shop scrapes where the same shop lists both genuine and aftermarket. Small samples — treat as direction, not decimals.</p>
+  <p class="lead">Median reference sell-out premium per family. Two independent measurements: the Eucon competitor panel (network level, ×1.785 on list) and live UK trade-shop scrapes where the same shop lists both genuine and aftermarket. Small samples — treat as direction, not decimals.</p>
   <div class="card">
-    <div class="chartbox" style="height:460px;"><canvas id="ladder" role="img" aria-label="Genuine street premium vs aftermarket per family">Street premium chart</canvas></div>
+    <div class="chartbox" style="height:460px;"><canvas id="ladder" role="img" aria-label="Reference sell-out premium vs aftermarket per family">Reference sell-out premium chart</canvas></div>
     <div class="legend">
-      <span><span class="sw" style="background:#2a78d6"></span>Eucon panel, street ×1.785 (pan-EU)</span>
+      <span><span class="sw" style="background:#2a78d6"></span>Eucon panel, ref sell-out ×1.785 (pan-EU)</span>
       <span><span class="sw" style="background:#85b7eb"></span>UK trade shop, observed genuine vs IAM listing</span>
       <span class="small">Bars show median premium; "n" = part numbers behind each bar.</span>
     </div>
@@ -208,7 +208,7 @@ const quad = new Chart(document.getElementById('quad'), {
         'Street premium (family median'+(e?', n='+e.n:'')+'): '+ctx.raw.y+'%'];}}}},
     scales:{x:{min:0,max:100,title:{display:true,text:'ISZE capture of expected demand (genuine + BVP), %'},
         ticks:{stepSize:20,callback:v=>v+'%'},grid:{color:grid}},
-      y:{title:{display:true,text:'Genuine street premium vs aftermarket (family median), %'},
+      y:{title:{display:true,text:'Reference sell-out premium vs aftermarket (family median), %'},
         ticks:{callback:v=>v+'%'},grid:{color:grid}}}},
   plugins:[zones]});
 dbSel.addEventListener('input',()=>{quad.data.datasets[0].data=quadData(dbSel.value);quad.update();refreshRisk();});
@@ -269,11 +269,11 @@ new Chart(document.getElementById('ladder'),{type:'bar',
       backgroundColor:'#85b7eb',borderRadius:3,barThickness:16}]},
   options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
     plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': +'+ctx.raw+'% vs aftermarket'}}},
-    scales:{x:{grid:{color:grid},title:{display:true,text:'genuine street premium vs aftermarket, %'},
+    scales:{x:{grid:{color:grid},title:{display:true,text:'reference sell-out premium vs aftermarket, %'},
       ticks:{maxTicksLimit:6,callback:v=>(v>0?'+':'')+v+'%'}},y:{grid:{display:false},ticks:{font:{size:12}}}}}});
 const cd=ev.clutch_disc,cp=ev.clutch_pressure_plate;
 if(cd&&cd.eucon&&cd.eucon.med_street_delta_pct<0){
-  document.getElementById('clutchNote').innerHTML='<b>Clutch anomaly worth knowing:</b> on the small Eucon sample, genuine clutch discs and pressure plates price <i>below</i> the aftermarket at street level ('+Math.round(cd.eucon.med_street_delta_pct*100)+'% and '+Math.round(cp.eucon.med_street_delta_pct*100)+'%, n='+cd.eucon.n+'+'+cp.eucon.n+'). Yet clutch capture is the worst on the map — the loss there is not a price problem. Verify on a fuller sample, then fix availability and kit coverage, not price.';
+  document.getElementById('clutchNote').innerHTML='<b>Clutch anomaly worth knowing:</b> on the small Eucon sample, genuine clutch discs and pressure plates price <i>below</i> the aftermarket at reference sell-out ('+Math.round(cd.eucon.med_street_delta_pct*100)+'% and '+Math.round(cp.eucon.med_street_delta_pct*100)+'%, n='+cd.eucon.n+'+'+cp.eucon.n+'). Yet clutch capture is the worst on the map — the loss there is not a price problem. Verify on a fuller sample, then fix availability and kit coverage, not price.';
 }
 
 /* ---- 5. heat matrix ---- */
@@ -300,14 +300,14 @@ heat.innerHTML=h+'</tbody>';
 /* ---- 6. actions ---- */
 const ACTS = [
  ['defend','<b>IUK clutch — €2.3M wallet, 4–6% capture.</b> Clutch disc gap €1.34M, pressure plate €565K, kit €373K. Street pricing is <i>not</i> the blocker (genuine prices at/below IAM on the sample). Launch a clutch-kit availability & dealer-stocking programme in the UK pick-up network; target the fitted-kit job, not the part.'],
- ['defend','<b>IUK brakes — pads €807K + shoes €694K + rotors €469K gap.</b> Genuine street premium on pads runs >+100% vs IAM. Price-position the BVP brake line as the counter-offer at the counter — BVP revenue is our revenue; a BVP brake sale beats a Febi sale every time.'],
+ ['defend','<b>IUK brakes — pads €807K + shoes €694K + rotors €469K gap.</b> Reference sell-out premium on pads runs >+100% vs IAM. Price-position the BVP brake line as the counter-offer at the counter — BVP revenue is our revenue; a BVP brake sale beats a Febi sale every time.'],
  ['defend','<b>UTI brake pads (€456K gap, 7% capture) + clutch booster (€388K, 2%).</b> Israel has live local IAM price evidence (13 Jul scrape). Build the UTI counter-offer around it and take it to the April-trip follow-up agenda.'],
  ['defend','<b>Belgium brake shoes — €344K gap at 7% capture</b> in a market we visit easily. Smallest-effort win-back pilot: one distributor, one family, measurable in two quarters.'],
- ['raise','<b>Fuel filters ITUK + UTI: capture ≥80% at a +146% street premium — the premium is accepted.</b> Take +5% list (≈ €19K/yr on these two cells alone, €96K/yr across all captive wear cells). Elasticity readings say stage it, not big-bang.'],
+ ['raise','<b>Fuel filters ITUK + UTI: capture ≥80% at a +146% reference sell-out premium — the premium is accepted.</b> Take +5% list (≈ €19K/yr on these two cells alone, €96K/yr across all captive wear cells). Elasticity readings say stage it, not big-bang.'],
  ['raise','<b>Whole-base captive raise: +1% list on non-IAM-exposed revenue ≈ €328K/yr network-wide</b> (ITUK €56K, IUK €61K, UTI €34K, UMI €34K per point). No aftermarket alternative exists for these parts — volume risk is VOR behaviour, not defection.'],
- ['verify','<b>Clutch price anomaly: genuine street below aftermarket (n=3).</b> Commission a fuller Eucon pull on clutch before any repricing — if confirmed, clutch list can carry +10% without touching the capture problem (which is availability-driven).'],
+ ['verify','<b>Clutch price anomaly: reference sell-out below aftermarket (n=3).</b> Commission a fuller Eucon pull on clutch before any repricing — if confirmed, clutch list can carry +10% without touching the capture problem (which is availability-driven).'],
  ['verify','<b>Air filter: don\'t reprice yet.</b> Capture looks healthy only under the provisional every-2nd-service interval; the official ITUK lane still shows a €736K air-filter gap. Get IML to confirm the interval ratio first — it flips air filter between "raise" and "defend".'],
- ['verify','<b>Germany + Norway street-price audit: €382K / €373K of revenue sits on Eucon-undercut part numbers.</b> Check actual distributor counter prices against the ×1.785 assumption — if their real markup is higher, we are pricing ourselves out with our own channel.'],
+ ['verify','<b>Germany + Norway reference sell-out price audit: €382K / €373K of revenue sits on Eucon-undercut part numbers.</b> Check actual distributor counter prices against the ×1.785 assumption — if their real markup is higher, we are pricing ourselves out with our own channel.'],
  ['fix','<b>Price-evidence pipeline repaired 16 Jul</b> (UK PN-level scraper restored after the 13 Jul crash; Swedish page-artifact guard in place — 4 clean Swedish price points now on file). One step left: kick a fresh UK PN-level run this week — genuine-vs-IAM evidence is still the 9 May scrape and it is the only source that sees both sides of the counter. Confirm the Sunday scheduled run lands before any repricing decision.'],
 ];
 document.getElementById('acts').innerHTML = ACTS.map(a=>
@@ -316,7 +316,7 @@ document.getElementById('acts').innerHTML = ACTS.map(a=>
 /* ---- sources foot ---- */
 document.getElementById('src').innerHTML =
  '<b>Sources & method.</b> Capture and € gaps: verified sales pipeline (SAP billing 2023–2026, credit notes/returns and non-part lines excluded; pipeline verification green, 106 checks, 6 Jul 2026) against UIO-implied demand per model bucket. '+
- 'Price benchmarks: Eucon competitor panel (44 part numbers, brands incl. Blue Print, Febi, Delphi, Textar — OE/mid-tier, not budget) grossed to street ×1.785; UK trade shop scrape 9 May 2026 (genuine vs IAM listings, same shop); UK & Israel category scrapes 13 Jul 2026; Swedish chain scrape 13 Jul 2026 (artifact-filtered). '+
+ 'Price benchmarks: Eucon competitor panel (44 part numbers, brands incl. Blue Print, Febi, Delphi, Textar — OE/mid-tier, not budget) grossed to reference sell-out ×1.785; UK trade shop scrape 9 May 2026 (genuine vs IAM listings, same shop); UK & Israel category scrapes 13 Jul 2026; Swedish chain scrape 13 Jul 2026 (artifact-filtered). '+
  'Whole-base captive split: AIM classification (93.5% of revenue classified, Mar 2026). Channel markups (+40% / +27.5%) are working assumptions — replace with confirmed distributor margins when available. '+
  'Built ' + D.meta.built + ' · CY2025 · MIDI and Turkey excluded by policy (not ISZE-direct customers).';
 </script>

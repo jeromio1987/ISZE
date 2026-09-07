@@ -2,7 +2,7 @@
 
 **Job implementations:** `C:\Users\jerom\Documents\Claude\Scheduled\<job-name>\SKILL.md`  
 **This file:** Canonical in-repo index (migrated from `00_docs/agent/NOTES.md`)  
-**Last audited:** 2026-08-25 (overnight process audit; prior full audit 2026-07-26)
+**Last audited:** 2026-09-07 (archive open-items closed; not a Jerome gate)
 **Path contract:** `$env:ISZE_ROOT` + [`paths.yaml`](../paths.yaml) · preflight policy: audit-export `scheduled-path-fix-report.md`
 
 ### Model routing (2026-07-24)
@@ -98,21 +98,23 @@ Scrapers (`*-tender-scrape`, `*-ks-scrape`, `scraper-healthcheck-autofix`) abort
 
 ## Open items (Jerome)
 
-| Skill | Issue | Status 2026-08-25 |
-|-------|-------|-------------------|
-| `isze-weekly-intelligence-brief` | Confirm target for `latest_weekly_brief.txt` | **CLOSED** — file lives at `05_memory/briefs/latest_weekly_brief.txt` |
-| `isze-dashboard-freshness-check` | Post-reorg paths for three XLSX + UIO HTML | **RESOLVED (paths found)** — update Scheduled `SKILL.md` then drop from open-items: |
+None.
 
-**Freshness-check path map (overnight):**
+---
 
-| Watched file | Live path | Action |
-|--------------|-----------|--------|
-| `ISZE_Parts_Sales_Classification_Mar2026_v2.xlsx` | `01_data/01_Pricing/` | Point skill here (also legacy copy under `91_legacy/`) |
-| `ISZE_FY2027_ActionPlan_v1.xlsx` | `90_archive/root_files/` only | Treat as **archived** — do not fail freshness; optional promote later |
-| `ITUK_PMS_Analysis_Apr2026_v2.xlsx` | `03_analytics/Isuzu/pms-pilot/_archive/` only | **Archived** — Model B / FACTS is SSOT; skip as live |
-| `ISUZU_UIO_Dashboard_2026_v17.html` | `02_dashboards/_archive/` | Superseded; live UIO = `06_uio/_CURRENT/` xlsx (not HTML) |
+## Resolved path map (not a Jerome gate)
 
-Junctions for `01_data/dashboards` **restored overnight** — freshness skill parent-folder preflight should pass again.
+Archived / moved files. The Monday audit must **not** copy these into “waiting on Jerome”.
+
+| File | Live / archive path | Rule |
+|------|---------------------|------|
+| `latest_weekly_brief.txt` | `05_memory/briefs/latest_weekly_brief.txt` | Closed 2026-08-25 |
+| `ISZE_Parts_Sales_Classification_Mar2026_v2.xlsx` | `01_data/01_Pricing/` | Live pricing file — freshness skill points here |
+| `ISZE_FY2027_ActionPlan_v1.xlsx` | `90_archive/root_files/` only | Archived — do not fail freshness |
+| `ITUK_PMS_Analysis_Apr2026_v2.xlsx` | `03_analytics/Isuzu/pms-pilot/_archive/` only | Archived — FACTS is SSOT |
+| `ISUZU_UIO_Dashboard_2026_v17.html` | `02_dashboards/_archive/` | Superseded; live UIO = `06_uio/_CURRENT/` xlsx |
+
+Junctions for `01_data/dashboards` restored. Freshness parent-folder preflight should pass.
 
 ---
 

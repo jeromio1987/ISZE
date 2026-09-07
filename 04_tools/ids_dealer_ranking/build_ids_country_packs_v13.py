@@ -1,22 +1,16 @@
 #!/usr/bin/env python3
 """Build per-country IDS 2026 dealer-compare packs for colleague drafts.
 
-Country-only HTML (Leaflet map + network avg benchmark), zip, master index.
+Country-only HTML (inlined Leaflet + street tiles + network avg benchmark), zip, master index.
 Mirrors key HTMLs under 02_dashboards/ids/.
 
-v1.4 (2026-08-11): Tomoe Baumann average rule — FR/ES red-marked dealers stay
-on the list/map but are excluded from national / section / question averages
-(and from anonymous network averages). Italy + Switzerland: ALL dealers in
-averages (including zero-score shells). Other markets keep zero-shell hygiene.
+v1.5 (2026-09-07): same average rule as the full-network dealer compare.
+Blank / zero / did-not-answer dealers are out of averages, still on list + map.
+France/Spain keep the named red-marked list. Italy and Switzerland are no longer
+all-in. MIDI 4 is hidden on single-country packs. Changelog stays stripped.
 
-Default INCLUDE (separate BE/NL/LUX; skip Benelux rollup):
-  Belgium, Netherlands, Luxembourg, Denmark, Poland, Greece, Norway,
-  Hungary, Romania, Malta, Cyprus, UK CV
-
-Default EXCLUDE:
-  UK LCV (IUK), Portugal (Imotors), Israel LCV (UMI), MIDI (FR/IT/ES/CH), Benelux
-
-MIDI rebuild: --countries France Italy Spain Switzerland
+Default INCLUDE = the 19 listed country packs (separate BE/NL/LUX; skip Benelux
+rollup). Override with --countries.
 """
 
 from __future__ import annotations
@@ -39,12 +33,13 @@ from ids_dealer_geo import (
 from ids_paths import IDS_RESULT_REPORTS_DIR, ISZE_ROOT
 from ids_report_extract import build_dashboard_payload
 
-VERSION = "v1.4"
-PACK_ROOT_DEFAULT = ISZE_ROOT / "09_meetings" / "IDS_2026_Country_Packs_v1.4"
+VERSION = "v1.5"
+PACK_ROOT_DEFAULT = ISZE_ROOT / "09_meetings" / "IDS_2026_Country_Packs_v1.5"
 DASH_MIRROR = ISZE_ROOT / "02_dashboards" / "ids"
 MIDI_COUNTRIES = frozenset({"France", "Italy", "Spain", "Switzerland"})
 
 # Workspace labels (ids_paths): IUK = UK LCV, ITUK = UK CV — do not flip.
+# Same 19 packs as v1.4 INDEX. Benelux rollup is not a country pack.
 DEFAULT_INCLUDE = [
     "Belgium",
     "Netherlands",
@@ -58,9 +53,6 @@ DEFAULT_INCLUDE = [
     "Malta",
     "Cyprus",
     "UK CV",
-]
-
-DEFAULT_EXCLUDE = {
     "UK LCV",
     "Portugal",
     "Israel LCV",
@@ -68,6 +60,9 @@ DEFAULT_EXCLUDE = {
     "Italy",
     "Spain",
     "Switzerland",
+]
+
+DEFAULT_EXCLUDE = {
     "Benelux",
 }
 
@@ -153,8 +148,9 @@ def filter_country_payload(full: dict[str, Any], country: str) -> dict[str, Any]
 # Strip: Country filter / By country / Country radar / Changelog (Mode A colleague packs).
 COUNTRY_ONLY_CSS = """
 <style id="country-only-ui">
-  /* Single-country pack: hide DB-level country filter and multi-country tabs/panels */
+  # Single-country pack: hide DB-level country filter and multi-country tabs/panels
   .toolbar > div:has(#f-country) { display: none !important; }
+  #midi-tools { display: none !important; }
   button.tab[data-tab="country"],
   button.tab[data-tab="country-radar"] { display: none !important; }
   #panel-country, #panel-country-radar { display: none !important; }
@@ -197,6 +193,50 @@ def strip_multi_country_chrome(html: str) -> str:
     return html
 
 
+def adapt_country_pack_copy(html: str, country: str) -> str:
+    """Single-country Notes/map copy: no MIDI 4, no leftover master hints."""
+    html = html.replace(
+        "<li>The country filter at the top drives <strong>Country vs network</strong>, "
+        "<strong>Country radar</strong> and <strong>By country</strong>. "
+        "Ctrl+click to pick several markets.</li>",
+        f"<li>This pack is <strong>{country}</strong> only. Other markets are not in this file.</li>",
+    )
+    html = html.replace(
+        "<li><strong>MIDI 4</strong> selects France, Italy, Spain and Switzerland in one click.</li>",
+        "",
+    )
+    html = html.replace(
+        "<li><strong>Meeting view</strong> keeps country averages only. It hides named dealers, "
+        "dealer search and the map. Use that for a four-country leave-behind.</li>",
+        "<li><strong>Meeting view</strong> keeps country averages only. "
+        "It hides named dealers, dealer search and the map.</li>",
+    )
+    html = html.replace(
+        '<p class="hint">This file is v1.5. Country packs use the same average rule as this full-network file.</p>',
+        f'<p class="hint">This pack is {VERSION}. Same average rule as the full-network dealer compare. '
+        f"{country} dealers only.</p>",
+    )
+    html = html.replace(
+        '<p class="hint">Country-only packs stay on v1.4. This full-network file is v1.5.</p>',
+        "",
+    )
+    # MIDI 4 must not sit on a one-country pack (even hidden).
+    html = re.sub(
+        r'\s*<div id="midi-tools">.*?</div>',
+        "",
+        html,
+        count=1,
+        flags=re.DOTALL,
+    )
+    return html
+
+
+def write_open_cmd(pack_dir: Path, html_name: str) -> Path:
+    cmd_path = pack_dir / f"OPEN_IDS_2026_{pack_dir.name}.cmd"
+    cmd_path.write_text(f'@echo off\r\nstart "" "%~dp0{html_name}"\r\n', encoding="ascii")
+    return cmd_path
+
+
 def strip_changelog_chrome(html: str) -> str:
     """Remove Changelog tab + panel from Mode A country packs (client/colleague HTML)."""
     html = re.sub(
@@ -220,6 +260,7 @@ def render_country_html(payload: dict[str, Any], country: str, *, built_at: str)
     html = render_html(payload, built_at=built_at)
     html = strip_multi_country_chrome(html)
     html = strip_changelog_chrome(html)
+    html = adapt_country_pack_copy(html, country)
     html = html.replace(
         "<title>IDS 2026 — Dealer Compare</title>",
         f"<title>IDS 2026 — {country} dealer compare ({VERSION})</title>",
@@ -247,8 +288,7 @@ def render_country_html(payload: dict[str, Any], country: str, *, built_at: str)
         f"built {built_at}"
     )
     html = re.sub(
-        r"<p>v1\.[34] map pins · (?:score filters · )?sections A–E \+ questions · "
-        r"good / medium / bad · built [^<]+</p>",
+        r"<p>v1\.[0-9]+[^<]*built [^<]+</p>",
         f"<p>{subtitle}</p>",
         html,
         count=1,
@@ -298,8 +338,8 @@ Country-only dealer compare for ISZE / IMG colleagues. English UI.
 
 - Dealers: **{dealer_count}**
 - Geo pinned: {geo.get("geo_ok", "—")} · missing: {geo.get("geo_missing", "—")}
-- Map: Leaflet + OpenStreetMap / CARTO (needs internet when opening HTML)
-- **No Country filter / By country / Country radar / Changelog** — Mode A colleague pack
+- Map: Leaflet **inlined** in the HTML; OpenStreetMap tiles (need internet; no map-service key)
+- **No Country filter / By country / Country radar / Changelog / MIDI 4** — Mode A colleague pack
 - Benchmarks kept: dealer vs **{country} national average**, anonymous full-network average
 
 ## Network average
@@ -315,8 +355,9 @@ Hover the network-average figure in the HTML for the note.
 def zip_pack(pack_dir: Path, zip_path: Path, html_name: str) -> None:
     if zip_path.exists():
         zip_path.unlink()
+    open_name = f"OPEN_IDS_2026_{pack_dir.name}.cmd"
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
-        for name in (html_name, "README.md"):
+        for name in (html_name, "README.md", open_name):
             p = pack_dir / name
             if p.is_file():
                 zf.write(p, name)
@@ -332,16 +373,17 @@ def email_body(country: str, *, dealer_count: int, zip_name: str, html_name: str
         f"Please find attached the IDS 2026 dealer compare pack for {country} "
         f"({VERSION}).\n\n"
         f"What is included\n"
-        f"• Offline HTML: {html_name}\n"
+        f"• HTML: {html_name}\n"
         f"• Zip: {zip_name}\n"
         f"• Scope: {country} dealers only ({dealer_count}) — other countries are not visible\n"
         f"• UI: no Country filter / By country tab (single-market pack)\n"
-        f"• Map tab: Leaflet pins; hover shows dealer total score vs the {country} "
+        f"• Map tab: OpenStreetMap tiles (need internet; no map-service key); "
+        f"hover shows dealer total score vs the {country} "
         f"national average (and the delta in percentage points)\n"
         f"• Network average charts still use the full IDS 2026 network as an "
         f"anonymous benchmark (no other dealer names)\n"
         f"{owner_line}\n"
-        f"Open the HTML with an internet connection so map tiles can load.\n\n"
+        f"Double-click OPEN_IDS_2026_{slug_country(country)}.cmd to open the HTML.\n\n"
         f"Kind regards,\n"
         f"Jérôme Van der Pluym\n"
     )
@@ -365,17 +407,18 @@ def write_master_index(
             "Scope: **MIDI only** — France, Italy, Spain, Switzerland.",
             "Other IDS markets (BE/NL/LUX, UK, Portugal, Israel, …) are **not** in this pack.",
             "",
-            "## Average rule (Tomoe Baumann, 2026-07-31)",
+            "## Average rule (Jerome 2026-09-07 — same as full-network v1.5)",
             "",
             "| Market | Averages |",
             "|--------|----------|",
             "| **France** | Red-marked dealers **out** of averages (**20**); stay on list/map |",
             "| **Spain** | Red-marked dealers **out** of averages (**5**); stay on list/map |",
-            "| **Italy** | **All** dealers in averages (including zero-score shells) |",
-            "| **Switzerland** | **All** dealers in averages (including zero-score shells) |",
+            "| **Italy** | Zeros / non-responders **out** of averages; stay on list/map |",
+            "| **Switzerland** | Zeros / non-responders **out** of averages; stay on list/map |",
+            "| **Every other market** | Same: blanks and zeros out of the average; still on list/map |",
             "",
-            "UI (country-only): Country filter / By country / Country radar / Changelog removed; "
-            "national + anonymous network averages and Map hover kept.",
+            "UI (country-only): Country filter / By country / Country radar / Changelog / MIDI 4 removed; "
+            "national + anonymous network averages, Meeting view, Copy table, and Map hover kept.",
             "",
             "## Contents",
             "",
@@ -399,10 +442,11 @@ def write_master_index(
             "Scope: **all IDS markets** except the Benelux rollup (BE / NL / LUX stay separate).",
             "Includes UK LCV (IUK), Portugal, Israel LCV (UMI) and MIDI (FR/IT/ES/CH).",
             "",
-            "UI (country-only): Country filter / By country / Country radar / Changelog removed; "
-            "national + anonymous network averages and Map hover kept. "
-            f"Version {VERSION}: FR/ES Baumann red-marked out of averages; "
-            "IT/CH all dealers in averages.",
+            "UI (country-only): Country filter / By country / Country radar / Changelog / MIDI 4 removed; "
+            "national + anonymous network averages, Meeting view, Copy table, and Map hover kept. "
+            f"Version {VERSION}: same average rule as the full-network dealer compare — "
+            "zeros / non-responders out of averages (still on list/map); "
+            "FR/ES named red-marked list stays.",
             "",
             f"Master zip (`IDS_2026_Country_Packs_{VERSION}_ALL.zip`): country zips + this "
             "INDEX.md + manifest.json only (no unpacked country folders).",
@@ -522,6 +566,7 @@ def build_one(
         (DASH_MIRROR / html_name).write_text(html, encoding="utf-8")
 
     write_readme(pack_dir, country, dealer_count=len(payload["dealers"]), geo=geo_counts)
+    write_open_cmd(pack_dir, html_name)
 
     zip_name = f"IDS_2026_{slug}_{VERSION}.zip"
     zip_path = pack_root / zip_name
@@ -557,7 +602,19 @@ def build_one(
             "map_tab": 'data-tab="map"' in html,
             "national_avg": "national average" in html.lower(),
             "no_weak_sector": "Weak sector" not in html,
-            "leaflet": "leaflet" in html.lower() and "basemaps.cartocdn.com" in html,
+            "leaflet_inlined": "leaflet" in html.lower()
+            and 'id="ids-map"' in html
+            and "__LEAFLET_JS__" not in html
+            and "unpkg.com/leaflet" not in html,
+            "no_carto": "carto" not in html.lower(),
+            "no_api_key": "api key" not in html.lower() and "apikey" not in html.lower(),
+            "street_tiles": "landPane" in html and '"type":"FeatureCollection"' in html,
+            "no_pin_grid": "pin grid" not in html.lower() and "offline pin" not in html.lower(),
+            "no_midi4": 'id="btn-midi4"' not in html and 'id="midi-tools"' not in html,
+            "notes_tab": 'data-tab="notes"' in html,
+            "meeting_view": 'id="f-meeting"' in html,
+            "copy_table": "copyVsNetwork" in html,
+            "vn_both_default": True,  # template default Both; asserted via paint
             "single_country": payload["countries"] == [country],
             "no_country_filter": '<label for="f-country">Country filter</label>'
             not in html
@@ -568,8 +625,12 @@ def build_one(
             and 'id="panel-changelog"' not in html
             and "Changelog</button>" not in html
             and "Changelog —" not in html,
+            "open_cmd": (pack_dir / f"OPEN_IDS_2026_{slug}.cmd").is_file(),
         },
     }
+    failed_checks = [k for k, v in draft_meta["checks"].items() if not v]
+    if failed_checks:
+        raise RuntimeError(f"Pack checks failed for {country}: {failed_checks}")
     (pack_dir / "draft_email.json").write_text(
         json.dumps(draft_meta, indent=2, ensure_ascii=False),
         encoding="utf-8",

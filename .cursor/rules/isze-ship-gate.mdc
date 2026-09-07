@@ -26,6 +26,7 @@ Banned substitute: "build succeeded" / "verify passed" without stating what pain
    - Hero / headline KPIs show numbers (e.g. `€` leakage in hero).
    - Charts: `class="bar-row"` count > 0 **or** embedded SVG/chart markers present.
    - Tables: `<tbody>` has `<tr>` rows **or** an explicit **DATA UNAVAILABLE** / amber banner — never a blank Top N shell.
+   - **Image-Read** the QA screenshots. “A chart is visible” / receipt `ok: true` alone is not pass.
 
 3. **Payload sanity** — no `NaN` in embedded JSON; no JS-only first paint without SSR fallback for `file://` open.
 

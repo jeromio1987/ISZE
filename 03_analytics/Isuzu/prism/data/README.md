@@ -93,5 +93,5 @@ See `ISZE/Data/DATA_MANIFEST.md` and `config.py` for all resolved paths.
 
 ## Other data files
 
-- `distributor_master_mapping.csv` — required here or under `Projects/Isuzu/data/`
+- `distributor_master_mapping.csv` — required under `03_analytics/Isuzu/prism/data/` (legacy `Projects/Isuzu/data/` path removed 2026-07-16)
 - UIO: production file here, or auto-resolve from `ISZE/UIO/_CURRENT/`

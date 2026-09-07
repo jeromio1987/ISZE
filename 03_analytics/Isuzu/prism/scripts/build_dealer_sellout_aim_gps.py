@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """
-DB→DLR sell-out (second layer): network AIM + GPS-style proxy for every wired DB.
+DB→DLR sales-to-dealer (second layer): network AIM + GPS-style proxy for every wired DB.
 
 Native loaders: ITUK (dealer pivot), UTI (PartSales YTD).
 Canonical long CSVs: any `dealer_sellout_long_<DB>_CY{year}.csv` (IRELAND, IUK, GREECE, …).
 
-Sell-out files are qty-only. "ISZE-denominated value" = qty × median CY ISZE→DB unit
+Sales-to-dealer files are qty-only. "ISZE-denominated value" = qty × median CY ISZE→DB unit
 price for that distributor×PN — a proxy for mix/GPS-style views, NOT dealer invoice EUR.
+(User-facing language: sales-to-dealer — not "dealer sell" / "sell-out" as the product name.)
 """
 from __future__ import annotations
 
 import html
 import json
 import math
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -36,10 +38,13 @@ from modules.dealer_sales_loader import (  # noqa: E402
     UTI_DIR,
     aggregate_pn,
     discover_sellout_long_dists,
+    ituk_duncan_month_coverage,
     load_ituk_dealer_sales,
     load_sellout_long_pn,
     load_uti_part_sales,
     normalize_pn,
+    sellout_long_path,
+    sellout_network_companion_path,
 )
 from modules.aim_pn_classifier import FILTER_SUBGROUPS, filter_subgroup_label  # noqa: E402
 from modules.bvp_product_nav import subgroup_label  # noqa: E402
@@ -73,7 +78,7 @@ YEAR = 2025
 # Native Excel loaders always included; long-CSV DBs auto-discovered and merged.
 NATIVE_DISTS = ("ITUK", "UTI")
 # Display / sort order when present (others append alphabetically).
-DIST_ORDER = ("ITUK", "UTI", "IRELAND", "IUK", "GREECE")
+DIST_ORDER = ("ITUK", "UTI", "IRELAND", "IUK", "GREECE", "PORTUGAL")
 # ITUK DVLA / UTI fallback if GPS row missing; others from gps_spu_by_distributor.
 UIO_FALLBACK = {"ITUK": 22_389.0, "UTI": 10_668.0}
 
@@ -84,9 +89,13 @@ OUT_AIM_L1 = DERIVED_DIR / f"sellout_aim_by_aim_l1_{YEAR}.csv"
 OUT_TOP = DERIVED_DIR / f"sellout_aim_top_pn_{YEAR}.csv"
 OUT_ENTITY_MIX = DERIVED_DIR / f"dealer_sellout_aim_mix_{YEAR}.csv"
 OUT_ENTITY_GPS = DERIVED_DIR / f"dealer_sellout_gps_{YEAR}.csv"
+OUT_ITUK_COMPANION = DERIVED_DIR / f"dealer_sellout_aim_ituk_companions_{YEAR}.csv"
 OUT_JSON = DASHBOARDS_JSON_DIR / "dealer_sellout_aim_gps.json"
 # Keep stable path (hub links); content is multi-DB second layer.
-OUT_HTML = DASHBOARDS_DIR / "sales" / "Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html"
+OUT_HTML = DASHBOARDS_DIR / "sales" / "Dealer_Sellout_AIM_GPS_Sales_to_Dealer_2025.html"
+OUT_HTML_LEGACY = DASHBOARDS_DIR / "sales" / "Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html"
+OUT_OPEN_CMD = DASHBOARDS_DIR / "sales" / "OPEN_Dealer_Sellout_AIM_GPS.cmd"
+CHART_JS = DASHBOARDS_DIR / "_ui" / "chart.umd.min.js"
 BILL_MIX = DERIVED_DIR / "db_parts_mix_classification.csv"
 
 # Filled in main() after discovery.
@@ -155,7 +164,7 @@ def _pct(n: object) -> str:
 
 
 def _isze_denom(n: object) -> str:
-    """Format ISZE-denominated proxy (€ scale from billing ASP, not dealer sell-out)."""
+    """Format ISZE-denominated proxy (€ scale from billing ASP, not sales-to-dealer invoice)."""
     if n is None or (isinstance(n, float) and math.isnan(n)):
         return "—"
     return f"€{_fmt(n)}"
@@ -209,7 +218,12 @@ def load_billing_pn(dist: str, asp: pd.DataFrame) -> pd.DataFrame:
 
 
 def load_sellout_pn(dist: str) -> pd.DataFrame:
-    """Prefer canonical long CSV when present; else native ITUK/UTI Excel loaders."""
+    """Prefer canonical long CSV when present; else native ITUK/UTI Excel loaders.
+
+    ITUK CY primary = dealer SSOT ``dealer_sellout_long_ITUK_CY{year}.csv``
+    (or native dealer pivot). Duncan network companion is loaded separately —
+    never via this path.
+    """
     long_df = load_sellout_long_pn(dist, YEAR, DERIVED_DIR)
     if not long_df.empty:
         return long_df
@@ -225,6 +239,103 @@ def load_sellout_pn(dist: str) -> pd.DataFrame:
             return pd.DataFrame(columns=["part_number", "qty_year"])
         return aggregate_pn(df, "qty_ytd").rename(columns={"qty": "qty_year"})
     return pd.DataFrame(columns=["part_number", "qty_year"])
+
+
+def _value_and_summarize(
+    sell: pd.DataFrame,
+    label: str,
+    dist: str,
+    layer: str,
+    asp: pd.DataFrame,
+    dim: pd.DataFrame,
+    desc: pd.DataFrame,
+    xref: pd.DataFrame,
+    xref_g: set[str],
+    xref_b: set[str],
+) -> tuple[pd.DataFrame, dict]:
+    """Attach master, AIM bucket, ASP value → (valued frame, aim_summary dict)."""
+    sell = attach_pn_master(sell, dim, desc, xref)
+    sell = classify_pn(sell, xref_g, xref_b)
+    a = asp[asp["distributor_code"] == dist][["part_number", "asp_eur"]]
+    sell = sell.merge(a, on="part_number", how="left")
+    sell["valued_eur"] = sell["qty_year"] * sell["asp_eur"].fillna(0)
+    return sell, aim_summary(sell, label, dist, layer)
+
+
+def build_ituk_companion_rows(
+    asp: pd.DataFrame,
+    dim: pd.DataFrame,
+    desc: pd.DataFrame,
+    xref: pd.DataFrame,
+    xref_g: set[str],
+    xref_b: set[str],
+) -> tuple[list[dict], dict]:
+    """Duncan network companions — labeled; never replace dealer SSOT primary.
+
+    Returns (companion summary rows for CSV/JSON, coverage meta).
+    """
+    rows: list[dict] = []
+    coverage = ituk_duncan_month_coverage(DERIVED_DIR)
+    ssot_path = sellout_long_path(DERIVED_DIR, "ITUK", YEAR)
+    net_path = sellout_network_companion_path(DERIVED_DIR, "ITUK", YEAR)
+    ytd_path = sellout_long_path(DERIVED_DIR, "ITUK", 2026)  # CY2026YTD.csv
+
+    meta = {
+        "dealer_ssot_path": str(ssot_path) if ssot_path else None,
+        "duncan_network_cy2025_path": str(net_path) if net_path else None,
+        "duncan_network_cy2026ytd_path": str(ytd_path) if ytd_path else None,
+        "month_coverage": coverage,
+        "note": (
+            "ITUK primary AIM/GPS CY2025 uses dealer×PN SSOT. "
+            "Duncan file is network_pn only (Customer Name=All). "
+            "Dealer×PN×month for 2026 still missing from Duncan."
+        ),
+    }
+
+    if net_path is not None:
+        sell = load_sellout_long_pn("ITUK", YEAR, DERIVED_DIR, path=net_path)
+        if not sell.empty:
+            _, s = _value_and_summarize(
+                sell,
+                "ITUK Duncan network companion (network_pn CY2025)",
+                "ITUK",
+                "sellout_db_dlr_network_companion",
+                asp,
+                dim,
+                desc,
+                xref,
+                xref_g,
+                xref_b,
+            )
+            s["grain"] = "network_pn"
+            s["source_role"] = "duncan_network_companion"
+            s["source_file"] = net_path.name
+            rows.append(s)
+
+    if ytd_path is not None:
+        # 2026 YTD valued with CY2025 ASP proxy (billing max may lag Aug).
+        sell = load_sellout_long_pn("ITUK", 2026, DERIVED_DIR, path=ytd_path)
+        if not sell.empty:
+            _, s = _value_and_summarize(
+                sell,
+                "ITUK Duncan network 2026YTD (thru Aug; ASP=CY2025 proxy)",
+                "ITUK",
+                "sellout_db_dlr_network_2026ytd",
+                asp,
+                dim,
+                desc,
+                xref,
+                xref_g,
+                xref_b,
+            )
+            s["grain"] = "network_pn"
+            s["source_role"] = "duncan_network_2026ytd"
+            s["source_file"] = ytd_path.name
+            s["year"] = 2026
+            s["months_2026"] = coverage.get("months_2026")
+            rows.append(s)
+
+    return rows, meta
 
 
 def classify_pn(
@@ -467,16 +578,31 @@ def build_html(payload: dict) -> str:
         )
     gen_top = "<div class='gridN'>" + "".join(gen_blocks) + "</div>"
 
-    b_by = payload.get("benchmarks_by_dist") or {}
-    kpi_items = []
-    for dist in dists:
-        bb = b_by.get(dist) or {}
-        kpi_items.append((f"{dist} sell-out qty", _fmt(bb.get("qty"))))
-        kpi_items.append((f"{dist} BVP % of proxy", _pct(bb.get("bvp_pct"))))
+    sell = [r for r in mix if r.get("layer") == "sellout_db_dlr"]
+    by_code = {r.get("distributor_code"): r for r in sell}
+    uti_cap = by_code.get("UTI", {}).get("contested_bvp_capture")
+    iuk_cap = by_code.get("IUK", {}).get("contested_bvp_capture")
+    kpi_items = [
+        (f"{len(dists)} networks", "ITUK · UTI · IRELAND · IUK · GREECE · PORTUGAL"),
+        (_pct(uti_cap), "UTI BVP capture (StD)"),
+        (_pct(iuk_cap), "IUK BVP capture (StD) · LCV"),
+    ]
     kpis = "".join(
         f'<div class="kpi"><div class="val">{_e(v)}</div><div class="lbl">{_e(l)}</div></div>'
-        for l, v in kpi_items
+        for v, l in kpi_items
     )
+    greece_amber = ""
+    if "GREECE" not in dists:
+        greece_amber = (
+            '<div class="callout amber">GREECE — DATA UNAVAILABLE: no sales-to-dealer file in this pack.</div>'
+        )
+    meeting_banner = (
+        f'<div class="callout">Meeting pack — DATA AS-OF CY{YEAR}. Not a Monday home. '
+        f"PMS / BVP capture here is <strong>total</strong> (BVP line vs contested basket), not genuine-only. "
+        f"IUK is LCV. Never blend IUK↔ITUK.</div>"
+    )
+    chart_src = CHART_JS.read_text(encoding="utf-8") if CHART_JS.exists() else ""
+    chart_src = re.sub(r"//# sourceMappingURL=.*$", "", chart_src, flags=re.M).strip()
 
     chart_json = json.dumps(
         _clean_nans(
@@ -495,8 +621,7 @@ def build_html(payload: dict) -> str:
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sell-out AIM · Network CY{YEAR}</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+<title>Sales to dealer — AIM &amp; GPS · six DBs (CY{YEAR})</title>
 <style>
 :root {{ --red:#CC0E1E; --bg:#f4f5f7; --card:#fff; --text:#1a1a1a; --muted:#5a5a5a; --border:#e4e4e7; }}
 * {{ box-sizing:border-box; }}
@@ -509,6 +634,7 @@ section {{ background:var(--card); border:1px solid var(--border); border-radius
 section h2 {{ margin:0 0 0.6rem; font-size:1.02rem; color:var(--red); border-bottom:3px solid var(--red); padding-bottom:0.25rem; }}
 section h3 {{ font-size:0.9rem; margin:0.5rem 0; color:var(--muted); }}
 .callout {{ padding:0.65rem 0.9rem; border-left:4px solid var(--red); background:#fff8f8; font-size:0.88rem; margin-bottom:1rem; }}
+.callout.amber {{ border-left-color:#c0552d; background:#fff3d6; color:#222; }}
 .kpi-row {{ display:flex; flex-wrap:wrap; gap:0.55rem; }}
 .kpi {{ flex:1 1 140px; background:var(--bg); border-left:4px solid var(--red); padding:0.6rem 0.8rem; border-radius:6px; }}
 .kpi .val {{ font-size:1.05rem; font-weight:700; }}
@@ -525,20 +651,22 @@ section h3 {{ font-size:0.9rem; margin:0.5rem 0; color:var(--muted); }}
 </head>
 <body>
 <header>
-  <div style="font-weight:800;font-size:0.8rem;letter-spacing:0.08em;opacity:0.9">ISZE · DB→DLR · Second layer (sell-out AIM / GPS)</div>
-  <h1>BVP &amp; Genuine sell-out — {_e(dist_label)} (CY{YEAR})</h1>
-  <span class="badge">Generated {payload.get("generated", "")}</span>
+  <div style="font-weight:800;font-size:0.8rem;letter-spacing:0.08em;opacity:0.9">ISZE · DB→DLR · Second layer (sales-to-dealer AIM / GPS)</div>
+  <h1>Sales to dealer — AIM &amp; GPS · {_e(dist_label)} (CY{YEAR})</h1>
+  <span class="badge">Meeting pack · DATA AS-OF CY{YEAR}</span>
 </header>
 <div class="wrap">
+  {meeting_banner}
+  {greece_amber}
   <div class="callout">{_e(payload.get("scope_note", ""))}<br/><strong>{_e(proxy_note)}</strong></div>
   <section><h2>Network summary</h2><div class="kpi-row">{kpis}</div></section>
   <div class="grid2">
     <section><h2>AIM mix by network</h2><canvas id="chartMix" height="260"></canvas></section>
-    <section><h2>PMS — BVP qty (sell-out)</h2><canvas id="chartPms" height="260"></canvas></section>
+    <section><h2>PMS — BVP qty (sales-to-dealer)</h2><canvas id="chartPms" height="260"></canvas></section>
   </div>
-  <section><h2>AIM comparison (sell-out qty vs ISZE-denom. proxy vs billing)</h2>
-    <p class="muted">Network view. ITUK dealer file aggregated to network where applicable. IUK / IRELAND / GREECE from canonical long CSVs. Never blend IUK↔ITUK or IRELAND↔IUK. BVP / genuine % on sell-out rows use ISZE-denominated proxy only.</p>
-    {_tbl(["Network","Layer","Qty (reported)","ISZE-denom. / invoice","BVP %","Contested gen. %","Genuine-only %","BVP capture","Per truck"],
+  <section><h2>AIM comparison (sales-to-dealer qty vs ISZE-denom. proxy vs billing)</h2>
+    <p class="muted">Network view. ITUK primary = dealer×PN SSOT (dealer grain in entity tables). Duncan network companion is labeled separately and does not replace dealer SSOT. IUK / IRELAND / GREECE / PORTUGAL from canonical long CSVs. Never blend IUK↔ITUK or IRELAND↔IUK. BVP / genuine % on sales-to-dealer rows use ISZE-denominated proxy only.</p>
+    {_tbl(["Network","Layer","Qty (reported)","ISZE-denom. / invoice","BVP %","Contested gen. %","Genuine-only %","BVP capture","€ / vehicle"],
           [[_e(r["label"]),_e(r["layer"]),_fmt(r.get("qty_year")),
             _isze_denom(r.get("total_eur")) if r.get("layer")=="sellout_db_dlr" else _invoice_eur(r.get("total_eur")),
             _pct(r.get("bvp_pct")),_pct(r.get("genuine_contested_pct")),_pct(r.get("genuine_only_pct")),
@@ -556,6 +684,7 @@ section h3 {{ font-size:0.9rem; margin:0.5rem 0; color:var(--muted); }}
   Rebuild: prism/scripts/build_dealer_sellout_aim_gps.py · 01_data/00_derived/sellout_aim_* · second layer
 </footer>
 <script type="application/json" id="chart-data">{chart_json}</script>
+<script>{chart_src}</script>
 <script>
 function initCharts() {{
   if (typeof Chart === 'undefined') return;
@@ -704,7 +833,7 @@ def main() -> None:
     for dist in DISTS:
         sell = load_sellout_pn(dist)
         if sell.empty:
-            print(f"warn: no sell-out rows for {dist}")
+            print(f"warn: no sales-to-dealer rows for {dist}")
             continue
         sell = attach_pn_master(sell, dim, desc, xref)
         sell["aim_l1_report"] = (
@@ -720,7 +849,7 @@ def main() -> None:
         valued_by_dist[dist] = sell
 
         mix_rows.append(
-            aim_summary(sell, f"{dist} sell-out (network)", dist, "sellout_db_dlr")
+            aim_summary(sell, f"{dist} sales-to-dealer (network)", dist, "sellout_db_dlr")
         )
 
         bill = load_billing_pn(dist, asp)
@@ -737,7 +866,7 @@ def main() -> None:
         top_bvp[dist] = top_pn_table(sell, dist, "bvp")
         top_gen[dist] = top_pn_table(sell, dist, "genuine_contested")
 
-    # Keep DISTS aligned to what actually produced sell-out rows
+    # Keep DISTS aligned to what actually produced sales-to-dealer rows
     present = tuple(
         d
         for d in DISTS
@@ -840,6 +969,41 @@ def main() -> None:
         entity_mix = pd.concat([ituk_dealers, other_net], ignore_index=True)
     else:
         entity_mix = net_mix
+
+    companion_rows, ituk_source_meta = build_ituk_companion_rows(
+        asp, dim, desc, xref, xref_g, xref_b
+    )
+    companion_df = pd.DataFrame(companion_rows)
+    cy_comp = [
+        r for r in companion_rows if r.get("source_role") == "duncan_network_companion"
+    ]
+    companion_df.to_csv(OUT_ITUK_COMPANION, index=False)
+    if cy_comp:
+        r = cy_comp[0]
+        companion_entity = pd.DataFrame(
+            [
+                {
+                    "entity": "ITUK (Duncan network companion - network_pn)",
+                    "bvp_eur": r.get("bvp_eur"),
+                    "genuine_contested_eur": r.get("genuine_contested_eur"),
+                    "genuine_only_eur": r.get("genuine_only_eur"),
+                    "total_eur": r.get("total_eur"),
+                    "bvp_pct": r.get("bvp_pct"),
+                    "genuine_contested_pct": r.get("genuine_contested_pct"),
+                    "genuine_only_pct": r.get("genuine_only_pct"),
+                    "contested_bvp_capture": r.get("contested_bvp_capture"),
+                    "distributor_code": "ITUK",
+                    "layer": "sellout_db_dlr_network_companion",
+                    "year": YEAR,
+                    "qty_year": r.get("qty_year"),
+                    "qty_unvalued_share": r.get("qty_without_isze_price_pct"),
+                    "grain": "network_pn",
+                    "source_role": "duncan_network_companion",
+                }
+            ]
+        )
+        entity_mix = pd.concat([entity_mix, companion_entity], ignore_index=True)
+
     entity_mix.to_csv(OUT_ENTITY_MIX, index=False)
 
     if not ituk_dealers.empty:
@@ -854,6 +1018,37 @@ def main() -> None:
         ituk_gps["share_of_network"] = ituk_gps["qty_year"] / tot_q
         other_gps = net_gps[net_gps["distributor_code"] != "ITUK"]
         entity_gps = pd.concat([ituk_gps, other_gps], ignore_index=True)
+        # Duncan companion GPS row (same national UIO; intensity not share)
+        if cy_comp:
+            r = cy_comp[0]
+            tot = r.get("total_eur") or 0
+            companion_gps = pd.DataFrame(
+                [
+                    {
+                        "entity": "ITUK (Duncan network companion - network_pn)",
+                        "bvp_eur": r.get("bvp_eur"),
+                        "genuine_contested_eur": r.get("genuine_contested_eur"),
+                        "genuine_only_eur": r.get("genuine_only_eur"),
+                        "total_eur": tot,
+                        "bvp_pct": r.get("bvp_pct"),
+                        "genuine_contested_pct": r.get("genuine_contested_pct"),
+                        "genuine_only_pct": r.get("genuine_only_pct"),
+                        "contested_bvp_capture": r.get("contested_bvp_capture"),
+                        "distributor_code": "ITUK",
+                        "layer": "sellout_db_dlr_network_companion",
+                        "year": YEAR,
+                        "qty_year": r.get("qty_year"),
+                        "qty_unvalued_share": r.get("qty_without_isze_price_pct"),
+                        "uio_units": uio_ituk,
+                        "sellout_spu_eur": (tot / uio_ituk) if uio_ituk else None,
+                        "sellout_qty": r.get("qty_year"),
+                        "share_of_network": None,
+                        "grain": "network_pn",
+                        "source_role": "duncan_network_companion",
+                    }
+                ]
+            )
+            entity_gps = pd.concat([entity_gps, companion_gps], ignore_index=True)
     else:
         entity_gps = net_gps
     entity_gps.to_csv(OUT_ENTITY_GPS, index=False)
@@ -904,17 +1099,21 @@ def main() -> None:
         "distributors": list(DISTS),
         "uio_units": dict(UIO),
         "scope_note": (
-            f"Second layer (DB→DLR sell-out) CY{YEAR}. Networks: {', '.join(DISTS)}. "
-            "ITUK from dealer pivot (network + dealer grain). UTI from PartSales YTD. "
-            "IRELAND / IUK / GREECE (and any other long CSV) from dealer_sellout_long_*. "
+            f"Second layer (DB→DLR sales-to-dealer) CY{YEAR}. Networks: {', '.join(DISTS)}. "
+            "ITUK primary = dealer×PN SSOT (Sales to Dealers_ITUK / dealer_sellout_long_ITUK_CY2025). "
+            "Duncan network companion (network_pn) is labeled separately and does not replace dealer grain. "
+            "UTI from PartSales YTD. IRELAND / IUK / GREECE / PORTUGAL from dealer_sellout_long_*. "
             "IUK ≠ ITUK; IRELAND ≠ IUK. AIM buckets: bvp | genuine_contested | genuine_only."
         ),
         "valuation_note": (
-            "Sell-out reports are quantity only — no dealer EUR. ISZE-denominated value = "
-            f"reported qty × median CY{YEAR} ISZE→DB unit price per PN (proxy for mix; not sell-out revenue). "
+            "Sales-to-dealer reports are quantity only — no dealer EUR. ISZE-denominated value = "
+            f"reported qty × median CY{YEAR} ISZE→DB unit price per PN (proxy for mix; not sales-to-dealer revenue). "
             "IUK is qty-only by design (no EUR chase). PNs with no billing price contribute qty but €0 to proxy totals. "
-            "Billing rows use actual invoice EUR and GPS."
+            "Billing rows use actual invoice EUR and GPS. "
+            "Duncan 2026YTD companion also uses CY2025 ASP proxy."
         ),
+        "ituk_sources": ituk_source_meta,
+        "ituk_companions": companion_rows,
         "benchmarks": legacy,
         "benchmarks_by_dist": benchmarks_by_dist,
         "aim_mix_comparison": mix_rows,
@@ -928,14 +1127,36 @@ def main() -> None:
     OUT_JSON.write_text(
         json.dumps(_clean_nans(payload), indent=2, default=str), encoding="utf-8"
     )
-    OUT_HTML.write_text(build_html(payload), encoding="utf-8")
+    html = build_html(payload)
+    OUT_HTML.write_text(html, encoding="utf-8")
+    # Legacy filename: tiny redirect so old OPEN / bookmarks still work
+    OUT_HTML_LEGACY.write_text(
+        "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/>"
+        "<meta http-equiv=\"refresh\" content=\"0;url=Dealer_Sellout_AIM_GPS_Sales_to_Dealer_2025.html\"/>"
+        "<title>Redirect — Sales to dealer</title></head>"
+        "<body><p>Moved to "
+        "<a href=\"Dealer_Sellout_AIM_GPS_Sales_to_Dealer_2025.html\">"
+        "Dealer_Sellout_AIM_GPS_Sales_to_Dealer_2025.html</a> "
+        "(all DBs with sales-to-dealer files, not ITUK/UTI only).</p></body></html>\n",
+        encoding="utf-8",
+    )
+    OUT_OPEN_CMD.write_text(
+        '@echo off\r\nstart "" "%~dp0Dealer_Sellout_AIM_GPS_Sales_to_Dealer_2025.html"\r\n',
+        encoding="utf-8",
+    )
 
     print(f"ok: {OUT_HTML}")
+    print(f"ok: legacy redirect {OUT_HTML_LEGACY}")
     print(f"ok: {OUT_JSON}")
     print(f"ok: {OUT_MIX} ({len(mix_rows)} mix rows)")
     print(f"ok: {OUT_ENTITY_MIX} ({len(entity_mix)} entities)")
     print(f"ok: {OUT_ENTITY_GPS}")
-
+    print(f"ok: {OUT_ITUK_COMPANION} ({len(companion_rows)} companions)")
+    cov = ituk_source_meta.get("month_coverage") or {}
+    print(
+        f"ituk duncan months: {cov.get('months_min')}..{cov.get('months_max')} "
+        f"({cov.get('month_count')} months); 2026={cov.get('months_2026')}"
+    )
 
 if __name__ == "__main__":
     main()

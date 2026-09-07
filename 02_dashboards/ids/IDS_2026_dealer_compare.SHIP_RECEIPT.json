@@ -1,0 +1,49 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ids\\IDS_2026_dealer_compare.html",
+  "artifact_mtime_ms": 1788789234461,
+  "written_at": "2026-09-07T13:55:42.652Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ids\\IDS_2026_dealer_compare.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "1450732 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN cmd present (OPEN_IDS_2026_Country_Action_UX_proposal.cmd, OPEN_IDS_2026_dealer_compare.cmd, OPEN_IDS_2026_Explainer.cmd)"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "2 PNG(s) — agent must have image-Read before shipping"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ids\\_qa\\master_map.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ids\\_qa\\master_map_midi4.png"
+  ],
+  "notes": "OSM raster tiles tile.openstreetmap.org no key. Geo sanity PASS. MIDI 4 toggles (192 dealers FR+IT+ES+CH). v1.5. No CARTO. Paint: Europe coasts/cities + coloured pins."
+}

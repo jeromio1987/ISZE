@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>IDS 2026 network rollup — Italy</title>
+<style>
+:root {
+  --navy:#1A2744; --terracotta:#C45C3E; --good:#2D8A5E; --amber:#C48A1A;
+  --grey:#6B7A90; --light:#F4F6F9; --line:#d4dae3;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0; background:#eef1f5; color:var(--navy);
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+  font-size:10.2pt; line-height:1.35;
+}
+.page {
+  background:#fff; width:210mm; min-height:296mm; margin:8mm auto; padding:11mm 12mm;
+  box-shadow:0 2px 10px rgba(26,39,68,.12);
+}
+.head { border-bottom:2.5px solid var(--navy); padding-bottom:6px; margin-bottom:9px;
+        display:flex; justify-content:space-between; align-items:flex-end; gap:12px; }
+.head h1 { margin:0; font-size:15.5pt; letter-spacing:-.2px; }
+.head .sub { margin:2px 0 0; font-size:9pt; color:var(--grey); }
+.head .right { text-align:right; font-size:8.6pt; color:var(--grey); white-space:nowrap; }
+.head .right strong { display:block; color:var(--navy); font-size:10pt; }
+h2 { font-size:10.6pt; margin:0 0 6px; text-transform:uppercase; letter-spacing:.5px;
+     color:var(--navy); border-bottom:1px solid var(--line); padding-bottom:3px; }
+.block { margin-bottom:9px; }
+.kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
+.kpi { background:var(--light); border-left:3.5px solid var(--terracotta);
+       border-radius:5px; padding:7px 9px; }
+.kpi .v { font-size:16pt; font-weight:700; line-height:1.05; }
+.kpi .v.fill { display:block; width:100%; min-width:0; height:21px;
+               border-bottom:1px dotted #8f9db0; margin-bottom:2px; }
+.kpi .l { font-size:7.8pt; color:var(--grey); text-transform:uppercase; letter-spacing:.4px; }
+.kpi .n { font-size:8.2pt; color:var(--grey); }
+.bandstrip { display:flex; align-items:center; gap:10px; background:var(--light);
+             border-radius:5px; padding:8px 11px; margin-top:7px; font-size:9pt; }
+.pill { display:inline-block; font-size:9pt; font-weight:700; border-radius:4px;
+        padding:2px 9px; white-space:nowrap; }
+.pill.good { background:#e5f4ec; color:var(--good); }
+.pill.medium { background:#f9f0d8; color:var(--amber); }
+.pill.weak { background:#f8e6e1; color:var(--terracotta); }
+.pill.blank { background:#fff; color:var(--grey); border:1px dashed var(--line); padding:2px 26px; }
+.scale { color:var(--grey); font-size:8.4pt; }
+table { width:100%; border-collapse:collapse; font-size:9.1pt; }
+th { text-align:left; font-size:7.8pt; text-transform:uppercase; letter-spacing:.4px;
+     color:#fff; background:var(--navy); padding:5px 6px; font-weight:600; }
+td { padding:4.5px 6px; border-bottom:1px solid var(--line); vertical-align:top; }
+tr:nth-child(even) td { background:#fafbfd; }
+td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+td.sec { font-weight:700; white-space:nowrap; }
+td.q { color:#33415c; }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+.panel { border:1px solid var(--line); border-radius:6px; padding:9px 11px; }
+.panel h3 { margin:0 0 6px; font-size:9.4pt; text-transform:uppercase; letter-spacing:.4px; }
+.panel.pos h3 { color:var(--good); }
+.panel.neg h3 { color:var(--terracotta); }
+.panel ol { margin:0; padding-left:16px; }
+.panel li { margin-bottom:4px; }
+.panel li .ref { font-weight:700; }
+.panel li .meta { color:var(--grey); font-size:8.4pt; }
+.fill { border-bottom:1px dotted #9aa7b8; display:inline-block; min-width:60px; }
+.ident { display:flex; gap:18px; font-size:8.6pt; color:var(--grey);
+         background:var(--light); border-radius:5px; padding:5px 10px; margin-bottom:8px; }
+.ident span.fill { min-width:110px; }
+.fillrow td { height:22px; }
+.hint { font-size:8.2pt; color:var(--grey); margin:-2px 0 5px; }
+.suggest td { padding:3.5px 6px; font-size:8.7pt; }
+.suggest td.action { color:#33415c; }
+.note { font-size:8.0pt; color:var(--grey); border-top:1px solid var(--line);
+        padding-top:6px; margin-top:8px; }
+.note strong { color:var(--navy); }
+.reading { font-size:8.4pt; color:var(--grey); background:var(--light);
+           border-left:3px solid var(--mid, #d4dae3); border-radius:4px;
+           padding:6px 9px; margin:7px 0 0; }
+.dist { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+@media print {
+  @page { size:A4 portrait; margin:10mm; }
+  body { background:#fff; font-size:9.6pt; }
+  .page { width:auto; min-height:0; margin:0; padding:0; box-shadow:none;
+          page-break-after:always; }
+  .page:last-child { page-break-after:auto; }
+  .block, .panel, table { page-break-inside:avoid; }
+}
+</style>
+</head>
+<body>
+<section class="page">
+<div class="head"><div><h1>Italy — dealer network feedback</h1><p class="sub">Isuzu Dealer Standards 2026 · distributor rollup · primary DB overview</p></div><div class="right"><strong>41 dealers evaluated</strong>Built 2026-09-07 · v0.4</div></div>
+<div class="block">
+  <h2>Network result</h2>
+  <div class="kpis">
+    <div class="kpi"><div class="v">79.6%</div>
+      <div class="l">Network average</div>
+      <div class="n">41 of 41 dealers in average</div></div>
+    <div class="kpi"><div class="v">41</div><div class="l">Dealers evaluated</div>
+      <div class="n">0 outside the average</div></div>
+    <div class="kpi"><div class="v">82.2%</div>
+      <div class="l">Highest section average</div>
+      <div class="n">Section C — Service</div></div>
+    <div class="kpi"><div class="v">77.3%</div>
+      <div class="l">Lowest section average</div>
+      <div class="n">Section B — Organisation, management, personnel</div></div>
+  </div>
+  <div class="bandstrip"><span class="scale">Bands: Good 80% and above · Medium 60% to under 80% · Needs improvement below 60%</span></div>
+</div>
+<div class="block">
+  <h2>Hit list — priority dealers to visit</h2>
+  <p class="hint">Below the market average and/or Needs improvement. Cap 12.
+    Incomplete / not-completed dealers are listed separately and are not visit
+    targets for a “low score”. Open the dealer workshop pack for the visit.</p>
+  <table>
+    <thead><tr><th class="num" style="width:5%">#</th><th>Dealer</th>
+    <th class="num" style="width:9%">Score</th>
+    <th class="num" style="width:11%">vs average</th>
+    <th style="width:14%">Band</th><th>Why on the list</th></tr></thead>
+    <tbody><tr><td class="num">1</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_MC_MOTORS_S_R_L_v0.4_workshop_pack.html">MC MOTORS S.R.L.</a></td><td class="num">67.1%</td><td class="num">-12.4 pp</td><td><span class="pill medium">Medium</span></td><td>Band: Medium · -12.4 pp vs market average</td></tr><tr><td class="num">2</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_CONCESSIONARIA_DIESEL_80_S_R_L_v0.4_workshop_pack.html">CONCESSIONARIA DIESEL 80 S.R.L.</a></td><td class="num">73.9%</td><td class="num">-5.6 pp</td><td><span class="pill medium">Medium</span></td><td>Band: Medium · -5.6 pp vs market average</td></tr><tr><td class="num">3</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_ISERVICE_SRL_v0.4_workshop_pack.html">ISERVICE SRL</a></td><td class="num">75.4%</td><td class="num">-4.2 pp</td><td><span class="pill medium">Medium</span></td><td>Band: Medium · -4.2 pp vs market average</td></tr><tr><td class="num">4</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_L_AUTOCENTER_S_R_L_v0.4_workshop_pack.html">L&#x27;AUTOCENTER S.R.L.</a></td><td class="num">76.1%</td><td class="num">-3.5 pp</td><td><span class="pill medium">Medium</span></td><td>Band: Medium · -3.5 pp vs market average</td></tr><tr><td class="num">5</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_NUOVA_VIB_Veicoli_Industriali_Biellesi_S_R_L_v0.4_workshop_pack.html">NUOVA VIB Veicoli Industriali Biellesi S.R.L.</a></td><td class="num">76.1%</td><td class="num">-3.5 pp</td><td><span class="pill medium">Medium</span></td><td>Band: Medium · -3.5 pp vs market average</td></tr><tr><td class="num">6</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_MIRANDOLA_TRUCKS_SRL_v0.4_workshop_pack.html">MIRANDOLA TRUCKS SRL</a></td><td class="num">77.5%</td><td class="num">-2.1 pp</td><td><span class="pill medium">Medium</span></td><td>Band: Medium · -2.1 pp vs market average</td></tr></tbody>
+  </table>
+</div>
+<div class="block">
+  <h2>Incomplete / not-completed lane</h2>
+  <p class="hint">Dealers with a zero or blank total score in this market's evaluation (incomplete / not completed). If none are listed, there is no incomplete lane for this market.</p>
+  <table>
+    <thead><tr><th>Dealer</th><th class="num" style="width:10%">Score</th>
+    <th style="width:14%">Band</th><th>Reason</th></tr></thead>
+    <tbody><tr><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_RIBATTI_VEICOLI_INDUSTRIALI_S_R_L_v0.4_workshop_pack.html">RIBATTI VEICOLI INDUSTRIALI S.R.L.</a></td><td class="num">0.0%</td><td><span class="pill weak">Needs improvement</span></td><td>Zero / blank total — treat as incomplete, not as a coaching score</td></tr><tr><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_SERI_MARCELLO_S_R_L_v0.4_workshop_pack.html">SERI MARCELLO S.R.L.</a></td><td class="num">0.0%</td><td><span class="pill weak">Needs improvement</span></td><td>Zero / blank total — treat as incomplete, not as a coaching score</td></tr><tr><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_SUN_CAR_S_P_A_v0.4_workshop_pack.html">SUN CAR S.P.A.</a></td><td class="num">0.0%</td><td><span class="pill weak">Needs improvement</span></td><td>Zero / blank total — treat as incomplete, not as a coaching score</td></tr></tbody>
+  </table>
+</div>
+<div class="note"><strong>Average basis.</strong> The Italy average shown here is calculated on <strong>all 41</strong> evaluated dealers. No dealer is excluded: every evaluated dealer counts towards this average. Source: 2026 IDS evaluation result report, Italy. Maximum score 280 points.</div>
+</section>
+<section class="page">
+<div class="head"><div><h1>Italy — DB next steps &amp; Pull</h1><p class="sub">Isuzu Dealer Standards 2026 · distributor rollup</p></div><div class="right"><strong>41 dealers</strong>v0.4</div></div>
+<div class="block">
+  <h2>Suggested DB-level next steps — edit in the DB planning meeting</h2>
+  <p class="hint">Network actions derived from the hit list, common checklist gaps,
+    and the incomplete lane. Owner, target date and proof stay blank until the
+    distributor planning meeting.</p>
+  <table>
+    <thead><tr><th class="num" style="width:5%">#</th>
+    <th style="width:52%">Suggested action</th>
+    <th style="width:15%">Owner (role)</th>
+    <th style="width:14%">Target date</th>
+    <th style="width:14%">Proof</th></tr></thead>
+    <tbody><tr class="suggest"><td class="num">1</td><td class="action">Schedule reviews with the 6 dealers on the hit list (below market average and/or Needs improvement). Use each dealer workshop pack as the annex for the visit.</td><td></td><td></td><td></td></tr><tr class="suggest"><td class="num">2</td><td class="action">Agree visit cadence for the 9 of 41 dealers (22%) currently below the market average (79.6%).</td><td></td><td></td><td></td></tr><tr class="suggest"><td class="num">3</td><td class="action">Prioritise coaching for the 3 dealer(s) in the Needs improvement band — start from checklist gaps on their sheet, not from a single section label.</td><td></td><td></td><td></td></tr><tr class="suggest"><td class="num">4</td><td class="action">Network pattern: checklist item A.3-1 (Do all reception staffs wear the service advisor uniform? (Confirm if m…) appears as a top gap for 23 dealers — review whether the DB can remove a shared blocker (tooling, training, stock, process).</td><td></td><td></td><td></td></tr><tr class="suggest"><td class="num">5</td><td class="action">Network pattern: checklist item B.4-7 (Are certificates regarding the handling and servicing of Battery Electr…) appears as a top gap for 20 dealers — review whether the DB can remove a shared blocker (tooling, training, stock, process).</td><td></td><td></td><td></td></tr></tbody>
+  </table>
+</div>
+<div class="block">
+  <h2>Pull scorecard — monthly return (fill in)</h2>
+  <p class="hint">Blank on purpose. Measure the distributor’s process, not a fake
+    monthly IDS score. Definitions stay fixed; values are entered after reviews.</p>
+  <table>
+    <thead><tr><th style="width:22%">Metric</th>
+    <th class="num" style="width:10%">This month</th>
+    <th>Definition</th>
+    <th style="width:14%">Owner</th>
+    <th style="width:12%">As of</th></tr></thead>
+    <tbody><tr><td>% dealers visited YTD</td><td class="num fill" style="min-width:48px">&nbsp;</td><td>Share of hit-list (or agreed priority) dealers that had a feedback review in the calendar year.</td><td></td><td></td></tr><tr><td>% suggested actions closed</td><td class="num fill" style="min-width:48px">&nbsp;</td><td>Commitments returned with proof and a done date, divided by actions still open from agreed reviews.</td><td></td><td></td></tr><tr><td># incomplete cleared</td><td class="num fill" style="min-width:48px">&nbsp;</td><td>Not-completed / red-marked / zero-shell dealers moved to a finished evaluation or a conscious exit this month.</td><td></td><td></td></tr><tr><td># escalations open</td><td class="num fill" style="min-width:48px">&nbsp;</td><td>Actions overdue more than 30 days, or blocked by a DB/ISZE issue (price, stock, tooling) without an owner.</td><td></td><td></td></tr></tbody>
+  </table>
+</div>
+<div class="block">
+  <h2>Band distribution</h2>
+  <div class="dist"><div class="kpi"><div class="v">30</div><div class="l">Good</div><div class="n">73% of dealers in average</div></div><div class="kpi"><div class="v">8</div><div class="l">Medium</div><div class="n">20% of dealers in average</div></div><div class="kpi"><div class="v">3</div><div class="l">Needs improvement</div><div class="n">7% of dealers in average</div></div></div>
+</div>
+<div class="block">
+  <h2>Sections across the network — lowest average first</h2>
+  <table>
+    <thead><tr><th style="width:5%">&nbsp;</th><th>Section</th>
+    <th class="num" style="width:12%">Max points</th>
+    <th class="num" style="width:16%">Network average</th>
+    <th class="num" style="width:14%">Dealers scored</th></tr></thead>
+    <tbody><tr><td class="sec">B</td><td>Organisation, management, personnel</td><td class="num">80</td><td class="num">77.3%</td><td class="num">41</td></tr><tr><td class="sec">A</td><td>Premises, facility and clothing</td><td class="num">46</td><td class="num">77.5%</td><td class="num">41</td></tr><tr><td class="sec">E</td><td>Vehicle sales</td><td class="num">27</td><td class="num">80.4%</td><td class="num">41</td></tr><tr><td class="sec">D</td><td>Parts and accessories</td><td class="num">47</td><td class="num">80.4%</td><td class="num">41</td></tr><tr><td class="sec">C</td><td>Service</td><td class="num">80</td><td class="num">82.2%</td><td class="num">41</td></tr></tbody>
+  </table>
+  <p class="reading">How to read sections A–E: in the 2026 results the five sections move closely together — a dealer who scores well on one section usually scores well on the others. Use the section table as structure for the conversation, not as five independent capabilities, and do not read a single section as a verdict on that part of the business. The actions are therefore built from the individual checklist items where points were actually lost.</p>
+</div>
+<div class="note"><strong>Average basis.</strong> The Italy average shown here is calculated on <strong>all 41</strong> evaluated dealers. No dealer is excluded: every evaluated dealer counts towards this average. Source: 2026 IDS evaluation result report, Italy. Maximum score 280 points.</div>
+</section>
+<section class="page">
+<div class="head"><div><h1>Italy — dealer list</h1><p class="sub">Isuzu Dealer Standards 2026 · distributor rollup</p></div><div class="right"><strong>41 dealers</strong>v0.4</div></div>
+<div class="block">
+  <h2>All dealers, highest score first</h2>
+  <p class="hint">Dealer workshop packs are annexes for the visit — this rollup is
+    the overview the distributor runs from.</p>
+  <table>
+    <thead><tr><th class="num" style="width:6%">Rank</th><th>Dealer</th>
+    <th class="num" style="width:12%">Points</th><th class="num" style="width:9%">Score</th>
+    <th class="num" style="width:11%">vs average</th><th style="width:15%">Band</th>
+    <th style="width:10%">In average</th></tr></thead>
+    <tbody><tr><td class="num">1</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_CENTRAL_CAR_S_R_L_v0.4_workshop_pack.html">CENTRAL CAR S.R.L.</a></td><td class="num">280 / 280</td><td class="num">100.0%</td><td class="num">+20.4 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">2</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_MITTELCAR_2_S_R_L_v0.4_workshop_pack.html">MITTELCAR 2 S.R.L.</a></td><td class="num">269 / 280</td><td class="num">96.1%</td><td class="num">+16.5 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">3</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_RIVERAUTO_S_R_L_v0.4_workshop_pack.html">RIVERAUTO S.R.L.</a></td><td class="num">264 / 280</td><td class="num">94.3%</td><td class="num">+14.7 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">4</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_AUTONORD_FIORETTO_S_P_A_v0.4_workshop_pack.html">AUTONORD FIORETTO S.P.A.</a></td><td class="num">261 / 280</td><td class="num">93.2%</td><td class="num">+13.6 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">4</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_CERIANI_SERVICE_S_R_L_v0.4_workshop_pack.html">CERIANI SERVICE S.R.L.</a></td><td class="num">261 / 280</td><td class="num">93.2%</td><td class="num">+13.6 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">6</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_ERRE_TRUCK_S_R_L_v0.4_workshop_pack.html">ERRE TRUCK S.R.L.</a></td><td class="num">260 / 280</td><td class="num">92.9%</td><td class="num">+13.3 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">7</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_CM4_MOTORS_DI_CONO_MARCONE_v0.4_workshop_pack.html">CM4 MOTORS DI CONO MARCONE</a></td><td class="num">256 / 280</td><td class="num">91.4%</td><td class="num">+11.9 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">7</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_CORPORATION_MOTOR_SUD_S_R_L_v0.4_workshop_pack.html">CORPORATION MOTOR SUD S.R.L.</a></td><td class="num">256 / 280</td><td class="num">91.4%</td><td class="num">+11.9 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">9</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_ROTALNORD_AUTO_S_R_L_con_unico_socio_v0.4_workshop_pack.html">ROTALNORD AUTO S.R.L. con unico socio</a></td><td class="num">255 / 280</td><td class="num">91.1%</td><td class="num">+11.5 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">10</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_OMAT_SRL_v0.4_workshop_pack.html">OMAT SRL</a></td><td class="num">254 / 280</td><td class="num">90.7%</td><td class="num">+11.1 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">10</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_PADOVA_DIESEL_S_R_L_v0.4_workshop_pack.html">PADOVA DIESEL S.R.L.</a></td><td class="num">254 / 280</td><td class="num">90.7%</td><td class="num">+11.1 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">12</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_C_S_A_CENTRO_SERVIZI_AUTOCARRI_SRL_v0.4_workshop_pack.html">C.S.A. CENTRO SERVIZI AUTOCARRI SRL</a></td><td class="num">253 / 280</td><td class="num">90.4%</td><td class="num">+10.8 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">13</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_AUTOVEICOLI_ERZELLI_SPA_v0.4_workshop_pack.html">AUTOVEICOLI ERZELLI SPA</a></td><td class="num">251 / 280</td><td class="num">89.6%</td><td class="num">+10.1 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">13</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_TOTANI_S_R_L_v0.4_workshop_pack.html">TOTANI S.R.L.</a></td><td class="num">251 / 280</td><td class="num">89.6%</td><td class="num">+10.1 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">15</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_G_T_AUTO_S_R_L_v0.4_workshop_pack.html">G.T. AUTO S.R.L.</a></td><td class="num">248 / 280</td><td class="num">88.6%</td><td class="num">+9.0 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">15</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_SOMIA_S_R_L_v0.4_workshop_pack.html">SOMIA S.R.L.</a></td><td class="num">248 / 280</td><td class="num">88.6%</td><td class="num">+9.0 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">17</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_ADRIATICA_VEICOLI_INDUSTRIALI_A_V_I_S_R_L_v0.4_workshop_pack.html">ADRIATICA VEICOLI INDUSTRIALI (A.V.I.) S.R.L.</a></td><td class="num">247 / 280</td><td class="num">88.2%</td><td class="num">+8.6 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">17</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_O_M_S_COMMERCIALE_FUORISTRADA_S_R_L_v0.4_workshop_pack.html">O.M.S. COMMERCIALE FUORISTRADA S.R.L.</a></td><td class="num">247 / 280</td><td class="num">88.2%</td><td class="num">+8.6 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">19</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_TONA_S_R_L_a_Socio_Unico_v0.4_workshop_pack.html">TONA S.R.L. a Socio Unico</a></td><td class="num">246 / 280</td><td class="num">87.9%</td><td class="num">+8.3 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">20</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_CUNEOTRE_S_P_A_v0.4_workshop_pack.html">CUNEOTRE S.P.A.</a></td><td class="num">243 / 280</td><td class="num">86.8%</td><td class="num">+7.2 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">21</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_CO_VE_I_S_R_L_v0.4_workshop_pack.html">CO.VE.I.  S.R.L.</a></td><td class="num">242 / 280</td><td class="num">86.4%</td><td class="num">+6.9 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">22</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_NORD_CAR_S_R_L_v0.4_workshop_pack.html">NORD CAR S.R.L.</a></td><td class="num">237 / 280</td><td class="num">84.6%</td><td class="num">+5.1 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">23</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_BURANO_MOTORI_DI_FRULLATORI_G_C_SNC_v0.4_workshop_pack.html">BURANO MOTORI DI FRULLATORI G. &amp; C. SNC</a></td><td class="num">236 / 280</td><td class="num">84.3%</td><td class="num">+4.7 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">23</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_PICCA_MOTORS_S_R_L_v0.4_workshop_pack.html">PICCA MOTORS S.R.L.</a></td><td class="num">236 / 280</td><td class="num">84.3%</td><td class="num">+4.7 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">23</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_SOCOMA_S_R_L_v0.4_workshop_pack.html">SOCOMA S.R.L.</a></td><td class="num">236 / 280</td><td class="num">84.3%</td><td class="num">+4.7 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">26</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_PEDUZZI_S_R_L_v0.4_workshop_pack.html">PEDUZZI S.R.L.</a></td><td class="num">234 / 280</td><td class="num">83.6%</td><td class="num">+4.0 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">27</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_PETESI_S_R_L_v0.4_workshop_pack.html">PETESI S.R.L.</a></td><td class="num">232 / 280</td><td class="num">82.9%</td><td class="num">+3.3 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">28</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_MONTELLO_TRUCKS_S_R_L_v0.4_workshop_pack.html">MONTELLO TRUCKS S.R.L.</a></td><td class="num">230 / 280</td><td class="num">82.1%</td><td class="num">+2.6 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">29</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_OFFICINE_MIRANDOLA_VEICOLI_INDUSTRIALI_SPA_v0.4_workshop_pack.html">OFFICINE MIRANDOLA VEICOLI INDUSTRIALI SPA</a></td><td class="num">229 / 280</td><td class="num">81.8%</td><td class="num">+2.2 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">30</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_V_E_P_CAR_S_R_L_v0.4_workshop_pack.html">V.E.P. CAR S.R.L.</a></td><td class="num">224 / 280</td><td class="num">80.0%</td><td class="num">+0.4 pp</td><td><span class="pill good">Good</span></td><td>Yes</td></tr><tr><td class="num">31</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_GIANLUCA_BONDATTI_AUTOVEICOLI_SRL_v0.4_workshop_pack.html">GIANLUCA BONDATTI AUTOVEICOLI SRL</a></td><td class="num">223 / 280</td><td class="num">79.6%</td><td class="num">+0.1 pp</td><td><span class="pill medium">Medium</span></td><td>Yes</td></tr><tr><td class="num">31</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_PRETTO_S_R_L_v0.4_workshop_pack.html">PRETTO S.R.L.</a></td><td class="num">223 / 280</td><td class="num">79.6%</td><td class="num">+0.1 pp</td><td><span class="pill medium">Medium</span></td><td>Yes</td></tr><tr><td class="num">33</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_MIRANDOLA_TRUCKS_SRL_v0.4_workshop_pack.html">MIRANDOLA TRUCKS SRL</a></td><td class="num">217 / 280</td><td class="num">77.5%</td><td class="num">-2.1 pp</td><td><span class="pill medium">Medium</span></td><td>Yes</td></tr><tr><td class="num">34</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_L_AUTOCENTER_S_R_L_v0.4_workshop_pack.html">L&#x27;AUTOCENTER S.R.L.</a></td><td class="num">213 / 280</td><td class="num">76.1%</td><td class="num">-3.5 pp</td><td><span class="pill medium">Medium</span></td><td>Yes</td></tr><tr><td class="num">34</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_NUOVA_VIB_Veicoli_Industriali_Biellesi_S_R_L_v0.4_workshop_pack.html">NUOVA VIB Veicoli Industriali Biellesi S.R.L.</a></td><td class="num">213 / 280</td><td class="num">76.1%</td><td class="num">-3.5 pp</td><td><span class="pill medium">Medium</span></td><td>Yes</td></tr><tr><td class="num">36</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_ISERVICE_SRL_v0.4_workshop_pack.html">ISERVICE SRL</a></td><td class="num">211 / 280</td><td class="num">75.4%</td><td class="num">-4.2 pp</td><td><span class="pill medium">Medium</span></td><td>Yes</td></tr><tr><td class="num">37</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_CONCESSIONARIA_DIESEL_80_S_R_L_v0.4_workshop_pack.html">CONCESSIONARIA DIESEL 80 S.R.L.</a></td><td class="num">207 / 280</td><td class="num">73.9%</td><td class="num">-5.6 pp</td><td><span class="pill medium">Medium</span></td><td>Yes</td></tr><tr><td class="num">38</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_MC_MOTORS_S_R_L_v0.4_workshop_pack.html">MC MOTORS S.R.L.</a></td><td class="num">188 / 280</td><td class="num">67.1%</td><td class="num">-12.4 pp</td><td><span class="pill medium">Medium</span></td><td>Yes</td></tr><tr><td class="num">39</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_RIBATTI_VEICOLI_INDUSTRIALI_S_R_L_v0.4_workshop_pack.html">RIBATTI VEICOLI INDUSTRIALI S.R.L.</a></td><td class="num">0 / 280</td><td class="num">0.0%</td><td class="num">-79.6 pp</td><td><span class="pill weak">Needs improvement</span></td><td>Yes</td></tr><tr><td class="num">39</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_SERI_MARCELLO_S_R_L_v0.4_workshop_pack.html">SERI MARCELLO S.R.L.</a></td><td class="num">0 / 280</td><td class="num">0.0%</td><td class="num">-79.6 pp</td><td><span class="pill weak">Needs improvement</span></td><td>Yes</td></tr><tr><td class="num">39</td><td><a href="dealers/IDS_2026_Dealer_Feedback_Italy_SUN_CAR_S_P_A_v0.4_workshop_pack.html">SUN CAR S.P.A.</a></td><td class="num">0 / 280</td><td class="num">0.0%</td><td class="num">-79.6 pp</td><td><span class="pill weak">Needs improvement</span></td><td>Yes</td></tr></tbody>
+  </table>
+</div>
+<div class="note"><strong>Average basis.</strong> The Italy average shown here is calculated on <strong>all 41</strong> evaluated dealers. No dealer is excluded: every evaluated dealer counts towards this average. Source: 2026 IDS evaluation result report, Italy. Maximum score 280 points.</div>
+</section>
+</body>
+</html>

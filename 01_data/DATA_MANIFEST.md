@@ -1,6 +1,6 @@
 # ISZE Data manifest — sort-by-topic map
 
-**Last updated:** 2026-08-25 (INBOX hygiene: mail hunts archived; IDS→08_Distributor)
+**Last updated:** 2026-09-03 (PORTUGAL StD wired; sales_fact: CY2025till31082026 owns 2025 + 2026 Jan–Aug)
 
 This is the **data map**. Each subject has a numbered folder under `01_data/` — drop new files into the matching one (§1). A small **wired working-set stays flat at root** because build scripts read it from there (§3).
 
@@ -71,21 +71,25 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | File | Path | Flag |
 |------|------|------|
 | CY2023-2024.XLSX · CY2025.XLSX | `01_data/raw/sales/` | ⚙ PRISM Phase 1 · 🔒 |
+| **CY2025till31082026.XLSX** | `01_data/12_raw/sales/` | ★⚙ **sales_fact** — owns CY2025 + 2026 Jan–Aug (`build_sales_fact_from_cy.py`) · filed 2026-09-03 |
 | Sales CY25.XLSX | `01_data/` (root, wired) | ⚙ Streamlit ISZE_Dashboard + GPT briefing |
-| sales_2026tillApril.XLSX | `01_data/` (root, wired) | ⚙ `build_gps_billing.py`, `build_gps.py` |
+| sales_2026tillApril.XLSX | `01_data/` (root, wired) | ⚙ `build_gps_billing.py`, `build_gps.py` — **not** used by sales_fact for 2026 anymore |
 | Sales_israel_1799&_1797.XLSX | `01_data/` (root, wired) | ⚙ `build_gps*.py` (UTI 1799 / UMI 1797) |
-| CY2024-2025.XLSX | `01_data/` (root, wired) | ⚙ more-complete 2025 re-export (supersedes CY2025 in pipeline) |
+| CY2024-2025.XLSX | `01_data/` (root, wired) + `12_raw/sales/` | ⚙ sales_fact **2024 only** (2025 superseded by CY2025till31082026) |
+| Q1FY2027.XLSX | `01_data/12_raw/sales/` | kept on disk; **not** loaded by sales_fact (superseded for Apr–Jun 2026) |
 | Extra ad-hoc billing extracts | `01_data/04_sales/` | topic drop (not `12_raw/sales/`) |
 
 ### 05 · Dealer sell-out / sales-to-dealer → `05_Dealer_sellout/` + `12_raw/dealer_sales/`
 | File | Path | Flag |
 |------|------|------|
-| **Canonical raw (all DBs)** | `01_data/12_raw/dealer_sales/<DB>/` | ★ ITUK · **IUK** · **IRELAND (Harris)** · UTI · **GREECE (Petros)** |
+| **Canonical raw (all DBs)** | `01_data/12_raw/dealer_sales/<DB>/` | ★ ITUK · **IUK** · **IRELAND (Harris)** · UTI · **GREECE (Petros)** · **PORTUGAL (Imotors/Astara)** |
 | `_registry.yaml` · `DEALER_SELL_OUT.md` | `01_data/12_raw/dealer_sales/` | 📄 intake + canonical long schema |
 | `IUK_Monthly_Demand_2025_2026YTD_July.xlsx` | `01_data/12_raw/dealer_sales/IUK/` | ★ LCV D-Max network PN qty · CY2025 + CY2026 YTD Jul · ≠ ITUK |
 | `dealer_sellout_long_IUK_CY2025.csv` · `…_CY2026YTD.csv` | `01_data/00_derived/` | ⚙ normalized long (IUK adapter) |
 | `IRELAND_Sales_to_Dealer_2025_2026YTD_Jul.xlsx` | `01_data/12_raw/dealer_sales/IRELAND/` | ★ Harris StD line-level · CY2025 + CY2026 YTD Jul · ≠ IUK ≠ IMIE |
 | `dealer_sellout_long_IRELAND_CY2025.csv` · `…_CY2026YTD.csv` | `01_data/00_derived/` | ⚙ normalized long (Ireland adapter) |
+| `PORTUGAL_Sales_to_Dealer_2025_2026YTD_Aug.xlsx` | `01_data/12_raw/dealer_sales/PORTUGAL/` | ★ Imotors/Astara StD · CY2025 + CY2026 YTD Aug · qty only · ≠ billing |
+| `dealer_sellout_long_PORTUGAL_CY2025.csv` · `…_CY2026YTD.csv` | `01_data/00_derived/` | ⚙ normalized long (Portugal adapter) |
 | `Petros_Parts_Sold_Qties_2025.xlsx` | `01_data/12_raw/dealer_sales/GREECE/` | ★ D-MAX qty CY2025 · flag `pn_newest_rollup` |
 | `dealer_sellout_long_GREECE_CY2025.csv` | `01_data/00_derived/` | ⚙ normalized long (Petros adapter) |
 | UTIPartSales_2025-* | `01_data/12_raw/dealer_sales/UTI/` | ⚙ sell-out pipeline |
@@ -119,7 +123,10 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | ITUK_ExecutiveSummary_Jan2026.pptx | `01_data/08_Distributor/` | also Meetings (§09) |
 | Imotors_Portugal_UIO_GPS_PMS_Study.xlsx | `01_data/08_Distributor/` | Portugal (Imotors) study (filed 2026-07-16) |
 | BO OVERVIEW - UNIVERSAL TRUCKS ISRAEL LTD 01-07-2026 (1).xlsx | `01_data/08_Distributor/` | Israel/UTI back-order overview (filed 2026-07-16) |
+| **overview_IE30_IE40_IE50_contacts.xlsx** + `CONTACTS_REGISTER.md` | `01_data/08_Distributor/` | ★ daily contacts by product line (IE30/40/50). Companion to `DB_email_22_DBs.xlsx` (allow-list). Flat CSV: `00_derived/distributor_daily_contacts_ie30_ie40_ie50.csv` |
+| `DB_email_22_DBs.xlsx` | `01_data/08_Distributor/` | ★ email allow-list → `04_tools/interactions/db_domains.yaml` |
 | **IDS 2026 dealer eval packs** (NL / DK / LUX drop 2026-07-24) | `01_data/08_Distributor/IDS_2026/` | ⚙ `04_tools/ids_dealer_ranking/` — NL unchanged (identical); DK 20 dealers filed; LUX Autopolis in `LUX/` pending BE/Benelux mapping |
+| **EU_Mileage_by_country_IMG_2020-11_to_2026-06.xlsx** + `Portugal_annual_km_mileage.md` | `01_data/08_Distributor/` | ★ LCV/RG warranty VIN km/yr (IMG). Feeds GPS/PMS V2 shadow only — **not** N75 CV |
 | **Meetings prep per DB:** | `09_meetings/Preparation Meetings/<DB>/` | |
 | **`distributor_dimension.csv`** + `.md` | `01_data/00_derived/` | ★⚙ **canonical DB key** — `91_build/build_distributor_dimension.py`. Join on **`sold_to_sap`**, never on `payer_code` (1797 = both UMI *and* UTI). Maps SAP entity names (`IBX`, `ISD`, `Danmark`) ↔ DB codes (`BELGIUM`, `GERMANY`, `DENMARK`). Read by `02_dashboards/_composable/build.mjs`. |
 
@@ -252,6 +259,14 @@ See `05_memory/projects/sales-analytics-pipeline.md`.
 ---
 
 ## §8 — Migration log
+- **2026-09-05** — GPS/PMS V2 LCV-first sparring lock: Opt1/2/3 denominators, UIO accuracy A–D, EQ-HIT = PMS-PN enrich only. Concept + subtype/Trooper/10y notes under `00_docs/agent/`. Shadow `pms_v2_lcv_opt_skeleton.csv` + `lcv_uio_accuracy_by_db.csv`. Aftermarket BI tab **GPS/PMS V2 LCV** (Portugal Opt2 on via Matriculas RT/RG shares). V1 untouched.
+- **2026-09-05** — GPS/PMS V2 shadow lane (Mode B): concept `00_docs/agent/GPS_PMS_V2_CONCEPT.md`; builder `prism/scripts/build_gps_pms_v2_shadow.py`; derived `eu_mileage_by_db_lcv.csv`, `pms_v2_cohort_weights.csv`, `pms_v2_fitment_weights.csv`, `pms_capture_by_db_year_v2_mileage.csv`, `gps_wallet_v2_by_distributor.csv`, `gps_pms_v2_findings.md`. V1 capture/GPS CSVs untouched. LCV mileage from EU Mileage xlsx; CV rates unchanged except existing UTI override. SCR cutoffs / EQ-HIT bulk still open.
+- **2026-09-04** — Wired second layer AIM/GPS after Duncan ITUK StD: `build_dealer_sellout_aim_gps.py` (+ loader skip for `*_network_*` companions). Dealer SSOT CY2025 unchanged; Duncan network companion + 2026YTD labeled in `dealer_sellout_aim_ituk_companions_2025.csv` / JSON `ituk_sources`. HTML `Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html` + `OPEN_Dealer_Sellout_AIM_GPS.cmd`. Full P0–P5 / GPS UNMAPPED drop **not** run (separate authorize).
+- **2026-09-04** — ITUK Duncan StD `Dealer Purchases by Part Number.xlsx` (mail RE: genuine parts share, thru Aug 2026) → `12_raw/dealer_sales/ITUK/ITUK_Dealer_Purchases_by_PN_2023_2026YTD_Aug.xlsx` (+ inbox trail). Normalized (network PN × calendar month) → `00_derived/dealer_sellout_long_ITUK_CY2023.csv` / `_CY2024.csv` / `_network_CY2025.csv` / `_CY2026YTD.csv` + PN-month + 2-PN dealer-year sample (`91_build/normalize_dealer_sellout_ituk_duncan.py`). **Dealer × PN × month SSOT unchanged:** `Sales to Dealers_ITUK_CY2025.xlsx` → `dealer_sellout_long_ITUK_CY2025.csv`. No invoice-date col in Duncan pivot. See `ITUK/SOURCE.md`.
+- **2026-09-03** — Contacts: self-sent `overview IE30-IE40-IE50 contacts.xlsx` → intake `90_INBOX/contacts_self_sent_20260903/` → canonical `08_Distributor/overview_IE30_IE40_IE50_contacts.xlsx` + `CONTACTS_REGISTER.md` + derived `00_derived/distributor_daily_contacts_ie30_ie40_ie50.csv`. Does **not** replace `DB_email_22_DBs.xlsx`.
+- **2026-09-03** — Sales-to-dealer naming on main surfaces (AIM/GPS HTML + builder + DEALER_SELL_OUT / coverage asks). Full mailbox re-hunt: no new StD workbooks beyond already-filed DBs. Log: `90_INBOX/sales_to_dealer_mail_hunt_20260903/FINDINGS.md`.
+- **2026-09-03** — Portugal Imotors/Astara StD from Outlook (`RE: Sales to dealer data` / Nuno Machado / `Sales to Dealer 2025-26.xlsx`) → `12_raw/dealer_sales/PORTUGAL/PORTUGAL_Sales_to_Dealer_2025_2026YTD_Aug.xlsx`; registered; normalized → `00_derived/dealer_sellout_long_PORTUGAL_CY2025.csv` + `…_CY2026YTD.csv` (adapter `91_build/normalize_dealer_sellout_portugal.py`). Wired second layer AIM/GPS. **Not** sales_fact / CY billing.
+- **2026-09-03** — Root `CY2025till31082026.XLSX` → `12_raw/sales/CY2025till31082026.XLSX`. Wired `build_sales_fact_from_cy.py`: this file owns CY2025 + 2026 months 1–8; `CY2024-2025.XLSX` now owns 2024 only; `sales_2026tillApril.XLSX` / `Q1FY2027.XLSX` no longer loaded into sales_fact. Rebuilt `00_derived/sales_fact.parquet`.
 - **2026-08-25** - INBOX hygiene (priority clear wins): mail hunts `UTI_PartSales_mail_20260813`, `_ireland_sales_mail_20260813`, `dealer_sales_mail_20260813` → `92_archive/mail_hunts_20260813/` (`12_raw/dealer_sales` already had UTI/IRELAND canonicals; July UTI PartSales was SHA256-identical to `UTIPartSales_2026-06.xlsx` so not promoted). Scratch `dg_*.py` / `analyze_*.py` → `91_build/_scratch/`. Quarantined `03_analytics/Isuzu/prism/data/UIO_v17.xlsx` → `92_archive/uio_stale/`. Relocated whole `IDS_2026` (970 files) → `08_Distributor/IDS_2026/`.
 
 - **2026-08-25** — **P8 Action Ledger** shipped: `91_build/action_ledger_adapters.py` + `build_action_ledger.py` → `00_derived/action_ledger*.parquet/csv` + `02_dashboards/ops/ISZE_Action_Ledger.html`. Nine adapters only; `portfolio_triage_20260819.csv` excluded (rollup). Decisions CSV is human-owned.

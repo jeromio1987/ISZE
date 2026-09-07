@@ -146,8 +146,15 @@ def aggregate_pn(df: pd.DataFrame, qty_col: str) -> pd.DataFrame:
 
 
 def sellout_long_path(derived_dir: Path, distributor_code: str, year: int) -> Path | None:
-    """Resolve canonical long CSV for a DB×year (CY full year preferred over YTD name)."""
+    """Resolve canonical long CSV for a DB×year (CY full year preferred over YTD name).
+
+    Skips grain companions such as ``dealer_sellout_long_ITUK_network_CY2025.csv`` —
+    those are resolved via ``sellout_network_companion_path``.
+    """
     code = str(distributor_code).strip().upper()
+    if "_" in code:
+        # Fake codes like ITUK_network must not resolve via this helper.
+        return None
     candidates = [
         derived_dir / f"dealer_sellout_long_{code}_CY{year}.csv",
         derived_dir / f"dealer_sellout_long_{code}_CY{year}YTD.csv",
@@ -158,14 +165,34 @@ def sellout_long_path(derived_dir: Path, distributor_code: str, year: int) -> Pa
     return None
 
 
+def sellout_network_companion_path(
+    derived_dir: Path, distributor_code: str, year: int
+) -> Path | None:
+    """Optional network-grain companion (does not replace dealer SSOT).
+
+    Example: ``dealer_sellout_long_ITUK_network_CY2025.csv`` (Duncan) sits beside
+    dealer SSOT ``dealer_sellout_long_ITUK_CY2025.csv``.
+    """
+    code = str(distributor_code).strip().upper()
+    p = derived_dir / f"dealer_sellout_long_{code}_network_CY{year}.csv"
+    return p if p.exists() else None
+
+
 def discover_sellout_long_dists(derived_dir: Path, year: int) -> list[str]:
-    """Distributor codes that have a normalized long file for the calendar year."""
+    """Distributor codes that have a normalized long file for the calendar year.
+
+    Ignores grain companions (``*_network_CY{year}.csv``) so they are not treated
+    as separate distributor codes.
+    """
     found: list[str] = []
     for p in sorted(derived_dir.glob(f"dealer_sellout_long_*_CY{year}.csv")):
         # dealer_sellout_long_IRELAND_CY2025.csv
         stem = p.stem  # dealer_sellout_long_IRELAND_CY2025
         mid = stem.removeprefix("dealer_sellout_long_").removesuffix(f"_CY{year}")
-        if mid and mid not in found:
+        # Skip companions: ITUK_network, …_dealer, etc.
+        if not mid or "_" in mid:
+            continue
+        if mid not in found:
             found.append(mid)
     return found
 
@@ -174,16 +201,31 @@ def load_sellout_long_pn(
     distributor_code: str,
     year: int,
     derived_dir: Path,
+    *,
+    path: Path | None = None,
 ) -> pd.DataFrame:
-    """Load canonical long sell-out → PN × qty_year (network aggregate)."""
-    path = sellout_long_path(derived_dir, distributor_code, year)
+    """Load canonical long sell-out → PN × qty_year (network aggregate).
+
+    Prefer year/ytd rollup rows when present so month + rollup are not double-counted.
+    Fall back to summing month rows if no rollup grain exists.
+    """
     if path is None:
+        path = sellout_long_path(derived_dir, distributor_code, year)
+    if path is None or not Path(path).exists():
         return pd.DataFrame(columns=["part_number", "qty_year"])
     df = pd.read_csv(path, dtype={"part_number": str}, low_memory=False)
     if df.empty or "part_number" not in df.columns or "qty" not in df.columns:
         return pd.DataFrame(columns=["part_number", "qty_year"])
     if "year" in df.columns:
         df = df[pd.to_numeric(df["year"], errors="coerce") == year]
+    if "period_grain" in df.columns:
+        grains = set(df["period_grain"].astype(str).str.lower())
+        if "year" in grains:
+            df = df[df["period_grain"].astype(str).str.lower() == "year"]
+        elif "ytd" in grains:
+            df = df[df["period_grain"].astype(str).str.lower() == "ytd"]
+        elif "month" in grains:
+            df = df[df["period_grain"].astype(str).str.lower() == "month"]
     df = df.copy()
     df["part_number"] = df["part_number"].map(normalize_pn)
     df["qty"] = pd.to_numeric(df["qty"], errors="coerce").fillna(0)
@@ -193,6 +235,30 @@ def load_sellout_long_pn(
         .sum()
         .rename(columns={"qty": "qty_year"})
     )
+
+
+def ituk_duncan_month_coverage(derived_dir: Path) -> dict[str, Any]:
+    """Month span from Duncan PN×month rollup (network grain; not dealer×month)."""
+    path = derived_dir / "dealer_sellout_ITUK_pn_month_2023_2026YTD.csv"
+    empty: dict[str, Any] = {
+        "path": str(path) if path.exists() else None,
+        "months_min": None,
+        "months_max": None,
+        "month_count": 0,
+        "months_2026": [],
+    }
+    if not path.exists():
+        return empty
+    df = pd.read_csv(path, usecols=["period"], low_memory=False)
+    periods = sorted({str(p) for p in df["period"].dropna().astype(str) if re.match(r"^\d{4}-\d{2}$", str(p))})
+    m2026 = [p for p in periods if p.startswith("2026-")]
+    return {
+        "path": str(path),
+        "months_min": periods[0] if periods else None,
+        "months_max": periods[-1] if periods else None,
+        "month_count": len(periods),
+        "months_2026": m2026,
+    }
 
 
 def load_all_uti_snapshots() -> list[tuple[pd.DataFrame, dict[str, Any]]]:

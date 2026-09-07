@@ -1,0 +1,48 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\IDS_2026_Country_Packs_v1.5\\France\\IDS_2026_dealer_compare_France.html",
+  "artifact_mtime_ms": 1788789246130,
+  "written_at": "2026-09-07T13:55:47.389Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\IDS_2026_Country_Packs_v1.5\\France\\IDS_2026_dealer_compare_France.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "461130 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN cmd present (OPEN_IDS_2026_France.cmd)"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "1 PNG(s) — agent must have image-Read before shipping"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\IDS_2026_Country_Packs_v1.5\\_qa\\fr_map.png"
+  ],
+  "notes": "v1.5 FR pack. OSM tiles. FR 64 of 84 in average. Coasts/cities + coloured pins. No MIDI 4. No CARTO."
+}

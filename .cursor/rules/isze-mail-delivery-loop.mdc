@@ -1,0 +1,39 @@
+---
+description: Outlook handoff loop — draft default; Send only on explicit ask; always prove Sent or Outbox stuck
+alwaysApply: true
+---
+
+# Mail delivery loop (always on)
+
+Closes the “Koen never got it” failure mode. Complements `isze-no-ship-without-ok.mdc` §1.
+
+## When it applies
+
+Any Outlook / email / draft / “send to Koen|Hadi|…” / “pop up the draft” / delivery proof ask.
+
+## Protocol
+
+| Jerome says (current message) | Agent does |
+|---|---|
+| draft / email / pop up / mail | Create **draft**, **Display**, log ledger `drafted` — **do not Send** |
+| **send** / **verstuur** (explicit) | Send **that** mail (or flush the named Outbox item he means), then **verify** |
+| “did it arrive / prove sent” | Read **Sent Items** + **Outbox** — truth only, no invented receipts |
+
+## Verify (mandatory before “done” / “sent” / “he has it”)
+
+1. **Outbox** — if matching subject/To still there → status **OUTBOX_STUCK** (not delivered). Tell Jerome; Display Outbox. Do not claim Sent.
+2. **Sent Items** — match To + subject (+ attachment names when relevant). Record **SentOn**.
+3. Update ledger under `09_meetings/_mail_delivery_ledger.jsonl` (or skill script).
+4. Chat: one proof table (SentOn / To / Subject / att count) or clear **NOT SENT / STUCK**.
+
+## Scope discipline
+
+- Attach only the DBs he named this turn (Sweden+Loutsios ≠ Sweden+DK+FI).
+- Prefer Mode A `_ModeA_only.pptx` for Koen packs unless he asks full.
+- Wrong leftover drafts/Outbox copies with extra DBs: do not Send them; delete or leave and say so.
+
+## Forbidden claims
+
+- “Draft ready” as if delivered
+- “Sent” without Sent Items evidence
+- Send without explicit **send**/**verstuur** in the **current** message

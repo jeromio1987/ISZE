@@ -4,7 +4,7 @@
 
 ## What you do (operator)
 
-1. **Keep the Cursor rule on.** User rule: `C:\Users\jerom\.cursor\rules\isze-commercial-criticism.mdc` (alwaysApply). Project mirror: `C:\Users\jerom\Desktop\claude\.cursor\rules\commercial-sanity-check.mdc`.
+1. **Keep the Cursor rule on** in the ISZE workspace: `ISZE/.cursor/rules/isze-commercial-criticism.mdc` (alwaysApply there). Do not put this in `~\.cursor\rules` — Alps chats must not load 20k LCV.
 2. **Point agents at the portal map** when fleet / “vehicle” KPIs look tiny:  
    `C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\_COUNTRY_TENDER_PORTALS_MAP.md`
 3. **Refuse vanity.** If a draft celebrates a small extract number without three-layer honesty + coverage caveats, send it back — do not “fix the label” only in chat.

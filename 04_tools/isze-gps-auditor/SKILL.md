@@ -158,25 +158,66 @@ Always state: "Credit notes treated as [positive deduction / sign-corrected nega
 Before any trend analysis, verify that the same item types appear (or are excluded)
 consistently across all years in the dataset.
 
-**Known inconsistency (discovered June 2026):**
-- CY2023 parquet: Transport €299K, Lubricants €275K, CR €115K — **PRESENT**
-- CY2024 parquet: Transport €362K, Lubricants €577K, CR €493K — **PRESENT**
-- CY2025 parquet: Transport €0, Lubricants €0, CR €0 — **ABSENT**
+**STATUS — the CY2023/24-vs-CY2025 asymmetry is RESOLVED. Do NOT apply the old caveat.**
 
-This means the `sales_fact.parquet` pipeline cleaned 2025 data but NOT 2023-2024.
-CY2024 gross billing is overstated by ~**€1.4M** vs CY2025. Any GPS trend showing
-"GPS% fell from 2024 to 2025" must be read with this in mind — the drop is partly
-a data artifact, not real performance decline.
+`sales_fact.parquet` was rebuilt (file timestamp 2026-08-26 17:57) and now carries
+transport, Shell lubricants and CR/RE lines in **all four years**. The parquet is a
+**gross** extract on a consistent basis across CY2023–CY2026: exclusions are the
+analyst's job and must be applied **symmetrically to every year**.
 
-**Check to run:**
+Verified totals — source `C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\sales_fact.parquet`,
+column `net_sales_value`, measured 2026-08-27:
+
+| Item | CY2023 | CY2024 | CY2025 | CY2026 (Jan–Jun only) |
+|---|---|---|---|---|
+| Gross billing | €30,422,372 | €34,699,409 | €33,707,574 | €18,706,834 |
+| Transport | €299,081 | €362,489 | €343,187 | €197,071 |
+| Lubricants (`55004*`/`55007*`) | €274,694 | €577,281 | €524,096 | €194,285 |
+| CR + RE (SaTy) | €116,240 | €523,429 | €509,348 | €502,132 |
+| Rebates | €76,788 | €431,304 | €465,000 | €430,030 |
+| Late payment interest | €111,681 | €266,765 | €44,454 | €0 |
+| Service fees | €0 | €0 | €0 | €205,355 |
+| Demurrage | €0 | €0 | €0 | €360 |
+
+CY2026 is a **part year** (2026-01-05 → 2026-06-30). Never place it beside a full year
+without annualising explicitly and saying that you did.
+
+**Superseded — do NOT reuse (kept only so older decks can be traced):**
+> ~~CY2023 Transport €299K / Lubricants €275K / CR €115K PRESENT — CY2024 Transport €362K /
+> Lubricants €577K / CR €493K PRESENT — CY2025 Transport €0 / Lubricants €0 / CR €0 ABSENT.
+> "CY2024 gross billing is overstated by ~€1.4M vs CY2025."~~
+
+That statement was true of the **June 2026** parquet only. It is false against the current
+file. Carrying it into a multi-year GPS trend today bends the trend the **opposite** way —
+it deflates CY2024 against a CY2025 that now sits on the same gross basis. Outputs produced
+in June/July 2026 carrying the caveat were correct at the time; do not retro-fit it onto new
+work, and do not "re-correct" those older outputs without re-running them on this parquet.
+
+**Check to run — re-verify every time. Never trust the table above without re-measuring:**
 ```python
-for year in years_in_dataset:
-    transport_pct = rows_with_TRANSPORT / total_rows
-    lubricant_pct = rows_with_550xxx / total_rows
-    cr_pct = rows_with_CR_saty / total_rows
-    print(f"{year}: transport={transport_pct:.2%}, lubes={lubricant_pct:.2%}, CR={cr_pct:.2%}")
+import pandas as pd
+df = pd.read_parquet(r"C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\sales_fact.parquet")
+pn = df["part_number"].astype(str).str.upper()
+gross = df.groupby("year")["net_sales_value"].sum()
+print(df.groupby("year")["billing_date"].agg(["min", "max"]))   # confirm which years are full
+for name, mask in [
+    ("transport", pn.str.contains("TRANSPORT")),
+    ("lubes",     pn.str.match(r"^(55004|55007)")),
+    ("cr_re",     df["saty"].astype(str).str.upper().isin(["CR", "RE"])),
+]:
+    share = df[mask].groupby("year")["net_sales_value"].sum() / gross
+    print(name, (share * 100).round(2).to_dict())
+print("null saty by year:", df["saty"].isna().groupby(df["year"]).sum().to_dict())
 ```
-If these percentages vary significantly across years → data is NOT comparable → flag before any trend statement.
+Compare **share of gross**, not absolute EUR — absolutes move with volume. If a category's
+share swings materially between years, the extract is NOT comparable → flag before any
+trend statement.
+
+**OPEN ISSUE — SaTy is null for Q1 FY2027 (Apr–Jun 2026).**
+36,532 lines worth €8,719,233, all dated 2026-04-01 → 2026-06-30, carry `saty = null`
+in the current parquet. CHECK 2 and CR/RE identification are **blind** in that window.
+Do not quote a CR/RE or SaTy-mix figure for Apr–Jun 2026 from the parquet — go back to the
+raw SAP extract, and say so in chat before computing anything that spans that quarter.
 
 ---
 
@@ -260,12 +301,18 @@ Document confirmed data issues here as they are discovered:
 
 | Issue | Discovered | Datasets affected | Status |
 |---|---|---|---|
-| Transport in parquet CY2023/24 | Jun 2026 | sales_fact.parquet | Parquet pipeline fix needed |
-| Shell Rimula in parquet CY2023/24 | Jun 2026 | sales_fact.parquet | Parquet pipeline fix needed |
-| CY2025 parquet excludes above items, CY2023/24 does not | Jun 2026 | sales_fact.parquet | Confirms inconsistency |
+| CY2025 parquet excluded transport/lubes/CR while CY2023-24 did not — "CY2024 overstated ~€1.4M" | Jun 2026 | sales_fact.parquet | **CLOSED 2026-08-27.** Parquet rebuilt 2026-08-26; all four years now carry the items on a gross basis. Caveat must NOT be applied to current data. |
+| Transport in parquet CY2023/24 | Jun 2026 | sales_fact.parquet | **Superseded** — transport is present in all years by design; exclude per CHECK 1, symmetrically |
+| Shell Rimula in parquet CY2023/24 | Jun 2026 | sales_fact.parquet | **Superseded** — lubricants present in all years by design; exclude per CHECK 1, symmetrically |
+| `saty` is null for every Apr–Jun 2026 line (36,532 rows / €8,719,233) | Aug 2026 | sales_fact.parquet | **OPEN** — SaTy/CR/RE unusable for Q1 FY2027; use the raw SAP extract for that window |
 | UMI/UTI billing merge in sold_to field | Jun 2026 | sales_fact.parquet, raw extracts | Use ship-to level for Israel |
-| CR saty appears as positive | Jun 2026 | All raw SAP extracts | Always sign-correct |
+| CR saty appears as positive | Jun 2026 | All raw SAP extracts, sales_fact.parquet | **Still true** — re-confirmed 2026-08-27: every CR/RE line in the parquet is positive. Always sign-correct |
 | G2 rebates concentrated in Q1 FY (Apr) | Jun 2026 | All raw SAP extracts | Adjust in annual GPS calc |
+
+**Maintenance rule.** Every row above is a snapshot of a file that gets rebuilt. Re-run a
+row's check against the current parquet before citing it. A closed issue quoted as still
+open does exactly as much damage as an open issue that is missed — it just bends the trend
+the other way. When a row is closed, date the closure and keep the original wording visible.
 
 ---
 
@@ -285,13 +332,23 @@ When computing or reviewing any GPS figure:
    At scale, these are 1.5-3% of their annual billing. Ignoring them systematically
    overstates their GPS%.
 
-4. **Shell lubricants to Israel are growing** (€275K in CY2023 → €577K in CY2024 →
-   €634K annualised in FY2026). If the lubricants project proceeds, this line will
-   scale significantly and MUST be tracked separately from vehicle parts GPS — mixing
-   them poisons the GPS metric and cannot be compared to competitor benchmarks or
+4. **Shell lubricants to Israel — quote measured figures, never an annualisation.**
+   Verified against the current parquet on 2026-08-27:
+   CY2023 €274,694 → CY2024 €577,281 → CY2025 €524,096 → CY2026 Jan–Jun €194,285.
+   On fiscal years (Apr–Mar): FY2024 €406,982 → FY2025 €592,146 → FY2026 €535,652 →
+   FY2027 Q1 (Apr–Jun 2026) €35,576.
+   The line **peaked in CY2024 / FY2025 and has eased since** — it is not on a straight
+   growth path. The earlier "€634K annualised in FY2026" was a Q1 extrapolation; FY2026
+   actually closed at €535,652. Do not annualise a quarter into a headline figure.
+   Whatever the trajectory, lubricants MUST be tracked separately from vehicle parts GPS —
+   mixing them poisons the metric and breaks comparability with competitor benchmarks and
    Eucon data.
 
-5. **The parquet pipeline needs fixing.** Until it consistently applies exclusions
-   across all years, use raw SAP extracts (cleaned manually) as the source of truth
-   for any multi-year GPS trend analysis. Do not present trend charts from the parquet
-   without this caveat.
+5. **The parquet is gross, not pre-cleaned — apply exclusions yourself, symmetrically.**
+   Since the 2026-08-26 rebuild, `sales_fact.parquet` is consistent across CY2023–CY2026:
+   transport, lubricants, rebates, CR/RE and interest appear in every year. It is therefore
+   usable for multi-year GPS trend work **provided the CHECK 1 + CHECK 2 exclusions are
+   applied to all years alike**. Never exclude an item from one year and not another.
+   Two live limits: `saty` is null for Apr–Jun 2026 (use the raw SAP extract for that
+   window), and sold-to party for the Israel UMI/UTI split is not in the parquet (CHECK 5).
+   Re-run the CHECK 4 script after every refresh — the basis has already changed once.

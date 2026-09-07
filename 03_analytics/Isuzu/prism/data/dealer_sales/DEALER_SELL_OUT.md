@@ -102,7 +102,8 @@ Every DB export is different (ITUK dealer pivot, UTI PartSales, Petros monthly q
 
 | DB | Typical file | Grain | Periods | Special |
 |----|--------------|-------|---------|---------|
-| **ITUK** | `Sales to Dealers_ITUK_CY{year}.xlsx` | dealer × PN | month names | Dealer dimension |
+| **ITUK** | `Sales to Dealers_ITUK_CY{year}.xlsx` | dealer × PN | month names | Dealer dimension — **SSOT for AIM/GPS dealer grain** |
+| **ITUK (Duncan)** | `ITUK_Dealer_Purchases_by_PN_2023_2026YTD_Aug.xlsx` | network PN | 2023-01…2026-08 | Companion only (`*_network_CY2025.csv` + CY2023/24/26YTD). Never replaces dealer SSOT. |
 | **IUK** | `IUK_Monthly_Demand_*_July.xlsx` | network PN | JAN…DEC + Total | LCV D-Max; ≠ ITUK; **qty-only by design** (no € from IUK — UK value = ITUK only); 2026 may be YTD (`partial_year`) |
 | **UTI** | `UTIPartSales_{year}-{mm}.xlsx` / `*_YTD.xlsx` | network PN | month + YTD cols | No dealer |
 | **GREECE (Petros)** | `Petros_Parts_Sold_Qties_{year}.xlsx` | network PN | `YYYY-Mon` cols + `SUM` | D-MAX scope; **`pn_newest_rollup`** |

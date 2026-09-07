@@ -1,23 +1,33 @@
 ---
-description: Use before saying an HTML pack, dealer map, dashboard, chart or deck slide is "done" or "fixed" — verify the rendered artifact actually paints and actually contains its data rows (dealers, series, pins), not just that a file was written.
+description: Paint-check procedure for HTML packs — use with verify-before-done receipt (harness enforces stop)
 alwaysApply: false
+globs:
+  - "**/02_dashboards/**/*.html"
+  - "**/09_meetings/**/*.html"
+  - "**/*dashboard*.html"
 ---
 
 # Verify rendered output before claiming done
 
-"The file was produced" is **not** completion. Jerome opens the artifact — a blank map, an empty dealer list, or a doubled chart line is a failed delivery, and re-reporting it as done is the failure he calls out.
+Enforcement is mechanical via user stop hooks + `SHIP_RECEIPT.json` — see:
 
-Related gates (do not duplicate): tiles / geo clustering / Mode A UI → `isze-ids-delivery.mdc`; `file://` fetch + launcher → `isze-html-openable.mdc`; rebuild order → `isze-db-sales-review.mdc`.
+- User rule `verify-before-done.mdc`
+- Skill `C:\Users\jerom\Desktop\claude\.cursor\skills\verify-before-done\`
+- `ISZE\00_docs\agent\AGENT_HARNESS.md`
 
-## Procedure — run before writing "done" / "fixed"
+"The file was produced" is **not** completion. Jerome opens the artifact — a blank map, an empty dealer list, or a doubled chart line is a failed delivery.
 
-1. **Open the rendered artifact**, not the source. HTML → run its `OPEN_*.cmd` (or open the file) and look at the painted page. PPTX slide → open the deck at that slide. Never verify only by reading the builder script or checking the file exists.
-2. **Map / geo:** confirm the basemap and the pins actually paint. A blank white area, an outline box with no tiles, or zero pins = **not done**. Fix, re-open, look again.
-3. **Data rows:** count them in the *output*, not in the source dataframe. Grep the built HTML for the row markers (e.g. dealer name cells) or read the embedded `<script type="application/json">` payload and check `len(rows) > 0` and that the count matches the expected network size. An empty or truncated dealer list ships as "looks fine" — catch it here.
-4. **Charts:** one visible series per intended series. Check for duplicate/overlapping lines (same series added twice), doubled legend entries, and labels that collide. If two lines sit on top of each other, the fix is not finished.
-5. **Re-check the exact item he flagged.** If the report was "slide 13 double lines" or "no dealers in the HTML", verify *that* slide / *that* list specifically before replying — not the pipeline around it.
-6. **Report what you saw.** State the observed evidence: "opened the pack — map tiles paint, 47 dealer rows, slide 13 shows one line per DB". If you could not open or render it, say so explicitly and say what is unverified — never substitute "the build succeeded" for "it renders".
+Related gates (do not duplicate): tiles / geo → `isze-ids-delivery.mdc`; launcher → `isze-html-openable.mdc`; ISZE ship scripts → `isze-ship-gate.mdc`.
+
+## Procedure — before writing done / fixed
+
+1. **Open the rendered artifact via QA-internal path** (headless screenshot / image Read), not only the source. Never verify only by checking the file exists.
+2. **Map / geo:** basemap + pins paint. Blank white / zero pins / “API KEY REQUIRED” / pin-only grid when he asked for streets = not done.
+3. **Data rows:** count in the *output* (grep HTML or embedded JSON). Empty truncated list = fail.
+4. **Charts:** one visible series per intended series; no duplicate overlapping lines; labels must not collide. “A chart is visible” is not pass — Image-Read the PNG.
+5. **Re-check the exact item he flagged.**
+6. **Write receipt** with `write_receipt.mjs` + screenshot paths; cite receipt in chat. Receipt `ok: true` without Image-Read of those PNGs is a fail (7 Sep Alps lesson).
 
 ## Repeat-failure rule
 
-If Jerome has already flagged the same artifact once, do **not** reply until steps 1–5 pass. "is it fixed?" asked twice on the same artifact means the previous verification did not happen.
+If Jerome has already flagged the same artifact once, do **not** reply until steps above pass and receipt is green.

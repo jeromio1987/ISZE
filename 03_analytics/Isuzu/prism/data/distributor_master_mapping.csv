@@ -15,7 +15,7 @@ POLAND,ISUZU BENELUX NV,Poland,CEE,Yes,Yes,POLAND,Under Benelux entity
 DENMARK,ISUZU DANMARK A/S,Denmark,Nordics,Yes,No,DENMARK,LCV only
 IRELAND,Isuzu Ireland,Ireland,UK/IE,Yes,Yes,IRELAND,CV + LCV
 GERMANY_SERVICE,Isuzu Motors Germany GmbH,Germany,DACH,No,No,GERMANY,Exclude - service dept only
-GERMANY,ISUZU SALES DEUTSCHLAND GMBH,Germany,DACH,Yes,No,GERMANY,Mainly LCV
+GERMANY,ISUZU SALES DEUTSCHLAND GMBH,Germany,DACH,Yes,Yes,GERMANY,Mixed LCV+CV - UIO has LD+MD; was stale segment_cv=No
 SWEDEN,ISUZU SVERIGE AB,Sweden,Nordics,Yes,No,SWEDEN,LCV only
 PALESTINE,KIMA LATEJARET AL MARKABAT CO,Palestine,MENA,Yes,No,PALESTINE,LCV only
 UKRAINE,KOMTRANSKOMPLEKT LLC,Ukraine,CIS,No,Yes,UKRAINE,Mainly CV
@@ -24,5 +24,7 @@ MIDI,MIDI EUROPE S.R.L.,Multi-country,Med,Yes,Yes,ITALY,EXCLUDE - no ISZE sales 
 FINLAND,Nordic Automotive trading oy.,Finland,Nordics,Yes,No,FINLAND,LCV only
 GREECE,PETROS PETROPOULOS S.A.,Greece,Med,Yes,Yes,GREECE,LCV & CV
 NORWAY,RUTEBILEIERNES STANDARDISERING AS,Norway,Nordics,Yes,No,NORWAY,LCV only
+ROMANIA,ISUZU ROM AUTO SRL,Romania,CEE,Yes,No,ROMANIA,LCV GPS scope - sap 396; was missing from master (only in EXTRA_DISTRIBUTORS)
 UTI,UNIVERSAL TRUCKS ISRAEL LTD,Israel,MENA,No,Yes,ISRAEL,CV only - sap 1799
 UMI,UNIVERSAL MOTORS ISRAEL LTD,Israel,MENA,Yes,No,ISRAEL,LCV only - sap 1797
+NON_PARTS,Non-parts billing (service / demurrage / e-credit),n/a,n/a,No,No,,EXCLUDE - service fee demurrage compensation; not a distributor

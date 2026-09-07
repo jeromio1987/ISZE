@@ -1,20 +1,16 @@
-⚠ GENERATED 2026-08-23 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
+⚠ GENERATED 2026-08-30 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
 
 # No diff this run.
 #
-# The 2026-08-09 diff in this file (Israel "undefined entity" fallback) was
-# applied interactively on 2026-08-11 — see applied_patches_log.md — and is
-# confirmed present in the current tender_scraper_v3.py. That old diff has
-# been removed from this file so it doesn't get mistaken for an outstanding
-# proposal.
-#
 # All five allowlisted competitive scrapers (KS, Tranzparts, TMC, Mekonomen,
-# Auto365) refreshed cleanly on 2026-08-17 with 0 errors and no drift — no
-# fix needed, nothing to propose.
+# Auto365) refreshed cleanly on 2026-08-24 with 0 errors and no drift, and
+# all five still py_compile clean as of 2026-08-30 — no fix needed, nothing
+# to propose. Unchanged from the 2026-08-23 run.
 #
-# One real issue remains open on the Israel tender feed (a second, different
-# XML malformation surfaced after the Aug 11 fix — "mismatched tag" instead
-# of "undefined entity"). No diff is proposed for it because this job has no
-# web access to see the actual malformed feed content, and guessing at the
-# fix risks corrupting/dropping entries. See manual_review_required.md Item 1
-# for the full diagnosis and evidence.
+# Two real issues remain open on tender_scraper_v3.py (Israel "mismatched
+# tag" XML defect, Belgium RSS endpoints returning non-XML) — no diff is
+# proposed for either because this job has no web access to see the actual
+# live feed content, and guessing at a fix risks corrupting/dropping
+# entries. See manual_review_required.md for the full diagnosis and
+# evidence on both. Same status as the last three reports (2026-08-09
+# through 2026-08-23) — no new information this cycle.

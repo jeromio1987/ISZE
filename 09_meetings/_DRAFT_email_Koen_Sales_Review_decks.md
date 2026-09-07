@@ -1,35 +1,11 @@
-# DRAFT — do not send until Jerome finishes / corrects
+# Koen Denmark / Finland — SENT proof
 
-**To:** Koen Matheussen `<koen.matheussen@isuzu-e.com>`  
-**Subject:** Sales Review decks — BL / Romania / RSA (Norway) / GasanZammit (Malta)
-
----
-
-Hi Koen,
-
-Please find attached the Sales Review & FY2027 Target decks (Mode A) for:
-
-- BL (Iceland)
-- Romania
-- RSA / Norway (Rutebileiernes)
-- GasanZammit (Malta)
-
-Working drafts for the upcoming reviews — happy to adjust wording or figures before anything goes out to the markets.
-
-Best regards,  
-Jerome
-
----
-
-## Attachments (Mode A only)
-
-All under `C:\Users\jerom\Desktop\claude\ISZE\09_meetings\`:
-
-| DB | File |
+**SENT (proof):**
+| Field | Value |
 |---|---|
-| ICELAND (BL) | `ICELAND_Sales_Review_2026\ISZE_ICELAND_Sales_Review_FY2027_ModeA_only.pptx` |
-| ROMANIA | `ROMANIA_Sales_Review_2026\ISZE_ROMANIA_Sales_Review_FY2027_ModeA_only.pptx` |
-| NORWAY (RSA) | `NORWAY_Sales_Review_2026\ISZE_NORWAY_Sales_Review_FY2027_ModeA_only.pptx` |
-| MALTA (GasanZammit) | `MALTA_Sales_Review_2026\ISZE_MALTA_Sales_Review_FY2027_ModeA_only.pptx` |
+| **SentOn** | **2026-09-03 10:37:20** |
+| **To** | Koen Matheussen |
+| **Subject** | Sales Review decks - Denmark / Finland |
+| **Attachments** | `ISZE_DENMARK_Sales_Review_FY2027_ModeA_only.pptx` · `ISZE_FINLAND_Sales_Review_FY2027_ModeA_only.pptx` |
 
-~1.1 MB total.
+**Backup folder:** `C:\Users\jerom\Desktop\claude\ISZE\09_meetings\_KOEN_SEND_NOW_Denmark_Finland\`

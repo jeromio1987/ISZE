@@ -56,7 +56,14 @@ $Findings = [System.Collections.Generic.List[object]]::new()
     LOW    cosmetic or bookkeeping
 #>
 function Add-Finding([string]$Severity, [string]$Area, [string]$What, [string]$Ask) {
-  $Findings.Add([pscustomobject]@{ severity = $Severity; area = $Area; what = $What; ask = $Ask })
+  $needsJerome = ($Severity -eq 'HIGH')
+  $Findings.Add([pscustomobject]@{
+    severity = $Severity
+    area = $Area
+    what = $What
+    ask = $Ask
+    needsJerome = $needsJerome
+  })
 }
 
 <#
@@ -324,17 +331,29 @@ if ($auditMatch.Success) {
 }
 
 # --- Check 7: the register's own open items --------------------------------
-# Already known and already waiting on Jerome, so they belong in the same list
-# instead of in a document he has to remember to open.
+# Closed / archived / resolved rows are NOT waiting on Jerome (same class as
+# Nordics keys). Path-map tables of old XLSX/HTML must not land on his list.
 $openMatch = [regex]::Match($RegisterText, '(?s)##\s*Open items \(Jerome\).*?(?=\r?\n---)')
 if ($openMatch.Success) {
+  $closedPat = 'CLOSED|RESOLVED|ARCHIVED|DONE|SKIP'
+  $archivePat = '_archive|90_archive|_ARCHIVE'
   foreach ($row in ($openMatch.Value -split "`n")) {
     if ($row -notmatch '^\|\s*`') { continue }
+    if ($row -match 'Watched file|Live path') { continue }
     $cells = ($row.Trim('|', ' ') -split '\s*\|\s*')
     if ($cells.Count -lt 2) { continue }
-    Add-Finding 'MEDIUM' 'open-item' `
-      ("{0}: {1}" -f $cells[0].Trim('`', ' '), $cells[1].Trim()) `
-      ("Carried over from the register's own open-items table.")
+    $status = if ($cells.Count -ge 3) { $cells[-1] } else { '' }
+    if ($status -match $closedPat) { continue }
+    if ($row -match $archivePat) { continue }
+    $name = $cells[0].Trim('`', ' ')
+    if ($name -match '\.(xlsx|html|txt)$') { continue }
+    $Findings.Add([pscustomobject]@{
+      severity = 'MEDIUM'
+      area = 'open-item'
+      what = ("{0}: {1}" -f $cells[0].Trim('`', ' '), $cells[1].Trim())
+      ask = 'Still an open human gate in the register — not an archive leftover.'
+      needsJerome = $true
+    })
   }
 }
 
@@ -359,15 +378,27 @@ $lines.Add('')
 if ($sorted.Count -eq 0) {
   $lines.Add('No drift found. Register, scheduler and FACTS agree.')
 } else {
-  $lines.Add('## Waiting on Jerome')
+  $lines.Add('## Findings')
   $lines.Add('')
   $i = 1
   foreach ($f in $sorted) {
     $lines.Add(("{0}. **[{1}]** ({2}) {3}" -f $i, $f.severity, $f.area, $f.what))
-    # Continuation must reach the list item's content column, which widens once
-    # the numbering hits double digits, or the sub-bullet renders as a sibling.
     $lines.Add((' ' * ("$i. ").Length) + ("- {0}" -f $f.ask))
     $i++
+  }
+  $human = @($sorted | Where-Object { $_.needsJerome })
+  $lines.Add('')
+  $lines.Add('## Waiting on Jerome')
+  $lines.Add('')
+  if ($human.Count -eq 0) {
+    $lines.Add('None. Archive paths, superseded skill folders, and overlapping long jobs are not a human gate.')
+  } else {
+    $j = 1
+    foreach ($f in $human) {
+      $lines.Add(("{0}. **[{1}]** ({2}) {3}" -f $j, $f.severity, $f.area, $f.what))
+      $lines.Add((' ' * ("$j. ").Length) + ("- {0}" -f $f.ask))
+      $j++
+    }
   }
 }
 

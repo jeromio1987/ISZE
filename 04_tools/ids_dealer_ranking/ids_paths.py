@@ -12,7 +12,9 @@ if str(_WORKSPACE) not in sys.path:
 from isze_paths import INBOX_DIR, ISZE_ROOT  # noqa: E402
 
 REPO = ISZE_ROOT
-DATA_ROOT = INBOX_DIR / "IDS_2026"
+# Canonical home after 2026-08-25 INBOX sort (DATA_MANIFEST). Unsorted drops still work.
+_SORTED_IDS = ISZE_ROOT / "01_data" / "08_Distributor" / "IDS_2026"
+DATA_ROOT = _SORTED_IDS if _SORTED_IDS.is_dir() else (INBOX_DIR / "IDS_2026")
 RANKINGS_DIR = DATA_ROOT / "rankings"
 IDS_REPORTS_DIR = DATA_ROOT / "reports"
 IDS_RESULT_REPORTS_DIR = IDS_REPORTS_DIR / "evaluation_result"

@@ -57,18 +57,19 @@ python build_ids_dashboard.py
 
 ---
 
-## 0. MIDI — Tomoe Baumann average rule (NEVER FORGET)
+## 0. Average rule — every country the same (Jerome 2026-09-07)
 
-**On behalf of Tomoe Baumann (IMG).** Logged 2026-08-10 from her **2026-07-31 08:58** mail. Full Mode B changelog: [`CHANGELOG.md`](CHANGELOG.md) in this folder.
+**Locked:** blank / zero / did-not-answer dealers are **out of averages** in **every** market. They stay on the **list and map**.
 
-**Exact rule:** *“red marked DLRs in the ranking list are to be excluded for the average calculation. For Italy and Switzerland, all DLRs are to be included.”*
+Tomoe (2026-07-31): France/Spain red-marked out of averages; original mail said Italy/Switzerland all-in. **Jerome 2026-09-07:** treat all countries the same as Switzerland (zeros out). Italy is no longer all-in.
 
 | Market | Action on rebuild |
 |--------|-------------------|
-| **FR + ES** | Exclude her **red-marked** dealers (zeros + very low / “not completed”) from **averages** only — expect **FR=20 / ES=5** `excluded_from_average_count` |
-| **IT + CH** | Include **all** dealers in averages — **including zero-score shells** (`excluded_from_average_count` = **0**). Do **not** apply zero-shell hygiene to IT/CH. |
+| **Every country** | Blank or zero-score dealers **out of averages**; still on list/map |
+| **FR + ES** | Also exclude Tomoe’s **red-marked** names (zeros + very low / “not completed”) — expect **FR=20 / ES=5** |
+| **IT + CH** | Same hygiene as everyone else. Switzerland: 6 zeros out (16 of 22). Italy zeros out (no longer 41 all-in). |
 
-**Scope:** her words = **averages only** (not automatic drop from dealer list/HTML). **v1.4** (rebuild+ship OK from Jerome): FR/ES reds out of averages; IT/CH all in; list/map keep everyone.
+**Scope:** averages only — not drop from dealer list / HTML. Country packs stay **v1.4** (frozen). Full-network compare is **v1.5**.
 
 **Sources:** `01_data/90_INBOX/tomoe_ids_mail_pull/20260731_0858_France_dealer_ranking.xlsx`, `…Spain_dealer_ranking.xlsx`, body `…_MIDI_exclude_mail_body.txt`, list `…_red_marked_dealers.json` (FR 20 / ES 5).
 

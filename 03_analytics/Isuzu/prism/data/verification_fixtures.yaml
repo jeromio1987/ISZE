@@ -7,8 +7,9 @@
 # CY_FILE_YEARS for the year-ownership rule that avoids double-counting 2024.
 # 2026-08-25: Q1FY2027.XLSX (Apr–Jun 2026) wired; 477,505 -> 514,037 rows.
 # Q1FY2027 extract has no SaTy column → overall SaTy coverage ~92.9%.
+# 2026-09-06: CY2025till31082026.XLSX owns 2025+2026 through Aug → 514,037 -> 538,347.
 sales_fact:
-  row_count: 514037
+  row_count: 538347
   row_tolerance_pct: 0.5
   years: [2023, 2024, 2025, 2026]
   max_unmapped_pct: 1.0

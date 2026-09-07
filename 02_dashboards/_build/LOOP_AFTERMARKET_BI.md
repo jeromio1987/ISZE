@@ -1,5 +1,9 @@
 # Aftermarket BI Command Center — watchdog loop
 
+## What it is
+
+Overnight **maintenance**, not a chat rebuild. SPAR (`rebuild` / `ship` in the current message) binds Cursor agents. This script may rebuild Command Center HTML when verify fails. Do not stop it because SPAR is on. Do not treat a tick as permission to add a new dashboard file.
+
 ## What it does
 
 Every **10 minutes** (and **immediately on start**) the loop:

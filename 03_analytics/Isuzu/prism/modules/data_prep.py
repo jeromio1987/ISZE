@@ -93,11 +93,12 @@ EXCLUDED_CODES = {
     "NETHERLANDS",      # UIO ≈ 1, covered under BELGIUM entity sales
     "LUXEMBOURG",       # UIO = 0
     "TURKEY",           # Not an ISZE customer — exclude from all analysis
+    "NON_PARTS",        # Service / demurrage / e-credit sold-tos (146, 373, 2970, 2987)
 }
 
-# Distributors not in master CSV — metadata added here
+# Distributors not in master CSV — metadata added here (skip if already in CSV)
 EXTRA_DISTRIBUTORS = {
-    "ROMANIA":  {"country": "Romania",  "region": "CEE",  "cv_lcv_scope": "TOTAL"},
+    # ROMANIA promoted into distributor_master_mapping.csv (integrity clean 2026-09-03)
 }
 
 # ─── V13 dist label → distributor_code ───────────────────────────────────────
@@ -143,7 +144,10 @@ def load_distributor_mapping(filepath: str) -> pd.DataFrame:
     df.columns = [c.strip() for c in df.columns]
 
     extras = []
+    existing_codes = set(df["distributor_code"].dropna().astype(str).tolist())
     for code, meta in EXTRA_DISTRIBUTORS.items():
+        if code in existing_codes:
+            continue
         extras.append({"distributor_code": code, "legal_entity": code, **meta,
                         "notes": "Added from sales data"})
     if extras:

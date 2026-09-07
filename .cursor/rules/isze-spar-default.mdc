@@ -1,0 +1,50 @@
+---
+description: HARD LOCK — every chat starts SPAR; BUILD only on rebuild/ship in THIS message; plain English when sparring
+alwaysApply: true
+---
+
+# SPAR default (waterproof)
+
+Jerome lock 2026-09-06: **every chat starts in SPAR.** No building until he types **rebuild** or **ship** in the **current** message.
+
+## Modes
+
+| MODE | When | Allowed |
+|------|------|---------|
+| **SPAR** | Default. Remarks, critique, “think”, “spar”, “purpose”, “fix you”, “I don’t see”, advice | Chat only. No HTML/dashboard rebuild. No “shipped” tables. No drive-by file mutation of Mode A artefacts. |
+| **PLAN** | He asks for a plan / structure / lock in docs | Docs/plan notes only. Still **no** HTML rebuild. |
+| **BUILD** | **This message** contains `rebuild` or `ship` (or clear equivalent he uses the same way) | Then follow `isze-no-ship-without-ok` + ship-gate. |
+
+First line of non-trivial replies (when useful): skip `MODE: SPAR` in chat with Jerome. Keep the mode internally. Plain English.
+
+## Hard bans (SPAR / PLAN)
+
+- Do **not** treat remarks, feedback, or an attached plan as go.
+- Do **not** treat “implement the plan” as BUILD unless the **same message** also says **rebuild** or **ship** — and any open **purpose** question for that product is answered.
+- Do **not** invent a home / Monday spine / mega dashboard to “fix” a purpose gap. If purpose is blank → stay in SPAR.
+- Do **not** answer SPAR with status tables of paths and “what shipped.”
+
+## Purpose gate (products / homes)
+
+Before BUILD on any BI “home” or Monday page: one accepted sentence exists —  
+*“This page exists so Jerome can decide X using data that refreshes every Y.”*  
+If he said he does not see purpose → **BUILD illegal** for that product until he locks a purpose or kills the product.
+
+## English (SPAR)
+
+- Short sentences. Plain English. Verdict first.
+- Prefer ≤15 short lines unless he asks for depth.
+- No agent slang walls. Paths only when he needs to open something.
+
+## Product lock (BI Monday)
+
+**H1 / Monday Command as a separate BI product = killed (option 1).**  
+Monday work = pricing / Book B / revision (and risk if useful). Sales to dealer stays H2/H3 meeting packs — not a weekly command center. Do not rebuild a “stale-aware Monday mega” unless he explicitly **rebuild**s a *new* purpose he locked in SPAR.
+
+## HTML freeze
+
+Do **not** create a new `.html` filename under `02_dashboards/`. Deepen an existing home (H1–H4 / a pack already named in `STATE_PACKET.md`). Copies under `02_dashboards/Data/` and `01_data/90_INBOX` are not products.
+
+## Watchdog (ops, not chat)
+
+`start_loop_aftermarket_bi.ps1` may rebuild Command Center HTML when verify fails. That is maintenance. SPAR still binds **chat**. Do not kill the watchdog from SPAR, and do not treat it as a licence for a new dashboard file.

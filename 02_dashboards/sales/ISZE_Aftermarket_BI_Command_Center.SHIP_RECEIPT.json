@@ -1,0 +1,53 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_Aftermarket_BI_Command_Center.html",
+  "artifact_mtime_ms": 1788763236397,
+  "written_at": "2026-09-07T06:55:42.490Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_Aftermarket_BI_Command_Center.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "484581 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN cmd present (OPEN_Aftermarket_BI_Command_Center.cmd, OPEN_DB_DLR_Replenishment.cmd, OPEN_Dealer_Sellout_AIM_GPS.cmd)"
+    },
+    {
+      "id": "ship_gate",
+      "ok": true,
+      "detail": "ship_gate_check.ps1 exit 0"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "1 PNG(s) — agent must have image-Read before shipping"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa\\cc\\page-001.png"
+  ],
+  "notes": "H4 V2 tab claim-gated: V19, IUK 44926, 37 seed PNs. Pricing tab default paint OK. SHIP_GATE_OK."
+}

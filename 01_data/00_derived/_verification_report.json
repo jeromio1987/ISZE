@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-25T17:19:54Z",
+  "generated_at": "2026-09-06T18:20:37Z",
   "data_root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data",
   "summary": {
     "pass": 116,
@@ -13,7 +13,7 @@
       "status": "pass",
       "message": "Found raw/sales/CY2023-2024.XLSX",
       "detail": {
-        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\12_raw\\sales\\CY2023-2024.XLSX"
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\sales\\CY2023-2024.XLSX"
       }
     },
     {
@@ -21,7 +21,7 @@
       "status": "pass",
       "message": "Found raw/sales/CY2024-2025.XLSX",
       "detail": {
-        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\12_raw\\sales\\CY2024-2025.XLSX"
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\sales\\CY2024-2025.XLSX"
       }
     },
     {
@@ -29,7 +29,7 @@
       "status": "pass",
       "message": "Found raw/sales/sales_2026tillApril.XLSX",
       "detail": {
-        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\12_raw\\sales\\sales_2026tillApril.XLSX"
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\sales\\sales_2026tillApril.XLSX"
       }
     },
     {
@@ -37,7 +37,7 @@
       "status": "pass",
       "message": "Found raw/reference/BVP PARTS CATALOG.xlsx",
       "detail": {
-        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\12_raw\\reference\\BVP PARTS CATALOG.xlsx"
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\reference\\BVP PARTS CATALOG.xlsx"
       }
     },
     {
@@ -363,10 +363,10 @@
     {
       "id": "sales_fact.row_count",
       "status": "pass",
-      "message": "Row count 514,037 (expected ~514,037, \u0394 0.00%)",
+      "message": "Row count 538,347 (expected ~538,347, \u0394 0.00%)",
       "detail": {
-        "actual": 514037,
-        "expected": 514037
+        "actual": 538347,
+        "expected": 538347
       }
     },
     {
@@ -391,9 +391,9 @@
     {
       "id": "sales_fact.saty",
       "status": "pass",
-      "message": "SaTy populated on 92.9% of rows (min 92.0%)",
+      "message": "SaTy populated on 100.0% of rows (min 92.0%)",
       "detail": {
-        "non_null_pct": 92.89311858873972
+        "non_null_pct": 100.0
       }
     },
     {
@@ -401,15 +401,15 @@
       "status": "pass",
       "message": "fig_key populated on 98.6% of rows (min 90.0%)",
       "detail": {
-        "non_null_pct": 98.6012680021088
+        "non_null_pct": 98.59904485396966
       }
     },
     {
       "id": "sales_fact.unmapped",
       "status": "pass",
-      "message": "UNMAPPED 6 (0.00%) after distributor map",
+      "message": "UNMAPPED 0 (0.00%) after distributor map",
       "detail": {
-        "unmapped": 6,
+        "unmapped": 0,
         "max_pct": 1.0
       }
     },
@@ -466,9 +466,9 @@
     {
       "id": "bvp_addr.rows",
       "status": "pass",
-      "message": "Addressable basket 2,272 rows",
+      "message": "Addressable basket 2,342 rows",
       "detail": {
-        "rows": 2272
+        "rows": 2342
       }
     },
     {
@@ -496,10 +496,10 @@
     {
       "id": "bvp_addr.ituk_penetration",
       "status": "pass",
-      "message": "ITUK BVP penetration 73/134 (54%)",
+      "message": "ITUK BVP penetration 75/135 (56%)",
       "detail": {
-        "selling": 73,
-        "addressable": 134
+        "selling": 75,
+        "addressable": 135
       }
     },
     {
@@ -648,9 +648,9 @@
     {
       "id": "contract10.rows",
       "status": "pass",
-      "message": "Network percentile 409 rows",
+      "message": "Network percentile 408 rows",
       "detail": {
-        "rows": 409
+        "rows": 408
       }
     },
     {
@@ -682,9 +682,9 @@
     {
       "id": "contract16.rows",
       "status": "pass",
-      "message": "ITUK PMS PN audit 274 rows",
+      "message": "ITUK PMS PN audit 302 rows",
       "detail": {
-        "rows": 274
+        "rows": 302
       }
     },
     {
@@ -726,9 +726,9 @@
     {
       "id": "contract16.oil_filter.2026",
       "status": "pass",
-      "message": "ITUK oil_filter 2026: 6 PNs (min 3)",
+      "message": "ITUK oil_filter 2026: 10 PNs (min 3)",
       "detail": {
-        "pns": 6
+        "pns": 10
       }
     },
     {
@@ -754,21 +754,21 @@
     {
       "id": "figkey.sales.rows",
       "status": "pass",
-      "message": "sales_by_db_fig_key_year 75,781 rows",
+      "message": "sales_by_db_fig_key_year 82,262 rows",
       "detail": {
-        "rows": 75781
+        "rows": 82262
       }
     },
     {
       "id": "figkey.sales.mapped",
       "status": "pass",
-      "message": "Mapped fig_key rows: 75316 (min 10)",
+      "message": "Mapped fig_key rows: 81762 (min 10)",
       "detail": {}
     },
     {
       "id": "aim_gps.rows",
       "status": "pass",
-      "message": "AIM\u00d7GPS matrix 89 rows",
+      "message": "AIM\u00d7GPS matrix 88 rows",
       "detail": {}
     },
     {
@@ -780,25 +780,25 @@
     {
       "id": "contract.vor_airfreight_risk",
       "status": "pass",
-      "message": "vor_airfreight_risk 502 rows",
+      "message": "vor_airfreight_risk 508 rows",
       "detail": {
-        "rows": 502
+        "rows": 508
       }
     },
     {
       "id": "contract.vor_seasonality",
       "status": "pass",
-      "message": "vor_seasonality 3,127 rows",
+      "message": "vor_seasonality 3,523 rows",
       "detail": {
-        "rows": 3127
+        "rows": 3523
       }
     },
     {
       "id": "contract.vor_profile",
       "status": "pass",
-      "message": "vor_profile 228 rows",
+      "message": "vor_profile 229 rows",
       "detail": {
-        "rows": 228
+        "rows": 229
       }
     },
     {
@@ -812,9 +812,9 @@
     {
       "id": "contract.part_lifecycle",
       "status": "pass",
-      "message": "part_lifecycle 505 rows",
+      "message": "part_lifecycle 515 rows",
       "detail": {
-        "rows": 505
+        "rows": 515
       }
     },
     {
@@ -836,25 +836,25 @@
     {
       "id": "contract.price_premium",
       "status": "pass",
-      "message": "price_premium 419 rows",
+      "message": "price_premium 457 rows",
       "detail": {
-        "rows": 419
+        "rows": 457
       }
     },
     {
       "id": "contract.basket_correlation",
       "status": "pass",
-      "message": "basket_correlation 2,123 rows",
+      "message": "basket_correlation 2,500 rows",
       "detail": {
-        "rows": 2123
+        "rows": 2500
       }
     },
     {
       "id": "contract.substitution_timeline",
       "status": "pass",
-      "message": "substitution_timeline 502 rows",
+      "message": "substitution_timeline 508 rows",
       "detail": {
-        "rows": 502
+        "rows": 508
       }
     },
     {
@@ -868,7 +868,7 @@
     {
       "id": "contract.distributor_geo",
       "status": "pass",
-      "message": "distributor_geo 23 rows",
+      "message": "distributor_geo 22 rows",
       "detail": {
         "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\03_analytics\\Isuzu\\prism\\data\\distributor_geo.csv"
       }
@@ -925,8 +925,8 @@
       "message": "BVP dashboard bundle ready",
       "detail": {
         "pms_rows": 1512,
-        "mix_subgroup": 1504,
-        "mix_pms": 1504
+        "mix_subgroup": 1575,
+        "mix_pms": 1575
       }
     }
   ]

@@ -7,11 +7,13 @@ alwaysApply: true
 
 Applies to **all** Mode A / outward work: packs, HTML, Excel, zip, Outlook to colleagues, dashboards — not IDS-only. Overrides “helpful” drive-bys. **Banned phrase:** “fix if safe.” Do not invent waivers.
 
-## 1. Mail — draft only
+## 1. Mail — draft by default; Send only on explicit current ask
 
-- Outlook / email / `.msg` / Copilot: **Draft only**. Jerome sends.
-- **Never Send** (no API, no script, no “he said send earlier”, no urgent exception).
-- Only create/update a draft when the **current** message asks for draft/mail content — still draft-only.
+- Outlook / email / `.msg` / Copilot: **Draft + Display** by default.
+- **Send** only when the **current** message explicitly says **send** / **verstuur** / clear equivalent for **that** mail.
+- Forbidden: Send because “he said send earlier”, urgency, or agent convenience.
+- After any Send (or when he says he sent): run the **mail delivery loop** — prove **Sent Items** (subject + To + attachments) or report **Outbox stuck**. Never claim delivered without that proof.
+- Full procedure: skill `isze-mail-delivery` + rule `isze-mail-delivery-loop.mdc`.
 
 ## 2. Versions — no silent overwrite
 
@@ -21,10 +23,13 @@ Applies to **all** Mode A / outward work: packs, HTML, Excel, zip, Outlook to co
 
 ## 3. Rebuild / ship — explicit words only
 
+- **Default MODE = SPAR** — see `isze-spar-default.mdc`. Remarks and attached plans are not go.
 - Default for packs, HTML, Excel, zips, Mode A outputs: **read-only**.
 - Write / regenerate / ship / sync-as-deliverable **only** when the **current** message explicitly says **rebuild** or **ship** (or clear equivalent he uses the same way).
+- “Implement the plan” alone is **not** enough if purpose is still open or he is sparring — require **rebuild**/**ship** in that message.
 - Check / investigate / QA = **read only**. No “while I’m here” mutation of client files.
 - Ask before expanding scope (extra countries, extra recipients, INDEX/manifest bumps).
+- Do **not** ship a **new** HTML filename under `02_dashboards/`. Change the existing file for that home.
 
 ## 4. Known-bad metrics — don’t touch until asked
 

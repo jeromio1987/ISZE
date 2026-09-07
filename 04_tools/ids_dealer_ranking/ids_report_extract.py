@@ -33,9 +33,10 @@ SECTION_RE = re.compile(r"^([A-H])\.\s", re.IGNORECASE)
 REPORT_PREFIX = "2026 IDS Evaluation Result Report_"
 REPORT_SUFFIX = ".xls"
 
-# Tomoe Baumann MIDI rule (2026-07-31):
-# - FR/ES red-marked → out of averages only (list/map keep them)
-# - IT/CH → ALL dealers in averages (including zero-score shells)
+# Average rule (Jerome 2026-09-07 — treat every country the same):
+# - Blank / zero / did-not-answer dealers are OUT of averages, still ON list + map.
+# - France/Spain keep Tomoe's named red-marked list (zeros + very low / not completed).
+# - Italy/Switzerland are no longer all-in; Swiss zeros drop via the same hygiene.
 RED_MARKED_JSON = (
     ISZE_ROOT
     / "01_data"
@@ -43,7 +44,6 @@ RED_MARKED_JSON = (
     / "tomoe_ids_mail_pull"
     / "20260731_0858_red_marked_dealers.json"
 )
-AVG_ALL_IN = frozenset({"Italy", "Switzerland"})
 AVG_EXCLUDE_RED = frozenset({"France", "Spain"})
 
 # Section E not assessed (2026-08-15):
@@ -236,9 +236,8 @@ def _apply_section_e_policy(
 def _is_scored_pct(pct: float | None) -> bool:
     """True when total % is usable for averages (> 0).
 
-    Zero-score shells stay in dealer lists. For most markets they stay out of
-    averages (hygiene). Exception — Tomoe Baumann: Italy / Switzerland keep
-    every dealer in averages, including zero shells.
+    Zero / blank / did-not-answer dealers stay on the list and map.
+    They are out of country and network averages in every market.
     """
     if pct is None:
         return False
@@ -467,18 +466,15 @@ def extract_result_report(
         records, dealers, resolved_totals, resolved_pcts
     )
 
-    # Average basis (Tomoe Baumann MIDI rule):
-    # IT/CH = all dealers in (incl. zero shells); FR/ES = drop red-marked only;
-    # other markets = drop zero-score shells (hygiene).
+    # Average basis (one rule every market):
+    # FR/ES = named red-marked list; everyone else = drop blank/zero scores.
+    # Excluded dealers stay on the list and map.
     red = load_red_marked_names().get(country, set())
     included_cols: list[int] = []
     excluded_cols: set[int] = set()
     for col in dealer_cols:
         name = name_by_col[col]
         pct = resolved_pcts.get(col)
-        if country in AVG_ALL_IN:
-            included_cols.append(col)
-            continue
         if country in AVG_EXCLUDE_RED:
             if _norm_dealer_name(name) in red:
                 excluded_cols.add(col)
@@ -613,9 +609,24 @@ def _section_e_network_meta(all_dealers: list[dict[str, Any]]) -> dict[str, Any]
             }
         )
 
+    n_ex = sum(1 for d in all_dealers if d.get("excluded_from_average"))
+    n_in = sum(1 for d in all_dealers if not d.get("excluded_from_average"))
+    fr_ex = sum(
+        1
+        for d in all_dealers
+        if d.get("country") == "France" and d.get("excluded_from_average")
+    )
+    es_ex = sum(
+        1
+        for d in all_dealers
+        if d.get("country") == "Spain" and d.get("excluded_from_average")
+    )
     hover = (
-        "Anonymous full-network average after the France/Spain red-mark rule "
-        "(20 + 5 dealers out of the average; Italy and Switzerland keep everyone in). "
+        f"Anonymous full-network average ({n_in} dealers in; {n_ex} out). "
+        "Blank or zero-score dealers are out of the average in every market. "
+        f"France and Spain also drop the named red-marked list "
+        f"(France {fr_ex}, Spain {es_ex}). "
+        "Those dealers stay on the list and map. "
         "Section E for Israel LCV (UMI) is not scored — 29 dealers, 18 questions / "
         "27 points, fill not_scored — and is excluded from this average. "
         "0/27 is not a vehicle-sales fail. Israel LCV totals are A–D only (max 253). "
@@ -710,7 +721,7 @@ def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:
                 sec.setdefault("network_avg_pct", None)
 
     def _in_average(d: dict[str, Any]) -> bool:
-        """Trust extract flags (IT/CH all-in may include zero-score shells)."""
+        """Trust extract flags (blank / zero / red-marked are already excluded)."""
         return not d.get("excluded_from_average")
 
     def profile_for(dealer_list: list[dict[str, Any]]) -> dict[str, Any]:

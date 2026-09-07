@@ -338,7 +338,7 @@ distributors:
     display: "Sweden"
     segment: "mixed"
     payer: "ISUZU SVERIGE AB"
-    sold_to: null
+    sold_to: 2181
     gps_key: "Sverige"
     pms_code: "SWEDEN"
     fy27_tab: "SWEDEN"
@@ -349,9 +349,15 @@ distributors:
     warranty_cy2025_claim: 189618
     warranty_note: "LCV warranty."
     incentive_fy27: null
+    deck:
+      skip_s2d: true
+      use_isze_ext_target: true   # FY27 target = BP + 1.8% stretch (V3.1), not S2D
+    ext_target_v31: 1502023.7822048
+    ext_target_source: "GPS Extended Target FY27 V3.1, Dashboard column I (SWEDEN)"
     pbi: null
     watch:
       - "No IDS 2026 assessment is available for Sweden; skip the dealer-standard slide."
+      - "PBI not entered — Power BI ISZE MONTHLY REPORT VP was not open in agent browser at rebuild."
 
   HUNGARY:
     name: "AutoWallis Distribution"
@@ -380,7 +386,7 @@ distributors:
     display: "Finland"
     segment: "mixed"
     payer: "Nordic Automotive trading oy."
-    sold_to: null
+    sold_to: 2679
     gps_key: "Nordic FI"
     pms_code: "FINLAND"
     fy27_tab: "FINLAND"
@@ -391,10 +397,16 @@ distributors:
     warranty_cy2025_claim: 48676
     warranty_note: "LCV warranty."
     incentive_fy27: null
+    deck:
+      skip_s2d: true
+      use_isze_ext_target: true   # FY27 target = BP + 1.8% stretch (V3.1), not S2D
+    ext_target_v31: 365727.90533376
+    ext_target_source: "GPS Extended Target FY27 V3.1, Dashboard column I (FINLAND)"
     pbi: null
     watch:
       - "Dashboard S2D is unavailable; FY2026 S2D is imputed from ISZE billing / 0.65."
       - "No IDS 2026 assessment is available for Finland."
+      - "PBI not entered — Power BI ISZE MONTHLY REPORT VP was not open in agent browser at rebuild."
 
   ROMANIA:
     name: "Isuzu Rom Auto"
@@ -436,7 +448,7 @@ distributors:
     display: "Denmark"
     segment: "mixed"
     payer: "ISUZU DANMARK A/S"
-    sold_to: null
+    sold_to: 2027
     gps_key: "Danmark"
     pms_code: "DENMARK"
     fy27_tab: "DENMARK"
@@ -447,8 +459,15 @@ distributors:
     warranty_cy2025_claim: 9115
     warranty_note: "LCV warranty."
     incentive_fy27: null
+    deck:
+      skip_s2d: true
+      use_isze_ext_target: true   # FY27 target = BP + 1.8% stretch (V3.1), not S2D
+    ext_target_v31: 191517.38733568
+    ext_target_source: "GPS Extended Target FY27 V3.1, Dashboard column I (DENMARK)"
     pbi: null
-    watch: []
+    watch:
+      - "Secondary sold-to 2751 also under payer 2027 (~€52k FY2026 in dimension) — profile filters sold_to 2027 only (primary network row)."
+      - "PBI not entered — Power BI ISZE MONTHLY REPORT VP was not open in agent browser at rebuild."
 
   ICELAND:
     name: "BL ehf."
@@ -491,7 +510,7 @@ distributors:
     display: "Cyprus"
     segment: "mixed"
     payer: "LOUTSIOS A & SONS LTD"
-    sold_to: null
+    sold_to: 393
     gps_key: "Loutsios"
     pms_code: "CYPRUS"
     fy27_tab: "CYPRUS"
@@ -502,9 +521,15 @@ distributors:
     warranty_cy2025_claim: 28041
     warranty_note: "CV and LCV warranty."
     incentive_fy27: null
+    deck:
+      skip_s2d: true
+      use_isze_ext_target: true   # FY27 target = BP + 1.8% stretch (V3.1), not S2D
+    ext_target_v31: 552822.11207744
+    ext_target_source: "GPS Extended Target FY27 V3.1, Dashboard column I (CYPRUS)"
     pbi: null
     watch:
       - "Dashboard billing is blank; S2D imputation relies on gps_master FY2026 billing."
+      - "PBI not entered — Power BI ISZE MONTHLY REPORT VP was not open in agent browser at rebuild."
 
   MALTA:
     name: "GasanZammit Motors"

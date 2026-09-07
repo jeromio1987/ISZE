@@ -5,7 +5,7 @@
 ## Facts (do not re-verify by opening portals)
 - Keys are already in env (`nordics_api_keys.env` / loader path as documented in `_NORDICS_BLOCKED.md` and workspace rules).
 - Verify OK; NO/FI merged into tender monitor.
-- Workspace rule: `nordics-keys-closed.mdc` / `isze-nordics-keys-closed.mdc` — closed as of 2026-08-25.
+- Workspace rule: `ISZE/.cursor/rules/isze-nordics-keys-closed.mdc` — closed as of 2026-08-25. Not in `~\.cursor\rules`.
 
 ## Hard stop for agents
 1. Do **not** open:

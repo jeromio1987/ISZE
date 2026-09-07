@@ -1,0 +1,48 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\IDS_2026_Country_Packs_v1.5\\Switzerland\\IDS_2026_dealer_compare_Switzerland.html",
+  "artifact_mtime_ms": 1788789246665,
+  "written_at": "2026-09-07T13:55:47.391Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\IDS_2026_Country_Packs_v1.5\\Switzerland\\IDS_2026_dealer_compare_Switzerland.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "330380 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN cmd present (OPEN_IDS_2026_Switzerland.cmd)"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "1 PNG(s) — agent must have image-Read before shipping"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\IDS_2026_Country_Packs_v1.5\\_qa\\ch_map.png"
+  ],
+  "notes": "v1.5 CH pack. OSM tiles. CH 87.8% 16/22. Roads/lakes/cities + pins. No MIDI 4 button. No CARTO. All 19 packs rebuilt same template. v1.4 untouched."
+}

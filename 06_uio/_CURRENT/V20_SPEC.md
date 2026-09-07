@@ -566,6 +566,12 @@ Concretely, for V20:
 
 ## Still open
 
+- **IUK LCV generation / authority car park (chase for V20 + GPS/PMS V2 Opt2) — NEED.**  
+  Row 25 already has a locked **CY2026F = 44,926** headcount. What is still missing for Opt2
+  (Trooper / D-Max RT / D-Max RG) and for UIO accuracy rank A on IUK: a **UK pickup registration
+  extract** (SMMT/DVLA or IUK) with **model / generation counts**, not only a single LCV total.
+  Also still chase the **UK VIN pack** (already noted below). Until that lands, IUK stays Opt1-only
+  (flat LCV + mileage). Owner: IUK / IMIT chase. Links: `00_docs/agent/GPS_PMS_V2_LCV_SUBTYPE_SSOT.md`.
 - **Where is the Israeli government extract?** The presentation is a picture of the data, not the data.
   Slide 14's chart can't be read reliably — it has 14 bars for 13 years, a duplicated 2022 label and one
   bar with no number on it. We need the file: registration year by weight class, plus their class

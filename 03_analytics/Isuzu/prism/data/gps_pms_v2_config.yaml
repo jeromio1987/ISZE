@@ -1,0 +1,35 @@
+# GPS / PMS V2 shadow config — LCV-first (Mode B only)
+
+lcv_service_interval_km: 20000
+cv_service_interval_km: 40000
+f_series_service_interval_km: 30000
+
+# Opt2 generation intervals (km between oil services)
+# Trooper: Jerome 2026-09-05 — use same interval as D-Max RT
+generation_interval_km:
+  trooper: 20000
+  dmax_rt: 20000
+  dmax_rg: 20000
+  dmax_rg21_scr: 15000   # not applied until IMIT cutoffs
+
+cohort_intensity:
+  age_0_5: 1.05
+  age_6_10: 1.00
+  age_11_plus: 0.90
+  default_when_unknown: 1.00
+
+# Opt3 lock — GPS_PMS_V2_10Y_DEFINITION.md
+opt3_max_age_years: 10
+opt3_age_basis: first_registration_else_vin_cohort
+
+scr_cutoffs:
+  status: need
+  owner: IMIT
+  note: "LCV RG21 with SCR = 15k km; without / older = 20k. Need chassis or registration-year cutoffs."
+
+eq_hit:
+  status: extract_wired_shadow
+  extract_path: 01_data/00_derived/eqhit_extract_priority_cy2025.csv
+  note: "2311 rows / 37 PNs wired into pms_v2_fitment_weights (seed-PN applicability). oil_filter skipped — BVP. Not full catalogue."
+
+ui_shell: aftermarket_bi_command_center

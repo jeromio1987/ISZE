@@ -1,0 +1,42 @@
+---
+description: ISZE commercial figures — never label extract subsets as market potential
+alwaysApply: true
+---
+
+# ISZE commercial criticism (before delivery)
+
+ISZE workspace only. Do not load this topic in Alps / myPENS / Private.
+
+Before delivering any ISZE commercial dashboard, KPI, one-pager, or “vehicle” total:
+
+## Three layers — always separate
+
+| Layer | Label honestly | Example |
+|---|---|---|
+| **(a)** Network sales scale | Jerome / ISZE annual volumes (indicative) | ~20k LCV / ~78k CV per year — ask if stale |
+| **(b)** Tenders captured | Gate-passing opportunities / CV (pickup+truck) count | ~130 CV of 228 |
+| **(c)** Fleet stated in those tenders | Sum of extracted `fleet_size` on scraped notices | **18** stated units |
+
+**18 ≠ 130 ≠ ~78k.** Never present (c) as market potential, addressable market, or annual demand.
+
+## Fail delivery if
+
+- (c) is **>10× smaller** than (a) and the front page lacks coverage caveats + dark-market context, **or**
+- Hero / headline implies extract-subset = sales potential, **or**
+- You invent a new big vehicle total to “look serious.”
+
+Prefer **coverage-gap diagnosis** (portal map P0) over polishing a tiny number.
+
+Paper: `ISZE/04_tools/ISZE_Tender_Monitor_Install/_COUNTRY_TENDER_PORTALS_MAP.md`
+
+- National **LIVE ~21%** of footprint countries; **~69%** TED-only below-threshold.
+- Wire P0: **ES PLACSP → IT PNCP → DE open data → NO/FI keys**.
+- Low (c) → **coverage P0**, not UI celebration of 18.
+
+## Allowed labels
+
+- “Stated fleet in captured notices (pickup/truck)”
+- “CV tenders in feed” (product filter CV = pickup+truck)
+- Not “Isuzu vehicle potential” / “addressable market” for extract sums
+
+Operator note: `_CRITICALITY_PROTOCOL.md` in the Tender Monitor install folder.

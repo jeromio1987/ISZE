@@ -49,7 +49,9 @@ All paths above are under **`00_docs/`** unless noted as ISZE root.
 
 | Map | Domain |
 |-----|--------|
-| `00_docs/ISZE_ROADMAP.md` | Programme hub — links to all roadmaps |
+| `00_docs/ISZE_ROADMAP.md` | Programme hub (Aug 18 — stale “Build now”) |
+| `00_docs/agent/BI_FULL_AUDIT_AND_STRUCTURE_2026-09-06.md` | Live BI product map — four homes |
+| `00_docs/agent/NEXT_DEEPEN_BRIEFS_2026-09-07.md` | What is left to deepen (H4 · P4 · H2/H3) |
 | `00_docs/roadmaps/html.md` | Static HTML dashboards |
 | `00_docs/roadmaps/scrapers.md` | Tender, Autodoc, KS, discount |
 | `00_docs/roadmaps/gps.md` | GPS / fig-key (AIM *scoring* V3 superseded) |

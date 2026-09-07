@@ -9,6 +9,28 @@ Newest first. Append only.
 
 ## [Unreleased]
 
+### OSM streets back on v1.5 maps (2026-09-07)
+
+- Restored OpenStreetMap raster tiles (`tile.openstreetmap.org`, no key) under
+  dealer pins. Pale pin-grid is not the product. Still v1.5 (no v1.6).
+
+### Country packs v1.5 (2026-09-07) — same average rule as master
+
+- New folder `09_meetings/IDS_2026_Country_Packs_v1.5/` (v1.4 left intact).
+- Same extract as full-network compare: zeros / non-responders out of averages
+  in every market including Italy and Switzerland; FR/ES red-marks stay.
+- MIDI 4 removed on single-country packs. Leaflet inlined. Changelog still stripped.
+- OPEN_*.cmd beside each HTML.
+
+### One average rule every market (2026-09-07) — Jerome: treat all countries as Swiss
+
+- Removed Italy + Switzerland `AVG_ALL_IN` exception in `ids_report_extract.py`.
+- Every market: blank / zero / did-not-answer dealers **out of averages**, still on list + map.
+- France/Spain keep Tomoe’s named red-marked list (FR 20 / ES 5).
+- Full-network compare **v1.5** rebuilt. Country packs **v1.5** in a new folder
+  (`IDS_2026_Country_Packs_v1.5`); v1.4 left intact.
+- Notes: “Z did not answer (still on the list and map).” Italy no longer “all dealers in”.
+
 ### Section E not_scored (2026-08-15) — leave E out of scoring, record it
 
 - Israel LCV (UMI): all 29 dealers 0/18 questions, 0/27 points, **fill not_scored**.
@@ -96,3 +118,5 @@ Newest first. Append only.
 - **Spain (5):** CAMIONES DEL PISUERGA SA (6.79%), ESPAWAGEN SAU (0), GAURSA ARABAUTO S.L. (0), MIDI SPAIN AUTOMOCION SL (0), TALAUTO PLUS S.L. (0).
 
 **Status 2026-08-11:** **Applied in v1.4** — `ids_report_extract.py`: FR/ES red-marked out of averages (20 / 5); **IT/CH all dealers in** (zeros included). First v1.4 build wrongly dropped IT/CH zero shells — corrected same day under authorized v1.4 rebuild. Packs: `09_meetings/IDS_2026_Country_Packs_v1.4/`. Outlook **draft** to Tomoe (not Sent) via `draft_ids_midi_v14.py`. Jerome must Send.
+
+**Superseded 2026-09-07 (Jerome):** Italy/Switzerland all-in is **off**. Every country uses the same exclusion (zeros/blanks out of average, still on list/map). FR/ES named red-marks stay. Country packs remain v1.4; full-network compare v1.5.

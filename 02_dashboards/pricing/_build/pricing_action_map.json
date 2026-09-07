@@ -1,13 +1,13 @@
 {
  "meta": {
-  "built": "2026-07-16",
+  "built": "2026-09-06",
   "year": 2025,
   "street_factor": 1.7849999999999997,
   "raise_scenario": 0.05,
   "sources": {
    "capture": "pms_opportunity_matrix / pms_capture_by_db_year (pipeline verify green 2026-07-06)",
    "eucon": "eucon_price_gap.csv (44 PNs, network)",
-   "ks": "KS International UK, scraped 2026-05-09 (stale flag)",
+   "ks": "KS International UK, scraped 2026-08-31",
    "coarse": "Tranzparts/TMC (UK), Auto365 (IL), scraped 2026-07-13",
    "mekonomen": "Mekonomen SE scraped 2026-07-13 \u2014 artifact-filtered"
   }
@@ -30,13 +30,13 @@
    "db": "BELGIUM",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 0.9274,
-   "tam": 39491,
-   "gap": 2868,
+   "capture": 0.2318,
+   "tam": 157964,
+   "gap": 121341,
    "captured": 36623,
-   "zone": "raise",
-   "headroom": 1831,
-   "at_risk": 0,
+   "zone": "defend",
+   "headroom": 0,
+   "at_risk": 121341,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -199,13 +199,13 @@
    "db": "CYPRUS",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 1.0,
-   "tam": 9080,
-   "gap": 0,
+   "capture": 0.3512,
+   "tam": 36323,
+   "gap": 23565,
    "captured": 12758,
-   "zone": "raise",
-   "headroom": 638,
-   "at_risk": 0,
+   "zone": "defend",
+   "headroom": 0,
+   "at_risk": 23565,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -381,13 +381,13 @@
    "db": "DENMARK",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 0.9124,
-   "tam": 3028,
-   "gap": 265,
+   "capture": 0.2281,
+   "tam": 12115,
+   "gap": 9351,
    "captured": 2763,
-   "zone": "raise",
-   "headroom": 138,
-   "at_risk": 0,
+   "zone": "defend",
+   "headroom": 0,
+   "at_risk": 9351,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -537,13 +537,13 @@
    "db": "FINLAND",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 1.0,
-   "tam": 5540,
-   "gap": 0,
+   "capture": 0.4277,
+   "tam": 22160,
+   "gap": 12681,
    "captured": 9479,
-   "zone": "raise",
-   "headroom": 474,
-   "at_risk": 0,
+   "zone": "defend",
+   "headroom": 0,
+   "at_risk": 12681,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -667,13 +667,13 @@
    "db": "GERMANY",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 0.4947,
-   "tam": 50762,
-   "gap": 25650,
+   "capture": 0.1237,
+   "tam": 203047,
+   "gap": 177935,
    "captured": 25112,
-   "zone": "contested",
+   "zone": "defend",
    "headroom": 0,
-   "at_risk": 25650,
+   "at_risk": 177935,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -836,13 +836,13 @@
    "db": "GREECE",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 0.9475,
-   "tam": 15418,
-   "gap": 810,
+   "capture": 0.2369,
+   "tam": 61671,
+   "gap": 47063,
    "captured": 14608,
-   "zone": "raise",
-   "headroom": 730,
-   "at_risk": 0,
+   "zone": "defend",
+   "headroom": 0,
+   "at_risk": 47063,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -992,13 +992,13 @@
    "db": "HUNGARY",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 0.8913,
-   "tam": 15439,
-   "gap": 1679,
+   "capture": 0.2228,
+   "tam": 61758,
+   "gap": 47997,
    "captured": 13761,
-   "zone": "raise",
-   "headroom": 688,
-   "at_risk": 0,
+   "zone": "defend",
+   "headroom": 0,
+   "at_risk": 47997,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -1122,13 +1122,13 @@
    "db": "ICELAND",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 1.0,
-   "tam": 1715,
-   "gap": 0,
+   "capture": 0.33,
+   "tam": 6860,
+   "gap": 4596,
    "captured": 2264,
-   "zone": "raise",
-   "headroom": 113,
-   "at_risk": 0,
+   "zone": "defend",
+   "headroom": 0,
+   "at_risk": 4596,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -1265,13 +1265,13 @@
    "db": "IRELAND",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 0.4646,
-   "tam": 6707,
-   "gap": 3591,
+   "capture": 0.1162,
+   "tam": 26830,
+   "gap": 23714,
    "captured": 3117,
-   "zone": "contested",
+   "zone": "defend",
    "headroom": 0,
-   "at_risk": 3591,
+   "at_risk": 23714,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -1434,13 +1434,13 @@
    "db": "ITUK",
    "cat": "brake_pad",
    "label": "Brake pads",
-   "capture": 0.5829,
-   "tam": 519072,
-   "gap": 216520,
+   "capture": 0.7286,
+   "tam": 415259,
+   "gap": 112706,
    "captured": 302550,
    "zone": "contested",
    "headroom": 0,
-   "at_risk": 216520,
+   "at_risk": 112706,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -1460,13 +1460,13 @@
    "db": "ITUK",
    "cat": "brake_shoe",
    "label": "Brake shoes",
-   "capture": 0.0957,
-   "tam": 299243,
-   "gap": 270599,
+   "capture": 0.1196,
+   "tam": 239395,
+   "gap": 210750,
    "captured": 28643,
    "zone": "defend",
    "headroom": 0,
-   "at_risk": 270599,
+   "at_risk": 210750,
    "elasticity": "no negative price response (captive or confounded)"
   },
   {
@@ -1590,13 +1590,13 @@
    "db": "IUK",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 0.7358,
-   "tam": 144066,
-   "gap": 38058,
+   "capture": 0.184,
+   "tam": 576260,
+   "gap": 470253,
    "captured": 106007,
-   "zone": "contested",
+   "zone": "defend",
    "headroom": 0,
-   "at_risk": 38058,
+   "at_risk": 470253,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -1746,13 +1746,13 @@
    "db": "MALTA",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 0.9929,
-   "tam": 4446,
-   "gap": 31,
+   "capture": 0.2482,
+   "tam": 17787,
+   "gap": 13372,
    "captured": 4415,
-   "zone": "raise",
-   "headroom": 221,
-   "at_risk": 0,
+   "zone": "defend",
+   "headroom": 0,
+   "at_risk": 13372,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -1902,13 +1902,13 @@
    "db": "NORWAY",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 1.0,
-   "tam": 34825,
-   "gap": 0,
+   "capture": 0.309,
+   "tam": 139303,
+   "gap": 96259,
    "captured": 43044,
-   "zone": "raise",
-   "headroom": 2152,
-   "at_risk": 0,
+   "zone": "defend",
+   "headroom": 0,
+   "at_risk": 96259,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -2032,13 +2032,13 @@
    "db": "PORTUGAL",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 0.9682,
-   "tam": 16049,
-   "gap": 511,
+   "capture": 0.242,
+   "tam": 64197,
+   "gap": 48659,
    "captured": 15539,
-   "zone": "raise",
-   "headroom": 777,
-   "at_risk": 0,
+   "zone": "defend",
+   "headroom": 0,
+   "at_risk": 48659,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -2214,13 +2214,13 @@
    "db": "ROMANIA",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 1.0,
-   "tam": 4581,
-   "gap": 0,
+   "capture": 0.5322,
+   "tam": 18319,
+   "gap": 8569,
    "captured": 9750,
-   "zone": "raise",
-   "headroom": 487,
-   "at_risk": 0,
+   "zone": "contested",
+   "headroom": 0,
+   "at_risk": 8569,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -2383,13 +2383,13 @@
    "db": "SWEDEN",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 1.0,
-   "tam": 31075,
-   "gap": 0,
+   "capture": 0.4375,
+   "tam": 124297,
+   "gap": 69914,
    "captured": 54383,
-   "zone": "raise",
-   "headroom": 2719,
-   "at_risk": 0,
+   "zone": "defend",
+   "headroom": 0,
+   "at_risk": 69914,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -2513,13 +2513,13 @@
    "db": "UMI",
    "cat": "blower_filter",
    "label": "Cabin/blower filter",
-   "capture": 0.028,
-   "tam": 62087,
-   "gap": 60346,
+   "capture": 0.007,
+   "tam": 248349,
+   "gap": 246608,
    "captured": 1741,
    "zone": "defend",
    "headroom": 0,
-   "at_risk": 60346,
+   "at_risk": 246608,
    "elasticity": "price-sensitive (contestable)"
   },
   {
@@ -3106,7 +3106,7 @@
    },
    "ks_derived": {
     "n": 4,
-    "med_premium_pct": 0.467
+    "med_premium_pct": 0.579
    }
   },
   "blower_filter": {
@@ -3131,8 +3131,8 @@
     "med_premium_pct": 7.333
    },
    "ks_derived": {
-    "n": 2,
-    "med_premium_pct": 3.801
+    "n": 1,
+    "med_premium_pct": 7.366
    }
   },
   "brake_pad_front": {
@@ -3150,11 +3150,11 @@
    },
    "ks_observed": {
     "n": 1,
-    "med_premium_pct": 2.571
+    "med_premium_pct": 3.167
    },
    "ks_derived": {
-    "n": 3,
-    "med_premium_pct": 2.296
+    "n": 4,
+    "med_premium_pct": 2.663
    }
   },
   "brake_shoe": {
@@ -3201,11 +3201,11 @@
    },
    "ks_observed": {
     "n": 1,
-    "med_premium_pct": 2.75
+    "med_premium_pct": 0.5
    },
    "ks_derived": {
     "n": 1,
-    "med_premium_pct": 1.594
+    "med_premium_pct": 0.037
    }
   },
   "leaf_spring": {
@@ -3226,25 +3226,25 @@
    "market": "UK",
    "PMS_Category": "brake",
    "n": 6,
-   "med_iam_street_eur": 71.71000000000001
+   "med_iam_street_eur": 75.955
   },
   {
    "market": "UK",
    "PMS_Category": "clutch",
    "n": 1,
-   "med_iam_street_eur": 540.54
+   "med_iam_street_eur": 561.6
   },
   {
    "market": "UK",
    "PMS_Category": "fuel_filter",
-   "n": 5,
-   "med_iam_street_eur": 35.1
+   "n": 9,
+   "med_iam_street_eur": 37.24
   },
   {
    "market": "UK",
    "PMS_Category": "oil_filter",
-   "n": 3,
-   "med_iam_street_eur": 22.53
+   "n": 7,
+   "med_iam_street_eur": 28.84
   }
  ],
  "eucon_top": [
@@ -3424,25 +3424,46 @@
     "MEK_AM_MinPrice_SEK": 957.0
    },
    {
-    "PN": "8983314120",
-    "Description": "SENSOR; PRESSURE,DPD",
-    "PR00_EUR": 196.64,
-    "Rev_CY2025_EUR": 118471.49,
-    "MEK_AM_MinPrice_SEK": 284.0
+    "PN": "8983373180",
+    "Description": "SENSOR ASM; DEF TANK",
+    "PR00_EUR": 328.3,
+    "Rev_CY2025_EUR": 86102.13,
+    "MEK_AM_MinPrice_SEK": 259.0
    },
    {
-    "PN": "5876102320",
-    "Description": "CLUTCH KIT",
-    "PR00_EUR": 194.69,
-    "Rev_CY2025_EUR": 86702.48,
-    "MEK_AM_MinPrice_SEK": 222.0
+    "PN": "8982932120",
+    "Description": "DRIVE ASM; FINAL,RR",
+    "PR00_EUR": 1410.25,
+    "Rev_CY2025_EUR": 61110.53,
+    "MEK_AM_MinPrice_SEK": 259.0
    },
    {
-    "PN": "8981647861",
-    "Description": "VALVE; EGR",
-    "PR00_EUR": 234.57,
-    "Rev_CY2025_EUR": 71790.07,
-    "MEK_AM_MinPrice_SEK": 661.0
+    "PN": "8982924321",
+    "Description": "SENSOR; SPD,FRT WHEEL",
+    "PR00_EUR": 158.26,
+    "Rev_CY2025_EUR": 36136.7,
+    "MEK_AM_MinPrice_SEK": 1929.0
+   },
+   {
+    "PN": "8983937793",
+    "Description": "SUPPORT; RR BUMPER",
+    "PR00_EUR": 104.3,
+    "Rev_CY2025_EUR": 31640.32,
+    "MEK_AM_MinPrice_SEK": 113.0
+   },
+   {
+    "PN": "8983288004",
+    "Description": "LAMP ASM; RR COMB",
+    "PR00_EUR": 61.03,
+    "Rev_CY2025_EUR": 29351.07,
+    "MEK_AM_MinPrice_SEK": 106.0
+   },
+   {
+    "PN": "8982606011",
+    "Description": "DOOR ASM; FRT,WO/TRIM",
+    "PR00_EUR": 268.41,
+    "Rev_CY2025_EUR": 28925.27,
+    "MEK_AM_MinPrice_SEK": 269.0
    }
   ],
   "suspect_n": 0

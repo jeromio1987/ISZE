@@ -1,6 +1,6 @@
 # ISZE derived pipeline verification
 
-**Generated:** 2026-08-25T17:19:54Z
+**Generated:** 2026-09-06T18:20:37Z
 **Data root:** `C:\Users\jerom\Desktop\claude\ISZE\01_data`
 
 | Pass | Warn | Fail |
@@ -51,12 +51,12 @@
 - ✅ **config.bvp_catalog** — BVP catalog at BVP PARTS CATALOG.xlsx
 - ✅ **uio.canonical** — UIO resolves to canonical ISUZU_UIO_Overview_2026.xlsx
 - ✅ **uio.stale_copies** — No stale v16/v17/v18 UIO copies in fallback paths
-- ✅ **sales_fact.row_count** — Row count 514,037 (expected ~514,037, Δ 0.00%)
+- ✅ **sales_fact.row_count** — Row count 538,347 (expected ~538,347, Δ 0.00%)
 - ✅ **sales_fact.schema** — Schema OK
 - ✅ **sales_fact.years** — Years present: [2023, 2024, 2025, 2026]
-- ✅ **sales_fact.saty** — SaTy populated on 92.9% of rows (min 92.0%)
+- ✅ **sales_fact.saty** — SaTy populated on 100.0% of rows (min 92.0%)
 - ✅ **sales_fact.fig_key** — fig_key populated on 98.6% of rows (min 90.0%)
-- ✅ **sales_fact.unmapped** — UNMAPPED 6 (0.00%) after distributor map
+- ✅ **sales_fact.unmapped** — UNMAPPED 0 (0.00%) after distributor map
 - ✅ **p0.rows** — Dimension 919 PNs
 - ✅ **p0.pms_flagged** — PMS-flagged 496
 - ✅ **p0.line_type** — line_type values OK
@@ -64,11 +64,11 @@
 - ✅ **p0b.pair_source** — pair_source OK
 - ✅ **p0b.catalog_pairs** — Catalog-derived pairs 517
 - ✅ **p0b.unique_pairs** — Duplicate (genuine,bvp) keys: 0
-- ✅ **bvp_addr.rows** — Addressable basket 2,272 rows
+- ✅ **bvp_addr.rows** — Addressable basket 2,342 rows
 - ✅ **bvp_addr.schema** — Schema OK
 - ✅ **bvp_addr.distributors** — 22 distributors (min 20)
 - ✅ **bvp_addr.subgroups** — 29 product subgroups (min 22)
-- ✅ **bvp_addr.ituk_penetration** — ITUK BVP penetration 73/134 (54%)
+- ✅ **bvp_addr.ituk_penetration** — ITUK BVP penetration 75/135 (56%)
 - ✅ **p1.rows** — PMS capture 3,024 rows
 - ✅ **p1.schema** — Schema OK
 - ✅ **p1.line_type** — line_type OK
@@ -88,36 +88,36 @@
 - ✅ **contract3.schema** — Schema OK
 - ✅ **contract3.capture_cap** — All capture_rate_total ≤ 10.0
 - ✅ **contract3.tam_eur** — tam_eur ≥ 1.0 where avg_sp_eur > 0
-- ✅ **contract10.rows** — Network percentile 409 rows
+- ✅ **contract10.rows** — Network percentile 408 rows
 - ✅ **contract10.schema** — Schema OK
 - ✅ **contract10.metrics** — All metrics present
 - ✅ **contract10.percentile_range** — percentile_rank in [0, 100] (actual 0.0–100.0)
-- ✅ **contract16.rows** — ITUK PMS PN audit 274 rows
+- ✅ **contract16.rows** — ITUK PMS PN audit 302 rows
 - ✅ **contract16.schema** — Schema OK
 - ✅ **contract16.distributor** — All rows ITUK
 - ✅ **contract16.oil_filter.2023** — ITUK oil_filter 2023: 11 PNs (min 3)
 - ✅ **contract16.oil_filter.2024** — ITUK oil_filter 2024: 10 PNs (min 3)
 - ✅ **contract16.oil_filter.2025** — ITUK oil_filter 2025: 7 PNs (min 3)
-- ✅ **contract16.oil_filter.2026** — ITUK oil_filter 2026: 6 PNs (min 3)
+- ✅ **contract16.oil_filter.2026** — ITUK oil_filter 2026: 10 PNs (min 3)
 - ✅ **figkey.catalog.rows** — parts_catalog_dimension 164,969 rows
 - ✅ **figkey.catalog.coverage** — PNs with fig_key: 161,191 (97.7%, min 95%)
 - ✅ **figkey.catalog.registry_fig** — Registry PNs with fig_key: 65 (min 35)
-- ✅ **figkey.sales.rows** — sales_by_db_fig_key_year 75,781 rows
-- ✅ **figkey.sales.mapped** — Mapped fig_key rows: 75316 (min 10)
-- ✅ **aim_gps.rows** — AIM×GPS matrix 89 rows
+- ✅ **figkey.sales.rows** — sales_by_db_fig_key_year 82,262 rows
+- ✅ **figkey.sales.mapped** — Mapped fig_key rows: 81762 (min 10)
+- ✅ **aim_gps.rows** — AIM×GPS matrix 88 rows
 - ✅ **aim_gps.quadrants** — Quadrant values OK
-- ✅ **contract.vor_airfreight_risk** — vor_airfreight_risk 502 rows
-- ✅ **contract.vor_seasonality** — vor_seasonality 3,127 rows
-- ✅ **contract.vor_profile** — vor_profile 228 rows
+- ✅ **contract.vor_airfreight_risk** — vor_airfreight_risk 508 rows
+- ✅ **contract.vor_seasonality** — vor_seasonality 3,523 rows
+- ✅ **contract.vor_profile** — vor_profile 229 rows
 - ✅ **contract.capture_trajectory** — capture_trajectory 1,460 rows
-- ✅ **contract.part_lifecycle** — part_lifecycle 505 rows
+- ✅ **contract.part_lifecycle** — part_lifecycle 515 rows
 - ✅ **contract.revenue_concentration** — revenue_concentration 260 rows
 - ✅ **contract.revenue_waterfall** — revenue_waterfall 228 rows
-- ✅ **contract.price_premium** — price_premium 419 rows
-- ✅ **contract.basket_correlation** — basket_correlation 2,123 rows
-- ✅ **contract.substitution_timeline** — substitution_timeline 502 rows
+- ✅ **contract.price_premium** — price_premium 457 rows
+- ✅ **contract.basket_correlation** — basket_correlation 2,500 rows
+- ✅ **contract.substitution_timeline** — substitution_timeline 508 rows
 - ✅ **contract.capture_recovery_model** — capture_recovery_model 252 rows
-- ✅ **contract.distributor_geo** — distributor_geo 23 rows
+- ✅ **contract.distributor_geo** — distributor_geo 22 rows
 - ✅ **action_ledger.artefacts** — P8 artefacts present
 - ✅ **action_ledger.nonempty** — ledger rows=23236
 - ✅ **action_ledger.lineage** — monetary rows with full lineage: 3507

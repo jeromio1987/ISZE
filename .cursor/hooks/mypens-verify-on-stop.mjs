@@ -89,6 +89,13 @@ if (loopCount >= 2) {
   process.exit(0)
 }
 
+const roots = input.workspace_roots || []
+const inMypens = roots.some((r) => /mypens/i.test(String(r || '')))
+if (!inMypens) {
+  emit({})
+  process.exit(0)
+}
+
 const mypens = findMypens(input.workspace_roots)
 if (!mypens || !mypensDirty(mypens)) {
   emit({})

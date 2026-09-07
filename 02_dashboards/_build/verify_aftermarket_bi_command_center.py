@@ -10,7 +10,7 @@ from pathlib import Path
 ISZE = Path(__file__).resolve().parents[2]
 HTML = ISZE / "02_dashboards" / "sales" / "ISZE_Aftermarket_BI_Command_Center.html"
 
-REQUIRED_PANELS = ["panel-network", "panel-db", "panel-pricing"]
+REQUIRED_PANELS = ["panel-network", "panel-db", "panel-pricing", "panel-gpsv2"]
 MIN_BAR_ROWS = 20
 MIN_NETWORK_ROWS = 50
 MAX_MB = 3.5
@@ -91,8 +91,23 @@ def main() -> int:
         print("FAIL: drill tbl tbody not found")
         fails += 1
 
-    if 'id="panel-network" class="panel active"' not in html:
-        print("FAIL: panel-network not active on load")
+    if 'id="panel-pricing" class="panel active"' not in html:
+        print("FAIL: panel-pricing not active on load (Monday = Pricing)")
+        fails += 1
+    if 'id="panel-network" class="panel active"' in html:
+        print("FAIL: panel-network must not be default (archive only)")
+        fails += 1
+    if "Pricing &amp; revision — Monday actions" not in html and "Pricing & revision — Monday actions" not in html:
+        print("FAIL: hero must say Pricing & revision — Monday actions")
+        fails += 1
+    if "Car park is not fully fixed" not in html:
+        print("FAIL: V2 tab missing V19 truth banner")
+        fails += 1
+    if "44,926" not in html:
+        print("FAIL: V2 tab missing IUK GPS lock 44,926")
+        fails += 1
+    if "Monday Command" in html:
+        print("FAIL: killed Monday Command / leakage mega framing still present")
         fails += 1
 
     for pid in REQUIRED_PANELS:

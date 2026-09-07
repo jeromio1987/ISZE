@@ -5,6 +5,14 @@ alwaysApply: true
 
 # ISZE (Cursor)
 
+This folder is **ISZE work**. Alps / myPENS / Private are out.
+
+If `STOP: BRIEF_CHECKLIST` or a QA-pending path is **not** under `Desktop\claude\ISZE\`: one line skip (`Skipped: foreign brief`), **zero** Alps GPX / myPENS tsc / V20-from-Alps. Write `brief-checklist-ISZE.json` only. Do not touch the Alps checklist file.
+
+“Check / full check / don’t be lazy” = measure the artefact (Image-Read, pin count, tile paint, grep the HTML). A `SHIP_RECEIPT` without those reads is a fail. File-exists is a fail.
+
+Subagents: paste `ISZE/.cursor/prompts/ISZE_SUBAGENT.md` plus his items in his words.
+
 Read `INDEX.md` → `00_docs/ROUTING.yaml` (matching task) → `AGENTS.md` before globbing the tree.
 
 - Never use `07_deploy/Master Dashboard/context/` — deploy mirror only; edit MD at ISZE root + numbered folders.

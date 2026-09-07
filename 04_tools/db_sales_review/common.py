@@ -69,7 +69,7 @@ FREIGHT_MATERIAL_CODES = frozenset(
 
 UIO_FILE = ISZE / "06_uio" / "_CURRENT" / "ISUZU_UIO_Overview_2026.xlsx"
 FY27_FILE = ISZE / "01_data" / "ISZE_GPS_Extended_Target_FY27_V3.1.xlsx"
-IDS_FILE = (ISZE / "01_data" / "90_INBOX" / "IDS_2026" / "rankings"
+IDS_FILE = (ISZE / "01_data" / "08_Distributor" / "IDS_2026" / "rankings"
             / "IDS_2026_TOTAL_ranking_all.xlsx")
 BUDGET_FILE = ISZE / "01_data" / "11_planning" / "budget_per_DB_reviewed_24042026.xlsx"
 BP_FILE = ISZE / "01_data" / "11_planning" / "FY2027  BP VP&ACC.xlsx"

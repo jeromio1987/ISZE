@@ -24,6 +24,10 @@ MANUAL = [
     (2574, "I.M. PARTS & SERVICE Limited", "IUK", "AIM confirmed"),
     (2575, "ISUZU TRUCK (UK) LIMITED", "ITUK", "AIM confirmed"),
     (2194, "MIDI EUROPE S.R.L.", "MIDI", "SAP 2194; CY billing; EXCLUDED_CODES"),
+    (146, "SERVICE FEE OUTSIDE EUROPE", "NON_PARTS", "CY2026 non-parts; EXCLUDED_CODES"),
+    (373, "IMIO / SERVICE", "NON_PARTS", "CY2026 non-parts service; EXCLUDED_CODES"),
+    (2970, "COST DEMURRAGE", "NON_PARTS", "CY2026 non-parts demurrage; EXCLUDED_CODES"),
+    (2987, "COMPENSATIONS SALE E-CREDIT", "NON_PARTS", "CY2026 non-parts e-credit; EXCLUDED_CODES"),
 ]
 
 

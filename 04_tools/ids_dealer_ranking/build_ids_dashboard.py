@@ -22,15 +22,46 @@ from ids_report_extract import build_dashboard_payload
 
 _TEMPLATE = Path(__file__).resolve().parent / "ids_dashboard_template.html"
 _DASH_MIRROR = ISZE_ROOT / "02_dashboards" / "ids" / "IDS_2026_dealer_compare.html"
+_LEAFLET_DIR = ISZE_ROOT / "02_dashboards" / "_ui"
+
+
+def _inline_leaflet(html: str) -> str:
+    """Embed Leaflet so file:// / USB / another PC needs no sibling _ui and no CDN."""
+    css_path = _LEAFLET_DIR / "leaflet.css"
+    js_path = _LEAFLET_DIR / "leaflet.js"
+    if not css_path.is_file() or not js_path.is_file():
+        raise FileNotFoundError(f"Leaflet missing under {_LEAFLET_DIR}")
+    css = css_path.read_text(encoding="utf-8").replace("</style>", r"<\/style>")
+    js = js_path.read_text(encoding="utf-8")
+    js = js.replace("//# sourceMappingURL=leaflet.js.map", "")
+    js = js.replace("</script>", r"<\/script>")
+    if "__LEAFLET_CSS__" not in html or "__LEAFLET_JS__" not in html:
+        raise ValueError("Template missing Leaflet placeholders")
+    return html.replace("__LEAFLET_CSS__", css).replace("__LEAFLET_JS__", js)
+
+
+_LAND_GEOJSON = Path(__file__).resolve().parent / "ne_110m_land.geojson"
+
+
+def _inline_land_geojson(html: str) -> str:
+    """Embed Natural Earth land so SharePoint HTML needs no tile server."""
+    if "__LAND_GEOJSON__" not in html:
+        raise ValueError("Template missing __LAND_GEOJSON__")
+    if not _LAND_GEOJSON.is_file():
+        raise FileNotFoundError(f"Land GeoJSON missing: {_LAND_GEOJSON}")
+    land = json.dumps(json.loads(_LAND_GEOJSON.read_text(encoding="utf-8")), separators=(",", ":"))
+    return html.replace("__LAND_GEOJSON__", land)
 
 
 def render_html(payload: dict, *, built_at: str) -> str:
     template = _TEMPLATE.read_text(encoding="utf-8")
     blob = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
-    return (
+    html = (
         template.replace("__BUILT_AT__", built_at)
         .replace("__DATA_JSON__", blob)
     )
+    html = _inline_land_geojson(html)
+    return _inline_leaflet(html)
 
 
 def main() -> int:
@@ -82,7 +113,7 @@ def main() -> int:
         "warnings": geo_sanity["warnings"],
         "countries": geo_sanity["countries"],
     }
-    payload["version"] = "v1.4"
+    payload["version"] = "v1.5"
 
     qa_errors = validate_dashboard_payload(payload)
     print(format_qa_report(payload, qa_errors))

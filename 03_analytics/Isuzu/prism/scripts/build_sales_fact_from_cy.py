@@ -6,8 +6,8 @@ Run from prism folder:
   python scripts/build_sales_fact_from_cy.py
 
 Requires: pandas, openpyxl, pyarrow
-Sources: 12_raw/sales/CY2023-2024.XLSX, CY2024-2025.XLSX,
-         sales_2026tillApril.XLSX (2026 Jan–Mar), Q1FY2027.XLSX (2026 Apr–Jun).
+Sources: 12_raw/sales/CY2023-2024.XLSX, CY2024-2025.XLSX (2024 only),
+         CY2025till31082026.XLSX (2025 full + 2026 Jan–Aug).
 """
 
 from __future__ import annotations
@@ -25,23 +25,22 @@ from config import DERIVED_DIR, RAW_SALES_DIR, SALES_FACT_PARQUET  # noqa: E402
 
 # Each source file "owns" the years listed. Where two exports cover the same
 # year (verified 2026-07-03: CY2024-2025.XLSX's 2024 rows are identical to
-# CY2023-2024.XLSX's — 154,519 rows, full Bill.Doc. overlap; its 2025 rows are
-# a more complete re-export, 148,778 vs the old CY2025.XLSX's 147,409), the
-# later file wins and the older file's rows for that year are dropped so we
-# never double-count. CY2025.XLSX is kept on disk but no longer loaded.
+# CY2023-2024.XLSX's — 154,519 rows, full Bill.Doc. overlap), the later file
+# wins and the older file's rows for that year are dropped so we never
+# double-count. CY2025.XLSX is kept on disk but no longer loaded.
 #
-# 2026 split (audit 2026-08-25): sales_2026tillApril = Jan–Mar;
-# Q1FY2027.XLSX = Apr–Jun (Isuzu FY2027 Q1). Month filter below prevents overlap.
+# 2026-09-03: CY2025till31082026.XLSX owns full CY2025 + 2026 Jan–Aug.
+# sales_2026tillApril.XLSX / Q1FY2027.XLSX stay on disk but are no longer
+# loaded for those months (superseded by the new export).
 CY_FILE_YEARS: dict[str, set[int]] = {
     "CY2023-2024.XLSX": {2023},
-    "CY2024-2025.XLSX": {2024, 2025},
-    "sales_2026tillApril.XLSX": {2026},
-    "Q1FY2027.XLSX": {2026},
+    "CY2024-2025.XLSX": {2024},
+    "CY2025till31082026.XLSX": {2025, 2026},
 }
-# Optional (year, month) allow-list per file. None = all months in owned years.
-CY_FILE_MONTHS: dict[str, Optional[set[int]]] = {
-    "sales_2026tillApril.XLSX": {1, 2, 3},
-    "Q1FY2027.XLSX": {4, 5, 6},
+# Optional month allow-list per file. None = all months in owned years.
+# Year-specific: dict[year, months] so 2025 stays full-year while 2026 is capped.
+CY_FILE_MONTHS: dict[str, Optional[Union[set[int], dict[int, set[int]]]]] = {
+    "CY2025till31082026.XLSX": {2026: {1, 2, 3, 4, 5, 6, 7, 8}},
 }
 CY_FILES = [RAW_SALES_DIR / name for name in CY_FILE_YEARS]
 
@@ -165,14 +164,32 @@ def main() -> int:
         if owned_years and "billing_date" in chunk.columns:
             bd = pd.to_datetime(chunk["billing_date"], dayfirst=True, errors="coerce")
             chunk_year = bd.dt.year
+            chunk_month = bd.dt.month
             before = len(chunk)
             mask = chunk_year.isin(owned_years)
             if owned_months is not None:
-                mask = mask & bd.dt.month.isin(owned_months)
+                if isinstance(owned_months, dict):
+                    # Year-specific months: years not listed keep all months.
+                    month_ok = pd.Series(True, index=chunk.index)
+                    for y, months in owned_months.items():
+                        month_ok = month_ok & (
+                            (chunk_year != y) | chunk_month.isin(months)
+                        )
+                    mask = mask & month_ok
+                    month_note = (
+                        ", "
+                        + "; ".join(
+                            f"{y} months {sorted(m)}" for y, m in sorted(owned_months.items())
+                        )
+                    )
+                else:
+                    mask = mask & chunk_month.isin(owned_months)
+                    month_note = f", months {sorted(owned_months)}"
+            else:
+                month_note = ""
             chunk = chunk[mask].reset_index(drop=True)
             dropped = before - len(chunk)
             if dropped:
-                month_note = f", months {sorted(owned_months)}" if owned_months else ""
                 print(
                     f"  -> {len(chunk):,} rows (dropped {dropped:,} outside owned years "
                     f"{sorted(owned_years)}{month_note})",

@@ -4,9 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>IDS 2026 — Dealer Compare</title>
-  <!-- Local Leaflet (no integrity/crossorigin): SRI blocks file:// double-click in Chromium -->
-  <link rel="stylesheet" href="../_ui/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Leaflet inlined at build (no sibling _ui, no CDN, works on another PC / file://) -->
+  <style id="leaflet-css">__LEAFLET_CSS__</style>
   <style>
     :root {
       --navy: #1a2744;
@@ -120,8 +119,12 @@
     .matrix-wrap { overflow: auto; }
     .matrix td.pos { color: var(--good); font-weight: 600; }
     .matrix td.neg { color: var(--bad); font-weight: 600; }
-    #ids-map { width:100%; height:560px; border-radius:8px; border:1px solid var(--mid); background:#dce3ec; }
-    .leaflet-container { font: inherit; }
+    #ids-map { width:100%; height:560px; border-radius:8px; border:1px solid var(--mid); background:#9ec3d8; }
+    #ids-map .leaflet-container { background:#9ec3d8; }
+    .leaflet-control-layers-toggle,
+    .leaflet-default-icon-path {
+      background-image: none !important;
+    }
     .rank-pin {
       border:2px solid #fff;
       border-radius:50%; width:16px; height:16px;
@@ -152,19 +155,39 @@
     .map-tip-meta .neg { color: var(--bad); }
     .tile-note { margin:.55rem 0 0; color:var(--muted); font-size:.78rem; }
     .tile-note.warn { color:#9a3412; }
+    .btn-chip {
+      font: inherit; font-size: 0.82rem; font-weight: 600;
+      padding: 0.42rem 0.7rem; border: 1px solid var(--mid); border-radius: 6px;
+      background: #fff; color: var(--navy); cursor: pointer;
+    }
+    .btn-chip:hover, .btn-chip.active { border-color: var(--terracotta); color: var(--terracotta); }
+    .toolbar-hint { font-size: 0.78rem; color: var(--muted); max-width: 16rem; padding-bottom: 0.2rem; }
+    .vn-cell { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .notes-card h2 { margin: 0 0 0.75rem; font-size: 1.05rem; }
+    .notes-card ol, .notes-card ul { margin: 0.35rem 0 0.9rem; padding-left: 1.2rem; }
+    .notes-card li { margin: 0.28rem 0; }
+    body.meeting-view .named-dealer-ui { display: none !important; }
     footer { text-align: center; font-size: 0.75rem; color: var(--muted); padding: 1rem; border-top: 1px solid var(--mid); }
   </style>
 </head>
 <body>
   <header>
-    <h1>IDS 2026 — Dealer comparison <span style="font-weight:500;opacity:.85;font-size:.85em">v1.4</span></h1>
-    <p>v1.4 map pins · score filters · sections A–E + questions · good / medium / bad · built __BUILT_AT__</p>
+    <h1>IDS 2026 — Dealer comparison <span style="font-weight:500;opacity:.85;font-size:.85em">v1.5</span></h1>
+    <p>v1.5 · one country filter for Country vs network, Country radar and By country · MIDI 4 · built __BUILT_AT__</p>
   </header>
 
   <div class="toolbar">
     <div><label for="f-country">Country filter</label><select id="f-country" multiple></select></div>
-    <div><label for="f-search">Dealer search</label><input id="f-search" type="search" placeholder="Name…" /></div>
+    <div id="midi-tools">
+      <label>Shortcuts</label>
+      <button type="button" class="btn-chip" id="btn-midi4" aria-pressed="false" title="Click for France, Italy, Spain, Switzerland. Click again for all countries.">MIDI 4</button>
+    </div>
     <div>
+      <label class="chk" style="padding-bottom:0"><input type="checkbox" id="f-meeting" /> Meeting view</label>
+      <div class="toolbar-hint">Country averages only. Hides named dealers and the map.</div>
+    </div>
+    <div class="named-dealer-ui"><label for="f-search">Dealer search</label><input id="f-search" type="search" placeholder="Name…" /></div>
+    <div class="named-dealer-ui">
       <label for="f-vs-national">Vs national avg</label>
       <select id="f-vs-national">
         <option value="all">All</option>
@@ -173,15 +196,15 @@
         <option value="near">Near (±3 pp)</option>
       </select>
     </div>
-    <div>
+    <div class="named-dealer-ui">
       <label for="f-min-score">Min score %</label>
       <input id="f-min-score" type="number" min="0" max="100" step="1" placeholder="—" />
     </div>
-    <div>
+    <div class="named-dealer-ui">
       <label for="f-max-score">Max score %</label>
       <input id="f-max-score" type="number" min="0" max="100" step="1" placeholder="—" />
     </div>
-    <div>
+    <div class="named-dealer-ui">
       <label for="f-weak-section">Weak section</label>
       <select id="f-weak-section">
         <option value="">Any section</option>
@@ -190,23 +213,23 @@
   </div>
 
   <nav class="tabs">
-    <button class="tab active" data-tab="overview" type="button">Overview</button>
-    <button class="tab" data-tab="map" type="button">Map</button>
-    <button class="tab" data-tab="heatmap" type="button">Heatmap</button>
-    <button class="tab" data-tab="gaps" type="button">Strengths &amp; gaps</button>
-    <button class="tab" data-tab="questions" type="button">Questions</button>
+    <button class="tab named-dealer-ui active" data-tab="overview" type="button">Overview</button>
+    <button class="tab named-dealer-ui" data-tab="map" type="button">Map</button>
+    <button class="tab named-dealer-ui" data-tab="heatmap" type="button">Heatmap</button>
+    <button class="tab named-dealer-ui" data-tab="gaps" type="button">Strengths &amp; gaps</button>
+    <button class="tab named-dealer-ui" data-tab="questions" type="button">Questions</button>
     <button class="tab" data-tab="vs-network" type="button">Country vs network</button>
-    <button class="tab" data-tab="dealer-radar" type="button">Dealer radar</button>
+    <button class="tab named-dealer-ui" data-tab="dealer-radar" type="button">Dealer radar</button>
     <button class="tab" data-tab="country-radar" type="button">Country radar</button>
-    <button class="tab" data-tab="compare" type="button">Compare dealers</button>
+    <button class="tab named-dealer-ui" data-tab="compare" type="button">Compare dealers</button>
     <button class="tab" data-tab="country" type="button">By country</button>
-    <button class="tab" data-tab="changelog" type="button">Changelog</button>
+    <button class="tab" data-tab="notes" type="button">Notes</button>
   </nav>
 
   <main>
     <div class="stats" id="stats"></div>
 
-    <section id="panel-overview" class="panel active">
+    <section id="panel-overview" class="panel named-dealer-ui active">
       <div class="card">
         <h2>Dealer overview — section vs country &amp; network</h2>
         <p class="hint">Pick a dealer to see section bars against country and network averages, plus strengths/weak points (full vs zero on max-point checklist items, one per section A–E). Click a section to open question drill.</p>
@@ -233,10 +256,10 @@
       </div>
     </section>
 
-    <section id="panel-map" class="panel">
+    <section id="panel-map" class="panel named-dealer-ui">
       <div class="card">
         <h2>Network dealer map</h2>
-        <p class="hint">Pins are coloured by dealer total vs that country’s national average (no rank digits — hover for name and scores; click to open Dealer radar). Filters above apply to the map and other tabs. Locations are approximate city centres (or a country centre when the dealer name has no place token) — not surveyed street addresses. Initial zoom stays on Europe/Israel; French overseas dealers remain on the map — zoom out or filter to France to see them. Map tiles require an internet connection. Dealers without coordinates stay in the tables only.</p>
+        <p class="hint">Pins are coloured by dealer total vs that country’s national average (no rank digits — hover for name and scores; click to open Dealer radar). Filters above apply to the map and other tabs. Locations are approximate city centres (or a country centre when the dealer name has no place token) — not surveyed addresses. Initial zoom stays on Europe/Israel; French overseas dealers remain on the map — zoom out or filter to France to see them. Land outlines are stored in this file (works on SharePoint with no map server). Street tiles appear only if this PC allows them. Dealers without coordinates stay in the tables only.</p>
         <div id="ids-map" role="img" aria-label="IDS network dealer interactive map"></div>
         <div class="legend map-pin-legend" id="map-legend">
           <span><i class="pin-swatch above"></i> ≥ +3 pp vs national avg</span>
@@ -244,11 +267,11 @@
           <span><i class="pin-swatch below"></i> ≤ −3 pp vs national avg</span>
           <span><i class="pin-swatch unknown"></i> No national avg</span>
         </div>
-        <p class="tile-note" id="ids-tile-status">Open the Map tab to load tiles…</p>
+        <p class="tile-note" id="ids-tile-status">Open the Map tab to load the map…</p>
       </div>
     </section>
 
-    <section id="panel-heatmap" class="panel">
+    <section id="panel-heatmap" class="panel named-dealer-ui">
       <div class="card">
         <h2>Section heatmap</h2>
         <div class="controls">
@@ -266,7 +289,7 @@
       </div>
     </section>
 
-    <section id="panel-gaps" class="panel">
+    <section id="panel-gaps" class="panel named-dealer-ui">
       <div class="card">
         <h2>Strengths &amp; gaps (section level)</h2>
         <p class="hint">Dealer % minus benchmark. Positive = strength; negative = audit priority.</p>
@@ -294,7 +317,7 @@
       </div>
     </section>
 
-    <section id="panel-questions" class="panel">
+    <section id="panel-questions" class="panel named-dealer-ui">
       <div class="card">
         <h2>Question drill</h2>
         <p class="hint">Compare each checklist item to country and network average. Band = good / medium / bad. Strengths = full score on max-point items; weak = zero score — one pick per section A–E.</p>
@@ -329,12 +352,27 @@
     <section id="panel-vs-network" class="panel">
       <div class="card">
         <h2>Country versus network average</h2>
-        <p class="hint">Section % for each country minus network %. Negative = market lag vs full IDS network. Hover the network average for who is excluded from Section E.</p>
+        <p class="hint">Uses the country filter at the top. % = country average. Δ = vs the full-network average. Both shows both (default). Hover network figures for who is excluded from Section E.</p>
+        <div class="controls">
+          <div>
+            <label for="vn-mode">Show</label>
+            <select id="vn-mode">
+              <option value="pct">%</option>
+              <option value="delta">Δ</option>
+              <option value="both" selected>Both (% · Δ)</option>
+            </select>
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button type="button" class="btn-chip" id="btn-copy-vn">Copy table</button>
+          </div>
+        </div>
         <div class="matrix-wrap" id="vs-network-table"></div>
+        <p class="hint" id="vn-copy-status" hidden></p>
       </div>
     </section>
 
-    <section id="panel-dealer-radar" class="panel">
+    <section id="panel-dealer-radar" class="panel named-dealer-ui">
       <div class="card">
         <h2>Dealer profile vs benchmarks</h2>
         <p class="hint">Section scores as % of each section maximum. Overlay country and network averages.</p>
@@ -354,9 +392,9 @@
     <section id="panel-country-radar" class="panel">
       <div class="card">
         <h2>Country comparison</h2>
-        <p class="hint">Select up to 4 countries. Polygons show average section profile per market.</p>
+        <p class="hint">Same countries as the filter at the top (MIDI 4 or Ctrl+click). Polygons show average section profile. Table lists A–E %. Radar draws up to 4 countries.</p>
         <div class="controls">
-          <div><label for="cr-countries">Countries (Ctrl+click)</label><select id="cr-countries" multiple size="5"></select></div>
+          <p class="toolbar-hint" id="cr-from-filter" style="max-width:none;margin:0"></p>
           <label class="chk"><input type="checkbox" id="cr-show-network" checked /> Overlay network</label>
         </div>
         <div class="split">
@@ -366,7 +404,7 @@
       </div>
     </section>
 
-    <section id="panel-compare" class="panel">
+    <section id="panel-compare" class="panel named-dealer-ui">
       <div class="card">
         <h2>Compare dealers (same country)</h2>
         <div class="controls">
@@ -384,41 +422,46 @@
 
     <section id="panel-country" class="panel">
       <div class="card">
-        <label for="f-country-one">Country</label>
-        <select id="f-country-one"></select>
-        <h2 style="margin-top:1rem">Section bars (dealers + country avg + network)</h2>
+        <h2>By country</h2>
+        <p class="hint" id="by-country-hint">Uses the country filter at the top. One country shows dealer bars. Several countries (or Meeting view) show country averages only.</p>
+        <select id="f-country-one" hidden aria-hidden="true"></select>
         <div id="chart-country"></div>
       </div>
     </section>
 
-    <section id="panel-changelog" class="panel">
-      <div class="card">
-        <h2>Changelog — v1.3 · 2026-07-30</h2>
+    <section id="panel-notes" class="panel">
+      <div class="card notes-card">
+        <h2>Notes</h2>
+        <p>How to read this file. Built __BUILT_AT__.</p>
+        <h3 style="font-size:0.95rem;margin:1rem 0 0.35rem">Country filter</h3>
         <ul>
-          <li><strong>v1.3 map pins + filters:</strong> Pins are colour discs by vs national average (±3 pp bands) — no rank digits. Toolbar: min/max score %, vs-national select, weak section (below that section’s country avg). Click a pin to open Dealer radar.</li>
-          <li><strong>v1.2 with map:</strong> Map tab — Leaflet + OpenStreetMap / CARTO pins for the full IDS network; hover shows dealer score %, country national average %, and delta (pp).</li>
-          <li><strong>MIDI FR/IT/ES/CH geo:</strong> Pins use MIDI_FR.xlsx NETWORK Town + Latitude/Longitude (exact DLRName match). Switzerland uses NETWORK Town city centres when lat/lon are blank. Removes the country-centre jitter blobs for those four countries.</li>
-          <li><strong>UK CV geo:</strong> Extra city pins from Isuzu Truck UK store pages / public dealer addresses for residual names without an Address row.</li>
-          <li><strong>Map fitBounds:</strong> Europe/Israel core only on open — French overseas dealers (Réunion / Martinique / Mayotte) stay on the map when MIDI NETWORK confirms them; zoom out or filter to France to see them. Réunion is labelled Saint-Pierre (Réunion), not Madagascar. Sanity fails if a non-overseas drawn pin sits outside country bounds.</li>
-          <li><strong>City-token scope:</strong> Country-scoped tokens (e.g. Sofia) cannot false-place a Greece dealer in Bulgaria.</li>
-          <li><strong>Poland geo fix:</strong> Pins use city centres inferred from the IDS result-report Address row (Toruń, Warszawa, Kraków, Poznań, Gdynia, …) — not the country-centre jitter blob near Łódź.</li>
-          <li><strong>Network geo + sanity:</strong> Address-row city matching expanded (Greece, Belgium, Denmark, Norway, UK LCV, NL, …); word-boundary tokens (no Bilboel→Bilbao); builder geo sanity warns on country-centre blobs / tight clusters and fails if Poland/Portugal/Greece/Belgium/France/Italy/Spain/Switzerland city coverage regresses.</li>
-          <li>Radar charts: removed dark “Weak sector” overlay wedges and floating Weak labels — clean dealer / country / network polygons only.</li>
-          <li>All UI labels in English (good / medium / bad — no Dutch goed/slecht).</li>
-          <li>Country names in English: Switzerland / France / Italy / Spain (not MIDI_CH etc.).</li>
-          <li>UK LCV (IUK — I.M. Parts &amp; Service, D-Max), UK CV (ITUK — Isuzu Truck UK), Israel LCV (UMI IDS pack — never blended with UTI), Norway (RSA).</li>
-          <li>Benelux kept; Belgium, Netherlands and Luxembourg also shown as separate countries (map prefers non-Benelux pins when both exist).</li>
-          <li>Overview strengths / weak points: per section A–E, based on max-point items (full score = good, zero = bad) — not “first question in section”.</li>
-          <li>Dealer total is % of scored max (280 A–E, or 253 A–D when Section E is not scored). Network GPS capture is not hardcoded here (Portugal meeting lock 63.3% stays on the Portugal / Imotors pack only).</li>
-          <li><strong>Section E not scored:</strong> Israel LCV (UMI) 29 dealers recorded 0/18 questions, 0/27 points, fill not_scored. That is not a fail. Totals restated on A–D; those zeros are excluded from the network Section E average and from the network total. Hover any network-average figure for the note.</li>
+          <li>The country filter at the top drives <strong>Country vs network</strong>, <strong>Country radar</strong> and <strong>By country</strong>. Ctrl+click to pick several markets.</li>
+          <li><strong>MIDI 4</strong> selects France, Italy, Spain and Switzerland in one click.</li>
+          <li><strong>Meeting view</strong> keeps country averages only. It hides named dealers, dealer search and the map. Use that for a four-country leave-behind.</li>
         </ul>
-        <p class="hint">Built __BUILT_AT__</p>
+        <h3 style="font-size:0.95rem;margin:1rem 0 0.35rem">% and Δ</h3>
+        <ul>
+          <li><strong>%</strong> is the country average for that chapter (A–E) or the total.</li>
+          <li><strong>Δ</strong> is that average minus the full-network average (percentage points). Negative means the market sits below the network.</li>
+          <li><strong>Both</strong> shows both, for example 71.0% · −4.6 pp. That is the default.</li>
+          <li><strong>Copy table</strong> copies the Country vs network grid for a slide.</li>
+        </ul>
+        <h3 style="font-size:0.95rem;margin:1rem 0 0.35rem">Who is in the average</h3>
+        <ul id="notes-avg-basis"></ul>
+        <p class="hint">Dealers who did not answer stay on the list and map. They are out of the average only. France and Spain use the named red-marked list. Every other market uses the same rule: blank or zero scores are out of the average.</p>
+        <h3 style="font-size:0.95rem;margin:1rem 0 0.35rem">Section E not scored</h3>
+        <ul>
+          <li>Where Section E is not scored it shows <strong>N.A.</strong> That is not a fail and not a −70 pp gap.</li>
+          <li>Israel LCV (UMI) totals are A–D only. Those zeros are excluded from the network Section E average.</li>
+          <li>IDS Israel in this file is the UMI dealer network. UTI is a different Israel distributor and is not blended in.</li>
+        </ul>
+        <p class="hint">This file is v1.5. Country packs use the same average rule as this full-network file.</p>
       </div>
     </section>
 
   </main>
 
-  <footer>Single-file offline dashboard · save to disk · open in Chrome or Firefox</footer>
+  <footer>Single-file dashboard · save to disk · open in Chrome or Firefox · map tiles need internet</footer>
 
   <script>
     const DATA = __DATA_JSON__;
@@ -489,8 +532,78 @@
     }
 
     function selectedCountries() {
-      const picked = [...$("#f-country").selectedOptions].map((o) => o.value);
+      const fc = $("#f-country");
+      if (!fc) return DATA.countries;
+      const picked = [...fc.selectedOptions].map((o) => o.value);
       return picked.length ? picked : DATA.countries;
+    }
+
+    const MIDI4 = ["France", "Italy", "Spain", "Switzerland"];
+
+    function meetingViewOn() {
+      return !!( $("#f-meeting") && $("#f-meeting").checked );
+    }
+
+    function vnMode() {
+      return ($("#vn-mode") && $("#vn-mode").value) || "both";
+    }
+
+    function countrySectionNotScored(c, sid) {
+      const p = DATA.country_profiles[c] || {};
+      return sid === "E" && (p.section_e_fill === "not_scored" || p.score_basis === "A-D");
+    }
+
+    function nsHtml() {
+      return '<span class="ns-label">N.A.</span>';
+    }
+
+    function fmtVnCell(pctVal, gapVal, notScored) {
+      if (notScored) return nsHtml();
+      const mode = vnMode();
+      if (mode === "pct") return pct(pctVal);
+      if (mode === "delta") return pctGap(gapVal);
+      if (pctVal == null && gapVal == null) return "—";
+      return pct(pctVal) + " · " + pctGap(gapVal);
+    }
+
+    function countryCountLabel(c) {
+      const p = DATA.country_profiles[c] || {};
+      const n = p.avg_basis_count;
+      const tot = p.dealer_count;
+      const ex = p.excluded_from_average_count || 0;
+      if (ex && n != null && tot != null) return n + " of " + tot + " in average";
+      if (n != null && tot != null && n !== tot) return n + " of " + tot + " in average";
+      if (tot != null) return String(tot) + " dealers";
+      return "—";
+    }
+
+    function midi4IsSelected() {
+      const fc = $("#f-country");
+      if (!fc) return false;
+      const picked = [...fc.selectedOptions].map((o) => o.value).sort();
+      const want = MIDI4.slice().sort();
+      return picked.length === want.length && picked.every((v, i) => v === want[i]);
+    }
+
+    function applyMeetingView() {
+      document.body.classList.toggle("meeting-view", meetingViewOn());
+      if (!meetingViewOn()) return;
+      const active = document.querySelector(".tab.active");
+      if (active && active.classList.contains("named-dealer-ui")) {
+        const btn = document.querySelector('.tab[data-tab="vs-network"]');
+        if (btn) btn.click();
+      }
+    }
+
+    function selectMidi4() {
+      const fc = $("#f-country");
+      if (!fc) return;
+      const turnOff = midi4IsSelected();
+      [...fc.options].forEach((o) => {
+        o.selected = turnOff ? true : MIDI4.includes(o.value);
+      });
+      syncOverviewFromFilter();
+      refresh();
     }
 
     /** Pin / filter band vs country national average (±3 pp). */
@@ -528,7 +641,8 @@
 
     function filteredDealers() {
       const countries = new Set(selectedCountries());
-      const q = $("#f-search").value.trim().toLowerCase();
+      const qEl = $("#f-search");
+      const q = qEl ? qEl.value.trim().toLowerCase() : "";
       const vs = ($("#f-vs-national") && $("#f-vs-national").value) || "all";
       const minScore = parseScoreFilter($("#f-min-score"));
       const maxScore = parseScoreFilter($("#f-max-score"));
@@ -800,30 +914,53 @@
     }
 
     function renderCountryRadar() {
-      const picked = [...$("#cr-countries").selectedOptions].map((o) => o.value).slice(0, 4);
-      if (!picked.length) picked.push(DATA.countries[0]);
-      const series = picked.map((c, i) => ({
+      const picked = selectedCountries();
+      const radarN = picked.slice(0, 4);
+      const hint = $("#cr-from-filter");
+      if (hint) {
+        hint.textContent = radarN.length
+          ? ("Filter: " + picked.join(", ") + (picked.length > 4 ? " — radar shows first 4" : ""))
+          : "No countries selected.";
+      }
+      if (!radarN.length) {
+        $("#country-radar-chart").innerHTML = "<p>Pick countries in the filter above.</p>";
+        $("#country-radar-table").innerHTML = "";
+        return;
+      }
+      const series = radarN.map((c, i) => ({
         label: c,
         values: countryVector(c),
         color: COUNTRY_COLORS[i % COUNTRY_COLORS.length],
         fill: COUNTRY_COLORS[i % COUNTRY_COLORS.length] + "22",
         width: 2,
       }));
-      if ($("#cr-show-network").checked) {
+      if ($("#cr-show-network") && $("#cr-show-network").checked) {
         series.push({ label: "Network", values: networkVector(), color: "#6b7a90", fill: "none", dash: "2 3", width: 1.5 });
       }
       drawRadar($("#country-radar-chart"), series);
-      let tbl = '<table class="data"><thead><tr><th>Country</th><th>Dealers</th><th class="num">Total %</th><th class="num">Δ network</th><th>Weakest</th></tr></thead><tbody>';
+      const secs = secIds();
+      let tbl = '<table class="data"><thead><tr><th>Country</th><th>n in average</th><th class="num th-tip">Total' + tipHtml(networkAvgHover()) + '</th>';
+      secs.forEach((s) => { tbl += `<th class="num">${s}</th>`; });
+      tbl += "<th>Weakest</th></tr></thead><tbody>";
       picked.forEach((c) => {
-        const p = DATA.country_profiles[c];
+        const p = DATA.country_profiles[c] || {};
         const vec = countryVector(c);
         let weak = "—", weakV = 1;
-        secIds().forEach((id, i) => {
+        secs.forEach((id, i) => {
+          if (countrySectionNotScored(c, id)) return;
           const v = vec[i];
           if (v != null && v < weakV) { weakV = v; weak = id + " (" + pct(v) + ")"; }
         });
         const gapN = p.total_pct != null && DATA.network.total_pct != null ? p.total_pct - DATA.network.total_pct : null;
-        tbl += `<tr><td>${c}</td><td>${p.dealer_count}</td><td class="num">${pct(p.total_pct)}</td><td class="num th-tip">${pctGap(gapN)}${tipHtml(networkAvgHover())}</td><td>${weak}</td></tr>`;
+        tbl += `<tr><td>${c}</td><td>${countryCountLabel(c)}</td><td class="num vn-cell">${fmtVnCell(p.total_pct, gapN, false)}</td>`;
+        secs.forEach((id, i) => {
+          const ns = countrySectionNotScored(c, id);
+          const cv = ns ? null : vec[i];
+          const nv = DATA.network.sections_pct[id];
+          const g = cv != null && nv != null ? cv - nv : null;
+          tbl += `<td class="num vn-cell">${fmtVnCell(cv, g, ns)}</td>`;
+        });
+        tbl += `<td>${weak}</td></tr>`;
       });
       $("#country-radar-table").innerHTML = tbl + "</tbody></table>";
     }
@@ -940,33 +1077,77 @@
 
     function renderVsNetwork() {
       const secs = secIds();
-      let html = `<table class="data matrix"><thead><tr><th>Country</th><th class="num th-tip">Total Δ${tipHtml(networkAvgHover())}</th>`;
+      const picked = selectedCountries();
+      let html = `<table class="data matrix"><thead><tr><th>Country</th><th>n in average</th><th class="num th-tip">Total${tipHtml(networkAvgHover())}</th>`;
       secs.forEach((s) => { html += `<th class="num">${s}</th>`; });
       html += `<th>Weakest vs net</th></tr></thead><tbody>`;
-      const rows = DATA.countries.map((c) => {
-        const p = DATA.country_profiles[c];
+      const rows = picked.map((c) => {
+        const p = DATA.country_profiles[c] || {};
         const totalGap = p.total_pct != null && DATA.network.total_pct != null ? p.total_pct - DATA.network.total_pct : null;
         const gaps = {};
+        const pcts = {};
         let weak = null, weakV = 0;
         secs.forEach((s) => {
-          const cv = p.sections_pct?.[s];
+          const ns = countrySectionNotScored(c, s);
+          const cv = ns ? null : p.sections_pct?.[s];
           const nv = DATA.network.sections_pct?.[s];
           const g = cv != null && nv != null ? cv - nv : null;
           gaps[s] = g;
-          if (g != null && (weak == null || g < weakV)) { weak = s; weakV = g; }
+          pcts[s] = cv;
+          if (!ns && g != null && (weak == null || g < weakV)) { weak = s; weakV = g; }
         });
-        return { c, p, totalGap, gaps, weak, weakV };
+        return { c, p, totalGap, gaps, pcts, weak, weakV };
       }).sort((a, b) => (a.totalGap ?? 0) - (b.totalGap ?? 0));
 
       rows.forEach((r) => {
         const cls = (v) => (v == null ? "" : v >= 0 ? "pos" : "neg");
-        html += `<tr><td>${r.c} <small>(${r.p.dealer_count})</small></td><td class="num ${cls(r.totalGap)}">${pctGap(r.totalGap)}</td>`;
+        html += `<tr><td>${r.c}</td><td>${countryCountLabel(r.c)}</td><td class="num vn-cell ${cls(r.totalGap)}">${fmtVnCell(r.p.total_pct, r.totalGap, false)}</td>`;
         secs.forEach((s) => {
-          html += `<td class="num ${cls(r.gaps[s])}">${pctGap(r.gaps[s])}</td>`;
+          const ns = countrySectionNotScored(r.c, s);
+          html += `<td class="num vn-cell ${ns ? "" : cls(r.gaps[s])}">${fmtVnCell(r.pcts[s], r.gaps[s], ns)}</td>`;
         });
         html += `<td>${r.weak ? r.weak + " (" + pctGap(r.weakV) + ")" : "—"}</td></tr>`;
       });
       $("#vs-network-table").innerHTML = html + "</tbody></table>";
+    }
+
+    function copyVsNetwork() {
+      const table = document.querySelector("#vs-network-table table");
+      const status = $("#vn-copy-status");
+      const done = (ok) => {
+        if (!status) return;
+        status.hidden = false;
+        status.textContent = ok ? "Copied. Paste into the slide." : "Copy failed — select the table and copy manually.";
+      };
+      if (!table) { done(false); return; }
+      const tsv = [...table.querySelectorAll("tr")].map((tr) =>
+        [...tr.children].map((td) => td.innerText.replace(/\s+/g, " ").trim()).join("\t")
+      ).join("\n");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(tsv).then(() => done(true)).catch(() => done(false));
+      } else {
+        done(false);
+      }
+    }
+
+    function renderNotes() {
+      const el = $("#notes-avg-basis");
+      if (!el) return;
+      const always = ["France", "Spain", "Italy", "Switzerland", "Israel LCV"];
+      const extra = DATA.countries.filter((c) => {
+        const p = DATA.country_profiles[c] || {};
+        return (p.excluded_from_average_count || 0) > 0 && !always.includes(c);
+      });
+      const list = always.filter((c) => DATA.country_profiles[c]).concat(extra);
+      el.innerHTML = list.map((c) => {
+        const p = DATA.country_profiles[c] || {};
+        const ex = p.excluded_from_average_count || 0;
+        let extraNote = "";
+        if (ex > 0) extraNote = " " + ex + " did not answer (still on the list and map).";
+        if (c === "France" || c === "Spain") extraNote += " Red-marked dealers stay on the list and map; they are out of this average.";
+        if (c === "Israel LCV") extraNote += " Section E is N.A. (not scored). This is the UMI network, not UTI.";
+        return "<li><strong>" + c + "</strong> — " + countryCountLabel(c) + "." + extraNote + "</li>";
+      }).join("");
     }
 
     function populateCompareSelects() {
@@ -1094,14 +1275,38 @@
     }
 
     function renderCountry() {
-      const c = $("#f-country-one").value || DATA.countries[0];
-      const list = DATA.dealers.filter((d) => d.country === c);
+      const picked = selectedCountries();
+      const hideNames = meetingViewOn() || picked.length !== 1;
       const nVec = networkVector();
+      if (hideNames) {
+        $("#chart-country").innerHTML = secIds().map((sec, si) => {
+          const net = nVec[si];
+          const rows = picked.map((c) => {
+            const p = DATA.country_profiles[c] || {};
+            const ns = countrySectionNotScored(c, sec);
+            const cv = ns ? null : (p.sections_pct || {})[sec];
+            const gap = cv != null && net != null ? cv - net : null;
+            return { c, ns, cv, gap };
+          });
+          const maxBar = Math.max(0.01, ...rows.map((r) => r.cv || 0), net || 0);
+          const bars = rows.map((r) => {
+            if (r.ns) {
+              return `<div class="bar-row"><div class="bar-label">${r.c}</div><div class="bar-track"></div><div class="bar-pct">${nsHtml()}</div></div>`;
+            }
+            return `<div class="bar-row"><div class="bar-label">${r.c}</div><div class="bar-track"><div class="bar-fill" style="width:${((r.cv || 0) / maxBar) * 100}%"></div></div><div class="bar-pct">${fmtVnCell(r.cv, r.gap, false)}</div></div>`;
+          }).join("");
+          return `<div style="margin-bottom:1.2rem"><h3 style="margin:0 0 0.35rem;font-size:0.95rem">${sec} — ${secLabel(sec)}</h3>
+            <p style="margin:0 0 0.5rem;font-size:0.8rem;color:var(--muted)">${netLabel("Network")} ${pct(net)}</p>${bars}</div>`;
+        }).join("");
+        return;
+      }
+      const c = picked[0] || DATA.countries[0];
+      const list = DATA.dealers.filter((d) => d.country === c);
       $("#chart-country").innerHTML = secIds().map((sec, si) => {
         if (sec === "E" && list.length && list.every((d) => sectionIsNotScored(d, "E"))) {
           const net = nVec[si];
           return `<div style="margin-bottom:1.2rem"><h3 style="margin:0 0 0.35rem;font-size:0.95rem">${sec} — ${secLabel(sec)}</h3>
-            <p style="margin:0 0 0.5rem;font-size:0.8rem;color:#222">Section E is not scored for this customer (recorded 0/27, fill not_scored). Excluded from averages — not a fail. ${netLabel("Network")} ${pct(net)} excludes this customer.</p></div>`;
+            <p style="margin:0 0 0.5rem;font-size:0.8rem;color:#222">Section E is not scored for this customer (recorded 0/27). Excluded from averages — not a fail. Shown as N.A., not a gap. ${netLabel("Network")} ${pct(net)} excludes this customer.</p></div>`;
         }
         const pcts = list.map((d) => d.sections[sec]?.pct).filter((v) => v != null);
         const avg = pcts.length ? pcts.reduce((a, b) => a + b, 0) / pcts.length : null;
@@ -1134,7 +1339,7 @@
         '<p class="map-tip-meta">Vs national average: <strong class="' + deltaCls + '">' +
         delta + "</strong></p>" +
         '<p class="map-tip-meta" style="margin-top:.35rem;font-size:.78rem">' +
-        (p.geo_label || "Approx location") + place + " — not a surveyed street address</p>"
+        (p.geo_label || "Approx location") + place + " — not a surveyed address</p>"
       );
     }
 
@@ -1183,30 +1388,82 @@
 
       if (typeof L === "undefined") {
         if (statusEl) {
-          statusEl.textContent = "Leaflet failed to load (check network / CDN). Other compare tabs still work.";
+          statusEl.textContent = "Map library missing from this file. Other compare tabs still work.";
           statusEl.classList.add("warn");
         }
-        mapEl.innerHTML = "<p style='padding:1rem;color:#9a3412'>Map library unavailable offline. Open with internet access.</p>";
+        mapEl.innerHTML = "<p style='padding:1rem;color:#9a3412'>Map library unavailable. Other tabs still work.</p>";
         return;
       }
 
       if (!window.__idsMap) {
-        window.__idsMap = L.map("ids-map", { scrollWheelZoom: true });
-        const tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-          maxZoom: 18,
-          subdomains: "abcd",
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        window.__idsMap = L.map("ids-map", {
+          scrollWheelZoom: true,
+          attributionControl: true,
         });
-        tiles.on("load", function () {
-          if (statusEl) statusEl.classList.remove("warn");
-        });
-        tiles.on("tileerror", function () {
-          if (statusEl) {
-            statusEl.textContent = "Tile load issue — check network. Pins still show if tiles partially load.";
-            statusEl.classList.add("warn");
+        window.__idsMap.attributionControl.setPrefix("");
+        // Land is in this file so SharePoint / blocked tile servers still show geography.
+        window.__idsMap.createPane("landPane");
+        window.__idsMap.getPane("landPane").style.zIndex = 150;
+        const landData = __LAND_GEOJSON__;
+        window.__idsLandLayer = L.geoJSON(landData, {
+          pane: "landPane",
+          interactive: false,
+          style: {
+            color: "#5b6e82",
+            weight: 1,
+            fillColor: "#f3eee6",
+            fillOpacity: 1,
+          },
+        }).addTo(window.__idsMap);
+        const BASEMAPS = [
+          {
+            url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+            opts: {
+              maxZoom: 19,
+              attribution: "Tiles &copy; Esri",
+            },
+          },
+          {
+            url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            opts: {
+              maxZoom: 19,
+              attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            },
+          },
+        ];
+        function attachBasemap(i) {
+          if (i >= BASEMAPS.length) {
+            window.__idsTileFailed = true;
+            return;
           }
-        });
-        tiles.addTo(window.__idsMap);
+          const spec = BASEMAPS[i];
+          const layer = L.tileLayer(spec.url, spec.opts);
+          let loaded = false;
+          let errors = 0;
+          let switched = false;
+          function failOver() {
+            if (switched || loaded) return;
+            switched = true;
+            window.__idsMap.removeLayer(layer);
+            attachBasemap(i + 1);
+          }
+          layer.on("load", function () {
+            loaded = true;
+            window.__idsTilesOk = true;
+            window.__idsTileFailed = false;
+          });
+          layer.on("tileerror", function () {
+            errors += 1;
+            if (!loaded && errors >= 3) failOver();
+          });
+          setTimeout(function () {
+            if (!loaded && errors > 0) failOver();
+          }, 1800);
+          layer.addTo(window.__idsMap);
+          window.__idsTileLayer = layer;
+        }
+        attachBasemap(0);
         window.__idsMapLayer = L.layerGroup().addTo(window.__idsMap);
       }
 
@@ -1255,14 +1512,23 @@
           );
           if (core.length >= Math.max(3, Math.floor(fit.length * 0.6))) fit = core;
         }
-        window.__idsMap.fitBounds(L.latLngBounds(fit), { padding: [36, 36], maxZoom: 6 });
+        const singleCountry = (DATA.countries || []).length === 1;
+        window.__idsMap.fitBounds(L.latLngBounds(fit), {
+          padding: [36, 36],
+          maxZoom: singleCountry ? 10 : 6,
+        });
+        // Network view: OSM at zoom 3 looks like empty land/water. Keep camera
+        // on Central Europe so coasts, cities and major roads are visible.
+        if (!singleCountry && window.__idsMap.getZoom() < 5) {
+          window.__idsMap.setView([47.5, 10], 5);
+        }
       } else {
         window.__idsMap.setView([48.5, 10.0], 4);
       }
       setTimeout(function () { window.__idsMap.invalidateSize(); }, 80);
+      setTimeout(function () { window.__idsMap.invalidateSize(); }, 400);
 
       if (statusEl) {
-        statusEl.classList.remove("warn");
         const overseasN = pinned.filter(
           (p) => p.lat < 28 || p.lat > 72 || p.lon < -12 || p.lon > 40
         ).length;
@@ -1272,6 +1538,8 @@
           if (bandCounts[b] != null) bandCounts[b] += 1;
           else bandCounts.unknown += 1;
         });
+        if (window.__idsTileFailed && !window.__idsLandLayer) statusEl.classList.add("warn");
+        else statusEl.classList.remove("warn");
         statusEl.textContent =
           "Showing " + pinned.length + " dealers on map" +
           (off ? (" · " + off + " without coordinates (tables only)") : "") +
@@ -1280,7 +1548,10 @@
           (overseasN
             ? (" · " + overseasN + " overseas pin(s) — zoom out to see; default view stays Europe")
             : "") +
-          " · hover for name & scores · click pin for Dealer radar.";
+          " · hover for name & scores · click pin for Dealer radar" +
+          (window.__idsTilesOk
+            ? " · Street map."
+            : " · Land outlines (in this file). Street tiles blocked here.");
       }
     }
 
@@ -1290,10 +1561,19 @@
       renderOverview(list);
       renderHeatmap(list);
       renderCountry();
+      renderVsNetwork();
+      renderCountryRadar();
+      renderNotes();
+      if ($("#btn-midi4")) {
+        const on = midi4IsSelected();
+        $("#btn-midi4").classList.toggle("active", on);
+        $("#btn-midi4").setAttribute("aria-pressed", on ? "true" : "false");
+      }
       if ($("#panel-map") && $("#panel-map").classList.contains("active")) renderMap(list);
     }
 
     function fillCountrySelect(sel, multi) {
+      if (!sel) return;
       DATA.countries.forEach((c) => {
         const o = document.createElement("option");
         o.value = c;
@@ -1304,9 +1584,17 @@
     }
 
     function syncOverviewFromFilter() {
-      // Keep overview country in sync with first selected filter country when possible
-      const picked = [...$("#f-country").selectedOptions].map((o) => o.value);
-      if (picked.length === 1) $("#ov-country").value = picked[0];
+      const picked = selectedCountries();
+      const first = picked[0];
+      ["ov-country", "dr-country", "gp-country", "cp-country", "qq-country", "f-country-one"].forEach((id) => {
+        const el = $("#" + id);
+        if (el && first && [...el.options].some((o) => o.value === first)) el.value = first;
+      });
+    }
+
+    function on(id, evt, fn) {
+      const el = typeof id === "string" ? $("#" + id) : id;
+      if (el) el.addEventListener(evt, fn);
     }
 
     function init() {
@@ -1317,7 +1605,6 @@
         fc.appendChild(o);
       });
       ["f-country-one", "dr-country", "gp-country", "cp-country", "ov-country", "qq-country"].forEach((id) => fillCountrySelect($("#" + id), false));
-      fillCountrySelect($("#cr-countries"), true);
       secIds().forEach((id) => {
         const label = id + " — " + secLabel(id).slice(0, 40);
         ["gp-section", "qq-section", "f-weak-section"].forEach((sid) => {
@@ -1333,38 +1620,40 @@
       });
 
       fc.addEventListener("change", () => { syncOverviewFromFilter(); refresh(); });
-      $("#f-search").addEventListener("input", refresh);
-      $("#f-vs-national").addEventListener("change", refresh);
-      $("#f-min-score").addEventListener("input", refresh);
-      $("#f-max-score").addEventListener("input", refresh);
-      $("#f-weak-section").addEventListener("change", refresh);
-      $("#f-country-one").addEventListener("change", renderCountry);
-      $("#hm-mode").addEventListener("change", () => renderHeatmap(filteredDealers()));
+      on("f-search", "input", refresh);
+      on("f-vs-national", "change", refresh);
+      on("f-min-score", "input", refresh);
+      on("f-max-score", "input", refresh);
+      on("f-weak-section", "change", refresh);
+      on("hm-mode", "change", () => renderHeatmap(filteredDealers()));
+      on("btn-midi4", "click", selectMidi4);
+      on("f-meeting", "change", () => { applyMeetingView(); refresh(); });
+      on("vn-mode", "change", () => { renderVsNetwork(); renderCountryRadar(); renderCountry(); });
+      on("btn-copy-vn", "click", copyVsNetwork);
 
-      $("#ov-country").addEventListener("change", renderOverviewFocus);
-      $("#ov-dealer").addEventListener("change", renderOverviewFocus);
+      on("ov-country", "change", renderOverviewFocus);
+      on("ov-dealer", "change", renderOverviewFocus);
 
-      $("#dr-country").addEventListener("change", renderDealerRadar);
-      $("#dr-dealer").addEventListener("change", renderDealerRadar);
-      $("#dr-show-country").addEventListener("change", renderDealerRadar);
-      $("#dr-show-network").addEventListener("change", renderDealerRadar);
+      on("dr-country", "change", renderDealerRadar);
+      on("dr-dealer", "change", renderDealerRadar);
+      on("dr-show-country", "change", renderDealerRadar);
+      on("dr-show-network", "change", renderDealerRadar);
 
-      $("#cr-countries").addEventListener("change", renderCountryRadar);
-      $("#cr-show-network").addEventListener("change", renderCountryRadar);
+      on("cr-show-network", "change", renderCountryRadar);
 
       ["gp-country", "gp-section", "gp-bench", "gp-side", "gp-limit"].forEach((id) => {
-        $("#" + id).addEventListener("change", renderGaps);
+        on(id, "change", renderGaps);
       });
 
       ["qq-country", "qq-dealer", "qq-section", "qq-band", "qq-sort"].forEach((id) => {
-        $("#" + id).addEventListener("change", () => {
+        on(id, "change", () => {
           if (id === "qq-country") populateDealerSelect($("#qq-dealer"), $("#qq-country").value);
           renderQuestions();
         });
       });
 
-      $("#cp-country").addEventListener("change", () => { renderCompare(); });
-      ["cp-a", "cp-b", "cp-c"].forEach((id) => $("#" + id).addEventListener("change", renderCompare));
+      on("cp-country", "change", () => { renderCompare(); });
+      ["cp-a", "cp-b", "cp-c"].forEach((id) => on(id, "change", renderCompare));
 
       document.querySelectorAll(".tab").forEach((btn) => {
         btn.addEventListener("click", () => {
@@ -1372,7 +1661,7 @@
           document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
           btn.classList.add("active");
           const panel = $("#panel-" + btn.dataset.tab);
-          panel.classList.add("active");
+          if (panel) panel.classList.add("active");
           if (btn.dataset.tab === "dealer-radar") renderDealerRadar();
           if (btn.dataset.tab === "country-radar") renderCountryRadar();
           if (btn.dataset.tab === "gaps") renderGaps();
@@ -1381,6 +1670,8 @@
           if (btn.dataset.tab === "vs-network") renderVsNetwork();
           if (btn.dataset.tab === "overview") renderOverviewFocus();
           if (btn.dataset.tab === "map") renderMap(filteredDealers());
+          if (btn.dataset.tab === "notes") renderNotes();
+          if (btn.dataset.tab === "country") renderCountry();
         });
       });
 
@@ -1391,16 +1682,11 @@
       renderCompare();
       renderQuestions();
       renderVsNetwork();
+      renderNotes();
     }
 
     init();
   </script>
-  <script src="../_ui/leaflet.js"></script>
-  <script>
-    /* CDN fallback if local _ui missing (online only) */
-    if (typeof L === "undefined") {
-      document.write('<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>');
-    }
-  </script>
+  <script>__LEAFLET_JS__</script>
 </body>
 </html>
