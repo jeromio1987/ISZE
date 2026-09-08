@@ -151,7 +151,7 @@ def _leaflet_map_script(
     status_el_id: str = "pt-tile-status",
     auto_init: bool = False,
 ) -> str:
-    """Client JS: Leaflet + OSM/CARTO pins; hover shows dealer score vs Portugal national average."""
+    """Client JS: Leaflet + OpenStreetMap pins; hover shows dealer score vs Portugal national average."""
     points_json = json.dumps(points, ensure_ascii=False)
     auto_flag = "true" if auto_init else "false"
     return f"""
@@ -198,20 +198,19 @@ def _leaflet_map_script(
     window.__ptMap = map;
     const providers = [
       {{
-        name: "CARTO Voyager",
-        url: "https://{{s}}.basemaps.cartocdn.com/rastertiles/voyager/{{z}}/{{x}}/{{y}}{{r}}.png",
-        options: {{
-          maxZoom: 18,
-          subdomains: "abcd",
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        }},
-      }},
-      {{
         name: "OpenStreetMap",
-        url: "https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png",
+        url: "https://tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png",
         options: {{
           maxZoom: 18,
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }},
+      }},
+      {{
+        name: "OpenTopoMap",
+        url: "https://{{s}}.tile.opentopomap.org/{{z}}/{{x}}/{{y}}.png",
+        options: {{
+          maxZoom: 18,
+          attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, SRTM | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
         }},
       }},
     ];
@@ -282,7 +281,7 @@ def _leaflet_map_script(
       map.fitBounds(L.latLngBounds(fit), {{ padding: [36, 36], maxZoom: 9 }});
       if (mainland.length && mainland.length < latLngs.length) {{
         baseStatus =
-          "Base layer: OpenStreetMap / CARTO · mainland view; Açores pin(s) on map (zoom out / pan west). Hover a pin for score vs Portugal national average.";
+          "Base layer: OpenStreetMap · mainland view; Açores pin(s) on map (zoom out / pan west). Hover a pin for score vs Portugal national average.";
         if (statusEl) statusEl.textContent = baseStatus;
       }}
     }} else {{
@@ -813,7 +812,7 @@ Meeting pack for Imotors / Portugal. **Mode A** (external language).
 
 - Dealers: **{dealer_count}**
 - Approx place on map: {geo.get("geo_ok")} · without place token: {geo.get("geo_missing")}
-- Map base layer: Leaflet CDN + OpenStreetMap/CARTO tiles (needs internet when opening the HTML).
+- Map base layer: bundled Leaflet + OpenStreetMap tiles (needs internet when opening the HTML).
 - Pins: approximate city centres from dealer names and the public Isuzu Portugal dealer directory — not surveyed street addresses.
 
 ## Network average
@@ -920,7 +919,7 @@ def main() -> int:
         'data-tab="map"' in html
         and "Portugal national average" in html
         and ("window.__idsMap" in html or "function renderMap" in html)
-        and "basemaps.cartocdn.com" in html
+        and "tile.openstreetmap.org" in html
         and "Weak sector" not in html
         and ">Weak</text>" not in html
     )
