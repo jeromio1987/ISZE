@@ -196,54 +196,31 @@ def _leaflet_map_script(
 
     const map = L.map("{map_div_id}", {{ scrollWheelZoom: true }});
     window.__ptMap = map;
-    const providers = [
-      {{
-        name: "OpenStreetMap",
-        url: "https://tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png",
-        options: {{
-          maxZoom: 18,
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        }},
-      }},
-      {{
-        name: "OpenTopoMap",
-        url: "https://{{s}}.tile.opentopomap.org/{{z}}/{{x}}/{{y}}.png",
-        options: {{
-          maxZoom: 18,
-          attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, SRTM | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
-        }},
-      }},
-    ];
-    let activeTiles = null;
-    function activateTiles(index) {{
-      const provider = providers[index];
-      let tileErrors = 0;
-      if (activeTiles) map.removeLayer(activeTiles);
-      activeTiles = L.tileLayer(provider.url, provider.options);
-      activeTiles.on("load", function () {{
-        if (statusEl) {{
-          statusEl.textContent = "Base layer: " + provider.name + " · hover a pin for dealer score vs Portugal national average.";
-          statusEl.classList.remove("warn");
-        }}
-      }});
-      activeTiles.on("tileerror", function () {{
-        tileErrors += 1;
-        if (tileErrors >= 3 && index + 1 < providers.length) {{
-          if (statusEl) {{
-            statusEl.textContent = provider.name + " tiles blocked — trying " + providers[index + 1].name + ".";
-            statusEl.classList.add("warn");
-          }}
-          activateTiles(index + 1);
-          return;
-        }}
-        if (statusEl) {{
-          statusEl.textContent = "Tile load issue — pins still show on the neutral map background.";
-          statusEl.classList.add("warn");
-        }}
-      }});
-      activeTiles.addTo(map);
+    const offlineLayer = L.layerGroup().addTo(map);
+    const gridStyle = {{ color: "#9fb0c4", weight: 1, opacity: 0.35, interactive: false }};
+    for (let lon = -32; lon <= -5; lon += 5) {{
+      L.polyline([[32, lon], [43, lon]], gridStyle).addTo(offlineLayer);
     }}
-    activateTiles(0);
+    for (let lat = 33; lat <= 42; lat += 3) {{
+      L.polyline([[lat, -32], [lat, -5]], gridStyle).addTo(offlineLayer);
+    }}
+    L.rectangle([[36.8, -9.6], [42.3, -6.0]], {{
+      color: "#7f93ab",
+      weight: 1,
+      opacity: 0.65,
+      fillColor: "#f7f4ee",
+      fillOpacity: 0.25,
+      interactive: false,
+    }}).addTo(offlineLayer);
+    L.marker([39.5, -8.0], {{
+      icon: L.divIcon({{ className: "offline-country-label", html: "Portugal", iconSize: [90, 16] }}),
+      interactive: false,
+    }}).addTo(offlineLayer);
+    map.attributionControl.setPrefix("Leaflet");
+    if (statusEl) {{
+      statusEl.textContent = "Offline basemap · no external tile service · hover a pin for dealer score vs Portugal national average.";
+      statusEl.classList.remove("warn");
+    }}
     setTimeout(function () {{ map.invalidateSize(); }}, 200);
 
     const pinIcon = function (rank) {{
@@ -281,7 +258,7 @@ def _leaflet_map_script(
       map.fitBounds(L.latLngBounds(fit), {{ padding: [36, 36], maxZoom: 9 }});
       if (mainland.length && mainland.length < latLngs.length) {{
         baseStatus =
-          "Base layer: OpenStreetMap · mainland view; Açores pin(s) on map (zoom out / pan west). Hover a pin for score vs Portugal national average.";
+          "Offline basemap · mainland view; Açores pin(s) on map (zoom out / pan west). Hover a pin for score vs Portugal national average.";
         if (statusEl) statusEl.textContent = baseStatus;
       }}
     }} else {{
@@ -637,6 +614,11 @@ main {{ max-width:1180px; margin:0 auto; padding:1rem 1.2rem 2rem; display:grid;
 .map-tip-meta .neg {{ color: var(--bad); }}
 .tile-note {{ margin:.55rem 0 0; color:var(--muted); font-size:.78rem; }}
 .tile-note.warn {{ color:#9a3412; }}
+.offline-country-label {{
+  color:#24354f; font-size:11px; font-weight:700;
+  text-shadow:0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+  white-space:nowrap; pointer-events:none;
+}}
 table {{ width:100%; border-collapse:collapse; font-size:.82rem; }}
 th,td {{ padding:.35rem .4rem; border-bottom:1px solid var(--mid); text-align:left; }}
 th {{ color:var(--muted); font-size:.72rem; text-transform:uppercase; }}
@@ -650,9 +632,9 @@ th {{ color:var(--muted); font-size:.72rem; text-transform:uppercase; }}
 <main>
   <div class="card">
     <h2>Network map</h2>
-    <p class="hint">Hover a pin for that dealer’s total score vs the Portugal national average (delta in pp). Pins are approximate city centres — not surveyed street addresses. The map library is bundled in this file; map tiles require an internet connection. If a tile provider is blocked, pins still render on the neutral background.</p>
+    <p class="hint">Hover a pin for that dealer’s total score vs the Portugal national average (delta in pp). Pins are approximate city centres — not surveyed street addresses. The map library and basemap are bundled in this file; no external map tile service is required.</p>
     <div id="pt-map" role="img" aria-label="Portugal dealer interactive map"></div>
-    <p class="tile-note" id="tile-status">Loading map tiles…</p>
+    <p class="tile-note" id="tile-status">Drawing offline map…</p>
   </div>
   <div class="card">
     <h2>Ranking</h2>
@@ -812,7 +794,7 @@ Meeting pack for Imotors / Portugal. **Mode A** (external language).
 
 - Dealers: **{dealer_count}**
 - Approx place on map: {geo.get("geo_ok")} · without place token: {geo.get("geo_missing")}
-- Map base layer: bundled Leaflet + OpenStreetMap tiles (needs internet when opening the HTML).
+- Map base layer: bundled Leaflet + offline grid / country label layer (no external tile service).
 - Pins: approximate city centres from dealer names and the public Isuzu Portugal dealer directory — not surveyed street addresses.
 
 ## Network average
@@ -919,7 +901,7 @@ def main() -> int:
         'data-tab="map"' in html
         and "Portugal national average" in html
         and ("window.__idsMap" in html or "function renderMap" in html)
-        and "tile.openstreetmap.org" in html
+        and "no external tile service" in html
         and "Weak sector" not in html
         and ">Weak</text>" not in html
     )

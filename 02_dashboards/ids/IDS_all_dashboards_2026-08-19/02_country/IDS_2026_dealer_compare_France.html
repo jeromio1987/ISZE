@@ -793,6 +793,15 @@ svg.leaflet-image-layer.leaflet-interactive path {
     .rank-pin.near { background: var(--amber); }
     .rank-pin.below { background: var(--bad); }
     .rank-pin.unknown { background: #94a3b8; }
+    .offline-country-label {
+      color:#24354f; font-size:11px; font-weight:700;
+      text-shadow:0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+      white-space:nowrap; pointer-events:none;
+    }
+    .offline-grid-label {
+      color:#6b7a90; font-size:10px; font-weight:600;
+      text-shadow:0 1px 0 #fff; pointer-events:none;
+    }
     .map-pin-legend { margin-top: 0.75rem; margin-bottom: 0.25rem; align-items: center; }
     .map-pin-legend .pin-swatch {
       display: inline-block; width: 0.85rem; height: 0.85rem; border-radius: 50%;
@@ -834,7 +843,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <body>
   <header>
     <h1>IDS 2026 — France dealer comparison <span style="font-weight:500;opacity:.85;font-size:.85em">v1.4</span></h1>
-    <p>v1.4 · France dealers only (84) · no country filter (single market) · map hover = dealer score vs France national average · network avg from full IDS network (564 dealers, anonymous; Section E not scored / missing excluded) · built 2026-09-08 09:15 UTC</p>
+    <p>v1.4 · France dealers only (84) · no country filter (single market) · map hover = dealer score vs France national average · network avg from full IDS network (564 dealers, anonymous; Section E not scored / missing excluded) · built 2026-09-08 10:03 UTC</p>
   </header>
 
   <div class="toolbar">
@@ -909,7 +918,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <section id="panel-map" class="panel">
       <div class="card">
         <h2>France dealer map</h2>
-        <p class="hint">Pins are coloured by dealer total vs the France national average (no rank digits — hover for name and scores; click to open Dealer radar). Filters above apply to the map and other tabs. Locations are approximate city centres (or a country centre when the dealer name has no place token) — not surveyed street addresses. Initial zoom stays on Europe/Israel; French overseas dealers remain on the map — zoom out or filter to France to see them. The map library is bundled in this file; map tiles require an internet connection. If a tile provider is blocked, pins still render on the neutral background. Dealers without coordinates stay in the tables only.</p>
+        <p class="hint">Pins are coloured by dealer total vs the France national average (no rank digits — hover for name and scores; click to open Dealer radar). Filters above apply to the map and other tabs. Locations are approximate city centres (or a country centre when the dealer name has no place token) — not surveyed street addresses. Initial zoom stays on Europe/Israel; French overseas dealers remain on the map — zoom out or filter to France to see them. The map library and basemap are bundled in this file; no external map tile service is required. Dealers without coordinates stay in the tables only.</p>
         <div id="ids-map" role="img" aria-label="France dealer interactive map"></div>
         <div class="legend map-pin-legend" id="map-legend">
           <span><i class="pin-swatch above"></i> ≥ +3 pp vs national avg</span>
@@ -917,7 +926,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
           <span><i class="pin-swatch below"></i> ≤ −3 pp vs national avg</span>
           <span><i class="pin-swatch unknown"></i> No national avg</span>
         </div>
-        <p class="tile-note" id="ids-tile-status">Open the Map tab to load tiles…</p>
+        <p class="tile-note" id="ids-tile-status">Open the Map tab to draw the offline map…</p>
       </div>
     </section>
 
@@ -1829,58 +1838,72 @@ svg.leaflet-image-layer.leaflet-interactive path {
       }).filter((p) => !p.map_exclude);
     }
 
-    function addTileLayerWithFallback(map, statusEl) {
-      const providers = [
-        {
-          name: "OpenStreetMap",
-          url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-          options: {
-            maxZoom: 18,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-          },
-        },
-        {
-          name: "OpenTopoMap",
-          url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-          options: {
-            maxZoom: 18,
-            attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, SRTM | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a>',
-          },
-        },
-      ];
-      let activeLayer = null;
+    const OFFLINE_COUNTRY_CENTRES = {
+      "Belgium": [50.8503, 4.3517], "Benelux": [51.0, 4.5], "Cyprus": [34.7071, 33.0226],
+      "Denmark": [56.2639, 9.5018], "France": [46.6034, 1.8883], "Greece": [39.0742, 21.8243],
+      "Hungary": [47.1625, 19.5033], "Israel LCV": [31.5, 34.9], "Israel": [31.5, 34.9],
+      "Italy": [42.5, 12.5], "Luxembourg": [49.8153, 6.1296], "Malta": [35.8997, 14.5146],
+      "Netherlands": [52.1326, 5.2913], "Norway": [64.0, 12.0], "Poland": [52.0, 19.0],
+      "Portugal": [39.5, -8.0], "Romania": [45.9, 24.9], "Spain": [40.2, -3.7],
+      "Switzerland": [46.8, 8.2], "UK CV": [52.5, -1.5], "UK LCV": [54.0, -2.5],
+    };
+    const OFFLINE_COUNTRY_BOUNDS = {
+      "Belgium": [49.4, 51.6, 2.4, 6.5], "Benelux": [49.4, 53.7, 2.4, 7.3],
+      "Cyprus": [34.5, 35.8, 32.0, 34.8], "Denmark": [54.5, 57.9, 8.0, 15.3],
+      "France": [41.0, 51.5, -5.5, 10.0], "Greece": [34.7, 41.8, 19.3, 29.7],
+      "Hungary": [45.7, 48.6, 16.0, 23.0], "Israel LCV": [29.4, 33.4, 34.2, 35.9],
+      "Israel": [29.4, 33.4, 34.2, 35.9], "Italy": [36.0, 47.5, 6.5, 19.0],
+      "Luxembourg": [49.4, 50.2, 5.7, 6.6], "Malta": [35.7, 36.1, 14.1, 14.6],
+      "Netherlands": [50.7, 53.7, 3.2, 7.3], "Norway": [57.8, 71.5, 4.5, 31.5],
+      "Poland": [49.0, 55.0, 14.0, 24.5], "Portugal": [36.8, 42.3, -9.6, -6.0],
+      "Romania": [43.5, 48.3, 20.0, 30.0], "Spain": [35.9, 44.0, -9.5, 4.5],
+      "Switzerland": [45.7, 47.9, 5.8, 10.6], "UK CV": [49.8, 61.0, -8.5, 2.0],
+      "UK LCV": [49.8, 61.0, -8.5, 2.0],
+    };
 
-      function activate(index) {
-        const provider = providers[index];
-        let tileErrors = 0;
-        if (activeLayer) map.removeLayer(activeLayer);
-        activeLayer = L.tileLayer(provider.url, provider.options);
-        activeLayer.on("load", function () {
-          if (statusEl) {
-            statusEl.classList.remove("warn");
-            statusEl.dataset.tileProvider = provider.name;
-          }
-        });
-        activeLayer.on("tileerror", function () {
-          tileErrors += 1;
-          if (tileErrors >= 3 && index + 1 < providers.length) {
-            if (statusEl) {
-              statusEl.textContent = provider.name + " tiles blocked — trying " + providers[index + 1].name + ".";
-              statusEl.classList.add("warn");
-            }
-            activate(index + 1);
-            return;
-          }
-          if (statusEl) {
-            statusEl.textContent = "Tile load issue — pins still show on the neutral map background.";
-            statusEl.classList.add("warn");
-          }
-        });
-        activeLayer.addTo(map);
-        window.__idsTileLayer = activeLayer;
+    function addOfflineBasemap(map, statusEl, countries) {
+      if (window.__idsOfflineBase) return;
+      const layer = L.layerGroup().addTo(map);
+      window.__idsOfflineBase = layer;
+      const visible = new Set(countries || DATA.countries || []);
+      const gridStyle = { color: "#9fb0c4", weight: 1, opacity: 0.35, interactive: false };
+      for (let lon = -30; lon <= 45; lon += 15) {
+        L.polyline([[28, lon], [72, lon]], gridStyle).addTo(layer);
+        L.marker([28.4, lon], {
+          icon: L.divIcon({ className: "offline-grid-label", html: lon + "°", iconSize: [36, 12] }),
+          interactive: false,
+        }).addTo(layer);
       }
-
-      activate(0);
+      for (let lat = 30; lat <= 70; lat += 10) {
+        L.polyline([[lat, -30], [lat, 45]], gridStyle).addTo(layer);
+        L.marker([lat, -29], {
+          icon: L.divIcon({ className: "offline-grid-label", html: lat + "°", iconSize: [36, 12] }),
+          interactive: false,
+        }).addTo(layer);
+      }
+      Object.entries(OFFLINE_COUNTRY_BOUNDS).forEach(([country, b]) => {
+        if (!visible.has(country)) return;
+        L.rectangle([[b[0], b[2]], [b[1], b[3]]], {
+          color: "#7f93ab",
+          weight: 1,
+          opacity: 0.55,
+          fillColor: "#f7f4ee",
+          fillOpacity: 0.22,
+          interactive: false,
+        }).addTo(layer);
+      });
+      Object.entries(OFFLINE_COUNTRY_CENTRES).forEach(([country, ll]) => {
+        if (!visible.has(country)) return;
+        L.marker(ll, {
+          icon: L.divIcon({ className: "offline-country-label", html: country, iconSize: [120, 16] }),
+          interactive: false,
+        }).addTo(layer);
+      });
+      map.attributionControl.setPrefix("Leaflet");
+      if (statusEl) {
+        statusEl.dataset.tileProvider = "Offline";
+        statusEl.classList.remove("warn");
+      }
     }
 
     function renderMap(list) {
@@ -1902,7 +1925,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
       if (!window.__idsMap) {
         window.__idsMap = L.map("ids-map", { scrollWheelZoom: true });
-        addTileLayerWithFallback(window.__idsMap, statusEl);
+        addOfflineBasemap(window.__idsMap, statusEl, DATA.countries);
         window.__idsMapLayer = L.layerGroup().addTo(window.__idsMap);
       }
 
@@ -1971,6 +1994,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         statusEl.textContent =
           "Showing " + pinned.length + " dealers on map" +
           (off ? (" · " + off + " without coordinates (tables only)") : "") +
+          " · offline basemap (no external tile service)" +
           " · " + bandCounts.above + " above / " + bandCounts.near + " near / " +
           bandCounts.below + " below national avg" +
           (overseasN

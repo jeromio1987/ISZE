@@ -298,7 +298,7 @@ Country-only dealer compare for ISZE / IMG colleagues. English UI.
 
 - Dealers: **{dealer_count}**
 - Geo pinned: {geo.get("geo_ok", "—")} · missing: {geo.get("geo_missing", "—")}
-- Map: bundled Leaflet + OpenStreetMap tiles (needs internet when opening HTML)
+- Map: bundled Leaflet + offline grid / country label layer (no external tile service)
 - **No Country filter / By country / Country radar / Changelog** — Mode A colleague pack
 - Benchmarks kept: dealer vs **{country} national average**, anonymous full-network average
 
@@ -557,7 +557,8 @@ def build_one(
             "map_tab": 'data-tab="map"' in html,
             "national_avg": "national average" in html.lower(),
             "no_weak_sector": "Weak sector" not in html,
-            "leaflet": "leaflet" in html.lower() and "tile.openstreetmap.org" in html,
+            "leaflet": "leaflet" in html.lower()
+            and "no external tile service" in html,
             "single_country": payload["countries"] == [country],
             "no_country_filter": '<label for="f-country">Country filter</label>'
             not in html
