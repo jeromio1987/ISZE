@@ -118,8 +118,8 @@
     .matrix-wrap { overflow: auto; }
     .matrix td.pos { color: var(--good); font-weight: 600; }
     .matrix td.neg { color: var(--bad); font-weight: 600; }
-    #ids-map { width:100%; height:560px; border-radius:8px; border:1px solid var(--mid); background:#dce3ec; }
-    .leaflet-container { font: inherit; }
+    #ids-map { width:100%; height:560px; border-radius:8px; border:1px solid var(--mid); background:#f8f5ef; }
+    .leaflet-container { font: inherit; background:#f8f5ef; }
     .rank-pin {
       border:2px solid #fff;
       border-radius:50%; width:16px; height:16px;
@@ -131,12 +131,12 @@
     .rank-pin.below { background: var(--bad); }
     .rank-pin.unknown { background: #94a3b8; }
     .offline-country-label {
-      color:#24354f; font-size:11px; font-weight:700;
+      color:#1a2744; font-size:12px; font-weight:800;
       text-shadow:0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
       white-space:nowrap; pointer-events:none;
     }
     .offline-grid-label {
-      color:#6b7a90; font-size:10px; font-weight:600;
+      color:#8b7355; font-size:10px; font-weight:700;
       text-shadow:0 1px 0 #fff; pointer-events:none;
     }
     .map-pin-legend { margin-top: 0.75rem; margin-bottom: 0.25rem; align-items: center; }
@@ -1183,10 +1183,10 @@
       const layer = L.layerGroup().addTo(map);
       window.__idsOfflineBase = layer;
       const visible = new Set(countries || DATA.countries || []);
-      const gridStyle = { color: "#9fb0c4", weight: 1, opacity: 0.35, interactive: false };
+      const gridStyle = { color: "#cdbf9f", weight: 1, opacity: 0.45, interactive: false };
       L.rectangle([[-85, -180], [85, 180]], {
         stroke: false,
-        fillColor: "#dce3ec",
+        fillColor: "#f8f5ef",
         fillOpacity: 1,
         interactive: false,
       }).addTo(layer);
@@ -1208,10 +1208,10 @@
         if (!visible.has(country)) return;
         L.rectangle([[b[0], b[2]], [b[1], b[3]]], {
           color: "#7f93ab",
-          weight: 1,
-          opacity: 0.55,
-          fillColor: "#f7f4ee",
-          fillOpacity: 0.22,
+          weight: 1.4,
+          opacity: 0.75,
+          fillColor: "#fffdf8",
+          fillOpacity: 0.78,
           interactive: false,
         }).addTo(layer);
       });
