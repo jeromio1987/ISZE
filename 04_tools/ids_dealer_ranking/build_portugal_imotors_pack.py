@@ -22,7 +22,7 @@ from typing import Any
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 
-from build_ids_dashboard import render_html
+from build_ids_dashboard import leaflet_css_block, leaflet_js_block, render_html
 from build_ids_dealer_feedback import (
     best_questions,
     load_db_kpi_by_country,
@@ -155,8 +155,7 @@ def _leaflet_map_script(
     points_json = json.dumps(points, ensure_ascii=False)
     auto_flag = "true" if auto_init else "false"
     return f"""
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+{leaflet_js_block()}
 <script>
 (function () {{
   const POINTS = {points_json};
@@ -187,36 +186,65 @@ def _leaflet_map_script(
   function initMap() {{
     if (typeof L === "undefined") {{
       if (statusEl) {{
-        statusEl.textContent = "Leaflet failed to load (check network / CDN). Other compare tabs still work.";
+        statusEl.textContent = "Leaflet failed to start from the bundled map library. Other compare tabs still work.";
         statusEl.classList.add("warn");
       }}
-      mapEl.innerHTML = "<p style='padding:1rem;color:#9a3412'>Map library unavailable offline. Open with internet access.</p>";
+      mapEl.innerHTML = "<p style='padding:1rem;color:#9a3412'>Map library unavailable. Other compare tabs still work.</p>";
       return;
     }}
     if (window.__ptMap) return;
 
     const map = L.map("{map_div_id}", {{ scrollWheelZoom: true }});
     window.__ptMap = map;
-    // CARTO Voyager (OSM data) — more reliable than raw OSM tile CDN on file://
-    const tiles = L.tileLayer("https://{{s}}.basemaps.cartocdn.com/rastertiles/voyager/{{z}}/{{x}}/{{y}}{{r}}.png", {{
-      maxZoom: 18,
-      subdomains: "abcd",
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    }});
-    let baseStatus = "Base layer: OpenStreetMap / CARTO · hover a pin for dealer score vs Portugal national average.";
-    tiles.on("load", function () {{
-      if (statusEl) {{
-        statusEl.textContent = baseStatus;
-        statusEl.classList.remove("warn");
-      }}
-    }});
-    tiles.on("tileerror", function () {{
-      if (statusEl) {{
-        statusEl.textContent = "Tile load issue — check network. Pins still show if tiles partially load.";
-        statusEl.classList.add("warn");
-      }}
-    }});
-    tiles.addTo(map);
+    const providers = [
+      {{
+        name: "CARTO Voyager",
+        url: "https://{{s}}.basemaps.cartocdn.com/rastertiles/voyager/{{z}}/{{x}}/{{y}}{{r}}.png",
+        options: {{
+          maxZoom: 18,
+          subdomains: "abcd",
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        }},
+      }},
+      {{
+        name: "OpenStreetMap",
+        url: "https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png",
+        options: {{
+          maxZoom: 18,
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }},
+      }},
+    ];
+    let activeTiles = null;
+    function activateTiles(index) {{
+      const provider = providers[index];
+      let tileErrors = 0;
+      if (activeTiles) map.removeLayer(activeTiles);
+      activeTiles = L.tileLayer(provider.url, provider.options);
+      activeTiles.on("load", function () {{
+        if (statusEl) {{
+          statusEl.textContent = "Base layer: " + provider.name + " · hover a pin for dealer score vs Portugal national average.";
+          statusEl.classList.remove("warn");
+        }}
+      }});
+      activeTiles.on("tileerror", function () {{
+        tileErrors += 1;
+        if (tileErrors >= 3 && index + 1 < providers.length) {{
+          if (statusEl) {{
+            statusEl.textContent = provider.name + " tiles blocked — trying " + providers[index + 1].name + ".";
+            statusEl.classList.add("warn");
+          }}
+          activateTiles(index + 1);
+          return;
+        }}
+        if (statusEl) {{
+          statusEl.textContent = "Tile load issue — pins still show on the neutral map background.";
+          statusEl.classList.add("warn");
+        }}
+      }});
+      activeTiles.addTo(map);
+    }}
+    activateTiles(0);
     setTimeout(function () {{ map.invalidateSize(); }}, 200);
 
     const pinIcon = function (rank) {{
@@ -580,8 +608,7 @@ def write_map_html(
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>IDS 2026 — Portugal dealer map</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+{leaflet_css_block()}
 <style>
 :root {{ --navy:#1a2744; --terracotta:#c45c3e; --bg:#f4f6f9; --card:#fff; --muted:#6b7a90; --mid:#d4dae3; --good:#2d8a5e; --bad:#c45c3e; }}
 body {{ margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--navy); }}
@@ -624,9 +651,9 @@ th {{ color:var(--muted); font-size:.72rem; text-transform:uppercase; }}
 <main>
   <div class="card">
     <h2>Network map</h2>
-    <p class="hint">Hover a pin for that dealer’s total score vs the Portugal national average (delta in pp). Pins are approximate city centres — not surveyed street addresses. Map tiles require an internet connection.</p>
+    <p class="hint">Hover a pin for that dealer’s total score vs the Portugal national average (delta in pp). Pins are approximate city centres — not surveyed street addresses. The map library is bundled in this file; map tiles require an internet connection. If a tile provider is blocked, pins still render on the neutral background.</p>
     <div id="pt-map" role="img" aria-label="Portugal dealer interactive map"></div>
-    <p class="tile-note" id="tile-status">Loading OpenStreetMap tiles…</p>
+    <p class="tile-note" id="tile-status">Loading map tiles…</p>
   </div>
   <div class="card">
     <h2>Ranking</h2>
