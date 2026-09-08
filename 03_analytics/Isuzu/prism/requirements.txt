@@ -1,5 +1,9 @@
-streamlit>=1.36.0
-pandas>=2.0.0
+# Upper bounds pin the major versions PRISM was written against. Streamlit >=1.50
+# changed st.page_link() to reject file-path pages outside st.navigation (breaks
+# the sidebar links + smoke tests); pandas 3.x changes .style/jinja2 gating and
+# dtype defaults. Keep <1.50 / <3.0 until the code is migrated.
+streamlit>=1.36.0,<1.50
+pandas>=2.0.0,<3.0.0
 numpy>=1.24.0
 plotly>=5.18.0
 openpyxl>=3.1.0
@@ -8,3 +12,6 @@ pyyaml>=6.0.0
 scipy>=1.11.0
 matplotlib>=3.8.0
 reportlab>=4.1.0
+# pandas .style (used across PRISM pages) needs jinja2; normally transitive via
+# altair/pydeck, declared here so the app never loses it on a fresh resolve.
+jinja2>=3.1.2
