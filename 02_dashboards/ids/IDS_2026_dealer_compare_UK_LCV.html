@@ -843,7 +843,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <body>
   <header>
     <h1>IDS 2026 — UK LCV dealer comparison <span style="font-weight:500;opacity:.85;font-size:.85em">v1.4</span></h1>
-    <p>v1.4 · UK LCV dealers only (45) · no country filter (single market) · map hover = dealer score vs UK LCV national average · network avg from full IDS network (564 dealers, anonymous; Section E not scored / missing excluded) · built 2026-09-08 10:03 UTC</p>
+    <p>v1.4 · UK LCV dealers only (45) · no country filter (single market) · map hover = dealer score vs UK LCV national average · network avg from full IDS network (564 dealers, anonymous; Section E not scored / missing excluded) · built 2026-09-08 10:19 UTC</p>
   </header>
 
   <div class="toolbar">
@@ -1867,6 +1867,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
       window.__idsOfflineBase = layer;
       const visible = new Set(countries || DATA.countries || []);
       const gridStyle = { color: "#9fb0c4", weight: 1, opacity: 0.35, interactive: false };
+      L.rectangle([[-85, -180], [85, 180]], {
+        stroke: false,
+        fillColor: "#dce3ec",
+        fillOpacity: 1,
+        interactive: false,
+      }).addTo(layer);
       for (let lon = -30; lon <= 45; lon += 15) {
         L.polyline([[28, lon], [72, lon]], gridStyle).addTo(layer);
         L.marker([28.4, lon], {

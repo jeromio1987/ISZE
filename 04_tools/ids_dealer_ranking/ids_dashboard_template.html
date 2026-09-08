@@ -1184,6 +1184,12 @@
       window.__idsOfflineBase = layer;
       const visible = new Set(countries || DATA.countries || []);
       const gridStyle = { color: "#9fb0c4", weight: 1, opacity: 0.35, interactive: false };
+      L.rectangle([[-85, -180], [85, 180]], {
+        stroke: false,
+        fillColor: "#dce3ec",
+        fillOpacity: 1,
+        interactive: false,
+      }).addTo(layer);
       for (let lon = -30; lon <= 45; lon += 15) {
         L.polyline([[28, lon], [72, lon]], gridStyle).addTo(layer);
         L.marker([28.4, lon], {

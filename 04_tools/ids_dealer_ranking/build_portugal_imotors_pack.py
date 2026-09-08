@@ -198,6 +198,12 @@ def _leaflet_map_script(
     window.__ptMap = map;
     const offlineLayer = L.layerGroup().addTo(map);
     const gridStyle = {{ color: "#9fb0c4", weight: 1, opacity: 0.35, interactive: false }};
+    L.rectangle([[-85, -180], [85, 180]], {{
+      stroke: false,
+      fillColor: "#dce3ec",
+      fillOpacity: 1,
+      interactive: false,
+    }}).addTo(offlineLayer);
     for (let lon = -32; lon <= -5; lon += 5) {{
       L.polyline([[32, lon], [43, lon]], gridStyle).addTo(offlineLayer);
     }}
