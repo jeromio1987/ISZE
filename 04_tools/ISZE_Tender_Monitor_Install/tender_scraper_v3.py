@@ -2719,9 +2719,10 @@ def fetch_poland_bzp(session: requests.Session, from_dt: datetime, page_size: in
 # ---------------------------------------------------------------------------
 # Spain PLACSP (below-threshold national) — Atom / open-data syndication
 # ---------------------------------------------------------------------------
-# Official Atom + monthly ZIP paths (Hacienda / OpenPLACSP docs). This runner's
-# egress is WAF-denied on contrataciondelestado.es / contrataciondelsectorpublico.gob.es
-# (Atom + ZIP + datosabiertos) — keep CODE_READY until a session/IP path works.
+# Official Atom + monthly ZIP paths (Hacienda / OpenPLACSP docs).
+# 2026-08-25: some runners WAF-denied Atom/ZIP → CODE_READY.
+# 2026-09-14 retry: Atom HTTP 200 (~770 KB, not WAF) from this runner — treat as LIVE
+# when fetch_spain_placsp returns keyword rows. Keep WAF detector for other egress.
 ES_PLACSP_ATOM_URLS = [
     "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom",
     "https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom",
@@ -2805,8 +2806,17 @@ def fetch_spain_placsp(session: requests.Session, from_dt: datetime) -> List[Dic
             print(f"  [ES PLACSP] {url.split('/')[-1]}: {len(kept)} keyword matches")
             results.extend(kept)
             if kept:
-                break  # one live feed is enough
-            last_err = None
+                last_err = None
+        # Dedupe by URL across Atom variants (estado vs sectorpublico vs aggregated)
+        seen: set[str] = set()
+        uniq: List[Dict[str, Any]] = []
+        for r in results:
+            key = str(r.get("URL") or r.get("url") or r.get("Title") or "").strip().lower()
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            uniq.append(r)
+        results = uniq
         if results:
             LAST_FETCH_ERRORS["Spain PLACSP"] = None
         else:

@@ -1,0 +1,224 @@
+{
+  "probed_at": "2026-09-14T12:42:42.618801+00:00",
+  "results": [
+    {
+      "name": "ES_atom_sectorpublico",
+      "url": "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom",
+      "method": "GET",
+      "http": 200,
+      "len": 772351,
+      "ct": "application/atom+xml",
+      "final_url": "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom",
+      "elapsed_s": 2.33,
+      "waf": false,
+      "snip": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?> <feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:cbc=\"urn:dgpe:names:draft:codice:schema:xsd:CommonBasicComponents-2\" xmlns:c"
+    },
+    {
+      "name": "ES_atom_estado",
+      "url": "https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom",
+      "method": "GET",
+      "http": 200,
+      "len": 772351,
+      "ct": "application/atom+xml",
+      "final_url": "https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom",
+      "elapsed_s": 2.0,
+      "waf": false,
+      "snip": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?> <feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:cbc=\"urn:dgpe:names:draft:codice:schema:xsd:CommonBasicComponents-2\" xmlns:c"
+    },
+    {
+      "name": "ES_atom_agregadas",
+      "url": "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores.atom",
+      "method": "GET",
+      "http": 200,
+      "len": 796749,
+      "ct": "application/atom+xml",
+      "final_url": "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores.atom",
+      "elapsed_s": 1.14,
+      "waf": false,
+      "snip": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?> <feed xmlns=\"http://www.w3.org/2005/Atom\" xmlns:cbc=\"urn:dgpe:names:draft:codice:schema:xsd:CommonBasicComponents-2\" xmlns:c"
+    },
+    {
+      "name": "ES_datosgob_ckan",
+      "url": "https://datos.gob.es/apidata/catalog/dataset?q=licitaciones&_pageSize=5",
+      "method": "GET",
+      "http": 400,
+      "len": 375,
+      "ct": "application/json",
+      "final_url": "https://datos.gob.es/apidata/catalog/dataset?q=licitaciones&_pageSize=5",
+      "elapsed_s": 0.67,
+      "waf": false,
+      "snip": "<html> <head> <title>unknown shortname</title>  <style>   body {      background-color: pink  }   pre {     margin: 1ex     ; padding: 1ex     ; background-color: #ffaaaa     ; bor",
+      "json_err": "Expecting value: line 1 column 1 (char 0)"
+    },
+    {
+      "name": "ES_datosgob_ckan2",
+      "url": "https://datos.gob.es/apidata/catalog/dataset/a02002834-licitaciones-publicadas-en-la-plataforma-de-contratacion-del-sector-publico",
+      "method": "GET",
+      "http": 200,
+      "len": 1103,
+      "ct": "application/json",
+      "final_url": "https://datos.gob.es/apidata/catalog/dataset/a02002834-licitaciones-publicadas-en-la-plataforma-de-contratacion-del-sector-publico",
+      "elapsed_s": 0.22,
+      "waf": false,
+      "snip": "{ \"format\" : \"linked-data-api\", \"version\" : \"0.2\", \"result\" : {\"_about\" : \"http://datos.gob.es/apidata/catalog/dataset/a02002834-licitaciones-publicadas-en-la-plataforma-de-contrat",
+      "json_keys": [
+        "format",
+        "version",
+        "result"
+      ]
+    },
+    {
+      "name": "ES_hacienda_od",
+      "url": "https://www.hacienda.gob.es/es-ES/GobiernoAbierto/Datos%20Abiertos/Paginas/LicitacionesAgregacion.aspx",
+      "method": "GET",
+      "http": 200,
+      "len": 65361,
+      "ct": "text/html; charset=utf-8",
+      "final_url": "https://www.hacienda.gob.es/es-ES/GobiernoAbierto/Datos%20Abiertos/Paginas/LicitacionesAgregacion.aspx",
+      "elapsed_s": 1.58,
+      "waf": false,
+      "snip": "\r \r <!DOCTYPE html >\r <!-- Master Minhap v1.0 -->\r <html lang=\"es\" xml:lang=\"es\">\r <head id=\"ctl00_Head1\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" /><meta http-equiv=\"C"
+    },
+    {
+      "name": "EE_rhr_opendata",
+      "url": "https://riigihanked.riik.ee/rhr/api/public/v1/opendata",
+      "method": "GET",
+      "http": 500,
+      "len": 36,
+      "ct": "application/json",
+      "final_url": "https://riigihanked.riik.ee/rhr/api/public/v1/opendata",
+      "elapsed_s": 0.83,
+      "waf": false,
+      "snip": "{\"actionId\":\"2355\",\"errorStack\":\"-\"}",
+      "json_keys": [
+        "actionId",
+        "errorStack"
+      ]
+    },
+    {
+      "name": "EE_rhr_notices",
+      "url": "https://riigihanked.riik.ee/rhr/api/public/v1/notices?page=0&size=5",
+      "method": "GET",
+      "http": 500,
+      "len": 36,
+      "ct": "application/json",
+      "final_url": "https://riigihanked.riik.ee/rhr/api/public/v1/notices?page=0&size=5",
+      "elapsed_s": 0.22,
+      "waf": false,
+      "snip": "{\"actionId\":\"8050\",\"errorStack\":\"-\"}",
+      "json_keys": [
+        "actionId",
+        "errorStack"
+      ]
+    },
+    {
+      "name": "EE_avahanked",
+      "url": "https://avahanked.ee/",
+      "method": "GET",
+      "http": 200,
+      "len": 527845,
+      "ct": "text/html",
+      "final_url": "https://avahanked.ee/",
+      "elapsed_s": 1.31,
+      "waf": false,
+      "snip": "<!DOCTYPE html><html lang=\"et\" class=\"fraunces_f8c11c51-module__ttIbHq__variable inter_19d2945c-module__e4KC9a__variable\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content"
+    },
+    {
+      "name": "LV_iub_api_guess",
+      "url": "https://www.iub.gov.lv/lv/meklet-pazinojumus",
+      "method": "GET",
+      "http": 404,
+      "len": 172618,
+      "ct": "text/html; charset=UTF-8",
+      "final_url": "https://www.iub.gov.lv/lv/meklet-pazinojumus",
+      "elapsed_s": 2.13,
+      "waf": false,
+      "snip": "<!DOCTYPE html> <html lang=\"lv\" dir=\"ltr\" prefix=\"og: https://ogp.me/ns#\">   <head>     <meta charset=\"utf-8\" /> <script>window.dataLayer = window.dataLayer || [];function gtag(){d"
+    },
+    {
+      "name": "HR_eojn_home",
+      "url": "https://eojn.nn.hr/",
+      "method": "GET",
+      "http": 200,
+      "len": 54921,
+      "ct": "text/html; charset=utf-8",
+      "final_url": "https://eojn.nn.hr/Oglasnik/",
+      "elapsed_s": 1.23,
+      "waf": false,
+      "snip": "\r <!DOCTYPE html>\r <html xmlns=\"http://www.w3.org/1999/xhtml\">\r <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title>\r \tOglasnik javne nabave\r </title>"
+    },
+    {
+      "name": "HU_ekr_home",
+      "url": "https://ekr.gov.hu/",
+      "method": "GET",
+      "http": 200,
+      "len": 215348,
+      "ct": "text/html; charset=UTF-8",
+      "final_url": "https://ekr.gov.hu/",
+      "elapsed_s": 2.73,
+      "waf": false,
+      "snip": "<!doctype html><html><head><meta charset=\"utf-8\"><title>Elektronikus K\u00f6zbeszerz\u00e9si Rendszer</title><base href=\"/portal\"><meta name=\"viewport\" content=\"width=device-width,initial-"
+    },
+    {
+      "name": "IE_etenders_rss",
+      "url": "https://www.etenders.gov.ie/epps/rss.xml",
+      "method": "GET",
+      "http": 404,
+      "len": 15763,
+      "ct": "text/html;charset=utf-8",
+      "final_url": "https://www.etenders.gov.ie/epps/rss.xml",
+      "elapsed_s": 0.94,
+      "waf": false,
+      "snip": "                          \t                                 <!DOCTYPE html>              <!-- ceproc.ok -->           \t<html>   \t<head> \t\t<!--  --> \t\t<meta http-equiv=\"Content-Type"
+    },
+    {
+      "name": "IE_etenders_home",
+      "url": "https://www.etenders.gov.ie/",
+      "method": "GET",
+      "http": 200,
+      "len": 25335,
+      "ct": "text/html;charset=utf-8",
+      "final_url": "https://www.etenders.gov.ie/epps/home.do",
+      "elapsed_s": 0.58,
+      "waf": false,
+      "snip": "                          \t                                 <!DOCTYPE html>              <!-- ceproc.ok -->           \t<html>   \t<head> \t\t<!--  --> \t\t<meta http-equiv=\"Content-Type"
+    },
+    {
+      "name": "IT_pncp_avvisi",
+      "url": "https://pubblicitalegale.anticorruzione.it/api/v0/avvisi?page=0&size=1",
+      "method": "GET",
+      "http": 200,
+      "len": 2610,
+      "ct": "application/json",
+      "final_url": "https://pubblicitalegale.anticorruzione.it/api/v0/avvisi?page=0&size=1",
+      "elapsed_s": 3.11,
+      "waf": false,
+      "snip": "{\"content\":[{\"idAvviso\":\"d6195a2a-ccd2-45c5-999b-bf1c2126aea4\",\"idAppalto\":\"ef49bc23-aaa1-44cc-82c1-da0d35e9bbc9\",\"scheda\":null,\"codiceScheda\":\"P1_16\",\"tipologia\":\"BANDI\",\"codiceEf",
+      "json_keys": [
+        "content",
+        "pageable",
+        "totalPages",
+        "totalElements",
+        "last",
+        "numberOfElements",
+        "size",
+        "number",
+        "sort",
+        "first",
+        "empty"
+      ]
+    },
+    {
+      "name": "DE_ov_home",
+      "url": "https://www.oeffentlichevergabe.de/documentation/swagger-ui/opendata/index.html",
+      "method": "GET",
+      "http": 200,
+      "len": 721,
+      "ct": "text/html",
+      "final_url": "https://oeffentlichevergabe.de/documentation/swagger-ui/opendata/index.html",
+      "elapsed_s": 1.67,
+      "waf": false,
+      "snip": "<!DOCTYPE html> <html lang=\"en\">   <head>     <meta charset=\"UTF-8\">     <title>Swagger UI</title>     <link rel=\"stylesheet\" type=\"text/css\" href=\"../base/swagger-ui.css\" />     <"
+    }
+  ]
+}

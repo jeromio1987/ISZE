@@ -12,7 +12,10 @@
 - [`00_docs/DECISION_PACK_20260914.md`](00_docs/DECISION_PACK_20260914.md) — one sitting for B5/P4, list-to-pocket Mode A, G1, Book B, LLM, sell-out files. Recommended defaults written; **not applied**.
 - Hub §2 and `DECISIONS.md` point at the pack. Gated productize waits on ticks.
 
-### Added (2026-09-14) — Monday OS seed (Mode B)
+### Changed (2026-09-14) — ES PLACSP national feed LIVE this runner
+- Atom syndication HTTP 200 (~772 KB, not WAF). Keyword matches **2** / Isuzu-gated **0** in the rolling Atom window. Health `Spain PLACSP` = OK. National LIVE **17/29**.
+- Hub §1 item 4 and `roadmaps/scrapers.md` were stale (“wire ES/IT/DE”, “8/29”). IT/DE were already LIVE 2026-08-25.
+- No `tender_data.json` publish. Next DARK portals need login/recaptcha/ministry-500 — no new key ask.
 - `action_ledger_decisions.csv`: **5 TRIAGED** rows from top-15 € (not ACTIONED; owner blank). `REVIEW` is not a legal ledger state.
 - Crosswalk: `01_data/00_derived/monday_pn_opportunity_crosswalk_20260914.csv` (40/40 Monday PNs). Command Center HTML not rebuilt.
 - Rebuilt Mode B `02_dashboards/ops/ISZE_Action_Ledger.html` (verify OK, 22 bars). Outcomes still 0.

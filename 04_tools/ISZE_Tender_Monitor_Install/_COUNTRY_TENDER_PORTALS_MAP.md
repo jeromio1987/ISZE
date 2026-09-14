@@ -1,6 +1,6 @@
 # Country tender portals map — where every notice launches
 
-**Date:** 2026-08-25  
+**Date:** 2026-08-25 · **ES retry:** 2026-09-14 (`_ES_PLACSP_LIVE_20260914.md`)  
 **Install:** `C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\`  
 **Purpose:** Analysis first — map **official** publication channels vs what the engine actually scrapes. Not a UI pass.  
 **Evidence:** `_source_health.json`, `_MARKET_COVERAGE_DARK_MAP.md`, `_SOURCE_HEALTH_FIX.md`, `_phase1_endpoint_discovery.md`, `_P4_BELOW_THRESHOLD_FR_PL_SPIKE.md`, `_OPEN_BACKLOG_ARRANGED.md`, `_ADDRESSABLE_VEHICLES.md`, plus official portal docs + probe `\_probe_country_portals_2026-08-25.json`.  
@@ -14,7 +14,7 @@
 |---|---|
 | Are we scraping all sites where tenders launch? | **No.** TED covers **above-threshold** EU/EEA (and UK FaT for UK). Most **below-threshold** national buys never appear on TED. |
 | Why does fleet / vehicle potential look tiny (~174 pickup/truck stated)? | **Consistent with current capture + extract.** Only a minority of gated opportunities publish an extractable fleet count; the hero KPI is `extract ∩ gate ∩ segment∈{pickup,truck}` — not “all CV notices.” Full portal wiring raises **notice volume**; it does **not** put a fleet number on every row. |
-| Share of footprint countries with a **national LIVE** feed (beyond TED-only) | **~55% LIVE** (16/29) · **~7% CODE_READY** (ES·LT) · **~38% DARK/BLOCKED** national. |
+| Share of footprint countries with a **national LIVE** feed (beyond TED-only) | **~59% LIVE** (17/29) · **~3% CODE_READY** (LT) · rest DARK/BLOCKED national. |
 
 **Footprint denominator:** 29 TED filter codes (`TED_TARGET_COUNTRIES`) = GBR, IRL, POL, PRT, GRC, ISR, DEU, FRA, ESP, ITA, NLD, BEL, DNK, SWE, NOR, FIN, ROU, HUN, CZE, SVK, BGR, HRV, AUT, LVA, LTU, EST, SVN, CYP, MLT.  
 **Notes outside filter:** ISL, KAZ (see bottom). CH/SIMAP not in filter.
@@ -46,7 +46,7 @@
 | **FR** | TED; **BOAMP** (boamp.fr / DILA OpenDataSoft); PLACE / regional profiles | TED FRA | BOAMP (national + many below) | TED + **France BOAMP** (OK 52) | **LIVE** | Public ODS **API** (no key) | Already wired — residual lift low (~+0–5); keep gate tight | Done / maintain |
 | **PL** | TED; **e-Zamówienia / BZP** (ezamowienia.gov.pl) | TED POL | BZP (`isTenderAmountBelowEU` common) | TED + **Poland BZP** (OK 38) | **LIVE** | Public mo-board **API** (no key) | Already wired — residual low–med | Done / maintain |
 | **IT** | TED; **PNCP** / ANAC **Pubblicità a valore legale** (pubblicitalegale.anticorruzione.it); MePA / Acquisti in Rete (execution); ANAC open data | TED ITA | PNCP is legal home for below-threshold (~majority by **count**) | TED + **Italy PNCP** (OK 32 raw → 2 gated) | **LIVE** | Public JSON `api/v0/avvisi` (no PDND); CKAN `dati.anticorruzione.it` still rejected | Wired 2026-08-25 — gate-tight; residual lift if search/CPV API params found | Maintain / tighten |
-| **ES** | TED; **PLACSP / PLACE** (contrataciondelestado.es / contrataciondelsectorpublico.gob.es); CCAA aggregated platforms | TED ESP | PLACSP profiles + regional aggregation (excl. many contratos menores) | TED + **Spain PLACSP** fetcher | **CODE_READY** (WAF) | Official **Atom/XML** + ZIPs; this runner **WAF-denied** (Atom+ZIP+datosabiertos) — fetcher ready | **High** once egress works (~+15–40 gated /30d) | **P0** (unblock) |
+| **ES** | TED; **PLACSP / PLACE** (contrataciondelestado.es / contrataciondelsectorpublico.gob.es); CCAA aggregated platforms | TED ESP | PLACSP profiles + regional aggregation (excl. many contratos menores) | TED + **Spain PLACSP** Atom | **LIVE** (2026-09-14 Atom HTTP 200 this runner; 2 keyword / 0 gated in rolling window) | Official **Atom/XML** (WAF on some other egress — detector kept) | Rolling Atom is thin vs a 30d API dump; residual lift if ZIP/open-data pagination works | Maintain / thicken |
 | **BE** | TED; **publicprocurement.be** (BOSA e-Notification / SEA) | TED BEL | SEA national | TED + **Belgium SEA** (OK 14) · RSS **RETIRED** | **LIVE** | Authenticated JSON **API** (SPA client credentials) | Already wired — residual low | Done / maintain |
 | **NL** | TED; **TenderNed** (tenderned.nl) | TED NLD | TenderNed mandatory national | TED + **TenderNed RSS** (OK 25) | **LIVE** | **RSS** (+ HTML); registration free for bidding | Already wired — residual low | Done / maintain |
 | **AT** | TED; **USP Ausschreibungssuche** (usp.gv.at / ausschreibungen.usp.gv.at) aggregating authority platforms | TED AUT | USP search (links out to procedure platforms) | TED + **Austria USP** (OK 23 → 4 gated) | **LIVE** | Public JSON `api/tenderlist` with `cpvList` + date window (text search ignored) | Wired 2026-08-25 overnight — residual if more CPV chips | Maintain |
@@ -118,7 +118,7 @@ From `_source_health.json` (same day):
 | France BOAMP | OK | 52 | FR below/national |
 | Poland BZP | OK | 38 | PL below/national |
 | Italy PNCP | OK | 32 | IT below/national (2 gated) |
-| Spain PLACSP | CODE_READY | 0 | ES Atom WAF-denied this runner |
+| Spain PLACSP | OK | 2 | ES national Atom — LIVE 2026-09-14 (0 gated this window) |
 | Germany oeffentlichevergabe | OK | 545 | DE national BKMS Open Data (41 gated) |
 | Germany service.bund | OK | 12 | DE RSS crumb |
 | Romania SEAP | OK | 147 | RO national (13 gated) |
@@ -135,8 +135,8 @@ From `_source_health.json` (same day):
 | Israel data.gov.il | SUSPECT | 0 | Frozen 2021 |
 | IEC iec.co.il domestic | SKIPPED | 0 | GEO_BLOCKED |
 
-**National LIVE countries (16/29 ≈ 55%):** UK, NL, BE, IL, FR, PL, IT, DE, RO, AT, NO, FI, DK, PT, BG, **CZ**.  
-**CODE_READY (2):** ES (WAF), LT (CVP apiKey).  
+**National LIVE countries (17/29 ≈ 59%):** UK, NL, BE, IL, FR, PL, IT, DE, RO, AT, NO, FI, DK, PT, BG, CZ, **ES**.  
+**CODE_READY (1):** LT (CVP apiKey — do not ask Jerome).  
 **DARK/BLOCKED national (~11/29 ≈ 38%):** HU, IE, SE, SK, EE, GR, HR, SI, LV, CY, MT.
 
 Overall Isuzu-relevant **notice** coverage remains roughly **~35–55%** of the addressable public stream (`_MARKET_COVERAGE_DARK_MAP.md`) — TED-strong, below-threshold-weak.
@@ -149,7 +149,7 @@ Ranked for **expected gate-passing CV/LCV lead lift × machine feasibility**. Sk
 
 | Rank | Portal | Country | Why | Feasibility | Est. gated lift /30d | Priority |
 |---:|---|---|---|---|---|---|
-| **1** | **PLACSP Atom / open data** | ES | Large below-threshold market; official syndication documented | Atom/XML (WAF work / ZIP open data) | **+15–40** | **P0** |
+| **1** | **PLACSP Atom / open data** | ES | Large below-threshold market; official syndication documented | Atom HTTP 200 this runner 2026-09-14 (2 keyword / 0 gated rolling window) | residual if ZIP/pagination | **Done (thin window)** |
 | **2** | **PNCP / ANAC pubblicità + open data** | IT | Legal below-threshold home; huge notice count | Open data + HTML; PDND for full API | **+20–50** | **P0** |
 | **3** | **oeffentlichevergabe.de Open Data** | DE | Replaces “TED-only honesty” for DE below-threshold mass | Official Open Data API (eForms/OCDS/CSV) | Wired 2026-08-25 (545→41 gated) | **Done** |
 | **4** | **Doffin Public API** | NO | National NO | Free API + key | Wired 2026-08-25 (37→11 gated) | **Done** |
@@ -162,17 +162,19 @@ Ranked for **expected gate-passing CV/LCV lead lift × machine feasibility**. Sk
 
 **Honorable / deferred:** IE eTenders (P2); GR Promitheus (P2); SE multi-platform (P2 — fragmented/paid); HU EKR (P2); Baltics/HR/SI/CY/MT (P3); ISL/KZ (P3); DTVP paid (BLOCKED unless budget). LT CVP apiKey (CODE_READY).
 
-**Already done this wave (do not re-prioritize as “next”):** FR BOAMP, PL BZP, BE SEA, NL TenderNed, IL mr.gov.il, UK FaT/CF, TED CYP/MLT filter, DE OV, RO SEAP, AT USP, NO Doffin, **DK udbud**, **PT BASE**, **BG EOP**, **CZ VVZ**.
+**Already done this wave (do not re-prioritize as “next”):** FR BOAMP, PL BZP, BE SEA, NL TenderNed, IL mr.gov.il, UK FaT/CF, TED CYP/MLT filter, DE OV, RO SEAP, AT USP, NO Doffin, **DK udbud**, **PT BASE**, **BG EOP**, **CZ VVZ**, **ES PLACSP Atom**.
 
 ---
 
-## #1–#5 for Jerome (most real CV tender volume)
+## #1–#5 remaining (most real CV tender volume still dark)
 
-1. **Spain PLACSP** — official Atom/open data; biggest easy Med lift after FR.  
-2. **Italy PNCP/ANAC** — below-threshold legal channel TED never sees.  
-3. **Germany oeffentlichevergabe Open Data** — real DE national list (beyond service.bund crumbs).  
-4. **Norway Doffin** — paste API key; code ready.  
-5. **Finland HILMA** — paste API key; code ready.
+1. **Hungary EKR** — national mandatory; login SPA; no free list API this pass.  
+2. **Ireland eTenders** — RSS 404 on 2026-09-14; HTML portal.  
+3. **Sweden** — no single gazette; commercial databases (paid / login).  
+4. **Slovakia ÚVO** — recaptcha; no free list API.  
+5. **Estonia RHR** — official opendata still HTTP 500 (ministry). **Not** Nordics keys.
+
+Spain / Italy / Germany / Doffin / HILMA are **already LIVE**. Do not re-ask for Doffin or HILMA keys.
 
 ---
 
@@ -181,9 +183,9 @@ Ranked for **expected gate-passing CV/LCV lead lift × machine feasibility**. Sk
 - TED **must** carry above-threshold notices for EU/EEA members in the filter; it **systematically misses** most below-threshold national advertising — that is why vehicle counts feel “too low.”  
 - **Sweden** has **no** single state gazette equivalent to BOAMP/BZP; commercial databases are the official advertising channel — treat as hard.  
 - **Germany** is federalised: BKMS/oeffentlichevergabe is the free **publication** hub; DTVP/state platforms host procedures — paid DTVP ≠ free BKMS.  
-- ES Atom URLs returned **WAF deny** from this environment (`_probe_country_portals_2026-08-25.json`); claim is **documented official syndication**, not a live parse this turn.  
+- ES Atom URLs returned **HTTP 200** from this runner on 2026-09-14 (`_probe_es_next_2026-09-14.json`); 2026-08-25 WAF deny was environment-specific. WAF detector stays.  
 - Lift bands use FR/PL as calibration, not fake decimals.  
-- **No scrapers implemented** in this pass beyond optional probe JSON (analysis-first per brief).
+- **No scrapers implemented** in the 2026-08-25 analysis pass beyond optional probe JSON. ES Atom fetch is live 2026-09-14 (`scrape_es_side.py`).
 
 ---
 

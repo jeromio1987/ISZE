@@ -1,6 +1,6 @@
 # Scrapers & tenders — roadmap
 
-**Last updated:** 2026-08-26
+**Last updated:** 2026-09-14
 **Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md) · **Location:** `04_tools/`
 **Owner:** Claude scheduled tasks (health report runs automatically)
 **Live register:** [`AUTOMATION_REGISTER.md`](../AUTOMATION_REGISTER.md)
@@ -33,7 +33,7 @@ Ordered. Jerome's standing priority: **portal coverage before cosmetic UI**.
 
 | Prio | Item | State | Next |
 |------|------|-------|------|
-| **P0** | **National portal coverage** | Analysis done. Only **8/29** footprint countries have a live national source (UK, NL, BE, IL, FR, PL, NO, FI; DE partial via service.bund). ~69% are TED-only for below-threshold national buys — that, not a dashboard bug, is why fleet/vehicle KPIs look low | Wire **ES PLACSP**, **IT PNCP/ANAC**, **DE oeffentlichevergabe** open data. Evidence: `_COUNTRY_TENDER_PORTALS_MAP.md`, `_probe_country_portals_2026-08-25.json` |
+| **P0** | **National portal coverage** | **ES PLACSP LIVE 2026-09-14** (Atom HTTP 200 this runner; 2 keyword / 0 Isuzu-gated in the rolling window). IT PNCP + DE OV already LIVE. Country-map national LIVE **17/29**. Hub was stale at “wire ES/IT/DE” / “8/29”. | Next DARK **without a human key**: HU EKR login, IE eTenders RSS 404, SK recaptcha, EE RHR HTTP 500, GR login. **Not** Nordics keys. Evidence: `_ES_PLACSP_LIVE_20260914.md`, `_source_health.json` |
 | **P1** | TED detail enrichment | Partial — capability code on; detail GET needs TED auth | Obtain TED auth, then enrich |
 | **P2** | Tender relevance scoring | Not started | Score 1–5 on title, country, value; filter ≥ 3 |
 | **P2** | `scrape_error` column (KS + successors) | Not started | Distinguish genuine price gap from scrape failure |
