@@ -8,6 +8,25 @@
 
 ## [Unreleased]
 
+### Added (2026-09-14) — Catalogue honesty + scraper V2 (gated productize not applied)
+- Fig-key: filled **158** empty `fig_key` on existing `pr00_classification.csv` from IE40 parquet; catalog rebuild **161,325 / 164,969**. `fig_key_pn_overrides.csv` header only (EPC JSON is edition/family; Snap-on blocks bulk BVP).
+- EPC validator: `--epc` optional; missing export → `pn_supersession_epc_validation.meta.json` **`BLOCKED_NO_EPC_EXPORT`**. Never MATCH. IE40 `newest_pn` labelled **`INTERNAL_IE40_CHECK`** (925/925 agrees). Map CSV not rewritten.
+- Residual 24 PN / €67,182.04 ZPR1-path listed from `no_pr00_gap_remaining_zpr1_check_20260812.csv`. `5500*` Shell lubricants parked.
+- Scraper V2: tender `relevance_score_1to5` + Relevance Score export (no drop); `scrape_error` on KS/Mekonomen/category crawlers; RSS sanitize/recover; UK FaT Retry-After; Lidl `a10051271` 404 / search URL live.
+- Gated productize (P4 4.10 / G1 / Mode A leakage / Book B alloc): **stopped, not applied**.
+
+### Added (2026-09-14) — Decision pack (ticks not applied)
+- [`00_docs/DECISION_PACK_20260914.md`](00_docs/DECISION_PACK_20260914.md) — one sitting for B5/P4, list-to-pocket Mode A, G1, Book B, LLM, sell-out files. Recommended defaults written; **not applied**.
+- Hub §2 and `DECISIONS.md` point at the pack. Gated productize waits on ticks.
+
+### Changed (2026-09-14) — ES PLACSP national feed LIVE this runner
+- Atom syndication HTTP 200 (~772 KB, not WAF). Keyword matches **2** / Isuzu-gated **0** in the rolling Atom window. Health `Spain PLACSP` = OK. National LIVE **17/29**.
+- Hub §1 item 4 and `roadmaps/scrapers.md` were stale (“wire ES/IT/DE”, “8/29”). IT/DE were already LIVE 2026-08-25.
+- No `tender_data.json` publish. Next DARK portals need login/recaptcha/ministry-500 — no new key ask.
+- `action_ledger_decisions.csv`: **5 TRIAGED** rows from top-15 € (not ACTIONED; owner blank). `REVIEW` is not a legal ledger state.
+- Crosswalk: `01_data/00_derived/monday_pn_opportunity_crosswalk_20260914.csv` (40/40 Monday PNs). Command Center HTML not rebuilt.
+- Rebuilt Mode B `02_dashboards/ops/ISZE_Action_Ledger.html` (verify OK, 22 bars). Outcomes still 0.
+
 ### Changed (2026-08-26) — Roadmap reorganised: one queue, one closed list
 - **`00_docs/ISZE_ROADMAP.md` rewritten.** The old "Build now" table mixed ~15 shipped/closed items with ~8 open ones and carried multi-paragraph rationale inside table cells. Now six sections: **1 Open queue** (14 items, each with the single thing that unblocks it), **2 Waiting on Jerome** (13 decisions, sourced from the Aftermarket BI Tier B list + AI-sales gates), **3 Live now**, **4 Shipped** (dated one-liners), **5 Closed — do not reopen**, **6 Domain roadmaps**. Rationale stays in `DECISIONS.md`; the hub is a queue, not an archive.
 - **Caught up to 2026-08-25.** The hub had stopped at 2026-08-18 and did not mention PRISM IA phases 3–8 (2026-08-20), the Aftermarket BI Tier A batch (2026-08-19, 14/15 built), P5 forecast, the P8 Action Ledger, or the overnight audit (verify 116/0/0, `sales_fact` to 2026-06-30).

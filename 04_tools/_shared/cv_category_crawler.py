@@ -96,20 +96,20 @@ def _parse_price(text: str, regex: str) -> float | None:
         return None
 
 
-def _fetch(url: str, cfg: SiteConfig, retries: int = 3) -> str | None:
+def _fetch(url: str, cfg: SiteConfig, retries: int = 3) -> tuple[str | None, str | None]:
     last_err = None
     for attempt in range(retries):
         try:
             r = creq.get(url, headers=cfg.headers, impersonate=cfg.impersonate, timeout=25)
             if r.status_code == 200:
-                return r.text
+                return r.text, None
             last_err = f"HTTP {r.status_code}"
         except Exception as e:
             last_err = str(e)
         if attempt < retries - 1:
             time.sleep(random.uniform(2, 5))
     print(f"    !! giving up on {url} ({last_err})")
-    return None
+    return None, last_err or "fetch failed"
 
 
 def crawl_site(cfg: SiteConfig, on_product: Callable[[dict], None] | None = None) -> list[dict]:
@@ -128,8 +128,23 @@ def crawl_site(cfg: SiteConfig, on_product: Callable[[dict], None] | None = None
         url = start_url
         for page in range(1, cfg.max_pages + 1):
             print(f"  [{cfg.site}] page {page}: {url}")
-            html = _fetch(url, cfg)
+            html, fetch_err = _fetch(url, cfg)
             if html is None:
+                products.append(
+                    {
+                        "Country": cfg.country,
+                        "Site": cfg.site,
+                        "PMS_Category": "",
+                        "Product_Name": "",
+                        "Price": "",
+                        "Currency": cfg.currency,
+                        "Price_EUR": "",
+                        "Product_URL": url,
+                        "Scraped_At": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        "scrape_error": fetch_err or "fetch failed",
+                        "Status": "error",
+                    }
+                )
                 break
             soup = BeautifulSoup(html, "html.parser")
 
@@ -193,6 +208,8 @@ def crawl_site(cfg: SiteConfig, on_product: Callable[[dict], None] | None = None
                     "Price_EUR": round(price * cfg.fx_to_eur, 2),
                     "Product_URL": full_url,
                     "Scraped_At": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    "scrape_error": "",
+                    "Status": "ok",
                 }
                 products.append(row)
                 if on_product:
@@ -215,7 +232,7 @@ def _urljoin(base: str, href: str) -> str:
 def write_products_csv(path: Path, products: list[dict]) -> None:
     import csv
     fields = ["Country", "Site", "PMS_Category", "Product_Name", "Price", "Currency",
-              "Price_EUR", "Product_URL", "Scraped_At"]
+              "Price_EUR", "Product_URL", "Scraped_At", "scrape_error", "Status"]
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=fields)
@@ -229,9 +246,15 @@ def summarise_by_category(products: list[dict]) -> list[dict]:
     from collections import defaultdict
     groups: dict[tuple[str, str], list[float]] = defaultdict(list)
     for p in products:
-        if not p["PMS_Category"]:
+        if p.get("scrape_error"):
             continue
-        groups[(p["Site"], p["PMS_Category"])].append(p["Price_EUR"])
+        if not p.get("PMS_Category"):
+            continue
+        try:
+            price = float(p["Price_EUR"])
+        except (TypeError, ValueError, KeyError):
+            continue
+        groups[(p["Site"], p["PMS_Category"])].append(price)
     out = []
     for (site, cat), prices in sorted(groups.items()):
         out.append({

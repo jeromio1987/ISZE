@@ -53,6 +53,8 @@ from isze_core_v3 import (
     extract_text,
     normalize_raw_row,
     parse_number,
+    parse_xml_root,
+    retry_after_seconds,
     row_passes_isuzu_selection_gate,
     score_legacy,
 )
@@ -208,34 +210,65 @@ def safe_get(d: Dict[str, Any], path: List[Any], default: Any = "") -> Any:
 RATE_LIMIT_BACKOFF_SCHEDULE = [30, 60, 90, 120, 180, 240]
 
 
-def get_with_retry(session: requests.Session, url: str, params: Optional[Dict[str, Any]] = None, max_retries: int = 6):
+def get_with_retry(
+    session: requests.Session,
+    url: str,
+    params: Optional[Dict[str, Any]] = None,
+    max_retries: int = 6,
+    *,
+    source_label: Optional[str] = None,
+):
+    last_err: Optional[str] = None
     for attempt in range(max_retries):
         try:
             r = session.get(url, params=params, timeout=30)
             if r.status_code == 429:
-                wait = RATE_LIMIT_BACKOFF_SCHEDULE[min(attempt, len(RATE_LIMIT_BACKOFF_SCHEDULE) - 1)]
-                print(f"  Rate limited — waiting {wait}s")
+                wait = retry_after_seconds(
+                    r.headers.get("Retry-After"),
+                    attempt,
+                    RATE_LIMIT_BACKOFF_SCHEDULE,
+                )
+                last_err = (
+                    f"HTTP 429 (Retry-After={r.headers.get('Retry-After')!s}, wait={wait}s)"
+                )
+                print(f"  Rate limited — {last_err}")
                 time.sleep(wait)
                 continue
             r.raise_for_status()
+            if source_label:
+                LAST_FETCH_ERRORS[source_label] = None
             return r
-        except Exception:
+        except Exception as exc:
+            last_err = str(exc)
             time.sleep(2 + attempt * 2)
+    if source_label:
+        LAST_FETCH_ERRORS[source_label] = (
+            (last_err or "request failed") + " — exhausted retries"
+        )
     return None
 
 
 def post_with_retry(session: requests.Session, url: str, payload: Dict[str, Any], max_retries: int = 6):
+    last_err: Optional[str] = None
     for attempt in range(max_retries):
         try:
             r = session.post(url, json=payload, timeout=30)
             if r.status_code == 429:
-                wait = RATE_LIMIT_BACKOFF_SCHEDULE[min(attempt, len(RATE_LIMIT_BACKOFF_SCHEDULE) - 1)]
-                print(f"  Rate limited — waiting {wait}s")
+                wait = retry_after_seconds(
+                    r.headers.get("Retry-After"),
+                    attempt,
+                    RATE_LIMIT_BACKOFF_SCHEDULE,
+                )
+                last_err = (
+                    f"HTTP 429 (Retry-After={r.headers.get('Retry-After')!s}, wait={wait}s)"
+                )
+                print(f"  Rate limited — {last_err}")
                 time.sleep(wait)
                 continue
             r.raise_for_status()
             return r
-        except Exception:
+        except Exception as exc:
+            last_err = str(exc)
             time.sleep(2 + attempt * 2)
     return None
 
@@ -249,6 +282,8 @@ def flatten_for_export(row: Dict[str, Any]) -> Dict[str, Any]:
         "Procedure Type": row.get("Procedure Type", ""),
         "Buyer Type": row.get("Buyer Type", ""),
         "Score": row.get("Score", ""),
+        "Relevance Score": row.get("relevance_score_1to5", ""),
+        "Relevance Pass": "YES" if row.get("relevance_pass") else "",
         "FleetSize": row.get("FleetSize", ""),
         "Title": row.get("Title", ""),
         "Buyer": row.get("Buyer", ""),
@@ -344,6 +379,7 @@ def uk_country(rel: Dict[str, Any]) -> str:
 
 def fetch_uk(session: requests.Session, from_dt: datetime, to_dt: datetime) -> List[Dict[str, Any]]:
     print("\n[UK] Fetching from Find a Tender...")
+    LAST_FETCH_ERRORS["UK Find a Tender"] = None
     base_url = "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages"
     all_releases: List[Dict[str, Any]] = []
     cursor = None
@@ -366,9 +402,11 @@ def fetch_uk(session: requests.Session, from_dt: datetime, to_dt: datetime) -> L
 
     while page < 60:
         params = _build_params(cursor)
-        resp = get_with_retry(session, base_url, params=params)
+        resp = get_with_retry(session, base_url, params=params, source_label="UK Find a Tender")
         if not resp:
             print(f"[UK] Request failed (page {page+1}). Stopping UK fetch.")
+            if not LAST_FETCH_ERRORS.get("UK Find a Tender"):
+                LAST_FETCH_ERRORS["UK Find a Tender"] = "request failed — exhausted retries"
             break
 
         if resp.status_code != 200:
@@ -377,11 +415,17 @@ def fetch_uk(session: requests.Session, from_dt: datetime, to_dt: datetime) -> L
             if page == 0 and resp.status_code in (400, 422):
                 print("[UK] Retrying without stages filter...")
                 params.pop("stages", None)
-                resp = get_with_retry(session, base_url, params=params)
+                resp = get_with_retry(
+                    session, base_url, params=params, source_label="UK Find a Tender"
+                )
                 if not resp or resp.status_code != 200:
                     print("[UK] Retry also failed — skipping UK source.")
+                    LAST_FETCH_ERRORS["UK Find a Tender"] = (
+                        f"HTTP {getattr(resp, 'status_code', 'none')} after stages retry"
+                    )
                     break
             else:
+                LAST_FETCH_ERRORS["UK Find a Tender"] = f"HTTP {resp.status_code}"
                 break
 
         try:
@@ -402,7 +446,9 @@ def fetch_uk(session: requests.Session, from_dt: datetime, to_dt: datetime) -> L
         if page == 0 and len(releases) == 0:
             print("[UK] Zero releases on page 1 with stages filter — retrying without it...")
             params_no_stage = {k: v for k, v in params.items() if k != "stages"}
-            resp2 = get_with_retry(session, base_url, params=params_no_stage)
+            resp2 = get_with_retry(
+                session, base_url, params=params_no_stage, source_label="UK Find a Tender"
+            )
             if resp2 and resp2.status_code == 200:
                 try:
                     pkg2 = resp2.json()
@@ -2095,68 +2141,69 @@ def _parse_procurement_rss(
     extra_keywords: Optional[List[str]] = None,
 ) -> List[Dict[str, Any]]:
     """Parse RSS/Atom XML → list of raw row dicts (shared by DE/BE/NL feeds)."""
-    rows = []
+    rows: List[Dict[str, Any]] = []
     kw = list(KEYWORDS) + list(extra_keywords or [])
     try:
-        root = ET.fromstring(content)
-        ns = {"atom": "http://www.w3.org/2005/Atom"}
-        # Try Atom feed first, fall back to RSS2
-        items = root.findall(".//atom:entry", ns) or root.findall(".//item")
-        for item in items:
-            def _t(tag: str, default: str = "") -> str:
-                # Do NOT use `el or …` — ElementTree Elements with only text
-                # are falsy (no child nodes), which wiped every RSS title.
-                el = item.find(tag)
-                if el is None:
-                    el = item.find(f"atom:{tag}", ns)
-                return (el.text or "").strip() if el is not None else default
-
-            title = _t("title")
-            description = _t("description") or _t("summary")
-            published = _t("pubDate") or _t("published")
-            link = _t("link")
-            if not link:
-                link_el = item.find("atom:link", ns)
-                if link_el is not None:
-                    link = link_el.get("href", "") or ""
-                # RSS <link> text already handled by _t("link")
-
-            blob = f"{title} {description}".lower()
-            if not match_keywords(blob, kw):
-                continue
-
-            # Check CPV if present in description
-            cpv_raw = ""
-            if "cpv" in blob or "34131" in blob or "50110" in blob:
-                import re
-                m = re.search(r"\b(3[0-9]{7}|5[0-9]{7})\b", description)
-                if m:
-                    cpv_raw = m.group(0)
-
-            rows.append({
-                "Source": source_label,
-                "Source Notice ID": link.split("/")[-1] if link else title[:40],
-                "Lifecycle": classify_lifecycle(blob, ""),
-                "Notice Type": "",
-                "Procedure Type": "",
-                "Buyer Type": "",
-                "Score": score_legacy(title, None),
-                "FleetSize": extract_fleet_size(title),
-                "Title": title,
-                "Buyer": "",
-                "CPV Code": cpv_raw,
-                "CPV Desc": "",
-                "Description": description[:500],
-                "Est. Value": "",
-                "Currency": currency,
-                "Published": published,
-                "Deadline": "",
-                "Country": country,
-                "Country Code": country_code,
-                "URL": link,
-            })
+        root = parse_xml_root(content)
     except ET.ParseError as e:
         print(f"  [{country_code}] RSS parse error: {e}")
+        return rows
+    ns = {"atom": "http://www.w3.org/2005/Atom"}
+    items = (
+        root.findall(".//{http://www.w3.org/2005/Atom}entry")
+        or root.findall(".//atom:entry", ns)
+        or root.findall(".//item")
+    )
+    for item in items:
+        def _t(tag: str, default: str = "") -> str:
+            # Do NOT use `el or …` — ElementTree Elements with only text
+            # are falsy (no child nodes), which wiped every RSS title.
+            el = item.find(tag)
+            if el is None:
+                el = item.find(f"atom:{tag}", ns)
+            return (el.text or "").strip() if el is not None else default
+
+        title = _t("title")
+        description = _t("description") or _t("summary")
+        published = _t("pubDate") or _t("published")
+        link = _t("link")
+        if not link:
+            link_el = item.find("atom:link", ns)
+            if link_el is not None:
+                link = link_el.get("href", "") or ""
+
+        blob = f"{title} {description}".lower()
+        if not match_keywords(blob, kw):
+            continue
+
+        cpv_raw = ""
+        if "cpv" in blob or "34131" in blob or "50110" in blob:
+            m = re.search(r"\b(3[0-9]{7}|5[0-9]{7})\b", description)
+            if m:
+                cpv_raw = m.group(0)
+
+        rows.append({
+            "Source": source_label,
+            "Source Notice ID": link.split("/")[-1] if link else title[:40],
+            "Lifecycle": classify_lifecycle(blob, ""),
+            "Notice Type": "",
+            "Procedure Type": "",
+            "Buyer Type": "",
+            "Score": score_legacy(title, None),
+            "FleetSize": extract_fleet_size(title),
+            "Title": title,
+            "Buyer": "",
+            "CPV Code": cpv_raw,
+            "CPV Desc": "",
+            "Description": description[:500],
+            "Est. Value": "",
+            "Currency": currency,
+            "Published": published,
+            "Deadline": "",
+            "Country": country,
+            "Country Code": country_code,
+            "URL": link,
+        })
     return rows
 
 
@@ -2719,9 +2766,10 @@ def fetch_poland_bzp(session: requests.Session, from_dt: datetime, page_size: in
 # ---------------------------------------------------------------------------
 # Spain PLACSP (below-threshold national) — Atom / open-data syndication
 # ---------------------------------------------------------------------------
-# Official Atom + monthly ZIP paths (Hacienda / OpenPLACSP docs). This runner's
-# egress is WAF-denied on contrataciondelestado.es / contrataciondelsectorpublico.gob.es
-# (Atom + ZIP + datosabiertos) — keep CODE_READY until a session/IP path works.
+# Official Atom + monthly ZIP paths (Hacienda / OpenPLACSP docs).
+# 2026-08-25: some runners WAF-denied Atom/ZIP → CODE_READY.
+# 2026-09-14 retry: Atom HTTP 200 (~770 KB, not WAF) from this runner — treat as LIVE
+# when fetch_spain_placsp returns keyword rows. Keep WAF detector for other egress.
 ES_PLACSP_ATOM_URLS = [
     "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom",
     "https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom",
@@ -2805,8 +2853,17 @@ def fetch_spain_placsp(session: requests.Session, from_dt: datetime) -> List[Dic
             print(f"  [ES PLACSP] {url.split('/')[-1]}: {len(kept)} keyword matches")
             results.extend(kept)
             if kept:
-                break  # one live feed is enough
-            last_err = None
+                last_err = None
+        # Dedupe by URL across Atom variants (estado vs sectorpublico vs aggregated)
+        seen: set[str] = set()
+        uniq: List[Dict[str, Any]] = []
+        for r in results:
+            key = str(r.get("URL") or r.get("url") or r.get("Title") or "").strip().lower()
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            uniq.append(r)
+        results = uniq
         if results:
             LAST_FETCH_ERRORS["Spain PLACSP"] = None
         else:

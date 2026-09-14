@@ -1,6 +1,6 @@
 # GPS V2 — Fig-key catalogue layer
 
-**Status:** 2026-06-02 — `parts_catalog_dimension.csv` loads fig keys from PR00 **Fig No. + Key No.** (~161k PNs), not just the 4 filter overrides.
+**Status:** 2026-09-14 — `pr00_classification.csv` empty `fig_key` filled from IE40 parquet (**158** PNs). `parts_catalog_dimension` **161,325 / 164,969** with fig_key (97.8%). Overrides file is header-only.
 
 PRISM already ships **GPS (spend/unit)** and **PMS capture** via the 55-PN registry and BVP catalog.
 GPS roadmap “V2” in `gps_dashboard/GPS_Dashboard_Roadmap.md` assumed PMS did not exist yet — this doc
@@ -48,7 +48,8 @@ python scripts\build_fig_key_dimension.py
 python scripts\build_sales_by_fig_key.py
 ```
 
-**PRISM GPS → Part Explorer** uses `parts_catalog_dimension` (Fig Key + PMS Category columns).
+**PRISM GPS → Part Explorer** — **done** in `pages/2_GPS.py` (Fig Key + PMS Category from `parts_catalog_dimension`). No Mode A rebuild.
+
 When `sales_by_db_fig_key_year.csv` exists, a per-distributor fig-key rollup table appears below the top parts list.
 
 **Outputs:** `01_data/derived/parts_catalog_dimension.csv`
@@ -67,11 +68,12 @@ When `sales_by_db_fig_key_year.csv` exists, a per-distributor fig-key rollup tab
 
 ## Next steps (V2 backlog)
 
-1. **Expand overrides** — EPC manual basket per catalogue edition × fig key (see `03_analytics/Isuzu/pms-pilot/BVP_FINDING.md`).
+1. **Expand overrides** — still blocked: EPC JSON is edition/family not fig-key; Snap-on blocks bulk BVP (`pms-pilot/BVP_FINDING.md`). Header-only `fig_key_pn_overrides.csv` is in place; do not invent rows.
 2. ~~**Ingest SAP/PBI fig key**~~ — **done 2026-07-02**: `sales_fact` now carries `fig_key` + `fig_key_source` (`build_sales_fact_from_cy.py`). CY export `FIG KEY CLASSIFICATION` is ingested directly when present (`fig_key_source = sap`); current exports lack the column, so fig_key is joined from `parts_catalog_dimension` (`fig_key_source = catalog`, 98.9% row coverage). Verified by `sales_fact.fig_key` check (min 90%).
-3. **GPS Part Explorer** — wired (Fig Key / PMS Category from `parts_catalog_dimension`).
-4. **Sales by fig key** — `sales_by_db_fig_key_year.csv` (GPS Part Explorer, single distributor).
-5. **AIM × GPS matrix** — `aim_gps_matrix.csv` · PRISM page 16.
+3. **IE40 empty-key fill** — **done 2026-09-14**: 158 existing PR00 rows; catalog rebuild fills from parquet if CSV is stale.
+4. **GPS Part Explorer** — **done** (wired; do not Mode A rebuild).
+5. **Sales by fig key** — `sales_by_db_fig_key_year.csv` (GPS Part Explorer, single distributor).
+6. **AIM × GPS matrix** — `aim_gps_matrix.csv` · Network Intelligence tab (page 16 archived).
 
 ---
 

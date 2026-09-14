@@ -8,6 +8,14 @@
 
 ## [Unreleased — v2.0 build in progress]
 
+### 2026-09-14
+
+#### Changed — fig-key honesty
+- Filled **158** empty `fig_key` on existing `pr00_classification.csv` from `pricing_pr00_ie40.parquet`. Family/group kept; no new PNs.
+- `build_parts_catalog_dimension` fills empty keys from the same parquet. Catalog **161,325** fig_key / **164,969** PNs.
+- `data/fig_key_pn_overrides.csv` header only (`part_number,fig_key,source`).
+- `validate_supersession_epc.py`: `--epc` optional; `BLOCKED_NO_EPC_EXPORT` when missing; `INTERNAL_IE40_CHECK` is not EPC MATCH.
+
 ### 2026-08-18
 
 #### Added — duplicate tabs dropped (cross-link, not merge)

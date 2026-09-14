@@ -6,6 +6,34 @@
 
 ---
 
+## 2026-09-14 — Lanes 3–5 outcomes (gated productize stopped)
+
+**Status:** Engineering done; gated productize **not applied**.
+
+**Catalogue.** Filled **158** empty `fig_key` on existing `pr00_classification.csv` from IE40 parquet. Catalog **161,325 / 164,969**. Overrides CSV header-only (EPC JSON = edition/family; Snap-on blocks bulk BVP). Part Explorer already wired — no Mode A rebuild. Residual **24 PN / €67,182.04** listed from `no_pr00_gap_remaining_zpr1_check_20260812.csv`; `5500*` Shell parked. EPC validator wrote **`BLOCKED_NO_EPC_EXPORT`**; IE40 check is **`INTERNAL_IE40_CHECK`** (925 agrees) — never MATCH. Map CSV not rewritten.
+
+**Scrapers.** `relevance_score_1to5` exported as Relevance Score; pass ≥3; notices not dropped. `scrape_error` on KS/Mekonomen/category crawlers; errors masked in iam_scoring. RSS sanitize/recover. UK Find a Tender honors Retry-After. Lidl `a10051271` is 404; search `aanbieding` is the live URL.
+
+**Gated.** P4 4.10 / G1 / Mode A leakage / Book B alloc **stopped**. Ticks on `DECISION_PACK_20260914.md` still blank.
+
+Does not supersede: 2026-09-14 pack opened; 2026-08-25 Nordics keys closed.
+
+---
+
+## 2026-09-14 — Decision pack opened (ticks not applied)
+
+**Status:** Open — waiting on Jerome. Recommended defaults are written, **not applied**.
+
+**What changed.** One-sitting pack: [`00_docs/DECISION_PACK_20260914.md`](00_docs/DECISION_PACK_20260914.md). Covers B5/P4 call-list, list-to-pocket Mode A, G1, B7 override, B1–B4/B8 Book B, B1b LLM, B10 vintages, A12, sell-out files. Recommended ticks: hold P4 productize; keep leakage Mode B (joins already verified 2026-08-20 — remaining gate is NO_LIST); do not G1 (WAPE 49.4%); Jerome-only forecast override; Book B launch-only; no seed € invention; growth factors unsigned; manual HOLD; skip Book A +3%, LLM, vintage HTML rebuild, A12 until a DB is named.
+
+**Still do not (until a tick):** change P4 thresholds in code; run alloc; mark forecast G1; quote leakage € in Mode A; ship Command Center.
+
+**Same-pass engineering (not gated):** Monday OS seed ≤5 REVIEW rows; tender diagnose; fig-key / EPC; scraper quality V2.
+
+**Does not supersede:** 2026-08-25 list-to-pocket Mode B hold; 2026-08-18 P4 draft-flags-not-KPI; 2026-08-25 Nordics keys closed.
+
+---
+
 ## 2026-08-25 — Never re-ask Jerome for Nordics tender API keys
 
 **Status:** Accepted — Jerome (overnight chat): spammed repeatedly with the same Doffin/HILMA setup sheet; stop unless a new accurate failure reason exists.
