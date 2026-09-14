@@ -1,10 +1,10 @@
 # GPS dashboard — roadmap
 
-**Last updated:** 2026-08-26
+**Last updated:** 2026-09-14
 **Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md) — open items also appear in the hub queue (§1 items 5–8)
 **Live app:** PRISM `pages/2_GPS.py` (port 8503, canonical) · `03_analytics/Isuzu/gps_dashboard/` legacy Dash — **frozen, do not build on it**
 
-**Open here:** fig-key V2 remainder (hub item 8) · interval-aware air factor still provisional (hub item 5) · LCV generation split blocked on chassis/reg-year cutoffs (hub item 7).
+**Open here:** interval-aware air factor still provisional (hub item 5) · LCV generation split blocked on chassis/reg-year cutoffs (hub item 7). **Fig-key V2 remainder (hub item 8) — 2026-09-14 slice done** (IE40 fill 158 empty keys; Part Explorer already wired; no Mode A rebuild).
 
 ---
 
@@ -33,10 +33,10 @@ GPS / Spend per Unit baseline dashboard:
 
 **Still to add:**
 
-- Bulk PN → fig key from SAP / IE40 PR00 column
-- EPC basket rows into overrides
-- Wire Part Explorer to `parts_catalog_dimension`
-- Optional rollups by `fig_key` × distributor × year
+- ~~Bulk PN → fig key from SAP / IE40 PR00 column~~ — **done 2026-09-14**: filled **158** empty `fig_key` on existing `pr00_classification.csv` rows from `pricing_pr00_ie40.parquet` (`fig_no`/`key_no`). Family/group kept. No flood of new PNs. Same fill is wired into `fig_key_catalog.build_parts_catalog_dimension` so a catalog rebuild is self-contained.
+- ~~EPC basket rows into overrides~~ — **header only.** `data/fig_key_pn_overrides.csv` exists with `part_number,fig_key,source`. EPC basket JSON (`pms-pilot/epc_results_merged.json`) has edition/family, not fig-key. Snap-on blocks bulk BVP (`pms-pilot/BVP_FINDING.md`). Do not invent override rows.
+- ~~Wire Part Explorer to `parts_catalog_dimension`~~ — **done** in `pages/2_GPS.py` (Fig Key / PMS Category columns + fig-key rollup). No Mode A rebuild.
+- Optional rollups by `fig_key` × distributor × year — `sales_by_db_fig_key_year.csv` already exists for a single distributor in Part Explorer.
 
 **PMS capture (PRISM — do not use 1.5 svc/yr):**
 

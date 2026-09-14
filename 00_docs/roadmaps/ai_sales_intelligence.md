@@ -9,7 +9,7 @@
 >
 > | Phase | Where it really is |
 > |---|---|
-> | **P1** | Catalogue PR00 coverage **98.2%**. Supersession delta and list-to-pocket validation both ran 2026-08-19. Residual: 24 PN / €67k ZPR1-path + admin non-PN; EPC validation of the 925-PN supersession map still open |
+> | **P1** | Catalogue PR00 coverage **98.2%**. Supersession delta and list-to-pocket validation both ran 2026-08-19. Residual: 24 PN / €67,182.04 ZPR1-path + parked Shell `5500*`. EPC validation of the 925-PN map: **`BLOCKED_NO_EPC_EXPORT`** (2026-09-14) |
 > | **P2a** | **Complete.** 3 tables, 24-month run, DSAR/purge job proven. Local, deterministic, zero egress |
 > | **P2b / P3 / P6** | **Zero code, and correctly so.** Blocked on B1b (named LLM route) then G0b |
 > | **P4** | Builder live (`p4-v1`, gitignored parquet) + ops triage pack. **Blocked on Jerome's threshold calibration (4.9)** — draft flags fire on 10 RED / 6 AMBER of 17 DBs, so they are not a call list |
@@ -230,7 +230,7 @@ No phase starts until its gate is signed. Gate owner listed; gate is binary.
 | # | Task | Effort | Output | Status 2026-08-12 |
 |---|---|---|---|---|
 | 1.1 | Classify the gap: superseded · new-not-yet-listed · non-catalogue · data error · closed | 3 d | `pn_coverage_classification.csv` | **Done** (254 rows: 220 closed + 34 open) |
-| 1.2 | Build supersession chain resolver (old PN → current PN), validate against EPC | 3 d | `pn_supersession_map.csv` | **Starter done** (IE40 `newest_pn`); EPC validation open |
+| 1.2 | Build supersession chain resolver (old PN → current PN), validate against EPC | 3 d | `pn_supersession_map.csv` | **Starter done** (IE40 `newest_pn`); EPC **`BLOCKED_NO_EPC_EXPORT`** 2026-09-14 — not MATCH |
 | 1.3 | Re-run realization / leakage with the resolved map; quantify the delta vs the 85% view | 2 d | delta report | **Next** |
 | 1.4 | Validate year-matched list-to-pocket joins on PR00/ZPR1 2023–2025 | 3 d | join validation note | Open (B5) |
 | 1.5 | Add coverage % as a standing check in `_verification_report.json` | 1 d | verify rule | Open |

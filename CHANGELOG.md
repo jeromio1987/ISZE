@@ -8,6 +8,13 @@
 
 ## [Unreleased]
 
+### Added (2026-09-14) — Catalogue honesty + scraper V2 (gated productize not applied)
+- Fig-key: filled **158** empty `fig_key` on existing `pr00_classification.csv` from IE40 parquet; catalog rebuild **161,325 / 164,969**. `fig_key_pn_overrides.csv` header only (EPC JSON is edition/family; Snap-on blocks bulk BVP).
+- EPC validator: `--epc` optional; missing export → `pn_supersession_epc_validation.meta.json` **`BLOCKED_NO_EPC_EXPORT`**. Never MATCH. IE40 `newest_pn` labelled **`INTERNAL_IE40_CHECK`** (925/925 agrees). Map CSV not rewritten.
+- Residual 24 PN / €67,182.04 ZPR1-path listed from `no_pr00_gap_remaining_zpr1_check_20260812.csv`. `5500*` Shell lubricants parked.
+- Scraper V2: tender `relevance_score_1to5` + Relevance Score export (no drop); `scrape_error` on KS/Mekonomen/category crawlers; RSS sanitize/recover; UK FaT Retry-After; Lidl `a10051271` 404 / search URL live.
+- Gated productize (P4 4.10 / G1 / Mode A leakage / Book B alloc): **stopped, not applied**.
+
 ### Added (2026-09-14) — Decision pack (ticks not applied)
 - [`00_docs/DECISION_PACK_20260914.md`](00_docs/DECISION_PACK_20260914.md) — one sitting for B5/P4, list-to-pocket Mode A, G1, Book B, LLM, sell-out files. Recommended defaults written; **not applied**.
 - Hub §2 and `DECISIONS.md` point at the pack. Gated productize waits on ticks.

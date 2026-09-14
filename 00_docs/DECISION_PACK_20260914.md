@@ -6,7 +6,7 @@
 
 **Related:** [`ISZE_ROADMAP.md`](ISZE_ROADMAP.md) §2 · [`AFTERMARKET_BI_BUILD_MENU_20260819.md`](AFTERMARKET_BI_BUILD_MENU_20260819.md) Tier B · [`P4_DETERMINISTIC_SIGNALS.md`](P4_DETERMINISTIC_SIGNALS.md) · [`LIST_TO_POCKET_VALIDATION_20260819.md`](../01_data/01_Pricing/LIST_TO_POCKET_VALIDATION_20260819.md)
 
-**Agent run in the same pass (does not wait on these ticks):** Monday OS seed ≤5 REVIEW rows · tender diagnose · fig-key / EPC · scraper quality V2. See `DECISIONS.md` 2026-09-14.
+**Agent run in the same pass (does not wait on these ticks):** Monday OS seed ≤5 **TRIAGED** rows · tender diagnose · fig-key / EPC · scraper quality V2. See `DECISIONS.md` 2026-09-14. Gated productize (Step 5) **stopped**.
 
 ---
 
@@ -50,11 +50,11 @@ Recorded so this pack is not mistaken for “nothing happened.”
 
 | Step | What | Status |
 |------|------|--------|
-| 1 | ≤5 Action Ledger rows seeded `REVIEW` (not ACTIONED); Monday PN → `opportunity_id` crosswalk | this run |
-| 2 | Tender: IT/DE vs hub; ES PLACSP retry; next public national source | this run |
-| 3 | Fig-key V2 remainder + EPC supersession validation | this run |
-| 4 | Scraper quality V2 | this run |
-| 5 | P4 widget / G1 / Mode A leakage / Book B alloc | **blocked on ticks above** |
+| 1 | ≤5 Action Ledger rows seeded **TRIAGED** (not REVIEW — illegal; not ACTIONED); Monday PN → `opportunity_id` crosswalk 40/40 | **done 2026-09-14** (`ca0fa9b`) |
+| 2 | Tender: IT PNCP + DE OV already LIVE; **ES PLACSP LIVE** this runner (Atom 200, 2 keyword / 0 gated). National LIVE **17/29**. No Mode A HTML ship | **done 2026-09-14** (`b427d22`) |
+| 3 | Fig-key: **158** empty keys filled from IE40 parquet; catalog 161,325 fig_key. Overrides header-only. EPC **`BLOCKED_NO_EPC_EXPORT`**. INTERNAL_IE40_CHECK 925/925 agrees (not MATCH). Residual 24 PN / €67,182.04 listed. Part Explorer already wired | **done 2026-09-14** |
+| 4 | Scraper V2: `relevance_score_1to5` + Relevance Score export (no drop); `scrape_error` KS/Mekonomen/category; RSS sanitize/recover; UK FaT Retry-After; Lidl `a10051271` 404, search URL live | **done 2026-09-14** |
+| 5 | P4 widget / G1 / Mode A leakage / Book B alloc | **stopped, gated** — no ticks on this pack |
 
 ---
 
