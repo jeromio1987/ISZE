@@ -120,14 +120,16 @@ distributors:
     pbi:
       quarter: "Q1 FY2027"
       months: ["Apr", "May", "Jun"]
-      sales: [140000, 151000, 153000]
+      sales: [140000, 151000, 153000]  # May/Jun were 141/163 (= budget); SAP Apr–Jun is 140/151/153k
       budget: [148000, 141000, 163000]
       prev_year: [116000, 140000, 169000]
       order_intake_total: null
-      source: "Power BI Q1 FY2027 report, Portugal row — supplied by Jerome 2026-07-28; May/Jun sales aligned to SAP (140/151/153k). Yaml 141/163 matched budget, not billed."
+      source: "Power BI Q1 FY2027 report, Portugal row — supplied by Jerome 2026-07-28"
     watch:
       - "Portugal has a real registration file (01_data/Matriculas Isuzu SAP.xlsx). Prefer it over UIO for the fleet chart — no other DB here has an equivalent."
       - "The July 2026 deck reported H1 2026 at EUR 935,636 with a EUR 20,000 rebate credit counted as a POSITIVE. Correct figure is EUR 40,000 lower. Fix before that deck is reused."
+    deck:
+      use_gps_master: true  # meeting GPS % is gps_master (flat published). Carpark mixed-rate wallet is not the quote.
 
   ISD:
     name: "Isuzu Sales Deutschland"

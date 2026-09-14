@@ -882,10 +882,14 @@ def _fy27_from_derived(profile: dict) -> dict:
     park = load_carpark(profile) or {}
     segs: dict[str, dict] = {}
     for seg, slot in (park.get("by_segment") or {}).items():
+        uio26 = int(slot["uio_2026"])
+        fixed = (profile.get("uio_2026_fixed") or {}).get(seg)
+        if fixed is not None:
+            uio26 = int(fixed)
         segs[seg] = {
             "fy25": None,
             "fy26": int(slot["uio_2025"]),
-            "fy27": int(slot["uio_2026"]),
+            "fy27": uio26,
         }
     w25 = park.get("wallet_2025") or gm.get("max_spend")
     w26 = park.get("wallet_2026") or gm.get("max_spend")

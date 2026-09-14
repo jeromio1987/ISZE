@@ -443,12 +443,25 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     db.bullet_list(s, bullets, Inches(0.32), Inches(1.45), Inches(12.0), Inches(4.5), size=15)
     page += 1
 
+    gps_seg = C.load_segmented_gps(profile) or {}
+    skip_gps_pct = (not gps_seg.get("show_pct", True)) or bool(
+        (profile.get("deck") or {}).get("skip_gps_pct")
+    )
+    use_gps_master = bool((profile.get("deck") or {}).get("use_gps_master"))
+    gps_agenda = (
+        "GPS — amount view (no capture percentage)"
+        if skip_gps_pct else
+        "GPS — published fiscal-year figure"
+        if use_gps_master else
+        "GPS — fiscal year (headline vs excl. warranty; max two lines)"
+    )
+
     # agenda
     s = db.build_content(prs, "Deep-dive agenda", eyebrow="Agenda", page_no=page)
     db.bullet_list(
         s,
         [
-            "GPS — fiscal year (headline vs excl. warranty; max two lines)",
+            gps_agenda,
             "FY2025 → FY2026 wallet mix (Genuine / Genuine with BVP alternative / BVP)",
             "Where the money went — outside the service-parts basket (FY)",
             "Service parts: CY capture vs network + FY billing (capture % is CY-only by design)",
@@ -463,10 +476,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
 
     # GPS chart — FY only, max 2 lines. Skip the % chart when capture > 100%
     # (Ireland-class) so Mode A never plots a GPS percentage on that market.
-    gps_seg = C.load_segmented_gps(profile) or {}
-    skip_gps_pct = (not gps_seg.get("show_pct", True)) or bool(
-        (profile.get("deck") or {}).get("skip_gps_pct")
-    )
+    ginfo: dict = {}
     if skip_gps_pct:
         s = db.build_content(
             prs, "GPS — amount view", eyebrow="GPS", page_no=page,
@@ -487,12 +497,31 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
             "Purchases sit above that theoretical potential — we discuss the amount "
             "and the per-vehicle rate, not a capture percentage."
         )
-        for w in (profile.get("watch") or [])[:1]:
-            if "GPS" in w or "gps" in w or "denominator" in w.lower():
-                take.append(w)
-                break
         db.bullet_list(s, take[:5], Inches(0.32), Inches(1.35), Inches(11.5),
                        Inches(4.0), size=14)
+        page += 1
+    elif use_gps_master:
+        gm = C.load_gps_master(profile)
+        g26 = gm.get("gps_pct_FY2026")
+        s = db.build_content(
+            prs, f"GPS Capture: {g26*100:.1f}%" if g26 is not None else "GPS",
+            eyebrow="GPS", page_no=page,
+        )
+        take = [
+            "GPS measures actual parts purchases against the full potential of the fleet.",
+        ]
+        if g26 is not None:
+            take.append(
+                f"{display} today: {g26*100:.1f}% (FY2026 purchases against the CY2025 fleet potential)."
+            )
+        if gm.get("max_spend") and gm.get("uio_2025"):
+            take.append(
+                f"Fleet potential: {eur(gm['max_spend'])} on {int(gm['uio_2025']):,} vehicles."
+            )
+        take.append("This is the same GPS figure as on the GPS dashboard.")
+        db.bullet_list(s, take[:5], Inches(0.32), Inches(1.35), Inches(11.5),
+                       Inches(4.0), size=14)
+        ginfo = {"fy26": (None if g26 is None else round(g26 * 100, 1))}
         page += 1
     else:
         ginfo = gps_fy_chart(chart_dir / "modeb_gps.png", profile, display)
@@ -781,7 +810,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
             s,
             [
                 "High-risk € is catalogue AIM exposure, not proven walk-out.",
-                "Open on jobs not bought through the distributor — not a street IAM war alone.",
+                "Open on jobs not bought through the distributor — not only independent-parts competition.",
             ],
             Inches(0.32), Inches(4.1), Inches(12.5), Inches(2.0), size=14,
         )
@@ -827,8 +856,13 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
         ],
         [
             "GPS looks fine / too high",
-            f"FY26 headline {ginfo.get('fy26')}%; excl. warranty ≈ {ginfo.get('fy26_ex')}%. "
-            + ("IBX: Belgium-only denominator." if key == "IBX" else ""),
+            (
+                "Purchases sit above the modelled fleet potential — talk the amount "
+                "and the per-vehicle rate, not a capture percentage."
+                if skip_gps_pct else
+                f"FY26 headline {ginfo.get('fy26')}%; excl. warranty ≈ {ginfo.get('fy26_ex')}%. "
+                + ("IBX: Belgium-only denominator." if key == "IBX" else "")
+            ),
         ],
         [
             "Service parts are fine",

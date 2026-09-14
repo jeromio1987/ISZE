@@ -811,16 +811,21 @@ def build(dbkey: str):
 
     # ---- GPS Capture (Portugal-style: one clean number, no recon trail) ----
     if gps:
-        g26 = gps["gps_FY2026"]
+        use_master = bool(deck_opt.get("use_gps_master") and gps.get("gps_master_flat_FY2026") is not None)
+        g26 = gps["gps_master_flat_FY2026"] if use_master else gps["gps_FY2026"]
+        gps_wallet = gps["gps_master_max_spend"] if use_master else gps["wallet_2025"]
+        master = C.load_gps_master(p) if use_master else {}
+        gps_uio = int(master.get("uio_2025") or gps["uio_2025"]) if use_master else gps["uio_2025"]
+        show_gps_pct = (g26 is not None and 0 < g26 <= 1.0) if use_master else gps["show_pct"]
         saty = p.get("saty_note")
-        if gps["show_pct"] and not deck_opt.get("skip_gps_pct"):
+        if show_gps_pct and not deck_opt.get("skip_gps_pct"):
             pct_lab = f"{g26 * 100:.1f}%"
             s = db.build_content(prs, f"GPS Capture: {pct_lab}",
                                  eyebrow="GPS", page_no=page)
             gbullets = [
                 "GPS measures your actual parts purchases against the full potential of your fleet.",
                 f"{disp} today: {pct_lab} (FY2026 purchases against the CY2025 fleet potential).",
-                f"Fleet potential: {eur(gps['wallet_2025'], True)} on {gps['uio_2025']:,} vehicles.",
+                f"Fleet potential: {eur(gps_wallet, True)} on {gps_uio:,} vehicles.",
             ]
             if gps.get("adder_note"):
                 gbullets.append(
