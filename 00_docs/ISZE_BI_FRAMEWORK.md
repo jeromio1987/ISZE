@@ -15,7 +15,7 @@ Formulas live in `03_analytics/Isuzu/prism/docs/metric_dictionary.md`. Do not qu
 2. **Euros first.** Name the part in words. Piece counts are not a headline. A gasket and a cab are not comparable in pieces.
 3. **Never blend** UTI with UMI, IUK (UK pickup) with ITUK (UK truck), Ireland with IUK. MIDI / Spain is not this book.
 4. **Do not invent official sales from SAP** when the Power BI row is missing. Skip the official slide.
-5. **Sales-to-dealer pieces are not a KPI.** Billed vs sales-to-dealer in pieces is stock movement (destock / restock). It is not lost sales, not a work list, and not a reason to change list price. If mix is needed, use **euros**, and only where that file exists (UK pickup, UK truck, Ireland, UTI, Greece).
+5. **Sales-to-dealer pieces are not a KPI.** If mix is needed, use **euros**, and only where that file exists (UK pickup, UK truck, Ireland, UTI, Greece). **Warranty must sit on that euro comparison** as its own line. Stock is billed in the same months minus sales to dealer, **after** warranty is parked. Do not read billed minus sales to dealer as destock while warranty is still inside billed. This comparison is not a business-review pack.
 
 ### Label conversion (builders only)
 
@@ -81,9 +81,13 @@ Use in this order. Lower layers do not override a higher one.
 
 ### L5 — Warranty vs commercial
 
-**Question:** is this year’s mover a campaign, or commercial sales?
+**Question:** is this year’s mover a campaign, or commercial sales? When billed is next to sales to dealer: how much of billed is warranty, not dealer sales?
 
 Split warranty euros from commercial before narrating YoY.
+
+**Billed vs sales to dealer (euros):** three lines — we billed, warranty, sales to dealer. Warranty is claim euros sitting in billed, not sales to dealer, and it is **not** pro-rated when the sales-to-dealer file is short of 12 months. Stock is only after warranty is parked, on the **same months**. UK pickup FY2026: billed ≈ sales to dealer (~€6.0m); warranty **€1.34m** is the GPS hole, not destock. Use `01_data/00_derived/distributor_warranty_expense_fiscal.csv` (alias `warranty_by_db_FY_canonical.csv`). Do not use `gps_master.csv` `warr_*`.
+
+Do not rebuild a business-review / sales-review pack to show this. The comparison page is enough.
 
 ---
 
@@ -128,4 +132,5 @@ Until the Power BI row is pasted, the official sales-review slide stays off. SAP
 | Leftover no-list billed, FY | `01_data/00_derived/NO_PR00_HARDWARE_FY2026.md` |
 | Calendar-2025 leftover (do not quote) | `01_data/00_derived/NO_PR00_HARDWARE_CY2025.md` |
 | List-to-pocket coverage (still calendar in the 2026-08-19 pack) | recut to FY before quoting as L3 network % |
-| Sales-review windows | `04_tools/db_sales_review/db_profiles.yaml` defaults are still calendar H1 — wrong vs this file until a rebuild is asked |
+| Sales-review windows | `04_tools/db_sales_review/db_profiles.yaml` defaults are still calendar H1 — wrong vs this file until a rebuild is asked. Do not rebuild those packs for the billed vs sales-to-dealer warranty view. |
+| Billed vs sales to dealer, FY, warranty parked | `03_analytics/Isuzu/prism/scripts/build_billed_vs_std_warranty_fy.py` → `02_dashboards/sales/Dealer_Billed_vs_Sales_to_Dealer_FY2026.html` |
