@@ -1,315 +1,422 @@
-# ISZE executive aftersales paper — paste-ready prompt
+# ISZE exec aftersales paper — paste-ready prompt
 
-**Status:** brief only. Paste into a **new** Cursor/Claude session. **Do not start the HTML** until (1) Phase 0 answers are locked and (2) Jerome says **rebuild** or **ship**.  
-**This file is Mode B** (agent + Jerome). The paper it later produces is **Mode A** (top management).  
-**Siblings:** capture audit = `00_docs/DASHBOARD_CAPTURE_AUDIT_PROMPT.md`. IAM price/volume honesty = `00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md`. Do not duplicate those reviews; this paper **uses** their locked conclusions.  
-**Outlook:** none. Draft-only if he later asks for a cover mail.
+**Status:** this file is the **brief**. Ready to paste into a **new** Cursor/Claude session.  
+**Do not write the HTML until the current message says `rebuild` or `ship`.**  
+**Not on the programme queue:** this is a prompt spec, not a new `ISZE_ROADMAP.md` §1 item.
 
----
+**Purpose:** turn a vague “analyse all the Isuzu data, SWOT, 10–20 page HTML” ask into a **Grade A** Mode A paper that ISZE + IML top management would thank an analyst for — chart-first, money-backed, honest about holes.
 
-## What Jerome actually asked (do not dilute)
-
-> So you did a lot of sales analysis, come up with a 10-20 page html with infographics, a paper where you analyze all the data of Isuzu, and do a SWOT analysis? if you have questions ask them first, I want the result as a grade a one analyst, but it should be so good, the top managment would pet you
-
-**Job of this prompt:** force a board-grade **aftersales** paper, not a dashboard dump and not an MBA SWOT.  
-**Job of the session that receives it:** **ask first. Do not start.**
-
----
-
-## How to use
-
-1. Open a **fresh** session with full ISZE repo access.
-2. Paste the fenced block at the bottom.
-3. The agent **stops after Phase 0 questions**. It does not write HTML, does not sync, does not bump versions.
-4. Jerome answers (or says **lock defaults**).
-5. Only a later message that says **rebuild** or **ship** is permission to write the Mode A HTML.
+**How to use:** paste the fenced block at the bottom into a fresh session with full ISZE repo access. Chat with Jerome in that session stays **Mode B**. The HTML the later rebuild produces is **Mode A**. Keep a Mode B speaker/source annex out of the paper body.
 
 If this prompt is pasted into a session that is already mid-rebuild: **stop and say so**. Do not mix briefs.
 
 ---
 
-## Why the rough ask would produce a C paper
+## What he actually asked (do not dilute)
+
+> So you did a lot of sales analysis, come up with a 10-20 page html with infographics, a paper where you analyze all the data of Isuzu, and do a SWOT analysis? if you have questions ask them first, I want the result as a grade a one analyst, but it should be so good, the top managment would pet you
+
+**Job of this prompt:** force a board-grade **aftersales** paper, not a dashboard dump and not an MBA SWOT.
 
 | Rough phrase | What goes wrong | Grade-A rewrite |
 |---|---|---|
-| “all the data of Isuzu” | Vehicle, manufacturing, Japan HQ, IAM volume, and ISZE hub get blended into one mush | **ISZE aftersales parts hub** across the European distributor network. Vehicle wholesale and ISZJ factory are out unless a cited figure is needed as context. |
+| “all the data of Isuzu” | Vehicle, manufacturing, Japan HQ, IAM volume, and the ISZE hub get blended into one mush | **ISZE aftersales parts hub** across the European distributor network. Vehicle wholesale and factory P&L are out unless a cited figure is needed as context. |
 | “10–20 page html with infographics” | Chart junk, CDN, `file://` dead, 40 pages of screenshots | **16 ± 4 A4 pages**, print CSS, one story per page, Chart.js **inline**, paints on double-click. |
 | “SWOT analysis” | Strengths = “strong brand”. No euros. Unfalsifiable. | Every SWOT cell = claim + € or volume + source + UNKNOWN + what would change a decision. |
-| “grade a analyst / top management would pet you” | Adjectives, “insights”, agent slang, two ITUK capture % on one slide | One thesis a MD can repeat in 12 seconds. Honesty about holes. Decisions, not vocabulary. |
-| “ask questions first” | Agent starts anyway with “sensible defaults” | **Hard stop.** No HTML until answers or an explicit **lock defaults**. |
+| “grade a / top management would pet you” | Adjectives, “insights”, agent slang, two ITUK capture % on one slide | One thesis a managing director can repeat in 12 seconds. Honesty about holes. Decisions, not vocabulary. |
+| “ask questions first” | Agent either starts anyway, or pings Jerome overnight | **Phase 0 lives in this file with locked defaults.** Overnight must not ping. A current-message override of one row is allowed. |
+
+**Siblings (do not overwrite):**  
+`00_docs/DASHBOARD_CAPTURE_AUDIT_PROMPT.md` (dashboard quality + OEM/IAM scoreboard) ·  
+`00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md` (price hunt, not volume) ·  
+`00_docs/PROMPT_ACTION_LEDGER_P8.md` (closed-loop euros).  
+This prompt **synthesises** those surfaces into one printable paper. It does not reopen AIM 0–100 scoring.
+
+**Proposed later paths (write only after rebuild/ship):**  
+`02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`  
+`02_dashboards/sales/OPEN_ISZE_Exec_Aftersales_Paper.cmd`  
+Mode B annex (private, never inside the HTML): `00_docs/SPEAKER_NOTES_ISZE_Exec_Aftersales_Paper.md`
+
+**Grounding (as of 2026-08-25, re-check live):** pipeline verify **116 pass / 0 fail**; `sales_fact` billed through **2026-06-30**. If `_verification_report.json` is not green, **stop quoting headlines**.
 
 ---
 
-## Phase 0 — questions the executing agent must ask first
+## This file is the brief
 
-Ask these **before any outline, HTML, or SWOT draft**. Number them. Wait. If Jerome says **lock defaults**, use the **Default** column and proceed only after he also says **rebuild** or **ship**.
+The original ask was: *do a lot of sales analysis, come up with a 10–20 page HTML with infographics, a paper that analyses all the data of Isuzu, and a SWOT — ask questions first — Grade A, good enough that top management would pet you.*
 
-| # | Question | Why it changes the paper | Default if he says lock |
-|---|---|---|---|
-| 1 | **Who is in the room?** ISZE management only, or IML / ITUK / a distributor also reading? | Mode A language, which capture lane, what can be shown. | **ISZE + IML top management.** Paper = Mode A. Private annex (sources, lane names) stays Mode B and is **not** in the HTML. |
-| 2 | **What entity is the SWOT of?** ISZE aftersales hub, IML aftersales Europe, or “Isuzu” the OEM? | Strengths/threats invert if the subject is Japan vs the European parts hub. | **ISZE aftersales (European parts hub).** Not Isuzu Motors Ltd Japan. |
-| 3 | **Time window?** CY2025 complete, FY2026 (Apr–Mar), or YTD through last billing? | Mixing CY and FY is how MDs lose trust. | **CY2025 complete** as the year of record + **YTD through last `sales_fact` billing date** as a clearly labelled extra (last green stamp: through **2026-06-30**). FY only if a figure is already FY in FACTS / PBI. |
-| 4 | **Geography?** Full network, ITUK-only deep dive, or “ITUK + 4 peers”? | ITUK is the richest story and the easiest way to fake a network paper. | **Full network league** + **ITUK as the worked example** (IML service-schedule lane). Never blend UTI+UMI. |
-| 5 | **May unsigned leakage / list-to-pocket € appear?** | DECISIONS 2026-08-25: leakage € stays Mode B until written sign-off. | **No** in the Mode A paper. Name the *existence* of a pocket gap if needed; **no unsigned €**. |
-| 6 | **May we show a SWOT “IAM threat” with a %?** | IAM **price** exists. IAM **unit volume / share is UNKNOWN**. Inventing it is a fireable paper. | **Price evidence allowed. Unit share forbidden.** Write UNKNOWN. |
-| 7 | **Print HTML only, or also PPTX / PDF?** | Scope. | **Self-contained HTML + `OPEN_*.cmd` only.** No PPTX unless he asks. Print-to-PDF is his step. |
-| 8 | **Length?** 10, 16, or 20 pages? | Padding vs missing the decision page. | **16 pages** (hard floor 10, hard ceiling 20). Cut pages before adding annex charts. |
-| 9 | **Language?** | Room. | **English.** |
-| 10 | **What must this paper decide?** A 90-day ask list, a FY28 narrative, or a “where we are” briefing with no ask? | Tone of the last two pages. | **Where we are + 5 numbered asks** (from roadmap §2 / FACTS, not invented programmes). |
+**This session (the one that created or is only editing this markdown) writes the prompt, not the paper.**
 
-**If any answer is missing and he did not say lock defaults: stop.** Do not “start a draft so we have something.”
+A later session that actually builds HTML must see **`rebuild` or `ship` in that session’s current message**. “The prompt exists” is not permission. No `sync_to_deploys`. No version bump. No Outlook Send. No “fix if safe.”
 
 ---
 
-## Grade-A bar (what “pet you” actually means)
+## Phase 0 — questions, with locked defaults
 
-A managing director should, after **one scroll of page 1**, be able to say:
+The original ask said to question first. Overnight / autonomous runs **must not ping Jerome**. Lock these defaults unless the **current** message overrides one in a single explicit sentence.
 
-> “Our parts wallet is €X. We locate about half. The hole is not last-mile on the hero lines we measured; it is trucks that never enter the workshop, categories we under-serve, and an IAM fight we can **price** but cannot **count**. Here are five decisions. Here is what would change my mind.”
+| # | Question | Locked default |
+|---|---------|----------------|
+| 1 | Who is the audience? | **ISZE + IML top management** for the paper (**Mode A**). Chat + speaker/source annex = **Mode B** private. No personal names in the paper. |
+| 2 | What “all the data of Isuzu” means | **Aftersales parts hub** only: GPS, PMS, mix, pricing, IDS, tenders, UIO. **Not** vehicle sales, manufacturing, or Isuzu Motors Ltd Japan P&L. |
+| 3 | Time window | **CY2025 complete + FY2026 YTD** through last billing (**2026-06-30** if still current). Label partial years. Never annualise YTD into a fake full year. |
+| 4 | Geography | **Full network.** ITUK is the **worked example**, not the only row. Never blend Israel. |
+| 5 | SWOT entity | **ISZE aftersales** (European parts hub), not Isuzu Motors Ltd Japan. |
+| 6 | Length | **16 pages ±4** (stay in 10–20 A4-equivalent). |
+| 7 | Language | **English** only in the paper (Mode A). |
+| 8 | Leakage € | **Do not quote unsigned leakage €** in the Mode A paper. List-to-pocket is unsigned (`DECISIONS.md` 2026-08-25). Mode B annex may name that the figure exists and is unsigned. |
+| 9 | IAM unit share | **Do not invent.** Price evidence ≠ volume. `100% − PMS` is **not** independent-garage share. |
+| 10 | Artefact | **Printable self-contained HTML** + sibling `OPEN_*.cmd`. Not PPTX unless the current message asks. |
 
-If page 1 needs a glossary, it fails. If SWOT could apply to any OEM, it fails. If two ITUK capture percentages sit next to each other without the lane name, it fails.
-
-**Analyst craft (required):**
-
-- Verdict in the **first sentence** of every page.
-- Every chart title is a **sentence**, not a filename (`“Air and clutch still carry the ITUK gap €”`, not `pms_by_cat`).
-- Colour = meaning (navy = us, terracotta = gap / ask, green = on plan, amber = unsigned / incomplete, red = integrity stop).
-- **Unknowns are first-class.** A grey panel “what we cannot say” is worth more than a fake IAM %.
-- Small-n: do not rank a distributor on a cell built on a toy base. Suppress or footnote.
-- No new 0–100 score. AIM scoring is **closed**.
+If a later human message overrides a row, restate the ten-line contract before writing HTML.
 
 ---
 
-## Hard constraints (executing session)
+## Modes (do not mix in one artefact)
+
+| Surface | Mode | Allowed |
+|---------|------|---------|
+| Chat with Jerome while building | **B** | Nicknames, traps, two ITUK lanes, unsigned leakage, pipeline filenames. |
+| HTML paper body, charts, captions, hover panels, print | **A** | Distributor in the room. **IML service schedule** (cite Apr 2026 PMS analysis / trip report / GIDSS / kick-off table). No **IML v7**, **Model B**, **PRISM lane**, personal names, sold-to codes as slide labels, export/blank-% jargon, internal filenames. |
+| Speaker/source annex `.md` | **B** | Full lineage, lane names, integrity flags, what was left out. |
+
+A bullet that needs a glossary to land **fails Mode A** — rewrite it.
+
+---
+
+## Forbidden words (never in Mode A paper, hover panels, or spoken/written labels to management)
+
+Working labels Jerome banned. JSON/code field names may stay **in the pipeline**; they must not appear in the paper.
+
+| Forbidden | Say instead |
+|-----------|-------------|
+| street / street fills / street € | **OEM peer retail** / **dealer sell-out price** / **reference sell-out** |
+| street index | **price index** (shop ÷ reference sell-out) |
+| undercut street | **below our reference sell-out** |
+| fill the street | **get OEM peer retail prices** / **complete peer price coverage** |
+| `peer_street_eur`, `street_index` as UI labels | keep as code keys only |
+
+**Reference sell-out €** = PR00 × 1.40 × 1.275 (= ×**1.785**). Hover/footnote OK.
+
+Kill criterion “forbidden pricing slang” means any of the left-column strings above in Mode A output.
+
+---
+
+## Hard constraints (Grade D if broken)
 
 ### Numbers
 
-1. Quote KPIs only after green `01_data/00_derived/_verification_report.json` (`ok`, fail = 0) → `metrics_snapshot.json` → `FACTS.md`.
-2. If verify is red: **stop quoting headlines**. Name the fail. Do not paper over with old MD-pack tiles.
-3. Never load `01_data/raw/sales/*.XLSX` or `01_data/12_raw/sales/*.XLSX` into context. Derived parquet/CSV only.
-4. As-of date on page 1 must match the verify stamp, not “today”.
-5. Metric formulas: `03_analytics/Isuzu/prism/docs/metric_dictionary.md`. Integrity: `03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md`.
+1. Quote KPIs only from green `01_data/00_derived/_verification_report.json` → `metrics_snapshot.json` → `FACTS.md`. Last known green: **116 pass / 0 fail**, billing through **2026-06-30** (as of **2026-08-25**). If not green: **stop quoting headlines**; name the fail.
+2. Never load `01_data/raw/sales/*.XLSX` or `01_data/12_raw/sales/*.XLSX` (or any line-level billing) into context. Derived parquet/CSV only.
+3. Never invent KPIs. Decks, memory, and GPT lose to the verify spine.
+4. Formulas when editing or explaining a metric: `03_analytics/Isuzu/prism/docs/metric_dictionary.md`.
+
+### Capture, mix, IAM
+
+5. PMS **headline = `line_type=total`**. Genuine is an extra quality lens. Sales is sales. Do not lead with genuine-only.
+6. **BVP has no capture rate.** Mix ≠ capture. Show mix as quality of what was sold, not as “we captured BVP.”
+7. **Never invent IAM capture %.** Independent-garage **unit volume is UNKNOWN**. Scrapes (Eucon / KS / Autodoc / Part Groups) are **price**, not volume. Coverage of billed book is often thin (Eucon UK 2023: ~38 priced PNs; DB coverage often ~1–17%).
+8. **`100% − PMS` is not IAM share.** Residual = IAM + lost service + DIY + other-OEM + export + interval error + parc error. Call it “not sold through ISZE on this basket” if needed.
+9. **PMS Best > 100%** — skip the series. Never plot “Best market” when best exceeds 100%.
+10. Do **not reopen AIM 0–100 scoring** (closed). No new composite score on this paper.
 
 ### Entities (never blend)
 
-- **UTI** sold-to **1799** ≠ **UMI** sold-to **1797**. IDS Israel = **UMI dealers only**.
-- **IUK** 2574 ≠ **ITUK** 2575. Ireland ≠ IUK ≠ IMIE.
-- Two **ITUK PMS** numbers are both correct on **different denominators** (`00_docs/ITUK_PRISM_LANE_BRIDGE.md`):
-  - **IML / service-schedule lane (Mode A story):** UIO **22,389**, oil-filter cover **35.1%**, 5-cat gap **€2.04M**, weighted cover **35.9%** — FACTS §1. Use this when the paper is “where we are with IML.”
-  - **PRISM network league (internal ranking):** bucketed UIO **23,068**, `pms_capture_by_db_year.csv`. Use this when ranking DBs. **Never** put both in one hero tile.
-- PMS headline = `line_type=total` (sales is sales). Genuine / BVP mix is an **extra quality lens**, never the capture that hides BVP.
-- **BVP has no capture rate.** Mix ≠ capture.
-- Do not plot “Best market” when best **> 100%**. Skip the series.
-- **5500\*** = Shell lubricants, not bumper “SHELL;” and not unclassified filler.
+11. **UTI sold-to 1799 ≠ UMI sold-to 1797.** Never average or label “Israel” as one IDS-linked number. **IDS Israel = UMI only.** UTI may appear as its **own** row.
+12. **IUK customer 2574 ≠ ITUK customer 2575.** Ireland ≠ IUK ≠ IMIE.
+13. **Two ITUK PMS lanes are both correct on different denominators** — never mix as “the” capture % (`00_docs/ITUK_PRISM_LANE_BRIDGE.md`):
+    - **IML / service-schedule story (external):** oil-filter **35.1%**, gap **€2.04M**, UIO **22,389** (plus any other FACTS §1 figures still listed). Use this as the ITUK worked example in the Mode A paper (without internal nicknames). **Never** put both lanes in one hero tile.
+    - **Network league (internal consistent denominator):** `pms_capture_by_db_year.csv`, bucketed UIO **23,068**. Use this **only** when ranking distributors against each other. Mode A: call it the **network-comparable capture**, not a pipeline codename.
+14. **Shell `5500*` = Shell lubricants** (not bumper “SHELL;”, not Isuzu gear oil). If material, one Mode A callout; do not hide in UNCLASSIFIED without saying so.
+15. GPS / ITUK: ITUK never on kickback or Other DBs tabs; dealer £ ≠ ISZE € wallet (`01_data/91_build/GPS_FILE_LINEAGE.md`).
 
-### Language (Mode A paper)
+### Leakage, tenders, closed topics
 
-- No **IML v7**, **Model B**, **PRISM lane**, sold-to, export, blank-%, loader, `_summary.json`, personal names.
-- Say **IML service schedule** and cite the business source (Apr 2026 PMS analysis / FACTS).
-- **Forbidden word:** street / street fills / street € / street index. Say **OEM peer retail** / **dealer sell-out** / **reference sell-out** / **price index**.
-- Reference sell-out € = PR00 × 1.40 × 1.275 (**×1.785**). Footnote OK.
-- JSON field names (`peer_street_eur`, `street_index`) may stay in pipeline footnotes only, never in body copy.
+16. **Leakage € stays Mode B** until list-to-pocket is signed in writing (`DECISIONS.md` 2026-08-25). The Mode A paper may say realization is **not yet signed for external quote** — it may not print the unsigned euro as a hero.
+17. **Nordics tender API keys are DONE.** Never ask Jerome to register, paste, or re-do Doffin/HILMA keys. If a scrape shows `AWAITING_KEY`, diagnose the loader silently. Coverage gap to discuss = **national portals** (8/29 footprint countries live; rest TED-only below threshold), not keys.
+18. Do not re-propose anything in `00_docs/ISZE_ROADMAP.md` §5. Do not add this paper to §1 as new programme work.
 
-### Money that must not leak into Mode A
+### Ship / HTML (when a later session is actually allowed to write)
 
-- Dealer-leakage / list-to-pocket € until written sign-off (DECISIONS 2026-08-25).
-- Invented IAM unit volume or IAM share. Shop quotes are **prices**. Eucon 2023 is **2023 workshop GBP**, not live 2026 retail.
-- **100% − PMS ≠ IAM.** Remainder includes deferred jobs and trucks that never enter the dealer.
-- New 0–100 scores. Unsigned forecast G1 as a committed plan. P4 RED/AMBER as a call list (draft thresholds).
-
-### Closed topics (do not reopen)
-
-- Nordics tender API keys — **DONE**. Never ask to paste Doffin/HILMA keys.
-- AIM 0–100 replacement score.
-- “Please send SaTy / Nordics / IAM volume” as a human gate unless there is a **new evidenced** failure.
-
-### Ship / files
-
-- Edit HTML only under `02_dashboards/`. Never `07_deploy/`.
-- No silent version overwrite. If a labelled pack already exists, **ask** before a new label.
-- Mail: draft only. Never Send.
-- Rebuild/ship **only** when the **current** message says rebuild or ship. This prompt file is **not** that permission.
+19. Edit HTML only under `02_dashboards/`. **Never** `07_deploy/`.
+20. **No ship without OK.** HTML write only when the executing session’s **current** message says rebuild/ship.
+21. Ship gate: **builder exit 0 ≠ done.** `file://` must paint (or sibling launcher). Chart.js **inline**, **no CDN**. Sibling `OPEN_*.cmd`. No `file://` markdown links in chat. Absolute paths in backticks.
+22. Empty sections get an **amber banner** (e.g. no sell-out file) — never a blank Top N table.
+23. Outlook / email: **draft only**, and only if the current message asks for mail. Never Send.
 
 ---
 
-## Paper architecture (16 pages ± 4)
+## Grade A bar (what “management would thank you” means)
 
-Print CSS so each `.page` ≈ A4. One story per page. Hero KPIs only on page 1. Tables earn their place.
+This is **not** a data dump, not an MBA SWOT, not a dashboard gallery.
 
-| P | Title (working) | Must answer | Infographic (one) | Fail if |
-|---|---|---|---|---|
-| 1 | **Cover / thesis** | The 12-second sentence + 4 hero KPIs with as-of | 4-tile strip + one thin rule in terracotta | Two theses. Mixed CY/FY in one tile. Lane-free ITUK %. |
-| 2 | **How to read** | What the numbers **are** and **are not** (wallet vs capture vs mix vs price vs parc) | Simple stack diagram of layers (UIO → GPS → PMS total → mix) | Pipeline lecture. Mode B nicknames. |
-| 3 | **Wallet & GPS** | Parts base €, GPS-facing €, € per truck where SPU is safe | Horizontal SPU bars, ITUK called out, no blend | Raw `sales_fact` total that includes freight/rebate as “sales”. |
-| 4 | **Capture** | PMS **total** network + IML service-schedule story as **one** labelled lane | Category gap € (ITUK 5-cat) or network capture vs wallet | Genuine-only headline. Both ITUK lanes as “the” %. |
-| 5 | **Mix / quality** | BVP mix as quality, € implication only if FACTS-safe | Mix stacked bars; genuine vs BVP as second lens | “BVP capture %”. Mix sold as the hole. |
-| 6 | **Distributor league** | Who is carrying the book; outliers a MD already feels | Small-multiples or ranked table, UTI and UMI **two rows** | One row labelled Israel. IUK labelled ITUK. |
-| 7 | **Network / dealers** | IDS / dealer score vs **country** average; Israel = UMI | One clean map **or** ranked dealers — not both cluttered | Country-centre pin blobs. Dutch labels. Weak-sector radar clutter. |
-| 8 | **Price & competitiveness** | We can price IAM and OEM peer retail; we cannot count IAM | Price index vs reference sell-out for a **hero PN** with vintage labelled | “Street”. KS £125 hung on the wrong PN. Eucon 2023 as 2026 retail. |
-| 9 | **Stock, replenishment, forecast** | What we can run on; honesty on WAPE / unsigned G1 | Exception count + € at stake from **signed** derived files | Forecast as a promise. Seed-€ invention. |
-| 10 | **Public volume / tenders** | Where national portals exist; TED-only gap is the issue | Simple coverage map (have / TED-only) — 8/29 is the story | Asking for Nordics keys. Fake award €. |
-| 11 | **Integrity & UNKNOWNs** | Flags still live (air factor provisional, brake 0.4 vs 0.8, Q1 SaTy hole, IAM units) | Grey UNKNOWN panel, 5–7 items max | Hiding holes. Integrity score 0–100 as a KPI. |
-| 12–13 | **SWOT** | See SWOT contract below | 2×2 with **euros in the cell**, not icons | Generic OEM SWOT. No sources. |
-| 14 | **90-day asks** | Five numbered decisions from roadmap §2 / DECISIONS — wording for a human, not an agent ticket | Decision table: ask / if yes / if no | Invented programmes. Nordics keys. “Fix if safe.” |
-| 15 | **What would change our mind** | Falsifiers: IML air ratio, brake factor, IAM units, list-to-pocket sign-off, next SAP extract | Short list, one line each | Unfalsifiable strategy poetry. |
-| 16 | **Sources** | Verify stamp, files, as-of. Grey, small, complete | Source table | Filenames in the body of pages 1–15. |
+A managing director should, after **one scroll of page 1**, be able to say:
 
-**Cut order if over 20:** page 10, then dealer map detail, then mix page (keep one mix footnote on capture).  
-**Add order if under 10:** do not pad. Deepen SWOT and asks.
+> Our parts wallet is €X. We locate about this much of the modelled workshop basket. The hole we can measure is not last-mile on the hero lines we have sell-out for; it is trucks that never enter the workshop, categories we under-serve, and an independent-market fight we can **price** but cannot **count**. Here are the decisions waiting. Here is what would change my mind.
 
-Visual system (Mode A):
+If page 1 needs a glossary, it fails. If SWOT could apply to any OEM, it fails. If two ITUK capture percentages sit next to each other without saying which definition, it fails.
 
-- Navy `#15233c`, terracotta `#c0552d`, paper `#f7f4ee`, ink `#222`. Georgia headings, Segoe/system body.
-- Chart.js **inline** (`chart.umd.js`) — **never CDN**.
-- Self-contained if payload ≤ ~2 MB; else launcher. This paper should **embed**.
-- Hover: CSS panel with formula + as-of + **not included** — not `title=` only.
-- Zero overlapping labels. No white text on pale. Sticky headers stay navy-on-paper.
-- `@media print` + `@page { size: A4; margin: 14mm; }`. Each `.page { break-after: page; }`.
-- Proposed path **when rebuild is authorised:** `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html` + `OPEN_ISZE_Exec_Aftersales_Paper.cmd`. Do not write those files from this brief alone.
+A Grade A paper also:
+
+1. **Opens with a thesis** a director can repeat in one breath.
+2. **Chart-first.** One glance = the story. Tables last, and few. **Chart titles are sentences**, not filenames.
+3. Every exhibit has **one sentence** under it: claim + € or volume + source grain (CY vs YTD, which capture definition).
+4. **UNKNOWNs are visible**, not smoothed. IAM unit share is a labelled hole, not a residual %. Colour: navy = us, terracotta = gap / ask, green = on plan, amber = unsigned / incomplete, red = integrity stop, grey = UNKNOWN.
+5. SWOT cells are **decision tools** (see SWOT contract).
+6. Page 14 is a **decision board** from roadmap §2 — asks, not agent nagging.
+7. Page 15 lists **what would change our mind** (falsifiers), so the room can disagree productively.
+8. Page 16 is a **verify stamp** a sceptic can audit.
+9. Small-n: do not rank a distributor on a toy base. Suppress or footnote.
+
+Tone: calm, specific, external-safe. No cheerleading. No “we crushed it.” No pipeline autobiography.
 
 ---
 
-## SWOT contract (the part that usually embarrasses people)
+## Page architecture (~16 A4-equivalent pages)
 
-**Subject:** ISZE aftersales (locked unless Phase 0 says otherwise).
+Print CSS must treat these as pages (`@page` A4, `break-after: page` on `.paper-page`). Stay inside **10–20**. Cut decoration, not capture / GPS / mix / integrity.
 
-Each of the 8–12 cells (2–3 per quadrant):
+| Page | Title (Mode A wording) | Must show | Must not |
+|------|------------------------|-----------|----------|
+| 1 | Cover — one-glance thesis + 4 hero KPIs | Thesis (≤40 words). Four heroes from **green verify** (suggested slots: network GPS €/UIO; PMS **total** for the ITUK service-schedule story, labelled as such; genuine vs BVP **mix** of what was sold; billing as-of + verify pass count). Hover explainers on each hero. | Pipeline filenames; unsigned leakage as a hero; IAM %; blended Israel. |
+| 2 | How to read this paper | What the numbers **are** / **are not**: PMS total vs genuine; mix ≠ capture; two ITUK definitions exist and this paper uses which, where; Israel is two distributors; IAM volume unknown; YTD is YTD. | Nicknames; “trust us.” |
+| 3 | Network wallet & GPS | GPS €/UIO league, traffic lights if defined, UIO as-of. Caveats: UMI warranty gap, CR/RE exclusion, partial 2026. | ITUK on the wrong tab; blending dealer £ into ISZE €. |
+| 4 | Capture — workshop basket | **PMS total first.** Network-comparable table for ranking DBs. **One** ITUK worked example using the IML service-schedule figures (35.1% oil-filter, €2.04M gap, UIO 22,389) with a plain-language footnote that the network table uses a **different, comparable denominator**. Category split only where intervals are comparable (air factor 0.5 is **provisional**). | Mixing 35.1% next to 100%/116% as one fact; genuine-only headline; Best series >100%. |
+| 5 | Mix / quality of what was sold | Genuine vs BVP **mix**. Shell `5500*` lubricants callout if material. | “BVP capture %.” |
+| 6 | Distributor league | Side-by-side GPS + PMS total + mix. **UTI and UMI as two rows.** IUK ≠ ITUK. | “Israel” as one IDS-linked average. |
+| 7 | Dealer network (IDS) | Dealer score vs **country** average. **IDS Israel = UMI only.** Geo: do not ship country-centre blobs. English labels only. | UTI as the IDS Israel counterpart; Dutch leftovers; Weak-sector radar clutter. |
+| 8 | Price vs reference sell-out | Price index = shop ÷ **reference sell-out** (×1.785). OEM peer retail / dealer sell-out coverage. Name the scrape and vintage. If coverage &lt; ~15% of billed €, **do not** headline “we are X% vs independent.” | Forbidden pricing slang (see Forbidden words). IAM list used as OEM-peer retail. Unsigned leakage hero. |
+| 9 | Demand, replenishment, forecast honesty | Replenishment exceptions as operational fact. Forecast: median **WAPE 49.4%** (P5.2/P5.6, 548 series) is a **surface**, not a signed live forecast. **G1 unsigned.** | Presenting forecast as go-live; inventing realised € past billing horizon. |
+| 10 | Public tenders / volume | What is live vs TED-only. **Keys are done** — the gap is **portal coverage** (8/29). | Asking for Nordics keys; inventing award €. |
+| 11 | Data integrity & UNKNOWNs | Integrity flags; IAM **volume hole**; sell-out files exist only for some DBs (ITUK, UTI, Ireland, IUK, Greece — others = source gap, not 0%). | Blank tables; pretending the hole is a chart bug. |
+| 12–13 | SWOT (two pages) | Four quadrants, **SWOT contract** below. Entity = ISZE aftersales. | MBA adjectives with no €; SWOT of Japan; SWOT of “Isuzu the brand” with no source. |
+| 14 | What to do in 90 days | Decision board from `00_docs/ISZE_ROADMAP.md` **§2** (B1–B10, B1b, B1c, B4-gov). Consequence of no answer, already in the hub. Frame as **asks the room must make**, not agent spam. Do **not** re-ask Nordics keys. | Fake Gantt; “we will fix leakage” without sign-off. |
+| 15 | What would change our mind | 5–8 falsifiers (e.g. IAM unit feed on one family; list-to-pocket sign-off; G1; IML air-factor confirmation; ITUK brake 0.4 vs 0.8; one DB independent sell-out). | Moving goalposts. |
+| 16 | Sources / as-of / verify stamp | Verify pass/fail, billing max date, which capture definition on which page, file list (filenames **here** only). | Chat `file://` links. |
 
-1. **Claim** in one sentence a parts director would recognise.
-2. **Stake** — € or volume or coverage count, with source file (footnote, not body jargon).
-3. **UNKNOWN** — what would make this cell stronger or kill it.
-4. **Decision link** — which page-14 ask this supports.
+Optional Mode B annex (separate file, only if HTML is authorised): lineage, two-lane math, unsigned leakage pointer, integrity IDs. Never merge into Mode A HTML.
 
-| Quadrant | Must be grounded in | Forbidden |
-|---|---|---|
-| **S** Strengths | Measured GPS/PMS/sell-out/IDS/tender **haves** (e.g. ITUK pad last-mile closed where measured; green verify; DVLA ITUK parc lane; Nordics portals live) | “Strong brand”, “data-driven”, “AI”, “committed team” |
-| **W** Weaknesses | Measured gaps (IML cover, air/clutch €, portal coverage 8/29, unsigned leakage, SaTy hole, forecast WAPE, air factor provisional) | Blaming SAP. Mixing lanes to make a gap look bigger. |
-| **O** Opportunities | Addressable **with a denominator we have** (IML gap €, replenishment exceptions, tender coverage we can still wire, mix quality) | IAM “share we will take” without units. Vehicle sales recovery as if it were parts capture. |
-| **T** Threats | IAM **price** war on billed hero PNs; parc / ICE window; unsigned price moves; distributor quiet (Early Warning, not draft P4 as gospel) | Invented independent-garage %. KS catalogue miss sold as volume proof. |
-
-**TOWS (required, short):** four arrows only — SO / WO / ST / WT — each pointing at a page-14 ask. No extra framework (PESTLE, Porter, Ansoff) unless Jerome asked.
-
----
-
-## Canonical inputs (read these, then stop)
-
-Do not recursive-glob. Ignore `07_deploy/`. Prefer ISZE-root numbered folders.
-
-| Need | Path |
-|---|---|
-| Bootstrap | `INDEX.md` → `00_docs/ROUTING.yaml` → `AGENTS.md` |
-| Verify + headlines | `01_data/00_derived/_verification_report.json`, `metrics_snapshot.json`, `FACTS.md` |
-| Formulas / flags | `03_analytics/Isuzu/prism/docs/metric_dictionary.md`, `DATA_INTEGRITY_FLAGS_2026-05-28.md` |
-| ITUK two lanes | `00_docs/ITUK_PRISM_LANE_BRIDGE.md` |
-| PMS league | `01_data/00_derived/pms_capture_by_db_year.csv` |
-| GPS | `01_data/00_derived/gps_spu_by_distributor.csv` |
-| Mix | `01_data/00_derived/mix_genuine_bvp_pms.csv` |
-| OS have/need | `00_docs/ISZE_OS_DATA_MAP.yaml` |
-| Queue + asks | `00_docs/ISZE_ROADMAP.md` §1–2, `DECISIONS.md` (newest first) |
-| Capture audit (do not redo) | `00_docs/DASHBOARD_CAPTURE_AUDIT_PROMPT.md` |
-| IAM honesty (do not redo) | `00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md` |
-| Visual precedent | `02_dashboards/md_pack/ISZE_MD_Pack_Capture_FY27_FY28.html` |
-| Presentation voice | `.cursor/skills/isze-db-sales-review/presentation.md` |
-| Closed: Nordics keys | `.cursor/rules/isze-nordics-keys-closed.mdc` |
-| Closed: no ship without OK | `.cursor/rules/isze-no-ship-without-ok.mdc` |
-
-Optional if Phase 0 needs them: sell-out CSVs (ITUK, UTI, Ireland, IUK, Greece only), IDS compare template, tender `01_data/14_dashboards/tender_data.json`, action ledger **Mode B only**.
+**Cut order if over 20 pages:** tenders map detail, then dealer map extras, then mix as a full page (keep one mix footnote on capture). **Do not pad** if under 10 — deepen SWOT and the 90-day asks instead.
 
 ---
 
-## Explicit DO NOT
+## SWOT contract (pages 12–13)
 
-- Start the paper in the same turn as Phase 0 questions.
-- Invent capture %, IAM units, or a blended “Israel”.
-- Use 100% − PMS as IAM share.
-- Lead with genuine-only PMS.
-- Say “street” in the paper or in conclusions.
-- Quote unsigned leakage € in Mode A.
-- Re-ask Nordics keys / paste-env sheets.
-- Rebuild, `sync_to_deploys`, bump versions, or Send mail from this brief.
-- New 0–100, AIM classifier, or “fix if safe”.
-- Load line-level billing XLSX.
-- Put Mode B nicknames in the HTML.
-- Claim done because the builder exited 0. Ship gate + paint check when (later) authorised.
+Not MBA fluff. **Every cell** must contain all four:
 
----
+1. **One-line claim** (plain English, Mode A).
+2. **Money or volume at stake** with source (file + grain + as-of). If the euro is unsigned (leakage) or missing, the cell says **UNKNOWN** and still states *what* is unknown.
+3. **UNKNOWN** explicitly if the evidence is missing, thin, or the wrong grain — do not skip the word.
+4. **What would change a decision** (the smallest fact that would rewrite the cell).
 
-## Done line (for the later rebuild, not for this file)
+| Quadrant | Evidence allowed |
+|----------|------------------|
+| **Strengths** / **Weaknesses** | **Internal** ISZE evidence only (GPS, PMS total, mix, IDS, sell-out longs that exist, verify, replenishment). |
+| **Opportunities** / **Threats** | **External** + competitive + parc + IAM **price** + tenders. Still sourced — or **UNKNOWN**. |
 
-When — and only when — rebuild/ship was explicit:
+Examples of **fail:** “Strong brand” with no €; “IAM threat 40%” invented; “Opportunity: digital transformation”; blending UTI+UMI as a strength of “Israel.”
 
-1. Verify green.
-2. HTML paints on `file://` / launcher: hero KPIs numeric, SWOT cells have € or UNKNOWN, ≥1 chart with bars/SVG, sources table filled, no `NaN`.
-3. `OPEN_*.cmd` exists next to the HTML; run it or state what is unverified.
-4. Reply with **What you should see** (≤3 bullets) from the rendered file.
-5. Chat links are dead — tell him to double-click the `.cmd`. Absolute paths in backticks.
+Examples of **pass:** “ITUK oil-filter cover on the IML service schedule is 35.1% (UIO 22,389; gap €2.04M; FACTS / Apr 2026 PMS analysis) — UNKNOWN = independent jobs not in the dealer; decision-changer = one family of IAM unit counts.”
 
-Until then, the only acceptable output of a session running this prompt is: **Phase 0 questions**, then silence on files.
+Target **3–5 cells per quadrant**, not 12. Rank by € at stake.
 
 ---
 
-## Paste-ready prompt
+## Visual system (Mode A HTML, when authorised)
 
-Copy everything inside the fence into a **new** session.
+Match the MD pack / IAM review visual language:
+
+- Navy `#15233c`, terracotta `#c0552d`, paper `#f7f4ee`, ink `#222`. **Georgia** headings. Body a readable serif or clean sans on paper — **never white text on pale**.
+- Self-contained HTML. Embed JSON (payload should stay ≲ ~2 MB). **Inline Chart.js (`chart.umd.js`)** — **never CDN**. `file://` first paint must show heroes + charts.
+- Print: `@page { size: A4; margin: 14mm; }`. Each architecture page is a `.paper-page` with `break-after: page`. Design for print **and** screen.
+- **Chart-first.** One glance = the story. Zero overlapping labels. Colour = meaning (navy = us, terracotta = gap / ask, green / amber / red / grey). Log axes only with forced ticks. **Chart titles are sentences**, not filenames.
+- Hover KPI explainers: **CSS panel**, not `title=` only — formula, as-of, what is **not** included.
+- Sibling `OPEN_*.cmd` that opens the HTML (`start "" "%~dp0ISZE_Exec_Aftersales_Paper.html"`). Run it in the same turn when building.
+- No client changelog / agent build notes in the HTML. No Dutch. Country names in English.
+- Sticky headers keep navy + paper contrast.
+
+**Infographic density:** every content page except 2, 15, and 16 has **at least one** chart or visual league. Page 2 is a legend; 15 is falsifiers; 16 is sources.
+
+---
+
+## Source spine (read these; do not glob the repo)
+
+Bootstrap: `INDEX.md` → `00_docs/ROUTING.yaml` (`exec_sales_paper`) → `AGENTS.md`. Then this file.
+
+**Verify + headlines**
+
+- `01_data/00_derived/_verification_report.json` (+ `.md` if needed)
+- `01_data/00_derived/metrics_snapshot.json`
+- `FACTS.md`
+- `03_analytics/Isuzu/prism/docs/metric_dictionary.md`
+- `03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md`
+- `01_data/00_derived/_data_integrity_open_issues.md` (if present)
+
+**Capture / GPS / mix**
+
+- `00_docs/ITUK_PRISM_LANE_BRIDGE.md`
+- `01_data/00_derived/pms_capture_by_db_year.csv`
+- `01_data/00_derived/gps_spu_by_distributor.csv`
+- `01_data/00_derived/mix_genuine_bvp_pms.csv`
+- `01_data/00_derived/wallet_waterfall.csv`
+- `01_data/00_derived/capture_trajectory.csv`
+- `01_data/00_derived/pms_opportunity_matrix.csv`
+
+**Sell-out / IDS / pricing (price, not IAM volume)**
+
+- Dealer sell-out longs **only where they exist** (ITUK, UTI, Ireland, IUK, Greece)
+- `01_data/00_derived/eucon_uk_survey_2023_price_gap.meta.json` (coverage honesty)
+- `01_data/01_Pricing/DB_DLR_COMMERCIAL_STACK.md`
+- IDS: template `02_dashboards/ids/` — do not score every country clone; Israel = UMI
+
+**Demand / tenders / decisions**
+
+- P5 forecast meta / WAPE as published (unsigned G1)
+- `01_data/14_dashboards/tender_data.json`
+- `00_docs/ISZE_ROADMAP.md` §2 and §5 (asks + do-not-reopen)
+- `DECISIONS.md` (list-to-pocket, Nordics keys done, AIM scoring closed)
+
+**Never**
+
+- `01_data/raw/sales/**`
+- `07_deploy/**`
+- `91_legacy/**` as evidence
+- AIM 0–100 classifiers
+
+Existing Mode A packs are **reference for visual craft**, not sources to copy jargon from: Aftermarket BI Command Center, pricing packs, MD pack capture (check freshness).
+
+---
+
+## Procedure (later session — HTML only if rebuild/ship)
+
+1. Restate the ten locked defaults. Note any current-message override.
+2. Green verify. If fail: stop headlines.
+3. Pull the source spine. Do not open line-level XLSX.
+4. Draft the **thesis + 4 heroes + SWOT claims** in Mode B chat first (numbers + sources). Do not write HTML yet unless the current message already said rebuild/ship.
+5. If — and only if — the current message says **rebuild** or **ship**: write the self-contained HTML + `OPEN_*.cmd` under `02_dashboards/sales/`. Mode B annex separate.
+6. Ship gate on the **rendered** file (not the builder): heroes have numbers; charts exist; no `NaN`; print pages ≈ 10–20; launcher exists; **run the `.cmd` or prove `file://` paint**.
+7. Chat reply: **What you should see** (≤3 bullets). Absolute paths in backticks. No `file://` markdown.
+
+If the current message did **not** say rebuild/ship: stop after the Mode B outline (thesis, hero candidates, SWOT draft, UNKNOWNs). Do not write HTML.
+
+---
+
+## Kill criteria / Grade D examples
+
+Any one of these = **do not claim done**; rewrite.
+
+- Invented IAM % or `100% − PMS` sold as independent share
+- Forbidden pricing slang (Forbidden words section) in the paper
+- UTI+UMI blend, or UTI as IDS Israel
+- Mixing the two ITUK capture lanes as one number
+- White text on pale; CDN Chart.js; `fetch()` of sibling JSON as the only path
+- Blank tables / empty Top N with no amber banner
+- MBA SWOT with no euros and no UNKNOWN
+- Pipeline jargon, nicknames, or personal names on Mode A pages
+- Unsigned leakage € as a cover hero
+- PMS Best series plotted when best &gt; 100%
+- BVP “capture rate”
+- Re-asking Nordics keys
+- Reopening AIM 0–100
+- Claiming done because the builder exited 0, without paint check
+- PPTX instead of HTML (unless explicitly asked)
+- Writing HTML when the current message did not say rebuild/ship
+
+---
+
+## After the run
+
+- Prompt-only sessions: commit is this markdown + maps. No HTML, no deploy sync.
+- Build sessions: Mode A HTML + Mode B annex as **two files**. Ship gate on the HTML. Draft-only mail if asked.
+- Do not bump version labels without Jerome’s OK.
+- Do not add this paper to `ISZE_ROADMAP.md` §1.
+
+---
+
+## Prompt — Grade A exec aftersales paper
 
 ```
-You are in the ISZE repo (Isuzu Motors Europe, aftersales parts hub).
+You are in the ISZE repo (Isuzu Motors Europe, parts hub). Workspace root is
+$ISZE_ROOT / the repo root (paths.yaml). Do not hardcode a laptop path.
 
-Read INDEX.md → 00_docs/ROUTING.yaml → AGENTS.md first. Follow them exactly.
-Then read 00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md in full. That file is the
-contract. If this message and that file conflict, the file wins except where
-THIS message is more recent on rebuild/ship permission.
+Read INDEX.md → 00_docs/ROUTING.yaml (task key exec_sales_paper) → AGENTS.md.
+Then read 00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md IN FULL and obey it.
+Also read 00_docs/ITUK_PRISM_LANE_BRIDGE.md before any ITUK capture %.
 
-============================================================
-HIS WORDS (do not dilute)
-============================================================
-So you did a lot of sales analysis, come up with a 10-20 page html with
-infographics, a paper where you analyze all the data of Isuzu, and do a
-SWOT analysis? if you have questions ask them first, I want the result as
-a grade a one analyst, but it should be so good, the top managment would
-pet you.
+THIS FILE IS THE BRIEF. Do not write HTML until THIS session's CURRENT
+message says rebuild or ship. If it does not, deliver a Mode B outline only
+(thesis, four hero candidates with sources, SWOT draft, UNKNOWN register).
 
-============================================================
-YOU MUST STOP AFTER QUESTIONS. DO NOT START THE PAPER.
-============================================================
-This turn: output Phase 0 questions only (the table in
-PROMPT_ISZE_EXEC_SALES_PAPER.md). Number them. Recommend the Default
-column in one line each so Jerome can say "lock defaults" or change one.
+Original ask (his words): so you did a lot of sales analysis, come up with a
+10-20 page html with infographics, a paper where you analyze all the data of
+Isuzu, and do a SWOT analysis; if you have questions ask them first; Grade A,
+good enough that top management would thank you.
 
-Do not write HTML. Do not outline pages in a file. Do not SWOT-draft.
-Do not sync_to_deploys. Do not bump versions. Do not send mail.
-Do not "fix if safe". Do not load 01_data/raw/sales/*.XLSX.
+You already have the questions. Do NOT ask Jerome. Use the locked defaults
+in PROMPT_ISZE_EXEC_SALES_PAPER.md Phase 0:
 
-Permission to write the Mode A HTML exists only if a LATER message in
-this session says rebuild or ship AND Phase 0 is locked.
+1. Audience = ISZE + IML top management (Mode A paper); chat + annex = Mode B.
+2. Scope = aftersales parts hub (GPS, PMS, mix, pricing, IDS, tenders, UIO)
+   — not vehicle manufacturing / Japan P&L.
+3. Window = CY2025 complete + FY2026 YTD through last billing (2026-06-30
+   if still current). Label partial years. Never fake a full year from YTD.
+4. Geography = full network; ITUK = worked example, not the only row;
+   never blend Israel (UTI 1799 ≠ UMI 1797; IDS Israel = UMI only).
+5. SWOT entity = ISZE aftersales.
+6. Length = 16 pages ±4 (stay in 10-20 A4).
+7. Language = English.
+8. Do not quote unsigned leakage € in the Mode A paper.
+9. Do not invent IAM unit share. 100%−PMS is not IAM.
+10. Artefact = printable self-contained HTML + OPEN_*.cmd, not PPTX.
 
-============================================================
-WHEN (LATER) YOU ARE ALLOWED TO BUILD
-============================================================
-Produce a 10–20 page (target 16) self-contained HTML paper,
-02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html + OPEN_*.cmd,
-print-CSS A4 pages, house colours (navy #15233c, terracotta #c0552d,
-paper #f7f4ee), Georgia headings, Chart.js inline no CDN.
+Chat = Mode B. HTML body = Mode A (no IML v7 / Model B / PRISM lane /
+personal names / pipeline filenames in the paper). Pricing labels =
+OEM peer retail / dealer sell-out / reference sell-out / price index
+(shop ÷ reference sell-out). Reference sell-out = PR00 × 1.40 × 1.275
+(= ×1.785). Obey the Forbidden words section of the markdown.
 
-Audience: top management. Mode A in the HTML. Chat with Jerome = Mode B.
+Verify-green first: 01_data/00_derived/_verification_report.json →
+metrics_snapshot.json → FACTS.md. Last known green (re-check): 116 pass /
+0 fail, billing through 2026-06-30 as of 2026-08-25. If not green, stop
+quoting headlines. Never load 01_data/raw/sales/*.XLSX.
 
-Thesis test: after page 1 a MD can repeat where the wallet is, what we
-locate, what we cannot count, and five asks.
+PMS headline = line_type=total. Genuine = extra lens. BVP has no capture
+rate. Mix ≠ capture. Skip PMS Best when best > 100%. Do not reopen AIM
+0-100. Shell 5500* = lubricants. IUK 2574 ≠ ITUK 2575; Ireland ≠ IUK ≠ IMIE.
 
-SWOT: ISZE aftersales unless Phase 0 changed the entity. Every cell =
-claim + €/volume + source + UNKNOWN + decision link. No generic brand
-SWOT. No invented IAM share. No "street" language.
+Two ITUK PMS lanes (both correct; never mix):
+• IML service-schedule story: oil-filter 35.1%, gap €2.04M, UIO 22,389.
+  That is the Mode A worked example (plain language, no nicknames).
+• Network-comparable league: pms_capture_by_db_year.csv, UIO 23,068.
+  Use only to rank distributors on one denominator.
 
-Numbers: green _verification_report.json → metrics_snapshot.json →
-FACTS.md. Two ITUK PMS lanes never mixed. PMS total first. UTI≠UMI.
-IUK≠ITUK. Leakage € Mode B until signed. Nordics keys closed.
-IAM prices ≠ IAM units. 100%−PMS is not IAM.
+Nordics tender keys are DONE. The gap is national portal coverage, not keys.
+Never 07_deploy/. No Send mail. No ship without rebuild/ship in THIS message.
 
-Follow the page map, SWOT contract, DO NOT list, and ship gate in
-00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md.
+Page map (16): 1 cover thesis + 4 heroes · 2 how to read · 3 GPS wallet ·
+4 PMS total + one ITUK service-schedule story · 5 mix/BVP quality ·
+6 distributor league (UTI and UMI as two rows) · 7 IDS (UMI for Israel) ·
+8 price vs reference sell-out · 9 demand/replenishment/forecast honesty
+(WAPE, unsigned G1) · 10 tenders (portals, not keys) · 11 integrity +
+UNKNOWNs · 12-13 SWOT · 14 90-day decision board from ISZE_ROADMAP.md §2
+(asks, not spam) · 15 what would change our mind · 16 sources/verify stamp.
 
-============================================================
-THIS TURN'S ONLY DELIVERABLE
-============================================================
-Phase 0 questions. Then wait.
+SWOT: every cell = (1) one-line claim (2) € or volume + source (3) UNKNOWN
+if missing (4) what would change a decision. S/W = internal ISZE evidence.
+O/T = external/competitive/parc/IAM-price/tender, still sourced or UNKNOWN.
+
+When HTML is authorised: 02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html
++ OPEN_ISZE_Exec_Aftersales_Paper.cmd. Navy #15233c, terracotta #c0552d,
+paper #f7f4ee, ink #222, Georgia headings. Inline Chart.js, no CDN.
+Print CSS @page A4. file:// must paint. Hover = CSS panel. Chart-first.
+Ship gate: exit 0 ≠ done; paint check; no blank tables; no file:// chat links.
+
+Grade D if: invented IAM %; forbidden pricing slang; Israel blend; mixed
+ITUK lanes; CDN Chart.js; MBA SWOT with no euros; Mode A pipeline jargon;
+unsigned leakage as a hero; claimed done without paint.
+
+Output now (no rebuild/ship in this paste): Mode B outline first — verdict
+thesis, four hero KPI candidates with file sources, SWOT 3-5 cells per
+quadrant in the four-part contract, UNKNOWN register, 90-day asks copied
+from roadmap §2 as a decision board. Stop. Wait for rebuild or ship.
 ```

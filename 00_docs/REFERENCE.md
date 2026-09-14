@@ -16,7 +16,6 @@
 | Monthly refresh runbook | `00_docs/RUNBOOK_MONTHLY_REFRESH.md` |
 | Scheduled jobs register | `00_docs/AUTOMATION_REGISTER.md` |
 | Workspace changelog / decisions | `CHANGELOG.md`, `DECISIONS.md` |
-| **Exec aftersales paper (paste-ready prompt)** | `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md` |
 | GPT upload status | `08_gpt/UPLOAD_STATUS.md` |
 | PMS / GPS / BVP / UIO metrics | `03_analytics/Isuzu/prism/docs/metric_dictionary.md` |
 | PRISM dashboard CSV contracts | `03_analytics/Isuzu/prism/docs/dashboard_contracts.md` |
@@ -53,6 +52,9 @@
 | Cleanup / dedupe plan | `00_docs/ISZE_Cleanup_Plan.md` |
 | Repo overview | `00_docs/README.md` |
 | Claude Desktop onboarding (paste-ready) | `00_docs/CLAUDE_DESKTOP_ONBOARDING.md` |
+| **Exec aftersales paper (paste-ready prompt)** | `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md` — 10–20 page Mode A HTML brief (GPS/PMS/mix/SWOT). Prompt only until the current message says rebuild/ship. Routing key `exec_sales_paper`. |
+| Dashboard + capture audit (paste-ready) | `00_docs/DASHBOARD_CAPTURE_AUDIT_PROMPT.md` |
+| IAM capture / price hunt review (paste-ready) | `00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md` |
 
 **Jerome working style:** `Isuzu/_SKILL_UPDATE/` or scheduled `isze-context` — see `docs/agent/NOTES.md`.
 

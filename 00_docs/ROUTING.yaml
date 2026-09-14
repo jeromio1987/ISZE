@@ -106,18 +106,29 @@ tasks:
       - 03_analytics/Isuzu/pms-pilot/
 
   exec_sales_paper:
-    description: Paste-ready prompt for a 10–20 page Mode A aftersales HTML paper + SWOT — brief only, do not start until Phase 0 + rebuild/ship
+    description: Grade-A Mode A HTML exec aftersales paper (GPS, PMS total, mix, pricing, IDS, tenders, SWOT) — prompt only until rebuild/ship
     read:
       - 00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md
+      - 00_docs/ITUK_PRISM_LANE_BRIDGE.md
+      - 01_data/00_derived/_verification_report.json
+      - 01_data/00_derived/metrics_snapshot.json
+      - FACTS.md
     optional:
+      - 00_docs/ISZE_ROADMAP.md
       - 00_docs/DASHBOARD_CAPTURE_AUDIT_PROMPT.md
       - 00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md
-      - FACTS.md
-      - 00_docs/ISZE_ROADMAP.md
+      - 03_analytics/Isuzu/prism/docs/metric_dictionary.md
+      - 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
     never:
       - 01_data/raw/sales/**
+      - 01_data/12_raw/sales/**
+      - 07_deploy/**
+    proposed_output:
+      - 02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html
+      - 02_dashboards/sales/OPEN_ISZE_Exec_Aftersales_Paper.cmd
     rules:
-      - This task is the brief. Do not write the HTML until the current message says rebuild or ship AND Phase 0 is locked.
+      - This routing key opens the brief. Phase 0 defaults are locked in the prompt so overnight can run without pinging Jerome.
+      - Do not write the HTML unless the current message says rebuild or ship.
 
   action_ledger:
     description: P8 Opportunity→Action→Outcome ledger over existing derived euro surfaces (Mode B)

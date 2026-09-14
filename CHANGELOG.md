@@ -9,7 +9,7 @@
 ## [Unreleased]
 
 ### Added (2026-09-14) — Exec aftersales paper prompt (brief only)
-- Paste-ready brief `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md`: 10–20 page Mode A HTML + evidence-backed SWOT. Phase 0 questions first; HTML only after rebuild/ship. Wired from `ROUTING.yaml` task `exec_sales_paper`.
+- Paste-ready brief `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md`: 10–20 page Mode A HTML + evidence-backed SWOT. Phase 0 questions live in the prompt **with locked defaults** so overnight/autonomous can run without pinging Jerome. HTML only after a later session’s current message says rebuild/ship. Wired from `ROUTING.yaml` task `exec_sales_paper`, `MAP_REGISTRY.yaml` `roadmap_specs`, `INDEX.md`, `REFERENCE.md`.
 - Not a new programme item. Does not start the paper. No KPI or dashboard change.
 
 ### Changed (2026-08-26) — Roadmap reorganised: one queue, one closed list

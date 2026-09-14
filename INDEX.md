@@ -38,9 +38,9 @@ Everything else lives in numbered folders below.
 |------|------|
 | **Drop / sort new data** | `01_data/90_INBOX/` → file per `01_data/DATA_MANIFEST.md` §0–§1 |
 | Task routing | `00_docs/ROUTING.yaml` |
-| **Exec aftersales paper prompt** | `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md` — paste-ready; ask first; do not start HTML until rebuild/ship |
 | Maps / registry | `00_docs/MAPS.md` · `00_docs/MAP_REGISTRY.yaml` |
 | **Programme roadmap (the queue)** | `00_docs/ISZE_ROADMAP.md` — open work §1, decisions waiting on Jerome §2, live §3, closed §5. Domain depth: `00_docs/roadmaps/` |
+| **Exec aftersales paper prompt** | `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md` — paste-ready Grade A HTML brief; Phase 0 defaults locked; do not write HTML until rebuild/ship |
 | Versioned filenames | `00_docs/CANONICAL.md` |
 | **Excel pre-delivery check** | `00_docs/EXCEL_PRE_DELIVERY_CHECK.md` |
 | Headline metrics | `01_data/00_derived/metrics_snapshot.json` + `FACTS.md` |
