@@ -120,13 +120,9 @@ def build_html() -> str:
             ("ITUK", 100, "100% cap · 116% raw", "#6b7c93"),
             ("Greece", 97.2, "97%", "#1d9e75"),
             ("UTI", 91.3, "91%", "#1d9e75"),
-            ("Cyprus", 91.2, "91%", "#1d9e75"),
             ("UMI", 85.2, "85%", "#1d9e75"),
             ("Belgium", 62.6, "63%", "#c48a16"),
-            ("Portugal", 52.1, "52%", "#c48a16"),
-            ("Sweden", 48.7, "49%", "#c48a16"),
             ("IUK", 37.7, "38%", "#c0453c"),
-            ("Hungary", 45.0, "45%", "#c48a16"),
             ("Germany", 15.1, "15%", "#c0453c"),
         ],
         max_v=100,
@@ -215,8 +211,8 @@ a{color:#15233c}
 .sheet{max-width:210mm;margin:0 auto;padding:12px 0 40px}
 .paper-page{
   background:#f7f4ee;color:#222;width:210mm;min-height:277mm;margin:0 auto 14px;
-  padding:11mm 12mm 14mm;position:relative;box-shadow:0 2px 10px rgba(21,35,60,.18);
-  break-after:page;page-break-after:always;overflow:hidden
+  padding:9mm 11mm 16mm;position:relative;box-shadow:0 2px 10px rgba(21,35,60,.18);
+  break-after:page;page-break-after:always
 }
 .paper-page.cover{padding:0;background:#15233c;color:#eef1f6}
 .ph{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;
@@ -245,11 +241,11 @@ h2{font-size:20px;line-height:1.2;margin:0 0 8px;padding-bottom:6px;border-botto
 .card h3{font-size:13px;margin-bottom:6px}
 .chartbox{background:#fff;border:1px solid #e3ded3;border-radius:5px;padding:10px 12px 8px;margin:8px 0 10px}
 .chartttl{font-size:11.5px;color:#15233c;font-weight:600;margin-bottom:8px;font-family:Georgia,serif}
-.chart-wrap{position:relative;height:168px}
-.bars{display:flex;flex-direction:column;gap:4px}
-.bar-row{display:grid;grid-template-columns:minmax(72px,28%) 1fr minmax(92px,30%);gap:6px;align-items:center;font-size:11px}
+.chart-wrap{position:relative;height:200px;display:none}
+.bars{display:flex;flex-direction:column;gap:3px}
+.bar-row{display:grid;grid-template-columns:minmax(72px,28%) 1fr minmax(92px,30%);gap:5px;align-items:center;font-size:10.5px}
 .bl{color:#52514e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.bt{background:#eceae4;height:13px;border-radius:2px;overflow:hidden}
+.bt{background:#eceae4;height:11px;border-radius:2px;overflow:hidden}
 .bf{display:block;height:100%;min-width:2px}
 .bv{text-align:right;font-variant-numeric:tabular-nums;color:#15233c}
 .callout{border-left:3px solid #c0552d;background:#fff;padding:8px 12px;margin:8px 0;border-radius:0 4px 4px 0}
@@ -267,7 +263,7 @@ tbody tr:nth-child(even){background:#faf8f4}
 .g{background:#1d9e75}.a{background:#c48a16}.r{background:#c0453c}
 .swot{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .swot-q h3{font-size:14px;margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid #c0552d}
-.swot-cell{background:#fff;border:1px solid #e3ded3;padding:8px 10px;margin-bottom:8px}
+.swot-cell{background:#fff;border:1px solid #e3ded3;padding:6px 8px;margin-bottom:6px;break-inside:avoid}
 .swot-cell .claim{font-weight:600;color:#15233c;margin:0 0 4px}
 .swot-cell .money{margin:0 0 4px;color:#3a3a3a}
 .swot-cell .unk-line,.swot-cell .dec{margin:0 0 3px;font-size:11px;color:#52514e}
@@ -284,10 +280,16 @@ kbd{font-family:Consolas,monospace;font-size:10px;background:#eceae4;padding:1px
 @media print{
   body{background:#fff}
   .sheet{padding:0;max-width:none}
-  .paper-page{box-shadow:none;margin:0;width:auto;min-height:0}
+  .paper-page{box-shadow:none;margin:0;width:auto;min-height:0;padding:8mm 10mm 10mm}
   .stat .tip{display:none !important}
-  .chart-wrap{display:none}
+  .chart-wrap, body.js-ok .chart-wrap{display:none !important}
+  body.js-ok .chartbox:has(.chart-wrap) .bars{display:flex !important}
+  .pf{position:static;margin-top:8px}
+  h2{font-size:17px}
+  .verdict{font-size:12.5px}
 }
+body.js-ok .chart-wrap{display:block}
+body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
 """
 
     pages = []
@@ -397,17 +399,11 @@ kbd{font-family:Consolas,monospace;font-size:10px;background:#eceae4;padding:1px
     pages.append(page(4, "Workshop basket", "Capture — what the service schedule still misses",
         "On the IML service schedule the UK truck oil-filter cover is 35.1% (UIO 22,389); the five-category revenue gap is €2.04M, and air plus wear — not oil — hold most of it.",
         f"""
-<p class="lede">This page’s worked example is the IML service schedule signed for UK truck correspondence: filters at 1.25 services per year, clutch and brake at 0.5, addressable 100%, parc 22,389. Actual oil-filter units 9,818 versus 27,986 expected.</p>
-<div class="grid2">
-  <div class="chartbox">
-    <div class="chartttl">Cover on the IML service schedule is a workshop gap, not a saturated filter book · CY2025</div>
-    {iml_cover}
-  </div>
-  <div class="chartbox">
-    <div class="chartttl">Air and wear hold the euro: €736k air, €642k brake, €393k clutch · CY2025</div>
-    {iml_gap}
-    <div class="chart-wrap"><canvas id="cImlGap" aria-hidden="true"></canvas></div>
-  </div>
+<p class="lede">Worked example = IML service schedule for UK truck: filters 1.25/yr, clutch and brake 0.5, addressable 100%, parc 22,389. Oil-filter actual 9,818 versus 27,986 expected.</p>
+<div class="chartbox">
+  <div class="chartttl">Air and wear hold the euro: €736k air, €642k brake, €393k clutch · CY2025</div>
+  {iml_gap}
+  <div class="chart-wrap"><canvas id="cImlGap" aria-hidden="true"></canvas></div>
 </div>
 <table>
   <thead><tr><th>Category</th><th class="n">Cover</th><th class="n">Gap €</th><th class="n">Actual units</th></tr></thead>
@@ -612,11 +608,6 @@ kbd{font-family:Consolas,monospace;font-size:10px;background:#eceae4;padding:1px
         "Ireland €389 · UTI €322 · ITUK €249 per unit CY2025 (green ≥ €150).",
         "2026 YTD spend-per-unit is a stub year. UMI green €179 becomes €82 without warranty.",
         "A decision to traffic-light UMI on the ex-warranty number in every pack.")}
-    {cell(
-        "Dealer sell-out exists where it exists — five distributors, not a blank network.",
-        "ITUK dealer sell-out CY2025 €11.0M at the counter versus €5.56M ISZE→DB billed (same parc).",
-        "Most GPS markets have no sell-out file. Greece sell-out looks partial (heavy billed-without-sell-out).",
-        "One additional large-market sell-out long.")}
   </div>
   <div class="swot-q">
     <h3>Weaknesses</h3>
@@ -631,15 +622,10 @@ kbd{font-family:Consolas,monospace;font-size:10px;background:#eceae4;padding:1px
         "That residual is not independent-garage share.",
         "A signed split of residual into lost service / IAM / DIY / other-OEM — we do not have it.")}
     {cell(
-        "Realization (list-to-pocket) is not signed for this room.",
-        "Existence of a pocket gap: named. Euro: not quoted.",
-        "The unsigned euro itself.",
-        "Written sign-off on year-matched list-to-net joins.")}
-    {cell(
-        "The forecast cannot go live on current signatures.",
-        "Median WAPE 49.4% on 548 series · G1 unsigned · override policy unsigned.",
-        "Realised euros past 30 June 2026.",
-        "G1 yes/no and who may change a forecast.")}
+        "Realization and the forecast are both unsigned for this room.",
+        "Pocket euro: not quoted. Forecast: median WAPE 49.4% on 548 series, G1 unsigned.",
+        "The pocket euro itself, and realised euros past 30 June 2026.",
+        "Written list-to-pocket sign-off, and G1 yes/no.")}
   </div>
 </div>
 """))
@@ -785,7 +771,17 @@ kbd{font-family:Consolas,monospace;font-size:10px;background:#eceae4;padding:1px
 
     js_boot = r"""
 (function(){
+  try {
+    var q = (location.hash || '').replace(/^#p/, '') || new URLSearchParams(location.search).get('page');
+    if (q) {
+      document.querySelectorAll('.paper-page').forEach(function(el){
+        if (el.getAttribute('data-page') !== q) el.style.display = 'none';
+      });
+      document.body.style.background = '#f7f4ee';
+    }
+  } catch (e) {}
   if (typeof Chart === 'undefined') return;
+  document.querySelectorAll('.chart-wrap').forEach(function(el){ el.style.display = 'block'; });
   const ink = '#15233c', terr = '#c0552d', grid = '#e6e2d8';
   Chart.defaults.font.family = 'Segoe UI, Helvetica, Arial, sans-serif';
   Chart.defaults.font.size = 10;
@@ -793,10 +789,11 @@ kbd{font-family:Consolas,monospace;font-size:10px;background:#eceae4;padding:1px
   function bar(id, labels, data, colors){
     const el = document.getElementById(id);
     if (!el) return;
-    new Chart(el, {type:'bar', data:{labels:labels, datasets:[{data:data, backgroundColor:colors, borderWidth:0}]},
-      options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
-        scales:{x:{ticks:{maxRotation:50, autoSkip:false}, grid:{display:false}},
-                y:{grid:{color:grid}, beginAtZero:true}}}});
+    new Chart(el, {type:'bar', data:{labels:labels, datasets:[{data:data, backgroundColor:colors, borderWidth:0, barPercentage:0.72, categoryPercentage:0.8}]},
+      options:{indexAxis:'y', responsive:true, maintainAspectRatio:false, animation:false,
+        plugins:{legend:{display:false}},
+        scales:{x:{grid:{color:grid}, beginAtZero:true},
+                y:{grid:{display:false}, ticks:{autoSkip:false}}}});
   }
   bar('cWallet', ['ITUK','IUK','UTI','PT','UMI','DE','HU','NO'],
       [11.61,5.81,4.94,1.34,1.32,1.27,0.60,0.57],
@@ -806,9 +803,9 @@ kbd{font-family:Consolas,monospace;font-size:10px;background:#eceae4;padding:1px
       ['#1d9e75','#1d9e75','#1d9e75','#1d9e75','#1d9e75','#1d9e75','#1d9e75','#1d9e75','#1d9e75','#1d9e75','#c48a16','#c48a16','#c48a16']);
   bar('cImlGap', ['Air','Brake','Clutch','Oil','Fuel'], [736,642,393,141,127],
       ['#c0453c',terr,terr,'#8a6a4a','#8a6a4a']);
-  bar('cPms', ['IE','ITUK','GR','UTI','CY','UMI','BE','PT','SE','IUK','HU','DE'],
-      [100,100,97,91,91,85,63,52,49,38,45,15],
-      ['#6b7c93','#6b7c93','#1d9e75','#1d9e75','#1d9e75','#1d9e75','#c48a16','#c48a16','#c48a16','#c0453c','#c48a16','#c0453c']);
+  bar('cPms', ['IE','ITUK','GR','UTI','UMI','BE','IUK','DE'],
+      [100,100,97,91,85,63,38,15],
+      ['#6b7c93','#6b7c93','#1d9e75','#1d9e75','#1d9e75','#c48a16','#c0453c','#c0453c']);
   bar('cMix', ['UTI','CY','GR','PT','IE','UMI','BE','ITUK','IUK','DE','SE'],
       [11.1,8.5,7.8,6.0,4.5,3.7,3.4,2.7,0.9,0.7,0.1],
       [terr,terr,terr,'#c48a16','#c48a16',ink,'#2b4a78','#2b4a78','#1d9e75','#1d9e75','#1d9e75']);
@@ -822,6 +819,7 @@ kbd{font-family:Consolas,monospace;font-size:10px;background:#eceae4;padding:1px
       [terr,'#c48a16','#2b4a78','#8a6a4a']);
   bar('cTender', ['EU','DE','FR','PL','BE','IL','IT','UK'], [159,41,20,16,6,5,1,1],
       ['#2b4a78','#1d9e75','#1d9e75','#1d9e75','#1d9e75','#1d9e75','#c48a16','#c48a16']);
+  document.body.classList.add('js-ok');
 })();
 """
 
