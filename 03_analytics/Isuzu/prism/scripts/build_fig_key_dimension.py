@@ -19,8 +19,12 @@ sys.path.insert(0, str(PRISM_ROOT))
 from config import (  # noqa: E402
     BVP_PN_DIMENSION_CSV,
     DERIVED_DIR,
+    PRICING_PR00_IE40_PARQUET,
 )
-from modules.fig_key_catalog import build_parts_catalog_dimension  # noqa: E402
+from modules.fig_key_catalog import (  # noqa: E402
+    build_parts_catalog_dimension,
+    fill_empty_fig_keys_in_pr00_csv,
+)
 
 OUT_CSV = DERIVED_DIR / "parts_catalog_dimension.csv"
 OUT_PARQUET = DERIVED_DIR / "parts_catalog_dimension.parquet"
@@ -34,9 +38,17 @@ def main() -> int:
         print(f"ERROR: {BVP_PN_DIMENSION_CSV.name} missing — run build_bvp_p0_p1.py first")
         return 1
 
+    if PR00_CSV.exists() and PRICING_PR00_IE40_PARQUET.exists():
+        stats = fill_empty_fig_keys_in_pr00_csv(PR00_CSV, PRICING_PR00_IE40_PARQUET)
+        print(
+            f"  pr00 fig_key fill from IE40: filled {stats['filled']} "
+            f"(already {stats['already_had']}, still empty {stats['still_empty']})"
+        )
+
     df = build_parts_catalog_dimension(
         pr00_csv=PR00_CSV,
         bvp_dimension_csv=BVP_PN_DIMENSION_CSV,
+        ie40_parquet=PRICING_PR00_IE40_PARQUET if PRICING_PR00_IE40_PARQUET.exists() else None,
     )
     DERIVED_DIR.mkdir(parents=True, exist_ok=True)
     df.to_csv(OUT_CSV, index=False)
