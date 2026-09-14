@@ -53,11 +53,11 @@
 | **CZ** | TED; **NEN / VVZ** (nen.nipez.cz, Věstník) | TED CZE | NEN + VVZ bulletin | TED + **Czechia VVZ** (OK 80→7 gated) | **LIVE** | Public `api.vvz.nipez.cz` · `createdAt[gte]` + order works; fulltext/CPV still ignored — client vehicle post-filter | Wired 2026-08-25 — residual if CPV/export auth | Maintain |
 | **SK** | TED; **ÚVO / EVO / Vestník VO** (uvo.gov.sk) | TED SVK | Vestník / EVO | TED only | **BLOCKED** | HTML + **reCAPTCHA**; UVOstat paid | **Low–Med** (~+3–12) | **P2** (open data / paid) |
 | **RO** | TED; **SEAP / e-licitatie.ro** | TED ROU | SEAP full national | TED + **Romania SEAP** (OK 147→13 gated) | **LIVE** | Public JSON `api-pub/NoticeCommon/GetCNoticeList` (POST; client-side CPV/keyword) | Wired 2026-08-25 overnight — residual if more pages / CPV API params | Maintain |
-| **HU** | TED; **EKR** (ekr.gov.hu) | TED HUN | EKR mandatory | TED only | **BLOCKED** | **HTML** / login SPA; no free list API this pass | **Med** (~+5–18) if unlocked | **P2** (registration) |
+| **HU** | TED; **EKR** (ekr.gov.hu) | TED HUN | EKR mandatory | TED only | **BLOCKED** (2026-09-14: EKR search `PASSWORD_EXPIRED` 406; kozbeszerzes RSS 404) | **HTML** / login SPA; no free list API | **Med** if unlocked | **P2** (operator login — do not ask Jerome) |
 | **PT** | TED; **Portal BASE** (base.gov.pt) + **dados.gov.pt** anúncios dumps | TED PRT | BASE centralises contracts / announcements | TED + **Portugal BASE** (OK 77→15 gated) | **LIVE** | dados.gov **JSON** (no IMPIC token); APIBase2 still optional token uplift | Wired 2026-08-25 — residual if APIBase2 | Maintain |
-| **IE** | TED; **eTenders** (etenders.gov.ie) | TED IRL | eTenders national + lower-value | TED only | **BLOCKED** | **HTML** / portal search; RSS 500; brittle | **Low–Med** (~+2–10) | **P2** (OGP feed) |
+| **IE** | TED; **eTenders** (etenders.gov.ie) | TED IRL | eTenders national + lower-value | TED + **Ireland eTenders** (OGP data.gov.ie CSV) | **LIVE** (2026-09-14 OGP CSV HTTP 200; vehicle CPV/keyword filter) | Public **CSV** on data.gov.ie (no key). HTML/RSS still brittle | Residual if CSV lag vs live portal | Maintain |
 | **UK** | **Find a Tender** (above + new PA regime); **Contracts Finder** (lower / legacy); Scotland portals for some below | FaT (UK post-Brexit; not TED) | CF + FaT below band | **UK FaT** (OK 22) + **CF** (OK 121 raw) | **LIVE** | Public **API**/search | Already strong; CF mostly fails Isuzu gate (passenger/route) — intentional | Maintain |
-| **SE** | TED; **no single national portal** — registered commercial databases (Visma TendSign, Mercell, e-Avrop, Kommers Annons) per UHM/Konkurrensverket | TED SWE | Commercial annonsdatabaser (mandatory advertising below TED still not on TED) | TED only | **BLOCKED** | **login** per platform; often **paid** monitoring; no free unified API | **Med** lift but **Hard** feasibility (~+5–20 if multi-platform) | **P2** (budget) |
+| **SE** | TED; **no single national portal** — registered commercial databases (Visma TendSign, Mercell, e-Avrop, Kommers Annons) per UHM/Konkurrensverket | TED SWE | Commercial annonsdatabaser (mandatory advertising below TED still not on TED) | TED only | **BLOCKED** (2026-09-14: no free unified API; dataportal search 404) | **login** per platform; often **paid** | **Med** lift but **Hard** | Leave — no public feed |
 | **NO** | TED; **Doffin** (doffin.no) | TED NOR | Doffin national | TED + **Doffin** fetcher | **LIVE** (keys DONE 2026-08-25) | Free **API** (`nordics_api_keys.env`) | National NO live — do **not** re-ask Jerome for keys | Maintain |
 | **FI** | TED; **HILMA** (hankintailmoitukset.fi) | TED FIN | HILMA statutory | TED + **HILMA** fetcher | **LIVE** (keys DONE 2026-08-25) | Free **API** (AVP-Read) | National FI live — do **not** re-ask Jerome for keys | Maintain |
 | **DK** | TED; **udbud.dk** (Competition Authority / MitUdbud) | TED DNK | udbud.dk national (+ purchasing plans) | TED + **Denmark udbud** (OK 6 → 4 gated) | **LIVE** | Public JSON `POST /soegning/public/soegeresultat` (`fritekstQuery` + paginering ≥1) | Wired 2026-08-25 overnight — standalone `national_fetchers_dk.py` | Maintain |
@@ -169,10 +169,10 @@ Ranked for **expected gate-passing CV/LCV lead lift × machine feasibility**. Sk
 ## #1–#5 remaining (most real CV tender volume still dark)
 
 1. **Hungary EKR** — national mandatory; login SPA; no free list API this pass.  
-2. **Ireland eTenders** — RSS 404 on 2026-09-14; HTML portal.  
-3. **Sweden** — no single gazette; commercial databases (paid / login).  
-4. **Slovakia ÚVO** — recaptcha; no free list API.  
-5. **Estonia RHR** — official opendata still HTTP 500 (ministry). **Not** Nordics keys.
+2. **Sweden** — no single gazette; commercial databases (paid / login).  
+3. **Slovakia ÚVO** — recaptcha; no free list API.  
+4. **Estonia RHR** — official opendata still HTTP 500 (ministry). **Not** Nordics keys.  
+Ireland eTenders is **LIVE** via the public OGP CSV (data.gov.ie) — not on this remaining list.
 
 Spain / Italy / Germany / Doffin / HILMA are **already LIVE**. Do not re-ask for Doffin or HILMA keys.
 

@@ -65,6 +65,7 @@ from source_health import (
     record_source_status,
     validate_feed,
 )
+import national_fetchers_ie as ie_national
 
 LOOKBACK_DAYS = 30
 _SCRIPT_DIR = Path(__file__).resolve().parent
@@ -3636,6 +3637,7 @@ def save_to_excel(
     ro_rows: Optional[List[Dict[str, Any]]] = None,
     at_rows: Optional[List[Dict[str, Any]]] = None,
     pt_rows: Optional[List[Dict[str, Any]]] = None,
+    ie_rows: Optional[List[Dict[str, Any]]] = None,
 ) -> None:
     wb = openpyxl.Workbook()
 
@@ -3728,6 +3730,10 @@ def save_to_excel(
     if pt_rows is not None:
         ws_pt = wb.create_sheet("Portugal BASE")
         write_sheet(ws_pt, normalize_batch(pt_rows, "🇵🇹 PT-BASE"), "No PT BASE results")
+    ie_rows = ie_rows or []
+    if ie_rows is not None:
+        ws_ie = wb.create_sheet("Ireland eTenders")
+        write_sheet(ws_ie, normalize_batch(ie_rows, "🇮🇪 IE-eTenders"), "No IE eTenders results")
 
     wb.save(filename)
     print(f"\n✓ Saved: {filename}")
@@ -3748,6 +3754,7 @@ def save_to_excel(
     print(f"  Romania SEAP: {len(ro_rows)}")
     print(f"  Austria USP: {len(at_rows)}")
     print(f"  Portugal BASE: {len(pt_rows)}")
+    print(f"  Ireland eTenders: {len(ie_rows)}")
 
 
 # ---------------------------------------------------------------------------
@@ -3885,7 +3892,7 @@ def main() -> None:
     parser.add_argument(
         "--only",
         default="",
-        help="Comma-separated source subset: bel,isr,iec,fr,pl,es,it,de,ov,ro,at,pt,nordics (skip TED/UK/etc)",
+        help="Comma-separated source subset: bel,isr,iec,fr,pl,es,it,de,ov,ro,at,pt,ie,nordics (skip TED/UK/etc)",
     )
     args = parser.parse_args()
     only = {x.strip().lower() for x in args.only.split(",") if x.strip()}
@@ -3897,7 +3904,7 @@ def main() -> None:
         print(f"  FOCUSED scrape: {', '.join(sorted(only))}")
     print(
         f"  Last {LOOKBACK_DAYS} days | Markets: UK, EU/TED, DE(+OV), BE, NL, FR, PL, ES, IT, RO, "
-        "Norway, Finland, Israel, IEC"
+        "AT, PT, IE, Norway, Finland, Israel, IEC"
     )
     print(f"  CPV codes: {len(CPV_CODES)} (surgical — ISZE targets only)")
     print(f"  TED country filter: {len(TED_TARGET_COUNTRIES)} markets (incl. CYP, MLT)")
@@ -3929,6 +3936,7 @@ def main() -> None:
     ro_rows: List[Dict[str, Any]] = []
     at_rows: List[Dict[str, Any]] = []
     pt_rows: List[Dict[str, Any]] = []
+    ie_rows: List[Dict[str, Any]] = []
 
     run_all = not focused
     run_be = run_all or ("bel" in only or "be" in only or "belgium" in only)
@@ -3954,6 +3962,7 @@ def main() -> None:
     run_ro = run_all or ("ro" in only or "romania" in only or "seap" in only)
     run_at = run_all or ("at" in only or "austria" in only or "usp" in only)
     run_pt = run_all or ("pt" in only or "portugal" in only or "base" in only)
+    run_ie = run_all or ("ie" in only or "ireland" in only or "etenders" in only)
     if "frpl" in only or "below" in only:
         run_fr = True
         run_pl = True
@@ -4126,6 +4135,15 @@ def main() -> None:
                 health, "Portugal BASE", len(pt_rows), LAST_FETCH_ERRORS.get("Portugal BASE")
             )
 
+        if run_ie:
+            ie_rows = ie_national.fetch_ireland_etenders(session, from_dt)
+            record_source_result(
+                health,
+                "Ireland eTenders",
+                len(ie_rows),
+                ie_national.LAST_ERROR if ie_national.LAST_ERROR else LAST_FETCH_ERRORS.get("Ireland eTenders"),
+            )
+
         if run_be or run_il:
             _record_be_il_health(
                 health,
@@ -4135,7 +4153,12 @@ def main() -> None:
 
     if focused:
         # Do not overwrite the full workbook — write a focused side file.
-        if run_pt and not (
+        if run_ie and not (
+            run_be or run_il or run_fr or run_pl or run_es or run_it or run_de or run_de_ov
+            or run_ro or run_at or run_nordics or run_iec or run_pt
+        ):
+            focused_out = str(_SCRIPT_DIR / "isuzu_tenders_v3_ie.xlsx")
+        elif run_pt and not (
             run_be or run_il or run_fr or run_pl or run_es or run_it or run_de or run_de_ov
             or run_ro or run_at or run_nordics or run_iec
         ):
@@ -4176,6 +4199,7 @@ def main() -> None:
             ro_rows=ro_rows,
             at_rows=at_rows,
             pt_rows=pt_rows,
+            ie_rows=ie_rows,
         )
     else:
         save_to_excel(
@@ -4198,6 +4222,7 @@ def main() -> None:
             ro_rows=ro_rows,
             at_rows=at_rows,
             pt_rows=pt_rows,
+            ie_rows=ie_rows,
         )
     persist_and_report(health)
     print("\nDone.")

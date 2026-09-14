@@ -136,6 +136,7 @@ SOURCE_SHEET_MAP = {
     "Netherlands": "🇳🇱 NL",
     "France BOAMP": "🇫🇷 FR-BOAMP",
     "Poland BZP": "🇵🇱 PL-BZP",
+    "Ireland eTenders": "🇮🇪 IE-eTenders",
 }
 
 SOURCE_COUNTRY_FALLBACK = {
@@ -150,6 +151,7 @@ SOURCE_COUNTRY_FALLBACK = {
     "🇳🇱 NL": "Netherlands",
     "🇫🇷 FR-BOAMP": "France",
     "🇵🇱 PL-BZP": "Poland",
+    "🇮🇪 IE-eTenders": "Ireland",
 }
 
 BRAND_TERMS = [
