@@ -24,7 +24,9 @@ from pathlib import Path
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-TOOLS = r"C:\Users\jerom\Desktop\claude\ISZE\04_tools\ppt_template_v2"
+import common as C                      # noqa: E402
+
+TOOLS = str(C.ISZE / "04_tools" / "ppt_template_v2")
 sys.path.insert(0, TOOLS)
 
 import isze_chart_theme as ct          # noqa: E402
@@ -33,8 +35,6 @@ from pptx.util import Inches, Pt, Emu  # noqa: E402
 from pptx.dml.color import RGBColor    # noqa: E402
 from pptx.enum.text import PP_ALIGN    # noqa: E402
 from pptx.enum.shapes import MSO_SHAPE  # noqa: E402
-
-import common as C                      # noqa: E402
 
 ct.FONT_FAMILY = "Calibri"
 
@@ -813,7 +813,7 @@ def build(dbkey: str):
     if gps:
         g26 = gps["gps_FY2026"]
         saty = p.get("saty_note")
-        if gps["show_pct"]:
+        if gps["show_pct"] and not deck_opt.get("skip_gps_pct"):
             pct_lab = f"{g26 * 100:.1f}%"
             s = db.build_content(prs, f"GPS Capture: {pct_lab}",
                                  eyebrow="GPS", page_no=page)
