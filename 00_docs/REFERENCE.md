@@ -17,7 +17,8 @@
 | Scheduled jobs register | `00_docs/AUTOMATION_REGISTER.md` |
 | Workspace changelog / decisions | `CHANGELOG.md`, `DECISIONS.md` |
 | GPT upload status | `08_gpt/UPLOAD_STATUS.md` |
-| PMS / GPS / BVP / UIO metrics | `03_analytics/Isuzu/prism/docs/metric_dictionary.md` |
+| **Which KPI to quote** (FY, euros, official vs GPS vs mix vs list) | `00_docs/ISZE_BI_FRAMEWORK.md` |
+| PMS / GPS / BVP / UIO formulas | `03_analytics/Isuzu/prism/docs/metric_dictionary.md` |
 | PRISM dashboard CSV contracts | `03_analytics/Isuzu/prism/docs/dashboard_contracts.md` |
 | Data integrity flags | `03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md` |
 | **Isuzu OS data map** (capability × Have/Partial/Need/Closed) | `00_docs/ISZE_OS_DATA_MAP.yaml` · HTML `02_dashboards/ops/ISZE_OS_Data_Map.html` |

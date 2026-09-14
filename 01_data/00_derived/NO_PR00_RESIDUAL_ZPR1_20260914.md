@@ -1,9 +1,11 @@
-# Residual PR00 gaps — 2026-09-14 listing (Mode B)
+# Residual PR00 gaps — listing (superseded grain)
+
+**Do not quote the calendar-2025 €67,182.04 / 24-part table.** Recut: `NO_PR00_HARDWARE_FY2026.md` — FY2026 **€67,318.49 / 21 parts**, euros only, no piece KPI.
 
 Copied from `no_pr00_gap_remaining_zpr1_check_20260812.csv`. **No prices invented.**
-`5500*` Shell lubricants stay parked (Jerome 2026-08-12) — they are **not** in this 24-PN hardware list.
+`5500*` Shell lubricants stay parked (Jerome 2026-08-12).
 
-## 24 PN / €67,182.04 CY2025 — ZPR1-path hardware (NO_PR00_IN_SAP)
+## Historical — 24 PN / €67,182.04 calendar 2025 (do not quote)
 
 | rank | part_number | description | cy2025_eur | has_zpr1 |
 |------|-------------|-------------|------------|----------|

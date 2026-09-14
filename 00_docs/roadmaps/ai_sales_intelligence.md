@@ -9,7 +9,7 @@
 >
 > | Phase | Where it really is |
 > |---|---|
-> | **P1** | Catalogue PR00 coverage **98.2%**. Supersession delta and list-to-pocket validation both ran 2026-08-19. Residual: 24 PN / €67,182.04 ZPR1-path + parked Shell `5500*`. EPC validation of the 925-PN map: **`BLOCKED_NO_EPC_EXPORT`** (2026-09-14) |
+> | **P1** | Catalogue PR00 coverage **98.2%**. Leftover billed with no list: **FY2026 21 parts / €67,318.49** (calendar-2025 24 / €67,182.04 is do not quote). Shell `5500*` parked. EPC validation of the 925-PN map: **`BLOCKED_NO_EPC_EXPORT`** (2026-09-14) |
 > | **P2a** | **Complete.** 3 tables, 24-month run, DSAR/purge job proven. Local, deterministic, zero egress |
 > | **P2b / P3 / P6** | **Zero code, and correctly so.** Blocked on B1b (named LLM route) then G0b |
 > | **P4** | Builder live (`p4-v1`, gitignored parquet) + ops triage pack. **Blocked on Jerome's threshold calibration (4.9)** — draft flags fire on 10 RED / 6 AMBER of 17 DBs, so they are not a call list |
@@ -218,7 +218,7 @@ No phase starts until its gate is signed. Gate owner listed; gate is binary.
 | Closed by SAP PR00 pull | **220 PN / €4.36M** | `no_pr00_gap_cy2025_closed_20260812.csv` |
 | Catalogue-parts PR00 coverage now | **98.2%** (G1 ≥97% bar) | `pn_coverage_classification.meta.json` |
 | All-billing coverage (incl. REBATE/TRANSPORT/interest) | 95.7% | same |
-| Open residual (all classified) | €1.44M → **€1.38M non-catalogue** (admin + parked Shell) + **€67k / 24 PN** active ZPR1-path hardware | `pn_coverage_classification.csv` |
+| Open residual (all classified) | €1.44M → **€1.38M non-catalogue** (admin + parked Shell) + **FY2026 €67.3k / 21 parts** billed with no list (calendar-2025 24 / €67k is do not quote) | `NO_PR00_HARDWARE_FY2026.md` |
 | Billed under superseded list number | **925 PN / €2.48M** (IE40 `newest_pn`; **not EPC-validated**) | `pn_supersession_map.csv` |
 
 **Rebuild:** `python 01_data/01_Pricing/_build_pn_coverage_p1.py`

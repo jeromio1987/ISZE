@@ -8,6 +8,11 @@
 
 ## [Unreleased]
 
+### Added (2026-09-14) — Critical BI framework; leftover no-list recut to FY
+- `00_docs/ISZE_BI_FRAMEWORK.md` — which KPI to quote: FY first, euros first, official Power BI then GPS then mix then list reach / %GM. Sales-to-dealer pieces are not a KPI.
+- Leftover billed with no list recut to **FY2026 (1 Apr 2025 – 31 Mar 2026): €67,318.49 / 21 parts**. Calendar-2025 €67,182.04 / 24 parts is do not quote. No piece columns. Shell `5500*` still parked.
+- GPS/PBI FY number is March close year; billing `fiscal_year` integer is April start year (`modules/fiscal.py`).
+
 ### Added (2026-09-14) — Catalogue honesty + scraper V2 (gated productize not applied)
 - Fig-key: filled **158** empty `fig_key` on existing `pr00_classification.csv` from IE40 parquet; catalog rebuild **161,325 / 164,969**. `fig_key_pn_overrides.csv` header only (EPC JSON is edition/family; Snap-on blocks bulk BVP).
 - EPC validator: `--epc` optional; missing export → `pn_supersession_epc_validation.meta.json` **`BLOCKED_NO_EPC_EXPORT`**. Never MATCH. IE40 `newest_pn` labelled **`INTERNAL_IE40_CHECK`** (925/925 agrees). Map CSV not rewritten.

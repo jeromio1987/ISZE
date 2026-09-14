@@ -22,6 +22,7 @@ tasks:
       - 00_docs/roadmaps/aim_prism_reinvention.md
       - 00_docs/roadmaps/ai_sales_intelligence.md
       - 00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md
+      - 00_docs/ISZE_BI_FRAMEWORK.md
       - 00_docs/DECISION_PACK_20260914.md
       - DECISIONS.md
     rules:
@@ -38,6 +39,7 @@ tasks:
   quote_kpi:
     description: Answer a headline metric (capture %, GPS, BVP mix, revenue)
     read:
+      - 00_docs/ISZE_BI_FRAMEWORK.md
       - 01_data/00_derived/_verification_report.json
       - 01_data/00_derived/metrics_snapshot.json
       - FACTS.md
@@ -46,6 +48,19 @@ tasks:
     never:
       - 91_legacy/Isuzu/Divers/**
       - 01_data/raw/sales/**
+    rules:
+      - Framework first: FY not calendar, euros not pieces, no %GM without a list price.
+      - Metric dictionary is formulas only. Do not quote a number that fails the framework.
+
+  bi_framework:
+    description: Which KPIs to quote in a sales review or pricing conversation
+    read:
+      - 00_docs/ISZE_BI_FRAMEWORK.md
+    optional:
+      - 03_analytics/Isuzu/prism/docs/metric_dictionary.md
+      - 00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md
+    rules:
+      - This file is the filter. The August 2026 build menu is a build list, not the KPI stack.
 
   edit_pipeline:
     description: Change PRISM build scripts, derived CSVs, or verify checks

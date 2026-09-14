@@ -6,6 +6,16 @@
 
 ---
 
+## 2026-09-14 — Critical BI stack; leftover no-list is FY euros, not pieces
+
+**Status:** Accepted — Jerome: calendar cut was wrong; sales-to-dealer pieces are not a KPI; “hardware PN” is not a term he should need; make a BI framework first.
+
+**What changed.** `00_docs/ISZE_BI_FRAMEWORK.md` is the filter (FY first, euros first, L0 official Power BI → L1 GPS → L2 mix € → L3 list reach / %GM → L4 PMS total → L5 warranty). Leftover billed with no list recut to **FY2026 €67,318.49 / 21 parts**. Calendar-2025 24 / €67,182.04 is do not quote. ITUK official slide still needs the Power BI monthly row (sales / budget / last year); sold-to 2575 is already set. Do not invent it from SAP.
+
+Does not supersede: 2026-09-14 catalogue residual listing (that was the calendar cut); 2026-08-25 list-to-pocket Mode B hold.
+
+---
+
 ## 2026-09-14 — Lanes 3–5 outcomes (gated productize stopped)
 
 **Status:** Engineering done; gated productize **not applied**.

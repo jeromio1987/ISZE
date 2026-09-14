@@ -30,31 +30,37 @@ If a programme check ran on an OUT topic, log it internally. Do not put it in hi
 
 | Do not say to him | Say instead |
 |---|---|
-| sell-out / sellout / reference sell-out / street | **sales to dealer** (StD) when it is IUK→dealer (or ITUK→dealer) volume |
-| ×1.40 × 1.275 / ×1.785 / “factors” | **%GM** (his commercial term). Do not gross a piece gap up to a fake retail euro |
-| extra pieces / leakage € / network gap | **we billed X, sales to dealer Y, difference Z** — and what Z can mean (stock they already had, timing, warranty) |
+| sell-out / sellout / reference sell-out / street | **sales to dealer** only when mix in **euros** is the question |
+| hardware PN / residual PN | **parts we billed with no list price** |
+| ×1.40 × 1.275 / ×1.785 / “factors” | **%GM** (his commercial term). No list price → no %GM. Do not invent one |
+| extra pieces / leakage € / network gap | billed **euros**, who, part in words. Do not lead with pieces |
 | List 1 / List 2 / Early Warning / health call list | Name the actual distributors and parts, or say nothing |
+| calendar 2025 / CY as the default | **FY** — FY2026 = 1 Apr 2025 to 31 Mar 2026 (GPS / Power BI) |
 
-Volume comparison is **ISZE bill to the distributor** vs **that distributor’s sales to dealer**. Never one number without the other two.
+**Euros first. Pieces are not a KPI.** A gasket and a cab are not comparable in pieces. Name the part in words.
 
-Sales-to-dealer files exist only for **IUK, ITUK, Ireland, UTI, Greece**. Not the rest of the book. Never present a share (e.g. “IUK is 79%”) as if we measured every customer. Greece StD is empty. IUK/Ireland long files carry a **year total and the months**; summing every row **double-counts**. Filter to the year grain, or you invent “extra” pieces.
+**Default period is fiscal year**, same as GPS and Power BI. FY2026 = 1 April 2025 – 31 March 2026. FY2027 = 1 April 2026 – 31 March 2027. Do not recut a GPS conversation on calendar year.
 
-**Billed vs sales to dealer is stock movement.** Destock or restock. It is not lost sales, not a Monday chase, and not a reason to change list price. Do not rank it as work.
+Sales-to-dealer files exist only for **IUK, ITUK, Ireland, UTI, Greece**. Pieces from those files do not say anything useful (gasket vs cab). Do not put billed pcs vs sales-to-dealer pcs on a work list. If mix is needed, use euros. Greece StD is empty. IUK/Ireland long files double-count if you sum year total plus months.
+
+**Billed vs sales to dealer is stock movement.** Destock or restock. It is not lost sales, not a Monday chase, and not a reason to change list price.
 
 Do not rank billed sales of an account that is still buying as a lost euro. Trailing billed sales is not a gap.
 
+KPI filter: `00_docs/ISZE_BI_FRAMEWORK.md`.
+
 ## How a brief is written
 
-Lead with **what it means for his job** (list price, IUK/ITUK/UMI, Power BI cuts he already uses). Then the number. Then what the number **is**.
+Lead with **what it means for his job** (list price, %GM, IUK/ITUK/UMI, Power BI cuts he already uses). Then the **euro**. Then what the number **is**.
 
-Every euro or piece line needs all of:
+Every money line needs:
 
 1. **Who** — distributor in his names (Isuzu UK pickup, Isuzu Truck UK, UMI, …)
 2. **What** — part in words (front brake disc, steering unit, Shell oil)
-3. **We billed** — pieces and €, period
-4. **Sales to dealer** — pieces, same period, or “we do not have their sales to dealer”
-5. **The difference** — in pieces, and the plain cause (stock, warranty, timing, or we counted twice)
-6. **What we want from him** — only if there is a real ask. Otherwise stop.
+3. **We billed €** — and the FY window
+4. **What we want from him** — only if there is a real ask. Otherwise stop.
+
+Do not add a sales-to-dealer piece line. Do not add %GM when there is no list price.
 
 Never add unlike euros.
 
@@ -79,11 +85,12 @@ Do not ask him to choose between internal watchlists. Do not ask four yes/no tic
 
 ## Power BI
 
-Talk like Power BI: figure/key, list price, billed sales, sales to dealer, %GM, distributor.
+Talk like Power BI: figure/key, list price, billed sales, %GM, distributor, FY months. Sales to dealer only as euro mix, never as pieces.
 
 ## Verify before send
 
 - No OUT topic in the brief.
-- No forbidden token (including sell-out / street / List 1 / 1.785).
-- Every piece comparison has billed + sales to dealer + period, or says the file is missing.
+- No forbidden token (including sell-out / street / List 1 / 1.785 / hardware PN).
+- Default window is FY, not calendar, unless he named calendar.
+- Money lines are euros + part in words. No piece-count headline.
 - No question he could not answer in one line.

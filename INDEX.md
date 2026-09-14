@@ -44,6 +44,7 @@ Everything else lives in numbered folders below.
 | Versioned filenames | `00_docs/CANONICAL.md` |
 | **Excel pre-delivery check** | `00_docs/EXCEL_PRE_DELIVERY_CHECK.md` |
 | Headline metrics | `01_data/00_derived/metrics_snapshot.json` + `FACTS.md` |
+| **Critical BI / which KPI to quote** | `00_docs/ISZE_BI_FRAMEWORK.md` — FY first, euros first; formulas stay in the metric dictionary |
 | Workspace root | `$env:ISZE_ROOT` (see `paths.yaml`) |
 | PRISM | `03_analytics/Isuzu/prism/run_prism.ps1` (**8503**, MD-safe) · `run_prism_internal.ps1` (extra tabs) |
 | Human onboarding | `00_docs/HUMAN_ONBOARDING.md` |

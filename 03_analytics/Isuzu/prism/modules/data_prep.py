@@ -534,16 +534,24 @@ def load_sales_data(filepath: str, df_mapping: pd.DataFrame) -> pd.DataFrame:
 
 
 def _get_fiscal_year(row) -> int:
-    """ISZE Fiscal Year: Apr–Mar. FY2024 = Apr 2024 – Mar 2025."""
+    """April-start integer stored on sales_fact (Apr 2025 → 2025).
+
+    GPS / Power BI name that same window FY2026. See modules.fiscal.
+    """
+    from modules.fiscal import sales_fiscal_year
+
     year = row['year']
     month = row.get('month')
     if pd.isna(month):
-        return year
-    return year if int(month) >= 4 else year - 1
+        return int(year)
+    return sales_fiscal_year(int(year), int(month))
 
 
 def get_fiscal_year_dates(fiscal_year: int) -> tuple:
-    """FY2024 → ('2024-04-01', '2025-03-31')"""
+    """Bounds for a sales_fact.fiscal_year integer (Apr 2025 integer → Apr 2025–Mar 2026).
+
+    That window is GPS/PBI FY2026. Prefer gps_fy_dates() when speaking FY to Jerome.
+    """
     return f"{fiscal_year}-04-01", f"{fiscal_year + 1}-03-31"
 
 
