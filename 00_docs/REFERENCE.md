@@ -34,6 +34,7 @@
 | Map registry / diagram | `00_docs/MAP_REGISTRY.yaml`, `00_docs/MAPS.md` |
 | Versioned filenames | `00_docs/CANONICAL.md` |
 | **What is open / next / closed** | `00_docs/ISZE_ROADMAP.md` — the queue. Domain depth in `00_docs/roadmaps/` |
+| **Decision pack (ticks)** | `00_docs/DECISION_PACK_20260914.md` — recommended defaults; gated productize waits |
 | AIM replacement programme | `00_docs/roadmaps/aim_prism_reinvention.md` |
 | AI sales intelligence (mail, account health, forecast) | `00_docs/roadmaps/ai_sales_intelligence.md` |
 | Aftermarket BI build menu | `00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md` |

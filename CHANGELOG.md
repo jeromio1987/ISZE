@@ -8,6 +8,10 @@
 
 ## [Unreleased]
 
+### Added (2026-09-14) — Decision pack (ticks not applied)
+- [`00_docs/DECISION_PACK_20260914.md`](00_docs/DECISION_PACK_20260914.md) — one sitting for B5/P4, list-to-pocket Mode A, G1, Book B, LLM, sell-out files. Recommended defaults written; **not applied**.
+- Hub §2 and `DECISIONS.md` point at the pack. Gated productize waits on ticks.
+
 ### Changed (2026-08-26) — Roadmap reorganised: one queue, one closed list
 - **`00_docs/ISZE_ROADMAP.md` rewritten.** The old "Build now" table mixed ~15 shipped/closed items with ~8 open ones and carried multi-paragraph rationale inside table cells. Now six sections: **1 Open queue** (14 items, each with the single thing that unblocks it), **2 Waiting on Jerome** (13 decisions, sourced from the Aftermarket BI Tier B list + AI-sales gates), **3 Live now**, **4 Shipped** (dated one-liners), **5 Closed — do not reopen**, **6 Domain roadmaps**. Rationale stays in `DECISIONS.md`; the hub is a queue, not an archive.
 - **Caught up to 2026-08-25.** The hub had stopped at 2026-08-18 and did not mention PRISM IA phases 3–8 (2026-08-20), the Aftermarket BI Tier A batch (2026-08-19, 14/15 built), P5 forecast, the P8 Action Ledger, or the overnight audit (verify 116/0/0, `sales_fact` to 2026-06-30).

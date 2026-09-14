@@ -49,6 +49,8 @@ Ordered. `Blocked on` names the single thing that unblocks the item — if it sa
 
 One answer each. Build effort is already sunk or trivial; these are the actual bottleneck. Source: [`AFTERMARKET_BI_BUILD_MENU_20260819.md`](AFTERMARKET_BI_BUILD_MENU_20260819.md) Tier B + the AI-sales gates.
 
+**One sitting (2026-09-14):** recommended ticks are in [`DECISION_PACK_20260914.md`](DECISION_PACK_20260914.md). Until a row is ticked, do not apply it in code. Same-pass engineering (Monday seed, tenders, fig-key/EPC, scraper quality) does not wait.
+
 | Ref | Decision | Consequence of no answer |
 |-----|----------|--------------------------|
 | B1 | Book B **alloc** ambition — +4% / +5% / launch-only | Revision book stays a review list, never a price move |
