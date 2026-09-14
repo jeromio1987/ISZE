@@ -5,11 +5,13 @@ alwaysApply: true
 
 # Brief Jerome in his language (always on)
 
-Jerome is ISZE pricing (Sales – Vehicle Parts). He writes like his Sent mail to Bart / Suzuki: short, factual, one topic, no flourish. He has already asked to drop internal language. A later “helpful” overview does **not** expire that.
+Jerome is ISZE pricing (Sales – Vehicle Parts). He writes like his Sent mail to Bart / Suzuki / ITUK: short, factual, one topic, no flourish. He has already asked to drop internal language. A later “helpful” overview does **not** expire that.
 
 This rule **overrides** Mode B nicknames for any overview, recap, “what you got”, Monday note, or decision ask. Sparring on a point **he named** may use his own words. Do not invent ours.
 
-Write like his Sent mail to ITUK / Bart: full sentences, one topic, no slogans. Forbidden voice: “Monday. Five items are waiting for a name or a no.” That is not how he writes.
+Write like his Sent mail: full sentences, one topic, no slogans. Forbidden voice: “Monday. Five items are waiting for a name or a no.” That is not how he writes.
+
+If a question is not clear enough that he could answer it in one line, **do not ask it**. Clarify first. Ask nothing rather than a coded fork.
 
 ## His book (IN)
 
@@ -22,24 +24,37 @@ ISZE distributors he prices and reviews: IUK (UK pickup / D-Max, not ITUK), ITUK
 - Personal discount scrape (Lidl). Not ISZE work.
 - Nordics API keys (already done). Never re-ask.
 
-If a programme lane ran on an OUT topic, log it internally. Do not put it in his brief.
+If a programme check ran on an OUT topic, log it internally. Do not put it in his brief.
+
+## Words he uses (IN) vs words we invented (OUT)
+
+| Do not say to him | Say instead |
+|---|---|
+| sell-out / sellout / reference sell-out / street | **sales to dealer** (StD) when it is IUK→dealer (or ITUK→dealer) volume |
+| ×1.40 × 1.275 / ×1.785 / “factors” | **%GM** (his commercial term). Do not gross a piece gap up to a fake retail euro |
+| extra pieces / leakage € / network gap | **we billed X, sales to dealer Y, difference Z** — and what Z can mean (stock they already had, timing, warranty) |
+| List 1 / List 2 / Early Warning / health call list | Name the actual distributors and parts, or say nothing |
+
+Volume comparison is **ISZE bill to the distributor** vs **that distributor’s sales to dealer**. Never one number without the other two.
+
+Sales-to-dealer files exist only for **IUK, ITUK, Ireland, UTI, Greece**. Not the rest of the book. Never present a share (e.g. “IUK is 79%”) as if we measured every customer. Greece StD is empty. IUK/Ireland long files carry a **year total and the months**; summing every row **double-counts**. Filter to the year grain, or you invent “extra” pieces.
+
+Do not rank billed sales of an account that is still buying as a lost euro. Trailing billed sales is not a gap.
 
 ## How a brief is written
 
 Lead with **what it means for his job** (list price, IUK/ITUK/UMI, Power BI cuts he already uses). Then the number. Then what the number **is**.
 
-Every euro line needs all of:
+Every euro or piece line needs all of:
 
 1. **Who** — distributor in his names (Isuzu UK pickup, Isuzu Truck UK, UMI, …)
 2. **What** — part in words (front brake disc, steering unit, Shell oil)
-3. **The euro** — and the unit (pieces if we have them)
-4. **The definition in one sentence** — billed by us / dealer sold minus we billed / still buying / no list price
-5. **The period** — last 12 months, calendar 2025, …
-6. **What we want from him** — call IUK, leave parked, yes/no on a real object
+3. **We billed** — pieces and €, period
+4. **Sales to dealer** — pieces, same period, or “we do not have their sales to dealer”
+5. **The difference** — in pieces, and the plain cause (stock, warranty, timing, or we counted twice)
+6. **What we want from him** — only if there is a real ask. Otherwise stop.
 
-Never add unlike euros. If two rows use different definitions, say so in the row, not as a puzzle.
-
-Do not rank billed sales of an account that is still buying as a lost euro, a gap, or a Monday chase. Trailing billed sales ≠ leakage.
+Never add unlike euros.
 
 ## Forbidden in briefs to him
 
@@ -49,22 +64,24 @@ Do not use, even in this chat:
 - Agent states (TRIAGED, REVIEW, Mode A/B, P4, G1, P8, “lane”, “productize”)
 - Metaphors (“different clocks”, “name or a no”, “health call list”, “owners on euros”)
 - Unexplained internal labels (Early Warning, Book B, Action Ledger, fig-key, pipeline)
+- Numbered invented lists (“List 1”, “List 2”)
+- Roadmap ticks disguised as business questions (forecast go-live, auto list increase, mail-speed flags)
 
-If he must open something: **one** sentence, the object he already knows (“the Aftermarket command center”, “the IUK sales review”), not a path.
+If he must open something: **one** sentence, the object he already knows (“the IUK sales review”), not a path.
 
 ## Questions
 
-A question names **the actual thing** and **who is on it**. Bad: “keep Early Warning as the sales list or treat the book as a health call list?” Good: “We already have a short list of distributors where sales look cold this cycle (UTI clutch, UMI brakes, Ireland pads). We also drafted a mail-speed flag that currently lights up 10 of 17 distributors. Should anyone use that mail-speed flag, or ignore it?”
+A question names **the actual thing** and **who is on it**. If you cannot, do not ask.
 
-If you cannot name the list in his words, do not ask the question. Ask nothing rather than a coded fork.
+Do not ask him to choose between internal watchlists. Do not ask four yes/no ticks from a decision pack unless he asked for that pack.
 
 ## Power BI
 
-Talk like Power BI: figure/key, list price, billed sales, distributor. Not catalogue dimension coverage percentages unless he asked for a coverage statistic.
+Talk like Power BI: figure/key, list price, billed sales, sales to dealer, %GM, distributor.
 
 ## Verify before send
 
 - No OUT topic in the brief.
-- No forbidden token.
-- Every euro has definition + period.
-- Every question names a real list or a real yes/no.
+- No forbidden token (including sell-out / street / List 1 / 1.785).
+- Every piece comparison has billed + sales to dealer + period, or says the file is missing.
+- No question he could not answer in one line.

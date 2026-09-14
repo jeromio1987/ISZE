@@ -26,7 +26,7 @@
 8. **Ship gate (all Mode A HTML / dashboards):** `.cursor/rules/isze-ship-gate.mdc` — exit 0 ≠ done; run verify + paint check before claiming done. **IDS HTML / maps / client packs:** also `isze-ids-delivery.mdc` + `04_tools/ids_dealer_ranking/IDS_2026_LOGIC_CHECK.md` §6b. Paint evidence: `isze-verify-rendered-output.mdc`.
 9. **GPS / ITUK:** read `01_data/91_build/GPS_FILE_LINEAGE.md` and `.cursor/rules/isze-gps-ituk.mdc` — ITUK never on kickback or Other DBs tabs; dealer £ ≠ ISZE € wallet.
 10. **Deploy mirror:** never read or edit `07_deploy/Master Dashboard/context/` — regenerated from `00_docs/context_sync_whitelist.txt`.
-11. **Chat overviews to Jerome:** `.cursor/rules/jerome-brief-plain.mdc` — his working English. No agent OS, no file dumps, no MIDI/Spain as his work. Every euro needs who / part / definition / period. Questions name the real list.
+11. **Chat overviews to Jerome:** `.cursor/rules/jerome-brief-plain.mdc` — his working English. Sales to dealer and %GM, not sell-out or markup factors. No agent OS, no invented List 1/2, no MIDI/Spain as his work.
 
 ## Edits & deploy
 
