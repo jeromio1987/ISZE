@@ -180,11 +180,15 @@ def search_dirs() -> list[Path]:
 def discover_epc_export(explicit: Path | None = None) -> tuple[Path | None, list[str]]:
     """Return (path or None, search log). Never invents a MATCH source."""
     searched: list[str] = []
+    inbox = ISZE_ROOT / "01_data" / "90_INBOX"
     if explicit is not None:
         searched.append(str(explicit))
         if explicit.is_file():
             return explicit, searched
         return None, searched
+
+    if not inbox.is_dir():
+        searched.append(f"{inbox} (directory missing)")
 
     for d in search_dirs():
         for name in COMMON_EPC_NAMES:

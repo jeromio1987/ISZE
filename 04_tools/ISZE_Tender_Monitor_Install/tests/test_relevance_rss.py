@@ -110,3 +110,66 @@ def test_parse_xml_recover_mismatched_tag() -> None:
         pytest.skip("recover parser unavailable")
     items = root.findall(".//item")
     assert isinstance(items, list)
+
+
+def test_flatten_exports_relevance_score_and_keeps_fail_rows() -> None:
+    from tender_scraper_v3 import flatten_for_export
+
+    low = normalize_raw_row(
+        {
+            "Source": "test",
+            "Title": "Isuzu vehicle maintenance",
+            "Country": "United States",
+            "Country Code": "USA",
+            "Est. Value": "100",
+        }
+    )
+    high = normalize_raw_row(
+        {
+            "Source": "test",
+            "Title": "Isuzu vehicle maintenance",
+            "Country": "United Kingdom",
+            "Country Code": "GBR",
+            "Est. Value": "100",
+        }
+    )
+    exported = [flatten_for_export(low), flatten_for_export(high)]
+    assert len(exported) == 2
+    assert "Relevance Score" in exported[0]
+    assert exported[0]["Relevance Pass"] == ""
+    assert exported[1]["Relevance Pass"] == "YES"
+    assert 1 <= int(exported[0]["Relevance Score"]) <= 5
+    assert 1 <= int(exported[1]["Relevance Score"]) <= 5
+
+
+def test_get_with_retry_honors_retry_after_and_records_exhaustion(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from tender_scraper_v3 import LAST_FETCH_ERRORS, get_with_retry
+
+    sleeps: list[float] = []
+
+    class _Resp:
+        status_code = 429
+        headers = {"Retry-After": "7"}
+
+        def raise_for_status(self) -> None:
+            raise AssertionError("429 must not raise before Retry-After loop")
+
+    class _Session:
+        def get(self, *args, **kwargs):
+            return _Resp()
+
+    monkeypatch.setattr("tender_scraper_v3.time.sleep", lambda s: sleeps.append(s))
+    LAST_FETCH_ERRORS.clear()
+    out = get_with_retry(
+        _Session(),
+        "https://example.test/ocds",
+        max_retries=2,
+        source_label="UK Find a Tender",
+    )
+    assert out is None
+    assert sleeps == [7, 7]
+    err = LAST_FETCH_ERRORS.get("UK Find a Tender") or ""
+    assert "429" in err
+    assert "exhausted" in err.lower()

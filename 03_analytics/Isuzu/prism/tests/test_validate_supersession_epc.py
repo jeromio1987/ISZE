@@ -13,10 +13,35 @@ from scripts import validate_supersession_epc as v
 
 def test_discover_missing_is_none(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(v, "search_dirs", lambda: [tmp_path])
+    monkeypatch.setattr(v, "ISZE_ROOT", tmp_path)
     path, searched = v.discover_epc_export(None)
     assert path is None
     assert searched
+    assert any("90_INBOX" in s for s in searched)
     assert all("MATCH" not in s for s in searched)
+
+
+def test_discover_finds_common_name(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(v, "search_dirs", lambda: [tmp_path])
+    hit = tmp_path / "epc_supersession_export.csv"
+    hit.write_text("old_pn,new_pn\n111,111N\n", encoding="utf-8")
+    path, searched = v.discover_epc_export(None)
+    assert path == hit
+    assert searched
+
+
+def test_search_dirs_includes_inbox_when_present(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    inbox = tmp_path / "01_data" / "90_INBOX"
+    inbox.mkdir(parents=True)
+    derived = tmp_path / "derived"
+    derived.mkdir()
+    monkeypatch.setattr(v, "ISZE_ROOT", tmp_path)
+    monkeypatch.setattr(v, "INBOX_DIR", inbox)
+    monkeypatch.setattr(v, "DERIVED_DIR", derived)
+    dirs = v.search_dirs()
+    assert any(p.resolve() == inbox.resolve() for p in dirs)
 
 
 def test_blocked_meta_never_match(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
