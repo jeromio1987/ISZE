@@ -105,6 +105,20 @@ tasks:
     data:
       - 03_analytics/Isuzu/pms-pilot/
 
+  exec_sales_paper:
+    description: Paste-ready prompt for a 10–20 page Mode A aftersales HTML paper + SWOT — brief only, do not start until Phase 0 + rebuild/ship
+    read:
+      - 00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md
+    optional:
+      - 00_docs/DASHBOARD_CAPTURE_AUDIT_PROMPT.md
+      - 00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md
+      - FACTS.md
+      - 00_docs/ISZE_ROADMAP.md
+    never:
+      - 01_data/raw/sales/**
+    rules:
+      - This task is the brief. Do not write the HTML until the current message says rebuild or ship AND Phase 0 is locked.
+
   action_ledger:
     description: P8 Opportunity→Action→Outcome ledger over existing derived euro surfaces (Mode B)
     read:

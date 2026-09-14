@@ -16,6 +16,7 @@
 | Monthly refresh runbook | `00_docs/RUNBOOK_MONTHLY_REFRESH.md` |
 | Scheduled jobs register | `00_docs/AUTOMATION_REGISTER.md` |
 | Workspace changelog / decisions | `CHANGELOG.md`, `DECISIONS.md` |
+| **Exec aftersales paper (paste-ready prompt)** | `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md` |
 | GPT upload status | `08_gpt/UPLOAD_STATUS.md` |
 | PMS / GPS / BVP / UIO metrics | `03_analytics/Isuzu/prism/docs/metric_dictionary.md` |
 | PRISM dashboard CSV contracts | `03_analytics/Isuzu/prism/docs/dashboard_contracts.md` |

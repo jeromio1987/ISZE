@@ -8,6 +8,10 @@
 
 ## [Unreleased]
 
+### Added (2026-09-14) — Exec aftersales paper prompt (brief only)
+- Paste-ready brief `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md`: 10–20 page Mode A HTML + evidence-backed SWOT. Phase 0 questions first; HTML only after rebuild/ship. Wired from `ROUTING.yaml` task `exec_sales_paper`.
+- Not a new programme item. Does not start the paper. No KPI or dashboard change.
+
 ### Changed (2026-08-26) — Roadmap reorganised: one queue, one closed list
 - **`00_docs/ISZE_ROADMAP.md` rewritten.** The old "Build now" table mixed ~15 shipped/closed items with ~8 open ones and carried multi-paragraph rationale inside table cells. Now six sections: **1 Open queue** (14 items, each with the single thing that unblocks it), **2 Waiting on Jerome** (13 decisions, sourced from the Aftermarket BI Tier B list + AI-sales gates), **3 Live now**, **4 Shipped** (dated one-liners), **5 Closed — do not reopen**, **6 Domain roadmaps**. Rationale stays in `DECISIONS.md`; the hub is a queue, not an archive.
 - **Caught up to 2026-08-25.** The hub had stopped at 2026-08-18 and did not mention PRISM IA phases 3–8 (2026-08-20), the Aftermarket BI Tier A batch (2026-08-19, 14/15 built), P5 forecast, the P8 Action Ledger, or the overnight audit (verify 116/0/0, `sales_fact` to 2026-06-30).
