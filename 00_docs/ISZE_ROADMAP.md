@@ -1,6 +1,7 @@
 # ISZE — programme roadmap (hub)
 
 **Last updated:** 2026-09-16 · **Domain detail:** [`roadmaps/`](roadmaps/) · **Registry:** [`MAP_REGISTRY.yaml`](MAP_REGISTRY.yaml)
+**Last updated:** 2026-09-14 · **Domain detail:** [`roadmaps/`](roadmaps/) · **Registry:** [`MAP_REGISTRY.yaml`](MAP_REGISTRY.yaml)
 
 > **Numbers rule:** green [`01_data/00_derived/_verification_report.json`](../01_data/00_derived/_verification_report.json) → `metrics_snapshot.json` → [`FACTS.md`](../FACTS.md). That order wins over any deck, memory file, or GPT answer.
 > **Pipeline state 2026-08-25:** verify **116 pass / 0 warn / 0 fail** · `sales_fact` billed through **2026-06-30** · SaTy coverage min 92% (Q1 hole documented).
@@ -29,18 +30,19 @@ Ordered. `Blocked on` names the single thing that unblocks the item — if it sa
 | 1 | **P4 account-health calibration** (task 4.9) | Builder live `p4-v1`; draft thresholds fire on 10 RED / 6 AMBER of 17 DBs — not yet a call list | **Jerome** — amber/red thresholds (B5) | [`P4_DETERMINISTIC_SIGNALS.md`](P4_DETERMINISTIC_SIGNALS.md) |
 | 2 | **List-to-pocket sign-off** | Validation ran 2026-08-19 (`list_to_pocket_validation_2023_2025.csv`); leakage € stays **Mode B** until year-matched PR00/ZPR1→net joins are signed in writing | **Jerome** — written sign-off | `DECISIONS.md` 2026-08-25 |
 | 3 | **P5 forecast go-live (G1)** | P5.2 + P5.6 built — 548 series, median WAPE 49.4%, `pages/19_Forecast.py` live as a surface | **Jerome** — sign G1 on 98.2% catalogue (B6/D6) + override policy (B7/D4) | [`P5_FORECAST_BUILD_PLAN.md`](P5_FORECAST_BUILD_PLAN.md) |
-| 4 | **National tender portal coverage** | **16/29** footprint countries have a live national feed (20 sources OK in `_source_health.json`, 2026-08-25). IT PNCP and DE oeffentlichevergabe are **already wired**. Remaining below-threshold mass is in DARK/BLOCKED national portals | **ES PLACSP egress** — the fetcher is written and `CODE_READY`; the block is a WAF deny on Jerome's runner, not missing code. Needs a session/IP path | [`roadmaps/scrapers.md`](roadmaps/scrapers.md) · `_COUNTRY_TENDER_PORTALS_MAP.md` |
+| 4 | **National tender portal coverage** | **ES PLACSP LIVE 2026-09-14** (Atom OK, 2 keyword / 0 gated this window). IT PNCP + DE OV already LIVE 2026-08-25. National LIVE **17/29**. | nothing — next DARK without a human key (HU/IE/SE/SK; EE RHR still HTTP 500) | [`roadmaps/scrapers.md`](roadmaps/scrapers.md) · `_ES_PLACSP_LIVE_20260914.md` |
 | 5 | **Interval-aware air vs oil capture** (integrity flag C) | Shipped 2026-07-02 on a **provisional 0.5 air factor** | IML ratio confirmation | [`roadmaps/gps.md`](roadmaps/gps.md) · PRISM `pms_capture_assumptions.yaml` |
 | 6 | **ITUK brake wear factor — 0.4 or 0.8** | 0.4 in force and now actually applied (fix 2026-07-21). Do not quote ITUK brake capture as locked | ITUK data (expected since 2026-08-11) | `DECISIONS.md` 2026-07-21 |
 | 7 | **LCV generation-aware interval split** | Schedules on disk: RG21 RZ4F-TC **with SCR** = 15k km, without / older = 20k | chassis + registration-year cutoffs — PDFs alone do not map UIO years to SCR vs non-SCR | `01_data/03_PMS/service_schedules/` |
-| 8 | **Fig-key dimension is stale vs the 2026-08-10 IE40** | **Measured 2026-08-27:** 1,841 blank `fig_key` are fillable from the SAP figure already on disk (97.71% → 98.83%); 1,618 PNs carry a figure that disagrees with the current IE40, supersession ruled out. Vintage, not corruption — the builder has not re-run since the new IE40 landed | nothing — re-run `build_pr00_classification.py` + `build_fig_key_dimension.py`, then verify | [`01_data/00_derived/FIG_KEY_PR00_AUDIT_20260827.md`](../01_data/00_derived/FIG_KEY_PR00_AUDIT_20260827.md) |
-| 8b | **Fig-key V2 rest** | EPC basket rows into overrides, Part Explorer wiring, `fig_key` × distributor × year rollups | nothing | [`roadmaps/gps.md`](roadmaps/gps.md) |
-| 9 | **Residual PR00 gaps** | 24 PN / €67k ZPR1-path hardware + admin non-PN + parked UMI Shell. Supersession billed-on-old 925 PN / €2.48M (IE40 map, **not** EPC-validated) | nothing — EPC validation is the next slice | [`roadmaps/ai_sales_intelligence.md`](roadmaps/ai_sales_intelligence.md) §6 |
+| 8 | **Fig-key V2 remainder** | IE40 parquet fill **158** empty `fig_key` on existing PR00 rows (2026-09-14). Catalog `fig_key` **161,325 / 164,969** (97.8%). Overrides file header-only — EPC basket JSON is edition/family, Snap-on blocks bulk BVP. Part Explorer already wired. | nothing remaining on this slice | [`roadmaps/gps.md`](roadmaps/gps.md) |
+| 9 | **Residual PR00 gaps** | FY2026 leftover: **21 parts / €67,318.49** billed with no list (almost all UTI; two UMI; one Kazakhstan). Calendar-2025 €67,182.04 / 24 parts is **do not quote**. Shell `5500*` parked. No %GM. Pieces are not the KPI. Supersession 925 PN / €2.48M: EPC **`BLOCKED_NO_EPC_EXPORT`** | EPC export in `90_INBOX` | [`ISZE_BI_FRAMEWORK.md`](ISZE_BI_FRAMEWORK.md) L3 · [`roadmaps/ai_sales_intelligence.md`](roadmaps/ai_sales_intelligence.md) §6 · `NO_PR00_HARDWARE_FY2026.md` |
 | 10 | **P2b / P3 / P6 (LLM on mail text)** | Specced, zero code. P2a runs local and deterministic | **B1b** approved LLM route named, then **G0b** (DPIA, LIA, works council) | [`roadmaps/ai_sales_intelligence.md`](roadmaps/ai_sales_intelligence.md) §4 |
 | 11 | **Supabase live Master KPIs** (HTML V4) | Not started | schema + credentials | [`roadmaps/html.md`](roadmaps/html.md) |
 | 12 | **Dashboard filename renames** | Blocked by design — build scripts hardcode `vN` | rename plan in [`CANONICAL.md`](CANONICAL.md) | [`roadmaps/html.md`](roadmaps/html.md) |
 | 13 | **Scraper quality V2** | Tender relevance scoring, `scrape_error` column, RSS parse failures (Israel entity, Belgium non-XML, UK 429), Lidl category id | nothing — small items | [`roadmaps/scrapers.md`](roadmaps/scrapers.md) |
 | 14 | **Workspace cleanup decisions** | **Both halves already decided in writing** — see below, not waiting on Jerome | — nothing — | [`ISZE_Cleanup_Plan.md`](ISZE_Cleanup_Plan.md) · [`UI_STACK.md`](UI_STACK.md) |
+| 13 | **Scraper quality V2** | **Done 2026-09-14** — `relevance_score_1to5` + export “Relevance Score” (pass ≥3, **no drop**); `scrape_error` on KS/Mekonomen + category crawlers; RSS entity sanitize + recover; UK Find a Tender honors Retry-After / records LAST_FETCH_ERRORS; Lidl `a10051271` is 404, live URL is search `aanbieding` | nothing | [`roadmaps/scrapers.md`](roadmaps/scrapers.md) |
+| 14 | **Workspace cleanup decisions** | UI primary for external share; ISZE_Dashboard merge | **Jerome** | [`ISZE_Cleanup_Plan.md`](ISZE_Cleanup_Plan.md) |
 
 **Not on this list on purpose:** anything in §5. Also: no new 0–100 score on any surface, and no Dash / Evidence work — Streamlit :8503 is the product.
 
@@ -53,6 +55,7 @@ Ordered. `Blocked on` names the single thing that unblocks the item — if it sa
 One answer each. Build effort is already sunk or trivial; these are the actual bottleneck. Source: [`AFTERMARKET_BI_BUILD_MENU_20260819.md`](AFTERMARKET_BI_BUILD_MENU_20260819.md) Tier B + the AI-sales gates.
 
 **How this list gets shorter:** [`DECISION_DISCIPLINE.md`](DECISION_DISCIPLINE.md) — a weekly 45-minute slot, one list only, and every item ends as decided / killed / delegated. A decision only counts once it is in this file, in [`DECISIONS.md`](../DECISIONS.md), and as `status: decided` in the build file that was waiting. Items reconciled against written evidence: [`DECISION_RECONCILE_20260916.md`](DECISION_RECONCILE_20260916.md).
+**One sitting (2026-09-14):** recommended ticks are in [`DECISION_PACK_20260914.md`](DECISION_PACK_20260914.md). Until a row is ticked, do not apply it in code. Same-pass engineering (Monday seed, tenders, fig-key/EPC, scraper quality) does not wait.
 
 | Ref | Decision | Consequence of no answer |
 |-----|----------|--------------------------|

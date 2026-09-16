@@ -111,10 +111,10 @@
   },
   "Spain PLACSP": {
     "zero_runs": 0,
-    "last_error": "WAF_BLOCKED \u2014 PLACSP Atom/ZIP denied from this runner (contrataciondelestado.es / contrataciondelsectorpublico.gob.es); official syndication still documented \u2014 CODE_READY",
-    "status": "CODE_READY",
-    "last_count": 0,
-    "note": "Official Atom/ZIP syndication documented; this runner is WAF-denied. Not BROKEN \u2014 retry when egress/session allows."
+    "last_error": null,
+    "status": "OK",
+    "last_count": 2,
+    "note": "LIVE 2026-09-14 \u2014 Atom HTTP 200 this runner (not WAF). Keyword matches=2 in rolling Atom window; Isuzu-gated=0. Atom is recent notices, not a 30-day API dump."
   },
   "Italy PNCP": {
     "zero_runs": 0,
@@ -187,5 +187,11 @@
     "last_error": "Open-data URL is login shell; need Promitheus credentials",
     "status": "BLOCKED",
     "last_count": 0
+  },
+  "Ireland eTenders": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 81
   }
 }

@@ -64,6 +64,7 @@ CSV_FIELDS = [
     "Scraped_At",
     "Status",
     "Notes",
+    "scrape_error",
 ]
 
 
@@ -297,6 +298,7 @@ def run(
                     "MEK_URL": url,
                     "Scraped_At": ts,
                     "Status": "error",
+                    "scrape_error": "",
                 }
             )
             try:
@@ -326,6 +328,7 @@ def run(
                     out["MEK_AM_Brands"] = "|".join(parsed["brands"])
                 out["MEK_AllProducts"] = "|".join(f"{p:.2f}kr" for p in prices[:20])
                 out["Status"] = "ok" if (prices or parsed["result_count"]) else "no_results"
+                out["scrape_error"] = ""
                 print(
                     f"    -> {out['Status']} count={parsed['result_count']} "
                     f"min SEK={out['MEK_AM_MinPrice_SEK'] or '-'} brands={out['MEK_AM_Brands'][:40]}",
@@ -334,9 +337,11 @@ def run(
             except PwTimeout:
                 out["Status"] = "timeout"
                 out["Notes"] = "timeout"
+                out["scrape_error"] = "timeout"
                 print("    -> timeout", flush=True)
             except Exception as exc:
                 out["Notes"] = str(exc)[:200]
+                out["scrape_error"] = str(exc)[:240]
                 print(f"    -> error: {out['Notes'][:80]}", flush=True)
 
             writer.append(out)

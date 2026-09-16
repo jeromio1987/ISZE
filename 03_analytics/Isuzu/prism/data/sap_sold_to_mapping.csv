@@ -1,0 +1,29 @@
+sap_sold_to_pt,sold_to_name,distributor_code,notes
+66,PETROS PETROPOULOS S.A. (VEHICLE),GREECE,from sales_fact name rows
+76,ISUZU IRELAND,IRELAND,from sales_fact name rows
+86,RUTEBILEIERNES STANDARDISERING AS,NORWAY,from sales_fact name rows
+88,MIDI EUROPE S.R.L.,MIDI,MIDI — excluded from GPS
+90,ISUZU BENELUX NV,BELGIUM,IBX Belgian entity
+105,Isuzu Motors Germany GmbH,GERMANY_SERVICE,internal service — excluded
+146,ISUZU TRUCK UK LIMITED,ITUK,legacy ITUK payer code
+373,ISUZU MOTORS INT OPERATIONS,IML_INTERNAL,internal
+393,LOUTSIOS A & SONS LTD,CYPRUS,from sales_fact name rows
+396,ISUZU ROM AUTO SRL,ROMANIA,from sales_fact name rows
+519,IMOTORS - Importacao e Comercio,PORTUGAL,sold_to 92 on these rows is ship-to — use 519
+537,AW Distribution Kft.,HUNGARY,from sales_fact name rows
+601,ISUZU SALES DEUTSCHLAND GMBH,GERMANY,ISD
+1576,BL. EHF.,ICELAND,from sales_fact name rows
+1759,GASANZAMMIT MOTORS LTD,MALTA,from sales_fact name rows
+1797,UNIVERSAL MOTORS ISRAEL LTD,UMI,UMI LCV — never blend with 1799
+1799,UNIVERSAL TRUCKS ISRAEL LTD,UTI,UTI CV. Billing sold_to often wrongly shows 1797 / UNIVERSAL MOTORS
+2027,ISUZU DANMARK A/S,DENMARK,from sales_fact name rows
+2181,ISUZU SVERIGE AB,SWEDEN,from sales_fact name rows
+2194,MIDI EUROPE S.R.L.,MIDI,true MIDI sap; ITUK rows with sold_to 2194 still have sold_to_sap 2575
+2294,KOMTRANSKOMPLEKT LLC,UKRAINE,from sales_fact name rows
+2516,ISUZU SALES DEUTSCHLAND GMBH,GERMANY,second DE sold-to with same legal name
+2574,I.M. PARTS & SERVICE Limited,IUK,UK pickup. sold_to 89 is ship-to — use 2574
+2575,ISUZU TRUCK (UK) LIMITED,ITUK,UK truck. sold_to 2194 on these rows is not MIDI
+2679,Nordic Automotive trading oy.,FINLAND,from sales_fact name rows
+2733,Grand Avto LLC,ARMENIA,from sales_fact name rows
+2734,CBC-Trans LLP,KAZAKHSTAN,from sales_fact name rows
+2751,ISUZU DANMARK A/S,DENMARK,second DK sold-to

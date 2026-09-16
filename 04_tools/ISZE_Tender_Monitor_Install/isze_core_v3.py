@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import html
 import json
 import re
 import unicodedata
@@ -135,6 +136,7 @@ SOURCE_SHEET_MAP = {
     "Netherlands": "🇳🇱 NL",
     "France BOAMP": "🇫🇷 FR-BOAMP",
     "Poland BZP": "🇵🇱 PL-BZP",
+    "Ireland eTenders": "🇮🇪 IE-eTenders",
 }
 
 SOURCE_COUNTRY_FALLBACK = {
@@ -149,6 +151,7 @@ SOURCE_COUNTRY_FALLBACK = {
     "🇳🇱 NL": "Netherlands",
     "🇫🇷 FR-BOAMP": "France",
     "🇵🇱 PL-BZP": "Poland",
+    "🇮🇪 IE-eTenders": "Ireland",
 }
 
 BRAND_TERMS = [
@@ -1050,6 +1053,95 @@ def score_legacy(title: str, value_amount: Optional[float] = None) -> int:
     return 1
 
 
+def relevance_score_1to5(
+    title: str,
+    country_code: Optional[str] = None,
+    value_amount: Optional[float] = None,
+) -> int:
+    """Explicit 1–5 relevance: title (via score_legacy) + ISZE target market + value.
+
+    Notices outside ISZE_TARGET_MARKETS are capped at 2 so relevance_pass (>=3)
+    is false, but callers must still keep the row in the export.
+    """
+    base = score_legacy(title, value_amount)
+    code = (country_code or "").strip().upper()
+    if not code:
+        return base
+    if code in ISZE_TARGET_MARKETS:
+        return base
+    return min(base, 2)
+
+
+def relevance_pass(score: int, threshold: int = 3) -> bool:
+    return int(score) >= threshold
+
+
+_XML_SAFE_ENTS = {"amp", "lt", "gt", "quot", "apos"}
+
+
+def sanitize_xml_entities(text: str) -> str:
+    """Replace HTML-only entities (&nbsp;, &laquo;, …) that break stdlib XML parse."""
+    if not text:
+        return text
+
+    def _repl(match: re.Match[str]) -> str:
+        name = match.group(1)
+        if name in _XML_SAFE_ENTS:
+            return match.group(0)
+        code = html.entities.name2codepoint.get(name)
+        if code is not None:
+            return chr(code)
+        html5 = html.entities.html5.get(name + ";")
+        return html5 if html5 else ""
+
+    return re.sub(r"&([a-zA-Z][a-zA-Z0-9]+);", _repl, text)
+
+
+def parse_xml_root(content: str):
+    """Parse RSS/Atom XML after entity sanitize; recover parser on structural errors."""
+    import xml.etree.ElementTree as ET
+
+    if not content or not str(content).strip():
+        raise ET.ParseError("empty document")
+    sanitized = sanitize_xml_entities(content)
+    try:
+        return ET.fromstring(sanitized)
+    except ET.ParseError as first:
+        try:
+            from lxml import etree
+
+            parser = etree.XMLParser(recover=True, huge_tree=True, resolve_entities=False)
+            tree = etree.fromstring(sanitized.encode("utf-8", errors="replace"), parser=parser)
+            return ET.fromstring(etree.tostring(tree))
+        except Exception:
+            raise first
+
+
+def retry_after_seconds(
+    header_value: Optional[str],
+    attempt: int = 0,
+    fallback_schedule: Optional[List[int]] = None,
+) -> int:
+    """Honor Retry-After (delta-seconds or HTTP-date); else scheduled backoff."""
+    schedule = fallback_schedule or [30, 60, 90, 120, 180, 240]
+    fallback = schedule[min(max(attempt, 0), len(schedule) - 1)]
+    if header_value is None:
+        return fallback
+    raw = str(header_value).strip()
+    if not raw:
+        return fallback
+    if raw.isdigit():
+        return max(int(raw), 1)
+    try:
+        dt = parsedate_to_datetime(raw)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        delta = (dt - datetime.now(timezone.utc)).total_seconds()
+        return max(int(delta), 1) if delta > 0 else fallback
+    except (TypeError, ValueError, OverflowError):
+        return fallback
+
+
 # ---------------------------------------------------------------------------
 # v3: CPV exclusion gate
 # ---------------------------------------------------------------------------
@@ -1534,6 +1626,7 @@ def normalize_raw_row(raw: Dict[str, Any], source_hint: str = "") -> Dict[str, A
         "Procedure Type": extract_text(raw.get("Procedure Type")),
         "Buyer Type": extract_text(raw.get("Buyer Type")),
         "Score": int(parse_number(raw.get("Score")) or score_legacy(title, value_amount)),
+        "relevance_score_1to5": relevance_score_1to5(title, country_code=ccode, value_amount=value_amount),
         "FleetSize": fleet_size,
         "Title": title,
         "Title Compact": compact_title(title),
@@ -1559,6 +1652,7 @@ def normalize_raw_row(raw: Dict[str, Any], source_hint: str = "") -> Dict[str, A
         "fleet_size_confidence": fleet_size_confidence,
         "cpv_excluded": cpv_is_excluded(cpv),  # v3: flag for transparency
     }
+    row["relevance_pass"] = relevance_pass(row["relevance_score_1to5"])
     row["opportunity_id"] = build_family_id(row["Title Compact"], buyer, country)
     _text_blob = " ".join([title, cpv_desc, description]).lower()
     row["brand_hits"] = keyword_hits(_text_blob, BRAND_TERMS)

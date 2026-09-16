@@ -1,6 +1,6 @@
 # Scrapers & tenders — roadmap
 
-**Last updated:** 2026-08-26
+**Last updated:** 2026-09-14
 **Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md) · **Location:** `04_tools/`
 **Owner:** Claude scheduled tasks (health report runs automatically)
 **Live register:** [`AUTOMATION_REGISTER.md`](../AUTOMATION_REGISTER.md)
@@ -33,13 +33,12 @@ Ordered. Jerome's standing priority: **portal coverage before cosmetic UI**.
 
 | Prio | Item | State | Next |
 |------|------|-------|------|
-| **P0** | **ES PLACSP egress** | Spain is the last high-lift portal not returning rows. The fetcher exists (`fetch_spain_placsp`, Atom + ZIP paths) and is `CODE_READY` — blocked by a **WAF deny on Jerome's runner**, not by missing code. Est. +15–40 gated notices / 30d once egress works | Find a session/IP path that PLACSP accepts. Probed again 2026-08-27 from a remote container: inconclusive, that runner's own gateway denies the host (policy 403 on CONNECT), so it is not a test of PLACSP |
-| **P0** | National portal coverage (rest) | **16/29** countries LIVE, 2 CODE_READY (ES, LT), rest DARK/BLOCKED national. IT PNCP, DE oeffentlichevergabe, AT, CZ, RO, PT, DK, BG were wired 2026-08-25 | Remaining lift is P2/P3 per country — GR credentials, LT key, SK/HU registration. Evidence: `_source_health.json`, `_COUNTRY_TENDER_PORTALS_MAP.md` |
+| **P0** | **National portal coverage** | **ES PLACSP LIVE 2026-09-14** (Atom HTTP 200 this runner; 2 keyword / 0 Isuzu-gated in the rolling window). IT PNCP + DE OV already LIVE. Country-map national LIVE **17/29**. Hub was stale at “wire ES/IT/DE” / “8/29”. | Next DARK **without a human key**: HU EKR login, IE eTenders RSS 404, SK recaptcha, EE RHR HTTP 500, GR login. **Not** Nordics keys. Evidence: `_ES_PLACSP_LIVE_20260914.md`, `_source_health.json` |
 | **P1** | TED detail enrichment | Partial — capability code on; detail GET needs TED auth | Obtain TED auth, then enrich |
-| **P2** | Tender relevance scoring | Not started | Score 1–5 on title, country, value; filter ≥ 3 |
-| **P2** | `scrape_error` column (KS + successors) | Not started | Distinguish genuine price gap from scrape failure |
-| **P3** | RSS / feed failures | Israel entity parse error, Belgium non-XML response, UK Find a Tender 429s | `04_tools/manual_review_required.md` items 2–4 |
-| **P3** | Lidl hardcoded category id `a10051271` | Unverified | Check after next discount run |
+| **P2** | Tender relevance scoring | **Done 2026-09-14** | `relevance_score_1to5` (title + `ISZE_TARGET_MARKETS` + value); export **Relevance Score**; `relevance_pass` if ≥ 3. **Does not drop** notices (Mode A counts unchanged). Tests in `ISZE_Tender_Monitor_Install/tests/test_relevance_rss.py` |
+| **P2** | `scrape_error` column (KS + successors) | **Done 2026-09-14** | KS + Mekonomen PN-level; category crawlers (Tranzparts/TMC/Auto365). Distinct from `no_results`. `IncrementalCsvWriter` adds missing columns on existing CSVs. `iam_scoring.mask_scrape_error_prices` so errors are not IAM gaps |
+| **P3** | RSS / feed failures | **Hardened 2026-09-14** | `_parse_procurement_rss` entity sanitize + recover parser. IL RSS / BE RSS remain **RETIRED** (live = mr.gov.il / SEA). UK Find a Tender honors `Retry-After` on 429 and writes `LAST_FETCH_ERRORS` on exhaustion |
+| **P3** | Lidl category id `a10051271` | **Closed 2026-09-14** | Probe: `https://www.lidl.be/c/a10051271` → **HTTP 404**. Live promotions URL (HTTP 200) is already in `discount_scraper.py`: `https://www.lidl.be/q/search?query=aanbieding`. Do not resurrect Autodoc |
 | **P4** | Health-report thresholds + stale-scraper push (ntfy.sh) | Not started | `04_tools/scraper_health_report.md` |
 
 **`ISZE_PMS_IAM_Refresh` note:** the Monday 07:00 run is occasionally interrupted by sleep/stop (`0xC000013A`). Prefer an overnight manual `refresh_and_check_drift.py` if Monday morning fails.

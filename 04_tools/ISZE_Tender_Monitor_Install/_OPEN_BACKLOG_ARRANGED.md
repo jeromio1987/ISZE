@@ -1,12 +1,12 @@
 # Arranged backlog — ISZE Tender Monitor
 
-**Written:** 2026-08-25 · **Updated:** 2026-08-25 (national portal coverage elevated) · **Install:** `C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\`  
+**Written:** 2026-08-25 · **Updated:** 2026-09-14 (ES PLACSP LIVE this runner) · **Install:** `C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\`  
 **Rule:** No item is DONE without evidence. Null ≠ 0. No invented SPU / keys / revenue.  
 **Main priority (Jerome):** **National portal coverage** — analysis map shipped; wire next portals before cosmetic UI.
 
 | Prio | Item | Status | Owner | Blocker / NEXT |
 |------|------|--------|-------|----------------|
-| **P0** | **National portal coverage** (map → wire ES/IT/DE + keys) | **ANALYSIS DONE · WIRE NEXT** | Research → implement | See `_COUNTRY_TENDER_PORTALS_MAP.md` top 10 |
+| **P0** | **National portal coverage** (map → wire ES/IT/DE + keys) | **ES LIVE 2026-09-14** · IT/DE already LIVE · Nordics keys DONE | Agent | Next DARK without a key: HU/IE/SE/SK/EE-500/GR. See `_ES_PLACSP_LIVE_20260914.md` |
 | **P0** | Nordics Primary keys | **DONE** | Agent | verify ALL OK · health OK · NO/FI merged |
 | **P1** | GPS maps FR/PL/IT/ES | **DONE (null)** | Market UX + arrange | 0 newly mapped; floor €1,488.22 |
 | **P2** | Market table UX | **DONE** | Market UX sibling | Reason chips shipped — **below** portal coverage |

@@ -41,9 +41,11 @@ Everything else lives in numbered folders below.
 | Maps / registry | `00_docs/MAPS.md` · `00_docs/MAP_REGISTRY.yaml` |
 | **Programme roadmap (the queue)** | `00_docs/ISZE_ROADMAP.md` — open work §1, decisions waiting on Jerome §2, live §3, closed §5. Domain depth: `00_docs/roadmaps/` |
 | **Exec aftersales paper (Mode A HTML)** | `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html` + `OPEN_ISZE_Exec_Aftersales_Paper.cmd` · brief `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md` |
+| **Decision pack (one sitting)** | `00_docs/DECISION_PACK_20260914.md` — recommended ticks; nothing gated is applied until Jerome answers |
 | Versioned filenames | `00_docs/CANONICAL.md` |
 | **Excel pre-delivery check** | `00_docs/EXCEL_PRE_DELIVERY_CHECK.md` |
 | Headline metrics | `01_data/00_derived/metrics_snapshot.json` + `FACTS.md` |
+| **Critical BI / which KPI to quote** | `00_docs/ISZE_BI_FRAMEWORK.md` — FY first, euros first; formulas stay in the metric dictionary |
 | Workspace root | `$env:ISZE_ROOT` (see `paths.yaml`) |
 | PRISM | `03_analytics/Isuzu/prism/run_prism.ps1` (**8503**, MD-safe) · `run_prism_internal.ps1` (extra tabs) |
 | Human onboarding | `00_docs/HUMAN_ONBOARDING.md` |

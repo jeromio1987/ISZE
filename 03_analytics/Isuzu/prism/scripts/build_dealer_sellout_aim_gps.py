@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-DB→DLR sell-out (second layer): network AIM + GPS-style proxy for every wired DB.
+DB→DLR sales to dealer (second layer): network AIM + GPS-style proxy for every wired DB.
 
 Native loaders: ITUK (dealer pivot), UTI (PartSales YTD).
 Canonical long CSVs: any `dealer_sellout_long_<DB>_CY{year}.csv` (IRELAND, IUK, GREECE, …).
 
-Sell-out files are qty-only. "ISZE-denominated value" = qty × median CY ISZE→DB unit
+Sales-to-dealer files are qty-only. "ISZE-denominated value" = qty × median CY ISZE→DB unit
 price for that distributor×PN — a proxy for mix/GPS-style views, NOT dealer invoice EUR.
 """
 from __future__ import annotations
@@ -28,6 +28,7 @@ from config import (  # noqa: E402
     DERIVED_DIR,
     GENUINE_BVP_CROSSREF_CSV,
     GPS_SPU_BY_DB_CSV,
+    ISZE_ROOT,
     SALES_FACT_PARQUET,
     resolve_mapping_path,
 )
@@ -155,7 +156,7 @@ def _pct(n: object) -> str:
 
 
 def _isze_denom(n: object) -> str:
-    """Format ISZE-denominated proxy (€ scale from billing ASP, not dealer sell-out)."""
+    """Format ISZE-denominated proxy (€ scale from billing ASP, not dealer invoice)."""
     if n is None or (isinstance(n, float) and math.isnan(n)):
         return "—"
     return f"€{_fmt(n)}"
@@ -471,7 +472,7 @@ def build_html(payload: dict) -> str:
     kpi_items = []
     for dist in dists:
         bb = b_by.get(dist) or {}
-        kpi_items.append((f"{dist} sell-out qty", _fmt(bb.get("qty"))))
+        kpi_items.append((f"{dist} sales to dealer qty", _fmt(bb.get("qty"))))
         kpi_items.append((f"{dist} BVP % of proxy", _pct(bb.get("bvp_pct"))))
     kpis = "".join(
         f'<div class="kpi"><div class="val">{_e(v)}</div><div class="lbl">{_e(l)}</div></div>'
@@ -490,13 +491,13 @@ def build_html(payload: dict) -> str:
     )
     dist_label = " · ".join(dists)
 
-    return f"""<!DOCTYPE html>
+    html_out = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sell-out AIM · Network CY{YEAR}</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+<title>Sales to dealer · mix · CY{YEAR}</title>
+<script>/*INLINE_CHART_JS*/</script>
 <style>
 :root {{ --red:#CC0E1E; --bg:#f4f5f7; --card:#fff; --text:#1a1a1a; --muted:#5a5a5a; --border:#e4e4e7; }}
 * {{ box-sizing:border-box; }}
@@ -525,8 +526,8 @@ section h3 {{ font-size:0.9rem; margin:0.5rem 0; color:var(--muted); }}
 </head>
 <body>
 <header>
-  <div style="font-weight:800;font-size:0.8rem;letter-spacing:0.08em;opacity:0.9">ISZE · DB→DLR · Second layer (sell-out AIM / GPS)</div>
-  <h1>BVP &amp; Genuine sell-out — {_e(dist_label)} (CY{YEAR})</h1>
+  <div style="font-weight:800;font-size:0.8rem;letter-spacing:0.08em;opacity:0.9">ISZE · billed vs sales to dealer · mix / GPS proxy</div>
+  <h1>BVP &amp; genuine — sales to dealer — {_e(dist_label)} (CY{YEAR})</h1>
   <span class="badge">Generated {payload.get("generated", "")}</span>
 </header>
 <div class="wrap">
@@ -534,10 +535,10 @@ section h3 {{ font-size:0.9rem; margin:0.5rem 0; color:var(--muted); }}
   <section><h2>Network summary</h2><div class="kpi-row">{kpis}</div></section>
   <div class="grid2">
     <section><h2>AIM mix by network</h2><canvas id="chartMix" height="260"></canvas></section>
-    <section><h2>PMS — BVP qty (sell-out)</h2><canvas id="chartPms" height="260"></canvas></section>
+    <section><h2>PMS — BVP qty (sales to dealer)</h2><canvas id="chartPms" height="260"></canvas></section>
   </div>
-  <section><h2>AIM comparison (sell-out qty vs ISZE-denom. proxy vs billing)</h2>
-    <p class="muted">Network view. ITUK dealer file aggregated to network where applicable. IUK / IRELAND / GREECE from canonical long CSVs. Never blend IUK↔ITUK or IRELAND↔IUK. BVP / genuine % on sell-out rows use ISZE-denominated proxy only.</p>
+  <section><h2>AIM comparison (sales to dealer qty vs billed, ISZE-denom. proxy)</h2>
+    <p class="muted">We billed vs their sales to dealer. Difference is stock movement (year total only — do not add the months). IUK is pickup, ITUK is truck, Ireland is Ireland. BVP / genuine % on sales-to-dealer rows use the ISZE billed unit price as a mix proxy, not their invoice.</p>
     {_tbl(["Network","Layer","Qty (reported)","ISZE-denom. / invoice","BVP %","Contested gen. %","Genuine-only %","BVP capture","Per truck"],
           [[_e(r["label"]),_e(r["layer"]),_fmt(r.get("qty_year")),
             _isze_denom(r.get("total_eur")) if r.get("layer")=="sellout_db_dlr" else _invoice_eur(r.get("total_eur")),
@@ -595,6 +596,9 @@ window.addEventListener('load', initCharts);
 </script>
 </body>
 </html>"""
+    chart_path = ISZE_ROOT / "02_dashboards" / "_ui" / "chart.umd.min.js"
+    chart_js = chart_path.read_text(encoding="utf-8")
+    return html_out.replace("/*INLINE_CHART_JS*/", chart_js)
 
 
 def _entity_rows_from_network(mix_rows: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -704,7 +708,7 @@ def main() -> None:
     for dist in DISTS:
         sell = load_sellout_pn(dist)
         if sell.empty:
-            print(f"warn: no sell-out rows for {dist}")
+            print(f"warn: no sales-to-dealer rows for {dist}")
             continue
         sell = attach_pn_master(sell, dim, desc, xref)
         sell["aim_l1_report"] = (
@@ -720,7 +724,7 @@ def main() -> None:
         valued_by_dist[dist] = sell
 
         mix_rows.append(
-            aim_summary(sell, f"{dist} sell-out (network)", dist, "sellout_db_dlr")
+            aim_summary(sell, f"{dist} sales to dealer", dist, "sellout_db_dlr")
         )
 
         bill = load_billing_pn(dist, asp)
@@ -904,16 +908,15 @@ def main() -> None:
         "distributors": list(DISTS),
         "uio_units": dict(UIO),
         "scope_note": (
-            f"Second layer (DB→DLR sell-out) CY{YEAR}. Networks: {', '.join(DISTS)}. "
-            "ITUK from dealer pivot (network + dealer grain). UTI from PartSales YTD. "
-            "IRELAND / IUK / GREECE (and any other long CSV) from dealer_sellout_long_*. "
-            "IUK ≠ ITUK; IRELAND ≠ IUK. AIM buckets: bvp | genuine_contested | genuine_only."
+            f"Billed vs sales to dealer, calendar {YEAR}. Networks: {', '.join(DISTS)}. "
+            "ITUK from their dealer file. UTI from PartSales. "
+            "Ireland / IUK / Greece from the year-total sales-to-dealer file (months are not added). "
+            "IUK is pickup, ITUK is truck, Ireland is Ireland. Mix buckets: BVP / genuine with a BVP alt / genuine only."
         ),
         "valuation_note": (
-            "Sell-out reports are quantity only — no dealer EUR. ISZE-denominated value = "
-            f"reported qty × median CY{YEAR} ISZE→DB unit price per PN (proxy for mix; not sell-out revenue). "
-            "IUK is qty-only by design (no EUR chase). PNs with no billing price contribute qty but €0 to proxy totals. "
-            "Billing rows use actual invoice EUR and GPS."
+            "Sales to dealer is pieces only. Euro on that layer is pieces × our billed unit price for that distributor and part — a mix proxy, not their invoice. "
+            "Difference vs what we billed is stock movement. Parts with no billed price keep the pieces and show €0 on the proxy. "
+            "Billed rows use the invoice euro."
         ),
         "benchmarks": legacy,
         "benchmarks_by_dist": benchmarks_by_dist,

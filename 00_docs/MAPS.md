@@ -53,6 +53,7 @@ All paths above are under **`00_docs/`** unless noted as ISZE root.
 | `00_docs/roadmaps/aim_prism_reinvention.md` | Active: after AIM scoring failed — P4, PN prices, PRISM surface |
 | `00_docs/roadmaps/ai_sales_intelligence.md` | Active: mail → action, account health, forecast |
 | `00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md` | Active: Tier A builds (done) / Tier B decisions |
+| `00_docs/ISZE_BI_FRAMEWORK.md` | **Which KPI to quote** — FY first, euros first. Build menu is not this. |
 | `00_docs/roadmaps/gps.md` | GPS / fig-key (AIM *scoring* V3 superseded) |
 | `00_docs/roadmaps/html.md` | Static HTML dashboards + inventory |
 | `00_docs/roadmaps/scrapers.md` | Tender portals, KS/IAM, discount |
