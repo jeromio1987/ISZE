@@ -1,6 +1,6 @@
 # Claude — ISZE workspace
 
-Same rules as Cursor. **Start:** [`INDEX.md`](INDEX.md) → [`00_docs/ROUTING.yaml`](00_docs/ROUTING.yaml) → [`AGENTS.md`](AGENTS.md).
+Same rules as Cursor. **Start:** [`INDEX.md`](INDEX.md) → [`00_docs/ROUTING.yaml`](00_docs/ROUTING.yaml) → [`AGENTS.md`](AGENTS.md). Chat overviews to Jerome: `.cursor/rules/jerome-brief-plain.mdc` (his working English; sales to dealer / %GM; Spain / MIDI is not his book).
 
 - Do not load `01_data/raw/sales/*.XLSX` (or any line-level billing) into context; use parquet / derived CSVs.
 - **New / unsorted files go to `01_data/90_INBOX/` only** — never dump into `01_data/` root. Sort per `01_data/DATA_MANIFEST.md` §0–§1.
