@@ -29,7 +29,7 @@
 | EU Conf 26 GPS/PMS deck + MH review | `09_meetings/EU_Conf26/MH_Remarks_Changelog.md` |
 | Pricing / IE40 | `05_memory/projects/competitiveness.md` |
 | UIO workbook logic | `05_memory/projects/uio.md`, `06_uio/_CURRENT/README.md` |
-| FY action plans | `05_memory/projects/action-plan-fy2026.md`, `action-plan-fy2027.md` |
+| FY action plans | `05_memory/projects/action-plan-fy2027.md` (FY2026 retired with the fiscal year) |
 | AIM / competitiveness / lubricants | `05_memory/projects/aftermarket-intelligence.md`, `competitiveness.md`, `lubricants.md` |
 | Terms & entities | `05_memory/glossary.md` |
 | Map registry / diagram | `00_docs/MAP_REGISTRY.yaml`, `00_docs/MAPS.md` |

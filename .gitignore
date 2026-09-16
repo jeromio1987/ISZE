@@ -11,6 +11,29 @@
 01_data/04_sales/**
 01_data/sales data/**
 
+# --- Tier 0 mirror: 02_dashboards/Data/ (deploy-side copy of 01_data) ---
+# The Tier 0 rules above are keyed to 01_data/ only, so the same content class
+# reached git through the mirror path. Audited 2026-08-27: 805 tracked files
+# under Data/90_INBOX/, including mail bodies and Outlook pulls.
+# The published dashboards only ever fetch ../Data/dashboards/* (6 JSON/JS) plus
+# one dealer-sales workbook — everything else in the mirror is incidental.
+# NOTE: these rules are forward-looking. Git ignores nothing it already tracks,
+# so the existing files stay tracked and stay in history until untracked.
+02_dashboards/Data/12_raw/**
+02_dashboards/Data/raw/**
+02_dashboards/Data/90_INBOX/**
+02_dashboards/Data/_INBOX/**
+02_dashboards/Data/04_sales/**
+02_dashboards/Data/sales data/**
+02_dashboards/Data/17_interactions/**
+02_dashboards/Data/13_models/**
+02_dashboards/Data/11_planning/**
+02_dashboards/Data/92_archive/**
+02_dashboards/Data/16_exports/**
+# Keep the mirror's actual purpose fetchable
+!02_dashboards/Data/dashboards/**
+!02_dashboards/Data/14_dashboards/**
+
 # Stray billing/reference workbooks at 01_data root (not in raw/)
 01_data/*.XLSX
 01_data/*.xlsx
