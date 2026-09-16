@@ -33,7 +33,8 @@ Ordered. Jerome's standing priority: **portal coverage before cosmetic UI**.
 
 | Prio | Item | State | Next |
 |------|------|-------|------|
-| **P0** | **National portal coverage** | Analysis done. Only **8/29** footprint countries have a live national source (UK, NL, BE, IL, FR, PL, NO, FI; DE partial via service.bund). ~69% are TED-only for below-threshold national buys — that, not a dashboard bug, is why fleet/vehicle KPIs look low | Wire **ES PLACSP**, **IT PNCP/ANAC**, **DE oeffentlichevergabe** open data. Evidence: `_COUNTRY_TENDER_PORTALS_MAP.md`, `_probe_country_portals_2026-08-25.json` |
+| **P0** | **ES PLACSP egress** | Spain is the last high-lift portal not returning rows. The fetcher exists (`fetch_spain_placsp`, Atom + ZIP paths) and is `CODE_READY` — blocked by a **WAF deny on Jerome's runner**, not by missing code. Est. +15–40 gated notices / 30d once egress works | Find a session/IP path that PLACSP accepts. Probed again 2026-08-27 from a remote container: inconclusive, that runner's own gateway denies the host (policy 403 on CONNECT), so it is not a test of PLACSP |
+| **P0** | National portal coverage (rest) | **16/29** countries LIVE, 2 CODE_READY (ES, LT), rest DARK/BLOCKED national. IT PNCP, DE oeffentlichevergabe, AT, CZ, RO, PT, DK, BG were wired 2026-08-25 | Remaining lift is P2/P3 per country — GR credentials, LT key, SK/HU registration. Evidence: `_source_health.json`, `_COUNTRY_TENDER_PORTALS_MAP.md` |
 | **P1** | TED detail enrichment | Partial — capability code on; detail GET needs TED auth | Obtain TED auth, then enrich |
 | **P2** | Tender relevance scoring | Not started | Score 1–5 on title, country, value; filter ≥ 3 |
 | **P2** | `scrape_error` column (KS + successors) | Not started | Distinguish genuine price gap from scrape failure |

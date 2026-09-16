@@ -1,0 +1,18 @@
+{
+ "measured_at_utc": "2026-08-27T19:40:20+00:00",
+ "source": "parts_catalog_dimension.fig_key vs pricing_pr00_ie40 fig_no/key_no",
+ "builder": "01_data/91_build/audit_fig_key_vs_pr00.py",
+ "read_only": true,
+ "pr00_source_files": [
+  "Price_file_PR00_IE40_20260810.xlsx",
+  "SAP_Pull_PN_Validity_List_PR00_return_20260812.xlsx"
+ ],
+ "fillable_from_sap": 1841,
+ "coverage_now_pct": 97.71,
+ "coverage_after_fill_pct": 98.83,
+ "unexplained_drift": 1618,
+ "outputs": {
+  "findings": "01_data/00_derived/fig_key_pr00_audit.json",
+  "disagreements": "01_data/00_derived/fig_key_pr00_disagreements.csv"
+ }
+}

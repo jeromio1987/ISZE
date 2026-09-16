@@ -1,0 +1,35 @@
+{
+ "inputs": {
+  "catalogue": "parts_catalog_dimension.parquet",
+  "catalogue_pns": 164969,
+  "pr00": "pricing_pr00_ie40.parquet",
+  "pr00_source_files": [
+   "Price_file_PR00_IE40_20260810.xlsx",
+   "SAP_Pull_PN_Validity_List_PR00_return_20260812.xlsx"
+  ],
+  "pr00_pns_with_figure": 164824
+ },
+ "fillable_blanks": {
+  "catalogue_fig_key_blank": 3778,
+  "fillable_from_sap": 1841,
+  "not_fillable": 1937,
+  "coverage_now_pct": 97.71,
+  "coverage_after_fill_pct": 98.83
+ },
+ "disagreements": {
+  "compared": 160560,
+  "agree": 158941,
+  "agree_pct": 98.99,
+  "disagree": 1619,
+  "explained_by_supersession": 1,
+  "unexplained_drift": 1618,
+  "drift_on_non_superseded_pns": 1609,
+  "drift_by_classification_source": {
+   "pr00": 1565,
+   "bvp_dimension": 33,
+   "pms_registry": 19,
+   "epc_n75_4hk1": 1
+  }
+ },
+ "note": "Drift means the dimension predates the IE40 pull on disk. Fix by re-running build_pr00_classification.py + build_fig_key_dimension.py, then run_pipeline_and_verify.ps1 \u2014 not by editing the CSV."
+}
