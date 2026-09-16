@@ -54,6 +54,9 @@
 | Cleanup / dedupe plan | `00_docs/ISZE_Cleanup_Plan.md` |
 | Repo overview | `00_docs/README.md` |
 | Claude Desktop onboarding (paste-ready) | `00_docs/CLAUDE_DESKTOP_ONBOARDING.md` |
+| **Exec aftersales paper (paste-ready prompt)** | `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md` — 10–20 page Mode A HTML brief (GPS/PMS/mix/SWOT). Prompt only until the current message says rebuild/ship. Routing key `exec_sales_paper`. |
+| Dashboard + capture audit (paste-ready) | `00_docs/DASHBOARD_CAPTURE_AUDIT_PROMPT.md` |
+| IAM capture / price hunt review (paste-ready) | `00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md` |
 
 **Jerome working style:** `Isuzu/_SKILL_UPDATE/` or scheduled `isze-context` — see `docs/agent/NOTES.md`.
 

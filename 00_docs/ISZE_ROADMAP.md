@@ -1,5 +1,6 @@
 # ISZE — programme roadmap (hub)
 
+**Last updated:** 2026-09-16 · **Domain detail:** [`roadmaps/`](roadmaps/) · **Registry:** [`MAP_REGISTRY.yaml`](MAP_REGISTRY.yaml)
 **Last updated:** 2026-09-14 · **Domain detail:** [`roadmaps/`](roadmaps/) · **Registry:** [`MAP_REGISTRY.yaml`](MAP_REGISTRY.yaml)
 
 > **Numbers rule:** green [`01_data/00_derived/_verification_report.json`](../01_data/00_derived/_verification_report.json) → `metrics_snapshot.json` → [`FACTS.md`](../FACTS.md). That order wins over any deck, memory file, or GPT answer.
@@ -38,10 +39,14 @@ Ordered. `Blocked on` names the single thing that unblocks the item — if it sa
 | 10 | **P2b / P3 / P6 (LLM on mail text)** | Specced, zero code. P2a runs local and deterministic | **B1b** approved LLM route named, then **G0b** (DPIA, LIA, works council) | [`roadmaps/ai_sales_intelligence.md`](roadmaps/ai_sales_intelligence.md) §4 |
 | 11 | **Supabase live Master KPIs** (HTML V4) | Not started | schema + credentials | [`roadmaps/html.md`](roadmaps/html.md) |
 | 12 | **Dashboard filename renames** | Blocked by design — build scripts hardcode `vN` | rename plan in [`CANONICAL.md`](CANONICAL.md) | [`roadmaps/html.md`](roadmaps/html.md) |
+| 13 | **Scraper quality V2** | Tender relevance scoring, `scrape_error` column, RSS parse failures (Israel entity, Belgium non-XML, UK 429), Lidl category id | nothing — small items | [`roadmaps/scrapers.md`](roadmaps/scrapers.md) |
+| 14 | **Workspace cleanup decisions** | **Both halves already decided in writing** — see below, not waiting on Jerome | — nothing — | [`ISZE_Cleanup_Plan.md`](ISZE_Cleanup_Plan.md) · [`UI_STACK.md`](UI_STACK.md) |
 | 13 | **Scraper quality V2** | **Done 2026-09-14** — `relevance_score_1to5` + export “Relevance Score” (pass ≥3, **no drop**); `scrape_error` on KS/Mekonomen + category crawlers; RSS entity sanitize + recover; UK Find a Tender honors Retry-After / records LAST_FETCH_ERRORS; Lidl `a10051271` is 404, live URL is search `aanbieding` | nothing | [`roadmaps/scrapers.md`](roadmaps/scrapers.md) |
 | 14 | **Workspace cleanup decisions** | UI primary for external share; ISZE_Dashboard merge | **Jerome** | [`ISZE_Cleanup_Plan.md`](ISZE_Cleanup_Plan.md) |
 
 **Not on this list on purpose:** anything in §5. Also: no new 0–100 score on any surface, and no Dash / Evidence work — Streamlit :8503 is the product.
+
+**Item 14 came off the waiting list on 2026-09-16, on written evidence only.** Both halves were already decided on paper: external share is HTML / GitHub Pages (`UI_STACK.md`, decided 2026-06-13) and the ISZE_Dashboard ops sandbox is closed indefinitely with no merge timeline (`ISZE_Cleanup_Plan.md` Phase 3, closed 2026-07-26). No cleanup work remains in this item. Reconciled in [`DECISION_RECONCILE_20260916.md`](DECISION_RECONCILE_20260916.md).
 
 ---
 
@@ -49,11 +54,12 @@ Ordered. `Blocked on` names the single thing that unblocks the item — if it sa
 
 One answer each. Build effort is already sunk or trivial; these are the actual bottleneck. Source: [`AFTERMARKET_BI_BUILD_MENU_20260819.md`](AFTERMARKET_BI_BUILD_MENU_20260819.md) Tier B + the AI-sales gates.
 
+**How this list gets shorter:** [`DECISION_DISCIPLINE.md`](DECISION_DISCIPLINE.md) — a weekly 45-minute slot, one list only, and every item ends as decided / killed / delegated. A decision only counts once it is in this file, in [`DECISIONS.md`](../DECISIONS.md), and as `status: decided` in the build file that was waiting. Items reconciled against written evidence: [`DECISION_RECONCILE_20260916.md`](DECISION_RECONCILE_20260916.md).
 **One sitting (2026-09-14):** recommended ticks are in [`DECISION_PACK_20260914.md`](DECISION_PACK_20260914.md). Until a row is ticked, do not apply it in code. Same-pass engineering (Monday seed, tenders, fig-key/EPC, scraper quality) does not wait.
 
 | Ref | Decision | Consequence of no answer |
 |-----|----------|--------------------------|
-| B1 | Book B **alloc** ambition — +4% / +5% / launch-only | Revision book stays a review list, never a price move |
+| B1 | the price adjustment ambition — +4% / +5% / launch-only (**still open — confirmed by Jerome 2026-09-16**) | Revision book stays a review list, never a price move |
 | B2 | **Seed €** for 9,591 no-L12M PNs — IML BOM vs UTI placeholders | Those PNs stay out of every € ranking |
 | B3 | **Growth-factor sign-off** — keep 1.24 / 1.25 / ×1.25 UTI table? | Forecast and alloc inherit an unsigned assumption |
 | B4 | **Guardrail policy** — auto-HOLD on IAM-undercut + proxy-adverse? | Every exception is manual |
