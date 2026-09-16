@@ -75,6 +75,8 @@ Each `SKILL.md` states `**Model tier: …**` under the frontmatter. Prefer Haiku
 | `ISZE_CursorWeekDigest_Weekly` | ✅ registered 2026-07-26 | Sun 20:00 | `04_tools/workspace/run_cursor_week_digest.cmd` | Cross-tool bridge: summarises the week's local Cursor sessions into `05_memory/briefs/cursor_week_*.md` so the Claude Desktop weekly review sees work done in Cursor. Output is gitignored (spans private projects). |
 | `ISZE_LiveStateAudit_Weekly` | ✅ registered 2026-07-26 | Mon 08:00 | `04_tools/workspace/run_live_state_audit.cmd` | Compares this register against Task Scheduler and the FACTS/pipeline reports; writes a numbered "waiting on Jerome" list to `05_memory/briefs/automation_drift_*.md`. Read-only — it reports drift, it never closes it. |
 
+**Decision drift (added 2026-09-16).** The same task now also runs `04_tools/workspace/check_decision_drift.ps1`, appended to the brief after the audit above. It compares `00_docs/ISZE_ROADMAP.md` §2 "Waiting on Jerome" against `DECISIONS.md` entries dated after the roadmap's own "Last updated" line, and prints a line for any item that may already be decided but still reads as waiting. Read-only, always exits 0, no second scheduled task, and it cannot change the audit's findings or exit code. Rule it serves: [`00_docs/DECISION_DISCIPLINE.md`](DECISION_DISCIPLINE.md).
+
 **Register a task from XML (no elevation needed for these LeastPrivilege tasks):**
 `schtasks /create /tn "ISZE Discount Scanner" /xml "<full path to xml>" /f`
 
@@ -148,3 +150,4 @@ Static HTML twins: `02_dashboards/bi/{Warranty_Intelligence,Price_Realization,Pa
 - Monthly refresh (manual): [RUNBOOK_MONTHLY_REFRESH.md](RUNBOOK_MONTHLY_REFRESH.md)
 - Monthly refresh (orchestrated, fail-closed): `04_tools/workspace/isze_monthly_refresh.ps1`
 - Drift audit of this file vs live state: `04_tools/workspace/isze_live_state_audit.ps1`
+- Decision drift (roadmap §2 vs `DECISIONS.md`): `04_tools/workspace/check_decision_drift.ps1` · rule: `00_docs/DECISION_DISCIPLINE.md`

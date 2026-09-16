@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Patch IDS dealer-compare template: English bands, max-point good/bad, changelog."""
+"""Patch IDS dealer-compare template: English bands and max-point good/bad."""
 
 from __future__ import annotations
 
@@ -51,34 +51,6 @@ def main() -> None:
             print("WARN missing:", old[:70])
         else:
             t = t.replace(old, new)
-
-    # Add changelog tab if missing
-    if 'data-tab="changelog"' not in t:
-        t = t.replace(
-            '<button class="tab" data-tab="country" type="button">By country</button>\n  </nav>',
-            '<button class="tab" data-tab="country" type="button">By country</button>\n'
-            '    <button class="tab" data-tab="changelog" type="button">Changelog</button>\n  </nav>',
-        )
-
-    changelog_panel = '''
-    <section id="panel-changelog" class="panel">
-      <div class="card">
-        <h2>Changelog — 2026-07-28</h2>
-        <ul>
-          <li>All UI labels in English (good / medium / bad — no Dutch goed/slecht).</li>
-          <li>Country names in English: Switzerland / France / Italy / Spain (not MIDI_CH etc.).</li>
-          <li>UK LCV (IUK), UK CV (ITUK), Israel LCV (UMI IDS pack — never blended with UTI), Norway (RSA).</li>
-          <li>Benelux kept; Belgium, Netherlands and Luxembourg also shown as separate countries.</li>
-          <li>Overview strengths / weak points: per section A–E, based on max-point items (full score = good, zero = bad) — not “first question in section”.</li>
-          <li>Dealer total score shown as percentage (Score % of 280); GPS context on feedback packs prefers capture % where available.</li>
-        </ul>
-        <p class="hint">Built __BUILT_AT__</p>
-      </div>
-    </section>
-'''
-    if 'id="panel-changelog"' not in t:
-        # Insert before closing </main>
-        t = t.replace("  </main>", changelog_panel + "\n  </main>")
 
     # Replace overview strengths/weak block with max-point logic
     old_block = """      const ranked = [...rows].filter((r) => r.gapC != null).sort((a, b) => b.gapC - a.gapC);

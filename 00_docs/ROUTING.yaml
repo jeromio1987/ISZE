@@ -105,6 +105,34 @@ tasks:
     data:
       - 03_analytics/Isuzu/pms-pilot/
 
+  exec_sales_paper:
+    description: Grade-A Mode A HTML exec aftersales paper (GPS, PMS total, mix, pricing, IDS, tenders, SWOT)
+    read:
+      - 00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md
+      - 00_docs/ITUK_PRISM_LANE_BRIDGE.md
+      - 01_data/00_derived/_verification_report.json
+      - 01_data/00_derived/metrics_snapshot.json
+      - FACTS.md
+    optional:
+      - 00_docs/ISZE_ROADMAP.md
+      - 00_docs/DASHBOARD_CAPTURE_AUDIT_PROMPT.md
+      - 00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md
+      - 03_analytics/Isuzu/prism/docs/metric_dictionary.md
+      - 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
+    never:
+      - 01_data/raw/sales/**
+      - 01_data/12_raw/sales/**
+      - 07_deploy/**
+    open:
+      - 02_dashboards/sales/OPEN_ISZE_Exec_Aftersales_Paper.cmd
+    proposed_output:
+      - 02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html
+      - 02_dashboards/sales/OPEN_ISZE_Exec_Aftersales_Paper.cmd
+    rebuild:
+      - python 02_dashboards/_build/build_exec_aftersales_paper.py
+    rules:
+      - Phase 0 defaults are locked in the prompt. HTML write still requires rebuild or ship in the current message.
+
   action_ledger:
     description: P8 Opportunity→Action→Outcome ledger over existing derived euro surfaces (Mode B)
     read:
