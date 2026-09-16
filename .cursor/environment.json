@@ -1,0 +1,17 @@
+{
+  "name": "ISZE — PRISM analytics",
+  "install": "python3 -m pip install --user --upgrade pip && python3 -m pip install --user -r 03_analytics/Isuzu/prism/requirements.txt pytest",
+  "terminals": [
+    {
+      "name": "PRISM (Streamlit)",
+      "command": "cd 03_analytics/Isuzu/prism && python3 -m streamlit run app.py --server.port 8503 --server.address 0.0.0.0 --server.headless true --browser.gatherUsageStats false",
+      "description": "PRISM — Parts Revenue Intelligence & Sales Monitor dashboard. Serves on http://localhost:8503. Reads committed derived data from 01_data/00_derived/. Run PRISM unit tests with: cd 03_analytics/Isuzu/prism && python3 -m pytest tests/ -q"
+    }
+  ],
+  "ports": [
+    {
+      "name": "PRISM Streamlit",
+      "port": 8503
+    }
+  ]
+}
