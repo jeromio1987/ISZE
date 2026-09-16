@@ -19,6 +19,7 @@ ISZE_BLUE = "#1B3A6B"
 ISZE_ORANGE = "#E87722"
 ISZE_RED = "#E2231A"
 ISZE_GREY = "#9AA0A6"
+from modules.plotly_style import style
 
 # Default weights -- mirror build_db_aftersales_risk.py
 DEFAULT_W = {"eucon": 0.35, "aim": 0.25, "contested": 0.25, "vor": 0.15}
@@ -84,7 +85,7 @@ def render_signal_breakdown(df: pd.DataFrame) -> None:
     bd = df.sort_values("risk_score", ascending=True)
     fig = go.Figure()
     parts = [
-        ("comp_eucon", "Eucon price (street)", ISZE_RED),
+        ("comp_eucon", "Eucon price (ref. sell-out)", ISZE_RED),
         ("comp_aim", "AIM scraper", ISZE_ORANGE),
         ("comp_contested", "BVP capture", ISZE_BLUE),
         ("comp_vor", "VOR/urgent", ISZE_GREY),
@@ -101,12 +102,12 @@ def render_signal_breakdown(df: pd.DataFrame) -> None:
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         margin=dict(l=10, r=10, t=40, b=10),
     )
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(style(fig), width="stretch")
 
 
 def render_threat_map(df: pd.DataFrame) -> None:
     st.markdown(
-        "**External walk-out vs internal down-trade.** X = Eucon street-undercut share "
+        "**External walk-out vs internal down-trade.** X = Eucon undercut share vs reference sell-out "
         "(price-driven loss to named aftermarket). Y = BVP capture of contested demand "
         "(loss one tier down to our own value line). Bubble = net sales. "
         "**Top-right = fighting on both fronts.**"
@@ -118,7 +119,7 @@ def render_threat_map(df: pd.DataFrame) -> None:
         color_continuous_scale=["#C8E6C9", "#FFF9C4", "#E2231A"],
         hover_name="distributor_code", size_max=55,
         labels={
-            "eucon_undercut_pct": "Eucon street-undercut share of sales",
+            "eucon_undercut_pct": "Eucon undercut share vs reference sell-out",
             "contested_bvp_capture": "BVP capture of contested demand",
             "risk_score": "Risk score",
         },
@@ -136,7 +137,7 @@ def render_threat_map(df: pd.DataFrame) -> None:
         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="#FAFBFC", height=560,
         xaxis_tickformat=".0%", yaxis_tickformat=".0%",
     )
-    st.plotly_chart(fig2, width="stretch")
+    st.plotly_chart(style(fig2), width="stretch")
 
 
 def load_eucon_scrape(derived_dir, street_factor: float = STREET_FACTOR) -> pd.DataFrame:
@@ -161,9 +162,9 @@ def render_aftermarket_scrape(eu: pd.DataFrame, street_factor: float = STREET_FA
     s1, s2, s3, s4 = st.columns(4)
     s1.metric("Benchmarked PNs", f"{len(eu)}")
     s2.metric("Undercut at LIST", f"{int(eu['undercut_list'].sum())}", "IE40 view")
-    s3.metric("Undercut at STREET", f"{int(eu['undercut_street'].sum())}",
+    s3.metric("Undercut at reference sell-out", f"{int(eu['undercut_street'].sum())}",
               f"+{int(eu['undercut_street'].sum() - eu['undercut_list'].sum())} vs list")
-    s4.metric("Rev on street-undercut PNs", f"EUR {u['rev_eur'].sum():,.0f}")
+    s4.metric("Rev on undercut PNs (ref. sell-out)", f"EUR {u['rev_eur'].sum():,.0f}")
 
     st.info(
         "**We sit upstream.** At IE40 list the aftermarket undercuts "
@@ -192,13 +193,13 @@ def render_aftermarket_scrape(eu: pd.DataFrame, street_factor: float = STREET_FA
     figb.update_layout(
         template="plotly_white", font=dict(family="Segoe UI"),
         paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="#FAFBFC",
-        height=max(360, 22 * len(lead)), xaxis_title="ISZE PNs undercut at street",
+        height=max(360, 22 * len(lead)), xaxis_title="ISZE PNs undercut at reference sell-out",
         margin=dict(l=10, r=10, t=10, b=10),
     )
-    st.plotly_chart(figb, width="stretch")
+    st.plotly_chart(style(figb), width="stretch")
 
     # --- Price position scatter (street-based)
-    st.markdown("##### Price position - revenue vs gap to street genuine")
+    st.markdown("##### Price position - revenue vs gap to reference sell-out")
     sc = u.dropna(subset=["rev_eur", "delta_vs_street"]).copy()
     sc["arena"] = sc["contested"].map(lambda c: "Contested (BVP pair)" if c else "No BVP pair")
     figs = px.scatter(
@@ -206,7 +207,7 @@ def render_aftermarket_scrape(eu: pd.DataFrame, street_factor: float = STREET_FA
         color_discrete_map={"Contested (BVP pair)": ISZE_RED, "No BVP pair": ISZE_BLUE},
         hover_name="description", size_max=48,
         labels={"rev_eur": "ISZE revenue on part (EUR)",
-                "delta_vs_street": "AM avg vs street genuine (- = cheaper)"},
+                "delta_vs_street": "AM avg vs reference sell-out (- = cheaper)"},
     )
     figs.update_layout(
         template="plotly_white", font=dict(family="Segoe UI"),
@@ -215,36 +216,36 @@ def render_aftermarket_scrape(eu: pd.DataFrame, street_factor: float = STREET_FA
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
     )
     figs.add_hline(y=0, line_dash="dash", line_color="#555")
-    st.plotly_chart(figs, width="stretch")
+    st.plotly_chart(style(figs), width="stretch")
 
     # --- Detail table
-    st.markdown("##### Street-undercut parts - the defend list")
+    st.markdown("##### Undercut parts (reference sell-out) - the defend list")
     det = u.sort_values("rev_eur", ascending=False)[[
         "pn", "description", "rev_eur", "ISZE_IE40_Price_EUR", "db_price",
         "street_price", "Min_Competitor_EUR", "Avg_Competitor_EUR",
         "delta_vs_street", "Competitor_Count", "Brands_Found", "Countries_Found",
     ]].rename(columns={
         "pn": "Part", "description": "Description", "rev_eur": "ISZE rev",
-        "ISZE_IE40_Price_EUR": "List", "db_price": "+DB 40%", "street_price": "Street",
+        "ISZE_IE40_Price_EUR": "List", "db_price": "+DB 40%", "street_price": "Ref. sell-out",
         "Min_Competitor_EUR": "AM min", "Avg_Competitor_EUR": "AM avg",
-        "delta_vs_street": "AM vs street", "Competitor_Count": "# offers",
+        "delta_vs_street": "AM vs ref. sell-out", "Competitor_Count": "# offers",
         "Brands_Found": "Brands", "Countries_Found": "Countries",
     })
-    det["AM vs street"] = det["AM vs street"] * 100
+    det["AM vs ref. sell-out"] = det["AM vs ref. sell-out"] * 100
     st.dataframe(
         det, width="stretch", hide_index=True, height=420,
         column_config={
             "ISZE rev": st.column_config.NumberColumn(format="EUR %.0f"),
             "List": st.column_config.NumberColumn(format="EUR %.2f"),
             "+DB 40%": st.column_config.NumberColumn(format="EUR %.2f"),
-            "Street": st.column_config.NumberColumn(format="EUR %.2f"),
+            "Ref. sell-out": st.column_config.NumberColumn(format="EUR %.2f"),
             "AM min": st.column_config.NumberColumn(format="EUR %.2f"),
             "AM avg": st.column_config.NumberColumn(format="EUR %.2f"),
-            "AM vs street": st.column_config.NumberColumn(format="%.0f%%"),
+            "AM vs ref. sell-out": st.column_config.NumberColumn(format="%.0f%%"),
         },
     )
     st.caption(
-        "Eucon/AutoDoc aftermarket trade benchmark. 'AM vs street' negative = aftermarket "
+        "Eucon/AutoDoc aftermarket trade benchmark. 'AM vs ref. sell-out' negative = aftermarket "
         "cheaper than genuine at the counter. Revenue per brand double-counts across brands "
         "(multiple brands per PN) - use # PNs as the primary attack measure."
     )

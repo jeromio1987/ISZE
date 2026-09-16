@@ -1,0 +1,1172 @@
+{
+  "meta": {
+    "title": "ISZE Pricing Engine \u2014 Readiness & Comparison",
+    "as_of": "2026-08-12",
+    "alloc_run_id": "20260810T171626Z__alloc__t3pct",
+    "launch_run_id": "20260806T154452Z__launch__dmax_22_base",
+    "target_weighted_pct": 3.0,
+    "base_eur": 5768025.0,
+    "mode": "A",
+    "language": "en"
+  },
+  "readiness": {
+    "composite_pct": 61.5,
+    "full_launch": {
+      "definition": "Full launch = Layers 0\u20135 operational with: (1) every in-scope PMS category on oem_benchmark or iam_derived (no placeholder moving via base filler), (2) OEM peer street filled to gate where peers exist, (3) \u03b8_parc + \u03b8_interval wired, (4) eligibility excludes NO_LIST/SUPERSEDED from ISZE \u0394, (5) PR00 + ZPR1/CIS rules as specified, (6) every line carries a reason code under the +3% weighted index.",
+      "composite_readiness_pct": 61.5,
+      "not_required_for_full_launch": [
+        "Measured DB\u2192DLR elasticity coefficient inside the solver (explicitly out of V1)",
+        "Volume response forecast (constant-units arithmetic until elasticity exists)"
+      ]
+    },
+    "layers": [
+      {
+        "id": 0,
+        "name": "Eligibility gate",
+        "score": 55,
+        "status": "partial",
+        "what_runs": "PMS action-map basket (213 cells) enters allocation.",
+        "missing": "NO_LIST (~15% billed \u20ac) and SUPERSEDED routing not yet excluding from ISZE \u0394 narrative; IML_CORRECTION pass-through not fully separated in every output."
+      },
+      {
+        "id": 1,
+        "name": "Segmentation (wallet \u00d7 street)",
+        "score": 58,
+        "status": "partial",
+        "what_runs": "Wallet zones on all 213 cells. Street evidence on 88/213 cells (76.2% of \u20ac weight). Trusted premium basis on 85.9% of \u20ac weight (2 oem_benchmark cats, 4 iam_derived).",
+        "missing": "OEM street 15/22 peers; near-gate cats blower_filter, brake_pad, brake_rotor, fuel_filter; placeholder still on brake_shoe, clutch_booster, clutch_disc, clutch_kit, clutch_pressure_plate, pilot_bearing, release_bearing, urea_filter.",
+        "metrics": {
+          "street_oe_fill_pct": 68.2,
+          "oem_benchmark_cats": [
+            "air_filter",
+            "oil_filter"
+          ],
+          "iam_derived_cats": [
+            "blower_filter",
+            "brake_pad",
+            "brake_rotor",
+            "fuel_filter"
+          ],
+          "placeholder_cats": [
+            "brake_shoe",
+            "clutch_booster",
+            "clutch_disc",
+            "clutch_kit",
+            "clutch_pressure_plate",
+            "pilot_bearing",
+            "release_bearing",
+            "urea_filter"
+          ],
+          "cells_with_street_evidence": 88,
+          "weight_with_street_evidence_pct": 76.2
+        }
+      },
+      {
+        "id": 2,
+        "name": "Momentum (\u03b8)",
+        "score": 40,
+        "status": "partial",
+        "what_runs": "\u03b8_parc wired from corrected car park; 60 cells moved by \u03b8; veto on adverse street.",
+        "missing": "\u03b8_interval blocked (chassis\u2192generation map \u2014 D-Max 15k vs 20k). \u03b8_cohort / \u03b8_warranty Partial (held at 1.0).",
+        "metrics": {
+          "components_wired": "theta_parc only",
+          "components_of_four": 1,
+          "n_theta_moving": 60,
+          "n_theta_vetoed": 10,
+          "weighted_theta_parc": 1.013
+        }
+      },
+      {
+        "id": 3,
+        "name": "Allocation (+3% weighted)",
+        "score": 72,
+        "status": "running",
+        "what_runs": "Index solver hits 3.0000% exactly. Caps/floors, reason codes, two-gate sign rules active. Revenue \u0394 \u20ac173,041 on \u20ac5,768,025 base.",
+        "missing": "125 cells / 23.8% \u20ac weight still take the unbenchmarked base lift \u2014 differentiation incomplete.",
+        "metrics": {
+          "weighted_increase_pct": 3.0,
+          "n_capped": 17,
+          "n_zero_evidence": 125,
+          "n_unbenchmarked_premium": 107,
+          "redistributed_vs_uniform_eur": 94886
+        }
+      },
+      {
+        "id": 4,
+        "name": "Market lists (PR00 / ZPR1 / CIS)",
+        "score": 62,
+        "status": "partial",
+        "what_runs": "PR00 full engine path. ZPR1 enabled (flat \u221210%). CIS enabled (flat factor).",
+        "missing": "ZPR1 not yet per-category. CIS not class-dependent. Auto365 IL evidence not wired into differentials."
+      },
+      {
+        "id": 5,
+        "name": "Output & governance",
+        "score": 82,
+        "status": "running",
+        "what_runs": "Reason codes, caps, run registry, alloc summary, soft DB\u2192DLR proxy diagnostic.",
+        "missing": "GPS bridge / distributor pack automation thin. DB\u2192DLR is proxy only (not joined into \u0394)."
+      }
+    ],
+    "oem_street": {
+      "unique_oe_mapped": 22,
+      "unique_oe_street_filled": 15,
+      "fill_pct": 68.2,
+      "scrape_gaps": 7,
+      "street_factor": 1.785
+    },
+    "category_readiness": [
+      {
+        "pms_category": "air_filter",
+        "n_priced_oe": 3,
+        "gap_to_oem_benchmark": 0,
+        "basis_if_alloc": "oem_benchmark",
+        "peer_markets_priced": "GERMANY,IUK,LCV"
+      },
+      {
+        "pms_category": "oil_filter",
+        "n_priced_oe": 3,
+        "gap_to_oem_benchmark": 0,
+        "basis_if_alloc": "oem_benchmark",
+        "peer_markets_priced": "GERMANY,IUK,LCV"
+      },
+      {
+        "pms_category": "blower_filter",
+        "n_priced_oe": 2,
+        "gap_to_oem_benchmark": 1,
+        "basis_if_alloc": "near_gate",
+        "peer_markets_priced": "LCV"
+      },
+      {
+        "pms_category": "brake_pad",
+        "n_priced_oe": 2,
+        "gap_to_oem_benchmark": 1,
+        "basis_if_alloc": "near_gate",
+        "peer_markets_priced": "LCV"
+      },
+      {
+        "pms_category": "brake_rotor",
+        "n_priced_oe": 2,
+        "gap_to_oem_benchmark": 1,
+        "basis_if_alloc": "near_gate",
+        "peer_markets_priced": "LCV"
+      },
+      {
+        "pms_category": "fuel_filter",
+        "n_priced_oe": 1,
+        "gap_to_oem_benchmark": 1,
+        "basis_if_alloc": "near_gate",
+        "peer_markets_priced": "GERMANY,IUK"
+      },
+      {
+        "pms_category": "brake_shoe",
+        "n_priced_oe": 1,
+        "gap_to_oem_benchmark": 2,
+        "basis_if_alloc": "below_gate",
+        "peer_markets_priced": "LCV"
+      },
+      {
+        "pms_category": "clutch_pressure_plate",
+        "n_priced_oe": 1,
+        "gap_to_oem_benchmark": 2,
+        "basis_if_alloc": "below_gate",
+        "peer_markets_priced": "LCV"
+      },
+      {
+        "pms_category": "clutch_disc",
+        "n_priced_oe": 0,
+        "gap_to_oem_benchmark": 3,
+        "basis_if_alloc": "below_gate",
+        "peer_markets_priced": ""
+      },
+      {
+        "pms_category": "clutch_kit",
+        "n_priced_oe": 0,
+        "gap_to_oem_benchmark": 3,
+        "basis_if_alloc": "below_gate",
+        "peer_markets_priced": ""
+      },
+      {
+        "pms_category": "urea_filter",
+        "n_priced_oe": 0,
+        "gap_to_oem_benchmark": 3,
+        "basis_if_alloc": "below_gate",
+        "peer_markets_priced": ""
+      }
+    ],
+    "missing_checklist": [
+      {
+        "priority": 1,
+        "item": "Genuine Paccar/DAF street quote (pad or disc or clutch)",
+        "unlocks": "Near-gate brake/clutch cats \u2192 oem_benchmark (n\u22653 with LCV fills)"
+      },
+      {
+        "priority": 2,
+        "item": "Confirm Ford 1713904 \u2192 2138025 supersession (dealer EPC)",
+        "unlocks": "Brake shoe street fill from Ford Online Shop"
+      },
+      {
+        "priority": 3,
+        "item": "Chassis-code \u2192 model-year / SCR map",
+        "unlocks": "\u03b8_interval \u2014 D-Max generation demand (+33% svc/yr on filters)"
+      },
+      {
+        "priority": 4,
+        "item": "OE maps for L200 / Transit / Sprinter / MAN / Crafter",
+        "unlocks": "Broader peer OE coverage beyond DAF + Hilux + Ranger"
+      },
+      {
+        "priority": 5,
+        "item": "Second full CY of sell-out (ITUK + UTI)",
+        "unlocks": "DB\u2192DLR proxy \u2192 measured elasticity label (still soft; not a \u0394 coefficient)"
+      },
+      {
+        "priority": 6,
+        "item": "NO_LIST / SUPERSEDED eligibility wiring in narrative packs",
+        "unlocks": "Full Layer 0 \u2014 ~15% billed \u20ac outside list action today"
+      },
+      {
+        "priority": 7,
+        "item": "ZPR1 per-category differentials (UMI \u2260 UTI)",
+        "unlocks": "Layer 4 Israel treatment beyond flat \u221210%"
+      }
+    ],
+    "db_dlr": {
+      "measure_kind": "proxy",
+      "markets": [
+        "ITUK",
+        "UTI"
+      ],
+      "joined_to_deltas": false,
+      "note": "ASP/list pass-through proxy \u2014 not dealer invoice elasticity. UTI \u2260 UMI."
+    },
+    "theta": {
+      "wired": "theta_parc only",
+      "n_moving": 60,
+      "n_vetoed": 10,
+      "weighted_theta_parc": 1.01303
+    }
+  },
+  "comparison": {
+    "headline": "Same +3.0000% weighted / same \u20ac173,041 revenue \u0394 under constant units \u2014 engine redistributes ~\u20ac94,886 of incidence vs uniform class/+3% path. IUK pays least (\u221238,146 \u20ac vs uniform); ITUK / UTI / Ireland fund the raise.",
+    "modelled_vs_measured": {
+      "measured": [
+        "Alloc deltas and reason codes from run 20260810T171626Z__alloc__t3pct",
+        "Wallet capture zones (PMS total capture)",
+        "Street evidence tier + OEM/IAM premium basis gates",
+        "\u03b8_parc from UIO car park",
+        "OEM street fill 15/22 peers"
+      ],
+      "modelled_assumption": [
+        "Constant prior-year units (no elasticity) \u2014 revenue evolution = price arithmetic only",
+        "Launch-book capture erosion / IAM entry years",
+        "Brand % ceilings until PN-level wiring complete",
+        "Index base lift on NO_EVIDENCE_HOLD / placeholder weight"
+      ]
+    },
+    "class_path": {
+      "name": "Prior path \u2014 uniform / class-era revision",
+      "description": "IML SP = FOB / class_factor sets the list level. For a chosen +3% weighted increase, the operational behaviour was uniform_target: every line +3% on prior SP (margin decision wearing a cost-plus coat). Strict cost-plus re-derive alone does not guarantee +3% \u2014 FX/BP can cut or overshoot.",
+      "weighted_increase_pct": 3.0,
+      "revenue_delta_eur": 173040.75,
+      "incidence": "Equal % on every cell \u2014 defend-zone brakes take the same lift as captive filters."
+    },
+    "engine_path": {
+      "name": "Engine path \u2014 rule-based allocation",
+      "description": "Rule-based allocation to the same +3% weighted index: position gates, brand % ceilings, oem_benchmark / iam_derived, \u03b8_parc, caps, theta veto.",
+      "weighted_increase_pct": 3.0,
+      "revenue_delta_eur": 173040.75000021124,
+      "incidence": "Raise/captive and unbenchmarked base take more \u20ac; contested-above-market and defend cuts take less (or negative)."
+    },
+    "sales_evolution": {
+      "under_constant_units": "Both paths deliver \u20ac173,041 extra list revenue on the \u20ac5,768,025 L12M weight. Mix of who pays differs by ~\u20ac94,886 reallocated. No volume win/loss is claimed.",
+      "mix_risk_uniform": "Uniform +3% loads IAM-lost defend cells (esp. IUK brakes) the same as captive \u2014 highest complaint risk per Spec C5 (distributors react to worst line).",
+      "mix_engine": "Engine cuts/holds defend & contested-above-market (IUK brake pad/rotor negative), funds raise cells and still uses base lift on no-evidence weight \u2014 honest partial differentiation.",
+      "new_models": "D-Max 2.2 launch book ranks warranty_load ~+33% GP NPV vs class_only (modelled). Real +3% portfolio tactic: protect interval-linked wear with \u03b8_interval once mapped; do not invent elasticity."
+    },
+    "by_reason": [
+      {
+        "reason_code": "DEFEND_CUT",
+        "cells": 40,
+        "weight_eur": 1723016.0,
+        "weight_share": 0.2987185388412845,
+        "mean_delta": -0.0003585937182178724,
+        "wtd_delta": -0.007228089996836261,
+        "rev_engine": -12454.114713988918,
+        "rev_uniform": 51690.479999999996,
+        "rev_diff": -64144.59471398892
+      },
+      {
+        "reason_code": "CAPTIVE_RAISE",
+        "cells": 26,
+        "weight_eur": 1554283.0,
+        "weight_share": 0.26946537159599687,
+        "mean_delta": 0.06360294474332055,
+        "wtd_delta": 0.06324877797664076,
+        "rev_engine": 98306.50037986715,
+        "rev_uniform": 46628.49,
+        "rev_diff": 51678.010379867155
+      },
+      {
+        "reason_code": "NO_EVIDENCE_HOLD",
+        "cells": 125,
+        "weight_eur": 1373506.0,
+        "weight_share": 0.2381241412788606,
+        "mean_delta": 0.06428217502745973,
+        "wtd_delta": 0.06145853196724322,
+        "rev_engine": 84413.66240820038,
+        "rev_uniform": 41205.18,
+        "rev_diff": 43208.48240820038
+      },
+      {
+        "reason_code": "CONTESTED_ABOVE_MARKET",
+        "cells": 22,
+        "weight_eur": 1117220.0,
+        "weight_share": 0.193691948283858,
+        "mean_delta": 0.003323224463600291,
+        "wtd_delta": 0.002483577027024769,
+        "rev_engine": 2774.7019261326113,
+        "rev_uniform": 33516.6,
+        "rev_diff": -30741.898073867385
+      }
+    ],
+    "by_zone": [
+      {
+        "zone": "contested",
+        "cells": 33,
+        "weight_eur": 1257523.0,
+        "wtd_delta": 0.009735850265148746,
+        "rev_engine": 12243.055632980644,
+        "rev_uniform": 37725.689999999995,
+        "rev_diff": -25482.634367019353
+      },
+      {
+        "zone": "defend",
+        "cells": 146,
+        "weight_eur": 2587951.0,
+        "wtd_delta": 0.015139357707147161,
+        "rev_engine": 39179.91591756913,
+        "rev_uniform": 77638.53,
+        "rev_diff": -38458.61408243087
+      },
+      {
+        "zone": "raise",
+        "cells": 34,
+        "weight_eur": 1922551.0,
+        "wtd_delta": 0.06325854474063962,
+        "rev_engine": 121617.77844966148,
+        "rev_uniform": 57676.53,
+        "rev_diff": 63941.24844966148
+      }
+    ],
+    "by_db": [
+      {
+        "db": "IUK",
+        "weight_eur": 1170884.0,
+        "engine_wtd_pct": -0.257864113538297,
+        "uniform_pct": 3.0,
+        "rev_diff": -38145.809647161834,
+        "rev_engine": -3019.2896471618383,
+        "rev_uniform": 35126.52
+      },
+      {
+        "db": "GERMANY",
+        "weight_eur": 390118.0,
+        "engine_wtd_pct": 1.1510709928371077,
+        "uniform_pct": 3.0,
+        "rev_diff": -7213.004864163724,
+        "rev_engine": 4490.535135836275,
+        "rev_uniform": 11703.539999999999
+      },
+      {
+        "db": "NORWAY",
+        "weight_eur": 333935.0,
+        "engine_wtd_pct": 1.6251891855321912,
+        "uniform_pct": 3.0,
+        "rev_diff": -4590.974493293091,
+        "rev_engine": 5427.0755067069085,
+        "rev_uniform": 10018.05
+      },
+      {
+        "db": "UMI",
+        "weight_eur": 244060.0,
+        "engine_wtd_pct": 1.5129114222452478,
+        "uniform_pct": 3.0,
+        "rev_diff": -3629.3883828682588,
+        "rev_engine": 3692.4116171317414,
+        "rev_uniform": 7321.8
+      },
+      {
+        "db": "SWEDEN",
+        "weight_eur": 268550.0,
+        "engine_wtd_pct": 2.2699253982396512,
+        "uniform_pct": 3.0,
+        "rev_diff": -1960.6153430274135,
+        "rev_engine": 6095.8846569725865,
+        "rev_uniform": 8056.5
+      },
+      {
+        "db": "HUNGARY",
+        "weight_eur": 89620.0,
+        "engine_wtd_pct": 2.1356536832998345,
+        "uniform_pct": 3.0,
+        "rev_diff": -774.6271690266869,
+        "rev_engine": 1913.972830973313,
+        "rev_uniform": 2688.6
+      },
+      {
+        "db": "BELGIUM",
+        "weight_eur": 339980.0,
+        "engine_wtd_pct": 2.8185761832108582,
+        "uniform_pct": 3.0,
+        "rev_diff": -616.804692319718,
+        "rev_engine": 9582.595307680282,
+        "rev_uniform": 10199.4
+      },
+      {
+        "db": "MALTA",
+        "weight_eur": 37867.0,
+        "engine_wtd_pct": 2.520108885499888,
+        "uniform_pct": 3.0,
+        "rev_diff": -181.72036832775677,
+        "rev_engine": 954.2896316722432,
+        "rev_uniform": 1136.01
+      },
+      {
+        "db": "ICELAND",
+        "weight_eur": 16142.0,
+        "engine_wtd_pct": 2.329157354730062,
+        "uniform_pct": 3.0,
+        "rev_diff": -108.28741979947313,
+        "rev_engine": 375.97258020052686,
+        "rev_uniform": 484.26
+      },
+      {
+        "db": "FINLAND",
+        "weight_eur": 42802.0,
+        "engine_wtd_pct": 2.7832402029644348,
+        "uniform_pct": 3.0,
+        "rev_diff": -92.77752832716214,
+        "rev_engine": 1191.2824716728378,
+        "rev_uniform": 1284.06
+      },
+      {
+        "db": "PORTUGAL",
+        "weight_eur": 316320.0,
+        "engine_wtd_pct": 3.0715414075784415,
+        "uniform_pct": 3.0,
+        "rev_diff": 226.2997804521292,
+        "rev_engine": 9715.89978045213,
+        "rev_uniform": 9489.6
+      },
+      {
+        "db": "DENMARK",
+        "weight_eur": 47102.0,
+        "engine_wtd_pct": 4.197041566567238,
+        "uniform_pct": 3.0,
+        "rev_diff": 563.8305186845009,
+        "rev_engine": 1976.8905186845009,
+        "rev_uniform": 1413.06
+      },
+      {
+        "db": "CYPRUS",
+        "weight_eur": 138182.0,
+        "engine_wtd_pct": 3.4651617452556875,
+        "uniform_pct": 3.0,
+        "rev_diff": 642.7698028292152,
+        "rev_engine": 4788.229802829215,
+        "rev_uniform": 4145.46
+      },
+      {
+        "db": "ROMANIA",
+        "weight_eur": 48665.0,
+        "engine_wtd_pct": 4.432110421664288,
+        "uniform_pct": 3.0,
+        "rev_diff": 696.9365367029266,
+        "rev_engine": 2156.8865367029266,
+        "rev_uniform": 1459.95
+      },
+      {
+        "db": "GREECE",
+        "weight_eur": 154618.0,
+        "engine_wtd_pct": 3.5352119135395523,
+        "uniform_pct": 3.0,
+        "rev_diff": 827.5339564765864,
+        "rev_engine": 5466.073956476586,
+        "rev_uniform": 4638.54
+      },
+      {
+        "db": "IRELAND",
+        "weight_eur": 272659.0,
+        "engine_wtd_pct": 6.913019772580621,
+        "uniform_pct": 3.0,
+        "rev_diff": 10669.200581720597,
+        "rev_engine": 18848.970581720598,
+        "rev_uniform": 8179.7699999999995
+      },
+      {
+        "db": "UTI",
+        "weight_eur": 627170.0,
+        "engine_wtd_pct": 5.971971838216954,
+        "uniform_pct": 3.0,
+        "rev_diff": 18639.315777745287,
+        "rev_engine": 37454.415777745286,
+        "rev_uniform": 18815.1
+      },
+      {
+        "db": "ITUK",
+        "weight_eur": 1229351.0,
+        "engine_wtd_pct": 5.037507835753588,
+        "uniform_pct": 3.0,
+        "rev_diff": 25048.122953915117,
+        "rev_engine": 61928.652953915116,
+        "rev_uniform": 36880.53
+      }
+    ],
+    "pays_more_than_uniform": [
+      {
+        "db": "ITUK",
+        "cat": "brake_rotor",
+        "label": "Brake rotors",
+        "delta_pct": 6.514140628178209,
+        "diff_eur": 9988.101341845802,
+        "weight_eur": 284226.0,
+        "reason_code": "CAPTIVE_RAISE",
+        "zone": "raise"
+      },
+      {
+        "db": "ITUK",
+        "cat": "fuel_filter",
+        "label": "Fuel filter",
+        "delta_pct": 6.514140628178209,
+        "diff_eur": 7650.881551450756,
+        "weight_eur": 217717.0,
+        "reason_code": "CAPTIVE_RAISE",
+        "zone": "raise"
+      },
+      {
+        "db": "UTI",
+        "cat": "fuel_filter",
+        "label": "Fuel filter",
+        "delta_pct": 6.514140628178209,
+        "diff_eur": 5714.625206730842,
+        "weight_eur": 162618.0,
+        "reason_code": "CAPTIVE_RAISE",
+        "zone": "raise"
+      },
+      {
+        "db": "ITUK",
+        "cat": "air_filter",
+        "label": "Air filter",
+        "delta_pct": 6.514140628178209,
+        "diff_eur": 5361.137800942396,
+        "weight_eur": 152559.0,
+        "reason_code": "CAPTIVE_RAISE",
+        "zone": "raise"
+      },
+      {
+        "db": "UTI",
+        "cat": "air_filter",
+        "label": "Air filter",
+        "delta_pct": 6.514140628178209,
+        "diff_eur": 5154.611756224364,
+        "weight_eur": 146682.0,
+        "reason_code": "CAPTIVE_RAISE",
+        "zone": "raise"
+      },
+      {
+        "db": "UTI",
+        "cat": "oil_filter",
+        "label": "Oil filter",
+        "delta_pct": 6.514140628178209,
+        "diff_eur": 4667.762713596554,
+        "weight_eur": 132828.0,
+        "reason_code": "NO_EVIDENCE_HOLD",
+        "zone": "raise"
+      },
+      {
+        "db": "ITUK",
+        "cat": "oil_filter",
+        "label": "Oil filter",
+        "delta_pct": 6.514140628178209,
+        "diff_eur": 3374.4183968018456,
+        "weight_eur": 96024.0,
+        "reason_code": "NO_EVIDENCE_HOLD",
+        "zone": "raise"
+      },
+      {
+        "db": "UTI",
+        "cat": "clutch_kit",
+        "label": "Clutch kit",
+        "delta_pct": 6.514140628178209,
+        "diff_eur": 2819.9924298941696,
+        "weight_eur": 80247.0,
+        "reason_code": "NO_EVIDENCE_HOLD",
+        "zone": "defend"
+      }
+    ],
+    "pays_less_than_uniform": [
+      {
+        "db": "IUK",
+        "cat": "brake_rotor",
+        "label": "Brake rotors",
+        "delta_pct": -1.4858593718217799,
+        "diff_eur": -16186.909533062899,
+        "weight_eur": 360843.0,
+        "reason_code": "DEFEND_CUT",
+        "zone": "defend"
+      },
+      {
+        "db": "IUK",
+        "cat": "brake_pad",
+        "label": "Brake pads",
+        "delta_pct": -1.4858593718217799,
+        "diff_eur": -11472.316191871916,
+        "weight_eur": 255744.0,
+        "reason_code": "DEFEND_CUT",
+        "zone": "defend"
+      },
+      {
+        "db": "ITUK",
+        "cat": "brake_pad",
+        "label": "Brake pads",
+        "delta_pct": 0.5141406281782099,
+        "diff_eur": -7520.967529446822,
+        "weight_eur": 302550.0,
+        "reason_code": "CONTESTED_ABOVE_MARKET",
+        "zone": "contested"
+      },
+      {
+        "db": "IUK",
+        "cat": "air_filter",
+        "label": "Air filter",
+        "delta_pct": -1.4858593718217799,
+        "diff_eur": -5217.772186928232,
+        "weight_eur": 116316.0,
+        "reason_code": "DEFEND_CUT",
+        "zone": "defend"
+      },
+      {
+        "db": "IUK",
+        "cat": "blower_filter",
+        "label": "Cabin/blower filter",
+        "delta_pct": -1.4858593718217799,
+        "diff_eur": -4755.324944287124,
+        "weight_eur": 106007.0,
+        "reason_code": "CONTESTED_ABOVE_MARKET",
+        "zone": "contested"
+      },
+      {
+        "db": "NORWAY",
+        "cat": "brake_pad",
+        "label": "Brake pads",
+        "delta_pct": -1.4858593718217799,
+        "diff_eur": -4608.413049859961,
+        "weight_eur": 102732.0,
+        "reason_code": "DEFEND_CUT",
+        "zone": "defend"
+      },
+      {
+        "db": "IUK",
+        "cat": "fuel_filter",
+        "label": "Fuel filter",
+        "delta_pct": -1.4858593718217799,
+        "diff_eur": -4141.973392377931,
+        "weight_eur": 92334.0,
+        "reason_code": "DEFEND_CUT",
+        "zone": "defend"
+      },
+      {
+        "db": "GERMANY",
+        "cat": "brake_pad",
+        "label": "Brake pads",
+        "delta_pct": 0.5141406281782099,
+        "diff_eur": -3359.8875269543296,
+        "weight_eur": 135160.0,
+        "reason_code": "DEFEND_CUT",
+        "zone": "defend"
+      }
+    ],
+    "redistributed_eur": 94886.49278796194,
+    "why_engine": {
+      "prior_process": {
+        "title": "How ISZE typically priced before",
+        "bullets": [
+          "Uniform or near-uniform weighted list increase \u2014 the same % across much of the book when a +3% target was set.",
+          "Class factors set selling price from FOB (IML formula), but the revision itself was not rule-based by capture, street, or \u03b8.",
+          "Little separation of IML buying-price pass-through versus the ISZE margin decision on the same list move.",
+          "Street reads often used the wrong pricing point historically (list vs PR00 \u00d7 street factor 1.785) \u2014 Eucon lesson.",
+          "No brand-quality % ceilings (+30 / +60 / +150 / +250); no oem_benchmark gate; no logged allocation runs with reason codes."
+        ]
+      },
+      "engine_process": {
+        "title": "What the engine does instead",
+        "bullets": [
+          "Same +3.0000% weighted index \u2014 solver hits the target exactly under constant prior-year units.",
+          "Wallet zones (raise / contested / defend from PMS total capture) plus street evidence gates decide who funds vs who is cut.",
+          "Reason codes on every cell; caps (+8%, tighter on top-50) and floors; \u03b8_parc with street veto.",
+          "Trusted premium basis required for position moves (oem_benchmark / iam_derived); hold-when-blind on NO_EVIDENCE.",
+          "Brand-quality ceiling ladder (+30/+60/+150/+250) in policy; run registry and alloc detail for every logged move."
+        ]
+      },
+      "maturity_matrix": [
+        {
+          "dim": "Index discipline",
+          "prior": "Target % often applied uniformly",
+          "engine": "+3% weighted exact; logged"
+        },
+        {
+          "dim": "Who pays",
+          "prior": "Same % most lines",
+          "engine": "Raise funds; defend/contested cut"
+        },
+        {
+          "dim": "Street gate",
+          "prior": "Ad hoc / wrong point risk",
+          "engine": "Evidence tiers + hold-when-blind"
+        },
+        {
+          "dim": "OEM peer gate",
+          "prior": "None",
+          "engine": "oem_benchmark (\u22653 priced peers)"
+        },
+        {
+          "dim": "Brand ceilings",
+          "prior": "Flat premium thinking",
+          "engine": "+30/+60/+150/+250 ladder"
+        },
+        {
+          "dim": "IML vs ISZE",
+          "prior": "Often blurred on revision",
+          "engine": "BP pass-through vs \u0394 decision separated"
+        },
+        {
+          "dim": "\u03b8 / parc",
+          "prior": "Not in list revision",
+          "engine": "\u03b8_parc live; \u03b8_interval pending map"
+        },
+        {
+          "dim": "Audit trail",
+          "prior": "No run registry",
+          "engine": "Reason codes + run IDs"
+        }
+      ],
+      "class_factors": [
+        {
+          "cls": "C",
+          "factor": 0.47
+        },
+        {
+          "cls": "D",
+          "factor": 0.48
+        },
+        {
+          "cls": "F",
+          "factor": 0.525
+        },
+        {
+          "cls": "J",
+          "factor": 0.555
+        },
+        {
+          "cls": "M",
+          "factor": 0.5
+        },
+        {
+          "cls": "P",
+          "factor": 0.44
+        },
+        {
+          "cls": "V",
+          "factor": 0.55
+        },
+        {
+          "cls": "T",
+          "factor": 0.8
+        }
+      ],
+      "brand_tiers": [
+        {
+          "tier": 4,
+          "label": "OE / premium IAM",
+          "ceiling_pct": 30,
+          "example": "Bosch, Delphi, Febi OE-tier"
+        },
+        {
+          "tier": 3,
+          "label": "Mainstream IAM",
+          "ceiling_pct": 60,
+          "example": "Solid mid brands"
+        },
+        {
+          "tier": 2,
+          "label": "Budget IAM",
+          "ceiling_pct": 150,
+          "example": "Value brands"
+        },
+        {
+          "tier": 1,
+          "label": "No-name / CN",
+          "ceiling_pct": 250,
+          "example": "Lowest-quality brands"
+        }
+      ],
+      "street_factor": 1.785,
+      "histogram_engine": [
+        {
+          "bin": "\u22122\u2026\u22121%",
+          "cells": 13,
+          "weight_eur": 1214111.0,
+          "weight_share": 0.21048989905556928
+        },
+        {
+          "bin": "\u22121\u20260%",
+          "cells": 0,
+          "weight_eur": 0.0,
+          "weight_share": 0.0
+        },
+        {
+          "bin": "0\u20261%",
+          "cells": 49,
+          "weight_eur": 1626125.0,
+          "weight_share": 0.2819205880695732
+        },
+        {
+          "bin": "1\u20263%",
+          "cells": 0,
+          "weight_eur": 0.0,
+          "weight_share": 0.0
+        },
+        {
+          "bin": "3\u20265%",
+          "cells": 20,
+          "weight_eur": 534768.0,
+          "weight_share": 0.09271249691185458
+        },
+        {
+          "bin": "5\u20266.5%",
+          "cells": 0,
+          "weight_eur": 0.0,
+          "weight_share": 0.0
+        },
+        {
+          "bin": "6.5\u20268%",
+          "cells": 114,
+          "weight_eur": 2211629.0,
+          "weight_share": 0.38342916336180927
+        },
+        {
+          "bin": "8% cap",
+          "cells": 17,
+          "weight_eur": 181392.0,
+          "weight_share": 0.03144785260119365
+        }
+      ],
+      "histogram_uniform": {
+        "bin": "+3% flat",
+        "cells": 213,
+        "weight_eur": 5768025.0,
+        "weight_share": 1.0
+      },
+      "zone_reason": [
+        {
+          "zone": "raise",
+          "reason_code": "CAPTIVE_RAISE",
+          "cells": 26,
+          "weight_eur": 1554283.0,
+          "rev_engine": 98306.50037986715,
+          "rev_uniform": 46628.49,
+          "rev_diff": 51678.01037986715
+        },
+        {
+          "zone": "raise",
+          "reason_code": "NO_EVIDENCE_HOLD",
+          "cells": 8,
+          "weight_eur": 368268.0,
+          "rev_engine": 23311.27806979432,
+          "rev_uniform": 11048.039999999999,
+          "rev_diff": 12263.238069794319
+        },
+        {
+          "zone": "contested",
+          "reason_code": "NO_EVIDENCE_HOLD",
+          "cells": 11,
+          "weight_eur": 140303.0,
+          "rev_engine": 9468.353706848035,
+          "rev_uniform": 4209.09,
+          "rev_diff": 5259.263706848034
+        },
+        {
+          "zone": "contested",
+          "reason_code": "CONTESTED_ABOVE_MARKET",
+          "cells": 22,
+          "weight_eur": 1117220.0,
+          "rev_engine": 2774.7019261326113,
+          "rev_uniform": 33516.6,
+          "rev_diff": -30741.898073867385
+        },
+        {
+          "zone": "defend",
+          "reason_code": "NO_EVIDENCE_HOLD",
+          "cells": 106,
+          "weight_eur": 864935.0,
+          "rev_engine": 51634.030631558046,
+          "rev_uniform": 25948.05,
+          "rev_diff": 25685.980631558046
+        },
+        {
+          "zone": "defend",
+          "reason_code": "DEFEND_CUT",
+          "cells": 40,
+          "weight_eur": 1723016.0,
+          "rev_engine": -12454.114713988918,
+          "rev_uniform": 51690.479999999996,
+          "rev_diff": -64144.59471398891
+        }
+      ],
+      "db_zone_stack": [
+        {
+          "db": "IUK",
+          "eng_raise": 0.0,
+          "uni_raise": 0.0,
+          "eng_contested": -1575.114944287124,
+          "uni_contested": 3180.21,
+          "eng_defend": -1444.1747028747145,
+          "uni_defend": 31946.309999999998,
+          "rev_diff": -38145.80964716184,
+          "engine_wtd_pct": -0.25786411353830424
+        },
+        {
+          "db": "ITUK",
+          "eng_raise": 48890.3190910408,
+          "uni_raise": 22515.78,
+          "eng_contested": 1555.5324705531782,
+          "uni_contested": 9076.5,
+          "eng_defend": 11482.80139232114,
+          "uni_defend": 5288.25,
+          "rev_diff": 25048.122953915114,
+          "engine_wtd_pct": 5.03750783575359
+        },
+        {
+          "db": "UTI",
+          "eng_raise": 28800.83967655176,
+          "uni_raise": 13263.84,
+          "eng_contested": 0.0,
+          "uni_contested": 0.0,
+          "eng_defend": 8653.576101193525,
+          "uni_defend": 5551.26,
+          "rev_diff": 18639.31577774529,
+          "engine_wtd_pct": 5.971971838216956
+        },
+        {
+          "db": "IRELAND",
+          "eng_raise": 15204.944818340282,
+          "uni_raise": 6725.759999999999,
+          "eng_contested": 2589.945763380315,
+          "uni_contested": 1058.73,
+          "eng_defend": 1054.08,
+          "uni_defend": 395.28,
+          "rev_diff": 10669.200581720595,
+          "engine_wtd_pct": 6.913019772580622
+        },
+        {
+          "db": "GERMANY",
+          "eng_raise": 0.0,
+          "uni_raise": 0.0,
+          "eng_contested": 761.226331268096,
+          "uni_contested": 4441.74,
+          "eng_defend": 3729.308804568178,
+          "uni_defend": 7261.8,
+          "rev_diff": -7213.004864163726,
+          "engine_wtd_pct": 1.1510709928371097
+        },
+        {
+          "db": "NORWAY",
+          "eng_raise": 6639.57860154964,
+          "uni_raise": 4412.5199999999995,
+          "eng_contested": 228.02507226678188,
+          "uni_contested": 1844.6999999999998,
+          "eng_defend": -1440.528167109513,
+          "uni_defend": 3760.83,
+          "rev_diff": -4590.974493293091,
+          "engine_wtd_pct": 1.625189185532187
+        },
+        {
+          "db": "UMI",
+          "eng_raise": 2886.747790313684,
+          "uni_raise": 1918.47,
+          "eng_contested": 0.0,
+          "uni_contested": 0.0,
+          "eng_defend": 805.6638268180574,
+          "uni_defend": 5403.33,
+          "rev_diff": -3629.3883828682583,
+          "engine_wtd_pct": 1.5129114222452436
+        },
+        {
+          "db": "SWEDEN",
+          "eng_raise": 3542.5850978221565,
+          "uni_raise": 1631.49,
+          "eng_contested": 1725.5889913388482,
+          "uni_contested": 2886.15,
+          "eng_defend": 827.7105678115815,
+          "uni_defend": 3538.8599999999997,
+          "rev_diff": -1960.6153430274132,
+          "engine_wtd_pct": 2.2699253982396526
+        },
+        {
+          "db": "GREECE",
+          "eng_raise": 3918.516153474321,
+          "uni_raise": 1804.62,
+          "eng_contested": 110.79216396612274,
+          "uni_contested": 646.47,
+          "eng_defend": 1436.7656390361426,
+          "uni_defend": 2187.45,
+          "rev_diff": 827.5339564765868,
+          "engine_wtd_pct": 3.535211913539553
+        },
+        {
+          "db": "HUNGARY",
+          "eng_raise": 896.4108918436036,
+          "uni_raise": 412.83,
+          "eng_contested": 623.8506828236734,
+          "uni_contested": 747.99,
+          "eng_defend": 393.71125630603586,
+          "uni_defend": 1527.78,
+          "rev_diff": -774.6271690266868,
+          "engine_wtd_pct": 2.135653683299836
+        }
+      ],
+      "flows_from": [
+        {
+          "reason_code": "DEFEND_CUT",
+          "eur": 64144.59471398891,
+          "signed": -64144.59471398891
+        },
+        {
+          "reason_code": "CONTESTED_ABOVE_MARKET",
+          "eur": 30741.898073867385,
+          "signed": -30741.898073867385
+        }
+      ],
+      "flows_to": [
+        {
+          "reason_code": "CAPTIVE_RAISE",
+          "eur": 51678.01037986715,
+          "signed": 51678.01037986715
+        },
+        {
+          "reason_code": "NO_EVIDENCE_HOLD",
+          "eur": 43208.48240820039,
+          "signed": 43208.48240820039
+        }
+      ],
+      "by_evidence_detail": [
+        {
+          "evidence_tier": "T3_eucon",
+          "cells": 88,
+          "weight_eur": 4394519.0,
+          "weight_share": 0.7618758587211394,
+          "mean_delta": 0.019459588099963936,
+          "wtd_delta": 0.020167642372694465
+        },
+        {
+          "evidence_tier": "T5_none",
+          "cells": 125,
+          "weight_eur": 1373506.0,
+          "weight_share": 0.2381241412788606,
+          "mean_delta": 0.06428217502745973,
+          "wtd_delta": 0.06145853196724322
+        }
+      ],
+      "caps": {
+        "n_capped": 17,
+        "n_at_floor": 0,
+        "n_top50_at_cap": 0,
+        "cap_pct": 8.0,
+        "cap_top50_pct": 5.0,
+        "floor_pct": -12.0,
+        "n_theta_vetoed": 10
+      },
+      "blind_weight": {
+        "reason_code": "NO_EVIDENCE_HOLD",
+        "cells": 125,
+        "weight_eur": 1373506.0,
+        "weight_share": 0.2381241412788606,
+        "wtd_delta_pct": 6.145853196724322,
+        "meaning": "These cells have no street evidence tier that can move position. They take the index base lift \u2014 still partly the old uniform world inside an otherwise differentiated run."
+      },
+      "distributor_talking_points": [
+        {
+          "title": "Same index, fairer mix",
+          "text": "We still deliver a +3% weighted list increase (\u20ac173,041 on \u20ac5,768,025). The engine does not invent a bigger bill \u2014 it changes which lines carry it."
+        },
+        {
+          "title": "Defend lines are not loaded like captive",
+          "text": "Where genuine capture is already lost and street is above market, the engine cuts or holds (e.g. IUK brake pads/rotors). A flat +3% would have raised those the same as captive filters."
+        },
+        {
+          "title": "Blind weight is still partly the old world",
+          "text": "23.8% of basket \u20ac still takes the unbenchmarked base lift (NO_EVIDENCE_HOLD, ~6.1% weighted). Differentiation is real where evidence exists \u2014 honest about where it does not."
+        },
+        {
+          "title": "Street on the right point",
+          "text": "Street comparisons use PR00 \u00d7 1.785 (street factor), not raw list \u2014 correcting the Eucon-era misread. No oem_benchmark without enough priced peer OEs."
+        },
+        {
+          "title": "New models need mix, not only +3%",
+          "text": "D-Max 2.2 (15k oil interval) is a \u03b8 / launch-book story: protect interval-linked wear with mix rules; do not claim volume from the list move alone."
+        }
+      ],
+      "headline_deep": "Same +3% weighted index (\u20ac173,041). Engine redistributes ~\u20ac94,886 of who pays. Blind weight 23.8% still on base lift. Caps hit 17 cells; \u03b8 veto 10."
+    }
+  },
+  "launch": {
+    "run_id": "20260806T154452Z__launch__dmax_22_base",
+    "model": "D-Max 2.2 (RG21 / RZ4F-TC)",
+    "best_tactic": "warranty_load",
+    "best_gp_npv_eur": 72752723,
+    "class_only_gp_npv_eur": 54832274,
+    "vs_class_only_pct": 32.7,
+    "services_per_vehicle_yr": 1.33,
+    "oil_interval_km": 15000,
+    "prior_interval_km": 20000,
+    "note": "Launch book NPV and capture erosion are modelled [ASSUMPTION] \u2014 not measured elasticity. Use for tactic ranking, not volume forecast. \u03b8_interval (15k vs 20k oil) is the measured demand lever still blocked."
+  },
+  "by_basis": [
+    {
+      "premium_basis": "iam_derived",
+      "cells": 70,
+      "weight_eur": 3615705.0,
+      "weight_share": 0.6268532123213751,
+      "mean_delta": 0.01885569199606783
+    },
+    {
+      "premium_basis": "oem_benchmark",
+      "cells": 36,
+      "weight_eur": 1336699.0,
+      "weight_share": 0.23174292760520282,
+      "mean_delta": 0.042633550377238656
+    },
+    {
+      "premium_basis": "placeholder",
+      "cells": 107,
+      "weight_eur": 815621.0,
+      "weight_share": 0.141403860073422,
+      "mean_delta": 0.06442064839181265
+    }
+  ],
+  "by_evidence": [
+    {
+      "evidence_tier": "T3_eucon",
+      "cells": 88,
+      "weight_eur": 4394519.0,
+      "weight_share": 0.7618758587211394
+    },
+    {
+      "evidence_tier": "T5_none",
+      "cells": 125,
+      "weight_eur": 1373506.0,
+      "weight_share": 0.2381241412788606
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # ISZE — which map when
 
-**Agent sync:** 2026-07-16 · Registry: `MAP_REGISTRY.yaml`
+**Agent sync:** 2026-08-26 · Registry: `MAP_REGISTRY.yaml`
 
 > **Filing new data?** All new/unsorted files go to **`01_data/90_INBOX/`** first, then get sorted into the numbered folder for their topic (`01_data/DATA_MANIFEST.md` §0–§1). The root of `01_data/` is **not** a drop zone.
 
@@ -41,6 +41,7 @@ All paths above are under **`00_docs/`** unless noted as ISZE root.
 | `00_docs/CANONICAL.md` | Which filename is authoritative; pending renames |
 | `00_docs/MAPS.md` | This file — navigation confusion |
 | `00_docs/MAP_REGISTRY.yaml` | Machine index of all maps |
+| `00_docs/PERSONAL_BRIDGE.md` | Career/agentic self → outside ISZE (`docs/BRIDGE_PRIVATE_ISZE.md`) |
 | `00_docs/agent/NOTES.md` | Scheduled tasks, decision-model caveats |
 | `00_docs/agent/AI_STACK.md` | Claude vs GPT routing, tier protocol |
 
@@ -48,11 +49,16 @@ All paths above are under **`00_docs/`** unless noted as ISZE root.
 
 | Map | Domain |
 |-----|--------|
-| `00_docs/ISZE_ROADMAP.md` | Programme hub — links to all roadmaps |
-| `00_docs/roadmaps/html.md` | Static HTML dashboards |
-| `00_docs/roadmaps/scrapers.md` | Tender, Autodoc, KS, discount |
-| `00_docs/roadmaps/gps.md` | GPS / fig-key / AIM integration |
-| `00_docs/roadmaps/tools.md` | Jarvis, isze-tools, IDS ranking |
+| `00_docs/ISZE_ROADMAP.md` | **Programme hub — the only queue.** Open work, decisions waiting on Jerome, what is live, what is closed |
+| `00_docs/roadmaps/aim_prism_reinvention.md` | Active: after AIM scoring failed — P4, PN prices, PRISM surface |
+| `00_docs/roadmaps/ai_sales_intelligence.md` | Active: mail → action, account health, forecast |
+| `00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md` | Active: Tier A builds (done) / Tier B decisions |
+| `00_docs/roadmaps/gps.md` | GPS / fig-key (AIM *scoring* V3 superseded) |
+| `00_docs/roadmaps/html.md` | Static HTML dashboards + inventory |
+| `00_docs/roadmaps/scrapers.md` | Tender portals, KS/IAM, discount |
+| `00_docs/roadmaps/tools.md` | Jarvis / isze-tools (low priority) |
+
+**Roadmap rule:** status lives in the hub. A domain file may hold depth and history, but if the two disagree, the hub wins and the domain file gets fixed. Rationale for anything closed lives in `DECISIONS.md`, not in a roadmap table cell.
 
 ## Tier 4 — Memory & data (topic-specific)
 
@@ -63,4 +69,4 @@ All paths above are under **`00_docs/`** unless noted as ISZE root.
 | `01_data/DATA_MANIFEST.md` | File registry, ingest, **INBOX dump-then-sort rule (§0)** |
 | `03_analytics/Isuzu/prism/docs/metric_dictionary.md` | Metric formulas (edit only) |
 
-**Numbers:** green `01_data/derived/_verification_report.json` → `metrics_snapshot.json` → `FACTS.md`
+**Numbers:** green `01_data/00_derived/_verification_report.json` → `metrics_snapshot.json` → `FACTS.md`

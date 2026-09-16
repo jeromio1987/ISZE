@@ -1,8 +1,35 @@
 {
-
   "version": 1,
-
-  "hooks": {}
-
+  "hooks": {
+    "afterShellExecution": [
+      {
+        "command": "node .cursor/hooks/db-sales-review-after-build.mjs",
+        "matcher": "db_sales_review|build_full_deck\\.py|build_deck\\.py|build_parts_analysis\\.py"
+      },
+      {
+        "command": "node .cursor/hooks/exec-aftersales-after-build.mjs",
+        "matcher": "build_exec_aftersales_paper\\.py|verify_exec_aftersales_paper\\.py"
+      }
+    ],
+    "afterAgentResponse": [
+      {
+        "command": "node .cursor/hooks/block-workspace-open-paths.mjs"
+      }
+    ],
+    "stop": [
+      {
+        "command": "node .cursor/hooks/db-sales-review-on-stop.mjs"
+      },
+      {
+        "command": "node .cursor/hooks/exec-aftersales-on-stop.mjs"
+      },
+      {
+        "command": "node .cursor/hooks/mypens-verify-on-stop.mjs"
+      },
+      {
+        "command": "node .cursor/hooks/block-workspace-open-paths.mjs",
+        "loop_limit": 1
+      }
+    ]
+  }
 }
-

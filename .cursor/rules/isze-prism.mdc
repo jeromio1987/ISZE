@@ -1,13 +1,14 @@
 ---
 description: PRISM pipeline, Streamlit, Evidence, Dash — metrics and verify
-globs: Projects/Isuzu/prism/**
+globs: 03_analytics/Isuzu/prism/**
 alwaysApply: false
 ---
 
 # ISZE PRISM
 
-- **Canonical code** lives here only — not `_archive/duplicate_repos/`.
-- **KPIs:** green `Data/derived/_verification_report.json` → `metrics_snapshot.json` → `metric_dictionary.md` for formulas.
-- **Pipeline edits:** run `isze-verify-pipeline` or `scripts/run_pipeline_and_verify.ps1` before citing capture %, GPS, BVP.
-- **Derived output:** `Data/derived/` — all UIs read this; do not fork metric math in page code.
-- **Evidence:** edit `evidence-app/pages/` only — ignore `.evidence/` build clones.
+- **Canonical code** lives under `03_analytics/Isuzu/prism/` only — not `_archive/duplicate_repos/`.
+- **Product surface:** Streamlit `:8503` via `run_prism.ps1` (MD-safe). Extra tabs: `run_prism_internal.ps1`.
+- **KPIs:** green `01_data/00_derived/_verification_report.json` → `metrics_snapshot.json` → `docs/metric_dictionary.md` for formulas. Never quote on red verify.
+- **Pipeline edits:** run skill `isze-verify-pipeline` or `scripts/run_pipeline_and_verify.ps1` before citing capture %, GPS, BVP.
+- **Derived output:** `01_data/00_derived/` — all UIs read this; do not fork metric math in page code.
+- **Evidence / Dash:** frozen — Streamlit is the product (see DECISIONS / roadmap).

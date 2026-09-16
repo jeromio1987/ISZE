@@ -1,8 +1,23 @@
 # Project: UIO (Units In Operation) Tool
 
-_Last validated: 2026-07-06 (v19 canonical — `06_uio/_CURRENT/ISUZU_UIO_Overview_2026.xlsx`)_
+_Last validated: 2026-08-17 (v19 canonical — `06_uio/_CURRENT/ISUZU_UIO_Overview_2026.xlsx`; Version history v18/v19 rows and open item #7 filled in from `06_uio/_CURRENT/README.md` and `CHANGELOG.md` — closes a gap flagged every week since 2026-07-20)_
 
 ## Status: Active — **v19 canonical** · JSON extract `01_data/91_build/uio_2026.json` · Dashboard HTML v18 (rebuild pending)
+
+## ⚠️ V20 rebuild in progress — one figure LOCKED, rest still draft (added 2026-08-03)
+
+`06_uio/_CURRENT/V20_SPEC.md` (drafted 27 Jul 2026, amended 30 Jul 2026) documents a forecast-methodology
+defect in the current v19 2026–2030 columns (flat 3% scrap assumption vs the ~10–12% the file's own
+survival curves and VIN-shipment data imply) — Grand Total overstated 7.8% (2026) rising to 37.7% (2030).
+**Rebuild status: draft, nothing built yet** — this is a flagged risk on the 2026–2030 columns, not a
+v19 replacement.
+
+**One figure is LOCKED (Jerome, 30 Jul 2026):** IUK LCV (sheet 1 row 25 — hardcoded, separate from the
+ITUK CV cohort model below, rows 22/24) CY2026F = **44,926** (was V19's 49,280 — confirmed wrong-direction,
+must not be used). This is the only V20 number currently authoritative; the rest of V20_SPEC.md's
+seven-problem list (Israel fleet ~25% understated, four low-confidence markets, GPS weight-class
+misclassification, pickup fleet direction, stale documentation) is analysis/plan, not yet applied to the
+workbook. Full detail: `06_uio/_CURRENT/V20_SPEC.md`.
 
 ## What
 Excel + Python tool calculating Isuzu vehicle population in service (UIO) by country, distributor, model type.
@@ -70,6 +85,8 @@ ITUK figures (22,389 → 23,068 → 24,173 → ... → 28,209) are unaffected an
 | v16 | 2026-04-17 | Chart 1 + Chart 2 corrections |
 | v16b | 2026-04-17 | Chart 1 further fix (orange floor above N35/N75 at age 15+); Section E survival notes confirmed. **Bug carried over**: 90% override only in 2025 formulas; 2026/2027 had broken INDEX(4:6,…) refs; 2028–2030 had no override at all. File corrupted on disk (re-uploaded 20 Apr). |
 | **v17** | **2026-04-20** | (1) 90% owner-operator override applied uniformly across 2025–2030 for Pre-2008/2008/2009/2010 cohorts — flat hold, no compounding. Broken INDEX(4:6,…) refs removed. (2) Sheet 1 U KING rows 22 (CV LD) + 24 (F-Series), cols AP-AU, converted from hardcoded v11-era values to live formulas linking sheet 4 Section C. (3) B17/B29 notes rewritten. Total: ~2,371 units restored 2026–2030 on sheet 4; Grand Total +1,914 to +2,400 across 2025–2030. |
+| **v18** | **2026-06-11** | Changelog entries V18-16→V18-20: forecast-methodology fix — replaced the pure-decay 2026–2030 forecast with one driven by actual IMIT/CV-plan new-registration inputs. Grand Total flipped from decline to growth (2025→2026 LCV +5%, was −3%) — this retires the old "2026F dip" narrative everywhere it was quoted. Also touched Portugal/Germany; confirmed **not** to have touched Sheet 4 (ITUK), which stayed on its existing figures. Source: `06_uio/_CURRENT/README.md` (refreshed 2026-07-09, cites the workbook's own Changelog sheet). |
+| **v19** | **confirmed canonical 2026-07-16** | Changelog entries V19-1/V19-2: Israel UTI parc (CV LD+MD) rebuilt — 2024: 10,049 → 2025: 10,336 → 2026: 10,760 → 2027: 10,972. Per `CHANGELOG.md` 2026-07-16: `_CURRENT/ISUZU_UIO_Overview_2026.xlsx` confirmed already v19 and the primary load everywhere; dormant `v18` fallback references in `config.py` (`UIO_CANDIDATES`) and `gps_v9_loaders.py` (`UIO_FALLBACKS`) re-pointed to v19. Full pipeline run at the time: **105 pass / 1 fail** (not fully green) — root `ISUZU_UIO_Overview_2026_v18.xlsx` deliberately kept, not archived. |
 
 ## ITUK cohort model impact vs v11 step-function
 - 2025: 21,154 (v11) → 23,068 (v12/v16b/v17 — same, 90% override already working in 2025)
@@ -101,7 +118,7 @@ ITUK figures (22,389 → 23,068 → 24,173 → ... → 28,209) are unaffected an
 4. ✅ **Dashboard rebuilt** — v17 HTML created May 2026 at `ISZE/Dashboards/ISUZU_UIO_Dashboard_2026_v17.html`
 5. ✅ **File sprawl resolved** — v8–v16b archived to `ISZE/UIO/_Archive/`. Canonical structure in `_CURRENT/`, `_Scripts/`, `_SourceData/`.
 6. **MIDI contribution (sheet 1 row 5)** not verified after v17 — SUMPRODUCT may still point at old hardcoded ITUK cells. Recheck before quoting MIDI numbers from v17 externally. (~92,585 units 2024 — treat as estimate until verified)
-7. **Build script `build_isuzu_uio.py`** not updated for v17 — treat v17 as manually-patched. Do not regenerate from script.
+7. **Build script `build_isuzu_uio.py`** still predates the canonical file (last updated Apr 2026 — pre-v18/v19). Per `06_uio/_CURRENT/README.md`: it now carries a runtime guard that aborts without `--force`, and needs two patches embedded before use — (1) the 90% owner-operator override fix, (2) Sheet 1 → Sheet 4 live links. Still do not regenerate from script without applying both patches first (updated 2026-08-17, previously just said "not updated for v17").
 8. **Model-level ITUK table rows** in v17 dashboard carry v11 step-function basis (totals are v17-correct; model sub-rows need refresh from Sheet 4 Section C).
 
 ## Next refresh

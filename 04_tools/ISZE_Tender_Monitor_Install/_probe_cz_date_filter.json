@@ -1,0 +1,245 @@
+{
+  "ctx": [
+    ".then((e=>e.data)))),mp(this,\"getSubmissionsSearch\",(e=>this.api.get(\"/api/submissions/search\",{params:e}).then((e=>({data:e.data,totalCount:parseInt(e.headers[bp]),maxItems:parseInt(e.headers[_p])}))))),mp(this,\"getSubmissionsChildrenSearch\",(e=>thi",
+    "order)},l=Ip(e);Lp.submission.getSubmissionsSearch({formGroup:l,form:e,page:p,limit:f,...i}).then((e=>{t(e.data),a(e.maxItems)})).catch((e=>{u(e.toString())})).finally((()=>{s(!1)}));const h=Pf(JSON.stringify({[e]:i}));Rf===h?n!==Ff&&r(Ff):Lp.submiss",
+    "ion.getSubmissionsSearch({formGroup:l,form:e,limit:0,...i}).then((e=>{r(e.totalCount),Rf=h,Ff=e.totalCount})).catch((e=>{u(e.toString())}))}),[p,f,c,d]),y=(0,U.useRef)(!0);return(0,U.useEffect)((()=>{y.current&&h?y.current=!",
+    "evResMain=await Lp.submission.getSubmissionsSearch({formGroup:zp.VZ,form:Mp.HLAVNI,page:1,limit:1,variableId:this.evCisloFormulare}).then((e=>e.data.length?e.data[0]:Lp.submission.getSubmissionsSearch({formGroup:zp.PROFIL,form:Mp.PROFIL,page:1,limit:",
+    "bleId:n=>{r(!0),Lp.submission.getSubmissionsSearch({formGroup:a,form:e,page:1,limit:1,variableId:n}).then((e=>{e.data.length?t((o?np.admin:np.vyhledatFormular)+\"/\"+e.data[0].id):kt.error(\"Navazuj\\xedc\\xed formul\\xe1\\u0159 nenalezen\")})).catch((e=>{kt",
+    "ffect)((()=>{o&&Lp.submission.getSubmissionsSearch({formGroup:s,form:r,page:1,limit:1,workflowPlace:Gp.UVEREJNENO_VVZ,\"data.evCisloVvzSouvisejicihoFormulare\":e.variableId,\"data.druhFormulare\":t.druhFormulare}).then((e=>{e.data.length?i(!0):i(!1)})).c",
+    "jicihoFormulare?Lp.submission.getSubmissionsSearch({formGroup:zp.PROFIL,form:Mp.PROFIL,page:1,limit:1,variableId:y.evCisloVvzSouvisejicihoFormulare}).then((e=>{S(!!e.data.length)})):S(!1))}),[_,y]);const O=!!w.data,N=k?null===(e=w.data)||void 0===e?v",
+    "),...t},c=Ip(e);Lp.submission.getSubmissionsSearch({formGroup:c,form:e,page:h,limit:m,...l}).then((e=>{r(e.data),s(e.maxItems)})).catch((e=>{d(e.toString())})).finally((()=>{u(!1)}));const b=Pf(JSON.stringify({[e]:l,reloadFlag:g}));rL===b?o!==oL&&a(o",
+    "L):Lp.submission.getSubmissionsSearch({formGroup:c,form:e,limit:0,...l}).then((e=>{a(e.totalCount),rL=b,oL=e.totalCount})).catch((e=>{d(e.toString())}))}),[h,m,e,v,p,f,g]);return(0,U.useEffect)((()=>{b()}),[b]),{data:n,loading:l,error:c,",
+    "rmulare,n=await Lp.submission.getSubmissionsSearch({formGroup:zp.VZ,form:Mp.HLAVNI,page:1,limit:1,variableId:t}).then((e=>e.data.length?e.data[0]:Lp.submission.getSubmissionsSearch({formGroup:zp.PROFIL,form:Mp.PROFIL,page:1,limit:1,variableId:t}).the"
+  ],
+  "fields_near_search": [
+    "order",
+    "toString",
+    "totalCount",
+    "workflowPlace"
+  ],
+  "date_keys_sample": [
+    "AsyncGeneratorFunction",
+    "Autocomplete",
+    "ButtonCopy",
+    "ButtonCopyAres",
+    "ButtonCopyOrganizationProfile",
+    "Date",
+    "DateParts",
+    "GeneratorFunction",
+    "October",
+    "ReactToPrint",
+    "SelectAutocomplete",
+    "ToastContainer",
+    "Toastify",
+    "Tooltip",
+    "TouchEvent",
+    "ValidateAndHide",
+    "ValidateAndShow",
+    "allowedDecimalSeparators",
+    "atom",
+    "atomcat",
+    "atomdeleted",
+    "atomsvc",
+    "auto",
+    "autoComplete",
+    "autoFocus",
+    "autoReverse",
+    "backendConnector",
+    "bottom",
+    "button",
+    "clearAuthToken",
+    "clearIndicator",
+    "componentDidUpdate",
+    "compositionupdate",
+    "conformsTo",
+    "constructor",
+    "crypto",
+    "cryptonote",
+    "customEnum",
+    "customInput",
+    "customInspect",
+    "date",
+    "dates",
+    "decimalSeparator",
+    "defaultTo",
+    "disabledAutocomplete",
+    "discriminator",
+    "dropdownIndicator",
+    "extractFromKey",
+    "findFrom",
+    "findIndexFrom",
+    "findLastFrom",
+    "findLastIndexFrom",
+    "forceUpdate",
+    "formWrapDesktop",
+    "formnavigationDesktop",
+    "from",
+    "fromCodePoint",
+    "fromElement",
+    "fromPairs",
+    "getBestMatchFromCodes"
+  ],
+  "tries": [
+    {
+      "params": {
+        "formGroup": "vz",
+        "form": "vz",
+        "page": 1,
+        "limit": 5,
+        "order[createdAt]": "desc"
+      },
+      "http": 200,
+      "total": "501536",
+      "dates": [
+        {
+          "createdAt": "2026-08-25T19:52:11+02:00",
+          "updatedAt": "2026-08-25T20:00:03+02:00",
+          "publicId": "hd6SsgS8aXGbJUYSAOupSMHRKiATAhh4"
+        },
+        {
+          "createdAt": "2026-08-25T18:12:29+02:00",
+          "updatedAt": "2026-08-25T18:30:08+02:00",
+          "publicId": "nYaLxwJfHHeGLU1L4kBAzXPqNQ3zk1mw"
+        },
+        {
+          "createdAt": "2026-08-25T17:55:45+02:00",
+          "updatedAt": "2026-08-25T19:50:01+02:00",
+          "publicId": "HfAJCkgMVHd0nqPU0Ghp1F0ZIqVlGjUV"
+        }
+      ]
+    },
+    {
+      "params": {
+        "formGroup": "vz",
+        "form": "vz",
+        "page": 1,
+        "limit": 5,
+        "order[updatedAt]": "desc"
+      },
+      "http": 200,
+      "total": "501536",
+      "dates": [
+        {
+          "createdAt": "2026-08-25T19:52:11+02:00",
+          "updatedAt": "2026-08-25T20:00:03+02:00",
+          "publicId": "hd6SsgS8aXGbJUYSAOupSMHRKiATAhh4"
+        },
+        {
+          "createdAt": "2026-08-25T17:55:45+02:00",
+          "updatedAt": "2026-08-25T19:50:01+02:00",
+          "publicId": "HfAJCkgMVHd0nqPU0Ghp1F0ZIqVlGjUV"
+        },
+        {
+          "createdAt": "2026-08-25T18:12:29+02:00",
+          "updatedAt": "2026-08-25T18:30:08+02:00",
+          "publicId": "nYaLxwJfHHeGLU1L4kBAzXPqNQ3zk1mw"
+        }
+      ]
+    },
+    {
+      "params": {
+        "formGroup": "vz",
+        "form": "vz",
+        "page": 1,
+        "limit": 5,
+        "createdAt[after]": "2026-07-01"
+      },
+      "http": 400,
+      "total": null,
+      "dates": []
+    },
+    {
+      "params": {
+        "formGroup": "vz",
+        "form": "vz",
+        "page": 1,
+        "limit": 5,
+        "updatedAt[after]": "2026-07-01"
+      },
+      "http": 400,
+      "total": null,
+      "dates": []
+    },
+    {
+      "params": {
+        "formGroup": "vz",
+        "form": "vz",
+        "page": 1,
+        "limit": 5,
+        "createdAt.from": "2026-07-01"
+      },
+      "http": 200,
+      "total": "501536",
+      "dates": [
+        {
+          "createdAt": "2023-03-26T17:30:08+02:00",
+          "updatedAt": "2023-03-26T17:30:08+02:00",
+          "publicId": "FsSwsMLt3e35CxTy52Fq1jeqmzXRYFik"
+        },
+        {
+          "createdAt": "2023-03-26T17:30:08+02:00",
+          "updatedAt": "2023-03-26T17:30:08+02:00",
+          "publicId": "qmt3mbt8sYWcYjBA32UelFIN7qK4mkCV"
+        },
+        {
+          "createdAt": "2023-03-26T17:30:07+02:00",
+          "updatedAt": "2023-03-26T17:30:07+02:00",
+          "publicId": "DBklZFWucp1uO3y0tKGhcnebQWYP0jl5"
+        }
+      ]
+    },
+    {
+      "params": {
+        "formGroup": "vz",
+        "form": "vz",
+        "page": 1,
+        "limit": 5,
+        "dateFrom": "2026-07-01",
+        "dateTo": "2026-08-25"
+      },
+      "http": 200,
+      "total": "501536",
+      "dates": [
+        {
+          "createdAt": "2023-03-26T17:30:08+02:00",
+          "updatedAt": "2023-03-26T17:30:08+02:00",
+          "publicId": "FsSwsMLt3e35CxTy52Fq1jeqmzXRYFik"
+        },
+        {
+          "createdAt": "2023-03-26T17:30:08+02:00",
+          "updatedAt": "2023-03-26T17:30:08+02:00",
+          "publicId": "qmt3mbt8sYWcYjBA32UelFIN7qK4mkCV"
+        },
+        {
+          "createdAt": "2023-03-26T17:30:07+02:00",
+          "updatedAt": "2023-03-26T17:30:07+02:00",
+          "publicId": "DBklZFWucp1uO3y0tKGhcnebQWYP0jl5"
+        }
+      ]
+    },
+    {
+      "params": {
+        "formGroup": "vz",
+        "form": "vz",
+        "page": 1,
+        "limit": 5,
+        "publicId": "Z2026"
+      },
+      "http": 200,
+      "total": "0",
+      "dates": []
+    },
+    {
+      "params": {
+        "formGroup": "vz",
+        "form": "vz",
+        "page": 1,
+        "limit": 5,
+        "variableId": "Z2026-032036"
+      },
+      "http": 200,
+      "total": "0",
+      "dates": []
+    }
+  ]
+}

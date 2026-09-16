@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ISZE Action Plan — Status, 19–24 August 2026</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;background:#e8e4dc;font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0}
+.cover{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:48px 44px 52px;max-width:1100px;margin:0 auto 18px}
+.cover h1{color:#fff;font-size:36px;line-height:1.12;max-width:22ch;font-weight:400}
+.cover .rule{width:64px;height:3px;background:#c0552d;margin:18px 0 16px}
+.cover .meta{font-size:14px;opacity:.92;max-width:70ch}
+.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
+.page{max-width:1100px;margin:0 auto 18px;background:#fff;padding:32px 36px 40px;box-shadow:0 1px 6px rgba(0,0,0,.08)}
+h2.sec{font-size:22px;margin:0 0 8px;padding-bottom:8px;border-bottom:2px solid #1a2b4a}
+h2.sec .no{color:#c0552d}
+h3{font-size:16px;margin:18px 0 8px}
+.lead{color:#6b6256;font-size:14px;margin:0 0 16px}
+.block{border:1px solid #d9d3c8;background:#f7f4ee;padding:14px 16px;margin:0 0 12px}
+.block h3{margin:0 0 6px;font-size:15px}
+.block.wait{border-left:4px solid #eda100;background:#fff8e8}
+.block.ok{border-left:4px solid #1d9e75;background:#eef7f3}
+.block.navy{border-left:4px solid #1a2b4a;background:#f3f5f8}
+.block b{color:#1a2b4a}
+.callout{border-left:3px solid #c0552d;background:#f7f4ee;padding:14px 16px;margin:0 0 16px}
+.callout.navy{border-left-color:#1a2b4a;background:#f3f5f8}
+.callout.ok{border-left-color:#1d9e75;background:#eef7f3}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+.kpi{background:#f7f4ee;padding:14px 16px;border-top:3px solid #1a2b4a;position:relative}
+.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#6b6256}
+.kpi .val{font-family:Georgia,serif;font-size:26px;color:#1a2b4a;margin-top:4px}
+.kpi .sub{font-size:12px;color:#6b6256;margin-top:4px}
+.kpi.ok{border-top-color:#1d9e75}
+.kpi.amber{border-top-color:#eda100}
+.kpi.navy{border-top-color:#1a2b4a}
+.kpi.help{cursor:help}
+.tip{display:none;position:absolute;left:12px;right:12px;top:100%;z-index:40;margin-top:8px;background:#15233c;color:#f7f4ee;padding:10px 12px;font-size:12px;line-height:1.45;border-top:3px solid #c0552d}
+.kpi.help:hover .tip{display:block}
+table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:13px}
+th{background:#1a2b4a;color:#f7f4ee;text-align:left;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+td{padding:8px 10px;border-bottom:1px solid #d9d3c8;color:#222}
+tbody tr:nth-child(even){background:#f7f4ee}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px}
+.tag.go{background:#1d9e75;color:#fff}
+.tag.wait{background:#eda100;color:#15233c}
+.tag.ask{background:#1a2b4a;color:#f7f4ee}
+.footer{margin-top:22px;padding-top:10px;border-top:1px solid #d9d3c8;font-size:11px;color:#6b6256;line-height:1.5}
+ul.tight{margin:8px 0 0;padding-left:18px}
+ul.tight li{margin:6px 0}
+p.say{font-size:14px;margin:0 0 10px}
+.chartcap{font-size:12px;color:#6b6256;margin:4px 0 14px}
+.colhead{font-family:Georgia,serif;font-size:15px;color:#1a2b4a;margin:0 0 8px;padding-bottom:6px;border-bottom:2px solid #c0552d}
+.colhead.navy{border-bottom-color:#1a2b4a}
+svg.chart{width:100%;height:auto;display:block;margin:8px 0 4px}
+.tl{margin:0;padding:0;list-style:none;position:relative}
+.tl:before{content:"";position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:#c0552d}
+.tl li{position:relative;padding:0 0 18px 36px}
+.tl li:last-child{padding-bottom:0}
+.tl .dot{position:absolute;left:0;top:4px;width:16px;height:16px;border-radius:50%;background:#1a2b4a;border:3px solid #c0552d}
+.tl .when{font-size:12px;font-weight:700;color:#c0552d;letter-spacing:.04em;text-transform:uppercase}
+.tl .what{color:#222;font-size:14px;margin-top:2px}
+.tl .what b{color:#1a2b4a}
+@media(max-width:800px){.grid2,.grid3,.grid4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="kicker">ISZE · action plan status</div>
+  <h1>Where we are — 19–24 August 2026</h1>
+  <div class="rule"></div>
+  <p class="meta">Jérôme Van der Pluym · GPS Extended Target 3.1 on UIO V19, 1.8% stretch. Internally agreed. Japan week closed — PMS, lubricants and IDS all held without blockers. PMS: confirmed positive, ISZE proceeding with SPA.</p>
+</div>
+
+<div class="page">
+  <h2 class="sec"><span class="no">1.</span> Status</h2>
+  <p class="lead">Masumi's 24 Aug "Action plans update" walks six lanes — this pack lines up against them. GPS round continues; UIO V20 refines the model in parallel.</p>
+  <table>
+    <thead><tr><th>Masumi's lane</th><th>Where</th><th>Status this pack</th></tr></thead>
+    <tbody>
+      <tr><td>Genuine parts share</td><td>§2</td><td>Target 3.1 · 10 held · agreement by 31 Aug</td></tr>
+      <tr><td>PMS</td><td>§4</td><td>ITUK result held — N75 Oct, SPA confirmed</td></tr>
+      <tr><td>Lubricant</td><td>§5</td><td>ITUK result — CP study agreed (revised MoM 24 Aug)</td></tr>
+      <tr><td>KPIs</td><td>§2</td><td>KPI + SPI chased with DBs — agreement by end Aug</td></tr>
+      <tr><td>IDS</td><td>§6</td><td>IMG result held — DB visits from 25 Aug</td></tr>
+      <tr><td>Parts training</td><td>—</td><td>Iceland 23 Sep — full schedule to confirm</td></tr>
+    </tbody>
+  </table>
+  <div class="grid4">
+    <div class="kpi ok help"><div class="lbl">GPS</div><div class="val">3.1</div><div class="sub">UIO V19 · 1.8% stretch · being communicated</div>
+      <div class="tip">Model is GPS Extended Target 3.1. Parc from UIO V19. Stretch is 1.8%, as you set. Targets are internally agreed. Customer meetings are communication of that number.</div></div>
+    <div class="kpi ok help"><div class="lbl">Reviews held</div><div class="val">10</div><div class="sub">5 in the diary · remainder being booked</div>
+      <div class="tip">Diary: Iceland 25 Aug, Romania 25 Aug, Norway 26 Aug, Denmark, Finland. Cyprus, Sweden and Malta are being booked. All have already been written to.</div></div>
+    <div class="kpi navy help"><div class="lbl">Live car-park file</div><div class="val">V19</div><div class="sub">V20 spec refines the model — GPS targets stay fixed</div>
+      <div class="tip">The new UIO V20 spec will have no influence on the GPS meetings, as the targets are fixed. V20 is to increase the reliability of our model and to refine it.</div></div>
+    <div class="kpi ok help"><div class="lbl">PMS with Japan</div><div class="val">Went well</div><div class="sub">18 Aug · Oct N75 launch · SPA confirmed</div>
+      <div class="tip">ITUK–ISZE–ISZJ meeting held 18 August. October N75 campaign at 40,000 km confirmed. ISZE presented complementary parts support (filter set, BVP, SPA). Outcome: ISZE proceeding with SPA. September build, October go-live.</div></div>
+  </div>
+  <div class="grid3" style="margin-top:14px">
+    <div class="kpi ok help"><div class="lbl">Lubricants</div><div class="val">CP study</div><div class="sub">19 Aug · ITUK in · revised MoM 24 Aug</div>
+      <div class="tip">Result (revised Ikeda MoM 24 Aug): ITUK joined the Centralized Purchasing opportunity study — no supplier switch decided. ITUK to send unit price history (pre/post Iran), vehicle park and service retention. Engine oil is most of ITUK's lubricants (~150,000 L, Chevron).</div></div>
+    <div class="kpi ok help"><div class="lbl">IDS with IMG</div><div class="val">Held</div><div class="sub">19 Aug · compare + Kaizen model accepted</div>
+      <div class="tip">Presented dealer compare tool, Belgium Kaizen example and visit annex. Agreed: HTML reading layer stays; DB-led Kaizen; next-round incentive on complete file, not high score; distributor feedback visits to follow.</div></div>
+    <div class="kpi amber help"><div class="lbl">Open after Japan</div><div class="val">3</div><div class="sub">ITUK lubes data · MoM comment · IDS visits</div>
+      <div class="tip">PMS: SPA confirmed — going ahead; GPS stretch split still to be finalised. Lubricants: ITUK to send price history + vehicle park + service retention for the CP study; comment back to Ikeda on the revised MoM. IDS: Tomoe’s allocation file — feedback to DBs from week of 25 Aug.</div></div>
+  </div>
+</div>
+
+<div class="page">
+  <h2 class="sec"><span class="no">2.</span> GPS — progress</h2>
+  <p class="lead">Who we have sat with, who is in the diary, and who we are booking. MH asked us to start the round — that is underway.</p>
+
+  <div class="grid3">
+    <div class="kpi ok"><div class="lbl">Held</div><div class="val">10</div><div class="sub">Portugal · ISD · IUK · Ireland · Petros · UMI · UTI · ITUK · IBX · AutoWallis</div></div>
+    <div class="kpi amber"><div class="lbl">In the diary</div><div class="val">5</div><div class="sub">Iceland · Romania · Norway · Denmark · Finland</div></div>
+    <div class="kpi navy"><div class="lbl">Being booked</div><div class="val">—</div><div class="sub">Cyprus · Sweden · Malta</div></div>
+  </div>
+
+  <h3>Held — what moved besides the target</h3>
+  <table>
+    <thead><tr><th>When</th><th>Who</th><th>What moved in the room</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>29 Jul</td><td>Astara Portugal</td><td>Monthly sales-to-dealer agreed in principle. Combined dealer visits mid-September to mid-October. SPA from their side.</td><td><span class="tag go">Held</span></td></tr>
+      <tr><td>5 Aug</td><td>ISD Germany</td><td>Sales-to-dealer from May 2025, then monthly. SPA template to Sebastian. KPI / SPI by end of August.</td><td><span class="tag go">Held</span></td></tr>
+      <tr><td>6 Aug</td><td>IUK</td><td>Aaron will automate monthly sales-to-dealer from January 2025. Target is parts-only. IDS UK 81.7%.</td><td><span class="tag go">Held</span></td></tr>
+      <tr><td>6 Aug</td><td>Harris Ireland</td><td>Sales-to-dealer to be resent, then monthly. SPA from John. Carl / Keith to check the parc. Bonus to scale if the target is higher.</td><td><span class="tag go">Held</span></td></tr>
+      <tr><td>6 Aug</td><td>Petros / Loutsios (Greece)</td><td>Sales-to-dealer from January 2025 if they can extract it. KPI / SPI to resume. IDS visits later, lower scorers first.</td><td><span class="tag go">Held</span></td></tr>
+      <tr><td>11 Aug</td><td>AutoWallis Hungary</td><td>Confirmed slot 11 Aug 11:00 with Mario.</td><td><span class="tag go">Held</span></td></tr>
+      <tr><td>12 Aug</td><td>IBX / Astara Benelux</td><td>Business review held. Bart minutes the next day. Sales-to-dealer: they will discuss internally (same as UMI).</td><td><span class="tag go">Held</span></td></tr>
+      <tr><td>12 Aug</td><td>UMI</td><td>Genuine-share incentive and SPA on the table. Sales-to-dealer: they will discuss internally. Section E: see IDS.</td><td><span class="tag go">Held</span></td></tr>
+      <tr><td>Jun / 7 Jul</td><td>UTI</td><td>Ministry of Transport fleet figures shared. FY27 incentive in discussion.</td><td><span class="tag go">Held</span></td></tr>
+      <tr><td>22 Jul</td><td>ITUK</td><td>We get their sales-to-dealer data. 18 August is PMS with Japan.</td><td><span class="tag go">Held</span></td></tr>
+    </tbody>
+  </table>
+
+  <h3>In the diary, and being booked</h3>
+  <table>
+    <thead><tr><th>When</th><th>Who</th><th>What</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>25 Aug</td><td>Iceland (BL)</td><td>Sigurdur confirmed 25 Aug. Invite to go out. (23 Sep is their training date — separate.)</td><td><span class="tag wait">Diary</span></td></tr>
+      <tr><td>25 Aug 13:00</td><td>Isuzu Romania</td><td>Business review — GPS 3.1 in that slot.</td><td><span class="tag wait">Diary</span></td></tr>
+      <tr><td>26 Aug 10:00</td><td>Norway (RSA)</td><td>Claus Magelssen and Morten Throndsen.</td><td><span class="tag wait">Diary</span></td></tr>
+      <tr><td>This window</td><td>Denmark</td><td>In the diary for the late-August round.</td><td><span class="tag wait">Diary</span></td></tr>
+      <tr><td>This window</td><td>Finland</td><td>In the diary for the late-August round (Ling’s customer — Jerome covering).</td><td><span class="tag wait">Diary</span></td></tr>
+      <tr><td>Slots in progress</td><td>Cyprus · Sweden · Malta</td><td>Already written to. Dates being confirmed.</td><td><span class="tag ask">Booking</span></td></tr>
+    </tbody>
+  </table>
+  <p class="chartcap">Checkpoint you set: distributor agreement by 31 August (treat 28 August — 31st is a UK bank holiday). Sterki 27 Aug is a regular commercial meeting, not AutoWallis.</p>
+</div>
+
+<div class="page">
+  <h2 class="sec"><span class="no">3.</span> UIO — V20 spec</h2>
+  <p class="lead">The new UIO V20 spec will have no influence on the GPS meetings, as the targets are fixed. V20 is to increase the reliability of our model and to refine it. Two kinds of improvement — they are not the same job.</p>
+
+  <div class="grid2">
+    <div class="block navy">
+      <h3 class="colhead navy">1. Corrected method</h3>
+      <p class="say">In June a 3% yearly attrition step crept into the 2026–2030 forecast. We do not know who put it there. The history in the same file already assumes about 10% of trucks leave each year. Keeping 97% makes the fleet grow even when registrations are falling. That is a method error, not new data.</p>
+    </div>
+    <div class="block ok">
+      <h3 class="colhead">2. Better data</h3>
+      <p class="say">Where a customer (or a government register) has given us actual trucks, we can see the real parc — including the 3.5 t vs 7.5 t split. Ireland (SIMI) and Portugal (registrations) already went in at V18. UTI has now given Ministry totals. That is better data, not a formula change.</p>
+    </div>
+  </div>
+
+  <h3>IUK — the method, drawn</h3>
+  <p class="say">UK pickups, 2025 actual = <b>47,783</b>. From 2026 the live file applies the 3% step. UK D-Max registrations are falling (IMIT 2026 about 3,020). A shrinking inflow cannot grow the parc. The locked correction (30 July) is 47,783 × (1 − 0.123) + 3,020 = <b>44,926</b>.</p>
+
+  <svg class="chart" viewBox="0 0 640 280" role="img" aria-label="IUK pickup parc: V19 method versus corrected method">
+    <rect x="0" y="0" width="640" height="280" fill="#f7f4ee"/>
+    <text x="20" y="28" font-family="Georgia,serif" font-size="15" fill="#1a2b4a">UK pickups — what V19 does vs what the history method does</text>
+    <text x="20" y="48" font-size="11" fill="#6b6256">2025 is the same actual. 2026 is where the 3% step points the wrong way. By 2030 the gap is larger.</text>
+    <!-- axes -->
+    <line x1="80" y1="70" x2="80" y2="230" stroke="#1a2b4a" stroke-width="1.5"/>
+    <line x1="80" y1="230" x2="600" y2="230" stroke="#1a2b4a" stroke-width="1.5"/>
+    <text x="70" y="234" font-size="10" fill="#6b6256" text-anchor="end">40k</text>
+    <text x="70" y="166" font-size="10" fill="#6b6256" text-anchor="end">48k</text>
+    <text x="70" y="98" font-size="10" fill="#6b6256" text-anchor="end">56k</text>
+    <text x="160" y="248" font-size="11" fill="#1a2b4a" text-anchor="middle">2025 actual</text>
+    <text x="320" y="248" font-size="11" fill="#1a2b4a" text-anchor="middle">2026</text>
+    <text x="500" y="248" font-size="11" fill="#1a2b4a" text-anchor="middle">2030</text>
+    <!-- scale: 40000 = y230, 56000 = y70, 16000 range = 160px, 1k = 10px -->
+    <!-- 47783 → (47783-40000)/1000*10 = 77.83 → y = 230-77.8 = 152.2 -->
+    <!-- 49280 → 92.8 → y 137.2 -->
+    <!-- 44926 → 49.26 → y 180.7 -->
+    <!-- 52804 → 128.04 → y 102 -->
+    <!-- 2025 both -->
+    <rect x="130" y="152" width="60" height="78" fill="#1a2b4a"/>
+    <text x="160" y="146" font-size="11" fill="#1a2b4a" text-anchor="middle">47,783</text>
+    <!-- 2026 wrong -->
+    <rect x="270" y="137" width="44" height="93" fill="#c0552d"/>
+    <text x="292" y="131" font-size="11" fill="#c0552d" text-anchor="middle">49,280</text>
+    <!-- 2026 right -->
+    <rect x="322" y="181" width="44" height="49" fill="#1d9e75"/>
+    <text x="344" y="175" font-size="11" fill="#1d9e75" text-anchor="middle">44,926</text>
+    <!-- 2030 V19 only -->
+    <rect x="470" y="102" width="60" height="128" fill="#c0552d"/>
+    <text x="500" y="96" font-size="11" fill="#c0552d" text-anchor="middle">52,804</text>
+    <!-- legend -->
+    <rect x="80" y="258" width="12" height="12" fill="#1a2b4a"/>
+    <text x="96" y="268" font-size="11" fill="#222">2025 actual</text>
+    <rect x="190" y="258" width="12" height="12" fill="#c0552d"/>
+    <text x="206" y="268" font-size="11" fill="#222">V19 with the 3% step</text>
+    <rect x="360" y="258" width="12" height="12" fill="#1d9e75"/>
+    <text x="376" y="268" font-size="11" fill="#222">Corrected 2026 (44,926)</text>
+  </svg>
+  <p class="chartcap">Green 2026 = locked correction. Terracotta 2026 and 2030 = live V19. The 3% step does not only miss 2026 by 4,354 units — it keeps adding every year, so 2030 is 52,804 and still rising. GPS 3.1 does not wait for this rebuild.</p>
+
+  <h3>I-Motors Portugal — 3.5 t vs 7.5 t, from better data</h3>
+  <p class="say">Government registrations already corrected the <i>size</i> of the Portugal parc in V18. What V20 still adds is the <b>split of the current car park</b>. The VIN / shipment file shows about <b>68%</b> of Portugal’s N-series are 3.5 t Grafters. Today the model treats every “LD” truck as a 7.5 t N75 (€739 wallet). A 3.5 t truck should sit at €296. The model is improving because we can finally see that mix.</p>
+
+  <svg class="chart" viewBox="0 0 640 250" role="img" aria-label="Portugal N-series mix 3.5 t versus 7.5 t, and the wallet effect">
+    <rect x="0" y="0" width="640" height="250" fill="#f7f4ee"/>
+    <text x="20" y="26" font-family="Georgia,serif" font-size="15" fill="#1a2b4a">Portugal N-series — today’s mix, and what the wallet does</text>
+    <text x="20" y="46" font-size="11" fill="#6b6256">Left: share of the parc. Right: target wallet if every truck is charged as 7.5 t, versus after the split.</text>
+    <!-- mix bar -->
+    <text x="20" y="78" font-size="12" fill="#1a2b4a">Parc mix</text>
+    <rect x="20" y="88" width="411" height="36" fill="#c0552d"/>
+    <rect x="431" y="88" width="189" height="36" fill="#1a2b4a"/>
+    <text x="225" y="111" font-size="13" fill="#f7f4ee" text-anchor="middle">3.5 t · 68%</text>
+    <text x="525" y="111" font-size="13" fill="#f7f4ee" text-anchor="middle">7.5 t · 32%</text>
+    <!-- wallets -->
+    <text x="20" y="154" font-size="12" fill="#1a2b4a">GPS wallet (indication)</text>
+    <rect x="20" y="164" width="520" height="28" fill="#c0552d"/>
+    <text x="280" y="183" font-size="12" fill="#f7f4ee" text-anchor="middle">Today — all LD at 7.5 t rate · €3.05m</text>
+    <rect x="20" y="200" width="406" height="28" fill="#1d9e75"/>
+    <text x="223" y="219" font-size="12" fill="#f7f4ee" text-anchor="middle">After split · €2.38m (−22%)</text>
+  </svg>
+  <p class="chartcap">Indication from 2020–26 shipments applied to the 2025 fleet — not a restated Portugal GPS % for the meetings. Ireland’s 3.5 t share is only about 6%; there the wallet barely moves. Portugal is where the split matters.</p>
+
+  <div class="block ok">
+    <h3>UTI — the government numbers we now have</h3>
+    <p class="say">UTI’s July parts slides show the Ministry of Transport registered fleet: <b>14,019</b> at 30 June 2026, against V19’s <b>10,760</b>. Gap about a quarter, in every year — a missing block of vehicles, not a scrap-rate tweak. By class: 6.5–7.5 t 8,610 · 7.6–10 t 2,485 · 10.1–12 t 2,697 · 12.1–16 t 227. V20 rebuilds UTI on those classes, year by year — not a flat scale-up. We still need the extract by year and weight class, not only the slide totals.</p>
+  </div>
+
+  <div class="block wait">
+    <h3>Also in the V20 spec — not yet a government file</h3>
+    <p class="say"><b>ISD / Germany</b> does not have a government register. It is the weakest cell in V19: 697 trucks in 2025 growing to 3,756 by 2030, and the 2019–2024 history was filled backwards from one 2025 point. Sebastian is refreshing their own parc for the GPS talk. The Japan VIN list has only 183 German shipments (not registrations). V20 flags Germany as indicative until a real source exists — we do not invent one.</p>
+    <p class="say"><b>Belgium, Cyprus, Malta, Greece</b> are still on the old IML estimate. Same VIN list: 49 / 114 / 130 / 4 shipments. Queue them for a registration rebuild, same as Germany. <b>ITUK</b> trucks are already on UK registrations and a survival model — leave that. Medium-duty rows that grow from zero on plan only (Ireland, Portugal, Greece, Cyprus) stay out of the Grand Total until a first real registration shows up.</p>
+  </div>
+</div>
+
+<div class="page">
+  <h2 class="sec"><span class="no">4.</span> PMS — N75 October</h2>
+  <p class="lead">Held 18 August with ITUK and Japan — went well. One campaign — October go-live confirmed, ISZE proceeding with SPA. (No separate PMS MoM in inbox yet — below from the room and ISZE pack.)</p>
+  <div class="callout ok">
+    <b>What landed in the room</b>
+    <p class="say">Duncan’s ITUK operating model (N75 fleet / safety events at 40,000 km) and ISZE’s complementary parts support were taken together — not as two campaigns. Scope, KPI set, BVP questions and October launch timeline agreed. R&amp;M removed from the PMS pack per ITUK’s internal review before Japan. Ikeda’s 19 Aug mail confirms Japan week “ended with success”; lubricants MoM attached — PMS minutes not yet circulated.</p>
+  </div>
+  <div class="grid2">
+    <div class="block navy">
+      <h3>Duncan’s pack — confirmed</h3>
+      <p class="say">October is <b>N75</b> — NPR75 and NPR88 already in the UK — at <b>40,000 km</b>. Oil and fuel as the pack foundation, air as the attach, brakes on condition. Dealer workflow on existing workshop events — not a generic discount campaign. September: baselines, stock rules, one-page guide. October: go-live.</p>
+    </div>
+    <div class="block ok">
+      <h3>ISZE support — agreed, SPA confirmed</h3>
+      <p class="say"><b>+1% floor</b> on parts the network already moves — filter set on scheduled visits, BVP where genuine is quiet (air BVP is the gap), SPA on the pad where there is no BVP. Wear 0.4 stays in the model. Outcome: ISZE going ahead with SPA. Still open: SPA route for MD approval; BVP availability on 1876102860 and 5876102500; EU R90 brake pad confirmation; PMS share of ITUK / ISZE GPS stretch to be split out.</p>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>When</th><th>What</th><th>Owner</th></tr></thead>
+    <tbody>
+      <tr><td>Sep 2026</td><td>Dealer baselines, part packs, stock rules, bulletin</td><td>ITUK</td></tr>
+      <tr><td>Sep 2026</td><td>SPA lines and BVP supply support where agreed</td><td>ISZE / IML</td></tr>
+      <tr><td>Oct 2026</td><td>N75 fleet uptime PMS campaign — go-live</td><td>ITUK network</td></tr>
+      <tr><td>Nov–Dec</td><td>Pilot review — conversion, availability, dealer performance</td><td>ITUK + ISZE</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="page">
+  <h2 class="sec"><span class="no">5.</span> Lubricants — ITUK meeting result</h2>
+  <p class="lead">Held 19 August at IML Yokohama HQ. Result: ITUK joined the Centralized Purchasing (CP) opportunity study — no supplier switch decided. (Revised Ikeda MoM, 24 Aug.)</p>
+  <div class="callout ok">
+    <b>The result in one line</b>
+    <p class="say">ITUK will join the CP study to size the engine-oil opportunity beyond today’s ~<b>150,000 L</b>, and will hand over <b>unit price history</b>, <b>vehicle park</b> and <b>service retention</b>. Supplier switch from Chevron is on the table but not decided — the business case must beat Chevron net of its 2.5% rebate.</p>
+  </div>
+  <div class="grid2">
+    <div class="block navy">
+      <h3>ITUK today — Chevron</h3>
+      <p class="say">Engine oil is the <b>majority</b> of ITUK lubricants (~150,000 L now, mainly maintenance contracts + counter sales; Duncan’s pre-meeting pack put it at 164,922 L over 18 months). ITUK buys from <b>Chevron</b>, negotiates periodically, and sees <b>no blocker to changing supplier</b> — but interest in centralised purchasing of <b>non-engine</b> oils is limited. Chevron gives a <b>2.5% rebate</b> + marketing support and raised prices twice (Apr + Jul, Iran): ITUK absorbed April, passed July through.</p>
+    </div>
+    <div class="block ok">
+      <h3>What the study needs — ITUK to provide</h3>
+      <p class="say"><b>Unit price history</b> (pre/post Iran) · <b>vehicle park</b> · <b>service retention</b>. UK rules require &gt;3.5 t vehicles to be serviced at DLRs — assumed mostly ISUZU-franchised, to be verified with data. ITUK’s intranet already runs as a client portal for oil cross-reference and ordering.</p>
+    </div>
+  </div>
+  <table>
+    <thead><tr><th>When</th><th>What</th><th>Owner</th></tr></thead>
+    <tbody>
+      <tr><td>Aug 2026</td><td>Unit price history + vehicle park + service retention to ISZE/IML</td><td>ITUK (Duncan)</td></tr>
+      <tr><td>Sep 2026</td><td>CP opportunity study — volume + landed-cost vs Chevron (net of rebate)</td><td>ISZE + IML</td></tr>
+      <tr><td>TBD</td><td>Follow-up trilateral — pilot scope if the business case holds</td><td>ITUK · ISZE · IML</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">
+    <b>To align before the next talk</b>
+    <ul class="tight">
+      <li>Is the PMS engine-oil volume the same as the CP study, or a separate track (single volume, no double-count)?</li>
+      <li>Does “CP” cover engine oil, non-engine oil, or both?</li>
+      <li>Reconcile ~150,000 L (MoM) with the <b>164,922 L / 18-month</b> figure in Duncan’s pre-meeting pack.</li>
+      <li>Is the 2.5% Chevron rebate inside the like-for-like price matrix?</li>
+    </ul>
+  </div>
+  <div class="callout navy">
+    <b>Not in scope</b>
+    <p class="say">No market-wide rollout sign-off. Israel (UTI / UMI) remains outside reachable potential. Other Approach-A markets stay on the April volume model until a UK pilot proves the model.</p>
+  </div>
+</div>
+
+<div class="page">
+  <h2 class="sec"><span class="no">6.</span> IDS — from Excel to a tool the network can use</h2>
+  <p class="lead">Two months ago this was a pile of evaluation workbooks. Tomoe asked us to split them by country and get to averages. We automated that, then built a compare layer so a distributor can actually see their network.</p>
+
+  <ol class="tl">
+    <li>
+      <span class="dot"></span>
+      <div class="when">27 May – 1 June</div>
+      <div class="what"><b>Tomoe starts the awards process.</b> IDS &amp; KPI evaluation for the conference. DB allocation, MIDI file she could not decode, completion dates. The split-by-country ask is not this week — that mail is 5 June.</div>
+    </li>
+    <li>
+      <span class="dot"></span>
+      <div class="when">2 June</div>
+      <div class="what"><b>One system, all dealers.</b> Tomoe checks IUK against her own example, then asks Jerome to load every dealer into the same system so conditions are identical.</div>
+    </li>
+    <li>
+      <span class="dot"></span>
+      <div class="when">5 June</div>
+      <div class="what"><b>Split MIDI by country.</b> Tomoe’s mail, 5 June 14:16: “Yes, please separate MIDI by countries” (France, Italy, Spain, Switzerland), and ranking by DB (IBX, MIDI) not only by country. That is the split — early June, not end of June. Jerome already running a script on the France file so the averages are not copy-paste.</div>
+    </li>
+    <li>
+      <span class="dot"></span>
+      <div class="when">9–10 June</div>
+      <div class="what"><b>Country files land.</b> Bart uploads the evaluations. Jerome sends the adjusted set including Malta, Cyprus, I-Motors and Hungary. Tomoe adds the KPI criteria into the awards sheet.</div>
+    </li>
+    <li>
+      <span class="dot"></span>
+      <div class="when">27 July</div>
+      <div class="what"><b>Master compare dashboard.</b> Jerome sends the IDS compare tool: every dealer against their country and against an anonymous network average, on a map. Internal reading layer — one network, not twenty workbooks.</div>
+    </li>
+    <li>
+      <span class="dot"></span>
+      <div class="when">30 July</div>
+      <div class="what"><b>The same tool, given to the customer.</b> Country overview sheets to Koen and Ling: “If you have a GPS meeting, you can send these to them as well.” A thank-you for the evaluation work — the distributor can review their own network. Tomoe: “Excellent.” MIDI Excel + HTML packs the same day. She forwards the summaries to Uematsu san the next afternoon.</div>
+    </li>
+    <li>
+      <span class="dot"></span>
+      <div class="when">31 July</div>
+      <div class="what"><b>Average rule locked.</b> Tomoe: France and Spain red-marked dealers stay on the list, out of the average. Italy and Switzerland keep every dealer in.</div>
+    </li>
+    <li>
+      <span class="dot"></span>
+      <div class="when">19 Aug 2026</div>
+      <div class="what"><b>IMG alignment — held.</b> Presented compare dashboard, Belgium Kaizen pack and dealer visit annex. Room accepted the reading layer (not Excel-only), DB-led Kaizen with 3–5 actions per visit, and participation incentive for the next evaluation round tied to <i>complete file in</i>, not score. Self-audit calibration agreed — sample high-scoring dealers, not only bottom of list. SharePoint / Forms scope for KPI file drop and short Kaizen return discussed with IT.</div>
+    </li>
+    <li>
+      <span class="dot"></span>
+      <div class="when">19 Aug 2026</div>
+      <div class="what"><b>DB allocation locked — visits start next week.</b> Tomoe (2:55 PM): updated country/DB responsibility list attached — <b>EU IDS Dealer Summary 20260819.xlsx</b>. <b>19 distributors</b> on the follow-up register (MIDI through Loutsios). Feedback to DBs starts from the week of <b>25 August</b>. Zero submissions still open on ISD, Sweden, Nordic, Ireland and UTI — priority follow-up.</div>
+    </li>
+    <li>
+      <span class="dot"></span>
+      <div class="when">UMI — Section E</div>
+      <div class="what"><b>Not scored, recorded.</b> All 29 UMI dealers are 0 / 27 on Section E (vehicle sales). That is not a fail they sat. Totals for UMI are A–D only (69.3%). Parts is the operating gap (61.6% vs network 78.7%). Shelly is considering completing E as a second wave. Until then: out of the 280-point awards ranking; zeros out of the network average. We do not invent marks.</div>
+    </li>
+  </ol>
+
+  <h3>Where this goes next</h3>
+  <div class="grid2">
+    <div class="callout navy">
+      <b>Keep giving the country dashboard to the DB</b>
+      <p class="say">The HTML pack is the thank-you and the working file. Map, dealer versus country, anonymous network average. Individual dealer sheets follow for visits. Do not go back to Excel-only in the room.</p>
+    </div>
+    <div class="callout ok">
+      <b>Use it as a visit OS, not as a sales forecast</b>
+      <p class="say">Hit list of dealers below the country average. Agree three to five actions (owner, date). Pull monthly: visited, closed, still open. Greece (Petros) is the first market that already uses IDS this way. We do not claim “IDS up → parts sales up.” GPS stays GPS.</p>
+    </div>
+  </div>
+  <div class="callout">
+    <b>One operating view per distributor</b>
+    <p class="say">The next step we have already started building: GPS, orders, fill, sales-to-dealer and IDS in one place for the account, so a review is not four decks. That sits beside this pack — it does not replace the country IDS file we send them.</p>
+  </div>
+
+  <p class="footer">Sources: Outlook (Ikeda lubricants MoM 19 Aug, revised 24 Aug; Masumi action-plan review 24 Aug; Tomoe DB allocation 19 Aug + EU IDS Dealer Summary 20260819.xlsx; Tomoe IDS thread 27 May–19 Aug; Masumi Japan-week brief 23 Jul; Duncan ITUK packs 13–14 Aug) · customer GPS minutes 29 Jul–12 Aug · GPS Extended Target 3.1 · UIO V19 · ISZE PMS Parts Support 18 Aug · IMG IDS briefing 19 Aug. Confidential — ISZE internal.</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,140 @@
+{
+  "GET https://udbud.dk/soegning/": {
+    "http": 404,
+    "ct": "application/problem+json",
+    "len": 111,
+    "snip": "{\"type\":\"about:blank\",\"title\":\"Not Found\",\"status\":404,\"detail\":\"No static resource .\",\"instance\":\"/soegning/\"}"
+  },
+  "POST https://udbud.dk/soegning/": {
+    "http": 403,
+    "ct": "application/json",
+    "len": 98,
+    "snip": "{\"timestamp\":\"2026-08-25T17:40:26.255+00:00\",\"status\":403,\"error\":\"Forbidden\",\"path\":\"/soegning/\"}"
+  },
+  "GET https://udbud.dk/soegning/soeg": {
+    "http": 404,
+    "ct": "application/problem+json",
+    "len": 119,
+    "snip": "{\"type\":\"about:blank\",\"title\":\"Not Found\",\"status\":404,\"detail\":\"No static resource soeg.\",\"instance\":\"/soegning/soeg\"}"
+  },
+  "POST https://udbud.dk/soegning/soeg": {
+    "http": 403,
+    "ct": "application/json",
+    "len": 102,
+    "snip": "{\"timestamp\":\"2026-08-25T17:40:26.381+00:00\",\"status\":403,\"error\":\"Forbidden\",\"path\":\"/soegning/soeg\"}"
+  },
+  "GET https://udbud.dk/soegning/api/soeg": {
+    "http": 404,
+    "ct": "application/problem+json",
+    "len": 127,
+    "snip": "{\"type\":\"about:blank\",\"title\":\"Not Found\",\"status\":404,\"detail\":\"No static resource api/soeg.\",\"instance\":\"/soegning/api/soeg\"}"
+  },
+  "POST https://udbud.dk/soegning/api/soeg": {
+    "http": 403,
+    "ct": "application/json",
+    "len": 106,
+    "snip": "{\"timestamp\":\"2026-08-25T17:40:26.459+00:00\",\"status\":403,\"error\":\"Forbidden\",\"path\":\"/soegning/api/soeg\"}"
+  },
+  "GET https://udbud.dk/udbud/bekendtgoerelser": {
+    "http": 404,
+    "ct": "application/problem+json",
+    "len": 140,
+    "snip": "{\"type\":\"about:blank\",\"title\":\"Not Found\",\"status\":404,\"detail\":\"No static resource bekendtgoerelser.\",\"instance\":\"/udbud/bekendtgoerelser\"}"
+  },
+  "GET https://udbud.dk/bekendtgoerelse": {
+    "http": 200,
+    "ct": "text/html",
+    "len": 902,
+    "snip": "<!DOCTYPE html> <html lang=\"da\">   <head>     <meta charset=\"utf-8\" />     <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />     <base href=\"/\" />     <me"
+  },
+  "GET https://udbud.dk/bekendtgoerelse/rolledata:opdater": {
+    "http": 200,
+    "ct": "text/html",
+    "len": 902,
+    "snip": "<!DOCTYPE html> <html lang=\"da\">   <head>     <meta charset=\"utf-8\" />     <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />     <base href=\"/\" />     <me"
+  },
+  "POST https://udbud.dk/bekendtgoerelse/rolledata:opdater": {
+    "http": 405,
+    "ct": "text/html;charset=utf-8",
+    "len": 449,
+    "snip": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 405 – Method Not Allowed</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h"
+  },
+  "GET https://udbud.dk/bekendtgoerelse/rolledata:backfill": {
+    "http": 200,
+    "ct": "text/html",
+    "len": 902,
+    "snip": "<!DOCTYPE html> <html lang=\"da\">   <head>     <meta charset=\"utf-8\" />     <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />     <base href=\"/\" />     <me"
+  },
+  "POST https://udbud.dk/bekendtgoerelse/rolledata:backfill": {
+    "http": 405,
+    "ct": "text/html;charset=utf-8",
+    "len": 449,
+    "snip": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 405 – Method Not Allowed</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h"
+  },
+  "POST https://udbud.dk/bekendtgoerelse": {
+    "http": 405,
+    "ct": "text/html;charset=utf-8",
+    "len": 449,
+    "snip": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 405 – Method Not Allowed</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h"
+  },
+  "GET https://udbud.dk/bekendtgoerelse:harNogle": {
+    "http": 200,
+    "ct": "text/html",
+    "len": 902,
+    "snip": "<!DOCTYPE html> <html lang=\"da\">   <head>     <meta charset=\"utf-8\" />     <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />     <base href=\"/\" />     <me"
+  },
+  "POST https://udbud.dk/bekendtgoerelse:harNogle": {
+    "http": 405,
+    "ct": "text/html;charset=utf-8",
+    "len": 449,
+    "snip": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 405 – Method Not Allowed</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h"
+  },
+  "GET https://udbud.dk/bekendtgoerelse:egne": {
+    "http": 200,
+    "ct": "text/html",
+    "len": 902,
+    "snip": "<!DOCTYPE html> <html lang=\"da\">   <head>     <meta charset=\"utf-8\" />     <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />     <base href=\"/\" />     <me"
+  },
+  "POST https://udbud.dk/bekendtgoerelse:egne": {
+    "http": 405,
+    "ct": "text/html;charset=utf-8",
+    "len": 449,
+    "snip": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 405 – Method Not Allowed</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h"
+  },
+  "GET https://udbud.dk/bekendtgoerelse/rolledata:alleKoeber": {
+    "http": 200,
+    "ct": "text/html",
+    "len": 902,
+    "snip": "<!DOCTYPE html> <html lang=\"da\">   <head>     <meta charset=\"utf-8\" />     <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />     <base href=\"/\" />     <me"
+  },
+  "POST https://udbud.dk/bekendtgoerelse/rolledata:alleKoeber": {
+    "http": 405,
+    "ct": "text/html;charset=utf-8",
+    "len": 449,
+    "snip": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 405 – Method Not Allowed</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h"
+  },
+  "GET https://udbud.dk/gemtSoegning": {
+    "http": 200,
+    "ct": "text/html",
+    "len": 902,
+    "snip": "<!DOCTYPE html> <html lang=\"da\">   <head>     <meta charset=\"utf-8\" />     <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />     <base href=\"/\" />     <me"
+  },
+  "POST https://udbud.dk/gemtSoegning": {
+    "http": 405,
+    "ct": "text/html;charset=utf-8",
+    "len": 449,
+    "snip": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 405 – Method Not Allowed</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h"
+  },
+  "GET https://udbud.dk/public/soegeresultat": {
+    "http": 200,
+    "ct": "text/html",
+    "len": 902,
+    "snip": "<!DOCTYPE html> <html lang=\"da\">   <head>     <meta charset=\"utf-8\" />     <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />     <base href=\"/\" />     <me"
+  },
+  "POST https://udbud.dk/public/soegeresultat": {
+    "http": 405,
+    "ct": "text/html;charset=utf-8",
+    "len": 449,
+    "snip": "<!doctype html><html lang=\"en\"><head><title>HTTP Status 405 – Method Not Allowed</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h"
+  }
+}

@@ -17,6 +17,7 @@ PRISM_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PRISM_ROOT))
 
 from config import DERIVED_DIR, PMS_CAPTURE_BY_DB_CSV  # noqa: E402
+from modules.year_coverage import latest_complete_year  # noqa: E402
 
 OUTPUT_CSV = DERIVED_DIR / "pms_summary_by_db.csv"
 
@@ -28,7 +29,9 @@ def build_pms_db_summary(pms_path: Path = PMS_CAPTURE_BY_DB_CSV) -> pd.DataFrame
     df = pd.read_csv(pms_path)
     totals = df[df["line_type"] == "total"].copy()
     genuine = df[df["line_type"] == "genuine"].copy()
-    latest_year = int(totals["year"].max())
+    # Latest COMPLETE year, not year.max(). Partial CY2026 (Jan-Mar) vs a
+    # full-year expected_qty silently collapses capture (ITUK oil 116% → 28%).
+    latest_year = latest_complete_year([int(y) for y in totals["year"].dropna().unique()])
 
     rows: list[dict] = []
     for dist in sorted(totals["distributor_code"].dropna().unique()):
@@ -57,6 +60,14 @@ def build_pms_db_summary(pms_path: Path = PMS_CAPTURE_BY_DB_CSV) -> pd.DataFrame
         )
 
         gap_sum = float(t["revenue_gap_eur"].fillna(0).sum())
+
+        # Quotable-KPI firewall (DECISIONS.md 2026-07-21 Fix 2): a category with
+        # zero actual sales books €0 gap (avg_sp=0), which hides the worst real
+        # outcome. Exclude those rows from the €-ranking sum and surface the
+        # count so callers don't league-table a distributor on a silent €0.
+        quotable = t["revenue_gap_quotable"].astype(bool) if "revenue_gap_quotable" in t.columns else pd.Series(True, index=t.index)
+        gap_sum_quotable = float(t.loc[quotable, "revenue_gap_eur"].fillna(0).sum())
+        n_nonquotable = int((~quotable).sum())
         oil = t[t["pms_category"] == "oil_filter"]
         oil_cap = float(oil["capture_rate"].iloc[0]) if not oil.empty else np.nan
 
@@ -78,6 +89,8 @@ def build_pms_db_summary(pms_path: Path = PMS_CAPTURE_BY_DB_CSV) -> pd.DataFrame
                 "capture_rate_total_wtd": round(wtd_total, 4),
                 "capture_rate_genuine_wtd": round(wtd_gen, 4),
                 "revenue_gap_eur_sum": round(gap_sum, 0),
+                "revenue_gap_eur_sum_quotable": round(gap_sum_quotable, 0),
+                "n_nonquotable_categories": n_nonquotable,
                 "oil_filter_capture": round(oil_cap, 4) if not np.isnan(oil_cap) else None,
                 "top_gap_categories": "|".join(top_gap),
             }

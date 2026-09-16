@@ -1,6 +1,6 @@
 # ISZE task routing — read this after INDEX.md + AGENTS.md when the task type is clear.
 # Stop reading as soon as the task is answered. Do not glob the repo.
-# Agent sync: 2026-06-13
+# Agent sync: 2026-08-26
 
 version: 1
 
@@ -14,6 +14,20 @@ global_ignore:
   - 90_archive/**
 
 tasks:
+  roadmap:
+    description: What is open / next / already decided across the programme
+    read:
+      - 00_docs/ISZE_ROADMAP.md
+    optional:
+      - 00_docs/roadmaps/aim_prism_reinvention.md
+      - 00_docs/roadmaps/ai_sales_intelligence.md
+      - 00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md
+      - DECISIONS.md
+    rules:
+      - Hub section 1 is the queue; section 2 is waiting on Jerome; section 5 is closed.
+      - Never re-propose anything in hub section 5. Rationale is in DECISIONS.md, not in the roadmap.
+      - Status disagreement between hub and a domain roadmap - hub wins, fix the domain file.
+
   holiday_laptop:
     description: Set up another PC / holiday laptop (clone, Cursor sync, secrets)
     read:
@@ -23,8 +37,8 @@ tasks:
   quote_kpi:
     description: Answer a headline metric (capture %, GPS, BVP mix, revenue)
     read:
-      - 01_data/derived/_verification_report.json
-      - 01_data/derived/metrics_snapshot.json
+      - 01_data/00_derived/_verification_report.json
+      - 01_data/00_derived/metrics_snapshot.json
       - FACTS.md
     optional:
       - 03_analytics/Isuzu/prism/docs/metric_dictionary.md
@@ -48,6 +62,7 @@ tasks:
       - 03_analytics/Isuzu/prism/docs/dashboard_contracts.md
     workflow:
       - Edit 02_dashboards/
+      - Run 02_dashboards/_build/ship_gate_check.ps1 (after rebuild; must print SHIP_GATE_OK)
       - Run 02_dashboards/sync_to_deploys.ps1
 
   refresh_dashboard_json:
@@ -66,6 +81,7 @@ tasks:
       - 03_analytics/Isuzu/prism/ARCHITECTURE.md
     run:
       - 03_analytics/Isuzu/prism/run_prism.ps1
+      - 03_analytics/Isuzu/prism/run_prism_internal.ps1
 
   decision_models:
     description: Waterfall, runway, defection, attach, leakage, elasticity
@@ -73,12 +89,12 @@ tasks:
       - 00_docs/agent/NOTES.md
       - 03_analytics/Isuzu/prism/data/decision_model_assumptions.yaml
     data:
-      - 01_data/derived/wallet_waterfall.csv
-      - 01_data/derived/revenue_runway.csv
-      - 01_data/derived/defection_alerts.csv
-      - 01_data/derived/attach_rates.csv
-      - 01_data/derived/dealer_leakage_ituk.csv
-      - 01_data/derived/price_volume_elasticity.csv
+      - 01_data/00_derived/wallet_waterfall.csv
+      - 01_data/00_derived/revenue_runway.csv
+      - 01_data/00_derived/defection_alerts.csv
+      - 01_data/00_derived/attach_rates.csv
+      - 01_data/00_derived/dealer_leakage_ituk.csv
+      - 01_data/00_derived/price_volume_elasticity.csv
 
   pms_programme:
     description: ITUK PMS pilot, capture analysis, IML joint programme
@@ -89,11 +105,102 @@ tasks:
     data:
       - 03_analytics/Isuzu/pms-pilot/
 
+  exec_sales_paper:
+    description: Grade-A Mode A HTML exec aftersales paper (GPS, PMS total, mix, pricing, IDS, tenders, SWOT)
+    read:
+      - 00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md
+      - 00_docs/ITUK_PRISM_LANE_BRIDGE.md
+      - 01_data/00_derived/_verification_report.json
+      - 01_data/00_derived/metrics_snapshot.json
+      - FACTS.md
+    optional:
+      - 00_docs/ISZE_ROADMAP.md
+      - 00_docs/DASHBOARD_CAPTURE_AUDIT_PROMPT.md
+      - 00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md
+      - 03_analytics/Isuzu/prism/docs/metric_dictionary.md
+      - 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
+    never:
+      - 01_data/raw/sales/**
+      - 01_data/12_raw/sales/**
+      - 07_deploy/**
+    open:
+      - 02_dashboards/sales/OPEN_ISZE_Exec_Aftersales_Paper.cmd
+    proposed_output:
+      - 02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html
+      - 02_dashboards/sales/OPEN_ISZE_Exec_Aftersales_Paper.cmd
+    rebuild:
+      - python 02_dashboards/_build/build_exec_aftersales_paper.py
+    rules:
+      - Phase 0 defaults are locked in the prompt. HTML write still requires rebuild or ship in the current message.
+
+  action_ledger:
+    description: P8 Opportunity→Action→Outcome ledger over existing derived euro surfaces (Mode B)
+    read:
+      - 00_docs/PROMPT_ACTION_LEDGER_P8.md
+      - 00_docs/roadmaps/ai_sales_intelligence.md
+      - 00_docs/AUTOMATION_REGISTER.md
+    data:
+      - 01_data/00_derived/action_ledger.parquet
+      - 01_data/00_derived/action_ledger_history.parquet
+      - 01_data/00_derived/action_ledger_open.csv
+      - 01_data/00_derived/action_ledger_decisions.csv
+      - 01_data/00_derived/action_ledger_rejects.csv
+      - 01_data/00_derived/dealer_leakage_ituk.csv
+      - 01_data/00_derived/revision_exception_queue.csv
+      - 01_data/00_derived/replenishment_exceptions_cy2025.csv
+      - 01_data/00_derived/early_warning.csv
+      - 01_data/00_derived/defection_alerts.csv
+      - 01_data/00_derived/no_pr00_gap_cy2025_ranked.csv
+      - 01_data/00_derived/revision_book_b_top_review.csv
+      - 01_data/00_derived/leakage_monday_actions_20260819.csv
+      - 01_data/17_interactions/account_health_latest_flagged.csv
+    open:
+      - 02_dashboards/ops/OPEN_ACTION_LEDGER.cmd
+    rebuild:
+      - python 01_data/91_build/build_action_ledger.py --all --backfill
+    critique:
+      - 01_data/00_derived/ACTION_LEDGER_REVIEW_20260825.md
+
+  aftermarket_bi_build:
+    description: What to build next — dealer sell-out, replenishment, forecast, pricing revision (no alloc unless explicit)
+    read:
+      - 00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md
+      - 01_data/01_Pricing/DB_DLR_COMMERCIAL_STACK.md
+      - 00_docs/P5_FORECAST_BUILD_PLAN.md
+      - 00_docs/roadmaps/ai_sales_intelligence.md
+    data:
+      - 01_data/00_derived/demand_series.parquet
+      - 01_data/00_derived/revision_book_b_top_review.csv
+      - 01_data/00_derived/replenishment_bridge.parquet
+      - 01_data/00_derived/leakage_monday_actions_20260819.csv
+    open:
+      - 02_dashboards/sales/OPEN_Aftermarket_BI_Command_Center.cmd
+      - 01_data/01_Pricing/OPEN_LEAKAGE_EXEC_SUMMARY.cmd
+    rebuild:
+      - python 02_dashboards/_build/build_aftermarket_bi_command_center.py --all
+    critique:
+      - 02_dashboards/_build/CHART_CRITIQUE_20260819.md
+    loop:
+      - 02_dashboards/_build/LOOP_AFTERMARKET_BI.md
+      - 02_dashboards/_build/status_loop_aftermarket_bi.ps1
+
   pricing:
-    description: IE40, SPA, basket pricing
+    description: IE40, SPA, basket pricing, DB→DLR commercial stack
     read:
       - 05_memory/projects/competitiveness.md
+      - 01_data/01_Pricing/DB_DLR_COMMERCIAL_STACK.md
       - FACTS.md
+
+  aim_prism_reinvention:
+    description: After AIM scoring failed — replacement programme (P4, PN prices, PRISM surface)
+    read:
+      - 00_docs/roadmaps/aim_prism_reinvention.md
+      - DECISIONS.md
+    optional:
+      - 00_docs/P4_DETERMINISTIC_SIGNALS.md
+      - 03_analytics/Isuzu/prism/docs/DASHBOARD_IA.md
+    never:
+      - 03_analytics/Isuzu/prism/modules/aim_pn_classifier.py
 
   uio_workbook:
     description: UIO v19 logic (06_uio/_CURRENT), ITUK parc, forecast cache caveats
@@ -105,17 +212,16 @@ tasks:
   data_ingest:
     description: New SAP export, inbox, parquet rebuild
     read:
-      - 01_data/DATA_MANIFEST.md
-      - 01_data/_INBOX/README.md
+      - 01_data/DATA_MANIFEST.md      # sections 0-1 = dump-then-sort rule
     drop_zone:
-      - 01_data/_INBOX/
+      - 01_data/90_INBOX/             # legacy alias 01_data/_INBOX/ is an NTFS junction
 
   tender_monitor:
     description: v3 tender scraper and publish
     read:
       - 04_tools/ISZE_Tender_Monitor_Install/
     feed:
-      - 01_data/dashboards/tender_data.json
+      - 01_data/14_dashboards/tender_data.json   # alias 01_data/dashboards/ is a junction
     never:
       - 91_legacy/tender scraper/
 
@@ -139,7 +245,18 @@ tasks:
     description: What is safe to quote externally
     read:
       - 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
-      - 01_data/derived/_verification_report.md
+      - 01_data/00_derived/_verification_report.md
+
+  data_os_map:
+    description: Isuzu OS capability × data map (what we have / still need / must not re-ask)
+    read:
+      - 00_docs/ISZE_OS_DATA_MAP.yaml
+    optional:
+      - 02_dashboards/ops/ISZE_OS_Data_Map.html
+      - 01_data/DATA_MANIFEST.md
+      - 00_docs/roadmaps/ai_sales_intelligence.md
+    rebuild:
+      - 02_dashboards/ops/build_os_data_map.py
 
   eu_conf_deck:
     description: EU Conf 26 Parts Sales deck and MH review

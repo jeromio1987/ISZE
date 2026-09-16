@@ -1,0 +1,802 @@
+# PMS_Project_18_08_2026.pptx
+
+## Slide 1
+
+- Periodic Maintenance Service (PMS) Project
+- 18 August 2026
+- ISUZU TRUCK UK LTD
+
+## Slide 2
+
+- Maintenance Interval Implications
+- PMS Project Outline
+- ISZJ PMS Requests & ITUK Response
+- Promotion Parts List – BVP Queries
+- Parts \ Service Flow
+- Connected Pathway
+- Maintenance Package Pathway
+- KPI Proposal
+- Implementation Roadmap
+- PMS Part Numbers By Model
+- Support
+- Contents
+
+## Slide 3
+
+- Maintenance Interval Implications
+- Segment
+- Model / engine
+- Interval basis
+- Campaign implication
+- N35.125
+- NLR87 / RZ4E
+- 20,000 km
+- Secondary service-reminder campaign only
+- N35.150
+- NLR88 / 4JZ1
+- Flexible up to 40,000 km
+- Secondary, where customer data is reliable
+- N75
+- NPR75 / 4HK1
+- 40,000 km
+- Phase 1 target - fleet, R&M and safety events
+- N75
+- NPR88 / 4JZ1
+- 40,000 km
+- Phase 1 target - fleet, R&M and safety events
+- Do not use old NLR85 / 4JJ1 assumptions as the basis for the launch plan.
+
+## Slide 4
+
+- PMS Project Outline - Protect Uptime and TCO
+- Our proposal translates the ISZJ PMS objectives into a UK-ready operating model that can be launched from October.
+- 1
+- Target the reachable opportunity
+- Start with N75 fleet / R&M / safety-event customers where workshops already have repeated touchpoints. Followed by N35 customers currently not using the network.
+- 2
+- Sell the right items first
+- Air Filter and Brake are the headline items; Oil and Fuel are the 40,000 km PMS pack foundation.
+- 3
+- Standardise dealer execution
+- Use PMS Standards: Service Advisor proposal, Technician check sheet and Parts Stock.
+- 4
+- Move to connected triggers
+- Use odometer + geofence + history to create due-work reminders and feed maintenance packages for future models.
+- 1
+- Identify N75 fleet events
+- Use R&M, service-contract and dealer safety-inspection schedules.
+- 2
+- Pre-check VIN / engine / mileage
+- Confirm NPR75 or NPR88 and the correct 40,000 km pack.
+- 3
+- Prepare PMS filter pack
+- Oil + Fuel + Air filters ready before the workshop visit.
+- 4
+- Inspect brakes during safety event
+- Record pad condition and convert where replacement is needed.
+- 5
+- Quote, convert or follow up
+- Capture declined work as the next PMS reminder opportunity.
+- Align PMS parts with the fleet safety-event cycle to protect uptime and avoid repeat workshop visits.
+
+## Slide 5
+
+- Why the UK launch must be N75-led
+- 7.5t operators are professional, compliance-led and highly sensitive to downtime and whole-life cost.
+- The campaign must create uptime value, not just additional parts sales.
+- N75
+- 7.5t fleet focus
+- Easier to identify through R&M, service contracts and safety inspections
+- 40k km
+- Maintenance basis
+- NPR75 / 4HK1 and NPR88 / 4JZ1 campaign pack logic
+- 6-8 wks
+- Safety events
+- Regular inspection cycle gives practical brake conversion trigger
+- TCO
+- Primary risk
+- Avoid pushing cost into loyal S1/S2 customers without value explanation
+- Service Interval Context
+- ISUZU N75 is more frequent than DAF, Mercedes/MAN and Iveco.
+- At 50,000 km/year, ISUZU is shown at approx. 1.25 services/year versus DAF at 0.5.
+- This makes PMS messaging more sensitive: we must position reliability and compliance benefits clearly.
+- Model Implication
+- Do not use old NLR85 / 4JJ1 assumptions as the launch basis.
+- N35 is Phase 2: use only where customer contact and mileage data are reliable.
+- N75 gives a measurable, event-led pilot with lower execution risk.
+
+## Slide 6
+
+- Why the UK launch must be N75-led
+- The launch should not be a generic discount campaign. It should be a dealer workflow that attaches PMS parts to real N75 workshop events.
+- Headline
+- Air Filter
+- Low coverage / easy attach
+- Headline
+- Brake
+- Safety-critical conversion
+- Foundation
+- Oil + Fuel
+- Build the 40,000 km PMS pack
+- Controlled
+- Clutch
+- VIN-specific manual only
+- N75 fleet / R&M / Service-Contract / Safety-Inspection Records
+- October Launch Pilot
+- N35 becomes Phase 2: use service reminders only where customer contact and mileage data are reliable.
+
+## Slide 7
+
+- Phase 2: PMS Target Customers – N35
+- NLR87 / RZ4E
+- N35.125 - 20,000 km basis. Use service reminders only where customer contact and mileage data are reliable.
+- NLR88 / 4JZ1
+- N35.150 - flexible interval up to 40,000 km. Use PMS pack offers for identifiable customers.
+- NLR85 / 4JJ1
+- Previous N35.120 model. Do not use as the calculation basis for the main launch campaign.
+- N35 message
+- "Do the full PMS filter set, not just the oil filter."
+- S1 (New Customer)
+- First time purchase for ISUZU Vehicles
+- S2 (Continuous Use of ISUZU Service Shop)
+- Customers have a clear intention to use ISUZU Service Shop
+- S3 (Non-continuous use of ISUZU Service Shop)
+- Customers are likely to use ISUZU Service Shop
+- S4 (No History to Use ISUZU Service Shop)
+- Customers clearly have no intention to use ISUZU Service Shop
+
+## Slide 8
+
+- ISZJ PMS Requests & ITUK Response
+- Requirement
+- ITUK response
+- Output
+- Target volume scenario
+- Use practical 2025 ITUK Parts Sales + UIO data for targeting.
+- Baseline Coverage model
+- Finalise promotion programme for Oct launch
+- Phase 1 N75 campaign with dealer baseline, one-page guide (Bulletin) and monthly league table.
+- Implementation plan
+- Review parts list / BVP / low demand
+- Resolve 1876102860, 5876102500, 8983104491, 8983752250 and EU R90 brake pad action.
+- BVP action list
+- Discuss maintenance package / KPIs
+- Connect PMS to maintenance packages, contract rate, dealer events, genuine parts and fill-rate KPIs.
+- KPI’s
+- Use connected / odometer linkage
+- Odometer + geofence + history creates due-work trigger and S1-S4 classification.
+- Future Connected workflow
+
+## Slide 9
+
+- Promotion Parts List – BVP Queries
+- Item
+- Issue
+- ITUK action
+- 1876102860
+- BVP fuel filter: zero ITUK Parts Sales 2025
+- BVP alternative 8975425400
+- 5876102500
+- BVP air filter: zero ITUK Parts Sales 2025
+- BVP alternative 8981772710
+- 8983104491 / 8983752250
+- Low demand filters
+- S/S TO 8975425390
+- 8982447940
+- EU R90 brake pad replacement for N75
+- Place initial order and add to R90-compliant brake pack after ISZE/ISZJ confirmation.
+- BVP availability, low-demand fuel items and the EU R90 brake pad.
+
+## Slide 10
+
+- Parts \ Service Flow
+- Parts
+- Service Advisor
+- Technician
+- Inbound Parts
+- Inspection
+- &
+- Put-away
+- Suggest
+- Additional Items
+- Vehicle Handover
+- Vehicle Check-In & Confirm Authorised Work on Job Card
+- Dealer Inventory
+- Confirm
+- Authorised Work & Mileage
+- Collect Required Parts
+- Perform Work
+- Fill Out Check Sheet
+- & Job Card
+- Feedback to customer
+- Explain
+- work completed & quote for additional work.
+- Hand Keys to Workshop Controller
+- Demand Forecasting & Orders
+- Issue Parts to
+- Job card \ WIP
+- Interrupt Required Parts
+- Confirm Parts for Repair & Upsell Additional Items
+- Are all parts in stock?
+- Yes
+- No
+- Move Vehicle to Workshop
+
+## Slide 11
+
+- Connected Pathway
+- The proposed approach can launch manually first, then strengthen as odometer linkage, geofence and DTC/DTU operations become available.
+- Vehicle data
+- Odometer
+- DTC/DTU
+- Location
+- Decision logic
+- Maintenance due?
+- S1-S4 customer type
+- Nearest dealer
+- Operational action
+- Contact Customer
+- Dealer quote
+- Pack pre-order
+- Commercial outcome
+- PMS conversion
+- Maintenance pack
+- Genuine parts retention
+- Core rule: Connected data to be used to reduce missed PMS events, reduce repeat visits and improve uptime.
+- Connected / Odometer Linkage: From static campaign to trigger-based PMS
+
+## Slide 12
+
+- Maintenance Package Pathway
+- ISZJ asked how connected services, odometer linkage and packages can work together.
+- Connect
+- Warranty / roadside / connected
+- Maintenance reminders
+- I-Maintain record access
+- Essential
+- Safety inspections and compliance
+- Routine maintenance
+- Dedicated CARE executive
+- Value
+- Full R&M for chassis
+- Preventative Wear and tear
+- Tacho / MOT / contract management
+
+## Slide 13
+
+- KPI Proposal
+- The project will fail if it is measured only as a parts discount activity.
+- The KPI set should track coverage, conversion, dealer capability and customer retention.
+- Commercial
+- PMS QTY / GBP
+- Cover ratio by category
+- Parts Sales Growth
+- Dealer conversion
+- N75 event conversion
+- Brake quote acceptance
+- Air-filter Increase Sales
+- Stock readiness
+- Fill rate
+- B/O items
+- Pack availability
+- Connected
+- Odometer due triggers
+- S1-S4 classification
+- CARE/dealer follow-up
+- Customer
+- Retention
+- Declined work recovery
+- Maintenance pack contract rate
+
+## Slide 14
+
+- Implementation Roadmap
+- 18 Aug
+- Japan alignment
+- Scope, Target, Support, KPI, BVP questions, and roles agreed.
+- Sep
+- Launch build
+- Dealer baselines & targets, part packs, stock rules, one-page guide
+- Oct 2026
+- Go-live
+- N75 Fleet Uptime PMS campaign launched
+- Nov-Dec
+- Pilot review
+- Conversion, availability, dealer performance and customer feedback
+- FY27
+- Scale decision
+- N35 expansion where data is reliable; maintenance package link
+- ITUK
+- Dealer execution, baselines, stock rules, service workflow, dashboard.
+- ISZE
+- Commercial support, incentive mechanism, BVP supply support.
+- ISZJ
+- PMS standard alignment, R90/BVP confirmation, connected requirements.
+
+## Slide 15
+
+- PMS Parts Promotion – NPR75  N75  4HK1
+- PMS category
+- Part number
+- Description / note
+- Campaign priority
+- Monthly Average
+- Year To Date Demand
+- Comments
+- Oil Filter
+- 8983282071
+- Element; oil filter
+- High
+- 5.2
+- 47
+- Oil Filter family
+- 8983282070
+- Same HOF family / related oil filter reference
+- High
+- 41.8
+- 371
+- Oil Filter BVP
+- 1876102890
+- BVP alternative for 8983282070 family
+- Useful for price-sensitive customers
+- 242.8
+- 1,633
+- Oil Filter BVP
+- 5876101170
+- BVP alternative for 8983282070 family
+- Useful
+- 16.5
+- 60
+- S/S TO 1876102890
+- Oil Filter BVP
+- 5876100310
+- BVP alternative for 8983282070 family
+- Useful
+- 0.0
+- 0
+- S/S TO 1876102890
+- Fuel Filter ASM
+- 8975425050
+- Filter ASM; fuel
+- Medium-high
+- 2.6
+- 15
+- Fuel Filter Element
+- 8975425400
+- Element; fuel filter
+- High
+- 289.3
+- 2,065
+- Fuel Filter BVP
+- 1876102860
+- BVP alternative for 8975425400
+- Useful
+- 0.0
+- 0
+- Air Cleaner ASM
+- 8981235322
+- Cleaner ASM; air
+- Do not headline unless required by VIN
+- 0.3
+- 2
+- Air Cleaner ASM
+- 8982157230
+- Cleaner ASM; air; used on some NPR75 rows
+- Do not headline unless required by VIN
+- 0.1
+- 1
+- Air Filter
+- 8981772710
+- Filter; ACL
+- High campaign priority
+- 115.3
+- 810
+- Air Filter BVP
+- 5876102500
+- BVP alternative for 8981772710
+- Strong campaign item
+- 0.0
+- 0
+- Brake Pad Kit
+- 8982447940
+- Pad kit; front/rear caliper application in matrix
+- Highest N75 focus item
+- 199.2
+- 1,463
+- Clutch Disc
+- 8981649171
+- Manual only
+- Do not headline
+- 4.5
+- 31
+- Clutch Disc BVP
+- 5876100920
+- BVP alternative for 8981649171
+- Only if targeting manual units
+- 0.0
+- 0
+- Clutch Pressure Plate
+- 8970388314
+- Manual only
+- Do not headline
+- 1.5
+- 11
+- Clutch Pressure Plate BVP
+- 5876101040
+- BVP alternative for 8970388314
+- Only if targeting manual units
+- 0.7
+- 4
+
+## Slide 16
+
+- PMS Parts Promotion – NPR88  N75  4JZ1
+- PMS category
+- Part Number
+- Description / note
+- Campaign priority
+- Monthly Average
+- Year To Date Demand
+- Comments
+- Oil Filter
+- 8975439050
+- Element kit; oil filter
+- High
+- 123.8
+- 920
+- Fuel Filter ASM
+- 8983104491
+- Filter ASM; fuel
+- Medium-high
+- 1.0
+- 5
+- Fuel Filter ASM related
+- 8983104490
+- Same HOF family reference
+- Use by VIN / supersession check
+- 0.0
+- 0
+- S/S TO 8983104491
+- Fuel Sedimenter
+- 8983572930
+- Sedimenter; fuel
+- Medium
+- 0.3
+- 1
+- Fuel Filter Element
+- 8975425390
+- Element kit; fuel filter
+- High
+- 148.6
+- 1,090
+- Fuel Filter Element
+- 8983752250
+- Element kit; fuel filter
+- High
+- 1.2
+- 7
+- S/S TO 8975425390
+- Fuel Cartridge Kit
+- 8980374810
+- Cartridge kit; fuel filter
+- High
+- 103.2
+- 726
+- Fuel Cartridge BVP
+- 5876101570
+- BVP alternative for 8980374810
+- Useful for price-sensitive customers
+- 65.7
+- 499
+- Fuel Cartridge related
+- 8980318470
+- Related genuine reference under 8980374810 HOF
+- Use by VIN / supersession check
+- 0.0
+- 0
+- S/S TO 8980374810
+- Fuel Cartridge related
+- 8980179710
+- Related genuine reference under 8980374810 HOF
+- Use by VIN / supersession check
+- 0.0
+- 0
+- S/S TO 8980374810
+- Air Cleaner ASM
+- 8976659910
+- Cleaner ASM; air
+- Do not headline unless required by VIN
+- 0.1
+- 0
+- Air Filter
+- 8976739570
+- Filter; ACL
+- High campaign priority
+- 70.8
+- 474
+- Brake Pad Kit
+- 8982447940
+- Main NPR88 brake pad kit for most rows
+- Highest N75 focus item
+- 199.2
+- 1,463
+- Brake Pad Kit
+- 8982169220
+- Used on specific NPR88 model-code groups
+- Secondary, VIN-specific
+- 53.0
+- 359
+- Brake Pad BVP
+- 5876102380
+- BVP alternative for 8982169220
+- Useful
+- 0.0
+- 0
+- Brake Pad BVP related
+- 5876170050
+- Related BVP reference for 8982169220 family
+- Useful
+- 0.0
+- 0
+- Clutch Disc
+- 8978283700
+- Manual only, some NPR88 rows
+- Do not headline
+- 0.3
+- 1
+- Clutch Disc
+- 8982551391
+- Manual only, some NPR88 rows
+- Do not headline
+- 4.0
+- 36
+- Clutch Disc BVP
+- 5876100771
+- BVP alternative for 8982551391
+- Only if targeting manual units
+- 4.3
+- 29
+- Clutch Pressure Plate
+- 8980400932
+- Manual only
+- Do not headline
+- 4.6
+- 43
+- Clutch Pressure Plate BVP
+- 5876100910
+- BVP alternative for 8980400932
+- Only if targeting manual units
+- 4.0
+- 28
+
+## Slide 17
+
+- PMS Parts Promotion – NLR87   N35.125   RZ4E
+- PMS category
+- Part Number
+- Description / note
+- Campaign priority
+- Monthly Average
+- Year To Date Demand
+- Comments
+- Oil Filter
+- 8982705240
+- Element; oil filter
+- High
+- 455.1
+- 3,095
+- Oil Filter BVP
+- 5876150530
+- BVP alternative for 8982705240
+- Useful for price-sensitive customers
+- 9.0
+- 91
+- Fuel Filter
+- 8975080920
+- Filter ASM; fuel
+- High
+- 4.1
+- 29
+- Fuel Filter
+- 8975080932
+- Filter ASM; fuel
+- High
+- 0.8
+- 6
+- Fuel Filter Element
+- 8981596930
+- Element kit; fuel filter
+- High
+- 388.9
+- 2,794
+- Fuel Filter BVP
+- 5876150170
+- BVP alternative for 8981596930
+- Useful for price-sensitive customers
+- 20.8
+- 127
+- Fuel Filter Element
+- 8981941190
+- Element kit; fuel filter
+- High
+- 407.4
+- 2,787
+- Fuel Filter BVP
+- 5876150240
+- BVP alternative for 8981941190
+- Useful for price-sensitive customers
+- 22.7
+- 142
+- Air Filter
+- 8983214130
+- Filter; ACL
+- Highest N35 focus item
+- 83.5
+- 641
+- Air Filter BVP
+- 5876102900
+- BVP alternative for 8983214130
+- Strong campaign item
+- 25.9
+- 187
+- Air Cleaner ASM
+- 8975095290
+- Cleaner ASM; air
+- Do not headline unless required by VIN
+- 0.6
+- 6
+- Front Brake Pad Kit
+- 8982169210
+- Pad kit; caliper disc brake front
+- Brake inspection conversion
+- 66.7
+- 497
+- Front Brake Pad Kit
+- 8982169220
+- Pad kit; caliper disc brake front
+- Brake inspection conversion
+- 53.0
+- 359
+- Brake Pad BVP
+- 5876102380
+- BVP alternative for 8982169220
+- Useful for price-sensitive repair channel
+- 0.0
+- 0
+- Rear Brake Shoe ASM
+- 8973319320
+- Shoe ASM; rear brake
+- Secondary
+- 6.0
+- 24
+- Rear Brake Shoe Kit
+- 5878320440
+- Shoe kit; rear brake
+- Secondary
+- 1.1
+- 7
+- Clutch Disc
+- 8983753331
+- Manual only
+- Do not headline
+- 0.9
+- 6
+- Clutch Pressure Plate
+- 8982831940
+- Manual only
+- Do not headline
+- 9.3
+- 76
+
+## Slide 18
+
+- PMS Parts Promotion – NLR88  N35.150  4JZ1
+- PMS category
+- Main part number
+- Description / note
+- Campaign priority
+- Monthly Average
+- Year To Date Demand
+- Comments
+- Oil Filter
+- 8975439050
+- Element kit; oil filter
+- Medium
+- 123.8
+- 920
+- Fuel Filter
+- 8983104491
+- Filter ASM; fuel
+- Medium
+- 1.0
+- 5
+- Fuel Filter
+- 8977903031
+- Filter ASM; fuel
+- Medium
+- 0.2
+- 1
+- Fuel Filter Element
+- 8981941190
+- Element kit; fuel filter
+- Medium
+- 407.4
+- 2,787
+- Fuel Filter BVP
+- 5876150240
+- BVP alternative for 8981941190
+- Useful
+- 22.7
+- 142
+- Fuel Filter Element
+- 8975425390
+- Element kit; fuel filter
+- High
+- 148.6
+- 1,090
+- Fuel Filter Element
+- 8983752250
+- Element kit; fuel filter
+- High
+- 1.2
+- 7
+- S/S TO 8975425390
+- Air Filter
+- 8976739570
+- Filter; ACL
+- Main NLR88 air-filter item
+- 70.8
+- 474
+- Air Cleaner ASM
+- 8976643531
+- Cleaner ASM; air
+- Do not headline unless required by VIN
+- 0.1
+- 0
+- Front Brake Pad Kit
+- 8982169220
+- Pad kit; caliper disc brake front
+- Brake inspection conversion
+- 53.0
+- 359
+- Rear Brake Pad Kit
+- 8982169210
+- Pad kit; caliper rear
+- Brake inspection conversion
+- 66.7
+- 497
+- Brake Pad BVP
+- 5876102380
+- BVP alternative for 8982169220
+- Useful
+- 0.0
+- 0
+- Clutch Disc
+- 8978293170
+- Manual only
+- Do not headline
+- 2.3
+- 18
+- Clutch Pressure Plate
+- 8980400932
+- Manual only
+- Do not headline
+- 4.6
+- 43
+- Clutch Pressure Plate BVP
+- 5876100910
+- BVP alternative for 8980400932
+- Only if doing clutch targeting
+- 4.0
+- 28
+
+## Slide 19
+
+- Support
+- 1
+- SPA
+- 2
+- Dealer Incentive
+
+## Slide 20
+

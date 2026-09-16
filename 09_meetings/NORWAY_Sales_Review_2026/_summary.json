@@ -7,230 +7,264 @@
   "label_prior": "CY H1 2025",
   "label_current": "CY H1 2026",
   "gross_prior": 687882.25,
-  "gross_current": 781213.23,
-  "gross_delta_pct": 0.1357,
+  "gross_current": 750242.54,
+  "gross_delta_pct": 0.0907,
+  "commercial_prior": 385556.36,
+  "commercial_current": 404541.19,
+  "commercial_delta_pct": 0.0492,
+  "warranty_stripped_prior": 302325.89,
+  "warranty_stripped_current": 345701.35,
+  "movers_basis": "commercial_ex_warranty",
   "credits_prior": 0.0,
   "credits_current": -47136.0,
   "net_prior": 687882.25,
-  "net_current": 734077.23,
-  "net_delta_pct": 0.0672,
-  "pbi": null,
+  "net_current": 703106.54,
+  "net_delta_pct": 0.0221,
+  "pbi": {
+    "quarter": "FY2027 YTD (Apr–Jul)",
+    "months": [
+      "Apr",
+      "May",
+      "Jun",
+      "Jul"
+    ],
+    "sales": [
+      116000,
+      108000,
+      173000,
+      86000
+    ],
+    "prev_year": [
+      115000,
+      149000,
+      122000,
+      101000
+    ],
+    "order_intake": [
+      90000,
+      115000,
+      164000,
+      75000
+    ],
+    "order_intake_total": 444000,
+    "original_bp": [
+      141000,
+      134000,
+      155000,
+      162000
+    ],
+    "source": "Power BI ISZE MONTHLY REPORT VP (Apr–Jul FY2027), read from open browser 2026-08-24 — display rounded to nearest €K"
+  },
   "categories": [
     {
-      "cat": "Exhaust",
-      "prior": 40390.12,
-      "current": 23919.16,
-      "d": -16470.96,
-      "dp": -0.4078
-    },
-    {
-      "cat": "Steering",
-      "prior": 85090.93,
-      "current": 69776.72,
-      "d": -15314.21,
-      "dp": -0.18
-    },
-    {
       "cat": "Brake parts",
-      "prior": 107342.31,
-      "current": 92105.12,
-      "d": -15237.19,
-      "dp": -0.1419
+      "prior": 67439.51,
+      "current": 41819.65,
+      "d": -25619.86,
+      "dp": -0.3799
     },
     {
       "cat": "Air conditioning",
-      "prior": 57010.03,
-      "current": 45929.16,
-      "d": -11080.87,
-      "dp": -0.1944
+      "prior": 49482.88,
+      "current": 35683.19,
+      "d": -13799.69,
+      "dp": -0.2789
     },
     {
-      "cat": "Hydraulic / mechanical",
-      "prior": 12557.18,
-      "current": 8033.86,
-      "d": -4523.32,
-      "dp": -0.3602
+      "cat": "Exhaust",
+      "prior": 24415.84,
+      "current": 15197.93,
+      "d": -9217.91,
+      "dp": -0.3775
     },
     {
-      "cat": "Clutch parts",
-      "prior": 1189.93,
-      "current": 724.86,
-      "d": -465.07,
-      "dp": -0.3908
-    },
-    {
-      "cat": "Gaskets / seals",
-      "prior": 6782.1,
-      "current": 6379.49,
-      "d": -402.61,
-      "dp": -0.0594
-    },
-    {
-      "cat": "Lighting",
-      "prior": 49063.64,
-      "current": 48949.86,
-      "d": -113.78,
-      "dp": -0.0023
-    },
-    {
-      "cat": "Belts",
-      "prior": 212.42,
-      "current": 149.79,
-      "d": -62.63,
-      "dp": -0.2948
-    },
-    {
-      "cat": "Consumables",
-      "prior": 95.81,
-      "current": 238.75,
-      "d": 142.94,
-      "dp": 1.4919
+      "cat": "Steering",
+      "prior": 7359.69,
+      "current": 2913.51,
+      "d": -4446.18,
+      "dp": -0.6041
     },
     {
       "cat": "Turbo",
       "prior": 3053.2,
-      "current": 3580.39,
-      "d": 527.19,
-      "dp": 0.1727
+      "current": 386.09,
+      "d": -2667.11,
+      "dp": -0.8735
+    },
+    {
+      "cat": "Hydraulic / mechanical",
+      "prior": 8514.85,
+      "current": 6801.91,
+      "d": -1712.94,
+      "dp": -0.2012
+    },
+    {
+      "cat": "UNCLASSIFIED",
+      "prior": 1528.91,
+      "current": 54.76,
+      "d": -1474.15,
+      "dp": -0.9642
+    },
+    {
+      "cat": "Lighting",
+      "prior": 34862.34,
+      "current": 34068.34,
+      "d": -794.0,
+      "dp": -0.0228
+    },
+    {
+      "cat": "Injectors",
+      "prior": 1576.03,
+      "current": 834.28,
+      "d": -741.75,
+      "dp": -0.4706
+    },
+    {
+      "cat": "Clutch parts",
+      "prior": 856.85,
+      "current": 559.56,
+      "d": -297.29,
+      "dp": -0.347
+    },
+    {
+      "cat": "Belts",
+      "prior": 77.82,
+      "current": 0.0,
+      "d": -77.82,
+      "dp": -1.0
+    },
+    {
+      "cat": "Consumables",
+      "prior": 95.81,
+      "current": 242.49,
+      "d": 146.68,
+      "dp": 1.5309
+    },
+    {
+      "cat": "Starter / alternator",
+      "prior": 3932.59,
+      "current": 4094.33,
+      "d": 161.74,
+      "dp": 0.0411
+    },
+    {
+      "cat": "Gaskets / seals",
+      "prior": 6453.4,
+      "current": 6658.5,
+      "d": 205.1,
+      "dp": 0.0318
+    },
+    {
+      "cat": "Engine parts",
+      "prior": 1093.48,
+      "current": 2002.81,
+      "d": 909.33,
+      "dp": 0.8316
+    },
+    {
+      "cat": "Mirrors",
+      "prior": 3875.92,
+      "current": 5128.93,
+      "d": 1253.01,
+      "dp": 0.3233
     },
     {
       "cat": "Air system",
       "prior": 2580.12,
-      "current": 3454.91,
-      "d": 874.79,
-      "dp": 0.3391
-    },
-    {
-      "cat": "Starter / alternator",
-      "prior": 4212.35,
-      "current": 5115.74,
-      "d": 903.39,
-      "dp": 0.2145
-    },
-    {
-      "cat": "Injectors",
-      "prior": 2803.06,
-      "current": 4253.78,
-      "d": 1450.72,
-      "dp": 0.5175
-    },
-    {
-      "cat": "Mirrors",
-      "prior": 5612.58,
-      "current": 7290.97,
-      "d": 1678.39,
-      "dp": 0.299
-    },
-    {
-      "cat": "Fuel system",
-      "prior": 2139.51,
-      "current": 3897.53,
-      "d": 1758.02,
-      "dp": 0.8217
+      "current": 4385.29,
+      "d": 1805.17,
+      "dp": 0.6996
     },
     {
       "cat": "Filters",
-      "prior": 21555.87,
-      "current": 23603.26,
-      "d": 2047.39,
-      "dp": 0.095
-    },
-    {
-      "cat": "Hardware",
-      "prior": 4208.27,
-      "current": 6295.9,
-      "d": 2087.63,
-      "dp": 0.4961
-    },
-    {
-      "cat": "Cooling",
-      "prior": 7721.83,
-      "current": 10041.19,
-      "d": 2319.36,
-      "dp": 0.3004
+      "prior": 20528.87,
+      "current": 22354.26,
+      "d": 1825.39,
+      "dp": 0.0889
     },
     {
       "cat": "Suspension",
-      "prior": 5493.7,
-      "current": 7971.46,
-      "d": 2477.76,
-      "dp": 0.451
+      "prior": 2254.99,
+      "current": 4092.06,
+      "d": 1837.07,
+      "dp": 0.8147
     },
     {
-      "cat": "Miscellaneous",
-      "prior": 24042.88,
-      "current": 28665.23,
-      "d": 4622.35,
-      "dp": 0.1923
+      "cat": "Cooling",
+      "prior": 2293.94,
+      "current": 4822.37,
+      "d": 2528.43,
+      "dp": 1.1022
     },
     {
-      "cat": "Engine parts",
-      "prior": 2884.96,
-      "current": 7974.32,
-      "d": 5089.36,
-      "dp": 1.7641
+      "cat": "Hardware",
+      "prior": 4006.39,
+      "current": 6741.29,
+      "d": 2734.9,
+      "dp": 0.6826
+    },
+    {
+      "cat": "Fuel system",
+      "prior": 2050.35,
+      "current": 5236.97,
+      "d": 3186.62,
+      "dp": 1.5542
     },
     {
       "cat": "Transmission parts",
-      "prior": 19556.32,
-      "current": 25124.54,
-      "d": 5568.22,
-      "dp": 0.2847
+      "prior": 13665.02,
+      "current": 19094.53,
+      "d": 5429.51,
+      "dp": 0.3973
     },
     {
-      "cat": "Body parts",
-      "prior": 91278.14,
-      "current": 113018.26,
-      "d": 21740.12,
-      "dp": 0.2382
+      "cat": "Miscellaneous",
+      "prior": 11435.06,
+      "current": 24487.07,
+      "d": 13052.01,
+      "dp": 1.1414
     },
     {
       "cat": "Electrical sensors",
-      "prior": 125484.73,
-      "current": 156793.79,
-      "d": 31309.06,
-      "dp": 0.2495
+      "prior": 28524.94,
+      "current": 46367.66,
+      "d": 17842.72,
+      "dp": 0.6255
     },
     {
-      "cat": "UNCLASSIFIED",
-      "prior": 5520.26,
-      "current": 77925.19,
-      "d": 72404.93,
-      "dp": 13.1162
+      "cat": "Body parts",
+      "prior": 83597.56,
+      "current": 110513.41,
+      "d": 26915.85,
+      "dp": 0.322
     }
   ],
   "top_decl_itc": [
     {
-      "pn": "8976526220",
-      "desc": "PAD KIT; CALIPER,DISC BRK,FRT",
-      "cat": "Brake parts",
-      "prior": 12392.0,
-      "current": 0.0,
-      "d": -12392.0,
-      "dq": -200.0
-    },
-    {
       "pn": "8975546610",
       "desc": "PAD KIT; CALIPER,DISC BRK,FRT",
       "cat": "Brake parts",
+      "model": "TF*",
       "prior": 40065.0,
       "current": 27886.5,
       "d": -12178.5,
       "dq": -150.0
     },
     {
-      "pn": "7552348290",
-      "desc": "STEERING UNIT",
-      "cat": "Steering",
-      "prior": 76285.6,
-      "current": 66749.9,
-      "d": -9535.7,
-      "dq": -5.0
+      "pn": "8976526220",
+      "desc": "PAD KIT; CALIPER,DISC BRK,FRT",
+      "cat": "Brake parts",
+      "model": "",
+      "prior": 12392.0,
+      "current": 3407.8,
+      "d": -8984.2,
+      "dq": -145.0
     },
     {
       "pn": "8981405904",
       "desc": "SILENCER ASM; EXH",
       "cat": "Exhaust",
+      "model": "",
       "prior": 12912.2,
       "current": 4337.52,
       "d": -8574.68,
@@ -240,51 +274,17 @@
       "pn": "8975554500",
       "desc": "FILTER; BLOWER UNIT",
       "cat": "Air conditioning",
+      "model": "TF*,UC*",
       "prior": 16138.0,
       "current": 9534.0,
       "d": -6604.0,
       "dq": -400.0
     },
     {
-      "pn": "8983682091",
-      "desc": "PIPE; EXH",
-      "cat": "Exhaust",
-      "prior": 6121.2,
-      "current": 0.0,
-      "d": -6121.2,
-      "dq": -5.0
-    },
-    {
-      "pn": "8979488071",
-      "desc": "ROTOR; DISC BRK,FRT",
-      "cat": "Brake parts",
-      "prior": 12831.36,
-      "current": 6957.6,
-      "d": -5873.76,
-      "dq": -166.0
-    },
-    {
-      "pn": "8978752452",
-      "desc": "HARNESS; CHAS",
-      "cat": "Electrical sensors",
-      "prior": 4960.27,
-      "current": 165.23,
-      "d": -4795.04,
-      "dq": -30.0
-    },
-    {
-      "pn": "8978429890",
-      "desc": "LAMP ASM; RR COMB",
-      "cat": "Lighting",
-      "prior": 4276.44,
-      "current": 0.0,
-      "d": -4276.44,
-      "dq": -28.0
-    },
-    {
       "pn": "8974995480",
       "desc": "FILTER; ACL",
       "cat": "Air conditioning",
+      "model": "TFR,TFS,UCR,UCS",
       "prior": 14448.0,
       "current": 10180.0,
       "d": -4268.0,
@@ -294,6 +294,7 @@
       "pn": "8984813230",
       "desc": "SEAL; BACKLIGHT GLASS",
       "cat": "Lighting",
+      "model": "",
       "prior": 7302.15,
       "current": 3040.44,
       "d": -4261.71,
@@ -303,6 +304,7 @@
       "pn": "8980618131",
       "desc": "DRUM; BRK,RR",
       "cat": "Brake parts",
+      "model": "",
       "prior": 3700.95,
       "current": 138.62,
       "d": -3562.33,
@@ -312,6 +314,7 @@
       "pn": "8983420130",
       "desc": "BODY ASM; VLV LWR,A/T",
       "cat": "Transmission parts",
+      "model": "",
       "prior": 3320.58,
       "current": 0.0,
       "d": -3320.58,
@@ -321,6 +324,7 @@
       "pn": "8981394280",
       "desc": "FILTER; BLOWER UNIT",
       "cat": "Air conditioning",
+      "model": "TF*,UC*",
       "prior": 8636.0,
       "current": 5451.5,
       "d": -3184.5,
@@ -330,165 +334,3275 @@
       "pn": "8982330912",
       "desc": "LAMP ASM; RR COMB",
       "cat": "Lighting",
+      "model": "",
       "prior": 6006.96,
       "current": 3207.66,
       "d": -2799.3,
       "dq": -25.0
+    },
+    {
+      "pn": "8982114012",
+      "desc": "PIPE; EXH",
+      "cat": "Exhaust",
+      "model": "",
+      "prior": 3596.32,
+      "current": 950.6,
+      "d": -2645.72,
+      "dq": -14.0
+    },
+    {
+      "pn": "8981776324",
+      "desc": "DPD ASM",
+      "cat": "Exhaust",
+      "model": "",
+      "prior": 2477.18,
+      "current": 0.0,
+      "d": -2477.18,
+      "dq": -2.0
+    },
+    {
+      "pn": "7552348310",
+      "desc": "STEERING UNIT",
+      "cat": "Steering",
+      "model": "",
+      "prior": 2275.32,
+      "current": 0.0,
+      "d": -2275.32,
+      "dq": -1.0
+    },
+    {
+      "pn": "5876150170",
+      "desc": "ELEMENT KIT; FUEL FILTER",
+      "cat": "Filters",
+      "model": "N*R,NPS,QKR,TF*,UC*",
+      "prior": 6740.0,
+      "current": 4718.0,
+      "d": -2022.0,
+      "dq": -300.0
+    },
+    {
+      "pn": "8974922413",
+      "desc": "DISPLAY; MULTI",
+      "cat": "Electrical sensors",
+      "model": "",
+      "prior": 1989.14,
+      "current": 0.0,
+      "d": -1989.14,
+      "dq": -2.0
     }
   ],
   "top_grow_itc": [
     {
-      "pn": "8983767550",
-      "desc": "ROTOR; DISC BRK,FRT",
-      "cat": "Brake parts",
-      "prior": 24326.4,
-      "current": 39588.0,
-      "d": 15261.6,
-      "dq": 200.0
-    },
-    {
       "pn": "8974993681",
       "desc": "SENSOR; TIRE INFLATION",
       "cat": "Electrical sensors",
+      "model": "",
       "prior": 2694.01,
       "current": 13476.0,
       "d": 10781.99,
       "dq": 391.0
     },
     {
-      "pn": "7552422500",
-      "desc": "CONTROL UNIT",
-      "cat": "Electrical sensors",
-      "prior": 6568.04,
-      "current": 10542.66,
-      "d": 3974.62,
-      "dq": 6.0
-    },
-    {
       "pn": "8975509392",
       "desc": "BUMPER ASM; FRT",
       "cat": "Body parts",
+      "model": "",
       "prior": 4653.0,
       "current": 8122.16,
       "d": 3469.16,
       "dq": 32.0
     },
     {
-      "pn": "8975056801",
-      "desc": "PAD KIT; CALIPER,DISC BRK,FRT",
-      "cat": "Brake parts",
-      "prior": 2403.9,
-      "current": 5577.3,
-      "d": 3173.4,
-      "dq": 40.0
-    },
-    {
-      "pn": "8978832640",
-      "desc": "CAMERA ASM",
-      "cat": "Engine parts",
-      "prior": 1061.0,
-      "current": 4182.18,
-      "d": 3121.18,
-      "dq": 3.0
-    },
-    {
       "pn": "8982705240",
       "desc": "ELEMENT; OIL FILTER",
       "cat": "Filters",
+      "model": "NHR,NLR,NMR,TF*,UC*",
       "prior": 8640.0,
       "current": 11688.0,
       "d": 3048.0,
       "dq": 200.0
     },
     {
-      "pn": "8983287985",
-      "desc": "LAMP ASM; RR COMB",
-      "cat": "Lighting",
-      "prior": 4581.9,
-      "current": 7610.1,
-      "d": 3028.2,
-      "dq": 20.0
-    },
-    {
-      "pn": "8983712150",
-      "desc": "SENSOR; SPD,RR WHEEL",
-      "cat": "Electrical sensors",
-      "prior": 940.15,
-      "current": 3777.3,
-      "d": 2837.15,
-      "dq": 15.0
+      "pn": "8984890171",
+      "desc": "PUMP ASM; FUEL,SUPPLY",
+      "cat": "Fuel system",
+      "model": "",
+      "prior": 660.57,
+      "current": 3264.37,
+      "d": 2603.8,
+      "dq": 4.0
     },
     {
       "pn": "8975595830",
       "desc": "PANEL; SIDE GATE",
       "cat": "Body parts",
+      "model": "",
       "prior": 619.41,
       "current": 2879.14,
       "d": 2259.73,
       "dq": 11.0
     },
     {
-      "pn": "8983835010",
-      "desc": "BELT; A/C CMPR",
-      "cat": "Air conditioning",
-      "prior": 1075.0,
-      "current": 3304.2,
-      "d": 2229.2,
-      "dq": 200.0
-    },
-    {
-      "pn": "8974814492",
-      "desc": "ACTUATOR; AXLE",
-      "cat": "Transmission parts",
-      "prior": 1762.45,
-      "current": 3944.96,
-      "d": 2182.51,
-      "dq": 17.0
-    },
-    {
-      "pn": "8984893170",
-      "desc": "CALIPER; FRT DISC BRK",
-      "cat": "Brake parts",
-      "prior": 334.04,
-      "current": 2378.7,
-      "d": 2044.66,
-      "dq": 24.0
-    },
-    {
-      "pn": "8983320160",
-      "desc": "VALVE; EGR",
-      "cat": "Exhaust",
-      "prior": 3787.1,
-      "current": 5568.66,
-      "d": 1781.56,
-      "dq": 7.0
+      "pn": "7552172691",
+      "desc": "BUMPER ASM; FRT",
+      "cat": "Body parts",
+      "model": "",
+      "prior": 812.16,
+      "current": 2646.0,
+      "d": 1833.84,
+      "dq": 12.0
     },
     {
       "pn": "8983621213",
       "desc": "BAR; FRT BUMPER",
       "cat": "Suspension",
+      "model": "",
       "prior": 260.35,
       "current": 2008.22,
       "d": 1747.87,
       "dq": 33.0
+    },
+    {
+      "pn": "8983314120",
+      "desc": "SENSOR; PRESSURE,DPD",
+      "cat": "Exhaust",
+      "model": "",
+      "prior": 380.84,
+      "current": 1705.44,
+      "d": 1324.6,
+      "dq": 7.0
+    },
+    {
+      "pn": "5876150780",
+      "desc": "BLADE; WIPER",
+      "cat": "Miscellaneous",
+      "model": "",
+      "prior": 2451.5,
+      "current": 3689.8,
+      "d": 1238.3,
+      "dq": 130.0
+    },
+    {
+      "pn": "8983675661",
+      "desc": "SUPPORT; FRT BUMPER",
+      "cat": "Body parts",
+      "model": "",
+      "prior": 176.16,
+      "current": 1411.04,
+      "d": 1234.88,
+      "dq": 28.0
+    },
+    {
+      "pn": "8981647861",
+      "desc": "VALVE; EGR",
+      "cat": "Exhaust",
+      "model": "",
+      "prior": 630.51,
+      "current": 1681.36,
+      "d": 1050.85,
+      "dq": 5.0
+    },
+    {
+      "pn": "8983303281",
+      "desc": "BUMPER ASM; FRT",
+      "cat": "Body parts",
+      "model": "",
+      "prior": 1414.32,
+      "current": 2436.04,
+      "d": 1021.72,
+      "dq": 8.0
+    },
+    {
+      "pn": "8975497422",
+      "desc": "FENDER; FRT",
+      "cat": "Body parts",
+      "model": "",
+      "prior": 598.7,
+      "current": 1616.68,
+      "d": 1017.98,
+      "dq": 12.0
+    },
+    {
+      "pn": "8944627340",
+      "desc": "GASKET; OIL FILLER,AXLE CASE",
+      "cat": "Gaskets / seals",
+      "model": "",
+      "prior": 832.0,
+      "current": 1807.0,
+      "d": 975.0,
+      "dq": 800.0
+    },
+    {
+      "pn": "8981402660",
+      "desc": "FILTER; ACL",
+      "cat": "Air conditioning",
+      "model": "TFR,TFS,UCR,UCS",
+      "prior": 214.6,
+      "current": 1096.1,
+      "d": 881.5,
+      "dq": 40.0
     }
   ],
-  "new_business": [
+  "top_decl_pn": [
     {
-      "pn": "TRANSPORT",
-      "desc": "Transporting Cost",
-      "cat": "UNCLASSIFIED",
-      "current": 76855.03,
-      "qty": 138.0,
-      "warranty_campaign": false,
-      "review_reason": "Review as new model, supersession or timing before classifying"
+      "pn": "8975546610",
+      "newest": "8975546610",
+      "desc": "PAD KIT; CALIPER,DISC BRK,FRT",
+      "cat": "Brake parts",
+      "model": "TF*",
+      "prior": 40065.0,
+      "current": 27886.5,
+      "d": -12178.5,
+      "dq": -150.0
     },
+    {
+      "pn": "8976526220",
+      "newest": "8976526220",
+      "desc": "PAD KIT; CALIPER,DISC BRK,FRT",
+      "cat": "Brake parts",
+      "model": "",
+      "prior": 12392.0,
+      "current": 3407.8,
+      "d": -8984.2,
+      "dq": -145.0
+    },
+    {
+      "pn": "8981405904",
+      "newest": "8981405904",
+      "desc": "SILENCER ASM; EXH",
+      "cat": "Exhaust",
+      "model": "",
+      "prior": 12912.2,
+      "current": 4337.52,
+      "d": -8574.68,
+      "dq": -64.0
+    },
+    {
+      "pn": "8975554500",
+      "newest": "8975554500",
+      "desc": "FILTER; BLOWER UNIT",
+      "cat": "Air conditioning",
+      "model": "TF*,UC*",
+      "prior": 16138.0,
+      "current": 9534.0,
+      "d": -6604.0,
+      "dq": -400.0
+    },
+    {
+      "pn": "8974995480",
+      "newest": "8974995480",
+      "desc": "FILTER; ACL",
+      "cat": "Air conditioning",
+      "model": "TFR,TFS,UCR,UCS",
+      "prior": 14448.0,
+      "current": 10180.0,
+      "d": -4268.0,
+      "dq": -200.0
+    },
+    {
+      "pn": "8984813230",
+      "newest": "8984813230",
+      "desc": "SEAL; BACKLIGHT GLASS",
+      "cat": "Lighting",
+      "model": "",
+      "prior": 7302.15,
+      "current": 3040.44,
+      "d": -4261.71,
+      "dq": -355.0
+    },
+    {
+      "pn": "8980618131",
+      "newest": "8980618131",
+      "desc": "DRUM; BRK,RR",
+      "cat": "Brake parts",
+      "model": "",
+      "prior": 3700.95,
+      "current": 138.62,
+      "d": -3562.33,
+      "dq": -53.0
+    },
+    {
+      "pn": "8983420130",
+      "newest": "8983420130",
+      "desc": "BODY ASM; VLV LWR,A/T",
+      "cat": "Transmission parts",
+      "model": "",
+      "prior": 3320.58,
+      "current": 0.0,
+      "d": -3320.58,
+      "dq": -8.0
+    },
+    {
+      "pn": "8981394280",
+      "newest": "8981394280",
+      "desc": "FILTER; BLOWER UNIT",
+      "cat": "Air conditioning",
+      "model": "TF*,UC*",
+      "prior": 8636.0,
+      "current": 5451.5,
+      "d": -3184.5,
+      "dq": -150.0
+    },
+    {
+      "pn": "8982330912",
+      "newest": "8982330912",
+      "desc": "LAMP ASM; RR COMB",
+      "cat": "Lighting",
+      "model": "",
+      "prior": 6006.96,
+      "current": 3207.66,
+      "d": -2799.3,
+      "dq": -25.0
+    },
+    {
+      "pn": "8982114012",
+      "newest": "8982114012",
+      "desc": "PIPE; EXH",
+      "cat": "Exhaust",
+      "model": "",
+      "prior": 3596.32,
+      "current": 950.6,
+      "d": -2645.72,
+      "dq": -14.0
+    },
+    {
+      "pn": "8981776324",
+      "newest": "8981776324",
+      "desc": "DPD ASM",
+      "cat": "Exhaust",
+      "model": "",
+      "prior": 2477.18,
+      "current": 0.0,
+      "d": -2477.18,
+      "dq": -2.0
+    },
+    {
+      "pn": "7552348310",
+      "newest": "7552348310",
+      "desc": "STEERING UNIT",
+      "cat": "Steering",
+      "model": "",
+      "prior": 2275.32,
+      "current": 0.0,
+      "d": -2275.32,
+      "dq": -1.0
+    },
+    {
+      "pn": "5876150170",
+      "newest": "5876150170",
+      "desc": "ELEMENT KIT; FUEL FILTER",
+      "cat": "Filters",
+      "model": "N*R,NPS,QKR,TF*,UC*",
+      "prior": 6740.0,
+      "current": 4718.0,
+      "d": -2022.0,
+      "dq": -300.0
+    },
+    {
+      "pn": "8974922412",
+      "newest": "8974922413",
+      "desc": "DISPLAY; MULTI",
+      "cat": "Electrical sensors",
+      "model": "",
+      "prior": 1989.14,
+      "current": 0.0,
+      "d": -1989.14,
+      "dq": -2.0
+    }
+  ],
+  "top_grow_pn": [
+    {
+      "pn": "8974993681",
+      "newest": "8974993681",
+      "desc": "SENSOR; TIRE INFLATION",
+      "cat": "Electrical sensors",
+      "model": "",
+      "prior": 2694.01,
+      "current": 13476.0,
+      "d": 10781.99,
+      "dq": 391.0
+    },
+    {
+      "pn": "8975509392",
+      "newest": "8975509392",
+      "desc": "BUMPER ASM; FRT",
+      "cat": "Body parts",
+      "model": "",
+      "prior": 4653.0,
+      "current": 8122.16,
+      "d": 3469.16,
+      "dq": 32.0
+    },
+    {
+      "pn": "8982705240",
+      "newest": "8982705240",
+      "desc": "ELEMENT; OIL FILTER",
+      "cat": "Filters",
+      "model": "NHR,NLR,NMR,TF*,UC*",
+      "prior": 8640.0,
+      "current": 11688.0,
+      "d": 3048.0,
+      "dq": 200.0
+    },
+    {
+      "pn": "8984890171",
+      "newest": "8984890171",
+      "desc": "PUMP ASM; FUEL,SUPPLY",
+      "cat": "Fuel system",
+      "model": "",
+      "prior": 660.57,
+      "current": 3264.37,
+      "d": 2603.8,
+      "dq": 4.0
+    },
+    {
+      "pn": "8975595830",
+      "newest": "8975595830",
+      "desc": "PANEL; SIDE GATE",
+      "cat": "Body parts",
+      "model": "",
+      "prior": 619.41,
+      "current": 2879.14,
+      "d": 2259.73,
+      "dq": 11.0
+    },
+    {
+      "pn": "7552172691",
+      "newest": "7552172691",
+      "desc": "BUMPER ASM; FRT",
+      "cat": "Body parts",
+      "model": "",
+      "prior": 812.16,
+      "current": 2646.0,
+      "d": 1833.84,
+      "dq": 12.0
+    },
+    {
+      "pn": "8983621213",
+      "newest": "8983621213",
+      "desc": "BAR; FRT BUMPER",
+      "cat": "Suspension",
+      "model": "",
+      "prior": 260.35,
+      "current": 2008.22,
+      "d": 1747.87,
+      "dq": 33.0
+    },
+    {
+      "pn": "8983314120",
+      "newest": "8983314120",
+      "desc": "SENSOR; PRESSURE,DPD",
+      "cat": "Exhaust",
+      "model": "",
+      "prior": 380.84,
+      "current": 1705.44,
+      "d": 1324.6,
+      "dq": 7.0
+    },
+    {
+      "pn": "5876150780",
+      "newest": "5876150780",
+      "desc": "BLADE; WIPER",
+      "cat": "Miscellaneous",
+      "model": "",
+      "prior": 2451.5,
+      "current": 3689.8,
+      "d": 1238.3,
+      "dq": 130.0
+    },
+    {
+      "pn": "8983675661",
+      "newest": "8983675661",
+      "desc": "SUPPORT; FRT BUMPER",
+      "cat": "Body parts",
+      "model": "",
+      "prior": 176.16,
+      "current": 1411.04,
+      "d": 1234.88,
+      "dq": 28.0
+    },
+    {
+      "pn": "8981647861",
+      "newest": "8981647861",
+      "desc": "VALVE; EGR",
+      "cat": "Exhaust",
+      "model": "",
+      "prior": 630.51,
+      "current": 1681.36,
+      "d": 1050.85,
+      "dq": 5.0
+    },
+    {
+      "pn": "8983303281",
+      "newest": "8983303281",
+      "desc": "BUMPER ASM; FRT",
+      "cat": "Body parts",
+      "model": "",
+      "prior": 1414.32,
+      "current": 2436.04,
+      "d": 1021.72,
+      "dq": 8.0
+    },
+    {
+      "pn": "8975497422",
+      "newest": "8975497422",
+      "desc": "FENDER; FRT",
+      "cat": "Body parts",
+      "model": "",
+      "prior": 598.7,
+      "current": 1616.68,
+      "d": 1017.98,
+      "dq": 12.0
+    },
+    {
+      "pn": "8944627340",
+      "newest": "8944627340",
+      "desc": "GASKET; OIL FILLER,AXLE CASE",
+      "cat": "Gaskets / seals",
+      "model": "",
+      "prior": 832.0,
+      "current": 1807.0,
+      "d": 975.0,
+      "dq": 800.0
+    },
+    {
+      "pn": "8981402660",
+      "newest": "8981402660",
+      "desc": "FILTER; ACL",
+      "cat": "Air conditioning",
+      "model": "TFR,TFS,UCR,UCS",
+      "prior": 214.6,
+      "current": 1096.1,
+      "d": 881.5,
+      "dq": 40.0
+    }
+  ],
+  "category_pn_drivers": {
+    "Air conditioning": {
+      "decl": [
+        {
+          "pn": "8975554500",
+          "newest": "8975554500",
+          "desc": "FILTER; BLOWER UNIT",
+          "cat": "Air conditioning",
+          "model": "TF*,UC*",
+          "prior": 16138.0,
+          "current": 9534.0,
+          "d": -6604.0,
+          "dq": -400.0
+        },
+        {
+          "pn": "8974995480",
+          "newest": "8974995480",
+          "desc": "FILTER; ACL",
+          "cat": "Air conditioning",
+          "model": "TFR,TFS,UCR,UCS",
+          "prior": 14448.0,
+          "current": 10180.0,
+          "d": -4268.0,
+          "dq": -200.0
+        },
+        {
+          "pn": "8981394280",
+          "newest": "8981394280",
+          "desc": "FILTER; BLOWER UNIT",
+          "cat": "Air conditioning",
+          "model": "TF*,UC*",
+          "prior": 8636.0,
+          "current": 5451.5,
+          "d": -3184.5,
+          "dq": -150.0
+        },
+        {
+          "pn": "8981402650",
+          "newest": "8981402650",
+          "desc": "FILTER; ACL",
+          "cat": "Air conditioning",
+          "model": "TFR,TFS,UCR,UCS",
+          "prior": 6604.0,
+          "current": 4953.0,
+          "d": -1651.0,
+          "dq": -100.0
+        },
+        {
+          "pn": "8980088940",
+          "newest": "8980088940",
+          "desc": "MOTOR ASM; FAN,BLOWER UNIT",
+          "cat": "Air conditioning",
+          "model": "",
+          "prior": 1428.0,
+          "current": 865.44,
+          "d": -562.56,
+          "dq": -8.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8981402660",
+          "newest": "8981402660",
+          "desc": "FILTER; ACL",
+          "cat": "Air conditioning",
+          "model": "TFR,TFS,UCR,UCS",
+          "prior": 214.6,
+          "current": 1096.1,
+          "d": 881.5,
+          "dq": 40.0
+        },
+        {
+          "pn": "8980526344",
+          "newest": "8980526344",
+          "desc": "CONDENSER ASM; A/C",
+          "cat": "Air conditioning",
+          "model": "",
+          "prior": 0.0,
+          "current": 831.15,
+          "d": 831.15,
+          "dq": 5.0
+        },
+        {
+          "pn": "8975556030",
+          "newest": "8975556030",
+          "desc": "EVAPORATOR ASM; HEATER",
+          "cat": "Air conditioning",
+          "model": "",
+          "prior": 0.0,
+          "current": 272.62,
+          "d": 272.62,
+          "dq": 1.0
+        },
+        {
+          "pn": "8980493940",
+          "newest": "8980493940",
+          "desc": "RESISTOR; BLOWER UNIT",
+          "cat": "Air conditioning",
+          "model": "",
+          "prior": 294.6,
+          "current": 500.91,
+          "d": 206.31,
+          "dq": 13.0
+        },
+        {
+          "pn": "8982242190",
+          "newest": "8982242190",
+          "desc": "HEATER ASM; FRT SEAT CUSHION",
+          "cat": "Air conditioning",
+          "model": "",
+          "prior": 0.0,
+          "current": 196.64,
+          "d": 196.64,
+          "dq": 2.0
+        }
+      ]
+    },
+    "Air system": {
+      "decl": [
+        {
+          "pn": "8981470986",
+          "newest": "8981470986",
+          "desc": "AIR BAG UNIT",
+          "cat": "Air system",
+          "model": "",
+          "prior": 422.23,
+          "current": 0.0,
+          "d": -422.23,
+          "dq": -1.0
+        },
+        {
+          "pn": "8974174017",
+          "newest": "8974174018",
+          "desc": "AIR BAG UNIT",
+          "cat": "Air system",
+          "model": "",
+          "prior": 386.79,
+          "current": 0.0,
+          "d": -386.79,
+          "dq": -1.0
+        },
+        {
+          "pn": "8975066902",
+          "newest": "8975066905",
+          "desc": "GUIDE; AIR",
+          "cat": "Air system",
+          "model": "",
+          "prior": 181.8,
+          "current": 0.0,
+          "d": -181.8,
+          "dq": -3.0
+        },
+        {
+          "pn": "8978453520",
+          "newest": "8978453520",
+          "desc": "GUIDE; AIR",
+          "cat": "Air system",
+          "model": "",
+          "prior": 118.32,
+          "current": 0.0,
+          "d": -118.32,
+          "dq": -2.0
+        },
+        {
+          "pn": "8981469391",
+          "newest": "8981469391",
+          "desc": "SENSOR; AIR BAG",
+          "cat": "Air system",
+          "model": "",
+          "prior": 103.05,
+          "current": 0.0,
+          "d": -103.05,
+          "dq": -3.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8983322324",
+          "newest": "8983322324",
+          "desc": "AIR BAG UNIT",
+          "cat": "Air system",
+          "model": "",
+          "prior": 0.0,
+          "current": 1068.0,
+          "d": 1068.0,
+          "dq": 3.0
+        },
+        {
+          "pn": "8983964240",
+          "newest": "8983964240",
+          "desc": "GUIDE ASM; AIR",
+          "cat": "Air system",
+          "model": "",
+          "prior": 593.95,
+          "current": 1198.65,
+          "d": 604.7,
+          "dq": 11.0
+        },
+        {
+          "pn": "8983322334",
+          "newest": "8983322334",
+          "desc": "AIR BAG UNIT",
+          "cat": "Air system",
+          "model": "",
+          "prior": 0.0,
+          "current": 366.67,
+          "d": 366.67,
+          "dq": 1.0
+        },
+        {
+          "pn": "8978265280",
+          "newest": "8978265280",
+          "desc": "GUIDE ASM; AIR",
+          "cat": "Air system",
+          "model": "",
+          "prior": 0.0,
+          "current": 362.69,
+          "d": 362.69,
+          "dq": 7.0
+        },
+        {
+          "pn": "8975339740",
+          "newest": "8975339740",
+          "desc": "MANIFOLD; INL",
+          "cat": "Air system",
+          "model": "",
+          "prior": 0.0,
+          "current": 164.82,
+          "d": 164.82,
+          "dq": 1.0
+        }
+      ]
+    },
+    "Belts": {
+      "decl": [
+        {
+          "pn": "8973615621",
+          "newest": "8973615621",
+          "desc": "PULLEY; CR/SHF DAMPER",
+          "cat": "Belts",
+          "model": "",
+          "prior": 77.82,
+          "current": 0.0,
+          "d": -77.82,
+          "dq": -1.0
+        }
+      ],
+      "grow": []
+    },
+    "Body parts": {
+      "decl": [
+        {
+          "pn": "8981965742",
+          "newest": "8981965742",
+          "desc": "BUMPER ASM; FRT",
+          "cat": "Body parts",
+          "model": "",
+          "prior": 3318.78,
+          "current": 1418.04,
+          "d": -1900.74,
+          "dq": -18.0
+        },
+        {
+          "pn": "8980432430",
+          "newest": "8980432430",
+          "desc": "DOOR ASM; FRT,WO/TRIM",
+          "cat": "Body parts",
+          "model": "",
+          "prior": 1651.26,
+          "current": 0.0,
+          "d": -1651.26,
+          "dq": -4.0
+        },
+        {
+          "pn": "8975554002",
+          "newest": "8975554002",
+          "desc": "GLASS; WINDSHIELD",
+          "cat": "Body parts",
+          "model": "",
+          "prior": 5761.25,
+          "current": 4423.86,
+          "d": -1337.39,
+          "dq": -8.0
+        },
+        {
+          "pn": "8982988802",
+          "newest": "8982988802",
+          "desc": "GLASS; WINDSHIELD",
+          "cat": "Body parts",
+          "model": "",
+          "prior": 1263.9,
+          "current": 0.0,
+          "d": -1263.9,
+          "dq": -10.0
+        },
+        {
+          "pn": "8981045617",
+          "newest": "8981045617",
+          "desc": "PANEL; SIDE GATE",
+          "cat": "Body parts",
+          "model": "",
+          "prior": 1207.05,
+          "current": 0.0,
+          "d": -1207.05,
+          "dq": -5.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8978461152",
+          "newest": "8978461152",
+          "desc": "GLASS; WINDSHIELD",
+          "cat": "Body parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 6572.92,
+          "d": 6572.92,
+          "dq": 32.0
+        },
+        {
+          "pn": "8975509392",
+          "newest": "8975509392",
+          "desc": "BUMPER ASM; FRT",
+          "cat": "Body parts",
+          "model": "",
+          "prior": 4653.0,
+          "current": 8122.16,
+          "d": 3469.16,
+          "dq": 32.0
+        },
+        {
+          "pn": "8975595830",
+          "newest": "8975595830",
+          "desc": "PANEL; SIDE GATE",
+          "cat": "Body parts",
+          "model": "",
+          "prior": 619.41,
+          "current": 2879.14,
+          "d": 2259.73,
+          "dq": 11.0
+        },
+        {
+          "pn": "7552172691",
+          "newest": "7552172691",
+          "desc": "BUMPER ASM; FRT",
+          "cat": "Body parts",
+          "model": "",
+          "prior": 812.16,
+          "current": 2646.0,
+          "d": 1833.84,
+          "dq": 12.0
+        },
+        {
+          "pn": "8983852257",
+          "newest": "8983852259",
+          "desc": "PANEL; DEFLECTOR",
+          "cat": "Body parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 1544.43,
+          "d": 1544.43,
+          "dq": 7.0
+        }
+      ]
+    },
+    "Brake parts": {
+      "decl": [
+        {
+          "pn": "8975546610",
+          "newest": "8975546610",
+          "desc": "PAD KIT; CALIPER,DISC BRK,FRT",
+          "cat": "Brake parts",
+          "model": "TF*",
+          "prior": 40065.0,
+          "current": 27886.5,
+          "d": -12178.5,
+          "dq": -150.0
+        },
+        {
+          "pn": "8976526220",
+          "newest": "8976526220",
+          "desc": "PAD KIT; CALIPER,DISC BRK,FRT",
+          "cat": "Brake parts",
+          "model": "",
+          "prior": 12392.0,
+          "current": 3407.8,
+          "d": -8984.2,
+          "dq": -145.0
+        },
+        {
+          "pn": "8980618131",
+          "newest": "8980618131",
+          "desc": "DRUM; BRK,RR",
+          "cat": "Brake parts",
+          "model": "",
+          "prior": 3700.95,
+          "current": 138.62,
+          "d": -3562.33,
+          "dq": -53.0
+        },
+        {
+          "pn": "8980303850",
+          "newest": "8980303850",
+          "desc": "DRUM; BRK,RR",
+          "cat": "Brake parts",
+          "model": "",
+          "prior": 948.45,
+          "current": 0.0,
+          "d": -948.45,
+          "dq": -13.0
+        },
+        {
+          "pn": "8980065371",
+          "newest": "8980065371",
+          "desc": "CALIPER; FRT DISC BRK",
+          "cat": "Brake parts",
+          "model": "",
+          "prior": 778.55,
+          "current": 0.0,
+          "d": -778.55,
+          "dq": -7.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8978348260",
+          "newest": "8978348260",
+          "desc": "SHOE KIT; BRK,RR",
+          "cat": "Brake parts",
+          "model": "TFR,TFS (RT,RG)",
+          "prior": 1155.0,
+          "current": 1959.5,
+          "d": 804.5,
+          "dq": 20.0
+        },
+        {
+          "pn": "7552081932",
+          "newest": "7552081932",
+          "desc": "HYDRAULIC UNIT; ANTI LOCK BRK",
+          "cat": "Brake parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 565.45,
+          "d": 565.45,
+          "dq": 1.0
+        },
+        {
+          "pn": "8980779960",
+          "newest": "8980779960",
+          "desc": "CALIPER; FRT DISC BRK",
+          "cat": "Brake parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 545.34,
+          "d": 545.34,
+          "dq": 6.0
+        },
+        {
+          "pn": "8978354480",
+          "newest": "8978354480",
+          "desc": "SHOE KIT; BRK,RR",
+          "cat": "Brake parts",
+          "model": "TFR,TFS (RT,RG)",
+          "prior": 247.8,
+          "current": 768.24,
+          "d": 520.44,
+          "dq": 15.0
+        },
+        {
+          "pn": "5876150260",
+          "newest": "5876150260",
+          "desc": "PAD KIT; CALIPER,DISC BRK,FRT",
+          "cat": "Brake parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 451.92,
+          "d": 451.92,
+          "dq": 12.0
+        }
+      ]
+    },
+    "Clutch parts": {
+      "decl": [
+        {
+          "pn": "8979477650",
+          "newest": "8979477650",
+          "desc": "CYLINDER; SLAVE,CLU",
+          "cat": "Clutch parts",
+          "model": "",
+          "prior": 569.26,
+          "current": 0.0,
+          "d": -569.26,
+          "dq": -4.0
+        },
+        {
+          "pn": "8971348571",
+          "newest": "8971348571",
+          "desc": "GEAR; CLUTCH",
+          "cat": "Clutch parts",
+          "model": "",
+          "prior": 196.88,
+          "current": 0.0,
+          "d": -196.88,
+          "dq": -4.0
+        },
+        {
+          "pn": "8981698261",
+          "newest": "8981698261",
+          "desc": "BEARING; CLU RELEASE",
+          "cat": "Clutch parts",
+          "model": "TF*,UC*",
+          "prior": 49.78,
+          "current": 0.0,
+          "d": -49.78,
+          "dq": -2.0
+        },
+        {
+          "pn": "8979451750",
+          "newest": "8979451750",
+          "desc": "DAMPER ASM; CLU OIL",
+          "cat": "Clutch parts",
+          "model": "",
+          "prior": 34.13,
+          "current": 0.0,
+          "d": -34.13,
+          "dq": -1.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8983930220",
+          "newest": "8983930220",
+          "desc": "GEAR; CLUTCH",
+          "cat": "Clutch parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 215.69,
+          "d": 215.69,
+          "dq": 4.0
+        },
+        {
+          "pn": "8979461710",
+          "newest": "8979461710",
+          "desc": "DISC; CLUTCH",
+          "cat": "Clutch parts",
+          "model": "TF*,UC*",
+          "prior": 0.0,
+          "current": 160.13,
+          "d": 160.13,
+          "dq": 1.0
+        },
+        {
+          "pn": "8979445072",
+          "newest": "8979445072",
+          "desc": "PLATE ASM; PRESSURE,CLU",
+          "cat": "Clutch parts",
+          "model": "TF*,UC*",
+          "prior": 0.0,
+          "current": 119.84,
+          "d": 119.84,
+          "dq": 1.0
+        },
+        {
+          "pn": "5878322640",
+          "newest": "5878322640",
+          "desc": "REPAIR KIT; CLU SLAVE CYL",
+          "cat": "Clutch parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 33.62,
+          "d": 33.62,
+          "dq": 2.0
+        },
+        {
+          "pn": "8979490060",
+          "newest": "8979490060",
+          "desc": "CYLINDER; SLAVE,CLU",
+          "cat": "Clutch parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 17.92,
+          "d": 17.92,
+          "dq": 1.0
+        }
+      ]
+    },
+    "Consumables": {
+      "decl": [
+        {
+          "pn": "8980052342",
+          "newest": "8980052342",
+          "desc": "TUBE; OIL FILLER",
+          "cat": "Consumables",
+          "model": "",
+          "prior": 11.94,
+          "current": 0.0,
+          "d": -11.94,
+          "dq": -1.0
+        },
+        {
+          "pn": "8981783282",
+          "newest": "8981783282",
+          "desc": "NIPPLE; OIL PIPE",
+          "cat": "Consumables",
+          "model": "",
+          "prior": 20.15,
+          "current": 16.12,
+          "d": -4.03,
+          "dq": -1.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8981320012",
+          "newest": "8981320012",
+          "desc": "PAN ASM; OIL",
+          "cat": "Consumables",
+          "model": "",
+          "prior": 0.0,
+          "current": 92.95,
+          "d": 92.95,
+          "dq": 1.0
+        },
+        {
+          "pn": "8983941600",
+          "newest": "8983941601",
+          "desc": "PLATE; OIL PAN",
+          "cat": "Consumables",
+          "model": "",
+          "prior": 0.0,
+          "current": 29.68,
+          "d": 29.68,
+          "dq": 1.0
+        },
+        {
+          "pn": "8981034472",
+          "newest": "8981034472",
+          "desc": "CATCHER; OIL",
+          "cat": "Consumables",
+          "model": "",
+          "prior": 0.0,
+          "current": 20.64,
+          "d": 20.64,
+          "dq": 3.0
+        },
+        {
+          "pn": "8981861040",
+          "newest": "8981861040",
+          "desc": "NIPPLE; OIL PIPE",
+          "cat": "Consumables",
+          "model": "",
+          "prior": 0.0,
+          "current": 12.64,
+          "d": 12.64,
+          "dq": 3.0
+        },
+        {
+          "pn": "5341380040",
+          "newest": "5341380040",
+          "desc": "MAGNET; OIL PAN",
+          "cat": "Consumables",
+          "model": "",
+          "prior": 0.0,
+          "current": 3.74,
+          "d": 3.74,
+          "dq": 2.0
+        }
+      ]
+    },
+    "Cooling": {
+      "decl": [
+        {
+          "pn": "8981811240",
+          "newest": "8981811240",
+          "desc": "PIPE; WATER",
+          "cat": "Cooling",
+          "model": "",
+          "prior": 743.31,
+          "current": 288.27,
+          "d": -455.04,
+          "dq": -16.0
+        },
+        {
+          "pn": "8981647470",
+          "newest": "8981647470",
+          "desc": "RADIATOR ASM",
+          "cat": "Cooling",
+          "model": "",
+          "prior": 421.16,
+          "current": 0.0,
+          "d": -421.16,
+          "dq": -1.0
+        },
+        {
+          "pn": "7552436450",
+          "newest": "7552436450",
+          "desc": "PUMP ASM; WATER",
+          "cat": "Cooling",
+          "model": "",
+          "prior": 270.12,
+          "current": 0.0,
+          "d": -270.12,
+          "dq": -3.0
+        },
+        {
+          "pn": "7551920350",
+          "newest": "7551920350",
+          "desc": "RADIATOR ASM",
+          "cat": "Cooling",
+          "model": "",
+          "prior": 177.52,
+          "current": 0.0,
+          "d": -177.52,
+          "dq": -1.0
+        },
+        {
+          "pn": "8973134720",
+          "newest": "8973134720",
+          "desc": "CLIP; WATER HOSE,RAD",
+          "cat": "Cooling",
+          "model": "",
+          "prior": 12.0,
+          "current": 0.0,
+          "d": -12.0,
+          "dq": -3.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8975534311",
+          "newest": "8975534311",
+          "desc": "RADIATOR ASM",
+          "cat": "Cooling",
+          "model": "",
+          "prior": 0.0,
+          "current": 1523.9,
+          "d": 1523.9,
+          "dq": 5.0
+        },
+        {
+          "pn": "8981940044",
+          "newest": "8981940044",
+          "desc": "COOLER; CHARGE AIR",
+          "cat": "Cooling",
+          "model": "",
+          "prior": 0.0,
+          "current": 1010.2,
+          "d": 1010.2,
+          "dq": 4.0
+        },
+        {
+          "pn": "8983355671",
+          "newest": "8983355671",
+          "desc": "RADIATOR ASM",
+          "cat": "Cooling",
+          "model": "",
+          "prior": 0.0,
+          "current": 414.65,
+          "d": 414.65,
+          "dq": 1.0
+        },
+        {
+          "pn": "8983355661",
+          "newest": "8983355661",
+          "desc": "RADIATOR ASM",
+          "cat": "Cooling",
+          "model": "",
+          "prior": 0.0,
+          "current": 402.58,
+          "d": 402.58,
+          "dq": 1.0
+        },
+        {
+          "pn": "8981323670",
+          "newest": "8981323670",
+          "desc": "BELT; COOLING FAN",
+          "cat": "Cooling",
+          "model": "",
+          "prior": 229.9,
+          "current": 368.1,
+          "d": 138.2,
+          "dq": 22.0
+        }
+      ]
+    },
+    "Electrical sensors": {
+      "decl": [
+        {
+          "pn": "8974922412",
+          "newest": "8974922413",
+          "desc": "DISPLAY; MULTI",
+          "cat": "Electrical sensors",
+          "model": "",
+          "prior": 1989.14,
+          "current": 0.0,
+          "d": -1989.14,
+          "dq": -2.0
+        },
+        {
+          "pn": "8982924321",
+          "newest": "8982924321",
+          "desc": "SENSOR; SPD,FRT WHEEL",
+          "cat": "Electrical sensors",
+          "model": "",
+          "prior": 2977.38,
+          "current": 1064.98,
+          "d": -1912.4,
+          "dq": -14.0
+        },
+        {
+          "pn": "8982924331",
+          "newest": "8982924331",
+          "desc": "SENSOR; SPD,FRT WHEEL",
+          "cat": "Electrical sensors",
+          "model": "",
+          "prior": 1417.8,
+          "current": 0.0,
+          "d": -1417.8,
+          "dq": -10.0
+        },
+        {
+          "pn": "8980094180",
+          "newest": "8980094180",
+          "desc": "SENSOR; MAP",
+          "cat": "Electrical sensors",
+          "model": "",
+          "prior": 6154.12,
+          "current": 4744.6,
+          "d": -1409.52,
+          "dq": -14.0
+        },
+        {
+          "pn": "7552422500",
+          "newest": "7552422500",
+          "desc": "CONTROL UNIT",
+          "cat": "Electrical sensors",
+          "model": "",
+          "prior": 1309.68,
+          "current": 0.0,
+          "d": -1309.68,
+          "dq": -2.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8974993681",
+          "newest": "8974993681",
+          "desc": "SENSOR; TIRE INFLATION",
+          "cat": "Electrical sensors",
+          "model": "",
+          "prior": 2694.01,
+          "current": 13476.0,
+          "d": 10781.99,
+          "dq": 391.0
+        },
+        {
+          "pn": "7552105216",
+          "newest": "7552105216",
+          "desc": "CABLE; BATTERY CHARGER",
+          "cat": "Electrical sensors",
+          "model": "",
+          "prior": 0.0,
+          "current": 9091.58,
+          "d": 9091.58,
+          "dq": 7.0
+        },
+        {
+          "pn": "7552392940",
+          "newest": "7552392940",
+          "desc": "SENSOR; SHORT RANGE RADAR",
+          "cat": "Electrical sensors",
+          "model": "",
+          "prior": 0.0,
+          "current": 2311.2,
+          "d": 2311.2,
+          "dq": 9.0
+        },
+        {
+          "pn": "8975412100",
+          "newest": "8975412100",
+          "desc": "CONTROL UNIT; ENG",
+          "cat": "Electrical sensors",
+          "model": "",
+          "prior": 0.0,
+          "current": 2079.52,
+          "d": 2079.52,
+          "dq": 2.0
+        },
+        {
+          "pn": "7552733620",
+          "newest": "7552733620",
+          "desc": "UNIT; VEHICLE CONTROL",
+          "cat": "Electrical sensors",
+          "model": "",
+          "prior": 0.0,
+          "current": 1467.51,
+          "d": 1467.51,
+          "dq": 2.0
+        }
+      ]
+    },
+    "Engine parts": {
+      "decl": [
+        {
+          "pn": "8981951380",
+          "newest": "8981951380",
+          "desc": "CRANKCASE",
+          "cat": "Engine parts",
+          "model": "",
+          "prior": 310.25,
+          "current": 0.0,
+          "d": -310.25,
+          "dq": -1.0
+        },
+        {
+          "pn": "8983360671",
+          "newest": "8983360671",
+          "desc": "VALVE; EVRV",
+          "cat": "Engine parts",
+          "model": "",
+          "prior": 303.72,
+          "current": 151.86,
+          "d": -151.86,
+          "dq": -2.0
+        },
+        {
+          "pn": "8981162600",
+          "newest": "8981162600",
+          "desc": "VALVE; EVRV",
+          "cat": "Engine parts",
+          "model": "",
+          "prior": 277.76,
+          "current": 139.86,
+          "d": -137.9,
+          "dq": -2.0
+        },
+        {
+          "pn": "8973121991",
+          "newest": "8973121991",
+          "desc": "GEAR; CR/SHF",
+          "cat": "Engine parts",
+          "model": "",
+          "prior": 67.61,
+          "current": 0.0,
+          "d": -67.61,
+          "dq": -1.0
+        },
+        {
+          "pn": "8980281160",
+          "newest": "8980281160",
+          "desc": "PISTON",
+          "cat": "Engine parts",
+          "model": "",
+          "prior": 38.52,
+          "current": 0.0,
+          "d": -38.52,
+          "dq": -1.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "7552392890",
+          "newest": "7552392890",
+          "desc": "CAMERA ASM",
+          "cat": "Engine parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 963.49,
+          "d": 963.49,
+          "dq": 1.0
+        },
+        {
+          "pn": "5884032481",
+          "newest": "5884032481",
+          "desc": "TARGET;AEBS,CAMERA AIMING",
+          "cat": "Engine parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 540.63,
+          "d": 540.63,
+          "dq": 1.0
+        },
+        {
+          "pn": "8975534430",
+          "newest": "8975534430",
+          "desc": "GUIDE; FAN",
+          "cat": "Engine parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 66.59,
+          "d": 66.59,
+          "dq": 3.0
+        },
+        {
+          "pn": "8981192791",
+          "newest": "8981192791",
+          "desc": "CHAIN; TIMING,CM/SHF",
+          "cat": "Engine parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 56.9,
+          "d": 56.9,
+          "dq": 2.0
+        },
+        {
+          "pn": "8975555760",
+          "newest": "8975555760",
+          "desc": "VALVE; EXPANSION",
+          "cat": "Engine parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 48.91,
+          "d": 48.91,
+          "dq": 1.0
+        }
+      ]
+    },
+    "Exhaust": {
+      "decl": [
+        {
+          "pn": "8981405904",
+          "newest": "8981405904",
+          "desc": "SILENCER ASM; EXH",
+          "cat": "Exhaust",
+          "model": "",
+          "prior": 12912.2,
+          "current": 4337.52,
+          "d": -8574.68,
+          "dq": -64.0
+        },
+        {
+          "pn": "8982114012",
+          "newest": "8982114012",
+          "desc": "PIPE; EXH",
+          "cat": "Exhaust",
+          "model": "",
+          "prior": 3596.32,
+          "current": 950.6,
+          "d": -2645.72,
+          "dq": -14.0
+        },
+        {
+          "pn": "8981776324",
+          "newest": "8981776324",
+          "desc": "DPD ASM",
+          "cat": "Exhaust",
+          "model": "",
+          "prior": 2477.18,
+          "current": 0.0,
+          "d": -2477.18,
+          "dq": -2.0
+        },
+        {
+          "pn": "8972630520",
+          "newest": "8972630520",
+          "desc": "GASKET; EXH PIPE",
+          "cat": "Exhaust",
+          "model": "",
+          "prior": 511.0,
+          "current": 96.32,
+          "d": -414.68,
+          "dq": -148.0
+        },
+        {
+          "pn": "8982602580",
+          "newest": "8982602580",
+          "desc": "SENSOR; PRESSURE,DPD",
+          "cat": "Exhaust",
+          "model": "",
+          "prior": 297.78,
+          "current": 0.0,
+          "d": -297.78,
+          "dq": -3.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8975359391",
+          "newest": "8975359391",
+          "desc": "DPD ASM",
+          "cat": "Exhaust",
+          "model": "",
+          "prior": 0.0,
+          "current": 2193.95,
+          "d": 2193.95,
+          "dq": 1.0
+        },
+        {
+          "pn": "8983314120",
+          "newest": "8983314120",
+          "desc": "SENSOR; PRESSURE,DPD",
+          "cat": "Exhaust",
+          "model": "",
+          "prior": 380.84,
+          "current": 1705.44,
+          "d": 1324.6,
+          "dq": 7.0
+        },
+        {
+          "pn": "8981647861",
+          "newest": "8981647861",
+          "desc": "VALVE; EGR",
+          "cat": "Exhaust",
+          "model": "",
+          "prior": 630.51,
+          "current": 1681.36,
+          "d": 1050.85,
+          "dq": 5.0
+        },
+        {
+          "pn": "8980139111",
+          "newest": "8980139111",
+          "desc": "VALVE; EGR",
+          "cat": "Exhaust",
+          "model": "",
+          "prior": 2109.0,
+          "current": 2914.7,
+          "d": 805.7,
+          "dq": 5.0
+        },
+        {
+          "pn": "8983313840",
+          "newest": "8983313840",
+          "desc": "SENSOR; TEMPERATURE,DPD",
+          "cat": "Exhaust",
+          "model": "",
+          "prior": 0.0,
+          "current": 123.74,
+          "d": 123.74,
+          "dq": 2.0
+        }
+      ]
+    },
+    "Filters": {
+      "decl": [
+        {
+          "pn": "5876150170",
+          "newest": "5876150170",
+          "desc": "ELEMENT KIT; FUEL FILTER",
+          "cat": "Filters",
+          "model": "N*R,NPS,QKR,TF*,UC*",
+          "prior": 6740.0,
+          "current": 4718.0,
+          "d": -2022.0,
+          "dq": -300.0
+        },
+        {
+          "pn": "8983417890",
+          "newest": "8983417890",
+          "desc": "STRAINER ASM; OIL,A/T",
+          "cat": "Filters",
+          "model": "",
+          "prior": 2809.3,
+          "current": 2262.5,
+          "d": -546.8,
+          "dq": -30.0
+        },
+        {
+          "pn": "5876150050",
+          "newest": "5876150050",
+          "desc": "ELEMENT; OIL FILTER",
+          "cat": "Filters",
+          "model": "TFR,TFS,UCR,UCS",
+          "prior": 467.2,
+          "current": 292.0,
+          "d": -175.2,
+          "dq": -30.0
+        },
+        {
+          "pn": "5876150120",
+          "newest": "5876150120",
+          "desc": "ELEMENT KIT; FUEL FILTER",
+          "cat": "Filters",
+          "model": "TF*,UC*",
+          "prior": 583.2,
+          "current": 510.3,
+          "d": -72.9,
+          "dq": -10.0
+        },
+        {
+          "pn": "8983127280",
+          "newest": "8983127280",
+          "desc": "CAP; OIL FILTER",
+          "cat": "Filters",
+          "model": "",
+          "prior": 91.79,
+          "current": 29.1,
+          "d": -62.69,
+          "dq": -5.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8982705240",
+          "newest": "8982705240",
+          "desc": "ELEMENT; OIL FILTER",
+          "cat": "Filters",
+          "model": "NHR,NLR,NMR,TF*,UC*",
+          "prior": 8640.0,
+          "current": 11688.0,
+          "d": 3048.0,
+          "dq": 200.0
+        },
+        {
+          "pn": "8981650710",
+          "newest": "8981650710",
+          "desc": "ELEMENT; OIL FILTER",
+          "cat": "Filters",
+          "model": "TFR,TFS,UCR,UCS",
+          "prior": 637.0,
+          "current": 1430.2,
+          "d": 793.2,
+          "dq": 120.0
+        },
+        {
+          "pn": "8981897310",
+          "newest": "8981897310",
+          "desc": "STRAINER ASM; OIL,A/T",
+          "cat": "Filters",
+          "model": "",
+          "prior": 241.44,
+          "current": 608.31,
+          "d": 366.87,
+          "dq": 17.0
+        },
+        {
+          "pn": "8981500290",
+          "newest": "8981500290",
+          "desc": "FILTER ASM; FUEL",
+          "cat": "Filters",
+          "model": "",
+          "prior": 119.02,
+          "current": 306.71,
+          "d": 187.69,
+          "dq": 3.0
+        },
+        {
+          "pn": "8980476610",
+          "newest": "8980476610",
+          "desc": "SENSOR ASM; FUEL FILTER",
+          "cat": "Filters",
+          "model": "",
+          "prior": 0.0,
+          "current": 123.2,
+          "d": 123.2,
+          "dq": 7.0
+        }
+      ]
+    },
+    "Fuel system": {
+      "decl": [
+        {
+          "pn": "8984871370",
+          "newest": "8984871370",
+          "desc": "UNIT; FUEL TANK",
+          "cat": "Fuel system",
+          "model": "",
+          "prior": 400.99,
+          "current": 0.0,
+          "d": -400.99,
+          "dq": -2.0
+        },
+        {
+          "pn": "8972744680",
+          "newest": "8972744680",
+          "desc": "TANK; FUEL",
+          "cat": "Fuel system",
+          "model": "",
+          "prior": 149.99,
+          "current": 0.0,
+          "d": -149.99,
+          "dq": -1.0
+        },
+        {
+          "pn": "8983276640",
+          "newest": "8983276640",
+          "desc": "CAP; FILLER,FUEL TANK",
+          "cat": "Fuel system",
+          "model": "",
+          "prior": 74.24,
+          "current": 0.0,
+          "d": -74.24,
+          "dq": -4.0
+        },
+        {
+          "pn": "8978215060",
+          "newest": "8983956321",
+          "desc": "PIPE; FUEL,DEL & RET",
+          "cat": "Fuel system",
+          "model": "",
+          "prior": 51.1,
+          "current": 0.0,
+          "d": -51.1,
+          "dq": -1.0
+        },
+        {
+          "pn": "8981042347",
+          "newest": "8981042347",
+          "desc": "RECESS; FUEL FILLER NECK,RR BO",
+          "cat": "Fuel system",
+          "model": "",
+          "prior": 45.51,
+          "current": 0.0,
+          "d": -45.51,
+          "dq": -3.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8984890171",
+          "newest": "8984890171",
+          "desc": "PUMP ASM; FUEL,SUPPLY",
+          "cat": "Fuel system",
+          "model": "",
+          "prior": 660.57,
+          "current": 3264.37,
+          "d": 2603.8,
+          "dq": 4.0
+        },
+        {
+          "pn": "8983320621",
+          "newest": "8983320621",
+          "desc": "PUMP ASM; FUEL,SUPPLY",
+          "cat": "Fuel system",
+          "model": "",
+          "prior": 0.0,
+          "current": 982.05,
+          "d": 982.05,
+          "dq": 1.0
+        },
+        {
+          "pn": "8975338030",
+          "newest": "8975338030",
+          "desc": "HOSE; RUBBER,FUEL LEAK",
+          "cat": "Fuel system",
+          "model": "",
+          "prior": 41.22,
+          "current": 283.9,
+          "d": 242.68,
+          "dq": 6.0
+        },
+        {
+          "pn": "8983864801",
+          "newest": "8983864801",
+          "desc": "COVER; FILLER NECK,FUEL TANK",
+          "cat": "Fuel system",
+          "model": "",
+          "prior": 0.0,
+          "current": 45.36,
+          "d": 45.36,
+          "dq": 5.0
+        },
+        {
+          "pn": "8983860001",
+          "newest": "8983860001",
+          "desc": "LID ASM; FUEL FILLER,RR BODY",
+          "cat": "Fuel system",
+          "model": "",
+          "prior": 0.0,
+          "current": 40.41,
+          "d": 40.41,
+          "dq": 2.0
+        }
+      ]
+    },
+    "Gaskets / seals": {
+      "decl": [
+        {
+          "pn": "8983419140",
+          "newest": "8983419140",
+          "desc": "GASKET; OIL PAN,A/T",
+          "cat": "Gaskets / seals",
+          "model": "",
+          "prior": 1839.2,
+          "current": 655.0,
+          "d": -1184.2,
+          "dq": -110.0
+        },
+        {
+          "pn": "8979125310",
+          "newest": "8979125310",
+          "desc": "GASKET; DRAIN PLUG",
+          "cat": "Gaskets / seals",
+          "model": "",
+          "prior": 813.0,
+          "current": 439.0,
+          "d": -374.0,
+          "dq": -1000.0
+        },
+        {
+          "pn": "5878168431",
+          "newest": "5878168431",
+          "desc": "GASKET SET; ENG OVERHAUL",
+          "cat": "Gaskets / seals",
+          "model": "",
+          "prior": 154.37,
+          "current": 0.0,
+          "d": -154.37,
+          "dq": -1.0
+        },
+        {
+          "pn": "8980658051",
+          "newest": "8980658051",
+          "desc": "SEAL; ENG HOOD",
+          "cat": "Gaskets / seals",
+          "model": "",
+          "prior": 70.07,
+          "current": 0.0,
+          "d": -70.07,
+          "dq": -7.0
+        },
+        {
+          "pn": "8973735550",
+          "newest": "8973735550",
+          "desc": "SEAL; OIL,AXLE SHAFT,INNER",
+          "cat": "Gaskets / seals",
+          "model": "",
+          "prior": 82.68,
+          "current": 28.82,
+          "d": -53.86,
+          "dq": -23.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8944627340",
+          "newest": "8944627340",
+          "desc": "GASKET; OIL FILLER,AXLE CASE",
+          "cat": "Gaskets / seals",
+          "model": "",
+          "prior": 832.0,
+          "current": 1807.0,
+          "d": 975.0,
+          "dq": 800.0
+        },
+        {
+          "pn": "8971157120",
+          "newest": "8971157120",
+          "desc": "GASKET; PLUG",
+          "cat": "Gaskets / seals",
+          "model": "",
+          "prior": 0.0,
+          "current": 316.62,
+          "d": 316.62,
+          "dq": 552.0
+        },
+        {
+          "pn": "8980375430",
+          "newest": "8980375430",
+          "desc": "COVER; SEAL,NOZZLE",
+          "cat": "Gaskets / seals",
+          "model": "",
+          "prior": 112.2,
+          "current": 282.15,
+          "d": 169.95,
+          "dq": 29.0
+        },
+        {
+          "pn": "8983040240",
+          "newest": "8983040240",
+          "desc": "COVER; SEAL,NOZZLE",
+          "cat": "Gaskets / seals",
+          "model": "",
+          "prior": 0.0,
+          "current": 144.55,
+          "d": 144.55,
+          "dq": 25.0
+        },
+        {
+          "pn": "8981897380",
+          "newest": "8981897380",
+          "desc": "GASKET; OIL PAN,A/T",
+          "cat": "Gaskets / seals",
+          "model": "",
+          "prior": 53.3,
+          "current": 162.2,
+          "d": 108.9,
+          "dq": 18.0
+        }
+      ]
+    },
+    "Hardware": {
+      "decl": [
+        {
+          "pn": "8978712500",
+          "newest": "8978712500",
+          "desc": "RUBBER; CUSHION,BRKT",
+          "cat": "Hardware",
+          "model": "",
+          "prior": 236.64,
+          "current": 0.0,
+          "d": -236.64,
+          "dq": -28.0
+        },
+        {
+          "pn": "8979472073",
+          "newest": "8979472073",
+          "desc": "SPRING; COIL,FRT SUSP",
+          "cat": "Hardware",
+          "model": "",
+          "prior": 397.14,
+          "current": 170.68,
+          "d": -226.46,
+          "dq": -6.0
+        },
+        {
+          "pn": "8981073183",
+          "newest": "8981073183",
+          "desc": "CAP; WHEEL",
+          "cat": "Hardware",
+          "model": "",
+          "prior": 189.2,
+          "current": 36.9,
+          "d": -152.3,
+          "dq": -9.0
+        },
+        {
+          "pn": "8983940751",
+          "newest": "8983940751",
+          "desc": "SPRING; COIL,FRT SUSP",
+          "cat": "Hardware",
+          "model": "",
+          "prior": 146.08,
+          "current": 0.0,
+          "d": -146.08,
+          "dq": -4.0
+        },
+        {
+          "pn": "8944721180",
+          "newest": "8944721180",
+          "desc": "COLLAR; DIST, COLLAPSIBLE",
+          "cat": "Hardware",
+          "model": "",
+          "prior": 136.2,
+          "current": 0.0,
+          "d": -136.2,
+          "dq": -30.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "7553154680",
+          "newest": "7553154680",
+          "desc": "BRACKET; FLEX HOSE,A/C",
+          "cat": "Hardware",
+          "model": "",
+          "prior": 0.0,
+          "current": 2172.6,
+          "d": 2172.6,
+          "dq": 153.0
+        },
+        {
+          "pn": "7551920370",
+          "newest": "7551920370",
+          "desc": "PROTECTOR; CHIPPING",
+          "cat": "Hardware",
+          "model": "",
+          "prior": 62.58,
+          "current": 197.72,
+          "d": 135.14,
+          "dq": 15.0
+        },
+        {
+          "pn": "0952352350",
+          "newest": "0952352350",
+          "desc": "CLIP; OIL PIPE",
+          "cat": "Hardware",
+          "model": "",
+          "prior": 0.0,
+          "current": 128.52,
+          "d": 128.52,
+          "dq": 153.0
+        },
+        {
+          "pn": "8981614460",
+          "newest": "8981614460",
+          "desc": "BUSHING; RUBBER,STAB BAR",
+          "cat": "Hardware",
+          "model": "",
+          "prior": 174.3,
+          "current": 295.77,
+          "d": 121.47,
+          "dq": 43.0
+        },
+        {
+          "pn": "8982146870",
+          "newest": "8982146870",
+          "desc": "CAP; WHEEL",
+          "cat": "Hardware",
+          "model": "",
+          "prior": 0.0,
+          "current": 107.4,
+          "d": 107.4,
+          "dq": 6.0
+        }
+      ]
+    },
+    "Hydraulic / mechanical": {
+      "decl": [
+        {
+          "pn": "8979458441",
+          "newest": "8979458441",
+          "desc": "ARM; LWR CONT",
+          "cat": "Hydraulic / mechanical",
+          "model": "",
+          "prior": 773.1,
+          "current": 0.0,
+          "d": -773.1,
+          "dq": -5.0
+        },
+        {
+          "pn": "8979458412",
+          "newest": "8979458412",
+          "desc": "ARM; UPR CONT",
+          "cat": "Hydraulic / mechanical",
+          "model": "",
+          "prior": 610.05,
+          "current": 0.0,
+          "d": -610.05,
+          "dq": -5.0
+        },
+        {
+          "pn": "8979458422",
+          "newest": "8979458422",
+          "desc": "ARM; UPR CONT",
+          "cat": "Hydraulic / mechanical",
+          "model": "",
+          "prior": 610.05,
+          "current": 0.0,
+          "d": -610.05,
+          "dq": -5.0
+        },
+        {
+          "pn": "8980574501",
+          "newest": "8980574501",
+          "desc": "LINK ASM; FRT WIPER",
+          "cat": "Hydraulic / mechanical",
+          "model": "",
+          "prior": 1166.0,
+          "current": 770.7,
+          "d": -395.3,
+          "dq": -3.0
+        },
+        {
+          "pn": "8979458431",
+          "newest": "8979458431",
+          "desc": "ARM; LWR CONT",
+          "cat": "Hydraulic / mechanical",
+          "model": "",
+          "prior": 309.24,
+          "current": 0.0,
+          "d": -309.24,
+          "dq": -2.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "7552302410",
+          "newest": "7552302410",
+          "desc": "WHEEL; DISC,AL",
+          "cat": "Hydraulic / mechanical",
+          "model": "",
+          "prior": 0.0,
+          "current": 829.44,
+          "d": 829.44,
+          "dq": 4.0
+        },
+        {
+          "pn": "7552796790",
+          "newest": "7552796790",
+          "desc": "PUMP KIT",
+          "cat": "Hydraulic / mechanical",
+          "model": "",
+          "prior": 0.0,
+          "current": 667.44,
+          "d": 667.44,
+          "dq": 2.0
+        },
+        {
+          "pn": "8981476802",
+          "newest": "8981476802",
+          "desc": "JOINT ASM",
+          "cat": "Hydraulic / mechanical",
+          "model": "",
+          "prior": 0.0,
+          "current": 255.21,
+          "d": 255.21,
+          "dq": 1.0
+        },
+        {
+          "pn": "8981454551",
+          "newest": "8981454551",
+          "desc": "OVERHAUL KIT; SUPPLY PUMP",
+          "cat": "Hydraulic / mechanical",
+          "model": "",
+          "prior": 236.4,
+          "current": 445.2,
+          "d": 208.8,
+          "dq": 3.0
+        },
+        {
+          "pn": "8975391990",
+          "newest": "8975391990",
+          "desc": "ROD END ASM; OUTER",
+          "cat": "Hydraulic / mechanical",
+          "model": "",
+          "prior": 0.0,
+          "current": 147.6,
+          "d": 147.6,
+          "dq": 4.0
+        }
+      ]
+    },
+    "Injectors": {
+      "decl": [
+        {
+          "pn": "8983320591",
+          "newest": "8983320591",
+          "desc": "NOZZLE ASM; INJ",
+          "cat": "Injectors",
+          "model": "",
+          "prior": 1192.15,
+          "current": 368.12,
+          "d": -824.03,
+          "dq": -5.0
+        },
+        {
+          "pn": "8975335391",
+          "newest": "8975335391",
+          "desc": "PIPE; INJ,C/R",
+          "cat": "Injectors",
+          "model": "",
+          "prior": 191.24,
+          "current": 0.0,
+          "d": -191.24,
+          "dq": -4.0
+        },
+        {
+          "pn": "8983024700",
+          "newest": "8983024700",
+          "desc": "WASHER; INJ NOZZLE",
+          "cat": "Injectors",
+          "model": "",
+          "prior": 5.04,
+          "current": 0.0,
+          "d": -5.04,
+          "dq": -4.0
+        },
+        {
+          "pn": "8983716601",
+          "newest": "8983716601",
+          "desc": "PIPE ASM; INJ",
+          "cat": "Injectors",
+          "model": "",
+          "prior": 69.4,
+          "current": 69.06,
+          "d": -0.34,
+          "dq": 0.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8981815400",
+          "newest": "8981815400",
+          "desc": "GASKET; INJ NOZZLE",
+          "cat": "Injectors",
+          "model": "",
+          "prior": 118.2,
+          "current": 206.0,
+          "d": 87.8,
+          "dq": 80.0
+        },
+        {
+          "pn": "8983323180",
+          "newest": "8983323180",
+          "desc": "PIPE ASM; INJ",
+          "cat": "Injectors",
+          "model": "",
+          "prior": 0.0,
+          "current": 86.1,
+          "d": 86.1,
+          "dq": 7.0
+        },
+        {
+          "pn": "8981587290",
+          "newest": "8981587290",
+          "desc": "PIPE; INJ NO.1",
+          "cat": "Injectors",
+          "model": "",
+          "prior": 0.0,
+          "current": 37.61,
+          "d": 37.61,
+          "dq": 1.0
+        },
+        {
+          "pn": "8981587300",
+          "newest": "8981587300",
+          "desc": "PIPE; INJ NO.2",
+          "cat": "Injectors",
+          "model": "",
+          "prior": 0.0,
+          "current": 37.61,
+          "d": 37.61,
+          "dq": 1.0
+        },
+        {
+          "pn": "8982480871",
+          "newest": "8982480871",
+          "desc": "BRACKET; INJ NOZZLE",
+          "cat": "Injectors",
+          "model": "",
+          "prior": 0.0,
+          "current": 18.18,
+          "d": 18.18,
+          "dq": 4.0
+        }
+      ]
+    },
+    "Lighting": {
+      "decl": [
+        {
+          "pn": "8984813230",
+          "newest": "8984813230",
+          "desc": "SEAL; BACKLIGHT GLASS",
+          "cat": "Lighting",
+          "model": "",
+          "prior": 7302.15,
+          "current": 3040.44,
+          "d": -4261.71,
+          "dq": -355.0
+        },
+        {
+          "pn": "8982330912",
+          "newest": "8982330912",
+          "desc": "LAMP ASM; RR COMB",
+          "cat": "Lighting",
+          "model": "",
+          "prior": 6006.96,
+          "current": 3207.66,
+          "d": -2799.3,
+          "dq": -25.0
+        },
+        {
+          "pn": "8982330922",
+          "newest": "8982330922",
+          "desc": "LAMP ASM; RR COMB",
+          "cat": "Lighting",
+          "model": "",
+          "prior": 3593.04,
+          "current": 1772.4,
+          "d": -1820.64,
+          "dq": -18.0
+        },
+        {
+          "pn": "8977993743",
+          "newest": "8977993743",
+          "desc": "LAMP ASM; HEAD",
+          "cat": "Lighting",
+          "model": "",
+          "prior": 3191.92,
+          "current": 1586.45,
+          "d": -1605.47,
+          "dq": -5.0
+        },
+        {
+          "pn": "8978486410",
+          "newest": "8978486410",
+          "desc": "LAMP UNIT; RR COMB",
+          "cat": "Lighting",
+          "model": "",
+          "prior": 1687.07,
+          "current": 276.14,
+          "d": -1410.93,
+          "dq": -10.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8978249025",
+          "newest": "8978249025",
+          "desc": "LAMP ASM; HEAD",
+          "cat": "Lighting",
+          "model": "",
+          "prior": 0.0,
+          "current": 3865.6,
+          "d": 3865.6,
+          "dq": 12.0
+        },
+        {
+          "pn": "8978249035",
+          "newest": "8978249035",
+          "desc": "LAMP ASM; HEAD",
+          "cat": "Lighting",
+          "model": "",
+          "prior": 0.0,
+          "current": 1606.17,
+          "d": 1606.17,
+          "dq": 5.0
+        },
+        {
+          "pn": "8978248633",
+          "newest": "8978248633",
+          "desc": "LAMP ASM; RR COMB",
+          "cat": "Lighting",
+          "model": "",
+          "prior": 0.0,
+          "current": 1533.41,
+          "d": 1533.41,
+          "dq": 10.0
+        },
+        {
+          "pn": "8978248663",
+          "newest": "8978248663",
+          "desc": "LAMP ASM; RR COMB",
+          "cat": "Lighting",
+          "model": "",
+          "prior": 0.0,
+          "current": 1279.97,
+          "d": 1279.97,
+          "dq": 10.0
+        },
+        {
+          "pn": "7552071520",
+          "newest": "7552071520",
+          "desc": "LAMP ASM; HEAD",
+          "cat": "Lighting",
+          "model": "",
+          "prior": 0.0,
+          "current": 1142.2,
+          "d": 1142.2,
+          "dq": 4.0
+        }
+      ]
+    },
+    "Mirrors": {
+      "decl": [
+        {
+          "pn": "8981582500",
+          "newest": "8981582500",
+          "desc": "MIRROR KIT; DOOR",
+          "cat": "Mirrors",
+          "model": "",
+          "prior": 755.24,
+          "current": 0.0,
+          "d": -755.24,
+          "dq": -6.0
+        },
+        {
+          "pn": "8984813531",
+          "newest": "8984813532",
+          "desc": "MIRROR ASM; DOOR",
+          "cat": "Mirrors",
+          "model": "",
+          "prior": 514.12,
+          "current": 0.0,
+          "d": -514.12,
+          "dq": -4.0
+        },
+        {
+          "pn": "8984813951",
+          "newest": "8984813952",
+          "desc": "MIRROR ASM; DOOR",
+          "cat": "Mirrors",
+          "model": "",
+          "prior": 482.08,
+          "current": 0.0,
+          "d": -482.08,
+          "dq": -4.0
+        },
+        {
+          "pn": "8981582510",
+          "newest": "8981582510",
+          "desc": "MIRROR KIT; DOOR",
+          "cat": "Mirrors",
+          "model": "",
+          "prior": 385.74,
+          "current": 0.0,
+          "d": -385.74,
+          "dq": -3.0
+        },
+        {
+          "pn": "7551828420",
+          "newest": "7551828420",
+          "desc": "MIRROR ASM; DOOR",
+          "cat": "Mirrors",
+          "model": "",
+          "prior": 125.15,
+          "current": 0.0,
+          "d": -125.15,
+          "dq": -1.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "7551828790",
+          "newest": "7551828790",
+          "desc": "MIRROR ASM; DOOR",
+          "cat": "Mirrors",
+          "model": "",
+          "prior": 0.0,
+          "current": 684.72,
+          "d": 684.72,
+          "dq": 6.0
+        },
+        {
+          "pn": "8980920870",
+          "newest": "8980920870",
+          "desc": "LAMP ASM; SIDE TURN,DOOR MIRROR",
+          "cat": "Mirrors",
+          "model": "",
+          "prior": 0.0,
+          "current": 464.28,
+          "d": 464.28,
+          "dq": 6.0
+        },
+        {
+          "pn": "8976489603",
+          "newest": "8976489603",
+          "desc": "MIRROR ASM; DOOR",
+          "cat": "Mirrors",
+          "model": "",
+          "prior": 916.48,
+          "current": 1372.08,
+          "d": 455.6,
+          "dq": 4.0
+        },
+        {
+          "pn": "7552403540",
+          "newest": "7552403540",
+          "desc": "MIRROR ASM; DOOR",
+          "cat": "Mirrors",
+          "model": "",
+          "prior": 0.0,
+          "current": 418.64,
+          "d": 418.64,
+          "dq": 2.0
+        },
+        {
+          "pn": "7552403570",
+          "newest": "7552403570",
+          "desc": "MIRROR ASM; DOOR",
+          "cat": "Mirrors",
+          "model": "",
+          "prior": 0.0,
+          "current": 418.64,
+          "d": 418.64,
+          "dq": 2.0
+        }
+      ]
+    },
+    "Miscellaneous": {
+      "decl": [
+        {
+          "pn": "8980005730",
+          "newest": "8980005730",
+          "desc": "GATE ASM; RR",
+          "cat": "Miscellaneous",
+          "model": "",
+          "prior": 568.72,
+          "current": 0.0,
+          "d": -568.72,
+          "dq": -2.0
+        },
+        {
+          "pn": "8975298810",
+          "newest": "8975298810",
+          "desc": "COVER; ENG",
+          "cat": "Miscellaneous",
+          "model": "",
+          "prior": 507.08,
+          "current": 0.0,
+          "d": -507.08,
+          "dq": -5.0
+        },
+        {
+          "pn": "8983852662",
+          "newest": "8983852663",
+          "desc": "SUPPORT; DEFLECTOR",
+          "cat": "Miscellaneous",
+          "model": "",
+          "prior": 194.72,
+          "current": 0.0,
+          "d": -194.72,
+          "dq": -4.0
+        },
+        {
+          "pn": "8983380850",
+          "newest": "8983380850",
+          "desc": "KEY; BLANK",
+          "cat": "Miscellaneous",
+          "model": "",
+          "prior": 315.05,
+          "current": 126.32,
+          "d": -188.73,
+          "dq": -12.0
+        },
+        {
+          "pn": "8983567932",
+          "newest": "8983567932",
+          "desc": "COVER; DASH COWL",
+          "cat": "Miscellaneous",
+          "model": "",
+          "prior": 223.3,
+          "current": 44.82,
+          "d": -178.48,
+          "dq": -24.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "5874123812",
+          "newest": "5874123812",
+          "desc": "INTERFACE MX2-T",
+          "cat": "Miscellaneous",
+          "model": "",
+          "prior": 0.0,
+          "current": 5762.1,
+          "d": 5762.1,
+          "dq": 6.0
+        },
+        {
+          "pn": "8975536860",
+          "newest": "8975536860",
+          "desc": "BODY ASM; REAR",
+          "cat": "Miscellaneous",
+          "model": "",
+          "prior": 0.0,
+          "current": 2670.14,
+          "d": 2670.14,
+          "dq": 2.0
+        },
+        {
+          "pn": "5876150780",
+          "newest": "5876150780",
+          "desc": "BLADE; WIPER",
+          "cat": "Miscellaneous",
+          "model": "",
+          "prior": 2451.5,
+          "current": 3689.8,
+          "d": 1238.3,
+          "dq": 130.0
+        },
+        {
+          "pn": "7552430370",
+          "newest": "7552430370",
+          "desc": "BATTERY",
+          "cat": "Miscellaneous",
+          "model": "",
+          "prior": 0.0,
+          "current": 1182.42,
+          "d": 1182.42,
+          "dq": 9.0
+        },
+        {
+          "pn": "8983786752",
+          "newest": "8983786752",
+          "desc": "TENSIONER; AUTO",
+          "cat": "Miscellaneous",
+          "model": "",
+          "prior": 0.0,
+          "current": 1040.69,
+          "d": 1040.69,
+          "dq": 11.0
+        }
+      ]
+    },
+    "Starter / alternator": {
+      "decl": [
+        {
+          "pn": "8981468370",
+          "newest": "8981468370",
+          "desc": "RELAY; STARTER",
+          "cat": "Starter / alternator",
+          "model": "",
+          "prior": 56.98,
+          "current": 0.0,
+          "d": -56.98,
+          "dq": -5.0
+        },
+        {
+          "pn": "8980098102",
+          "newest": "8980098102",
+          "desc": "REGULATOR ASM; DOOR",
+          "cat": "Starter / alternator",
+          "model": "",
+          "prior": 51.9,
+          "current": 0.0,
+          "d": -51.9,
+          "dq": -2.0
+        },
+        {
+          "pn": "8980076221",
+          "newest": "8980076221",
+          "desc": "HARNESS; CABLE,BATTERY TO STARTER",
+          "cat": "Starter / alternator",
+          "model": "",
+          "prior": 46.25,
+          "current": 0.0,
+          "d": -46.25,
+          "dq": -1.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8980098112",
+          "newest": "8980098112",
+          "desc": "REGULATOR ASM; DOOR",
+          "cat": "Starter / alternator",
+          "model": "",
+          "prior": 79.74,
+          "current": 230.94,
+          "d": 151.2,
+          "dq": 5.0
+        },
+        {
+          "pn": "8974927351",
+          "newest": "8974927351",
+          "desc": "HARNESS; CABLE,BATTERY TO STARTER",
+          "cat": "Starter / alternator",
+          "model": "",
+          "prior": 0.0,
+          "current": 128.28,
+          "d": 128.28,
+          "dq": 4.0
+        },
+        {
+          "pn": "8982482712",
+          "newest": "8982482713",
+          "desc": "STARTER ASM",
+          "cat": "Starter / alternator",
+          "model": "",
+          "prior": 272.8,
+          "current": 310.19,
+          "d": 37.39,
+          "dq": 0.0
+        }
+      ]
+    },
+    "Steering": {
+      "decl": [
+        {
+          "pn": "7552348310",
+          "newest": "7552348310",
+          "desc": "STEERING UNIT",
+          "cat": "Steering",
+          "model": "",
+          "prior": 2275.32,
+          "current": 0.0,
+          "d": -2275.32,
+          "dq": -1.0
+        },
+        {
+          "pn": "8979461321",
+          "newest": "8979461321",
+          "desc": "STEERING UNIT",
+          "cat": "Steering",
+          "model": "",
+          "prior": 626.86,
+          "current": 0.0,
+          "d": -626.86,
+          "dq": -1.0
+        },
+        {
+          "pn": "7551893891",
+          "newest": "7551893891",
+          "desc": "BARREL ASM; W/KEY,STRG LOCK",
+          "cat": "Steering",
+          "model": "",
+          "prior": 622.9,
+          "current": 0.0,
+          "d": -622.9,
+          "dq": -6.0
+        },
+        {
+          "pn": "8979461360",
+          "newest": "8979461360",
+          "desc": "SHAFT; STRG,2ND",
+          "cat": "Steering",
+          "model": "",
+          "prior": 874.62,
+          "current": 291.54,
+          "d": -583.08,
+          "dq": -6.0
+        },
+        {
+          "pn": "8983039000",
+          "newest": "8983039000",
+          "desc": "KNUCKLE; FRT AXLE",
+          "cat": "Steering",
+          "model": "",
+          "prior": 536.31,
+          "current": 0.0,
+          "d": -536.31,
+          "dq": -3.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8974719902",
+          "newest": "8974719902",
+          "desc": "WHEEL; STRG",
+          "cat": "Steering",
+          "model": "",
+          "prior": 0.0,
+          "current": 686.34,
+          "d": 686.34,
+          "dq": 3.0
+        },
+        {
+          "pn": "8979436291",
+          "newest": "8979436291",
+          "desc": "KNUCKLE; FRT AXLE",
+          "cat": "Steering",
+          "model": "",
+          "prior": 0.0,
+          "current": 198.07,
+          "d": 198.07,
+          "dq": 1.0
+        },
+        {
+          "pn": "8973163411",
+          "newest": "8973163411",
+          "desc": "SHAFT; STRG,2ND",
+          "cat": "Steering",
+          "model": "",
+          "prior": 310.07,
+          "current": 484.08,
+          "d": 174.01,
+          "dq": 2.0
+        },
+        {
+          "pn": "8981088100",
+          "newest": "8981088100",
+          "desc": "SHAFT; STRG,2ND",
+          "cat": "Steering",
+          "model": "",
+          "prior": 0.0,
+          "current": 137.72,
+          "d": 137.72,
+          "dq": 1.0
+        },
+        {
+          "pn": "8983948811",
+          "newest": "8983948811",
+          "desc": "SHAFT; STRG,2ND",
+          "cat": "Steering",
+          "model": "",
+          "prior": 0.0,
+          "current": 135.44,
+          "d": 135.44,
+          "dq": 2.0
+        }
+      ]
+    },
+    "Suspension": {
+      "decl": [
+        {
+          "pn": "8979468160",
+          "newest": "8979468160",
+          "desc": "SPRING ASM; LEAF,RR",
+          "cat": "Suspension",
+          "model": "",
+          "prior": 438.78,
+          "current": 302.66,
+          "d": -136.12,
+          "dq": -1.0
+        },
+        {
+          "pn": "8973574920",
+          "newest": "8973574920",
+          "desc": "BUSHING; SHACKLE,RR SPR",
+          "cat": "Suspension",
+          "model": "CHINA",
+          "prior": 193.5,
+          "current": 68.5,
+          "d": -125.0,
+          "dq": -100.0
+        },
+        {
+          "pn": "8975595540",
+          "newest": "8975595540",
+          "desc": "ABSORBER ASM; SHOCK,RR",
+          "cat": "Suspension",
+          "model": "TF* (4X2)",
+          "prior": 291.84,
+          "current": 169.05,
+          "d": -122.79,
+          "dq": -5.0
+        },
+        {
+          "pn": "8979445680",
+          "newest": "8979445680",
+          "desc": "LINK ASM; STABILIZER",
+          "cat": "Suspension",
+          "model": "",
+          "prior": 80.16,
+          "current": 0.0,
+          "d": -80.16,
+          "dq": -8.0
+        },
+        {
+          "pn": "8981614501",
+          "newest": "8981614501",
+          "desc": "BAR; STAB,FRT SUSP",
+          "cat": "Suspension",
+          "model": "",
+          "prior": 72.04,
+          "current": 0.0,
+          "d": -72.04,
+          "dq": -1.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8983621213",
+          "newest": "8983621213",
+          "desc": "BAR; FRT BUMPER",
+          "cat": "Suspension",
+          "model": "",
+          "prior": 260.35,
+          "current": 2008.22,
+          "d": 1747.87,
+          "dq": 33.0
+        },
+        {
+          "pn": "8973670441",
+          "newest": "8973670441",
+          "desc": "BAR; FRT BUMPER",
+          "cat": "Suspension",
+          "model": "",
+          "prior": 0.0,
+          "current": 344.96,
+          "d": 344.96,
+          "dq": 7.0
+        },
+        {
+          "pn": "8979470973",
+          "newest": "8979470973",
+          "desc": "ABSORBER ASM; SHOCK,FRT",
+          "cat": "Suspension",
+          "model": "TF* (4X4)",
+          "prior": 186.3,
+          "current": 298.08,
+          "d": 111.78,
+          "dq": 3.0
+        },
+        {
+          "pn": "8981522160",
+          "newest": "8981522160",
+          "desc": "ABSORBER ASM; SHOCK,FRT",
+          "cat": "Suspension",
+          "model": "TF* (4X4)",
+          "prior": 0.0,
+          "current": 106.56,
+          "d": 106.56,
+          "dq": 3.0
+        },
+        {
+          "pn": "8979470163",
+          "newest": "8979470163",
+          "desc": "ABSORBER ASM; SHOCK,RR",
+          "cat": "Suspension",
+          "model": "TF* (4X4)",
+          "prior": 369.6,
+          "current": 465.5,
+          "d": 95.9,
+          "dq": 4.0
+        }
+      ]
+    },
+    "Transmission parts": {
+      "decl": [
+        {
+          "pn": "8983420130",
+          "newest": "8983420130",
+          "desc": "BODY ASM; VLV LWR,A/T",
+          "cat": "Transmission parts",
+          "model": "",
+          "prior": 3320.58,
+          "current": 0.0,
+          "d": -3320.58,
+          "dq": -8.0
+        },
+        {
+          "pn": "8983951940",
+          "newest": "8983951940",
+          "desc": "HUB; FRT AXLE",
+          "cat": "Transmission parts",
+          "model": "",
+          "prior": 925.72,
+          "current": 0.0,
+          "d": -925.72,
+          "dq": -10.0
+        },
+        {
+          "pn": "8979476450",
+          "newest": "8979476450",
+          "desc": "JOURNAL ASM; PROP SHAFT",
+          "cat": "Transmission parts",
+          "model": "",
+          "prior": 891.3,
+          "current": 0.0,
+          "d": -891.3,
+          "dq": -50.0
+        },
+        {
+          "pn": "8983420280",
+          "newest": "8983420280",
+          "desc": "PAN ASM; OIL,A/T",
+          "cat": "Transmission parts",
+          "model": "",
+          "prior": 718.38,
+          "current": 0.0,
+          "d": -718.38,
+          "dq": -6.0
+        },
+        {
+          "pn": "8973331080",
+          "newest": "8973331080",
+          "desc": "NUT; WHEEL,FRT AXLE",
+          "cat": "Transmission parts",
+          "model": "",
+          "prior": 1081.5,
+          "current": 696.0,
+          "d": -385.5,
+          "dq": -350.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8983939000",
+          "newest": "8983939000",
+          "desc": "TRANSMISSION ASM; AUTO",
+          "cat": "Transmission parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 7029.94,
+          "d": 7029.94,
+          "dq": 2.0
+        },
+        {
+          "pn": "8981964150",
+          "newest": "8981964150",
+          "desc": "ACTUATOR; TRANSFER,2-4 SHIFT",
+          "cat": "Transmission parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 1145.01,
+          "d": 1145.01,
+          "dq": 9.0
+        },
+        {
+          "pn": "8974816300",
+          "newest": "8974816300",
+          "desc": "DRIVE ASM; FINAL,FRT",
+          "cat": "Transmission parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 895.45,
+          "d": 895.45,
+          "dq": 1.0
+        },
+        {
+          "pn": "8983033480",
+          "newest": "8983033480",
+          "desc": "HUB; FRT AXLE",
+          "cat": "Transmission parts",
+          "model": "",
+          "prior": 240.38,
+          "current": 858.87,
+          "d": 618.49,
+          "dq": 5.0
+        },
+        {
+          "pn": "8974175263",
+          "newest": "8974175263",
+          "desc": "LEVER; SHIFT,A/T",
+          "cat": "Transmission parts",
+          "model": "",
+          "prior": 0.0,
+          "current": 393.73,
+          "d": 393.73,
+          "dq": 1.0
+        }
+      ]
+    },
+    "Turbo": {
+      "decl": [
+        {
+          "pn": "8981506872",
+          "newest": "8981506872",
+          "desc": "TURBOCHARGER ASM",
+          "cat": "Turbo",
+          "model": "",
+          "prior": 1054.26,
+          "current": 0.0,
+          "d": -1054.26,
+          "dq": -2.0
+        },
+        {
+          "pn": "8981506883",
+          "newest": "8981506883",
+          "desc": "TURBOCHARGER ASM",
+          "cat": "Turbo",
+          "model": "",
+          "prior": 758.74,
+          "current": 0.0,
+          "d": -758.74,
+          "dq": -1.0
+        },
+        {
+          "pn": "8983313592",
+          "newest": "8983313592",
+          "desc": "TURBOCHARGER ASM",
+          "cat": "Turbo",
+          "model": "",
+          "prior": 738.72,
+          "current": 0.0,
+          "d": -738.72,
+          "dq": -1.0
+        },
+        {
+          "pn": "8973099420",
+          "newest": "8973099420",
+          "desc": "NUT; TURBOCHARGER",
+          "cat": "Turbo",
+          "model": "",
+          "prior": 238.2,
+          "current": 76.4,
+          "d": -161.8,
+          "dq": -50.0
+        },
+        {
+          "pn": "8982480882",
+          "newest": "8982480882",
+          "desc": "GASKET; TURBOCHARGER TO EXH MANIF",
+          "cat": "Turbo",
+          "model": "",
+          "prior": 39.08,
+          "current": 0.0,
+          "d": -39.08,
+          "dq": -10.0
+        }
+      ],
+      "grow": [
+        {
+          "pn": "8975334720",
+          "newest": "8975334720",
+          "desc": "PIPE; OIL RETURN,TURBOCHARGER",
+          "cat": "Turbo",
+          "model": "",
+          "prior": 0.0,
+          "current": 57.83,
+          "d": 57.83,
+          "dq": 1.0
+        },
+        {
+          "pn": "8980115041",
+          "newest": "8980115041",
+          "desc": "PIPE; OIL,TURBOCHARGER FEED",
+          "cat": "Turbo",
+          "model": "",
+          "prior": 0.0,
+          "current": 36.47,
+          "d": 36.47,
+          "dq": 1.0
+        },
+        {
+          "pn": "8981789271",
+          "newest": "8981789271",
+          "desc": "PIPE; OIL,TURBOCHARGER FEED",
+          "cat": "Turbo",
+          "model": "",
+          "prior": 0.0,
+          "current": 26.86,
+          "d": 26.86,
+          "dq": 2.0
+        },
+        {
+          "pn": "8980830251",
+          "newest": "8980830251",
+          "desc": "PIPE; WATER,TURBOCHARGER OUT",
+          "cat": "Turbo",
+          "model": "",
+          "prior": 0.0,
+          "current": 14.48,
+          "d": 14.48,
+          "dq": 1.0
+        },
+        {
+          "pn": "8981512000",
+          "newest": "8981512000",
+          "desc": "PIPE; WATER,TURBOCHARGER",
+          "cat": "Turbo",
+          "model": "",
+          "prior": 0.0,
+          "current": 10.95,
+          "d": 10.95,
+          "dq": 1.0
+        }
+      ]
+    }
+  },
+  "model_attribution": {
+    "source": "genuine_bvp_crossref + bvp_addressable_basket (vehicle_model)",
+    "coverage": "BVP/PMS addressable basket only - not full EPC/GIDSS",
+    "n_mapped_pns": 689,
+    "browser_catalogue_required": false,
+    "note": "PN EUR drivers come from SAP billing. Model is filled only when the PN appears in the BVP/PMS application tables; blank otherwise. Full fitment for arbitrary PNs would need EPC/GIDSS - not required for the movers slides."
+  },
+  "new_business": [
     {
       "pn": "7552105216",
       "desc": "CABLE; BATTERY CHARGER",
       "cat": "Electrical sensors",
       "current": 9091.58,
       "qty": 7.0,
+      "warranty_campaign": false,
+      "review_reason": "Review as new model, supersession or timing before classifying"
+    },
+    {
+      "pn": "8983939000",
+      "desc": "TRANSMISSION ASM; AUTO",
+      "cat": "Transmission parts",
+      "current": 7029.94,
+      "qty": 2.0,
       "warranty_campaign": false,
       "review_reason": "Review as new model, supersession or timing before classifying"
     },
@@ -520,22 +3634,13 @@
       "review_reason": "Review as new model, supersession or timing before classifying"
     },
     {
-      "pn": "8983939000",
-      "desc": "TRANSMISSION ASM; AUTO",
-      "cat": "Transmission parts",
-      "current": 3514.97,
-      "qty": 1.0,
-      "warranty_campaign": false,
-      "review_reason": "Review as new model, supersession or timing before classifying"
-    },
-    {
       "pn": "8983287647",
       "desc": "LAMP ASM; HEAD",
       "cat": "Lighting",
       "current": 3511.04,
       "qty": 11.0,
-      "warranty_campaign": false,
-      "review_reason": "Review as new model, supersession or timing before classifying"
+      "warranty_campaign": true,
+      "review_reason": "Warranty / campaign PN (claim grain or heuristic) — not commercial growth"
     },
     {
       "pn": "8974985741",
@@ -543,8 +3648,17 @@
       "cat": "Turbo",
       "current": 3204.4,
       "qty": 4.0,
-      "warranty_campaign": false,
-      "review_reason": "Review as new model, supersession or timing before classifying"
+      "warranty_campaign": true,
+      "review_reason": "Warranty / campaign PN (claim grain or heuristic) — not commercial growth"
+    },
+    {
+      "pn": "8978775550",
+      "desc": "CAMERA ASM",
+      "cat": "Engine parts",
+      "current": 3098.54,
+      "qty": 3.0,
+      "warranty_campaign": true,
+      "review_reason": "Warranty / campaign PN (claim grain or heuristic) — not commercial growth"
     },
     {
       "pn": "8975435772",
@@ -552,8 +3666,8 @@
       "cat": "Air conditioning",
       "current": 2879.46,
       "qty": 6.0,
-      "warranty_campaign": false,
-      "review_reason": "Review as new model, supersession or timing before classifying"
+      "warranty_campaign": true,
+      "review_reason": "Warranty / campaign PN (claim grain or heuristic) — not commercial growth"
     },
     {
       "pn": "8975536860",
@@ -570,8 +3684,8 @@
       "cat": "Cooling",
       "current": 2526.6,
       "qty": 15.0,
-      "warranty_campaign": false,
-      "review_reason": "Review as new model, supersession or timing before classifying"
+      "warranty_campaign": true,
+      "review_reason": "Warranty / campaign PN (claim grain or heuristic) — not commercial growth"
     },
     {
       "pn": "7552392940",
@@ -584,37 +3698,37 @@
     }
   ],
   "bvp": {
-    "bvp_prior": 112622.37,
-    "bvp_current": 88464.43,
-    "gen_prior": 575259.88,
-    "gen_current": 692748.8
+    "bvp_prior": 112178.85,
+    "bvp_current": 91205.78,
+    "gen_prior": 273377.51,
+    "gen_current": 313335.41
   },
-  "pms_year": 2026,
+  "pms_year": 2025,
   "pms_peers": {
     "oil_filter": {
-      "db": 11.98,
-      "network": 12.829651736877725,
-      "best": 29.18
+      "db": 47.8,
+      "network": 61.190823560738025,
+      "best": 190.56
     },
     "fuel_filter": {
-      "db": 5.93,
-      "network": 12.152180666348618,
-      "best": 54.09
+      "db": 29.07,
+      "network": 47.515893180078336,
+      "best": 212.37
     },
     "air_filter": {
-      "db": 12.86,
-      "network": 12.283254029120895,
-      "best": 27.43
+      "db": 55.800000000000004,
+      "network": 52.03844879018893,
+      "best": 204.32000000000002
     },
     "brake_pad": {
-      "db": 8.17,
-      "network": 5.902270558731392,
-      "best": 29.28
+      "db": 43.730000000000004,
+      "network": 28.74464869246553,
+      "best": 87.36
     },
     "brake_rotor": {
-      "db": 12.01,
-      "network": 13.449568970299447,
-      "best": 57.46
+      "db": 81.83,
+      "network": 52.95507749658837,
+      "best": 225.97
     }
   },
   "gps_master": {
@@ -711,14 +3825,9 @@
       "2001": 3,
       "2002": 2,
       "2003": 1,
-      "2004": 1,
-      "2025": 0,
-      "2026": 0
+      "2004": 1
     },
-    "md": {
-      "2025": 0,
-      "2026": 0
-    },
+    "md": {},
     "lcv": {
       "1990": 594,
       "1991": 764,
@@ -806,55 +3915,12 @@
       "2030": 8824
     }
   },
-  "gps_segmented": {
-    "carpark_db": "RSA",
-    "uio_2025": 7929,
-    "uio_2026": 7374,
-    "wallet_2025": 1982250.0,
-    "wallet_2026": 1843433.0,
-    "net_FY2025": 1162750.6663480552,
-    "net_FY2026": 1377395.0249578897,
-    "gps_FY2025": 0.5865812416940624,
-    "gps_FY2026": 0.6948644343336561,
-    "gps_FY2026_on_cy2026_wallet": 0.7471901745047906,
-    "show_pct": true,
-    "status": [
-      "ESTIMATE_CONSTANT_HAZARD"
-    ],
-    "by_segment": {
-      "ld": {
-        "uio_2025": 0,
-        "uio_2026": 0,
-        "wallet_2025": 0.0,
-        "wallet_2026": 0.0,
-        "rate": 739.0,
-        "gps_target_group": "N75_N50_N62"
-      },
-      "md": {
-        "uio_2025": 0,
-        "uio_2026": 0,
-        "wallet_2025": 0.0,
-        "wallet_2026": 0.0,
-        "rate": 887.0,
-        "gps_target_group": "F_Series_MD"
-      },
-      "lcv": {
-        "uio_2025": 7929,
-        "uio_2026": 7374,
-        "wallet_2025": 1982250.0,
-        "wallet_2026": 1843433.0,
-        "rate": 250.0,
-        "gps_target_group": "LCV_D_Max"
-      }
-    },
-    "source": "UIO_carpark_for_GPS_recalc_2026-07-30.csv",
-    "gps_master_flat_FY2026": 0.668881886588753,
-    "gps_master_max_spend": 2059250.0
-  },
+  "gps_segmented": null,
   "ids": {
-    "n": 38,
-    "network_avg": 74.8,
-    "db_avg": 75.2,
+    "n": 36,
+    "network_avg": 79.4,
+    "db_avg": 79.4,
+    "n_not_assessed": 2,
     "top": [
       {
         "dealer": "RSA Bil Tromsø",
@@ -874,23 +3940,38 @@
     ],
     "bottom": [
       {
+        "dealer": "RSA Bil Forus",
+        "pts": 62.86,
+        "grank": 450
+      },
+      {
+        "dealer": "Gjermundsen Bilsenter A/S",
+        "pts": 39.64,
+        "grank": 478
+      },
+      {
         "dealer": "Blakstad Auto AS",
         "pts": 33.21,
         "grank": 482
-      },
-      {
-        "dealer": "Star Bil AS",
-        "pts": 0.71,
-        "grank": 489
-      },
-      {
-        "dealer": "Alta Motorsenter",
-        "pts": 0.0,
-        "grank": 518
       }
     ]
   },
   "warranty_claim": 290712,
+  "warranty_note": "Movers exclude claim-matched PNs from warranty_raw_grain (+ text heuristic). CY2025 claim-price total below is from Warranty_CY2025_by_DB.md — distinct from fiscal GPS warranty expense in distributor_warranty_expense_fiscal.csv.",
+  "warranty_exclusion": {
+    "method": "claim_pn_match+text_heuristic",
+    "available": true,
+    "db_names": [
+      "RSA"
+    ],
+    "n_claim_pns": 207,
+    "n_claim_lines": 1070,
+    "claim_eur": 248263.95,
+    "assess_month_from": 202410,
+    "assess_month_to": 202606,
+    "billing_stripped_prior": 302325.89,
+    "billing_stripped_current": 345701.35
+  },
   "incentive_fy27": null,
   "watch": [
     "Warranty RSA means Norway; a separate billing source labels Greece payer 66 as RSA. Never join those sources on RSA alone."

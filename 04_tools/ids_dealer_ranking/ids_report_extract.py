@@ -2,15 +2,17 @@
 
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 from statistics import mean
 from typing import Any
 
 import xlrd
 
-from ids_paths import country_display_name
+from ids_paths import ISZE_ROOT, country_display_name
 from build_ids_result_report import (
     COL_FIRST_DEALER,
     COL_LABEL,
@@ -30,6 +32,27 @@ SECTION_RE = re.compile(r"^([A-H])\.\s", re.IGNORECASE)
 
 REPORT_PREFIX = "2026 IDS Evaluation Result Report_"
 REPORT_SUFFIX = ".xls"
+
+# Tomoe Baumann MIDI rule (2026-07-31):
+# - FR/ES red-marked → out of averages only (list/map keep them)
+# - IT/CH → ALL dealers in averages (including zero-score shells)
+RED_MARKED_JSON = (
+    ISZE_ROOT
+    / "01_data"
+    / "90_INBOX"
+    / "tomoe_ids_mail_pull"
+    / "20260731_0858_red_marked_dealers.json"
+)
+AVG_ALL_IN = frozenset({"Italy", "Switzerland"})
+AVG_EXCLUDE_RED = frozenset({"France", "Spain"})
+
+# Section E not assessed (2026-08-15):
+# Israel LCV (UMI) filled 0/18 questions, 0/27 points at all 29 dealers.
+# That is not_scored — not a vehicle-sales fail. Leave E out of scoring;
+# record the 0/27; exclude those zeros from country / network averages.
+SECTION_E_NOT_SCORED_COUNTRIES = frozenset({"Israel LCV"})
+SECTION_E_MAX = 27.0
+TOTAL_MAX_AE = 280.0
 
 
 # META_ROWS offset: Dealer Name (0), Evaluation Date (1), Address (2)
@@ -51,12 +74,39 @@ class DealerRecord:
     address: str | None = None
     # Disambiguate same company name / multi-site columns in one country report
     site_key: str | None = None
+    # True when dealer is listed but excluded from country / section averages
+    excluded_from_average: bool = False
+    # "A-E" (280), "A-D" (253 when Section E is not_scored), or "totals_only"
+    score_basis: str = "A-E"
+    raw_total: float | None = None
+    raw_total_pct: float | None = None
+    total_max: float | None = None
 
     @property
     def id(self) -> str:
         if self.site_key:
             return f"{self.country}::{self.name}::{self.site_key}"
         return f"{self.country}::{self.name}"
+
+
+def _norm_dealer_name(name: str) -> str:
+    return " ".join((name or "").casefold().split())
+
+
+@lru_cache(maxsize=1)
+def load_red_marked_names() -> dict[str, set[str]]:
+    """Country → normalised dealer names excluded from averages (Baumann)."""
+    if not RED_MARKED_JSON.is_file():
+        return {}
+    raw = json.loads(RED_MARKED_JSON.read_text(encoding="utf-8"))
+    out: dict[str, set[str]] = {}
+    for country, rows in raw.items():
+        out[str(country)] = {
+            _norm_dealer_name(r["name"])
+            for r in rows
+            if isinstance(r, dict) and r.get("name")
+        }
+    return out
 
 
 def _num(val: Any) -> float | None:
@@ -100,12 +150,95 @@ def _avg(vals: list[float | None]) -> float | None:
     return mean(ok) if ok else None
 
 
+def _ad_score_max(rec: DealerRecord) -> tuple[float, float]:
+    """Sum scored A–D points and their max (Section E left out)."""
+    score = 0.0
+    mx = 0.0
+    for sid in ("A", "B", "C", "D"):
+        block = rec.sections.get(sid) or {}
+        if block.get("score") is not None:
+            score += float(block["score"])
+        if block.get("max"):
+            mx += float(block["max"])
+    return score, mx
+
+
+def _detect_section_e_fill(rec: DealerRecord) -> str:
+    """scored | not_scored | blank | totals_only.
+
+    Israel LCV is an explicit not_scored customer (all 29 dealers 0/18, 0/27).
+    Blank = E questions empty (UK LCV three dealers; UK CV totals-only).
+    Genuine zeros in FR/IT/ES/CH stay scored (Tomoe rule handles red-marks).
+    """
+    if rec.totals_only:
+        return "totals_only"
+    if rec.country in SECTION_E_NOT_SCORED_COUNTRIES:
+        return "not_scored"
+    q_e = [
+        block
+        for qid, block in (rec.questions or {}).items()
+        if str(qid).upper().startswith("E")
+    ]
+    scores = [b.get("score") for b in q_e]
+    e = rec.sections.get("E") or {}
+    if not q_e or all(s is None for s in scores):
+        if e.get("score") is None and e.get("pct") is None:
+            return "blank"
+        if not q_e:
+            return "blank"
+    return "scored"
+
+
+def _apply_section_e_policy(
+    records: list[DealerRecord],
+    dealers: list[tuple[int, str]],
+    resolved_totals: dict[int, float | None],
+    resolved_pcts: dict[int, float | None],
+) -> set[int]:
+    """Mark Section E fill, restate A–D totals, return cols left out of E averages."""
+    e_out_of_avg: set[int] = set()
+    for rec, (col, _) in zip(records, dealers):
+        fill = _detect_section_e_fill(rec)
+        if rec.totals_only:
+            rec.score_basis = "totals_only"
+            continue
+        eblock = rec.sections.setdefault(
+            "E",
+            {"score": None, "max": SECTION_E_MAX, "pct": None},
+        )
+        eblock["fill"] = fill
+        if fill in ("not_scored", "blank"):
+            e_out_of_avg.add(col)
+            eblock["pct"] = None
+            for qid, qblock in rec.questions.items():
+                if str(qid).upper().startswith("E"):
+                    qblock["pct"] = None
+                    qblock["fill"] = fill
+        if fill == "not_scored":
+            rec.raw_total = rec.total
+            rec.raw_total_pct = rec.total_pct
+            ad_score, ad_max = _ad_score_max(rec)
+            rec.total = ad_score
+            rec.total_pct = (ad_score / ad_max) if ad_max else None
+            rec.total_max = ad_max or (TOTAL_MAX_AE - SECTION_E_MAX)
+            rec.score_basis = "A-D"
+            if eblock.get("score") is None:
+                eblock["score"] = 0.0
+            eblock.setdefault("max", SECTION_E_MAX)
+            resolved_totals[col] = rec.total
+            resolved_pcts[col] = rec.total_pct
+        else:
+            rec.score_basis = "A-E"
+            rec.total_max = TOTAL_MAX_AE
+    return e_out_of_avg
+
+
 def _is_scored_pct(pct: float | None) -> bool:
     """True when total % is usable for averages (> 0).
 
-    Zero-score shells (common in MIDI empty self-evals) stay in dealer lists
-    for Tomoe count checks, but must not drag country / network averages down.
-    Same rule as ids_kaizen_hygiene.is_scored_dealer.
+    Zero-score shells stay in dealer lists. For most markets they stay out of
+    averages (hygiene). Exception — Tomoe Baumann: Italy / Switzerland keep
+    every dealer in averages, including zero shells.
     """
     if pct is None:
         return False
@@ -248,25 +381,10 @@ def extract_result_report(
         )
         question_rows.append((qid, row))
 
-    # Country avg per question (for dealer payload convenience)
-    q_country_avg: dict[str, float | None] = {}
-    for qid, row in question_rows:
-        max_pts = next((q["max"] for q in question_meta if q["id"] == qid), None)
-        pcts: list[float] = []
-        for col, _ in dealers:
-            score = (
-                _num(sh.cell_value(row.sheet_row, col))
-                if row.sheet_row is not None
-                else None
-            )
-            if score is None or not max_pts:
-                continue
-            pcts.append(score / max_pts)
-        q_country_avg[qid] = mean(pcts) if pcts else None
-
     records: list[DealerRecord] = []
     resolved_totals: dict[int, float | None] = {}
     resolved_pcts: dict[int, float | None] = {}
+    name_by_col: dict[int, str] = {col: name for col, name in dealers}
     name_counts: dict[str, int] = {}
     for _, name in dealers:
         name_counts[name] = name_counts.get(name, 0) + 1
@@ -281,16 +399,13 @@ def extract_result_report(
         for sec, by_col in section_scores.items():
             max_pts = section_max.get(sec)
             score = by_col.get(col)
-            col_scores = [by_col.get(dc) for dc in dealer_cols]
-            avg_score = _avg(col_scores)
-            avg_pct = (avg_score / max_pts) if avg_score is not None and max_pts else None
             pct = (score / max_pts) if score is not None and max_pts else None
             sec_data[sec] = {
                 "score": score,
                 "max": max_pts,
                 "pct": pct,
-                "country_avg_score": avg_score,
-                "country_avg_pct": avg_pct,
+                "country_avg_score": None,
+                "country_avg_pct": None,
             }
 
         q_data: dict[str, dict[str, float | None]] = {}
@@ -306,7 +421,7 @@ def extract_result_report(
                 "score": score,
                 "max": max_pts,
                 "pct": pct,
-                "country_avg_pct": q_country_avg.get(qid),
+                "country_avg_pct": None,
             }
 
         if total is None:
@@ -348,13 +463,80 @@ def extract_result_report(
             )
         )
 
-    # Second pass: country averages need all resolved totals (already filled above
-    # only if we iterate once — fix averages now that dict is complete).
-    country_avg_total = _avg([resolved_totals[dc] for dc in dealer_cols])
-    country_avg_pct = _avg([resolved_pcts[dc] for dc in dealer_cols])
-    for rec in records:
+    e_out_of_avg_cols = _apply_section_e_policy(
+        records, dealers, resolved_totals, resolved_pcts
+    )
+
+    # Average basis (Tomoe Baumann MIDI rule):
+    # IT/CH = all dealers in (incl. zero shells); FR/ES = drop red-marked only;
+    # other markets = drop zero-score shells (hygiene).
+    red = load_red_marked_names().get(country, set())
+    included_cols: list[int] = []
+    excluded_cols: set[int] = set()
+    for col in dealer_cols:
+        name = name_by_col[col]
+        pct = resolved_pcts.get(col)
+        if country in AVG_ALL_IN:
+            included_cols.append(col)
+            continue
+        if country in AVG_EXCLUDE_RED:
+            if _norm_dealer_name(name) in red:
+                excluded_cols.add(col)
+            else:
+                included_cols.append(col)
+            continue
+        if not _is_scored_pct(pct):
+            excluded_cols.add(col)
+        else:
+            included_cols.append(col)
+
+    country_avg_total = _avg([resolved_totals[dc] for dc in included_cols])
+    country_avg_pct = _avg([resolved_pcts[dc] for dc in included_cols])
+
+    # Section averages on the same included set
+    sec_avg_score: dict[str, float | None] = {}
+    sec_avg_pct: dict[str, float | None] = {}
+    for sec, by_col in section_scores.items():
+        max_pts = section_max.get(sec)
+        scores = [
+            by_col.get(dc)
+            for dc in included_cols
+            if not (sec == "E" and dc in e_out_of_avg_cols)
+        ]
+        avg_score = _avg(scores)
+        sec_avg_score[sec] = avg_score
+        sec_avg_pct[sec] = (
+            (avg_score / max_pts) if avg_score is not None and max_pts else None
+        )
+
+    # Question averages on the same included set
+    q_country_avg: dict[str, float | None] = {}
+    for qid, row in question_rows:
+        max_pts = next((q["max"] for q in question_meta if q["id"] == qid), None)
+        pcts: list[float] = []
+        is_e = str(qid).upper().startswith("E")
+        for col in included_cols:
+            if is_e and col in e_out_of_avg_cols:
+                continue
+            score = (
+                _num(sh.cell_value(row.sheet_row, col))
+                if row.sheet_row is not None
+                else None
+            )
+            if score is None or not max_pts:
+                continue
+            pcts.append(score / max_pts)
+        q_country_avg[qid] = mean(pcts) if pcts else None
+
+    for rec, (col, _) in zip(records, dealers):
         rec.country_avg_total = country_avg_total
         rec.country_avg_pct = country_avg_pct
+        rec.excluded_from_average = col in excluded_cols
+        for sec, block in rec.sections.items():
+            block["country_avg_score"] = sec_avg_score.get(sec)
+            block["country_avg_pct"] = sec_avg_pct.get(sec)
+        for qid, block in rec.questions.items():
+            block["country_avg_pct"] = q_country_avg.get(qid)
 
     return country, records, sections_meta, question_meta
 
@@ -382,6 +564,68 @@ def discover_result_reports(reports_dir: Path) -> list[Path]:
         elif stem_label != label and prev_stem != label and path.name < prev.name:
             best[label] = path
     return sorted(best.values(), key=lambda p: p.name.casefold())
+
+
+def _section_e_network_meta(all_dealers: list[dict[str, Any]]) -> dict[str, Any]:
+    """Hover copy + excluded-customer record for network averages."""
+    by_c: dict[str, dict[str, int]] = {}
+    for d in all_dealers:
+        c = d.get("country") or "?"
+        fill = ((d.get("sections") or {}).get("E") or {}).get("fill")
+        row = by_c.setdefault(c, {"n": 0, "not_scored": 0, "blank": 0, "scored": 0})
+        row["n"] += 1
+        if fill == "not_scored":
+            row["not_scored"] += 1
+        elif fill == "blank":
+            row["blank"] += 1
+        elif fill == "scored":
+            row["scored"] += 1
+
+    excluded: list[dict[str, Any]] = []
+    il = by_c.get("Israel LCV") or {}
+    if il.get("not_scored"):
+        excluded.append(
+            {
+                "country": "Israel LCV",
+                "customer": "UMI",
+                "fill": "not_scored",
+                "dealers": il["not_scored"],
+                "questions": 18,
+                "points": 27,
+                "reason": (
+                    "Section E was not assessed. 0/18 questions, 0/27 points. "
+                    "Not a vehicle-sales fail."
+                ),
+            }
+        )
+    uk = by_c.get("UK LCV") or {}
+    if uk.get("blank"):
+        excluded.append(
+            {
+                "country": "UK LCV",
+                "customer": "IUK",
+                "fill": "blank",
+                "dealers": uk["blank"],
+                "reason": (
+                    "Dealers left Section E empty (blank, not zero) and are "
+                    "omitted from the Section E average only."
+                ),
+            }
+        )
+
+    hover = (
+        "Anonymous full-network average after the France/Spain red-mark rule "
+        "(20 + 5 dealers out of the average; Italy and Switzerland keep everyone in). "
+        "Section E for Israel LCV (UMI) is not scored — 29 dealers, 18 questions / "
+        "27 points, fill not_scored — and is excluded from this average. "
+        "0/27 is not a vehicle-sales fail. Israel LCV totals are A–D only (max 253). "
+        "UK LCV: 3 dealers blank on E (omitted from Section E only)."
+    )
+    return {
+        "excluded_customers": excluded,
+        "by_country": by_c,
+        "hover": hover,
+    }
 
 
 def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:
@@ -419,9 +663,14 @@ def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:
                     "address": rec.address,
                     "total": rec.total,
                     "total_pct": rec.total_pct,
+                    "total_max": rec.total_max,
+                    "score_basis": rec.score_basis,
+                    "raw_total": rec.raw_total,
+                    "raw_total_pct": rec.raw_total_pct,
                     "country_avg_total": rec.country_avg_total,
                     "country_avg_pct": rec.country_avg_pct,
                     "totals_only": rec.totals_only,
+                    "excluded_from_average": rec.excluded_from_average,
                     "sections": rec.sections,
                 }
             )
@@ -460,28 +709,35 @@ def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:
             if isinstance(sec, dict):
                 sec.setdefault("network_avg_pct", None)
 
+    def _in_average(d: dict[str, Any]) -> bool:
+        """Trust extract flags (IT/CH all-in may include zero-score shells)."""
+        return not d.get("excluded_from_average")
+
     def profile_for(dealer_list: list[dict[str, Any]]) -> dict[str, Any]:
+        basis = [d for d in dealer_list if _in_average(d)]
         sec_pct: dict[str, float | None] = {}
         for sid in section_order:
             vals = [
                 d["sections"][sid]["pct"]
-                for d in dealer_list
+                for d in basis
                 if sid in d.get("sections", {})
                 and d["sections"][sid].get("pct") is not None
             ]
             sec_pct[sid] = mean(vals) if vals else None
-        tvals = [d["total_pct"] for d in dealer_list if d.get("total_pct") is not None]
+        tvals = [d["total_pct"] for d in basis if d.get("total_pct") is not None]
         return {
             "total_pct": mean(tvals) if tvals else None,
             "sections_pct": sec_pct,
+            "avg_basis_count": len(basis),
         }
 
     def question_profile(dealer_list: list[dict[str, Any]]) -> list[float | None]:
+        basis = [d for d in dealer_list if _in_average(d)]
         out: list[float | None] = []
         for i in range(len(question_ids)):
             vals = [
                 d["q"][i]
-                for d in dealer_list
+                for d in basis
                 if isinstance(d.get("q"), list)
                 and i < len(d["q"])
                 and d["q"][i] is not None
@@ -494,17 +750,32 @@ def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:
         subset = [d for d in all_dealers if d["country"] == c]
         country_profiles[c] = {
             "dealer_count": len(subset),
+            "excluded_from_average_count": sum(
+                1 for d in subset if d.get("excluded_from_average")
+            ),
             **profile_for(subset),
             "q_pct": question_profile(subset),
         }
 
-    scored_for_network = [
-        d for d in all_dealers if not d.get("totals_only") and d.get("q") is not None
-    ]
+    scored_for_network = [d for d in all_dealers if _in_average(d)]
+    section_e_meta = _section_e_network_meta(all_dealers)
+    for c, prof in country_profiles.items():
+        if c == "Israel LCV":
+            prof["score_basis"] = "A-D"
+            prof["section_e_fill"] = "not_scored"
+            prof["avg_hover"] = (
+                "Israel LCV national average is A–D only (max 253). "
+                "Section E is recorded as not scored (29 dealers, 0/18 questions, "
+                "0/27 points, fill not_scored) and is excluded from this average. "
+                "0/27 is not a vehicle-sales fail. The operating gap is Section D "
+                "(Parts), not vehicle sales."
+            )
     network = {
         "dealer_count": len(all_dealers),
         **profile_for(all_dealers),
         "q_pct": question_profile(scored_for_network or all_dealers),
+        "section_e": section_e_meta,
+        "avg_hover": section_e_meta["hover"],
     }
 
     # Stamp network section avg onto each dealer section block

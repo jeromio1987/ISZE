@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ISZE Tender Engine — SteerCo briefing</title>
+<style>
+:root{
+  --navy:#15233c; --navy2:#1a2b4a; --navy3:#2b4a78;
+  --paper:#f7f4ee; --ink:#222; --terra:#c0552d;
+  --muted:#5a6578; --line:#d8d2c6; --ok:#2f6b4f; --warn:#8a6a1f;
+  --pale:#eef3f9; --white:#fff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#0e1828;color:var(--ink);
+  font-family:"Segoe UI",Helvetica,Arial,sans-serif;line-height:1.45;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;margin:0;color:var(--navy);font-weight:400}
+.deck{max-width:1120px;margin:0 auto;padding:18px 14px 64px}
+.slide{
+  background:var(--paper);margin:0 0 16px;padding:36px 40px 32px;
+  min-height:640px;position:relative;box-shadow:0 8px 28px rgba(0,0,0,.28);
+  border:1px solid #0a1220;page-break-after:always;break-after:page;
+}
+.slide.cover{
+  background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);
+  color:var(--paper);min-height:700px;display:flex;flex-direction:column;justify-content:flex-end;
+}
+.slide.cover h1{color:#fff;font-size:2.55rem;line-height:1.1;max-width:18ch}
+.slide.cover .rule{width:64px;height:3px;background:var(--terra);margin:18px 0 16px}
+.slide.cover .sub{color:#c5d0e0;font-size:1.05rem;max-width:52ch;margin:0 0 28px}
+.slide.cover .meta{font-size:.82rem;color:#9aabbf;margin-top:auto;padding-top:24px}
+.kicker{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);margin:0 0 10px;font-family:"Segoe UI",sans-serif;font-weight:700}
+.slide.cover .kicker{color:#f0c4b4}
+.sn{position:absolute;top:18px;right:22px;font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.slide.cover .sn{color:#9aabbf}
+h2.sec{font-size:1.65rem;margin:0 0 6px;padding-bottom:8px;border-bottom:2px solid var(--navy);display:inline-block}
+h2.sec .no{color:var(--terra);margin-right:6px}
+.lead{color:var(--muted);font-size:.95rem;margin:8px 0 18px;max-width:68ch}
+.callout{
+  border-left:4px solid var(--terra);background:#fff;padding:14px 16px;margin:0 0 16px;
+  font-size:.95rem;max-width:72ch;
+}
+.callout.navy{border-left-color:var(--navy)}
+.callout.ok{border-left-color:var(--ok)}
+.callout.warn{border-left-color:var(--warn);background:#fff8e8}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.kpi{
+  background:#fff;border:1px solid var(--line);padding:14px 14px 12px;
+  border-top:3px solid var(--navy);position:relative;cursor:help;
+}
+.kpi.terra{border-top-color:var(--terra)}
+.kpi.ok{border-top-color:var(--ok)}
+.kpi.warn{border-top-color:var(--warn)}
+.kpi .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.kpi .val{font-family:Georgia,serif;font-size:1.75rem;color:var(--navy);margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .sub{font-size:.75rem;color:var(--muted);margin-top:4px;line-height:1.35}
+.tip{
+  display:none;position:absolute;left:8px;right:8px;top:100%;z-index:50;margin-top:6px;
+  background:var(--navy);color:var(--paper);padding:10px 12px;font-size:.75rem;line-height:1.4;
+  border-top:3px solid var(--terra);box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+.kpi:hover .tip{display:block}
+.card{
+  background:#fff;border:1px solid var(--line);padding:14px 16px;
+}
+.card h3{font-size:1.05rem;margin:0 0 8px;color:var(--navy)}
+.card p,.card li{font-size:.9rem;margin:0 0 6px;color:var(--ink)}
+.card ul{margin:6px 0 0;padding-left:1.15em}
+table{width:100%;border-collapse:collapse;font-size:.86rem;margin:8px 0 4px;background:#fff}
+th{
+  background:var(--navy2);color:var(--paper);text-align:left;padding:9px 10px;
+  font-size:.72rem;text-transform:uppercase;letter-spacing:.03em;font-weight:600;
+}
+td{padding:8px 10px;border-bottom:1px solid var(--line);color:var(--ink);background:#fff}
+tbody tr:nth-child(even) td{background:var(--paper)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{
+  display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;padding:2px 7px;margin-right:4px;
+}
+.tag.ok{background:#e4f0e9;color:var(--ok)}
+.tag.wait{background:#f5ecd2;color:var(--warn)}
+.tag.ask{background:var(--navy);color:var(--paper)}
+.tag.dark{background:#e8e4dc;color:var(--muted)}
+.tag.terra{background:#f3ddd4;color:var(--terra)}
+.layers{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:stretch;margin:16px 0}
+.layer{
+  background:#fff;border:1px solid var(--line);padding:16px 14px;text-align:center;
+}
+.layer .who{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.layer .n{font-family:Georgia,serif;font-size:1.9rem;color:var(--navy);margin:8px 0 4px}
+.layer.a .n{color:var(--ok)}
+.layer.b .n{color:var(--navy3)}
+.layer.c .n{color:var(--terra)}
+.layer .desc{font-size:.78rem;color:var(--muted);line-height:1.35}
+.neq{font-family:Georgia,serif;font-size:1.6rem;color:var(--terra);align-self:center;font-weight:700}
+.barrow{margin:12px 0 4px}
+.barrow .row{display:grid;grid-template-columns:140px 1fr 56px;gap:10px;align-items:center;margin:7px 0;font-size:.85rem}
+.barrow .lab{color:var(--navy);font-weight:600}
+.barrow .track{background:#e4dfd6;height:22px;position:relative}
+.barrow .fill{height:100%;background:var(--navy)}
+.barrow .fill.terra{background:var(--terra)}
+.barrow .fill.ok{background:var(--ok)}
+.barrow .fill.muted{background:#9aa3b2}
+.barrow .pct{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted);font-size:.8rem}
+.foot{
+  margin-top:22px;padding-top:10px;border-top:1px solid var(--line);
+  font-size:.72rem;color:var(--muted);line-height:1.45;
+}
+.ask-box{
+  background:var(--navy);color:var(--paper);padding:18px 20px;margin:14px 0 0;
+}
+.ask-box h3{color:#fff;margin:0 0 10px;font-size:1.15rem}
+.ask-box ol{margin:0;padding-left:1.2em;font-size:.92rem}
+.ask-box li{margin:8px 0}
+.ask-box strong{color:#fff}
+.navfix{
+  position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:100;
+  background:rgba(21,35,60,.94);color:var(--paper);padding:8px 14px;border-radius:2px;
+  font-size:.78rem;display:flex;gap:12px;align-items:center;box-shadow:0 4px 16px rgba(0,0,0,.35);
+}
+.navfix button{
+  background:transparent;border:1px solid #4a5d78;color:var(--paper);
+  padding:4px 10px;cursor:pointer;font-size:.78rem;
+}
+.navfix button:hover{border-color:var(--terra);color:#fff}
+.two-col{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;margin-top:8px}
+.checklist{list-style:none;padding:0;margin:8px 0 0}
+.checklist li{
+  padding:10px 12px;margin:0 0 8px;background:#fff;border:1px solid var(--line);
+  border-left:4px solid var(--navy);font-size:.9rem;
+}
+.checklist li.in{border-left-color:var(--ok)}
+.checklist li.out{border-left-color:var(--terra)}
+.dash-mock{
+  border:1px solid var(--line);background:#fff;padding:0;overflow:hidden;
+}
+.dash-tabs{display:flex;background:var(--navy);flex-wrap:wrap}
+.dash-tabs span{
+  color:#c5d0e0;font-size:.72rem;padding:10px 12px;border-right:1px solid #2a3d5c;
+  font-family:"Segoe UI",sans-serif;
+}
+.dash-tabs span.on{background:var(--terra);color:#fff}
+.dash-body{padding:12px 14px}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{
+  font-size:.72rem;background:var(--pale);color:var(--navy);border:1px solid var(--line);
+  padding:4px 8px;
+}
+.chip.terra{background:#f3ddd4;color:var(--terra);border-color:#e2b8a6}
+.mini-table{font-size:.75rem}
+.mini-table th{padding:6px 8px}
+.mini-table td{padding:5px 8px}
+.eq-line{
+  text-align:center;font-family:Georgia,serif;font-size:1.15rem;color:var(--navy);
+  margin:10px 0 4px;letter-spacing:.02em;
+}
+.eq-line em{color:var(--terra);font-style:normal;font-weight:700}
+@media print{
+  body{background:#fff}
+  .navfix{display:none}
+  .slide{box-shadow:none;margin:0;border:none;min-height:0}
+  .tip{display:none!important}
+}
+@media (max-width:900px){
+  .layers{grid-template-columns:1fr;gap:10px}
+  .neq{display:none}
+  .grid2,.grid3,.grid4,.two-col{grid-template-columns:1fr}
+  .slide{padding:24px 18px;min-height:0}
+}
+</style>
+</head>
+<body>
+<div class="deck">
+
+<!-- ========== 1 COVER ========== -->
+<section class="slide cover" id="s1" data-title="Cover">
+  <div class="sn">1 / 9</div>
+  <p class="kicker">ISZE · Steering Committee</p>
+  <h1>Tender Engine</h1>
+  <div class="rule"></div>
+  <p class="sub">Public-procurement radar for Isuzu commercial vehicles and aftersales — live coverage, honest layers, clear asks.</p>
+  <p class="meta">
+    Snapshot freeze: <strong style="color:#fff">2026-08-25 19:50 Europe/Berlin</strong>
+    · Live desk: <strong style="color:#fff">326 notices / 291 opps</strong>
+    · Source: overnight engine runlog + v4 JSON<br/>
+    Figures refresh as national portals come online. Stated fleet ≠ market potential.
+  </p>
+</section>
+
+<!-- ========== 2 WHY ========== -->
+<section class="slide" id="s2" data-title="Why we built this">
+  <div class="sn">2 / 9</div>
+  <p class="kicker">Story · 01</p>
+  <h2 class="sec"><span class="no">01</span> Why we built this</h2>
+  <p class="lead">Public buyers across the ISZE footprint publish LCV / truck and fleet R&amp;M notices every week. Until now there was no single Isuzu-relevant desk that turns that stream into actionable opportunities.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>The problem</h3>
+      <ul>
+        <li>Tenders launch on <strong>TED</strong> (above threshold) and on <strong>national portals</strong> (most below-threshold volume).</li>
+        <li>Noise is high: passenger cars, SEND/route transport, tyres, postal panel vans.</li>
+        <li>GPS / MAP conversation needs a real buyer + geography + dealer path — not a scraped pile.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>What the engine is</h3>
+      <ul>
+        <li>A rolling ~30-day scrape across TED + wired national feeds.</li>
+        <li>An Isuzu selection gate + product-fit gate so the desk shows CV that matters.</li>
+        <li>GPS € only when fleet is stated <em>and</em> the buy is pickup/truck-shaped with a real distributor map.</li>
+        <li>IDS dealer linkage for country → distributor → dealer (real rankings only).</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">
+    <strong>SteerCo framing:</strong> this is a radar and a desk — not a forecast of network sales, and not a claim that stated fleet units equal addressable market.
+  </div>
+  <p class="foot">Live working surface: Install v4 opportunity dashboard (six tabs). This pack is the narrative layer for decision-makers.</p>
+</section>
+
+<!-- ========== 3 FOR US ========== -->
+<section class="slide" id="s3" data-title="What for us means">
+  <div class="sn">3 / 9</div>
+  <p class="kicker">Story · 02</p>
+  <h2 class="sec"><span class="no">02</span> What “for us” means</h2>
+  <p class="lead">If it is not an Isuzu play, it must not clutter the desk. GPS-null alone is not enough — postal panel vans leave entirely.</p>
+  <div class="grid2">
+    <div>
+      <ul class="checklist">
+        <li class="in"><strong>IN — Pickup / D-Max-shaped</strong><br/>Core product. GPS € allowed when fleet + map exist.</li>
+        <li class="in"><strong>IN — Truck / chassis cab / tipper</strong><br/>N-Series-shaped commercial vehicles. Same GPS rule.</li>
+        <li class="in"><strong>IN — Real fleet R&amp;M / parts</strong><br/>Aftersales desk when not a postal org and not a panel-van buy.</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="checklist">
+        <li class="out"><strong>OUT — Postal / courier panel vans</strong><br/>Poșta Română-style utilitare, Transporter / Kastenwagen / bestelwagen fleets. Buyers of Ford / Fiat / Stellantis / VW vans — not Isuzu exclusive play.</li>
+        <li class="out"><strong>OUT — Passenger / SEND / route</strong><br/>CPV 600…, taxi, buses, client transport.</li>
+        <li class="out"><strong>OUT — Pure tyres / towing / specials</strong><br/>Noise gate before the desk.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid3" style="margin-top:8px">
+    <div class="kpi ok">
+      <div class="lbl">Desk default filter</div>
+      <div class="val" style="font-size:1.35rem">CV</div>
+      <div class="sub">Pickup + truck only</div>
+      <div class="tip">Product filter defaults to CV (pickup + truck). Search term “CV” does the same. “All segments” remains for audit only.</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">lcv_van on desk (this snap)</div>
+      <div class="val">3</div>
+      <div class="sub">Parts-only survivors</div>
+      <div class="tip">Hard not-for-us gate removed postal panel-van buys. Remaining lcv_van rows are rare parts-only survivors. Poșta Română is gone. Snapshot 2026-08-25 19:10.</div>
+    </div>
+    <div class="kpi terra">
+      <div class="lbl">Aftersales hooks tagged</div>
+      <div class="val">54</div>
+      <div class="sub">R&amp;M / parts / service language</div>
+      <div class="tip">Count of opportunities where notice text matched aftersales language (repair_maintenance, parts, service_contract). Never invented — empty when vehicles-only. Snapshot 2026-08-25 19:50 · overnight freeze.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 4 THREE LAYERS ========== -->
+<section class="slide" id="s4" data-title="Three layers">
+  <div class="sn">4 / 9</div>
+  <p class="kicker">Story · 03 · Commercial honesty</p>
+  <h2 class="sec"><span class="no">03</span> Three layers — never conflate</h2>
+  <p class="lead">The engine once risked celebrating a tiny extract number as if it were Isuzu market potential. That must not happen again.</p>
+  <div class="layers">
+    <div class="layer a kpi" style="cursor:help;border-top:3px solid var(--ok)">
+      <div class="who">Layer (a) · Network</div>
+      <div class="n">~20k / ~78k</div>
+      <div class="desc">Indicative annual LCV / CV network sales. Not from this scrape. Ask if stale.</div>
+      <div class="tip">Jerome / ISZE order-of-magnitude annual volumes for sanity only. Independent of tender extract. Do not equate to stated fleet or tender count.</div>
+    </div>
+    <div class="neq">≠</div>
+    <div class="layer b kpi" style="cursor:help;border-top:3px solid var(--navy3)">
+      <div class="who">Layer (b) · Captured</div>
+      <div class="n">215</div>
+      <div class="desc">CV tenders in feed (pickup + truck) of 291 opportunities.</div>
+      <div class="tip">Count of opportunities with product_segment pickup or truck after Isuzu + not-for-us gates. Most lack a published fleet count. Freeze 326 notices / 291 opps · overnight runlog + v4.</div>
+    </div>
+    <div class="neq">≠</div>
+    <div class="layer c kpi" style="cursor:help;border-top:3px solid var(--terra)">
+      <div class="who">Layer (c) · Stated fleet</div>
+      <div class="n">174</div>
+      <div class="desc">Sum of fleet counts printed on pickup/truck notices we extract (17 notices).</div>
+      <div class="tip">vehicles_pickup_truck = sum(fleet_size) where extract exists AND segment ∈ {pickup, truck}. Null omitted. Extract-subset only — NOT market potential, NOT addressable market, NOT annual demand. DE OV large extracts dominate this snap. 174 ≠ CV count ≠ ~78k.</div>
+    </div>
+  </div>
+  <p class="eq-line"><em>174</em> stated fleet units ≠ CV tender count ≠ <em>~78k</em> CV / year</p>
+  <div class="callout warn">
+    <strong>Read correctly:</strong> (c) ≪ (a) by far more than 10×. That is a <strong>coverage gap</strong>, not proof of a tiny Isuzu market. Overnight DE Open Data already lifted (c) from the earlier “18” extract — still an extract-subset, still not demand.
+  </div>
+  <div class="grid3">
+    <div class="kpi">
+      <div class="lbl">Opportunities (all seg.)</div>
+      <div class="val">291</div>
+      <div class="sub">Post gate · desk defaults to CV</div>
+      <div class="tip">Opportunity families after Isuzu selection + not-for-us. Includes weak / rm_only for audit; product filter CV focuses the desk. Freeze 326 notices / 291 opps · overnight runlog.</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">GPS € / yr (sized)</div>
+      <div class="val">~€37.2k</div>
+      <div class="sub">10 rows · product-fit only</div>
+      <div class="tip">Addressable parts wallet if won — pickup/truck with stated fleet and distributor SPU map. Null ≠ €0. Not expected revenue. Not network sales. Overnight freeze ~€37.2k (10 rows).</div>
+    </div>
+    <div class="kpi warn">
+      <div class="lbl">Rows with any fleet extract</div>
+      <div class="val">21</div>
+      <div class="sub">~8% of opportunities</div>
+      <div class="tip">List feeds rarely publish fleet counts. Wiring more portals raises notice volume; it does not put a fleet number on every row. Snapshot stats.rows_with_fleet ≈ 21 · freeze pack.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 5 COVERAGE ========== -->
+<section class="slide" id="s5" data-title="Coverage reality">
+  <div class="sn">5 / 9</div>
+  <p class="kicker">Story · 04 · Why numbers look small</p>
+  <h2 class="sec"><span class="no">04</span> Coverage reality</h2>
+  <p class="lead">TED covers above-threshold EU/EEA. Most below-threshold national buys never appear on TED. National LIVE share of the 29-country footprint is still a minority.</p>
+  <div class="grid4">
+    <div class="kpi ok">
+      <div class="lbl">National LIVE</div>
+      <div class="val">~55%</div>
+      <div class="sub">16 / 29 countries</div>
+      <div class="tip">UK, NL, BE, IL, FR, PL, IT, DE, RO, AT, NO, FI, DK, PT, BG, CZ. Was ~52% before CZ. Portal map + overnight runlog 2026-08-25 20:20. Still a minority of the footprint.</div>
+    </div>
+    <div class="kpi warn">
+      <div class="lbl">CODE_READY</div>
+      <div class="val">~7%</div>
+      <div class="sub">ES WAF · LT apiKey</div>
+      <div class="tip">Fetcher known; blocked on WAF session (ES) or VPT apiKey (LT). Nordics keys DONE — NO/FI national feeds are live. PT/BG/CZ LIVE. Not inventing portals.</div>
+    </div>
+    <div class="kpi terra">
+      <div class="lbl">DARK national</div>
+      <div class="val">~38%</div>
+      <div class="sub">TED-only below threshold</div>
+      <div class="tip">Share of footprint countries with no national fetcher — SK, HU, IE, SE, HR, SI, Baltics, GR, CY, MT (RO+AT+NO+FI+DK+PT+BG+CZ now LIVE). Portal map + overnight runlog 2026-08-25 (CZ LIVE).</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Lead coverage (est.)</div>
+      <div class="val">35–55%</div>
+      <div class="sub">Isuzu-relevant stream</div>
+      <div class="tip">Estimated share of addressable public notices we see in the ISZE footprint. Confidence Medium. Strong on TED above-threshold; weak where national portals are dark. Not GPS-sized share.</div>
+    </div>
+  </div>
+  <div class="barrow">
+    <div class="row"><div class="lab">National LIVE</div><div class="track"><div class="fill ok" style="width:55%"></div></div><div class="pct">55%</div></div>
+    <div class="row"><div class="lab">CODE_READY</div><div class="track"><div class="fill terra" style="width:7%"></div></div><div class="pct">7%</div></div>
+    <div class="row"><div class="lab">DARK (TED-only)</div><div class="track"><div class="fill muted" style="width:38%"></div></div><div class="pct">38%</div></div>
+  </div>
+  <h3 style="font-size:1.05rem;margin:18px 0 8px">Portal roadmap (wire order)</h3>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Portal</th><th>Country</th><th>Status</th><th>Why it matters</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>PLACSP Atom / open data</td><td>ES</td><td><span class="tag wait">CODE_READY</span></td><td>Large below-threshold market · WAF on this runner</td></tr>
+      <tr><td>2</td><td>oeffentlichevergabe Open Data</td><td>DE</td><td><span class="tag ok">LIVE</span></td><td>545 pre-gate → 41 gated merged · largest DACH lift</td></tr>
+      <tr><td>3</td><td>SEAP / e-licitatie</td><td>RO</td><td><span class="tag ok">LIVE</span></td><td>147 pre-gate → 13 gated · CEE volume</td></tr>
+      <tr><td>4</td><td>USP Ausschreibungssuche</td><td>AT</td><td><span class="tag ok">LIVE</span></td><td>23 matches → 4 gated · CPV-filtered JSON API</td></tr>
+      <tr><td>5</td><td>Doffin Public API</td><td>NO</td><td><span class="tag ok">LIVE</span></td><td>Keys DONE · 37→11 gated · do not re-ask Jerome</td></tr>
+      <tr><td>6</td><td>HILMA AVP-Read</td><td>FI</td><td><span class="tag ok">LIVE</span></td><td>Keys DONE · gated CV thin · do not re-ask Jerome</td></tr>
+      <tr><td>7</td><td>udbud.dk MitUdbud</td><td>DK</td><td><span class="tag ok">LIVE</span></td><td>6→4 gated · public soegeresultat POST</td></tr>
+      <tr><td>8</td><td>Next unlocks</td><td>ES / HU / IE / SE</td><td><span class="tag wait">WAF / BLOCKED</span></td><td>ES egress · EKR · OGP · paid SE DBs</td></tr>
+    </tbody>
+  </table>
+  <p class="foot">IT PNCP already LIVE (gate-tight). Source health + country portal map are the canonical evidence — not a vanity chart.</p>
+</section>
+
+<!-- ========== 6 DASHBOARD ========== -->
+<section class="slide" id="s5b" data-title="Live dashboard">
+  <div class="sn">6 / 9</div>
+  <p class="kicker">Story · 05 · Working surface</p>
+  <h2 class="sec"><span class="no">05</span> Live dashboard walkthrough</h2>
+  <p class="lead">Self-contained v4 opportunity dashboard — offline, light theme, six tabs. Demo from the Install folder after this briefing.</p>
+  <div class="two-col">
+    <div>
+      <div class="dash-mock">
+        <div class="dash-tabs">
+          <span class="on">Opportunities</span>
+          <span>How tenders work</span>
+          <span>By market</span>
+          <span>Sources / health</span>
+          <span>Method / scoring</span>
+          <span>Export / Data</span>
+        </div>
+        <div class="dash-body">
+          <div class="chip-row">
+            <span class="chip terra">Stated fleet p+t · 174</span>
+            <span class="chip">CV filter · ON</span>
+            <span class="chip">Aftersales · 54</span>
+            <span class="chip">IDS dealers · 519</span>
+          </div>
+          <table class="mini-table">
+            <thead><tr><th>Filter</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td><strong>CV</strong></td><td>Pickup + truck shortlist (default)</td></tr>
+              <tr><td>Search <code>CV</code></td><td>Same as product filter CV</td></tr>
+              <tr><td>Aftersales</td><td>Any aftersales tag on the notice</td></tr>
+              <tr><td>Has GPS €</td><td>Sized wallet rows only</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin:0">
+        <h3>What to show SteerCo</h3>
+        <ol style="margin:0;padding-left:1.15em;font-size:.9rem">
+          <li style="margin:6px 0"><strong>Opportunities</strong> — hero KPIs with hover tooltips; CV filter on; Selective / Watch shortlist.</li>
+          <li style="margin:6px 0"><strong>Aftersales chips</strong> — R&amp;M / parts language surfaced without inventing contracts.</li>
+          <li style="margin:6px 0"><strong>IDS dealer column</strong> — country_primary or geo_nearest from 519 real IDS dealers; Germany stays distributor-only until a DE ranking file exists.</li>
+          <li style="margin:6px 0"><strong>Sources / health</strong> — OK vs CODE_READY vs RETIRED (Nordics no longer AWAITING_KEY; no fake “broken”).</li>
+          <li style="margin:6px 0"><strong>How tenders work</strong> — three-layer honesty baked into the product UI.</li>
+        </ol>
+      </div>
+      <div class="grid2" style="margin-top:10px">
+        <div class="kpi">
+          <div class="lbl">IDS mapped</div>
+          <div class="val" style="font-size:1.4rem">128</div>
+          <div class="sub">86 primary · 42 geo</div>
+          <div class="tip">Opportunities with ids_match_method country_primary or geo_nearest. 96 remain unmapped (often DE / markets without IDS tab). Real rankings only — never invented outlets. Snapshot 2026-08-25.</div>
+        </div>
+        <div class="kpi warn">
+          <div class="lbl">IDS unmapped</div>
+          <div class="val" style="font-size:1.4rem">96</div>
+          <div class="sub">incl. DE without dealer sheet</div>
+          <div class="tip">No yaml distributor or no IDS dealers for that country. Germany GPS distributor still shows; dealer fields stay unmapped until a DE ranking workbook is provided.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="foot">Open: <code>ISZE\04_tools\ISZE_Tender_Monitor_Install\OPEN_isze_dashboard_v4_opportunity.cmd</code></p>
+</section>
+
+<!-- ========== 7 ASKS ========== -->
+<section class="slide" id="s6" data-title="Asks">
+  <div class="sn">7 / 9</div>
+  <p class="kicker">Story · 06 · Decisions</p>
+  <h2 class="sec"><span class="no">06</span> Asks</h2>
+  <p class="lead">Three concrete asks. Everything else is maintain / probe — not a new product pitch.</p>
+  <div class="ask-box">
+    <h3>SteerCo / Jerome</h3>
+    <ol>
+      <li>
+        <strong>Next portals (Nordics keys DONE — do not re-ask):</strong>
+        unblock <strong>ES PLACSP</strong> (WAF / egress), keep DE OV healthy, then P1 probes
+        <strong>HU · IE · SE BLOCKED; PT already LIVE</strong> (RO SEAP / AT USP / NO Doffin / FI HILMA / DK udbud already LIVE).
+      </li>
+      <li>
+        <strong>UMI / IEC geo:</strong>
+        Domestic IEC supplier tenders are <strong>GEO_BLOCKED</strong> from abroad.
+        UMI Electric Company vehicle tender is still a <strong>Bart / UMI open item</strong> — not a row in the radar.
+        Need an IL-side view or UMI confirmation; do not invent a FOUND notice.
+      </li>
+      <li>
+        <strong>Criticality reminder:</strong>
+        Stated fleet in captured notices ≠ network CV potential. Keep three-layer honesty on every external slide.
+      </li>
+    </ol>
+  </div>
+  <div class="grid3" style="margin-top:14px">
+    <div class="card">
+      <h3>Already LIVE</h3>
+      <p>DE OV, RO SEAP, AT USP, <strong>NO + FI</strong> (keys DONE), <strong>DK udbud</strong>, <strong>PT BASE</strong>, <strong>BG EOP</strong>, <strong>CZ VVZ</strong>. National LIVE ~55% (16/29). Stated fleet hero is extract-subset only.</p>
+    </div>
+    <div class="card">
+      <h3>Still CODE_READY (ES · LT)</h3>
+      <p>Spain PLACSP Atom/ZIP documented; this runner WAF-denied. Fetcher ready — needs Spanish egress. PT is LIVE via dados.gov (no IMPIC token).</p>
+    </div>
+    <div class="card">
+      <h3>Nordics keys</h3>
+      <p><strong>CLOSED.</strong> Do not ask Jerome to paste Doffin/HILMA keys again.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 8 APPENDIX METHOD ========== -->
+<section class="slide" id="s7" data-title="Appendix method">
+  <div class="sn">8 / 9</div>
+  <p class="kicker">Appendix · A</p>
+  <h2 class="sec"><span class="no">A</span> Method &amp; sources</h2>
+  <div class="grid2">
+    <div>
+      <h3 style="font-size:1.05rem;margin:0 0 8px">Method (short)</h3>
+      <table>
+        <tbody>
+          <tr><td>Lookback</td><td>~30 rolling days</td></tr>
+          <tr><td>Spine</td><td>TED Europa (29 ISO codes)</td></tr>
+          <tr><td>Gate</td><td>Isuzu selection → not-for-us → product-fit for GPS</td></tr>
+          <tr><td>Fleet KPI</td><td>Extract sum on pickup/truck only</td></tr>
+          <tr><td>GPS €</td><td>fleet × max wallet / UIO · capture uses actual SPU</td></tr>
+          <tr><td>Null rule</td><td>Null ≠ 0 · never invent dealers or €</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3 style="font-size:1.05rem;margin:0 0 8px">Source health (freeze)</h3>
+      <table>
+        <thead><tr><th>Source</th><th>Status</th><th class="num">Count</th></tr></thead>
+        <tbody>
+          <tr><td>TED Europa</td><td><span class="tag ok">OK</span></td><td class="num">605</td></tr>
+          <tr><td>Germany OV</td><td><span class="tag ok">OK</span></td><td class="num">545→41</td></tr>
+          <tr><td>FR BOAMP / PL BZP</td><td><span class="tag ok">OK</span></td><td class="num">52 / 38</td></tr>
+          <tr><td>IT PNCP</td><td><span class="tag ok">OK</span></td><td class="num">32</td></tr>
+          <tr><td>UK / NL / BE / IL</td><td><span class="tag ok">OK</span></td><td class="num">live</td></tr>
+          <tr><td>ES PLACSP</td><td><span class="tag wait">CODE_READY</span></td><td class="num">0</td></tr>
+          <tr><td>NO Doffin / FI HILMA</td><td><span class="tag ok">LIVE</span></td><td class="num">11 / 1</td></tr>
+          <tr><td>DK udbud</td><td><span class="tag ok">LIVE</span></td><td class="num">6→4</td></tr>
+          <tr><td>IEC domestic</td><td><span class="tag dark">GEO_BLOCKED</span></td><td class="num">—</td></tr>
+          <tr><td>DTVP / old RSS</td><td><span class="tag dark">RETIRED</span></td><td class="num">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="callout navy" style="margin-top:14px">
+    <strong>Stated fleet by market (pickup/truck extract):</strong>
+    Germany 148 · Poland 17 · France 7 · Norway 1 · Romania 1 · Italy 0 —
+    dominated by a few DE notices (incl. a large conservation framework). Still layer (c), not demand.
+  </div>
+  <p class="foot">Canonical papers live in the Install folder: criticality protocol · country portal map · coverage dark map · addressable vehicles · not-for-us gate · overnight runlog.</p>
+</section>
+
+<!-- ========== 9 APPENDIX NOT FOR US ========== -->
+<section class="slide" id="s8" data-title="Appendix gate">
+  <div class="sn">9 / 9</div>
+  <p class="kicker">Appendix · B</p>
+  <h2 class="sec"><span class="no">B</span> Not-for-us gate</h2>
+  <p class="lead">Hard drop — not “show with GPS null.” Postal / courier panel vans waste operator time even as empty leads.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Dropped examples</h3>
+      <ul>
+        <li>C.N. POSTA ROMANA S.A. — utilitare / leasing panel vans</li>
+        <li>DE “Transporter” / Kastenwagen fleets</li>
+        <li>Bestelwagen / furgon pure panel buys</li>
+        <li>TED “Vans” pure panel fleets without truck-shape signal</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Same-feed effect (documented)</h3>
+      <ul>
+        <li>Opportunities trimmed when gate applied (postal rows removed)</li>
+        <li>Desk default = <strong>CV (pickup + truck)</strong></li>
+        <li>This freeze: <strong>3</strong> lcv_van survivors (parts-only)</li>
+        <li>Complementary: product-fit blocks van GPS € even if a row survives</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout ok" style="margin-top:16px">
+    <strong>Freeze reminder:</strong> 174 stated fleet ≠ CV tenders ≠ ~78k CV/yr · national LIVE ~55% (16/29) with NO+FI+DK+PT+BG+CZ in · notices 326 / opps 291 · Nordics keys CLOSED · UMI/IEC still geo / commercial follow-up — not a scraped FOUND.
+  </div>
+  <p class="foot">
+    Pack folder: <code>ISZE\09_meetings\Tender_Engine_SteerCo_20260826\</code>
+    · Speaker notes: <code>_PRESENTATION_SPEAKER_NOTES.md</code>
+    · Snapshot: 2026-08-25 19:50 Europe/Berlin · notices 326 / opps 291 · stated fleet p+t 174 · LIVE ~55%
+  </p>
+</section>
+
+</div>
+
+<div class="navfix" aria-label="Slide navigation">
+  <button type="button" id="prevBtn">← Prev</button>
+  <span id="posLabel">1 / 9</span>
+  <button type="button" id="nextBtn">Next →</button>
+  <span style="opacity:.7">Keys: ← → · Home · End</span>
+</div>
+
+<script>
+(function(){
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var i=0;
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides[i].scrollIntoView({behavior:'smooth',block:'start'});
+    document.getElementById('posLabel').textContent=(i+1)+' / '+slides.length;
+  }
+  document.getElementById('prevBtn').onclick=function(){go(i-1)};
+  document.getElementById('nextBtn').onclick=function(){go(i+1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();go(i+1)}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1)}
+    if(e.key==='Home'){e.preventDefault();go(0)}
+    if(e.key==='End'){e.preventDefault();go(slides.length-1)}
+  });
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        i=slides.indexOf(en.target);
+        document.getElementById('posLabel').textContent=(i+1)+' / '+slides.length;
+      }
+    });
+  },{threshold:0.55});
+  slides.forEach(function(s){obs.observe(s)});
+})();
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@ import pandas as pd
 from pathlib import Path
 
 for name in ["CY2023-2024.XLSX", "CY2025.XLSX"]:
-    p = Path(r"C:\Users\jerom\Desktop\claude\ISZE\Data\raw\sales") / name
+    p = Path(r"C:\Users\jerom\Desktop\claude\ISZE\01_data\12_raw\sales") / name
     xl = pd.ExcelFile(p)
     for sheet in xl.sheet_names:
         df = pd.read_excel(p, sheet_name=sheet, nrows=3)

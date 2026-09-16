@@ -13,7 +13,10 @@ st.set_page_config(
 # Constants
 # ──────────────────────────────────────────────────────────────────────────────
 DATA_FILE  = r"C:\Users\jerom\Desktop\claude\ISZJ master data competitive parts.xlsx"
-SALES_FILE = r"C:\Users\jerom\Desktop\claude\ISZE\Projects\Isuzu\data\sales_detailed_for_claude_full_fixed.tsv"
+# Canonical sales source = the verified pipeline parquet (DI-9 fix, 2026-08-20).
+# The legacy TSV (sales_detailed_for_claude_full_fixed.tsv) is stale/dead and
+# predates the CR/RE exclusion + fig_key + more-complete CY2025 rebuild.
+SALES_FILE = r"C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\sales_fact.parquet"
 
 PLOT_BG   = "#1a1a2e"
 PAPER_BG  = "#16213e"
@@ -52,7 +55,7 @@ def load_data() -> pd.DataFrame:
 
 @st.cache_data
 def load_sales() -> pd.DataFrame:
-    df = pd.read_csv(SALES_FILE, sep="\t", low_memory=False)
+    df = pd.read_parquet(SALES_FILE)
     df["billing_date"] = pd.to_datetime(df["billing_date"], errors="coerce")
 
     # Normalise part_number to clean integer string — same logic as load_data
@@ -65,6 +68,8 @@ def load_sales() -> pd.DataFrame:
             return str(v).strip()
 
     df["part_number"] = df["part_number"].apply(_norm_pno)
+    # sold_to arrives stringified ('2194.0') in the parquet — clean for display/grouping
+    df["sold_to"] = df["sold_to"].astype(str).str.replace(r"\.0$", "", regex=True)
     return df
 
 
@@ -353,7 +358,7 @@ if show_comp_share:
                 else "All dates"
             )
             st.caption(
-                f"Period: {period_str} · Source: sales_detailed_for_claude_full_fixed.tsv × ISZJ competitive parts catalog"
+                f"Period: {period_str} · Source: sales_fact.parquet (verified pipeline) × ISZJ competitive parts catalog"
             )
 
         except Exception as exc:

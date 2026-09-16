@@ -50,6 +50,12 @@ def load_rows_from_xlsx(path: Path) -> List[Dict[str, Any]]:
                 continue
             if str(row.get("Title", "")).lower().startswith("no "):
                 continue
+            # Placeholder rows from empty sheets: Source holds the empty_msg, Title blank
+            src = str(row.get("Source") or "")
+            if not row.get("Title") and src.lower().startswith("no "):
+                continue
+            if src.startswith("No results") or src.startswith("No Israel") or src.startswith("No Belgium") or src.startswith("No DE national") or src.startswith("No TenderNed"):
+                continue
             row["_source"] = source_label_from_sheet(sheet_name)
             rows.append(row)
     return rows
@@ -1478,13 +1484,37 @@ def build_dashboard_html(payload: Dict[str, Any]) -> str:
 
 
 def build_payload(raw_rows: List[Dict[str, Any]]) -> Dict[str, Any]:
-    notices = [normalize_raw_row(row, row.get("_source", "")) for row in raw_rows]
+    from isze_core_v3 import row_passes_isuzu_selection_gate
+
+    notices = []
+    dropped_gate = 0
+    for row in raw_rows:
+        norm = normalize_raw_row(row, row.get("_source", ""))
+        if not row_passes_isuzu_selection_gate(norm):
+            dropped_gate += 1
+            continue
+        notices.append(norm)
+    if dropped_gate:
+        print(f"[Isuzu gate] dropped {dropped_gate} notices (noise / no LCV-core signal)")
     opportunities = aggregate_opportunities(notices)
     payload = {
         "meta": meta_summary(notices, opportunities),
         "opportunities": [row_to_export(r) for r in opportunities],
         "notices": [row_to_export(r) for r in notices],
     }
+    try:
+        from gps_pms_linkage import enrich_payload
+
+        enrich_payload(payload)
+    except Exception as exc:
+        print(f"[GPS/PMS] linkage skipped: {exc}")
+    # Attach durable outcomes (Phase 5) without overwriting on rebuild
+    try:
+        from tender_outcomes import merge_outcomes_into_payload
+
+        merge_outcomes_into_payload(payload)
+    except Exception as exc:
+        print(f"[Outcomes] merge skipped: {exc}")
     return payload
 
 

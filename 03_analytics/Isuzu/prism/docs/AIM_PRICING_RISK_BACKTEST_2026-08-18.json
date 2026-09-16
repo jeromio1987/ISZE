@@ -1,0 +1,919 @@
+{
+  "generated_at_utc": "2026-08-18T10:51:27Z",
+  "verification_ok_cited": true,
+  "sales_source": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\sales_fact.parquet",
+  "complete_years": [
+    2023,
+    2024,
+    2025
+  ],
+  "excluded_partial_year": 2026,
+  "no_uio_excluded_from_gps_tests": [
+    "ARMENIA",
+    "KAZAKHSTAN",
+    "PALESTINE",
+    "UKRAINE"
+  ],
+  "clearing_rule": {
+    "rho_min": 0.47,
+    "mae_improve_min": 0.1,
+    "holdout": "2024 feature (lagged) \u2192 2025 outcome, UIO-ok DBs only",
+    "sign": "higher feature \u2192 worse GPS SPU / worse PMS capture (sign -1)"
+  },
+  "c1_survey_meta": {
+    "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\eucon_uk_survey_2023_price_gap.csv",
+    "n_pn": 34,
+    "vintage": [
+      "UK_IAM_PriceSurvey_2023"
+    ],
+    "probe_label": [
+      "Eucon UK IAM workshop 2023 (not 2026 street)"
+    ]
+  },
+  "partspool_meta_flag": {
+    "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\eucon_price_gap.csv",
+    "what": "PartsPool Autodoc DE/NO online IAM, 44 PNs",
+    "as_of": "2026-03-29",
+    "source_xlsx": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\_raw\\eucon_pricing_partspool_20260329.xlsx",
+    "not": "Not the 2023 UK/ITUK Price Survey. Do not label this file Eucon 2023.",
+    "countries": [
+      "DE",
+      "NO"
+    ],
+    "n_pns": 44,
+    "relabelled_at_utc": "2026-08-14T14:37:20Z",
+    "csv_untouched": true
+  },
+  "mekonomen": {
+    "n_rows": 67,
+    "n_pn": 7,
+    "filter_part_role_hits": 0,
+    "l1": {
+      "Body Exterior": 34,
+      "Brakes": 15,
+      "Wheels Hub": 11,
+      "Intake Exhaust Emission": 5,
+      "Driveline Axle": 2
+    },
+    "note": "Closed finding: Mekonomen is not a filter-PN index. 0 filter_part_role hits confirms AUTO365/proposal text."
+  },
+  "ks_diagnostic": {
+    "n_pn": 43,
+    "scraped_at_sample": [
+      "2026-08-10 07:09:14"
+    ],
+    "temporal": "2026-08 scrape \u2014 cannot forecast CY2025. Contemporaneous Spearman only.",
+    "spearman_2025_gps": {
+      "n": 18,
+      "rho": -0.4014,
+      "p": 0.0987
+    },
+    "spearman_2025_pms": {
+      "n": 18,
+      "rho": -0.5831,
+      "p": 0.0111
+    }
+  },
+  "partspool_diagnostic": {
+    "temporal": "PartsPool Autodoc DE/NO dated 2026-03-29, not Eucon UK 2023. Contemporaneous only.",
+    "n_pn": 44,
+    "spearman_2025_gps": {
+      "n": 17,
+      "rho": -0.2745,
+      "p": 0.2863
+    },
+    "spearman_2025_pms": {
+      "n": 17,
+      "rho": -0.2745,
+      "p": 0.2863
+    }
+  },
+  "aim_workbook": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\91_legacy\\Isuzu\\AIM_CY2025_Analysis.xlsx",
+  "demand_type_counts_parts_master": {
+    "Breakdown Repair": 1878,
+    "Unknown": 1443,
+    "Wear Repair": 521,
+    "Crash Body": 442,
+    "Review": 103,
+    "Maintenance": 99,
+    "Admin": 13,
+    "Logistics": 9,
+    "Accessory": 1
+  },
+  "c3_demand_join_rate_2025_median": 0.9998,
+  "incumbent_aim_high_risk_2025": {
+    "max": 0.0213,
+    "median": 0.0089,
+    "spearman_vs_gps": {
+      "n": 18,
+      "rho": -0.3375,
+      "p": 0.1708
+    },
+    "spearman_vs_pms": {
+      "n": 18,
+      "rho": -0.6821,
+      "p": 0.0018
+    },
+    "lagged_spearman_vs_gps": {
+      "n": 18,
+      "rho": -0.3779,
+      "p": 0.1221
+    },
+    "lagged_spearman_vs_pms": {
+      "n": 18,
+      "rho": -0.5679,
+      "p": 0.014
+    }
+  },
+  "persistence_2025": {
+    "gps": {
+      "n": 18,
+      "rho": 0.9216,
+      "p": 0.0
+    },
+    "pms_total": {
+      "n": 18,
+      "rho": 0.7482,
+      "p": 0.0004
+    }
+  },
+  "candidates": {
+    "C1_eucon_uk_2023_undercut": {
+      "label": "C1 lagged 2023 IAM workshop undercut (rev-weighted -delta vs reference sell-out)",
+      "feature": "c1_undercut_lag",
+      "hypothesized_sign": -1,
+      "n_2025_uio_ok": 18,
+      "tests": {
+        "gps_spu": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": -0.3333,
+            "p": 0.1765
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": -0.4386,
+            "p": 0.0686
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": 0.3333,
+            "p": 0.1765
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": -0.0877,
+            "p": 0.7293
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 465.747439,
+            "beta1": -609.623667,
+            "mae_model": 47.927268,
+            "mae_median": 47.723921,
+            "mae_improve_vs_median": -0.0043
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": -62.717616,
+            "beta1": 169.82523,
+            "mae_model": 38.048219,
+            "mae_zero": 31.21169,
+            "mae_improve_vs_zero": -0.219
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.9216,
+            "p": 0.0
+          }
+        },
+        "pms_total_capture": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": -0.5129,
+            "p": 0.0295
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": -0.4799,
+            "p": 0.0439
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": -0.1476,
+            "p": 0.559
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": -0.0588,
+            "p": 0.8167
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.763817,
+            "beta1": -1.064366,
+            "mae_model": 0.125806,
+            "mae_median": 0.133635,
+            "mae_improve_vs_median": 0.0586
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.126692,
+            "beta1": -0.20542,
+            "mae_model": 0.055226,
+            "mae_zero": 0.062438,
+            "mae_improve_vs_zero": 0.1155
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.7482,
+            "p": 0.0004
+          }
+        },
+        "pms_genuine_capture": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": 0.0299,
+            "p": 0.9062
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": 0.063,
+            "p": 0.804
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": 0.0918,
+            "p": 0.717
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": -0.1806,
+            "p": 0.4733
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.312463,
+            "beta1": -0.178982,
+            "mae_model": 0.103105,
+            "mae_median": 0.112463,
+            "mae_improve_vs_median": 0.0832
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.02582,
+            "beta1": 0.020179,
+            "mae_model": 0.044885,
+            "mae_zero": 0.049843,
+            "mae_improve_vs_zero": 0.0995
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.7317,
+            "p": 0.0006
+          }
+        }
+      },
+      "incumbent_aim_lag": {
+        "gps_spu_holdout": {
+          "n": 18,
+          "rho": -0.3779,
+          "p": 0.1221
+        },
+        "pms_total_holdout": {
+          "n": 18,
+          "rho": -0.5679,
+          "p": 0.014
+        },
+        "gps_delta_holdout": {
+          "n": 18,
+          "rho": -0.3469,
+          "p": 0.1584
+        },
+        "pms_delta_holdout": {
+          "n": 18,
+          "rho": -0.2426,
+          "p": 0.332
+        }
+      },
+      "verdict": {
+        "gps_spu": {
+          "level_clears": false,
+          "delta_clears": false,
+          "holdout_rho": -0.4386,
+          "holdout_delta_rho": -0.0877,
+          "incumbent_rho": -0.3779
+        },
+        "pms_total_capture": {
+          "level_clears": false,
+          "delta_clears": false,
+          "holdout_rho": -0.4799,
+          "holdout_delta_rho": -0.0588,
+          "incumbent_rho": -0.5679
+        },
+        "gps_delta": {
+          "delta_clears": false
+        },
+        "pms_delta": {
+          "delta_clears": false
+        }
+      },
+      "clears_any": false
+    },
+    "C1b_exposed_share": {
+      "label": "C1b lagged share of \u20ac in 2023-survey PNs where IAM < reference sell-out",
+      "feature": "c1_exposed_share_lag",
+      "hypothesized_sign": -1,
+      "n_2025_uio_ok": 18,
+      "tests": {
+        "gps_spu": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": -0.1847,
+            "p": 0.4631
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": -0.4056,
+            "p": 0.095
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": 0.5108,
+            "p": 0.0303
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": -0.0279,
+            "p": 0.9126
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 250.275082,
+            "beta1": -625.915818,
+            "mae_model": 49.665579,
+            "mae_median": 47.723921,
+            "mae_improve_vs_median": -0.0407
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": -40.863024,
+            "beta1": 932.243917,
+            "mae_model": 43.736431,
+            "mae_zero": 31.21169,
+            "mae_improve_vs_zero": -0.4013
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.9216,
+            "p": 0.0
+          }
+        },
+        "pms_total_capture": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": -0.0382,
+            "p": 0.8804
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": -0.129,
+            "p": 0.6099
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": -0.0444,
+            "p": 0.8612
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": -0.2714,
+            "p": 0.276
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.300224,
+            "beta1": 0.642366,
+            "mae_model": 0.133007,
+            "mae_median": 0.133635,
+            "mae_improve_vs_median": 0.0047
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.041808,
+            "beta1": 0.032862,
+            "mae_model": 0.055953,
+            "mae_zero": 0.062438,
+            "mae_improve_vs_zero": 0.1039
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.7482,
+            "p": 0.0004
+          }
+        },
+        "pms_genuine_capture": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": 0.4489,
+            "p": 0.0617
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": 0.0423,
+            "p": 0.8676
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": 0.3911,
+            "p": 0.1085
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": -0.5129,
+            "p": 0.0295
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.091333,
+            "beta1": 2.950754,
+            "mae_model": 0.111276,
+            "mae_median": 0.112463,
+            "mae_improve_vs_median": 0.0106
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": -0.026367,
+            "beta1": 1.19852,
+            "mae_model": 0.060376,
+            "mae_zero": 0.049843,
+            "mae_improve_vs_zero": -0.2113
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.7317,
+            "p": 0.0006
+          }
+        }
+      },
+      "incumbent_aim_lag": {
+        "gps_spu_holdout": {
+          "n": 18,
+          "rho": -0.3779,
+          "p": 0.1221
+        },
+        "pms_total_holdout": {
+          "n": 18,
+          "rho": -0.5679,
+          "p": 0.014
+        },
+        "gps_delta_holdout": {
+          "n": 18,
+          "rho": -0.3469,
+          "p": 0.1584
+        },
+        "pms_delta_holdout": {
+          "n": 18,
+          "rho": -0.2426,
+          "p": 0.332
+        }
+      },
+      "verdict": {
+        "gps_spu": {
+          "level_clears": false,
+          "delta_clears": false,
+          "holdout_rho": -0.4056,
+          "holdout_delta_rho": -0.0279,
+          "incumbent_rho": -0.3779
+        },
+        "pms_total_capture": {
+          "level_clears": false,
+          "delta_clears": false,
+          "holdout_rho": -0.129,
+          "holdout_delta_rho": -0.2714,
+          "incumbent_rho": -0.5679
+        },
+        "gps_delta": {
+          "delta_clears": false
+        },
+        "pms_delta": {
+          "delta_clears": false
+        }
+      },
+      "clears_any": false
+    },
+    "C2_bvp_contested": {
+      "label": "C2 lagged BVP capture of contested demand (existing genuine/BVP split)",
+      "feature": "c2_bvp_contested_lag",
+      "hypothesized_sign": -1,
+      "n_2025_uio_ok": 18,
+      "tests": {
+        "gps_spu": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": 0.0796,
+            "p": 0.7535
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": 0.2306,
+            "p": 0.3572
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": -0.6153,
+            "p": 0.0066
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": 0.0817,
+            "p": 0.7473
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 209.508198,
+            "beta1": 34.667939,
+            "mae_model": 51.961296,
+            "mae_median": 47.723921,
+            "mae_improve_vs_median": -0.0888
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 31.883501,
+            "beta1": -96.749193,
+            "mae_model": 47.365544,
+            "mae_zero": 31.21169,
+            "mae_improve_vs_zero": -0.5176
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.9216,
+            "p": 0.0
+          }
+        },
+        "pms_total_capture": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": 0.3775,
+            "p": 0.1225
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": 0.1686,
+            "p": 0.5037
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": 0.1851,
+            "p": 0.4621
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": -0.1375,
+            "p": 0.5863
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.305815,
+            "beta1": 0.100374,
+            "mae_model": 0.130375,
+            "mae_median": 0.133635,
+            "mae_improve_vs_median": 0.0244
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.031045,
+            "beta1": 0.046579,
+            "mae_model": 0.057941,
+            "mae_zero": 0.062438,
+            "mae_improve_vs_zero": 0.072
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.7482,
+            "p": 0.0004
+          }
+        },
+        "pms_genuine_capture": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": -0.3837,
+            "p": 0.116
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": -0.5346,
+            "p": 0.0223
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": -0.1086,
+            "p": 0.668
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": -0.0631,
+            "p": 0.8036
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.286632,
+            "beta1": -0.175109,
+            "mae_model": 0.087793,
+            "mae_median": 0.112463,
+            "mae_improve_vs_median": 0.2194
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.039617,
+            "beta1": -0.021083,
+            "mae_model": 0.046167,
+            "mae_zero": 0.049843,
+            "mae_improve_vs_zero": 0.0738
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.7317,
+            "p": 0.0006
+          }
+        }
+      },
+      "incumbent_aim_lag": {
+        "gps_spu_holdout": {
+          "n": 18,
+          "rho": -0.3779,
+          "p": 0.1221
+        },
+        "pms_total_holdout": {
+          "n": 18,
+          "rho": -0.5679,
+          "p": 0.014
+        },
+        "gps_delta_holdout": {
+          "n": 18,
+          "rho": -0.3469,
+          "p": 0.1584
+        },
+        "pms_delta_holdout": {
+          "n": 18,
+          "rho": -0.2426,
+          "p": 0.332
+        }
+      },
+      "verdict": {
+        "gps_spu": {
+          "level_clears": false,
+          "delta_clears": false,
+          "holdout_rho": 0.2306,
+          "holdout_delta_rho": 0.0817,
+          "incumbent_rho": -0.3779
+        },
+        "pms_total_capture": {
+          "level_clears": false,
+          "delta_clears": false,
+          "holdout_rho": 0.1686,
+          "holdout_delta_rho": -0.1375,
+          "incumbent_rho": -0.5679
+        },
+        "gps_delta": {
+          "delta_clears": false
+        },
+        "pms_delta": {
+          "delta_clears": false
+        }
+      },
+      "clears_any": false
+    },
+    "C3_commodity_contested_share": {
+      "label": "C3 lagged commodity-contested \u20ac share (BVP-catalog PNs excluding Maintenance/safety L1)",
+      "feature": "c3_commodity_contested_share_lag",
+      "hypothesized_sign": -1,
+      "n_2025_uio_ok": 18,
+      "tests": {
+        "gps_spu": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": 0.42,
+            "p": 0.0827
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": 0.2343,
+            "p": 0.3495
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": -0.2817,
+            "p": 0.2574
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": -0.226,
+            "p": 0.3672
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 98.000493,
+            "beta1": 6269.087648,
+            "mae_model": 66.844488,
+            "mae_median": 47.723921,
+            "mae_improve_vs_median": -0.4006
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 13.197504,
+            "beta1": -369.050308,
+            "mae_model": 33.432736,
+            "mae_zero": 31.21169,
+            "mae_improve_vs_zero": -0.0712
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.9216,
+            "p": 0.0
+          }
+        },
+        "pms_total_capture": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": 0.3849,
+            "p": 0.1147
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": 0.6347,
+            "p": 0.0047
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": -0.1373,
+            "p": 0.5871
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": 0.0382,
+            "p": 0.8804
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.128004,
+            "beta1": 10.620914,
+            "mae_model": 0.126047,
+            "mae_median": 0.133635,
+            "mae_improve_vs_median": 0.0568
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.060357,
+            "beta1": -0.877073,
+            "mae_model": 0.055668,
+            "mae_zero": 0.062438,
+            "mae_improve_vs_zero": 0.1084
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.7482,
+            "p": 0.0004
+          }
+        },
+        "pms_genuine_capture": {
+          "spearman_2024_origin": {
+            "n": 18,
+            "rho": 0.3024,
+            "p": 0.2226
+          },
+          "spearman_2025_holdout": {
+            "n": 18,
+            "rho": 0.4592,
+            "p": 0.0552
+          },
+          "spearman_delta_2024": {
+            "n": 18,
+            "rho": 0.0774,
+            "p": 0.7602
+          },
+          "spearman_delta_2025_holdout": {
+            "n": 18,
+            "rho": -0.1249,
+            "p": 0.6215
+          },
+          "ols_level_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.100468,
+            "beta1": 7.2414,
+            "mae_model": 0.104481,
+            "mae_median": 0.112463,
+            "mae_improve_vs_median": 0.071
+          },
+          "ols_delta_train2024_test2025": {
+            "n_train": 18,
+            "n_test": 18,
+            "ok": true,
+            "beta0": 0.038977,
+            "beta1": -0.25861,
+            "mae_model": 0.043664,
+            "mae_zero": 0.049843,
+            "mae_improve_vs_zero": 0.124
+          },
+          "persistence_spearman_2025": {
+            "n": 18,
+            "rho": 0.7317,
+            "p": 0.0006
+          }
+        }
+      },
+      "incumbent_aim_lag": {
+        "gps_spu_holdout": {
+          "n": 18,
+          "rho": -0.3779,
+          "p": 0.1221
+        },
+        "pms_total_holdout": {
+          "n": 18,
+          "rho": -0.5679,
+          "p": 0.014
+        },
+        "gps_delta_holdout": {
+          "n": 18,
+          "rho": -0.3469,
+          "p": 0.1584
+        },
+        "pms_delta_holdout": {
+          "n": 18,
+          "rho": -0.2426,
+          "p": 0.332
+        }
+      },
+      "verdict": {
+        "gps_spu": {
+          "level_clears": false,
+          "delta_clears": false,
+          "holdout_rho": 0.2343,
+          "holdout_delta_rho": -0.226,
+          "incumbent_rho": -0.3779
+        },
+        "pms_total_capture": {
+          "level_clears": false,
+          "delta_clears": false,
+          "holdout_rho": 0.6347,
+          "holdout_delta_rho": 0.0382,
+          "incumbent_rho": -0.5679
+        },
+        "gps_delta": {
+          "delta_clears": false
+        },
+        "pms_delta": {
+          "delta_clears": false
+        }
+      },
+      "clears_any": false
+    }
+  },
+  "any_candidate_clears": false
+}

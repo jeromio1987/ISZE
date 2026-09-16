@@ -1,0 +1,118 @@
+
+<div class="stamp">Data as of <strong id="stampDate">—</strong> &nbsp;·&nbsp; internal tool — verify freshness before sharing externally</div>
+<div class="top-bar">
+  <div>
+    <div class="brand"><span class="dot"></span><h1>Part-Groups Sales Explorer</h1></div>
+    <div class="crumb">ISZE · Standalone file — open directly in any browser, no other files required</div>
+  </div>
+  <div class="meta" id="topMeta">Loading…</div>
+</div>
+
+<div class="main">
+
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <div class="filter-bar">
+    <div class="filter-row">
+      <div class="filter-group">
+        <label>Part group</label>
+        <select id="selL1"></select>
+      </div>
+      <div class="filter-group">
+        <label>Subcategory</label>
+        <select id="selL2"></select>
+      </div>
+      <div class="filter-group">
+        <label>Timeline grain</label>
+        <div class="grain-toggle" id="grainToggle">
+          <button data-g="month">Month</button>
+          <button data-g="quarter">Quarter</button>
+          <button data-g="fy">FY</button>
+          <button data-g="cy">CY</button>
+        </div>
+      </div>
+      <div class="filter-group" style="flex:1;min-width:280px">
+        <label>Distributors <span id="dbCountLabel" style="text-transform:none;font-weight:400;color:#999"></span></label>
+        <div class="chip-wrap" id="dbChips"></div>
+      </div>
+      <div class="filter-actions">
+        <button class="btn-mini" id="btnAllDb">All DBs</button>
+        <button class="btn-mini" id="btnTop6Db">Top 6 DBs</button>
+        <button class="btn-mini" id="btnReset">Reset filters</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Net sales trend <span class="toggle-table" data-target="trendTbl">Table view</span></h3>
+      <div class="scope-line" id="scopeTrend"></div>
+      <div class="chart-container" id="trendChart"></div>
+      <div class="tbl-scroll" id="trendTbl" style="display:none"></div>
+      <div class="note">Split by DB shown when ≤8 distributors are selected (color-safe series cap); otherwise shows the combined total. GPS-eligible net sales only — see data notes below.</div>
+    </div>
+    <div class="card">
+      <h3>By distributor <span class="toggle-table" data-target="dbTbl">Table view</span></h3>
+      <div class="scope-line" id="scopeDb"></div>
+      <div class="chart-container" id="dbChart"></div>
+      <div class="tbl-scroll" id="dbTbl" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3 id="l1ChartTitle">Part groups <span class="toggle-table" data-target="l1Tbl">Table view</span></h3>
+      <div class="scope-line" id="scopeL1"></div>
+      <div class="chart-container" id="l1Chart"></div>
+      <div class="tbl-scroll" id="l1Tbl" style="display:none"></div>
+      <div class="note">Click a bar to drill into that part group's subcategories (also settable via the Part group filter above).</div>
+    </div>
+    <div class="card">
+      <h3 id="l2ChartTitle">Subcategories <span class="toggle-table" data-target="l2Tbl">Table view</span></h3>
+      <div class="scope-line" id="scopeL2"></div>
+      <div class="chart-container" id="l2Chart"></div>
+      <div class="tbl-scroll" id="l2Tbl" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Genuine vs BVP mix <span class="toggle-table" data-target="bvpTbl">Table view</span></h3>
+      <div class="scope-line" id="scopeBvp"></div>
+      <div class="chart-container" id="bvpChart"></div>
+      <div style="font-size:11px;color:#666;margin-top:6px" id="bvpCoverageLine"></div>
+      <div class="tbl-scroll" id="bvpTbl" style="display:none"></div>
+      <div class="note" id="bvpNote">Only Brakes, Filters, Clutch/Driveline, Suspension, Electrical, Cooling and Cab/Misc have a BVP-alternative catalog. Other part groups (e.g. Body Exterior) show as 100% Genuine because ISZE runs no BVP line for them. The competitive price-gap panel to the right is the closest read on exposure for those groups, though its sample is narrow.</div>
+    </div>
+    <div class="card">
+      <h3>Competitive price-gap exposure <span class="toggle-table" data-target="compTbl">Table view</span></h3>
+      <div class="scope-line" id="scopeComp"></div>
+      <div class="chart-container" id="compChart"></div>
+      <div class="tbl-scroll" id="compTbl" style="display:none"></div>
+      <div class="note">Real Eucon-sourced benchmark (<code>01_data/01_Pricing/</code>, priced 2026-08-10/11) — replaces the
+      earlier <code>competitiveness_autodoc_risk.csv</code> panel, which failed a sanity check (93% duplicate placeholder
+      price, ~0 correlation to ISZE price). This one is genuine: 0.69 correlation, real IAM brands (Blue Print, Febi
+      Bilstein, Ridex…) and real genuine-OEM peers (DAF, Toyota, Ford). <b>But it's a narrow, actively-growing sample —
+      51 part numbers, mostly Brakes/Filters/Fuel/Intake — not a full catalog scan</b>, and it's explicitly a Mode B /
+      Jerome-only work-in-progress per its own status notes (some categories intentionally left blank rather than
+      guessed at). Bars = % gap vs ISZE street-equivalent price; negative (red) = competitor undercuts ISZE.</div>
+    </div>
+  </div>
+
+  <div class="grid1">
+    <div class="card">
+      <h3 id="moversTitle">Top part-number movers</h3>
+      <div class="scope-line" id="scopeMovers"></div>
+      <div id="moversWrap"></div>
+      <div class="note">Ranked by absolute EUR change within the current DB + part-group + subcategory filter. Compares the two most recent <b>complete</b> periods at the timeline grain selected above — partial periods (e.g. FY2023, CY2026 here) are skipped so the comparison isn't distorted by a part-year.</div>
+    </div>
+  </div>
+
+  <div class="notes-card">
+    <h3>⚠ Data notes — read before presenting these numbers externally</h3>
+    <ul id="notesList"></ul>
+  </div>
+
+  <div class="footer">ISZE Part-Groups Sales Explorer · Built from sales_fact.parquet + aim_pn_classification.csv + bvp_pn_dimension.csv + Eucon-sourced competitive pricing (01_data/01_Pricing/) · Internal tool, not for distributor sharing without review</div>
+</div>
+

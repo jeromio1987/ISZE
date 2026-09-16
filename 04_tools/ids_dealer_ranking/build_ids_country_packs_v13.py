@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-"""Build per-country IDS 2026 dealer-compare packs (v1.3) for colleague drafts.
+"""Build per-country IDS 2026 dealer-compare packs for colleague drafts.
 
 Country-only HTML (Leaflet map + network avg benchmark), zip, master index.
 Mirrors key HTMLs under 02_dashboards/ids/.
+
+v1.4 (2026-08-11): Tomoe Baumann average rule — FR/ES red-marked dealers stay
+on the list/map but are excluded from national / section / question averages
+(and from anonymous network averages). Italy + Switzerland: ALL dealers in
+averages (including zero-score shells). Other markets keep zero-shell hygiene.
 
 Default INCLUDE (separate BE/NL/LUX; skip Benelux rollup):
   Belgium, Netherlands, Luxembourg, Denmark, Poland, Greece, Norway,
@@ -10,6 +15,8 @@ Default INCLUDE (separate BE/NL/LUX; skip Benelux rollup):
 
 Default EXCLUDE:
   UK LCV (IUK), Portugal (Imotors), Israel LCV (UMI), MIDI (FR/IT/ES/CH), Benelux
+
+MIDI rebuild: --countries France Italy Spain Switzerland
 """
 
 from __future__ import annotations
@@ -32,9 +39,10 @@ from ids_dealer_geo import (
 from ids_paths import IDS_RESULT_REPORTS_DIR, ISZE_ROOT
 from ids_report_extract import build_dashboard_payload
 
-VERSION = "v1.3"
-PACK_ROOT_DEFAULT = ISZE_ROOT / "09_meetings" / "IDS_2026_Country_Packs_v1.3"
+VERSION = "v1.4"
+PACK_ROOT_DEFAULT = ISZE_ROOT / "09_meetings" / "IDS_2026_Country_Packs_v1.4"
 DASH_MIRROR = ISZE_ROOT / "02_dashboards" / "ids"
+MIDI_COUNTRIES = frozenset({"France", "Italy", "Spain", "Switzerland"})
 
 # Workspace labels (ids_paths): IUK = UK LCV, ITUK = UK CV — do not flip.
 DEFAULT_INCLUDE = [
@@ -79,6 +87,20 @@ OWNER_EMAIL: dict[str, dict[str, str]] = {
     "UK CV": {"name": "Jerome Van Der Pluym", "email": "jerome.van.der.pluym@isuzu-e.com"},
     # UK LCV (IUK) — excluded from default colleague batch; build with --countries "UK LCV"
     "UK LCV": {"name": "Koen Matheussen", "email": "koen.matheussen@isuzu-e.com"},
+    # Israel LCV (UMI) — excluded from default batch; build with --countries "Israel LCV"
+    "Israel LCV": {
+        "name": "Jerome Van Der Pluym",
+        "email": "jerome.van.der.pluym@isuzu-e.com",
+    },
+    "Portugal": {
+        "name": "Jerome Van Der Pluym",
+        "email": "jerome.van.der.pluym@isuzu-e.com",
+    },
+    # MIDI batch (explicit --countries France Italy Spain Switzerland)
+    "France": {"name": "Tomoe Baumann", "email": "Tomoe.Baumann@isuzu.de"},
+    "Italy": {"name": "Tomoe Baumann", "email": "Tomoe.Baumann@isuzu.de"},
+    "Spain": {"name": "Tomoe Baumann", "email": "Tomoe.Baumann@isuzu.de"},
+    "Switzerland": {"name": "Tomoe Baumann", "email": "Tomoe.Baumann@isuzu.de"},
 }
 
 JEROME_EMAIL = "jerome.van.der.pluym@isuzu-e.com"
@@ -211,15 +233,21 @@ def render_country_html(payload: dict[str, Any], country: str, *, built_at: str)
     )
     net_n = (payload.get("network") or {}).get("dealer_count", "—")
     n_dealers = payload.get("dealer_count", 0)
+    e_note = (
+        " · Section E not scored (A–D only, 0/27 recorded)"
+        if country == "Israel LCV"
+        else ""
+    )
     subtitle = (
-        f"{VERSION} · {country} dealers only ({n_dealers}) · "
+        f"{VERSION} · {country} dealers only ({n_dealers}){e_note} · "
         f"no country filter (single market) · "
         f"map hover = dealer score vs {country} national average · "
-        f"network avg from full IDS network ({net_n} dealers, anonymous) · "
+        f"network avg from full IDS network ({net_n} dealers, anonymous; "
+        f"Section E not scored / missing excluded) · "
         f"built {built_at}"
     )
     html = re.sub(
-        r"<p>v1\.3 map pins · (?:score filters · )?sections A–E \+ questions · "
+        r"<p>v1\.[34] map pins · (?:score filters · )?sections A–E \+ questions · "
         r"good / medium / bad · built [^<]+</p>",
         f"<p>{subtitle}</p>",
         html,
@@ -270,13 +298,16 @@ Country-only dealer compare for ISZE / IMG colleagues. English UI.
 
 - Dealers: **{dealer_count}**
 - Geo pinned: {geo.get("geo_ok", "—")} · missing: {geo.get("geo_missing", "—")}
-- Map: Leaflet + OpenStreetMap / CARTO (needs internet when opening HTML)
+- Map: bundled Leaflet + offline grid / country label layer (no external tile service)
 - **No Country filter / By country / Country radar / Changelog** — Mode A colleague pack
 - Benchmarks kept: dealer vs **{country} national average**, anonymous full-network average
 
 ## Network average
 
 Charts and heatmap “vs network avg” use the **full IDS 2026 network** average (anonymous).
+Section E for Israel LCV (UMI) is **not scored** (29 dealers, 0/18 questions, 0/27 points)
+and is **excluded** from that network average — not treated as a fail.
+Hover the network-average figure in the HTML for the note.
 """
     (pack_dir / "README.md").write_text(text, encoding="utf-8")
 
@@ -322,23 +353,63 @@ def write_master_index(
     *,
     built_at: str,
 ) -> Path:
-    lines = [
-        f"# IDS 2026 Country Packs {VERSION}",
-        "",
-        f"Built: {built_at}",
-        "",
-            "Excluded: UK LCV (IUK), Portugal (Imotors), Israel LCV (UMI), MIDI (FR/IT/ES/CH), Benelux rollup.",
-        "Included: separate BE / NL / LUX (no Benelux duplicate).",
-        "",
-        "UI (country-only): Country filter / By country / Country radar / Changelog removed; "
-        "national + anonymous network averages and Map hover kept. Version remains v1.3.",
-        "",
-        "Master zip (`IDS_2026_Country_Packs_v1.3_ALL.zip`): **12 country zips** + this "
-        "INDEX.md + manifest.json only (no unpacked country folders).",
-        "",
-        "| Country | Dealers | Zip | HTML | Draft To | Geo |",
-        "|---------|--------:|-----|------|----------|-----|",
-    ]
+    built_names = {r["country"] for r in rows}
+    midi_only = built_names == MIDI_COUNTRIES
+
+    if midi_only:
+        lines = [
+            f"# IDS 2026 MIDI Country Packs {VERSION}",
+            "",
+            f"Built: {built_at}",
+            "",
+            "Scope: **MIDI only** — France, Italy, Spain, Switzerland.",
+            "Other IDS markets (BE/NL/LUX, UK, Portugal, Israel, …) are **not** in this pack.",
+            "",
+            "## Average rule (Tomoe Baumann, 2026-07-31)",
+            "",
+            "| Market | Averages |",
+            "|--------|----------|",
+            "| **France** | Red-marked dealers **out** of averages (**20**); stay on list/map |",
+            "| **Spain** | Red-marked dealers **out** of averages (**5**); stay on list/map |",
+            "| **Italy** | **All** dealers in averages (including zero-score shells) |",
+            "| **Switzerland** | **All** dealers in averages (including zero-score shells) |",
+            "",
+            "UI (country-only): Country filter / By country / Country radar / Changelog removed; "
+            "national + anonymous network averages and Map hover kept.",
+            "",
+            "## Contents",
+            "",
+            "**HTML-only** country packs (dealer compare + README). Ranking / result "
+            "Excel workbooks are **not** bundled here — they live under "
+            "`01_data/90_INBOX/IDS_2026/rankings/` and `…/reports/` (same pattern as "
+            f"the v1.3 MIDI HTML packs).",
+            "",
+            f"Master zip (`IDS_2026_Country_Packs_{VERSION}_ALL.zip`): four country "
+            "zips + this INDEX.md + manifest.json only (no unpacked country folders).",
+            "",
+            "| Country | Dealers | Zip | HTML | Draft To | Geo |",
+            "|---------|--------:|-----|------|----------|-----|",
+        ]
+    else:
+        lines = [
+            f"# IDS 2026 Country Packs {VERSION}",
+            "",
+            f"Built: {built_at}",
+            "",
+            "Scope: **all IDS markets** except the Benelux rollup (BE / NL / LUX stay separate).",
+            "Includes UK LCV (IUK), Portugal, Israel LCV (UMI) and MIDI (FR/IT/ES/CH).",
+            "",
+            "UI (country-only): Country filter / By country / Country radar / Changelog removed; "
+            "national + anonymous network averages and Map hover kept. "
+            f"Version {VERSION}: FR/ES Baumann red-marked out of averages; "
+            "IT/CH all dealers in averages.",
+            "",
+            f"Master zip (`IDS_2026_Country_Packs_{VERSION}_ALL.zip`): country zips + this "
+            "INDEX.md + manifest.json only (no unpacked country folders).",
+            "",
+            "| Country | Dealers | Zip | HTML | Draft To | Geo |",
+            "|---------|--------:|-----|------|----------|-----|",
+        ]
     for r in rows:
         lines.append(
             f"| {r['country']} | {r['dealer_count']} | "
@@ -346,28 +417,43 @@ def write_master_index(
             f"{r.get('to_email') or '*(fill To)*'} | "
             f"{r.get('geo_ok', 0)}/{r['dealer_count']} |"
         )
-    lines.extend(
-        [
-            "",
-            "## UK label note",
-            "",
-            "Workspace mapping (do not flip): **UK CV = ITUK**, **UK LCV = IUK**.",
-            "This pack set includes **UK CV** only.",
-            "",
-            "## Draft emails",
-            "",
-            "Outlook drafts are created by `draft_ids_country_pack_emails.py` "
-            "(Save as draft — does not Send).",
-            "",
-        ]
-    )
+    if midi_only:
+        lines.extend(
+            [
+                "",
+                "## Draft email",
+                "",
+                "Outlook draft to Tomoe Baumann via `draft_ids_midi_v14.py` "
+                "(Save as draft — does not Send).",
+                "",
+            ]
+        )
+    else:
+        lines.extend(
+            [
+                "",
+                "## UK label note",
+                "",
+                "Workspace mapping (do not flip): **UK CV = ITUK**, **UK LCV = IUK**.",
+                "This pack set includes **both** UK CV and UK LCV.",
+                "",
+                "## Draft emails",
+                "",
+                "Outlook drafts are created by `draft_ids_country_pack_emails.py` "
+                "(Save as draft — does not Send).",
+                "",
+            ]
+        )
     path = pack_root / "INDEX.md"
     path.write_text("\n".join(lines), encoding="utf-8")
     manifest = {
         "version": VERSION,
         "built_at": built_at,
+        "pack_scope": "MIDI" if midi_only else "colleague_batch",
         "countries": rows,
-        "exclude": sorted(DEFAULT_EXCLUDE),
+        "exclude": sorted(DEFAULT_EXCLUDE) if not midi_only else sorted(
+            c for c in DEFAULT_EXCLUDE if c not in MIDI_COUNTRIES
+        ),
     }
     (pack_root / "manifest.json").write_text(
         json.dumps(manifest, indent=2, ensure_ascii=False),
@@ -437,7 +523,7 @@ def build_one(
 
     write_readme(pack_dir, country, dealer_count=len(payload["dealers"]), geo=geo_counts)
 
-    zip_name = f"IDS_2026_{slug}_v1.3.zip"
+    zip_name = f"IDS_2026_{slug}_{VERSION}.zip"
     zip_path = pack_root / zip_name
     zip_pack(pack_dir, zip_path, html_name)
 
@@ -467,11 +553,12 @@ def build_one(
         "geo_sanity_ok": geo_sanity["ok"],
         "geo_warnings": geo_sanity.get("warnings") or [],
         "checks": {
-            "v13_label": VERSION in html,
+            "version_label": VERSION in html,
             "map_tab": 'data-tab="map"' in html,
             "national_avg": "national average" in html.lower(),
             "no_weak_sector": "Weak sector" not in html,
-            "leaflet": "leaflet" in html.lower() and "basemaps.cartocdn.com" in html,
+            "leaflet": "leaflet" in html.lower()
+            and "no external tile service" in html,
             "single_country": payload["countries"] == [country],
             "no_country_filter": '<label for="f-country">Country filter</label>'
             not in html
@@ -558,7 +645,7 @@ def main() -> int:
     drafts_json = pack_root / "draft_emails.json"
     drafts_json.write_text(json.dumps(rows, indent=2, ensure_ascii=False), encoding="utf-8")
 
-    all_zip = pack_root / "IDS_2026_Country_Packs_v1.3_ALL.zip"
+    all_zip = pack_root / f"IDS_2026_Country_Packs_{VERSION}_ALL.zip"
     write_master_all_zip(pack_root, rows, all_zip)
     print(f"Master zip: {all_zip}")
 

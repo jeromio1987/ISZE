@@ -1,8 +1,8 @@
 {
   "summary": {
     "total": 54,
-    "ok": 36,
-    "broken": 16,
+    "ok": 41,
+    "broken": 11,
     "redirect": 2,
     "error": 0
   },
@@ -282,13 +282,9 @@
     },
     {
       "file": "sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html",
-      "status": "broken",
-      "issues": [
-        "js_error"
-      ],
-      "page_errors": [
-        "Canvas is already in use. Chart with ID '0' must be destroyed before the canvas with ID 'chartMix' can be reused."
-      ],
+      "status": "ok",
+      "issues": [],
+      "page_errors": [],
       "failed_nonfont": [],
       "missing_files": [],
       "probe": {
@@ -300,8 +296,7 @@
         "typeofEcharts": "undefined",
         "echartsInst": 0,
         "bodySample": "ISZE \u00b7 DB\u2192DLR \u00b7 Network AIM BVP & Genuine sell-out \u2014 ITUK vs UTI (CY2025) Generated 2026-07-27 Network-level DB\u2192DLR sell-out CY2025. ITUK dealer pivot summed to one network. AIM buckets: bvp | genuine_contested (catalog pair exists) | genui"
-      },
-      "screenshot": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_working\\audit\\fix2__sales__Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html.png"
+      }
     },
     {
       "file": "sales/Dealer_Sellout_UTI_vs_ITUK.html",
@@ -325,16 +320,13 @@
       "file": "sales/ISZE_Competitiveness_Dashboard.html",
       "status": "broken",
       "issues": [
-        "blank_canvases",
-        "js_error"
+        "blank_canvases"
       ],
-      "page_errors": [
-        "Unexpected token ')'"
-      ],
+      "page_errors": [],
       "failed_nonfont": [],
       "missing_files": [],
       "probe": {
-        "bodyLen": 26095,
+        "bodyLen": 9428,
         "canvasCount": 2,
         "blankCanvases": 2,
         "blankChartSvgs": 0,
@@ -347,17 +339,13 @@
     },
     {
       "file": "sales/ISZE_Monthly_Sales_Tracker.html",
-      "status": "broken",
-      "issues": [
-        "js_error"
-      ],
-      "page_errors": [
-        "Cannot read properties of undefined (reading 'forEach')"
-      ],
+      "status": "ok",
+      "issues": [],
+      "page_errors": [],
       "failed_nonfont": [],
       "missing_files": [],
       "probe": {
-        "bodyLen": 1342,
+        "bodyLen": 1887,
         "canvasCount": 0,
         "blankCanvases": 0,
         "blankChartSvgs": 0,
@@ -365,8 +353,7 @@
         "typeofEcharts": "undefined",
         "echartsInst": 0,
         "bodySample": "ISZE Intelligence Hub Mission Control AI Ops PROPERTIQ AIM Pricing ISZE Monthly Sales Tracker \ud83d\udcc5 File last updated: 2026-05-22 \u2014 verify underlying data freshness before sharing externally \u2b1b ISZE Hub | Master Dashboard AIM Competitiveness Sa"
-      },
-      "screenshot": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_working\\audit\\fix2__sales__ISZE_Monthly_Sales_Tracker.html.png"
+      }
     },
     {
       "file": "sales/ISZE_Risk_Cockpit.html",
@@ -433,11 +420,11 @@
       "failed_nonfont": [
         "https://c.basemaps.cartocdn.com/rastertiles/voyager/6/30/24.png",
         "https://b.basemaps.cartocdn.com/rastertiles/voyager/6/30/23.png",
+        "https://a.basemaps.cartocdn.com/rastertiles/voyager/6/29/23.png",
         "https://d.basemaps.cartocdn.com/rastertiles/voyager/6/31/24.png",
+        "https://d.basemaps.cartocdn.com/rastertiles/voyager/6/30/25.png",
         "https://b.basemaps.cartocdn.com/rastertiles/voyager/6/29/24.png",
         "https://c.basemaps.cartocdn.com/rastertiles/voyager/6/31/23.png",
-        "https://a.basemaps.cartocdn.com/rastertiles/voyager/6/29/23.png",
-        "https://d.basemaps.cartocdn.com/rastertiles/voyager/6/30/25.png",
         "https://c.basemaps.cartocdn.com/rastertiles/voyager/6/29/25.png",
         "https://a.basemaps.cartocdn.com/rastertiles/voyager/6/31/25.png"
       ],
@@ -833,17 +820,11 @@
     },
     {
       "file": "hub/PROJECT_HUB.html",
-      "status": "broken",
-      "issues": [
-        "missing_local_asset"
-      ],
+      "status": "ok",
+      "issues": [],
       "page_errors": [],
-      "failed_nonfont": [
-        "file:///C:/Users/jerom/Desktop/claude/ISZE/02_dashboards/hub/PROPERTIQ.html?embed=1"
-      ],
-      "missing_files": [
-        "file:///C:/Users/jerom/Desktop/claude/ISZE/02_dashboards/hub/PROPERTIQ.html?embed=1"
-      ],
+      "failed_nonfont": [],
+      "missing_files": [],
       "probe": {
         "bodyLen": 756,
         "canvasCount": 0,
@@ -853,8 +834,7 @@
         "typeofEcharts": "undefined",
         "echartsInst": 0,
         "bodySample": "ISZE Intelligence Hub Mission Control AI Ops PROPERTIQ Project Hub ISZE \u00b7 Project Hub Overzicht PROPERTIQ Projecten Stacks Methodologie Alle projecten, \u00e9\u00e9n UI Editorial design language (PROPERTIQ) toegepast op het ISZE-dashboard-ecosysteem."
-      },
-      "screenshot": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_working\\audit\\fix2__hub__PROJECT_HUB.html.png"
+      }
     },
     {
       "file": "hub/index.html",
@@ -894,13 +874,9 @@
     },
     {
       "file": "since_2026-06-01/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html",
-      "status": "broken",
-      "issues": [
-        "js_error"
-      ],
-      "page_errors": [
-        "Canvas is already in use. Chart with ID '0' must be destroyed before the canvas with ID 'chartMix' can be reused."
-      ],
+      "status": "ok",
+      "issues": [],
+      "page_errors": [],
       "failed_nonfont": [],
       "missing_files": [],
       "probe": {
@@ -912,8 +888,7 @@
         "typeofEcharts": "undefined",
         "echartsInst": 0,
         "bodySample": "ISZE \u00b7 DB\u2192DLR \u00b7 Network AIM BVP & Genuine sell-out \u2014 ITUK vs UTI (CY2025) Generated 2026-07-21 Network-level DB\u2192DLR sell-out CY2025. ITUK dealer pivot summed to one network. AIM buckets: bvp | genuine_contested (catalog pair exists) | genui"
-      },
-      "screenshot": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_working\\audit\\fix2__since_2026-06-01__Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html.png"
+      }
     },
     {
       "file": "since_2026-06-01/IDS_2026_dealer_compare.html",
@@ -1007,21 +982,11 @@
     },
     {
       "file": "side/PROPERTIQ.html",
-      "status": "broken",
-      "issues": [
-        "missing_local_asset"
-      ],
+      "status": "ok",
+      "issues": [],
       "page_errors": [],
-      "failed_nonfont": [
-        "file:///C:/Users/jerom/Desktop/claude/ISZE/02_dashboards/side/propertiq-assets/eilandje-mas.jpg",
-        "file:///C:/Users/jerom/Desktop/claude/ISZE/02_dashboards/side/propertiq-assets/zurenborg-cogels.jpg",
-        "file:///C:/Users/jerom/Desktop/claude/ISZE/02_dashboards/side/propertiq-assets/eilandje-dock.jpg"
-      ],
-      "missing_files": [
-        "file:///C:/Users/jerom/Desktop/claude/ISZE/02_dashboards/side/propertiq-assets/eilandje-mas.jpg",
-        "file:///C:/Users/jerom/Desktop/claude/ISZE/02_dashboards/side/propertiq-assets/zurenborg-cogels.jpg",
-        "file:///C:/Users/jerom/Desktop/claude/ISZE/02_dashboards/side/propertiq-assets/eilandje-dock.jpg"
-      ],
+      "failed_nonfont": [],
+      "missing_files": [],
       "probe": {
         "bodyLen": 1025,
         "canvasCount": 0,
@@ -1031,8 +996,7 @@
         "typeofEcharts": "undefined",
         "echartsInst": 0,
         "bodySample": "ISZE Intelligence Hub Mission Control AI Ops PROPERTIQ AIM Pricing PROPERTIQ 01 \u00b7 SPLIT HERO PROPERTIQ Simuleren Portfolio Formules \ud83d\udd14 Eigen vermogen over tijd Waarde pand \u2212 restschuld \u00b7 15 jaar \u00b7 Antwerp portfolio Eigen vermogen Restschuld"
-      },
-      "screenshot": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_working\\audit\\fix2__side__PROPERTIQ.html.png"
+      }
     }
   ]
 }

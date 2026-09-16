@@ -1,0 +1,44 @@
+{
+  "assets": [
+    "/assets/js/main-81174094.js"
+  ],
+  "apis": [
+    "https://lokal.udbud.dk",
+    "https://dev.udbud.dk",
+    "https://test2.udbud.dk",
+    "https://demo.udbud.dk",
+    "https://preprod.udbud.dk",
+    "https://udbud.dk",
+    "https://www.was.digst.dk/udbud-dk"
+  ],
+  "gets": [
+    {
+      "url": "https://demo.udbud.dk",
+      "http": 503,
+      "ct": "",
+      "len": 62,
+      "snip": "<html><body><b>Http/1.1 Service Unavailable</b></body> </html>"
+    },
+    {
+      "url": "https://preprod.udbud.dk",
+      "http": 503,
+      "ct": "",
+      "len": 62,
+      "snip": "<html><body><b>Http/1.1 Service Unavailable</b></body> </html>"
+    },
+    {
+      "url": "https://udbud.dk",
+      "http": 200,
+      "ct": "text/html",
+      "len": 902,
+      "snip": "<!DOCTYPE html>\n<html lang=\"da\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta http-equiv=\"X-UA-Compatible\" content=\"I"
+    },
+    {
+      "url": "https://www.was.digst.dk/udbud-dk",
+      "http": 200,
+      "ct": "text/html",
+      "len": 15310,
+      "snip": "<!DOCTYPE html>\n<html lang=\"da\">\n    <head>\n        <meta charset=\"utf-8\">\n        <meta name=\"viewport\" content=\"width="
+    }
+  ]
+}

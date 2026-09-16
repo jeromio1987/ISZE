@@ -1,12 +1,13 @@
 ---
 description: Tender Monitor v3 scraper and tender_data.json publish
-globs: Tools/ISZE_Tender_Monitor_Install/**
+globs: 04_tools/ISZE_Tender_Monitor_Install/**
 alwaysApply: false
 ---
 
 # ISZE Tender Monitor (v3)
 
-- **Live feed:** `Data/dashboards/tender_data.json` only.
-- **Pipeline:** `Tools/ISZE_Tender_Monitor_Install/` → `publish_tender.ps1`.
-- **Do not use:** root `tender scraper/` (v2) — deprecated; see `docs/REFERENCE.md`.
-- **Scheduled:** `isze-weekly-tender-scrape` under `Documents\Claude\Scheduled\`.
+- **Live feed:** `01_data/14_dashboards/tender_data.json` only (junction alias `01_data/dashboards/` when present).
+- **Pipeline:** `04_tools/ISZE_Tender_Monitor_Install/` → publish scripts (`publish_live_tender_json.ps1` / `publish_tender.ps1`).
+- **Do not use:** root `tender scraper/` (v2) — deprecated; see `00_docs/REFERENCE.md`.
+- **Scheduled:** `isze-weekly-tender-scrape` under `Documents\Claude\Scheduled\` + Windows task `ISZE Tender Monitor`.
+- **Commercial honesty:** three-layer (network · tenders · fleet in extract); coverage map `_COUNTRY_TENDER_PORTALS_MAP.md` — do not celebrate tiny fleet extracts as market potential.

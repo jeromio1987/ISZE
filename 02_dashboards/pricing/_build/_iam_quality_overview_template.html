@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ISZE vs IAM — aftermarket position overview</title>
+<style>
+:root {
+  --navy:#15233c; --navy2:#1a2b4a; --terra:#c0552d; --paper:#f7f4ee;
+  --line:#d9d3c8; --muted:#6b6256; --ink:#222;
+  --good:#1d9e75; --goodt:#2e7d54; --bad:#b23b3b; --amber:#eda100;
+  --blue:#2a78d6; --grey:#888780;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);
+  font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;line-height:1.45;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;color:var(--navy);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 22px 48px}
+.banner{background:var(--navy);color:#f7f4ee;padding:10px 22px;font-size:12px;letter-spacing:.04em;
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.banner b,.banner span,.banner a{color:#f7f4ee}
+.hero{background:linear-gradient(155deg,#15233c 0%,#203759 62%,#2b4a78 100%);
+  color:#f7f4ee;padding:28px 22px 26px;margin:0}
+.hero h1{color:#fff;font-size:32px;line-height:1.12}
+.hero .rule{width:72px;height:3px;background:var(--terra);margin:12px 0 14px}
+.hero p{margin:0;max-width:72ch;color:#eef1f6;font-size:15px}
+.hero p b{color:#fff}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:20;
+  background:var(--paper);border-bottom:1px solid var(--line);padding:10px 22px}
+.tabs a{font-size:12px;color:#1a2b4a;text-decoration:none;background:#fff;
+  border:1px solid #d9d3c8;padding:6px 10px}
+.tabs a:hover{border-color:#c0552d;color:#c0552d}
+.jserr{display:none;background:#15233c;color:#f7f4ee;border-top:3px solid #c0552d;
+  padding:12px 22px;font-size:13px}
+.jserr.show{display:block}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 8px}
+.margrow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;
+  cursor:pointer;position:relative;text-decoration:none;color:inherit;display:block}
+.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.kpi .val{font-family:Georgia,serif;font-size:26px;color:var(--navy);margin-top:4px}
+.kpi .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.chipbox{border-left:4px solid var(--terra)}
+.kpi[data-tip]:hover::after,.kpi[data-tip]:focus::after{
+  content:attr(data-tip);position:absolute;left:12px;right:12px;top:calc(100% + 8px);
+  background:#15233c;color:#f7f4ee;border-top:3px solid #c0552d;
+  padding:10px 12px;border-radius:0 0 6px 6px;font-size:12px;line-height:1.4;
+  z-index:50;box-shadow:0 8px 24px rgba(21,35,60,.25);white-space:normal}
+.sec{margin:32px 0 10px}
+.sec h2{font-size:22px;padding-bottom:8px;border-bottom:2px solid var(--navy);color:var(--navy)}
+.sec h2 .no{color:var(--terra)}
+.lead{color:var(--muted);margin:8px 0 14px;max-width:82ch}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px 18px}
+.grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:#fff}
+table.pns{width:100%;border-collapse:collapse;font-size:13px}
+table.pns thead th{background:#15233c;color:#f7f4ee;text-align:left;padding:9px 10px;
+  font-size:11px;text-transform:uppercase;letter-spacing:.04em}
+table.pns td{padding:9px 10px;border-bottom:1px solid var(--line);color:#222;vertical-align:top}
+table.pns tbody tr:nth-child(even) td{background:#f7f4ee;color:#222}
+table.pns tbody tr:nth-child(odd) td{background:#fff;color:#222}
+table.pns td.n{text-align:right;font-variant-numeric:tabular-nums}
+table.pns td.cut{color:#c0552d;font-weight:600}
+table.pns td.spa{color:#15233c;font-weight:600}
+table.pns td.bvp{color:#2e7d54;font-weight:600}
+table.pns td.competitive{color:#1a5c45}
+table.pns td.monitor{color:#5c4300}
+table.pns td.incomplete{color:#6b6256}
+table.pns td.hold{color:#222}
+.chartbox{position:relative;width:100%;height:280px;background:#fff}
+.chartbox.md{height:360px}
+.empty{background:#eef3f9;color:#222;padding:16px;border-radius:8px;border:1px dashed var(--line)}
+.concl{background:#fff;border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin:18px 0 8px}
+.concl h2{font-size:22px;padding-bottom:8px;border-bottom:2px solid var(--navy);color:var(--navy)}
+.concl h2 .no{color:var(--terra)}
+.concl ol{margin:10px 0 0;padding-left:22px;color:#222}
+.concl li{margin:10px 0;max-width:92ch}
+.sibnav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.sibnav a{font-size:12px;color:#1a2b4a;text-decoration:none;background:#fff;
+  border:1px solid #d9d3c8;padding:6px 10px}
+.sibnav a:hover,.sibnav a.on{border-color:#c0552d;color:#c0552d}
+.sibnav a.on{background:#15233c;color:#f7f4ee;border-color:#15233c}
+.foot{margin-top:36px;padding-top:12px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted)}
+.src{font-size:12px;color:var(--muted);margin-top:8px}
+@media(max-width:900px){
+  .kpis,.grid2,.margrow{grid-template-columns:1fr}
+  .hero h1{font-size:26px}
+  .wrap,.hero,.tabs{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+<div class="banner">
+  <b>INTERNAL · quality positioning engine · not a customer screen</b>
+  <span>UMI · ITUK · ISD · Imotors — four books, not blended · %%AS_OF%%</span>
+</div>
+<div class="hero">
+  <h1>Aftermarket quality position — four distributors</h1>
+  <div class="rule"></div>
+  <p>Same engine as the UMI quality page. Position vs the <b>best-quality named IAM</b>,
+  not the cheapest T1. Pads sit tighter than filters. Captive hold. Best Value is retention.
+  Each column is one sold-to list. Do not add them.</p>
+</div>
+<nav class="tabs" aria-label="Dashboard sections">
+  <a href="#kpis">Books</a>
+  <a href="#conclusion">Conclusion</a>
+  <a href="#matrix">Matrix</a>
+  <a href="#charts">Charts</a>
+</nav>
+<div class="jserr" id="jserr"></div>
+<div class="wrap">
+
+<div class="sibnav">%%SIBLING_NAV%%</div>
+%%MARGIN_CHIPS%%
+<div class="kpis" id="kpis">%%KPI_HTML%%</div>
+
+<section class="concl" id="conclusion">
+  <h2><span class="no">C · </span>%%CONCLUSION_TITLE%%</h2>
+  <p class="lead">%%CONCLUSION_LEAD%%</p>
+  <ol>%%CONCLUSION_ITEMS%%</ol>
+</section>
+
+<section class="sec" id="matrix">
+  <h2><span class="no">1 · </span>Comparison matrix</h2>
+  <p class="lead">Rows are the same engine outputs. Columns are separate distributor books.
+  Colour marks the lever (cut / SPA / Best Value), not a ranking.</p>
+  <div class="tblwrap">%%MATRIX_HTML%%</div>
+</section>
+
+<section class="sec" id="charts">
+  <h2><span class="no">2 · </span>Where the priced sample sits</h2>
+  <p class="lead">Left: how much of each CY2025 book has a usable IAM price.
+  Right: SPA / cut-to-band / Best Value on that priced set — not on the unpriced remainder.</p>
+  <div class="grid2">
+    <div class="card">
+      <div class="chartbox md"><canvas id="coverChart" role="img" aria-label="Share of each distributor billed book that has a scored IAM price">Coverage</canvas></div>
+    </div>
+    <div class="card">
+      <div class="chartbox md"><canvas id="leverChart" role="img" aria-label="SPA, cut-to-band and Best Value counts by distributor">Levers</canvas></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="chartbox md"><canvas id="mixChart" role="img" aria-label="Competitive versus T1 versus captive on the priced set">Priced mix</canvas></div>
+    <p class="src">Priced-set mix. Captive hold lives mainly on the unpriced book — open the per-DB page.</p>
+  </div>
+</section>
+
+<p class="foot">%%FOOT%%</p>
+</div>
+<script>
+try{window.module=undefined;window.exports=undefined;window.define=undefined;}catch(e){}
+</script>
+<script>%%CHART_JS%%</script>
+<script>
+if(typeof Chart==='undefined'&&typeof module!=='undefined'&&module.exports){window.Chart=module.exports;}
+</script>
+<script type="application/json" id="payload">%%PAYLOAD%%</script>
+<script>
+(function(){
+  function showErr(msg){
+    var box=document.getElementById('jserr');
+    if(!box) return;
+    box.textContent = msg;
+    box.className = 'jserr show';
+  }
+  var P;
+  try {
+    P = JSON.parse(document.getElementById('payload').textContent);
+  } catch (err) {
+    showErr('Payload JSON failed: ' + err.message);
+    return;
+  }
+  var ink = '#222', grid = '#e1e0d9';
+  function mkChart(id, cfg){
+    var node = document.getElementById(id);
+    if(!node) return;
+    if(typeof Chart === 'undefined'){
+      node.parentNode.innerHTML = '<p class="empty">Chart library did not bind. Numbers remain in the matrix.</p>';
+      return;
+    }
+    try { new Chart(node, cfg); }
+    catch (err) {
+      node.parentNode.innerHTML = '<p class="empty">Chart failed: '+String(err.message)+'</p>';
+    }
+  }
+  try {
+    var rows = P.rows || [];
+    var labels = rows.map(function(r){ return r.short; });
+    mkChart('coverChart', {
+      type:'bar',
+      data:{
+        labels: labels,
+        datasets:[{
+          label:'Share of CY2025 book with a scored IAM price',
+          data: rows.map(function(r){ return r.cover_pct; }),
+          backgroundColor: rows.map(function(r){ return r.cover_pct>=12?'#1d9e75':(r.cover_pct>=6?'#eda100':'#c0552d'); }),
+          barThickness:26
+        }]
+      },
+      options:{
+        indexAxis:'y', responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{display:false},
+          tooltip:{callbacks:{label:function(c){
+            var r=rows[c.dataIndex];
+            return r.cover_pct+'% · €'+Math.round(r.rev_scored_eur).toLocaleString('en-GB')+' of €'+Math.round(r.rev_book_eur).toLocaleString('en-GB')+' · '+r.n_scored+' PNs';
+          }}}},
+        scales:{
+          x:{max:25, grid:{color:grid}, ticks:{color:ink, callback:function(v){return v+'%';}}},
+          y:{grid:{display:false}, ticks:{color:ink}}
+        }
+      }
+    });
+    mkChart('leverChart', {
+      type:'bar',
+      data:{
+        labels: labels,
+        datasets:[
+          {label:'SPA candidates', data:rows.map(function(r){return r.n_spa;}), backgroundColor:'#15233c', barThickness:18},
+          {label:'Cut-to-band', data:rows.map(function(r){return r.n_cut;}), backgroundColor:'#c0552d', barThickness:18},
+          {label:'Push Best Value', data:rows.map(function(r){return r.n_bvp;}), backgroundColor:'#1d9e75', barThickness:18}
+        ]
+      },
+      options:{
+        indexAxis:'y', responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{position:'bottom', labels:{color:ink}}},
+        scales:{
+          x:{beginAtZero:true, grid:{color:grid}, ticks:{color:ink, stepSize:1}},
+          y:{grid:{display:false}, ticks:{color:ink}}
+        }
+      }
+    });
+    mkChart('mixChart', {
+      type:'bar',
+      data:{
+        labels: labels,
+        datasets:[
+          {label:'Named T3/T4 or BVP', data:rows.map(function(r){return r.n_competitive;}), backgroundColor:'#1d9e75', barThickness:18},
+          {label:'T1 only', data:rows.map(function(r){return r.n_t1;}), backgroundColor:'#888780', barThickness:18},
+          {label:'Captive on priced set', data:rows.map(function(r){return r.n_captive;}), backgroundColor:'#2a78d6', barThickness:18}
+        ]
+      },
+      options:{
+        indexAxis:'y', responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{position:'bottom', labels:{color:ink}}},
+        scales:{
+          x:{beginAtZero:true, stacked:true, grid:{color:grid}, ticks:{color:ink}},
+          y:{stacked:true, grid:{display:false}, ticks:{color:ink}}
+        }
+      }
+    });
+  } catch (err) {
+    showErr('Page script failed: ' + err.message);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ITUK PMS diagnostic: calendar vs fiscal, N75 vs complete parc</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;font-size:14px;line-height:1.45;background:#e8e4dc}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#15233c;margin:0}
+.cover{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:36px 32px 40px;margin:0 auto 16px;max-width:1080px}
+.cover h1{color:#fff;font-size:30px;line-height:1.2;max-width:22ch}
+.cover .rule{width:64px;height:3px;background:#c0552d;margin:16px 0 14px}
+.cover .meta{font-size:14px;opacity:.92;max-width:62ch}
+.chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:6px 12px;font-size:12px;border-radius:2px;display:inline-block}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.page{max-width:1080px;margin:0 auto 16px;background:#fff;padding:26px 30px 32px;box-shadow:0 1px 6px rgba(0,0,0,.08)}
+h2.sec{font-size:20px;margin:0 0 6px;padding-bottom:8px;border-bottom:2px solid #15233c}
+h2.sec .no{color:#c0552d}
+.lead{color:#6b6256;font-size:13px;margin:0 0 16px}
+.callout{border-left:3px solid #c0552d;background:#f7f4ee;padding:12px 14px;margin:0 0 16px;color:#222}
+.callout.ok{border-left-color:#1d9e75}
+.callout.flag{border-left-color:#c0552d;background:#fbf0ea}
+.callout.stable{border-left-color:#1d9e75;background:#eef7f3}
+.callout b{color:#15233c}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0}
+.kpi{background:#f7f4ee;padding:12px 14px;border-top:3px solid #15233c;position:relative;cursor:help}
+.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#6b6256}
+.kpi .val{font-family:Georgia,serif;font-size:26px;color:#15233c;margin-top:4px}
+.kpi .sub{font-size:12px;color:#6b6256;margin-top:4px}
+.kpi.gap{border-top-color:#c0552d}
+.kpi.gap .val{color:#c0552d}
+.kpi.ok{border-top-color:#1d9e75}
+.kpi .tip{display:none;position:absolute;left:8px;right:8px;top:100%;z-index:20;margin-top:6px;background:#15233c;color:#f7f4ee;padding:10px 12px;font-size:12px;line-height:1.4;border-top:3px solid #c0552d;box-shadow:0 6px 16px rgba(0,0,0,.2)}
+.kpi:hover .tip{display:block}
+table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:13px}
+th{background:#15233c;color:#fff;text-align:left;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+td{padding:8px 10px;border-bottom:1px solid #d9d3c8;color:#222}
+tbody tr:nth-child(even){background:#f7f4ee;color:#222}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:2px;vertical-align:middle}
+.tag.p1{background:#2a78d6;color:#fff}
+.tag.plan{background:#c0552d;color:#fff}
+.tag.hole{background:#888780;color:#fff}
+.barrow{display:grid;grid-template-columns:168px 1fr 58px;gap:10px;align-items:center;margin:6px 0}
+.barrow .name{font-size:13px;font-weight:600;color:#15233c}
+.track{height:22px;background:#eee9e0;border-radius:3px;overflow:hidden;position:relative}
+.fill{height:100%;border-radius:3px;min-width:0}
+.fill.navy{background:#15233c}
+.fill.terra{background:#c0552d}
+.fill.blue{background:#2a78d6}
+.fill.green{background:#1d9e75}
+.pct{font-variant-numeric:tabular-nums;font-weight:700;color:#15233c;text-align:right}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;margin:4px 0 12px;color:#6b6256}
+.sw{width:12px;height:12px;display:inline-block;border-radius:2px;margin-right:5px;vertical-align:middle}
+.g{background:#e6f5ef;color:#2e7d54}
+.a{background:#fbf0d8;color:#8a6a00}
+.r{background:#f8e4e3;color:#b23b3b}
+.cell{text-align:center;font-weight:700;font-variant-numeric:tabular-nums}
+.footer{margin-top:20px;padding-top:10px;border-top:1px solid #d9d3c8;font-size:11px;color:#6b6256;line-height:1.5}
+.muted{color:#6b6256;font-size:12px}
+h3{font-size:15px;margin:16px 0 8px;color:#15233c}
+@media(max-width:800px){
+  .grid2,.grid3,.grid5{grid-template-columns:1fr}
+  .barrow{grid-template-columns:110px 1fr 48px}
+}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;">ITUK only · Jerome diagnostic · not the Tuesday head pack</div>
+  <h1>Does the period or the parc change the PMS story?</h1>
+  <div class="rule"></div>
+  <p class="meta">Same five categories, same IML service schedule. Calendar year vs fiscal year, N75 vs complete UK parc, distributor vs dealer where the file exists.</p>
+  <div class="chips">
+    <span class="chip">Schedule: 50,000 km/yr · filters every 40,000 km</span>
+    <span class="chip">N75 UIO 9,359 (cleaned)</span>
+    <span class="chip">Complete parc 22,389</span>
+    <span class="chip">Opens from Explorer, no server</span>
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">0</span> Verdict</h2>
+  <p class="lead">Read this screen first. Detail charts sit underneath.</p>
+
+  <div class="callout stable">
+    <b>Air miss and clutch low do not flip.</b>
+    Across calendar vs fiscal, and across N75 vs complete parc, air stays the hole (about 13% complete / about 19% N75) and clutch stays low (about 8% complete / about 11% N75, 47% manual planning figure). Fuel already high is an <b>N75</b> line, not a complete-parc line. Fiscal 2025 does not rescue air.
+  </div>
+
+  <div class="grid3">
+    <div class="kpi ok">
+      <div class="lbl">Calendar vs fiscal</div>
+      <div class="val">No air flip</div>
+      <div class="sub">Oil flat. Air still the miss. Clutch still low.</div>
+      <div class="tip">Same 53 PMS part numbers, ISZE to ITUK billing. Calendar 2025 oil 39.5% vs fiscal 2025 (Apr 2025 to Mar 2026) oil 39.9%. Air 13.5% to 15.8%. Clutch 9.3% to 11.1%. Fuel and brake rise on fiscal because Jan-Mar 2026 is stronger than Jan-Mar 2025. That is timing, not a reason to drop air from phase-one.</div>
+    </div>
+    <div class="kpi gap">
+      <div class="lbl">N75 vs complete parc</div>
+      <div class="val">Fuel + brake</div>
+      <div class="sub">Those two move a lot. Air and clutch do not.</div>
+      <div class="tip">Calendar 2025, same schedule. N75 fuel 94% vs complete 65%. N75 brake 62% vs complete 35%. Oil 40% vs 35% and air 19% vs 13% stay the same story. Do not quote N75 fuel or brake as if they were the full UK parc.</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Warehouse YTD (unique PN)</div>
+      <div class="val">Air still 13%</div>
+      <div class="sub">Jan-Jul 2026, unique part numbers only.</div>
+      <div class="tip">ITUK warehouse year-to-date on the same 53 PMS part numbers, counted once (not summed across the four model tables). Annualised cover: oil 37%, fuel 64%, air 13%, brake 38%, clutch 9%. Tracks the complete-parc picture. Different layer than ISZE billing.</div>
+    </div>
+  </div>
+
+  <h3>What is stable for Tuesday vs what is not</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Tuesday line</th>
+        <th>Stable?</th>
+        <th>What this diagnostic shows</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Air is the miss (~19% N75 / ~13% complete)</td>
+        <td class="cell g">Stable</td>
+        <td>Fiscal and warehouse YTD leave air in the low teens to high teens. Not a headline flip.</td>
+      </tr>
+      <tr>
+        <td>Fuel already high (~94% N75)</td>
+        <td class="cell a">N75 only</td>
+        <td>Complete parc fuel is 65% (study) / 58-69% (billing CY-FY). Do not take 94% onto the full parc.</td>
+      </tr>
+      <tr>
+        <td>Clutch ~11% N75 (47% manual, planning)</td>
+        <td class="cell g">Stable</td>
+        <td>Complete parc 8%. Fiscal 11%. Still low. Still a planning split, not VIN-measured.</td>
+      </tr>
+      <tr>
+        <td>Brake phase-one</td>
+        <td class="cell a">Depends on parc</td>
+        <td>N75 62% vs complete 35%. Fiscal complete 46%. The gap is much larger on the full parc.</td>
+      </tr>
+      <tr>
+        <td>Oil ~40% N75 / 35% complete</td>
+        <td class="cell g">Stable</td>
+        <td>Fiscal oil barely moves. Warehouse YTD 37% annualised on complete parc.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">1</span> How to read the cuts</h2>
+  <p class="lead">One schedule, two parc sizes, two periods, two layers. Denominators are on every chart.</p>
+
+  <div class="grid2">
+    <div>
+      <h3>IML service schedule (shared)</h3>
+      <table>
+        <thead><tr><th>Family</th><th>Frequency</th><th>Basis</th></tr></thead>
+        <tbody>
+          <tr><td>Oil / fuel / air</td><td>1.25 per year</td><td>50,000 km/yr and 40,000 km interval</td></tr>
+          <tr><td>Brake</td><td>0.5 per year</td><td>Wear interval 100,000 km</td></tr>
+          <tr><td>Clutch</td><td>0.5 per year on 47% of UIO</td><td>Planning figure, not VIN-measured</td></tr>
+          <tr><td>Addressable</td><td>100%</td><td>No workshop-share discount</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Parc and period</h3>
+      <table>
+        <thead><tr><th>Cut</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>N75 UIO</td><td>9,359 cleaned (not 10,684 dirty)</td></tr>
+          <tr><td>Complete UK parc</td><td>22,389 (full registration)</td></tr>
+          <tr><td>Calendar 2025</td><td>1 Jan 2025 to 31 Dec 2025</td></tr>
+          <tr><td>Fiscal 2025</td><td>1 Apr 2025 to 31 Mar 2026 (ISZE FY = Apr-Mar)</td></tr>
+          <tr><td>Warehouse YTD</td><td>Jan-Jul 2026, unique PN demand</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout">
+    <b>Two layers, do not mix.</b> Distributor = ISZE billing into ITUK. Dealer = ITUK sell-out to dealers. Dealer files exist for calendar 2025 only. Jan-Mar 2026 dealer extract is still outstanding, so there is no fiscal dealer column.
+  </div>
+  <div class="callout flag">
+    <span class="tag plan">Planning</span>
+    <b> Clutch % uses 47% of UIO as the manual-relevant fleet.</b> That is a planning convention Jerome confirmed to proceed with. It is not a VIN-measured transmission split. Tagged on every clutch row.
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">2</span> Period: calendar vs fiscal vs warehouse YTD</h2>
+  <p class="lead">Complete UK parc 22,389. Same 53 PMS part numbers as the Apr study. Billing CY vs FY is the fair period test. Warehouse YTD is a third column on unique part numbers, not a sum of the four model tables.</p>
+
+  <div class="legend">
+    <span><i class="sw" style="background:#15233c"></i> Calendar 2025 billing</span>
+    <span><i class="sw" style="background:#c0552d"></i> Fiscal 2025 billing (Apr 2025 to Mar 2026)</span>
+    <span><i class="sw" style="background:#2a78d6"></i> Warehouse YTD Jan-Jul 2026 (annualised, unique PN)</span>
+  </div>
+
+  <div class="barrow"><div class="name">Oil · CY billing</div><div class="track"><div class="fill navy" style="width:39.5%"></div></div><div class="pct">39.5%</div></div>
+  <div class="barrow"><div class="name">Oil · FY billing</div><div class="track"><div class="fill terra" style="width:39.9%"></div></div><div class="pct">39.9%</div></div>
+  <div class="barrow"><div class="name">Oil · WH YTD ann.</div><div class="track"><div class="fill blue" style="width:37.4%"></div></div><div class="pct">37.4%</div></div>
+
+  <div class="barrow"><div class="name">Fuel · CY billing</div><div class="track"><div class="fill navy" style="width:58.4%"></div></div><div class="pct">58.4%</div></div>
+  <div class="barrow"><div class="name">Fuel · FY billing</div><div class="track"><div class="fill terra" style="width:68.8%"></div></div><div class="pct">68.8%</div></div>
+  <div class="barrow"><div class="name">Fuel · WH YTD ann.</div><div class="track"><div class="fill blue" style="width:63.9%"></div></div><div class="pct">63.9%</div></div>
+
+  <div class="barrow"><div class="name">Air · CY billing <span class="tag p1">P1</span></div><div class="track"><div class="fill navy" style="width:13.5%"></div></div><div class="pct">13.5%</div></div>
+  <div class="barrow"><div class="name">Air · FY billing <span class="tag p1">P1</span></div><div class="track"><div class="fill terra" style="width:15.8%"></div></div><div class="pct">15.8%</div></div>
+  <div class="barrow"><div class="name">Air · WH YTD ann. <span class="tag p1">P1</span></div><div class="track"><div class="fill blue" style="width:13.3%"></div></div><div class="pct">13.3%</div></div>
+
+  <div class="barrow"><div class="name">Brake · CY billing <span class="tag p1">P1</span></div><div class="track"><div class="fill navy" style="width:33.2%"></div></div><div class="pct">33.2%</div></div>
+  <div class="barrow"><div class="name">Brake · FY billing <span class="tag p1">P1</span></div><div class="track"><div class="fill terra" style="width:45.5%"></div></div><div class="pct">45.5%</div></div>
+  <div class="barrow"><div class="name">Brake · WH YTD ann. <span class="tag p1">P1</span></div><div class="track"><div class="fill blue" style="width:38.3%"></div></div><div class="pct">38.3%</div></div>
+
+  <div class="barrow"><div class="name">Clutch · CY billing <span class="tag plan">47%</span></div><div class="track"><div class="fill navy" style="width:9.3%"></div></div><div class="pct">9.3%</div></div>
+  <div class="barrow"><div class="name">Clutch · FY billing <span class="tag plan">47%</span></div><div class="track"><div class="fill terra" style="width:11.1%"></div></div><div class="pct">11.1%</div></div>
+  <div class="barrow"><div class="name">Clutch · WH YTD ann. <span class="tag plan">47%</span></div><div class="track"><div class="fill blue" style="width:9.3%"></div></div><div class="pct">9.3%</div></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th class="num">CY billing qty</th>
+        <th class="num">CY cover</th>
+        <th class="num">FY billing qty</th>
+        <th class="num">FY cover</th>
+        <th class="num">Move</th>
+        <th class="num">WH 7m qty</th>
+        <th class="num">WH ann. cover</th>
+        <th class="num">Expected / yr</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Oil</td>
+        <td class="num">11,043</td><td class="num">39.5%</td>
+        <td class="num">11,154</td><td class="num">39.9%</td>
+        <td class="cell g">+0.4 pt</td>
+        <td class="num">6,110</td><td class="num">37.4%</td>
+        <td class="num">27,986</td>
+      </tr>
+      <tr>
+        <td>Fuel</td>
+        <td class="num">16,344</td><td class="num">58.4%</td>
+        <td class="num">19,258</td><td class="num">68.8%</td>
+        <td class="cell a">+10.4 pt</td>
+        <td class="num">10,436</td><td class="num">63.9%</td>
+        <td class="num">27,986</td>
+      </tr>
+      <tr>
+        <td>Air <span class="tag p1">P1</span></td>
+        <td class="num">3,776</td><td class="num">13.5%</td>
+        <td class="num">4,409</td><td class="num">15.8%</td>
+        <td class="cell g">+2.3 pt</td>
+        <td class="num">2,173</td><td class="num">13.3%</td>
+        <td class="num">27,986</td>
+      </tr>
+      <tr>
+        <td>Brake <span class="tag p1">P1</span></td>
+        <td class="num">3,720</td><td class="num">33.2%</td>
+        <td class="num">5,093</td><td class="num">45.5%</td>
+        <td class="cell a">+12.3 pt</td>
+        <td class="num">2,500</td><td class="num">38.3%</td>
+        <td class="num">11,195</td>
+      </tr>
+      <tr>
+        <td>Clutch <span class="tag plan">47%</span></td>
+        <td class="num">490</td><td class="num">9.3%</td>
+        <td class="num">582</td><td class="num">11.1%</td>
+        <td class="cell g">+1.8 pt</td>
+        <td class="num">284</td><td class="num">9.3%</td>
+        <td class="num">5,261</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="muted">Expected = UIO 22,389 × frequency (clutch × 47% planning). Warehouse cover uses 7/12 of annual expected against 7-month qty, which equals annualised qty against a full year. Apr study calendar oil was 35.1% (9,818 / 27,986) on a different extract of the same basket. Billing CY vs FY above is one extract, so the period move is comparable even if the level sits a few points above the study file.</p>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">3</span> Parc: N75 vs complete UK (calendar 2025)</h2>
+  <p class="lead">Same IML service schedule. N75 denominator 9,359. Complete denominator 22,389. These are the locked calendar-2025 study figures (distributor layer).</p>
+
+  <div class="grid5">
+    <div class="kpi">
+      <div class="lbl">Oil N75 / complete</div>
+      <div class="val">40 / 35</div>
+      <div class="sub">4,673 / 11,699 vs 9,818 / 27,986</div>
+      <div class="tip">Cover % = actual units divided by UIO × 1.25. N75 oil is a few points higher than complete parc. Same story: not saturated.</div>
+    </div>
+    <div class="kpi gap">
+      <div class="lbl">Fuel N75 / complete</div>
+      <div class="val">94 / 65</div>
+      <div class="sub">11,021 / 11,699 vs 18,228 / 27,986</div>
+      <div class="tip">This is the material parc split. Fuel already high is true on N75. Complete parc fuel is 65%, still a real gap. Do not mix the two in one sentence without the UIO.</div>
+    </div>
+    <div class="kpi gap">
+      <div class="lbl">Air N75 / complete</div>
+      <div class="val">19 / 13</div>
+      <div class="sub">2,226 / 11,699 vs 3,692 / 27,986</div>
+      <div class="tip">Air is the miss on both cuts. N75 is less ugly (19%) than complete (13%) but both are phase-one. Fiscal billing does not take complete air above 16%.</div>
+    </div>
+    <div class="kpi gap">
+      <div class="lbl">Brake N75 / complete</div>
+      <div class="val">62 / 35</div>
+      <div class="sub">2,902 / 4,680 vs 3,953 / 11,194</div>
+      <div class="tip">Second material parc split. N75 brake cover is already mid-sixties. Complete parc is 35% and is where most of the euro gap sits (~€642k in the Apr five-category study).</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Clutch N75 / complete</div>
+      <div class="val">11 / 8</div>
+      <div class="sub">243 / 2,199 vs 411 / 5,274 · 47% planning</div>
+      <div class="tip">Both low. 47% of UIO is the manual planning convention, not a VIN count. Deferred from phase-one. Do not treat 11% as a measured manual-only rate.</div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><i class="sw" style="background:#15233c"></i> N75 (UIO 9,359)</span>
+    <span><i class="sw" style="background:#c0552d"></i> Complete parc (UIO 22,389)</span>
+  </div>
+  <div class="barrow"><div class="name">Oil · N75</div><div class="track"><div class="fill navy" style="width:40%"></div></div><div class="pct">40.0%</div></div>
+  <div class="barrow"><div class="name">Oil · complete</div><div class="track"><div class="fill terra" style="width:35.1%"></div></div><div class="pct">35.1%</div></div>
+  <div class="barrow"><div class="name">Fuel · N75</div><div class="track"><div class="fill navy" style="width:94.2%"></div></div><div class="pct">94.2%</div></div>
+  <div class="barrow"><div class="name">Fuel · complete</div><div class="track"><div class="fill terra" style="width:65.1%"></div></div><div class="pct">65.1%</div></div>
+  <div class="barrow"><div class="name">Air · N75 <span class="tag p1">P1</span></div><div class="track"><div class="fill navy" style="width:19%"></div></div><div class="pct">19.0%</div></div>
+  <div class="barrow"><div class="name">Air · complete <span class="tag p1">P1</span></div><div class="track"><div class="fill terra" style="width:13.2%"></div></div><div class="pct">13.2%</div></div>
+  <div class="barrow"><div class="name">Brake · N75 <span class="tag p1">P1</span></div><div class="track"><div class="fill navy" style="width:62%"></div></div><div class="pct">62.0%</div></div>
+  <div class="barrow"><div class="name">Brake · complete <span class="tag p1">P1</span></div><div class="track"><div class="fill terra" style="width:35.3%"></div></div><div class="pct">35.3%</div></div>
+  <div class="barrow"><div class="name">Clutch · N75 <span class="tag plan">47%</span></div><div class="track"><div class="fill navy" style="width:11%"></div></div><div class="pct">11.0%</div></div>
+  <div class="barrow"><div class="name">Clutch · complete <span class="tag plan">47%</span></div><div class="track"><div class="fill terra" style="width:7.8%"></div></div><div class="pct">7.8%</div></div>
+
+  <div class="callout flag">
+    <b>Do not add the two euro gaps.</b> N75 five-category gap is a subset of the complete-parc ~€2.04M (9,818 / 27,986 oil, five-cat study). Pilot execution stays on N75. Complete parc is context only on this diagnostic, not a Tuesday lead.
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">4</span> Layer: distributor vs dealer (calendar 2025 only)</h2>
+  <p class="lead">Dealer sell-out is calendar 2025. There is no fiscal dealer column until the Q1 2026 extract arrives.</p>
+
+  <h3>N75 (UIO 9,359 · expected oil/fuel/air 11,699 · brake 4,680 · clutch 2,199)</h3>
+  <div class="legend">
+    <span><i class="sw" style="background:#15233c"></i> Distributor</span>
+    <span><i class="sw" style="background:#2a78d6"></i> Dealer</span>
+  </div>
+  <div class="barrow"><div class="name">Oil · DB</div><div class="track"><div class="fill navy" style="width:40%"></div></div><div class="pct">40.0%</div></div>
+  <div class="barrow"><div class="name">Oil · DLR</div><div class="track"><div class="fill blue" style="width:46.2%"></div></div><div class="pct">46.2%</div></div>
+  <div class="barrow"><div class="name">Fuel · DB</div><div class="track"><div class="fill navy" style="width:94.2%"></div></div><div class="pct">94.2%</div></div>
+  <div class="barrow"><div class="name">Fuel · DLR</div><div class="track"><div class="fill blue" style="width:95.2%"></div></div><div class="pct">95.2%</div></div>
+  <div class="barrow"><div class="name">Air · DB <span class="tag p1">P1</span></div><div class="track"><div class="fill navy" style="width:19%"></div></div><div class="pct">19.0%</div></div>
+  <div class="barrow"><div class="name">Air · DLR <span class="tag p1">P1</span></div><div class="track"><div class="fill blue" style="width:19.6%"></div></div><div class="pct">19.6%</div></div>
+  <div class="barrow"><div class="name">Brake · DB <span class="tag p1">P1</span></div><div class="track"><div class="fill navy" style="width:62%"></div></div><div class="pct">62.0%</div></div>
+  <div class="barrow"><div class="name">Brake · DLR <span class="tag p1">P1</span></div><div class="track"><div class="fill blue" style="width:62.5%"></div></div><div class="pct">62.5%</div></div>
+  <div class="barrow"><div class="name">Clutch · DB <span class="tag plan">47%</span></div><div class="track"><div class="fill navy" style="width:11%"></div></div><div class="pct">11.0%</div></div>
+  <div class="barrow"><div class="name">Clutch · DLR <span class="tag plan">47%</span></div><div class="track"><div class="fill blue" style="width:15.5%"></div></div><div class="pct">15.5%</div></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th class="num">DB cover</th>
+        <th class="num">DLR cover</th>
+        <th class="num">DB qty</th>
+        <th class="num">DLR qty</th>
+        <th class="num">Expected</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Oil</td><td class="num">40.0%</td><td class="num">46.2%</td><td class="num">4,673</td><td class="num">5,404</td><td class="num">11,699</td></tr>
+      <tr><td>Fuel</td><td class="num">94.2%</td><td class="num">95.2%</td><td class="num">11,021</td><td class="num">11,139</td><td class="num">11,699</td></tr>
+      <tr><td>Air <span class="tag p1">P1</span></td><td class="num">19.0%</td><td class="num">19.6%</td><td class="num">2,226</td><td class="num">2,289</td><td class="num">11,699</td></tr>
+      <tr><td>Brake <span class="tag p1">P1</span></td><td class="num">62.0%</td><td class="num">62.5%</td><td class="num">2,902</td><td class="num">2,923</td><td class="num">4,680</td></tr>
+      <tr><td>Clutch <span class="tag plan">47%</span></td><td class="num">11.0%</td><td class="num">15.5%</td><td class="num">243</td><td class="num">340</td><td class="num">2,199</td></tr>
+    </tbody>
+  </table>
+  <p class="muted">Dealer N75 is bottom-up part numbers excluding N35 and F-series. Distributor N75 is share-scaled from the complete-parc study (billing has no model flag on the line). Dealer sits a little above distributor on oil and clutch; air and brake are almost the same. Stock / channel timing can explain part of that, not a second demand model.</p>
+
+  <h3>Complete parc oil (UIO 22,389 · expected 27,986)</h3>
+  <div class="barrow"><div class="name">Oil · DB</div><div class="track"><div class="fill navy" style="width:35.1%"></div></div><div class="pct">35.1%</div></div>
+  <div class="barrow"><div class="name">Oil · DLR</div><div class="track"><div class="fill blue" style="width:40.6%"></div></div><div class="pct">40.6%</div></div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">5</span> Comparison matrix</h2>
+  <p class="lead">Green = 50% or more. Amber = 20 to 50%. Red = under 20%. Hover a KPI on earlier screens for the formula.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th class="num">N75 CY DB</th>
+        <th class="num">N75 CY DLR</th>
+        <th class="num">Complete CY study</th>
+        <th class="num">Complete CY billing</th>
+        <th class="num">Complete FY billing</th>
+        <th class="num">WH YTD ann.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Oil</td>
+        <td class="cell a">40.0%</td>
+        <td class="cell a">46.2%</td>
+        <td class="cell a">35.1%</td>
+        <td class="cell a">39.5%</td>
+        <td class="cell a">39.9%</td>
+        <td class="cell a">37.4%</td>
+      </tr>
+      <tr>
+        <td>Fuel</td>
+        <td class="cell g">94.2%</td>
+        <td class="cell g">95.2%</td>
+        <td class="cell g">65.1%</td>
+        <td class="cell g">58.4%</td>
+        <td class="cell g">68.8%</td>
+        <td class="cell g">63.9%</td>
+      </tr>
+      <tr>
+        <td>Air <span class="tag p1">P1</span></td>
+        <td class="cell r">19.0%</td>
+        <td class="cell r">19.6%</td>
+        <td class="cell r">13.2%</td>
+        <td class="cell r">13.5%</td>
+        <td class="cell r">15.8%</td>
+        <td class="cell r">13.3%</td>
+      </tr>
+      <tr>
+        <td>Brake <span class="tag p1">P1</span></td>
+        <td class="cell g">62.0%</td>
+        <td class="cell g">62.5%</td>
+        <td class="cell a">35.3%</td>
+        <td class="cell a">33.2%</td>
+        <td class="cell a">45.5%</td>
+        <td class="cell a">38.3%</td>
+      </tr>
+      <tr>
+        <td>Clutch <span class="tag plan">47%</span></td>
+        <td class="cell r">11.0%</td>
+        <td class="cell r">15.5%</td>
+        <td class="cell r">7.8%</td>
+        <td class="cell r">9.3%</td>
+        <td class="cell r">11.1%</td>
+        <td class="cell r">9.3%</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">6</span> Data holes (do not invent)</h2>
+  <table>
+    <thead><tr><th>Hole</th><th>Effect on this diagnostic</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>No dealer sell-out after 31 Dec 2025</td>
+        <td>Fiscal dealer column is blank. Q1 2026 dealer extract still outstanding.</td>
+      </tr>
+      <tr>
+        <td>ISZE billing ends 31 Mar 2026</td>
+        <td>No Apr-Jul 2026 billing to pair with warehouse YTD. Warehouse is a different layer.</td>
+      </tr>
+      <tr>
+        <td>Clutch 47% manual</td>
+        <td>Planning convention. VIN / transmission split still not available in the requested form.</td>
+      </tr>
+      <tr>
+        <td>Distributor N75 is share-scaled</td>
+        <td>Billing lines have no N75 flag. N75 dealer is bottom-up PN. Do not treat DB N75 qty as VIN-counted.</td>
+      </tr>
+      <tr>
+        <td>Warehouse unique-PN only</td>
+        <td>Four model tables were not summed (same PN repeats across models). YTD is unique item demand.</td>
+      </tr>
+      <tr>
+        <td>Study file vs current billing extract</td>
+        <td>Apr study calendar oil 35.1% (9,818). Current billing extract on the same 53 PNs is 39.5%. Period moves use the extract. Tuesday can keep 35.1% as the locked study number.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    ITUK only. Cover = actual units ÷ (UIO × IML service-schedule frequency). N75 UIO 9,359 cleaned. Complete parc 22,389. Fiscal = Apr to Mar. Clutch denominator = 47% of UIO (planning). Five-category complete-parc gap ~€2.04M is the Apr study figure (oil 9,818 / 27,986). This page is a Jerome-only diagnostic and is not the Tuesday head presentation.
+  </div>
+</section>
+
+</body>
+</html>

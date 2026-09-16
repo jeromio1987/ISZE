@@ -1,0 +1,48 @@
+{
+  "generated_at": "2026-08-19T15:43:59+00:00",
+  "rows": 106,
+  "integrity": {
+    "score": 74,
+    "band": "provisional",
+    "quotable_externally": false,
+    "label": "Internal QA / provisional \u2014 do not quote list-to-pocket externally",
+    "deductions": [
+      {
+        "item": "List coverage %",
+        "deduction": 3,
+        "detail": "Avg matched revenue coverage 87.6% (NO_LIST gap)"
+      },
+      {
+        "item": "Blank PR00 prices (#VALUE!/null)",
+        "deduction": 5,
+        "detail": "7 blank/unusable Price_EUR in 2023\u20132025 history extracts"
+      },
+      {
+        "item": "2026 PR00 unusable prices",
+        "deduction": 4,
+        "detail": "4387 blank/non-positive SP on active current PR00 rows"
+      },
+      {
+        "item": "Year alignment (accepted assumption)",
+        "deduction": 3,
+        "detail": "Billing/order-date year -> that year's PR00 list (accepted 2026-08-20). Intra-year list changes not dated - residual, not a blocker."
+      },
+      {
+        "item": "2026 list vintage",
+        "deduction": 6,
+        "detail": "2026 YTD joins current IE40 PR00 extract (2026-08-10), not a 2026-01 list snapshot"
+      },
+      {
+        "item": "FY vs CY caveat",
+        "deduction": 5,
+        "detail": "Realization is calendar-year; VPACC/KPI MOS mix FY labels \u2014 do not blend without care"
+      }
+    ],
+    "validated_2026_08_20": "Year-matched joins independently verified; formulas reconcile. Task 1.4 closed.",
+    "built_at_utc": "2026-08-19T15:43:36Z"
+  },
+  "outputs": {
+    "csv": "01_data\\00_derived\\list_to_pocket_validation_2023_2025.csv",
+    "note": "01_data\\01_Pricing\\LIST_TO_POCKET_VALIDATION_20260819.md"
+  }
+}

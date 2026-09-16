@@ -1,0 +1,35 @@
+{
+  "probed_at": "2026-08-25T17:28:03.275463+00:00",
+  "GET_1": {
+    "http": 200,
+    "ct": "application/json;charset=UTF-8",
+    "len": 12075,
+    "snip": "{\"recordsFiltered\":170156,\"data\":[[\"1210 Wien, Veterinärplatz 1- Wartung-Mittelspannungsanlage\",\"Bundesimmobiliengesellschaft m.b.H.\",\"2026-08-25\",null,\"a2c49245-23b2-46e1-acc7-c5a78913a090-1acbb173-9fdd-46f6-bcca-f784c55f2cff\",false,null,null],[\"4040 Linz, Peuerbachstr. 35, Erweiterung des Georg von Peuerbach Gymnasiums, Fliesenlegerarbeiten\",\"Bundesimmobiliengesellschaft m.b.H. vertreten durch U",
+    "keys": [
+      "recordsFiltered",
+      "data",
+      "recordsTotal"
+    ],
+    "n_data": 50,
+    "recordsTotal": 170156
+  },
+  "POST_2": {
+    "http": 405,
+    "ct": "application/json",
+    "len": 133,
+    "snip": "{\"timestamp\":\"2026-08-25T17:28:04.424Z\",\"status\":405,\"error\":\"Method Not Allowed\",\"path\":\"/at.gv.bmdw.eproc-p/public/api/tenderlist\"}"
+  },
+  "POST_3": {
+    "http": 405,
+    "ct": "application/json",
+    "len": 133,
+    "snip": "{\"timestamp\":\"2026-08-25T17:28:04.465Z\",\"status\":405,\"error\":\"Method Not Allowed\",\"path\":\"/at.gv.bmdw.eproc-p/public/api/tenderlist\"}"
+  },
+  "kerndaten": {
+    "http": 200,
+    "ct": "text/html; charset=UTF-8",
+    "len": 32537,
+    "final": "https://offenevergaben.at/downloads/kerndaten_dump_daily?format=csv",
+    "snip": "<!DOCTYPE html> <html lang=\"de\"> <head>     <meta charset=\"utf-8\">     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">     <meta name=\"csrf-token\" content=\"T1HgHT4PjjXnkiNIWEx4hdTbtNg9cwrL7slpatZi\">     <!-- Open Graph -->     <meta property=\"og:title\" content=\"BULK Kerndaten\" /"
+  }
+}

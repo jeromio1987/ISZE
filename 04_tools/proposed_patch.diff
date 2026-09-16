@@ -1,24 +1,20 @@
-⚠ GENERATED 2026-07-27 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
+⚠ GENERATED 2026-08-23 by isze-scraper-healthcheck-autofix — review applied_patches_log.md for any auto-applies.
 
-# No patch proposed this run (2026-07-27).
+# No diff this run.
 #
-# Nothing diagnosed this run is a diffable code fix:
+# The 2026-08-09 diff in this file (Israel "undefined entity" fallback) was
+# applied interactively on 2026-08-11 — see applied_patches_log.md — and is
+# confirmed present in the current tender_scraper_v3.py. That old diff has
+# been removed from this file so it doesn't get mistaken for an outstanding
+# proposal.
 #
-#   - KS / Tranzparts / TMC / Auto365 (all allowlisted): ran clean with
-#     0 errors in the 2026-07-26 manual refresh, and KS was mid-refresh
-#     again via the Monday 07:00 scheduled task at the time of this
-#     check (119/300 rows written, no errors observed). No bug found,
-#     nothing to patch.
-#   - Mekonomen (allowlisted): confirmed broken, but the cause is a
-#     missing Playwright browser executable (environment/dependency
-#     issue), not a URL/selector string in the script. This fails the
-#     auto-apply gate ("string updates only") and there is no in-script
-#     line to change — see manual_review_required.md Item 1 for the
-#     full traceback and suggested fix (run `playwright install`, check
-#     PLAYWRIGHT_BROWSERS_PATH).
-#   - Tender (propose-only regardless): Israel RSS undefined-entity
-#     parse error and Belgium RSS non-XML response are both unchanged
-#     since 2026-06-28 — see manual_review_required.md Items 3 and 4 for
-#     the suggested-but-untested code, carried forward again this run.
+# All five allowlisted competitive scrapers (KS, Tranzparts, TMC, Mekonomen,
+# Auto365) refreshed cleanly on 2026-08-17 with 0 errors and no drift — no
+# fix needed, nothing to propose.
 #
-# This file intentionally contains no diff hunks this run. Do not git apply.
+# One real issue remains open on the Israel tender feed (a second, different
+# XML malformation surfaced after the Aug 11 fix — "mismatched tag" instead
+# of "undefined entity"). No diff is proposed for it because this job has no
+# web access to see the actual malformed feed content, and guessing at the
+# fix risks corrupting/dropping entries. See manual_review_required.md Item 1
+# for the full diagnosis and evidence.

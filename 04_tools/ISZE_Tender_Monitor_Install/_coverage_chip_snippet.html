@@ -1,0 +1,72 @@
+<!--
+  Coverage vs dark — KPI chip snippet for v4
+  DO NOT auto-merge into build_dashboard_v4.py while source-health agent is editing it.
+  Paste into the KPI strip after that lands, then rebuild v4.
+
+  Paper: _MARKET_COVERAGE_DARK_MAP.md
+  Style: navy #15233c / terracotta #c0552d / paper #f7f4ee — no CDN
+-->
+
+<style>
+  /* Optional: only if not already present beside other .kpi-tip rules */
+  .kpi-chip.coverage-dark {
+    position: relative;
+    cursor: help;
+    background: #15233c;
+    color: #f7f4ee;
+    border: 1px solid #1a2b4a;
+    border-left: 3px solid #c0552d;
+    padding: 10px 14px;
+    border-radius: 2px;
+    font-size: 13px;
+    line-height: 1.35;
+    max-width: 280px;
+  }
+  .kpi-chip.coverage-dark .chip-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #c8d0dc;
+    margin-bottom: 4px;
+  }
+  .kpi-chip.coverage-dark .chip-value {
+    font-weight: 700;
+    font-size: 18px;
+    color: #f7f4ee;
+  }
+  .kpi-chip.coverage-dark .chip-sub {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #c8d0dc;
+  }
+  .kpi-chip.coverage-dark[data-tip]:hover::after,
+  .kpi-chip.coverage-dark:focus-visible::after {
+    content: attr(data-tip);
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 8px);
+    z-index: 40;
+    width: min(360px, 70vw);
+    padding: 10px 12px;
+    background: #15233c;
+    color: #f7f4ee;
+    border: 1px solid #c0552d;
+    border-radius: 2px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+    white-space: normal;
+    box-shadow: 0 8px 20px rgba(21, 35, 60, 0.35);
+    pointer-events: none;
+  }
+</style>
+
+<div class="kpi-chip coverage-dark"
+     tabindex="0"
+     data-tip="Plausible share of Isuzu-relevant public notices in the ISZE footprint we already ingest (TED ± national), after the product-fit gate — not every EU tender, not GPS-sized share. Band ~35–55%, confidence Medium (2026-08-25 dark map). Full lead capacity ≠ every row GPS-sized. See _MARKET_COVERAGE_DARK_MAP.md.">
+  <span class="chip-label">Coverage vs dark</span>
+  <span class="chip-value">~35–55%</span>
+  <span class="chip-sub">addressable leads likely seen · range, not a point estimate</span>
+</div>

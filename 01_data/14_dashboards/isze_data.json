@@ -4,9 +4,9 @@
     "generated": "2026-04-17",
     "source_excel": "ISUZU_UIO_Overview_2026_v17.xlsx",
     "description": "ISZE dashboard data — auto-extracted 17 Apr 2026",
-    "pms_refreshed": "2026-07-27T15:30:57Z",
+    "pms_refreshed": "2026-08-25T18:14:23Z",
     "pms_source": "build_isze_dashboard_json.py",
-    "prism_refreshed": "2026-07-27T15:30:57Z"
+    "prism_refreshed": "2026-08-25T18:14:23Z"
   },
   "aim": {
     "kpis": {
@@ -1228,227 +1228,139 @@
     "methodology": "ITUK: IML v7 service schedule (Model B) — IML service schedule: Oil/Fuel/Air 1.25×/yr (40,000 km ÷ 50,000 km/yr); Clutch/Brake 0.5×/yr. UIO × category freq, no addressability discount. Network league (other DBs): PRISM registry vs UIO × interval assumptions.",
     "source_file": "ITUK_PMS_Analysis_Apr2026_v7_reclassified.xlsx",
     "prism_source_file": "Data/derived/pms_capture_by_db_year.csv",
+    "league_year": 2025,
     "distributor_count": 18,
     "by_distributor": [
       {
+        "year": 2025,
         "distributor_code": "IUK",
         "country": "nan",
         "uio_units": 47783,
-        "capture_rate_total_wtd_pct": 3.4,
-        "capture_rate_genuine_wtd_pct": 2.9,
-        "revenue_gap_eur_sum": 6925978.0,
-        "oil_filter_capture_pct": 7.4,
+        "capture_rate_total_wtd_pct": 17.3,
+        "capture_rate_genuine_wtd_pct": 15.6,
+        "revenue_gap_eur_sum": 5802175.0,
+        "oil_filter_capture_pct": 37.7,
         "top_gap_categories": [
           "clutch_disc",
           "brake_pad",
-          "brake_rotor"
+          "brake_shoe"
         ]
       },
       {
+        "year": 2025,
+        "distributor_code": "UTI",
+        "country": "nan",
+        "uio_units": 10336,
+        "capture_rate_total_wtd_pct": 48.4,
+        "capture_rate_genuine_wtd_pct": 20.0,
+        "revenue_gap_eur_sum": 1863298.0,
+        "oil_filter_capture_pct": 91.3,
+        "top_gap_categories": [
+          "brake_pad",
+          "clutch_booster",
+          "clutch_pressure_plate"
+        ]
+      },
+      {
+        "year": 2025,
         "distributor_code": "GERMANY",
         "country": "nan",
         "uio_units": 13780,
-        "capture_rate_total_wtd_pct": 6.3,
-        "capture_rate_genuine_wtd_pct": 5.7,
-        "revenue_gap_eur_sum": 2149315.0,
-        "oil_filter_capture_pct": 13.9,
+        "capture_rate_total_wtd_pct": 14.0,
+        "capture_rate_genuine_wtd_pct": 12.4,
+        "revenue_gap_eur_sum": 1857082.0,
+        "oil_filter_capture_pct": 15.1,
         "top_gap_categories": [
           "clutch_disc",
-          "clutch_pressure_plate",
+          "brake_shoe",
           "brake_pad"
         ]
       },
       {
+        "year": 2025,
         "distributor_code": "UMI",
         "country": "nan",
         "uio_units": 18542,
-        "capture_rate_total_wtd_pct": 1.7,
-        "capture_rate_genuine_wtd_pct": 0.4,
-        "revenue_gap_eur_sum": 2050245.0,
-        "oil_filter_capture_pct": 1.7,
+        "capture_rate_total_wtd_pct": 21.3,
+        "capture_rate_genuine_wtd_pct": 7.1,
+        "revenue_gap_eur_sum": 1760114.0,
+        "oil_filter_capture_pct": 85.2,
         "top_gap_categories": [
+          "brake_pad",
           "clutch_disc",
-          "brake_pad",
-          "brake_shoe"
+          "blower_filter"
         ]
       },
       {
-        "distributor_code": "UTI",
+        "year": 2025,
+        "distributor_code": "BELGIUM",
         "country": "nan",
-        "uio_units": 10336,
-        "capture_rate_total_wtd_pct": 11.0,
-        "capture_rate_genuine_wtd_pct": 5.3,
-        "revenue_gap_eur_sum": 1837682.0,
-        "oil_filter_capture_pct": 20.4,
+        "uio_units": 9593,
+        "capture_rate_total_wtd_pct": 25.9,
+        "capture_rate_genuine_wtd_pct": 17.6,
+        "revenue_gap_eur_sum": 1382312.0,
+        "oil_filter_capture_pct": 62.6,
         "top_gap_categories": [
+          "brake_shoe",
           "brake_pad",
-          "brake_rotor",
-          "clutch_booster"
+          "clutch_disc"
         ]
       },
       {
+        "year": 2025,
         "distributor_code": "ITUK",
         "country": "nan",
         "uio_units": 23068,
         "capture_rate_total_wtd_pct": 35.9,
-        "capture_rate_genuine_wtd_pct": 17.1,
+        "capture_rate_genuine_wtd_pct": 54.9,
         "revenue_gap_eur_sum": 2038471,
         "oil_filter_capture_pct": 35.1,
         "top_gap_categories": [
-          "brake_pad",
+          "urea_filter",
           "brake_shoe",
-          "clutch_pressure_plate"
+          "clutch_disc"
         ],
         "pms_model": "iml_v7"
       },
       {
-        "distributor_code": "BELGIUM",
-        "country": "nan",
-        "uio_units": 9593,
-        "capture_rate_total_wtd_pct": 11.3,
-        "capture_rate_genuine_wtd_pct": 7.1,
-        "revenue_gap_eur_sum": 1389748.0,
-        "oil_filter_capture_pct": 28.2,
-        "top_gap_categories": [
-          "brake_pad",
-          "brake_shoe",
-          "clutch_pressure_plate"
-        ]
-      },
-      {
-        "distributor_code": "NORWAY",
-        "country": "nan",
-        "uio_units": 7929,
-        "capture_rate_total_wtd_pct": 5.6,
-        "capture_rate_genuine_wtd_pct": 4.6,
-        "revenue_gap_eur_sum": 1233228.0,
-        "oil_filter_capture_pct": 12.0,
-        "top_gap_categories": [
-          "clutch_disc",
-          "brake_pad",
-          "clutch_pressure_plate"
-        ]
-      },
-      {
-        "distributor_code": "PORTUGAL",
-        "country": "nan",
-        "uio_units": 7208,
-        "capture_rate_total_wtd_pct": 9.1,
-        "capture_rate_genuine_wtd_pct": 2.2,
-        "revenue_gap_eur_sum": 1006010.0,
-        "oil_filter_capture_pct": 19.4,
-        "top_gap_categories": [
-          "brake_pad",
-          "clutch_disc",
-          "clutch_pressure_plate"
-        ]
-      },
-      {
+        "year": 2025,
         "distributor_code": "SWEDEN",
         "country": "nan",
         "uio_units": 8443,
-        "capture_rate_total_wtd_pct": 6.2,
-        "capture_rate_genuine_wtd_pct": 6.0,
-        "revenue_gap_eur_sum": 870105.0,
-        "oil_filter_capture_pct": 10.6,
+        "capture_rate_total_wtd_pct": 24.1,
+        "capture_rate_genuine_wtd_pct": 23.4,
+        "revenue_gap_eur_sum": 1032358.0,
+        "oil_filter_capture_pct": 48.7,
         "top_gap_categories": [
-          "brake_pad",
-          "brake_shoe",
-          "brake_rotor"
-        ]
-      },
-      {
-        "distributor_code": "GREECE",
-        "country": "nan",
-        "uio_units": 3742,
-        "capture_rate_total_wtd_pct": 3.8,
-        "capture_rate_genuine_wtd_pct": 3.0,
-        "revenue_gap_eur_sum": 636921.0,
-        "oil_filter_capture_pct": 8.2,
-        "top_gap_categories": [
-          "brake_pad",
           "clutch_disc",
+          "brake_pad",
           "brake_shoe"
         ]
       },
       {
-        "distributor_code": "HUNGARY",
+        "year": 2025,
+        "distributor_code": "PORTUGAL",
         "country": "nan",
-        "uio_units": 3734,
-        "capture_rate_total_wtd_pct": 5.7,
-        "capture_rate_genuine_wtd_pct": 3.9,
-        "revenue_gap_eur_sum": 447186.0,
-        "oil_filter_capture_pct": 15.8,
+        "uio_units": 7208,
+        "capture_rate_total_wtd_pct": 32.4,
+        "capture_rate_genuine_wtd_pct": 12.8,
+        "revenue_gap_eur_sum": 773599.0,
+        "oil_filter_capture_pct": 52.1,
         "top_gap_categories": [
-          "brake_pad",
-          "clutch_disc",
-          "brake_rotor"
-        ]
-      },
-      {
-        "distributor_code": "CYPRUS",
-        "country": "nan",
-        "uio_units": 2308,
-        "capture_rate_total_wtd_pct": 6.3,
-        "capture_rate_genuine_wtd_pct": 3.4,
-        "revenue_gap_eur_sum": 282111.0,
-        "oil_filter_capture_pct": 8.9,
-        "top_gap_categories": [
-          "brake_pad",
+          "clutch_booster",
           "brake_shoe",
           "clutch_disc"
         ]
       },
       {
-        "distributor_code": "IRELAND",
+        "year": 2025,
+        "distributor_code": "NORWAY",
         "country": "nan",
-        "uio_units": 2161,
-        "capture_rate_total_wtd_pct": 11.1,
-        "capture_rate_genuine_wtd_pct": 7.7,
-        "revenue_gap_eur_sum": 273790.0,
-        "oil_filter_capture_pct": 11.3,
-        "top_gap_categories": [
-          "brake_pad",
-          "blower_filter",
-          "brake_rotor"
-        ]
-      },
-      {
-        "distributor_code": "ROMANIA",
-        "country": "nan",
-        "uio_units": 1071,
-        "capture_rate_total_wtd_pct": 7.7,
-        "capture_rate_genuine_wtd_pct": 6.7,
-        "revenue_gap_eur_sum": 175153.0,
-        "oil_filter_capture_pct": 15.9,
-        "top_gap_categories": [
-          "brake_pad",
-          "clutch_disc",
-          "clutch_pressure_plate"
-        ]
-      },
-      {
-        "distributor_code": "MALTA",
-        "country": "nan",
-        "uio_units": 1040,
-        "capture_rate_total_wtd_pct": 7.2,
-        "capture_rate_genuine_wtd_pct": 7.1,
-        "revenue_gap_eur_sum": 168352.0,
-        "oil_filter_capture_pct": 29.2,
-        "top_gap_categories": [
-          "clutch_disc",
-          "brake_pad",
-          "brake_shoe"
-        ]
-      },
-      {
-        "distributor_code": "DENMARK",
-        "country": "nan",
-        "uio_units": 851,
-        "capture_rate_total_wtd_pct": 7.5,
-        "capture_rate_genuine_wtd_pct": 7.2,
-        "revenue_gap_eur_sum": 107100.0,
-        "oil_filter_capture_pct": 20.9,
+        "uio_units": 7929,
+        "capture_rate_total_wtd_pct": 26.9,
+        "capture_rate_genuine_wtd_pct": 22.1,
+        "revenue_gap_eur_sum": 612667.0,
+        "oil_filter_capture_pct": 47.8,
         "top_gap_categories": [
           "brake_shoe",
           "brake_pad",
@@ -1456,31 +1368,138 @@
         ]
       },
       {
-        "distributor_code": "FINLAND",
+        "year": 2025,
+        "distributor_code": "HUNGARY",
         "country": "nan",
-        "uio_units": 1204,
-        "capture_rate_total_wtd_pct": 4.6,
-        "capture_rate_genuine_wtd_pct": 4.4,
-        "revenue_gap_eur_sum": 105545.0,
-        "oil_filter_capture_pct": 12.2,
+        "uio_units": 3734,
+        "capture_rate_total_wtd_pct": 19.1,
+        "capture_rate_genuine_wtd_pct": 14.1,
+        "revenue_gap_eur_sum": 488268.0,
+        "oil_filter_capture_pct": 45.0,
         "top_gap_categories": [
+          "clutch_disc",
           "brake_pad",
-          "blower_filter",
-          "fuel_filter"
+          "brake_shoe"
         ]
       },
       {
+        "year": 2025,
+        "distributor_code": "GREECE",
+        "country": "nan",
+        "uio_units": 3742,
+        "capture_rate_total_wtd_pct": 40.3,
+        "capture_rate_genuine_wtd_pct": 22.7,
+        "revenue_gap_eur_sum": 414168.0,
+        "oil_filter_capture_pct": 97.2,
+        "top_gap_categories": [
+          "clutch_disc",
+          "brake_pad",
+          "brake_shoe"
+        ]
+      },
+      {
+        "year": 2025,
+        "distributor_code": "CYPRUS",
+        "country": "nan",
+        "uio_units": 2308,
+        "capture_rate_total_wtd_pct": 50.1,
+        "capture_rate_genuine_wtd_pct": 26.9,
+        "revenue_gap_eur_sum": 231896.0,
+        "oil_filter_capture_pct": 91.2,
+        "top_gap_categories": [
+          "clutch_disc",
+          "brake_shoe",
+          "clutch_pressure_plate"
+        ]
+      },
+      {
+        "year": 2025,
+        "distributor_code": "FINLAND",
+        "country": "nan",
+        "uio_units": 1204,
+        "capture_rate_total_wtd_pct": 28.9,
+        "capture_rate_genuine_wtd_pct": 27.8,
+        "revenue_gap_eur_sum": 149717.0,
+        "oil_filter_capture_pct": 78.2,
+        "top_gap_categories": [
+          "clutch_disc",
+          "brake_pad",
+          "brake_shoe"
+        ]
+      },
+      {
+        "year": 2025,
+        "distributor_code": "ROMANIA",
+        "country": "nan",
+        "uio_units": 1071,
+        "capture_rate_total_wtd_pct": 36.6,
+        "capture_rate_genuine_wtd_pct": 28.1,
+        "revenue_gap_eur_sum": 128352.0,
+        "oil_filter_capture_pct": 57.3,
+        "top_gap_categories": [
+          "brake_pad",
+          "clutch_disc",
+          "brake_rotor"
+        ]
+      },
+      {
+        "year": 2025,
+        "distributor_code": "IRELAND",
+        "country": "nan",
+        "uio_units": 2161,
+        "capture_rate_total_wtd_pct": 102.7,
+        "capture_rate_genuine_wtd_pct": 76.0,
+        "revenue_gap_eur_sum": 123281.0,
+        "oil_filter_capture_pct": 190.6,
+        "top_gap_categories": [
+          "urea_filter",
+          "blower_filter",
+          "brake_shoe"
+        ]
+      },
+      {
+        "year": 2025,
+        "distributor_code": "MALTA",
+        "country": "nan",
+        "uio_units": 1040,
+        "capture_rate_total_wtd_pct": 32.9,
+        "capture_rate_genuine_wtd_pct": 32.8,
+        "revenue_gap_eur_sum": 121156.0,
+        "oil_filter_capture_pct": 90.5,
+        "top_gap_categories": [
+          "clutch_disc",
+          "brake_pad",
+          "blower_filter"
+        ]
+      },
+      {
+        "year": 2025,
+        "distributor_code": "DENMARK",
+        "country": "nan",
+        "uio_units": 851,
+        "capture_rate_total_wtd_pct": 30.2,
+        "capture_rate_genuine_wtd_pct": 29.2,
+        "revenue_gap_eur_sum": 107031.0,
+        "oil_filter_capture_pct": 49.5,
+        "top_gap_categories": [
+          "clutch_disc",
+          "brake_pad",
+          "clutch_pressure_plate"
+        ]
+      },
+      {
+        "year": 2025,
         "distributor_code": "ICELAND",
         "country": "nan",
         "uio_units": 406,
-        "capture_rate_total_wtd_pct": 6.0,
-        "capture_rate_genuine_wtd_pct": 5.5,
-        "revenue_gap_eur_sum": 38844.0,
-        "oil_filter_capture_pct": 9.4,
+        "capture_rate_total_wtd_pct": 30.2,
+        "capture_rate_genuine_wtd_pct": 30.0,
+        "revenue_gap_eur_sum": 46819.0,
+        "oil_filter_capture_pct": 70.7,
         "top_gap_categories": [
-          "brake_rotor",
-          "brake_shoe",
-          "brake_pad"
+          "clutch_disc",
+          "brake_pad",
+          "clutch_pressure_plate"
         ]
       }
     ],
@@ -1560,27 +1579,27 @@
       ]
     },
     "ituk_prism_lane": {
-      "year": 2026,
+      "year": 2025,
       "uio_dvla": 23068,
-      "revenue_gap_eur_sum": 1610699.0,
+      "revenue_gap_eur_sum": 1322262.0,
       "oil_filter": {
         "category": "oil_filter",
         "label": "Oil Filter",
-        "capture_rate_pct": 28.4,
-        "capture_rate_raw_pct": 28.4,
+        "capture_rate_pct": 100.0,
+        "capture_rate_raw_pct": 116.4,
         "expected_qty": 11680.2,
-        "actual_qty": 3322.0,
-        "revenue_gap_eur": 66976.0
+        "actual_qty": 13599.0,
+        "revenue_gap_eur": 0.0
       },
       "categories": [
         {
           "category": "air_filter",
           "label": "Air Filter",
-          "capture_rate_pct": 27.4,
-          "capture_rate_raw_pct": 27.4,
+          "capture_rate_pct": 91.6,
+          "capture_rate_raw_pct": 91.6,
           "expected_qty": 5840.1,
-          "actual_qty": 1602.0,
-          "revenue_gap_eur": 123162.0
+          "actual_qty": 5351.0,
+          "revenue_gap_eur": 13944.0
         },
         {
           "category": "blower_filter",
@@ -1594,83 +1613,83 @@
         {
           "category": "brake_pad",
           "label": "Brake Pad",
-          "capture_rate_pct": 29.3,
-          "capture_rate_raw_pct": 29.3,
+          "capture_rate_pct": 72.9,
+          "capture_rate_raw_pct": 72.9,
           "expected_qty": 4672.1,
-          "actual_qty": 1368.0,
-          "revenue_gap_eur": 288809.0
+          "actual_qty": 3404.0,
+          "revenue_gap_eur": 112706.0
         },
         {
           "category": "brake_rotor",
           "label": "Brake Rotor",
-          "capture_rate_pct": 57.5,
-          "capture_rate_raw_pct": 57.5,
+          "capture_rate_pct": 100.0,
+          "capture_rate_raw_pct": 197.7,
           "expected_qty": 2920.0,
-          "actual_qty": 1678.0,
-          "revenue_gap_eur": 79525.0
+          "actual_qty": 5772.0,
+          "revenue_gap_eur": 0.0
         },
         {
           "category": "brake_shoe",
           "label": "Brake Shoe",
-          "capture_rate_pct": 8.7,
-          "capture_rate_raw_pct": 8.7,
+          "capture_rate_pct": 12.0,
+          "capture_rate_raw_pct": 12.0,
           "expected_qty": 4672.1,
-          "actual_qty": 408.0,
-          "revenue_gap_eur": 232569.0
+          "actual_qty": 559.0,
+          "revenue_gap_eur": 210750.0
         },
         {
           "category": "clutch_booster",
           "label": "Clutch Booster",
-          "capture_rate_pct": 0.0,
-          "capture_rate_raw_pct": 0.0,
+          "capture_rate_pct": 0.2,
+          "capture_rate_raw_pct": 0.2,
           "expected_qty": 1168.0,
-          "actual_qty": 0.0,
-          "revenue_gap_eur": 0.0
+          "actual_qty": 2.0,
+          "revenue_gap_eur": 159744.0
         },
         {
           "category": "clutch_disc",
           "label": "Clutch Disc",
-          "capture_rate_pct": 6.2,
-          "capture_rate_raw_pct": 6.2,
+          "capture_rate_pct": 13.7,
+          "capture_rate_raw_pct": 13.7,
           "expected_qty": 2336.0,
-          "actual_qty": 144.0,
-          "revenue_gap_eur": 191116.0
+          "actual_qty": 321.0,
+          "revenue_gap_eur": 183287.0
         },
         {
           "category": "clutch_kit",
           "label": "Clutch Kit",
-          "capture_rate_pct": 5.8,
-          "capture_rate_raw_pct": 5.8,
+          "capture_rate_pct": 32.0,
+          "capture_rate_raw_pct": 32.0,
           "expected_qty": 1752.0,
-          "actual_qty": 102.0,
-          "revenue_gap_eur": 93618.0
+          "actual_qty": 561.0,
+          "revenue_gap_eur": 98989.0
         },
         {
           "category": "clutch_pressure_plate",
           "label": "Clutch Pressure Plate",
-          "capture_rate_pct": 3.5,
-          "capture_rate_raw_pct": 3.5,
+          "capture_rate_pct": 13.5,
+          "capture_rate_raw_pct": 13.5,
           "expected_qty": 2336.0,
-          "actual_qty": 83.0,
-          "revenue_gap_eur": 221820.0
+          "actual_qty": 316.0,
+          "revenue_gap_eur": 162889.0
         },
         {
           "category": "fuel_filter",
           "label": "Fuel Filter",
-          "capture_rate_pct": 54.1,
-          "capture_rate_raw_pct": 54.1,
+          "capture_rate_pct": 100.0,
+          "capture_rate_raw_pct": 157.0,
           "expected_qty": 11680.2,
-          "actual_qty": 6318.0,
-          "revenue_gap_eur": 63863.0
+          "actual_qty": 18339.0,
+          "revenue_gap_eur": 0.0
         },
         {
           "category": "oil_filter",
           "label": "Oil Filter",
-          "capture_rate_pct": 28.4,
-          "capture_rate_raw_pct": 28.4,
+          "capture_rate_pct": 100.0,
+          "capture_rate_raw_pct": 116.4,
           "expected_qty": 11680.2,
-          "actual_qty": 3322.0,
-          "revenue_gap_eur": 66976.0
+          "actual_qty": 13599.0,
+          "revenue_gap_eur": 0.0
         },
         {
           "category": "pilot_bearing",
@@ -1684,20 +1703,20 @@
         {
           "category": "release_bearing",
           "label": "Release Bearing",
-          "capture_rate_pct": 2.6,
-          "capture_rate_raw_pct": 2.6,
+          "capture_rate_pct": 6.2,
+          "capture_rate_raw_pct": 6.2,
           "expected_qty": 1752.0,
-          "actual_qty": 45.0,
-          "revenue_gap_eur": 40871.0
+          "actual_qty": 108.0,
+          "revenue_gap_eur": 37597.0
         },
         {
           "category": "urea_filter",
           "label": "Urea (AdBlue) Filter",
-          "capture_rate_pct": 3.5,
-          "capture_rate_raw_pct": 3.5,
+          "capture_rate_pct": 11.3,
+          "capture_rate_raw_pct": 11.3,
           "expected_qty": 11680.2,
-          "actual_qty": 404.0,
-          "revenue_gap_eur": 208369.0
+          "actual_qty": 1319.0,
+          "revenue_gap_eur": 342356.0
         }
       ],
       "note": "Internal network KPI lane only — not IML headline"
@@ -2057,7 +2076,7 @@
     "grow_capture_count": 0,
     "defend_count": 6,
     "competitive_pn_tracked": 12,
-    "tender_pipeline_90d": 13,
+    "tender_pipeline_90d": 2,
     "tender_stale_days": 0
   }
 }

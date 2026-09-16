@@ -1,0 +1,295 @@
+{
+  "probed_at": "2026-08-25T18:01:21.616520+00:00",
+  "cz_js_search_ctx": [
+    "{e}`).then((e=>e.data)))),mp(this,\"getSubmissionsSearch\",(e=>this.api.get(\"/api/submissions/search\",{params:e}).then((e=>({data:e.data,totalCount:parseInt(e.headers[bp]),maxItems:parseInt(e.headers[_p])}))))),mp(this,\""
+  ],
+  "cz_tries": [
+    {
+      "url": "https://api.vvz.nipez.cz/api/submissions/search?page=0&size=5",
+      "method": "GET",
+      "http": 400,
+      "len": 187,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"detail\":\"Query parameter \\u0022formGroup\\u0022 is required\",\"code\":\"FILTER_CONSTRAINT_VIOLATION\"}"
+    },
+    {
+      "url": "https://api.vvz.nipez.cz/api/submissions/search",
+      "method": "POST",
+      "http": 405,
+      "len": 132,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"status\":405,\"detail\":\"Method Not Allowed\"}"
+    },
+    {
+      "url": "https://api.vvz.nipez.cz/api/submissions/search",
+      "method": "POST",
+      "http": 405,
+      "len": 132,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"status\":405,\"detail\":\"Method Not Allowed\"}"
+    },
+    {
+      "url": "https://api.vvz.nipez.cz/api/forms?page=0&size=5",
+      "method": "GET",
+      "http": 400,
+      "len": 157,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"detail\":\"Page should not be less than 1\",\"code\":\"INVALID_ARGUMENT\"}"
+    },
+    {
+      "url": "https://api.vvz.nipez.cz/api/organizations?page=0&size=5",
+      "method": "GET",
+      "http": 401,
+      "len": 162,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"detail\":\"Not privileged to request the resource.\",\"code\":\"UNAUTHORIZED\"}"
+    },
+    {
+      "url": "https://api.vvz.nipez.cz/api/submissions/search",
+      "method": "POST",
+      "http": 405,
+      "len": 132,
+      "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"status\":405,\"detail\":\"Method Not Allowed\"}"
+    },
+    {
+      "url": "https://api.vvz.nipez.cz/vvz2-json-formulare/api/submissions/search?page=0&size=5",
+      "method": "GET",
+      "http": 404,
+      "len": 19,
+      "snip": "404 page not found "
+    },
+    {
+      "url": "https://api.vvz.nipez.cz/vvz2-json-formulare/api/submissions/search",
+      "method": "POST",
+      "http": 404,
+      "len": 19,
+      "snip": "404 page not found "
+    },
+    {
+      "url": "https://api.vvz.nipez.cz/vvz2-json-formulare/api/submissions/search",
+      "method": "POST",
+      "http": 404,
+      "len": 19,
+      "snip": "404 page not found "
+    },
+    {
+      "url": "https://api.vvz.nipez.cz/vvz2-json-formulare/api/forms?page=0&size=5",
+      "method": "GET",
+      "http": 404,
+      "len": 19,
+      "snip": "404 page not found "
+    },
+    {
+      "url": "https://api.vvz.nipez.cz/vvz2-json-formulare/api/organizations?page=0&size=5",
+      "method": "GET",
+      "http": 404,
+      "len": 19,
+      "snip": "404 page not found "
+    },
+    {
+      "url": "https://api.vvz.nipez.cz/vvz2-json-formulare/api/submissions/search",
+      "method": "POST",
+      "http": 404,
+      "len": 19,
+      "snip": "404 page not found "
+    }
+  ],
+  "bg": {
+    "day": "2026-08-24",
+    "list_http": 200,
+    "keys": [
+      "Автоматично генерирани данни за анекси, публикувани в ЦАИС ЕОП на 24.08.2026.json",
+      "Автоматично генерирани данни за договори, публикувани в ЦАИС ЕОП на 24.08.2026.json",
+      "Автоматично генерирани данни за обявления, публикувани в ЦАИС ЕОП на 24.08.2026 г., съгласно стандарт OCDS.json",
+      "Автоматично генерирани данни за поръчки, публикувани в ЦАИС ЕОП на 24.08.2026.json"
+    ],
+    "ocds_key": "Автоматично генерирани данни за обявления, публикувани в ЦАИС ЕОП на 24.08.2026 г., съгласно стандарт OCDS.json",
+    "file_http": 200,
+    "file_len": 2420073,
+    "n_releases": 212,
+    "vehicle_hits": 63,
+    "sample_hits": [
+      {
+        "ocid": "ocds-e82gsb-583385",
+        "tender_id": "583385",
+        "title": "„РЕКОНСТРУКЦИЯ И БЛАГОУСТРОЯВАНЕ НА УЛИЦА „МЛАДЕЖКА” И ПЛОЩАД „НИКОЛА МУШАНОВ”, КВ. 411 И КВ. 420 ПО ПЛАНА НА „РУСИН МАХАЛА” – ГР. ПЛОВДИВ”",
+        "buyer": "ОБЩИНА ПЛОВДИВ - РАЙОН \"ЦЕНТРАЛЕН\"",
+        "cpvs": [
+          "45000000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/583385"
+      },
+      {
+        "ocid": "ocds-e82gsb-593685",
+        "tender_id": "593685",
+        "title": "ИЗВЪРШВАНЕ НА ТЕКУЩИ СТРОИТЕЛНО-РЕМОНТНИ ДЕЙНОСТИ НА ТЕРИТОРИЯТА НА 131 СУ \"КЛИМЕНТ АРКАДИЕВИЧ ТИМИРЯЗЕВ\", ГР. СОФИЯ",
+        "buyer": "131 СРЕДНО УЧИЛИЩЕ \"КЛИМЕНТ АРКАДИЕВИЧ ТИМИРЯЗЕВ\"",
+        "cpvs": [
+          "45000000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/593685"
+      },
+      {
+        "ocid": "ocds-e82gsb-598604",
+        "tender_id": "598604",
+        "title": "„Осигуряване на охрана, включително с помощта на уреди за звукова сигнализация и/или видеонаблюдение, а при необходимост и проектиране, доставка, монтиране, използване и поддържане",
+        "buyer": "ТЕРИТОРИАЛНО ПОДЕЛЕНИЕ \"ДЪРЖАВНО ГОРСКО СТОПАНСТВО ПАНАГЮРИЩЕ\"",
+        "cpvs": [
+          "98000000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/598604"
+      },
+      {
+        "ocid": "ocds-e82gsb-599079",
+        "tender_id": "599079",
+        "title": "„Абонаментно сервизно обслужване, ремонт и възникнали аварии на 4 броя асансьори и 4 броя подемника за хора с увреждания“",
+        "buyer": "СТОЛИЧНА ОБЩИНА",
+        "cpvs": [
+          "50750000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/599079"
+      },
+      {
+        "ocid": "ocds-e82gsb-599625",
+        "tender_id": "599625",
+        "title": "Изграждане на метален навес в авторемонтна база на ЕСО ЕАД, гр. Шумен",
+        "buyer": "МРЕЖОВИ ЕКСПЛОАТАЦИОНЕН РАЙОН - ШУМЕН",
+        "cpvs": [
+          "45000000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/599625"
+      },
+      {
+        "ocid": "ocds-e82gsb-601669",
+        "tender_id": "601669",
+        "title": "Изпълнение на строително-монтажни работи на обект: “Облагородяване на дворното пространство на Технологично училище „Електронни системи“ (ТУЕС) към Технически университет - София, ",
+        "buyer": "ТЕХНИЧЕСКИ УНИВЕРСИТЕТ",
+        "cpvs": [
+          "45000000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/601669"
+      },
+      {
+        "ocid": "ocds-e82gsb-601670",
+        "tender_id": "601670",
+        "title": "Инженеринг – проектиране, строително-монтажни работи с цел вътрешен ремонт и изграждане на ПИС в общежитие Блок №2 вход Б при НПГ по КТС Правец, при ТУ - София",
+        "buyer": "ТЕХНИЧЕСКИ УНИВЕРСИТЕТ",
+        "cpvs": [
+          "45000000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/601670"
+      },
+      {
+        "ocid": "ocds-e82gsb-601878",
+        "tender_id": "601878",
+        "title": "„Осигуряване на лиценз за право на ползване и софтуерна поддръжка на виртуална телефонна централа за 36 месеца за нуждите на Комисия за защита на личните данни (КЗЛД)“",
+        "buyer": "ИНФОРМАЦИОННО ОБСЛУЖВАНЕ АД",
+        "cpvs": [
+          "32540000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/601878"
+      },
+      {
+        "ocid": "ocds-e82gsb-602362",
+        "tender_id": "602362",
+        "title": "„Извънгаранционна поддръжка на хардуерни и софтуерни ресурси за изграждане на мрежова инфраструктура за нуждите на РЗИ към Министерство на здравеопазването (МЗ)”",
+        "buyer": "ИНФОРМАЦИОННО ОБСЛУЖВАНЕ АД",
+        "cpvs": [
+          "72700000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/602362"
+      },
+      {
+        "ocid": "ocds-e82gsb-591005",
+        "tender_id": "591005",
+        "title": "Покана 85 „Упражняване на строителен надзор, изготвяне на окончателен доклад и изготвяне на технически паспорт на обект: „Основен ремонт и реконструкция на площадки за игра на откр",
+        "buyer": "ОБЩИНА ВАРНА",
+        "cpvs": [
+          "71520000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/591005"
+      },
+      {
+        "ocid": "ocds-e82gsb-558041",
+        "tender_id": "558041",
+        "title": "“Доставка на резервни части и монтаж на съоръжения в детски площадки за нуждите на Община Варна и второстепенните разпоредители с бюджети“",
+        "buyer": "ОБЩИНА ВАРНА",
+        "cpvs": [
+          "37535200"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/558041"
+      },
+      {
+        "ocid": "ocds-e82gsb-602929",
+        "tender_id": "602929",
+        "title": "„Рехабилитация на общински път в частта от Софийски околовръстен път до ул.“Фенера“, с. Войнеговци, район „Нови Искър“-Столична община“",
+        "buyer": "РАЙОН \"НОВИ ИСКЪР\"",
+        "cpvs": [
+          "45233000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/602929"
+      },
+      {
+        "ocid": "ocds-e82gsb-602916",
+        "tender_id": "602916",
+        "title": "„СМР на обект: „Основен ремонт и подобряване на енергийната ефективност в общинска образователна инфраструктура с местно значение – детски градини в гр. Белослав, Община Белослав“ ",
+        "buyer": "ОБЩИНА БЕЛОСЛАВ",
+        "cpvs": [
+          "45214100",
+          "45214100"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/602916"
+      },
+      {
+        "ocid": "ocds-e82gsb-603236",
+        "tender_id": "603236",
+        "title": "Извънгаранционно абонаментно техническо обслужване на роботизирана хирургична система Da Vinci X модел IS 4200",
+        "buyer": "Специализирана болница за активно лечение по акушерство и гинекология - Майчин дом ЕАД",
+        "cpvs": [
+          "50422000"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/603236"
+      },
+      {
+        "ocid": "ocds-e82gsb-602157",
+        "tender_id": "602157",
+        "title": "„Инженеринг - проектиране, авторски надзор и основен ремонт на ул. Хайдут Сидер, район Илинден, Столична община“",
+        "buyer": "РАЙОН \"ИЛИНДЕН\"",
+        "cpvs": [
+          "45233200"
+        ],
+        "kw": true,
+        "cpv": false,
+        "url": "https://app.eop.bg/today/602157"
+      }
+    ]
+  },
+  "sk_ajax": {
+    "http": 200,
+    "len": 792261,
+    "snip": "{\"status\":true,\"data\":{\"10001\":{\"nazov\":\"Po\\u013enohospod\\u00e1rske, farm\\u00e1rske, ryb\\u00e1rske, lesn\\u00edcke a s\\u00favisiace produkty\",\"kod\":\"03000000-1\",\"child\":{\"10002\":{\"nazov\":\"Po\\u013enohospod\\u00e1rske a z\\u00e1hradn\\u00edcke produkty\",\"kod\":\"03100000-2\",\"child\":{\"10003\":{\"nazov\":\"Plodiny, produkty zelenin\\u00e1rstva a z\\u00e1hradn\\u00edctva\",\"kod\":\"03110000-5\",\"child\":{\"10004\":{\"nazov"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "category": "oil_filter",
+  "complete_years": [
+    2023,
+    2024,
+    2025
+  ],
+  "n_db_years": 54,
+  "assumed_lambda_cv_f_lcv": [
+    0.5,
+    0.6667,
+    1.0
+  ],
+  "identification": "No VIN-level sales; \u03bb is intensity \u00d7 average capture, not a hazard. UIO mix is a single 2025E snapshot (data/uio_by_model_bucket.csv).",
+  "folds": [
+    {
+      "holdout_year": 2024,
+      "n_train": 18,
+      "n_test": 18,
+      "n_high_capture_train": 3,
+      "mae_baseline_expected_qty": 3111.8,
+      "rmse_baseline_expected_qty": 6103.1,
+      "lambda_all_cv_f_lcv": [
+        0.8455,
+        0.0,
+        0.3412
+      ],
+      "mae_fitted_all": 2401.4,
+      "rmse_fitted_all": 4056.8,
+      "fitted_all_beats_baseline_mae": true,
+      "lambda_highcap_cv_f_lcv": [
+        0.0846,
+        18.4176,
+        0.9654
+      ],
+      "mae_fitted_highcap": 3744.9,
+      "rmse_fitted_highcap": 6417.8,
+      "fitted_highcap_beats_baseline_mae": false
+    },
+    {
+      "holdout_year": 2025,
+      "n_train": 36,
+      "n_test": 18,
+      "n_high_capture_train": 8,
+      "mae_baseline_expected_qty": 3730.0,
+      "rmse_baseline_expected_qty": 7786.4,
+      "lambda_all_cv_f_lcv": [
+        0.8381,
+        0.0,
+        0.4525
+      ],
+      "mae_fitted_all": 1802.2,
+      "rmse_fitted_all": 2741.7,
+      "fitted_all_beats_baseline_mae": true,
+      "lambda_highcap_cv_f_lcv": [
+        0.0,
+        17.6269,
+        0.9456
+      ],
+      "mae_fitted_highcap": 4062.8,
+      "rmse_fitted_highcap": 7702.4,
+      "fitted_highcap_beats_baseline_mae": false
+    }
+  ],
+  "clears_backtest_fitted_all": true,
+  "clears_backtest_fitted_highcap": false,
+  "why_fitted_all_is_not_a_pass": "All-DB OLS can beat MAE by absorbing capture into \u03bb (LCV fitted ~0.34\u20130.45 vs assumed 1.0). Shipping that would hide the gap.",
+  "verdict": "null \u2014 high-capture (revealed-frequency) spec does not beat current expected_qty out of sample; all-DB MAE win is capture-contaminated"
+}

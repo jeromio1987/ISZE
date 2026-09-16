@@ -8,6 +8,28 @@
 
 ## [Unreleased — v2.0 build in progress]
 
+### 2026-08-18
+
+#### Added — duplicate tabs dropped (cross-link, not merge)
+- BVP: dropped PMS capture / GPS / SPU / AIM risk; Overview links to PMS, GPS, AIM Review. Autodoc Class C moved to Catalog.
+- Insights: dropped BVP × Capture; link to AIM × GPS Matrix.
+- Strategic: dropped Most exposed and Basket correlation; link to Early Warning. Basket CSV still builds.
+- Tests: `tests/test_duplicate_tabs.py`.
+
+#### Added — INTERNAL_MODE hides leakage / attach / elasticity / scrape
+- Default `run_prism.ps1` (port 8503) forces `PRISM_INTERNAL=false`. Extra tabs only via `run_prism_internal.ps1` (or `.bat`).
+- Pages: Decision (Attach / ITUK Leakage / Elasticity), Offset (Demand-Flow Sankey), Customer Risk (Aftermarket scrape).
+- Tests: `tests/test_internal_gate.py`.
+
+#### Fixed — `capture_trajectory` no longer regresses through the partial year
+- `modules/strategic_build.build_capture_trajectory()` fits slope / `alert_declining` on complete billing years only (`year_coverage.is_partial`). Live re-measure: 33 declining alerts → 5; 28 artifacts; 0 real declines hidden. CSV rebuilt. Scorecard and review-pack PDFs inherit the flag from the CSV.
+- Tests: `tests/test_capture_trajectory.py`.
+- Docs: `DECISIONS.md`, `docs/EARLY_WARNING_DESIGN.md`, `docs/DASHBOARD_IA.md` §6–7, `docs/dashboard_contracts.md` Contract 7.
+
+#### Documented — Streamlit is the canonical PRISM surface; oil-filter hazard null
+- `docs/DASHBOARD_IA.md` §7: Streamlit :8503 shipped; Dash :8050 and Evidence.dev frozen. Phases 3–8 paused for sign-off.
+- `docs/pilot_oil_filter_hazard.md` — fitted bucket intensity does not replace the flat oil-filter interval. `pms_engine` frequencies unchanged.
+
 ### 2026-07-03
 
 #### Added — Jan-Mar 2026 sales + more-complete 2025 re-export (FY2025 completeness closed)

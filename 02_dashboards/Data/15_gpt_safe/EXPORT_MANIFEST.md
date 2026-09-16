@@ -1,6 +1,6 @@
 # GPT-safe export
 
-**Generated:** 2026-07-27T15:33:58Z
+**Generated:** 2026-08-17T06:23:50Z
 
 Aggregates only — no `raw/sales/*.XLSX` or line-level billing.
 

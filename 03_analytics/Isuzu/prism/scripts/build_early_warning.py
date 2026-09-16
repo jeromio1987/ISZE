@@ -21,17 +21,15 @@ context columns only (db_aftersales_risk.risk_score).
 --------------------------------------------------------------------------
 WHY THE SLOPE IS RECOMPUTED HERE INSTEAD OF READ FROM capture_trajectory.csv
 --------------------------------------------------------------------------
-`modules/strategic_build.build_capture_trajectory()` regresses capture_rate over
-EVERY year present in pms_capture_by_db.csv, including the current PARTIAL year.
-The partial year is a fraction of a full year of billing, so its capture_rate is
-structurally depressed (network median 2026 = 0.019 vs 0.094 in 2025) and the
-regression reads that as a cliff.
-
-Measured 2026-07-17: 35 declining alerts with the partial year in, 6 with it
-out. 29 of 35 (83%) are artifacts; 0 real declines are hidden by the
-contamination. This script therefore drops partial years before regressing.
-`capture_trajectory.csv` / the Strategic "Capture trend" tab still carry the
-contaminated flag — see docs/EARLY_WARNING_DESIGN.md.
+Through 2026-08-18 the shared builder
+(`modules/strategic_build.build_capture_trajectory()`) regressed through the
+partial current year and printed a false 83%-class decline rate into the CSV,
+Strategic tab, scorecard PDF, and QBR pack. That partial-year guard is now in
+the builder (DECISIONS.md 2026-08-18). This script still recomputes the slope
+because Early Warning also applies a **level gate** (latest complete-year
+capture ≤ 100%) that Contract 7 does not: ITUK brake_rotor can slope down
+while still buying ~198% of modelled demand. Do not read `alert_declining`
+from the CSV here.
 
 Note: `trend_slope_pp_per_year` is a MISNOMER in the existing contract — the
 values are fractions per year (capture_rate is 0..1), not percentage points.

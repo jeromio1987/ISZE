@@ -1,0 +1,647 @@
+# Isuzu OS data map — capability × data
+# Agents: this file is the source of truth. HTML is generated from it
+# (02_dashboards/ops/build_os_data_map.py). Do not invent KPIs here.
+# Snapshot seeded from DATA_MANIFEST, FACTS, ISZE_ROADMAP,
+# roadmaps/ai_sales_intelligence.md, DATA_INTEGRITY_FLAGS_2026-05-28.md,
+# 01_data/00_derived/_data_integrity_open_issues.md (2026-08-17).
+# Completeness index is a planning catalogue — not FACTS-quotable.
+
+version: 1
+snapshot_date: 2026-08-18
+title: Isuzu OS data map
+audience: ISZE internal (Jerome) — aftersales decision OS in the seat, not a product to sell
+purpose: >
+  What data the aftersales OS needs to take each decision, what is already wired,
+  what is still requestable, and what is closed (do not re-ask). Integrity is an
+  overlay on Have/Partial, not a second dashboard.
+
+completeness:
+  formula: have / (have + partial + need)
+  label: Catalogue completeness
+  exclude_from_index: [closed, org]
+  not_facts_quotable: true
+  tooltip: >
+    Have divided by Have + Partial + Need on this catalogue. Snapshot 18 Aug 2026.
+    Not a FACTS KPI — a planning index of how much of the requestable OS data is
+    already wired. Closed doors and org-scale programmes are excluded.
+
+statuses:
+  have:
+    label: Have
+    meaning: Wired into derived tables and FACTS-quotable when the quote gate is green.
+  partial:
+    label: Partial
+    meaning: Some distributors, years, or joins only — usable with a caveat.
+  need:
+    label: Need
+    meaning: Would unlock the capability and is still requestable.
+  closed:
+    label: Closed
+    meaning: Confirmed unavailable or ruled out. Do not re-ask.
+  org:
+    label: Org
+    meaning: Six-to-twelve-month organisational programme. Not on the critical path.
+
+capabilities:
+  - id: fleet
+    name: Fleet / parc
+    question: How big is the parc, where is it, is it growing?
+    items:
+      - id: uio_v19
+        name: Network UIO workbook (v19, DVLA-based)
+        status: have
+        integrity: 2025 capture rows no longer use a 2024 fleet proxy.
+        owner: ISZE
+        ask: null
+        artefact: 06_uio/_CURRENT/
+      - id: ituk_dvla_lane
+        name: ITUK DVLA parc lane (signed-off, separate from network league)
+        status: have
+        integrity: Do not merge the IML 22,389 DVLA lane with the 23,068 PRISM capture lane.
+        owner: IML / ITUK
+        ask: null
+        artefact: prism verification_fixtures / iml_v7_ituk_cy2025.yaml
+      - id: vin_register
+        name: JP VIN register (rolling 60-month PMS cohort)
+        status: partial
+        integrity: Structured, not wired into PRISM or UIO v19. Automatic/manual unknown until an ISZJ map exists. ITUK and UTI packs come later.
+        owner: ISZJ
+        ask: Transmission map (AT/MT) and later ITUK/UTI VIN packs.
+        artefact: 01_data/07_UIO/vin/
+      - id: lcv_scr_cutoffs
+        name: LCV chassis / registration-year cutoffs (SCR vs non-SCR interval)
+        status: need
+        period: LCV generations on the parc (RG / RG21 / RT56 / RT88) — not a claim-year hole
+        integrity: LCV = IMIT. Service PDFs are on disk (RG21 RZ4F-TC with SCR = 15k km; without SCR / older = 20k). PDFs do not map UIO years to SCR vs non-SCR.
+        owner: IMIT
+        ask: Chassis or registration-year cutoffs from IMIT so the LCV parc can be weighted 15k vs 20k.
+        artefact: 01_data/03_PMS/service_schedules/
+
+  - id: gps
+    name: GPS / wallet
+    question: Euro per truck per year — who is red, what is the ceiling?
+    items:
+      - id: sales_fact
+        name: Net-only sales_fact (SAP billing extract)
+        status: have
+        integrity: Canonical billing spine. Gross / SPA / condition closed 2026-08-11. Sales fact stays net-only. Do not re-ask.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/00_derived/sales_fact.parquet
+      - id: gps_spu
+        name: Spend per unit by distributor
+        status: have
+        integrity: GPS-facing parts base after non-part and credit-note exclusions.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/00_derived/gps_spu_by_distributor.csv
+      - id: gps_ex_warranty
+        name: Ex-warranty GPS
+        status: have
+        period: CY2025 parts warranty (see file spans on the rows below)
+        integrity: Wired 2026-08-17. Basis is CY2025 claim files, not a live ERP warranty type.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/00_derived/gps_spu_by_distributor.csv
+      - id: gps_fy_workbook
+        name: Locked fiscal GPS workbook
+        status: have
+        integrity: Fiscal-year only. Do not invent a calendar-year GPS% from the wallet file.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/ISZE_GPS_Calculator_v9.xlsx
+      - id: umi_lcv_warranty
+        name: Israel LCV warranty (UMI)
+        status: have
+        period: Dedicated UMI file 2022-12-18 → 2026-05-17; CY2025 Jan–Dec continuous (12,042 lines)
+        integrity: Resolved 2026-07-03. Do not use Warranty_LCV_2025.xlsx for UMI — that workbook has no Israel/UMI DistributorName rows. GPS already subtracts €1,791,020 CY2025 from the dedicated file.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/UMI warranty data 202301 - 202605 (1).xlsx
+      - id: cv_blank_country
+        name: CV Sheet4 “blank country €314k”
+        status: closed
+        period: CY2025 (BILLYMD 2025) in Warranty_CV_2025.xlsx
+        integrity: Nothing is missing. Sheet4 sorts PARTNBR 0 / 0000000000 before real PNs under each country; the old audit treated 0 as a country and summed the next real parts into a fake bucket. Line-level those 3,083 blank-PN rows are labour (PARTAMT €0, LBRAMT €110,995). Jerome rule 2026-07-27 — skip. Ireland/Portugal CV claims are already tagged on the line-level sheet.
+        owner: —
+        ask: null
+        how_to_find: Open Warranty_CV_2025.xlsx sheet DATA WITHOUT MIDI (not the Sheet4 pivot). Skip PARTNBR 0 / 0000000000. Remaining valid-PN euros sit on UK / Ireland / Israel / Portugal / Germany rows. Nov–Dec 2025 CV is not in this extract — it is in CV Warranty.xlsx sheet 10_25-12_2025 (2025-09-18 → 2025-12-17).
+        artefact: 01_data/90_INBOX/warranty_audit_2026-07-27/SANITY.md
+      - id: cv_price_map
+        name: Ireland / Portugal CV unpriced real part numbers
+        status: partial
+        period: CY2025 CV claims (Ireland 15 valid-PN rows, Portugal 114)
+        integrity: Not a missing-claim gap. Claims exist. Optional valuation polish — 1 Ireland PN and 42 Portugal PNs have PARTAMT but no ITUK/UTI list price (priced € lower bound €3,908 IE / €28,836 PT). Labour/no-PN rows are skip, not a price-map chase.
+        owner: ISZE
+        ask: Leave the lower bound, or price the 1+42 real PNs from the ITUK map.
+        artefact: 01_data/90_INBOX/warranty_audit_2026-07-27/SANITY.md
+      - id: lcv_warranty_dec2025
+        name: LCV claim extract after November 2025
+        status: need
+        period: December 2025 (and later) — Warranty_LCV_2025.xlsx ends Nov 2025
+        integrity: IUK LCV claims in that file run 2024-11 → 2025-11; Portugal LCV 2025-01 → 2025-11. No sister LCV fill for December 2025 was named in the 27 Jul 2026 sanity check. GPS CY2025 used this extract as-is.
+        owner: Warranty team
+        ask: Next LCV claim-assessment export covering December 2025 onward.
+        artefact: 01_data/06_Warranty/Warranty_LCV_2025.xlsx
+      - id: billing_gross_spa
+        name: Gross, SPA and condition columns on the SAP billing extract
+        status: closed
+        integrity: Closed 2026-08-11 — not available. Sales fact stays net-only. Do not re-ask.
+        owner: —
+        ask: null
+        artefact: ISZE_ROADMAP.md / DECISIONS.md 2026-08-11
+
+  - id: pms
+    name: PMS capture
+    question: What share of expected service demand did we sell, and where is the euro gap?
+    items:
+      - id: pms_capture
+        name: Capture by distributor × year × category
+        status: have
+        integrity: Primary lens is total capture (sales is sales). Genuine is an extra cut.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/00_derived/pms_capture_by_db_year.csv
+      - id: gps_base_18db
+        name: 18-distributor GPS-base / PMS parc config
+        status: have
+        integrity: Ukraine, Armenia, Kazakhstan, Palestine bill parts but are out of the 18-db base by design.
+        owner: ISZE
+        ask: null
+        artefact: pms_capture_assumptions.yaml
+      - id: iml_air_oil
+        name: IML-confirmed air-to-oil replacement ratio
+        status: need
+        integrity: Flag C — air factor 0.5 is provisional (air element ~every 2nd service). One IML number replaces the assumption.
+        owner: IML
+        ask: Confirm the air-to-oil replacement ratio.
+        artefact: pms_capture_assumptions.yaml / pms_service_intervals.md
+      - id: ituk_brake_factor
+        name: ITUK brake wear factor (0.4 vs 0.8)
+        status: need
+        integrity: Leave 0.4 until ITUK data arrives. Do not quote ITUK brake capture as locked.
+        owner: ITUK
+        ask: Brake replacement evidence so the 0.4 vs 0.8 basis can be chosen.
+        artefact: ISZE_ROADMAP.md
+      - id: n35_registry
+        name: N35 / RZ4E / 4JZ1 PMS part-number registry
+        status: need
+        integrity: Network engine is N75-led. N35 expansion was in the May 2026 GPT briefing as a 12–24 month item.
+        owner: IML / ISZE
+        ask: N35 PMS registry comparable to the 55-PN N75 set.
+        artefact: 01_data/15_gpt_safe/GPT_DEEP_DIVE_BRIEFING_2026-05-15.md
+      - id: out_of_gps_base
+        name: Put CIS / Palestine markets into the 18-db GPS-base
+        status: closed
+        integrity: Out of PMS/GPS exercise scope by design. MIDI LCV warranty exists but is not a separate GPS row.
+        owner: —
+        ask: null
+        artefact: 01_data/00_derived/_data_integrity_open_issues.md
+
+  - id: mix
+    name: Mix / BVP
+    question: Genuine vs Best Value — is capture quality or just volume?
+    items:
+      - id: mix_csvs
+        name: Genuine / BVP mix by distributor and PMS subgroup
+        status: have
+        integrity: YoY% suppressed where prior-year base is under 10 units.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/00_derived/mix_genuine_bvp_pms.csv
+      - id: substitution
+        name: Substitution flags (genuine collapse as BVP rises)
+        status: have
+        integrity: Whole-book mix, not the paired-basket trap.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/00_derived/substitution_by_db_year.csv
+      - id: dealer_sellout_coverage
+        name: Dealer sell-out (sales-to-dealer) network coverage
+        status: partial
+        integrity: Canonical raw exists for ITUK, IUK, Ireland (Harris), Greece (Petros), UTI. Not network-wide. Elasticity stays unquotable until coverage grows.
+        owner: Distributors
+        ask: Sell-out extracts from the remaining DBs, same long schema.
+        artefact: 01_data/12_raw/dealer_sales/
+      - id: elasticity
+        name: Quote ISZE→distributor price-volume elasticity
+        status: closed
+        integrity: Deferred 2026-08-11 — distributor→dealer only. Resume when more dealer sell-out exists. Do not quote the ISZE→DB file.
+        owner: —
+        ask: null
+        artefact: price_volume_elasticity.README.md
+
+  - id: price
+    name: Price / IAM
+    question: Are we priced to keep the job, and which part numbers have no list?
+    items:
+      - id: fig_key
+        name: Fig-key / parts catalogue on sales_fact
+        status: have
+        integrity: sales_fact.fig_key populated on 98.6% of rows (verify min 90%). Catalogue 97.7% of PNs have a fig_key. Residual waits on the next SAP column, not a new extract request.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/00_derived/parts_catalog_dimension.csv
+      - id: iam_scrape_vintage
+        name: IAM competitor file vintages labelled on the join
+        status: partial
+        integrity: PartsPool Autodoc DE/NO is 2026-03-29, not Eucon UK 2023. Builder meta already flags; Mode A / HTML country packs need a rebuild/ship to show the label.
+        owner: ISZE
+        ask: Rebuild/ship Mode A packs when asked so the vintage is visible, not only in the builder.
+        artefact: 01_data/00_derived/eucon_price_gap.csv
+      - id: dated_lists
+        name: Dated PR00 and ZPR1 lists 2023–2026
+        status: have
+        integrity: Landed 2026-08-11. Year-matched list-to-pocket is possible but not yet validated — do not quote leakage until joins are checked.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/01_Pricing/history/
+      - id: pr00_coverage
+        name: Catalogue PR00 coverage (~98.2%)
+        status: have
+        integrity: Spec C4 closed 220 PN / €4.36M. Residual is admin non-PN, parked UMI Shell, and 24 PN / €67k ZPR1-path hardware — not one undifferentiated gap.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/00_derived/pn_coverage_classification.csv
+      - id: list_to_pocket
+        name: Year-matched list-to-pocket join (validated)
+        status: partial
+        integrity: Lists exist; joins not yet validated. Do not quote leakage.
+        owner: ISZE
+        ask: Run and sign off the year-matched list-to-pocket join.
+        artefact: 01_data/01_Pricing/history/
+      - id: residual_24pn
+        name: Residual 24 part numbers / €67k ZPR1-path hardware
+        status: partial
+        integrity: Classified, not a scary gap. Still open to close or park.
+        owner: ISZE
+        ask: Park or price the 24 ZPR1-path hardware PNs.
+        artefact: 01_data/00_derived/pn_coverage_classification.csv
+      - id: epc_supersession
+        name: EPC-validated supersession (billed-on-old)
+        status: need
+        integrity: 925 PN / €2.48M on the IE40 map, not EPC-validated.
+        owner: IML / ISZJ
+        ask: EPC validation of billed-on-old supersessions.
+        artefact: 00_docs/roadmaps/ai_sales_intelligence.md §6
+      - id: billing_gross_spa_price
+        name: Gross / SPA / condition on billing (pricing decomposition)
+        status: closed
+        integrity: Same closed door as GPS — net-only extract. Discount vs SPA vs mix cannot be decomposed from billing.
+        owner: —
+        ask: null
+        artefact: ISZE_ROADMAP.md 2026-08-11
+
+
+  - id: fill
+    name: Fill / VOR
+    question: Is a reported fill rate hiding lost jobs, and where is vehicle-off-road pricing power?
+    items:
+      - id: ituk_leakage
+        name: ITUK dealer leakage
+        status: have
+        integrity: Internal only. ITUK sell-out vs billing. Do not generalise to the network.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/00_derived/dealer_leakage_ituk.csv
+      - id: offset_vor
+        name: VOR / airfreight / movement (Offset Insights)
+        status: have
+        integrity: Internal Streamlit/Dash shelf. Not an MD-safe GPS%.
+        owner: ISZE
+        ask: null
+        artefact: 03_analytics/Isuzu/prism/pages/12_Offset_Insights.py
+      - id: network_fill
+        name: Honest network fill-rate (not the reported good fill)
+        status: need
+        integrity: Fill as a commercial lie is part of the OS story. No network-wide fill fact exists — only ITUK leakage and VOR views.
+        owner: Distributors
+        ask: Fill / lost-sales extracts on the same grain as sell-out, where a DB will share them.
+        artefact: null
+
+  - id: dealer
+    name: Dealer / IDS
+    question: Which dealers to visit, and did the network close the actions?
+    items:
+      - id: ids_v04
+        name: IDS 2026 dealer evaluation OS (v0.4 rollup)
+        status: have
+        integrity: 563 dealers. Integer self-eval; blanks = 0; Baumann FR/ES reds out of averages. No IDS↔parts-sales correlation story.
+        owner: ISZE
+        ask: null
+        artefact: 05_memory/projects/ids-db-leverage-os.md
+      - id: std_partial
+        name: Sales-to-dealer files (current markets)
+        status: partial
+        integrity: Same coverage hole as Mix — ITUK, IUK, Ireland, Greece, UTI only.
+        owner: Distributors
+        ask: null
+        artefact: 01_data/12_raw/dealer_sales/
+      - id: network_sellout
+        name: Network-wide dealer sell-out
+        status: need
+        integrity: FY2027 dealer-data initiative exists as a briefing, not as a filled network.
+        owner: Distributors / ISZE
+        ask: Remaining DB sell-out as a FY2027 condition, same schema.
+        artefact: 01_data/DATA_MANIFEST.md §05
+      - id: pull_scorecard
+        name: PIC-matrix monthly Pull scorecard (visited / closed / incomplete)
+        status: need
+        integrity: v0.4 rollup ships a blank Pull scaffold. Cadence is the OS; the sheet is not yet filled.
+        owner: Distributors (PIC)
+        ask: Fill the monthly Pull (visited YTD, actions closed, incomplete cleared).
+        artefact: 09_meetings/IDS_2026_DB_Feedback_Sheet_v0.4/
+      - id: ids_sales_correlation
+        name: Use IDS scores to predict parts sales
+        status: closed
+        integrity: Scan 2026-08-10 — no defensible IDS↔parts correlation. Kaizen from checklist gaps, not section stamps.
+        owner: —
+        ask: null
+        artefact: ids_correlation_scan_2026-08-10.md
+
+  - id: cadence
+    name: Account cadence
+    question: Who went quiet, and how long from signal to order?
+    items:
+      - id: p2a_interactions
+        name: Local mail interaction layer (P2a)
+        status: have
+        integrity: 9,490 interactions, 926 commitments, 203 stakeholders — 24-month local MAPI run. Derived fields only.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/17_interactions/
+      - id: early_warning
+        name: Early Warning / defection alerts
+        status: have
+        integrity: Capture-trajectory partial-year false alarms fixed 2026-08-18 (33 declining alerts → 5).
+        owner: ISZE
+        ask: null
+        artefact: 01_data/00_derived/defection_alerts.csv
+      - id: p4_account_health
+        name: P4 account-health tables
+        status: partial
+        integrity: Builder live 2026-08-18. Draft thresholds. Not a KPI. No Mode A / PRISM widget until calibration.
+        owner: ISZE (Jerome calibrate)
+        ask: Calibrate P4 thresholds (task 4.9) before any widget.
+        artefact: 00_docs/P4_DETERMINISTIC_SIGNALS.md
+      - id: signal_order_latency
+        name: Signal → order latency as a published KPI
+        status: need
+        integrity: Roadmap names this as not instrumented today. P4 computes it; mail-to-order is null after sales-fact end (2026-03-31).
+        owner: ISZE
+        ask: Publish after P4 calibration, with the sales-fact end-date caveat.
+        artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.1
+      - id: crm
+        name: CRM
+        status: org
+        integrity: None in the workspace. Six-to-twelve-month programme. Not on the critical path.
+        owner: ISZE org
+        ask: null
+        artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.2
+      - id: transcripts
+        name: Call transcripts
+        status: org
+        integrity: None. Not required for the email + spine roadmap.
+        owner: ISZE org
+        ask: null
+        artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.2
+      - id: graph_mail
+        name: Cloud Graph / OAuth mailbox
+        status: org
+        integrity: Tenant admin consent required at isuzu-e.com. Local MAPI is the open route.
+        owner: Tenant admin
+        ask: null
+        artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.3
+
+  - id: forecast
+    name: Forecast
+    question: What order rate should we expect next, given the parc?
+    items:
+      - id: order_rate_parc
+        name: Order-rate forecast × parc
+        status: need
+        integrity: Named missing in the AI-sales roadmap. Do not invent a forecast from GPS%.
+        owner: ISZE
+        ask: Spec an order-rate × parc model once P4 latency exists.
+        artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.1
+      - id: live_erp
+        name: Live ERP write-back / continuous extract
+        status: org
+        integrity: SAP arrives as a periodic extract. Live integration is a 6–12 month programme.
+        owner: ISZE org / SAP
+        ask: null
+        artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.2
+
+  - id: stakeholder
+    name: Stakeholder model
+    question: Who decides what, at which distributor?
+    items:
+      - id: who_decides
+        name: Decision-rights map per distributor
+        status: need
+        integrity: P2a has a stakeholder dimension (203 people). That is not a RACI of who decides pricing, stock, or PMS.
+        owner: ISZE sales
+        ask: Name decision rights (pricing / stock / PMS) per DB from the stakeholder dimension.
+        artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.1
+
+  - id: plan
+    name: Plan / GPS%
+    question: What did we promise, and is the published GPS% the locked workbook?
+    items:
+      - id: bp_fy27
+        name: Reviewed budget per distributor (FY27)
+        status: have
+        integrity: Wired into GPS builders.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/11_planning/budget_per_DB_reviewed_24042026.xlsx
+      - id: vpacc
+        name: FY2027 VPACC action plan
+        status: have
+        integrity: July update is canonical; join on PIC / progress / stream.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/11_planning/
+      - id: kosha
+        name: Kosha / 2030 plan tracker
+        status: have
+        integrity: Long-range plan surface exists. Treat stretch vs credible execution as a narrative, not a FACTS number.
+        owner: ISZE
+        ask: null
+        artefact: 02_dashboards/fleet/ISZE_Plan_Tracker_2030.html
+      - id: gps_pct_honesty
+        name: Honest GPS% vs as-presented workbook
+        status: partial
+        integrity: Some operating packs sit on the dashboard row only. Do not synthesise a calendar-year GPS% from the wallet file.
+        owner: ISZE
+        ask: Per-DB, publish fiscal GPS% from the locked workbook or say it is absent.
+        artefact: 09_meetings/*_Operating_Dashboard_2026/DATA_INTEGRITY.md
+
+  - id: quote
+    name: Quote gate
+    question: Is this number safe to say outside the building?
+    items:
+      - id: verify_report
+        name: Pipeline verification (green gate)
+        status: have
+        integrity: Numbers leave only after green verification → metrics snapshot → FACTS.
+        owner: ISZE
+        ask: null
+        artefact: 01_data/00_derived/_verification_report.json
+      - id: facts
+        name: FACTS narrative anchors
+        status: have
+        integrity: FACTS wins over decks, memory, and GPT files.
+        owner: ISZE
+        ask: null
+        artefact: FACTS.md
+      - id: flags_c_h
+        name: Remaining quote-guards (interval factor and credit notes)
+        status: partial
+        integrity: Flag C — air:oil still IML-open. Flag H — CR/RE exclusion is a judgment call, not ERP-confirmed.
+        owner: IML (C) / SAP (H, not expected soon)
+        ask: IML air:oil number. Do not wait on ERP for H.
+        artefact: 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
+      - id: page10_di_stale
+        name: PRISM Data Integrity page — “DI items pipeline does not check”
+        status: have
+        integrity: Refreshed 2026-08-18. DI-2 names UIO v19; DI-8 names AIM CY2026 shipped 2026-07-02. Duplicate-path cross-check and country-pack vintage labels remain. Do not clone the page into HTML.
+        owner: ISZE
+        ask: null
+        artefact: 03_analytics/Isuzu/prism/pages/10_Data_Integrity.py
+
+closed_doors:
+  - id: cv_blank_parse
+    title: Treat Sheet4 PARTNBR 0 as a missing-country GPS gap
+    since: 2026-07-27
+    note: Parse artifact. Blank PN = labour, PARTAMT €0. Skip. Line-level countries are already filled. Do not re-ask warranty for a €314k country bucket.
+  - id: sap_gross
+    title: Gross / SPA / condition on the SAP billing extract
+    since: 2026-08-11
+    note: Not available. Sales fact stays net-only. Design pricing around net plus dated lists. Do not re-ask.
+  - id: aim_score
+    title: New 0–100 AIM pricing-risk score
+    since: 2026-08-18
+    note: Fitted replacement was a null backtest. Do not ship a new score onto PRISM pages 7/16.
+  - id: ids_to_sales
+    title: IDS score predicts parts sales
+    since: 2026-08-10
+    note: Correlation scan failed. Wallet is a parallel lane (price / SPA / sell-out), not via IDS.
+  - id: cis_in_gps_base
+    title: Force CIS / Palestine into the 18-db GPS-base
+    since: 2026-08-17
+    note: Out of scope by design. They bill parts; they are not GPS calculator rows.
+  - id: quote_elasticity
+    title: Quote ISZE→distributor elasticity
+    since: 2026-08-11
+    note: Deferred until dealer sell-out coverage grows. Annotate or ignore the existing file.
+  - id: invent_cy_gps
+    title: Invent a calendar-year GPS% from the wallet file
+    since: 2026-08-14
+    note: Locked GPS workbook is fiscal-year. A CY GPS% will not be synthesised.
+
+asks:
+  - rank: 1
+    item: iml_air_oil
+    who: IML
+    ask: Confirm the air-to-oil replacement ratio (replaces the provisional 0.5).
+  - rank: 2
+    item: ituk_brake_factor
+    who: ITUK
+    ask: Brake replacement evidence to choose 0.4 vs 0.8.
+  - rank: 3
+    item: lcv_scr_cutoffs
+    who: IMIT
+    ask: LCV chassis or registration-year cutoffs (SCR vs non-SCR) so the parc can be weighted 15k vs 20k.
+  - rank: 4
+    item: lcv_warranty_dec2025
+    who: Warranty team
+    ask: Next LCV claim-assessment export covering December 2025 (Warranty_LCV_2025.xlsx ends Nov 2025).
+  - rank: 5
+    item: dealer_sellout_coverage
+    who: Distributors
+    ask: Sell-out extracts for DBs not yet in the long schema (ITUK, IUK, Ireland, Greece, UTI already in).
+  - rank: 6
+    item: epc_supersession
+    who: IML / ISZJ
+    ask: EPC-validate billed-on-old supersessions (925 PN / €2.48M on IE40 map).
+  - rank: 7
+    item: list_to_pocket
+    who: ISZE
+    ask: Validate year-matched list-to-pocket joins before quoting leakage.
+  - rank: 8
+    item: n35_registry
+    who: IML / ISZE
+    ask: N35 PMS registry (RZ4E / 4JZ1) comparable to the N75 55-PN set.
+  - rank: 9
+    item: who_decides
+    who: ISZE sales
+    ask: Decision-rights map per DB (pricing / stock / PMS) from the stakeholder dimension.
+  - rank: 10
+    item: pull_scorecard
+    who: Distributors (PIC)
+    ask: Fill the monthly Pull scorecard on the IDS v0.4 rollup.
+  - rank: 11
+    item: vin_register
+    who: ISZJ
+    ask: Transmission map and later ITUK/UTI VIN packs.
+  - rank: 12
+    item: p4_account_health
+    who: Jerome
+    ask: Calibrate P4 thresholds before any Mode A / PRISM widget.
+  - rank: 13
+    item: iam_scrape_vintage
+    who: ISZE
+    ask: Rebuild/ship Mode A packs when asked so IAM vintages (PartsPool 2026-03-29 vs Eucon UK 2023) are visible on the pack, not only in the builder.
+  - rank: 14
+    item: network_fill
+    who: Distributors
+    ask: Fill / lost-sales extracts on the same grain as sell-out, where a DB will share them.
+
+integrity:
+  overlay_not_a_product: true
+  quote_guards:
+    - id: C
+      title: Air-to-oil interval still provisional
+      severity: medium
+      note: Air factor 0.5 until IML confirms. Capture is directionally comparable across categories, not locked.
+    - id: H
+      title: Credit-note / return exclusion is a judgment call
+      severity: medium
+      note: SaTy CR/RE on positive-value lines excluded. Not ERP-confirmed. Reversible. Do not wait on SAP.
+    - id: LCV-DEC
+      title: LCV claim file ends November 2025
+      severity: source-gap
+      note: Period hole is December 2025 onward in Warranty_LCV_2025.xlsx. Not a mid-year blackout. GPS CY2025 used this extract. UMI CY2025 is complete on the dedicated file.
+  fragments:
+    - name: PRISM Data Integrity page
+      role: Pipeline pass/warn/fail, distributor-code reconcile, mislabelled SKU audit. IA demotes this to Tools.
+      path: 03_analytics/Isuzu/prism/pages/10_Data_Integrity.py
+    - name: Integrity flag list (28 May 2026)
+      role: What is safe to quote. A/B/D/E/F/G closed; C and H still guarded.
+      path: 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
+    - name: Open source-gap note (updated 2026-08-18)
+      role: LCV-DEC is the open source gap (Warranty_LCV_2025.xlsx ends Nov 2025). UMI-WARR and CV-BLANK closed per 27 Jul 2026 warranty sanity. Page 10 DI-2/DI-8 refreshed 2026-08-18.
+      path: 01_data/00_derived/_data_integrity_open_issues.md
+    - name: Evidence integrity board
+      role: UIO coverage and GPS warranty sanity (internal SQL).
+      path: 03_analytics/Isuzu/prism/evidence-app/pages/data-integrity.md
+    - name: Per-distributor operating-pack holes
+      role: Meeting-pack caveats (ITUK, UMI, Germany, Portugal, Greece). Not a network OS map.
+      path: 09_meetings/*_Operating_Dashboard_2026/DATA_INTEGRITY.md
+    - name: IE40 / Class-0 Excel (ITUK dispute evidence)
+      role: March 2026 pricing-quality tracker. Not the OS integrity view. Do not grow it for the Marsh dispute.
+      path: 01_data/11_planning/ISZE_DataIntegrity_Dashboard.xlsx
+      copies:
+        - 91_legacy/Isuzu/ISZE_DataIntegrity_Dashboard.xlsx
+  stale_on_page10:
+    - Refreshed 2026-08-18. DI-2 names UIO v19; DI-8 names AIM CY2026 shipped 2026-07-02. Duplicate-path cross-check and country-pack vintage labels remain.
+  do_not:
+    - Clone the Streamlit integrity page into HTML.
+    - Rebuild the March 2026 Excel as a fourth integrity product.
+    - Treat MASTER_DASHBOARD, the PRISM network map, or DATA_MANIFEST as this OS data map.
+
+sources_footnote: >
+  Seeded 18 Aug 2026 from the data manifest, FACTS, the programme roadmap, the AI-sales
+  intelligence inventory, the 28 May integrity flags, and the 17 Aug open-issues note.
+  Catalogue completeness is not a FACTS KPI. Do not quote it externally.

@@ -54,6 +54,8 @@ sheet **GPS_2025_Warranty**, column F (blue INPUT).
 
 ## Caveats (read before adjusting)
 
+> **2026-07-27:** Caveats 2–3 below are **superseded** for “is GPS parts warranty missing?”. Sheet4 €314k is a PARTNBR-0 parse artifact (labour, skip). IE/PT remaining issue is optional list-price on real PNs, not missing claims. Periods and how-to-find: `01_data/90_INBOX/warranty_audit_2026-07-27/SANITY.md`.
+
 1. **UMI resolved 2026-07-03** (was: LCV warranty file had no ISRAEL rows; only UTI Israel trucks
    CV was present). Value now sourced from a dedicated UMI claim-assessment export — see table note.
 2. **Ireland & Portugal CV are lower bounds.** Their CV truck warranty is valued via the ITUK/UTI

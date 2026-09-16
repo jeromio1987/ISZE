@@ -1,0 +1,93 @@
+{
+  "probed_at": "2026-08-25T18:08:49.300025+00:00",
+  "nordics": "DONE — not touched",
+  "evidence": {
+    "CZ": {
+      "api": "https://api.vvz.nipez.cz/api/submissions/search?formGroup=vz&form=vz",
+      "http": 200,
+      "window_filter": "createdAt[gte]=YYYY-MM-DD works; fulltext/CPV still ignored",
+      "status": "LIVE",
+      "source": "national_fetchers_cz.py",
+      "note": "80 raw → 7 gated · merged 2026-08-25"
+    },
+    "LT": {
+      "api": "https://viesiejipirkimai.lt/epps-integration/api/cft-details-export",
+      "http": 401,
+      "snip": "{\"title\":\"Unauthorized\",\"status\":401,\"detail\":\"Please include a valid apiKey\",\"code\":\"UNAUTHORIZED_API_KEY\"}",
+      "status": "CODE_READY",
+      "unblock": "Request free VPT CVP IS API key (apiKey header) — do not spam browser"
+    },
+    "EE": {
+      "api": "https://riigihanked.riik.ee/rhr/api/public/v1/opendata",
+      "http": 500,
+      "snip": "{\"actionId\":\"2618\",\"errorStack\":\"-\"}",
+      "status": "BLOCKED",
+      "unblock": "RHR open-data API currently 500; wait for Rahandusministeerium fix or use dump when published"
+    },
+    "SK": {
+      "portal": "https://www.uvo.gov.sk/",
+      "http": 200,
+      "recaptcha": true,
+      "status": "BLOCKED",
+      "unblock": "ÚVO structured open data / UVOstat paid API — HTML vestník is recaptcha-gated"
+    },
+    "GR": {
+      "portal": "https://www.promitheus.gov.gr/",
+      "opendata_http": 200,
+      "login_shell": true,
+      "status": "BLOCKED",
+      "unblock": "KIMDIS Open Data API credentials from Promitheus / GSIS registration"
+    },
+    "ES": {
+      "http": 200,
+      "waf": true,
+      "status": "CODE_READY",
+      "unblock": "Spanish egress / residential session cookies — fetcher already coded"
+    },
+    "HU": {
+      "portal": "https://ekr.gov.hu",
+      "status": "BLOCKED",
+      "unblock": "EKR operator registration or paid aggregator"
+    },
+    "IE": {
+      "portal": "https://www.etenders.gov.ie",
+      "status": "BLOCKED",
+      "unblock": "OGP structured feed — RSS 500 / brittle HTML"
+    },
+    "SE": {
+      "portal": "commercial annonsdatabaser",
+      "status": "BLOCKED",
+      "unblock": "Paid TendSign/Mercell/e-Avrop or UHM dump"
+    },
+    "HR": {
+      "portal": "https://eojn.nn.hr",
+      "status": "BLOCKED",
+      "unblock": "EOJN structured API if published; HTML SPA today"
+    },
+    "SI": {
+      "portal": "https://www.enarocanje.si",
+      "status": "BLOCKED",
+      "unblock": "eNaročanje public JSON if published; HTML shell today"
+    },
+    "LV": {
+      "portal": "https://www.eis.gov.lv",
+      "status": "BLOCKED",
+      "unblock": "IUB/EIS open-data dump or API registration"
+    },
+    "CY": {
+      "portal": "https://www.eprocurement.gov.cy",
+      "status": "BLOCKED",
+      "unblock": "Thin market; TED covers above-threshold — national HTML only"
+    },
+    "MT": {
+      "portal": "https://www.etenders.gov.mt",
+      "status": "BLOCKED",
+      "unblock": "eTenders Malta structured feed if OGP publishes one"
+    },
+    "BG": {
+      "status": "LIVE",
+      "source": "https://storage.eop.bg/open-data-YYYY-MM-DD/ OCDS JSON",
+      "note": "wired national_fetchers_bg.py"
+    }
+  }
+}

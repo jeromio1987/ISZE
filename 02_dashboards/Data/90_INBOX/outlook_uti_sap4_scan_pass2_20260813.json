@@ -1,0 +1,79 @@
+{
+  "scan_date": "2026-08-13",
+  "never_send": true,
+  "pass": 2,
+  "stores": [
+    {
+      "name": "jerome.van.der.pluym@isuzu-e.com",
+      "FilePath": "C:\\Users\\jerom\\AppData\\Local\\Microsoft\\Outlook\\jerome.van.der.pluym@isuzu-e.com - jer.ost",
+      "IsOpen": "True",
+      "ExchangeStoreType": "0",
+      "IsDataFileStore": "True"
+    },
+    {
+      "name": "Sales",
+      "FilePath": "",
+      "IsOpen": "True",
+      "ExchangeStoreType": "1",
+      "IsDataFileStore": "False"
+    },
+    {
+      "name": "Parts",
+      "FilePath": "",
+      "IsOpen": "True",
+      "ExchangeStoreType": "1",
+      "IsDataFileStore": "False"
+    }
+  ],
+  "hit_count": 0,
+  "saved_count": 0,
+  "saved": [],
+  "hits": [],
+  "advanced_search": [
+    {
+      "scope": "\\\\jerome.van.der.pluym@isuzu-e.com",
+      "filt": "@SQL=\"urn:schemas:httpmail:fromemail\" LIKE '%sap4%'",
+      "err": "(-2147024809, 'The parameter is incorrect.', None, None)"
+    },
+    {
+      "scope": "\\\\jerome.van.der.pluym@isuzu-e.com",
+      "filt": "@SQL=\"http://schemas.microsoft.com/mapi/proptag/0x0037001F\" LIKE '%UTIPartSales%'",
+      "err": "(-2147024809, 'The parameter is incorrect.', None, None)"
+    },
+    {
+      "scope": "\\\\jerome.van.der.pluym@isuzu-e.com",
+      "filt": "@SQL=\"urn:schemas:httpmail:from\" LIKE '%sap4%'",
+      "err": "(-2147024809, 'The parameter is incorrect.', None, None)"
+    },
+    {
+      "scope": "\\\\Sales",
+      "filt": "@SQL=\"urn:schemas:httpmail:fromemail\" LIKE '%sap4%'",
+      "err": "(-2147024809, 'The parameter is incorrect.', None, None)"
+    },
+    {
+      "scope": "\\\\Sales",
+      "filt": "@SQL=\"http://schemas.microsoft.com/mapi/proptag/0x0037001F\" LIKE '%UTIPartSales%'",
+      "err": "(-2147024809, 'The parameter is incorrect.', None, None)"
+    },
+    {
+      "scope": "\\\\Sales",
+      "filt": "@SQL=\"urn:schemas:httpmail:from\" LIKE '%sap4%'",
+      "err": "(-2147024809, 'The parameter is incorrect.', None, None)"
+    },
+    {
+      "scope": "\\\\Parts",
+      "filt": "@SQL=\"urn:schemas:httpmail:fromemail\" LIKE '%sap4%'",
+      "err": "(-2147024809, 'The parameter is incorrect.', None, None)"
+    },
+    {
+      "scope": "\\\\Parts",
+      "filt": "@SQL=\"http://schemas.microsoft.com/mapi/proptag/0x0037001F\" LIKE '%UTIPartSales%'",
+      "err": "(-2147024809, 'The parameter is incorrect.', None, None)"
+    },
+    {
+      "scope": "\\\\Parts",
+      "filt": "@SQL=\"urn:schemas:httpmail:from\" LIKE '%sap4%'",
+      "err": "(-2147024809, 'The parameter is incorrect.', None, None)"
+    }
+  ]
+}

@@ -57,6 +57,23 @@ python build_ids_dashboard.py
 
 ---
 
+## 0. MIDI — Tomoe Baumann average rule (NEVER FORGET)
+
+**On behalf of Tomoe Baumann (IMG).** Logged 2026-08-10 from her **2026-07-31 08:58** mail. Full Mode B changelog: [`CHANGELOG.md`](CHANGELOG.md) in this folder.
+
+**Exact rule:** *“red marked DLRs in the ranking list are to be excluded for the average calculation. For Italy and Switzerland, all DLRs are to be included.”*
+
+| Market | Action on rebuild |
+|--------|-------------------|
+| **FR + ES** | Exclude her **red-marked** dealers (zeros + very low / “not completed”) from **averages** only — expect **FR=20 / ES=5** `excluded_from_average_count` |
+| **IT + CH** | Include **all** dealers in averages — **including zero-score shells** (`excluded_from_average_count` = **0**). Do **not** apply zero-shell hygiene to IT/CH. |
+
+**Scope:** her words = **averages only** (not automatic drop from dealer list/HTML). **v1.4** (rebuild+ship OK from Jerome): FR/ES reds out of averages; IT/CH all in; list/map keep everyone.
+
+**Sources:** `01_data/90_INBOX/tomoe_ids_mail_pull/20260731_0858_France_dealer_ranking.xlsx`, `…Spain_dealer_ranking.xlsx`, body `…_MIDI_exclude_mail_body.txt`, list `…_red_marked_dealers.json` (FR 20 / ES 5).
+
+---
+
 ## 1. Score & percentage logic
 
 ### 1.1 No percentage above 100%

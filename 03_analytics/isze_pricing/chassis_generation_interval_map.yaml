@@ -1,0 +1,82 @@
+# Chassis / generation → oil service interval
+# Sourced from Jerome's schedule PDFs under 01_data/03_PMS/service_schedules/
+# + ISZE_Pricing_Spec_v1 §6. Do NOT invent market mix % into live alloc
+# unless config allows basis schedule_assumed_mix.
+
+version: 2
+updated: 2026-08-12
+unit: km
+assumed_annual_km: 20000  # illustration only for svc/yr
+
+# ---------------------------------------------------------------------------
+# Modes (see theta_interval.py + config.yaml theta.interval)
+#   off      — θ_interval = 1.0 everywhere (current live default)
+#   simple   — LCV oil-interval cats use assumed SCR share × schedule factors
+#              basis = schedule_assumed_mix (gated OUT of require_basis by default)
+#   extended — LCV mix from file (reg-year / chassis share); else falls back to simple
+# ---------------------------------------------------------------------------
+
+sources:
+  - file: RG21_Service Maintenance Schedule.pdf
+    note: "RZ4F-TC with SCR = 15k; without SCR / 4JJ3 / RZ4E = 20k"
+  - file: RG_Service Maintenance Schedule.pdf
+    note: "Engine oil / filter = 20k"
+  - file: RT56_Service Maintenance Schedule.pdf
+    note: "Engine oil / filter = 20k (Europe normal)"
+  - file: RT88_93_Service Maintenance Schedule.pdf
+    note: "Engine oil / filter = 20k"
+  - file: GIDSS_maint_N_MY14.pdf
+    note: "N-series oil shorter (7.5–10k) — CV path; not D-Max θ_interval lever"
+
+generations:
+  - id: dmax_older_20k
+    labels: ["RT56", "RG", "RT88_93", "4JJ3", "RZ4E", "RZ4F-TC_no_SCR"]
+    scr: false
+    oil_interval_km: 20000
+    svc_per_year_at_20k_km: 1.0
+    segment: LCV
+    source_pdf: "RT56 / RG / RT88_93 / RG21 (non-SCR)"
+
+  - id: dmax_rg21_scr_15k
+    labels: ["RG21", "RZ4F-TC_with_SCR"]
+    scr: true
+    oil_interval_km: 15000
+    svc_per_year_at_20k_km: 1.3333
+    segment: LCV
+    source_pdf: "RG21_Service Maintenance Schedule.pdf"
+
+chassis_code_aliases:
+  RG: dmax_older_20k
+  RG21: dmax_rg21_scr_15k
+  RT56: dmax_older_20k
+  RT88_93: dmax_older_20k
+  RZ4F-TC: null   # ambiguous — need SCR flag; see with_SCR / without_SCR
+  "RZ4F-TC_with_SCR": dmax_rg21_scr_15k
+  "RZ4F-TC_without_SCR": dmax_older_20k
+  RZ4E: dmax_older_20k
+  4JJ3: dmax_older_20k
+
+# PMS categories whose demand scales with oil service frequency (simple mode)
+interval_linked_categories:
+  - oil_filter
+  - air_filter
+  - fuel_filter
+  - blower_filter
+  - urea_filter
+
+# Relative demand vs 20k baseline: svc_15k / svc_20k = 1.3333
+interval_lift_scr_vs_legacy: 1.3333
+
+# Simple-mode assumed SCR share of LCV parc by DB (PROVISIONAL — Jerome to edit)
+# Used only when mode=simple|extended-fallback. Does NOT move alloc until
+# schedule_assumed_mix is in theta.require_basis.
+simple_lcv_scr_share:
+  IUK: 0.15
+  UMI: 0.25
+  default_lcv_db: 0.10
+
+# DBs treated as LCV-heavy for simple interval (others θ_interval=1.0)
+lcv_dbs: [IUK, UMI]
+
+extended_mix_file: 01_data/00_derived/lcv_generation_mix_by_db.csv
+# expected columns: distributor_DB, share_scr_15k, share_legacy_20k, as_of, source

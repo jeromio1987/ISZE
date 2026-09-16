@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>%%PAGE_TITLE%%</title>
+<style>
+:root {
+  --navy:#15233c; --navy2:#1a2b4a; --terra:#c0552d; --paper:#f7f4ee;
+  --line:#d9d3c8; --muted:#6b6256; --ink:#222;
+  --good:#1d9e75; --goodt:#2e7d54; --bad:#b23b3b; --amber:#eda100;
+  --blue:#2a78d6; --grey:#888780;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);
+  font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;line-height:1.45;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;color:var(--navy);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 22px 48px}
+.banner{background:var(--navy);color:#f7f4ee;padding:10px 22px;font-size:12px;letter-spacing:.04em;
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.banner b,.banner span,.banner a{color:#f7f4ee}
+.hero{background:linear-gradient(155deg,#15233c 0%,#203759 62%,#2b4a78 100%);
+  color:#f7f4ee;padding:28px 22px 26px;margin:0}
+.hero h1{color:#fff;font-size:32px;line-height:1.12}
+.hero .rule{width:72px;height:3px;background:var(--terra);margin:12px 0 14px}
+.hero p{margin:0;max-width:72ch;color:#eef1f6;font-size:15px}
+.hero p b{color:#fff}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;position:sticky;top:0;z-index:20;
+  background:var(--paper);border-bottom:1px solid var(--line);padding:10px 22px}
+.tabs a{font-size:12px;color:#1a2b4a;text-decoration:none;background:#fff;
+  border:1px solid #d9d3c8;padding:6px 10px}
+.tabs a:hover{border-color:#c0552d;color:#c0552d}
+.jserr{display:none;background:#15233c;color:#f7f4ee;border-top:3px solid #c0552d;
+  padding:12px 22px;font-size:13px}
+.jserr.show{display:block}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0 8px}
+.margrow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;
+  cursor:pointer;position:relative}
+.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.kpi .val{font-family:Georgia,serif;font-size:26px;color:var(--navy);margin-top:4px}
+.kpi .sub{font-size:12px;color:var(--muted);margin-top:2px}
+.chipbox{border-left:4px solid var(--terra)}
+.kpi[data-tip]:hover::after,.kpi[data-tip]:focus::after,
+.tip[data-tip]:hover::after,.chip[data-tip]:hover::after{
+  content:attr(data-tip);position:absolute;left:12px;right:12px;top:calc(100% + 8px);
+  background:#15233c;color:#f7f4ee;border-top:3px solid #c0552d;
+  padding:10px 12px;border-radius:0 0 6px 6px;font-size:12px;line-height:1.4;
+  z-index:50;box-shadow:0 8px 24px rgba(21,35,60,.25);white-space:normal}
+.chip{display:inline-block;position:relative;cursor:pointer;border-bottom:1px dotted var(--terra)}
+.sec{margin:32px 0 10px}
+.sec h2{font-size:22px;padding-bottom:8px;border-bottom:2px solid var(--navy);color:var(--navy)}
+.sec h2 .no{color:var(--terra)}
+.lead{color:var(--muted);margin:8px 0 14px;max-width:82ch}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px 18px}
+.grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.chain{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:8px 0 4px}
+.ch{border-radius:8px;padding:12px 14px;min-height:92px}
+.ch.on{background:var(--navy);color:#f7f4ee}
+.ch.off{background:#eef3f9;color:#222;border:1px dashed var(--line)}
+.ch .k{font-size:11px;text-transform:uppercase;letter-spacing:.05em;opacity:.85}
+.ch .t{font-family:Georgia,serif;font-size:16px;margin-top:4px}
+.ch .d{font-size:12px;margin-top:6px;line-height:1.35}
+.ch.on .t,.ch.on .k,.ch.on .d{color:#f7f4ee}
+.ch .n{font-family:Georgia,serif;font-size:22px;margin-top:8px}
+.flag{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px}
+.flag.cut{background:#c0552d;color:#f7f4ee}
+.flag.rev{background:#f3e2b3;color:#5c4300}
+.flag.ok{background:#d5efe6;color:#1a5c45}
+.flag.spa{background:#15233c;color:#f7f4ee}
+.flag.bvp{background:#e8e4dc;color:#222}
+.flag.sus{background:#888780;color:#fff}
+.flag.hold{background:#dcecfc;color:#1a4a7a}
+.flag.trade{background:#f3e2b3;color:#5c4300}
+.flag.retail{background:#d5efe6;color:#1a5c45}
+.flag.mix{background:#e8e4dc;color:#222}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.filters button{background:#fff;border:1px solid var(--line);color:var(--navy);
+  padding:6px 12px;border-radius:999px;cursor:pointer;font:inherit;font-size:13px}
+.filters button.on{background:var(--navy);color:#f7f4ee;border-color:var(--navy)}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px;max-height:640px;background:#fff}
+table.pns{width:100%;border-collapse:collapse;font-size:13px;min-width:1180px}
+table.pns thead th{background:#15233c;color:#f7f4ee;text-align:left;padding:9px 10px;
+  font-size:11px;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0;z-index:2}
+table.pns td{padding:9px 10px;border-bottom:1px solid var(--line);color:#222;vertical-align:top}
+table.pns tbody tr:nth-child(even) td{background:#f7f4ee;color:#222}
+table.pns tbody tr:nth-child(odd) td{background:#fff;color:#222}
+table.pns a{color:var(--blue);text-decoration:none;border-bottom:1px solid #c5d8f0}
+.n{text-align:right}
+.mono{font-variant-numeric:tabular-nums}
+.pn{font-family:Consolas,"Courier New",monospace;font-size:13px;font-weight:600}
+.callout{border-left:3px solid var(--terra);background:#fff;padding:12px 14px;margin:12px 0;color:#222}
+.callout.ok{border-left-color:#1d9e75}
+.callout.bvp{border-left-color:#6b6256}
+.chartbox{position:relative;width:100%;height:280px;background:#fff}
+.chartbox.md{height:360px}
+.chartbox.lg{height:520px}
+.empty{background:#eef3f9;color:#222;padding:16px;border-radius:8px;border:1px dashed var(--line)}
+.rules{margin:0;padding-left:18px;color:#222}
+.rules li{margin:6px 0}
+.foot{margin-top:36px;padding-top:12px;border-top:1px solid var(--line);
+  font-size:12px;color:var(--muted)}
+.src{font-size:12px;color:var(--muted);margin-top:8px}
+.concl{background:#fff;border:1px solid var(--line);border-radius:8px;padding:18px 20px;margin:18px 0 8px}
+.concl h2{font-size:22px;padding-bottom:8px;border-bottom:2px solid var(--navy);color:var(--navy)}
+.concl h2 .no{color:var(--terra)}
+.concl ol{margin:10px 0 0;padding-left:22px;color:#222}
+.concl li{margin:10px 0;max-width:92ch}
+.sibnav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.sibnav a{font-size:12px;color:#1a2b4a;text-decoration:none;background:#fff;
+  border:1px solid #d9d3c8;padding:6px 10px}
+.sibnav a:hover,.sibnav a.on{border-color:#c0552d;color:#c0552d}
+.sibnav a.on{background:#15233c;color:#f7f4ee;border-color:#15233c}
+@media(max-width:900px){
+  .kpis,.grid2,.grid3,.chain,.margrow{grid-template-columns:1fr}
+  .hero h1{font-size:26px}
+  .wrap,.hero,.tabs{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+<div class="banner">
+  <b>INTERNAL · quality positioning engine · not a customer screen</b>
+  <span>%%BANNER_RIGHT%%</span>
+</div>
+<div class="hero">
+  <h1>%%HERO_H1%%</h1>
+  <div class="rule"></div>
+  <p>%%HERO_P%%</p>
+</div>
+<nav class="tabs" aria-label="Dashboard sections">
+  <a href="#kpis">KPIs</a>
+  <a href="#conclusion">Conclusion</a>
+  <a href="#channel">Channel</a>
+  <a href="#ladder">Ladder</a>
+  <a href="#product">Product type</a>
+  <a href="#captive">Captive</a>
+  <a href="#system">System</a>
+  <a href="#position">Position</a>
+  <a href="#table">Part table</a>
+  <a href="#rules">Rules</a>
+</nav>
+<div class="jserr" id="jserr"></div>
+<div class="wrap">
+
+<div class="sibnav">%%SIBLING_NAV%%</div>
+%%MARGIN_CHIPS%%
+<div class="kpis" id="kpis">%%KPI_HTML%%</div>
+
+<section class="concl" id="conclusion">
+  <h2><span class="no">C · </span>%%CONCLUSION_TITLE%%</h2>
+  <p class="lead">%%CONCLUSION_LEAD%%</p>
+  <ol>%%CONCLUSION_ITEMS%%</ol>
+</section>
+
+<section class="sec" id="channel">
+  <h2><span class="no">0 · </span>ISZE net → projected retail</h2>
+  <p class="lead">%%CHANNEL_LEAD%%</p>
+  <div class="chain" id="chain"></div>
+  <div class="card" style="margin-top:12px">
+    <h3 style="margin-bottom:8px">Hero PN — billed-weight example</h3>
+    <p class="src" id="heroMeta"></p>
+    <div class="chain" id="heroChain"></div>
+    <p class="src" id="heroGap"></p>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="chartbox md"><canvas id="retailChart" role="img" aria-label="Projected ISZE retail versus IAM offer on scored part numbers">Projected retail vs IAM</canvas></div>
+    <p class="src">Positive gap = projected retail cheaper than the IAM offer. IAM trade listings are not like-for-like vs retail.</p>
+  </div>
+</section>
+
+<section class="sec" id="ladder">
+  <h2><span class="no">1 · </span>The ladder — where genuine may sit</h2>
+  <p class="lead">Same ceilings as the pricing engine: T4 +30% / T3 +60% / T2 +150% / T1 +250%.
+  Pads use a tighter overlay (T4 pad +15%, T3 pad +30%). Quality IAM is the only competitor
+  that compresses ISZE. Hover the chips for the formula.</p>
+  <div class="grid2">
+    <div class="card">
+      <div class="chartbox md"><canvas id="ladderChart" role="img" aria-label="Allowed ISZE premium versus IAM by brand quality tier, pads versus oil filters">Ladder</canvas></div>
+    </div>
+    <div class="card">
+      <table class="pns">
+        <thead><tr><th>Tier</th><th>Who</th><th class="n">Base</th><th class="n">Pads</th><th class="n">Oil filter</th></tr></thead>
+        <tbody id="ladderTbl"></tbody>
+      </table>
+      <p class="src">T2/T1 ceilings are not tightened — T1 / no-name does not set the price. Compresses ISZE = T3/T4 only.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="product">
+  <h2><span class="no">2 · </span>Product type — pads are the exception that eats the book</h2>
+  <p class="lead">%%PRODUCT_LEAD%%</p>
+  <div class="grid2">
+    <div class="card">
+      <div class="chartbox md"><canvas id="tightChart" role="img" aria-label="Product-type tightness overlay and T4 effective ceiling">Product tightness</canvas></div>
+    </div>
+    <div class="card">
+      <div class="chartbox md"><canvas id="pmsChart" role="img" aria-label="CY2025 total capture by PMS category for this distributor">Capture</canvas></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="captive">
+  <h2><span class="no">3 · </span>Captive vs competitive</h2>
+  <p class="lead">Captive = no named T3/T4 IAM and no Best Value in the crossref → hold.
+  Competitive = Best Value or a quality IAM equivalent. A T1 listing is not a reason to cut.
+  Crossref is incomplete — missing a Best Value row is not “no Best Value in the catalogue”.</p>
+  <div class="grid2">
+    <div class="card">
+      <div class="chartbox md"><canvas id="mixChart" role="img" aria-label="Billed book mix by captive and competitive evidence">Book mix</canvas></div>
+    </div>
+    <div class="card">
+      <div class="chartbox md"><canvas id="actChart" role="img" aria-label="Scored part numbers by engine action">Actions</canvas></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="system">
+  <h2><span class="no">4 · </span>Who offers the system</h2>
+  <p class="lead">ISZE genuine, Best Value, and a named IAM brand are three different offers.
+  A T1 pad is not a brake kit. There is no dedicated system-offer table in derived data —
+  roles below are inferred from the ISZE description. Unknown stays unknown.</p>
+  <div class="grid2">
+    <div class="card">
+      <div class="chartbox"><canvas id="offerChart" role="img" aria-label="Who offers an equivalent on scored part numbers">Who offers</canvas></div>
+    </div>
+    <div class="card">
+      <div class="chartbox"><canvas id="roleChart" role="img" aria-label="Inferred system completeness on scored part numbers">System role</canvas></div>
+      <p class="src" id="sysEmpty"></p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="position">
+  <h2><span class="no">5 · </span>Current ISZE net vs recommended band</h2>
+  <p class="lead">Bar = current net-to-DB. Terracotta = band high vs the best-quality IAM.
+  Positive delta = ISZE cheaper. The band is on the net-to-DB point; projected retail is in section 0 and the table.</p>
+  <div class="card">
+    <div class="chartbox lg"><canvas id="posChart" role="img" aria-label="Current ISZE net-to-distributor versus recommended quality band">Position</canvas></div>
+  </div>
+</section>
+
+<section class="sec" id="table">
+  <h2><span class="no">6 · </span>Part table — chain, IAM offer, gap</h2>
+  <p class="lead">%%TABLE_LEAD%%</p>
+  <div class="filters" id="filters"></div>
+  <div class="tblwrap">
+    <table class="pns" id="tbl">
+      <thead>
+        <tr>
+          <th>PN / part</th>
+          <th>Family</th>
+          <th class="n">ISZE net</th>
+          <th class="n">Proj DB</th>
+          <th class="n">Proj DLR</th>
+          <th class="n">Proj retail</th>
+          <th>IAM offer</th>
+          <th class="n">Gap</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="sec" id="rules">
+  <h2><span class="no">7 · </span>Engine rules</h2>
+  <div class="callout">
+    <ol class="rules">
+      <li>Benchmark = the <b>highest-tier named IAM</b> on the PN, not the cheapest listing.</li>
+      <li>Ceilings: T4 +30% / T3 +60% / T2 +150% / T1 +250%. T1 never auto-cuts.</li>
+      <li>Pads tighten T3/T4 only (T4 pad +15%, T3 pad +30%). Oil filters keep the full T4 +30%.</li>
+      <li>Captive (no T3/T4, no Best Value in crossref) → hold. Incomplete crossref ≠ no Best Value in catalogue.</li>
+      <li>Best Value in the crossref → push Best Value. Retention. Never a red cut.</li>
+      <li>Proposed = quality IAM price × (1 + effective ceiling). Action = hold / review / SPA / cut-to-band / monitor.</li>
+      <li>ISZE net = PR00. Projected DB / DLR / retail = net × 1.40 × 1.275 from the pricing-engine channel rule. IAM = trade or retail — flagged when not like-for-like.</li>
+      <li>Eucon does not isolate the named brand — quality-end proxy is the survey maximum when T3/T4 is present.</li>
+      <li>Assembly/kit vs mixed Eucon listing → auto-cut blocked (system completeness not confirmed).</li>
+      <li>Mekonomen titles that are only a kronor figure, or a spring brand on a pad, are suspect.</li>
+      <li>KS aftermarket at or below £2 is dropped. KS unnamed brands stay T1.</li>
+      <li>Positive delta = cheaper than the comparison price. Hover every derived chip.</li>
+    </ol>
+  </div>
+</section>
+
+<p class="foot">%%FOOT%%</p>
+</div>
+<script>
+try{window.module=undefined;window.exports=undefined;window.define=undefined;}catch(e){}
+</script>
+<script>%%CHART_JS%%</script>
+<script>
+if(typeof Chart==='undefined'&&typeof module!=='undefined'&&module.exports){window.Chart=module.exports;}
+</script>
+<script type="application/json" id="payload">%%PAYLOAD%%</script>
+<script>
+(function(){
+  function showErr(msg){
+    var box=document.getElementById('jserr');
+    if(!box) return;
+    box.textContent = msg;
+    box.className = 'jserr show';
+  }
+  var P;
+  try {
+    P = JSON.parse(document.getElementById('payload').textContent);
+  } catch (err) {
+    showErr('Payload JSON failed: ' + err.message);
+    return;
+  }
+  var ink = '#222', grid = '#e1e0d9';
+  var ACTION = {
+    spa_cut: {label:'SPA · cut to band', color:'#c0552d', flag:'cut'},
+    cut_to_band: {label:'Cut to band', color:'#c0552d', flag:'cut'},
+    spa_review: {label:'SPA · review', color:'#15233c', flag:'spa'},
+    review: {label:'Review', color:'#eda100', flag:'rev'},
+    monitor: {label:'Monitor (T1)', color:'#888780', flag:'sus'},
+    has_bvp: {label:'Push Best Value', color:'#6b6256', flag:'bvp'},
+    hold: {label:'Hold', color:'#2a78d6', flag:'hold'}
+  };
+  function eur(v, d){
+    if(v===null||v===undefined) return '—';
+    d = d===undefined?2:d;
+    return '€' + Number(v).toLocaleString('en-GB', {minimumFractionDigits:d, maximumFractionDigits:d});
+  }
+  function pct(f, d){
+    if(f===null||f===undefined) return '—';
+    d = d===undefined?0:d;
+    return (f*100).toLocaleString('en-GB', {maximumFractionDigits:d, minimumFractionDigits:d}) + '%';
+  }
+  function esc(s){
+    return String(s||'').replace(/[&<>"']/g, function(c){
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+    });
+  }
+  function tipAttr(s){ return esc(s); }
+  function mkChart(id, cfg){
+    var node = document.getElementById(id);
+    if(!node) return;
+    if(typeof Chart === 'undefined'){
+      node.parentNode.innerHTML = '<p class="empty">Chart library did not bind. Numbers remain in the tables.</p>';
+      return;
+    }
+    try { new Chart(node, cfg); }
+    catch (err) {
+      node.parentNode.innerHTML = '<p class="empty">Chart failed: '+esc(err.message)+'</p>';
+    }
+  }
+
+  try {
+  var ch = P.channel || {};
+  (P.points||[]).forEach(function(p){
+    var hero = P.hero || {};
+    var val = '';
+    if(p.code==='ISZE net') val = eur(hero.isze_eur);
+    else if(p.code==='DB sell') val = eur(hero.proj_db_eur);
+    else if(p.code==='DLR sell') val = eur(hero.proj_dlr_eur);
+    else if(p.code==='Projected retail') val = eur(hero.proj_retail_eur);
+    document.getElementById('chain').insertAdjacentHTML('beforeend',
+      '<div class="ch '+(p.observed?'on':'off')+'"><div class="k">'+(p.observed?'Observed':'Channel rule')+
+      '</div><div class="t">'+esc(p.code)+'</div>'+(val?'<div class="n">'+val+'</div>':'')+
+      '<div class="d">'+esc(p.label)+'</div></div>'
+    );
+  });
+
+  var hero = P.hero || {};
+  var hm = document.getElementById('heroMeta');
+  if(hm) hm.textContent = (hero.pn||'')+' · '+(hero.description||'')+' · '+(hero.family_label||'')+
+    (hero.book_cy2025_eur||hero.umi_cy2025_eur? ' · '+(P.meta.db_short||'')+' CY2025 '+eur(hero.book_cy2025_eur||hero.umi_cy2025_eur,0) : '');
+  var hc = document.getElementById('heroChain');
+  if(hc){
+    [
+      ['ISZE net', hero.isze_eur, 'PR00 / IE40. Observed.'],
+      ['Projected DB', hero.proj_db_eur, 'Net × '+((ch.db_factor)||1.4)+' (+'+(ch.db_markup_pct||40)+'% DB markup).'],
+      ['Projected DLR', hero.proj_dlr_eur, 'DB × '+((ch.dlr_factor)||1.275)+' (+'+(ch.dlr_markup_pct||27.5)+'% DLR markup).'],
+      ['Projected retail', hero.proj_retail_eur, 'Equals DLR sell — no extra retail markup in local files.']
+    ].forEach(function(x){
+      hc.insertAdjacentHTML('beforeend',
+        '<div class="ch on"><div class="k">'+esc(x[0])+'</div><div class="n">'+eur(x[1])+'</div><div class="d">'+esc(x[2])+'</div></div>'
+      );
+    });
+  }
+  var hg = document.getElementById('heroGap');
+  if(hg){
+    var kind = hero.iam_point_kind || 'unknown';
+    hg.innerHTML = 'IAM offer '+eur(hero.iam_offer_eur)+
+      (hero.quality_brand? ' · '+esc(hero.quality_brand):'')+
+      ' · <span class="flag '+esc(kind)+'">'+esc(kind)+'</span>'+
+      ' · gap vs projected retail '+pct(hero.gap_vs_proj_retail,1)+
+      (hero.gap_vs_proj_retail_eur!=null? ' ('+eur(hero.gap_vs_proj_retail_eur)+')':'')+
+      '<br>'+esc(hero.iam_point_note||'');
+  }
+
+  var lt = document.getElementById('ladderTbl');
+  (P.ladder||[]).forEach(function(r){
+    var tip = 'Base ceiling vs a T'+r.tier+' brand. Pads: base × 0.50 (T3/T4 only). Oil filter keeps the full T4/T3 ceiling. T1/T2 are not tightened.';
+    lt.insertAdjacentHTML('beforeend',
+      '<tr><td>T'+r.tier+'</td><td>'+esc(r.label)+'<div class="src">'+esc(r.example)+'</div></td>'+
+      '<td class="n mono"><span class="chip" data-tip="'+tipAttr(tip)+'">+'+r.ceiling_pct+'%</span></td>'+
+      '<td class="n mono">+'+r.pad_ceiling_pct+'%</td>'+
+      '<td class="n mono">+'+r.filter_ceiling_pct+'%</td></tr>'
+    );
+  });
+
+  mkChart('ladderChart', {
+    type:'bar',
+    data:{
+      labels: P.ladder.map(function(r){ return r.code+' '+r.label; }),
+      datasets:[
+        {label:'Base ceiling', data:P.ladder.map(function(r){return r.ceiling_pct;}), backgroundColor:'#2a78d6', barThickness:22},
+        {label:'Pads (tighter)', data:P.ladder.map(function(r){return r.pad_ceiling_pct;}), backgroundColor:'#c0552d', barThickness:22},
+        {label:'Oil filter', data:P.ladder.map(function(r){return r.filter_ceiling_pct;}), backgroundColor:'#1d9e75', barThickness:22}
+      ]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{color:ink}},
+        tooltip:{callbacks:{label:function(c){ return c.dataset.label+': +'+c.raw+'% vs that tier'; }}}},
+      scales:{
+        x:{max:280, grid:{color:grid}, ticks:{color:ink, callback:function(v){return '+'+v+'%';}}, title:{display:true, text:'Allowed ISZE premium vs that IAM tier', color:ink}},
+        y:{grid:{display:false}, ticks:{color:ink}}
+      }
+    }
+  });
+
+  var fam = (P.families||[]).slice();
+  var tightEl = document.getElementById('tightChart');
+  if(tightEl && tightEl.parentNode) tightEl.parentNode.style.height = Math.max(280, fam.length*40+80)+'px';
+  mkChart('tightChart', {
+    type:'bar',
+    data:{
+      labels: fam.map(function(f){ return f.label+' ('+f.pns+')'; }),
+      datasets:[{label:'T4 effective ceiling %', data:fam.map(function(f){return f.t4_eff;}),
+        backgroundColor: fam.map(function(f){ return f.family==='brake_pad'?'#c0552d':(f.tightness<1?'#eda100':'#2a78d6'); }),
+        barThickness:22}]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:function(c){
+          var f=fam[c.dataIndex];
+          return 'T4 ceiling +'+f.t4_eff+'% (tightness '+f.tightness+' × 30%). Pads called out.';
+        }}}},
+      scales:{
+        x:{max:40, grid:{color:grid}, ticks:{color:ink, callback:function(v){return '+'+v+'%';}}},
+        y:{grid:{display:false}, ticks:{color:ink}}
+      }
+    }
+  });
+
+  var pms = (P.pms_capture||[]).filter(function(x){ return x.capture_pct!==null; }).slice(0,12);
+  var pmsEl = document.getElementById('pmsChart');
+  if(pmsEl && pmsEl.parentNode) pmsEl.parentNode.style.height = Math.max(280, pms.length*40+80)+'px';
+  mkChart('pmsChart', {
+    type:'bar',
+    data:{
+      labels: pms.map(function(x){ return x.label||x.cat; }),
+      datasets:[{label:(P.meta.db_short||'')+' total capture CY2025', data:pms.map(function(x){return x.capture_pct;}),
+        backgroundColor: pms.map(function(x){ return x.cat==='brake_pad'?'#c0552d':(x.capture_pct<15?'#eda100':'#1d9e75'); }),
+        barThickness:22}]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:function(c){
+          var x=pms[c.dataIndex];
+          return (x.capture_pct)+'% total capture · tightness '+x.tightness+' · UIO model, not GPS';
+        }}}},
+      scales:{
+        x:{max:100, grid:{color:grid}, ticks:{color:ink, callback:function(v){return v+'%';}}},
+        y:{grid:{display:false}, ticks:{color:ink}}
+      }
+    }
+  });
+
+  var mix = P.mix||[];
+  var mixTot = mix.reduce(function(s,x){return s+(x.eur||0);},0);
+  var MIX_COL = {bvp:'#6b6256', competitive:'#1d9e75', monitor:'#888780', incomplete:'#eda100', captive:'#2a78d6'};
+  mkChart('mixChart', {
+    type:'bar',
+    data:{
+      labels: mix.map(function(x){ return x.label; }),
+      datasets:[{label:(P.meta.db_short||'')+' CY2025 €', data:mix.map(function(x){return Math.round(x.eur||0);}),
+        backgroundColor: mix.map(function(x){ return MIX_COL[x.kind]||'#888780'; }),
+        barThickness:22}]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:function(c){
+          var x=mix[c.dataIndex];
+          var sh = mixTot? Math.round(100*(x.eur||0)/mixTot):0;
+          return eur(x.eur,0)+' · '+x.pns+' PNs · '+sh+'% of billed book';
+        }}}},
+      scales:{
+        x:{grid:{color:grid}, ticks:{color:ink}},
+        y:{grid:{display:false}, ticks:{color:ink}}
+      }
+    }
+  });
+
+  var acts = (P.actions||[]).map(function(a){
+    var m=ACTION[a.action]||{label:a.action, color:'#888780'};
+    return {label:m.label, n:a.n, color:m.color};
+  });
+  mkChart('actChart', {
+    type:'bar',
+    data:{
+      labels: acts.map(function(a){ return a.label; }),
+      datasets:[{data:acts.map(function(a){return a.n;}), backgroundColor:acts.map(function(a){return a.color;}), barThickness:24}]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{beginAtZero:true, grid:{color:grid}, ticks:{color:ink, stepSize:1}},
+        y:{grid:{display:false}, ticks:{color:ink}}
+      }
+    }
+  });
+
+  var off = P.offers||{};
+  mkChart('offerChart', {
+    type:'bar',
+    data:{
+      labels:['ISZE genuine','Best Value','Named IAM T3/T4','T1 listing only'],
+      datasets:[{data:[off.isze||0, off.bvp||0, off.named_iam||0, off.t1_listing||0],
+        backgroundColor:['#15233c','#6b6256','#1d9e75','#888780'], barThickness:26}]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{callbacks:{label:function(c){
+          return c.raw+' of '+P.meta.n_scored+' scored PNs. Best Value is retention, never a red cut.';
+        }}}},
+      scales:{
+        x:{beginAtZero:true, grid:{color:grid}, ticks:{color:ink}},
+        y:{grid:{display:false}, ticks:{color:ink}}
+      }
+    }
+  });
+
+  var roles = P.role_counts||[];
+  var sysEmpty = document.getElementById('sysEmpty');
+  if(sysEmpty){
+    if(!roles.length){
+      sysEmpty.textContent = 'No system-offer table exists in derived data. Nothing invented.';
+    } else {
+      var nUnk = P.meta.n_system_unknown||0;
+      sysEmpty.textContent = nUnk
+        ? (nUnk+' scored PNs have no inferred system role — not invented.')
+        : 'Roles inferred from ISZE descriptions. No dedicated system-offer table.';
+    }
+  }
+  mkChart('roleChart', {
+    type:'bar',
+    data:{
+      labels: roles.map(function(r){ return r.label; }),
+      datasets:[{data:roles.map(function(r){return r.n;}),
+        backgroundColor: roles.map(function(r){ return r.label==='Not scored'?'#888780':'#2a78d6'; }),
+        barThickness:22}]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{beginAtZero:true, grid:{color:grid}, ticks:{color:ink}},
+        y:{grid:{display:false}, ticks:{color:ink}}
+      }
+    }
+  });
+
+  var withBand = (P.rows||[]).filter(function(r){ return r.quality_iam_eur && r.isze_eur; });
+  var posEl = document.getElementById('posChart');
+  if(posEl && posEl.parentNode) posEl.parentNode.style.height = Math.max(360, withBand.length*40+80)+'px';
+  mkChart('posChart', {
+    type:'bar',
+    data:{
+      labels: withBand.map(function(r){ return r.pn.slice(-6)+' '+r.family_label; }),
+      datasets:[
+        {label:'ISZE net-to-DB', data:withBand.map(function(r){return r.isze_eur;}),
+          backgroundColor: withBand.map(function(r){ return (ACTION[r.action]||{}).color||'#2a78d6'; }),
+          barThickness:22},
+        {label:'Band high (quality IAM × ceiling)', data:withBand.map(function(r){return r.band_high_eur;}),
+          type:'bar', backgroundColor:'rgba(192,85,45,0.35)', barThickness:22}
+      ]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{color:ink}},
+        tooltip:{callbacks:{label:function(c){
+          var r=withBand[c.dataIndex];
+          if(c.datasetIndex===0) return 'ISZE '+eur(r.isze_eur)+' · delta vs quality '+pct(r.delta_vs_quality)+' (positive = ISZE cheaper)';
+          return 'Band high '+eur(r.band_high_eur)+' vs '+r.quality_brand+' T'+r.quality_tier+' (+'+r.effective_ceiling_pct+'%)';
+        }}}},
+      scales:{
+        x:{grid:{color:grid}, ticks:{color:ink}},
+        y:{grid:{display:false}, ticks:{color:ink}}
+      }
+    }
+  });
+
+  var withRetail = (P.rows||[]).filter(function(r){ return r.proj_retail_eur && r.iam_offer_eur; })
+    .slice().sort(function(a,b){ return ((b.book_cy2025_eur||b.umi_cy2025_eur)||0)-((a.book_cy2025_eur||a.umi_cy2025_eur)||0); }).slice(0,16);
+  var retEl = document.getElementById('retailChart');
+  if(retEl && retEl.parentNode) retEl.parentNode.style.height = Math.max(280, withRetail.length*36+80)+'px';
+  mkChart('retailChart', {
+    type:'bar',
+    data:{
+      labels: withRetail.map(function(r){ return r.pn.slice(-6)+' '+r.family_label; }),
+      datasets:[
+        {label:'Projected retail (ISZE × 1.785)', data:withRetail.map(function(r){return r.proj_retail_eur;}),
+          backgroundColor:'#15233c', barThickness:22},
+        {label:'IAM offer', data:withRetail.map(function(r){return r.iam_offer_eur;}),
+          backgroundColor: withRetail.map(function(r){ return r.iam_point_kind==='retail'?'#1d9e75':(r.iam_point_kind==='trade'?'#eda100':'#888780'); }),
+          barThickness:22}
+      ]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{color:ink}},
+        tooltip:{callbacks:{label:function(c){
+          var r=withRetail[c.dataIndex];
+          if(c.datasetIndex===0) return 'Projected retail '+eur(r.proj_retail_eur)+' = net × 1.40 × 1.275';
+          return 'IAM '+eur(r.iam_offer_eur)+' · '+r.iam_point_kind+' · gap '+pct(r.gap_vs_proj_retail,1)+' · '+ (r.iam_point_note||'');
+        }}}},
+      scales:{
+        x:{grid:{color:grid}, ticks:{color:ink}},
+        y:{grid:{display:false}, ticks:{color:ink}}
+      }
+    }
+  });
+
+  var filt = 'all';
+  var filters = [
+    ['all','All '+P.rows.length],
+    ['cut','Cut-to-band'],
+    ['spa','SPA'],
+    ['bvp','Best Value'],
+    ['monitor','T1 monitor'],
+    ['hold','Hold / review']
+  ];
+  var fbar = document.getElementById('filters');
+  filters.forEach(function(f){
+    var b=document.createElement('button');
+    b.textContent=f[1]; b.dataset.k=f[0];
+    if(f[0]==='all') b.className='on';
+    b.onclick=function(){ filt=f[0]; drawTbl();
+      Array.prototype.forEach.call(fbar.children, function(x){ x.className = x.dataset.k===filt?'on':''; });
+    };
+    fbar.appendChild(b);
+  });
+  function matchFilt(r){
+    if(filt==='all') return true;
+    if(filt==='cut') return r.action==='spa_cut'||r.action==='cut_to_band';
+    if(filt==='spa') return r.spa_candidate;
+    if(filt==='bvp') return r.action==='has_bvp';
+    if(filt==='monitor') return r.action==='monitor';
+    return r.action==='hold'||r.action==='review'||r.action==='spa_review';
+  }
+  function drawTbl(){
+    var tb=document.querySelector('#tbl tbody'); tb.innerHTML='';
+    var rowsHtml = '';
+    P.rows.filter(matchFilt).forEach(function(r){
+      var a=ACTION[r.action]||ACTION.hold;
+      var kind = r.iam_point_kind || 'unknown';
+      var netTip = 'ISZE net to distributor, PR00 IE40. Observed.';
+      var dbTip = 'Projected DB sell = ISZE net × '+(ch.db_factor||1.4)+' (+'+(ch.db_markup_pct||40)+'% markup). Source: '+(ch.source_file||'')+' · '+(ch.source_as_of||'')+'. Working channel rule, not observed SPA terms.';
+      var dlrTip = 'Projected DLR sell = DB × '+(ch.dlr_factor||1.275)+' (+'+(ch.dlr_markup_pct||27.5)+'% markup). Equals projected retail — no extra retail markup in local files.';
+      var retTip = 'Projected retail = ISZE net × '+(ch.combined_factor||1.785)+'. Formula: net × 1.40 × 1.275. Snapshot '+(ch.source_as_of||'')+'.';
+      var iamTip = r.iam_point_note || 'IAM offer.';
+      var gapTip = 'Gap = (IAM − projected retail) / projected retail. Positive = projected retail cheaper than the IAM offer. '+iamTip;
+      rowsHtml += '<tr>'+
+        '<td><div class="pn">'+esc(r.pn)+'</div><div class="src">'+esc(r.description)+'</div>'+
+          ((r.book_cy2025_eur||r.umi_cy2025_eur)? '<div class="src">'+(P.meta.db_short||'')+' CY2025 '+eur(r.book_cy2025_eur||r.umi_cy2025_eur,0)+'</div>':'')+
+          '<div class="src">'+esc(r.captive_label||'')+' · '+esc(r.system_label||'')+'</div></td>'+
+        '<td>'+esc(r.family_label)+'<div class="src">tightness '+r.tightness+'</div></td>'+
+        '<td class="n mono"><span class="chip" data-tip="'+tipAttr(netTip)+'">'+eur(r.isze_eur)+'</span></td>'+
+        '<td class="n mono"><span class="chip" data-tip="'+tipAttr(dbTip)+'">'+eur(r.proj_db_eur)+'</span></td>'+
+        '<td class="n mono"><span class="chip" data-tip="'+tipAttr(dlrTip)+'">'+eur(r.proj_dlr_eur)+'</span></td>'+
+        '<td class="n mono"><span class="chip" data-tip="'+tipAttr(retTip)+'">'+eur(r.proj_retail_eur)+'</span></td>'+
+        '<td>'+(r.quality_brand? esc(r.quality_brand)+' T'+r.quality_tier+' · ':'')+eur(r.iam_offer_eur)+
+          '<div class="src"><span class="flag '+esc(kind)+'">'+esc(kind)+'</span> · '+esc(r.quality_source||'')+'</div></td>'+
+        '<td class="n mono"><span class="chip" data-tip="'+tipAttr(gapTip)+'">'+pct(r.gap_vs_proj_retail,1)+'</span>'+
+          '<div class="src">'+(r.gap_vs_proj_retail_eur!=null?eur(r.gap_vs_proj_retail_eur):'—')+'</div></td>'+
+        '<td><span class="flag '+a.flag+'">'+esc(a.label)+'</span><div class="src">'+esc(r.proposed_note)+'</div></td>'+
+        '</tr>';
+    });
+    tb.insertAdjacentHTML('beforeend', rowsHtml);
+  }
+  drawTbl();
+  } catch (err) {
+    showErr('Page script failed: ' + err.message);
+  }
+})();
+</script>
+</body>
+</html>

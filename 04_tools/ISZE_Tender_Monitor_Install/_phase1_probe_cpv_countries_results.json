@@ -1,0 +1,514 @@
+{
+  "probed_at": "2026-08-25T15:13:24.928725+00:00",
+  "window": "PD>=20260616 (~70d)",
+  "baseline_cpv": [
+    "34131000",
+    "34113000",
+    "34136000",
+    "34130000",
+    "34136200",
+    "50110000",
+    "50112000",
+    "50116000",
+    "50111000"
+  ],
+  "baseline_countries_n": 27,
+  "results": {
+    "baseline_current_9_cpv": {
+      "query": "(PC=34131000 OR PC=34113000 OR PC=34136000 OR PC=34130000 OR PC=34136200 OR PC=50110000 OR PC=50112000 OR PC=50116000 OR PC=50111000) AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+      "status": 200,
+      "total": 1612,
+      "error": null,
+      "keys": [
+        "iterationNextToken",
+        "notices",
+        "timedOut",
+        "totalNoticeCount"
+      ]
+    },
+    "candidates_alone": [
+      {
+        "code": "34136100",
+        "label": "Light vans",
+        "why": "LCV core sibling of 34136000/34136200",
+        "query": "PC=34136100 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 35,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "34113200",
+        "label": "Off-road vehicles",
+        "why": "Pickup / utility 4x4 adjacent to 34113000",
+        "query": "PC=34113200 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 54,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "34113300",
+        "label": "All-terrain vehicles",
+        "why": "Utility / ATV fleet adjacent",
+        "query": "PC=34113300 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 32,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "34113100",
+        "label": "Jeeps",
+        "why": "4x4 passenger-utility adjacent",
+        "query": "PC=34113100 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 4,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "34134000",
+        "label": "Flatbed and tipper trucks",
+        "why": "Chassis-cab / dropside municipal fleet",
+        "query": "PC=34134000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 135,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "34134100",
+        "label": "Flatbed trucks",
+        "why": "Dropside / platform goods vehicles",
+        "query": "PC=34134100 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 37,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "34134200",
+        "label": "Tipper trucks",
+        "why": "Tipper goods vehicles",
+        "query": "PC=34134200 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 48,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "34137000",
+        "label": "Second-hand goods vehicles",
+        "why": "Used LCV / pickup purchases",
+        "query": "PC=34137000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 7,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "34139000",
+        "label": "Chassis",
+        "why": "Chassis-cab builds (D-Max / N-Series path)",
+        "query": "PC=34139000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 116,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "34144700",
+        "label": "Utility vehicles",
+        "why": "Utility / municipal light fleet label",
+        "query": "PC=34144700 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 280,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "34144900",
+        "label": "Electric vehicles",
+        "why": "EV fleet purchase (often mixed LCV)",
+        "query": "PC=34144900 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 482,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "50100000",
+        "label": "Repair/maint. of vehicles & related equip. (parent)",
+        "why": "Parent of 5011xxxx — broader R&M net",
+        "query": "PC=50100000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "50111100",
+        "label": "Vehicle-fleet management services",
+        "why": "Fleet mgmt without forcing repair CPV",
+        "query": "PC=50111100 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "50111110",
+        "label": "Vehicle-fleet-support services",
+        "why": "Fleet support / managed services",
+        "query": "PC=50111110 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "50112100",
+        "label": "Car repair services",
+        "why": "Repair child under 50112000",
+        "query": "PC=50112100 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 79,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "50112200",
+        "label": "Car maintenance services",
+        "why": "Maintenance contracts",
+        "query": "PC=50112200 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "50113000",
+        "label": "Repair and maintenance of buses",
+        "why": "Adjacent heavy R&M (noise risk)",
+        "query": "PC=50113000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "50113200",
+        "label": "Truck repair services",
+        "why": "Truck R&M — fleet workshop contracts",
+        "query": "PC=50113200 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": 200,
+        "total": 14,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      {
+        "code": "50114000",
+        "label": "Repair and maintenance of specialised vehicles",
+        "why": "Specialised fleet workshop",
+        "query": "PC=50114000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "50117000",
+        "label": "Vehicle conversion and reconditioning",
+        "why": "Conversion / reconditioning / bodywork",
+        "query": "PC=50117000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "50118000",
+        "label": "Automobile emergency road services",
+        "why": "Breakdown / roadside (fleet servicing edge)",
+        "query": "PC=50118000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "50118100",
+        "label": "Breakdown and recovery services for cars",
+        "why": "Recovery — fleet servicing edge",
+        "query": "PC=50118100 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "50118200",
+        "label": "Breakdown and recovery for commercial vehicles",
+        "why": "Commercial recovery — closer to LCV fleet",
+        "query": "PC=50118200 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "34300000",
+        "label": "Parts and accessories for vehicles and engines",
+        "why": "Parts supply (fleet servicing)",
+        "query": "PC=34300000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "34320000",
+        "label": "Mechanical spare parts for motor vehicles",
+        "why": "Mechanical parts supply",
+        "query": "PC=34320000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "34330000",
+        "label": "Spare parts for goods / special vehicles / buses",
+        "why": "Goods-vehicle parts",
+        "query": "PC=34330000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      {
+        "code": "66114000",
+        "label": "Financial leasing services",
+        "why": "Fleet leasing (often + servicing in title)",
+        "query": "PC=66114000 AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN) AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      }
+    ],
+    "country_probes": {
+      "CYP": {
+        "query": "(PC=34131000 OR PC=34113000 OR PC=34136000 OR PC=34130000 OR PC=34136200 OR PC=50110000 OR PC=50112000 OR PC=50116000 OR PC=50111000) AND CY=CYP AND PD>=20260616",
+        "status": 200,
+        "total": 8,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      "CYP_any": {
+        "query": "CY=CYP AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      "MLT": {
+        "query": "(PC=34131000 OR PC=34113000 OR PC=34136000 OR PC=34130000 OR PC=34136200 OR PC=50110000 OR PC=50112000 OR PC=50116000 OR PC=50111000) AND CY=MLT AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      "MLT_any": {
+        "query": "CY=MLT AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      },
+      "ISL": {
+        "query": "(PC=34131000 OR PC=34113000 OR PC=34136000 OR PC=34130000 OR PC=34136200 OR PC=50110000 OR PC=50112000 OR PC=50116000 OR PC=50111000) AND CY=ISL AND PD>=20260616",
+        "status": 200,
+        "total": 2,
+        "error": null,
+        "keys": [
+          "iterationNextToken",
+          "notices",
+          "timedOut",
+          "totalNoticeCount"
+        ]
+      },
+      "ISL_any": {
+        "query": "CY=ISL AND PD>=20260616",
+        "status": null,
+        "total": null,
+        "error": "Expecting value: line 1 column 1 (char 0)",
+        "keys": []
+      }
+    },
+    "baseline_plus_cyp_mlt": {
+      "query": "(PC=34131000 OR PC=34113000 OR PC=34136000 OR PC=34130000 OR PC=34136200 OR PC=50110000 OR PC=50112000 OR PC=50116000 OR PC=50111000) AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN OR CY=CYP OR CY=MLT) AND PD>=20260616",
+      "status": null,
+      "total": null,
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "keys": []
+    },
+    "priority_increments": [
+      {
+        "add": "34136100",
+        "total": null,
+        "delta_vs_baseline": null,
+        "status": null,
+        "error": "Expecting value: line 1 column 1 (char 0)"
+      },
+      {
+        "add": "34113200",
+        "total": null,
+        "delta_vs_baseline": null,
+        "status": null,
+        "error": "Expecting value: line 1 column 1 (char 0)"
+      },
+      {
+        "add": "50111100",
+        "total": null,
+        "delta_vs_baseline": null,
+        "status": null,
+        "error": "Expecting value: line 1 column 1 (char 0)"
+      },
+      {
+        "add": "50111110",
+        "total": null,
+        "delta_vs_baseline": null,
+        "status": null,
+        "error": "Expecting value: line 1 column 1 (char 0)"
+      },
+      {
+        "add": "50113200",
+        "total": null,
+        "delta_vs_baseline": null,
+        "status": null,
+        "error": "Expecting value: line 1 column 1 (char 0)"
+      },
+      {
+        "add": "50112200",
+        "total": null,
+        "delta_vs_baseline": null,
+        "status": null,
+        "error": "Expecting value: line 1 column 1 (char 0)"
+      },
+      {
+        "add": "34320000",
+        "total": null,
+        "delta_vs_baseline": null,
+        "status": null,
+        "error": "Expecting value: line 1 column 1 (char 0)"
+      },
+      {
+        "add": "66114000",
+        "total": null,
+        "delta_vs_baseline": null,
+        "status": null,
+        "error": "Expecting value: line 1 column 1 (char 0)"
+      },
+      {
+        "add": "34134000",
+        "total": null,
+        "delta_vs_baseline": null,
+        "status": null,
+        "error": "Expecting value: line 1 column 1 (char 0)"
+      },
+      {
+        "add": "34139000",
+        "total": 1612,
+        "delta_vs_baseline": 0,
+        "status": 200,
+        "error": null
+      },
+      {
+        "add": "50100000",
+        "total": 1871,
+        "delta_vs_baseline": 259,
+        "status": 200,
+        "error": null
+      },
+      {
+        "add": "50118200",
+        "total": null,
+        "delta_vs_baseline": null,
+        "status": null,
+        "error": "Expecting value: line 1 column 1 (char 0)"
+      }
+    ]
+  }
+}

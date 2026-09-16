@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-27T15:28:58Z",
+  "generated_at": "2026-08-25T17:19:54Z",
   "data_root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data",
   "summary": {
-    "pass": 106,
+    "pass": 116,
     "warn": 0,
     "fail": 0,
     "ok": true
@@ -321,7 +321,7 @@
           "mapping": true,
           "uio": true,
           "sales_parquet": true,
-          "sales_csv_derived": true,
+          "sales_csv_derived": false,
           "sales_legacy": true,
           "raw_cy2025": true,
           "raw_cy2023_24": true,
@@ -345,12 +345,28 @@
       "detail": {}
     },
     {
+      "id": "uio.canonical",
+      "status": "pass",
+      "message": "UIO resolves to canonical ISUZU_UIO_Overview_2026.xlsx",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\ISUZU_UIO_Overview_2026.xlsx"
+      }
+    },
+    {
+      "id": "uio.stale_copies",
+      "status": "pass",
+      "message": "No stale v16/v17/v18 UIO copies in fallback paths",
+      "detail": {
+        "stale": []
+      }
+    },
+    {
       "id": "sales_fact.row_count",
       "status": "pass",
-      "message": "Row count 477,505 (expected ~477,505, \u0394 0.00%)",
+      "message": "Row count 514,037 (expected ~514,037, \u0394 0.00%)",
       "detail": {
-        "actual": 477505,
-        "expected": 477505
+        "actual": 514037,
+        "expected": 514037
       }
     },
     {
@@ -375,9 +391,9 @@
     {
       "id": "sales_fact.saty",
       "status": "pass",
-      "message": "SaTy populated on 100.0% of rows (min 95.0%)",
+      "message": "SaTy populated on 92.9% of rows (min 92.0%)",
       "detail": {
-        "non_null_pct": 100.0
+        "non_null_pct": 92.89311858873972
       }
     },
     {
@@ -385,15 +401,15 @@
       "status": "pass",
       "message": "fig_key populated on 98.6% of rows (min 90.0%)",
       "detail": {
-        "non_null_pct": 98.59184720578841
+        "non_null_pct": 98.6012680021088
       }
     },
     {
       "id": "sales_fact.unmapped",
       "status": "pass",
-      "message": "UNMAPPED 4 (0.00%) after distributor map",
+      "message": "UNMAPPED 6 (0.00%) after distributor map",
       "detail": {
-        "unmapped": 4,
+        "unmapped": 6,
         "max_pct": 1.0
       }
     },
@@ -546,9 +562,10 @@
     {
       "id": "p1.distributor_count",
       "status": "pass",
-      "message": "PMS capture 18 distributors @ 2026 (min 18)",
+      "message": "PMS capture 18 distributors @ complete 2025 (min 18)",
       "detail": {
-        "distributors": 18
+        "distributors": 18,
+        "year": 2025
       }
     },
     {
@@ -558,6 +575,23 @@
       "detail": {
         "rows": 18
       }
+    },
+    {
+      "id": "pms.summary.complete_year",
+      "status": "pass",
+      "message": "pms_summary_by_db year [2025] == complete 2025",
+      "detail": {
+        "years": [
+          2025
+        ],
+        "complete_year": 2025
+      }
+    },
+    {
+      "id": "pms.summary.not_partial",
+      "status": "pass",
+      "message": "pms_summary_by_db is a complete billing year",
+      "detail": {}
     },
     {
       "id": "pms.summary.schema",
@@ -770,9 +804,9 @@
     {
       "id": "contract.capture_trajectory",
       "status": "pass",
-      "message": "capture_trajectory 1,512 rows",
+      "message": "capture_trajectory 1,460 rows",
       "detail": {
-        "rows": 1512
+        "rows": 1460
       }
     },
     {
@@ -838,6 +872,52 @@
       "detail": {
         "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\03_analytics\\Isuzu\\prism\\data\\distributor_geo.csv"
       }
+    },
+    {
+      "id": "action_ledger.artefacts",
+      "status": "pass",
+      "message": "P8 artefacts present",
+      "detail": {
+        "missing": []
+      }
+    },
+    {
+      "id": "action_ledger.nonempty",
+      "status": "pass",
+      "message": "ledger rows=23236",
+      "detail": {
+        "n": 23236
+      }
+    },
+    {
+      "id": "action_ledger.lineage",
+      "status": "pass",
+      "message": "monetary rows with full lineage: 3507",
+      "detail": {
+        "monetary": 3507
+      }
+    },
+    {
+      "id": "action_ledger.rejects",
+      "status": "pass",
+      "message": "rejects.csv rows=0 has_reason=True",
+      "detail": {
+        "n": 0
+      }
+    },
+    {
+      "id": "action_ledger.language",
+      "status": "pass",
+      "message": "co-movement wording only",
+      "detail": {
+        "hits": []
+      }
+    },
+    {
+      "id": "action_ledger.html",
+      "status": "pass",
+      "message": "dashboard HTML at ISZE_Action_Ledger.html",
+      "detail": {}
     },
     {
       "id": "prism.bvp_bundle",

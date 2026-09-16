@@ -173,13 +173,26 @@ foreach ($row in ($liveStateSection -split "`n")) {
 }
 
 # --- Check 4: last run outcome ---------------------------------------------
-# 267011 is SCHED_S_TASK_HAS_NOT_RUN: not a failure, but worth flagging on a
-# task that should have fired by now.
+# Task Scheduler result codes (hex -> decimal) that are states, not failures:
+#   267009 = 0x41301 SCHED_S_TASK_RUNNING      still running at query time
+#   267010 = 0x41302 SCHED_S_TASK_DISABLED     disabled by user/policy
+#   267011 = 0x41303 SCHED_S_TASK_HAS_NOT_RUN  never fired yet
+# A long job (the 07:00 refresh runs ~1h43m) legitimately shows RUNNING when the
+# 08:00 audit queries it - mislabelling that as a crash floods the brief with
+# false HIGH alarms and hides real failures. States are LOW/informational.
 foreach ($t in $liveTasks) {
   if (-not (Test-InScope $t.Name)) { continue }
   $code = $t.LastResult
   if ($code -eq '0' -or -not $code) { continue }
-  if ($code -eq '267011') {
+  if ($code -eq '267009') {
+    Add-Finding 'LOW' 'scheduler' `
+      ("{0} was still running when the audit queried it" -f $t.Name) `
+      ("Usually a long job (the PMS/IAM refresh runs ~1h43m) overlapping the 08:00 audit - check its log to confirm it finished, not that it hung.")
+  } elseif ($code -eq '267010') {
+    Add-Finding 'LOW' 'scheduler' `
+      ("{0} is disabled" -f $t.Name) `
+      ("Re-enable it if it should run, or move the register row to Retired.")
+  } elseif ($code -eq '267011') {
     Add-Finding 'LOW' 'scheduler' `
       ("{0} has never run yet" -f $t.Name) `
       ("Fine if it was just imported; otherwise check the trigger.")

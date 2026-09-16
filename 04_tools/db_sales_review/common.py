@@ -22,13 +22,65 @@ DERIVED = ISZE / "01_data" / "00_derived"
 PRICING = ISZE / "01_data" / "01_Pricing"
 HERE = Path(__file__).resolve().parent
 PROFILES = HERE / "db_profiles.yaml"
+WARRANTY_GRAIN = DERIVED / "warranty_raw_grain.csv"
+
+# profile key → exact db_name values in warranty_raw_grain.csv
+# (ERP has no warranty doc type — claim grain is the PN-level exclusion source)
+WARRANTY_GRAIN_DB: dict[str, list[str]] = {
+    "IUK": ["ISUZU (UK)"],
+    "PORTUGAL": ["IMOTORS LDA", "PORTUGAL"],
+    "ISD": ["ISUZU SALES DEUTSCHLAND - ISD", "ISD"],
+    # IBX payer bills BE/NL/PL — include all Benelux claim rows
+    "IBX": [
+        "ISUZU BENELUX - BELGIUM",
+        "ISUZU BENELUX - NETHERLANDS",
+        "Isuzu Benelux NV (Poland)",
+    ],
+    "PETROS": ["PETROS PETROPOULOS"],
+    "IRELAND": ["Isuzu Ireland 2020 Unlimited Company", "IRELAND"],
+    "UMI": ["UMI"],
+    "NORWAY": ["RSA"],
+    "SWEDEN": ["Isuzu Sverige AB"],
+    "HUNGARY": ["WAE LTD.", "WAE"],
+    "FINLAND": ["Isuzu Motor Finland OY"],
+    "ROMANIA": ["ISUZU ROM AUTO SRL"],
+    "DENMARK": ["ISUZU Danmark"],
+    "ICELAND": ["BL ehf."],
+    "CYPRUS": ["A. LOUTSIOS & SONS", "CYPRUS"],
+    "MALTA": ["GASANZAMMIT MOTORS LIMITED", "MALTA"],
+}
+
+# Months of claim-assessment lag before the prior window (claims trail billing)
+WARRANTY_CLAIM_LAG_MONTHS = 3
+
+_WARRANTY_TEXT_RE = re.compile(
+    r"\bSENSOR\W*PM\b|\bPM\W*SENSOR\b|\bWARRANTY\b|\bCAMPAIGN\b|\bRECALL\b",
+    re.IGNORECASE,
+)
+
+# Material codes that are not parts. ERP bills freight/delivery surcharges as a
+# line with a non-numeric Material code (e.g. TRANSPORT). These are real revenue
+# and must stay in load_sales so PBI reconciliation works; they are excluded at
+# the parts-aggregation stage (build_parts_analysis) so they cannot leak into
+# category / mover / UNCLASSIFIED totals.
+FREIGHT_MATERIAL_CODES = frozenset(
+    {"TRANSPORT", "FREIGHT", "SHIPPING", "CARRIAGE", "DELIVERY", "SURCHARGE", "HANDLING"}
+)
 
 UIO_FILE = ISZE / "06_uio" / "_CURRENT" / "ISUZU_UIO_Overview_2026.xlsx"
 FY27_FILE = ISZE / "01_data" / "ISZE_GPS_Extended_Target_FY27_V3.1.xlsx"
 IDS_FILE = (ISZE / "01_data" / "90_INBOX" / "IDS_2026" / "rankings"
             / "IDS_2026_TOTAL_ranking_all.xlsx")
 BUDGET_FILE = ISZE / "01_data" / "11_planning" / "budget_per_DB_reviewed_24042026.xlsx"
+BP_FILE = ISZE / "01_data" / "11_planning" / "FY2027  BP VP&ACC.xlsx"
 CARPARK_FILE = DERIVED / "UIO_carpark_for_GPS_recalc_2026-07-30.csv"
+
+# A dealer that never returned an IDS assessment scores nothing on every item, so
+# "Items scored %" and "Points achieved %" both collapse to ~0. Those rows are
+# non-returns, not failures: naming them as the weakest dealers is wrong, and
+# leaving them in drags both the country and the network average down (30 of 518
+# rows network-wide, worth ~4.6 points on the benchmark).
+IDS_MIN_SCORED_PCT = 5.0
 
 OUT_ROOT = ISZE / "09_meetings"
 
@@ -118,38 +170,78 @@ def load_sales(profile: dict) -> pd.DataFrame:
     economically negative; they are signed here so a rebate credit cannot read
     as a gain. Verified against net_value_gps_signed in the tagged extract.
 
-    CY2026 current window spanning past 31 Mar pulls Apr–Jun from
-    q1fy2027_billing_tagged.csv (same payer / Net value / credit convention).
+    CY2026 current window spanning past 31 Mar pulls Apr–Jun from the
+    reconciled `q1fy2027_export_with_saty.csv` when `sold_to` is set (PBI-aligned),
+    else `q1fy2027_billing_tagged.csv` by payer name.
+
+    Israel: payer name UNIVERSAL MOTORS ISRAEL LTD covers both UMI (1797) and
+    UTI (1799). Always filter `Sold-to pt` / `Sold_to` when profile.sold_to is set.
     """
     d = profile["defaults"]
     payer = profile["payer"]
+    sold_to = profile.get("sold_to")
+    sold_to_s = str(int(sold_to)) if sold_to is not None else None
     L25, L26 = d["window_label_prior"], d["window_label_current"]
     w25, w26 = d["window_prior"], d["window_current"]
     frames = []
 
-    usecols_cur = ["Billing Date", "Payer.1", "Material", "Material Number",
+    def _filter_sold_to(df: pd.DataFrame, col: str) -> pd.DataFrame:
+        if not sold_to_s or col not in df.columns:
+            return df
+        st = df[col].astype(str).str.replace(r"\.0$", "", regex=True).str.strip()
+        return df[st == sold_to_s].copy()
+
+    usecols_cur = ["Billing Date", "Payer.1", "Sold-to pt", "Material", "Material Number",
                    "Billed Quantity", "Net value", "SaTy", "BillT"]
 
     def _slice_cur(df: pd.DataFrame, start: str, end: str) -> pd.DataFrame:
         out = df[df["Payer.1"] == payer].copy()
+        out = _filter_sold_to(out, "Sold-to pt")
         out["Billing Date"] = _dates(out["Billing Date"])
         out = out[(out["Billing Date"] >= start) & (out["Billing Date"] < end)]
         out["period"] = L26
         return out.rename(columns={"Billed Quantity": "qty", "Net value": "net_eur"})
 
-    # CY current: Jan–Mar from cy2026_q1, Apr+ from q1fy2027 tagged extract
+    # CY current: Jan–Mar from cy2026_q1 (payer + sold_to)
     cur_q1 = pd.read_csv(DERIVED / "cy2026_q1.csv", low_memory=False, usecols=usecols_cur)
     frames.append(_slice_cur(cur_q1, w26[0], min(w26[1], "2026-04-01")))
 
+    # Apr+: prefer reconciled export (Sold_to) when profile has sold_to — matches PBI.
+    # Tagged extract by payer alone blends UMI 1797 + UTI 1799 under the same payer name.
     if w26[1] > "2026-04-01":
-        cur_q2 = pd.read_csv(DERIVED / "q1fy2027_billing_tagged.csv", low_memory=False,
-                             usecols=usecols_cur)
-        frames.append(_slice_cur(cur_q2, max(w26[0], "2026-04-01"), w26[1]))
+        start_q2 = max(w26[0], "2026-04-01")
+        used_export = False
+        exp_path = DERIVED / "q1fy2027_export_with_saty.csv"
+        if sold_to_s and exp_path.exists():
+            exp = pd.read_csv(
+                exp_path, low_memory=False,
+                usecols=["Billing Date", "Sold_to", "Material", "Material_Number",
+                         "Quantity", "EUR_Amount", "SaTy", "BillT", "Payer_name"],
+            )
+            exp = exp[exp["Sold_to"].astype(str).str.replace(r"\.0$", "", regex=True) == sold_to_s].copy()
+            if not exp.empty:
+                exp["Billing Date"] = _dates(exp["Billing Date"])
+                exp = exp[(exp["Billing Date"] >= start_q2) & (exp["Billing Date"] < w26[1])]
+                if not exp.empty:
+                    exp = exp.rename(columns={
+                        "Quantity": "qty",
+                        "EUR_Amount": "net_eur",
+                        "Material_Number": "Material Number",
+                    })
+                    exp["period"] = L26
+                    exp["Payer.1"] = exp.get("Payer_name", payer)
+                    frames.append(exp)
+                    used_export = True
+        if not used_export:
+            cur_q2 = pd.read_csv(
+                DERIVED / "q1fy2027_billing_tagged.csv", low_memory=False, usecols=usecols_cur)
+            frames.append(_slice_cur(cur_q2, start_q2, w26[1]))
 
     pri = pd.read_csv(DERIVED / "cy2025_raw.csv", low_memory=False,
-                      usecols=["Billing Date", "DB", "Material", "Material Number",
+                      usecols=["Billing Date", "DB", "Sold-to pt", "Material", "Material Number",
                                "Billed Quantity", "Net value", "SaTy"])
     pri = pri[pri["DB"] == payer].copy()
+    pri = _filter_sold_to(pri, "Sold-to pt")
     pri["Billing Date"] = _dates(pri["Billing Date"])
     pri = pri[(pri["Billing Date"] >= w25[0]) & (pri["Billing Date"] < w25[1])]
     pri["period"] = L25
@@ -158,7 +250,11 @@ def load_sales(profile: dict) -> pd.DataFrame:
 
     all_ = pd.concat(frames, ignore_index=True)
     if all_.empty:
-        raise SystemExit(f"No billing rows found for payer '{payer}'. Check the profile.")
+        raise SystemExit(
+            f"No billing rows found for payer '{payer}'"
+            + (f" sold_to={sold_to_s}" if sold_to_s else "")
+            + ". Check the profile."
+        )
 
     all_["sap_desc"] = all_["Material Number"].astype(str).str.strip()
     all_["Material"] = all_["Material"].map(norm_pn)
@@ -183,6 +279,85 @@ def fy_billing_derived(profile: dict, start="2025-04-01", end="2026-04-01") -> f
         df = df[(df["Billing Date"] >= start) & (df["Billing Date"] < end)]
         tot += float(pd.to_numeric(df["Net value"], errors="coerce").fillna(0).sum())
     return tot
+
+
+# ----------------------------------------------------------------- warranty --
+def is_warranty_campaign_text(pn_value, description) -> bool:
+    """PN/description heuristic for campaign / recall / PM-sensor style lines."""
+    text = f"{pn_value or ''} {description or ''}"
+    return bool(_WARRANTY_TEXT_RE.search(text))
+
+
+def _yyyymm(ts) -> int:
+    ts = pd.Timestamp(ts)
+    return int(ts.year) * 100 + int(ts.month)
+
+
+def _shift_yyyymm(yyyymm: int, months: int) -> int:
+    y, m = divmod(int(yyyymm), 100)
+    idx = y * 12 + (m - 1) + months
+    return (idx // 12) * 100 + (idx % 12) + 1
+
+
+def load_warranty_claim_pns(profile: dict,
+                            window_prior: tuple[str, str] | None = None,
+                            window_current: tuple[str, str] | None = None,
+                            lag_months: int = WARRANTY_CLAIM_LAG_MONTHS,
+                            ) -> dict:
+    """PN set from warranty_raw_grain for this DB over the analysis windows.
+
+    ERP billing has no warranty document type, so commercial H1 movers exclude
+    PNs that appear on claim lines for this distributor. Claim assessment dates
+    lag billing — the prior window is opened ``lag_months`` earlier.
+
+    Returns dict with keys: pns (set[str]), n_claim_lines, claim_eur, db_names,
+    assess_month_from, assess_month_to, source, available (bool).
+    """
+    d = profile["defaults"]
+    w25 = window_prior or tuple(d["window_prior"])
+    w26 = window_current or tuple(d["window_current"])
+    names = list(profile.get("warranty_grain_db") or WARRANTY_GRAIN_DB.get(profile["key"]) or [])
+    empty = {
+        "pns": set(), "n_claim_lines": 0, "claim_eur": 0.0, "db_names": names,
+        "assess_month_from": None, "assess_month_to": None,
+        "source": str(WARRANTY_GRAIN), "available": False,
+        "method": "claim_pn_match+text_heuristic",
+    }
+    if not names or not WARRANTY_GRAIN.exists():
+        return empty
+
+    grain = pd.read_csv(WARRANTY_GRAIN, low_memory=False,
+                        usecols=["assess_month", "db_name", "part_no", "claim_eur"])
+    hit = grain[grain["db_name"].isin(names)].copy()
+    if hit.empty:
+        return empty
+
+    start = _shift_yyyymm(_yyyymm(w25[0]), -lag_months)
+    end = _yyyymm(w26[1])  # exclusive end date → last month before end
+    # window end is exclusive (e.g. 2026-07-01) → include through prior month
+    end_inclusive = _shift_yyyymm(end, -1)
+    am = pd.to_numeric(hit["assess_month"], errors="coerce")
+    hit = hit[(am >= start) & (am <= end_inclusive)]
+    pns = {p for p in hit["part_no"].map(norm_pn) if p}
+    return {
+        "pns": pns,
+        "n_claim_lines": int(len(hit)),
+        "claim_eur": float(pd.to_numeric(hit["claim_eur"], errors="coerce").fillna(0).sum()),
+        "db_names": names,
+        "assess_month_from": int(start),
+        "assess_month_to": int(end_inclusive),
+        "source": str(WARRANTY_GRAIN),
+        "available": True,
+        "method": "claim_pn_match+text_heuristic",
+    }
+
+
+def is_warranty_pn(pn_value, description, claim_pns: set[str]) -> bool:
+    """True when PN is on a claim for this DB or matches the campaign heuristic."""
+    pn = norm_pn(pn_value)
+    if pn and pn in claim_pns:
+        return True
+    return is_warranty_campaign_text(pn_value, description)
 
 
 # ------------------------------------------------------------------ ITC map --
@@ -228,6 +403,44 @@ def load_catalog() -> pd.DataFrame:
     cat = pd.read_csv(DERIVED / "parts_catalog_dimension.csv", dtype=str)
     cat["part_number"] = cat["part_number"].map(norm_pn)
     return cat[["part_number", "pr00_group", "pms_category"]].drop_duplicates("part_number")
+
+
+def load_pn_vehicle_models() -> dict[str, str]:
+    """Best-effort PN → vehicle_model from existing BVP/PMS application tables.
+
+    Coverage is the addressable BVP basket / genuine↔BVP crossref only — not a
+    full EPC. Returns {} when sources are missing. Never invents a model.
+    """
+    frames: list[pd.DataFrame] = []
+    xref = DERIVED / "genuine_bvp_crossref.csv"
+    basket = DERIVED / "bvp_addressable_basket.csv"
+    if xref.exists():
+        df = pd.read_csv(xref, dtype=str)
+        for col in ("genuine_pn", "bvp_pn"):
+            if col in df.columns and "vehicle_model" in df.columns:
+                part = df[[col, "vehicle_model"]].rename(columns={col: "pn"})
+                frames.append(part)
+    if basket.exists():
+        df = pd.read_csv(basket, dtype=str)
+        for col in ("genuine_pn", "bvp_pn"):
+            if col in df.columns and "vehicle_model" in df.columns:
+                part = df[[col, "vehicle_model"]].rename(columns={col: "pn"})
+                frames.append(part)
+    if not frames:
+        return {}
+    all_ = pd.concat(frames, ignore_index=True)
+    all_["pn"] = all_["pn"].map(norm_pn)
+    all_["vehicle_model"] = all_["vehicle_model"].fillna("").astype(str).str.strip()
+    all_ = all_[(all_["pn"].notna()) & (all_["vehicle_model"] != "")
+                & (all_["vehicle_model"].str.lower() != "nan")]
+    if all_.empty:
+        return {}
+    # Prefer the most frequent non-blank label per PN
+    ranked = (all_.groupby(["pn", "vehicle_model"]).size()
+              .reset_index(name="n")
+              .sort_values(["pn", "n"], ascending=[True, False]))
+    return (ranked.drop_duplicates("pn")
+            .set_index("pn")["vehicle_model"].to_dict())
 
 
 def load_bvp_pns() -> set[str]:
@@ -339,12 +552,29 @@ def load_segmented_gps(profile: dict) -> dict | None:
     }
 
 
+def latest_complete_pms_year(years) -> int:
+    """Latest full calendar year in a PMS series.
+
+    Mid-year rows (e.g. CY2026 YTD in Aug 2026) keep a full-year expected_qty
+    denominator. Pairing that with a partial numerator crushes capture %
+    (Hungary brake rotor: 5.1% on 2026 YTD vs 36.1% on CY2025 full year — same
+    file, same model). Decks and peer bars must use a complete year only.
+    """
+    from datetime import date
+    ys = sorted({int(y) for y in years if pd.notna(y)})
+    if not ys:
+        raise SystemExit("No PMS years available")
+    cy = date.today().year
+    complete = [y for y in ys if y < cy]
+    return max(complete) if complete else max(ys)
+
+
 def load_pms(profile: dict, year: int | None = None):
     p = pd.read_csv(DERIVED / "pms_capture_by_db_year.csv")
     p = p[(p["distributor_code"] == profile["pms_code"]) & (p["line_type"] == "total")]
     if p.empty:
         raise SystemExit(f"pms_code '{profile['pms_code']}' not in pms_capture_by_db_year.csv")
-    year = year or int(p["year"].max())
+    year = year or latest_complete_pms_year(p["year"])
     return year, p[p["year"] == year].reset_index(drop=True)
 
 
@@ -356,7 +586,7 @@ def pms_vs_network(profile: dict, categories=None, year: int | None = None) -> d
                                 "brake_pad", "brake_rotor"]
     p = pd.read_csv(DERIVED / "pms_capture_by_db_year.csv")
     p = p[p["line_type"] == "total"]
-    year = year or int(p["year"].max())
+    year = year or latest_complete_pms_year(p["year"])
     p = p[p["year"] == year]
     code = profile["pms_code"]
     out = {}
@@ -372,6 +602,21 @@ def pms_vs_network(profile: dict, categories=None, year: int | None = None) -> d
             "best": float(peers["capture_rate"].max()) * 100,
         }
     return out
+
+
+def quotable_pms(peers: dict) -> tuple[list[str], list[str]]:
+    """(categories safe to show, categories withheld) from a pms_vs_network dict.
+
+    A capture rate over 100% is an artefact of the service-interval assumption in
+    the expected-quantity base, not real over-capture — 12 DB/category pairs
+    across the network breach it on the CY2025 cut. It cannot be defended in
+    front of a distributor, so the category is withheld everywhere rather than
+    plotted. Fixing the base means changing the network-wide interval model.
+    """
+    keep, drop = [], []
+    for k, v in peers.items():
+        (drop if (v["db"] > 100 or v["network"] > 100) else keep).append(k)
+    return keep, drop
 
 
 def load_uio(profile: dict) -> dict:
@@ -566,13 +811,54 @@ def load_fy27(profile: dict) -> dict:
 
 
 def load_ids(profile: dict):
-    """(this DB's dealers, network average, DB average) or None when the DB has
-    no IDS 2026 assessment."""
+    """(assessed dealers, network average, DB average, n_not_assessed) or None
+    when the DB has no IDS 2026 assessment.
+
+    Non-returns are dropped before any average is taken — see IDS_MIN_SCORED_PCT.
+    Both averages are computed on the same assessed-only population so the
+    country-vs-network comparison is like-for-like.
+    """
     if not profile.get("ids_code"):
         return None
     df = pd.read_excel(IDS_FILE, sheet_name=0)
-    mine = df[df["Country"] == profile["ids_code"]].copy()
+    scored = df[df["Items scored %"] >= IDS_MIN_SCORED_PCT]
+    n_all = int((df["Country"] == profile["ids_code"]).sum())
+    mine = scored[scored["Country"] == profile["ids_code"]].copy()
     if mine.empty:
         return None
     mine = mine.sort_values("Rank (country)")
-    return mine, float(df["Points achieved %"].mean()), float(mine["Points achieved %"].mean())
+    return (mine,
+            float(scored["Points achieved %"].mean()),
+            float(mine["Points achieved %"].mean()),
+            n_all - int(len(mine)))
+
+
+def load_bp_monthly(profile: dict) -> dict[str, float] | None:
+    """{month_abbr: EUR} FY2027 Business Plan for one DB, from the BP workbook.
+
+    Sheet 'VP FY27' carries one row per SAP sold-to ("86 - RSA"), Apr..Mar.
+    This is the only monthly plan series in the workspace that traces to a file;
+    the 'budget' bars in the Power BI monthly report are a browser read with no
+    source here, so BP is what the decks quote against.
+    """
+    sold_to = profile.get("sold_to")
+    if sold_to is None or not BP_FILE.exists():
+        return None
+    import openpyxl
+    wb = openpyxl.load_workbook(BP_FILE, data_only=True, read_only=True)
+    try:
+        rows = list(wb["VP FY27"].iter_rows(values_only=True))
+    finally:
+        wb.close()
+    months, hit = None, None
+    for r in rows:
+        label = str(r[1] or "").strip()
+        if label == "Vehicle Parts":
+            months = [str(v).strip() for v in r[3:15]]
+        elif label.split(" - ")[0].strip() == str(int(sold_to)):
+            hit = r
+    if hit is None or not months:
+        return None
+    out = {m: float(hit[3 + i]) for i, m in enumerate(months)
+           if isinstance(hit[3 + i], (int, float))}
+    return out or None

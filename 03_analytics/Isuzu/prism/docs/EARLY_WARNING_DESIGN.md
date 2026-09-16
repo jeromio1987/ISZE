@@ -6,7 +6,7 @@
 
 Three corrections that the paper design did not anticipate. Each one was killing or manufacturing alarms:
 
-1. **`capture_trajectory.csv` / Strategic "Capture trend" is contaminated — 83% false alarms.** `modules/strategic_build.build_capture_trajectory()` regresses over every year in `pms_capture_by_db.csv` including the current **partial** year. Q1-only billing reads as a cliff (network median capture 2026 = 0.019 vs 0.094 in 2025). Measured: **35 declining alerts with 2026 in, 6 with it out; 29 of 35 are artifacts and 0 real declines are hidden.** Early Warning recomputes the slope itself with a partial-year guard. **The Strategic tab and the CSV still carry the contaminated flag — separate fix, not done here.**
+1. **`capture_trajectory.csv` / Strategic "Capture trend" was contaminated — 83% false alarms (FIXED 2026-08-18).** `modules/strategic_build.build_capture_trajectory()` used to regress over every year including the current **partial** year. Q1-only billing reads as a cliff (network median capture 2026 = 0.019 vs 0.094 in 2025). Measured 2026-07-17: **35 declining alerts with 2026 in, 6 with it out; 29 of 35 are artifacts and 0 real declines are hidden.** Re-measured 2026-08-18 on live `pms_capture_by_db_year.csv`: **33 unguarded → 5 guarded; 28 artifacts; 0 real declines hidden.** The builder now uses `year_coverage.is_partial()`; scorecard/QBR PDFs inherit the CSV. Early Warning still recomputes locally because of the **level gate** (finding 2) which Contract 7 does not apply.
 2. **A declining category can still be over-capturing — the level gate.** 4.9% of DB×category×year rows have capture > 1.0 (max 3.03) with a flat `expected_qty`, i.e. the demand model under-predicts. ITUK brake_rotor runs 2.20 → 2.19 → 1.98: a −11pp/yr "decline" while still buying **198% of modelled demand**. Ungated it headlined this page at €313K. Alarms now require latest complete-year capture ≤ 100%; over-ceiling declines are suppressed and counted in the build log. Network exposure €605K → **€307K**.
 3. **Silence ≠ defection when the category is dead.** 8 of 25 defection alerts are categories silent 13–33 months with €0 trailing revenue — never really bought, not walking away. Classed `dormant` and ranked below every live alarm.
 
@@ -98,7 +98,7 @@ Net: Strategic's 15 tabs contribute 0 standalone tabs to the ops path. Customer 
 
 **Not done — deliberately left for a decision:** deregistering `15_Customer_Risk`, the Strategic tabs per §3, and Decision→Defection. Building the one page is additive; removing established destinations has blast radius (other pages/docs link them) and is the IA's later phase. The new page does not depend on their removal.
 
-**Separate bug worth its own change:** the partial-year contamination in `build_capture_trajectory()` (finding 1 above) still affects `capture_trajectory.csv` and the Strategic "Capture trend" tab.
+**`build_capture_trajectory()` partial-year contamination (finding 1) was fixed 2026-08-18** — see DECISIONS.md. Early Warning still recomputes slope because of the level gate.
 
 ## 5 · Acceptance
 

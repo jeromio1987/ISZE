@@ -1,0 +1,666 @@
+{
+  "generated_from": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\14_dashboards\\tender_data.json",
+  "meta_generated_at": "2026-08-24T05:33:31.507363Z",
+  "notice_count": 778,
+  "opportunity_count": 680,
+  "field_completeness": [
+    {
+      "field": "FleetSize",
+      "populated": 1,
+      "empty": 777,
+      "pct_populated": 0.1,
+      "pct_empty": 99.9
+    },
+    {
+      "field": "brand_hits",
+      "populated": 1,
+      "empty": 777,
+      "pct_populated": 0.1,
+      "pct_empty": 99.9
+    },
+    {
+      "field": "fleet_size",
+      "populated": 1,
+      "empty": 777,
+      "pct_populated": 0.1,
+      "pct_empty": 99.9
+    },
+    {
+      "field": "Est. Value",
+      "populated": 70,
+      "empty": 708,
+      "pct_populated": 9.0,
+      "pct_empty": 91.0
+    },
+    {
+      "field": "value_amount",
+      "populated": 70,
+      "empty": 708,
+      "pct_populated": 9.0,
+      "pct_empty": 91.0
+    },
+    {
+      "field": "framework_hits",
+      "populated": 114,
+      "empty": 664,
+      "pct_populated": 14.7,
+      "pct_empty": 85.3
+    },
+    {
+      "field": "CPV Desc",
+      "populated": 134,
+      "empty": 644,
+      "pct_populated": 17.2,
+      "pct_empty": 82.8
+    },
+    {
+      "field": "Procedure Type",
+      "populated": 134,
+      "empty": 644,
+      "pct_populated": 17.2,
+      "pct_empty": 82.8
+    },
+    {
+      "field": "Buyer Type",
+      "populated": 138,
+      "empty": 640,
+      "pct_populated": 17.7,
+      "pct_empty": 82.3
+    },
+    {
+      "field": "Notice Type",
+      "populated": 143,
+      "empty": 635,
+      "pct_populated": 18.4,
+      "pct_empty": 81.6
+    },
+    {
+      "field": "Currency",
+      "populated": 160,
+      "empty": 618,
+      "pct_populated": 20.6,
+      "pct_empty": 79.4
+    },
+    {
+      "field": "Description",
+      "populated": 168,
+      "empty": 610,
+      "pct_populated": 21.6,
+      "pct_empty": 78.4
+    },
+    {
+      "field": "Deadline",
+      "populated": 189,
+      "empty": 589,
+      "pct_populated": 24.3,
+      "pct_empty": 75.7
+    },
+    {
+      "field": "Deadline Date",
+      "populated": 189,
+      "empty": 589,
+      "pct_populated": 24.3,
+      "pct_empty": 75.7
+    },
+    {
+      "field": "days_to_deadline",
+      "populated": 189,
+      "empty": 589,
+      "pct_populated": 24.3,
+      "pct_empty": 75.7
+    },
+    {
+      "field": "rm_hits",
+      "populated": 287,
+      "empty": 491,
+      "pct_populated": 36.9,
+      "pct_empty": 63.1
+    },
+    {
+      "field": "service_hits",
+      "populated": 391,
+      "empty": 387,
+      "pct_populated": 50.3,
+      "pct_empty": 49.7
+    },
+    {
+      "field": "vehicle_hits",
+      "populated": 614,
+      "empty": 164,
+      "pct_populated": 78.9,
+      "pct_empty": 21.1
+    },
+    {
+      "field": "score_drivers",
+      "populated": 631,
+      "empty": 147,
+      "pct_populated": 81.1,
+      "pct_empty": 18.9
+    },
+    {
+      "field": "data_gaps",
+      "populated": 719,
+      "empty": 59,
+      "pct_populated": 92.4,
+      "pct_empty": 7.6
+    },
+    {
+      "field": "CPV Code",
+      "populated": 739,
+      "empty": 39,
+      "pct_populated": 95.0,
+      "pct_empty": 5.0
+    },
+    {
+      "field": "Buyer",
+      "populated": 748,
+      "empty": 30,
+      "pct_populated": 96.1,
+      "pct_empty": 3.9
+    },
+    {
+      "field": "Published Date",
+      "populated": 748,
+      "empty": 30,
+      "pct_populated": 96.1,
+      "pct_empty": 3.9
+    },
+    {
+      "field": "Country",
+      "populated": 773,
+      "empty": 5,
+      "pct_populated": 99.4,
+      "pct_empty": 0.6
+    },
+    {
+      "field": "Country Code",
+      "populated": 773,
+      "empty": 5,
+      "pct_populated": 99.4,
+      "pct_empty": 0.6
+    },
+    {
+      "field": "Published",
+      "populated": 773,
+      "empty": 5,
+      "pct_populated": 99.4,
+      "pct_empty": 0.6
+    },
+    {
+      "field": "Source Notice ID",
+      "populated": 773,
+      "empty": 5,
+      "pct_populated": 99.4,
+      "pct_empty": 0.6
+    },
+    {
+      "field": "Title",
+      "populated": 773,
+      "empty": 5,
+      "pct_populated": 99.4,
+      "pct_empty": 0.6
+    },
+    {
+      "field": "Title Compact",
+      "populated": 773,
+      "empty": 5,
+      "pct_populated": 99.4,
+      "pct_empty": 0.6
+    },
+    {
+      "field": "URL",
+      "populated": 773,
+      "empty": 5,
+      "pct_populated": 99.4,
+      "pct_empty": 0.6
+    },
+    {
+      "field": "Lifecycle",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "Score",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "Source",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "cpv_excluded",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "decision",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "econ_score",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "evidence_label",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "evidence_score",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "fit_score",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "next_action_suggested",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "opportunity_id",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "owner_suggested",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "parts_signal",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "rm_contract",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "status_suggested",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "tier",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "urgency",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    },
+    {
+      "field": "win_score",
+      "populated": 778,
+      "empty": 0,
+      "pct_populated": 100.0,
+      "pct_empty": 0.0
+    }
+  ],
+  "notice_source_counts": {
+    "🇪🇺 EU": 605,
+    "🇬🇧 UK-CF": 121,
+    "🇳🇱 NL": 25,
+    "🇬🇧 UK": 22,
+    "No DE national results — DTVP portal may require browser access. TED covers DE above-threshold contracts.": 1,
+    "No results — add DOFFIN_API_KEY (free) at top of script": 1,
+    "No results — add HILMA_API_KEY (free) at top of script": 1,
+    "No Israel results found": 1,
+    "No Belgium RSS results — TED covers above-threshold BE": 1
+  },
+  "markets_returning": [
+    {
+      "code": "GBR",
+      "name": "United Kingdom",
+      "opportunities": 125,
+      "notices": 143,
+      "action_tier": 0,
+      "sources": {
+        "🇬🇧 UK": 22,
+        "🇬🇧 UK-CF": 103
+      }
+    },
+    {
+      "code": "ROU",
+      "name": "Romania",
+      "opportunities": 71,
+      "notices": 90,
+      "action_tier": 51,
+      "sources": {
+        "🇪🇺 EU": 71
+      }
+    },
+    {
+      "code": "DEU",
+      "name": "Germany",
+      "opportunities": 66,
+      "notices": 72,
+      "action_tier": 6,
+      "sources": {
+        "🇪🇺 EU": 66
+      }
+    },
+    {
+      "code": "FRA",
+      "name": "France",
+      "opportunities": 51,
+      "notices": 53,
+      "action_tier": 26,
+      "sources": {
+        "🇪🇺 EU": 51
+      }
+    },
+    {
+      "code": "POL",
+      "name": "Poland",
+      "opportunities": 51,
+      "notices": 58,
+      "action_tier": 16,
+      "sources": {
+        "🇪🇺 EU": 51
+      }
+    },
+    {
+      "code": "NLD",
+      "name": "Netherlands",
+      "opportunities": 46,
+      "notices": 46,
+      "action_tier": 8,
+      "sources": {
+        "🇪🇺 EU": 21,
+        "🇳🇱 NL": 25
+      }
+    },
+    {
+      "code": "ESP",
+      "name": "Spain",
+      "opportunities": 45,
+      "notices": 47,
+      "action_tier": 13,
+      "sources": {
+        "🇪🇺 EU": 45
+      }
+    },
+    {
+      "code": "CZE",
+      "name": "Czechia",
+      "opportunities": 37,
+      "notices": 38,
+      "action_tier": 13,
+      "sources": {
+        "🇪🇺 EU": 37
+      }
+    },
+    {
+      "code": "ITA",
+      "name": "Italy",
+      "opportunities": 25,
+      "notices": 31,
+      "action_tier": 11,
+      "sources": {
+        "🇪🇺 EU": 25
+      }
+    },
+    {
+      "code": "HUN",
+      "name": "Hungary",
+      "opportunities": 17,
+      "notices": 18,
+      "action_tier": 9,
+      "sources": {
+        "🇪🇺 EU": 17
+      }
+    },
+    {
+      "code": "PRT",
+      "name": "Portugal",
+      "opportunities": 17,
+      "notices": 18,
+      "action_tier": 13,
+      "sources": {
+        "🇪🇺 EU": 17
+      }
+    },
+    {
+      "code": "SWE",
+      "name": "Sweden",
+      "opportunities": 16,
+      "notices": 16,
+      "action_tier": 1,
+      "sources": {
+        "🇪🇺 EU": 16
+      }
+    },
+    {
+      "code": "BGR",
+      "name": "Bulgaria",
+      "opportunities": 15,
+      "notices": 32,
+      "action_tier": 13,
+      "sources": {
+        "🇪🇺 EU": 15
+      }
+    },
+    {
+      "code": "BEL",
+      "name": "Belgium",
+      "opportunities": 14,
+      "notices": 15,
+      "action_tier": 2,
+      "sources": {
+        "🇪🇺 EU": 14
+      }
+    },
+    {
+      "code": "NOR",
+      "name": "Norway",
+      "opportunities": 14,
+      "notices": 15,
+      "action_tier": 2,
+      "sources": {
+        "🇪🇺 EU": 14
+      }
+    },
+    {
+      "code": "GRC",
+      "name": "Greece",
+      "opportunities": 13,
+      "notices": 16,
+      "action_tier": 5,
+      "sources": {
+        "🇪🇺 EU": 13
+      }
+    },
+    {
+      "code": "SVK",
+      "name": "Slovakia",
+      "opportunities": 13,
+      "notices": 17,
+      "action_tier": 2,
+      "sources": {
+        "🇪🇺 EU": 13
+      }
+    },
+    {
+      "code": "IRL",
+      "name": "Ireland",
+      "opportunities": 9,
+      "notices": 9,
+      "action_tier": 2,
+      "sources": {
+        "🇪🇺 EU": 9
+      }
+    },
+    {
+      "code": "HRV",
+      "name": "Croatia",
+      "opportunities": 8,
+      "notices": 10,
+      "action_tier": 5,
+      "sources": {
+        "🇪🇺 EU": 8
+      }
+    },
+    {
+      "code": "LTU",
+      "name": "Lithuania",
+      "opportunities": 8,
+      "notices": 8,
+      "action_tier": 3,
+      "sources": {
+        "🇪🇺 EU": 8
+      }
+    },
+    {
+      "code": "SVN",
+      "name": "Slovenia",
+      "opportunities": 5,
+      "notices": 5,
+      "action_tier": 2,
+      "sources": {
+        "🇪🇺 EU": 5
+      }
+    },
+    {
+      "code": "EST",
+      "name": "Estonia",
+      "opportunities": 4,
+      "notices": 5,
+      "action_tier": 0,
+      "sources": {
+        "🇪🇺 EU": 4
+      }
+    },
+    {
+      "code": "LVA",
+      "name": "Latvia",
+      "opportunities": 4,
+      "notices": 6,
+      "action_tier": 1,
+      "sources": {
+        "🇪🇺 EU": 4
+      }
+    },
+    {
+      "code": "AUT",
+      "name": "Austria",
+      "opportunities": 2,
+      "notices": 2,
+      "action_tier": 0,
+      "sources": {
+        "🇪🇺 EU": 2
+      }
+    },
+    {
+      "code": "FIN",
+      "name": "Finland",
+      "opportunities": 2,
+      "notices": 2,
+      "action_tier": 0,
+      "sources": {
+        "🇪🇺 EU": 2
+      }
+    },
+    {
+      "code": "DNK",
+      "name": "Denmark",
+      "opportunities": 1,
+      "notices": 1,
+      "action_tier": 0,
+      "sources": {
+        "🇪🇺 EU": 1
+      }
+    },
+    {
+      "code": "UNK",
+      "name": "UNK",
+      "opportunities": 1,
+      "notices": 0,
+      "action_tier": 0,
+      "sources": {
+        "No Belgium RSS results — TED covers above-threshold BE": 1,
+        "No DE national results — DTVP portal may require browser access. TED covers DE above-threshold contracts.": 1,
+        "No Israel results found": 1,
+        "No results — add DOFFIN_API_KEY (free) at top of script": 1,
+        "No results — add HILMA_API_KEY (free) at top of script": 1
+      }
+    }
+  ],
+  "zero_notice_isze_markets": [
+    {
+      "code": "CYP",
+      "name": "Cyprus",
+      "in_ted_filter": false
+    },
+    {
+      "code": "ISL",
+      "name": "Iceland",
+      "in_ted_filter": false
+    },
+    {
+      "code": "ISR",
+      "name": "Israel",
+      "in_ted_filter": true
+    },
+    {
+      "code": "KAZ",
+      "name": "Kazakhstan",
+      "in_ted_filter": false
+    },
+    {
+      "code": "MLT",
+      "name": "Malta",
+      "in_ted_filter": false
+    }
+  ],
+  "ted_filter_missing_named_markets": [
+    "CYP",
+    "ISL",
+    "KAZ",
+    "MLT"
+  ]
+}

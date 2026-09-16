@@ -154,7 +154,7 @@ st.subheader("Mislabelled SKU audit (description vs spec)")
 if MISLABELLED_SKU_AUDIT_CSV.exists():
     mis = pd.read_csv(MISLABELLED_SKU_AUDIT_CSV)
     st.caption(f"Source: `{MISLABELLED_SKU_AUDIT_CSV.name}` · fixes applied in `sales_loader.py` DESCRIPTION_OVERRIDES")
-    st.dataframe(mis, use_container_width=True, hide_index=True)
+    st.dataframe(mis, width="stretch", hide_index=True)
     if not mis.empty and "rev_eur" in mis.columns:
         st.metric("Revenue on flagged PNs (all years)", f"€{mis['rev_eur'].sum():,.0f}")
 else:
@@ -166,10 +166,10 @@ else:
 st.subheader("DI items the pipeline does not yet check")
 st.markdown(
     """
-- **DI-2** UIO v17 file lives in 3 places — no automated cross-check
+- **DI-2** Canonical UIO is **v19** (`06_uio/_CURRENT/`). Duplicate-path cross-check is still not automated.
 - **DI-7** Two parallel "Competitiveness" definitions (static HTML vs ISZE_Dashboard) — no cross-system check
-- **DI-8** AIM dashboard frozen at CY2025 — needs CY2026 refresh script
-- **DI-9** `isze-tools` and `prism` don't share `sales_fact.parquet` — risk of dual price
+- **DI-8** AIM CY2026 billing dashboard shipped 2026-07-02 (`sales/AIM_Dashboard_CY2026.html`). Country-pack vintage labels still need a rebuild/ship when asked.
+- **DI-9** `isze-tools` and `prism` don't share `sales_fact.parquet` — risk of dual price. ✅ **Fixed 2026-08-20** — `isze-tools/pages/6_Competitive_Parts.py` now reads `01_data/00_derived/sales_fact.parquet` (was a dead legacy TSV).
 - **DI-11** Kosha plan tracker missing realistic trajectory line
 
 See `docs/REFERENCE.md` for the full open list (tooling map archived 2026-06-13).

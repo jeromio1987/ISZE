@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ISZE Action Ledger · Mode B</title>
+<style>
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;background:#f7f4ee;font-size:15px;line-height:1.5}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0}
+.hero{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:42px 28px 28px}
+.hero-inner{max-width:1180px;margin:0 auto}
+.brand{font-family:Georgia,serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#c9d4e6;margin-bottom:14px}
+.hero h1{color:#fff;font-size:34px;line-height:1.12;margin:0 0 12px;font-weight:400}
+.hero .rule{width:64px;height:3px;background:#c0552d;margin:0 0 16px}
+.hero .lead{max-width:760px;font-size:15.5px;color:#d5dce8;margin:0 0 22px}
+.hero-kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.hk{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:14px 16px;position:relative;cursor:help}
+.hk .v{font-size:28px;font-weight:700;letter-spacing:-.5px;color:#fff}
+.hk .v.sm{font-size:20px;line-height:1.2}
+.hk .l{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#aeb9cb;margin-top:4px}
+.hk .n{font-size:12px;color:#9aa8bd;margin-top:6px;line-height:1.35}
+.hk .tip{display:none;position:absolute;left:0;top:calc(100% + 8px);width:min(320px,70vw);
+  background:#15233c;color:#f7f4ee;border-top:3px solid #c0552d;padding:12px 14px;
+  font-size:12.5px;line-height:1.45;z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.hk:hover .tip,.hk:focus-within .tip{display:block}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;max-width:1180px;margin:0 auto;padding:16px 28px;background:#f7f4ee;border-bottom:1px solid #d9d3c8;position:sticky;top:0;z-index:20}
+.toolbar label{font-size:13px;color:#6b6256}
+.toolbar input,.toolbar select{padding:7px 10px;font:inherit;font-size:13px;border:1px solid #d9d3c8;background:#fff}
+.filters{display:flex;flex-wrap:wrap;gap:8px}
+.filters button{appearance:none;border:1px solid #d9d3c8;background:#fff;color:#222;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
+.filters button.on{background:#15233c;color:#f7f4ee;border-color:#15233c}
+.filters button:hover{border-color:#c0552d}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 28px 80px}
+h2{font-size:22px;margin:8px 0 8px;padding-bottom:8px;border-bottom:2px solid #1a2b4a}
+h2 .no{color:#c0552d}
+.lead{color:#6b6256;margin:0 0 18px;max-width:820px}
+.callout{border-left:3px solid #c0552d;background:#fff;padding:14px 16px;margin:0 0 20px;font-size:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.card{background:#fff;border:1px solid #d9d3c8;padding:18px 18px 14px}
+.card h3{font-size:15px;margin:0 0 6px;font-family:Georgia,serif}
+.card .cap{font-size:12.5px;color:#6b6256;margin:0 0 12px}
+.chart-wrap{position:relative;width:100%;min-height:280px;height:300px}
+.chart-wrap canvas{display:block;width:100%!important;min-height:280px}
+.fallback-bars{display:flex;flex-direction:column;gap:6px;padding:4px 0}
+.fb-row{display:grid;grid-template-columns:minmax(60px,28%) 1fr minmax(56px,18%);gap:8px;align-items:center;font-size:12px}
+.fb-lb{color:#52514e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fb-track{background:#eceae4;height:18px;border-radius:2px;overflow:hidden}
+.fb-bar{height:100%;min-width:2px;border-radius:2px}
+.fb-val{text-align:right;font-variant-numeric:tabular-nums;color:#222}
+.chart-status{margin-top:12px;padding:10px 14px;font-size:12px;color:#8a3030;background:#f8e4dc;border-left:3px solid #c0552d;display:none}
+.chart-status.show{display:block}
+table.matrix{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+.matrix thead th{background:#1a2b4a;color:#f7f4ee;text-align:left;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;position:sticky;top:56px;z-index:6;cursor:pointer;user-select:none}
+.matrix thead th.num,.matrix td.num{text-align:right;font-variant-numeric:tabular-nums}
+.matrix td{padding:8px 10px;border-bottom:1px solid #e8e4dc;color:#222;vertical-align:top}
+.matrix tbody tr:nth-child(even) td{background:#faf8f4;color:#222}
+.matrix tbody tr.is-hide{display:none}
+.matrix tbody tr:hover td{background:#eef3f9}
+.table-scroll{overflow-x:auto;margin-bottom:8px;-webkit-overflow-scrolling:touch}
+.matrix th[data-key="bucket"],.matrix td.bucket{min-width:200px;white-space:nowrap}
+.tabs{display:flex;gap:0;max-width:1180px;margin:0 auto;padding:0 28px;background:#f7f4ee;border-bottom:1px solid #d9d3c8;position:sticky;top:0;z-index:25}
+.tabs button{appearance:none;border:0;background:transparent;padding:14px 20px;font:inherit;font-size:14px;color:#6b6256;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button.active{color:#1a2b4a;font-weight:600;border-bottom-color:#c0552d}
+.tabs button:hover{color:#1a2b4a}
+.panel{display:none}
+.panel.active{display:block}
+.monday-list{margin:0;padding:0;list-style:none}
+.monday-list li{background:#fff;border:1px solid #d9d3c8;border-left:3px solid #c0552d;padding:10px 14px;margin-bottom:8px;font-size:14px}
+.pill{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;font-weight:700;white-space:nowrap}
+.pill.leak{background:#f8e4dc;color:#8a3030}
+.pill.over{background:#eceae4;color:#444}
+.pill.bal{background:#e4f5ee;color:#1d6b4f}
+.pill.act{background:#dcecfc;color:#1a4a7a}
+.pill.hold{background:#eceae4;color:#666}
+.pill.aim{background:#eef3f9;color:#1a2b4a;font-size:10px;text-transform:none;letter-spacing:0;font-weight:600}
+.row-count{font-size:13px;color:#6b6256;margin-left:auto}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid #d9d3c8;font-size:11.5px;color:#6b6256;line-height:1.65}
+@media(max-width:900px){.hero-kpis,.grid2{grid-template-columns:1fr}.hero h1{font-size:26px}.wrap,.hero,.toolbar,.tabs{padding-left:16px;padding-right:16px}}
+@media print{.tabs,.toolbar .filters{display:none}.panel{display:block!important}}
+
+
+.ssr-chart{width:100%;min-height:120px}
+.bar-rows{display:flex;flex-direction:column;gap:5px;padding:4px 0}
+.bar-row{display:flex;align-items:center;gap:8px;font-size:12px;line-height:1.2}
+.bar-row .lbl{flex:0 0 auto;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#52514e;font-size:11px}
+.bar-row .track{flex:1;height:16px;background:#eef3f9;border-radius:2px;overflow:hidden;min-width:40px}
+.bar-row .fill{height:100%;border-radius:2px;min-width:2px}
+.bar-row .val{flex:0 0 76px;text-align:right;font-variant-numeric:tabular-nums;color:#222;font-size:11px}
+.ssr-svg{display:block;width:100%;height:auto;max-height:320px}
+.ssr-legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:10px;font-size:11px;color:#52514e}
+.ssr-legend span{display:inline-flex;align-items:center;gap:5px}
+.ssr-legend i{display:inline-block;width:10px;height:10px;border-radius:2px}
+.mix-bar{display:flex;height:22px;border-radius:3px;overflow:hidden;margin:8px 0 4px}
+.mix-seg{height:100%;min-width:2px}
+.donut-wrap{display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:8px 0}
+.donut-svg{flex:0 0 auto;width:120px;height:120px}
+.donut-legend{flex:1 1 140px;font-size:11px;color:#52514e;display:flex;flex-direction:column;gap:6px}
+.donut-legend span{display:inline-flex;align-items:center;gap:6px}
+.donut-legend i{display:inline-block;width:10px;height:10px;border-radius:50%}
+.db-compare-strip{display:flex;gap:8px;align-items:flex-end;padding:12px 4px;min-height:160px}
+.db-compare-col{flex:1 1 0;min-width:72px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.db-compare-col .bar{ width:100%;max-width:88px;border-radius:3px 3px 0 0;min-height:4px;background:#c0552d}
+.db-compare-col .lbl{font-size:10px;color:#52514e;text-align:center;font-weight:600}
+.db-compare-col .val{font-size:11px;color:#15233c;font-variant-numeric:tabular-nums;text-align:center}
+.db-compare-note{font-size:10px;color:#6b6256;margin:4px 0 0;text-align:center;font-style:italic}
+.db-compare-col.is-dominant .bar{opacity:.92;box-shadow:0 0 0 1px rgba(192,85,45,.35)}
+.data-unavail{background:#fff3d6;border-left:4px solid #eda100;padding:14px 16px;margin:0 0 16px;font-size:14px;color:#222;border-radius:2px}
+.data-unavail.greece{background:#eef3f9;border-left:4px solid #15233c;color:#15233c}
+.data-unavail strong{color:#8a6500;font-family:Georgia,serif}
+.data-unavail.greece strong{color:#15233c}
+.chart-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+@media(max-width:900px){.chart-grid3{grid-template-columns:1fr}}
+.ssr-line-chart .grid-line{stroke:#e1e0d9;stroke-width:1}
+.ssr-line-chart .line-bill{fill:none;stroke:#15233c;stroke-width:2}
+.ssr-line-chart .line-sell{fill:none;stroke:#c0552d;stroke-width:2}
+.ssr-line-chart text{font-size:10px;fill:#52514e}
+.ssr-waterfall{display:flex;flex-direction:column;gap:6px;padding:4px 0}
+.wf-step{display:grid;grid-template-columns:120px 1fr 88px;gap:8px;align-items:center;font-size:12px}
+.wf-step .lbl{color:#52514e;font-weight:600}
+.wf-step .track{height:20px;background:#eef3f9;border-radius:2px;overflow:hidden}
+.wf-step .fill{height:100%;border-radius:2px;min-width:2px}
+.wf-step .val{text-align:right;font-variant-numeric:tabular-nums;color:#222}
+.wf-step.wf-total .lbl{color:#15233c;font-family:Georgia,serif}
+.spark-strip{display:flex;gap:10px;flex-wrap:wrap;padding:6px 0}
+.spark-cell{flex:1 1 140px;min-width:120px;background:#faf8f4;border:1px solid #e8e4dc;padding:8px 10px}
+.spark-cell .sl{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#6b6256}
+.spark-cell .sv{font-size:13px;font-weight:700;color:#15233c;margin-top:2px}
+.money-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:12px 0}
+.money-card{background:linear-gradient(145deg,#c0552d 0%,#a84826 100%);color:#f7f4ee;padding:16px 14px;border-radius:2px;min-height:120px;position:relative}
+.money-card .rank{font-family:Georgia,serif;font-size:28px;opacity:.35;position:absolute;top:8px;right:12px}
+.money-card .pn{font-family:Consolas,monospace;font-size:15px;font-weight:700;margin-bottom:4px}
+.money-card .eur{font-size:22px;font-weight:700;letter-spacing:-.3px}
+.money-card .meta{font-size:11px;opacity:.9;margin-top:8px;line-height:1.4}
+.money-card .badge{display:inline-block;margin-top:8px;font-size:10px;text-transform:uppercase;letter-spacing:.06em;background:rgba(255,255,255,.18);padding:3px 8px}
+.bullet-chart{padding:8px 0}
+.bullet-row{margin-bottom:14px}
+.bullet-row .bl{font-size:12px;color:#52514e;margin-bottom:4px;display:flex;justify-content:space-between}
+.bullet-track{height:22px;background:#eef3f9;position:relative;border-radius:2px;overflow:visible}
+.bullet-fill{height:100%;background:#15233c;border-radius:2px}
+.bullet-mark{position:absolute;top:-4px;bottom:-4px;width:3px;background:#c0552d;z-index:2}
+.bullet-legend{font-size:11px;color:#6b6256;margin-top:8px}
+.treemap-wrap{display:flex;flex-wrap:wrap;gap:3px;padding:4px 0;min-height:140px}
+.treemap-cell{display:flex;flex-direction:column;justify-content:flex-end;padding:8px;color:#f7f4ee;font-size:11px;min-width:48px;min-height:48px;border-radius:2px}
+.treemap-cell .ta{font-weight:700;font-size:12px}
+.treemap-cell .tv{font-variant-numeric:tabular-nums;margin-top:2px}
+.leaderboard{list-style:none;margin:0;padding:0}
+.leaderboard li{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-bottom:1px solid #e8e4dc;font-size:13px;background:#fff}
+.leaderboard li:nth-child(even){background:#faf8f4}
+.leaderboard .rk{font-family:Georgia,serif;color:#c0552d;font-size:18px;text-align:center}
+.leaderboard .nm{font-weight:600;color:#15233c}
+.leaderboard .ev{font-variant-numeric:tabular-nums;color:#222;font-weight:600}
+.section-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px;padding:10px 0;position:sticky;top:48px;z-index:15;background:#f7f4ee;border-bottom:1px solid #d9d3c8}
+.section-nav a{font-size:12px;color:#1a2b4a;text-decoration:none;background:#fff;border:1px solid #d9d3c8;padding:6px 12px}
+.section-nav a:hover{border-color:#c0552d;color:#c0552d}
+.so-what{border-left:3px solid #c0552d;background:#fff8f4;padding:8px 12px;margin:8px 0 12px;font-size:13px;color:#52514e;line-height:1.45}
+.so-what strong{color:#c0552d;font-weight:600}
+.radar-wrap{margin:4px 0}
+.radar-toggle{display:flex;flex-wrap:wrap;gap:8px 14px;margin:0 0 10px;font-size:12px;color:#52514e}
+.radar-toggle label{display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.radar-toggle input{accent-color:#c0552d}
+.heatmap-legend{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0 0;font-size:11px;color:#52514e}
+.heatmap-legend span{display:inline-flex;align-items:center;gap:4px}
+.heatmap-legend i{display:inline-block;width:14px;height:14px;border-radius:2px}
+.chart-footnote{font-size:10px;color:#6b6256;font-style:italic;margin:6px 0 0}
+.spark-partial{font-size:9px;color:#c0552d;margin-top:2px}
+
+.tip-chip{position:relative;cursor:help;display:inline-block}
+.tip-chip .tip{display:none;position:absolute;left:0;top:calc(100% + 6px);width:min(300px,70vw);
+  background:#15233c;color:#f7f4ee;border-top:3px solid #c0552d;padding:10px 12px;font-size:12px;z-index:40}
+.tip-chip:hover .tip{display:block}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="hero-inner">
+    <div class="brand">ISZE · Mode B · Action Ledger P8</div>
+    <h1>Action Ledger</h1>
+    <div class="rule"></div>
+    <p class="lead">What we said we would do about the euro leaks already on the board — and whether the number co-moved with the action window on the next refresh. No new KPI; re-stated source euros only.</p>
+    <div class="hero-kpis">
+      <div class="hk tip-chip"><div class="v">23236</div><div class="l">Open items</div>
+        <div class="tip">Count of opportunities not in CLOSED_* / EXPIRED. Snapshot 2026-08-25T17:52:29Z.</div></div>
+      <div class="hk tip-chip"><div class="v">€22111k</div><div class="l">€ at stake (open)</div>
+        <div class="tip">Sum of source eur_at_stake cells on open rows. Mixed bases (CY2025 / L12M / …) — not one wallet. Snapshot 2026-08-25T17:52:29Z.</div></div>
+      <div class="hk tip-chip"><div class="v">0</div><div class="l">Rejects</div>
+        <div class="tip">Rows dropped for missing lineage or illegal decision transitions. See Rejects tab.</div></div>
+      <div class="hk tip-chip"><div class="v">0</div><div class="l">Not measurable</div>
+        <div class="tip">ACTIONED rows whose window cannot close — billing horizon 2026-06-30. realised_eur stays empty; never estimated.</div></div>
+      <div class="hk tip-chip"><div class="v sm">2026-06-30</div><div class="l">Billing horizon</div>
+        <div class="tip">sales_fact billing_date ends here. Anything raised after this date has outcome_status NOT_MEASURABLE until the next SAP extract.</div></div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button type="button" class="active" data-tab="open">Open by €</button>
+  <button type="button" data-tab="traj">Trajectory</button>
+  <button type="button" data-tab="closed">Closed — what moved</button>
+  <button type="button" data-tab="rejects">Rejects &amp; not-measurable</button>
+</nav>
+
+<main class="wrap">
+  <section class="panel active" id="panel-open">
+    <h2><span class="no">01</span> Open by €</h2>
+    <p class="lead">Monday list — open opportunities sorted by source euro descending. Figures carried unchanged from the named source column.</p>
+    <div class="grid2">
+      <div class="card"><h3>Top 15 by €</h3><p class="cap">Re-stated source cells</p><div class="ssr-fallback"><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl" style="width:120px" title="BOOK_B|IUK|8983767550">BOOK_B|IUK|8983767550</span><span class="track"><span class="fill" style="width:100.0%;background:#c0552d"></span></span><span class="val">€639,902</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="BOOK_B|GREECE|8983767550">BOOK_B|GREECE|8983767550</span><span class="track"><span class="fill" style="width:100.0%;background:#c0552d"></span></span><span class="val">€639,902</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="BOOK_B|IRELAND|8983767550">BOOK_B|IRELAND|8983767550</span><span class="track"><span class="fill" style="width:100.0%;background:#c0552d"></span></span><span class="val">€639,902</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="LEAKAGE|IUK|8983767550">LEAKAGE|IUK|8983767550</span><span class="track"><span class="fill" style="width:89.6%;background:#c0552d"></span></span><span class="val">€573,277</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="LEAKAGE|IUK|7552348280">LEAKAGE|IUK|7552348280</span><span class="track"><span class="fill" style="width:86.9%;background:#c0552d"></span></span><span class="val">€555,970</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="LEAKAGE|IUK|8978808250">LEAKAGE|IUK|8978808250</span><span class="track"><span class="fill" style="width:71.6%;background:#c0552d"></span></span><span class="val">€458,359</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="LEAKAGE|IUK|8978808270">LEAKAGE|IUK|8978808270</span><span class="track"><span class="fill" style="width:69.9%;background:#c0552d"></span></span><span class="val">€447,138</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="CATALOGUE_GAP|NET|550047337">CATALOGUE_GAP|NET|550047337</span><span class="track"><span class="fill" style="width:67.8%;background:#c0552d"></span></span><span class="val">€433,820</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="BOOK_B|UTI|8982447940">BOOK_B|UTI|8982447940</span><span class="track"><span class="fill" style="width:55.5%;background:#c0552d"></span></span><span class="val">€355,338</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="BOOK_B|IRELAND|8982447940">BOOK_B|IRELAND|8982447940</span><span class="track"><span class="fill" style="width:55.5%;background:#c0552d"></span></span><span class="val">€355,338</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="REPLENISHMENT|IUK|8983767550">REPLENISHMENT|IUK|8983767550</span><span class="track"><span class="fill" style="width:41.7%;background:#c0552d"></span></span><span class="val">€266,700</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="BOOK_B|IUK|8974995480">BOOK_B|IUK|8974995480</span><span class="track"><span class="fill" style="width:41.6%;background:#c0552d"></span></span><span class="val">€266,147</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="BOOK_B|IRELAND|8974995480">BOOK_B|IRELAND|8974995480</span><span class="track"><span class="fill" style="width:41.6%;background:#c0552d"></span></span><span class="val">€266,147</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="BOOK_B|GREECE|8974995480">BOOK_B|GREECE|8974995480</span><span class="track"><span class="fill" style="width:41.6%;background:#c0552d"></span></span><span class="val">€266,147</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="DEFECTION|ITUK|ITUK|fuel_filter">DEFECTION|ITUK|ITUK|fuel_filter</span><span class="track"><span class="fill" style="width:36.4%;background:#c0552d"></span></span><span class="val">€232,927</span></div></div></div></div>
+      <div class="card"><h3>Open € by signal</h3><p class="cap">Mixed bases — do not sum across types as one wallet</p><div class="ssr-fallback"><div class="bar-rows ssr-chart"><div class="bar-row"><span class="lbl" style="width:120px" title="BOOK_B">BOOK_B</span><span class="track"><span class="fill" style="width:100.0%;background:#15233c"></span></span><span class="val">€9,995,481</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="REPLENISHMENT">REPLENISHMENT</span><span class="track"><span class="fill" style="width:41.7%;background:#15233c"></span></span><span class="val">€4,168,788</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="LEAKAGE">LEAKAGE</span><span class="track"><span class="fill" style="width:39.2%;background:#15233c"></span></span><span class="val">€3,922,774</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="DEFECTION">DEFECTION</span><span class="track"><span class="fill" style="width:29.2%;background:#15233c"></span></span><span class="val">€2,914,197</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="CATALOGUE_GAP">CATALOGUE_GAP</span><span class="track"><span class="fill" style="width:5.9%;background:#15233c"></span></span><span class="val">€591,916</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="EARLY_WARNING">EARLY_WARNING</span><span class="track"><span class="fill" style="width:2.9%;background:#15233c"></span></span><span class="val">€293,130</span></div><div class="bar-row"><span class="lbl" style="width:120px" title="PRICE_REVISION">PRICE_REVISION</span><span class="track"><span class="fill" style="width:2.2%;background:#15233c"></span></span><span class="val">€224,277</span></div></div></div></div>
+    </div>
+    <div class="table-scroll">
+      <table class="matrix">
+        <thead><tr>
+          <th>id</th><th>signal</th><th>db</th><th>entity</th><th class="num">€ at stake</th>
+          <th>basis</th><th>state</th><th>source</th><th>action</th>
+        </tr></thead>
+        <tbody><tr><td><code>8336fe9a6dce4d33</code></td><td>BOOK_B</td><td>IUK</td><td>8983767550</td><td class='num'>€639,902</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>a65f48abce0561c5</code></td><td>BOOK_B</td><td>GREECE</td><td>8983767550</td><td class='num'>€639,902</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>a97f7a60b0742682</code></td><td>BOOK_B</td><td>IRELAND</td><td>8983767550</td><td class='num'>€639,902</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>3b4361608b685ff0</code></td><td>LEAKAGE</td><td>IUK</td><td>8983767550</td><td class='num'>€573,277</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>635017e34dec6292</code></td><td>LEAKAGE</td><td>IUK</td><td>7552348280</td><td class='num'>€555,970</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>9130cba985b4ed1e</code></td><td>LEAKAGE</td><td>IUK</td><td>8978808250</td><td class='num'>€458,359</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>bc20b124a5f34cd7</code></td><td>LEAKAGE</td><td>IUK</td><td>8978808270</td><td class='num'>€447,138</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>32169937e7643606</code></td><td>CATALOGUE_GAP</td><td>—</td><td>550047337</td><td class='num'>€433,820</td><td>CY2025</td><td>NEW</td><td>no_pr00_gap_cy2025_ranked.csv</td><td>UMI_SHELL_LUBE_PARKED</td></tr>
+<tr><td><code>268803f1ca0ad0cd</code></td><td>BOOK_B</td><td>UTI</td><td>8982447940</td><td class='num'>€355,338</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>5b5d9593d115e304</code></td><td>BOOK_B</td><td>IRELAND</td><td>8982447940</td><td class='num'>€355,338</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>afff0d9c23dc34e4</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8983767550</td><td class='num'>€266,700</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>b6ec08c4a9c080fd</code></td><td>BOOK_B</td><td>IUK</td><td>8974995480</td><td class='num'>€266,147</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>42da0fab34b308af</code></td><td>BOOK_B</td><td>IRELAND</td><td>8974995480</td><td class='num'>€266,147</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>c048e62f5798bfb3</code></td><td>BOOK_B</td><td>GREECE</td><td>8974995480</td><td class='num'>€266,147</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>e0b4ce354adfe311</code></td><td>DEFECTION</td><td>ITUK</td><td>ITUK|fuel_filter</td><td class='num'>€232,927</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>1fa80a062597fbb8</code></td><td>BOOK_B</td><td>IRELAND</td><td>8975554500</td><td class='num'>€222,108</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>6dae2e48e3457e21</code></td><td>BOOK_B</td><td>GREECE</td><td>8975554500</td><td class='num'>€222,108</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>700f26aea09f0a07</code></td><td>BOOK_B</td><td>IUK</td><td>8975554500</td><td class='num'>€222,108</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>bd2c4c4d0b782afc</code></td><td>BOOK_B</td><td>IUK</td><td>8981596930</td><td class='num'>€219,443</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>c7db79aa7ba9cb92</code></td><td>BOOK_B</td><td>IRELAND</td><td>8981596930</td><td class='num'>€219,443</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>56f25954cb65f91a</code></td><td>LEAKAGE</td><td>IUK</td><td>8975359391</td><td class='num'>€205,666</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>197a382ef73ae4f0</code></td><td>LEAKAGE</td><td>IUK</td><td>8982705240</td><td class='num'>€204,535</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>85d8f34e34e42400</code></td><td>BOOK_B</td><td>GREECE</td><td>8982705240</td><td class='num'>€204,376</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>9b93e8435294a051</code></td><td>BOOK_B</td><td>ITUK</td><td>8982705240</td><td class='num'>€204,376</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>02f63c0f73c7dcf8</code></td><td>BOOK_B</td><td>IUK</td><td>8982705240</td><td class='num'>€204,376</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>77a113eafdb91a46</code></td><td>BOOK_B</td><td>IRELAND</td><td>8982705240</td><td class='num'>€204,376</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>c0abe8d980bfdfb2</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8978808270</td><td class='num'>€200,050</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>2044c10de39e28ea</code></td><td>LEAKAGE</td><td>IUK</td><td>8975056801</td><td class='num'>€184,406</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>f725a0f688dba1a0</code></td><td>LEAKAGE</td><td>IUK</td><td>8975554500</td><td class='num'>€180,730</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>c41674caee925e11</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8978808250</td><td class='num'>€166,758</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>7c9edc0cba868856</code></td><td>LEAKAGE</td><td>IUK</td><td>8974995480</td><td class='num'>€152,677</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>1653195a80d792b6</code></td><td>BOOK_B</td><td>ITUK</td><td>8983300950</td><td class='num'>€135,569</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>496b6c7152e8a8bc</code></td><td>DEFECTION</td><td>ITUK</td><td>ITUK|air_filter</td><td class='num'>€134,616</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>40e863767ead8bb8</code></td><td>LEAKAGE</td><td>IUK</td><td>8981901180</td><td class='num'>€133,726</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>fa652d7126817371</code></td><td>BOOK_B</td><td>IUK</td><td>8983842670</td><td class='num'>€126,391</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>9a81c9d14357beaf</code></td><td>BOOK_B</td><td>IUK</td><td>8978279610</td><td class='num'>€125,217</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>d817281aac0b10f1</code></td><td>BOOK_B</td><td>UTI</td><td>8983314120</td><td class='num'>€119,134</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_OVERSTOCK</td></tr>
+<tr><td><code>91c38811bc123d68</code></td><td>BOOK_B</td><td>IUK</td><td>8983320591</td><td class='num'>€113,343</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_IAM_UNDERCUT</td></tr>
+<tr><td><code>f274739ebcd1182b</code></td><td>DEFECTION</td><td>UTI</td><td>UTI|air_filter</td><td class='num'>€108,964</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>37bda2857e99f789</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8975056801</td><td class='num'>€98,904</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>d6c596a76c64ed55</code></td><td>BOOK_B</td><td>ITUK</td><td>8980252486</td><td class='num'>€98,498</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>bcdb47dfdd21e86b</code></td><td>BOOK_B</td><td>UTI</td><td>8980252486</td><td class='num'>€98,498</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>06b69d6b8370a2eb</code></td><td>DEFECTION</td><td>IUK</td><td>IUK|air_filter</td><td class='num'>€96,885</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>d7385f580604fca5</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8984865441</td><td class='num'>€95,322</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>f0b851f894ccd485</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8981596930</td><td class='num'>€91,193</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>494f6634f62e6f96</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8984865960</td><td class='num'>€89,055</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>ef9fba1a60ce3509</code></td><td>DEFECTION</td><td>IUK</td><td>IUK|blower_filter</td><td class='num'>€89,006</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>117422c7e7b06853</code></td><td>BOOK_B</td><td>ITUK</td><td>8982488951</td><td class='num'>€85,642</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>5ef40cad114c3197</code></td><td>DEFECTION</td><td>UTI</td><td>UTI|fuel_filter</td><td class='num'>€84,977</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>dab2c4e23a3fafe0</code></td><td>BOOK_B</td><td>IUK</td><td>8983767530</td><td class='num'>€83,370</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>97968520c2fbb5eb</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8974995480</td><td class='num'>€83,335</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>f649a762bd2fff64</code></td><td>REPLENISHMENT</td><td>UTI</td><td>8982984040</td><td class='num'>€82,918</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>8829f730982f8c4f</code></td><td>EARLY_WARNING</td><td>UTI</td><td>UTI</td><td class='num'>€80,247</td><td>CY2025</td><td>NEW</td><td>early_warning.csv</td><td>clutch kit capture -5.3pp/yr to 33% (r² 0.94), EUR 80K billed CY2025 · VOR 24% of orders last 4 wks vs 11% own baseline (+13pp, 2.25×)</td></tr>
+<tr><td><code>1090bb6e65233f28</code></td><td>DEFECTION</td><td>ITUK</td><td>ITUK|oil_filter</td><td class='num'>€77,893</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>0c662664213d287b</code></td><td>BOOK_B</td><td>UTI</td><td>8982127181</td><td class='num'>€77,574</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>b7e29e4a55d633a0</code></td><td>BOOK_B</td><td>ITUK</td><td>8982127181</td><td class='num'>€77,574</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>2f2b7ed6d4e3f78e</code></td><td>BOOK_B</td><td>IUK</td><td>8983320160</td><td class='num'>€76,828</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>fd1411878dc7a315</code></td><td>CATALOGUE_GAP</td><td>—</td><td>550047252</td><td class='num'>€75,636</td><td>CY2025</td><td>NEW</td><td>no_pr00_gap_cy2025_ranked.csv</td><td>UMI_SHELL_LUBE_PARKED</td></tr>
+<tr><td><code>ad1f584f474f904b</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8982705240</td><td class='num'>€75,511</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>5da8bd07eb418841</code></td><td>REPLENISHMENT</td><td>ITUK</td><td>8983373180</td><td class='num'>€75,162</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>cbe2ab74b509dc7a</code></td><td>BOOK_B</td><td>IRELAND</td><td>8981941190</td><td class='num'>€72,271</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>9f90f91946b4e1f7</code></td><td>BOOK_B</td><td>IRELAND</td><td>8981772710</td><td class='num'>€71,305</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>a242943865fe4250</code></td><td>BOOK_B</td><td>IUK</td><td>8980618131</td><td class='num'>€70,838</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>e14e30a1564f3786</code></td><td>BOOK_B</td><td>IUK</td><td>8981868281</td><td class='num'>€69,313</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>e25b33bc4511954e</code></td><td>BOOK_B</td><td>ITUK</td><td>8981868281</td><td class='num'>€69,313</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>7c4321953d4d5380</code></td><td>BOOK_B</td><td>IUK</td><td>8983922341</td><td class='num'>€69,003</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>df73e5a38cbee9cb</code></td><td>DEFECTION</td><td>NORWAY</td><td>NORWAY|brake_pad</td><td class='num'>€68,110</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>a7fb8e5f9dfcc379</code></td><td>REPLENISHMENT</td><td>ITUK</td><td>8982878080</td><td class='num'>€67,644</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>7ff92888a960ef3a</code></td><td>DEFECTION</td><td>IUK</td><td>IUK|oil_filter</td><td class='num'>€65,057</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>1cfcbd583a188ec3</code></td><td>DEFECTION</td><td>IUK</td><td>IUK|fuel_filter</td><td class='num'>€65,045</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>6c3c303de5745166</code></td><td>LEAKAGE</td><td>ITUK</td><td>8983300950</td><td class='num'>€64,906</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>38985d164e8a7f92</code></td><td>BOOK_B</td><td>IUK</td><td>8983712150</td><td class='num'>€60,682</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>ed94de7d4b50abe7</code></td><td>BOOK_B</td><td>UTI</td><td>8975425390</td><td class='num'>€59,085</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>4411cedf6c3f90d9</code></td><td>DEFECTION</td><td>SWEDEN</td><td>SWEDEN|blower_filter</td><td class='num'>€56,934</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>ef1aecf0153794ad</code></td><td>DEFECTION</td><td>UKRAINE</td><td>UKRAINE|fuel_filter</td><td class='num'>€56,418</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>590b5ce6a6a66bc8</code></td><td>LEAKAGE</td><td>IRELAND</td><td>8983528481</td><td class='num'>€55,798</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>ae4b5e3782d5624b</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8983767530</td><td class='num'>€54,889</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>c69efb79e395075b</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8975554500</td><td class='num'>€54,814</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>5b31ced37016a9ab</code></td><td>BOOK_B</td><td>IUK</td><td>8975488420</td><td class='num'>€52,476</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>60c025686778c8ce</code></td><td>BOOK_B</td><td>GREECE</td><td>8975488420</td><td class='num'>€52,476</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>ff590f895a9ebee4</code></td><td>DEFECTION</td><td>ITUK</td><td>ITUK|brake_pad</td><td class='num'>€51,365</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>c412f0cda16e4001</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8978279610</td><td class='num'>€51,144</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>95979c6ca2b74036</code></td><td>LEAKAGE</td><td>ITUK</td><td>8983615741</td><td class='num'>€50,853</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>d628b3f2e6a8c941</code></td><td>BOOK_B</td><td>IRELAND</td><td>8973871590</td><td class='num'>€50,343</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_IAM_UNDERCUT</td></tr>
+<tr><td><code>db65e96a64e81732</code></td><td>BOOK_B</td><td>ITUK</td><td>8973871590</td><td class='num'>€50,343</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_IAM_UNDERCUT</td></tr>
+<tr><td><code>f5cf1ac9295e2654</code></td><td>BOOK_B</td><td>ITUK</td><td>8975425400</td><td class='num'>€49,946</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>b17dcee3f4f66e0a</code></td><td>BOOK_B</td><td>IRELAND</td><td>8975425400</td><td class='num'>€49,946</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>dc63c8390cd4e1fd</code></td><td>EARLY_WARNING</td><td>UMI</td><td>UMI</td><td class='num'>€48,149</td><td>CY2025</td><td>NEW</td><td>early_warning.csv</td><td>brake shoe silent 2 mo (median gap 1.0), EUR 15K trailing 12 mo · clutch kit silent 11 mo (median gap 4.0), EUR 996 trailing 12 mo · brake pad capture -4.1pp/yr to 9% (r² 0.72), EUR 32K billed CY2025</td></tr>
+<tr><td><code>5b6625d24e7ee995</code></td><td>BOOK_B</td><td>IRELAND</td><td>8980256421</td><td class='num'>€48,030</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>f906abf9edad6feb</code></td><td>BOOK_B</td><td>ITUK</td><td>8980256421</td><td class='num'>€48,030</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>5cb21feb1f8dcfbe</code></td><td>DEFECTION</td><td>BELGIUM</td><td>BELGIUM|air_filter</td><td class='num'>€46,900</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>0a477489b90badf2</code></td><td>DEFECTION</td><td>ITUK</td><td>ITUK|clutch_kit</td><td class='num'>€46,786</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>6a7bb58a4db992ac</code></td><td>BOOK_B</td><td>IUK</td><td>8975525690</td><td class='num'>€46,672</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>e16b463baeae7296</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8975509392</td><td class='num'>€46,208</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>e173c7c3b7cf7d06</code></td><td>BOOK_B</td><td>ITUK</td><td>8944627340</td><td class='num'>€45,746</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>2ad257b379674fa5</code></td><td>BOOK_B</td><td>GREECE</td><td>8944627340</td><td class='num'>€45,746</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>17357ba97729e0ed</code></td><td>BOOK_B</td><td>IUK</td><td>8944627340</td><td class='num'>€45,746</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>2dbe753a75d390fb</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8984890190</td><td class='num'>€45,555</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>0cb269e1feb76188</code></td><td>BOOK_B</td><td>IUK</td><td>8974993681</td><td class='num'>€44,816</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>1eac97a274f13094</code></td><td>DEFECTION</td><td>UKRAINE</td><td>UKRAINE|oil_filter</td><td class='num'>€44,775</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>69840dc28144ebc7</code></td><td>REPLENISHMENT</td><td>ITUK</td><td>8983300950</td><td class='num'>€44,005</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>5c22dd2c4d89f73d</code></td><td>DEFECTION</td><td>UTI</td><td>UTI|clutch_kit</td><td class='num'>€43,875</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>4f2c6e403ed7ea66</code></td><td>BOOK_B</td><td>IUK</td><td>8982054020</td><td class='num'>€43,770</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>83a15ced583a636c</code></td><td>DEFECTION</td><td>NORWAY</td><td>NORWAY|air_filter</td><td class='num'>€43,136</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>a62f88eb8054fb1a</code></td><td>REPLENISHMENT</td><td>UTI</td><td>8983314120</td><td class='num'>€43,120</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>7735cdc2ad4fea61</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8979071464</td><td class='num'>€43,072</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>8a4f97536df9153e</code></td><td>LEAKAGE</td><td>ITUK</td><td>8978410450</td><td class='num'>€42,838</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>ccb43796e4dfe7c5</code></td><td>DEFECTION</td><td>BELGIUM</td><td>BELGIUM|blower_filter</td><td class='num'>€42,385</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>c8611f9750cea466</code></td><td>BOOK_B</td><td>IUK</td><td>8982831940</td><td class='num'>€41,923</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_IAM_UNDERCUT</td></tr>
+<tr><td><code>c4e99e1ef51b0e7a</code></td><td>EARLY_WARNING</td><td>BELGIUM</td><td>BELGIUM</td><td class='num'>€41,207</td><td>CY2025</td><td>NEW</td><td>early_warning.csv</td><td>fuel filter capture -2.8pp/yr to 26% (r² 0.52), EUR 19K billed CY2025 · clutch disc capture -2.3pp/yr to 9% (r² 0.95), EUR 15K billed CY2025 · clutch kit capture -4.8pp/yr to 10% (r² 0.71), EUR 7K billed CY2025</td></tr>
+<tr><td><code>db7b160c156c87a4</code></td><td>DEFECTION</td><td>UTI</td><td>UTI|oil_filter</td><td class='num'>€40,969</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>7550bd5230041c3b</code></td><td>BOOK_B</td><td>IUK</td><td>8983621213</td><td class='num'>€40,388</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_IAM_UNDERCUT</td></tr>
+<tr><td><code>5ccdda38588f1450</code></td><td>BOOK_B</td><td>IUK</td><td>8975525680</td><td class='num'>€40,291</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>29c6597edddba438</code></td><td>DEFECTION</td><td>ITUK</td><td>ITUK|urea_filter</td><td class='num'>€40,167</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>28c11c6a8562b94a</code></td><td>DEFECTION</td><td>GERMANY</td><td>GERMANY|air_filter</td><td class='num'>€39,563</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>bfd71f9ebc62e104</code></td><td>BOOK_B</td><td>ITUK</td><td>8982488930</td><td class='num'>€39,006</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>1cf92e39a23d338d</code></td><td>BOOK_B</td><td>ITUK</td><td>8982079520</td><td class='num'>€38,000</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_IAM_UNDERCUT</td></tr>
+<tr><td><code>30b2dbafd757e0a5</code></td><td>DEFECTION</td><td>ARMENIA</td><td>ARMENIA|brake_shoe</td><td class='num'>€37,587</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>d11e049cd5d76748</code></td><td>DEFECTION</td><td>IRELAND</td><td>IRELAND|fuel_filter</td><td class='num'>€37,114</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>daf625391645297d</code></td><td>DEFECTION</td><td>NORWAY</td><td>NORWAY|blower_filter</td><td class='num'>€37,089</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>f611c631c132868c</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8979071454</td><td class='num'>€37,057</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>9c2413835b315f02</code></td><td>DEFECTION</td><td>PORTUGAL</td><td>PORTUGAL|air_filter</td><td class='num'>€36,940</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>d5047cce5cd1294b</code></td><td>REPLENISHMENT</td><td>UTI</td><td>8978757231</td><td class='num'>€36,927</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>730cc4055922e455</code></td><td>DEFECTION</td><td>GERMANY</td><td>GERMANY|fuel_filter</td><td class='num'>€36,756</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>2749227e669d7d58</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8981405894</td><td class='num'>€36,325</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>126ef2251a8b4339</code></td><td>BOOK_B</td><td>IUK</td><td>8975497422</td><td class='num'>€36,182</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>6c97d8c5dab62f4b</code></td><td>LEAKAGE</td><td>ITUK</td><td>8975425400</td><td class='num'>€35,872</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>9d91fd1dedda5144</code></td><td>REPLENISHMENT</td><td>IRELAND</td><td>8983528481</td><td class='num'>€35,684</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>10abfe56e459ea14</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8982330902</td><td class='num'>€35,534</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>2498e2a3bd1a962d</code></td><td>DEFECTION</td><td>SWEDEN</td><td>SWEDEN|air_filter</td><td class='num'>€35,295</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>ea303692296f6587</code></td><td>REPLENISHMENT</td><td>ITUK</td><td>5878324001</td><td class='num'>€35,098</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>66785310827976f7</code></td><td>BOOK_B</td><td>IUK</td><td>8978348260</td><td class='num'>€34,285</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>8942b1edc77a24c2</code></td><td>DEFECTION</td><td>IRELAND</td><td>IRELAND|air_filter</td><td class='num'>€32,979</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>6ca50d7ad41c8b8a</code></td><td>REPLENISHMENT</td><td>ITUK</td><td>8978410450</td><td class='num'>€32,964</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>3b51f1b328335f48</code></td><td>BOOK_B</td><td>IUK</td><td>8983937793</td><td class='num'>€32,895</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>ebe62aa1118a1da0</code></td><td>BOOK_B</td><td>ITUK</td><td>8981455011</td><td class='num'>€32,630</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_IAM_UNDERCUT</td></tr>
+<tr><td><code>da6f1c3a49312378</code></td><td>BOOK_B</td><td>UTI</td><td>8981455011</td><td class='num'>€32,630</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_IAM_UNDERCUT</td></tr>
+<tr><td><code>dcd78567c3e93efa</code></td><td>REPLENISHMENT</td><td>UTI</td><td>8982447940</td><td class='num'>€32,253</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>7696a30c6e9d9881</code></td><td>LEAKAGE</td><td>UTI</td><td>5876101170</td><td class='num'>€32,128</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>2adb301447722d49</code></td><td>BOOK_B</td><td>UTI</td><td>8981065790</td><td class='num'>€32,053</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>c4978ad3ed4bb89d</code></td><td>LEAKAGE</td><td>ITUK</td><td>8982878080</td><td class='num'>€31,987</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>fcce7847c728565d</code></td><td>DEFECTION</td><td>GERMANY</td><td>GERMANY|blower_filter</td><td class='num'>€31,848</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>edda9532e4138f9e</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8975488420</td><td class='num'>€31,698</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>b35f8b8414e71c36</code></td><td>BOOK_B</td><td>IUK</td><td>8980058750</td><td class='num'>€31,501</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>a737e0990aa23546</code></td><td>BOOK_B</td><td>IUK</td><td>8975497412</td><td class='num'>€31,452</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>9843d0b13562f595</code></td><td>DEFECTION</td><td>BELGIUM</td><td>BELGIUM|oil_filter</td><td class='num'>€31,183</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>57bd04779377aedf</code></td><td>LEAKAGE</td><td>ITUK</td><td>8978410420</td><td class='num'>€31,045</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>ee6669923d78f8d6</code></td><td>BOOK_B</td><td>IUK</td><td>8981868290</td><td class='num'>€30,497</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>0f8134c7880c0dd7</code></td><td>BOOK_B</td><td>ITUK</td><td>8981868290</td><td class='num'>€30,497</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>924fd849150a9a4f</code></td><td>LEAKAGE</td><td>IRELAND</td><td>8978808270</td><td class='num'>€29,349</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>8a1d359d630ea346</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8980618131</td><td class='num'>€29,349</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>3030c698be23f74c</code></td><td>DEFECTION</td><td>UMI</td><td>UMI|oil_filter</td><td class='num'>€28,802</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>462fe6b20a22f9c1</code></td><td>EARLY_WARNING</td><td>ITUK</td><td>ITUK</td><td class='num'>€28,643</td><td>CY2025</td><td>NEW</td><td>early_warning.csv</td><td>brake shoe capture -4.3pp/yr to 12% (r² 1.00), EUR 29K billed CY2025</td></tr>
+<tr><td><code>a8435842ffe6d552</code></td><td>LEAKAGE</td><td>ITUK</td><td>8983320621</td><td class='num'>€28,326</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>5da847608374da78</code></td><td>EARLY_WARNING</td><td>GERMANY</td><td>GERMANY</td><td class='num'>€28,168</td><td>CY2025</td><td>NEW</td><td>early_warning.csv</td><td>clutch disc dormant — silent 14 mo (median gap 1.0), no revenue in 12 mo · blower filter capture -6.5pp/yr to 12% (r² 0.44), EUR 25K billed CY2025 · clutch kit capture -2.7pp/yr to 3% (r² 0.78), EUR 3K billed CY2025</td></tr>
+<tr><td><code>47036bdd6ac715a3</code></td><td>REPLENISHMENT</td><td>UTI</td><td>8975425390</td><td class='num'>€28,020</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>112c07178b899593</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8978348260</td><td class='num'>€27,623</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>ae278128ae03135e</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8981868281</td><td class='num'>€27,330</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>0b60464763a3d99c</code></td><td>EARLY_WARNING</td><td>IRELAND</td><td>IRELAND</td><td class='num'>€27,330</td><td>CY2025</td><td>NEW</td><td>early_warning.csv</td><td>brake pad silent 2 mo (median gap 1.0), EUR 16K trailing 12 mo · urea filter silent 5 mo (median gap 2.0), EUR 3K trailing 12 mo · brake shoe capture -3.6pp/yr to 30% (r² 0.99), EUR 9K billed CY2025</td></tr>
+<tr><td><code>5d0e3a30326ded56</code></td><td>DEFECTION</td><td>UMI</td><td>UMI|fuel_filter</td><td class='num'>€27,173</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>fe679d1f03345235</code></td><td>REPLENISHMENT</td><td>UTI</td><td>5876102500</td><td class='num'>€27,067</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>65986793ca0b08b3</code></td><td>LEAKAGE</td><td>IRELAND</td><td>8983767550</td><td class='num'>€26,315</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>7dfc0e267f0c7bb0</code></td><td>DEFECTION</td><td>SWEDEN</td><td>SWEDEN|fuel_filter</td><td class='num'>€25,518</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>58000a5069c6123e</code></td><td>LEAKAGE</td><td>IRELAND</td><td>8978808250</td><td class='num'>€25,464</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>962830338a587801</code></td><td>BOOK_B</td><td>ITUK</td><td>8982185991</td><td class='num'>€24,902</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>6a0fc8411d068963</code></td><td>LEAKAGE</td><td>IRELAND</td><td>8981772710</td><td class='num'>€24,743</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>44dafad160fd0e6e</code></td><td>DEFECTION</td><td>ITUK</td><td>ITUK|clutch_pressure_plate</td><td class='num'>€24,432</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>37ea99c31c0fec76</code></td><td>LEAKAGE</td><td>ITUK</td><td>8975452010</td><td class='num'>€24,273</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>624d6ba960438943</code></td><td>REPLENISHMENT</td><td>ITUK</td><td>8975425400</td><td class='num'>€24,211</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>f28bf6b599e1f862</code></td><td>REPLENISHMENT</td><td>ITUK</td><td>8983615741</td><td class='num'>€24,083</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>28339bd9c26796b6</code></td><td>BOOK_B</td><td>UTI</td><td>8980067942</td><td class='num'>€23,496</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>d547b471e14a9187</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8982831940</td><td class='num'>€23,473</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>e9a13bf8c7fe70e6</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8944627340</td><td class='num'>€23,290</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>eb1108924e79ac68</code></td><td>DEFECTION</td><td>KAZAKHSTAN</td><td>KAZAKHSTAN|fuel_filter</td><td class='num'>€23,224</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>156f5d47ada67d0b</code></td><td>CATALOGUE_GAP</td><td>—</td><td>7552825890</td><td class='num'>€23,111</td><td>CY2025</td><td>NEW</td><td>no_pr00_gap_cy2025_ranked.csv</td><td>NO_PR00_IN_SAP</td></tr>
+<tr><td><code>c1c2ca8288a3bae5</code></td><td>LEAKAGE</td><td>IRELAND</td><td>8982447940</td><td class='num'>€23,064</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>eef101b188f1a5b8</code></td><td>REPLENISHMENT</td><td>UTI</td><td>8972670504</td><td class='num'>€22,843</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>0fdd49aab8049260</code></td><td>BOOK_B</td><td>IUK</td><td>8978354480</td><td class='num'>€22,797</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>c2f9b4475fe261e8</code></td><td>BOOK_B</td><td>IUK</td><td>8983675661</td><td class='num'>€22,611</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>d472cd1cef894e34</code></td><td>LEAKAGE</td><td>ITUK</td><td>5876101170</td><td class='num'>€22,403</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>412189501c0ec73d</code></td><td>REPLENISHMENT</td><td>IUK</td><td>8976526220</td><td class='num'>€22,231</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>89f42c6680cbb4b7</code></td><td>DEFECTION</td><td>BELGIUM</td><td>BELGIUM|fuel_filter</td><td class='num'>€21,829</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>4e4093d3c94dc1a3</code></td><td>REPLENISHMENT</td><td>IUK</td><td>5876150610</td><td class='num'>€21,725</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>54d87e9b59773b68</code></td><td>BOOK_B</td><td>ITUK</td><td>8980374810</td><td class='num'>€21,575</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>75ca91f8ff5a3b64</code></td><td>BOOK_B</td><td>IRELAND</td><td>8980374810</td><td class='num'>€21,575</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>c14a971acdf1aee9</code></td><td>DEFECTION</td><td>SWEDEN</td><td>SWEDEN|oil_filter</td><td class='num'>€21,346</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>7d299a67efd1bcab</code></td><td>BOOK_B</td><td>ITUK</td><td>8982013690</td><td class='num'>€21,225</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>dd52a6df5e874625</code></td><td>BOOK_B</td><td>UTI</td><td>8982013690</td><td class='num'>€21,225</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_HIGH_LIST_EXPOSURE</td></tr>
+<tr><td><code>57ff75209a0fe65d</code></td><td>LEAKAGE</td><td>ITUK</td><td>5878324000</td><td class='num'>€21,105</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>6c43239b0a89f93a</code></td><td>DEFECTION</td><td>IRELAND</td><td>IRELAND|oil_filter</td><td class='num'>€20,827</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>198787a95a1c6428</code></td><td>DEFECTION</td><td>NORWAY</td><td>NORWAY|oil_filter</td><td class='num'>€20,742</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>cecbb2ba8e623bfb</code></td><td>BOOK_B</td><td>IUK</td><td>8972431320</td><td class='num'>€20,689</td><td>L12M</td><td>NEW</td><td>revision_book_b_top_review.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>a94924b52c4c9352</code></td><td>LEAKAGE</td><td>UTI</td><td>8982447940</td><td class='num'>€20,678</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>92f0dd0411b8b8b8</code></td><td>REPLENISHMENT</td><td>IRELAND</td><td>8982447940</td><td class='num'>€20,396</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>5c7c8bfb66acb34d</code></td><td>REPLENISHMENT</td><td>UTI</td><td>8978757431</td><td class='num'>€20,087</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>1f15dce9c0c740e8</code></td><td>REPLENISHMENT</td><td>IUK</td><td>7552026060</td><td class='num'>€20,028</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>8680100b13223b48</code></td><td>LEAKAGE</td><td>UTI</td><td>8982049420</td><td class='num'>€19,992</td><td>ANNUALISED_SOURCE</td><td>NEW</td><td>leakage_monday_actions_20260819.csv</td><td>REVIEW_LEAKAGE</td></tr>
+<tr><td><code>dc55cb67108b9ccc</code></td><td>DEFECTION</td><td>GERMANY</td><td>GERMANY|oil_filter</td><td class='num'>€19,789</td><td>TRAILING_12M</td><td>NEW</td><td>defection_alerts.csv</td><td>—</td></tr>
+<tr><td><code>38441b12dce65ca5</code></td><td>REPLENISHMENT</td><td>UTI</td><td>8978757421</td><td class='num'>€19,274</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr>
+<tr><td><code>eb40761f50cd4643</code></td><td>REPLENISHMENT</td><td>UTI</td><td>8972785800</td><td class='num'>€19,235</td><td>CY2025</td><td>NEW</td><td>replenishment_exceptions_cy2025.csv</td><td>—</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-traj">
+    <h2><span class="no">02</span> Trajectory</h2>
+    <p class="lead">Append-only observations per opportunity. Same id across runs — new observation, not a new row.</p>
+    <ul class='monday-list'><li><code>8336fe9a6dce4d33</code> — 2026-08-25: €639,902</li><li><code>a65f48abce0561c5</code> — 2026-08-25: €639,902</li><li><code>a97f7a60b0742682</code> — 2026-08-25: €639,902</li><li><code>3b4361608b685ff0</code> — 2026-08-19: €573,277 → 2026-08-25: €573,277</li><li><code>635017e34dec6292</code> — 2026-08-19: €555,970 → 2026-08-25: €555,970</li><li><code>9130cba985b4ed1e</code> — 2026-08-19: €458,359 → 2026-08-25: €458,359</li><li><code>bc20b124a5f34cd7</code> — 2026-08-19: €447,138 → 2026-08-25: €447,138</li><li><code>32169937e7643606</code> — 2026-08-12: €433,820 → 2026-08-25: €433,820</li></ul>
+  </section>
+
+  <section class="panel" id="panel-closed">
+    <h2><span class="no">03</span> Closed — what moved</h2>
+    <p class="lead">Measured co-movement with the action window. Wording is observation, not proof — peer-drift adjusted where ≥10 peers exist.</p>
+    <div class="table-scroll">
+      <table class="matrix">
+        <thead><tr>
+          <th>id</th><th>status</th><th class="num">€ at raise</th><th class="num">€ at close</th>
+          <th class="num">delta €</th><th class="num">drift-adj €</th><th>note</th>
+        </tr></thead>
+        <tbody><tr><td colspan='7'>No ACTIONED decisions yet — outcomes empty.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="panel-rejects">
+    <h2><span class="no">04</span> Rejects &amp; not-measurable</h2>
+    <p class="lead">Visible on purpose. An empty realised cell is the correct answer past the data horizon — never an estimate.</p>
+    <div class="table-scroll">
+      <table class="matrix">
+        <thead><tr><th>id</th><th>reason</th><th>source</th><th>detail</th></tr></thead>
+        <tbody><tr><td colspan='4'>No rejects this run.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="foot">Mode B · internal only · run_id 20260825T175229Z_48a077 · produced 2026-08-25T17:52:29Z ·
+  billing horizon 2026-06-30 · euros re-stated from source columns — not recomputed.
+  Attribution: co-moved with the action window only.</p>
+</main>
+<script>
+document.querySelectorAll('.tabs button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    const id='panel-'+btn.getAttribute('data-tab');
+    const el=document.getElementById(id);
+    if(el) el.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

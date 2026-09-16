@@ -1,76 +1,63 @@
-# Scrapers — roadmap
+# Scrapers & tenders — roadmap
 
-**Last updated:** 2026-07-26  
-**Hub:** [`ISZE_ROADMAP.md`](../../ISZE_ROADMAP.md) · **Location:** `04_tools/`  
-**Owner:** Claude scheduled tasks (health report runs automatically)  
+**Last updated:** 2026-08-26
+**Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md) · **Location:** `04_tools/`
+**Owner:** Claude scheduled tasks (health report runs automatically)
 **Live register:** [`AUTOMATION_REGISTER.md`](../AUTOMATION_REGISTER.md)
+**Tender working backlog (authoritative, evidence-gated):** `04_tools/ISZE_Tender_Monitor_Install/_OPEN_BACKLOG_ARRANGED.md`
 
 ---
 
 ## Current state
 
-| Scraper | Status (2026-07-26) | Output | Schedule |
+| Scraper | Status | Output | Schedule |
 |---|---|---|---|
-| Tender Scraper | ✅ Live task `ISZE Tender Monitor` — last OK 2026-07-20 (result 0); next Mon 07:30 | `01_data/14_dashboards/tender_data.json` | Weekly Mon 07:30 |
-| Competitive pricing (KS, Tranzparts, TMC, Mekonomen, Auto365) | ✅ Live task `ISZE_PMS_IAM_Refresh` — **do not** also import `ISZE_ScraperRefresh_WeeklyTask.xml` (double-run). Last scheduled 2026-07-20 exited interrupt (`0xC000013A`); manual `refresh_and_check_drift.py` re-run started 2026-07-26 ~21:28 | `04_tools/autodoc_scraper/*_results.csv` | Weekly Mon 07:00 |
+| Tender Scraper | ✅ Live task `ISZE Tender Monitor` | `01_data/14_dashboards/tender_data.json` | Weekly Mon 07:30 |
+| Competitive pricing (KS, Tranzparts, TMC, Mekonomen, Auto365) | ✅ Live task `ISZE_PMS_IAM_Refresh` — **do not** also import `ISZE_ScraperRefresh_WeeklyTask.xml` (double-run) | `04_tools/autodoc_scraper/*_results.csv` | Weekly Mon 07:00 |
 | Autodoc / Oscaro | **Retired** — Cloudflare Turnstile blocks 100% of requests | `autodoc_results.csv` (frozen) | None |
-| Discount Scraper | Optional / personal promos — task may be registered; not ISZE core | `04_tools/discount-scanner/deals_dashboard.html` | Weekly Thu 07:00 |
+| Discount Scraper | Optional / personal promos — not ISZE core | `04_tools/discount-scanner/deals_dashboard.html` | Weekly Thu 07:00 |
 
-**Canonical versions:**
+**Canonical versions**
 
-- Tender: `04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py` · live task name `ISZE Tender Monitor`
-- Competitive pricing: `04_tools/autodoc_scraper/refresh_and_check_drift.py` · live task name `ISZE_PMS_IAM_Refresh`
-- Discount: `04_tools/discount-scanner/discount_scraper.py` · Task XML: `ISZE_DiscountScanner_WeeklyTask.xml`
+- Tender: `04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py` · task `ISZE Tender Monitor`
+- Competitive pricing: `04_tools/autodoc_scraper/refresh_and_check_drift.py` · task `ISZE_PMS_IAM_Refresh`
+- Discount: `04_tools/discount-scanner/discount_scraper.py` · XML `ISZE_DiscountScanner_WeeklyTask.xml`
 
-**Known issues (open):**
-
-1. Doffin (Norway) API requires subscription key — no key registered yet
-2. Discount Scraper optional — personal supermarket promos, not ISZE work
-3. Lidl URL hardcodes category ID `a10051271` — verify after next discount run
-4. Israel RSS entity parse error, Belgium RSS non-XML response, UK Find a Tender 429s — see `04_tools/manual_review_required.md` Items 2–4
-5. `ISZE_PMS_IAM_Refresh` Mon 07:00 sometimes interrupted (sleep / stop) — prefer overnight manual if Monday AM fails
+**KS/IAM index:** catalog tree expanded 2026-08-25 (`01_data/01_Pricing/_raw/ks_catalog_tree_expand_20260825.csv`, 69 rows) — KS matches now **302** (126 unique PNs) in `revision_exception_queue.csv`.
 
 ---
 
-## Immediate actions
+## Open queue
 
-1. ~~Re-import Tender Monitor~~ — **done** (live, verified)
-2. ~~Import competitive pricing refresh~~ — **done** as `ISZE_PMS_IAM_Refresh` (spare XML is redundant)
-3. ~~Manual competitiveness refresh~~ — **in progress** 2026-07-26 (KS leg of `refresh_and_check_drift.py`)
+Ordered. Jerome's standing priority: **portal coverage before cosmetic UI**.
 
----
+| Prio | Item | State | Next |
+|------|------|-------|------|
+| **P0** | **National portal coverage** | Analysis done. Only **8/29** footprint countries have a live national source (UK, NL, BE, IL, FR, PL, NO, FI; DE partial via service.bund). ~69% are TED-only for below-threshold national buys — that, not a dashboard bug, is why fleet/vehicle KPIs look low | Wire **ES PLACSP**, **IT PNCP/ANAC**, **DE oeffentlichevergabe** open data. Evidence: `_COUNTRY_TENDER_PORTALS_MAP.md`, `_probe_country_portals_2026-08-25.json` |
+| **P1** | TED detail enrichment | Partial — capability code on; detail GET needs TED auth | Obtain TED auth, then enrich |
+| **P2** | Tender relevance scoring | Not started | Score 1–5 on title, country, value; filter ≥ 3 |
+| **P2** | `scrape_error` column (KS + successors) | Not started | Distinguish genuine price gap from scrape failure |
+| **P3** | RSS / feed failures | Israel entity parse error, Belgium non-XML response, UK Find a Tender 429s | `04_tools/manual_review_required.md` items 2–4 |
+| **P3** | Lidl hardcoded category id `a10051271` | Unverified | Check after next discount run |
+| **P4** | Health-report thresholds + stale-scraper push (ntfy.sh) | Not started | `04_tools/scraper_health_report.md` |
 
-## V2 — Quality and coverage
-
-### 2.1 Tender source coverage (Medium, 2–3 h)
-
-TED EU, Doffin, HILMA return near-zero. Add Belgium/NL portals (e-Procurement.be, TenderNed).
-
-**Done when:** At least 3 sources contributing regularly.
-
-### 2.2 Tender relevance scoring (Medium, 3–4 h)
-
-Score 1–5 on title, country, value. Filter score ≥ 3.
-
-### 2.3 Autodoc + KS result quality (Low–Medium, 2 h)
-
-Add `scrape_error` column; distinguish genuine gap vs scrape failure.
+**`ISZE_PMS_IAM_Refresh` note:** the Monday 07:00 run is occasionally interrupted by sleep/stop (`0xC000013A`). Prefer an overnight manual `refresh_and_check_drift.py` if Monday morning fails.
 
 ---
 
-## V3 — Dashboard integration
+## Closed — do not reopen
 
-- Auto-inject tender JSON into dashboard HTML (already via `01_data/dashboards/tender_data.json`)
-- Competitive Pricing tab: top 50 PNs, Autodoc vs ISZE SP, Class C risk flags
-
----
-
-## V4 — Monitoring
-
-- Extend health report thresholds (`04_tools/scraper_health_report.md`)
-- Push notification (ntfy.sh) on stale scrapers
-- Version consolidation — one canonical path per scraper (v3 tender only)
+| Closed | Date | Why |
+|---|---|---|
+| **Nordics tender API keys** (Doffin / HILMA) | 2026-08-25 | **DONE.** `nordics_api_keys.env` filled, `verify_nordics_keys.py` ALL OK, source health OK (Doffin 37 / HILMA 54 matches, NO 11 + FI 1 merged). Never put "paste Nordics keys" on a waiting-on-Jerome list, audit, or overnight brief again. Escalate only on a **new** evidenced failure such as a 401 after a previously OK run. `DECISIONS.md` 2026-08-25 · `_NORDICS_BLOCKED.md` |
+| Autodoc / Oscaro scraping | 2026-07-14 | Cloudflare Turnstile blocks every request; retired from the health check |
+| Auto365 as a **PN price index** | — | No OEM part-number join — `04_tools/autodoc_scraper/AUTO365_PN_JOIN.md`. The scraper still runs; its output is not a price index |
+| GPS maps FR/PL/IT/ES | 2026-08-25 | Done (null) — no SPU rows exist for those countries in `gps_spu_by_distributor.csv`; labelled `has_spu=false`. Never invent an SPU |
+| Spare `ISZE_ScraperRefresh_WeeklyTask.xml` import | 2026-07-16 | Would double-run the live `ISZE_PMS_IAM_Refresh` task |
 
 ---
 
-*V3 dashboard integration is highest business value after hygiene items.*
+## Dashboard integration (standing)
+
+- Tender JSON is auto-injected via `01_data/14_dashboards/tender_data.json` (alias `01_data/dashboards/`) — **the only live feed path**.
+- Competitive Pricing tab: top 50 PNs, IAM vs ISZE SP, Class C risk flags. Mode A needs the competitor **vintage labels** decision (hub §2, B10) before shipping.

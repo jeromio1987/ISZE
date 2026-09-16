@@ -1,6 +1,6 @@
 # ISZE Data manifest — sort-by-topic map
 
-**Last updated:** 2026-07-27 (JP VIN register filed under `07_UIO/vin/`) · **Root:** `01_data/` (under `$env:ISZE_ROOT`)
+**Last updated:** 2026-08-25 (INBOX hygiene: mail hunts archived; IDS→08_Distributor)
 
 This is the **data map**. Each subject has a numbered folder under `01_data/` — drop new files into the matching one (§1). A small **wired working-set stays flat at root** because build scripts read it from there (§3).
 
@@ -28,10 +28,14 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 ### 01 · Pricing → `01_Pricing/`
 | File | Path | Flag |
 |------|------|------|
-| IE40 Price list …PR00_3_level_classified_GPT.xlsx | `01_data/` (root, wired) | ⚙ `04_tools/autodoc_scraper/aim_gap_closer.py` |
-| Price file 2026_full.xlsx · preliminary_pricefile2026.xlsx · BPFY2027.XLSX · SPA_2026_UTI_… | `01_data/01_Pricing/` | pricing drop zone |
+| **`PRICING_DATA.md`** | `01_data/01_Pricing/` | 📄 map for Spec v1 — which raw → which parquet |
+| **`_raw/` CY2026 PRICE CD · Price_file_2026_full · PR00 IE40 20260810 · EXPORT_ZPR1 20260810 · sim 5% · Eucon PriceSurvey UK/ITUK 2023 OEM+IAM** | `01_data/01_Pricing/_raw/` | ★ lists 2026-08-10; ★ 2023 survey rawdata filed 2026-08-10 |
+| `pricing_list_pn` · `pricing_revision_cd` · `pricing_sim_pr00_l12m` · `pricing_pr00_ie40` · `pricing_zpr1*` · `pricing_pn_enquiry` | `01_data/00_derived/` | ⚙ `91_build/build_pricing_enquiry_tables.py` |
+| `Price_file_2026_full.xlsx` · `Price_file_PR00_IE40_20260810.xlsx` · `EXPORT_ZPR1_20260810.xlsx` | `01_data/01_Pricing/` | ★ calc book + newest PR00/ZPR1 lists |
+| IE40 … PR00_3_level_classified_GPT.xlsx | `01_data/01_Pricing/` (+ root wired copy if present) | ⚙ taxonomy / `aim_gap_closer.py` |
+| preliminary_pricefile2026.xlsx · BPFY2027.XLSX · SPA_2026_UTI_… | `01_data/01_Pricing/` | pricing drop zone |
 | Margin analysis report.xlsx · Customer order sales - VP.xlsx | `01_data/raw/reference/` | 🔒 |
-| **Code/tool:** SPA/NOx optimizer | `04_tools/isze-tools/pages/5_NOx_SPA_Optimizer.py` | |
+| **Code/tool:** SPA/NOx optimizer · **Spec/engine** | `04_tools/isze-tools/pages/5_NOx_SPA_Optimizer.py` · `00_docs/ISZE_Pricing_Spec_v1.md` · `03_analytics/isze_pricing/` | |
 
 ### 02 · GPS → `02_GPS/`
 | File | Path | Flag |
@@ -73,11 +77,19 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | CY2024-2025.XLSX | `01_data/` (root, wired) | ⚙ more-complete 2025 re-export (supersedes CY2025 in pipeline) |
 | Extra ad-hoc billing extracts | `01_data/04_sales/` | topic drop (not `12_raw/sales/`) |
 
-### 05 · Dealer sell-out → `05_Dealer_sellout/`
+### 05 · Dealer sell-out / sales-to-dealer → `05_Dealer_sellout/` + `12_raw/dealer_sales/`
 | File | Path | Flag |
 |------|------|------|
-| UTIPartSales_2025-* | `01_data/raw/dealer_sales/UTI/` | ⚙ sell-out pipeline |
-| DEALER_SELL_OUT.md | `01_data/raw/dealer_sales/` | 📄 method + BVP rules |
+| **Canonical raw (all DBs)** | `01_data/12_raw/dealer_sales/<DB>/` | ★ ITUK · **IUK** · **IRELAND (Harris)** · UTI · **GREECE (Petros)** |
+| `_registry.yaml` · `DEALER_SELL_OUT.md` | `01_data/12_raw/dealer_sales/` | 📄 intake + canonical long schema |
+| `IUK_Monthly_Demand_2025_2026YTD_July.xlsx` | `01_data/12_raw/dealer_sales/IUK/` | ★ LCV D-Max network PN qty · CY2025 + CY2026 YTD Jul · ≠ ITUK |
+| `dealer_sellout_long_IUK_CY2025.csv` · `…_CY2026YTD.csv` | `01_data/00_derived/` | ⚙ normalized long (IUK adapter) |
+| `IRELAND_Sales_to_Dealer_2025_2026YTD_Jul.xlsx` | `01_data/12_raw/dealer_sales/IRELAND/` | ★ Harris StD line-level · CY2025 + CY2026 YTD Jul · ≠ IUK ≠ IMIE |
+| `dealer_sellout_long_IRELAND_CY2025.csv` · `…_CY2026YTD.csv` | `01_data/00_derived/` | ⚙ normalized long (Ireland adapter) |
+| `Petros_Parts_Sold_Qties_2025.xlsx` | `01_data/12_raw/dealer_sales/GREECE/` | ★ D-MAX qty CY2025 · flag `pn_newest_rollup` |
+| `dealer_sellout_long_GREECE_CY2025.csv` | `01_data/00_derived/` | ⚙ normalized long (Petros adapter) |
+| UTIPartSales_2025-* | `01_data/12_raw/dealer_sales/UTI/` | ⚙ sell-out pipeline |
+| Topic copies | `01_data/05_Dealer_sellout/` | optional working copies |
 
 ### 06 · Warranty (⚙ all read by warranty/GPS builds — do not move)
 | File | Path | Flag |
@@ -107,8 +119,9 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | ITUK_ExecutiveSummary_Jan2026.pptx | `01_data/08_Distributor/` | also Meetings (§09) |
 | Imotors_Portugal_UIO_GPS_PMS_Study.xlsx | `01_data/08_Distributor/` | Portugal (Imotors) study (filed 2026-07-16) |
 | BO OVERVIEW - UNIVERSAL TRUCKS ISRAEL LTD 01-07-2026 (1).xlsx | `01_data/08_Distributor/` | Israel/UTI back-order overview (filed 2026-07-16) |
-| **IDS 2026 dealer eval packs** (NL / DK / LUX drop 2026-07-24) | `01_data/90_INBOX/IDS_2026/` | ⚙ `04_tools/ids_dealer_ranking/` — NL unchanged (identical); DK 20 dealers filed; LUX Autopolis in `LUX/` pending BE/Benelux mapping |
+| **IDS 2026 dealer eval packs** (NL / DK / LUX drop 2026-07-24) | `01_data/08_Distributor/IDS_2026/` | ⚙ `04_tools/ids_dealer_ranking/` — NL unchanged (identical); DK 20 dealers filed; LUX Autopolis in `LUX/` pending BE/Benelux mapping |
 | **Meetings prep per DB:** | `09_meetings/Preparation Meetings/<DB>/` | |
+| **`distributor_dimension.csv`** + `.md` | `01_data/00_derived/` | ★⚙ **canonical DB key** — `91_build/build_distributor_dimension.py`. Join on **`sold_to_sap`**, never on `payer_code` (1797 = both UMI *and* UTI). Maps SAP entity names (`IBX`, `ISD`, `Danmark`) ↔ DB codes (`BELGIUM`, `GERMANY`, `DENMARK`). Read by `02_dashboards/_composable/build.mjs`. |
 
 ### 09 · Meetings & minutes → `09_meetings/`
 | File | Path | Flag |
@@ -128,16 +141,32 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 |------|------|------|
 | KPI Master File june 2026.xlsx | `01_data/11_planning/` | ★ **newest** KPI master (april archived 2026-07-16) |
 | budget_per_DB_reviewed_24042026.xlsx | `01_data/11_planning/` | ★⚙ `load_bp_fy27.py` |
-| Action plan FY2027 VPACC_April update.xlsx · ISZE_DB_KPI_Targets_FY2627_v1.xlsx | `01_data/11_planning/` | |
+| **Action plan FY2027 VPACC_July update.xlsx** | `01_data/11_planning/` | ★ newest VPACC (git-allowlisted) · `91_build/build_vpacc_fy2027_action_plan.py` → `00_derived/vpacc_*.parquet` · join on `pic` / `progress_status` / `stream` |
+| Action plan FY2027 VPACC_April update.xlsx · ISZE_DB_KPI_Targets_FY2627_v1.xlsx | `01_data/11_planning/` | prior monthly / KPI targets |
+| `11_planning/README.md` | `01_data/11_planning/` | 📄 VPACC folder map |
 | ISZE PL Plan FY2026 2027 2028 20260205_2.xlsx | `01_data/11_planning/` | ★ ("- Copy" archived 2026-07-16) |
 
 ---
+
+### 18 · PRISM BI surfaces (pages 20–23) — read-only over derived files
+
+Added 2026-08-20 (consolidation plan). No new derived file, no pipeline change — these pages read existing files.
+
+| PRISM page | Reads | Source file(s) |
+|------------|-------|----------------|
+| `03_analytics/Isuzu/prism/pages/20_Warranty.py` | Warranty expense per DB / FY | `00_derived/distributor_warranty_expense_fiscal.csv` |
+| `…/21_Realization.py` | List→pocket realization + ZPR1 gap | `00_derived/pr00_realization_network_cy.csv` · `pr00_realization_by_db_cy.csv` · `zpr1_vs_pr00_by_payer_year.csv` |
+| `…/22_Parc_Cohort.py` | JP VIN shipment cohort (rolling 60m) | `07_UIO/vin/VIN_register.csv` |
+| `…/23_Dealer_Sellout.py` | Multi-DB sell-out mix + SPU | `00_derived/sellout_aim_network_mix_2025.csv` · `sellout_aim_by_subgroup_2025.csv` |
+| `…/24_VPACC.py` | FY2027 VPACC action plan (121 items, stream/owner/status) | `00_derived/vpacc_fy2027_action_plan_july.parquet` · `vpacc_fy2027_monthly_db_block.parquet` (legacy) |
+
+Static HTML twins of pages 20–23 (self-contained, no CDN) live in `02_dashboards/bi/`, built by `02_dashboards/bi/_build_bi_twins.py`. Tender-pipeline *value* is already served by `pages/14_Tender_Pipeline.py` (value coverage is thin — 56/708 rows — and flagged there).
 
 ## §2 — Physical folder layout (numbered)
 
 | # | Folder | Purpose |
 |---|--------|---------|
-| 00 | `00_derived/` | Machine exports: `sales_fact.parquet`, phase summaries, verify reports |
+| 00 | `00_derived/` | Machine exports: `sales_fact.parquet`, phase summaries, verify reports, **P8 `action_ledger*.parquet/csv`** |
 | 01 | `01_Pricing/` | Price lists, SPA, BPFY (topic drop zone) |
 | 02 | `02_GPS/` | GPS working files — sales-share stretch pilots (newest per family) |
 | 03 | `03_PMS/` | PMS studies, meeting feedback, **`service_schedules/`** (OEM PDFs) |
@@ -153,8 +182,9 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | 14 | `14_dashboards/` | `isze_data.json`, `tender_data.json`, **`kosha/`** — alias junction `dashboards/` (§6) |
 | 15 | `15_gpt_safe/` | Small MD/CSV only — the **only** source for GPT uploads |
 | 16 | `16_exports/` | Ad-hoc exports |
+| 17 | `17_interactions/` | **G0a local mail facts** (derived only; gitignored). Collector: `04_tools/interactions/collect_mapi.py` |
 | 90 | `90_INBOX/` | **Drop zone** for all new files — sort per §1 (see §0) |
-| 91 | `91_build/` | One-off extract/build scripts (GPS v9, warranty extractors, BP loader) |
+| 91 | `91_build/` | One-off extract/build scripts (GPS v9, warranty extractors, BP loader, **`build_action_ledger.py` + `action_ledger_adapters.py`**) |
 | 92 | `92_archive/` | Deduped / superseded data files (general) |
 
 **Also present:** `_archive/` — a **separate, GPS-lineage-only** archive holding `ISZE_GPS_v6_mistaken_fork_2026-07-03.xlsx`, referenced by name in `91_build/GPS_FILE_LINEAGE.md`. Left as-is to avoid editing that authority doc; all **new** archival goes to `92_archive/`.
@@ -199,14 +229,14 @@ See `05_memory/projects/sales-analytics-pipeline.md`.
 
 | Dataset | Last refreshed | Rows (approx) | Owner |
 |---------|----------------|---------------|-------|
-| Sales_Fact (derived) | 2026-07-03 | 477,505 | Jerome |
+| Sales_Fact (derived) | 2026-08-25 | 514,037 | Jerome |
 
 ---
 
 ## §6 — Dashboard JSON paths & the `dashboards` junction
 
 **Local source:** `01_data/14_dashboards/isze_data.json`, `tender_data.json`
-**Alias:** `01_data/dashboards/` is a **healthy NTFS junction → `14_dashboards/`** (verified 2026-07-16). It is **load-bearing** — `publish_tender.ps1`, `publish_live_tender_json.ps1`, and `sync_to_deploys.ps1` reference the `dashboards\` alias. Do **not** delete it. (The 2026-07-12 scraper health-check "I/O error on `dashboards`" was a sandbox mount artifact, not a real break.)
+**Alias:** `01_data/dashboards/` is an NTFS junction → `14_dashboards/` (**recreated 2026-08-25 overnight** via `reorganize_data_layout.ps1 -CreateJunctions`; same for `derived`→`00_derived`, `_INBOX`→`90_INBOX`, and other legacy aliases). Load-bearing for freshness skills and older publish paths. Prefer numbered paths in new code.
 **Deploy-side compatibility** (GitHub Pages — not local edit paths): `../Data/dashboards/isze_data.json`, `../Data/dashboards/tender_data.json`
 
 ---
@@ -222,7 +252,15 @@ See `05_memory/projects/sales-analytics-pipeline.md`.
 ---
 
 ## §8 — Migration log
+- **2026-08-25** - INBOX hygiene (priority clear wins): mail hunts `UTI_PartSales_mail_20260813`, `_ireland_sales_mail_20260813`, `dealer_sales_mail_20260813` → `92_archive/mail_hunts_20260813/` (`12_raw/dealer_sales` already had UTI/IRELAND canonicals; July UTI PartSales was SHA256-identical to `UTIPartSales_2026-06.xlsx` so not promoted). Scratch `dg_*.py` / `analyze_*.py` → `91_build/_scratch/`. Quarantined `03_analytics/Isuzu/prism/data/UIO_v17.xlsx` → `92_archive/uio_stale/`. Relocated whole `IDS_2026` (970 files) → `08_Distributor/IDS_2026/`.
 
+- **2026-08-25** — **P8 Action Ledger** shipped: `91_build/action_ledger_adapters.py` + `build_action_ledger.py` → `00_derived/action_ledger*.parquet/csv` + `02_dashboards/ops/ISZE_Action_Ledger.html`. Nine adapters only; `portfolio_triage_20260819.csv` excluded (rollup). Decisions CSV is human-owned.
+- **2026-08-13** — Ireland Harris StD from Outlook (`RE: Business review` / John Cummins / `XT - 2026-08-13T114222.149.xlsx`) → `12_raw/dealer_sales/IRELAND/IRELAND_Sales_to_Dealer_2025_2026YTD_Jul.xlsx`; registered; normalized → `00_derived/dealer_sellout_long_IRELAND_CY2025.csv` + `…_CY2026YTD.csv` (adapter `91_build/normalize_dealer_sellout_ireland.py`). **Wired second layer** (AIM/GPS): `build_dealer_sellout_aim_gps.py` now multi-DB (ITUK, UTI, IRELAND, IUK, GREECE). Standing rule in `12_raw/dealer_sales/DEALER_SELL_OUT.md`. **IRELAND ≠ IUK ≠ IMIE.**
+- **2026-08-12** — IUK `IUK Monthly Demand - July 2026 - Copy.xlsx` (unsorted root) → `12_raw/dealer_sales/IUK/IUK_Monthly_Demand_2025_2026YTD_July.xlsx`; registered in `_registry.yaml`; normalized → `00_derived/dealer_sellout_long_IUK_CY2025.csv` + `…_CY2026YTD.csv` (adapter `91_build/normalize_dealer_sellout_iuk.py`). **IUK ≠ ITUK.**
+- **2026-08-10** — Eucon 2023 Price Survey rawdata (UK OEM, ITUK OEM, UK IAM) → `01_Pricing/_raw/Eucon_PriceSurvey_*` + hard QA `_raw/Eucon_PriceSurvey_2023_QA.md` (crossrefs safe; prices list-not-street); **21** basket `peer_oe_pn` fills (`mapped_oe_pn`).
+- **2026-08-10** — Latest lists: `EXPORT_ZPR1` + `Price file 202610082026` → `_raw/EXPORT_ZPR1_20260810.xlsx` + `Price_file_PR00_IE40_20260810.xlsx`; derived `pricing_zpr1*.parquet` + `pricing_pr00_ie40.parquet`.
+- **2026-08-09** — Pricing drop (PRICE CD, Price file 2026_full, sim 5%, parts master, UTI final) → `01_Pricing/_raw/`; enquiry parquets in `00_derived/pricing_*.parquet`. See `01_Pricing/PRICING_DATA.md`.
+- **2026-08-09** — Petros `Petros_Parts_Sold_Qties_2025.xlsx` filed under `12_raw/dealer_sales/GREECE/`; multi-DB sell-out intake (`_registry.yaml` + canonical long schema). Normalized → `00_derived/dealer_sellout_long_GREECE_CY2025.csv`.
 - **2026-07-16** — **Root de-clutter + INBOX rule (§0).** ~30 loose files re-filed from `01_data/` root into numbered folders; older duplicates → `92_archive/dedupe_2026-07-16/`; junk → `92_archive/junk_2026-07-16/`. Service PDFs → `03_PMS/service_schedules/`; Mainz conf → `09_meetings/European_Conference_2026_Mainz/`; stretch pilots → `02_GPS/` (newest per family); distributor studies → `08_Distributor/`; KPI/PL/budget → `11_planning/`. ITUK study newest (today) promoted to canonical. Root now holds only §3 wired files + docs. See `CHANGELOG.md` 2026-07-16.
 - **2026-06-18** — Numbered `01_data` subfolders + resolver in `_shared/paths.py` + `prism/config.py`. Manifest reorganised by topic (§1) + wired-file watchlist (§3).
 - **2026-05-15** — All 10 files from `new files/` filed (`migration-log.txt`).

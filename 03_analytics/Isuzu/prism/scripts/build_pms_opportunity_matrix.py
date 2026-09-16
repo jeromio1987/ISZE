@@ -61,6 +61,7 @@ def build_pms_opportunity_matrix(
         "actual_rev_eur",
         "capture_rate",
         "revenue_gap_eur",
+        "revenue_gap_quotable",
     ]].rename(columns={"capture_rate": "capture_rate_total"})
 
     out = out.merge(gen, on=keys, how="left")
@@ -84,6 +85,7 @@ def build_pms_opportunity_matrix(
         "capture_rate_total",
         "capture_rate_genuine",
         "revenue_gap_eur",
+        "revenue_gap_quotable",
         "avg_sp_eur",
         "tam_eur",
         "uio_units",

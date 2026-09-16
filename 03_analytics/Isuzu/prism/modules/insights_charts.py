@@ -19,14 +19,7 @@ from modules.pms_engine import CATEGORY_LABELS, classify_pms_sales
 
 ISZE_BLUE = "#1B3A6B"
 ISZE_ORANGE = "#E87722"
-PALETTE = [
-    "#1B3A6B", "#E87722", "#2C5AA0", "#F4A460", "#4A90D9",
-    "#8B4513", "#70B8FF", "#D2691E", "#003087", "#FFA07A",
-]
-PLOTLY_BASE = dict(
-    plot_bgcolor="white", paper_bgcolor="white",
-    font=dict(family="Segoe UI, sans-serif", size=12),
-)
+from modules.plotly_style import BASE_LAYOUT as PLOTLY_BASE, PALETTE
 
 
 def _tc(v, lo=0.3, hi=0.6):
@@ -151,92 +144,7 @@ def render_opportunity_matrix(
     }), width='stretch')
 
 
-def render_bvp_capture_quadrant(
-    pms_all: pd.DataFrame,
-    mix_sub: pd.DataFrame,
-    dist_sel: list[str],
-    dists_avail: list[str],
-    latest_y: int | None,
-) -> None:
-    st.markdown("#### 📐 BVP Mix × PMS Capture — Quadrant Analysis")
-    st.caption(
-        "**Formula: X = BVP unit share = BVP qty ÷ (Genuine + BVP qty)** "
-        "| **Y = Total PMS capture rate = (Genuine + BVP) qty ÷ Expected demand** "
-        "| **Top-left:** High capture, low BVP → genuine-dominant, strong performer "
-        "| **Top-right:** High capture, high BVP → BVP is filling gap, net positive "
-        "| **Bottom-left:** Low capture, low BVP → IAM winning, no BVP offset "
-        "| **Bottom-right:** High BVP, low total capture → BVP replaced genuine but IAM still winning — worst quadrant."
-    )
-
-    if pms_all.empty or mix_sub.empty or latest_y is None:
-        st.info("Requires both PMS capture and BVP mix data. Check that derived CSVs are built.")
-        return
-
-    df_cap = pms_all[
-        (pms_all["line_type"] == "total") &
-        (pms_all["year"] == latest_y) &
-        (pms_all["distributor_code"].isin(dist_sel if dist_sel else dists_avail))
-    ].copy()
-
-    mix_cat_col = "product_subgroup" if "product_subgroup" in mix_sub.columns else "pms_category"
-    mix_y = mix_sub[mix_sub["year"] == latest_y].copy() if "year" in mix_sub.columns else mix_sub.copy()
-    df_cap = df_cap.merge(
-        mix_y[["distributor_code", mix_cat_col, "bvp_share_units"]].rename(
-            columns={mix_cat_col: "pms_category"}
-        ),
-        on=["distributor_code", "pms_category"], how="inner"
-    )
-    df_cap["category_label"] = df_cap["pms_category"].map(CATEGORY_LABELS).fillna(df_cap["pms_category"])
-
-    cat_pick = st.selectbox(
-        "Category",
-        ["All"] + sorted(df_cap["pms_category"].dropna().unique().tolist()),
-        format_func=lambda c: "All categories" if c == "All" else CATEGORY_LABELS.get(c, c),
-        key="quad_cat",
-    )
-    df_q = df_cap.copy() if cat_pick == "All" else df_cap[df_cap["pms_category"] == cat_pick].copy()
-
-    if df_q.empty:
-        st.info("No data for this selection.")
-        return
-
-    fig = px.scatter(
-        df_q,
-        x="bvp_share_units",
-        y="capture_rate",
-        color="distributor_code",
-        symbol="category_label" if cat_pick == "All" else None,
-        text="distributor_code",
-        size="revenue_gap_eur",
-        hover_data={
-            "category_label": True,
-            "capture_rate": ":.0%",
-            "bvp_share_units": ":.0%",
-            "revenue_gap_eur": ":,.0f",
-        },
-        labels={"bvp_share_units": "BVP unit mix %", "capture_rate": "Total PMS capture rate"},
-        color_discrete_sequence=PALETTE,
-    )
-    fig.add_vline(x=0.20, line_dash="dash", line_color="#999",
-                  annotation_text="20% BVP threshold", annotation_position="top right")
-    fig.add_hline(y=0.50, line_dash="dash", line_color="#999",
-                  annotation_text="50% capture threshold", annotation_position="top right")
-    for x_, y_, txt, col in [
-        (0.05, 0.75, "🟢 Genuine strong", "#2E7D32"),
-        (0.55, 0.75, "🟡 BVP additive", "#F9A825"),
-        (0.05, 0.25, "🔴 IAM winning", "#C62828"),
-        (0.55, 0.25, "⚠️ Both losing", "#C62828"),
-    ]:
-        fig.add_annotation(x=x_, y=y_, text=txt, showarrow=False,
-                           font=dict(color=col, size=11), xref="x", yref="y")
-    fig.update_traces(textposition="top center", marker=dict(opacity=0.85))
-    fig.update_layout(
-        **PLOTLY_BASE, height=520,
-        xaxis=dict(tickformat=".0%", range=[-0.05, 1.05], gridcolor="#F0F0F0"),
-        yaxis=dict(tickformat=".0%", range=[-0.05, 1.05], gridcolor="#F0F0F0"),
-        margin=dict(l=40, r=40, t=40, b=40),
-    )
-    st.plotly_chart(fig, width='stretch')
+# render_bvp_capture_quadrant removed 2026-08-20 (parked; surviving quadrant is AIM x GPS Matrix)
 
 
 def render_growth_decomposition(df_trend: pd.DataFrame, dist_sel: list[str]) -> None:

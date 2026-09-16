@@ -1,0 +1,24 @@
+---
+description: Mode A HTML must open without fetch/file:// failures
+alwaysApply: true
+---
+
+# HTML openable — never “Failed to fetch” again
+
+Jerome double-clicks HTML. That is `file://`. **`fetch()` of sibling JSON always fails** on `file://`. Telling him to run `python -m http.server` is **not** an acceptable deliverable.
+
+## Hard rules (Mode A under `02_dashboards/`, `09_meetings/`)
+
+1. **Self-contained if payload ≤ ~2 MB** — embed JSON in `<script type="application/json" id="…">` (or inline JS). Open from Explorer must paint charts with zero server.
+2. **Fat payloads (>~2 MB)** — ship a **`.cmd` / `.ps1` launcher** next to the HTML that starts a local server and opens the **http://** URL. Do not hand him a bare HTML that only works after a chat tip.
+3. **Forbidden as the only path:** “Serve via HTTP / file:// cannot fetch” banners with no launcher and no inline data.
+4. **Chart libraries:**
+   - **Chart.js (house dashboards):** always inline `chart.umd.js` — **never CDN** (see `dashboard-contrast-kpi` / visueel-rapport).
+   - **Plotly:** prefer local `_ui/plotly.min.js` only. CDN fallback is **discouraged**; if used, it is a last-resort for `file://` when the local path is broken — new Mode A packs should ship local Plotly or a launcher, not depend on CDN.
+5. **Rebuild gate:** after writing HTML that loads data, open it (or simulate `file://` path) and confirm first paint — or prove data is embedded / launcher exists.
+6. **Chat links are dead.** Cursor markdown `file://` does not open HTML/PDF. Ship `OPEN_*.cmd` (`start "" "%~dp0file.html"`) next to the file **and run it** in the same turn. Tell him to double-click the `.cmd`. Never leave a `file://` chat link as the open path.
+
+## Part-Groups / Aftermarket
+
+- `ISZE_Aftermarket_Live_Pricing_Dashboard.html` → **always embed** `partgroups_scrape.json` at build time.
+- `ISZE_PartGroups_Sales_Explorer.html` → launcher `OPEN_PartGroups_Explorer.cmd` required (agg/pnyear are multi-MB).

@@ -1,0 +1,37 @@
+---
+description: Exec aftersales paper — opportunity/commercialisation ship gates from 2026-09-15 review (not diagnostic-only)
+alwaysApply: true
+---
+
+# Exec aftersales paper (Mode A) — hard gates
+
+**When:** building, reviewing, outlining, or claiming done on `ISZE_Exec_Aftersales_Paper` / `build_exec_aftersales_paper.py` / `PROMPT_ISZE_EXEC_SALES_PAPER.md`.
+
+**Brief:** `00_docs/PROMPT_ISZE_EXEC_SALES_PAPER.md`  
+**Retro:** `00_docs/REVIEW_EXEC_AFTERSALES_PAPER_20260915.md`  
+**Gate:** `python 02_dashboards/_build/verify_exec_aftersales_paper.py` (exit 0 required before “done”)
+
+Authority first: `isze-no-ship-without-ok.mdc` — HTML write only on **rebuild** / **ship**. This rule is QA *after* permission, and outline constraints *before*.
+
+## Product bar
+
+The paper is an **opportunity + commercialisation** case, not a GPS/PMS audit annex with a SWOT bolted on. Diagnostic strength without category-gap ranking, margin, warranty, and ready levers = **not done**.
+
+## Hard failures (do not claim done)
+
+1. **Hero follows euro, not the worked example** — Cover / page-4 opportunity lead must follow `pms_opportunity_matrix.csv` category gaps (typically clutch disc + brake pad + brake shoe). Oil-filter IML story is a **method illustration only**. Oil filter as the opportunity hero = FAIL.
+2. **Ceiling placeholder disclosed** — Page 1 and page 3 must state what share of the target-spend ceiling is a flat €250/UIO placeholder, plus a short sensitivity band. Silent 51%-class headline = FAIL. **The count must be derived from the live `wallet_waterfall.csv` on the build date, not copied from a review:** recomputed 2026-09-16 from `theoretical_wallet_eur ÷ uio_units` for CY2025, exactly 8 of 18 markets sit at €250.0 (IUK, UMI, Sweden, Norway, Hungary, Finland, Romania, Iceland) holding **37.0%** of the €60.22M ceiling. The 9-market / 37.3% wording that stood in the HTML on 2026-09-15 is wrong. The same gate must recompute the share, so the next build cannot copy a stale count.
+3. **Matrix and gap types on the page** — Quotable category ranking from `pms_opportunity_matrix.csv` and substitution / under-service / catalogue from `capture_recovery_model.csv` (vintage labelled) must appear. Computed-but-unused = FAIL.
+4. **Margin or UNKNOWN** — When Eucon/GP files exist, print a gross-margin layer (or explicit UNKNOWN). External ATD/NADA GP % must be labelled external — never merged into verify KPIs.
+5. **Warranty quantified** — Billed warranty € / share of book + claim expense YoY (or UNKNOWN). A traffic-light aside alone = FAIL.
+6. **Telematics / subscriptions** — Modelled option labelled external **or** named data gap. Silence = FAIL.
+7. **Sell-out as % of billed €** — Not row counts alone. Missing files = amber / source gap, not “no exceptions.” **Recompute the coverage share from the sell-out files present on the build date.** Verified 2026-09-16: five distributors = **54.4%** of the 18-market GPS billed euro (€16.74M of €30.76M, from `gps_spu_by_distributor.csv` 2025 `total_sales_eur`); Germany + Belgium + Portugal add **€6.35M** and lift it to **75.1%**. Portugal has a long file on disk since 2026-09-15, so the moment Portugal enters the five, the headline moves — do not keep printing 54.4% without re-deriving it.
+8. **Live tenders** — Counts from current `01_data/14_dashboards/tender_data.json` as-of at build. Size aftersales honestly (footprint vs parts €). Stale snapshot = FAIL.
+9. **Account health / defection honesty** — Print `thresholds_calibrated: false` when true; split defection recoverable vs zero trailing revenue.
+10. **Ready levers ranked** — Book B (the price list we might change) alloc ambition, NO_LIST PNs, DE/BE/PT sell-out must not be buried below weaker asks when they are the highest return-per-effort items already built.
+11. **Entity / lane / language** — UTI≠UMI; IUK≠ITUK; two ITUK lanes never mixed; no wallet/street; no IML v7 / Model B / PRISM lane in Mode A.
+12. **Ship gate** — Builder exit 0 ≠ done. Run `verify_exec_aftersales_paper.py` + paint check + receipt. Sibling `OPEN_*.cmd`.
+
+## Outline sessions (no rebuild/ship)
+
+Mode B outline must still propose **matrix-led heroes**, ceiling disclose, margin/warranty/telematics treatment, and ready-lever ranking — do not re-propose the oil-filter-led diagnostic outline the retro already rejected.

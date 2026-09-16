@@ -1,0 +1,175 @@
+ISZE MEMORY REVIEW — Week 33, 2026
+Generated: 2026-08-10
+
+Scope note: per standing instruction (2026-07-13), lubricants.md and action-plan-fy*.md
+remain permanently out of scope. Neither file exists under 05_memory/projects/ —
+confirmed, not re-flagged as missing. One pre-existing internal link inside an in-scope
+file points at the action-plan file by name; per instruction it is skipped silently, not
+listed here.
+
+## Verifier
+| Check | Result | Evidence |
+|-------|--------|----------|
+| Brief written this run | PASS | 05_memory/briefs/memory_review_W33_2026.txt |
+| Stale files remaining | FAIL | 7 of 9 in-scope project files STALE by clock (same set as W32; see below) |
+| Off-scope untouched | PASS | lubricants/action-plan absent from 05_memory/projects/; no edits or references made |
+| Applied log updated | PASS | 05_memory/briefs/memory_applied_log.md (1 new entry) |
+
+## Memory Health
+
+Mostly clock movement this week, plus one genuinely new development and one new broken
+link found by actually reading cited paths rather than trusting titles.
+
+1. **uio.md's V20 rebuild is now on a second draft revision** — `V20_SPEC_v2_DRAFT.md`
+   (45KB) appeared 2026-08-09, one day before this review, alongside a same-day-touched
+   `V20_SPEC.md`. Per its own header it's a review draft, "not committed." It reports the
+   locked IUK LCV figure (44,926) is now corroborated by two independent methods to within
+   3 units — strengthens, doesn't change, what's already synced into uio.md. It also
+   reports two findings not yet anywhere in memory: an "All rows" total in the workbook
+   that doesn't equal the sum of its own rows (short ~2,500/yr, described as larger than
+   the row-25 issue already flagged), and a new "Problem 8" — the claim that the
+   currently-deployed UIO dashboard is publishing an arithmetically impossible headline
+   KPI right now. Not incorporated into uio.md this run: it exceeds hygiene-edit scope and
+   the source itself says not committed. See Open Items and Suggested Updates.
+2. **glossary.md line 153 points at a path that no longer exists.** `Isuzu/_SKILL_UPDATE/
+   isze-company-context.md` isn't on disk anywhere outside `91_legacy/` (deprecated per the
+   2026-06-13 reorg decision) and two archive/backup folders. No canonical numbered-folder
+   copy found. Not fixed this run — the right replacement target is a judgment call, not a
+   mechanical sync (see Suggested Updates).
+3. **sales-analytics-pipeline.md's own path table may itself be using the pre-reorg
+   naming.** Its "Canonical paths" table (last touched at the reorg, 2026-06-13) lists
+   `raw/`, `derived/`, `models/`, `planning/`, `gpt_safe/`, `dashboards/`, `_INBOX/` —
+   no numbered prefixes — while `DATA_MANIFEST.md` and other project files use `12_raw/`,
+   `00_derived/`, `15_gpt_safe/`, `14_dashboards/`. `DATA_MANIFEST.md` documents at least
+   one of these as a real NTFS junction (`dashboards/` → `14_dashboards/`), so the
+   un-numbered names may still resolve rather than being stale. This sandbox can't follow
+   Windows junctions to confirm either way (same failure mode seen on the workspace's own
+   top-level junctions). Flagged, not edited.
+4. **pricing-basket-2026.md and monthly-sales-report-fy2027.md re-confirmed clock-stale-
+   only**, same conclusion as W32: the price file hasn't moved since 13-Mar (re-confirmed
+   14-Jul, and the file's own text explicitly pre-empts re-flagging this as a pending
+   re-run), and no July monthly-report PDF exists yet in `01_data/04_sales/` (checked
+   directly again this run).
+5. **The two failing automation jobs are now a two-week pattern.** `automation_drift_
+   2026-08-10.md` (different job, same day) reports the identical two HIGH findings as
+   2026-08-03: `ISZE_PMS_IAM_Refresh` and `ISZE_LiveStateAudit_Weekly` both still exiting
+   267009. `ISZE_PMS_IAM_Refresh` is plausibly why pms-coverage.md and
+   aftermarket-intelligence.md keep going clock-stale independent of content accuracy —
+   now with two consecutive weeks of evidence instead of one.
+
+STALE (>3 weeks since last validated) — 7 of 9:
+- sales-analytics-pipeline.md — 2026-06-13 (58 days). One line reconfirmed this run
+  (below); frontmatter intentionally left unchanged — targeted sync, not a
+  re-validation (same policy applied to uio.md on 2026-08-03).
+- pricing-basket-2026.md — 2026-06-29 (42 days). Clock-stale only, see Memory Health #4.
+- aftermarket-intelligence.md — 2026-07-02 (39 days). No newer content found inside the
+  file itself to sync; nothing contradicts it in metric_dictionary.md this week.
+- gps-reconciliation.md — 2026-07-03 (38 days). Same — no internal newer content, no
+  contradictions found.
+- pms-coverage.md — 2026-07-03 (38 days). Content still matches metric_dictionary.md
+  line for line, including the blower-factor fix applied two runs ago.
+- monthly-sales-report-fy2027.md — 2026-07-05 (36 days). Not behind — see Memory
+  Health #4.
+- uio.md — 2026-07-06 (35 days). Two targeted syncs since (2026-08-03, and see Memory
+  Health #1 for what's still outside the file) — frontmatter deliberately not bumped.
+
+NOT STALE:
+- competitiveness.md — 2026-07-27 (14 days). No new issues found on this week's
+  cross-check.
+- imie_3party_2025_2026.md — captured 2026-07-30 (11 days). Still missing the standard
+  frontmatter other project files use — format question, not a staleness issue (see
+  Suggested Updates).
+
+## Applied this run
+
+1. `05_memory/projects/sales-analytics-pipeline.md` — appended a reconfirmation clause to
+   the existing "clear verify fails" checklist line: `_verification_report.md`
+   (regenerated 2026-08-03T06:13:45Z) still shows 106 pass / 0 warn / 0 fail, and
+   `_facts_drift_report.md` (same run, checked 2026-08-03T06:18:30Z) shows 0 drifted / 0
+   missing / 12 aligned. Second data point on an already-checked item, not a new claim.
+   `Last validated` frontmatter left at 2026-06-13 — see staleness note above.
+
+Full detail logged to `05_memory/briefs/memory_applied_log.md`.
+
+## Open Items Still Unresolved
+
+Carried forward, no movement unless noted:
+- EQ-HIT PN→service-schedule mapping (pms-coverage.md) — still pending.
+- CY2025 full PMS basket gap revalidation (pms-coverage.md) — still pending.
+- VKWRT load for SPA-adjusted AIM scoring (aftermarket-intelligence.md) — still open.
+- Other-DB sell-out data collection for AIM, FY2027 20% KPI (aftermarket-intelligence.md)
+  — still open.
+- GPS v9 snapshot re-basing decision — still needs Jerome's call (gps-reconciliation.md).
+- MIDI contribution (uio.md, ~92,585 units 2024) — still "treat as estimate," unverified
+  since v17.
+- Q1FY2027 canonical swap — still circumstantial only, 3rd week carried: raw folder still
+  holds a single `Q1FY2027.XLSX` (no `_full` file), `_data_integrity_open_issues.md` still
+  doesn't track a swap item.
+- Re-deploy the two `07_deploy` competitiveness copies from the corrected canonical file —
+  carried forward from W32, not independently re-checked this run.
+- uio.md / V20 — still draft, now on a second draft revision with a new, more serious
+  finding (Problem 8, see Memory Health #1). 6-of-7 original problem list still
+  unexecuted; the case for a dedicated V20 session (not folded into weekly hygiene) is
+  stronger than last week.
+- Two ISZE scheduled tasks (`ISZE_PMS_IAM_Refresh`, `ISZE_LiveStateAudit_Weekly`) failing
+  exit 267009 — now a confirmed two-week pattern (see Memory Health #5). IT/automation
+  fix, outside this task's edit scope.
+
+## Suggested Updates
+
+(Jerome homework — global CLAUDE.md is outside this task's edit scope; everything below
+needs a human hand or a separate pass.)
+
+1. Global CLAUDE.md "Key confirmed data" PMS line — still shows the rejected 0.3% /
+   €3.5M+ figures. Replace with Model B's 35.1% oil-filter / €2.04M gap. Unresolved 3rd
+   week running.
+2. Global CLAUDE.md AIM line — still shows CY2024-only 93.5% framing. Current standard
+   (aftermarket-intelligence.md) is residual closed to 1.6% CY2024 / 1.8% CY2025 (~98%
+   classified overall). Unresolved 3rd week running.
+3. Global CLAUDE.md UIO Tool row — still reads "(v9) / Apr 2026 / awaiting data" — actual
+   is v19 canonical, with a V20 rebuild now in its second draft revision (9 Aug). Also:
+   the Active Projects table's pricing-row path reads `memory/projects/pricing-2026.md` —
+   no such file exists; the actual file is `05_memory/projects/pricing-basket-2026.md`.
+   Both unresolved since first flagged (path issue: 2nd week; UIO row: 3rd week).
+4. Confirm Q1FY2027 canonical swap status (one word closes this) — 3rd week carried.
+5. Fill in uio.md's Version history table (v18, v19) and clear open item #7 ("build
+   script not updated for v17"). Given V20 is now on its second draft with a new,
+   larger-magnitude finding, doing this in the same pass as the eventual V20 promotion
+   is probably better than doing it twice.
+6. Add a `last_validated` line to glossary.md — 4th time flagged (W30, W31, W32, this
+   run).
+7. ITUK pricing dispute status still ambiguous (global CLAUDE.md: active/"will resolve";
+   pricing-basket-2026.md: silent). The dangling `ISZE_CLAUDE_memory_fixes_2026-07-21.md`
+   (workspace root, outside ISZE/) is unchanged again this week (same 1,962 bytes, same
+   21-Jul-07:32 mtime) — still recommend discarding rather than applying; its proposed
+   9.8%/17.3% PMS figures are themselves obsolete per metric_dictionary.md.
+8. imie_3party_2025_2026.md doesn't follow the standard project-file frontmatter — worth
+   conforming if this becomes a recurring file type, not a one-off.
+9. glossary.md line 153 — company-context pointer is broken (see Memory Health #2).
+   Needs a decision on the right canonical target (point at `91_legacy/`, or somewhere
+   else) before it can be fixed mechanically.
+10. sales-analytics-pipeline.md's un-numbered path table vs. the numbered-folder
+    convention used elsewhere (see Memory Health #3) — needs a quick confirmation of
+    whether junctions exist for `raw/`, `derived/`, `models/`, `planning/`, `gpt_safe/`,
+    `_INBOX/` before editing; guessing wrong here would break, not fix, the reference.
+11. New: V20_SPEC_v2_DRAFT.md's "Problem 8" claims the currently-deployed UIO dashboard
+    is publishing an arithmetically impossible headline KPI. Worth Jerome's eyes soon
+    given it's about a live artifact, even though the source document is itself an
+    uncommitted draft.
+
+## No action needed
+
+- **competitiveness.md** — 14 days, well within window, no new issues found on
+  cross-check.
+- **imie_3party_2025_2026.md** — 11 days, fresh; format question already tracked above.
+- **monthly-sales-report-fy2027.md** — content is current for the latest available PDF
+  (June); checked `01_data/04_sales/` directly again, no July PDF exists yet.
+- **pricing-basket-2026.md** — clock-stale only; content is pinned to an unrevised source
+  file and the file's own text pre-empts re-flagging (see Memory Health #4).
+- **pms-coverage.md, aftermarket-intelligence.md, gps-reconciliation.md** —
+  cross-checked against metric_dictionary.md and DECISIONS.md (no new entries since
+  2026-07-14). No content contradictions found. Clock-stale, not accuracy-stale; likely
+  explained by the two failing automation jobs above, not neglect.
+- **glossary.md content** (terms, discount factors, FX/pricing figures) — cross-checked
+  against pricing-basket-2026.md and confirmed consistent. (The one broken path pointer
+  is a separate item, above.)

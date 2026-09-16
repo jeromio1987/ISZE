@@ -1,0 +1,109 @@
+{
+  "found": {
+    "[\\\"'](/[^\\\"']*(?:notice|udbud|search|pro": [
+      "/demo/eFormsNoticeTypeDemo",
+      "/afmeldUdbudsagent",
+      "/opretIndkoeb/udbudsbekendtgoerelse",
+      "/opretIndkoeb/udbudsbekendtgoerelseBlankAendring",
+      "/opretIndkoeb/udbudsbekendtgoerelseAendring",
+      "/udbud/",
+      "/udbud"
+    ],
+    "https?://[^\\\"'\\s]+(?:notice|search|api)[": [
+      "https://npms.io/search?q=ponyfill."
+    ],
+    "baseUrl[^,]{0,80}": [
+      "baseURL",
+      "baseURL.replace(/\\/+$/",
+      "baseURL;\n}\nfunction buildFullPath(baseURL",
+      "baseURL && !isAbsoluteURL(requestedURL)) {\n    return combineURLs(baseURL",
+      "baseURL: defaultToConfig2",
+      "baseUrl: {\n    adfaerd: \"/adfaerd/\"",
+      "baseUrl: {\n    client: \"https://lokal.udbud.dk\"\n  }",
+      "baseUrl: {\n    client: \"https://dev.udbud.dk\"\n  }",
+      "baseUrl: {\n    client: \"https://test2.udbud.dk\"\n  }",
+      "baseUrl: {\n    client: \"https://demo.udbud.dk\"\n  }",
+      "baseUrl: {\n    client: \"https://preprod.udbud.dk\"\n  }",
+      "baseUrl: {\n    client: \"https://udbud.dk\"\n  }",
+      "baseUrl: {\n        adfaerd: SpaConfig.staticConfig.baseUrl.adfaerd",
+      "baseUrl.bruger",
+      "baseUrl) == null ? void 0 : _a.client",
+      "baseUrl.konfiguration",
+      "baseUrl.soegning",
+      "baseUrl.udbud\n      }",
+      "baseUrl.client + environmentConfig.variables.sector9.redirectEndpoint",
+      "baseUrl.client",
+      "baseURL: this.getBaseUrl(komponent)",
+      "BaseUrl(komponent) {\n    let apiUrl = \"\";\n    const currentUrl = window.location.hostna",
+      "baseUrl[komponent];\n  }\n}\nclass BekendtgoerelseKladdeService {\n  constructor() {\n    __"
+    ],
+    "apiUrl[^,]{0,80}": [
+      "apiUrl = \"\";\n    const currentUrl = window.location.hostname;\n    if (currentUrl.index",
+      "apiUrl = \"https://lokal.udbud.dk\";\n    } else if (currentUrl.indexOf(\"dev.\") > -1) {\n ",
+      "apiUrl = \"https://dev.udbud.dk\";\n    } else if (currentUrl.indexOf(\"test2.\") > -1) {\n ",
+      "apiUrl = \"https://test2.udbud.dk\";\n    } else if (currentUrl.indexOf(\"preprod.\") > -1)",
+      "apiUrl = \"https://preprod.udbud.dk\";\n    } else if (currentUrl.indexOf(\"demo.\") > -1) ",
+      "apiUrl = \"https://demo.udbud.dk\";\n    } else {\n      apiUrl = \"https://udbud.dk\";\n    ",
+      "apiUrl + environmentConfig.variables.baseUrl[komponent];\n  }\n}\nclass BekendtgoerelseKl"
+    ],
+    "environment\\.[a-zA-Z]+": []
+  },
+  "results": [
+    {
+      "m": "GET",
+      "u": "https://udbud.dk/demo/eFormsNoticeTypeDemo",
+      "http": 200,
+      "ct": "text/html",
+      "snip": "<!DOCTYPE html>\n<html lang=\"da\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n    <base href=\"/\" "
+    },
+    {
+      "m": "GET",
+      "u": "https://udbud.dk/afmeldUdbudsagent",
+      "http": 200,
+      "ct": "text/html",
+      "snip": "<!DOCTYPE html>\n<html lang=\"da\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n    <base href=\"/\" "
+    },
+    {
+      "m": "GET",
+      "u": "https://udbud.dk/opretIndkoeb/udbudsbekendtgoerelse",
+      "http": 200,
+      "ct": "text/html",
+      "snip": "<!DOCTYPE html>\n<html lang=\"da\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n    <base href=\"/\" "
+    },
+    {
+      "m": "GET",
+      "u": "https://udbud.dk/opretIndkoeb/udbudsbekendtgoerelseBlankAendring",
+      "http": 200,
+      "ct": "text/html",
+      "snip": "<!DOCTYPE html>\n<html lang=\"da\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n    <base href=\"/\" "
+    },
+    {
+      "m": "GET",
+      "u": "https://udbud.dk/opretIndkoeb/udbudsbekendtgoerelseAendring",
+      "http": 200,
+      "ct": "text/html",
+      "snip": "<!DOCTYPE html>\n<html lang=\"da\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n    <base href=\"/\" "
+    },
+    {
+      "m": "GET",
+      "u": "https://udbud.dk/udbud/",
+      "http": 404,
+      "ct": "application/problem+json",
+      "snip": "{\"type\":\"about:blank\",\"title\":\"Not Found\",\"status\":404,\"detail\":\"No static resource .\",\"instance\":\"/udbud/\"}"
+    },
+    {
+      "m": "POST",
+      "u": "https://udbud.dk/udbud/",
+      "http": 403,
+      "ct": "application/json",
+      "snip": "{\"timestamp\":\"2026-08-25T17:39:21.635+00:00\",\"status\":403,\"error\":\"Forbidden\",\"path\":\"/udbud/\"}"
+    },
+    {
+      "m": "GET",
+      "u": "https://udbud.dk/udbud",
+      "http": 200,
+      "ct": "text/html",
+      "snip": "<!DOCTYPE html>\n<html lang=\"da\">\n  <head>\n    <meta charset=\"utf-8\" />\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n    <base href=\"/\" "
+    }
+  ]
+}

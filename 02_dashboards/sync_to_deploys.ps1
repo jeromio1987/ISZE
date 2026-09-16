@@ -25,7 +25,10 @@ $Targets    = @(
     (Join-Path $IszeRoot 'publish-site')
 ) | Select-Object -Unique | Where-Object { Test-Path $_ }
 
-$SkipDirs = @('_archive', '_build')
+# Reduced copy set (consolidation 2026-08-20): skip scratch, internal SPA, and
+# the mirrored Data folder (JSON feeds are copied separately below). _composable
+# stays in the deploy set (PRISM map + master desk are still shipped).
+$SkipDirs = @('_archive', '_build', '_working', 'spa_internal', 'Data')
 
 function Convert-ToDeployHtml {
     param([string]$Content)
@@ -124,12 +127,14 @@ foreach ($target in $Targets) {
             }
         }
     }
+    # Copy to the CURRENT target only. This used to re-loop over $Targets while
+    # already inside the outer foreach, reusing the same $target variable: it
+    # clobbered the loop variable and copied the file once per target, per target.
     $dataJs = Join-Path (Join-Path $Dashboards 'sales') 'risk_cockpit.data.js'
     if (Test-Path $dataJs) {
-        foreach ($target in $Targets) {
-            Copy-Item $dataJs (Join-Path $target 'risk_cockpit.data.js') -Force
-            Write-Host "    risk_cockpit.data.js -> $target"
-        }
+        Copy-Item $dataJs (Join-Path $target 'risk_cockpit.data.js') -Force
+        Write-Host "    risk_cockpit.data.js"
+        $count++
     }
     Write-Host "  $count files copied"
 }

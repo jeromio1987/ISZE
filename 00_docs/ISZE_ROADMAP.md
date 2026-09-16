@@ -1,73 +1,202 @@
-# ISZE — Consolidated roadmap
+# ISZE — programme roadmap (hub)
 
-**Last updated:** 2026-07-14  
-**Domain detail:** [`roadmaps/`](roadmaps/) · **Registry:** [`MAP_REGISTRY.yaml`](MAP_REGISTRY.yaml)
+**Last updated:** 2026-09-16 · **Domain detail:** [`roadmaps/`](roadmaps/) · **Registry:** [`MAP_REGISTRY.yaml`](MAP_REGISTRY.yaml)
 
-> **Numbers:** `../FACTS.md` wins over any deck, memory, or GPT file. Pipeline: green `01_data/derived/_verification_report.json` → `metrics_snapshot.json`.
+> **Numbers rule:** green [`01_data/00_derived/_verification_report.json`](../01_data/00_derived/_verification_report.json) → `metrics_snapshot.json` → [`FACTS.md`](../FACTS.md). That order wins over any deck, memory file, or GPT answer.
+> **Pipeline state 2026-08-25:** verify **116 pass / 0 warn / 0 fail** · `sales_fact` billed through **2026-06-30** · SaTy coverage min 92% (Q1 hole documented).
+
+**How to read this file**
+
+| Section | Use it for |
+|---|---|
+| [1. Open queue](#1-open-queue) | What is actually being built next — the only list that is work |
+| [2. Waiting on Jerome](#2-waiting-on-jerome) | Decisions, not effort. Nothing here moves without an answer |
+| [3. Live now](#3-live-now) | What already runs, and where it lives |
+| [4. Shipped](#4-shipped) | Dated ledger of what closed — one line each, rationale lives in `DECISIONS.md` |
+| [5. Closed — do not reopen](#5-closed--do-not-reopen) | Dead ends. Re-proposing one of these costs credibility |
+| [6. Domain roadmaps](#6-domain-roadmaps) | Depth per domain |
+
+Rationale, evidence and numbers for every closed item live in [`DECISIONS.md`](../DECISIONS.md) (append-only, newest first) and [`CHANGELOG.md`](../CHANGELOG.md). This hub stays short on purpose — it is a queue, not an archive.
 
 ---
 
-## Live now (PRISM + derived pipeline)
+## 1. Open queue
 
-| Capability | Location |
-|------------|----------|
-| GPS spend per unit | PRISM `pages/2_GPS.py` · `gps_spu_by_distributor.csv` |
-| PMS capture (registry + BVP catalogue) | `pages/3_PMS.py` · `pms_capture_by_db_year.csv` |
-| Fig-key / PR00 catalogue | `parts_catalog_dimension.csv` · `gps_v2_fig_key.md` |
-| GPS × PMS-capture quadrant | `pages/16_AIM_GPS_Matrix.py` · `aim_gps_matrix.csv` (x-axis was AIM pricing risk until 2026-07-17 — it never separated anyone, see `DECISIONS.md`) |
-| Decision models | `pages/18_Decision_Models.py` · `wallet_waterfall.csv`, etc. |
-| Pipeline verify | `scripts/run_pipeline_and_verify.ps1` |
+Ordered. `Blocked on` names the single thing that unblocks the item — if it says *nothing*, it is buildable today.
+
+| # | Item | State | Blocked on | Detail |
+|---|------|-------|------------|--------|
+| 1 | **P4 account-health calibration** (task 4.9) | Builder live `p4-v1`; draft thresholds fire on 10 RED / 6 AMBER of 17 DBs — not yet a call list | **Jerome** — amber/red thresholds (B5) | [`P4_DETERMINISTIC_SIGNALS.md`](P4_DETERMINISTIC_SIGNALS.md) |
+| 2 | **List-to-pocket sign-off** | Validation ran 2026-08-19 (`list_to_pocket_validation_2023_2025.csv`); leakage € stays **Mode B** until year-matched PR00/ZPR1→net joins are signed in writing | **Jerome** — written sign-off | `DECISIONS.md` 2026-08-25 |
+| 3 | **P5 forecast go-live (G1)** | P5.2 + P5.6 built — 548 series, median WAPE 49.4%, `pages/19_Forecast.py` live as a surface | **Jerome** — sign G1 on 98.2% catalogue (B6/D6) + override policy (B7/D4) | [`P5_FORECAST_BUILD_PLAN.md`](P5_FORECAST_BUILD_PLAN.md) |
+| 4 | **National tender portal coverage** | Analysis done — only 8/29 footprint countries have a live national source; ~69% are TED-only below threshold | nothing — wire ES PLACSP, IT PNCP/ANAC, DE oeffentlichevergabe | [`roadmaps/scrapers.md`](roadmaps/scrapers.md) · `_COUNTRY_TENDER_PORTALS_MAP.md` |
+| 5 | **Interval-aware air vs oil capture** (integrity flag C) | Shipped 2026-07-02 on a **provisional 0.5 air factor** | IML ratio confirmation | [`roadmaps/gps.md`](roadmaps/gps.md) · PRISM `pms_capture_assumptions.yaml` |
+| 6 | **ITUK brake wear factor — 0.4 or 0.8** | 0.4 in force and now actually applied (fix 2026-07-21). Do not quote ITUK brake capture as locked | ITUK data (expected since 2026-08-11) | `DECISIONS.md` 2026-07-21 |
+| 7 | **LCV generation-aware interval split** | Schedules on disk: RG21 RZ4F-TC **with SCR** = 15k km, without / older = 20k | chassis + registration-year cutoffs — PDFs alone do not map UIO years to SCR vs non-SCR | `01_data/03_PMS/service_schedules/` |
+| 8 | **Fig-key V2 remainder** | `parts_catalog_dimension` live at 98.9% coverage | nothing — bulk PN→fig key from SAP IE40 PR00 column, EPC basket rows, Part Explorer wiring | [`roadmaps/gps.md`](roadmaps/gps.md) |
+| 9 | **Residual PR00 gaps** | 24 PN / €67k ZPR1-path hardware + admin non-PN + parked UMI Shell. Supersession billed-on-old 925 PN / €2.48M (IE40 map, **not** EPC-validated) | nothing — EPC validation is the next slice | [`roadmaps/ai_sales_intelligence.md`](roadmaps/ai_sales_intelligence.md) §6 |
+| 10 | **P2b / P3 / P6 (LLM on mail text)** | Specced, zero code. P2a runs local and deterministic | **B1b** approved LLM route named, then **G0b** (DPIA, LIA, works council) | [`roadmaps/ai_sales_intelligence.md`](roadmaps/ai_sales_intelligence.md) §4 |
+| 11 | **Supabase live Master KPIs** (HTML V4) | Not started | schema + credentials | [`roadmaps/html.md`](roadmaps/html.md) |
+| 12 | **Dashboard filename renames** | Blocked by design — build scripts hardcode `vN` | rename plan in [`CANONICAL.md`](CANONICAL.md) | [`roadmaps/html.md`](roadmaps/html.md) |
+| 13 | **Scraper quality V2** | Tender relevance scoring, `scrape_error` column, RSS parse failures (Israel entity, Belgium non-XML, UK 429), Lidl category id | nothing — small items | [`roadmaps/scrapers.md`](roadmaps/scrapers.md) |
+| 14 | **Workspace cleanup decisions** | **Both halves already decided in writing** — see below, not waiting on Jerome | — nothing — | [`ISZE_Cleanup_Plan.md`](ISZE_Cleanup_Plan.md) · [`UI_STACK.md`](UI_STACK.md) |
+
+**Not on this list on purpose:** anything in §5. Also: no new 0–100 score on any surface, and no Dash / Evidence work — Streamlit :8503 is the product.
+
+**Item 14 came off the waiting list on 2026-09-16, on written evidence only.** Both halves were already decided on paper: external share is HTML / GitHub Pages (`UI_STACK.md`, decided 2026-06-13) and the ISZE_Dashboard ops sandbox is closed indefinitely with no merge timeline (`ISZE_Cleanup_Plan.md` Phase 3, closed 2026-07-26). No cleanup work remains in this item. Reconciled in [`DECISION_RECONCILE_20260916.md`](DECISION_RECONCILE_20260916.md).
+
+---
+
+## 2. Waiting on Jerome
+
+One answer each. Build effort is already sunk or trivial; these are the actual bottleneck. Source: [`AFTERMARKET_BI_BUILD_MENU_20260819.md`](AFTERMARKET_BI_BUILD_MENU_20260819.md) Tier B + the AI-sales gates.
+
+**How this list gets shorter:** [`DECISION_DISCIPLINE.md`](DECISION_DISCIPLINE.md) — a weekly 45-minute slot, one list only, and every item ends as decided / killed / delegated. A decision only counts once it is in this file, in [`DECISIONS.md`](../DECISIONS.md), and as `status: decided` in the build file that was waiting. Items reconciled against written evidence: [`DECISION_RECONCILE_20260916.md`](DECISION_RECONCILE_20260916.md).
+
+| Ref | Decision | Consequence of no answer |
+|-----|----------|--------------------------|
+| B1 | the price adjustment ambition — +4% / +5% / launch-only (**still open — confirmed by Jerome 2026-09-16**) | Revision book stays a review list, never a price move |
+| B2 | **Seed €** for 9,591 no-L12M PNs — IML BOM vs UTI placeholders | Those PNs stay out of every € ranking |
+| B3 | **Growth-factor sign-off** — keep 1.24 / 1.25 / ×1.25 UTI table? | Forecast and alloc inherit an unsigned assumption |
+| B4 | **Guardrail policy** — auto-HOLD on IAM-undercut + proxy-adverse? | Every exception is manual |
+| B5 | **P4 calibration** — amber/red thresholds | Queue item 1 blocked |
+| B6 / D6 | **G1** — sign 98.2% catalogue coverage, or wait for P1.4 / P1.5? | Queue item 3 blocked |
+| B7 / D4 | **P5 override policy** — who may delta a forecast, audit trail | Forecast cannot go live even after G1 |
+| B8 | **Book A +3% alloc** | Explicit rebuild only — no default |
+| B9 | **ITUK brake wear factor** 0.4 vs 0.8 | Queue item 6 blocked |
+| B10 | **Competitor vintage labels (Mode A)** | Mode A keeps mixed-vintage files unlabelled in the UI |
+| B1b | **Approved LLM route** for company text (Cowork or other) | P2b / P3 / P6 die; P1 + P2a + P4 + P5 still run |
+| B1c | Shared `Sales` / `Parts` mailboxes — works-council step | Mail corpus stays halved |
+| B4-gov | DPO for ISZE, or via IML legal | P0 governance is 2 weeks or 8 |
+
+**Never put back on a waiting list:** Nordics tender API keys. They are **DONE** (verify ALL OK, Doffin + HILMA healthy) — `DECISIONS.md` 2026-08-25.
+
+---
+
+## 3. Live now
+
+### PRISM — Streamlit, port 8503 (canonical analytical surface)
+
+Run: `03_analytics/Isuzu/prism/run_prism.ps1` (Mode-A safe) · `run_prism_internal.ps1` (internal shelf: leakage, attach, elasticity, scrape).
+
+| Page | Capability | Primary data |
+|------|-----------|--------------|
+| `0_Early_Warning.py` | This-cycle call list | `early_warning.csv`, `defection_alerts.csv` |
+| `1_UIO.py` | Parc | UIO v19 (DVLA-based), `06_uio/_CURRENT/` |
+| `2_GPS.py` | GPS spend per unit | `gps_spu_by_distributor.csv` |
+| `3_PMS.py` | PMS capture (registry + BVP catalogue) | `pms_capture_by_db_year.csv` |
+| `4_BVP.py` | BVP mix | `mix_genuine_bvp_pms.csv` |
+| `9_Review_Pack.py` | Review pack export | derived |
+| `10_Data_Integrity.py` | Integrity audit | `mislabelled_sku_audit.csv` |
+| `14_Tender_Pipeline.py` | Tender pipeline | `01_data/14_dashboards/tender_data.json` |
+| `18_Decision_Models.py` | Waterfall, runway, defection, attach | `wallet_waterfall.csv` et al. |
+| `19_Forecast.py` | P5 forecast surface (**pre-G1**) | `forecast_final_2026_08.csv` + `forecast_final.parquet` (gitignored) |
+| `20_Warranty.py` | Warranty expense per DB / FY | `distributor_warranty_expense_fiscal.csv` |
+| `21_Realization.py` | List→pocket + ZPR1 gap (**Mode B**) | `pr00_realization_*_cy.csv`, `zpr1_vs_pr00_by_payer_year.csv` |
+| `22_Parc_Cohort.py` | JP cohort (not UIO v19) | `07_UIO/vin/VIN_register.csv` |
+| `23_Dealer_Sellout.py` | Multi-DB sell-out mix + SPU | `sellout_aim_network_mix_2025.csv` |
+| `24_VPACC.py` | FY2027 VPACC action plan (121 items) | `vpacc_fy2027_action_plan_july.parquet` |
+| `network_intelligence.py` · `ituk.py` · `internal_shelf.py` · `tools_marketing_calendar.py` | IA phases 3–8 result (2026-08-20) | see `prism/docs/DASHBOARD_IA.md` §8 |
+
+The AIM × GPS quadrant is now a tab inside `network_intelligence.py` (merged 2026-08-20; source archived to `pages/_archive/16_AIM_GPS_Matrix.py`), on `aim_gps_matrix.csv` with **GPS × PMS total capture** axes. The pricing-risk axis is gone (§5). Everything under `pages/_archive/` is retired — do not link it as live.
+
+### Derived spine + ledger
+
+| Surface | Where |
+|---|---|
+| Quantitative spine | `01_data/00_derived/` (alias `01_data/derived/` is an NTFS junction — prefer numbered paths) |
+| **P8 Action Ledger** | `action_ledger*.parquet/csv` + `02_dashboards/ops/ISZE_Action_Ledger.html` — 23,236 opportunities, €22.1M **mixed-basis source cells, not one wallet** |
+| Pipeline verify | `03_analytics/Isuzu/prism/scripts/run_pipeline_and_verify.ps1` |
 | PMS assumptions (editable) | `prism/data/pms_capture_assumptions.yaml` |
-| Static HTML refresh | `build_isze_dashboard_json.py` + `inject_dashboard_overlays.py` |
-| Data integrity audit | `pages/10_Data_Integrity.py` · `mislabelled_sku_audit.csv` |
 
-Run PRISM: `03_analytics/Isuzu/prism/run_prism.ps1` (port **8503**)
+### HTML (Mode A unless flagged)
 
----
+`02_dashboards/` is the single source of truth; `07_deploy/` is generated. Build → `_build/ship_gate_check.ps1` → `sync_to_deploys.ps1`.
 
-## Build now
+| Pack | File |
+|---|---|
+| Master hub | `hub/MASTER_DASHBOARD.html` |
+| Aftermarket BI Command Center | `sales/ISZE_Aftermarket_BI_Command_Center.html` |
+| DB→DLR replenishment | `sales/ISZE_DB_DLR_Replenishment_CY2025.html` |
+| Pricing full analysis pack | `pricing/ISZE_Pricing_Full_Analysis_Pack.html` (integrity weak — internal QA) |
+| Pricing history findings | `pricing/ISZE_Pricing_History_Findings_Dashboard.html` (**provisional**) |
+| Static PRISM twins | `bi/` (4 self-contained snapshots) |
+| OS data map | `ops/ISZE_OS_Data_Map.html` |
+| IDS 2026 packs | `ids/` (v1.4 — Baumann MIDI average rule locked) |
 
-| Item | Blocker | Domain |
-|------|---------|--------|
-| Interval-aware air vs oil capture | ⚠ shipped 2026-07-02 with **provisional 0.5 air factor** — IML ratio confirmation still open | PRISM |
-| SAP fig key on `sales_fact` | ✅ done 2026-07-02 via `parts_catalog_dimension` join (98.9% coverage); SAP column auto-ingested when CY export adds it | Pipeline |
-| 2025 UIO in capture | ✅ done — V19 (DVLA-based) confirmed wired 2026-07-03, `uio_proxy_used=False` on all 2025 rows | UIO |
-| FY2025 completeness (Jan-Mar 2026 data) | ✅ done 2026-07-03 — `sales_2026tillApril.XLSX` wired in, FY2025 now a complete 12 months | Pipeline |
-| CR/RE credit-note/return exclusion (flag H) | ✅ done 2026-07-03, judgment call not ERP-confirmed — see FACTS.md flag H | Pipeline |
-| CY2026 AIM dashboard | AIM workbook | HTML |
-| Supabase live Master KPIs | Schema + credentials | HTML V4 |
-| Discount scraper refresh | Optional (personal promos) | [scrapers](roadmaps/scrapers.md) |
-| Dashboard filename renames | Build scripts hardcode vN | [html](roadmaps/html.md) · [`CANONICAL.md`](CANONICAL.md) |
-| Tender Monitor Task Scheduler | ✅ live `ISZE Tender Monitor` (verified 2026-07-26) | [scrapers](roadmaps/scrapers.md) |
-| Competitive pricing refresh scheduler | ✅ live `ISZE_PMS_IAM_Refresh` — do **not** also import spare XML; manual refresh 2026-07-26 after interrupt | [scrapers](roadmaps/scrapers.md) |
-| **Dated PR00 price-list history** | **Blocked — Jerome confirmed 2026-08-01 the earlier files are not held locally.** Only one snapshot exists on disk: `01_data/01_Pricing/IE40 Price list as of 13.03.2026 PR00_3_level_classified_GPT.xlsx` (164,380 rows). Consequence, measured 2026-08-01: applying that single list to every billing year produces realization 0.8865 (2023) → 0.8956 (2024) → 0.9185 (2025) → 0.9416 (Q1 2026). The index rises monotonically as billing approaches the list date, i.e. **most of the apparent "concession" is the price increase baked into the 2026 list, applied backwards**. Until dated snapshots exist, list-to-pocket realization cannot be separated from price movement and must not be presented as leakage. Needed: prior-year IE40 exports (SAP or archive), one per price revision, stored as `01_data/01_Pricing/history/IE40_PR00_<YYYY-MM-DD>.xlsx`. Unlocks the realization waterfall in `02_dashboards/pricing/ISZE_Pricing_BI_Dashboard.html` view 01. | Pricing / Pipeline |
-| Gross + condition values on the billing extract | `sales_fact.parquet` carries **only** `net_sales_value` — no gross, no discount, no SPA condition column. Even with dated lists, discount vs SPA vs mix cannot be decomposed. Ask: add gross value and condition types to the SAP billing export. | Pricing / Pipeline |
-| 522 part numbers billed with no PR00 entry | Measured 2026-08-01: **€4.96M, 15.1% of CY2025 parts revenue** billed on part numbers absent from the price list (largest: `7552348290` STEERING UNIT, €718,864). Every realization figure therefore covers only 85% of the business. Also 800 PNs / €1.82M still billed under numbers the list itself marks superseded. See view 02 of the Pricing BI dashboard. | Pricing |
-| `price_volume_elasticity.csv` is not quotable | **Jerome, 2026-08-01: "elasticity only possible with DB → DLR sales, ISZE is too far from the market."** `01_data/00_derived/price_volume_elasticity.csv` holds 38 categories with betas (e.g. pilot_bearing −9.83, air_filter −4.22) labelled "price-sensitive (contestable)". It is built on ISZE→distributor billing, so it measures distributor stocking behaviour, not end-market response. The file's own `method_note` already flags low power and mix/discount confounding. Decide: annotate as non-quotable, or drop it from `derived/`. | Pricing |
-| LCV bucket generation-aware interval split | Blocked — need D-Max generation/registration-year cutoffs (RG/RG21/RT56/RT88_93 → model year). 4 OEM Isuzu maintenance schedules read 2026-07-15: standard/older D-Max (4JJ3/RZ4E, incl. RT56="2013 TF series") = 20,000km oil interval, confirms current `lcv=1.0 svc/yr`. Newest gen (RG21, RZ4F-TC **with SCR**, Europe/Israel) = 15,000km → ~1.33 svc/yr. PDF metadata has no build-year (all "Print to PDF" today from Isuzu ETM); only RT56 self-labels a year. Need Jerome/IML to supply which years/chassis codes are SCR vs non-SCR before this can become a real registration-year-weighted bucket in `pms_capture_assumptions.yaml` (same mechanism as existing `country_overrides`) | PRISM / PMS |
-| Brake front/rear split categories never get real actual sales | ✅ **Fixed 2026-07-16 — option (b), Jerome's call.** `brake_pad_front/rear` + `brake_shoe_front/rear` dropped from `wear_factor` (`pms_capture_assumptions.yaml`); parent `brake_pad`/`brake_shoe` retained and now restated explicitly in the YAML. The 2026-07-15 diagnosis understated it: the parents were **already** in `P1_CATEGORIES` via `_DEFAULT_WEAR` in `modules/pms_capture_config.py` (the YAML is merged **onto** that dict, not substituted for it), so brake demand was estimated **three times** over one parc (parent 0.5 + front 0.5 + rear 0.5) — the drag was phantom *expected* demand in the denominator, not the empty numerators. Option (a) was rejected on that basis: it would have filled the numerators while leaving the denominator tripled, converting a visible zero row into an invisible wrong rate. Rationale for (b): front/rear is not a unit of commercial action (there is no front-pad campaign), and the only market with real data (ITUK, IML slide 2026-07-14) has front+rear replaced together as one job — not independent wear cycles. Verified by re-run: P1 3,888 → 3,024 rows (864 = 4 cats × 72 × 3 line_types), all surviving actuals byte-identical, network expected-weighted capture CY2025 **23.8% → 32.0%** (`total` line_type; matches the 31.9% quoted 2026-07-15 within data drift), ITUK oil-filter anchors unchanged, 40/40 prism tests pass. | PRISM / PMS |
-| `country_overrides.factors` is dead config for every bucketed distributor | **✅ FIXED 2026-07-21 — Jerome approved via "do all" on Safety&capital top-10.** `modules/pms_engine.expected_by_category_bucketed()` now reads `cfg["factor_overrides"]` before falling back to `LCV_BUCKET_FACTOR_OVERRIDES`/global factors (same override-replaces-default pattern as `scripts/build_bvp_p0_p1.py::_expected_qty_for_db()`); the legacy single-scope loop in `calculate_pms_capture()` got the identical fix since it never applied `factor_overrides` either. Verified on real data: ITUK brake_pad CY2025 expected 5,840.1 → **4,672.1** (0.5 → 0.4 denominator), capture **58.3% → 72.8%** (registry-only actuals 3,402 units). 61/61 prism tests pass. `country_overrides.services_per_year` was already live via `BUCKET_SERVICES_PER_YEAR_OVERRIDES` (UTI) — untouched. See `DECISIONS.md` 2026-07-21. The units question below (0.4 vs 0.8) is still open — this fix makes the *configured* 0.4 finally take effect, it does not resolve whether 0.4 is the right number. | PRISM / PMS |
-| ITUK brake wear factor — is 0.4 or 0.8 the right basis? | **Open, never measured.** The ITUK 0.4 derives as an interval ratio (40,000/100,000 km), independent of axle count, so it carried over unchanged when the front/rear split was dropped. But the IML slide describes replacement as one paired "2item" job covering both axles — if a single `brake_pad` unit is one axle's set, the merged factor is arguably **0.8**, and ITUK brake capture currently reads ~2x optimistic. This is a units question about what one `brake_pad` unit represents; it needs IML confirmation, not a guess. Currently moot in the output — see the dead-config row above. | PRISM / PMS |
+Full inventory: [`roadmaps/html.md`](roadmaps/html.md).
+
+### Automation
+
+Live scheduled tasks and their SSOT: [`AUTOMATION_REGISTER.md`](AUTOMATION_REGISTER.md). Tender Monitor (Mon 07:30) and `ISZE_PMS_IAM_Refresh` (Mon 07:00) are the two ISZE-core jobs — do **not** import the spare refresh XML (double-run).
 
 ---
 
-## Domain roadmaps
+## 4. Shipped
+
+Newest first. One line each; the reasoning is in `DECISIONS.md` under the same date.
+
+| Date | Shipped |
+|------|---------|
+| 2026-08-25 | **P8 Action Ledger** — nine adapters → `action_ledger*.parquet/csv` + ops HTML; `BILLING_HORIZON` now reads `max(sales_fact.billing_date)` |
+| 2026-08-25 | Overnight process audit — verify green 116/0/0, junctions restored, Nordics keys closed as an ask |
+| 2026-08-25 | `sales_fact` extended with `Q1FY2027.XLSX` (Apr–Jun 2026); dealer sell-out CSVs re-emitted for 5 DBs |
+| 2026-08-20 | **PRISM IA phases 3–8** — Network Intelligence merged (7 tabs), Mix absorbed DB-mix-split, ITUK hub, Tools re-cut, sources archived. 71 tests green |
+| 2026-08-19 | **Aftermarket BI Tier A** — 14 of 15 builds done: P5.2 + P5.6 forecast, replenishment dashboard, Book B review, GREECE as 5th DB, supersession delta, list-to-pocket validation, account-health ops pack, portfolio triage, PMS BVP regain, pricing history pack |
+| 2026-08-18 | PRISM `INTERNAL_MODE` launcher split (MD-safe default) + duplicate tabs dropped by cross-link |
+| 2026-08-18 | `capture_trajectory` partial-year guard — 33 declining alerts → 5, zero real declines hidden |
+| 2026-08-18 | P4 account-health builder `p4-v1` (draft flags, gitignored parquet — **not** a KPI) |
+| 2026-08-12 | P2a interaction layer complete — 3 tables, 24-month run (9,490 interactions, 926 commitments, 203 stakeholders), local + deterministic under G0a |
+| 2026-08-11 | **Dated price-list history** PR00 + ZPR1 2023/2024/2025 + current 2026 under `01_data/01_Pricing/history/` |
+| 2026-08-11 | CY2026 AIM dashboard on billing only — dual CY + FY windows in `aim_billing_windows.json` |
+| 2026-08-11 | Spec C4 SAP pull closed 220 PN / €4.36M of the no-PR00 gap — catalogue PR00 coverage **98.2%** (was €4.96M / 15.1% at 2026-08-01) |
+| 2026-08-11 | IDS 2026 v1.4 packs — Baumann MIDI average rule applied |
+| 2026-07-26 | Tender Monitor + competitive-pricing refresh confirmed live as scheduled tasks |
+| 2026-07-21 | `country_overrides.factors` fixed on the bucketed PMS path — ITUK brake capture 58.3% → 72.8% at the configured 0.4 |
+| 2026-07-16 | Front/rear brake split dropped from `wear_factor` — network capture CY2025 23.8% → 32.0% (phantom tripled denominator removed) |
+| 2026-07-03 | FY2025 completeness (Jan–Mar 2026 wired) · CR/RE credit-note exclusion (flag H) · 2025 UIO V19 in capture |
+| 2026-07-02 | SAP fig key on `sales_fact` via `parts_catalog_dimension` join (98.9% coverage) |
+
+---
+
+## 5. Closed — do not reopen
+
+No new data, no new proposal. Each of these was tested and failed, or was answered by Jerome.
+
+| Closed | Date | Why |
+|--------|------|-----|
+| **Gross / SPA / condition columns on the billing extract** | 2026-08-11 | Not available. `sales_fact` is **net-only forever**. Discount vs SPA vs mix cannot be decomposed from billing — design around net + dated lists. **Do not re-ask.** |
+| **AIM pricing-risk as a decision surface** | 2026-07-17 · 2026-08-18 | 0.12 gate never fired; fitted replacements failed the 2024→2025 holdout; persistence ρ = 0.92 GPS / 0.75 PMS. No new 0–100 on any surface |
+| `db_aftersales_risk` as the replacement | 2026-08-18 | Same genus — hand-weighted 0–100 on a mislabelled 44-PN file. Parked, not promoted |
+| Fitted oil-filter service frequency | 2026-08-18 | Null. All-DB OLS wins MAE only by absorbing under-capture into λ. Flat bucketed constants stay |
+| `price_volume_elasticity.csv` (ISZE→DB) | 2026-08-11 | Deferred — DB→DLR only. Resume when dealer sell-out coverage grows |
+| Brake front/rear split categories | 2026-07-16 | Front/rear is not a unit of commercial action; the only market with real data replaces both in one job |
+| **Nordics tender API keys** | 2026-08-25 | DONE — verify ALL OK, Doffin + HILMA healthy, NO/FI merged. Never put on a waiting-on-Jerome list again |
+| Autodoc / Oscaro scraping | 2026-07-14 | Cloudflare Turnstile blocks 100% of requests. Frozen CSV kept |
+| Auto365 as a PN price index | — | No OEM part-number join |
+| Telematics / VIN usage as the next ask | — | Data we do not have |
+| External "healthy capture %" (J.D. Power / NADA / DataMac) as an ISZE target | — | Three different metrics; none of them is ours |
+
+---
+
+## 6. Domain roadmaps
 
 | Domain | File | Status |
 |--------|------|--------|
-| HTML dashboards | [`roadmaps/html.md`](roadmaps/html.md) | V3 overlay + V4 Supabase |
-| Scrapers | [`roadmaps/scrapers.md`](roadmaps/scrapers.md) | Tender path fixed; refresh scheduler XML ready; Autodoc retired from health check |
-| GPS / fig-key / AIM | [`roadmaps/gps.md`](roadmaps/gps.md) | V2 enrichment in PRISM |
-| Jarvis / tools | [`roadmaps/tools.md`](roadmaps/tools.md) | V2 data-out-of-code |
+| AIM + PRISM after scoring failed | [`roadmaps/aim_prism_reinvention.md`](roadmaps/aim_prism_reinvention.md) | **Active** — the programme after the score kill: P4, PN prices, Streamlit surface |
+| AI sales intelligence (mail → action, account health, forecast) | [`roadmaps/ai_sales_intelligence.md`](roadmaps/ai_sales_intelligence.md) | **Active** — Track A running; Track B stops at B1b/G0b |
+| Aftermarket BI execution menu | [`AFTERMARKET_BI_BUILD_MENU_20260819.md`](AFTERMARKET_BI_BUILD_MENU_20260819.md) | **Active** — Tier A 14/15 done; Tier B is §2 above |
+| GPS / fig-key | [`roadmaps/gps.md`](roadmaps/gps.md) | V2 enrichment in PRISM; V3 scoring **superseded** |
+| HTML dashboards | [`roadmaps/html.md`](roadmaps/html.md) | V3 overlay shipped; V4 Supabase blocked on credentials |
+| Scrapers / tenders | [`roadmaps/scrapers.md`](roadmaps/scrapers.md) | Both core tasks live; national portal coverage is the open P0 |
+| Jarvis / isze-tools | [`roadmaps/tools.md`](roadmaps/tools.md) | V2 data-out-of-code done; V2.2 onward unstarted |
+| Specs feeding the queue | [`P4_DETERMINISTIC_SIGNALS.md`](P4_DETERMINISTIC_SIGNALS.md) · [`P5_FORECAST_BUILD_PLAN.md`](P5_FORECAST_BUILD_PLAN.md) · [`PROMPT_ACTION_LEDGER_P8.md`](PROMPT_ACTION_LEDGER_P8.md) | Build specs, not status |
 
 ---
 
-## Data integrity (do not quote externally until closed)
+## 7. Integrity and hygiene
 
-See `03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md` — priority: interval-aware PMS (C), returns confirmation (H).
-
----
-
-## Workspace cleanup
-
-Open decisions (UI primary for external share, ISZE_Dashboard merge): [`ISZE_Cleanup_Plan.md`](ISZE_Cleanup_Plan.md)
+- **Do not quote externally until closed:** `03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md` — live priorities are interval-aware PMS (flag C, queue item 5) and returns confirmation (flag H, judgment call not ERP-confirmed).
+- **Mode B only:** leakage / list-to-pocket euros, pricing history findings, action-ledger stakes. Mode A needs the §2 sign-off.
+- **Language:** Mode A never uses internal nicknames or personal names — see `AGENTS.md` § External IML / meeting language.
+- **Workspace cleanup:** open items in [`ISZE_Cleanup_Plan.md`](ISZE_Cleanup_Plan.md).

@@ -9,7 +9,9 @@ Layout (numbered, preferred):
 
 from __future__ import annotations
 
+import json
 import os
+from datetime import datetime
 from functools import lru_cache
 from pathlib import Path
 from typing import Optional
@@ -181,10 +183,19 @@ AIM_WORKBOOK_CANDIDATES = [
 
 BETA_MODE = os.getenv("PRISM_BETA", "false").lower() == "true"
 
-# Internal-only content gate (docs/DASHBOARD_IA.md §6). Default OFF — the app
-# is MD-safe unless launched with PRISM_INTERNAL=true (dealer leakage, attach
-# lift, elasticity, demand-flow Sankey, aftermarket scrape).
-INTERNAL_MODE = os.getenv("PRISM_INTERNAL", "false").lower() == "true"
+
+def is_internal_mode() -> bool:
+    """True only when launched with PRISM_INTERNAL=true.
+
+    Read at call time (not import time) so pages and tests see the live env.
+    Default OFF: dealer leakage, attach, elasticity, demand-flow Sankey, and
+    aftermarket scrape stay off the distributor-facing app.
+    """
+    return os.getenv("PRISM_INTERNAL", "false").lower() in ("true", "1", "yes")
+
+
+# Snapshot for the Home banner (process start). Pages should call is_internal_mode().
+INTERNAL_MODE = is_internal_mode()
 
 # Canonical UIO filenames — no version suffix (version tracked on Changelog sheet inside the file)
 UIO_FILE_PROD = str(_ROOT / "data" / "UIO.xlsx")
@@ -256,7 +267,12 @@ def data_status() -> dict[str, bool]:
         "sales_parquet": SALES_FACT_PARQUET.exists(),
         "sales_csv_derived": SALES_FACT_CSV.exists(),
         "sales_legacy": resolve_first_existing(LEGACY_SALES_CANDIDATES[2:]) is not None,
-        "raw_cy2025": (RAW_SALES_DIR / "CY2025.XLSX").exists(),
+        # CY2024-2025.XLSX supersedes old CY2025.XLSX (DECISIONS 2026-07-03).
+        # Accept either filename so verify stays green after the rename.
+        "raw_cy2025": (
+            (RAW_SALES_DIR / "CY2024-2025.XLSX").exists()
+            or (RAW_SALES_DIR / "CY2025.XLSX").exists()
+        ),
         "raw_cy2023_24": (RAW_SALES_DIR / "CY2023-2024.XLSX").exists(),
         "bvp_dimension": BVP_PN_DIMENSION_CSV.exists(),
         "bvp_pms_capture": PMS_CAPTURE_BY_DB_CSV.exists(),
@@ -269,3 +285,25 @@ def data_status() -> dict[str, bool]:
         "bvp_gps_db": GPS_SPU_BY_DB_CSV.exists(),
         "bvp_aim_exposure": AIM_EXPOSURE_BY_DB_CSV.exists(),
     }
+
+
+@lru_cache(maxsize=1)
+def data_freshness_date() -> str:
+    """Human-readable pipeline snapshot date, read from the verification report.
+
+    Reads ``01_data/00_derived/_verification_report.json`` ``generated_at`` (an
+    ISO timestamp like ``2026-08-18T15:12:22Z``) and formats it as ``18 Aug 2026``.
+    Returns ``"unknown"`` if the report is missing or unreadable. Cached so every
+    page shares a single read.
+    """
+    report = DERIVED_DIR / "_verification_report.json"
+    try:
+        if not report.is_file():
+            return "unknown"
+        with report.open(encoding="utf-8") as fh:
+            payload = json.load(fh)
+        raw = payload.get("generated_at") or ""
+        dt = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+        return f"{dt.day} {dt.strftime('%b %Y')}"
+    except Exception:
+        return "unknown"

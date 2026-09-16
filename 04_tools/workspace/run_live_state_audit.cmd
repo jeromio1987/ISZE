@@ -14,5 +14,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%isze_live_state
 set RC=%ERRORLEVEL%
 echo [%date% %time%] exit=%RC% >> "%LOG%"
 
+REM Decision drift, appended to the brief the audit just wrote. Read-only, always
+REM exits 0, and its own exit code is deliberately not inspected - it must not be
+REM able to change what this task reports.
+echo [%date% %time%] decision-drift start >> "%LOG%"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%check_decision_drift.ps1" -AppendToBrief >> "%LOG%" 2>&1
+echo [%date% %time%] decision-drift done >> "%LOG%"
+
 if "%RC%"=="2" exit /b 0
 exit /b %RC%

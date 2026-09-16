@@ -1,11 +1,11 @@
 # FACTS drift report
 
-**Checked:** 2026-07-27T15:33:59Z
-**Snapshot as-of:** 2026-07-27T15:33:57Z
+**Checked:** 2026-08-25T17:23:39Z
+**Snapshot as-of:** 2026-08-25T17:21:01Z
 
 | Anchor | FACTS value | Pipeline value | Drift | Status |
 |---|---|---|---|---|
-| sales.parts_base_eur | 1.03574e+08 | 1.03574e+08 | 0.00% | ok |
+| sales.parts_base_eur | 1.12089e+08 | 1.12089e+08 | 0.00% | ok |
 | ituk.oil_filter.2023.total.capture_uncapped_pct | 154.4 | 154.4 | 0.00% | ok |
 | ituk.oil_filter.2024.total.capture_uncapped_pct | 83.5 | 83.5 | 0.00% | ok |
 | ituk.oil_filter.2025.total.capture_uncapped_pct | 116.4 | 116.4 | 0.00% | ok |

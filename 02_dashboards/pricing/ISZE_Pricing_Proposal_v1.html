@@ -1,0 +1,1903 @@
+<meta charset="utf-8">
+<title>ISZE FY2027 Pricing Proposal</title>
+<style>
+:root{
+  --ground:#FCFCFB; --surface:#FFFFFF; --sunk:#F5F3F0;
+  --ink:#1A1A1A; --ink2:#5A5A5A; --ink3:#8A827E;
+  --rule:#E4E0DB; --rule2:#D2CCC5;
+  --accent:#CC0E1E;
+  --c1:#C41230; --c2:#C07A00; --c3:#2563C9; --c4:#0F7B4F;
+  --grid:#EAE6E1;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono","SF Mono",Menlo,Consolas,monospace;
+  --measure:68ch;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --ground:#1A1A19; --surface:#212120; --sunk:#252524;
+    --ink:#E8E6E2; --ink2:#A8A29C; --ink3:#7C7671;
+    --rule:#33322F; --rule2:#403E3A;
+    --accent:#E8455C;
+    --c1:#DC3A52; --c2:#C88200; --c3:#3A73D6; --c4:#128A58;
+    --grid:#2C2B29;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#1A1A19; --surface:#212120; --sunk:#252524;
+  --ink:#E8E6E2; --ink2:#A8A29C; --ink3:#7C7671;
+  --rule:#33322F; --rule2:#403E3A;
+  --accent:#E8455C;
+  --c1:#DC3A52; --c2:#C88200; --c3:#3A73D6; --c4:#128A58;
+  --grid:#2C2B29;
+}
+:root[data-theme="light"]{
+  --ground:#FCFCFB; --surface:#FFFFFF; --sunk:#F5F3F0;
+  --ink:#1A1A1A; --ink2:#5A5A5A; --ink3:#8A827E;
+  --rule:#E4E0DB; --rule2:#D2CCC5;
+  --accent:#CC0E1E;
+  --c1:#C41230; --c2:#C07A00; --c3:#2563C9; --c4:#0F7B4F;
+  --grid:#EAE6E1;
+}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding:0 28px 120px}
+p,ul,ol{max-width:var(--measure)}
+p{margin:0 0 1.05em}
+strong{font-weight:650}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* ---- masthead ---- */
+.mast{padding:72px 0 34px;border-bottom:2px solid var(--ink)}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 20px}
+h1{font-size:clamp(38px,6.2vw,68px);line-height:1.02;letter-spacing:-.035em;
+  font-weight:800;margin:0 0 22px;text-wrap:balance;max-width:20ch}
+.standfirst{font-size:20px;line-height:1.5;color:var(--ink2);max-width:56ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink3)}
+.meta b{color:var(--ink2);font-weight:500}
+
+/* ---- sections ---- */
+section{padding-top:58px}
+h2{font-size:clamp(24px,3.2vw,33px);line-height:1.12;letter-spacing:-.028em;
+  font-weight:750;margin:0 0 6px;text-wrap:balance;max-width:24ch}
+h2 .num{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--accent);
+  letter-spacing:.1em;display:block;margin-bottom:11px}
+h3{font-size:18px;letter-spacing:-.012em;font-weight:700;margin:34px 0 9px;
+  max-width:40ch}
+.lede{font-size:18.5px;color:var(--ink2);max-width:60ch;margin:0 0 26px}
+
+/* ---- findings ---- */
+.finds{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);
+  margin:34px 0 0}
+@media(min-width:760px){.finds{grid-template-columns:repeat(3,1fr)}}
+.find{background:var(--surface);padding:24px 22px 26px}
+.find .n{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  color:var(--ink3);text-transform:uppercase}
+.find .big{font-family:var(--mono);font-size:31px;font-weight:600;
+  letter-spacing:-.03em;margin:12px 0 8px;color:var(--accent);
+  font-variant-numeric:tabular-nums}
+.find p{font-size:14.5px;line-height:1.5;color:var(--ink2);margin:0}
+
+/* ---- figures ---- */
+figure{margin:34px 0;border:1px solid var(--rule);background:var(--surface)}
+.fig-h{padding:18px 22px 0}
+.fig-lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink3);margin:0 0 7px}
+.fig-t{font-size:16.5px;font-weight:700;letter-spacing:-.012em;margin:0;max-width:52ch}
+.fig-body{padding:14px 22px 4px;overflow-x:auto}
+figcaption{padding:6px 22px 20px;font-size:13.5px;line-height:1.5;
+  color:var(--ink2);max-width:74ch}
+figcaption b{color:var(--ink);font-weight:650}
+
+.legend{display:flex;flex-wrap:wrap;gap:16px;padding:0 22px 4px;
+  font-family:var(--mono);font-size:11px;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.swatch{width:11px;height:11px;border-radius:2px;flex:none}
+
+details{border-top:1px solid var(--rule);margin:0}
+summary{padding:11px 22px;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);cursor:pointer}
+summary:hover{color:var(--accent)}
+details table{margin:0 22px 20px}
+
+table{border-collapse:collapse;font-size:13.5px;width:calc(100% - 0px)}
+th,td{text-align:left;padding:7px 14px 7px 0;border-bottom:1px solid var(--rule)}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink3);font-weight:500;white-space:nowrap}
+td.n,th.n{text-align:right;font-family:var(--mono);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.tw{overflow-x:auto;margin:26px 0}
+.tw table{min-width:520px}
+
+/* ---- callouts ---- */
+.note{border-left:2px solid var(--accent);padding:3px 0 3px 20px;margin:28px 0;
+  max-width:var(--measure)}
+.note p:last-child{margin-bottom:0}
+.note .h{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 7px}
+
+.blocked{border:1px solid var(--rule);background:var(--sunk);padding:20px 22px;
+  margin:28px 0}
+.blocked .h{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink3);margin:0 0 10px}
+.blocked ul{margin:0;padding-left:20px;font-size:15px;color:var(--ink2)}
+.blocked li{margin-bottom:7px}
+.blocked li:last-child{margin-bottom:0}
+.blocked b{color:var(--ink)}
+
+code{font-family:var(--mono);font-size:.88em;background:var(--sunk);
+  padding:1px 5px;border-radius:2px}
+.eq{font-family:var(--mono);font-size:14px;background:var(--sunk);
+  border:1px solid var(--rule);padding:15px 18px;margin:22px 0;
+  overflow-x:auto;line-height:1.7;max-width:var(--measure)}
+.num{font-variant-numeric:tabular-nums}
+
+.assume{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--c2);border:1px solid currentColor;
+  padding:1px 6px;border-radius:2px;white-space:nowrap;vertical-align:2px}
+
+hr{border:0;border-top:1px solid var(--rule);margin:56px 0 0}
+
+.partdiv{margin:64px 0 -18px;padding-bottom:10px;border-bottom:2px solid var(--ink);
+  font-size:23px;font-weight:750;letter-spacing:-.022em;max-width:none}
+.partdiv span{display:block;font-family:var(--mono);font-size:10.5px;font-weight:500;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+
+/* ---- introduction & contents ---- */
+.intro{padding:44px 0 8px}
+.toc{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);
+  margin:30px 0 8px}
+@media(min-width:720px){.toc{grid-template-columns:1fr 1fr}}
+.toc a{display:block;background:var(--surface);padding:14px 18px;
+  text-decoration:none;color:var(--ink);transition:background .12s}
+.toc a:hover{background:var(--sunk)}
+.toc .tn{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  color:var(--accent);display:block;margin-bottom:4px}
+.toc .tt{font-weight:650;font-size:15px;letter-spacing:-.01em;display:block}
+.toc .td{font-size:13px;color:var(--ink2);display:block;margin-top:3px;
+  line-height:1.42}
+h2{scroll-margin-top:20px}
+
+/* ---- glossary ---- */
+.g{border-bottom:1px dotted var(--ink3);cursor:help;text-decoration:none;
+  color:inherit}
+.g:hover,.g:focus-visible{border-bottom-color:var(--accent);color:var(--accent)}
+#gloss{position:fixed;pointer-events:none;opacity:0;transition:opacity .12s;
+  background:var(--ink);color:var(--ground);font-size:13.5px;line-height:1.5;
+  padding:11px 14px;border-radius:4px;z-index:60;max-width:330px;
+  box-shadow:0 6px 22px rgba(0,0,0,.24)}
+#gloss b{display:block;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;opacity:.62;margin-bottom:5px}
+
+#tip{position:fixed;pointer-events:none;opacity:0;transition:opacity .1s;
+  background:var(--ink);color:var(--ground);font-family:var(--mono);
+  font-size:11.5px;line-height:1.45;padding:7px 10px;border-radius:3px;
+  z-index:50;white-space:nowrap;font-variant-numeric:tabular-nums}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+svg{display:block}
+.ax{font-family:var(--mono);font-size:10.5px;fill:var(--ink3)}
+.vl{font-family:var(--mono);font-size:11px;fill:var(--ink2);
+  font-variant-numeric:tabular-nums}
+.cl{font-family:var(--mono);font-size:11.5px;fill:var(--ink);
+  font-variant-numeric:tabular-nums}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="kicker">ISZE · Vehicle Parts Sales · Proposal v1</p>
+  <h1>Pricing the FY2027 book, and the two models that escape it</h1>
+  <p class="standfirst">The weighted increase is worth €96,000. The wallet sitting at the
+  aftermarket is worth €16 million. This proposal argues we have been optimising the
+  smaller number, and sets out what to do instead.</p>
+  <div class="meta">
+    <span><b>Prepared for</b> HT · MH</span>
+    <span><b>Scope</b> PR00 · ZPR1 · CIS</span>
+    <span><b>Basis</b> CY2025, 18 distributors</span>
+    <span><b>Coverage</b> 14 PMS categories — see §02</span>
+    <span><b>Engine</b> isze_pricing v1.0.0</span>
+  </div>
+</header>
+
+<section class="intro">
+  <h2><span class="num">Inleiding</span>What this document argues, and where to find it</h2>
+
+  <p class="lede">Three claims, in order. First, the class factor cannot see what it
+  needs to see. Second, the money is not where the price round is looking. Third, the
+  two new models are the only place the method can be proven without spending a single
+  basis point of the increase.</p>
+
+  <p>Everything rests on data we hold, and where we do not hold it the engine is built
+  to <em>refuse to act</em> rather than to guess. That is why a full allocation run
+  today moves nothing at all — and why section 04 matters more than section 08.</p>
+
+  <p style="color:var(--ink2);font-size:15px">Terms with a dotted underline —
+  <span class="g" data-g="laspeyres">Laspeyres</span>, for instance — carry an
+  explanation on hover. Click any section below to jump to it.</p>
+
+  <nav class="toc">
+    <a href="#s01"><span class="tn">01</span><span class="tt">What we are actually pricing</span><span class="td">€32.3M by AIM group. Body is the largest block, and nobody has priced it</span></a>
+    <a href="#s02"><span class="tn">02</span><span class="tt">What the formula cannot see</span><span class="td">Why a class factor is blind to competition, demand and lifecycle</span></a>
+    <a href="#s03"><span class="tn">03</span><span class="tt">How everyone else prices</span><span class="td">Documented industry practice — and how often the market moves</span></a>
+    <a href="#s04"><span class="tn">04</span><span class="tt">Where we stand against the market</span><span class="td">Aftermarket position, the OEM benchmark gap, and cost per kilometre</span></a>
+    <a href="#s05"><span class="tn">05</span><span class="tt">Where the money is, within PMS</span><span class="td">€96K of headroom against €16M sitting at the aftermarket</span></a>
+    <a href="#s06"><span class="tn">06</span><span class="tt">What the old way would have given</span><span class="td">Two kinds of cost-plus, and the bridge that separates them</span></a>
+    <a href="#s07"><span class="tn">07</span><span class="tt">Two planes</span><span class="td">Billing versus sell-out, and why the current index is self-biasing</span></a>
+    <a href="#s08"><span class="tn">08</span><span class="tt">How the engine allocates</span><span class="td">A base rate, signed adjustments, and a reason code on every line</span></a>
+    <a href="#s09"><span class="tn">09</span><span class="tt">What the engine does today</span><span class="td">The live run — and the defect an audit caught in it</span></a>
+    <a href="#s10"><span class="tn">10</span><span class="tt">The 3% bind, once position unlocks</span><span class="td">Dormant today, unavoidable the moment a benchmark exists</span></a>
+    <a href="#s11"><span class="tn">11</span><span class="tt">The assumption that dominates</span><span class="td">Replacement mileage — worth 330× the entire tactic debate</span></a>
+    <a href="#s12"><span class="tn">12</span><span class="tt">D-Max 2.2L</span><span class="td">SCR arrives with no predecessor — the largest block of free pricing</span></a>
+    <a href="#s13"><span class="tn">13</span><span class="tt">P700</span><span class="td">The new N-Series. Engines carry over; the gearbox and electronics do not</span></a>
+    <a href="#s14"><span class="tn">14</span><span class="tt">Launch tactics</span><span class="td">Four ways to price a part nobody has bought before</span></a>
+    <a href="#s15"><span class="tn">15</span><span class="tt">Warranty sequencing</span><span class="td">Price when volume is low, then hold while it grows</span></a>
+    <a href="#s16"><span class="tn">16</span><span class="tt">The three price lists</span><span class="td">PR00, Israel, and the CIS grey-import question</span></a>
+    <a href="#s17"><span class="tn">17</span><span class="tt">How this gets audited</span><span class="td">Six layers, and the one that makes the other five mean anything</span></a>
+    <a href="#s18"><span class="tn">18</span><span class="tt">What we need</span><span class="td">Ranked by what each unlocks, not by effort</span></a>
+    <a href="#s19"><span class="tn">19</span><span class="tt">Everything still open</span><span class="td">Blocked data, decisions and unfinished work in one place</span></a>
+    <a href="#s20"><span class="tn">20</span><span class="tt">What this changes</span><span class="td">What the pricing round becomes</span></a>
+  </nav>
+</section>
+
+<section>
+  <h2><span class="num">Summary</span>Three findings</h2>
+  <div class="finds">
+    <div class="find">
+      <p class="n">Finding 01</p>
+      <p class="big">1 : 167</p>
+      <p>Identified price headroom against wallet already lost to the aftermarket.
+      The price round is not where the money is.</p>
+    </div>
+    <div class="find">
+      <p class="n">Finding 02</p>
+      <p class="big">+1.5 → +6.5%</p>
+      <p>The full live spread at a 3% target. Nothing falls, and the only
+      differentiator is parc momentum — competitive position cannot fire until a
+      benchmark exists.</p>
+    </div>
+    <div class="find">
+      <p class="n">Finding 03</p>
+      <p class="big">6.9%</p>
+      <p>Our share of the €7.8M clutch wallet. The P700 dual-clutch makes that
+      category captive for the first time.</p>
+    </div>
+  </div>
+</section>
+
+
+<p class="partdiv"><span>Part I</span>What we are pricing</p>
+<section>
+  <h2><span class="num">01</span>What we are actually pricing</h2>
+  <p class="lede">Everything that follows in sections 04 and 05 is built on the PMS
+  capture model. That model sees fourteen categories. This is what the book actually
+  looks like, in euros.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 01 · CY2025 billed revenue by AIM group</p>
+      <p class="fig-t">Body is the largest group in the book &mdash; and it is the one
+      nobody has priced.</p>
+    </div>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--c4)"></i>Reached by the PMS capture model</span>
+      <span><i class="swatch" style="background:var(--c1)"></i>Not covered at all</span>
+    </div>
+    <div class="fig-body"><div id="ch-scope"></div></div>
+    <figcaption><b>&euro;32,308,208 billed in CY2025, 100% classified</b> &mdash;
+    billing joined to <code>aim_pn_classification.csv</code>. <b>Body Exterior is the
+    single largest group at &euro;5.42M, 16.8% of revenue.</b> Body, lamps, panels and
+    mirrors together come to &euro;5.04M / 15.6%, against <b>&euro;4.10M / 12.7% for
+    the PMS-type sub-groups</b> this entire analysis is built on. Body is bigger than
+    PMS, and it has never been looked at.</figcaption>
+    <details><summary>Show data</summary>
+      <table><thead><tr><th>AIM group</th><th class="n">CY2025 &euro;m</th><th class="n">% of book</th><th>Covered?</th></tr></thead>
+      <tbody>
+        <tr><td><b>Body Exterior</b></td><td class="n">5.42</td><td class="n">16.8</td><td><b>No</b></td></tr>
+        <tr><td>Intake / exhaust / emission</td><td class="n">4.90</td><td class="n">15.2</td><td>No</td></tr>
+        <tr><td>Brakes</td><td class="n">3.19</td><td class="n">9.9</td><td>Partly</td></tr>
+        <tr><td>Maintenance service</td><td class="n">3.10</td><td class="n">9.6</td><td>Partly</td></tr>
+        <tr><td>Electrical</td><td class="n">1.85</td><td class="n">5.7</td><td>No</td></tr>
+        <tr><td>Fuel system</td><td class="n">1.74</td><td class="n">5.4</td><td>No</td></tr>
+        <tr><td>Competitive parts</td><td class="n">1.55</td><td class="n">4.8</td><td>No</td></tr>
+        <tr><td>Repair parts</td><td class="n">1.52</td><td class="n">4.7</td><td>No</td></tr>
+        <tr><td>Steering</td><td class="n">1.49</td><td class="n">4.6</td><td>No</td></tr>
+        <tr><td>Wheels &amp; hub</td><td class="n">1.15</td><td class="n">3.6</td><td>No</td></tr>
+        <tr><td>Engine</td><td class="n">0.72</td><td class="n">2.2</td><td>No</td></tr>
+        <tr><td>Transmission</td><td class="n">0.60</td><td class="n">1.9</td><td>No</td></tr>
+      </tbody></table>
+    </details>
+  </figure>
+
+  <div class="note">
+    <p class="h">Correction to scope</p>
+    <p>The PMS capture model exists because PMS was the programme that needed it. It
+    was never a statement that PMS is the business. On CY2025 billing,
+    <strong>PMS-type categories are &euro;4.10M &mdash; 12.7% of a &euro;32.3M
+    book.</strong></p>
+    <p><strong>Body is larger, at &euro;5.04M.</strong> It is not an edge case at the
+    margin of the model; it is the biggest single thing we sell. And it behaves nothing
+    like a wear part &mdash; insurance-assessed, pattern-part competed, damage-driven
+    rather than mileage-driven. It needs its own benchmark and its own demand logic,
+    not an extension of the filter model. Israel has already raised price complaints
+    there.</p>
+    <p>The top sub-groups make the same point: <b>Panels &euro;2.60M</b>, Sensors
+    &euro;1.98M, <b>Lamps &euro;1.32M</b>, Friction &euro;1.30M, Steering gear
+    &euro;1.14M, Discs &amp; drums &euro;1.07M, Filters &euro;1.03M.</p>
+  </div>
+
+  <div class="blocked">
+    <p class="h">Three data defects found while producing this figure</p>
+    <ul>
+      <li><b><code>cy2025_raw.csv</code> carries an embedded grand-total row.</b>
+      Summing the net value column naively returns &euro;66.0M instead of &euro;32.3M
+      &mdash; a 104% overstatement. The row has no sales type, which is the only way
+      to catch it.</li>
+      <li><b>That embedded total disagrees with its own lines.</b> It reads
+      &euro;33.71M against &euro;32.31M actually present &mdash; a &euro;1.4M / 4.3%
+      gap.</li>
+      <li><b>The part-number columns are transposed.</b> <code>Material</code> holds
+      the part number; <code>Material Number</code> holds the description. Joining on
+      the column named "Material Number" returns <b>zero</b> matches &mdash; which is
+      at least loud. A fuzzy join would have failed silently.</li>
+    </ul>
+  </div>
+</section><section>
+  <h2><span class="num">02</span>What the formula cannot see</h2>
+  <p class="lede">The class factor is a supply-side attribute. It describes what IML
+  calls a part, not what the buyer will pay for it.</p>
+
+  <div class="eq">FOB_EUR = BP_JPY / FX × source_discount
+SP_EUR  = FOB_EUR / class_factor</div>
+
+  <p>The formula is sound and it is not in question here — it is IML-owned and this
+  proposal leaves it untouched. The issue is what sits on top of it. A class factor
+  gives every part in class C a 53% margin whether it costs €2 or €2,000, whether an
+  aftermarket copy exists or not, and whether the buyer is replacing a filter at a
+  planned service or a water pump on a vehicle that is off the road.</p>
+
+  <p>Three consequences follow, and all three are visible in our own data:</p>
+
+  <p><strong>It is blind to competition.</strong> On the categories where we hold a
+  benchmark, our street price ranges from 1.61× to 3.04× the aftermarket. Those are
+  not judgements about brand premium — they are the arithmetic of a factor that was
+  never asked to look outward.</p>
+
+  <p><strong>It has no feedback loop.</strong> FY2026 was a uniform 5.3%. That price
+  change carried no information: no capture rate, no competitive index, no realised
+  margin fed into which parts moved. A pricing system that cannot learn is an
+  indexation rule.</p>
+
+  <p><strong>It is fighting the PMS programme.</strong> The Kosha plan takes VP Sales
+  from €32.3M to €35.3M while GP% falls from 36.2% to 31.3%. That is a volume plan.
+  But price is the only lever the class system operates, and it currently suppresses
+  volume on exactly the competed, high-frequency parts where the capture gap lives.</p>
+</section><section>
+  <h2><span class="num">03</span>How everyone else prices</h2>
+  <p class="lede">No manufacturer publishes its parts pricing method — Toyota, Ford and
+  Nissan treat it as commercial confidence. What is documented is industry practice,
+  from the consultancies and pricing vendors who implement it.</p>
+
+  <h3>The method they have moved away from is ours</h3>
+
+  <p>Cost-plus — a standard markup on landed cost — is described consistently as the
+  legacy approach. Its documented failure mode is worth quoting against our own
+  formula: when an OEM buys a part more cheaply and applies the same markup, it
+  <em>silently becomes cheaper than the competition without knowing it</em>. Our class
+  factor does exactly this, in both directions.</p>
+
+  <p>What replaced it is <strong>market-based and value-based pricing</strong>: the
+  price reflects what the buyer believes the part is worth, informed by continuous
+  competitor intelligence, and set per part rather than per category.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 02 · How an OEM parts book typically sits against the market</p>
+      <p class="fig-t">Roughly four parts in a hundred are actually priced at market.</p>
+    </div>
+    <div class="fig-body"><div id="ch-mis"></div></div>
+    <figcaption>Distribution observed across OEM parts catalogues by a market-pricing
+    vendor. <b>52% are exclusive</b> — no competitor listing exists, so they are
+    premium candidates. 22% sit below market, 22% above, and <b>only 4.1% are
+    competitively priced</b>. <span class="assume">Caveat</span> This is vendor
+    material and the sample is not stated; treat the shape as indicative rather than
+    the decimals as precise. The shape is the point: <b>mispricing is the normal
+    condition of a cost-plus parts book, not an exception.</b></figcaption>
+  </figure>
+
+  <h3>Where OEMs deliberately take margin</h3>
+
+  <p>Two lifecycle positions come up repeatedly, and both are already in this
+  proposal:</p>
+
+  <p><strong>New parts</strong> — no third party has tooled for them yet, so there is
+  no competitive ceiling. This is the launch book in section 14, and it is standard
+  practice rather than an aggressive idea.</p>
+
+  <p><strong>Parts leaving production</strong> — competitors stop manufacturing them
+  because volumes no longer justify it, and scarcity returns pricing power to the OEM.
+  Worth noting because you raised end-of-production parts as a source of large
+  percentage increases. <strong>They are not an accounting artefact. Taking margin
+  there is deliberate industry practice.</strong> That does not remove the need to
+  separate those lines from ISZE decisions in the distributor conversation, but it
+  does mean the position is defensible.</p>
+
+  <p>One further point argues against part of our own launch logic. Aftermarket demand
+  is documented as materially less price-elastic than retail demand, because a part is
+  <em>need-to-have</em> and downtime carries its own cost. The literature is explicit
+  that loss-leader promotions on such parts erode margin on items the customer was
+  going to buy anyway. <strong>That is an argument for the split tactic and against
+  the habit tactic applied broadly</strong> — buy the habit on genuinely competed wear
+  parts, never on parts the customer has no choice about.</p>
+
+  <h3>How often they adjust</h3>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 03 · Price changes per year, by pricing method</p>
+      <p class="fig-t">We change prices once. The competitors we are measured against
+      change them continuously.</p>
+    </div>
+    <div class="fig-body"><div id="ch-cad"></div></div>
+    <figcaption>Traditional cost-plus adjusts <b>annually at most</b>; some
+    manufacturers have moved to <b>three times a year</b>; market-based pricing
+    requires <b>continuous monitoring</b> because third-party vendors change prices
+    constantly. Online aftermarket retailers — AUTODOC, kfzteile24, Oscaro — run
+    <b>algorithmic dynamic repricing</b>. Dots are indicative of cadence, not literal
+    change counts.</figcaption>
+  </figure>
+
+  <div class="note">
+    <p class="h">The uncomfortable arithmetic</p>
+    <p>A price set once a year is, in a moving market, the right price on the day it
+    is set and drifting on the other 364. Our competitive position is not a number we
+    choose annually — it is a number the market re-decides every week while our list
+    stands still.</p>
+    <p>This does not argue for repricing ISZE continuously; distributor relationships
+    and SAP make that impractical. It argues for <strong>separating the annual list
+    revision from a quarterly competitive review</strong>, which is the cadence this proposal recommends: annual list revision by IML,
+    quarterly competitive review by ISZE.</p>
+  </div>
+
+  <div class="tw">
+  <table><thead><tr><th>Claim</th><th class="n">Figure</th><th>How much weight to give it</th></tr></thead>
+  <tbody>
+    <tr><td>Profit uplift from a 1% price improvement</td><td class="n">up to 7%</td>
+      <td>Standard pricing economics, follows from margin arithmetic. Defensible</td></tr>
+    <tr><td>Parts gross margin vs new-equipment margin</td><td class="n">30–50% vs 15–25%</td>
+      <td>Widely reported. Consistent with our own 44.3% network GP</td></tr>
+    <tr><td>Parts and service share of OEM profit</td><td class="n">up to 40%</td>
+      <td>Widely reported</td></tr>
+    <tr><td>Revenue uplift from market-based pricing in year one</td><td class="n">~21%</td>
+      <td><b>Vendor marketing claim.</b> No methodology given. Do not repeat to IML</td></tr>
+  </tbody></table>
+  </div>
+
+  <p style="color:var(--ink2);font-size:15px">Sources: McKinsey on aftermarket pricing;
+  Syncron on OEM versus retail pricing approaches; MARKT-PILOT on market-based parts
+  pricing; Quanos on spare-parts pricing cadence; BCG on European aftermarket
+  e-commerce. Full links at the foot of this page.</p>
+</section>
+<p class="partdiv"><span>Part II</span>Where we stand</p>
+<section>
+  <h2><span class="num">04</span>Where we stand against the aftermarket</h2>
+  <p class="lede">Genuine street price is list × 1.40 distributor margin × 1.275 dealer
+  margin = ×1.785. Measured against the Eucon competitor average.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 04 · ISZE street price as a multiple of aftermarket street</p>
+      <p class="fig-t">Every benchmarked PMS category sits above the policy premium,
+      most of them far above.</p>
+    </div>
+    <div class="fig-body"><div id="ch-pos"></div></div>
+    <figcaption>Bar length is the multiple. The vertical rule sits at 1.40× purely
+    as a visual reference — <span class="assume">Placeholder</span>
+    <b>it is not a policy and nothing in this proposal prices off it.</b> We do not
+    have a defensible premium target for any category, which is the subject of the
+    second half of this section. Only categories with n≥3 benchmark observations are
+    shown.</figcaption>
+    <details><summary>Show data</summary>
+      <table><thead><tr><th>Category</th><th class="n">Index vs IAM</th><th class="n">n</th><th class="n">Captured €</th></tr></thead>
+      <tbody>
+        <tr><td>Cabin / blower filter</td><td class="n">3.04×</td><td class="n">3</td><td class="n">355,364</td></tr>
+        <tr><td>Air filter</td><td class="n">2.77×</td><td class="n">3</td><td class="n">778,814</td></tr>
+        <tr><td>Fuel filter</td><td class="n">2.46×</td><td class="n">3</td><td class="n">716,773</td></tr>
+        <tr><td>Brake pads</td><td class="n">2.38×</td><td class="n">3</td><td class="n">1,248,370</td></tr>
+        <tr><td>Brake rotors</td><td class="n">1.61×</td><td class="n">3</td><td class="n">1,295,198</td></tr>
+      </tbody></table>
+    </details>
+  </figure>
+
+  <p>Two cautions on this chart, both of which matter for how it is used. Eucon covers
+  44 part numbers network-wide, so a category median rests on three observations and
+  the spread inside a category exceeds 2× — one fuel filter reads 2.46×, another
+  reads 1.20×. And it will appear to contradict the competitiveness dashboard, which
+  shows D-Max PMS parts at 0.66–0.77×. Both are correct: that dashboard measures D-Max
+  at authorised-service-centre level, this measures the network against independent
+  aftermarket. They are different comparisons.</p>
+
+  <h3>We are benchmarking against the wrong competitor</h3>
+
+  <p>Everything above measures us against the <em>independent aftermarket</em>. That
+  tells us where we lose a transaction. It does not tell us where we lose the
+  vehicle — and with it the whole parts annuity behind it.</p>
+
+  <p>A fleet buyer choosing between an N75 and a Canter compares running cost
+  including parts. A tender scores a parts basket. In both cases the reference is
+  another manufacturer's genuine part, not a pattern part.
+  <strong>The aftermarket is the floor. The competitor OEM is the benchmark.
+  We measure only the floor.</strong></p>
+
+  <p>This is why the premium target in this engine is not a flat rate, and why it
+  currently does nothing at all. Every category carries a value <em>and a basis</em>,
+  and a category whose basis is unbenchmarked does not move:</p>
+
+  <div class="eq">policy_premium:
+  by_category:
+    brake_pad: {value: 1.40, basis: placeholder}
+require_basis: [oem_benchmark, iam_derived]</div>
+
+  <p>Run the allocation today and <strong>δ<sub>position</sub> fires on nothing</strong>
+  — <code>n_unbenchmarked_premium: 213</code>. Not one line moves because of where it
+  sits against the market. That is the correct output, not a defect: a premium nobody
+  has measured is a guess with a decimal point, and the engine must not launder it into
+  a target. What still differentiates the book is parc momentum, covered in section
+  09 — so the result is a smarter uniform increase, not a repricing.</p>
+
+  <div class="note">
+    <p class="h">A second unknown, and it is testable</p>
+    <p>We do not know whether IML has already embedded a premium in BP_JPY, or
+    whether it varies by part type. Layering a flat ISZE premium on top of an
+    unknown IML one compounds two errors.</p>
+    <p>This can be checked: for parts where we hold both BP_JPY and an external
+    benchmark, examine whether the implied street premium varies systematically by
+    part type in a way the class factor does not explain. If BP_JPY is clean cost,
+    the premium should be broadly flat within a class. If IML has already loaded
+    certain categories, it will not be. <strong>That test should run before we set
+    any target.</strong></p>
+  </div>
+
+  <h3>What an OEM comparison would take — four steps</h3>
+
+  <div class="tw">
+  <table><thead><tr><th class="n">Step</th><th>Action</th><th>Effort</th><th>Gives us</th></tr></thead>
+  <tbody>
+    <tr><td class="n">1</td><td><b>Manual basket study.</b> ~20 service parts across
+      three competitors at 7.5t — Canter, Daily/Eurocargo, DAF LF — matched by
+      application, priced from genuine-parts retailers</td><td>~2 weeks, no licence</td>
+      <td>First real premium per category. Enough to unlock the engine on PMS</td></tr>
+    <tr><td class="n">2</td><td><b>Extend the existing scrapers.</b> KS, Tranzparts,
+      TMC and Autodoc already list genuine Mercedes, Iveco and DAF parts alongside
+      aftermarket — we simply do not capture those rows</td><td>Parser change</td>
+      <td>Continuous OEM coverage from infrastructure we already run</td></tr>
+    <tr><td class="n">3</td><td><b>Cross-reference licence</b> (TecDoc or equivalent)
+      for application-based equivalence mapping</td><td>Licence cost</td>
+      <td>Makes it systematic and repeatable rather than a one-off study</td></tr>
+    <tr><td class="n">4</td><td><b>Tender mining.</b> Our tender scraper already runs
+      weekly; tender documents sometimes carry competitor parts-basket pricing</td>
+      <td>Incremental</td><td>Real transacted basket comparisons</td></tr>
+  </tbody></table>
+  </div>
+
+  <h3>One route is closed, and one is open now</h3>
+
+  <p><strong>Closed:</strong> bridging equivalence through aftermarket
+  cross-references. The hope was that a single Febi or Bosch part listing both an
+  Isuzu OE number and a competitor OE number would give us the match for free.
+  Checked against a real part — oil filter 8982705240 — and the cross-reference lists
+  twelve aftermarket brands and <em>no</em> competitor OE numbers at all. That is not
+  an omission: a filter for a 4JJ1 does not fit a Fuso 4M42. <b>Competing OEMs' parts
+  are genuinely not interchangeable, so no free equivalence bridge exists.</b></p>
+
+  <p><strong>Open, and arguably better:</strong> compare the <em>job</em>, not the
+  part. Capped-price service plans are published, cover the whole basket, and sidestep
+  equivalence entirely — you are matching a service interval, not a part number. They
+  are also precisely what a fleet buyer and a tender actually score.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 05 · Published service-plan cost per 100,000 km</p>
+      <p class="fig-t">The longer interval does not win. We are the most expensive of
+      the three to maintain.</p>
+    </div>
+    <div class="fig-body"><div id="ch-oem"></div></div>
+    <figcaption>Australian capped-price servicing — the one public, like-for-like,
+    whole-market comparison available. <b>D-Max costs 18.5% more per kilometre than
+    Ranger and 11.9% more than HiLux.</b> Note what defeats the intuition: HiLux
+    services twice as often (10,000 km against our 15,000) and is <em>still</em>
+    cheaper per kilometre, because its per-visit price is around $268 against our
+    $449. <span class="assume">Caveat</span> Australia, not Europe; plans bundle parts
+    <em>and</em> labour and may be subsidised. Directional, not a parts-price
+    comparison — but directionally it is not flattering.</figcaption>
+    <details><summary>Show data</summary>
+      <table><thead><tr><th>Model</th><th class="n">Per service</th><th class="n">Interval</th><th class="n">Services / 100k km</th><th class="n">Per 100k km</th></tr></thead>
+      <tbody>
+        <tr><td><b>Isuzu D-Max</b></td><td class="n">$449</td><td class="n">15,000 km</td><td class="n">6.67</td><td class="n"><b>$2,993</b></td></tr>
+        <tr><td>Toyota HiLux</td><td class="n">~$268</td><td class="n">10,000 km</td><td class="n">10.00</td><td class="n">$2,675</td></tr>
+        <tr><td>Ford Ranger</td><td class="n">$379</td><td class="n">15,000 km</td><td class="n">6.67</td><td class="n">$2,527</td></tr>
+      </tbody></table>
+    </details>
+  </figure>
+
+  <div class="note">
+    <p class="h">This changes where the benchmark programme should start</p>
+    <p>Not with part prices. <strong>Start with published service-plan pricing</strong>
+    — it is free, comparable, needs no licence, and it is the number that decides a
+    vehicle purchase. The parts annuity follows the vehicle.</p>
+    <p>It also reframes the D-Max interval change. Going from 20,000 to 15,000 km
+    raises our parts revenue per vehicle by a third — and simultaneously
+    <strong>worsens our cost-per-kilometre position against exactly these
+    competitors</strong>. The same fact is an opportunity on one measure and an
+    exposure on the other, and only one of the two is currently being managed.</p>
+  </div>
+
+  <p>The genuine difficulty is <strong>equivalence, not price collection</strong>.
+  An Isuzu oil filter cannot be compared to a Mercedes oil filter by name — it has
+  to be "the filter fitted to a 7.5-tonne Canter with a 3.0-litre engine" against
+  "the filter fitted to an N75 with a 3.0-litre engine." That is an
+  application-level match, which is what step 3 buys and what steps 1 and 2 have to
+  do by hand.</p>
+
+  <div class="blocked">
+    <p class="h">Blind spot — body parts</p>
+    <ul>
+      <li>Body is <b>not among the fourteen PMS categories</b> and does not appear in
+      the action map at all. The engine has never seen it.</li>
+      <li>It is also where <b>Israel has raised actual price complaints</b>.</li>
+      <li>And it needs a third benchmark again — body competes with pattern parts and
+      insurance assessors, not with OEM genuine or with mainstream aftermarket.</li>
+      <li>Marked <code>excluded_blind_spot</code> in the engine so nothing prices it
+      until the category is properly covered.</li>
+    </ul>
+  </div>
+</section><section>
+  <h2><span class="num">05</span>Where the money is, within PMS</h2>
+  <p class="lede">213 distributor × category cells, CY2025, across the fourteen PMS
+  categories. Read as one slice of the book, not the book.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 06 · Captured vs at risk, by capture zone</p>
+      <p class="fig-t">The raise zone is where price can move. It is also the smallest
+      thing on this chart.</p>
+    </div>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--c4)"></i>Captured revenue</span>
+      <span><i class="swatch" style="background:var(--c1)"></i>Wallet at aftermarket</span>
+    </div>
+    <div class="fig-body"><div id="ch-zones"></div></div>
+    <figcaption><b>Zones follow capture rate:</b> raise ≥80%, contested 45–80%,
+    defend &lt;45%. Headroom is a +5% scenario applied to captured revenue in the
+    raise zone only. <b>At risk</b> is modelled TAM minus captured — the full
+    theoretical gap, not what is winnable. Discount it heavily and the asymmetry
+    still holds.</figcaption>
+    <details><summary>Show data</summary>
+      <table><thead><tr><th>Zone</th><th class="n">Cells</th><th class="n">Captured €</th><th class="n">Headroom €</th><th class="n">At risk €</th></tr></thead>
+      <tbody>
+        <tr><td>raise (≥80%)</td><td class="n">34</td><td class="n">1,922,551</td><td class="n">96,124</td><td class="n">—</td></tr>
+        <tr><td>contested (45–80%)</td><td class="n">33</td><td class="n">1,257,523</td><td class="n">—</td><td class="n">964,182</td></tr>
+        <tr><td>defend (&lt;45%)</td><td class="n">146</td><td class="n">2,587,951</td><td class="n">—</td><td class="n">16,049,637</td></tr>
+      </tbody></table>
+    </details>
+  </figure>
+
+  <div class="note">
+    <p class="h">The reframe</p>
+    <p>The question is not "which parts can absorb more than 3%." It is
+    <strong>how the 3% gets spent buying back defend-zone volume, funded from the
+    34 raise cells.</strong></p>
+  </div>
+</section>
+<p class="partdiv"><span>Part III</span>The method</p>
+<section>
+  <h2><span class="num">06</span>What the old way would have given</h2>
+  <p class="lede">Judging a new method on its own is not judging it. The engine has
+  to be measured against the alternative — and the alternative turns out not to be
+  one thing.</p>
+
+  <p>"Cost-plus" describes two different procedures that currently point in opposite
+  directions:</p>
+
+  <div class="tw">
+  <table><thead><tr><th>Method</th><th>What it does</th><th>Who chooses the increase</th></tr></thead>
+  <tbody>
+    <tr><td><b>Strict cost-plus</b></td><td>Re-derive SP = FOB / class factor each
+      year and accept the result</td><td>Cost and FX. Nobody chooses</td></tr>
+    <tr><td><b>Target markup</b></td><td>Apply a chosen percentage to last year's
+      price</td><td><b>We do.</b> It is a margin decision</td></tr>
+  </tbody></table>
+  </div>
+
+  <p>The difference is not academic. Holding IML base price constant, FX moving from
+  146.6 to 163.7 JPY/EUR makes the euro cost of a part <em>fall</em>. Strict cost-plus
+  would therefore have <strong>cut prices by about 10.4%</strong> over that period. The
+  applied increase was +5.3%.</p>
+
+  <p>Both can be true — IML base prices may have risen enough to cover the gap. The
+  point is that <strong>nobody currently knows the split</strong>, and a distributor
+  asking "why has this gone up when the yen moved in our favour?" is asking a fair
+  question we cannot presently answer per part.</p>
+
+  <div class="note">
+    <p class="h">The price bridge</p>
+    <p>Any price movement decomposes exactly into five terms:</p>
+    <p style="font-family:var(--mono);font-size:13px;margin:14px 0;line-height:1.8">
+    prior price<br>
+    &nbsp;&nbsp;+ IML base price effect<br>
+    &nbsp;&nbsp;+ FX effect<br>
+    &nbsp;&nbsp;+ source mix effect &nbsp;<span style="color:var(--ink3)">(Japan vs Thailand)</span><br>
+    &nbsp;&nbsp;+ class factor effect<br>
+    &nbsp;&nbsp;+ <b>ISZE decision</b> &nbsp;<span style="color:var(--ink3)">(the residual — the only part we chose)</span><br>
+    = new price</p>
+    <p>It reconciles by construction, so the terms sum to the headline percentage
+    rather than approximately to it. <strong>That residual is the number worth being
+    able to state.</strong> Everything above it is pass-through of decisions taken
+    elsewhere, and saying so precisely is a stronger position than absorbing the whole
+    increase as though it were ours.</p>
+  </div>
+
+  <p>The module also runs turnover and margin under each policy — frozen, strict
+  cost-plus, target markup, engine. One deliberate limitation:
+  <strong>volume is held constant.</strong> With no measured
+  <span class="g" data-g="elasticity">elasticity</span>, any volume response would
+  decide the comparison by assumption rather than by evidence. It becomes a genuine
+  backtest once sell-out history accumulates — the same function, with a real volume
+  term.</p>
+
+  <div class="blocked">
+    <p class="h">What this needs before it produces real numbers</p>
+    <ul>
+      <li><b>BP_JPY history</b> per part, one snapshot per revision</li>
+      <li><b>Dated PR00 snapshots</b> — the same blocker as the realisation waterfall</li>
+      <li>FX and class factors by year, which we already hold</li>
+    </ul>
+  </div>
+</section><section>
+  <h2><span class="num">07</span>Two planes — and why one of them is bent</h2>
+  <p class="lede">Everything so far runs on what ISZE invoices to distributors. That
+  measures distributor stocking behaviour, not end-market demand. Sell-out data from
+  January 2025 adds the second plane.</p>
+
+  <p>This is usually described as "more data." It is more than that — it corrects a
+  defect in the current measurement.</p>
+
+  <div class="note">
+    <p class="h">The weighted increase is currently self-biasing</p>
+    <p>The declared increase is a
+    <span class="g" data-g="laspeyres">Laspeyres index</span> weighted on the last
+    twelve months of ISZE→DB volume. Announce an increase with notice, and
+    distributors buy ahead of it. That <span class="g" data-g="pre-buy">pre-buy</span>
+    inflates recorded volume on precisely the parts that went up — which then
+    <strong>overweights those same parts in next year's index</strong>.</p>
+    <p>The measuring instrument is bent by the action it measures. A dealer does not
+    pre-buy on an ISZE price letter, so weighting on sell-out breaks the loop.</p>
+  </div>
+
+  <h3>Two more things the second plane settles</h3>
+
+  <p><strong>Pass-through becomes observable.</strong> A 3% list increase is currently
+  assumed to reach the market as 3%. It may arrive as 0% on competed lines the
+  distributor absorbs, and as 6% on captive lines where they take the opportunity.
+  Those are opposite problems needing opposite responses, and today we cannot tell
+  them apart.</p>
+
+  <p><strong>The street factor stops being a guess.</strong> We assume list × 1.40
+  distributor × 1.275 dealer = ×1.785, flat, across eighteen distributors whose gross
+  margins range from 40.8% to 47.1%. A flat factor across that spread is not a
+  measurement. Sell-out gives the real number per distributor per category.</p>
+
+  <p>Distributors set their own resale prices and this changes nothing about that —
+  the factor is an internal estimate used to compare our position against the
+  aftermarket, not a price we expect or recommend anyone to charge.</p>
+
+  <h3>The design rule</h3>
+
+  <p style="font-size:19px;line-height:1.45;max-width:44ch;margin:22px 0;
+    letter-spacing:-.015em"><strong>Optimise on the sell-out plane. Constrain on the
+  billing plane.</strong></p>
+
+  <p>Demand evidence, competitive position and elasticity come from what dealers
+  actually buy. The negotiated weighted increase stays declared and measured on
+  ISZE→DB, because that is the number a distributor can audit. The bridge between the
+  two planes is itself measurable, with its own diagnostics — pass-through, stocking
+  swing, and channel margin.</p>
+
+  <p>Until sell-out lands, every function degrades to the billing plane and records
+  its basis as <code>MISSING</code> rather than quietly substituting.</p>
+</section><section>
+  <h2><span class="num">08</span>How the engine allocates</h2>
+  <p class="lede">Every line receives a base rate plus a set of named, signed
+  adjustments, each traceable to a source file. A distributor query on any line
+  resolves to a reason code.</p>
+
+  <div class="eq">Δ(pn) = Δ_base + δ_position + δ_momentum + δ_lifecycle + δ_market
+
+subject to   Δ_floor ≤ Δ(pn) ≤ Δ_cap          per-line guardrail
+             Σ(w · Δ) = Δ_target              w = L12M revenue share</div>
+
+  <p>The base is solved <em>jointly</em> with the caps by bisection, not before them.
+  Clamping outliers shifts the weighted index, so solving the two separately lets the
+  declared increase drift off target — the engine lands on 3.0000% exactly.</p>
+
+  <h3>The two-gate rule</h3>
+  <div class="tw">
+  <table><thead><tr><th>Wallet position</th><th>Street position</th><th>Action</th><th>Reason</th></tr></thead>
+  <tbody>
+    <tr><td>Captive</td><td>any</td><td><b>+</b></td><td>The 34 raise cells. This funds everything else</td></tr>
+    <tr><td>Contested</td><td>below market</td><td>+</td><td>Room to take</td></tr>
+    <tr><td>Contested</td><td>above market</td><td>−</td><td>—</td></tr>
+    <tr><td>Lost</td><td>above market</td><td><b>− −</b></td><td>The €16M defend zone. Brakes live here</td></tr>
+    <tr><td>Lost</td><td>below market</td><td><b>0 · investigate</b></td><td>Cheap and still losing ⇒ not a price problem</td></tr>
+    <tr><td>any</td><td>no benchmark</td><td>0</td><td>Never move blind</td></tr>
+  </tbody></table>
+  </div>
+
+  <p>The fifth row matters more than it looks. Where we are already below market and
+  still holding under 45% of the wallet, price is not the constraint — availability,
+  lead time or dealer behaviour is. Cutting further burns margin on a problem price
+  cannot solve.</p>
+
+  <p><strong>None of these gates can fire today.</strong> Each requires a benchmarked
+  premium target for the category, and no category has one — so every row currently
+  resolves to hold. The machinery is built and tested; it is waiting on the OEM basket
+  study in section 04, not on further modelling.</p>
+
+  <div class="blocked">
+    <p class="h">What this engine deliberately does not do</p>
+    <ul>
+      <li><b>No elasticity coefficient.</b> Not measurable at ISZE level — we sit too
+      far from the market, and the existing file measures distributor stocking, not
+      end-market response.</li>
+      <li><b>No realisation waterfall.</b> We hold one PR00 snapshot. Applied backwards
+      it yields 0.8865 → 0.8956 → 0.9185 → 0.9416, which is the 2026 increase read in
+      reverse, not leakage, and must not be presented as such.</li>
+      <li><b>No discount-versus-SPA decomposition.</b> The billing extract carries
+      net value only — no gross, no condition types.</li>
+      <li><b>No action on 522 part numbers</b> billed with no PR00 entry: €4.96M, 15.1%
+      of CY2025 revenue. Plus 800 PNs / €1.82M on superseded numbers. Data fix
+      precedes pricing.</li>
+    </ul>
+  </div>
+</section><section>
+  <h2><span class="num">09</span>What the engine does today, and what it refuses to do</h2>
+  <p class="lede">A live run, not a design intention. This is what the current
+  configuration actually produces, and it is not what an earlier draft of this document
+  claimed.</p>
+
+  <div class="tw">
+  <table><thead><tr><th>Measure</th><th class="n">Live at 3% target</th><th>Meaning</th></tr></thead>
+  <tbody>
+    <tr><td>Weighted increase delivered</td><td class="n">3.0000%</td><td>Exact, solved jointly with caps</td></tr>
+    <tr><td>Base rate</td><td class="n">+3.51%</td><td>What a line with no signal receives</td></tr>
+    <tr><td>Range across all lines</td><td class="n">+1.51% to +6.51%</td><td><b>Nothing goes down</b></td></tr>
+    <tr><td>Cells with no benchmarked premium</td><td class="n">213 of 213</td><td>δ<sub>position</sub> never fires</td></tr>
+    <tr><td>Cells moved by momentum</td><td class="n">60</td><td>θ<sub>parc</sub> is the only live differentiator</td></tr>
+    <tr><td>Momentum increases vetoed</td><td class="n">10</td><td>€407,587 blocked from rising</td></tr>
+  </tbody></table>
+  </div>
+
+  <div class="note">
+    <p class="h">Correction to an earlier draft</p>
+    <p>A previous version of this document said the engine "holds all 213 cells flat."
+    <strong>That is no longer true and should not be repeated.</strong> Competitive
+    position gates are idle, but parc momentum is wired and moves 60 cells. The book is
+    differentiated — just on demand, not on competitiveness.</p>
+  </div>
+
+  <h3>Which is a problem, and it has been fixed</h3>
+
+  <p>Gating position on evidence while leaving momentum ungated produced an
+  indefensible result: the engine would raise brake pads <strong>6.5%</strong> because
+  the parc was growing, on a category we can see sits at <strong>2.38× the
+  aftermarket</strong>. It declined to act on the evidence it had, and acted on the
+  evidence that says nothing about willingness to pay.</p>
+
+  <p>The principle now applied: <strong>evidence sufficient to veto is a lower bar than
+  evidence sufficient to act.</strong> A street reading too thin to justify cutting a
+  line is still good enough to stop momentum pushing it up. Ten cells — air filter at
+  2.77×, cabin filter 3.04×, fuel filter 2.46×, brake pads 2.38×, brake rotors 1.61× —
+  now receive the base rate only.</p>
+
+  <div class="blocked">
+    <p class="h">What this means for the honest reading of the engine</p>
+    <ul>
+      <li><b>Today it is a smarter uniform increase, not a repricing.</b> Three momentum
+      buckets spread around a base rate. That is better than one flat number, and a long
+      way short of what it is designed to do.</li>
+      <li><b>No competitive correction happens at all.</b> Not one line moves because of
+      where it sits against the market, because no category has a benchmarked target.</li>
+      <li><b>A reason code needs renaming before anything distributor-facing.</b> All 213
+      cells carry <code>NO_EVIDENCE_HOLD</code> while averaging +3.4%. The label says hold
+      and the behaviour is a rise. Split it into <code>POSITION_HOLD</code> and
+      <code>THETA_MOVE</code>.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">10</span>The 3% bind, once position unlocks</h2>
+  <p class="lede">The weighted increase is a Laspeyres index on last-twelve-months
+  volume. Correcting our competitive position and delivering 3% turn out to pull in
+  opposite directions.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 07 · What each target rate costs</p>
+      <p class="fig-t">Because the differentiation is net-negative, the base rate must
+      climb — and it lands on lines we cannot benchmark.</p>
+    </div>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--c1)"></i>Base rate</span>
+      <span><i class="swatch" style="background:var(--c4)"></i>Growing parc (θ+)</span>
+      <span><i class="swatch" style="background:var(--c2)"></i>Declining parc (θ−)</span>
+    </div>
+    <div class="fig-body"><div id="ch-trade"></div></div>
+    <figcaption>At a <b>3% target the base rate is +3.51%</b> and the full range across
+    every line is <b>+1.51% to +6.51%</b>. <b>Nothing goes down.</b> The only
+    differentiation is parc momentum — three buckets around a base — because no category
+    has a benchmarked premium, so δ<sub>position</sub> never fires. Even at a
+    <b>0% target</b> the base is +0.51% and only declining-parc lines fall, by 1.49%.
+    <b>The competitive bind described below is therefore dormant, not solved:</b> brakes
+    are not being corrected because nothing is correcting anything.</figcaption>
+    <details><summary>Show data</summary>
+      <table><thead><tr><th class="n">Target %</th><th class="n">Base %</th><th class="n">Growing %</th><th class="n">Declining %</th></tr></thead>
+      <tbody id="tb-trade"></tbody></table>
+    </details>
+  </figure>
+
+  <div class="note">
+    <p class="h">Recommendation</p>
+    <p>Either the 3% comes down, or brake correction waits, or benchmark coverage
+    expands so the burden spreads across more lines. <strong>These are the only three
+    options and the choice is commercial, not analytical.</strong></p>
+  </div>
+</section>
+<p class="partdiv"><span>Part IV</span>The two new models</p>
+<section>
+  <h2><span class="num">11</span>The assumption that dominates everything</h2>
+  <p class="lede">Replacement mileage. It moves the answer by two orders of magnitude
+  more than the choice of pricing tactic.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 08 · Ten-year GP under the replacement-mileage fork</p>
+      <p class="fig-t">A 60 to 75 point spread, against 0.15% for the entire tactic
+      debate.</p>
+    </div>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--c3)"></i>D-Max 2.2L</span>
+      <span><i class="swatch" style="background:var(--c2)"></i>P700</span>
+    </div>
+    <div class="fig-body"><div id="ch-fork"></div></div>
+    <figcaption>Deviation from the base fork, best tactic per model. P700 swings wider
+    because at 60,000 km a year the interval bites three times as hard as on a pickup.
+    <b>Tuning pricing tactics against uncalibrated mileages is polishing the wrong
+    thing.</b></figcaption>
+  </figure>
+
+  <p>Across 54 parameter combinations the hierarchy is unambiguous:</p>
+
+  <div class="tw">
+  <table><thead><tr><th>Assumption</th><th class="n">Swings the answer by</th></tr></thead>
+  <tbody>
+    <tr><td><b>Replacement mileage</b></td><td class="n"><b>94.5%</b></td></tr>
+    <tr><td>Aftermarket entry year</td><td class="n">2.6%</td></tr>
+    <tr><td>Erosion sensitivity</td><td class="n">1.1%</td></tr>
+    <tr><td>Choice of pricing tactic</td><td class="n">0.28%</td></tr>
+  </tbody></table>
+  </div>
+
+  <p>Replacement mileage is worth roughly <strong>330 times more than the tactic
+  debate</strong>. Every hour spent arguing about launch multipliers before the
+  intervals are calibrated is an hour spent on the fourth-most-important variable.</p>
+
+  <div class="note">
+    <p class="h">This can be measured, not assumed</p>
+    <p>For any existing part number:</p>
+    <p style="font-family:var(--mono);font-size:13.5px;margin:14px 0">implied
+    replacement km = annual km × capture rate ÷ units billed per vehicle-year</p>
+    <p>All three inputs already exist — ITUK sell-out by part number, UIO for parc, and
+    capture by distributor and category. <strong>The capture adjustment is
+    essential:</strong> raw billing over parc gives only the replacements we captured,
+    so in the defend zone the implied interval reads far too long. We would conclude
+    brake pads last 200,000 km when the customer simply bought them elsewhere.</p>
+    <p>Calibrated intervals then transfer directly to carryover architecture on the new
+    models, leaving only the genuinely new parts needing judgement. It doubles as a
+    data-integrity check: an oil filter that comes out at 5,000 km means the capture
+    rate or the parc is wrong.</p>
+  </div>
+</section><section>
+  <h2><span class="num">12</span>D-Max 2.2L — the emissions windfall</h2>
+  <p class="lede">New part numbers carry zero weight in the Laspeyres index. The 3%
+  does not bind on them, and there is no old price for a distributor to compare
+  against.</p>
+
+  <div class="tw">
+  <table><thead><tr><th></th><th>Previous generation</th><th>New generation</th></tr></thead>
+  <tbody>
+    <tr><td>Chassis / engine</td><td>RT56, 4JJ3, RZ4E</td><td><b>RG21, RZ4F-TC, 2.2L</b></td></tr>
+    <tr><td>Aftertreatment</td><td>DPF only</td><td><b>DPF + SCR / AdBlue</b></td></tr>
+    <tr><td>Oil interval</td><td>20,000 km → 1.00 svc/yr</td><td><b>15,000 km → 1.33 svc/yr</b></td></tr>
+  </tbody></table>
+  </div>
+
+  <p><strong>The SCR system is an entirely new set of part families with no
+  predecessor.</strong> DEF pump, DEF injector, SCR catalyst, NOx sensors upstream and
+  downstream. No old part number, therefore no old price, no distributor reference
+  point and no aftermarket equivalent. This is the largest block of genuinely free
+  pricing in the FY2027 cycle and it is available once.</p>
+
+  <p>Second, the shorter interval delivers <strong>33% more service events per vehicle
+  per year</strong> on everything tied to the oil interval — volume growth requiring
+  no commercial action at all. It also means filters are what a distributor touches
+  most often, so filter pricing is the visible basket.</p>
+
+  <div class="note">
+    <p class="h">Where to price up, and where not to</p>
+    <p>Price up on the <strong>AdBlue hardware</strong> — NOx sensors, DEF pump, DEF
+    injector, SCR catalyst. These are failure-driven, expensive, and nobody holds a
+    reference for them. Do <strong>not</strong> price up the <strong>urea
+    filter</strong>: it is a scheduled consumable the dealer sees every service, it is
+    trivial to copy, and it belongs on the visible basket.</p>
+  </div>
+
+  <p style="color:var(--ink2);font-size:15px">The SCR component breakdown is inferred
+  from standard AdBlue architecture rather than read from an Isuzu parts catalogue.
+  Some engine ancillaries may also carry over from RZ4E. Verify against the actual
+  part-number list before quoting.</p>
+</section><section>
+  <h2><span class="num">13</span>P700 — a different windfall entirely</h2>
+  <p class="lede">P700 is the new-generation N-Series: 3.5t, 7.5t and 13.5t chassis,
+  the largest UK product overhaul in thirty years. It replaces the core of our parts
+  business.</p>
+
+  <p>The engines largely carry over — the new 175 PS 3.0-litre sits between the
+  existing 150 PS 3.0 and 190 PS 5.2. And the predecessor already ran SCR: the 5.2-litre
+  4HK1E6C uses DPD plus SCR for Euro VI. <strong>So the AdBlue windfall does not apply
+  here.</strong> Distributors hold reference prices for every one of those parts.</p>
+
+  <p>What is genuinely new is the <strong>ISIM dual-clutch nine-speed gearbox</strong>,
+  the ADAS pack (BSIS, DWS, TSR, TPMS), LED lighting, new cabs, and a 13.5t weight
+  class we have never priced. Which makes the relevant question what the DCT replaces.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 09 · The manual clutch business today, all distributors</p>
+      <p class="fig-t">We see €536K of a €7.78M category. The aftermarket has the rest.</p>
+    </div>
+    <div class="fig-body"><div id="ch-clutch"></div></div>
+    <figcaption>Clutch disc capture <b>3.9%</b> · pressure plate <b>4.8%</b> · clutch
+    booster <b>0.7%</b>. This is the weakest-captured category we have.
+    <b>The dual-clutch converts it into a captive one</b> — there is no aftermarket
+    clutch pack, no aftermarket mechatronic unit, and the fluid service is
+    dealer-specified.</figcaption>
+    <details><summary>Show data</summary>
+      <table><thead><tr><th>Category</th><th class="n">Captured €</th><th class="n">TAM €</th><th class="n">Capture</th></tr></thead>
+      <tbody>
+        <tr><td>Clutch disc</td><td class="n">180,419</td><td class="n">3,323,187</td><td class="n">3.9%</td></tr>
+        <tr><td>Pressure plate</td><td class="n">140,654</td><td class="n">2,123,511</td><td class="n">4.8%</td></tr>
+        <tr><td>Clutch kit</td><td class="n">184,202</td><td class="n">1,140,163</td><td class="n">9.9%</td></tr>
+        <tr><td>Clutch booster</td><td class="n">8,724</td><td class="n">709,672</td><td class="n">0.7%</td></tr>
+        <tr><td>Release bearing</td><td class="n">21,525</td><td class="n">450,491</td><td class="n">3.5%</td></tr>
+        <tr><td>Pilot bearing</td><td class="n">821</td><td class="n">28,122</td><td class="n">2.2%</td></tr>
+        <tr><td><b>Total</b></td><td class="n"><b>536,345</b></td><td class="n"><b>7,775,146</b></td><td class="n"><b>6.9%</b></td></tr>
+      </tbody></table>
+    </details>
+  </figure>
+
+  <h3>Replacement mileage — the DCT fork</h3>
+  <div class="tw">
+  <table><thead><tr><th>Part</th><th class="n">Short<br>urban, laden</th><th class="n">Base</th><th class="n">Long<br>motorway, light</th><th>Type</th></tr></thead>
+  <tbody>
+    <tr><td>Fluid + filter kit</td><td class="n">40,000</td><td class="n">80,000</td><td class="n">120,000</td><td>Scheduled</td></tr>
+    <tr><td>Clutch pack assembly</td><td class="n">200,000</td><td class="n">350,000</td><td class="n">500,000</td><td>Wear</td></tr>
+    <tr><td>Mechatronic unit</td><td class="n">250,000</td><td class="n">400,000</td><td class="n">600,000</td><td>Failure</td></tr>
+    <tr><td>Speed / position sensors</td><td class="n">250,000</td><td class="n">400,000</td><td class="n">550,000</td><td>Failure</td></tr>
+  </tbody></table>
+  </div>
+
+  <p><strong>Clutch packs should outlast the manual clutch they replace.</strong> Wet
+  packs are oil-cooled and shifts are electronically controlled — none of the driver
+  abuse that kills a manual disc at 150–200,000 km on a 7.5-tonne vehicle. Higher value
+  per event, fewer events, no aftermarket equivalent.</p>
+
+  <p><strong>Mechatronic life is coupled to fluid discipline.</strong> Skipped fluid
+  changes are what kill DCT valve bodies. If the vehicle comes to us for the fluid
+  service, the mechatronic sits at the long end of that fork; if it does not, the short
+  end. That is a commercial link between a €200 service item and a €2,800 assembly —
+  and it argues for pricing the fluid service <em>to be taken</em>, not to make margin.</p>
+
+  <p>The fluid interval is <strong>knowable rather than assumable</strong>: it will be
+  stated in the P700 maintenance schedule, the same source that gave us the D-Max
+  20,000→15,000 km finding. The three failure-driven intervals stay uncertain until
+  Israel's fifteen months becomes four or five years.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 10 · P700 — ten-year discounted gross profit by part</p>
+      <p class="fig-t">Three of the top nine have no predecessor at all.</p>
+    </div>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--c1)"></i>New — no predecessor</span>
+      <span><i class="swatch" style="background:var(--c3)"></i>Carryover architecture</span>
+    </div>
+    <div class="fig-body"><div id="ch-p700"></div></div>
+    <figcaption>Base mileage fork, warranty-load tactic. The <b>specification is
+    confirmed</b> — engines and AdBlue carry over, DCT and ADAS are new.
+    <span class="assume">Assumption</span> Part costs and registration volumes remain
+    placeholders, so <b>the ranking is the output here, not the euro amounts</b>. The
+    DCT mechatronic and clutch pack enter directly at rank two and three.</figcaption>
+  </figure>
+</section><section>
+  <h2><span class="num">14</span>Launch tactics</h2>
+  <p class="lede">Launch price is the one decision here that cannot be revisited. An
+  existing part can rise 3% a year forever; a launch price set too low is never
+  recovered.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 11 · D-Max 2.2L — ten-year discounted GP by tactic</p>
+      <p class="fig-t">The top two are separated by 0.15%. The ranking is not the
+      finding.</p>
+    </div>
+    <div class="fig-body"><div id="ch-tac"></div></div>
+    <figcaption>Doing nothing beyond the class factor leaves <b>€17.9M on the table</b>
+    against the best tactic. But the top two — load-then-freeze and split — differ by
+    €106,000 on €72.8M, inside the model's own error bars. <b>They separate on retained
+    share, not on profit:</b> captive share held at year 10 is 0.524 against 0.491, and
+    competitive position 1.93× against 2.13×.</figcaption>
+    <details><summary>Show data</summary>
+      <table><thead><tr><th>Tactic</th><th class="n">GP NPV €</th><th class="n">Wear share y10</th><th class="n">Captive share y10</th><th class="n">Captive index y10</th></tr></thead>
+      <tbody id="tb-tac"></tbody></table>
+    </details>
+  </figure>
+
+  <h3>Why the freeze works</h3>
+  <p>Holding a line flat while the rest of the book rises makes it progressively
+  cheaper in relative terms — and that arrives at roughly the moment an aftermarket
+  alternative appears.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 12 · Competitive position over ten years, EGR valve</p>
+      <p class="fig-t">The freeze holds position at 2.64× while the normal path drifts
+      to 2.92×.</p>
+    </div>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--c1)"></i>Normal annual increase</span>
+      <span><i class="swatch" style="background:var(--c4)"></i>Frozen after warranty</span>
+    </div>
+    <div class="fig-body"><div id="ch-ero"></div></div>
+    <figcaption>Price index against aftermarket street, year by year from launch.
+    <b>An honest limitation:</b> on this part both paths sit so far above parity that
+    retained share collapses either way — the freeze is close to cosmetic here. It
+    earns its keep on parts nearer parity, which is where the aggregate gain of
+    <b>+3.1 points of captive share</b> comes from.</figcaption>
+  </figure>
+</section><section>
+  <h2><span class="num">15</span>Warranty sequencing</h2>
+  <p class="lede">A sequencing option that carries an internal cost. It should not be
+  adopted without the agreement of the warranty function.</p>
+
+  <p>Two features of the warranty period bear on price. Parts fitted under warranty are
+  still supplied and invoiced by ISZE — an earlier version of this model treated that
+  demand as revenue that never occurred, which understated launch-phase volume
+  substantially. And <strong>an aftermarket part cannot be fitted to a warranty
+  repair</strong>, so in that channel there is no competitive substitution at any price.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 13 · Parc under warranty, D-Max 2.2L</p>
+      <p class="fig-t">Warranty runs three years from each vehicle's own registration,
+      not from model launch.</p>
+    </div>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--c3)"></i>Total parc</span>
+      <span><i class="swatch" style="background:var(--c2)"></i>Still inside warranty</span>
+    </div>
+    <div class="fig-body"><div id="ch-parc"></div></div>
+    <figcaption>Once registrations steady, a rolling <b>36%</b> of the parc is
+    permanently under warranty. The warranty channel is a standing feature of the parts
+    business, not a launch-phase artefact — which is what makes sequencing against it
+    worth considering at all.</figcaption>
+  </figure>
+
+  <p>The option: for failure-driven parts only — aftertreatment, sensors, injectors,
+  and <em>not</em> scheduled service items, which the customer pays for regardless —
+  set the launch price toward the upper end of the policy band, then hold it flat once
+  warranty ends rather than applying the annual increase.</p>
+
+  <p>The commercial logic is timing, not who pays. Price is set when volume is lowest
+  and no substitute exists, then held while volume grows and the aftermarket arrives.</p>
+
+  <figure>
+    <div class="fig-h">
+      <p class="fig-lab">Figure 14 · Sensitivity to warranty term</p>
+      <p class="fig-t">The tactic lives or dies on one fact we have not yet confirmed.</p>
+    </div>
+    <div class="fig-body"><div id="ch-warr"></div></div>
+    <figcaption>Effect on ten-year GP versus not doing it. Varying the <em>share</em>
+    of demand billed to warranty between 40% and 80% moves the answer by less than half
+    a point — it is <b>warranty duration</b> that drives everything.
+    <b>Below roughly three years the option does not pay.</b> Confirm the applicable
+    term and mileage cap, market by market, before proceeding.</figcaption>
+  </figure>
+
+  <div class="blocked">
+    <p class="h">Costs and cautions, stated plainly</p>
+    <ul>
+      <li>The approach <b>raises warranty expense per vehicle</b> during the covered
+      period. That figure is visible to IML and is read partly as a product-quality
+      indicator. It should be quantified and presented alongside the pricing proposal,
+      not left to emerge later.</li>
+      <li>ISZE and the warranty function sit within the <b>same group result</b>. The
+      gain is in competitive position and timing, not in the transfer itself, and the
+      proposal should be made on that basis.</li>
+      <li>It requires a <b>multi-year commitment to hold price</b>. Abandoning the
+      freeze after two years leaves us worse off than never having started.</li>
+    </ul>
+  </div>
+</section>
+<p class="partdiv"><span>Part V</span>Governance and next steps</p>
+<section>
+  <h2><span class="num">16</span>The three price lists</h2>
+
+  <h3>PR00</h3>
+  <p>Full engine as described. 15,355 lines.</p>
+
+  <h3>ZPR1 — Israel</h3>
+  <p>Currently a flat ~10% below PR00, class-dependent. Israel is 17.6% of network
+  revenue at 40.8% GP against a 44.3% network average — the discount is being applied
+  even in categories where it buys nothing. <strong>Replace the blanket 10% with a
+  per-category differential</strong> derived from the Israeli street data we already
+  scrape. Expect margin recovery on captive categories and deeper cuts on genuinely
+  contested ones.</p>
+
+  <p>Israel also carries the only real P700 evidence — fifteen months of it. Use it for
+  <strong>demand structure</strong>: which parts move, how often, the warranty claim
+  mix. Not for price level: fifteen months sits entirely inside the warranty period and
+  says nothing about the paid channel in years four to seven, and ZPR1 needs restating
+  to a PR00 basis before any read-across.</p>
+
+  <h3>CIS — Armenia and Kazakhstan</h3>
+  <p>Currently SP = FOB / 0.40, a 60% gross margin applied class-independently. The
+  highest margin in the entire system, applied to the markets most exposed to grey
+  import, <strong>with no ability to differentiate at all</strong>.</p>
+
+  <p>The competitor is not primarily the independent aftermarket. It is
+  <strong>Qingling</strong> — the Chongqing joint venture, licensed N-series and
+  F-series production with substantially overlapping part numbers. Kazakhstan shares a
+  land border with China, and Kazakhstan and Armenia both sit inside the EAEU customs
+  union, so goods landing in one reach the other with no further customs event. Both
+  our CIS distributors are inside the same customs area as the leak.</p>
+
+  <div class="note">
+    <p class="h">Recommendation — no blanket CIS cut</p>
+    <p>If Qingling parts land at 30–50% of our price, a 15% cut does not win the sale;
+    it surrenders margin without changing behaviour. And a deep cut on a
+    class-independent list is the easiest arbitrage in our system — we would risk
+    funding a grey channel back into Europe.</p>
+    <p>Instead: <strong>make CIS class-dependent</strong> — that is the structural fix,
+    and without it no differentiation is possible at all. Cut to 40–45% GM where a
+    Chinese equivalent exists, hold 60% or above on Euro VI/VII aftertreatment and
+    electronics they cannot follow, and <strong>put re-export monitoring in place
+    before any cut</strong>.</p>
+  </div>
+
+  <p style="color:var(--ink2);font-size:15px">On tracking the flow through customs
+  data: China publishes HS-code aggregates only — no brand, no part number. The
+  commercial bill-of-lading databases carry shipper and consignee detail but are built
+  on maritime manifests, and this lane is rail and road via Khorgos and Dostyk. We will
+  not get part-level visibility. GPS spend-per-unit for our CIS distributors is already
+  the measurement we need, and it is free.</p>
+</section><section>
+  <h2><span class="num">17</span>How this gets audited</h2>
+  <p class="lede">A pricing engine is worth what it can be challenged on. Six layers,
+  in the order a reviewer would work through them.</p>
+
+  <div class="tw">
+  <table><thead><tr><th class="n">#</th><th>Layer</th><th>Answers</th><th>Status</th></tr></thead>
+  <tbody>
+    <tr><td class="n">1</td><td><b>Input</b></td><td>Is the data fit to price on at all?</td><td>Running</td></tr>
+    <tr><td class="n">2</td><td><b>Arithmetic</b></td><td>Does the engine do what it claims?</td><td>Running</td></tr>
+    <tr><td class="n">3</td><td><b>Provenance</b></td><td>Can every moving line name its evidence, and how old is it?</td><td>Partial</td></tr>
+    <tr><td class="n">4</td><td><b>Coherence</b></td><td>Do the prices make sense next to each other?</td><td>Not yet running</td></tr>
+    <tr><td class="n">5</td><td><b>Reproduce</b></td><td>Does a logged run re-execute to the same answer?</td><td><b>Running</b></td></tr>
+    <tr><td class="n">6</td><td><b>Materiality</b></td><td>Which lines actually need a human?</td><td>Running</td></tr>
+  </tbody></table>
+  </div>
+
+  <p>Layer 5 is the one that makes the rest mean anything. Recording a configuration
+  hash proves nothing unless something re-runs from it and compares. It does:
+  re-executing a logged allocation reproduces it to a
+  <strong>maximum numeric drift of 1.8 × 10⁻¹²</strong>, which is floating-point noise
+  from the solver rather than instability.</p>
+
+  <p>Current verdict is <strong>WARN</strong> — no failures, three honest gaps:</p>
+
+  <div class="blocked">
+    <p class="h">Open audit gaps</p>
+    <ul>
+      <li><b>Evidence age is untracked.</b> There is no <code>evidence_asof</code>
+      column, so a benchmark scraped last week cannot be distinguished from one
+      scraped last year. A price moving on stale evidence looks identical to one
+      moving on fresh evidence.</li>
+      <li><b>Coherence checks have nothing to run against.</b> Three checks are
+      written and idle: <b>price ladders</b> (a larger variant priced below a smaller
+      one), <b>kits priced above the sum of their components</b>, and
+      <b>supersession continuity</b>. The last is live — 800 part numbers and €1.82M
+      are billed on superseded numbers today.</li>
+      <li><b>Outcome audit needs the second plane.</b> Whether a price change produced
+      the revenue it was meant to cannot be checked from billing alone.</li>
+    </ul>
+  </div>
+
+  <p>Two governance points that are not code. <strong>Separation of duties</strong> —
+  whoever sets the policy dials should not be the only person who reviews the output,
+  and the sign-off belongs in the run record. And a <strong>challenge log</strong>: when
+  a distributor queries a line, record the query and the resolution. Over a couple of
+  cycles that becomes the evidence base for what is actually survivable per line,
+  which is currently a matter of opinion.</p>
+</section><section>
+  <h2><span class="num">18</span>What we need</h2>
+  <p class="lede">Ranked by what each unlocks, not by effort.</p>
+
+  <div class="tw">
+  <table><thead><tr><th class="n">#</th><th>Request</th><th>Unlocks</th></tr></thead>
+  <tbody>
+    <tr><td class="n">1</td><td><b>Gross value and condition types on the SAP billing export</b></td><td>Discount versus SPA versus mix decomposition. Largest single unlock — the extract currently carries net value only</td></tr>
+    <tr><td class="n">2</td><td><b>Chassis code → model year / SCR mapping</b> (RG, RG21, RT56, RT88_93)</td><td>The D-Max demand forecast. Cheapest high-value item on this list</td></tr>
+    <tr><td class="n">3</td><td><b>P700 maintenance schedule</b></td><td>The DCT fluid interval, and the whole scheduled side of the P700 book</td></tr>
+    <tr><td class="n">4</td><td><b>Dated IE40 PR00 snapshots</b>, one per revision</td><td>Realisation waterfall; separates concession from price movement</td></tr>
+    <tr><td class="n">5</td><td><b>Distributor → dealer sell-out beyond ITUK</b></td><td>The only route to real elasticity. Ties to the FY2027 20% KPI support condition</td></tr>
+    <tr><td class="n">6</td><td><b>PR00 entries for the 522 billed part numbers</b></td><td>Brings 15.1% of revenue into scope of any pricing action</td></tr>
+  </tbody></table>
+  </div>
+
+  <h3>Decisions required</h3>
+  <ul>
+    <li><strong>Approve the OEM basket study</strong> (step 1 above). Roughly two
+    weeks of work, no licence, and it is the gate on everything else — without it the
+    engine holds every line flat and we are back to a uniform percentage.</li>
+    <li><strong>Run the IML premium test</strong> before setting any target, so we are
+    not stacking an ISZE premium on an IML one we cannot see.</li>
+    <li><strong>Bring body parts into scope</strong> as a category in their own right,
+    with their own benchmark. They are outside the model today and they are where we
+    have live complaints.</li>
+    <li><strong>The 3% target</strong>, given it cannot coexist with brake correction
+    at current benchmark coverage.</li>
+    <li><strong>Per-line cap.</strong> Set at +8% here, tighter inside a distributor's
+    top-50 basket. Is that politically survivable?</li>
+    <li><strong>Class assignment for new part numbers.</strong> Do we have any input
+    into how IML classes P700 and D-Max 2.2L parts? It sets margin for the life of the
+    model and is invisible to distributors because there is no old price to compare.
+    If we have a voice there it is worth more than the entire increase exercise.</li>
+  </ul>
+</section><section>
+  <h2><span class="num">19</span>Everything that is still open</h2>
+  <p class="lede">One place to see it. Nothing here is hidden elsewhere in the
+  document — this is the same list, gathered.</p>
+
+  <h3>Blocked on data we do not have</h3>
+  <div class="tw">
+  <table><thead><tr><th>Item</th><th>Blocks</th><th>Severity</th></tr></thead>
+  <tbody>
+    <tr><td><b>OEM peer benchmark</b> — does not exist</td><td>Competitive correction entirely. δ<sub>position</sub> fires on nothing without it</td><td><b>Critical</b></td></tr>
+    <tr><td><b>Dated PR00 snapshots</b>, one per revision</td><td>Realisation waterfall <em>and</em> the price bridge</td><td>High</td></tr>
+    <tr><td><b>BP_JPY history</b> per part</td><td>The price bridge — separating IML movement from our decision</td><td>High</td></tr>
+    <tr><td><b>Gross value + condition types</b> on billing</td><td>Discount vs SPA vs mix decomposition</td><td>High</td></tr>
+    <tr><td><b>DB → DLR sell-out</b> (arriving from Jan 2025)</td><td>Elasticity, pass-through, measured street factor, outcome audit, unbiased index weights</td><td>High</td></tr>
+    <tr><td><b>Chassis code → model year / SCR</b></td><td>θ<sub>interval</sub> — the D-Max demand forecast</td><td>Medium</td></tr>
+    <tr><td><b>P700 maintenance schedule</b></td><td>DCT fluid interval, and the whole scheduled side of the P700 book</td><td>Medium</td></tr>
+    <tr><td><b>PR00 entries for 522 part numbers</b></td><td>€4.96M / 15.1% of revenue, outside any pricing action</td><td>Medium</td></tr>
+    <tr><td><b>Revenue-weighted view by AIM group</b></td><td>Knowing what the book is actually worth by category. Its absence is why the analysis drifted to PMS</td><td>Medium</td></tr>
+  </tbody></table>
+  </div>
+
+  <h3>Decisions only you can make</h3>
+  <div class="tw">
+  <table><thead><tr><th>Decision</th><th>Why it cannot be modelled</th></tr></thead>
+  <tbody>
+    <tr><td><b>Per-category premium targets</b></td><td>Commercial judgement about the market, once benchmarks exist</td></tr>
+    <tr><td><b>3% target vs correcting brakes</b></td><td>They are arithmetically incompatible at current coverage. One has to give</td></tr>
+    <tr><td><b>Per-line cap</b> — currently +8%</td><td>Political tolerance, not analysis</td></tr>
+    <tr><td><b>Warranty term and mileage cap, per market</b></td><td>Decides whether the load-then-freeze tactic pays at all. Below three years it does not</td></tr>
+    <tr><td><b>Class assignment input for new part numbers</b></td><td>Do we have a voice with IML? Worth more than the whole increase exercise</td></tr>
+    <tr><td><b>Bringing body into scope</b></td><td>Largest block in the catalogue, own benchmark, own demand logic</td></tr>
+  </tbody></table>
+  </div>
+
+  <h3>Built but not yet complete</h3>
+  <div class="tw">
+  <table><thead><tr><th>Item</th><th>State</th></tr></thead>
+  <tbody>
+    <tr><td>θ momentum</td><td>Only θ<sub>parc</sub> wired. Interval, cohort and warranty sit at 1.0 rather than being filled with invented numbers</td></tr>
+    <tr><td>Evidence age tracking</td><td>No <code>evidence_asof</code> column — stale and fresh benchmarks are indistinguishable</td></tr>
+    <tr><td>Coherence checks</td><td>Written and idle. Need family, kit and supersession columns</td></tr>
+    <tr><td>P700 emissions step</td><td>Euro VI Step E or Euro 7 — not published, ask IML</td></tr>
+    <tr><td>ISIM gearbox coverage</td><td>Confirmed 5.5–7.5t; unknown whether it reaches 3.5t</td></tr>
+  </tbody></table>
+  </div>
+
+  <h3>Specified but not started</h3>
+  <ul>
+    <li><b>CIS</b> — class-dependent factor table to replace the flat 0.40; marketplace
+    price scraping for Qingling-equivalent parts; re-export monitoring, which must be in
+    place <em>before</em> any cut</li>
+    <li><b>Israel</b> — per-category ZPR1 differential to replace the blanket 10%</li>
+    <li><b>Body and lighting</b> — benchmark source and demand model, both different in
+    kind from wear parts</li>
+  </ul>
+</section><section>
+  <h2><span class="num">20</span>What this changes</h2>
+  <p>The pricing round stops being a single negotiated percentage and becomes an
+  allocation with a reason code on every line. That alone changes the distributor
+  conversation from "3% across the board" to something checkable:</p>
+
+  <div class="note">
+    <p>"Your top fifty service lines are flat or down. Your last-twelve-months basket
+    moves +2.6%, below the 3% network figure. Separately, N lines carry IML base-price
+    corrections — listed here with BP_JPY before and after."</p>
+  </div>
+
+  <p>Separating IML corrections and end-of-production parts from ISZE decisions is not
+  presentational. Those are the lines that generate the complaints, and the answer to
+  each is completely different. Mixing them into one weighted average is what makes the
+  conversation unwinnable.</p>
+
+  <p>And the two new models are where the method can be proven without spending a single
+  basis point of the increase — because parts with no history cannot appear in a
+  comparison. <strong>That is the wedge: implement it properly on P700 and D-Max 2.2L,
+  demonstrate it, then extend to the legacy book.</strong></p>
+</section>
+
+<hr>
+<p style="font-family:var(--mono);font-size:11.5px;color:var(--ink3);margin-top:24px;
+  max-width:80ch;line-height:1.65">
+<b>External sources for section 02.</b> No manufacturer publishes its parts pricing
+method; the following describe documented industry practice.
+<a href="https://www.mckinsey.com/industries/automotive-and-assembly/our-insights/the-future-of-aftermarket-pricing-unlocking-value-with-ai">McKinsey — the future of aftermarket pricing</a> ·
+<a href="https://www.syncron.com/blog/oem-after-market-vs-general-retail-yes-you-need-a-different-pricing-approach">Syncron — OEM aftermarket vs general retail pricing</a> ·
+<a href="https://www.markt-pilot.com/en/resources/ultimate-guide-to-market-based-parts-pricing">MARKT-PILOT — market-based parts pricing</a> ·
+<a href="https://quanos.com/en/blog/after-sales-service/detail/spare-parts-pricing-tips-for-setting-prices-in-aftersales-service/">Quanos — spare parts pricing cadence</a> ·
+<a href="https://www.bcg.com/publications/2025/ecommerce-in-the-european-automotive-aftermarket">BCG — e-commerce in the European automotive aftermarket</a>
+<br><br>
+Engine: isze_pricing v1.0.0 · every run logged to runs/REGISTRY.csv with resolved config
+and sha256 of each input. Allocation basis: pricing_action_map.json, built 2026-07-16 on
+CY2025, 213 cells across 18 distributors. Launch book parameters are assumptions in
+config.yaml with no observed elasticity behind them — the model ranks tactics against one
+another, it does not forecast a number. Figures marked
+<span class="assume">Assumption</span> rest on placeholder inputs.
+</p>
+
+</div>
+<div id="tip" role="status"></div>
+<div id="gloss" role="status"></div>
+
+<script>
+/* ---------------- glossary ---------------- */
+const GLOSS={
+ laspeyres:["Laspeyres index","A weighted average price change that holds quantities fixed at a base period. Ours weights every part by its last-twelve-months revenue share — so what you sold a lot of last year dominates the headline percentage."],
+ "class factor":["Class factor","The divisor IML assigns per part class. SP = FOB ÷ class factor, so a factor of 0.47 implies a 53% gross margin. It describes what kind of part it is, not what anyone will pay for it."],
+ "cost-plus":["Cost-plus","Applying a standard markup to landed cost. Its documented failure: buy a part cheaper, keep the same markup, and you silently become cheaper than your competitors without noticing."],
+ elasticity:["Price elasticity","How far demand moves when price moves. Not measurable at ISZE level — we sell to distributors, whose orders reflect stocking decisions rather than end-market demand."],
+ "pre-buy":["Pre-buy","Distributors ordering ahead of an announced increase to beat it. It inflates recorded volume on exactly the parts that went up, which then overweights them in next year's index."],
+ "capture rate":["Capture rate","The share of a category's total addressable demand that ISZE actually supplies. Below 45% we treat the wallet as lost to the aftermarket."],
+ TAM:["Total addressable market","All the demand a category could generate across the parc, whether or not we supply it. Modelled, not observed — so gaps derived from it are upper bounds."],
+ "street factor":["Street factor","Our internal estimate of list-to-street: ×1.40 distributor and ×1.275 dealer, so ×1.785. Used only to compare our position against aftermarket prices. Distributors set their own resale prices."],
+ IAM:["Independent aftermarket","Non-genuine parts — Febi, Blue Print and similar — sold through independent channels. The price floor, not the benchmark."],
+ FOB:["FOB","Free on board: the landed euro cost before margin. FOB = BP_JPY ÷ FX × source discount."],
+ BP_JPY:["BP_JPY","The base price IML sets in yen. The starting point of the whole formula and outside ISZE's control."],
+ PR00:["PR00","The main European price list — roughly 15,355 lines against a catalogue of 164,668 part numbers."],
+ ZPR1:["ZPR1","The Israel price list, currently a flat ~10% below PR00 and class-dependent."],
+ parc:["Parc","The population of vehicles in service. Parts demand is parc × service frequency × attach rate, so parc is the denominator under everything."],
+ UIO:["UIO","Units in operation — our measure of the parc, by market and model."],
+ "pass-through":["Pass-through","How much of an ISZE price change actually reaches the dealer. Below 1.0 the distributor is absorbing it; above 1.0 they are amplifying it."],
+ Eucon:["Eucon","The network competitive benchmark — 44 part numbers, so a category median often rests on three observations."],
+ SPA:["SPA","Special pricing agreement. A negotiated price for a distributor that sits below list, so a list increase on an SPA line may change nothing."],
+ BVP:["BVP","Best Value Parts — Isuzu's own value line. It competes with genuine, so raising genuine can push volume into it."],
+ DPF:["DPF / DPD","Diesel particulate filter. High value, low replacement frequency, and no aftermarket equivalent for years."],
+ SCR:["SCR","Selective catalytic reduction — the AdBlue system. Entirely new on the D-Max generation; long-standing on the trucks."],
+ DCT:["Dual-clutch transmission","The ISIM nine-speed on the new N-Series. Introduces a fluid service that did not exist, plus clutch packs and a mechatronic unit with no predecessor."],
+ NPV:["Net present value","Future gross profit discounted back to today, so a euro in year seven is not counted as a euro today."],
+ theta:["θ (theta)","Expected forward volume ÷ last-twelve-months volume. The index charges you on last year's volume while cash arrives on next year's, so θ says which parts are cheap to increase."],
+ materiality:["Materiality","Reviewing lines in order of absolute revenue impact rather than treating all 15,000 equally."],
+ provenance:["Provenance","Where a number came from and how old it is. A premium target carries its basis, and an unbenchmarked basis is not allowed to move a price."]};
+
+(function(){
+ const box=document.getElementById("gloss");
+ const SKIP=new Set(["SCRIPT","STYLE","A","ABBR","CODE","H1","H2","SUMMARY","svg","TEXT"]);
+ const terms=Object.keys(GLOSS).sort((a,b)=>b.length-a.length);
+ const done=new Set([...document.querySelectorAll('.g')]
+   .map(e=>e.dataset.g));
+ const walk=document.createTreeWalker(document.querySelector(".wrap"),NodeFilter.SHOW_TEXT);
+ const jobs=[];
+ let node;
+ while((node=walk.nextNode())){
+  let p=node.parentElement,bad=false;
+  while(p&&p!==document.body){if(SKIP.has(p.tagName)||p.classList?.contains("g")){bad=true;break}p=p.parentElement}
+  if(bad||!node.nodeValue.trim())continue;
+  for(const t of terms){
+   if(done.has(t))continue;
+   const i=node.nodeValue.indexOf(t);
+   if(i<0)continue;
+   jobs.push([node,i,t]);done.add(t);break;}
+ }
+ jobs.forEach(([n,i,t])=>{
+  const after=n.splitText(i),rest=after.splitText(t.length);
+  const sp=document.createElement("span");
+  sp.className="g";sp.dataset.g=t;sp.tabIndex=0;sp.textContent=after.nodeValue;
+  after.parentNode.replaceChild(sp,after);});
+
+ function show(e){
+  const el=e.target.closest?.(".g");if(!el)return;
+  const k=el.dataset.g,d=GLOSS[k]||GLOSS[k.toLowerCase()];if(!d)return;
+  box.innerHTML="<b>"+d[0]+"</b>"+d[1];box.style.opacity="1";
+  const r=el.getBoundingClientRect();
+  let x=Math.min(r.left,innerWidth-box.offsetWidth-14);
+  let y=r.top-box.offsetHeight-9;
+  if(y<8)y=r.bottom+9;
+  box.style.left=Math.max(8,x)+"px";box.style.top=y+"px";}
+ function hide(){box.style.opacity="0"}
+ document.addEventListener("pointerover",show);
+ document.addEventListener("pointerout",hide);
+ document.addEventListener("focusin",show);
+ document.addEventListener("focusout",hide);
+
+ document.querySelectorAll(".wrap > section").forEach((s,i)=>{
+  if(!s.classList.contains("intro")&&!s.id){
+   const num=s.querySelector("h2 .num");
+   if(num&&/^\d+$/.test(num.textContent))s.id="s"+num.textContent;}});
+})();
+</script>
+
+<script>
+const D={
+ zones:[{z:"raise",lab:"raise · ≥80%",cells:34,cap:1922551,risk:0,head:96124},
+        {z:"contested",lab:"contested · 45–80%",cells:33,cap:1257523,risk:964182,head:0},
+        {z:"defend",lab:"defend · <45%",cells:146,cap:2587951,risk:16049637,head:0}],
+ pos:[{c:"Cabin / blower filter",v:3.04,n:3},{c:"Air filter",v:2.77,n:3},
+      {c:"Fuel filter",v:2.46,n:3},{c:"Brake pads",v:2.38,n:3},{c:"Brake rotors",v:1.61,n:3}],
+ trade:[{t:0,b:0.51,g:3.51,d:-1.49},{t:0.5,b:1.01,g:4.01,d:-0.99},{t:1,b:1.51,g:4.51,d:-0.49},{t:1.5,b:2.01,g:5.01,d:0.01},{t:2,b:2.51,g:5.51,d:0.51},{t:2.5,b:3.01,g:6.01,d:1.01},{t:3,b:3.51,g:6.51,d:1.51}],
+ tac:[{s:"Load then freeze",v:72752723,w:.232,c:.524,i:1.928},{s:"Split",v:72646584,w:.232,c:.491,i:2.131},{s:"Harvest",v:66252669,w:.169,c:.523,i:1.961},{s:"Split + freeze",v:65733676,w:.232,c:.549,i:1.785},{s:"Class factor only",v:54832274,w:.194,c:.570,i:1.705},{s:"Habit",v:54531823,w:.232,c:.570,i:1.705}],
+ ero:{norm:[2.234,2.301,2.37,2.441,2.514,2.59,2.667,2.747,2.83,2.915],
+      froz:[2.413,2.485,2.559,2.636,2.636,2.636,2.636,2.636,2.636,2.636]},
+ parc:[2100,6537,12341,17971,23432,28729,33867,38851,43685,48375],
+ pw:[2100,6537,12341,16054,17465,17465,17465,17465,17465,17465],
+ warr:[{y:"2 years",v:-2.3},{y:"3 years",v:0.2},{y:"5 years",v:4.6}],
+ fork:[{m:"D-Max 2.2L",s:39.6,l:-22.2,k:"c3"},{m:"P700",s:49.1,l:-24.9,k:"c2"}],
+ p700:[{d:"DPF assembly",r:"carry",v:15183553},{d:"DCT mechatronic unit",r:"new",v:7836673},
+       {d:"DCT clutch pack",r:"new",v:7248922},{d:"Turbocharger",r:"carry",v:6465255},
+       {d:"Injector nozzle",r:"carry",v:4310170},{d:"NOx sensor, upstream",r:"carry",v:3072332},
+       {d:"LED headlamp",r:"new",v:2711224},{d:"Blind-spot module",r:"new",v:2089779},
+       {d:"Traffic-sign camera",r:"new",v:1893863}]
+};
+const eur=n=>"€"+n.toLocaleString("en-GB",{maximumFractionDigits:0});
+const M=n=>"€"+(n/1e6).toFixed(1)+"M";
+const tip=document.getElementById("tip");
+function bind(el,html){
+  el.style.cursor="crosshair";
+  el.addEventListener("pointerenter",()=>{tip.innerHTML=html;tip.style.opacity="1"});
+  el.addEventListener("pointermove",e=>{
+    const w=window.innerWidth,x=Math.min(e.clientX+14,w-tip.offsetWidth-10);
+    tip.style.left=x+"px";tip.style.top=(e.clientY-tip.offsetHeight-10)+"px"});
+  el.addEventListener("pointerleave",()=>{tip.style.opacity="0"});
+}
+const NS="http://www.w3.org/2000/svg";
+function mk(t,a){const e=document.createElementNS(NS,t);
+  for(const k in a)e.setAttribute(k,a[k]);return e}
+function svg(host,w,h){const s=mk("svg",{viewBox:`0 0 ${w} ${h}`,width:"100%",
+  style:`max-width:${w}px;height:auto;overflow:visible`});
+  document.getElementById(host).appendChild(s);return s}
+
+/* --- Fig A: OEM parts book vs market --- */
+(()=>{const segs=[
+ {k:"Exclusive — no competitor listing",v:52,c:"c3",n:"premium candidates"},
+ {k:"Priced below market",v:22,c:"c2",n:"margin left on the table"},
+ {k:"Priced above market",v:22,c:"c1",n:"losing the transaction"},
+ {k:"Priced at market",v:4.1,c:"c4",n:"correct"}];
+ const W=760,H=180,L=0,R=W;const s=svg("ch-mis",W,H);
+ const sc=v=>v/100.1*R;let x=0;
+ segs.forEach(d=>{const w=sc(d.v);
+  const b=mk("rect",{x:x,y:26,width:Math.max(w-2,2),height:40,rx:3,
+    style:`fill:var(--${d.c})`});s.appendChild(b);
+  bind(b,`<b>${d.k}</b><br>${d.v}% of the parts book<br>${d.n}`);
+  if(w>52)s.appendChild(mk("text",{x:x+10,y:51,class:"vl",style:"fill:#fff"}))
+    .textContent=d.v+"%";
+  x+=w;});
+ // callout for the 4.1% sliver
+ const cx=sc(52+22+22)+sc(4.1)/2;
+ s.appendChild(mk("line",{x1:cx,y1:70,x2:cx,y2:88,
+   style:"stroke:var(--c4);stroke-width:2"}));
+ s.appendChild(mk("text",{x:cx,y:103,class:"cl","text-anchor":"end",
+   style:"fill:var(--c4)"})).textContent="4.1% priced at market";
+ let ly=132;
+ segs.forEach((d,i)=>{const lx=(i%2)*380;if(i===2)ly=152;
+  s.appendChild(mk("rect",{x:lx,y:ly-9,width:11,height:11,rx:2,
+    style:`fill:var(--${d.c})`}));
+  s.appendChild(mk("text",{x:lx+18,y:ly,class:"ax"}))
+    .textContent=d.k+"  —  "+d.v+"%";});
+})();
+
+/* --- Fig B: repricing cadence --- */
+(()=>{const rows=[
+ {k:"ISZE today — cost-plus",n:1,c:"c1",lab:"once a year"},
+ {k:"OEMs that have moved",n:3,c:"c2",lab:"three times a year"},
+ {k:"Market-based pricing",n:12,c:"c3",lab:"continuous monitoring"},
+ {k:"Online aftermarket retailers",n:48,c:"c4",lab:"algorithmic — daily"}];
+ const W=760,rowH=46,H=rows.length*rowH+34,L=214,R=W-186;
+ const s=svg("ch-cad",W,H);
+ for(let m=0;m<=12;m+=3){const x=L+m/12*(R-L);
+  s.appendChild(mk("line",{x1:x,y1:12,x2:x,y2:H-30,style:"stroke:var(--grid);stroke-width:1"}));
+  s.appendChild(mk("text",{x:x,y:H-14,class:"ax","text-anchor":"middle"}))
+    .textContent=m===0?"Jan":(m===12?"Dec":"M"+m);}
+ rows.forEach((d,i)=>{const y=i*rowH+30;
+  s.appendChild(mk("text",{x:0,y:y+4,class:"cl"})).textContent=d.k;
+  const g=mk("g",{});s.appendChild(g);
+  for(let j=0;j<d.n;j++){const x=L+(d.n===1?0.04:j/(d.n-1))*(R-L)*(d.n===1?1:1);
+   g.appendChild(mk("circle",{cx:d.n===1?L+ (R-L)*0.04 : L+j/(d.n-1)*(R-L),cy:y,
+     r:d.n>20?3:5,style:`fill:var(--${d.c})`}));}
+  bind(g,`<b>${d.k}</b><br>${d.lab}`);
+  s.appendChild(mk("text",{x:R+12,y:y+4,class:"ax",style:`fill:var(--${d.c})`}))
+    .textContent=d.lab;});
+})();
+
+/* --- Fig 1 catalogue scope --- */
+(()=>{const rows=[
+ {g:"Body Exterior — panels, lamps, mirrors",v:5.42,cov:0},
+ {g:"Intake / exhaust / emission",v:4.90,cov:0},
+ {g:"Brakes",v:3.19,cov:2.37},
+ {g:"Maintenance service",v:3.10,cov:1.73},
+ {g:"Electrical",v:1.85,cov:0},
+ {g:"Fuel system",v:1.74,cov:0},
+ {g:"Competitive parts",v:1.55,cov:0},
+ {g:"Repair parts",v:1.52,cov:0},
+ {g:"Steering",v:1.49,cov:0},
+ {g:"Wheels & hub",v:1.15,cov:0},
+ {g:"Engine",v:0.72,cov:0},
+ {g:"Transmission",v:0.60,cov:0}];
+ const W=760,rowH=30,H=rows.length*rowH+24,L=262,R=W-78;
+ const s=svg("ch-scope",W,H),max=Math.max(...rows.map(d=>d.v)),sc=v=>v/max*(R-L);
+ rows.forEach((d,i)=>{const y=i*rowH+8;
+  s.appendChild(mk("text",{x:0,y:y+13,class:"cl"})).textContent=d.g;
+  const un=d.v-d.cov;
+  if(d.cov>0){const b=mk("rect",{x:L,y:y,width:Math.max(sc(d.cov),2),height:18,rx:3,
+    style:"fill:var(--c4)"});s.appendChild(b);
+   bind(b,`<b>${d.g}</b><br>Reached by the PMS model<br>EUR ${d.cov.toFixed(2)}m`);}
+  const b2=mk("rect",{x:L+(d.cov>0?sc(d.cov)+2:0),y:y,
+    width:Math.max(sc(un)-(d.cov>0?2:0),2),height:18,rx:3,style:"fill:var(--c1)"});
+  s.appendChild(b2);
+  bind(b2,`<b>${d.g}</b><br>Not covered<br>EUR ${un.toFixed(2)}m of ${d.v.toFixed(2)}m`);
+  s.appendChild(mk("text",{x:L+sc(d.v)+8,y:y+13,class:"vl"}))
+    .textContent="€"+d.v.toFixed(2)+"m";});
+})();
+
+/* --- Fig: OEM service-plan cost per 100k km --- */
+(()=>{const rows=[
+ {m:"Isuzu D-Max",per:449,iv:15000,c:2993,k:"c1"},
+ {m:"Toyota HiLux",per:268,iv:10000,c:2675,k:"c3"},
+ {m:"Ford Ranger",per:379,iv:15000,c:2527,k:"c4"}];
+ const W=760,rowH=54,H=rows.length*rowH+34,L=150,R=W-118;
+ const s=svg("ch-oem",W,H),max=3200,sc=v=>v/max*(R-L);
+ [0,1000,2000,3000].forEach(g=>{const x=L+sc(g);
+  s.appendChild(mk("line",{x1:x,y1:6,x2:x,y2:H-30,style:"stroke:var(--grid);stroke-width:1"}));
+  s.appendChild(mk("text",{x:x,y:H-14,class:"ax","text-anchor":"middle"}))
+    .textContent="$"+(g/1000)+"k";});
+ s.appendChild(mk("text",{x:(L+R)/2,y:H-1,class:"ax","text-anchor":"middle"}))
+   .textContent="service-plan cost per 100,000 km";
+ rows.forEach((d,i)=>{const y=i*rowH+14;
+  s.appendChild(mk("text",{x:0,y:y+14,class:"cl"})).textContent=d.m;
+  s.appendChild(mk("text",{x:0,y:y+29,class:"ax"}))
+    .textContent="$"+d.per+" every "+(d.iv/1000)+"k km";
+  const b=mk("rect",{x:L,y:y,width:sc(d.c),height:26,rx:3,style:`fill:var(--${d.k})`});
+  s.appendChild(b);
+  bind(b,`<b>${d.m}</b><br>$${d.per} per service every ${d.iv.toLocaleString("en-GB")} km<br>= $${d.c.toLocaleString("en-GB")} per 100,000 km`);
+  s.appendChild(mk("text",{x:L+sc(d.c)+9,y:y+18,class:"vl"}))
+    .textContent="$"+d.c.toLocaleString("en-GB");
+  if(i===0)s.appendChild(mk("text",{x:L,y:y+40,class:"ax",
+    style:"fill:var(--c1)"})).textContent="most expensive per kilometre of the three";});
+})();
+
+/* --- Fig 2 zones --- */
+(()=>{const W=760,rowH=64,H=D.zones.length*rowH+34,L=142,R=W-24;
+ const s=svg("ch-zones",W,H),max=Math.max(...D.zones.map(d=>d.cap+d.risk));
+ const sc=v=>v/max*(R-L);
+ D.zones.forEach((d,i)=>{const y=i*rowH+18;
+  s.appendChild(mk("text",{x:0,y:y+15,class:"cl"})).textContent=d.lab;
+  s.appendChild(mk("text",{x:0,y:y+31,class:"ax"})).textContent=d.cells+" cells";
+  const bc=mk("rect",{x:L,y:y,width:Math.max(sc(d.cap),2),height:22,rx:3,
+    style:"fill:var(--c4)"});s.appendChild(bc);
+  bind(bc,`<b>${d.lab}</b><br>Captured ${eur(d.cap)}`);
+  if(d.risk>0){const br=mk("rect",{x:L+sc(d.cap)+2,y:y,width:Math.max(sc(d.risk)-2,2),
+    height:22,rx:3,style:"fill:var(--c1)"});s.appendChild(br);
+   bind(br,`<b>${d.lab}</b><br>At aftermarket ${eur(d.risk)}`);
+   const wide=sc(d.risk)>64;
+   s.appendChild(mk("text",{x:L+sc(d.cap+d.risk)+(wide?-8:8),y:y+16,class:"vl",
+     "text-anchor":wide?"end":"start",style:wide?"fill:#fff":""})).textContent=M(d.risk);}
+  const lx=L+sc(d.cap)+(d.risk>0?0:8);
+  const t=mk("text",{x:d.risk>0?L+6:lx,y:y+16,class:"vl",
+    style:d.risk>0?"fill:#fff":""});t.textContent=M(d.cap);
+  if(d.risk>0&&sc(d.cap)<58){t.setAttribute("x",L+sc(d.cap)+8);t.removeAttribute("style")}
+  s.appendChild(t);
+  if(d.head>0){s.appendChild(mk("text",{x:L,y:y+40,class:"ax",
+    style:"fill:var(--c4)"})).textContent="headroom at +5% — "+eur(d.head);}
+ });
+})();
+
+/* --- Fig 2 position --- */
+(()=>{const W=760,rowH=44,H=D.pos.length*rowH+40,L=178,R=W-70;
+ const s=svg("ch-pos",W,H),max=3.3,sc=v=>v/max*(R-L);
+ [1,2,3].forEach(g=>{const x=L+sc(g);
+  s.appendChild(mk("line",{x1:x,y1:8,x2:x,y2:H-30,style:"stroke:var(--grid);stroke-width:1"}));
+  s.appendChild(mk("text",{x:x,y:H-14,class:"ax","text-anchor":"middle"})).textContent=g+"×";});
+ const px=L+sc(1.4);
+ s.appendChild(mk("line",{x1:px,y1:4,x2:px,y2:H-30,
+   style:"stroke:var(--accent);stroke-width:2;stroke-dasharray:4 3"}));
+ s.appendChild(mk("text",{x:px+7,y:12,class:"ax",style:"fill:var(--accent)"}))
+   .textContent="1.40× policy";
+ D.pos.forEach((d,i)=>{const y=i*rowH+22;
+  s.appendChild(mk("text",{x:0,y:y+15,class:"cl"})).textContent=d.c;
+  const b=mk("rect",{x:L,y:y,width:sc(d.v),height:21,rx:3,style:"fill:var(--c1)"});
+  s.appendChild(b);bind(b,`<b>${d.c}</b><br>${d.v}× aftermarket street<br>n=${d.n} benchmarks`);
+  s.appendChild(mk("text",{x:L+sc(d.v)+8,y:y+15,class:"vl"})).textContent=d.v.toFixed(2)+"×";});
+})();
+
+/* --- Fig 3 tradeoff --- */
+(()=>{const W=760,H=300,L=52,R=W-16,T=16,B=H-42;
+ const s=svg("ch-trade",W,H);
+ const x=v=>L+v/3*(R-L),y=v=>B-(v+3)/9.5*(B-T);
+ [-2,0,2,4,6].forEach(g=>{const yy=y(g);
+  s.appendChild(mk("line",{x1:L,y1:yy,x2:R,y2:yy,
+    style:`stroke:var(--${g===0?"rule2":"grid"});stroke-width:1`}));
+  s.appendChild(mk("text",{x:L-9,y:yy+4,class:"ax","text-anchor":"end"})).textContent=g+"%";});
+ D.trade.forEach(d=>s.appendChild(mk("text",{x:x(d.t),y:H-14,class:"ax",
+   "text-anchor":"middle"})).textContent=d.t+"%");
+ s.appendChild(mk("text",{x:(L+R)/2,y:H-1,class:"ax","text-anchor":"middle"}))
+   .textContent="declared weighted target";
+ [["b","c1"],["g","c4"],["d","c2"]].forEach(([k,c])=>{
+  const pts=D.trade.map(d=>`${x(d.t)},${y(d[k])}`).join(" ");
+  s.appendChild(mk("polyline",{points:pts,fill:"none",
+    style:`stroke:var(--${c});stroke-width:2;stroke-linejoin:round`}));
+  D.trade.forEach(d=>{const c2=mk("circle",{cx:x(d.t),cy:y(d[k]),r:4.5,
+    style:`fill:var(--${c});stroke:var(--surface);stroke-width:2`});
+   s.appendChild(c2);bind(c2,`Target ${d.t}%<br>Base ${d.b}%<br>Growing parc ${d.g}%<br>Declining parc ${d.d}%`)});});
+ const last=D.trade[6];
+ s.appendChild(mk("text",{x:x(last.t)-6,y:y(last.b)-11,class:"vl",
+   style:"fill:var(--c1)","text-anchor":"end"})).textContent="+3.51%";
+ s.appendChild(mk("text",{x:x(last.t)-6,y:y(last.br)-11,class:"vl",
+   style:"fill:var(--c3)","text-anchor":"end"})).textContent="+0.79%";
+ const tb=document.getElementById("tb-trade");
+ D.trade.forEach(d=>tb.insertAdjacentHTML("beforeend",
+  `<tr><td class="n">${d.t.toFixed(1)}</td><td class="n">${d.b.toFixed(2)}</td><td class="n">${d.g.toFixed(2)}</td><td class="n">${d.d.toFixed(2)}</td></tr>`));
+})();
+
+/* --- Fig 4 clutch --- */
+(()=>{const W=760,H=112,L=0,R=W-92;const s=svg("ch-clutch",W,H);
+ const tot=7775146,cap=536345,sc=v=>v/tot*(R-L);
+ s.appendChild(mk("rect",{x:0,y:30,width:R,height:34,rx:3,style:"fill:var(--grid)"}));
+ const b=mk("rect",{x:0,y:30,width:Math.max(sc(cap),4),height:34,rx:3,style:"fill:var(--c1)"});
+ s.appendChild(b);bind(b,`Captured €536,345<br>of €7,775,146 · 6.9%`);
+ s.appendChild(mk("text",{x:0,y:20,class:"ax"})).textContent="CAPTURED BY ISZE";
+ s.appendChild(mk("text",{x:R+10,y:44,class:"cl"})).textContent="€7.78M";
+ s.appendChild(mk("text",{x:R+10,y:60,class:"ax"})).textContent="total wallet";
+ s.appendChild(mk("text",{x:sc(cap)+10,y:52,class:"vl",style:"fill:var(--c1)"}))
+   .textContent="€536K — 6.9%";
+ s.appendChild(mk("text",{x:0,y:88,class:"ax"}))
+   .textContent="clutch disc 3.9%  ·  pressure plate 4.8%  ·  clutch kit 9.9%  ·  booster 0.7%";
+})();
+
+/* --- Fig 5 p700 --- */
+(()=>{const W=760,rowH=34,H=D.p700.length*rowH+20,L=210,R=W-74;
+ const s=svg("ch-p700",W,H),max=Math.max(...D.p700.map(d=>d.v)),sc=v=>v/max*(R-L);
+ D.p700.forEach((d,i)=>{const y=i*rowH+8,c=d.r==="new"?"c1":"c3";
+  s.appendChild(mk("text",{x:0,y:y+15,class:"cl"})).textContent=d.d;
+  const b=mk("rect",{x:L,y:y,width:Math.max(sc(d.v),2),height:20,rx:3,
+    style:`fill:var(--${c})`});s.appendChild(b);
+  bind(b,`<b>${d.d}</b><br>${d.r==="new"?"No predecessor":"Carryover"}<br>10y GP ${eur(d.v)}`);
+  s.appendChild(mk("text",{x:L+sc(d.v)+8,y:y+15,class:"vl"})).textContent=M(d.v);});
+})();
+
+/* --- Fig 6 tactics --- */
+(()=>{const W=760,rowH=38,H=D.tac.length*rowH+20,L=158,R=W-70;
+ const s=svg("ch-tac",W,H),max=Math.max(...D.tac.map(d=>d.v)),sc=v=>v/max*(R-L);
+ D.tac.forEach((d,i)=>{const y=i*rowH+8,c=i<2?"c1":"c3";
+  s.appendChild(mk("text",{x:0,y:y+16,class:"cl"})).textContent=d.s;
+  const b=mk("rect",{x:L,y:y,width:sc(d.v),height:22,rx:3,style:`fill:var(--${c})`});
+  s.appendChild(b);
+  bind(b,`<b>${d.s}</b><br>GP NPV ${eur(d.v)}<br>Captive share y10 ${(d.c*100).toFixed(1)}%<br>Captive index y10 ${d.i}×`);
+  s.appendChild(mk("text",{x:L+sc(d.v)+8,y:y+16,class:"vl"})).textContent=M(d.v);});
+ const tb=document.getElementById("tb-tac");
+ D.tac.forEach(d=>tb.insertAdjacentHTML("beforeend",
+  `<tr><td>${d.s}</td><td class="n">${d.v.toLocaleString("en-GB")}</td><td class="n">${(d.w*100).toFixed(1)}%</td><td class="n">${(d.c*100).toFixed(1)}%</td><td class="n">${d.i.toFixed(2)}×</td></tr>`));
+})();
+
+/* --- Fig 7 erosion --- */
+(()=>{const W=760,H=270,L=52,R=W-88,T=16,B=H-40;const s=svg("ch-ero",W,H);
+ const x=i=>L+i/9*(R-L),y=v=>B-(v-2.1)/0.95*(B-T);
+ [2.2,2.4,2.6,2.8].forEach(g=>{const yy=y(g);
+  s.appendChild(mk("line",{x1:L,y1:yy,x2:R,y2:yy,style:"stroke:var(--grid);stroke-width:1"}));
+  s.appendChild(mk("text",{x:L-9,y:yy+4,class:"ax","text-anchor":"end"})).textContent=g.toFixed(1)+"×";});
+ for(let i=0;i<10;i++)s.appendChild(mk("text",{x:x(i),y:H-16,class:"ax",
+   "text-anchor":"middle"})).textContent=i+1;
+ s.appendChild(mk("text",{x:(L+R)/2,y:H-2,class:"ax","text-anchor":"middle"}))
+   .textContent="year from launch";
+ const wx=x(3);
+ s.appendChild(mk("line",{x1:wx,y1:T,x2:wx,y2:B,
+   style:"stroke:var(--rule2);stroke-width:1;stroke-dasharray:3 3"}));
+ s.appendChild(mk("text",{x:wx+6,y:T+11,class:"ax"})).textContent="warranty ends";
+ [["norm","c1","Normal increase"],["froz","c4","Frozen"]].forEach(([k,c,lb])=>{
+  const arr=D.ero[k];
+  s.appendChild(mk("polyline",{points:arr.map((v,i)=>`${x(i)},${y(v)}`).join(" "),
+    fill:"none",style:`stroke:var(--${c});stroke-width:2;stroke-linejoin:round`}));
+  arr.forEach((v,i)=>{const c2=mk("circle",{cx:x(i),cy:y(v),r:4,
+    style:`fill:var(--${c});stroke:var(--surface);stroke-width:2`});s.appendChild(c2);
+   bind(c2,`Year ${i+1}<br>${lb}: ${v.toFixed(3)}× aftermarket`)});
+  s.appendChild(mk("text",{x:R+8,y:y(arr[9])+4,class:"vl",style:`fill:var(--${c})`}))
+    .textContent=arr[9].toFixed(2)+"×";});
+})();
+
+/* --- Fig 8 parc --- */
+(()=>{const W=760,H=250,L=60,R=W-90,T=16,B=H-40;const s=svg("ch-parc",W,H);
+ const max=52000,x=i=>L+i/9*(R-L),y=v=>B-v/max*(B-T);
+ [0,10000,20000,30000,40000,50000].forEach(g=>{const yy=y(g);
+  s.appendChild(mk("line",{x1:L,y1:yy,x2:R,y2:yy,style:"stroke:var(--grid);stroke-width:1"}));
+  s.appendChild(mk("text",{x:L-9,y:yy+4,class:"ax","text-anchor":"end"}))
+    .textContent=(g/1000)+"k";});
+ for(let i=0;i<10;i++)s.appendChild(mk("text",{x:x(i),y:H-16,class:"ax",
+   "text-anchor":"middle"})).textContent=i+1;
+ s.appendChild(mk("text",{x:(L+R)/2,y:H-2,class:"ax","text-anchor":"middle"}))
+   .textContent="year from launch";
+ s.appendChild(mk("path",{d:`M${x(0)},${y(D.parc[0])}`+D.parc.map((v,i)=>`L${x(i)},${y(v)}`).join("")
+   +`L${x(9)},${y(0)}L${x(0)},${y(0)}Z`,style:"fill:var(--c3);opacity:.13"}));
+ [["parc","c3","Total parc"],["pw","c2","Under warranty"]].forEach(([k,c,lb])=>{
+  const arr=D[k];
+  s.appendChild(mk("polyline",{points:arr.map((v,i)=>`${x(i)},${y(v)}`).join(" "),
+    fill:"none",style:`stroke:var(--${c});stroke-width:2;stroke-linejoin:round`}));
+  arr.forEach((v,i)=>{const c2=mk("circle",{cx:x(i),cy:y(v),r:4,
+    style:`fill:var(--${c});stroke:var(--surface);stroke-width:2`});s.appendChild(c2);
+   bind(c2,`Year ${i+1}<br>${lb}: ${v.toLocaleString("en-GB")} vehicles<br>${k==="pw"?"= "+(D.pw[i]/D.parc[i]*100).toFixed(0)+"% of parc":""}`)});
+  s.appendChild(mk("text",{x:R+8,y:y(arr[9])+4,class:"vl",style:`fill:var(--${c})`}))
+    .textContent=(arr[9]/1000).toFixed(1)+"k";});
+ s.appendChild(mk("text",{x:R+8,y:y(D.pw[9])+19,class:"ax",style:"fill:var(--c2)"}))
+   .textContent="36% of parc";
+})();
+
+/* --- Fig 9 warranty term --- */
+(()=>{const W=760,H=150,L=92,MID=330,H2=44;const s=svg("ch-warr",W,H);
+ const sc=v=>v/5*200;
+ s.appendChild(mk("line",{x1:MID,y1:8,x2:MID,y2:H-30,style:"stroke:var(--rule2);stroke-width:1"}));
+ s.appendChild(mk("text",{x:MID,y:H-12,class:"ax","text-anchor":"middle"}))
+   .textContent="no change vs not doing it";
+ D.warr.forEach((d,i)=>{const y=i*H2+8,w=Math.abs(sc(d.v)),neg=d.v<0;
+  s.appendChild(mk("text",{x:0,y:y+20,class:"cl"})).textContent=d.y+" warranty";
+  const b=mk("rect",{x:neg?MID-w:MID,y:y,width:Math.max(w,2),height:26,rx:3,
+    style:`fill:var(--${neg?"c1":"c4"})`});s.appendChild(b);
+  bind(b,`<b>${d.y} warranty</b><br>${d.v>0?"+":""}${d.v}% on 10-year GP`);
+  s.appendChild(mk("text",{x:neg?MID-w-8:MID+w+8,y:y+18,class:"vl",
+    "text-anchor":neg?"end":"start"})).textContent=(d.v>0?"+":"")+d.v+"%";});
+})();
+
+/* --- Fig 10 fork tornado --- */
+(()=>{const W=760,H=170,MID=350,rowH=68;const s=svg("ch-fork",W,H);
+ const sc=v=>Math.abs(v)/52*300;
+ s.appendChild(mk("line",{x1:MID,y1:6,x2:MID,y2:H-34,style:"stroke:var(--rule2);stroke-width:1"}));
+ s.appendChild(mk("text",{x:MID,y:H-16,class:"ax","text-anchor":"middle"}))
+   .textContent="base fork";
+ D.fork.forEach((d,i)=>{const y=i*rowH+10;
+  s.appendChild(mk("text",{x:0,y:y+20,class:"cl"})).textContent=d.m;
+  [["l",d.l],["s",d.s]].forEach(([k,v])=>{
+   const w=sc(v),neg=v<0;
+   const b=mk("rect",{x:neg?MID-w:MID,y:neg?y:y+26,width:Math.max(w,2),height:22,rx:3,
+     style:`fill:var(--${d.k})`});s.appendChild(b);
+   bind(b,`<b>${d.m}</b><br>${neg?"Long":"Short"} interval fork<br>${v>0?"+":""}${v}% vs base`);
+   s.appendChild(mk("text",{x:neg?MID-w-8:MID+w+8,y:(neg?y:y+26)+16,class:"vl",
+     "text-anchor":neg?"end":"start"})).textContent=(v>0?"+":"")+v+"%";
+   s.appendChild(mk("text",{x:neg?MID+8:MID-8,y:(neg?y:y+26)+16,class:"ax",
+     "text-anchor":neg?"start":"end"})).textContent=neg?"long intervals":"short intervals";});
+ });
+})();
+</script>

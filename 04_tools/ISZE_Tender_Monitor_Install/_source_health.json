@@ -1,0 +1,191 @@
+{
+  "UK Find a Tender": {
+    "status": "OK",
+    "zero_runs": 0,
+    "last_count": 22,
+    "last_error": null
+  },
+  "UK Contracts Finder": {
+    "status": "OK",
+    "zero_runs": 0,
+    "last_count": 121,
+    "last_error": null
+  },
+  "TED Europa": {
+    "status": "OK",
+    "zero_runs": 0,
+    "last_count": 605,
+    "last_error": null
+  },
+  "Germany DTVP/NRW": {
+    "status": "RETIRED",
+    "zero_runs": 4,
+    "last_count": 0,
+    "last_error": "RETIRED \u2014 TED-only honesty for DTVP (no free feed); use TED DEU + Germany service.bund",
+    "note": "not an active fetcher; paid DTVP Professional Edition would be needed for that portal"
+  },
+  "Belgium RSS": {
+    "status": "RETIRED",
+    "zero_runs": 9,
+    "last_count": 0,
+    "last_error": "RETIRED \u2014 HTML SPA shell; live source is Belgium publicprocurement.be SEA",
+    "note": "ignored; replacement OK when Belgium publicprocurement.be is OK"
+  },
+  "Netherlands TenderNed": {
+    "status": "OK",
+    "zero_runs": 0,
+    "last_count": 25,
+    "last_error": null
+  },
+  "Norway Doffin": {
+    "status": "OK",
+    "zero_runs": 0,
+    "last_count": 37,
+    "last_error": null,
+    "note": null
+  },
+  "Finland HILMA": {
+    "status": "OK",
+    "zero_runs": 0,
+    "last_count": 54,
+    "last_error": null,
+    "note": null
+  },
+  "Israel data.gov.il": {
+    "status": "SUSPECT",
+    "zero_runs": 5,
+    "last_count": 0,
+    "last_error": "demoted \u2014 live mr.gov.il succeeded; CKAN frozen Feb 2021",
+    "note": "secondary only; datastore frozen Feb 2021 \u2014 not competing with live OK"
+  },
+  "Belgium publicprocurement.be": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 14
+  },
+  "Israel mr.gov.il": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 18
+  },
+  "Israel RSS": {
+    "zero_runs": 5,
+    "last_error": "RETIRED \u2014 HTML SPA shell, 0 <item>; live = Israel mr.gov.il",
+    "status": "RETIRED",
+    "last_count": 0,
+    "note": "ignored; replacement OK when Israel mr.gov.il is OK"
+  },
+  "Germany service.bund": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 12
+  },
+  "France BOAMP": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 52
+  },
+  "Poland BZP": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 38
+  },
+  "IEC iec.co.il domestic": {
+    "zero_runs": 0,
+    "last_error": "GEO_BLOCKED \u2014 iec.co.il domestic supplier tenders (Access Denied from outside Israel). Vehicle / leasing packs live here, not on global-iec. Abroad pointer: https://www.global-iec.com/activeTenders.html",
+    "status": "SKIPPED",
+    "last_count": 0,
+    "note": "vehicle/leasing tenders for UMI chase live here; abroad use IEC global-iec.com"
+  },
+  "IEC global-iec.com": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 7,
+    "note": "HTML list only (no RSS/API). Vehicle-keyword + Isuzu-gate survivors this run: 0. Domestic vehicle packs remain on GEO_BLOCKED iec.co.il."
+  },
+  "Spain PLACSP": {
+    "zero_runs": 0,
+    "last_error": "WAF_BLOCKED \u2014 PLACSP Atom/ZIP denied from this runner (contrataciondelestado.es / contrataciondelsectorpublico.gob.es); official syndication still documented \u2014 CODE_READY",
+    "status": "CODE_READY",
+    "last_count": 0,
+    "note": "Official Atom/ZIP syndication documented; this runner is WAF-denied. Not BROKEN \u2014 retry when egress/session allows."
+  },
+  "Italy PNCP": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 32
+  },
+  "Germany oeffentlichevergabe": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 545
+  },
+  "Romania SEAP": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 147
+  },
+  "Austria USP": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 23
+  },
+  "Denmark udbud.dk": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 6
+  },
+  "Portugal BASE": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 77
+  },
+  "Bulgaria CAIS EOP": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 159
+  },
+  "Czechia VVZ": {
+    "zero_runs": 0,
+    "last_error": null,
+    "status": "OK",
+    "last_count": 80
+  },
+  "Lithuania CVP IS": {
+    "zero_runs": 0,
+    "last_error": "POST cft-details-export returns 401 without VPT apiKey \u2014 CODE_READY",
+    "status": "CODE_READY",
+    "last_count": 0
+  },
+  "Estonia RHR": {
+    "zero_runs": 0,
+    "last_error": "rhr/api/public/v1/opendata HTTP 500 \u2014 wait for ministry fix",
+    "status": "BLOCKED",
+    "last_count": 0
+  },
+  "Slovakia UVO": {
+    "zero_runs": 0,
+    "last_error": "Vestnik HTML recaptcha; no free list API",
+    "status": "BLOCKED",
+    "last_count": 0
+  },
+  "Greece KIMDIS": {
+    "zero_runs": 0,
+    "last_error": "Open-data URL is login shell; need Promitheus credentials",
+    "status": "BLOCKED",
+    "last_count": 0
+  }
+}

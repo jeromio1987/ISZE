@@ -4,9 +4,7 @@ PRISM — Decision Models (next-gen layer, built 2026-06-10)
 One page for the decision-oriented models:
   Waterfall  — the EUR identity (wallet -> captured -> gap)
   Runway     — Golden Window wallet projection to 2030
-  Attach     — dealer-level cross-sell lifts (ITUK)
-  Leakage    — ITUK dealer call list
-  Elasticity — price-volume response by category (LOW POWER — direction only)
+  Attach / Leakage / Elasticity — internal only (PRISM_INTERNAL=true)
 
 Defection moved to Early Warning (2026-07-17). This page showed the raw
 defection_alerts table; Early Warning ranks the same alerts alongside capture
@@ -30,7 +28,9 @@ import plotly.graph_objects as go
 import streamlit as st
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-from config import DERIVED_DIR  # noqa: E402
+from config import DERIVED_DIR, is_internal_mode  # noqa: E402
+from modules.internal_gate import decision_tab_labels  # noqa: E402
+from modules.plotly_style import style  # noqa: E402
 
 # set_page_config is handled by app.py — do not call it in sub-pages
 st.title("Decision Models")
@@ -55,9 +55,17 @@ def _load(name: str) -> pd.DataFrame:
     return pd.read_csv(p)
 
 
-tab_wf, tab_rw, tab_att, tab_leak, tab_el = st.tabs(
-    ["€ Waterfall", "Revenue Runway", "Attach", "ITUK Leakage", "Elasticity"]
-)
+internal = is_internal_mode()
+if not internal:
+    st.caption(
+        "Attach, ITUK dealer leakage, and elasticity stay on the internal PRISM "
+        "launcher — double-click `run_prism_internal.ps1` when you are working alone."
+    )
+
+tab_names = decision_tab_labels(internal=internal)
+tabs = st.tabs(tab_names)
+tab_by_name = dict(zip(tab_names, tabs))
+tab_wf, tab_rw = tab_by_name["€ Waterfall"], tab_by_name["Revenue Runway"]
 
 with tab_wf:
     wf = _load("wallet_waterfall.csv")
@@ -106,8 +114,12 @@ with tab_wf:
                 net["over_target_eur"],  # closes identity to ~0
             ],
         ))
-        fig.update_layout(title=f"Network € identity — CY{year}", height=420)
-        st.plotly_chart(fig, width="stretch")
+        fig.update_layout(
+            title=f"Network € identity — CY{year}",
+            height=420,
+            margin=dict(l=40, r=20, t=40, b=20),
+        )
+        st.plotly_chart(style(fig), width="stretch")
 
         st.dataframe(
             w.sort_values("addressable_uncaptured_eur", ascending=False),
@@ -130,7 +142,7 @@ with tab_rw:
         fig = px.line(ser, x="year", y=["wallet_eur", "projected_capture_eur"],
                       title=f"{pick} — wallet ceiling vs projected capture (CY2025 GPS% held flat)")
         fig.update_layout(height=420, yaxis_title="EUR")
-        st.plotly_chart(fig, width="stretch")
+        st.plotly_chart(style(fig), width="stretch")
         st.caption(rw["scenario_note"].iloc[0])
         peaks = rw.drop_duplicates("distributor_code")[
             ["distributor_code", "peak_wallet_year", "peak_wallet_eur",
@@ -139,59 +151,64 @@ with tab_rw:
         ].sort_values("cum_wallet_2026_2030_eur", ascending=False)
         st.dataframe(peaks, width="stretch", hide_index=True)
 
-with tab_att:
-    at = _load("attach_rates.csv")
-    if not at.empty:
-        st.caption(
-            at["method_note"].iloc[0]
-            + " — lifts are association at dealer-year grain, not causal gateway proof."
-        )
-        cat = st.selectbox(
-            "Anchor category (A)", sorted(at["category_a"].unique()),
-            index=sorted(at["category_a"].unique()).index("lubricants")
-            if "lubricants" in set(at["category_a"]) else 0,
-        )
-        sub = at[at["category_a"] == cat].sort_values("attach_lift", ascending=False)
-        fig = px.bar(sub, x="category_b", y="attach_lift",
-                     title=f"Attach lift: dealers buying {cat} also buy …")
-        fig.add_hline(y=1.0, line_dash="dash")
-        fig.update_layout(height=380)
-        st.plotly_chart(fig, width="stretch")
-        st.dataframe(sub.drop(columns=["method_note"]), width="stretch", hide_index=True)
+if internal:
+    tab_att = tab_by_name["Attach"]
+    tab_leak = tab_by_name["ITUK Leakage"]
+    tab_el = tab_by_name["Elasticity"]
 
-with tab_leak:
-    dl = _load("dealer_leakage_ituk.csv")
-    if not dl.empty:
-        st.warning(
-            "Relative mix benchmark only — NOT the IML v7 absolute PMS gap "
-            "(€2.0M). Soft PMS-tag join (≈16% of ITUK sell-out units mapped). "
-            "Use as a call-order hint, not a € commitment."
-        )
-        st.caption(dl["benchmark_note"].iloc[0])
-        top = (dl.groupby("dealer_name", as_index=False)["gap_eur"].sum()
-               .sort_values("gap_eur", ascending=False).head(15))
-        fig = px.bar(top, x="gap_eur", y="dealer_name", orientation="h",
-                     title="ITUK dealers — relative mix gap € (call list, not IML gap)")
-        fig.update_layout(height=480, yaxis=dict(autorange="reversed"))
-        st.plotly_chart(fig, width="stretch")
-        drop_cols = [c for c in ("benchmark_note",) if c in dl.columns]
-        st.dataframe(
-            dl.drop(columns=drop_cols).head(200),
-            width="stretch", hide_index=True,
-        )
+    with tab_att:
+        at = _load("attach_rates.csv")
+        if not at.empty:
+            st.caption(
+                at["method_note"].iloc[0]
+                + " — lifts are association at dealer-year grain, not causal gateway proof."
+            )
+            cat = st.selectbox(
+                "Anchor category (A)", sorted(at["category_a"].unique()),
+                index=sorted(at["category_a"].unique()).index("lubricants")
+                if "lubricants" in set(at["category_a"]) else 0,
+            )
+            sub = at[at["category_a"] == cat].sort_values("attach_lift", ascending=False)
+            fig = px.bar(sub, x="category_b", y="attach_lift",
+                         title=f"Attach lift: dealers buying {cat} also buy …")
+            fig.add_hline(y=1.0, line_dash="dash")
+            fig.update_layout(height=380)
+            st.plotly_chart(style(fig), width="stretch")
+            st.dataframe(sub.drop(columns=["method_note"]), width="stretch", hide_index=True)
 
-with tab_el:
-    el = _load("price_volume_elasticity.csv")
-    if not el.empty:
-        st.warning(
-            "LOW POWER by construction (annual prices, 2 YoY transitions). "
-            "Read as direction + rough magnitude — never quote a beta externally."
-        )
-        view = el[~el["low_power"]] if st.toggle("Adequate n only", value=True) else el
-        fig = px.bar(view.sort_values("beta_elasticity"), x="beta_elasticity", y="category",
-                     orientation="h", error_x="se_beta",
-                     title="Price-volume response by category (beta, qty-weighted)")
-        fig.add_vline(x=0, line_dash="dash")
-        fig.update_layout(height=560)
-        st.plotly_chart(fig, width="stretch")
-        st.dataframe(view.drop(columns=["method_note"]), width="stretch", hide_index=True)
+    with tab_leak:
+        dl = _load("dealer_leakage_ituk.csv")
+        if not dl.empty:
+            st.warning(
+                "Relative mix benchmark only — NOT the IML service-schedule absolute PMS gap "
+                "(€2.0M). Soft PMS-tag join (≈16% of ITUK sell-out units mapped). "
+                "Use as a call-order hint, not a € commitment."
+            )
+            st.caption(dl["benchmark_note"].iloc[0])
+            top = (dl.groupby("dealer_name", as_index=False)["gap_eur"].sum()
+                   .sort_values("gap_eur", ascending=False).head(15))
+            fig = px.bar(top, x="gap_eur", y="dealer_name", orientation="h",
+                         title="ITUK dealers — relative mix gap € (call list, not IML gap)")
+            fig.update_layout(height=480, yaxis=dict(autorange="reversed"))
+            st.plotly_chart(style(fig), width="stretch")
+            drop_cols = [c for c in ("benchmark_note",) if c in dl.columns]
+            st.dataframe(
+                dl.drop(columns=drop_cols).head(200),
+                width="stretch", hide_index=True,
+            )
+
+    with tab_el:
+        el = _load("price_volume_elasticity.csv")
+        if not el.empty:
+            st.warning(
+                "LOW POWER by construction (annual prices, 2 YoY transitions). "
+                "Read as direction + rough magnitude — never quote a beta externally."
+            )
+            view = el[~el["low_power"]] if st.toggle("Adequate n only", value=True) else el
+            fig = px.bar(view.sort_values("beta_elasticity"), x="beta_elasticity", y="category",
+                         orientation="h", error_x="se_beta",
+                         title="Price-volume response by category (beta, qty-weighted)")
+            fig.add_vline(x=0, line_dash="dash")
+            fig.update_layout(height=560)
+            st.plotly_chart(style(fig), width="stretch")
+            st.dataframe(view.drop(columns=["method_note"]), width="stretch", hide_index=True)

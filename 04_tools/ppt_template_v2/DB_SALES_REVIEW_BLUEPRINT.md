@@ -37,8 +37,9 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
 1. Cover
 2. Agenda
 3. Q period Sales Review — actual vs budget, actual vs prior year, by month. **Use official/accounting figures if the user supplies them, not a self-derived cut.**
-4. Parts Performance — category-level H1/period movers, waterfall or bar chart, both up and down
-5+. One slide per material problem category (each ~-15% or worse) — see tone rules below for exact structure
+4. Parts Performance — **commercial / ex-warranty** category-level H1 movers (bar chart, up and down) **plus the largest-EUR PN drivers** for the increase and the decrease (PN + short description; model/application only when present in workspace BVP/PMS tables). Never review blended warranty+commercial demand as the sales cut.
+5+. One slide per material problem category (each ~-15% or worse) — same commercial basis; lead with category total then the **top PNs by EUR delta** driving that category move; see tone rules below for exact structure
+   - Growth slide: top growing PNs by EUR delta (prior > 0), not category totals alone
    - One slide for "New Business" — PNs with zero sales in prior years, cross-checked they don't just have a timing/backdated-invoice artifact, and cross-checked against warranty claims before calling them "new" wins
 6. GPS Capture — one line, the clean number, nothing else (see tone rules)
 7. PMS Coverage — filter categories with real km intervals labeled, wear-item categories with confidence caveats
@@ -54,18 +55,43 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
 
 ### Locked FY2027 lenses
 
+- **FY-first:** Prefer fiscal-year figures on every customer slide when available;
+  use calendar year only as fallback. Exception: parts H1 / slide-3 window stays
+  **CY H1** (Jan–Jun). PMS **capture %** stays complete-CY (no FY capture model).
 - The customer-facing target is **Sales-to-Dealer** from Dashboard columns P:U:
   `FY2026 Sales-to-Dealer × (1 + fleet movement) × 1.05 × 1.018`.
   If FY2026 Sales-to-Dealer is unavailable, use FY2026 ISZE billing divided by 0.65
   and label the base as a working estimate. ISZE-to-distributor billing remains an
   internal reconciliation measure, not the headline target.
-- Growth tables require **prior-period sales above zero** and exclude credit notes
-  and warranty/campaign heuristics. Prior-zero/current-positive parts move to a
-  **New Business validation** slide; they are not described as incremental growth
-  until new model, supersession, timing and campaign explanations are checked.
+- Growth tables require **prior-period sales above zero** and exclude credit notes.
+  Prior-zero/current-positive parts move to a **New Business validation** slide;
+  they are not described as incremental growth until new model, supersession,
+  timing and campaign explanations are checked.
+- **Commercial / ex-warranty on Parts Performance (slides 3–4+):** ERP has no
+  warranty document type, so warranty rides normal orders. Category / PN / ITC
+  movers use **commercial** billing only — exclude PNs that appear on
+  `warranty_raw_grain.csv` claim lines for that DB (assess-month window = prior
+  H1 opened 3 months early through current H1 end) **plus** the PN/description
+  text heuristic (PM sensor / warranty / campaign / recall). Credits stay on the
+  net bridge (signed negative, out of movers). Label Mode A takeaways
+  **commercial / ex-warranty**. Limitation: claim-matched PN exclusion drops all
+  billing of that PN (including any genuine commercial demand); residual warranty
+  on unmapped PNs can remain; grain assess-month coverage is uneven by DB/year.
+- **PN drivers on movers slides:** “Most common” = **largest EUR contribution**
+  to the H1 commercial move (qty as secondary). Category overview + each
+  decline/growth deep-dive must name those PNs with a short description.
+- **Model / application attribution:** fill `vehicle_model` from existing
+  `genuine_bvp_crossref.csv` / `bvp_addressable_basket.csv` when the PN is in
+  that basket. Do **not** invent fitment. `parts_catalog_dimension.csv` has no
+  model field. Browser EPC/GIDSS is **not** required for the PN-EUR movers
+  story; only needed if Jerome wants full fitment for PNs outside the BVP/PMS
+  application tables.
 - Fleet charts show **2019–2026 only**. The 2026 point is labelled as a working
   year-end estimate. UK LCV CY2026 is fixed at **44,926 units**, about **6% below**
   2025, and the title must state decline rather than imply continued growth.
+- **No Total≈segment double line.** If one segment is ≥90% of the latest fleet
+  (e.g. IBX LCV ~98%), plot **Total fleet only** and put the mix in a takeaway
+  bullet. Only plot multiple segment lines when two or more are each ≥5% of fleet.
 
 ---
 
@@ -120,13 +146,17 @@ doesn't repeat the same rounds. Follow it in order; each section names the mista
 All of these are handled by `04_tools\db_sales_review\common.py` and flagged by `preflight.py`.
 They are listed here because they will bite again in any hand-rolled analysis.
 
+- **Warranty contaminates commercial movers unless excluded.** Locked rule (Aug 2026): Parts
+  Performance / decline / growth slides are **commercial / ex-warranty**. Method in
+  `common.load_warranty_claim_pns` + text heuristic; implemented in `build_parts_analysis.py`
+  for every DB. Do not present blended H1 category movers as a sales review.
 - **Credit memos carry a POSITIVE `Net value`.** `BillT` G2 / `SaTy` CR rows are economically
   negative but stored positive in `cy2025_raw.csv` / `cy2026_q1.csv` / the raw extracts; only
   `q1fy2027_billing_tagged.csv` signs them, in `net_value_gps_signed`. Unsigned, IUK's EUR 95,000
   rebate credit turned a -9.8% quarter into a reported -4.5%. **This is network-wide, not an IUK
   quirk** — Q1 2026 alone carries credits for ITUK (142K), UMI (113K), IUK (96K), RSA (47K), ISD
   (30K), IBX (25K), Sverige (24K), Portugal (20K), Ireland (0.7K). Sign them, then keep them out
-  of the mover lists as a commercial adjustment.
+  of the mover lists as a commercial adjustment (separate from the warranty PN cut).
   ⚠ The July 2026 Portugal deck reported H1 2026 at EUR 935,636 with its EUR 20,000 rebate counted
   as a positive — the correct figure is EUR 40,000 lower. Fix before that deck is reused.
 - **A quarter's SAP extract can be badly short, by a DB-specific amount.** `Q1FY2027.XLSX` holds
@@ -175,3 +205,64 @@ They are listed here because they will bite again in any hand-rolled analysis.
 | IBX | The GPS number is overstated by construction (BE/NL/PL/LUX billing over a Belgium-only denominator). Lead with that honestly or the whole target discussion is contestable. |
 | PETROS | Q1 CY26 down ~41%. That is the meeting. Get the Power BI cut before presenting anything. |
 | IRELAND | GPS reads over 100%. No percentage anywhere in the deck — amounts only, and offer to agree the per-unit rate. |
+| HUNGARY | Fleet working estimate 3,645 (−2.4%). S2D imputed ÷0.65 until Dashboard has a row. Deep dive: genuine hole outside PMS; pads = local BVP exception. |
+| UMI | IDS Israel = UMI only — never blend UTI. Warranty fiscal is large vs net — always show GPS excl. warranty. |
+
+---
+
+## 7. Full deck (Mode A + deep dive) — Aug 2026 blueprint
+
+After Hungary (AutoWallis), the standard pack is **Mode A meeting deck + deep-dive annex** in one PPTX. Same shape for every DB.
+
+### Run order
+
+```bash
+cd 04_tools\db_sales_review
+python preflight.py --db IBX
+python build_parts_analysis.py --db IBX
+python build_full_deck.py --db IBX
+# same for UMI, HUNGARY, …
+```
+
+Outputs under `09_meetings\<DB>_Sales_Review_2026\`:
+
+| File | Role |
+|------|------|
+| `ISZE_<DB>_Sales_Review_FY2027.pptx` | Full = Mode A + deep dive |
+| `ISZE_<DB>_Sales_Review_FY2027_ModeA_only.pptx` | Customer-safe Mode A only |
+| `_full_deck_manifest.json` | Slide counts + paths |
+| `_summary.json` | Parts / GPS / PMS inputs |
+
+`build_hungary_full_deck.py` is a thin wrapper around `build_full_deck.py --db HUNGARY`.
+
+### Deep-dive slide set (customer-shareable — no “INTERNAL” stamp)
+
+1. Divider — prep detail; pick slides to share  
+2. Agenda  
+3. **GPS** — **max two FY lines**: fiscal-year GPS % + fiscal GPS **excl. warranty** (no calendar-year GPS line on the chart)  
+4–5. FY25→FY26 wallet mix (Genuine only / Genuine with BVP alternative / BVP)  
+6–7. Drivers — plain English where the genuine drop sits **on FY**; top PN losers outside PMS  
+8. Service-parts **CY capture %** vs network (complete calendar year only — never YTD vs full-year expected; capture % has no FY twin)  
+9. Same five lines as **FY € billing** (so fiscal is visible even though capture % is CY)  
+10. Brake pads — **BVP share of total brake pad sales (€)** on **FY**, not PMS capture  
+11. AIM exposure from `aim_gps_matrix.csv`  
+12. Warranty — claim-price CY vs fiscal GPS expense (two lenses, labelled)  
+13. Meeting bridge table  
+
+### Locked language / lenses (from Hungary round)
+
+- **FY-first on all customer slides.** Prefer fiscal-year numbers when available; fall back to calendar year only when FY does not exist. **Exception:** Mode A slide 3 / parts H1 window stays **CY H1** (Jan–Jun like-for-like).  
+- **GPS deep-dive chart:** max **two** lines — FY GPS % and FY GPS % excl. warranty. Never a third CY GPS series.  
+- **Genuine with BVP alternative** — never “genuine contested” on slides.  
+- PMS primary = **total** capture; capture % remains **complete CY only** (by design).  
+- Fleet chart = calendar years (UIO source); FY2027 target bullets say so explicitly. No Total≈dominant-segment double line (≥90% → Total only + mix takeaway).  
+- No `INTERNAL` eyebrow — deep dive may be shared selectively.  
+- Israel: **UMI ≠ UTI** on any IDS-linked slide.  
+- PMS year = `latest_complete_pms_year()` (full CY only).
+
+### Adding another customer
+
+1. Ensure `db_profiles.yaml` has `sold_to` (or resolvable `gps_key` in `gps_billing_fy_ALLCUSTOMERS.csv`).  
+2. Run the four commands above.  
+3. Read watch list + contact sheets; sharpen Mode A wording before send.  
+4. Ship only on explicit rebuild/ship OK from Jerome.

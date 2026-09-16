@@ -8,17 +8,13 @@
 # Seeded 2026-06-10 from metrics_snapshot.json (pipeline verify 96/0, 2026-06-04).
 
 anchors:
-  # 2026-07-03: parts base grew 94.26M -> 103.57M. Two legitimate, real causes
-  # (not a bug): (1) sales_fact widened from 434,858 to 477,505 rows (added
-  # CY2024-2025.XLSX's more-complete 2025 re-export + sales_2026tillApril.XLSX,
-  # Jan-Mar 2026 — closes the FY2025-completeness gap); (2) SaTy CR/RE
-  # credit-note/return lines (280 rows, EUR1.65M network-wide) now excluded from
-  # revenue-bearing metrics for the first time (flag H). Net effect is additive
-  # since the new 2026 quarter (~EUR10M gross) outweighs the CR/RE removal.
+  # 2026-08-25: parts base 103.57M -> 112.09M. sales_fact 477,505 -> 514,037
+  # after wiring Q1FY2027.XLSX (2026 Apr–Jun). Prior Jul-03 note still applies
+  # for CR/RE exclusion; Q1FY2027 has no SaTy so Apr–Jun CR/RE is sign-based only.
   - key: sales.parts_base_eur
-    facts_value: 103573715
+    facts_value: 112089307
     tol_pct: 0.5
-    facts_ref: "FACTS.md section 4 - parts base (2023-2026, ex-credit-notes/returns)"
+    facts_ref: "FACTS.md section 4 - parts base (2023–2026-06, ex-credit-notes/returns)"
 
   # 2026-07-15: PRISM lane re-based on the real per-distributor UIO bucket
   # split (cv_std/f_series/lcv) instead of the old hardcoded 2-market N75/LCV

@@ -1,0 +1,118 @@
+{
+  "scan_date": "2026-08-13",
+  "never_send": true,
+  "pass": 3,
+  "hit_count": 0,
+  "saved_count": 0,
+  "saved": [],
+  "hits": [],
+  "advanced_search": [
+    {
+      "hydrate": "\\\\jerome.van.der.pluym@isuzu-e.com\\Archive\\Inbox\\archive\\customers\\UMI%2FUTI",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "hydrate": "\\\\jerome.van.der.pluym@isuzu-e.com\\Archive\\Inbox\\archive\\customers\\UMI%2FUTI\\UTI",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "hydrate": "\\\\jerome.van.der.pluym@isuzu-e.com\\Archive\\Inbox\\archive\\customers\\UMI%2FUTI\\UMI",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "hydrate": "\\\\jerome.van.der.pluym@isuzu-e.com\\Archive\\Inbox\\archive\\customers\\UMI%2FUTI\\meeting minutes",
+      "before": 0,
+      "after": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com\\Inbox'",
+      "filt": "\"urn:schemas:httpmail:fromemail\" like '%sap4@uti.co.il%'",
+      "count": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com'",
+      "filt": "\"urn:schemas:httpmail:fromemail\" like '%sap4@uti.co.il%'",
+      "count": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com\\Inbox'",
+      "filt": "\"urn:schemas:httpmail:fromemail\" like '%sap4%'",
+      "count": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com'",
+      "filt": "\"urn:schemas:httpmail:fromemail\" like '%sap4%'",
+      "count": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com\\Inbox'",
+      "filt": "\"urn:schemas:httpmail:from\" like '%sap4%'",
+      "count": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com'",
+      "filt": "\"urn:schemas:httpmail:from\" like '%sap4%'",
+      "count": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com\\Inbox'",
+      "filt": "\"urn:schemas:httpmail:fromemail\" ci_phrasematch 'sap4@uti.co.il'",
+      "count": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com'",
+      "filt": "\"urn:schemas:httpmail:fromemail\" ci_phrasematch 'sap4@uti.co.il'",
+      "count": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com\\Inbox'",
+      "filt": "\"http://schemas.microsoft.com/mapi/proptag/0x0C1A001F\" like '%sap4%'",
+      "count": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com'",
+      "filt": "\"http://schemas.microsoft.com/mapi/proptag/0x0C1A001F\" like '%sap4%'",
+      "count": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com\\Inbox'",
+      "filt": "\"urn:schemas:httpmail:subject\" like '%UTIPartSales%' AND \"urn:schemas:httpmail:fromemail\" like '%sap4%'",
+      "count": 0
+    },
+    {
+      "scope": "'\\\\jerome.van.der.pluym@isuzu-e.com'",
+      "filt": "\"urn:schemas:httpmail:subject\" like '%UTIPartSales%' AND \"urn:schemas:httpmail:fromemail\" like '%sap4%'",
+      "count": 0
+    }
+  ],
+  "kql": [
+    {
+      "q": "from:sap4@uti.co.il",
+      "folder": "\\\\jerome.van.der.pluym@isuzu-e.com\\Inbox",
+      "n": 23355
+    },
+    {
+      "q": "from:sap4u@uti.co.il",
+      "folder": "\\\\jerome.van.der.pluym@isuzu-e.com\\Inbox",
+      "n": 23355
+    },
+    {
+      "q": "from:sap4uti@uti.co.il",
+      "folder": "\\\\jerome.van.der.pluym@isuzu-e.com\\search folders\\All Mail Items",
+      "n": 0
+    },
+    {
+      "q": "from:sap4@uti.co.il OR from:sap4u@uti.co.il OR from:sap4uti@uti.co.il",
+      "folder": "\\\\jerome.van.der.pluym@isuzu-e.com\\search folders\\All Mail Items",
+      "n": 0
+    },
+    {
+      "q": "from:(sap4) received:01/01/2020..12/31/2022",
+      "folder": "\\\\jerome.van.der.pluym@isuzu-e.com\\search folders\\All Mail Items",
+      "n": 0
+    }
+  ]
+}

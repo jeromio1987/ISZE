@@ -1,0 +1,37 @@
+{
+  "scan_date": "2026-08-13",
+  "never_send": true,
+  "mailbox": "jerome.van.der.pluym@isuzu-e.com",
+  "also_stores": ["Sales", "Parts"],
+  "method": "Outlook COM Restrict all folders + deep Petros folder + Archive customer folders",
+  "added_to_12_raw": [],
+  "by_db": {
+    "UTI": {
+      "found_in_mail": [
+        "2025-08", "2025-09", "2025-10", "2025-11", "2025-12",
+        "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06"
+      ],
+      "new_vs_disk": [],
+      "still_missing": ["2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2026-07"],
+      "note": "Sales Archive FW 2025-10-01 = exact duplicate of filed UTIPartSales_2025-09.xlsx. Dec mail copy still smaller than canonical YTD."
+    },
+    "IUK": {
+      "found_in_mail": ["IUK Monthly Demand - July 2026.xlsx (Inbox 2026-08-11)"],
+      "new_vs_disk": [],
+      "note": "SHA256 identical to filed IUK_Monthly_Demand_2025_2026YTD_July.xlsx"
+    },
+    "ITUK": {
+      "found_in_mail": [],
+      "already_on_disk": ["Sales to Dealers_ITUK_CY2025.xlsx"],
+      "note": "No Sales to Dealers_ITUK_CY*.xlsx in mailbox this hunt."
+    },
+    "GREECE": {
+      "found_in_mail": [],
+      "already_on_disk": ["Petros_Parts_Sold_Qties_2025.xlsx"],
+      "note": "Parts store Petros folder = 40 operational mails (orders/DHL/inquiries), no Parts_Sold_Qties workbook."
+    }
+  },
+  "other_db_sellout_in_mail": [],
+  "caveat": "Archive\\Inbox\\archive\\customers\\* folders have 0 local items (online stubs).",
+  "dump_dir": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\dealer_sales_mail_20260813"
+}

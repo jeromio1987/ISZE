@@ -23,6 +23,7 @@
 01_data/13_models/**
 01_data/models/**
 01_data/11_planning/**
+!01_data/11_planning/README.md
 01_data/planning/**
 01_data/92_archive/**
 01_data/_archive/**
@@ -46,6 +47,8 @@
 
 # Small reference allowlist (explicit only — review before init)
 !03_analytics/Isuzu/prism/data/distributor_master_mapping.csv
+# FY2027 VPACC July action plan (planning workbook on git)
+!01_data/11_planning/Action plan FY2027 VPACC_July update.xlsx
 
 # --- Derived data (regenerable; default off) ---
 01_data/derived/**
@@ -62,12 +65,33 @@
 01_data/dashboards/**
 !01_data/dashboards/README.md
 
-# Parquet everywhere
+# Parquet everywhere (default off) — allowlist engine tables for remote clones
 **/*.parquet
+!01_data/00_derived/sales_fact.parquet
+!01_data/00_derived/sales_with_crossref.parquet
+!01_data/00_derived/parts_catalog_dimension.parquet
+!01_data/00_derived/pms_capture_by_db_year.parquet
+!01_data/00_derived/bvp_pn_dimension.parquet
+!01_data/00_derived/genuine_bvp_crossref.parquet
+!01_data/00_derived/db_parts_mix_classification.parquet
+!01_data/00_derived/aim_gps_matrix.parquet
+!01_data/00_derived/pricing_*.parquet
+!01_data/00_derived/vpacc_*.parquet
+!01_data/00_derived/vpacc_*.meta.json
+
+# Interaction layer (G0a) — local derived mail facts; never commit content hashes at scale without review
+01_data/17_interactions/**
+!01_data/17_interactions/README.md
+
+# Giant regenerable CSVs (use sibling .parquet on clones; GitHub ~100MB hard limit)
+01_data/00_derived/pricing_pn_enquiry_active.csv
+01_data/00_derived/pricing_revision_cd_changed.csv
+01_data/00_derived/pricing_list_pn.csv
 
 # Large derived / scraper / insight dumps
 **/*sales_detailed*.tsv
 01_data/derived/insights/**
+01_data/00_derived/insights/**
 02_dashboards/_archive/**
 04_tools/**/scrape_results/**
 04_tools/**/results/**
@@ -123,6 +147,8 @@
 .env.*
 !.env.example
 *.env
+!nordics_api_keys.env.example
+nordics_api_keys.env
 secrets.toml
 **/secrets.toml
 *credentials*
@@ -142,6 +168,11 @@ cloudflared.exe
 # Meeting decks (track changelogs in 09_meetings; not pptx by default)
 09_meetings/**/*.pptx
 09_meetings/**/*.pdf
+# Exception: FY2027 sales-review decks (Mode A + full) — tracked for GitHub share
+!09_meetings/*_Sales_Review_2026/
+!09_meetings/*_Sales_Review_2026/ISZE_*_Sales_Review_FY2027*.pptx
+!09_meetings/*_Sales_Review_2026/_full_deck_manifest.json
+!09_meetings/*_Sales_Review_2026/_summary.json
 
 # --- Python / Node / Evidence build noise ---
 .venv/
@@ -173,3 +204,37 @@ Thumbs.db
 
 # --- Cursor local state (optional: track rules/skills explicitly via git add) ---
 # .cursor/ is NOT ignored — rules and verify skill should be tracked
+
+# --- 01_data legacy junction paths (NTFS junctions -> numbered folders) ---
+# These are on-disk backward-compat aliases created by 04_tools/workspace, each
+# pointing at the canonical numbered folder (paths.yaml). Git follows junctions
+# on Windows and would store every file twice. Track ONLY the numbered folder.
+# Confirmed 2026-08-26: no legacy path has ever been tracked in HEAD.
+01_data/dashboards/
+01_data/Dealer_sellout/
+01_data/derived/
+01_data/Distributor/
+01_data/exports/
+01_data/gpt_safe/
+01_data/models/
+01_data/planning/
+01_data/PMS/
+01_data/Pricing/
+01_data/raw/
+01_data/sales data/
+01_data/Tender/
+01_data/UIO/
+01_data/Warranty/
+01_data/_build/
+01_data/_INBOX/
+
+# --- Action Ledger transient build artefacts ---
+# One .txt per build run; the curated ACTION_LEDGER_BUILD_LOG_*.md is tracked.
+01_data/00_derived/action_ledger_build_log_*.txt
+01_data/00_derived/_p8_*
+
+# --- Rolling dashboard JSON snapshots (the live file is tracked) ---
+01_data/14_dashboards/*.backup_*.json
+
+# --- Scratch probe scripts (DATA_MANIFEST.md §8: scratch dump, not a deliverable) ---
+01_data/91_build/_scratch/

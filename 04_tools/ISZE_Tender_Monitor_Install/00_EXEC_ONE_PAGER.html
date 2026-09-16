@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>ISZE Tender Engine — Executive one-pager</title>
+<style>
+  :root {
+    --navy: #15233c;
+    --navy2: #1a2b4a;
+    --paper: #f7f4ee;
+    --ink: #222;
+    --terra: #c0552d;
+    --muted: #5a6578;
+    --line: #d8d2c6;
+    --ok: #2f6b4f;
+    --warn: #8a6a1f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    background: linear-gradient(165deg, #eef3f9 0%, var(--paper) 42%, #ebe4d8 100%);
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 28px 22px 48px; }
+  header {
+    background: var(--navy);
+    color: var(--paper);
+    padding: 28px 26px 24px;
+    border-radius: 2px;
+  }
+  header .brand {
+    font-size: 1.65rem;
+    letter-spacing: 0.02em;
+    margin: 0 0 6px;
+  }
+  header .sub {
+    margin: 0;
+    color: #c5d0e0;
+    font-size: 0.98rem;
+    font-family: system-ui, sans-serif;
+    font-weight: 400;
+  }
+  header .snap {
+    margin-top: 14px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.82rem;
+    color: #9aabbf;
+  }
+  h2 {
+    font-size: 1.05rem;
+    color: var(--navy);
+    margin: 28px 0 10px;
+    border-bottom: 2px solid var(--terra);
+    padding-bottom: 4px;
+    display: inline-block;
+  }
+  p { margin: 0 0 12px; max-width: 62ch; }
+  .verdict {
+    background: #fff;
+    border-left: 4px solid var(--terra);
+    padding: 14px 16px;
+    margin: 18px 0;
+    font-family: system-ui, sans-serif;
+    font-size: 0.95rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    font-family: system-ui, sans-serif;
+    font-size: 0.88rem;
+    margin: 8px 0 4px;
+  }
+  th {
+    background: var(--navy2);
+    color: var(--paper);
+    text-align: left;
+    padding: 9px 10px;
+    font-weight: 600;
+  }
+  td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    background: #fff;
+  }
+  tr:nth-child(even) td { background: #faf8f4; }
+  .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .kpi {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin: 12px 0 6px;
+  }
+  .chip {
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 12px 12px 10px;
+    position: relative;
+    cursor: help;
+  }
+  .chip .lab {
+    font-family: system-ui, sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  .chip .val {
+    font-size: 1.35rem;
+    color: var(--navy);
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+  .chip .tip {
+    display: none;
+    position: absolute;
+    left: 0; right: 0; top: 100%;
+    z-index: 5;
+    margin-top: 6px;
+    background: var(--navy);
+    color: var(--paper);
+    padding: 10px 12px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.78rem;
+    border-top: 3px solid var(--terra);
+    line-height: 1.35;
+  }
+  .chip:hover .tip { display: block; }
+  ul { margin: 6px 0 12px; padding-left: 1.2em; font-family: system-ui, sans-serif; font-size: 0.92rem; }
+  li { margin: 4px 0; }
+  .ask {
+    background: var(--navy);
+    color: var(--paper);
+    padding: 16px 18px;
+    margin-top: 20px;
+    font-family: system-ui, sans-serif;
+  }
+  .ask strong { color: #fff; }
+  .ask a { color: #f0c4b4; }
+  .foot {
+    margin-top: 22px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  code { font-size: 0.85em; }
+  .tag {
+    display: inline-block;
+    font-family: system-ui, sans-serif;
+    font-size: 0.72rem;
+    padding: 2px 7px;
+    margin-right: 4px;
+    background: #eef3f9;
+    color: var(--navy);
+    border: 1px solid var(--line);
+  }
+  .tag.warn { background: #f5ecd2; color: var(--warn); }
+  .tag.ok { background: #e4f0e9; color: var(--ok); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="brand">ISZE Tender Engine</p>
+    <p class="sub">Weekly public-procurement radar for Isuzu LCV / truck + fleet R&amp;M — scored as GPS addressable opportunity <em>if won</em>, never as expected revenue.</p>
+    <p class="snap">Snapshot 2026-08-25 · v4 dashboard · figures from live <code>isze_dashboard_v4_data.json</code></p>
+  </header>
+
+  <div class="verdict">
+    <strong>Status:</strong> Engine usable. Paper was a phase pile — this one-pager is the SteerCo entry.
+    <strong>Three layers:</strong> network ~20k LCV / ~78k CV/yr (indicative) ≠ ~130 CV tenders in feed ≠ <strong>18 stated fleet units</strong> on captured pickup/truck notices.
+    <strong>18 is not market potential.</strong> National LIVE only ~21% of footprint; ~69% TED-only below-threshold — see <code>_COUNTRY_TENDER_PORTALS_MAP.md</code>. Wire P0: ES PLACSP → IT PNCP → DE open data → NO/FI keys.
+  </div>
+
+  <h2>Live headline</h2>
+  <div class="kpi">
+    <div class="chip">
+      <div class="lab">Stated fleet (pickup/truck)</div>
+      <div class="val">18</div>
+      <div class="tip">Sum of extracted fleet_size on pickup/truck rows in the scrape subset. NOT annual demand. NOT sales potential. 18 ≠ ~130 CV tenders ≠ ~78k CV/yr. Snapshot 2026-08-25.</div>
+    </div>
+    <div class="chip">
+      <div class="lab">CV tenders in feed</div>
+      <div class="val">~130 / 228</div>
+      <div class="tip">Pickup+truck opportunities after Isuzu gate. Product filter CV. CV is in the feed — most rows simply lack a published fleet count.</div>
+    </div>
+    <div class="chip">
+      <div class="lab">Network scale (indicative)</div>
+      <div class="val">~20k / ~78k</div>
+      <div class="tip">Jerome LCV / CV annual sales order-of-magnitude. Not from this tender scrape. Ask if stale. Sanity only — do not equate to stated fleet.</div>
+    </div>
+    <div class="chip">
+      <div class="lab">National portal LIVE</div>
+      <div class="val">~21%</div>
+      <div class="tip">Share of footprint countries with a national LIVE feed beyond TED. ~69% TED-only for below-threshold — why fleet extract looks tiny. Paper: _COUNTRY_TENDER_PORTALS_MAP.md.</div>
+    </div>
+  </div>
+
+  <h2>Before → after (same day stack)</h2>
+  <table>
+    <thead>
+      <tr><th>Stage</th><th class="num">Notices</th><th class="num">Opps</th><th class="num">GPS-sized</th><th class="num">GPS € / yr</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>v3 baseline (24 Aug feed)</td><td class="num">778</td><td class="num">680</td><td class="num">0</td><td class="num">—</td></tr>
+      <tr><td>v4 pre–Isuzu gate</td><td class="num">773</td><td class="num">679</td><td class="num">11*</td><td class="num">~€5.9k bug → €30.4k max-wallet*</td></tr>
+      <tr><td>After Isuzu gate (noise cut)</td><td class="num">193</td><td class="num">172</td><td class="num">6</td><td class="num">€30,410</td></tr>
+      <tr><td>After BEL/ISR + product-fit (live)</td><td class="num"><strong>211</strong></td><td class="num"><strong>186</strong></td><td class="num"><strong>3</strong></td><td class="num"><strong>€1,488</strong></td></tr>
+    </tbody>
+  </table>
+  <p style="font-family:system-ui,sans-serif;font-size:0.8rem;color:var(--muted);">*Historical maths only. Live commercial floor is €1,488 after van/LCV product-fit (Poșta Română-style vans no longer count as D-Max GPS).</p>
+
+  <h2>What the money words mean</h2>
+  <ul>
+    <li><strong>Lead count</strong> — gate-passing opportunities (buyer, title, Fit, link). Most have no GPS €.</li>
+    <li><strong>GPS floor €</strong> — addressable parts wallet <em>if</em> we won a pickup/truck-shaped buy with published fleet and a real SPU map row. Not network revenue. Not expected revenue.</li>
+    <li><strong>Published contract value</strong> — buyer’s Est. Value when the notice carried one (list feeds often empty).</li>
+    <li><span class="tag ok">OK</span> live feed · <span class="tag ok">OK</span> Nordics keys DONE · <span class="tag">RETIRED</span> dead portals not red alarms</li>
+  </ul>
+
+  <h2>Product segments (live)</h2>
+  <table>
+    <thead><tr><th>Segment</th><th class="num">Opps</th><th>GPS € allowed?</th></tr></thead>
+    <tbody>
+      <tr><td>Truck / chassis</td><td class="num">70</td><td>Yes if fleet + map</td></tr>
+      <tr><td>Pickup / D-Max-shaped</td><td class="num">40</td><td>Yes if fleet + map</td></tr>
+      <tr><td>Postal van / LCV</td><td class="num">41</td><td>No — lead only</td></tr>
+      <tr><td>Weak / generic</td><td class="num">30</td><td>No</td></tr>
+      <tr><td>R&amp;M only</td><td class="num">5</td><td>No</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Source honesty (now)</h2>
+  <ul>
+    <li>TED, UK FaT/CF, NL, BE SEA, IL mr.gov.il, DE service.bund, <strong>NO Doffin + FI HILMA</strong> — feeding.</li>
+    <li>Nordics keys — <strong>DONE</strong> (do not re-ask Jerome). SSOT: <code>_NORDICS_BLOCKED.md</code>.</li>
+    <li>BE RSS, IL RSS, DE DTVP — <strong>RETIRED</strong> (not “broken scrapers silently returning 0”).</li>
+  </ul>
+
+  <div class="ask">
+    <strong>Next ask (not Nordics):</strong> unblock <strong>ES PLACSP</strong> WAF/egress when ready; keep DE OV healthy.
+    Nordics keys are closed — agents diagnose silently if health flips.
+  </div>
+
+  <h2>Engine vs paper</h2>
+  <ul>
+    <li><strong>Engine-side (live):</strong> scrape, gate, product-fit GPS (van GPS null), source health, market reason chips, <strong>IDS dealer ↔ MAP</strong> on the v4 opportunity table (real rankings only — see <code>_IDS_DEALER_MODULE.md</code>).</li>
+    <li><strong>Paper-side:</strong> this one-pager + operator hub — see <code>_PAPER_DEEP_REVIEW.md</code>.</li>
+  </ul>
+
+  <h2>IDS dealer / MAP (real fields only)</h2>
+  <ul>
+    <li>Source: IDS 2026 rankings workbook — <strong>519</strong> dealers across 19 country tabs. No invented outlets.</li>
+    <li>On the live 186 opps: <strong>113</strong> get an IDS dealer (<code>country_primary</code> or <code>geo_nearest</code>); <strong>73</strong> stay dealer-<em>unmapped</em>.</li>
+    <li><strong>Romania</strong> → distributor <code>ROMANIA</code> + IDS dealer (e.g. rank-1 <code>RODAV</code> or a city hit). <strong>Germany</strong> → distributor <code>GERMANY</code> / ISD label, dealer <em>unmapped</em> until a DE ranking file exists.</li>
+    <li>Detail + schema: <code>_IDS_DEALER_MODULE.md</code> · open v4 for the Dealer / IDS column.</li>
+  </ul>
+
+  <p class="foot">
+    Open the working dashboard: double-click <code>OPEN_isze_dashboard_v4_opportunity.cmd</code> in the same folder.<br/>
+    Hub: <code>OPERATOR_INDEX.md</code> · Criticality: <code>_CRITICALITY_PROTOCOL.md</code> · Portal map: <code>_COUNTRY_TENDER_PORTALS_MAP.md</code> · Stated fleet notes: <code>_ADDRESSABLE_VEHICLES.md</code><br/>
+    No invented commercial figures. Null ≠ €0. 18 stated fleet ≠ CV tender count ≠ network sales.
+  </p>
+</div>
+</body>
+</html>

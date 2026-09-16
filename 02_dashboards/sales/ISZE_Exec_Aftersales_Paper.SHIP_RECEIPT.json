@@ -1,0 +1,53 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_Exec_Aftersales_Paper.html",
+  "artifact_mtime_ms": 1789563389098,
+  "written_at": "2026-09-16T13:01:57.558Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_Exec_Aftersales_Paper.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "278711 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN cmd present (OPEN_Aftermarket_BI_Command_Center.cmd, OPEN_DB_DLR_Replenishment.cmd, OPEN_Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.cmd)"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "6 PNG(s) — agent must have image-Read before shipping"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa\\exec_paper\\page-001-cover.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa\\exec_paper\\page-003-billed-target.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa\\exec_paper\\page-004-opportunity.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa\\exec_paper\\page-008-price-pn.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa\\exec_paper\\page-010-tenders.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa\\exec_paper\\page-011-holes.png"
+  ],
+  "notes": "Rebuilt 2026-09-16: placeholder count/share derived at build time (8 markets, 37% of 60.22M ceiling). Content gate verify_exec_aftersales_paper.py exit 0. Headless Chrome QA offline (proxy 127.0.0.1:9), 6 PNGs image-Read, PDF print 18 sheets = 16 paper pages + p4/p8 print overflow (pre-existing)."
+}

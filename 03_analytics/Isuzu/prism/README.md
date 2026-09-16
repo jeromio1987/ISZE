@@ -2,7 +2,13 @@
 
 ## Start the app (Windows)
 
-**Easiest:** double-click **`run_prism.bat`** in this folder.
+**Usual (MD-safe):** double-click **`run_prism.ps1`**. Then open **http://localhost:8503**.
+
+(`run_prism.bat` is the older 8501 path — also MD-safe, but use the `.ps1` for the usual window.)
+
+Attach, ITUK leakage, elasticity, the demand-flow Sankey, and aftermarket scrape stay off that window.
+
+**Internal (those extra tabs):** double-click **`run_prism_internal.ps1`** (or `run_prism_internal.bat`). Same address **8503** — close the usual PRISM window first.
 
 Or in PowerShell:
 

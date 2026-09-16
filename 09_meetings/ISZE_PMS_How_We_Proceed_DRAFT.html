@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draft — ISZE parts support for ITUK PMS</title>
+<style>
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;font-size:14px;line-height:1.45;background:#e8e4dc;}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0;}
+.page{max-width:1000px;margin:0 auto 18px;background:#fff;padding:28px 32px 36px;box-shadow:0 1px 6px rgba(0,0,0,.08);}
+.cover{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:40px 36px 44px;margin:0 auto 18px;max-width:1000px;}
+.cover h1{color:#fff;font-size:30px;line-height:1.18;max-width:24ch;}
+.cover .rule{width:64px;height:3px;background:#c0552d;margin:18px 0 16px;}
+.cover .meta{font-size:14px;opacity:.92;max-width:60ch;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;}
+.chip{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);padding:6px 12px;font-size:12px;border-radius:2px;}
+.chip.warn{background:rgba(192,85,45,.35);border-color:#c0552d;}
+h2.sec{font-size:20px;margin:0 0 8px;padding-bottom:8px;border-bottom:2px solid #1a2b4a;}
+h2.sec .no{color:#c0552d;}
+.say{background:#15233c;color:#f7f4ee;padding:12px 16px;margin:0 0 16px;border-left:4px solid #c0552d;}
+.say .k{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#c0552d;font-weight:700;}
+.say p{margin:4px 0 0;font-size:15px;line-height:1.4;}
+.lead{color:#6b6256;font-size:13px;margin:0 0 14px;}
+.callout{border-left:3px solid #c0552d;background:#f7f4ee;padding:12px 14px;margin:12px 0 0;}
+.callout.ok{border-left-color:#1d9e75;}
+.callout b{color:#1a2b4a;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:14px 0;}
+.kpi{background:#f7f4ee;padding:14px 16px;border-top:3px solid #1a2b4a;position:relative;}
+.kpi .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#6b6256;}
+.kpi .val{font-family:Georgia,serif;font-size:28px;color:#1a2b4a;margin-top:4px;}
+.kpi .sub{font-size:12px;color:#6b6256;margin-top:4px;}
+.kpi.gap{border-top-color:#c0552d;} .kpi.gap .val{color:#c0552d;}
+.kpi.ok{border-top-color:#1d9e75;} .kpi.ok .val{color:#1d9e75;}
+table{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:13px;}
+th{background:#1a2b4a;color:#fff;text-align:left;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.03em;}
+td{padding:8px 10px;border-bottom:1px solid #d9d3c8;}
+tbody tr:nth-child(even){background:#f7f4ee;}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+.tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:2px;vertical-align:middle;}
+.tag.now{background:#1d9e75;color:#fff;}
+.tag.phase{background:#2a78d6;color:#fff;}
+.barrow{display:grid;grid-template-columns:150px 1fr 64px;gap:10px;align-items:center;margin:7px 0;}
+.barrow .name{font-size:13px;font-weight:600;color:#1a2b4a;}
+.track{height:22px;background:#eee9e0;border-radius:3px;overflow:hidden;}
+.fill{height:100%;border-radius:3px;display:flex;align-items:center;}
+.fill.ituk{background:#1a2b4a;} .fill.gap{background:#c0552d;} .fill.ok{background:#1d9e75;}
+.fill span{color:#fff;font-size:11px;font-weight:700;padding-left:8px;}
+.pct{font-variant-numeric:tabular-nums;font-weight:700;color:#1a2b4a;text-align:right;}
+.card{border:1px solid #d9d3c8;padding:14px 16px;background:#fff;}
+.card h3{font-size:16px;margin:0 0 8px;}
+.card .n{font-family:Georgia,serif;font-size:22px;color:#c0552d;margin-right:6px;}
+.ask{margin:0;padding-left:18px;} .ask li{margin:8px 0;}
+.footer{margin-top:18px;padding-top:10px;border-top:1px solid #d9d3c8;font-size:11px;color:#6b6256;}
+/* flow */
+.flow{display:flex;flex-direction:column;align-items:center;gap:0;margin:8px 0 4px;}
+.fbox{width:100%;max-width:720px;padding:14px 18px;text-align:center;border-radius:4px;color:#fff;}
+.fbox h3{color:#fff;font-size:16px;margin:0 0 4px;}
+.fbox p{margin:0;font-size:13px;opacity:.95;}
+.fbox.q{background:#15233c;}
+.fbox.a{background:#1d9e75;}
+.fbox.b{background:#2a78d6;}
+.fbox.c{background:#c0552d;}
+.arrow{width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:14px solid #c0552d;margin:4px 0;}
+.split{display:grid;grid-template-columns:1fr 28px 1fr;gap:8px;width:100%;max-width:720px;align-items:center;}
+.split .or{text-align:center;font-size:11px;font-weight:700;color:#c0552d;letter-spacing:.06em;}
+.parties{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:8px;align-items:stretch;margin-top:14px;}
+.party{background:#f7f4ee;border-top:4px solid #1a2b4a;padding:14px 12px;text-align:center;}
+.party.im{border-top-color:#c0552d;}
+.party.it{border-top-color:#2a78d6;}
+.party .who{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#6b6256;}
+.party .nm{font-family:Georgia,serif;font-size:20px;color:#1a2b4a;margin:4px 0;}
+.plus{font-family:Georgia,serif;font-size:28px;color:#c0552d;align-self:center;}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0;}
+.step{background:#f7f4ee;padding:12px 10px;border-top:3px solid #1a2b4a;min-height:96px;}
+.step .t{font-size:11px;font-weight:700;color:#c0552d;text-transform:uppercase;}
+.step p{margin:6px 0 0;font-size:12px;color:#222;}
+.daf{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.daf .box{background:#15233c;color:#f7f4ee;padding:14px 16px;}
+.daf .box .cat{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#c0552d;}
+.daf .box .pn{font-family:Consolas,monospace;font-size:13px;margin:6px 0 2px;}
+.daf .box .peer{font-size:12px;opacity:.9;}
+@media print{
+  body{background:#fff;}
+  .page,.cover{box-shadow:none;margin-bottom:0;page-break-after:always;}
+  .page:last-child{page-break-after:auto;}
+}
+@media(max-width:720px){
+  .grid2,.grid3,.daf,.steps,.parties{grid-template-columns:1fr;}
+  .split{grid-template-columns:1fr;}
+  .plus{display:none;}
+  .barrow{grid-template-columns:120px 1fr 52px;}
+}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;">Draft · ISZE parts support · complements the ITUK operating model</div>
+  <h1>PMS from the parts side: pack, BVP now, SPA now</h1>
+  <div class="rule"></div>
+  <p class="meta">Your workshop model stays the head story. This pack is how Europe parts prices the job: BVP where it exists, SPA with ITUK, IML in if we need more penetration.</p>
+  <div class="chips">
+    <span class="chip warn">DRAFT</span>
+    <span class="chip">N75 · October</span>
+    <span class="chip">BVP this month</span>
+    <span class="chip">SPA we work now</span>
+    <span class="chip">Clutch in, 47% manuals</span>
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">1</span> Opening</h2>
+  <div class="say">
+    <p>Uptime is the customer story. Parts is how we attach the right set on a visit that already happens. We start with BVP this month. We price SPA now. If ITUK and ISZE cannot close the discount, IML can join and we share it three ways.</p>
+  </div>
+  <div class="callout ok">
+    <b>N75 October is not P700.</b> October is a PMS campaign on the existing NPR75 / NPR88 fleet (ITUK interval 40,000 km). P700 is the new truck and unpriced parts — a separate workstream with James Marsh.
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <h3>ITUK already said</h3>
+      <p>N75 events. Oil + fuel + air on the job. Inspect brakes. Conversion and fill, not discount as the KPI. N35 later. Connected later.</p>
+    </div>
+    <div class="card">
+      <h3>What we add</h3>
+      <p>Cover %. Filter pack. BVP promotion from August. SPA build now. Clutch in the model at 47% manuals. IML as a third wallet if the SPA is not enough.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">2</span> How we got here</h2>
+  <div class="say">
+    <p>March to August is one programme. This week we have both halves: your operating model, and a parts path you asked us to draft in Japan.</p>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="t">Mar</div><p>Kick-off. Frequencies, target items. VIN format not available. UIO + CBU + R&amp;M instead.</p></div>
+    <div class="step"><div class="t">Apr</div><p>UK visit. N75 first. Air + brake headlines. Oil + fuel as the 40k pack. Parc 9,359.</p></div>
+    <div class="step"><div class="t">Jun</div><p>EU conference. SPA discussion. Sales prices requested so we can price a SPA.</p></div>
+    <div class="step"><div class="t">Jul</div><p>Japan hour locked. ISZE to take the parts lead on Tuesday.</p></div>
+    <div class="step"><div class="t">13 Aug</div><p>Your pack + three ISZE options. You asked for this draft in Japan.</p></div>
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">3</span> N75 cover % · clutch stays in</h2>
+  <div class="say">
+    <p>Air is the miss. Fuel is already there. Brake is convert-on-event. Oil stays in the pack. Clutch we keep in the model: 47% of the N75 parc as manuals, until VIN says otherwise.</p>
+  </div>
+  <div class="grid3">
+    <div class="kpi gap" title="CY2025 distributor cover vs expected demand on the IML service schedule. N75 parc 9,359."><div class="lbl">Air · the miss</div><div class="val">19%</div><div class="sub">2,226 / 11,699</div></div>
+    <div class="kpi" title="47% of 9,359 N75 = manuals (planning). Times 0.5 services/yr = 2,199 expected kits. 243 billed."><div class="lbl">Clutch · 47% manuals</div><div class="val">11%</div><div class="sub">243 / 2,199 expected</div></div>
+    <div class="kpi"><div class="lbl">Brake · convert</div><div class="val">62%</div><div class="sub">2,902 / 4,680</div></div>
+  </div>
+  <div class="barrow"><div class="name">Fuel</div><div class="track"><div class="fill ok" style="width:94%"><span>94%</span></div></div><div class="pct">94%</div></div>
+  <div class="barrow"><div class="name">Brake</div><div class="track"><div class="fill ituk" style="width:62%"><span>62%</span></div></div><div class="pct">62%</div></div>
+  <div class="barrow"><div class="name">Oil</div><div class="track"><div class="fill ituk" style="width:40%"><span>40%</span></div></div><div class="pct">40%</div></div>
+  <div class="barrow"><div class="name">Air</div><div class="track"><div class="fill gap" style="width:19%"><span>19%</span></div></div><div class="pct">19%</div></div>
+  <div class="barrow"><div class="name">Clutch</div><div class="track"><div class="fill ituk" style="width:11%"><span>11%</span></div></div><div class="pct">11%</div></div>
+  <div class="callout ok">
+    <b>47% is the planning figure for this round.</b> Manual share of N75 until a VIN list with gearbox exists. We do not wait for that list to keep clutch in the programme. At the counter, a kit is still only for a manual.
+  </div>
+  <div class="footer">CY2025 · N75 9,359. ITUK interval: NPR75 / NPR88 = 40,000 km. IML planning cover % uses the same 40,000 km filters plus 50,000 km/yr assumed mileage (1.25 services/year). Fuel dealer 95% · oil dealer 46% · air dealer 20% · brake dealer 63% · clutch dealer 16%.</div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">4</span> DAF LF is the price peer, not a physical fit</h2>
+  <div class="say">
+    <p>Oil and fuel (and air) have a comparable DAF LF part in the UK OEM survey. That is the price fight on a 7.5t job. It does not mean the Isuzu filter bolts onto a DAF.</p>
+  </div>
+  <div class="daf">
+    <div class="box">
+      <div class="cat">Oil</div>
+      <div class="pn">Isuzu 8983282070</div>
+      <div class="peer">DAF LF 1399494 · comparable</div>
+    </div>
+    <div class="box">
+      <div class="cat">Fuel</div>
+      <div class="pn">Isuzu 8975425400</div>
+      <div class="peer">DAF LF 1707078 · comparable</div>
+    </div>
+    <div class="box">
+      <div class="cat">Air</div>
+      <div class="pn">Isuzu 8981772710</div>
+      <div class="peer">DAF LF 1914366 · comparable</div>
+    </div>
+  </div>
+  <p class="lead" style="margin-top:14px;">Source: UK / ITUK OEM survey 2023, DAF LF 180 FA 8–12t, status COMPARABLE. Use it to explain why the pack has to be priced against DAF, not to claim interchange.</p>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">5</span> Three levers · BVP this month, SPA now</h2>
+  <div class="say">
+    <p>We do not wait for October to start pricing. BVP that already exists, we promote from August. SPA we work now. The pack is how air rides on the visit.</p>
+  </div>
+  <div class="grid3">
+    <div class="card">
+      <h3><span class="n">1</span> BVP <span class="tag now">August</span></h3>
+      <p>Where a twin exists, promote it. Live oil BVP <code>1876102890</code> already moves. Catalogue twins with zero UK sales only go on the poster if ITUK orders them.</p>
+    </div>
+    <div class="card">
+      <h3><span class="n">2</span> SPA <span class="tag now">now</span></h3>
+      <p>Genuine air and brake (and clutch if we keep it in). We price with ITUK now, not after Japan. If the level is not enough, IML can join.</p>
+    </div>
+    <div class="card">
+      <h3><span class="n">3</span> Filter pack</h3>
+      <p>One N75 kit: oil + fuel + air. Fuel 94%, air 19%. R90 pad <code>8982447940</code> is orderable on the brake side.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">6</span> How we get the price down</h2>
+  <div class="say">
+    <p>BVP first. Then SPA with ITUK. If we cannot agree the level, IML sits at the table and the three of us share the discount so the dealer can win the job.</p>
+  </div>
+
+  <div class="flow">
+    <div class="fbox q">
+      <h3>Need more price on this job?</h3>
+      <p>Do not start with a three-party SPA. Walk the ladder.</p>
+    </div>
+    <div class="arrow"></div>
+    <div class="split">
+      <div class="fbox a">
+        <h3>BVP twin exists</h3>
+        <p>Promote BVP. That is the August move. No extra SPA until the twin is on the shelf.</p>
+      </div>
+      <div class="or">OR</div>
+      <div class="fbox b">
+        <h3>Genuine needs SPA</h3>
+        <p>ISZE prices it with ITUK now. Dealer quotes the set on the event.</p>
+      </div>
+    </div>
+    <div class="arrow"></div>
+    <div class="fbox c">
+      <h3>ITUK and ISZE cannot close the level</h3>
+      <p>IML joins. We share the discount across three parties. More penetration, same workshop event.</p>
+    </div>
+  </div>
+
+  <div class="parties">
+    <div class="party"><div class="who">Europe parts</div><div class="nm">ISZE</div><div class="lead">SPA wallet + pack BOM</div></div>
+    <div class="plus">+</div>
+    <div class="party it"><div class="who">UK distributor</div><div class="nm">ITUK</div><div class="lead">Dealer price + stock</div></div>
+    <div class="plus">+</div>
+    <div class="party im"><div class="who">If still short</div><div class="nm">IML</div><div class="lead">Third share of the discount</div></div>
+  </div>
+  <div class="callout">
+    <b>The idea.</b> We do not lose a conversion because one wallet ran out. If ITUK cannot go far enough, IML can still come in. That is how we buy market penetration without turning Tuesday into a discount argument.
+  </div>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">7</span> How we proceed</h2>
+  <div class="say">
+    <p>Mark this up in Japan. Lock the ladder on Tuesday. BVP already this month. SPA build in parallel. Pack and R90 in September. N75 live in October on the existing fleet — not P700.</p>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="t">August</div><p>Promote live BVP. Start SPA numbers with ITUK. Draft in Japan.</p></div>
+    <div class="step"><div class="t">Tue 18 Aug</div><p>Lock pack, SPA lines, BVP order-or-leave, IML-join rule, clutch on 47%.</p></div>
+    <div class="step"><div class="t">September</div><p>Pack BOM, SPA paper, R90 pad order, bulletin, stock rule.</p></div>
+    <div class="step"><div class="t">October</div><p>N75 uptime campaign. Pack on the visit. Brake convert. Clutch in the model.</p></div>
+    <div class="step"><div class="t">Nov–Dec</div><p>Air attach %, brake accept, clutch kits vs 2,199, pack fill. Then N35.</p></div>
+  </div>
+  <p class="lead">Not this round: N35 as the launch, connected / odometer, oil as the headline KPI.</p>
+</section>
+
+<section class="page">
+  <h2 class="sec"><span class="no">8</span> Asks so the hour can close</h2>
+  <div class="say">
+    <p>Five answers. Then September has a job.</p>
+  </div>
+  <ol class="ask">
+    <li><b>BVP now.</b> Promote live oil BVP from August. Zero-sales twins (air <code>5876102500</code>, fuel <code>1876102860</code>): order, or leave off the poster?</li>
+    <li><b>SPA now.</b> Which genuine air / brake / clutch lines do we price with ITUK this month?</li>
+    <li><b>IML join rule.</b> If ITUK and ISZE cannot agree the SPA level, IML can share the discount. Yes?</li>
+    <li><b>Pack.</b> One N75 kit (oil + fuel + air) on existing events. R90 pad <code>8982447940</code> is orderable.</li>
+    <li><b>Clutch.</b> Keep it in at 47% manuals (expected 2,199). VIN later only refines the %.</li>
+  </ol>
+  <div class="footer">Draft 13 Aug 2026. Complements ITUK PMS Project 18 Aug 2026. Double-click; nothing is fetched from the network.</div>
+</section>
+
+</body>
+</html>

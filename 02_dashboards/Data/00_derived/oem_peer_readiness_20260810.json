@@ -1,0 +1,29 @@
+{
+  "as_of_utc": "2026-08-12T10:50:40.789866+00:00",
+  "unique_oe_mapped": 22,
+  "unique_oe_street_filled": 15,
+  "scrape_gaps": 7,
+  "oem_benchmark_cats": [
+    "air_filter",
+    "oil_filter"
+  ],
+  "near_gate_cats": [
+    "blower_filter",
+    "brake_pad",
+    "brake_rotor",
+    "fuel_filter"
+  ],
+  "street_factor": 1.785,
+  "n_pn_street_vs_isze_rows": 22,
+  "files": {
+    "readiness": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\oem_peer_readiness_20260810.csv",
+    "street_vs_isze": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\oem_peer_street_vs_isze_20260810.csv",
+    "eucon_gap_scan": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\eucon_comparable_oem_gap_20260810.csv"
+  },
+  "notes": [
+    "Eucon 2023 COMPARABLE brands present: DAF, Toyota Hilux, Ford Ranger only.",
+    "No Mitsubishi L200 / Transit / Sprinter / MAN / Crafter COMPARABLE maps in survey.",
+    "Do not invent OE maps or street. FEBI/aftermarket \u2260 OEM street.",
+    "Ford shop Ranger shoes Product No 2138025 \u2014 not proven supersession of 1713904."
+  ]
+}

@@ -37,6 +37,7 @@ from config import (  # noqa: E402
 )
 from modules.bvp_analytics import UIO_OVERRIDES  # noqa: E402
 from modules.bvp_dashboard_data import is_ready, load_bvp_bundle  # noqa: E402
+from modules.year_coverage import is_partial, latest_complete_year  # noqa: E402
 
 FIXTURES_PATH = PRISM_ROOT / "data" / "verification_fixtures.yaml"
 REPORT_JSON = DERIVED_DIR / "_verification_report.json"
@@ -437,15 +438,17 @@ def check_pms_all_distributors(report: Report, fx: dict[str, Any]) -> None:
     if pms_path.exists() and cfg_cap.get("min_distributors"):
         df = pd.read_csv(pms_path)
         totals = df[df["line_type"] == "total"]
-        yr = int(totals["year"].max())
-        dbs = totals[totals["year"] == yr]["distributor_code"].nunique()
+        years = [int(y) for y in totals["year"].dropna().unique()]
+        complete_yr = latest_complete_year(years)
+        dbs = totals[totals["year"] == complete_yr]["distributor_code"].nunique()
         need = int(cfg_cap["min_distributors"])
         _chk(
             report,
             "p1.distributor_count",
             dbs >= need,
-            f"PMS capture {dbs} distributors @ {yr} (min {need})",
+            f"PMS capture {dbs} distributors @ complete {complete_yr} (min {need})",
             distributors=dbs,
+            year=complete_yr,
         )
 
     if not summ_path.exists() or not cfg_sum:
@@ -460,6 +463,28 @@ def check_pms_all_distributors(report: Report, fx: dict[str, Any]) -> None:
         f"pms_summary_by_db {n} distributors (min {need})",
         rows=n,
     )
+    if "year" in df.columns and n:
+        summ_years = sorted({int(y) for y in df["year"].dropna().unique()})
+        capture_years = [int(y) for y in pd.read_csv(pms_path)["year"].dropna().unique()] if pms_path.exists() else summ_years
+        complete_yr = latest_complete_year(capture_years)
+        _chk(
+            report,
+            "pms.summary.complete_year",
+            summ_years == [complete_yr],
+            f"pms_summary_by_db year {summ_years} == complete {complete_yr}"
+            if summ_years == [complete_yr]
+            else f"pms_summary_by_db year {summ_years} is not latest complete {complete_yr} (partial-year trap)",
+            years=summ_years,
+            complete_year=complete_yr,
+        )
+        _chk(
+            report,
+            "pms.summary.not_partial",
+            not any(is_partial(y) for y in summ_years),
+            "pms_summary_by_db is a complete billing year"
+            if not any(is_partial(y) for y in summ_years)
+            else f"pms_summary_by_db includes partial year {summ_years}",
+        )
     req = set(cfg_sum.get("required_columns", []))
     missing = req - set(df.columns)
     _chk(
@@ -745,6 +770,94 @@ def check_aim_gps_matrix(report: Report, fx: dict[str, Any]) -> None:
         _chk(report, "aim_gps.quadrants", ok, "Quadrant values OK")
 
 
+def check_action_ledger(report: Report) -> None:
+    """P8 Action Ledger — presence, lineage, horizon honesty, language."""
+    ledger_pq = DERIVED_DIR / "action_ledger.parquet"
+    history_pq = DERIVED_DIR / "action_ledger_history.parquet"
+    open_csv = DERIVED_DIR / "action_ledger_open.csv"
+    rejects_csv = DERIVED_DIR / "action_ledger_rejects.csv"
+    decisions_csv = DERIVED_DIR / "action_ledger_decisions.csv"
+    meta_json = DERIVED_DIR / "action_ledger.meta.json"
+    # Path: .../ISZE/03_analytics/Isuzu/prism/scripts → parents[4] = ISZE
+    isze_root = Path(__file__).resolve().parents[4]
+    html = isze_root / "02_dashboards" / "ops" / "ISZE_Action_Ledger.html"
+
+    required = [ledger_pq, history_pq, open_csv, rejects_csv, decisions_csv, meta_json]
+    missing = [p.name for p in required if not p.is_file()]
+    _chk(
+        report,
+        "action_ledger.artefacts",
+        len(missing) == 0,
+        f"P8 artefacts present" if not missing else f"missing {missing}",
+        missing=missing,
+    )
+    if missing:
+        return
+
+    ledger = pd.read_parquet(ledger_pq)
+    _chk(
+        report,
+        "action_ledger.nonempty",
+        len(ledger) > 0,
+        f"ledger rows={len(ledger)}",
+        n=len(ledger),
+    )
+
+    # Lineage on monetary rows
+    mon = ledger[ledger["eur_at_stake"].notna()]
+    if len(mon):
+        lineage_ok = (
+            mon["source_file"].notna().all()
+            and mon["source_column"].notna().all()
+            and mon["source_as_of"].notna().all()
+        )
+    else:
+        lineage_ok = True
+    _chk(
+        report,
+        "action_ledger.lineage",
+        bool(lineage_ok),
+        f"monetary rows with full lineage: {len(mon)}",
+        monetary=len(mon),
+    )
+
+    # Rejects file exists and has reason column
+    rej = pd.read_csv(rejects_csv)
+    has_reason = "reason" in rej.columns
+    _chk(
+        report,
+        "action_ledger.rejects",
+        has_reason,
+        f"rejects.csv rows={len(rej)} has_reason={has_reason}",
+        n=len(rej),
+    )
+
+    # Language ban in HTML + open CSV
+    banned = ["delivered by", "caused", "drove", "thanks to", "attributable to"]
+    hits: list[str] = []
+    for path in [html, open_csv]:
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore").lower()
+        for phrase in banned:
+            if phrase in text:
+                hits.append(f"{path.name}:{phrase}")
+    _chk(
+        report,
+        "action_ledger.language",
+        len(hits) == 0,
+        "co-movement wording only" if not hits else f"banned hits {hits}",
+        hits=hits,
+    )
+
+    _chk(
+        report,
+        "action_ledger.html",
+        html.is_file() and "Open by" in html.read_text(encoding="utf-8", errors="ignore"),
+        f"dashboard HTML at {html.name}" if html.is_file() else "HTML missing",
+    )
+
+
 def check_prism_bundle(report: Report) -> None:
     try:
         bundle = load_bvp_bundle()
@@ -774,6 +887,50 @@ def check_config_status(report: Report) -> None:
         status=st,
     )
     _chk(report, "config.bvp_catalog", BVP_CATALOG_XLSX.exists(), f"BVP catalog at {BVP_CATALOG_XLSX.name}")
+
+
+def check_uio_canonical(report: Report, fx: dict[str, Any]) -> None:
+    """DI-2: canonical UIO resolves to 06_uio/_CURRENT (v19, unversioned) and no
+    stale v17/v18 copy sits in a fallback path where it could shadow it."""
+    from config import UIO_CANDIDATES, resolve_uio_path
+
+    try:
+        resolved = resolve_uio_path()
+    except FileNotFoundError as e:
+        _chk(report, "uio.canonical", False, "Canonical UIO not found", error=str(e))
+        return
+
+    canonical = UIO_CANDIDATES[0] if UIO_CANDIDATES else None
+    is_canonical = canonical is not None and resolved.resolve() == canonical.resolve()
+    _chk(
+        report,
+        "uio.canonical",
+        is_canonical,
+        f"UIO resolves to canonical {resolved.name}"
+        if is_canonical
+        else f"UIO resolved to non-canonical {resolved.name} (expected {canonical.name})",
+        path=str(resolved),
+    )
+
+    # A versioned v17/v18 (or older) copy anywhere in a candidate/archive path is
+    # a stale shadow: if the canonical ever goes missing, resolve_uio_path would
+    # fall through to it and silently re-base every UIO-denominator metric.
+    stale: list[str] = []
+    scan_roots = {Path(c).parent for c in UIO_CANDIDATES if Path(c).parent.exists()}
+    for root in scan_roots:
+        for p in root.glob("*UIO*"):
+            if p.is_file() and ("v18" in p.name.lower() or "v17" in p.name.lower() or "v16" in p.name.lower()):
+                stale.append(str(p))
+    _chk(
+        report,
+        "uio.stale_copies",
+        not stale,
+        "No stale v16/v17/v18 UIO copies in fallback paths"
+        if not stale
+        else f"Stale UIO copies on disk: {stale}",
+        warn=bool(stale),
+        stale=stale,
+    )
 
 
 def write_reports(report: Report) -> None:
@@ -832,6 +989,7 @@ def main() -> int:
     check_raw_files(report, fx)
     check_derived_files(report, fx)
     check_config_status(report)
+    check_uio_canonical(report, fx)
     check_sales_fact(report, fx)
     check_dimension(report, fx)
     check_crossref(report, fx)
@@ -846,6 +1004,7 @@ def main() -> int:
     check_sales_by_fig_key(report, fx)
     check_aim_gps_matrix(report, fx)
     check_strategic_contracts(report, fx)
+    check_action_ledger(report)
     check_prism_bundle(report)
     write_reports(report)
 

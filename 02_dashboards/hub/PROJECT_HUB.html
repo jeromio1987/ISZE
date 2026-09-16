@@ -50,17 +50,22 @@
     .pq-embed-head p { font-size: 13px; color: var(--ed-muted); max-width: 520px; line-height: 1.5; }
     .pq-embed-head a { font-size: 13px; font-weight: 500; color: var(--ed-ink); white-space: nowrap; }
     a.tile-tab { cursor: pointer; }
+    .hub-tabs .tab-btn.pq { margin-left: auto; color: #9A6B4A; border-left: 1px solid var(--ed-line); padding-left: 18px; }
+    .side-note { margin: 20px 0 0; border: 1px dashed #d8b59d; background: #fbf0e7; border-radius: 12px; padding: 16px 18px; display: flex; gap: 12px; align-items: center; }
+    .side-note .non-isuzu { flex-shrink: 0; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #fff; background: #c0552d; border-radius: 6px; padding: 4px 8px; }
+    .side-note a { font-size: 13px; color: var(--ed-ink); }
   </style>
 </head>
 <body class="isze-editorial">
 
 <header id="isze-editorial-chrome">
-  <a class="ed-logo" href="PROJECT_HUB.html"><span>ISZE</span> Intelligence</a>
+  <a class="ed-logo" href="index.html"><span>ISZE</span> Intelligence</a>
   <nav>
-    <a href="PROJECT_HUB.html" class="active">Hub</a>
+    <a href="index.html">Home</a>
+    <a href="BI_PACKS.html">Dashboard Index</a>
     <a href="MASTER_DASHBOARD.html">Mission Control</a>
+    <a href="PROJECT_HUB.html" class="active">Project Hub</a>
     <a href="AI_Operations_Explorer.html">AI Ops</a>
-    <a href="../side/PROPERTIQ.html">PROPERTIQ</a>
   </nav>
   <div class="ed-page">Project Hub</div>
 </header>
@@ -69,17 +74,17 @@
   <div class="hub-logo"><span>ISZE</span> · Project Hub</div>
   <div class="hub-tabs">
     <button type="button" class="tab-btn active" data-tab="overzicht">Overzicht</button>
-    <button type="button" class="tab-btn" data-tab="propertiq">PROPERTIQ</button>
     <button type="button" class="tab-btn" data-tab="projecten">Projecten</button>
     <button type="button" class="tab-btn" data-tab="stacks">Stacks</button>
     <button type="button" class="tab-btn" data-tab="methodologie">Methodologie</button>
+    <button type="button" class="tab-btn pq" data-tab="propertiq">Side project · non-Isuzu</button>
   </div>
 </div>
 
 <div id="tab-overzicht" class="tab-panel active">
   <div class="hero">
     <h1>Alle projecten, één UI</h1>
-    <p>Editorial design language (PROPERTIQ) toegepast op het ISZE-dashboard-ecosysteem. Simulator en UX-referentie zitten in tab <strong>PROPERTIQ</strong> — geen aparte pagina nodig.</p>
+    <p>Editorial view of the ISZE dashboard ecosystem. <strong>PROPERTIQ</strong> is a <strong>non-Isuzu side project</strong> (personal real-estate simulator) — kept separate from the Isuzu hierarchy, reachable from the "Side project · non-Isuzu" tab.</p>
   </div>
   <div class="kpi-row">
     <div class="kpi"><div class="l">HTML dashboards</div><div class="v">15</div></div>
@@ -89,10 +94,15 @@
   </div>
   <div class="sec-title">Snel starten</div>
   <div class="grid">
+    <a class="tile" href="index.html"><span class="tag">Home</span><h3>ISZE Home</h3><p>Canonical entry point — links to every view.</p></a>
+    <a class="tile" href="BI_PACKS.html"><span class="tag">Index</span><h3>Dashboard Index</h3><p>Elke dashboard, gegroepeerd per audience.</p></a>
     <a class="tile" href="MASTER_DASHBOARD.html"><span class="tag">Centraal</span><h3>Mission Control</h3><p>Alle projecten, bestanden, sparring topics en AI stack.</p></a>
-    <a class="tile" href="AIM_Dashboard_CY2025.html"><span class="tag">Sales</span><h3>AIM CY2025</h3><p>Aftermarket intelligence — strategic scoring & pricing risk.</p></a>
-    <a class="tile tile-tab" href="#" data-hub-tab="propertiq"><span class="tag new">Nieuw</span><h3>PROPERTIQ</h3><p>Vastgoed-simulatie Antwerpen — grafiek, sliders, formules. Opent in deze hub.</p></a>
+    <a class="tile" href="../sales/AIM_Dashboard_CY2026.html"><span class="tag">Sales</span><h3>AIM CY2026</h3><p>Aftermarket intelligence — strategic scoring & pricing risk.</p></a>
     <a class="tile tile-tab" href="#" data-hub-tab="stacks"><span class="tag">Lokaal</span><h3>PRISM Stacks</h3><p>Streamlit · Evidence · Dash — vier UI-lagen op dezelfde derived data.</p></a>
+  </div>
+  <div class="side-note">
+    <span class="non-isuzu">Non-Isuzu</span>
+    <span><a href="../side/PROPERTIQ.html" target="_blank" rel="noopener">PROPERTIQ</a> — personal real-estate simulator (Antwerp), unrelated to Isuzu. Opens in its own page; also embedded in the side-project tab.</span>
   </div>
 </div>
 
@@ -104,7 +114,7 @@
   <div class="sec-title">Published — primary external (GitHub Pages / Netlify)</div>
   <div class="grid">
     <a class="tile" href="MASTER_DASHBOARD.html"><span class="tag">HTML</span><h3>Mission Control</h3><p>16 statische dashboards — bron in <code>Dashboards/</code>, sync via <code>sync_to_deploys.ps1</code>.</p></a>
-    <a class="tile" href="ISZE_Tender_Monitor_v2.html"><span class="tag">HTML + JSON</span><h3>Tender Monitor</h3><p>Leest <code>Data/dashboards/tender_data.json</code>.</p></a>
+    <a class="tile" href="../ops/ISZE_Tender_Monitor_v2.html"><span class="tag">HTML + JSON</span><h3>Tender Monitor</h3><p>Leest <code>Data/dashboards/tender_data.json</code>.</p></a>
   </div>
   <div class="sec-title">Internal — PRISM (zelfde <code>Data/derived/</code>)</div>
   <div class="grid">
@@ -125,7 +135,7 @@
   <div class="pq-embed-head">
     <div>
       <h1 style="font-family:'Fraunces',serif;font-size:32px;font-weight:600;margin-bottom:6px">PROPERTIQ</h1>
-      <p>Editorial UX-referentie — simulator ingebed in de hub. Sliders, grafiek en formules zonder aparte pagina.</p>
+      <p>Non-Isuzu side project — personal real-estate simulator, embedded for convenience. Sliders, graph and formulas without leaving the hub.</p>
     </div>
     <a href="../side/PROPERTIQ.html" target="_blank" rel="noopener">Volledig scherm ↗</a>
   </div>
@@ -137,30 +147,29 @@
 <div id="tab-projecten" class="tab-panel">
   <div class="sec-title">Sales & intelligence</div>
   <div class="grid">
-    <a class="tile" href="AIM_Dashboard_CY2025.html"><h3>AIM Dashboard CY2025</h3><p>Strategic scoring, brand league, pricing risk.</p></a>
-    <a class="tile" href="ISZE_Competitiveness_Dashboard.html"><h3>Competitiveness</h3><p>IE40 heatmap, 3 segments, 4 AM modes.</p></a>
+    <a class="tile" href="../sales/AIM_Dashboard_CY2026.html"><h3>AIM Dashboard CY2026</h3><p>Strategic scoring, brand league, pricing risk.</p></a>
+    <a class="tile" href="../sales/ISZE_Competitiveness_Dashboard.html"><h3>Competitiveness</h3><p>IE40 heatmap, 3 segments, 4 AM modes.</p></a>
     <a class="tile" href="../sales/ISZE_Risk_Cockpit.html"><h3>⚡ Risk Cockpit</h3><p>Wallet waterfall, AIM×GPS motion, substitution, defection alerts, PMS bubbles.</p></a>
     <a class="tile" href="../fleet/ISZE_GPS_Dashboard.html"><span class="tag new">GPS</span><h3>GPS Dashboard</h3><p>Network + ITUK Target Study · max spend per unit · offline.</p></a>
-    <a class="tile" href="Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html"><h3>Sell-out AIM · ITUK vs UTI</h3><p>BVP / genuine mix · network CY2025.</p></a>
-    <a class="tile" href="Dealer_Sellout_UTI_vs_ITUK.html"><h3>Sell-out UTI vs ITUK</h3><p>PartSales YTD vs CY25 · PMS category.</p></a>
-    <a class="tile" href="ISZE_Monthly_Sales_Tracker.html"><h3>Monthly Sales Tracker</h3><p>CY2025 baseline · distributor ranking.</p></a>
-    <a class="tile" href="ISZE_SPA_RunRate_UTI.html"><h3>SPA Run Rate UTI</h3><p>Programme alignment & run-rate.</p></a>
+    <a class="tile" href="../sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html"><h3>Sell-out AIM · second layer</h3><p>BVP / genuine mix · ITUK UTI IRELAND IUK GREECE · CY2025.</p></a>
+    <a class="tile" href="../sales/Dealer_Sellout_UTI_vs_ITUK.html"><h3>Sell-out UTI vs ITUK</h3><p>PartSales YTD vs CY25 · PMS category.</p></a>
+    <a class="tile" href="../sales/ISZE_Monthly_Sales_Tracker.html"><h3>Monthly Sales Tracker</h3><p>CY2025 baseline · distributor ranking.</p></a>
+    <a class="tile" href="../sales/ISZE_SPA_RunRate_UTI.html"><h3>SPA Run Rate UTI</h3><p>Programme alignment & run-rate.</p></a>
   </div>
   <div class="sec-title">Fleet & planning</div>
   <div class="grid">
     <a class="tile" href="../fleet/ISUZU_UIO_Dashboard_2026.html"><span class="tag new">UIO</span><h3>UIO Dashboard</h3><p>Fleet by country, model, registration year — Jun 2026 refresh.</p></a>
-    <a class="tile" href="../gps/ISZE_GPS_TargetStudy_Reconciliation_Dashboard.html"><h3>GPS target study</h3><p>Redirects to GPS Dashboard (ITUK BP tab).</p></a>
-    <a class="tile" href="ITUK_ZEV_Golden_Window_Dashboard.html"><h3>ZEV Golden Window</h3><p>Dealer network · lubricants · mandate · action plan.</p></a>
-    <a class="tile" href="ISZE_Plan_Tracker_2030.html"><h3>Plan Tracker 2030</h3><p>Long-range plan tracking.</p></a>
-    <a class="tile" href="ISZE_FY2026_YearEnd_Review.html"><h3>FY2026 Year End</h3><p>Year-end review dashboard.</p></a>
+    <a class="tile" href="../fleet/ITUK_ZEV_Golden_Window_Dashboard.html"><h3>ZEV Golden Window</h3><p>Dealer network · lubricants · mandate · action plan.</p></a>
+    <a class="tile" href="../fleet/ISZE_Plan_Tracker_2030.html"><h3>Plan Tracker 2030</h3><p>Long-range plan tracking.</p></a>
+    <a class="tile" href="../fleet/ISZE_FY2026_YearEnd_Review.html"><h3>FY2026 Year End</h3><p>Year-end review dashboard.</p></a>
   </div>
   <div class="sec-title">Tools & operations</div>
   <div class="grid">
-    <a class="tile" href="ISZE_Tender_Monitor_v2.html"><h3>Tender Monitor v2</h3><p>Public tender tracking.</p></a>
+    <a class="tile" href="../ops/ISZE_Tender_Monitor_v2.html"><h3>Tender Monitor v2</h3><p>Public tender tracking.</p></a>
     <a class="tile" href="AI_Operations_Explorer.html"><h3>AI Operations Explorer</h3><p>AI tooling map across ISZE.</p></a>
-    <a class="tile" href="ISZE_AI_Tools_Overview.html"><h3>AI Tools Overview</h3><p>Capability inventory.</p></a>
-    <a class="tile" href="ISZE_Tools_Legal_Map.html"><h3>Tools Legal Map</h3><p>Compliance & legal boundaries.</p></a>
-    <a class="tile" href="index.html"><h3>Legacy index (AIM)</h3><p>Original AIM entry — redirects content.</p></a>
+    <a class="tile" href="../ops/ISZE_AI_Tools_Overview.html"><h3>AI Tools Overview</h3><p>Capability inventory.</p></a>
+    <a class="tile" href="../ops/ISZE_Tools_Legal_Map.html"><h3>Tools Legal Map</h3><p>Compliance & legal boundaries.</p></a>
+    <a class="tile" href="BI_PACKS.html"><h3>Dashboard Index (BI Packs)</h3><p>Dashboards grouped by audience — Internal / Distributor / Management.</p></a>
   </div>
 </div>
 

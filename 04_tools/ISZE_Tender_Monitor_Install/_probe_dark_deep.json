@@ -1,0 +1,303 @@
+{
+  "probed_at": "2026-08-25T18:00:22.016932+00:00",
+  "sections": {
+    "BG": [
+      {
+        "day": "2026-08-25",
+        "http": 403,
+        "len": 320,
+        "ct": "application/xml"
+      },
+      {
+        "day": "2026-08-24",
+        "http": 200,
+        "len": 2119,
+        "ct": "application/xml",
+        "snip": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ListBucketResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Name>open-data-2026-08-24</Name><Prefix></Prefix><Marker></Marker><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>Автоматично генерирани данни за анекси, публикувани в ЦАИС ЕОП на 24.08.2026.json</Key><LastModified>2026-08-25T06:00:19.955Z</LastModified><ETag>&#34;5a72b61e3465123c2950b35bd3fe20a9-1&#34;</ETag><Size>229282</Size><Owner><ID>02d6176db174dc93cb1b899f7c6078f",
+        "hrefs": [],
+        "keys": [
+          "Автоматично генерирани данни за анекси, публикувани в ЦАИС ЕОП на 24.08.2026.json",
+          "Автоматично генерирани данни за договори, публикувани в ЦАИС ЕОП на 24.08.2026.json",
+          "Автоматично генерирани данни за обявления, публикувани в ЦАИС ЕОП на 24.08.2026 г., съгласно стандарт OCDS.json",
+          "Автоматично генерирани данни за поръчки, публикувани в ЦАИС ЕОП на 24.08.2026.json"
+        ],
+        "files": [
+          {
+            "path": "Автоматично генерирани данни за анекси, публикувани в ЦАИС ЕОП на 24.08.2026.json",
+            "http": 200,
+            "len": 229282,
+            "ct": "application/json",
+            "head": "[\r\n  {\r\n    \"noticeId\": 893988,\r\n    \"publicationDate\": \"2026-08-24T05:01:36\",\r\n    \"uniqueProcurementNumber\": \"00413-2025-0046\",\r\n    \"tenderId\": 535787,\r\n    \"procedureType\": \"Договаряне �",
+            "json_type": "list"
+          },
+          {
+            "path": "Автоматично генерирани данни за договори, публикувани в ЦАИС ЕОП на 24.08.2026.json",
+            "http": 200,
+            "len": 280946,
+            "ct": "application/json",
+            "head": "[\r\n  {\r\n    \"noticeId\": 890387,\r\n    \"publicationDate\": \"2026-08-24T09:33:13.9566667\",\r\n    \"uniqueProcurementNumber\": \"00964-2026-0018\",\r\n    \"tenderId\": 596940,\r\n    \"procedureType\": \"Събиран",
+            "json_type": "list"
+          },
+          {
+            "path": "Автоматично генерирани данни за обявления, публикувани в ЦАИС ЕОП на 24.08.2026 г., съгласно стандарт OCDS.json",
+            "http": 200,
+            "len": 2420073,
+            "ct": "application/json",
+            "head": "{\r\n  \"uri\": \"https://data.egov.bg/releases/2026-08-25.json\",\r\n  \"version\": \"1.1\",\r\n  \"publishedDate\": \"2026-08-25T06:00:20.4186874+00:00\",\r\n  \"extensions\": [\r\n    \"https://standard.open-contracting.or",
+            "json_type": "dict",
+            "keys": [
+              "uri",
+              "version",
+              "publishedDate",
+              "extensions",
+              "license",
+              "publicationPolicy",
+              "publisher",
+              "releases"
+            ],
+            "n_releases": 212
+          },
+          {
+            "path": "Автоматично генерирани данни за поръчки, публикувани в ЦАИС ЕОП на 24.08.2026.json",
+            "http": 200,
+            "len": 424056,
+            "ct": "application/json",
+            "head": "[\r\n  {\r\n    \"noticeId\": 781002,\r\n    \"publicationDate\": \"2026-08-24T05:21:48.8266667\",\r\n    \"uniqueProcurementNumber\": \"00797-2026-0082\",\r\n    \"tenderId\": 543976,\r\n    \"procedureType\": \"Открита",
+            "json_type": "list"
+          }
+        ]
+      }
+    ],
+    "SK": {
+      "rss": {
+        "http": 200,
+        "ct": "text/html; charset=UTF-8",
+        "snip": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\"/>\n    <!--[if lt IE 9]>\n    <script src=\"https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js\"></script>\n    <script src=\"https://oss.maxcdn.com/respond/1.4.2/respond.min.js\"></script>\n    <![endif]-->\n    <title>Nedostupne</title>\n    <meta name=\"Description\" content=\"Úrad pre verejné obstarávanie\">\n    <link href=\"https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700&amp;subset=latin,latin-ext\"\n          media=\"screen\" rel=\"stylesheet\" type=\"text/css\">\n    <link href=\"css/bootstrap.min.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\">\n    <link href=\"css/bootstrap-th",
+        "len": 3506
+      },
+      "vestnik_http": 200,
+      "vestnik_len": 575415,
+      "script_srcs": [
+        "/typo3conf/ext/bootstrap_package/Resources/Public/Contrib/modernizr/modernizr.min.js?1659099362",
+        "/fileadmin/assets/img/logo.png",
+        "/fileadmin/assets/img/logo_print.png",
+        "/fileadmin/assets/img/logo.png",
+        "/fileadmin/assets/img/home_icon.png",
+        "/fileadmin/assets/img/home_icon.png",
+        "https://www.facebook.com/tr?id=1212899579058931&ev=PageView&noscript=1",
+        "https://www.google.com/recaptcha/api.js?hl=sk",
+        "/fileadmin/assets/js/jquery.js?1659096160",
+        "/fileadmin/assets/js/modernizer.js?1659096160",
+        "/fileadmin/assets/js/bootstrap.min.js?1659096150",
+        "/fileadmin/assets/js/jquery.matchHeight-min.js?1659096160",
+        "/fileadmin/assets/js/script.js?1716796760",
+        "/fileadmin/assets/js/jquery.mmenu.min.js?1659096160",
+        "/fileadmin/assets/js/jquery.mmenu.header.min.js?1659096160",
+        "/fileadmin/assets/js/menu.js?1659096160",
+        "/fileadmin/assets/js/jquery.news.js?1659096160",
+        "/fileadmin/assets/js/app.js?1659096150",
+        "/typo3conf/ext/om_cookie_manager/Resources/Public/Js/om_cookie_main.js?1659099414",
+        "/typo3conf/ext/tempest_core/Resources/Public/JavaScript/bootstrap-multiselect.js?1678365338",
+        "/typo3conf/ext/tempest_core/Resources/Public/JavaScript/moment-with-locales.min.js?1678365303",
+        "/typo3conf/ext/tempest_core/Resources/Public/JavaScript/bootstrap-datetimepicker.js?1678365303"
+      ],
+      "api_mentions": [
+        "https://www.google.com/recaptcha/api.js?hl=sk"
+      ],
+      "ajax_paths": [
+        "/vestnik-a-registre/vestnik?tx_tempestvestnik_vestnik%5Baction%5D=ajaxGetCode&tx_tempestvestnik_vestnik%5Bcontroller%5D=Vestnik&type=199900&cHash=d230b4d1c2d9975638f822de7e78eb35",
+        "/zaujemca-uchadzac/vestnik",
+        "/vestnik-a-registre",
+        "/vestnik-a-registre/vestnik?tx_tempestvestnik_vestnik%5Baction%5D=ajaxGetNuts&tx_tempestvestnik_vestnik%5Bcontroller%5D=Vestnik&type=199900&cHash=ccf191a6a2879fa723a5f67deddaa008",
+        "/verejny-obstaravatel-obstaravatel/vestnik"
+      ]
+    },
+    "EE": [
+      {
+        "url": "https://riigihanked.riik.ee/rhr/api/public/v1/opendata",
+        "http": 500,
+        "len": 36,
+        "snip": "{\"actionId\":\"2618\",\"errorStack\":\"-\"}"
+      },
+      {
+        "url": "https://riigihanked.riik.ee/rhr/api/public/v1/opendata?page=0&size=5",
+        "http": 500,
+        "len": 36,
+        "snip": "{\"actionId\":\"2618\",\"errorStack\":\"-\"}"
+      },
+      {
+        "url": "https://riigihanked.riik.ee/rhr/api/public/v1/notices?page=0&size=5",
+        "http": 500,
+        "len": 36,
+        "snip": "{\"actionId\":\"7929\",\"errorStack\":\"-\"}"
+      },
+      {
+        "url": "https://riigihanked.riik.ee/rhr/api/public/v1/procurements?page=0&size=5",
+        "http": 500,
+        "len": 36,
+        "snip": "{\"actionId\":\"1835\",\"errorStack\":\"-\"}"
+      },
+      {
+        "url": "https://riigihanked.riik.ee/rhr/api/public/v1/search?keyword=veok&page=0&size=5",
+        "http": 500,
+        "len": 36,
+        "snip": "{\"actionId\":\"5866\",\"errorStack\":\"-\"}"
+      },
+      {
+        "url": "https://avahanked.ee/en",
+        "http": 200,
+        "len": 55177,
+        "snip": "<!DOCTYPE html><html lang=\"et\" class=\"fraunces_f8c11c51-module__ttIbHq__variable inter_19d2945c-module__e4KC9a__variable\"><head><meta charSet=\"utf-8\"/><meta name=\"viewport\" content=\"width=device-width"
+      },
+      {
+        "url": "https://api.riigihanked.eu/openapi.json",
+        "http": 404,
+        "len": 22,
+        "snip": "{\"detail\":\"Not Found\"}"
+      }
+    ],
+    "CZ": {
+      "home": {
+        "http": 200,
+        "len": 1757,
+        "snip": "<!doctype html><html lang=\"cs\"><head><meta charset=\"utf-8\"/><link rel=\"icon\" href=\"/favicon.ico\"/><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"/><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; manifest-src 'self'; img-src 'self' data:; frame-src 'self' https://vvz.nipez.cz/auth/; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-"
+      },
+      "assets": [
+        "/favicon.ico",
+        "/apple-touch-icon.png",
+        "/favicon-32x32.png",
+        "/favicon-16x16.png",
+        "/safari-pinned-tab.svg",
+        "/manifest.json",
+        "/static/js/main.e8045595.js",
+        "/static/css/main.ee96bf92.css"
+      ],
+      "js_api": [
+        {
+          "asset": "/static/js/main.e8045595.js",
+          "http": 200,
+          "len": 1861060,
+          "apis": [
+            "/api/enumerations/search",
+            "/api/form_schema_translations/messages",
+            "/api/forms",
+            "/api/organizations",
+            "/api/submission_attachments",
+            "/api/submission_comments",
+            "/api/submission_export_requests",
+            "/api/submission_versions",
+            "/api/submissions",
+            "/api/submissions/bulk_patch",
+            "/api/submissions/children/search",
+            "/api/submissions/search"
+          ],
+          "hosts": [
+            "https://api.vvz.nipez.cz/",
+            "https://api.vvz.nipez.cz/vvz-export/",
+            "https://api.vvz.nipez.cz/vvz-kontextova-napoveda/",
+            "https://api.vvz.nipez.cz/vvz-notifikace-dodavatelu/",
+            "https://api.vvz.nipez.cz/vvz-odber-aktualit/",
+            "https://api.vvz.nipez.cz/vvz-sprava-subjektu-a-uzivatelu/",
+            "https://api.vvz.nipez.cz/vvz2-json-formulare/",
+            "https://api.vvz.nipez.cz/vvz2-uloziste-zobrazeni-fieldu/",
+            "https://api.vvz.nipez.cz/vvz2-validace-navaznosti/",
+            "https://api.vvz.nipez.cz/vvz2-validace/",
+            "https://cdz.vvz.nipez.cz/",
+            "https://cms.vvz.nipez.cz/",
+            "https://cms.vvz.nipez.cz/wp-content/uploads/2024/05/",
+            "https://cms.vvz.nipez.cz/wp-json/wp/v2/",
+            "https://isvz.nipez.cz/ciselniky"
+          ]
+        }
+      ],
+      "api_try": [
+        {
+          "url": "https://vvz.nipez.cz/api/Formulare/Search",
+          "http": 200,
+          "len": 1757,
+          "snip": "<!doctype html><html lang=\"cs\"><head><meta charset=\"utf-8\"/><link rel=\"icon\" href=\"/favicon.ico\"/><meta name=\"viewport\" content=\"width=device-width,in"
+        },
+        {
+          "url": "https://vvz.nipez.cz/api/vyhledat",
+          "http": 200,
+          "len": 1757,
+          "snip": "<!doctype html><html lang=\"cs\"><head><meta charset=\"utf-8\"/><link rel=\"icon\" href=\"/favicon.ico\"/><meta name=\"viewport\" content=\"width=device-width,in"
+        },
+        {
+          "url": "https://vvz.nipez.cz/api/Search/Formulare",
+          "http": 200,
+          "len": 1757,
+          "snip": "<!doctype html><html lang=\"cs\"><head><meta charset=\"utf-8\"/><link rel=\"icon\" href=\"/favicon.ico\"/><meta name=\"viewport\" content=\"width=device-width,in"
+        },
+        {
+          "url": "https://api.vvz.nipez.cz/",
+          "http": 404,
+          "len": 123,
+          "snip": "{\"type\":\"https:\\/\\/tools.ietf.org\\/html\\/rfc2616#section-10\",\"title\":\"An error occurred\",\"status\":404,\"detail\":\"Not Found\"}"
+        }
+      ]
+    },
+    "GR": {
+      "kimdis_page": {
+        "http": 200,
+        "len": 9306,
+        "snip": "<!DOCTYPE html>\r\n\r\n\r\n<html lang=\"en\" >\r\n   <head>\r\n      <meta charset=\"UTF-8\">\r\n      <title>Login Form</title>\r\n   </head>\r\n   <style>\r\n      * {\r\n      margin: 0;\r\n      padding: 0;\r\n      box-sizing: border-box;\r\n      -webkit-font-smoothing: antialiased;\r\n      }\r\n      body {\r\n      background: #DBE6E6;\r\n      font-family: Verdana, Tahoma, Arial;\r\n      }\r\n      .login-form {\r\n      background: #fff;\r\n      width: 500px;\r\n      margin: 65px auto;\r\n      display: -webkit-box;\r\n      display: flex;\r\n      -webkit-box-orient: vertical;\r\n      -webkit-box-direction: normal;\r\n      flex-direc",
+        "links": [
+          "https://portal.eprocurement.gov.gr/webcenter/portal/TestPortal/kentro_eksipiretisis"
+        ]
+      },
+      "diavgeia": [
+        {
+          "url": "https://diavgeia.gov.gr/luminapi/api/search?q=%CE%A6%CE%BF%CF%81%CF%84%CE%B7%CE%B3&page=0&size=5",
+          "http": 400,
+          "len": 275,
+          "snip": "{\"description\":\"\",\"user\":null,\"errors\":[{\"errorCode\":\"SEARCH-001\",\"errorMessage\":\"Μή αποδεκτό ερώτημα αναζήτησης\",\"errorDetails\":\"Error in query syntax. Query:q:Φορτηγ Error: \",\"canBeIgnored\":false}],\"exception\":\"InvalidQuertSyntaxException\"}"
+        },
+        {
+          "url": "https://diavgeia.gov.gr/luminapi/api/search.json?q=truck&page=0&size=5",
+          "http": 503,
+          "len": 592,
+          "snip": "<html>\r\n<head><title>503 Service Temporarily Unavailable</title></head>\r\n<body>\r\n<center><h1>503 Service Temporarily Unavailable</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error pag"
+        },
+        {
+          "url": "https://diavgeia.gov.gr/api/search?q=φορτηγ&page=0",
+          "http": 200,
+          "len": 22187,
+          "snip": "<!DOCTYPE html>\r\n<html lang=\"el\" >\r\n    <head>\r\n        <base href=\"/\" ><!--[if ie]></base><![endif]-->\r\n        <meta charset=\"UTF-8\">\r\n        <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n\r\n        <meta http-equiv=\"X-UA-"
+        }
+      ]
+    },
+    "MISC": {
+      "HR_eojn": {
+        "http": 200,
+        "len": 54921,
+        "loginish": true,
+        "snip": "\r <!DOCTYPE html>\r <html xmlns=\"http://www.w3.org/1999/xhtml\">\r <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title>\r \tOglasnik javne nabave\r </title><link href=\"favicon.ico\" rel=\"SHORTCUT ICON\" /><meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\" /><script t"
+      },
+      "SI_enarocanje": {
+        "http": 200,
+        "len": 531,
+        "loginish": true,
+        "snip": "<!DOCTYPE html>\r <html lang=\"sl\">\r   <head>\r     <meta charset=\"UTF-8\">\r     <link rel=\"icon\" href=\"/favicon.ico\">\r     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r     <title>Portal javnih naročil</title>\r     <script src=\"https://www.google.com/recaptcha/api.js\" async de"
+      },
+      "LV_eis": {
+        "http": 200,
+        "len": 4264,
+        "loginish": true,
+        "snip": "\r \r <!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r <html xmlns=\"http://www.w3.org/1999/xhtml\">\r <head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title>\r \tElektronisko Iepirkumu Sistēma - Sistēmas k"
+      },
+      "CY_eproc": {
+        "http": 200,
+        "len": 25757,
+        "loginish": true,
+        "snip": "                          \t                                 <!DOCTYPE html>              <!-- ceproc.ok -->           \t<html>   \t<head> \t\t<!--  --> \t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /> \t\t<meta http-equiv=\"Content-Script-Type\" content=\"text/javascript\"> \t\t<meta http"
+      },
+      "MT_etenders": {
+        "http": 200,
+        "len": 21875,
+        "loginish": true,
+        "snip": "                          \t                            <!DOCTYPE html>              <!-- ceproc.ok -->      \t<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\"> \t<head> \t\t<!--  --> \t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /> \t\t<meta http-equiv=\"Content-Scr"
+      }
+    }
+  }
+}

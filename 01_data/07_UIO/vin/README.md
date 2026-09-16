@@ -1,7 +1,7 @@
 # JP VIN register — separate project
 
-**Status:** structured, not wired into PRISM / UIO v19 / GPS calculators.  
-**As-of for rolling 60m:** 2026-07-27  
+**Status:** structured; **wired into PRISM page 22 (Parc Cohorts) 2026-08-20** (reads `VIN_register.parquet`). Still **not** a UIO v19 denominator — cohort signal only.
+**As-of for rolling 60m:** 2026-07-27
 **Scope:** CV shipments from this JP extract — **ex ITUK & UTI** (those packs come later; F-heavy).
 
 ## Layout

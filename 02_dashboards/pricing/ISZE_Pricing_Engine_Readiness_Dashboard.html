@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ISZE · Pricing Engine Readiness</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;background:#f7f4ee;font-size:15px;line-height:1.5}
+.hero{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:42px 28px 28px}
+.hero-inner{max-width:1120px;margin:0 auto}
+.brand{font-family:Georgia,"Times New Roman",serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#c9d4e6;margin-bottom:14px}
+.hero h1{font-family:Georgia,"Times New Roman",serif;color:#fff;font-size:34px;line-height:1.12;margin:0 0 12px;font-weight:400}
+.hero .rule{width:64px;height:3px;background:#c0552d;margin:0 0 16px}
+.hero .lead{max-width:720px;font-size:15.5px;color:#d5dce8;margin:0 0 22px}
+.hero-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.hk{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:14px 16px}
+.hk .v{font-size:28px;font-weight:700;letter-spacing:-.5px;color:#fff}
+.hk .l{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#aeb9cb;margin-top:4px}
+.hk .n{font-size:12px;color:#9aa8bd;margin-top:6px;line-height:1.35}
+.tabs{display:flex;gap:0;max-width:1120px;margin:0 auto;padding:0 28px;background:#f7f4ee;border-bottom:1px solid #d9d3c8;position:sticky;top:0;z-index:20}
+.tabs button{appearance:none;border:0;background:transparent;padding:14px 20px;font:inherit;font-size:14px;color:#6b6256;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button.active{color:#1a2b4a;font-weight:600;border-bottom-color:#c0552d}
+.tabs button:hover{color:#1a2b4a}
+.panel{display:none}
+.panel.active{display:block}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 28px 80px}
+h2{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;font-size:22px;margin:36px 0 8px;padding-bottom:8px;border-bottom:2px solid #1a2b4a}
+h2 .no{color:#c0552d}
+h3.sub{font-family:Georgia,serif;color:#1a2b4a;font-size:17px;margin:28px 0 8px}
+.lead{color:#6b6256;margin:0 0 18px;max-width:820px}
+.callout{border-left:3px solid #c0552d;background:#fff;padding:14px 16px;margin:0 0 20px}
+.callout.ok{border-left-color:#1d9e75}
+.callout.amber{border-left-color:#eda100}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.card{background:#fff;border:1px solid #d9d3c8;padding:18px 18px 14px}
+.card h3{font-family:Georgia,serif;color:#1a2b4a;font-size:15px;margin:0 0 6px}
+.card .cap{font-size:12.5px;color:#6b6256;margin:0 0 12px}
+.layers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.layer{background:#fff;border:1px solid #d9d3c8;padding:14px 14px 12px}
+.layer-top{display:flex;justify-content:space-between;align-items:baseline}
+.layer-id{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6b6256}
+.layer-score{font-size:26px;font-weight:700;letter-spacing:-1px}
+.layer h3{font-family:Georgia,serif;font-size:14px;color:#1a2b4a;margin:4px 0 8px}
+.layer p{font-size:12.5px;margin:6px 0;color:#333}
+.layer .miss{color:#6b6256}
+.pill{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:2px;background:#e8e4dc;color:#444;margin-bottom:6px}
+.pill.running{background:#e4f5ee;color:#1d6b4f}
+.pill.partial{background:#fff3d6;color:#8a6500}
+table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
+th{background:#1a2b4a;color:#fff;text-align:left;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+td{padding:7px 10px;border-bottom:1px solid #e8e4dc}
+tbody tr:nth-child(even){background:#faf8f4}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+td.hi{color:#1d9e75;font-weight:600}
+td.bad{color:#b23b3b;font-weight:600}
+td.sm{font-size:11.5px;color:#6b6256}
+.tag{font-size:11px;padding:1px 7px;border-radius:2px;background:#e8e4dc}
+.tag.oem_benchmark{background:#dcecfc;color:#1a4a7a}
+.tag.near_gate{background:#fff3d6;color:#8a6500}
+.tag.below_gate{background:#fde8e8;color:#8a3030}
+.tag.iam_derived{background:#e4f5ee;color:#1d6b4f}
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0 20px}
+.comp{background:#fff;border:1px solid #d9d3c8;padding:16px}
+.comp h3{margin:0 0 8px;font-family:Georgia,serif;color:#1a2b4a;font-size:16px}
+.comp .big{font-size:32px;font-weight:700;color:#1a2b4a;letter-spacing:-1px}
+.comp .sub{font-size:12.5px;color:#6b6256;margin:4px 0 10px}
+.checklist{margin:0;padding-left:18px}
+.checklist li{margin:6px 0}
+.talks{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:14px 0}
+.talk{background:#fff;border:1px solid #d9d3c8;border-top:3px solid #c0552d;padding:14px 16px}
+.talk h4{margin:0 0 6px;font-family:Georgia,serif;color:#1a2b4a;font-size:14px}
+.talk p{margin:0;font-size:13px;color:#333}
+.foot{margin-top:40px;padding-top:14px;border-top:1px solid #d9d3c8;font-size:11.5px;color:#6b6256;line-height:1.65}
+svg.ch{width:100%;height:auto;display:block}
+svg.ch text{font-family:"Segoe UI",Arial,sans-serif}
+svg.ch .tk{font-size:11px;fill:#6b6256}
+svg.ch .ax{font-size:11px;fill:#444}
+.anchor-nav{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.anchor-nav a{font-size:12px;color:#1a2b4a;text-decoration:none;background:#fff;border:1px solid #d9d3c8;padding:6px 10px}
+.anchor-nav a:hover{border-color:#c0552d;color:#c0552d}
+@media(max-width:900px){
+  .hero-kpis,.grid2,.grid3,.layers,.comp-grid,.talks{grid-template-columns:1fr}
+  .hero h1{font-size:26px}
+  .wrap,.hero,.tabs{padding-left:16px;padding-right:16px}
+}
+@media print{
+  .tabs{display:none}
+  .panel{display:block!important}
+}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="hero-inner">
+    <div class="brand">Isuzu Europe · ISZE Pricing</div>
+    <h1>Pricing engine readiness</h1>
+    <div class="rule"></div>
+    <p class="lead">How much of the rule-based pricing engine is running today, what still blocks a full launch,
+    and — in depth — why the engine is better than the prior uniform / class-era revision: same +3% index, different who pays.</p>
+    <div class="hero-kpis">
+      <div class="hk"><div class="v">61.5%</div><div class="l">Engine readiness</div>
+        <div class="n">Equal-weight average of Spec layers 0–5</div></div>
+      <div class="hk"><div class="v">+3.0%</div><div class="l">Weighted target</div>
+        <div class="n">Hit exactly on alloc run</div></div>
+      <div class="hk"><div class="v">15/22</div><div class="l">OEM street fill</div>
+        <div class="n">68.2% of mapped peer OEs priced</div></div>
+      <div class="hk"><div class="v">€94,886</div><div class="l">€ reallocated vs uniform</div>
+        <div class="n">Same total +3%; different incidence</div></div>
+    </div>
+  </div>
+</div>
+
+<nav class="tabs" role="tablist" aria-label="Dashboard sections">
+  <button type="button" class="active" data-tab="readiness" role="tab" aria-selected="true">Readiness</button>
+  <button type="button" data-tab="why" role="tab" aria-selected="false">Why the engine</button>
+</nav>
+
+<div class="wrap">
+
+<!-- ═══════════════ TAB: READINESS ═══════════════ -->
+<div id="panel-readiness" class="panel active" role="tabpanel">
+
+<section>
+  <h2><span class="no">01</span> · Full launch definition</h2>
+  <div class="callout">Full launch = Layers 0–5 operational with: (1) every in-scope PMS category on oem_benchmark or iam_derived (no placeholder moving via base filler), (2) OEM peer street filled to gate where peers exist, (3) θ_parc + θ_interval wired, (4) eligibility excludes NO_LIST/SUPERSEDED from ISZE Δ, (5) PR00 + ZPR1/CIS rules as specified, (6) every line carries a reason code under the +3% weighted index.</div>
+  <div class="grid2">
+    <div class="card">
+      <h3>Not required for full launch</h3>
+      <ul class="checklist">
+        <li>Measured DB→DLR elasticity coefficient inside the solver (explicitly out of V1)</li><li>Volume response forecast (constant-units arithmetic until elasticity exists)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Layer readiness scoreboard</h3>
+      <p class="cap">Green ≥75 · Amber 50–74 · Red &lt;50. Composite = mean of six layers.</p>
+      <svg viewBox="0 0 560 208" class="ch" role="img" aria-label="Layer readiness scores">
+<text x="198" y="26" text-anchor="end" class="ax">L0 · Eligibility gate</text>
+<rect x="210" y="12" width="300" height="16" fill="#e8e4dc" rx="2"/>
+<rect x="210" y="12" width="165.0" height="16" fill="#eda100" rx="2"/>
+<text x="385.0" y="25" class="tk">55%</text>
+<text x="198" y="54" text-anchor="end" class="ax">L1 · Segmentation (wallet × stree</text>
+<rect x="210" y="40" width="300" height="16" fill="#e8e4dc" rx="2"/>
+<rect x="210" y="40" width="174.0" height="16" fill="#eda100" rx="2"/>
+<text x="394.0" y="53" class="tk">58%</text>
+<text x="198" y="82" text-anchor="end" class="ax">L2 · Momentum (θ)</text>
+<rect x="210" y="68" width="300" height="16" fill="#e8e4dc" rx="2"/>
+<rect x="210" y="68" width="120.0" height="16" fill="#e24b4a" rx="2"/>
+<text x="340.0" y="81" class="tk">40%</text>
+<text x="198" y="110" text-anchor="end" class="ax">L3 · Allocation (+3% weighted)</text>
+<rect x="210" y="96" width="300" height="16" fill="#e8e4dc" rx="2"/>
+<rect x="210" y="96" width="216.0" height="16" fill="#eda100" rx="2"/>
+<text x="436.0" y="109" class="tk">72%</text>
+<text x="198" y="138" text-anchor="end" class="ax">L4 · Market lists (PR00 / ZPR1 / </text>
+<rect x="210" y="124" width="300" height="16" fill="#e8e4dc" rx="2"/>
+<rect x="210" y="124" width="186.0" height="16" fill="#eda100" rx="2"/>
+<text x="406.0" y="137" class="tk">62%</text>
+<text x="198" y="166" text-anchor="end" class="ax">L5 · Output & governance</text>
+<rect x="210" y="152" width="300" height="16" fill="#e8e4dc" rx="2"/>
+<rect x="210" y="152" width="246.0" height="16" fill="#1d9e75" rx="2"/>
+<text x="466.0" y="165" class="tk">82%</text>
+</svg>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="no">02</span> · What is running — layers 0–5</h2>
+  <p class="lead">Evidence gates, OEM peer street, IAM-derived ceilings, θ components, and list treatment —
+  stated as running vs missing, not as a forecast.</p>
+  <div class="layers">
+    
+<div class="layer">
+  <div class="layer-top">
+    <div class="layer-id">Layer 0</div>
+    <div class="layer-score" style="color:#eda100">55%</div>
+  </div>
+  <h3>Eligibility gate</h3>
+  <div class="pill partial">partial</div>
+  <p><b>Running:</b> PMS action-map basket (213 cells) enters allocation.</p>
+  <p class="miss"><b>Missing:</b> NO_LIST (~15% billed €) and SUPERSEDED routing not yet excluding from ISZE Δ narrative; IML_CORRECTION pass-through not fully separated in every output.</p>
+</div>
+<div class="layer">
+  <div class="layer-top">
+    <div class="layer-id">Layer 1</div>
+    <div class="layer-score" style="color:#eda100">58%</div>
+  </div>
+  <h3>Segmentation (wallet × street)</h3>
+  <div class="pill partial">partial</div>
+  <p><b>Running:</b> Wallet zones on all 213 cells. Street evidence on 88/213 cells (76.2% of € weight). Trusted premium basis on 85.9% of € weight (2 oem_benchmark cats, 4 iam_derived).</p>
+  <p class="miss"><b>Missing:</b> OEM street 15/22 peers; near-gate cats blower_filter, brake_pad, brake_rotor, fuel_filter; placeholder still on brake_shoe, clutch_booster, clutch_disc, clutch_kit, clutch_pressure_plate, pilot_bearing, release_bearing, urea_filter.</p>
+</div>
+<div class="layer">
+  <div class="layer-top">
+    <div class="layer-id">Layer 2</div>
+    <div class="layer-score" style="color:#e24b4a">40%</div>
+  </div>
+  <h3>Momentum (θ)</h3>
+  <div class="pill partial">partial</div>
+  <p><b>Running:</b> θ_parc wired from corrected car park; 60 cells moved by θ; veto on adverse street.</p>
+  <p class="miss"><b>Missing:</b> θ_interval blocked (chassis→generation map — D-Max 15k vs 20k). θ_cohort / θ_warranty Partial (held at 1.0).</p>
+</div>
+<div class="layer">
+  <div class="layer-top">
+    <div class="layer-id">Layer 3</div>
+    <div class="layer-score" style="color:#eda100">72%</div>
+  </div>
+  <h3>Allocation (+3% weighted)</h3>
+  <div class="pill running">running</div>
+  <p><b>Running:</b> Index solver hits 3.0000% exactly. Caps/floors, reason codes, two-gate sign rules active. Revenue Δ €173,041 on €5,768,025 base.</p>
+  <p class="miss"><b>Missing:</b> 125 cells / 23.8% € weight still take the unbenchmarked base lift — differentiation incomplete.</p>
+</div>
+<div class="layer">
+  <div class="layer-top">
+    <div class="layer-id">Layer 4</div>
+    <div class="layer-score" style="color:#eda100">62%</div>
+  </div>
+  <h3>Market lists (PR00 / ZPR1 / CIS)</h3>
+  <div class="pill partial">partial</div>
+  <p><b>Running:</b> PR00 full engine path. ZPR1 enabled (flat −10%). CIS enabled (flat factor).</p>
+  <p class="miss"><b>Missing:</b> ZPR1 not yet per-category. CIS not class-dependent. Auto365 IL evidence not wired into differentials.</p>
+</div>
+<div class="layer">
+  <div class="layer-top">
+    <div class="layer-id">Layer 5</div>
+    <div class="layer-score" style="color:#1d9e75">82%</div>
+  </div>
+  <h3>Output & governance</h3>
+  <div class="pill running">running</div>
+  <p><b>Running:</b> Reason codes, caps, run registry, alloc summary, soft DB→DLR proxy diagnostic.</p>
+  <p class="miss"><b>Missing:</b> GPS bridge / distributor pack automation thin. DB→DLR is proxy only (not joined into Δ).</p>
+</div>
+  </div>
+
+  <div class="grid2" style="margin-top:8px">
+    <div class="card">
+      <h3>OEM peer street — category gate</h3>
+      <p class="cap">Gate = ≥3 priced peer OEs → oem_benchmark. Street factor 1.785.</p>
+      <div class="tw"><table>
+        <thead><tr><th>Category</th><th class="n">Priced OE</th><th class="n">Gap to gate</th><th>Basis</th><th>Markets</th></tr></thead>
+        <tbody><tr><td>air_filter</td><td class='n'>3</td><td class='n'>0</td><td><span class='tag oem_benchmark'>oem_benchmark</span></td><td class='sm'>GERMANY,IUK,LCV</td></tr><tr><td>oil_filter</td><td class='n'>3</td><td class='n'>0</td><td><span class='tag oem_benchmark'>oem_benchmark</span></td><td class='sm'>GERMANY,IUK,LCV</td></tr><tr><td>blower_filter</td><td class='n'>2</td><td class='n'>1</td><td><span class='tag near_gate'>near_gate</span></td><td class='sm'>LCV</td></tr><tr><td>brake_pad</td><td class='n'>2</td><td class='n'>1</td><td><span class='tag near_gate'>near_gate</span></td><td class='sm'>LCV</td></tr><tr><td>brake_rotor</td><td class='n'>2</td><td class='n'>1</td><td><span class='tag near_gate'>near_gate</span></td><td class='sm'>LCV</td></tr><tr><td>fuel_filter</td><td class='n'>1</td><td class='n'>1</td><td><span class='tag near_gate'>near_gate</span></td><td class='sm'>GERMANY,IUK</td></tr><tr><td>brake_shoe</td><td class='n'>1</td><td class='n'>2</td><td><span class='tag below_gate'>below_gate</span></td><td class='sm'>LCV</td></tr><tr><td>clutch_pressure_plate</td><td class='n'>1</td><td class='n'>2</td><td><span class='tag below_gate'>below_gate</span></td><td class='sm'>LCV</td></tr><tr><td>clutch_disc</td><td class='n'>0</td><td class='n'>3</td><td><span class='tag below_gate'>below_gate</span></td><td class='sm'></td></tr><tr><td>clutch_kit</td><td class='n'>0</td><td class='n'>3</td><td><span class='tag below_gate'>below_gate</span></td><td class='sm'></td></tr><tr><td>urea_filter</td><td class='n'>0</td><td class='n'>3</td><td><span class='tag below_gate'>below_gate</span></td><td class='sm'></td></tr></tbody>
+      </table></div>
+    </div>
+    <div class="card">
+      <h3>Soft signals (not in Δ)</h3>
+      <p class="cap">Diagnostic only — must not be read as allocation coefficients.</p>
+      <p><b>DB → dealer response:</b> proxy on ITUK, UTI.
+      Joined to deltas: no. ASP/list pass-through proxy — not dealer invoice elasticity. UTI ≠ UMI.</p>
+      <p><b>θ:</b> theta_parc only. 60 cells moved · 10 vetoed.
+      Weighted θ_parc ≈ 1.013.</p>
+      <p><b>ZPR1:</b> live as flat differential today; UMI and UTI stay separate columns — never blended.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="no">03</span> · Missing-data checklist for full launch</h2>
+  <p class="lead">Ranked by unlock value. Nothing here invents peer OEs or street prices.</p>
+  <div class="card">
+    <table>
+      <thead><tr><th class="n">#</th><th>Missing item</th><th>What it unlocks</th></tr></thead>
+      <tbody><tr><td class='n'>1</td><td>Genuine Paccar/DAF street quote (pad or disc or clutch)</td><td>Near-gate brake/clutch cats → oem_benchmark (n≥3 with LCV fills)</td></tr><tr><td class='n'>2</td><td>Confirm Ford 1713904 → 2138025 supersession (dealer EPC)</td><td>Brake shoe street fill from Ford Online Shop</td></tr><tr><td class='n'>3</td><td>Chassis-code → model-year / SCR map</td><td>θ_interval — D-Max generation demand (+33% svc/yr on filters)</td></tr><tr><td class='n'>4</td><td>OE maps for L200 / Transit / Sprinter / MAN / Crafter</td><td>Broader peer OE coverage beyond DAF + Hilux + Ranger</td></tr><tr><td class='n'>5</td><td>Second full CY of sell-out (ITUK + UTI)</td><td>DB→DLR proxy → measured elasticity label (still soft; not a Δ coefficient)</td></tr><tr><td class='n'>6</td><td>NO_LIST / SUPERSEDED eligibility wiring in narrative packs</td><td>Full Layer 0 — ~15% billed € outside list action today</td></tr><tr><td class='n'>7</td><td>ZPR1 per-category differentials (UMI ≠ UTI)</td><td>Layer 4 Israel treatment beyond flat −10%</td></tr></tbody>
+    </table>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card">
+      <h3>Measured in this pack</h3>
+      <ul class="checklist">
+        <li>Alloc deltas and reason codes from run 20260810T171626Z__alloc__t3pct</li><li>Wallet capture zones (PMS total capture)</li><li>Street evidence tier + OEM/IAM premium basis gates</li><li>θ_parc from UIO car park</li><li>OEM street fill 15/22 peers</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Modelled / assumption</h3>
+      <ul class="checklist">
+        <li>Constant prior-year units (no elasticity) — revenue evolution = price arithmetic only</li><li>Launch-book capture erosion / IAM entry years</li><li>Brand % ceilings until PN-level wiring complete</li><li>Index base lift on NO_EVIDENCE_HOLD / placeholder weight</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div><!-- /panel-readiness -->
+
+<!-- ═══════════════ TAB: WHY THE ENGINE ═══════════════ -->
+<div id="panel-why" class="panel" role="tabpanel">
+
+<section>
+  <h2><span class="no">A</span> · Why the engine (Before vs Engine)</h2>
+  <p class="lead">Same +3% weighted index (€173,041). Engine redistributes ~€94,886 of who pays. Blind weight 23.8% still on base lift. Caps hit 17 cells; θ veto 10.</p>
+  <div class="anchor-nav">
+    <a href="#we-process">Process contrast</a>
+    <a href="#we-who">Who pays</a>
+    <a href="#we-flow">Redistribution</a>
+    <a href="#we-blind">Blind weight</a>
+    <a href="#we-hist">Δ histogram</a>
+    <a href="#we-street">Street gates</a>
+    <a href="#we-brand">Brand ceilings</a>
+    <a href="#we-dmax">D-Max / new models</a>
+    <a href="#we-talk">Tell a distributor</a>
+  </div>
+  <div class="callout ok">
+    <b>One sentence.</b> The prior process set a list level with class factors and then often applied a near-uniform % revision;
+    the engine keeps the same +3% weighted index but allocates the incidence with capture zones, street evidence, caps, and reason codes — and is honest where evidence is still missing.
+  </div>
+</section>
+
+<section id="we-process">
+  <h3 class="sub">1 · Process contrast — crystal clear</h3>
+  <div class="comp-grid">
+    <div class="comp">
+      <h3>How ISZE typically priced before</h3>
+      <div class="big">+3.0%</div>
+      <div class="sub">Revenue Δ €173,041 · constant units · uniform incidence</div>
+      <ul class="checklist"><li>Uniform or near-uniform weighted list increase — the same % across much of the book when a +3% target was set.</li><li>Class factors set selling price from FOB (IML formula), but the revision itself was not rule-based by capture, street, or θ.</li><li>Little separation of IML buying-price pass-through versus the ISZE margin decision on the same list move.</li><li>Street reads often used the wrong pricing point historically (list vs PR00 × street factor 1.785) — Eucon lesson.</li><li>No brand-quality % ceilings (+30 / +60 / +150 / +250); no oem_benchmark gate; no logged allocation runs with reason codes.</li></ul>
+    </div>
+    <div class="comp">
+      <h3>What the engine does instead</h3>
+      <div class="big">+3.0000%</div>
+      <div class="sub">Revenue Δ €173,041 · constant units · differentiated incidence</div>
+      <ul class="checklist"><li>Same +3.0000% weighted index — solver hits the target exactly under constant prior-year units.</li><li>Wallet zones (raise / contested / defend from PMS total capture) plus street evidence gates decide who funds vs who is cut.</li><li>Reason codes on every cell; caps (+8%, tighter on top-50) and floors; θ_parc with street veto.</li><li>Trusted premium basis required for position moves (oem_benchmark / iam_derived); hold-when-blind on NO_EVIDENCE.</li><li>Brand-quality ceiling ladder (+30/+60/+150/+250) in policy; run registry and alloc detail for every logged move.</li></ul>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Maturity matrix — prior vs engine</h3>
+    <p class="cap">Mode A labels. Class factors still set SP = FOB / factor; the revision logic is what changed.</p>
+    <table>
+      <thead><tr><th>Dimension</th><th>Prior process</th><th>Engine</th></tr></thead>
+      <tbody><tr><td><b>Index discipline</b></td><td>Target % often applied uniformly</td><td>+3% weighted exact; logged</td></tr><tr><td><b>Who pays</b></td><td>Same % most lines</td><td>Raise funds; defend/contested cut</td></tr><tr><td><b>Street gate</b></td><td>Ad hoc / wrong point risk</td><td>Evidence tiers + hold-when-blind</td></tr><tr><td><b>OEM peer gate</b></td><td>None</td><td>oem_benchmark (≥3 priced peers)</td></tr><tr><td><b>Brand ceilings</b></td><td>Flat premium thinking</td><td>+30/+60/+150/+250 ladder</td></tr><tr><td><b>IML vs ISZE</b></td><td>Often blurred on revision</td><td>BP pass-through vs Δ decision separated</td></tr><tr><td><b>θ / parc</b></td><td>Not in list revision</td><td>θ_parc live; θ_interval pending map</td></tr><tr><td><b>Audit trail</b></td><td>No run registry</td><td>Reason codes + run IDs</td></tr></tbody>
+    </table>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card">
+      <h3>Class factors (level, not revision)</h3>
+      <p class="cap">These set the selling-price level from FOB. They do not decide who gets +3%.</p>
+      <svg viewBox="0 0 560 228" class="ch" role="img" aria-label="Class factors">
+<text x="20" y="16" class="tk">Class factors set SP level from FOB — they did not allocate the +3% revision</text>
+<text x="60" y="40" text-anchor="end" class="ax">Class C</text>
+<rect x="70" y="28" width="176.2" height="14" fill="#203759"/>
+<text x="254.2" y="39" class="tk">0.47</text>
+<text x="60" y="62" text-anchor="end" class="ax">Class D</text>
+<rect x="70" y="50" width="180.0" height="14" fill="#203759"/>
+<text x="258.0" y="61" class="tk">0.48</text>
+<text x="60" y="84" text-anchor="end" class="ax">Class F</text>
+<rect x="70" y="72" width="196.9" height="14" fill="#203759"/>
+<text x="274.9" y="83" class="tk">0.525</text>
+<text x="60" y="106" text-anchor="end" class="ax">Class J</text>
+<rect x="70" y="94" width="208.1" height="14" fill="#203759"/>
+<text x="286.1" y="105" class="tk">0.555</text>
+<text x="60" y="128" text-anchor="end" class="ax">Class M</text>
+<rect x="70" y="116" width="187.5" height="14" fill="#203759"/>
+<text x="265.5" y="127" class="tk">0.5</text>
+<text x="60" y="150" text-anchor="end" class="ax">Class P</text>
+<rect x="70" y="138" width="165.0" height="14" fill="#203759"/>
+<text x="243.0" y="149" class="tk">0.44</text>
+<text x="60" y="172" text-anchor="end" class="ax">Class V</text>
+<rect x="70" y="160" width="206.2" height="14" fill="#203759"/>
+<text x="284.2" y="171" class="tk">0.55</text>
+<text x="60" y="194" text-anchor="end" class="ax">Class T</text>
+<rect x="70" y="182" width="300.0" height="14" fill="#203759"/>
+<text x="378.0" y="193" class="tk">0.8</text>
+</svg>
+    </div>
+    <div class="card">
+      <h3>Street pricing point</h3>
+      <p class="cap">Eucon lesson — compare apples to apples.</p>
+      <p><b>Wrong historically:</b> reading street against raw list.</p>
+      <p><b>Engine:</b> street factor <b>1.785</b> → compare at PR00 × 1.785.</p>
+      <p>oem_benchmark requires enough priced peer OEs; otherwise hold-when-blind — no invented peer prices.</p>
+      <div class="callout amber" style="margin-top:12px">No volume claim. Constant prior-year units only. Mix quality is the prize today.</div>
+    </div>
+  </div>
+</section>
+
+<section id="we-who">
+  <h3 class="sub">2 · Same +3% index € — who pays</h3>
+  <p class="lead">Both paths deliver €173,041 on €5,768,025.
+  Charts show incidence: uniform loads every zone equally by %; engine loads raise and cuts defend / contested-above-market.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Zone € Δ — uniform vs engine</h3>
+      <p class="cap">Grey = flat +3% on that zone’s weight. Colour = engine.</p>
+      <svg viewBox="0 0 560 200" class="ch" role="img" aria-label="Uniform vs engine by zone">
+<text x="20" y="18" class="tk">€ revenue Δ — uniform +3% (grey) vs engine (colour)</text>
+<text x="120" y="190" text-anchor="middle" class="ax">raise</text>
+<rect x="80" y="103.1" width="36" height="56.9" fill="#c8c2b6"/>
+<rect x="124" y="40.0" width="36" height="120.0" fill="#1d9e75"/>
+<text x="98.0" y="99.1" text-anchor="middle" class="tk">58k</text>
+<text x="142.0" y="36.0" text-anchor="middle" class="tk">122k</text>
+<text x="280" y="190" text-anchor="middle" class="ax">contested</text>
+<rect x="240" y="122.8" width="36" height="37.2" fill="#c8c2b6"/>
+<rect x="284" y="147.9" width="36" height="12.1" fill="#eda100"/>
+<text x="258.0" y="118.8" text-anchor="middle" class="tk">38k</text>
+<text x="302.0" y="143.9" text-anchor="middle" class="tk">12k</text>
+<text x="440" y="190" text-anchor="middle" class="ax">defend</text>
+<rect x="400" y="83.4" width="36" height="76.6" fill="#c8c2b6"/>
+<rect x="444" y="121.3" width="36" height="38.7" fill="#c0552d"/>
+<text x="418.0" y="79.4" text-anchor="middle" class="tk">78k</text>
+<text x="462.0" y="117.3" text-anchor="middle" class="tk">39k</text>
+</svg>
+    </div>
+    <div class="card">
+      <h3>Wallet zone table</h3>
+      <p class="cap">Raise funds the index; defend / contested take less.</p>
+      <table>
+        <thead><tr><th>Zone</th><th class="n">Cells</th><th class="n">Weight €</th><th class="n">Wtd Δ</th><th class="n">vs uniform €</th></tr></thead>
+        <tbody><tr><td>defend</td><td class='n'>146</td><td class='n'>2,587,951</td><td class='n'>1.51%</td><td class='n'>-38,459</td></tr><tr><td>raise</td><td class='n'>34</td><td class='n'>1,922,551</td><td class='n'>6.33%</td><td class='n'>+63,941</td></tr><tr><td>contested</td><td class='n'>33</td><td class='n'>1,257,523</td><td class='n'>0.97%</td><td class='n'>-25,483</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>Distributor × zone — engine € Δ stack</h3>
+    <p class="cap">Top DBs by |€ vs uniform|. Right labels = engine weighted %. Opacity reduced when a zone component is negative.</p>
+    <svg viewBox="0 0 560 396" class="ch" role="img" aria-label="Engine revenue by zone and distributor">
+<text x="90" y="16" class="tk">Engine € Δ stacked by wallet zone (raise · contested · defend)</text>
+<text x="82" y="42" text-anchor="end" class="ax">IUK</text>
+<g><title>IUK raise: +0 EUR</title><rect x="90.0" y="28" width="0.0" height="18" fill="#1d9e75" opacity="1"/></g>
+<g><title>IUK contested: -1,575 EUR</title><rect x="90.0" y="28" width="10.2" height="18" fill="#eda100" opacity="0.55"/></g>
+<g><title>IUK defend: -1,444 EUR</title><rect x="100.2" y="28" width="9.3" height="18" fill="#c0552d" opacity="0.55"/></g>
+<text x="548" y="41" text-anchor="end" class="tk">-0.3%</text>
+<text x="82" y="74" text-anchor="end" class="ax">ITUK</text>
+<g><title>ITUK raise: +48,890 EUR</title><rect x="90.0" y="60" width="315.8" height="18" fill="#1d9e75" opacity="1"/></g>
+<g><title>ITUK contested: +1,556 EUR</title><rect x="405.8" y="60" width="10.0" height="18" fill="#eda100" opacity="1"/></g>
+<g><title>ITUK defend: +11,483 EUR</title><rect x="415.8" y="60" width="74.2" height="18" fill="#c0552d" opacity="1"/></g>
+<text x="548" y="73" text-anchor="end" class="tk">5.0%</text>
+<text x="82" y="106" text-anchor="end" class="ax">UTI</text>
+<g><title>UTI raise: +28,801 EUR</title><rect x="90.0" y="92" width="186.0" height="18" fill="#1d9e75" opacity="1"/></g>
+<g><title>UTI contested: +0 EUR</title><rect x="276.0" y="92" width="0.0" height="18" fill="#eda100" opacity="1"/></g>
+<g><title>UTI defend: +8,654 EUR</title><rect x="276.0" y="92" width="55.9" height="18" fill="#c0552d" opacity="1"/></g>
+<text x="548" y="105" text-anchor="end" class="tk">6.0%</text>
+<text x="82" y="138" text-anchor="end" class="ax">IRELAND</text>
+<g><title>IRELAND raise: +15,205 EUR</title><rect x="90.0" y="124" width="98.2" height="18" fill="#1d9e75" opacity="1"/></g>
+<g><title>IRELAND contested: +2,590 EUR</title><rect x="188.2" y="124" width="16.7" height="18" fill="#eda100" opacity="1"/></g>
+<g><title>IRELAND defend: +1,054 EUR</title><rect x="204.9" y="124" width="6.8" height="18" fill="#c0552d" opacity="1"/></g>
+<text x="548" y="137" text-anchor="end" class="tk">6.9%</text>
+<text x="82" y="170" text-anchor="end" class="ax">GERMANY</text>
+<g><title>GERMANY raise: +0 EUR</title><rect x="90.0" y="156" width="0.0" height="18" fill="#1d9e75" opacity="1"/></g>
+<g><title>GERMANY contested: +761 EUR</title><rect x="90.0" y="156" width="4.9" height="18" fill="#eda100" opacity="1"/></g>
+<g><title>GERMANY defend: +3,729 EUR</title><rect x="94.9" y="156" width="24.1" height="18" fill="#c0552d" opacity="1"/></g>
+<text x="548" y="169" text-anchor="end" class="tk">1.2%</text>
+<text x="82" y="202" text-anchor="end" class="ax">NORWAY</text>
+<g><title>NORWAY raise: +6,640 EUR</title><rect x="90.0" y="188" width="42.9" height="18" fill="#1d9e75" opacity="1"/></g>
+<g><title>NORWAY contested: +228 EUR</title><rect x="132.9" y="188" width="1.5" height="18" fill="#eda100" opacity="1"/></g>
+<g><title>NORWAY defend: -1,441 EUR</title><rect x="134.4" y="188" width="9.3" height="18" fill="#c0552d" opacity="0.55"/></g>
+<text x="548" y="201" text-anchor="end" class="tk">1.6%</text>
+<text x="82" y="234" text-anchor="end" class="ax">UMI</text>
+<g><title>UMI raise: +2,887 EUR</title><rect x="90.0" y="220" width="18.6" height="18" fill="#1d9e75" opacity="1"/></g>
+<g><title>UMI contested: +0 EUR</title><rect x="108.6" y="220" width="0.0" height="18" fill="#eda100" opacity="1"/></g>
+<g><title>UMI defend: +806 EUR</title><rect x="108.6" y="220" width="5.2" height="18" fill="#c0552d" opacity="1"/></g>
+<text x="548" y="233" text-anchor="end" class="tk">1.5%</text>
+<text x="82" y="266" text-anchor="end" class="ax">SWEDEN</text>
+<g><title>SWEDEN raise: +3,543 EUR</title><rect x="90.0" y="252" width="22.9" height="18" fill="#1d9e75" opacity="1"/></g>
+<g><title>SWEDEN contested: +1,726 EUR</title><rect x="112.9" y="252" width="11.1" height="18" fill="#eda100" opacity="1"/></g>
+<g><title>SWEDEN defend: +828 EUR</title><rect x="124.0" y="252" width="5.3" height="18" fill="#c0552d" opacity="1"/></g>
+<text x="548" y="265" text-anchor="end" class="tk">2.3%</text>
+<text x="82" y="298" text-anchor="end" class="ax">GREECE</text>
+<g><title>GREECE raise: +3,919 EUR</title><rect x="90.0" y="284" width="25.3" height="18" fill="#1d9e75" opacity="1"/></g>
+<g><title>GREECE contested: +111 EUR</title><rect x="115.3" y="284" width="0.7" height="18" fill="#eda100" opacity="1"/></g>
+<g><title>GREECE defend: +1,437 EUR</title><rect x="116.0" y="284" width="9.3" height="18" fill="#c0552d" opacity="1"/></g>
+<text x="548" y="297" text-anchor="end" class="tk">3.5%</text>
+<text x="82" y="330" text-anchor="end" class="ax">HUNGARY</text>
+<g><title>HUNGARY raise: +896 EUR</title><rect x="90.0" y="316" width="5.8" height="18" fill="#1d9e75" opacity="1"/></g>
+<g><title>HUNGARY contested: +624 EUR</title><rect x="95.8" y="316" width="4.0" height="18" fill="#eda100" opacity="1"/></g>
+<g><title>HUNGARY defend: +394 EUR</title><rect x="99.8" y="316" width="2.5" height="18" fill="#c0552d" opacity="1"/></g>
+<text x="548" y="329" text-anchor="end" class="tk">2.1%</text>
+<rect x="90" y="368" width="12" height="12" fill="#1d9e75"/>
+<text x="106" y="378" class="tk">raise</text>
+<rect x="180" y="368" width="12" height="12" fill="#eda100"/>
+<text x="196" y="378" class="tk">contested</text>
+<rect x="270" y="368" width="12" height="12" fill="#c0552d"/>
+<text x="286" y="378" class="tk">defend</text>
+</svg>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>Distributor incidence — € vs uniform +3%</h3>
+    <p class="cap">Bars = euro difference vs charging every line +3%. Labels = engine weighted %.</p>
+    <svg viewBox="0 0 560 486" class="ch" role="img" aria-label="Distributor incidence vs uniform">
+<text x="212" y="28" text-anchor="end" class="ax">IUK</text>
+<g><title>IUK: engine -0.26% · Δ€ vs uniform -38,146</title><rect x="-60.0" y="14" width="280.0" height="16" fill="#e24b4a"/></g>
+<text x="548" y="27" text-anchor="end" class="tk">-0.3%</text>
+<text x="212" y="54" text-anchor="end" class="ax">GERMANY</text>
+<g><title>GERMANY: engine 1.15% · Δ€ vs uniform -7,213</title><rect x="167.1" y="40" width="52.9" height="16" fill="#e24b4a"/></g>
+<text x="548" y="53" text-anchor="end" class="tk">1.2%</text>
+<text x="212" y="80" text-anchor="end" class="ax">NORWAY</text>
+<g><title>NORWAY: engine 1.63% · Δ€ vs uniform -4,591</title><rect x="186.3" y="66" width="33.7" height="16" fill="#e24b4a"/></g>
+<text x="548" y="79" text-anchor="end" class="tk">1.6%</text>
+<text x="212" y="106" text-anchor="end" class="ax">UMI</text>
+<g><title>UMI: engine 1.51% · Δ€ vs uniform -3,629</title><rect x="193.4" y="92" width="26.6" height="16" fill="#e24b4a"/></g>
+<text x="548" y="105" text-anchor="end" class="tk">1.5%</text>
+<text x="212" y="132" text-anchor="end" class="ax">SWEDEN</text>
+<g><title>SWEDEN: engine 2.27% · Δ€ vs uniform -1,961</title><rect x="205.6" y="118" width="14.4" height="16" fill="#e24b4a"/></g>
+<text x="548" y="131" text-anchor="end" class="tk">2.3%</text>
+<text x="212" y="158" text-anchor="end" class="ax">HUNGARY</text>
+<g><title>HUNGARY: engine 2.14% · Δ€ vs uniform -775</title><rect x="214.3" y="144" width="5.7" height="16" fill="#e24b4a"/></g>
+<text x="548" y="157" text-anchor="end" class="tk">2.1%</text>
+<text x="212" y="184" text-anchor="end" class="ax">BELGIUM</text>
+<g><title>BELGIUM: engine 2.82% · Δ€ vs uniform -617</title><rect x="215.5" y="170" width="4.5" height="16" fill="#e24b4a"/></g>
+<text x="548" y="183" text-anchor="end" class="tk">2.8%</text>
+<text x="212" y="210" text-anchor="end" class="ax">MALTA</text>
+<g><title>MALTA: engine 2.52% · Δ€ vs uniform -182</title><rect x="218.7" y="196" width="2.0" height="16" fill="#e24b4a"/></g>
+<text x="548" y="209" text-anchor="end" class="tk">2.5%</text>
+<text x="212" y="236" text-anchor="end" class="ax">ICELAND</text>
+<g><title>ICELAND: engine 2.33% · Δ€ vs uniform -108</title><rect x="219.2" y="222" width="2.0" height="16" fill="#e24b4a"/></g>
+<text x="548" y="235" text-anchor="end" class="tk">2.3%</text>
+<text x="212" y="262" text-anchor="end" class="ax">PORTUGAL</text>
+<g><title>PORTUGAL: engine 3.07% · Δ€ vs uniform +226</title><rect x="220.0" y="248" width="2.0" height="16" fill="#2a78d6"/></g>
+<text x="548" y="261" text-anchor="end" class="tk">3.1%</text>
+<text x="212" y="288" text-anchor="end" class="ax">DENMARK</text>
+<g><title>DENMARK: engine 4.20% · Δ€ vs uniform +564</title><rect x="220.0" y="274" width="4.1" height="16" fill="#2a78d6"/></g>
+<text x="548" y="287" text-anchor="end" class="tk">4.2%</text>
+<text x="212" y="314" text-anchor="end" class="ax">CYPRUS</text>
+<g><title>CYPRUS: engine 3.47% · Δ€ vs uniform +643</title><rect x="220.0" y="300" width="4.7" height="16" fill="#2a78d6"/></g>
+<text x="548" y="313" text-anchor="end" class="tk">3.5%</text>
+<text x="212" y="340" text-anchor="end" class="ax">ROMANIA</text>
+<g><title>ROMANIA: engine 4.43% · Δ€ vs uniform +697</title><rect x="220.0" y="326" width="5.1" height="16" fill="#2a78d6"/></g>
+<text x="548" y="339" text-anchor="end" class="tk">4.4%</text>
+<text x="212" y="366" text-anchor="end" class="ax">GREECE</text>
+<g><title>GREECE: engine 3.54% · Δ€ vs uniform +828</title><rect x="220.0" y="352" width="6.1" height="16" fill="#2a78d6"/></g>
+<text x="548" y="365" text-anchor="end" class="tk">3.5%</text>
+<text x="212" y="392" text-anchor="end" class="ax">IRELAND</text>
+<g><title>IRELAND: engine 6.91% · Δ€ vs uniform +10,669</title><rect x="220.0" y="378" width="78.3" height="16" fill="#2a78d6"/></g>
+<text x="548" y="391" text-anchor="end" class="tk">6.9%</text>
+<text x="212" y="418" text-anchor="end" class="ax">UTI</text>
+<g><title>UTI: engine 5.97% · Δ€ vs uniform +18,639</title><rect x="220.0" y="404" width="136.8" height="16" fill="#2a78d6"/></g>
+<text x="548" y="417" text-anchor="end" class="tk">6.0%</text>
+<text x="212" y="444" text-anchor="end" class="ax">ITUK</text>
+<g><title>ITUK: engine 5.04% · Δ€ vs uniform +25,048</title><rect x="220.0" y="430" width="183.9" height="16" fill="#2a78d6"/></g>
+<text x="548" y="443" text-anchor="end" class="tk">5.0%</text>
+<line x1="220" y1="8" x2="220" y2="466" stroke="#d9d3c8"/>
+</svg>
+  </div>
+  <div class="grid2" style="margin-top:14px">
+    <div class="card">
+      <h3>Who pays more than uniform</h3>
+      <table>
+        <thead><tr><th>DB</th><th>Category</th><th class="n">Engine Δ</th><th class="n">€ vs +3%</th><th>Reason</th></tr></thead>
+        <tbody><tr><td>ITUK</td><td>Brake rotors</td><td class='n'>6.51%</td><td class='n hi'>+9,988</td><td class='sm'>CAPTIVE_RAISE</td></tr><tr><td>ITUK</td><td>Fuel filter</td><td class='n'>6.51%</td><td class='n hi'>+7,651</td><td class='sm'>CAPTIVE_RAISE</td></tr><tr><td>UTI</td><td>Fuel filter</td><td class='n'>6.51%</td><td class='n hi'>+5,715</td><td class='sm'>CAPTIVE_RAISE</td></tr><tr><td>ITUK</td><td>Air filter</td><td class='n'>6.51%</td><td class='n hi'>+5,361</td><td class='sm'>CAPTIVE_RAISE</td></tr><tr><td>UTI</td><td>Air filter</td><td class='n'>6.51%</td><td class='n hi'>+5,155</td><td class='sm'>CAPTIVE_RAISE</td></tr><tr><td>UTI</td><td>Oil filter</td><td class='n'>6.51%</td><td class='n hi'>+4,668</td><td class='sm'>NO_EVIDENCE_HOLD</td></tr><tr><td>ITUK</td><td>Oil filter</td><td class='n'>6.51%</td><td class='n hi'>+3,374</td><td class='sm'>NO_EVIDENCE_HOLD</td></tr><tr><td>UTI</td><td>Clutch kit</td><td class='n'>6.51%</td><td class='n hi'>+2,820</td><td class='sm'>NO_EVIDENCE_HOLD</td></tr></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Who pays less than uniform</h3>
+      <table>
+        <thead><tr><th>DB</th><th>Category</th><th class="n">Engine Δ</th><th class="n">€ vs +3%</th><th>Reason</th></tr></thead>
+        <tbody><tr><td>IUK</td><td>Brake rotors</td><td class='n'>-1.49%</td><td class='n bad'>-16,187</td><td class='sm'>DEFEND_CUT</td></tr><tr><td>IUK</td><td>Brake pads</td><td class='n'>-1.49%</td><td class='n bad'>-11,472</td><td class='sm'>DEFEND_CUT</td></tr><tr><td>ITUK</td><td>Brake pads</td><td class='n'>0.51%</td><td class='n bad'>-7,521</td><td class='sm'>CONTESTED_ABOVE_MARKET</td></tr><tr><td>IUK</td><td>Air filter</td><td class='n'>-1.49%</td><td class='n bad'>-5,218</td><td class='sm'>DEFEND_CUT</td></tr><tr><td>IUK</td><td>Cabin/blower filter</td><td class='n'>-1.49%</td><td class='n bad'>-4,755</td><td class='sm'>CONTESTED_ABOVE_MARKET</td></tr><tr><td>NORWAY</td><td>Brake pads</td><td class='n'>-1.49%</td><td class='n bad'>-4,608</td><td class='sm'>DEFEND_CUT</td></tr><tr><td>IUK</td><td>Fuel filter</td><td class='n'>-1.49%</td><td class='n bad'>-4,142</td><td class='sm'>DEFEND_CUT</td></tr><tr><td>GERMANY</td><td>Brake pads</td><td class='n'>0.51%</td><td class='n bad'>-3,360</td><td class='sm'>DEFEND_CUT</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="we-flow">
+  <h3 class="sub">3 · Redistribution map (~€94,886)</h3>
+  <p class="lead">Zero-sum under constant units: cuts on defend / contested fund raises on captive and (still) the blind base lift.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>From → to (reason codes)</h3>
+      <p class="cap">Left releases € vs uniform; right absorbs it.</p>
+      <svg viewBox="0 0 560 220" class="ch" role="img" aria-label="Redistribution from to">
+<text x="280" y="18" text-anchor="middle" class="tk">~94,886 € reallocated · same total index</text>
+<text x="40" y="42" class="ax">Released by</text>
+<text x="520" y="42" text-anchor="end" class="ax">Absorbed by</text>
+<rect x="40.0" y="56" width="160.0" height="22" fill="#e24b4a"/>
+<text x="34.0" y="71" text-anchor="end" class="ax">DEFEND CUT</text>
+<text x="206" y="71" class="tk">−64,145</text>
+<rect x="123.3" y="92" width="76.7" height="22" fill="#eda100"/>
+<text x="117.3" y="107" text-anchor="end" class="ax">CONTESTED ABOVE MARKET</text>
+<text x="206" y="107" class="tk">−30,742</text>
+<rect x="340" y="56" width="160.0" height="22" fill="#1d9e75"/>
+<text x="506.0" y="71" class="ax">CAPTIVE RAISE</text>
+<text x="334" y="71" text-anchor="end" class="tk">+51,678</text>
+<rect x="340" y="92" width="133.8" height="22" fill="#8a9bb0"/>
+<text x="479.8" y="107" class="ax">NO EVIDENCE HOLD</text>
+<text x="334" y="107" text-anchor="end" class="tk">+43,208</text>
+<line x1="280" y1="56" x2="280" y2="160" stroke="#c0552d" stroke-width="2"/>
+<text x="280" y="178" text-anchor="middle" class="tk">incidence shift</text>
+</svg>
+    </div>
+    <div class="card">
+      <h3>€ impact vs uniform, by reason</h3>
+      <p class="cap">Positive = engine charges more than +3% on that bucket.</p>
+      <svg viewBox="0 0 560 164" class="ch" role="img" aria-label="Revenue vs uniform by reason">
+<text x="270" y="30" text-anchor="end" class="ax">DEFEND CUT</text>
+<g><title>DEFEND CUT: -64,145 EUR vs uniform</title><rect x="60.0" y="16" width="220.0" height="18" fill="#e24b4a"/></g>
+<text x="54.0" y="30" text-anchor="end" class="tk">-64,145</text>
+<text x="270" y="64" text-anchor="end" class="ax">CAPTIVE RAISE</text>
+<g><title>CAPTIVE RAISE: +51,678 EUR vs uniform</title><rect x="280.0" y="50" width="177.2" height="18" fill="#1d9e75"/></g>
+<text x="463.2" y="64" text-anchor="start" class="tk">+51,678</text>
+<text x="270" y="98" text-anchor="end" class="ax">NO EVIDENCE HOLD</text>
+<g><title>NO EVIDENCE HOLD: +43,208 EUR vs uniform</title><rect x="280.0" y="84" width="148.2" height="18" fill="#8a9bb0"/></g>
+<text x="434.2" y="98" text-anchor="start" class="tk">+43,208</text>
+<text x="270" y="132" text-anchor="end" class="ax">CONTESTED ABOVE MARKET</text>
+<g><title>CONTESTED ABOVE MARKET: -30,742 EUR vs uniform</title><rect x="174.6" y="118" width="105.4" height="18" fill="#eda100"/></g>
+<text x="168.6" y="132" text-anchor="end" class="tk">-30,742</text>
+<line x1="280" y1="8" x2="280" y2="152" stroke="#d9d3c8"/>
+</svg>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>Reason-code detail</h3>
+    <table>
+      <thead><tr><th>Reason</th><th class="n">Cells</th><th class="n">Weight €</th><th class="n">Wtd Δ</th><th class="n">Engine rev Δ</th><th class="n">vs uniform</th></tr></thead>
+      <tbody><tr><td>DEFEND_CUT</td><td class='n'>40</td><td class='n'>1,723,016</td><td class='n'>-0.72%</td><td class='n'>-12,454</td><td class='n'>-64,145</td></tr><tr><td>CAPTIVE_RAISE</td><td class='n'>26</td><td class='n'>1,554,283</td><td class='n'>6.32%</td><td class='n'>98,307</td><td class='n'>+51,678</td></tr><tr><td>NO_EVIDENCE_HOLD</td><td class='n'>125</td><td class='n'>1,373,506</td><td class='n'>6.15%</td><td class='n'>84,414</td><td class='n'>+43,208</td></tr><tr><td>CONTESTED_ABOVE_MARKET</td><td class='n'>22</td><td class='n'>1,117,220</td><td class='n'>0.25%</td><td class='n'>2,775</td><td class='n'>-30,742</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section id="we-blind">
+  <h3 class="sub">4 · Blind weight — still partly the old world</h3>
+  <p class="lead">These cells have no street evidence tier that can move position. They take the index base lift — still partly the old uniform world inside an otherwise differentiated run.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>NO_EVIDENCE_HOLD share of basket €</h3>
+      <svg viewBox="0 0 280 160" class="ch" role="img" aria-label="Blind weight share">
+<circle cx="80" cy="80" r="54" fill="none" stroke="#e8e4dc" stroke-width="22"/>
+<circle cx="80" cy="80" r="54" fill="none" stroke="#1d9e75" stroke-width="22" stroke-dasharray="258.5 339.3" stroke-dashoffset="0" transform="rotate(-90 80 80)"/>
+<circle cx="80" cy="80" r="54" fill="none" stroke="#8a9bb0" stroke-width="22" stroke-dasharray="80.8 339.3" stroke-dashoffset="-258.5" transform="rotate(-90 80 80)"/>
+<text x="80" y="76" text-anchor="middle" style="font-size:20px;font-weight:700;fill:#1a2b4a">24%</text>
+<text x="80" y="94" text-anchor="middle" class="tk">blind €</text>
+<rect x="160" y="50" width="14" height="14" fill="#8a9bb0"/>
+<text x="180" y="62" class="ax">NO_EVIDENCE_HOLD</text>
+<rect x="160" y="78" width="14" height="14" fill="#1d9e75"/>
+<text x="180" y="90" class="ax">Street evidence</text>
+<text x="160" y="120" class="tk">Still partly old-world</text>
+<text x="160" y="136" class="tk">base lift on blind weight</text>
+</svg>
+      <p style="margin-top:10px"><b>125 cells</b> ·
+      €1,373,506 ·
+      weighted Δ <b>6.15%</b>
+      (base lift, not a position cut/raise).</p>
+    </div>
+    <div class="card">
+      <h3>What this means externally</h3>
+      <ul class="checklist">
+        <li>Do <b>not</b> pitch “fully differentiated +3%” while ~23.8% of € is still on the unbenchmarked base.</li>
+        <li>Do pitch: evidenced lines are already ruled (raise / defend / contested); blind lines wait for street / OEM peers.</li>
+        <li>Filling near-gate OEM street (e.g. one genuine DAF quote) converts blind/near cats into oem_benchmark — that shrinks this slice.</li>
+        <li>Prior process put <em>all</em> weight on uniform +3%. Engine already differentiates 76.2% of € weight.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="we-hist">
+  <h3 class="sub">5 · Caps, floors, reason codes — Δ distribution</h3>
+  <p class="lead">Under a flat +3%, every euro of weight sits in one bin. Under the engine, weight spreads across cuts, holds, raises, and the +8% cap.</p>
+  <div class="card">
+    <h3>Histogram of engine deltas (€ weight)</h3>
+    <svg viewBox="0 0 560 200" class="ch" role="img" aria-label="Engine delta histogram">
+<text x="20" y="16" class="tk">€ weight by engine Δ bin (uniform would be a single spike at +3%)</text>
+<g><title>−2…−1%: 1,214,111 EUR · 13 cells</title><rect x="50" y="88.6" width="48" height="71.4" fill="#e24b4a"/></g>
+<text x="74.0" y="178" text-anchor="middle" class="tk" style="font-size:9px">−2…−1%</text>
+<text x="74.0" y="84.6" text-anchor="middle" class="tk">21%</text>
+<g><title>−1…0%: 0 EUR · 0 cells</title><rect x="112" y="160.0" width="48" height="1.0" fill="#e24b4a"/></g>
+<text x="136.0" y="178" text-anchor="middle" class="tk" style="font-size:9px">−1…0%</text>
+<g><title>0…1%: 1,626,125 EUR · 49 cells</title><rect x="174" y="64.4" width="48" height="95.6" fill="#2a78d6"/></g>
+<text x="198.0" y="178" text-anchor="middle" class="tk" style="font-size:9px">0…1%</text>
+<text x="198.0" y="60.4" text-anchor="middle" class="tk">28%</text>
+<g><title>1…3%: 0 EUR · 0 cells</title><rect x="236" y="160.0" width="48" height="1.0" fill="#c8c2b6"/></g>
+<text x="260.0" y="178" text-anchor="middle" class="tk" style="font-size:9px">1…3%</text>
+<g><title>3…5%: 534,768 EUR · 20 cells</title><rect x="298" y="128.6" width="48" height="31.4" fill="#c8c2b6"/></g>
+<text x="322.0" y="178" text-anchor="middle" class="tk" style="font-size:9px">3…5%</text>
+<text x="322.0" y="124.6" text-anchor="middle" class="tk">9%</text>
+<g><title>5…6.5%: 0 EUR · 0 cells</title><rect x="360" y="160.0" width="48" height="1.0" fill="#1d9e75"/></g>
+<text x="384.0" y="178" text-anchor="middle" class="tk" style="font-size:9px">5…6.5%</text>
+<g><title>6.5…8%: 2,211,629 EUR · 114 cells</title><rect x="422" y="30.0" width="48" height="130.0" fill="#c0552d"/></g>
+<text x="446.0" y="178" text-anchor="middle" class="tk" style="font-size:9px">6.5…8%</text>
+<text x="446.0" y="26.0" text-anchor="middle" class="tk">38%</text>
+<g><title>8% cap: 181,392 EUR · 17 cells</title><rect x="484" y="149.3" width="48" height="10.7" fill="#c0552d"/></g>
+<text x="508.0" y="178" text-anchor="middle" class="tk" style="font-size:9px">8% cap</text>
+<text x="508.0" y="145.3" text-anchor="middle" class="tk">3%</text>
+<text x="280" y="196" text-anchor="middle" class="tk">Flat +3% = 100% weight in one bin — engine spreads across cut / hold / raise / cap</text>
+</svg>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <h3>Hard limits applied this run</h3>
+    <p class="cap">Cap +8% (top-50 tighter at +5%); floor -12%.</p>
+    <svg viewBox="0 0 560 90" class="ch" role="img" aria-label="Caps and vetoes">
+<rect x="30" y="20" width="160" height="50" fill="#fff" stroke="#d9d3c8"/>
+<text x="110" y="48" text-anchor="middle" style="font-size:22px;font-weight:700;fill:#c0552d">17</text>
+<text x="110" y="64" text-anchor="middle" class="tk">At +8% cap</text>
+<rect x="210" y="20" width="160" height="50" fill="#fff" stroke="#d9d3c8"/>
+<text x="290" y="48" text-anchor="middle" style="font-size:22px;font-weight:700;fill:#eda100">10</text>
+<text x="290" y="64" text-anchor="middle" class="tk">θ street-vetoed</text>
+<rect x="390" y="20" width="160" height="50" fill="#fff" stroke="#d9d3c8"/>
+<text x="470" y="48" text-anchor="middle" style="font-size:22px;font-weight:700;fill:#8a9bb0">0</text>
+<text x="470" y="64" text-anchor="middle" class="tk">At floor −12%</text>
+</svg>
+  </div>
+</section>
+
+<section id="we-street">
+  <h3 class="sub">6 · Street / evidence tiers — gates the prior process lacked</h3>
+  <p class="lead">Prior revision had no systematic hold-when-blind. Engine: T5_none cannot take a position move; it rides the index base only.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Evidence tier — € weight</h3>
+      <svg viewBox="0 0 560 116" class="ch" role="img" aria-label="Evidence tier weight">
+<text x="140" y="30" text-anchor="end" class="ax">T3_eucon</text>
+<rect x="150" y="16" width="320.0" height="18" fill="#1d9e75"/>
+<text x="480.0" y="30" class="tk">88 cells · 76.2% · wtd Δ 2.0%</text>
+<text x="140" y="66" text-anchor="end" class="ax">T5_none</text>
+<rect x="150" y="52" width="100.0" height="18" fill="#8a9bb0"/>
+<text x="260.0" y="66" class="tk">125 cells · 23.8% · wtd Δ 6.1%</text>
+</svg>
+    </div>
+    <div class="card">
+      <h3>Gate logic (Mode A)</h3>
+      <ul class="checklist">
+        <li><b>T3_eucon (and stronger):</b> may move within tier limits; street read at PR00 × 1.785.</li>
+        <li><b>T5_none:</b> NO_EVIDENCE_HOLD — no invented street; base lift only.</li>
+        <li><b>oem_benchmark:</b> ≥3 priced peer OEs required — not Autodoc IAM substitutes for OEM peers.</li>
+        <li><b>θ veto:</b> if already far above street premium, θ cannot raise further (10 cells this run).</li>
+      </ul>
+      <div class="callout" style="margin-top:12px">
+        Prior process risk: raise defend-zone brakes the same as captive filters because “the book is +3%”.
+        Engine risk (honest): over-claim differentiation while blind weight remains large.
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="we-brand">
+  <h3 class="sub">7 · Brand-quality % ceilings vs flat premium thinking</h3>
+  <p class="lead">Policy ladder from IAM brand tiers. Prior instinct was often a single “we should be X% above IAM”. Engine encodes quality-dependent ceilings.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Ceiling ladder</h3>
+      <svg viewBox="0 0 560 200" class="ch" role="img" aria-label="Brand quality ceilings">
+<text x="20" y="18" class="tk">Max ISZE premium vs IAM by brand-quality tier (policy ladder)</text>
+<text x="150" y="50" text-anchor="end" class="ax">T4 OE / premium IAM</text>
+<rect x="160" y="36" width="43.2" height="20" fill="#1d9e75"/>
+<text x="211.2" y="50" class="tk">+30%</text>
+<text x="150" y="86" text-anchor="end" class="ax">T3 Mainstream IAM</text>
+<rect x="160" y="72" width="86.4" height="20" fill="#2a78d6"/>
+<text x="254.4" y="86" class="tk">+60%</text>
+<text x="150" y="122" text-anchor="end" class="ax">T2 Budget IAM</text>
+<rect x="160" y="108" width="216.0" height="20" fill="#eda100"/>
+<text x="384.0" y="122" class="tk">+150%</text>
+<text x="150" y="158" text-anchor="end" class="ax">T1 No-name / CN</text>
+<rect x="160" y="144" width="360.0" height="20" fill="#c0552d"/>
+<text x="528.0" y="158" class="tk">+250%</text>
+<text x="20" y="190" class="tk">Prior process: one flat “premium” instinct — no tiered ceiling discipline</text>
+</svg>
+    </div>
+    <div class="card">
+      <h3>Tier table</h3>
+      <table>
+        <thead><tr><th>Tier</th><th>Quality</th><th class="n">Ceiling</th><th>Examples</th></tr></thead>
+        <tbody><tr><td>T4</td><td>OE / premium IAM</td><td class='n'>+30%</td><td class='sm'>Bosch, Delphi, Febi OE-tier</td></tr><tr><td>T3</td><td>Mainstream IAM</td><td class='n'>+60%</td><td class='sm'>Solid mid brands</td></tr><tr><td>T2</td><td>Budget IAM</td><td class='n'>+150%</td><td class='sm'>Value brands</td></tr><tr><td>T1</td><td>No-name / CN</td><td class='n'>+250%</td><td class='sm'>Lowest-quality brands</td></tr></tbody>
+      </table>
+      <p class="cap" style="margin-top:10px">Until PN-level brand wiring is complete, category defaults may still show placeholder basis —
+      the ladder is live in policy; full PN enforcement is a launch unlock.</p>
+    </div>
+  </div>
+</section>
+
+<section id="we-dmax">
+  <h3 class="sub">8 · New models / D-Max 2.2 — mix, not only across-the-board +3%</h3>
+  <p class="lead">How to tackle the portfolio +3% with a parc / interval / θ story — without inventing elasticity.</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Launch book signal (modelled)</h3>
+      <p class="cap">Run 20260806T154452Z__launch__dmax_22_base · ranking only</p>
+      <svg viewBox="0 0 560 160" class="ch" role="img" aria-label="Launch book GP NPV">
+<text x="20" y="18" class="tk">D-Max 2.2 launch book — GP NPV by tactic (modelled ranking)</text>
+<text x="140" y="55" text-anchor="end" class="ax">class_only</text>
+<rect x="150" y="40" width="241.2" height="20" fill="#c8c2b6"/>
+<text x="399.2" y="54" class="tk">€54,832,274</text>
+<text x="140" y="95" text-anchor="end" class="ax">warranty_load</text>
+<rect x="150" y="80" width="320.0" height="20" fill="#c0552d"/>
+<text x="478.0" y="94" class="tk">€72,752,723</text>
+<text x="20" y="130" class="tk">+32.7% GP NPV vs class-only · 1.33 svc/veh/yr at 15,000 km (was 20,000)</text>
+<text x="20" y="148" class="tk">[ASSUMPTION] erosion — ranking only, not a volume forecast under +3%</text>
+</svg>
+      <div class="callout" style="margin-top:12px">Launch book NPV and capture erosion are modelled [ASSUMPTION] — not measured elasticity. Use for tactic ranking, not volume forecast. θ_interval (15k vs 20k oil) is the measured demand lever still blocked.</div>
+    </div>
+    <div class="card">
+      <h3>Portfolio +3% — practical read</h3>
+      <ul class="checklist">
+        <li><b>Do not</b> claim volume response from the +3% list move — ISZE→DB elasticity is not quotable.</li>
+        <li><b>Do</b> use capture zones + street gates so defend-zone wear is not loaded like captive.</li>
+        <li><b>Do</b> treat the D-Max generation shift as a θ_interval unlock: ~+33% service frequency on oil-interval parts once chassis maps exist (15,000 vs 20,000 km).</li>
+        <li><b>Do</b> keep UTI and UMI as separate Israel rows in any ZPR1 or sell-out lens.</li>
+        <li>D-Max 2.2 launch book ranks warranty_load ~+33% GP NPV vs class_only (modelled). Real +3% portfolio tactic: protect interval-linked wear with θ_interval once mapped; do not invent elasticity.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="we-talk">
+  <h3 class="sub">9 · What you can tell a distributor</h3>
+  <p class="lead">Short callouts — Mode A English, no internal nicknames.</p>
+  <div class="talks"><div class="talk"><h4>Same index, fairer mix</h4><p>We still deliver a +3% weighted list increase (€173,041 on €5,768,025). The engine does not invent a bigger bill — it changes which lines carry it.</p></div><div class="talk"><h4>Defend lines are not loaded like captive</h4><p>Where genuine capture is already lost and street is above market, the engine cuts or holds (e.g. IUK brake pads/rotors). A flat +3% would have raised those the same as captive filters.</p></div><div class="talk"><h4>Blind weight is still partly the old world</h4><p>23.8% of basket € still takes the unbenchmarked base lift (NO_EVIDENCE_HOLD, ~6.1% weighted). Differentiation is real where evidence exists — honest about where it does not.</p></div><div class="talk"><h4>Street on the right point</h4><p>Street comparisons use PR00 × 1.785 (street factor), not raw list — correcting the Eucon-era misread. No oem_benchmark without enough priced peer OEs.</p></div><div class="talk"><h4>New models need mix, not only +3%</h4><p>D-Max 2.2 (15k oil interval) is a θ / launch-book story: protect interval-linked wear with mix rules; do not claim volume from the list move alone.</p></div></div>
+  <div class="callout amber">
+    <b>Sales evolution (honest scope).</b> Both paths deliver €173,041 extra list revenue on the €5,768,025 L12M weight. Mix of who pays differs by ~€94,886 reallocated. No volume win/loss is claimed.
+    Uniform +3% loads IAM-lost defend cells (esp. IUK brakes) the same as captive — highest complaint risk per Spec C5 (distributors react to worst line). Engine cuts/holds defend & contested-above-market (IUK brake pad/rotor negative), funds raise cells and still uses base lift on no-evidence weight — honest partial differentiation.
+  </div>
+</section>
+
+</div><!-- /panel-why -->
+
+<div class="foot">
+  Sources: allocation run 20260810T171626Z__alloc__t3pct; OEM peer readiness 2026-08-10; D-Max launch run 20260806T154452Z__launch__dmax_22_base;
+  pricing action map (213 PMS cells); Spec layers 0–5; class factors and brand ceilings from resolved pricing config.
+  Charts are inline SVG — no external libraries, no network calls.
+  Mode A · English UI · Built 2026-08-12.
+</div>
+</div>
+<script>
+(function(){
+  var buttons = document.querySelectorAll('.tabs button');
+  var panels = {
+    readiness: document.getElementById('panel-readiness'),
+    why: document.getElementById('panel-why')
+  };
+  function activate(name){
+    buttons.forEach(function(b){
+      var on = b.getAttribute('data-tab') === name;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    Object.keys(panels).forEach(function(k){
+      panels[k].classList.toggle('active', k === name);
+    });
+    if(name === 'why' && location.hash){
+      var el = document.querySelector(location.hash);
+      if(el) el.scrollIntoView();
+    }
+  }
+  buttons.forEach(function(b){
+    b.addEventListener('click', function(){ activate(b.getAttribute('data-tab')); });
+  });
+  document.querySelectorAll('.anchor-nav a').forEach(function(a){
+    a.addEventListener('click', function(){ activate('why'); });
+  });
+  if(location.hash && location.hash.indexOf('we-') === 1){ activate('why'); }
+})();
+</script>
+</body>
+</html>

@@ -28,6 +28,7 @@ from config import (
     DATA_ROOT,
     DERIVED_DIR,
     GPS_MODEL_TARGETS_CSV,
+    data_freshness_date,
     data_status,
     resolve_mapping_path,
     resolve_uio_path,
@@ -47,6 +48,7 @@ from modules.gps_engine import (
 from modules.export_engine import export_gps_dashboard_excel
 from modules.pms_engine import PMS_PN_REGISTRY, CATEGORY_LABELS
 from modules.fig_key_catalog import enrich_top_parts_table, load_catalog_index
+from modules.plotly_style import style
 
 # set_page_config is handled by app.py — do not call it in sub-pages
 
@@ -269,7 +271,7 @@ except Exception as e:
 # ── Header ────────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="main-header">
-    <h1>🚛 ISZE GPS Dashboard — Genuine Parts Share &amp; Spend per Unit</h1>
+    <h1>🚛 ISZE GPS Dashboard — Spend per Unit (€/truck)</h1>
     <p>Isuzu Motors Europe | Vehicle Parts Sales | Confidential</p>
 </div>
 """, unsafe_allow_html=True)
@@ -315,7 +317,7 @@ with st.sidebar:
     st.caption("📅 Data: 2022–2026 YTD")
     st.caption("📌 UIO: V17 Excel (2020–2024 actual; 2025/2026 = 2024 proxy)")
     st.caption("🔢 ITUK/IUK and UTI/UMI split by CV/LCV segment")
-    st.caption(f"🔄 Built: {datetime.now().strftime('%d %b %Y')}")
+    st.caption(f"🔄 Built: {data_freshness_date()}")
 
 # ── Apply filters ─────────────────────────────────────────────────────────────
 df_sales_filtered = df_sales.copy()
@@ -475,7 +477,7 @@ with tab1:
                 paper_bgcolor='white',
                 xaxis=dict(gridcolor='#F0F0F0'),
             )
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(style(fig), width='stretch')
         else:
             st.info("No distributors with UIO data in current selection.")
 
@@ -506,7 +508,7 @@ with tab1:
             paper_bgcolor='white',
             xaxis=dict(gridcolor='#F0F0F0'),
         )
-        st.plotly_chart(fig2, width='stretch')
+        st.plotly_chart(style(fig2), width='stretch')
 
     st.divider()
     st.markdown("#### Detail Table")
@@ -577,10 +579,10 @@ with tab2:
                 return f"FY{y}"
             return str(y)
 
-        # ── GPS % scoreboard — all distributors (ITUK study row 38) ─────────────
-        st.markdown(f"#### GPS % scoreboard | {period_label}")
+        # ── Wallet capture % scoreboard — all distributors (ITUK study row 38) ──
+        st.markdown(f"#### Wallet capture % scoreboard | {period_label}")
         st.caption(
-            "**Formula: GPS % = Actual sales ÷ Target wallet × 100** "
+            "**Formula: wallet capture % = Actual sales ÷ Target wallet × 100** "
             "| Target wallet = Σ(UIO per model × max genuine parts €/vehicle/year) "
             "| Rates: N75/N50/N62 **€1,120** · F-Series/MD **€1,344** · LCV/D-Max **€250** "
             "| Reads: what share of the theoretical maximum genuine parts wallet is being captured. "
@@ -601,10 +603,10 @@ with tab2:
             with c1:
                 st.metric("Distributors ranked", str(n_db))
             with c2:
-                st.metric("Median GPS %", f"{med_gps:.0f}%")
+                st.metric("Median wallet capture %", f"{med_gps:.0f}%")
             with c3:
                 top = df_score.iloc[0]
-                st.metric("Highest GPS %", top["distributor_code"], f"{top['gps_pct']:.0f}%")
+                st.metric("Highest wallet capture %", top["distributor_code"], f"{top['gps_pct']:.0f}%")
 
             chart_h = max(320, min(720, 26 * len(df_score)))
             fig_board = go.Figure(
@@ -626,7 +628,7 @@ with tab2:
                     ),
                     hovertemplate=(
                         "<b>%{y}</b><br>"
-                        "GPS: %{x:.0f}%<br>"
+                        "Wallet capture: %{x:.0f}%<br>"
                         "Sales: €%{customdata[0]:,.0f}<br>"
                         "Target wallet: €%{customdata[1]:,.0f}<br>"
                         "Spend/unit: €%{customdata[2]:,.1f}<br>"
@@ -646,10 +648,10 @@ with tab2:
                 margin=dict(l=10, r=60, t=20, b=20),
                 plot_bgcolor="white",
                 paper_bgcolor="white",
-                xaxis=dict(title="GPS % of target wallet", ticksuffix="%", gridcolor="#F0F0F0"),
+                xaxis=dict(title="Wallet capture % of target wallet", ticksuffix="%", gridcolor="#F0F0F0"),
                 yaxis=dict(title="", autorange="reversed"),
             )
-            st.plotly_chart(fig_board, width='stretch')
+            st.plotly_chart(style(fig_board), width='stretch')
 
             tbl = df_score[
                 [
@@ -669,7 +671,7 @@ with tab2:
             show = tbl.rename(
                 columns={
                     "distributor_code": "Distributor",
-                    "gps_pct": "GPS %",
+                    "gps_pct": "Wallet capture %",
                     "total_sales_eur": "Sales €",
                     "target_wallet_eur": "Target wallet €",
                     "spend_per_unit_eur": "Spend/unit €",
@@ -683,7 +685,7 @@ with tab2:
                 [
                     "Rank",
                     "Distributor",
-                    "GPS %",
+                    "Wallet capture %",
                     "Sales €",
                     "Target wallet €",
                     "Spend/unit €",
@@ -699,7 +701,7 @@ with tab2:
             show["Target wallet €"] = show["Target wallet €"].map(lambda x: _fmt_eur(x, 0))
             show["Spend/unit €"] = show["Spend/unit €"].map(lambda x: _fmt_eur(x, 1))
             show["UIO"] = show["UIO"].map(lambda x: f"{int(x):,}")
-            show["GPS %"] = [f"{v:.0f}%" for v in gps_numeric]
+            show["Wallet capture %"] = [f"{v:.0f}%" for v in gps_numeric]
             for col in ("N75 mix %", "F mix %", "LCV mix %"):
                 show[col] = show[col].map(lambda x: f"{x:.0f}%")
             show["UIO proxy"] = show["UIO proxy"].map(lambda x: "Yes" if x else "")
@@ -707,7 +709,7 @@ with tab2:
             def _color_gps_column(_col):
                 return [_style_gps_pct(v) for v in gps_numeric]
 
-            styled = show.style.apply(_color_gps_column, subset=["GPS %"])
+            styled = show.style.apply(_color_gps_column, subset=["Wallet capture %"])
             st.dataframe(styled, width='stretch', hide_index=True)
 
         with st.expander("Model targets & ITUK study reference", expanded=False):
@@ -726,7 +728,7 @@ with tab2:
                 st.warning(f"Could not load targets: {exc}")
 
         if not df_mt.empty:
-            with st.expander("GPS % heatmap by year (all distributors)", expanded=False):
+            with st.expander("Wallet capture % heatmap by year (all distributors)", expanded=False):
                 pivot = df_mt.pivot_table(
                     index="distributor_code",
                     columns="year_value",
@@ -783,7 +785,7 @@ with tab2:
                     )
                     fig_yoy.update_layout(
                         height=340,
-                        yaxis_title="GPS %",
+                        yaxis_title="Wallet capture %",
                         xaxis_title="Period",
                         plot_bgcolor="white",
                         paper_bgcolor="white",
@@ -791,12 +793,12 @@ with tab2:
                         margin=dict(t=40, b=20),
                     )
                     st.caption(
-                        "**GPS % year-on-year for selected distributor.** "
+                        "**Wallet capture % year-on-year for selected distributor.** "
                         "pp = percentage point change vs prior year. "
                         "Upward trend = improving wallet capture. "
                         "Flat line = neither gaining nor losing share of the potential."
                     )
-                    st.plotly_chart(fig_yoy, width='stretch')
+                    st.plotly_chart(style(fig_yoy), width='stretch')
 
         st.divider()
 
@@ -854,7 +856,7 @@ with tab2:
                     legend=dict(orientation="h", yanchor="bottom", y=-0.3),
                     margin=dict(l=10, r=10, t=20, b=10),
                 )
-                st.plotly_chart(fig3, width='stretch')
+                st.plotly_chart(style(fig3), width='stretch')
 
             st.divider()
 
@@ -896,7 +898,7 @@ with tab2:
                         legend=dict(orientation="h", yanchor="bottom", y=-0.35),
                         margin=dict(l=10, r=10, t=20, b=10),
                     )
-                    st.plotly_chart(fig4, width='stretch')
+                    st.plotly_chart(style(fig4), width='stretch')
                 else:
                     st.info("Need at least two years of data per distributor to compute YoY growth.")
 
@@ -1104,7 +1106,7 @@ with tab3:
                         xaxis=dict(ticksuffix="%", gridcolor="#F0F0F0"),
                         plot_bgcolor="white", paper_bgcolor="white",
                     )
-                    st.plotly_chart(fig_ytd, width='stretch')
+                    st.plotly_chart(style(fig_ytd), width='stretch')
     except Exception as _e:
         st.caption(f"YTD comparison unavailable: {_e}")
 
@@ -1189,6 +1191,6 @@ st.markdown(
     '<div class="footer-note">ISZE GPS Dashboard — Confidential | '
     'Vehicle Parts Sales, Isuzu Motors Europe | '
     f'Data: 2022–2026 YTD | UIO Reference: 2024 | '
-    f'Built: {datetime.now().strftime("%d %b %Y")}</div>',
+    f'Built: {data_freshness_date()}</div>',
     unsafe_allow_html=True,
 )
