@@ -1,0 +1,21 @@
+---
+description: Open paths Jerome can actually double-click on this Windows PC
+alwaysApply: true
+---
+
+# Open on his PC (ISZE)
+
+Jerome opens files on **this** Windows clone. Chat markdown does not launch HTML.
+
+## Hard lines
+
+- Never give `/workspace/...` or `\workspace\...` as something he should run on Windows.
+- Never `file://` markdown.
+- Never a GitHub `blob/...html` as “open the paper” (private repo 404s while signed out; source view is not the pack).
+- Quoted Windows path only under `C:\Users\jerom\Desktop\claude\ISZE\...` and only if that file **exists on this machine**.
+- If this session cannot `start` the file on Windows, say so in one sentence. Do not lead with “pull the repo.” If the file lives only on another clone, say that plainly.
+- Sibling `OPEN_*.cmd` must be **CRLF**. He double-clicks it in Explorer.
+
+Project hook (this repo): `.cursor/hooks/block-workspace-open-paths.mjs` via `.cursor/hooks.json`. Do **not** dump this into `~\.cursor\hooks`.
+
+See also `isze-html-openable.mdc`.

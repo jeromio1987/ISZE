@@ -1,0 +1,34 @@
+---
+description: Spoken and Mode A labels — no wallet, no dump of ×1.785, gloss Book B, no bot English
+alwaysApply: true
+---
+
+# Spoken labels (ISZE chat + Mode A UI)
+
+Cross-link street words: `isze-pricing-no-street-ui.mdc`. Do not copy that whole file here.
+
+## Forbidden → say instead
+
+| Do not say | Say |
+|---|---|
+| wallet / wallet € / parts wallet | **parts billed** vs **target spend per truck** (or “what we billed” vs “GPS target € per unit”) |
+| street / street fills / street index | **OEM peer retail** / **reference dealer price** / **price index** (shop ÷ reference dealer price) |
+| **sell-out / sell out / sellout** | **sales to dealer** (Jerome has asked repeatedly — this is a banned word, not a style preference) |
+| **Book B** (any form, bare or glossed) | **the price list** / **a price revision**. Jerome does not use “Book B” — do not introduce it, do not gloss it, do not ask which initiative it is. Pricing work is a **separate track**: SPA work plus a price revision, timing owned by Jerome. |
+| ×1.785 with no English | One sentence first: ISZE list × 1.40 to the dealer × 1.275 to the customer price we use as **reference dealer price**. The factor may then appear in a footnote. |
+
+Filenames that contain a banned word may be quoted **once** in a footnote.
+
+JSON field names (`peer_street_eur`, `wallet_eur`) may stay in pipeline code. Labels to Jerome and in dashboards must not.
+
+## Talk plainly
+
+Default to plain business English. Say “trucks in service”, not parc; “what we billed”, not capture; “dealer price”, not a bare formula. Keep a real term only when it is the clearest word for the thing, and gloss it the first time. No shorthand that only an agent would invent.
+
+## Packs
+
+First time a formula or internal code appears in a pack, add one plain English sentence. Then the code is fine.
+
+## Bot English — never in chat or Mode A
+
+loss function, grain, cartoon, brain, SPAR, ship-gate, harness.
