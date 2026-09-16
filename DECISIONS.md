@@ -6,6 +6,18 @@
 
 ---
 
+## 2026-09-16 — ISZE_Dashboard merge timeline: closed, keep as ops sandbox
+
+**Status:** Accepted — closing text already in the workspace; entry is the dated record the old open question was missing.
+
+**Decision.** The question "Timeline to fold legacy Streamlit ops sandbox into PRISM, or keep indefinitely?" is **closed**. Keep it as an ops sandbox indefinitely; there is no merge timeline and none will be set. `UI_STACK.md` already records the external share surface as HTML / GitHub Pages (**decided 2026-06-13**), so the legacy surface is not on the publication path either way.
+
+**Evidence:** `00_docs/ISZE_Cleanup_Plan.md` Phase 3 — "**Closed 2026-07-26:** keep as **ops sandbox** indefinitely — no merge timeline" · `00_docs/UI_STACK.md` — "**Decided:** 2026-06-13". Roadmap item 14 re-labelled 2026-09-16.
+
+**Supersedes:** "Open — ISZE_Dashboard merge timeline" (undated entry, **Status: Open**), which contradicted the 2026-07-26 close and kept re-appearing as an open question.
+
+---
+
 ## 2026-08-25 — Never re-ask Jerome for Nordics tender API keys
 
 **Status:** Accepted — Jerome (overnight chat): spammed repeatedly with the same Doffin/HILMA setup sheet; stop unless a new accurate failure reason exists.
@@ -602,11 +614,7 @@ Until (1)–(3) are agreed with IML (open item already logged in `05_memory/proj
 
 ## Open — ISZE_Dashboard merge timeline
 
-**Status:** Open  
-**Source:** [00_docs/UI_STACK.md](00_docs/UI_STACK.md), [00_docs/ISZE_Cleanup_Plan.md](00_docs/ISZE_Cleanup_Plan.md)  
-**Question:** Timeline to fold legacy Streamlit ops sandbox into PRISM, or keep indefinitely?
-
----
+**Status:** CLOSED 2026-09-16 — see the 2026-09-16 entry at the top of this file. Keep as an ops sandbox indefinitely; no merge timeline. Kept here so the old question does not re-appear as unmarked.
 
 ## Open — latest_weekly_brief.txt publish target
 
