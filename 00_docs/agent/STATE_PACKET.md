@@ -1,33 +1,48 @@
 # ISZE state packet
 
-**Updated:** 2026-08-25 ~19:52 (overnight Tick 12 — P8 horizon fix)
+**Updated:** 2026-09-16 — workspace remediation (CURSOR_BRIEF)
 
 Keep ≤1–2 pages. Refresh when big ISZE work ships.
 
-## Built
+## Built (this pass)
 
 | Item | Path |
 |------|------|
-| Action Ledger P8 | `01_data/00_derived/action_ledger*` + `02_dashboards/ops/ISZE_Action_Ledger*.html` |
-| Overnight workspace audit | `docs/OVERNIGHT_PROCESS_AUDIT_2026-08-25.md` |
-| Morning brief / command card | `docs/OVERNIGHT_MORNING_BRIEF_2026-08-26.md` · `OVERNIGHT_MORNING_COMMAND_CARD_2026-08-26.md` |
+| Audit refresh (read-only) | `docs\WORKSPACE_AUDIT_REFRESH_2026-09-16.md` |
+| Execution brief | `docs\CURSOR_BRIEF_2026-09-16.md` |
+| Security report (B) | `docs\_wsB_security_report.md` |
+| Alps PR land (5/5 merged) | `docs\_wsA_Alps_report.md` |
+| mypens PR land (2 closed, reasons) | `docs\_wsA_mypens_report.md` |
+| VC gaps C.1–C.2 | `docs\_wsC_vc_report.md` |
+| Tier1 consolidation refresh | `docs\CONSOLIDATION_TIER1_REFRESH_2026-09-16.md` |
+| Inventory refresh | `docs\WORKSPACE_INVENTORY.md` |
 
-## Facts (snapshot)
+## Open / blocked
 
-- Verify: **116/0/0 · ok=true** (2026-08-25T17:19:54Z)
-- `sales_fact`: **514,037** rows · billing max **2026-06-30**
-- SaTy: **~92.9%** — Apr–Jun from Q1FY2027 lack SaTy column; min fixture **92%**
-- Junctions: **restored** (`dashboards`/`derived`/`_INBOX`/…)
-- Action Ledger: **23,236** open · decisions CSV header-only · **billing_horizon = 2026-06-30** (now derived from sales_fact, not hard-coded Mar-31)
-- Nordics: Doffin/HILMA **OK** — **never re-ask Jerome for keys**
+| Item | Status |
+|------|--------|
+| ISZE PRs | **All 8 merged** — see `docs\_wsA_ISZE_report.md`. Local dirty tree left uncommitted; both IDS stashes dropped |
+| C.3 myPENS CI | **Done** — workflows on mypens `main` (`1476ccc`); see `docs\_wsC3_mypens_ci_report.md` |
+| E truth audit | **Done** — `docs\TRUTH_AUDIT_2026-09-16.md` (4 confirmed disagreements; fig_key = date drift only) |
+| Old GitHub PAT | Skipped per Jerome 2026-09-16 — files left; residual local-disk risk only |
+| Private health `.gitignore` | Proposal in `_wsB`; awaiting confirm before write |
+| cairn / pebble | Awaiting Jerome: version / park / reclaim |
+| Tier1 delete 210 files (~222 MB) | **Done** — 210 deleted / 221.9 MB; receipt `docs\_tier1_delete_receipt.json` |
+| Alps `.gitignore` `export_*.csv` | Done on disk, **not committed** |
 
-## Open
+## CV warranty mileage validation (2026-09-16)
 
-- Human: P4 calibration 4.9 *or* Tomoe IDS mail
-- Optional: SAP re-export Q1 **with SaTy**
-- P8: seed ≤5 rows in `action_ledger_decisions.csv` from top-15 € (not all 23k)
-- Manual: delete retired Scheduled folders; patch freshness SKILL paths (map in AUTOMATION_REGISTER)
+| Item | Path |
+|------|------|
+| Validation note | `01_data\90_INBOX\_cv_warranty_mileage_validation.md` |
+| Derived table | `01_data\00_derived\warranty_cv_km_age_by_market.csv` |
+| Fleet/age companion (parallel worker) | `01_data\90_INBOX\_market_fleet_profile_workup.md`, `_market_fleet_profile_design.md` |
 
-## Agent habit
+**Headline:** the PRISM mileage assumption is confirmed for UTI (measured 51,680 vs assumed 50,000) and contradicted for ITUK (measured 16,688 vs assumed 50,000). The global `annual_km_yr: 20000` is structurally wrong — mileage tracks truck weight class (N35 12,165 / N75 35,217 / F-series 45,630), a 3.7× spread. Open question: whether ITUK's 50,000 or the UK warranty VIN sample is the wrong one. **Awaiting Jerome before any PRISM rebuild.**
 
-KPIs: green `_verification_report.json` first. Process OS: overnight pack + `AUTOMATION_REGISTER.md`. Nordics keys: closed.
+## Prior built (unchanged)
+
+| Item | Path |
+|------|------|
+| Exec aftersales paper | `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html` |
+| Command Center | `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html` |
