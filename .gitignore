@@ -296,7 +296,36 @@ _tmp_*.png
 _tmp_*.jpg
 _qa*.png
 _qa*.jpg
-!02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/**
+# NOTE: no `!dmax_render/**` negation here on purpose. A broad negation would
+# override the __pycache__/ and *.log rules below for that whole tree, which is
+# how 132 .pyc and .log files got swept back into the index. The D-Max _qa sheets
+# and _assets are already tracked and stay tracked; the pattern rules simply do
+# not apply to them retroactively.
+
+# --- D-Max render intermediates ---
+# Only the per-frame PNG renders live here (346 MB). The _raw/*.json camera and
+# silhouette measurements are INPUTS that measure_silhouette_mismatch.py reads
+# (HERO_REPORT = _raw/cam_hero.json), so the folder itself must stay tracked —
+# ignore the images only, never the folder.
+02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/_raw/*.png
+02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/_raw/*.jpg
+02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/_raw/*.jpeg
+
+# --- 02_dashboards/Data deploy mirror ------------------------------------
+# A real folder (not a junction) holding copies of derived data for published
+# HTML, plus ingest leftovers. The root .gitignore excludes the canonical
+# copies under 01_data/, so the same files were being tracked twice here:
+# pricing_pn_enquiry_active.csv (98 MB), pricing_list_pn.csv (58 MB),
+# sales_fact.csv (45 MB) and 900 other files, 414 MB in total. Canonical
+# source is 01_data/, never this path.
+02_dashboards/Data/
+
+# --- Python bytecode that escaped the global __pycache__/ rule ---
+# The D-Max render tree was reaching the index through a broad negation in the
+# QA block above; these are compiled caches and run logs, never source.
+**/__pycache__/**
+**/*.pyc
+02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/**/*.log
 
 # --- Action Ledger transient build artefacts ---
 # One .txt per build run; the curated ACTION_LEDGER_BUILD_LOG_*.md is tracked.

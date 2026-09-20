@@ -7,7 +7,13 @@ data/*.xls
 # Allow production data files â€” private repo, needed for Streamlit Cloud
 # !data/UIO.xlsx  # blocked at ISZE root — holiday laptop uses derived JSON
 !data/distributor_master_mapping.csv
-!data/sales_detailed_for_claude_full_fixed.tsv
+# UNTRACKED 2026-09-20 — this line was re-including line-level billing (44 MB of
+# sold_to / billing_date / part_number / net_sales_value rows) into git. ISZE
+# policy is never to commit raw billing, and the replacement is already tracked
+# at 01_data/00_derived/sales_fact.parquet (REFERENCE.md maps this file to it).
+# Kept commented so the decision is visible and reversible in one edit if a
+# Streamlit Cloud deploy genuinely needs the TSV.
+# !data/sales_detailed_for_claude_full_fixed.tsv
 !data/dealer_sales/
 !data/dealer_sales/**
 

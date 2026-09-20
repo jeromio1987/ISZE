@@ -1,0 +1,71 @@
+{
+  "generated": "2026-09-20T14:34:48.309397+00:00",
+  "built_by": "01_data/91_build/build_aim_classification_20260920.py",
+  "purpose": "Two-axes lock 2026-09-17: Axis A = catalog_l1/l2/l3 identity (catalogue, from the declared upstream pr00_classification.csv); Axis B = commercial score beside Axis A (contested per part per market) - not built as scored columns here yet. legacy workbook_l* is context only. Do not invent a fourth layer.",
+  "supersedes_for_rebuild": "aim_pn_classification_v2.csv (18 Sep) - read-only, not replaced",
+  "sources": {
+    "spine": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_master_v2.csv",
+    "spine_modified": "2026-09-20T07:24:12.785595+00:00",
+    "catalog": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\pr00_classification.csv",
+    "catalog_modified": "2026-09-18T05:52:21.040666+00:00",
+    "contract_columns": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_pn_classification.csv",
+    "contract_modified": "2026-09-18T06:02:29.881047+00:00"
+  },
+  "catalog_source_note": "catalog_l1/l2/l3 are read LIVE from pr00_classification.csv, the source the master's own cat_* columns are copied from. The master's copy is stale (taken 17 Sep 22:06) and disagrees with that upstream on 2,843 rows. Building from the stale copy would import the drift; building from the declared source does not. Rows where the two disagree are flagged catalog_changed_vs_master=1, so the movement is auditable, not silent.",
+  "non_part_rule": {
+    "source": "03_analytics/Isuzu/prism/modules/sales_loader.py NON_PART_LINE_KIND (copied, that file NOT edited)",
+    "keys": {
+      "TRANSPORT": "freight",
+      "REBATE": "rebate",
+      "LATEPAYMENTINTEREST": "finance",
+      "DISRACK01": "adjustment",
+      "5874123810": "tool",
+      "5874123811": "tool",
+      "5874123812": "tool",
+      "SERVICE": "service_fee",
+      "SERVICEFEEOUTSIDEEUROPE": "service_fee",
+      "SERVICEFEEWITHINEEUROPE": "service_fee",
+      "COSTDEMURRAGE": "demurrage",
+      "COMPENSATIONSSALEE-CREDIT": "e_credit"
+    },
+    "additions_not_in_source": [
+      "SERVICEFEEWITHINEEUROPE"
+    ],
+    "matching": "normalised: uppercase, spaces removed, leading zeros stripped (the master carries REBATE and 0000REBATE, and LATEPAYMENTINTEREST and 'LATE PAYMENT INTEREST', for the same entities)",
+    "effect": "tags line_kind; rows are kept, never dropped. Consumers that want parts revenue filter line_kind=='part'."
+  },
+  "rows": 164907,
+  "counts": {
+    "duplicate_keys": 0,
+    "hierarchy_orphans": 0,
+    "catalog_from_pr00": 164792,
+    "catalog_no_upstream_row": 115,
+    "catalog_moved_vs_master": 2843,
+    "catalog_moved_l12m_eur": 6182406.49,
+    "catalog_residual_other_review": 9634,
+    "axis_conflict_rows": 19520,
+    "description_ambiguous_rows": 891,
+    "distinct_ambiguous_descriptions": 94,
+    "leading_zero_keys": 1606,
+    "description_present": 27207,
+    "catalog_l2_count": 27,
+    "catalog_l3_count": 177,
+    "non_part_rows": 13,
+    "non_part_l12m_eur": 1807550.4
+  },
+  "gate_expectations": {
+    "axis_a_l2_approved": 27,
+    "axis_a_l3_approved": 176,
+    "note": "verify_aim_classification.py approves L2=27 / L3=176 (leaf_add_battery_tools_20260918)"
+  },
+  "consumer_contract": [
+    "Axis A (identity): group by catalog_l1/l2/l3. Wear and family views hang from catalog_l2/l3 or fig_key - never from a commercial posture parent.",
+    "Axis B (commercial score): contested/captive per part per market sits beside Axis A. Never the hang-from parent for identity views.",
+    "filter catalog_node_present=1 for a real Axis A family view.",
+    "Report catalog_residual=1 (Other / review) as a named residual, never as a family.",
+    "workbook_l1 is legacy AIM system context - neither Axis A nor Axis B. Never group workbook_l1 with catalog_l2.",
+    "aim_l1_fixed = the governed functional family (what a family question charts).",
+    "jp_zkk / jp_zuk are CATALOGUE ATTRIBUTES from the Japan price file. Never chart on them; they are not a family (one code holds 42% of the book across 415 part types).",
+    "line_kind != 'part' marks freight / rebate / service-fee / demurrage rows. Filter line_kind=='part' for parts revenue; never let these into a family chart."
+  ]
+}
