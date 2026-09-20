@@ -1,0 +1,26 @@
+﻿AIR FILTER -> pms_category, rule by rule
+  engine air-cleaner elements found        256   EUR 1,203,146
+  of which outside 'Filters' group         128   EUR 1,160,612
+  can match rule `match_group: Filters`    128   EUR 42,534
+  saved by `match_fig_key: 130-006`        66   EUR 1,123,009
+  -> NO pms_category at all               62   EUR 37,603
+  fig keys actually carried by the misfiled parts: {'130-006': 66, '130-026': 40, '130-027': 22}
+
+KING PIN -> pms_category
+  parts reading KING PIN                   536   EUR 219,775
+  can match rule `match_group: Suspension` 0   EUR 0
+  -> NO king_pin category                  536   EUR 219,775
+  where they sit: {'Hardware > Pin': 366, 'Hardware > Washer': 136, 'Hardware > Bolt': 22, 'Gaskets / seals > Other gasket / seal': 7}
+
+SHIPPED parts_catalog_dimension.csv
+  rows 164,969   columns ['part_number', 'fig_key', 'fig_key_label', 'pms_category', 'classification_source', 'pr00_family', 'pr00_group', 'pr00_level3_type', 'pms_registry', 'in_bvp_catalog']
+  pms_category populated on 8,266 rows
+  air_filter rows in the shipped dimension: 254
+  king_pin rows  in the shipped dimension: 0
+
+  the 256 engine air-cleaner parts, as tagged in the shipped dimension:
+     207 parts  EUR   1,202,903   pms_category = air_filter
+      49 parts  EUR         243   pms_category = (not tagged)
+
+  the 536 KING PIN parts, as tagged:
+     536 parts  EUR     219,775   pms_category = (not tagged)

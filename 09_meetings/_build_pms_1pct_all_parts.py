@@ -1,4 +1,4 @@
-"""Build ISZE_PMS_1pct_all_parts_ITUK_DLR.xlsx (Mode A, formulas in cells).
+"""Build ISZE_PMS_1pct_all_parts_ITUK_DLR.xlsx (shared, formulas in cells).
 
 Study A: 1.00 percentage point of calendar 2025 ITUK-to-dealer sales
 on the Duncan PMS part-number set (all scheduled-service families).
@@ -396,7 +396,7 @@ def build():
 
     top_wear = wear.sort_values(["qty", "dlr_valued"], ascending=False).head(20)
 
-    # Print Mode B numbers for the agent
+    # Print internal numbers for the agent
     print("=== DEFINITION ===")
     print("unique_pns", totals["pn_count"])
     print("n35_only", totals["n35_only_pns"], "n75_only", totals["n75_only_pns"], "both", totals["both_pns"])

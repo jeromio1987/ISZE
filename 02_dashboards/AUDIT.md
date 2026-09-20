@@ -17,7 +17,7 @@
 | Pack | Audience | Language |
 |------|----------|----------|
 | **Internal** | ISZE ops + Jerome | Full pipeline detail, leakage/attach/elasticity only in PRISM internal mode |
-| **Distributor (Mode A)** | DB-facing | Plain language, no pipeline jargon, no leakage |
+| **Distributor (shared)** | DB-facing | Plain language, no pipeline jargon, no leakage |
 | **Management** | MD pack / evaluaties / year-end | Deck-style summaries |
 
 ---

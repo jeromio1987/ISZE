@@ -1,6 +1,6 @@
 # IDS 2026 — cross-dataset correlation scan
 
-**Mode B / internal. Read-only analysis — no rebuild, no mail, no commit.**
+**internal / internal. Read-only analysis — no rebuild, no mail, no commit.**
 **Generated:** 2026-08-10 · IDS payload: 564 dealer rows, 521 after dropping the `Benelux` rollup (it double-counts BE+NL+LUX).
 
 KPI anchor: `_verification_report.json` is **green** (106 pass / 0 fail, 2026-08-03).

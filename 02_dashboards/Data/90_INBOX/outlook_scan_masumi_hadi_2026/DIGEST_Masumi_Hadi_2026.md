@@ -1,6 +1,6 @@
 # Outlook scan — Masumi + Hadi (CY2026)
 
-**Mode B · Jerome-only** · Scanned via local Outlook COM (Composio still unauthenticated).  
+**internal · Jerome-only** · Scanned via local Outlook COM (Composio still unauthenticated).  
 **Mailbox:** `jerome.van.der.pluym@isuzu-e.com` · Inbox + Sent + Archive  
 **Scanned at:** 2026-08-09 11:08  
 **Raw:** `hits.json` / `index.json` / `_analysis.json` in this folder

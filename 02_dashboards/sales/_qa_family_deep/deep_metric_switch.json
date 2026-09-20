@@ -1,0 +1,185 @@
+{
+  "steps": [
+    {
+      "tag": "opening: IUK, all vehicle types, CY, billed euro",
+      "metric": "abs",
+      "fleetMode": "split",
+      "chips": [
+        "abs:on",
+        "pv:off",
+        "units:off"
+      ],
+      "chartLabel": "CY2025 = January to December 2025 \u00e2\u20ac\u201d billed euro",
+      "chartValue": 124.89,
+      "prevValue": 31.08,
+      "kpi0": {
+        "v": "EUR 1,170,885",
+        "l": "billed euro, CY2025 = January to December 2025",
+        "s": "-18.1% against CY2024 = January to December 2024"
+      }
+    },
+    {
+      "tag": "after clicking \"Euro per vehicle\"",
+      "metric": "pv",
+      "chips": [
+        "abs:off",
+        "pv:on",
+        "units:off"
+      ],
+      "chartLabel": "CY2025 = January to December 2025 \u00e2\u20ac\u201d euro per vehicle",
+      "chartValue": null,
+      "prevValue": null,
+      "kpi0": {
+        "v": "EUR 25",
+        "l": "euro per vehicle, CY2025 = January to December 2025",
+        "s": "-18.1% against CY2024 = January to December 2024"
+      }
+    },
+    {
+      "tag": "after clicking \"Units\"",
+      "metric": "units",
+      "chips": [
+        "abs:off",
+        "pv:off",
+        "units:on"
+      ],
+      "chartLabel": "CY2025 = January to December 2025 \u00e2\u20ac\u201d units",
+      "chartValue": 5,
+      "kpi0": {
+        "v": "54,155 pcs",
+        "l": "units, CY2025 = January to December 2025",
+        "s": "-14.8% against CY2024 = January to December 2024"
+      }
+    },
+    {
+      "tag": "denominator switched to the per-year count",
+      "fleetMode": "yearly",
+      "normRows": 3,
+      "industryRows": 4
+    },
+    {
+      "tag": "euro per vehicle, both denominators drawn (ITUK, N-series truck)",
+      "ownLine": [
+        59.47509800039597,
+        53.120695430791905,
+        53.44881328599484
+      ],
+      "flatLine": [
+        52.090986648170635,
+        51.55710291312641,
+        53.448581584879506
+      ],
+      "fleetBars": [
+        20204,
+        22389,
+        23067.9
+      ],
+      "series": [
+        "Euro per vehicle, divided by that period\u00e2\u20ac\u2122s own fleet",
+        "The same euro, divided by the single 2025 estimate"
+      ]
+    },
+    {
+      "tag": "left in euro per vehicle on the split denominator"
+    }
+  ],
+  "fail": [],
+  "proof": {
+    "market": "ITUK",
+    "family": "n_series_truck",
+    "rows": [
+      {
+        "period": 2023,
+        "eur": 727731.02,
+        "units": 13338,
+        "fleetSplit": 22191,
+        "fleetYear": 19559,
+        "fleetUsed": 22191,
+        "rate": 32.79397142985895,
+        "rateSplit": 32.79397142985895,
+        "rateYear": 37.20696456874074,
+        "modeUsed": "split",
+        "fleetVintage": "2023 billing divided by the fleet estimate labelled one estimate, labelled 2025E \u00e2\u20ac\u201d no year axis in this derived file \u00e2\u20ac\u201d the same estimate in every period",
+        "fleetSource": "the model's own fleet split by vehicle type"
+      },
+      {
+        "period": 2024,
+        "eur": 774068.7599999999,
+        "units": 12739,
+        "fleetSplit": 22191,
+        "fleetYear": 21584,
+        "fleetUsed": 22191,
+        "rate": 34.88210355549547,
+        "rateSplit": 34.88210355549547,
+        "rateYear": 35.8630819125278,
+        "modeUsed": "split",
+        "fleetVintage": "2024 billing divided by the fleet estimate labelled one estimate, labelled 2025E \u00e2\u20ac\u201d no year axis in this derived file \u00e2\u20ac\u201d the same estimate in every period",
+        "fleetSource": "the model's own fleet split by vehicle type"
+      },
+      {
+        "period": 2025,
+        "eur": 753204.2800000001,
+        "units": 12203,
+        "fleetSplit": 22191,
+        "fleetYear": 22190.9,
+        "fleetUsed": 22191,
+        "rate": 33.94188094272454,
+        "rateSplit": 33.94188094272454,
+        "rateYear": 33.94203389677751,
+        "modeUsed": "split",
+        "fleetVintage": "2025 billing divided by the fleet estimate labelled one estimate, labelled 2025E \u00e2\u20ac\u201d no year axis in this derived file \u00e2\u20ac\u201d the same estimate in every period",
+        "fleetSource": "the model's own fleet split by vehicle type"
+      }
+    ]
+  },
+  "keys": [
+    {
+      "canvas": "c_funnel",
+      "words": 48,
+      "text": "CY2025 = January to December 2025, euroCY2024 = January to December 2024, eurothe second bar is the same twelve months a year earlier, so the length difference is the move. Click any bar to open the l"
+    },
+    {
+      "canvas": "c_norm",
+      "words": 70,
+      "text": "euro per vehicle, divided by that period\u00e2\u20ac\u2122s own fleet (left axis, solid line \u00e2\u20ac\u201d the default in force)the same euro divided by the single 2025 estimate (dashed line, the comparison)vehicles in service pe"
+    },
+    {
+      "canvas": "c_target",
+      "words": 22,
+      "text": "billed per vehicle, divided by that period\u00e2\u20ac\u2122s own fleetthe same euro divided by the single 2025 estimatetarget spend per vehicle, dashed, where a target exists"
+    },
+    {
+      "canvas": "c_band",
+      "words": 33,
+      "text": "CY2025 = January to December 2025 billed euroCY2024 = January to December 2024 \u00e2\u20ac\u201d the same months a year earlierone bar per weight band; the pair of bars is the move. Click a bar to open the part numbe"
+    },
+    {
+      "canvas": "c_drill",
+      "words": 29,
+      "text": "CY2025 = January to December 2025CY2024 = January to December 2024all service families for this selection, ranked by the current period \u00e2\u20ac\u201d pick a vehicle type above to narrow it, or click a bar to open"
+    },
+    {
+      "canvas": "c_before",
+      "words": 26,
+      "text": "as shipped (ISZE_PMS_Family_Evolution.html as shipped, read from 6 QA case files taken 19 Sep 2026)correctedCY2025 = January to December 2025, service parts only, the whole network \u00e2\u20ac\u201d the same scope th"
+    },
+    {
+      "canvas": "c_mix",
+      "words": 42,
+      "text": "N-series truck \u00e2\u20ac\u201d 0.0% (EUR 125) on 0 vehicles in serviceLight vehicle (D-Max) \u00e2\u20ac\u201d 76.4% (EUR 894,245) on 47,783 vehicles in serviceParts used across more than one family \u00e2\u20ac\u201d 16.6% (EUR 194,181) \u00e2\u20ac\u201d pooled a"
+    },
+    {
+      "canvas": "c_fleet",
+      "words": 12,
+      "text": "Light vehicle (D-Max) \u00e2\u20ac\u201d 47,783, billed EUR 0.89M = EUR 894,245 over 47,783 vehicles"
+    }
+  ],
+  "notes": {
+    "metricNote": "Billed euro is the absolute figure. It is not a like-for-like comparison on its own: the vehicles in service move every year, so read it with the euro-per-vehicle rate beside it.",
+    "fleetNote": "In force: that period\u00e2\u20ac\u2122s own fleet, by vehicle type. Vehicles in service for this selection: 47,783, against 47,783 on the single 2025 estimate and 47,783 on the 2025 count this period \u00e2\u20ac\u201d they coincide here only because 2025 is the estimate year itself, so a single period proves nothing about the difference between them; read the table below across all three periods. the 2025 count for this vehicle type, an estimate.",
+    "norm": "Every period here is divided by its own fleet. Two answers are drawn on purpose: the solid line is the per-period fleet, the dashed line is the one 2025 estimate, and where they disagree about direction that disagreement is the finding. In your selection the rate went from EUR 29 to EUR 25 per vehicle (-16.2%) while the absolute euro went -18.1%. On the single 2025 estimate the same two periods read EUR 30 to EUR 25 (-18.1%), which is the euro move restated as a rate rather than a rate that can move on its own. Over the whole span CY2023 = January to December 2023 to CY2025 = January to December 2025 the two denominators read +18.9% on the single 2025 estimate against +15.9% on each period\u00e2\u20ac\u2122s own fleet. They agree on the direction here and differ in size. What the 2025 denominator is made of, from the workbook\u00e2\u20ac\u2122s own rows: IUK 47,783 on the light-commercial row. Where the denominator comes from. Both are read from the vehicle-in-service workbook. The single estimate is the model\u00e2\u20ac\u2122s own three-way split, one vintage labelled 2025E; it is the second option in the control above and it stays on the page, because a reader should be able to check what the flat answer was rather than be told it was wrong. The default is the workbook\u00e2\u20ac\u2122s own count for the period, summed from the rows that name a vehicle type (the LD and MD rows are the N-series truck, the F-series row the heavy truck and the light-commercial row the light vehicle). Two defects in that source are carried here, not hidden. LD is a label, not a weight class: 6.5/7.5 t in Israel and about 3.5 t in most of Europe, two different parts spend rates on one label. The band is read per market, from the market's own measured 3.5 t share, never assumed. Open issue LD-LABEL. Israel's CV rows run about 25% LOW in every year against the Israeli ministry's own registrations, so a per-truck figure on UTI is flattered by an understated denominator. Open issue UIO-FCAST. Forward periods are not measured. 2026 to 2030 are forecast, not measured: the workbook scraps about 3% a year from 2026 while the 1990-2025 history uses a survival curve implying about 10.2% (trucks) and 12.3% (light vehicles), so the forward years are overstated by +9% in 2026 rising to about +59% by 2030 network-wide and worse per market. Open issue UIO-FCAST. The billing runs from January 2023, so a period later than 2025 would be a forecast denominator with nothing to divide, and those periods are excluded from the chart rather than shown as a fall.",
+    "normHead": "The two denominators, side by side, for every period",
+    "target": "This is our own target, not an industry benchmark. A target spend per vehicle exists for 2025 and for the part-year 2026 only. A year with no target is shown without one rather than back-filled. The target is per market, so it shows where the gap between what we billed per vehicle and what a vehicle in that market is worth is widest; it does not say what share of that market\u00e2\u20ac\u2122s parts demand we hold. A market with no dashed line has no target on disk for the period shown.",
+    "industry": "The industry question, answered honestlyQuestionAnswerIs an industry benchmark shown on this page?No. No industry or all-makes benchmark exists on disk at the grain this page works at \u00e2\u20ac\u201d market, year and vehicle type. Every rate on this page is our own billing against our own fleet and, where stated, against our own target spend. Nothing here says what share of a market's total parts demand we hold, because no source on disk can say it.What was searched fora third-party parts-market size, by market and yearan all-makes vehicles-in-service count, by market and yearan independent service-spend be"
+  }
+}

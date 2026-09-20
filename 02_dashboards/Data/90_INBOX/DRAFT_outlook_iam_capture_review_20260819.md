@@ -63,7 +63,7 @@ Copy from the fenced block in:
 Or paste this:
 
 ```
-You are in ISZE at C:\Users\jerom\Desktop\claude\ISZE. Mode B with Jerome.
+You are in ISZE at C:\Users\jerom\Desktop\claude\ISZE. internal with Jerome.
 Read INDEX.md → 00_docs/ROUTING.yaml (pricing + pms_programme) → AGENTS.md.
 Read 00_docs/IAM_CAPTURE_PRICE_HUNT_REVIEW_PROMPT.md in full and obey it.
 Read skills: answering-the-exact-question, locating-existing-artifacts, visueel-rapport

@@ -93,4 +93,4 @@
 4. **Service-parts coverage:** prefer rolling 12m; stock-order timing and warranty distort H1.
 5. **R&M:** live threads at ISD (Santander leasing), Petros (Alex / Real Garand), IUK (Phil Evans national), Ireland (Carl).
 
-**Mode:** B (internal). Do not paste personal names into Mode A decks without Jerome OK.
+**Mode:** B (internal). Do not paste personal names into shared decks without Jerome OK.

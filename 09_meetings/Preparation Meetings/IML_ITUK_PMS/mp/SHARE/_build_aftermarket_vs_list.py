@@ -1,4 +1,4 @@
-"""Mode A Excel: N75 PMS EQ application + aftermarket brand prices vs ISZE list.
+"""shared Excel: N75 PMS EQ application + aftermarket brand prices vs ISZE list.
 
 No invented prices. DAF peer rows are excluded (not physical fit).
 Does not touch any PowerPoint. Does not Outlook Send.

@@ -94,7 +94,7 @@ banner = """
 <div class="callout green">
   <strong>Week-1 execute update (25 Aug 2026, same evening):</strong> verify green; sales_fact → 30 Jun 2026;
   parts base €112.09M; sell-out long CSVs re-emitted for 5 DBs + second layer rebuilt; INBOX 1,677→545;
-  UIO_v17 quarantined; UMI ask drafted; leakage € stays Mode B until list-to-pocket signed.
+  UIO_v17 quarantined; UMI ask drafted; leakage € stays internal until list-to-pocket signed.
   Cover KPIs above are post-execute. Body sections below still describe the audit-time baseline where noted.
 </div>
 """

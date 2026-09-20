@@ -1,0 +1,24 @@
+{
+  "built": "2026-09-18T05:33:12",
+  "purpose": "state, per source, the key it carries and the question it can answer",
+  "headline": {
+    "sources": 8,
+    "with_part_number": 6,
+    "with_geography": 0,
+    "with_vehicle_split": 0,
+    "ks_domains": 1,
+    "auto365_rows_with_pn": 0,
+    "autodoc_rows_with_corrupt_price": 277
+  },
+  "blocked_questions": [
+    "Israel vs UK: no source prices the same part in both markets.",
+    "CV vs LCV: no source states which vehicle a part number fits.",
+    "The Auto365 join is impossible - the file has no part number."
+  ],
+  "what_would_unblock": [
+    "A competitor price per market for the same part number (local scrapes).",
+    "The vehicle application per part number (EPC or catalogue figure).",
+    "More than one competing listing per part (83% of current rows rest on one).",
+    "A market-differentiated list on our side for PR00 - our list price is global today."
+  ]
+}

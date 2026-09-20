@@ -316,7 +316,7 @@ def main() -> int:
         bad = [b for b in bad_eur if re.search(r"€\d{2,},", b)]
         check("HTML € formatting (no raw+ M)", len(bad) == 0, f"bad_samples={bad[:5]}")
         check(
-            "Mode A language (no IML v7 / Model B)",
+            "shared language (no IML v7 / Model B)",
             ("IML v7" not in html_txt) and ("Model B" not in html_txt),
             "scanned",
         )

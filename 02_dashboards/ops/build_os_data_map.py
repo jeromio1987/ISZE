@@ -138,6 +138,11 @@ def build(data: dict) -> str:
     )
 
     # Matrix rows
+    GEO_LABEL = {
+        "exact": "exact location",
+        "approximate": "approximate (derived)",
+        "none": "no location",
+    }
     matrix_rows = []
     for cap in data["capabilities"]:
         matrix_rows.append(
@@ -149,9 +154,28 @@ def build(data: dict) -> str:
             ask = it.get("ask") or it.get("how_to_find") or "—"
             integ = it.get("integrity") or ""
             period = it.get("period") or "—"
+            geo = it.get("geo") or "none"
+            meta_bits = []
+            if it.get("grain"):
+                meta_bits.append(f'<span class="mk"><b>Row</b> {esc(it["grain"])}</span>')
+            if it.get("market_key"):
+                meta_bits.append(
+                    f'<span class="mk"><b>Market key</b> <code>{esc(it["market_key"])}</code></span>'
+                )
+            else:
+                meta_bits.append('<span class="mk"><b>Market key</b> none</span>')
+            if it.get("source_entity"):
+                meta_bits.append(f'<span class="mk"><b>Source</b> {esc(it["source_entity"])}</span>')
+            else:
+                meta_bits.append('<span class="mk"><b>Source</b> not established</span>')
+            meta_bits.append(
+                f'<span class="mk geo geo-{esc(geo)}"><b>Map</b> '
+                f'{esc(GEO_LABEL.get(geo, geo))}</span>'
+            )
+            meta = f'<div class="meta">{"".join(meta_bits)}</div>'
             matrix_rows.append(
                 f'<tr class="item" data-status="{esc(st)}" data-cap="{esc(cap["id"])}">'
-                f'<td>{esc(it["name"])}</td>'
+                f'<td>{esc(it["name"])}{meta}</td>'
                 f'<td class="period">{esc(period)}</td>'
                 f'<td><span class="pill {esc(st)}">{esc(data["statuses"][st]["label"])}</span></td>'
                 f'<td>{esc(it.get("owner") or "—")}</td>'
@@ -272,6 +296,15 @@ table.matrix{{width:100%;border-collapse:collapse;font-size:13px;background:#fff
 .matrix tbody tr.item td{{background:#fff;color:#222}}
 .matrix tbody tr.item:nth-child(even) td{{background:#faf8f4;color:#222}}
 .matrix tbody tr.is-hide{{display:none}}
+.meta{{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11.5px;color:#6b6256;line-height:1.45}}
+.meta .mk{{white-space:normal;max-width:520px}}
+.meta .mk b{{color:#1a2b4a;font-weight:600}}
+.meta .mk code{{font-family:Consolas,Menlo,monospace;font-size:11px;background:#f2efe8;color:#1a2b4a;
+  padding:1px 4px;border-radius:2px}}
+.meta .geo b{{color:#1a2b4a}}
+.meta .geo-exact b{{color:#1d6b4f}}
+.meta .geo-approximate b{{color:#8a6500}}
+.meta .geo-none b{{color:#8a3030}}
 .pill{{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;
   padding:2px 8px;font-weight:700}}
 .pill.have{{background:#e4f5ee;color:#1d6b4f}}
@@ -383,7 +416,8 @@ table.matrix{{width:100%;border-collapse:collapse;font-size:13px;background:#fff
   <p class="legend">{status_legend}</p>
 
   <h2 style="margin-top:36px"><span class="no">02</span> · Every decision the OS should take</h2>
-  <p class="lead">Filter by status. Capability headers stay navy; data rows stay ink on paper.</p>
+  <p class="lead">Filter by status. Capability headers stay navy; data rows stay ink on paper. Under each row: what one row of the data is, the column that names the market, who the data comes from, and whether it can ever be placed on a map.</p>
+  <p class="legend"><b>Map</b> — <span style="color:#1d6b4f;font-weight:600">exact location</span>: real latitude and longitude in the data · <span style="color:#8a6500;font-weight:600">approximate (derived)</span>: a coordinate exists but is worked out, for example a country centre, not a site · <span style="color:#8a3030;font-weight:600">no location</span>: no coordinates anywhere in it, so it can never go on a map.</p>
   <div class="filters" id="filters">{''.join(filter_btns)}</div>
   <table class="matrix" id="matrix">
     <thead>
@@ -397,7 +431,7 @@ table.matrix{{width:100%;border-collapse:collapse;font-size:13px;background:#fff
 
 <div id="panel-asks" class="panel" role="tabpanel">
   <h2><span class="no">03</span> · Ranked asks</h2>
-  <p class="lead">What to request next. This list does not implement P4, collect sell-out, or mail IML — it names the asks.</p>
+  <p class="lead">What to request next. This list does not implement P4, collect sales to dealer, or mail IML — it names the asks.</p>
   <div class="asks">{''.join(ask_cards)}</div>
 </div>
 

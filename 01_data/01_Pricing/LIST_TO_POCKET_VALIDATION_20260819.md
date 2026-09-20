@@ -1,4 +1,4 @@
-# List-to-pocket validation — year-matched joins (Mode B)
+# List-to-pocket validation — year-matched joins (internal)
 
 **Validated 2026-08-20.** Task 1.4 closed: the year-matched PR00/ZPR1 list-to-pocket joins are independently verified. Jerome accepted the standing assumption: **a sale is matched to the PR00 list of its billing/order-date year** — intra-year list changes are not dated, and are accepted as immaterial for this purpose.
 

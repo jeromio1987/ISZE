@@ -1,0 +1,66 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\ISZE_Pricing_Stack_Simulation_2026-09-19.xlsx",
+  "artifact_mtime_ms": 1789815126378,
+  "written_at": "2026-09-19T11:05:32.255Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\ISZE_Pricing_Stack_Simulation_2026-09-19.xlsx"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "2,204,374 bytes"
+    },
+    {
+      "id": "zip_integrity",
+      "ok": true,
+      "detail": "no corrupt entry"
+    },
+    {
+      "id": "xml_wellformed",
+      "ok": true,
+      "detail": "0 malformed parts"
+    },
+    {
+      "id": "no_lookup_or_array_functions",
+      "ok": true,
+      "detail": "296 formulas parsed, none found"
+    },
+    {
+      "id": "five_sheets",
+      "ok": true,
+      "detail": "['Legends', 'PR00', 'UTI', 'UMI', 'CIS']"
+    },
+    {
+      "id": "no_wrapped_data_cells",
+      "ok": true,
+      "detail": "zero wrapped cells in the four market sheets"
+    },
+    {
+      "id": "freeze_pane_A2",
+      "ok": true,
+      "detail": "A2 on market sheets, None on Legends"
+    },
+    {
+      "id": "cached_values_present",
+      "ok": true,
+      "detail": "17,960 of 17,960 formulas"
+    },
+    {
+      "id": "headline_present",
+      "ok": true,
+      "detail": "PR00 weighted increase = 0.05921147633739341"
+    },
+    {
+      "id": "launcher_crlf",
+      "ok": true,
+      "detail": "CRLF 2, bare LF 0"
+    }
+  ],
+  "screenshots": [],
+  "notes": "Regenerated 2026-09-19 to cover the 12:52 rebuild. The previous receipt covered the 08:40 build and no longer matched the artefact. NOT VERIFIED HERE: that Excel opens the file, and that it scrolls in a window. This machine has no Excel and no COM. The two mechanical causes of the earlier scroll failure were removed and are asserted above."
+}

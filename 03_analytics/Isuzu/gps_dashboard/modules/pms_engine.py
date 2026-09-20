@@ -1,11 +1,31 @@
 """
-Module: PMS Coverage Engine
-ISZE GPS Dashboard — PMS Classification & Capture Rate Analysis
+Module: PMS Coverage Engine  ──  ⚠ DEPRECATED 2026-09-17, DO NOT USE FOR NEW WORK
 
-Phase 1 scope: N75 / 7.5t fleet (NPR75/4HK1 and NPR88/4JZ1).
-N35 (NLR87/NLR88) included in registry but shown as reference only.
+This is a FORK of the canonical PRISM engine, not the engine itself. It was the original
+GPS-dashboard PMS calculator and has been superseded. It is left on disk so nothing that already
+imports it breaks, but any page still using it produces a materially different capture rate.
 
-Source: ITUK guidance Apr 2026
+Why it must not be used:
+
+  * Hardcoded parcs at lines ~196-197: N75_surviving_parc 8,515 / N35_surviving_parc 9,818.
+    The canonical engine uses a real per-market UIO bucket split (ITUK 23,068 = cv_std 22,190.9
+    + f_series 877.0), so this fork's denominator is roughly 2.7x smaller and its capture rate
+    correspondingly higher.
+  * Hard cap at 100% at line ~386: ``min(act_qty / exp_qty, 1.0)``. The canonical derived CSV
+    ``pms_capture_by_db_year.csv`` is deliberately UNCAPPED; capping is a display convention only.
+  * It carries its own PMS_PN_REGISTRY copy, which has drifted from the canonical registry.
+
+Use instead:
+  * Engine:    ``03_analytics/Isuzu/prism/modules/pms_engine.py``
+              (``expected_by_category_bucketed()`` for the real UIO split)
+  * Config:    ``03_analytics/Isuzu/prism/modules/pms_capture_config.py``
+  * Derived:   ``01_data/00_derived/pms_capture_by_db_year.csv`` (canonical, uncapped)
+  * League:    ``01_data/00_derived/pms_summary_by_db.csv``
+  * Definitions: ``03_analytics/Isuzu/prism/docs/metric_dictionary.md``
+  * Why two ITUK numbers exist: ``00_docs/ITUK_PRISM_LANE_BRIDGE.md``
+
+Phase 1 scope (historical): N75 / 7.5t fleet (NPR75/4HK1 and NPR88/4JZ1).
+Source (historical): ITUK guidance Apr 2026
 """
 
 import pandas as pd

@@ -1,0 +1,85 @@
+{
+  "built": "2026-09-18T05:58:58",
+  "book": {
+    "billed_eur": 32595852.629999995,
+    "part_numbers": 15273
+  },
+  "union_with_any_record": {
+    "part_numbers": 300,
+    "billed_eur": 18648794.94,
+    "pct_of_book_eur": 57.21217098287024
+  },
+  "union_with_usable_price": {
+    "part_numbers": 76,
+    "billed_eur": 5369216.41,
+    "pct_of_book_eur": 16.472084565317907
+  },
+  "sources": [
+    {
+      "source": "Same-shop listings (KS), the panel in the paper",
+      "part_numbers": 43,
+      "billed_eur": 2873778.8499999996,
+      "pct_of_book_eur": 8.816394167137329,
+      "price_kind": "same-shop trade, GBP",
+      "note": "ONE UK source, fanned across 18 market rows. GBP ex-VAT at 1.17"
+    },
+    {
+      "source": "Eucon IAM cross-reference (822 rows, never joined)",
+      "part_numbers": 41,
+      "billed_eur": 3961117.2300000004,
+      "pct_of_book_eur": 12.152212353403321,
+      "price_kind": "online IAM, EUR, DE/NO",
+      "note": "432 IAM part numbers, 155 brands, countries ['DE', 'NO']"
+    },
+    {
+      "source": "Eucon/PartsPool gap file (the 44 we quote)",
+      "part_numbers": 41,
+      "billed_eur": 3961117.2300000004,
+      "pct_of_book_eur": 12.152212353403321,
+      "price_kind": "online IAM, EUR, DE/NO",
+      "note": "min/avg/max competitor EUR and a brand list per part number"
+    },
+    {
+      "source": "Autodoc extract (brand names only, prices corrupt)",
+      "part_numbers": 293,
+      "billed_eur": 18582629.32,
+      "pct_of_book_eur": 57.0091831342287,
+      "price_kind": "none usable",
+      "note": "277 of 298 rows carry the identical value 2.34"
+    },
+    {
+      "source": "The worklist (rival named, price not held)",
+      "part_numbers": 139,
+      "billed_eur": 10353140.87,
+      "pct_of_book_eur": 31.76214160592737,
+      "price_kind": "none yet",
+      "note": "the 139 to go and price"
+    },
+    {
+      "source": "UNION of every competitor source on disk",
+      "part_numbers": 300,
+      "billed_eur": 18648794.94,
+      "pct_of_book_eur": 57.21217098287024,
+      "price_kind": "mixed tiers, never blended",
+      "note": "includes sources whose price is unusable"
+    },
+    {
+      "source": "UNION of sources that carry a USABLE price",
+      "part_numbers": 76,
+      "billed_eur": 5369216.41,
+      "pct_of_book_eur": 16.472084565317907,
+      "price_kind": "two real tiers",
+      "note": "KS trade GBP + Eucon/PartsPool online IAM EUR"
+    }
+  ],
+  "correction": [
+    "The pricing paper described the competitor panel as 43 part numbers from one source, 16.5% of the book. That is the KS panel alone.",
+    "eucon_crossref_iam_20260329.csv holds a part-number-level cross-reference to 432 IAM part numbers and 155 brands with a real price on all 822 rows, and had never been joined. It is a richer base than the panel the paper was built on.",
+    "The union with a USABLE PRICE is the number that matters. The larger union that includes the Autodoc extract must not be quoted as coverage, because that source has no usable price."
+  ],
+  "caveats": [
+    "Price tiers differ and must never be blended: KS is GBP trade ex-VAT; Eucon/PartsPool is online IAM EUR in DE/NO. Both differ from the reference dealer price we compare against.",
+    "The Eucon crossref covers DE and NO only.",
+    "TecAlliance sells both the cross-reference (OE Parts Data) and the prices (OE Prices / IAM Prices) as licensed products. Whether the price module returns a competing retail price directly is unverified and needs a vendor demo."
+  ]
+}

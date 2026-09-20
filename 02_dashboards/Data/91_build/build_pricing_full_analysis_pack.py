@@ -1,4 +1,4 @@
-"""Full Mode A pricing + AIM + PMS/GPS + MOS + VPACC mega-pack.
+"""Full shared pricing + AIM + PMS/GPS + MOS + VPACC mega-pack.
 
 Synthesizes year-matched PR00 findings with PRISM derived tables into one
 self-contained HTML (inline SVG charts — no CDN). Integrity score prominent.
@@ -850,7 +850,7 @@ score <b>{integ['score']}</b>; band <b>{integ['band']}</b>; external quote: <b>n
 </div>
 
 <div class="foot">
-Mode A pack · English · No internal model nicknames · UTI and UMI kept separate ·
+shared pack · English · No internal model nicknames · UTI and UMI kept separate ·
 PMS total capture is primary · MOS labelled not elasticity · Integrity provisional.<br>
 Sources: sales_fact / PR00 &amp; ZPR1 year parquets · aim_billing_windows · pms_capture_by_db_year ·
 gps_spu_by_distributor · aim_gps_matrix · mix_genuine_bvp_pms · no_pr00_gap_cy2025_ranked ·

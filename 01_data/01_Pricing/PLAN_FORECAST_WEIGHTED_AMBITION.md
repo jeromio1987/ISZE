@@ -1,6 +1,6 @@
 # Plan — Forecast-weighted ambition (not past-sales only)
 
-**Mode B · 2026-08-12 · Jerome**  
+**internal · 2026-08-12 · Jerome**  
 **Language:** plain English.
 
 ---
@@ -74,7 +74,7 @@ Oil / fuel / air / blower / urea filters · brake pads/rotors · clutch disc · 
 
 ## Real PN lists from APL packs (2026-08-12) — Book B seed map
 
-**Built (Mode B, no inventing).** Builder: `01_data/01_Pricing/_build_apl_pn_lists.py`  
+**Built (internal, no inventing).** Builder: `01_data/01_Pricing/_build_apl_pn_lists.py`  
 Hunt notes: `01_data/01_Pricing/OUTLOOK_APL_MAIL_SCAN.md`
 
 ### Outputs (canonical)
@@ -127,7 +127,7 @@ P700-only ≈ 2,029 · RG21-only ≈ 3,605 · ITUK-only ≈ 7,420.
 - N-series / F-series xlsx — **FIGKEY + Name only, no PN column**
 - PDFs, VIN list, awards survey, lubricants PDF, production volume / UK model sheets (not PN catalogues)
 
-### Caveats (Mode A care)
+### Caveats (shared care)
 
 - Suzuki/RG21 **BP / B/P** kept as `price_raw` with flag `BP_raw_currency_unclear` — do not treat as EUR list.
 - Accessory prices labelled `accessory_list_fca_exw_eur` (as printed).

@@ -65,7 +65,7 @@ Quieter cover, one timeline, collaborative ladder, more air.
 ### What changed
 
 - **Cover quieter.** Red left bar gone. Eyebrow is gray `IML · ITUK · ISZE` with `DRAFT` on the right, not a red shout. Three chips kept (same copy). More white around the title.
-- **Duplicate partnership copy cut.** Opening no longer repeats the cover chips in a gray box, and no longer previews the IML-join rule. "Duncan's pack" is now "The ITUK pack" (Mode A). Flow IML → ITUK → ISZE → Coverage carries the story.
+- **Duplicate partnership copy cut.** Opening no longer repeats the cover chips in a gray box, and no longer previews the IML-join rule. "Duncan's pack" is now "The ITUK pack" (shared). Flow IML → ITUK → ISZE → Coverage carries the story.
 - **One process line.** Path and proceed merged: March to October on one slide. Tuesday lock sits on that line. Dropped the second five-node timeline.
 - **Discount ladder is an invitation.** Headline: "Two wallets first. IML can join." Step 3 is "IML can join" / "only if two wallets are not enough." Same change on the Tuesday ask. Not "if we cannot close."
 - **More air on 5–7.** Pack slide is three big EUR numbers (58.37 / 53.88 / 35.50), not paragraph cards. Table footnote shortened. Levers headline is one idea: "We start this month."
@@ -176,7 +176,7 @@ Jerome authorized rebuild after spar. Filename stays DRAFT. No version bump. ORI
 - **Filter set.** Title: parts required for one scheduled PMS (N75). Subline: fuel and air filters; list price, ISZE to ITUK. Three euro figures explained in sentences. Oil in the add-up as set contents only.
 - **BVP / SPA.** Formal requests. Fuel 1876102860 and air 5876102500. SPA if price remains the barrier after BVP; IML can support if ITUK and ISZE cannot close. Targeted discount wording. No wallets. No oil action.
 - **Close.** Operational kick-off, 18 August 2026. Proposed actions: BVP availability, SPA where required, complete filter set. No "One hour" closer.
-- **Tone.** Formal. Complete sentences. Propose / request / for discussion. No internal one-liners. No street. Mode A.
+- **Tone.** Formal. Complete sentences. Propose / request / for discussion. No internal one-liners. No street. shared.
 
 ### Dealer quantity
 

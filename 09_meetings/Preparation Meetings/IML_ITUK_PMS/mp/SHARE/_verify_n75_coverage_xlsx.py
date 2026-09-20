@@ -1,4 +1,4 @@
-"""Verify N75 coverage workbook: formulas present, params locked, no Mode A leaks."""
+"""Verify N75 coverage workbook: formulas present, params locked, no shared leaks."""
 from pathlib import Path
 from openpyxl import load_workbook
 

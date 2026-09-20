@@ -1,6 +1,6 @@
-# Pricing programme — Mode B status brief (2026-08-12)
+# Pricing programme — internal status brief (2026-08-12)
 
-**Audience:** Jerome only (Mode B). No Mode A ship.  
+**Audience:** Jerome only (internal). No shared ship.  
 **Alloc baseline:** `20260810T171626Z__alloc__t3pct` — **+3.0000% exact** (not re-run yet this pass).  
 **Language:** do not say “street fills” — say **OEM peer retail** / **reference sell-out** (PR00×1.785).
 

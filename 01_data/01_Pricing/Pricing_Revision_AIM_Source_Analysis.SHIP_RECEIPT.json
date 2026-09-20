@@ -1,0 +1,21 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\Pricing_Revision_AIM_Source_Analysis.xlsx",
+  "artifact_mtime_ms": 1789743173565,
+  "written_at": "2026-09-18T14:54:23.314Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\Pricing_Revision_AIM_Source_Analysis.xlsx"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "8716974 bytes"
+    }
+  ],
+  "screenshots": [],
+  "notes": "Rebuilt from pricing_aim_source_lines.parquet after aim_master_v2 refresh. COM recalc OK; Checks sheet step/weighted diff 0 vs published. verify_pricing_analysis_xlsx.ps1 VERIFY_DONE."
+}

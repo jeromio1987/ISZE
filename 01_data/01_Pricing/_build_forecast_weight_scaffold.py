@@ -1,5 +1,5 @@
 """
-Forecast-weight scaffold for Book B (Mode B · provisional defaults).
+Forecast-weight scaffold for Book B (internal · provisional defaults).
 
 Continues without model-mix / gearbox / market / ambition-% answers.
 Does NOT write an official Book B alloc run id — sensitivity is PROVISIONAL / diagnostic only.

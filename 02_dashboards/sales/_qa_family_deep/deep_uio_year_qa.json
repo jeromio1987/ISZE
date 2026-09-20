@@ -1,0 +1,248 @@
+{
+  "fail": [],
+  "proof": {
+    "market": "ITUK",
+    "family": "n_series_truck",
+    "rows": [
+      {
+        "period": 2023,
+        "eur": 727731.02,
+        "units": 13338,
+        "fleetSplit": 22191,
+        "fleetYear": 19559,
+        "fleetUsed": 19559,
+        "rate": 37.20696456874074,
+        "rateSplit": 32.79397142985895,
+        "rateYear": 37.20696456874074,
+        "modeUsed": "yearly",
+        "fleetVintage": "the 2023 count for this vehicle type, measured",
+        "fleetSource": "the vehicle-in-service workbook's own year axis"
+      },
+      {
+        "period": 2024,
+        "eur": 774068.7599999999,
+        "units": 12739,
+        "fleetSplit": 22191,
+        "fleetYear": 21584,
+        "fleetUsed": 21584,
+        "rate": 35.8630819125278,
+        "rateSplit": 34.88210355549547,
+        "rateYear": 35.8630819125278,
+        "modeUsed": "yearly",
+        "fleetVintage": "the 2024 count for this vehicle type, measured",
+        "fleetSource": "the vehicle-in-service workbook's own year axis"
+      },
+      {
+        "period": 2025,
+        "eur": 753204.2800000001,
+        "units": 12203,
+        "fleetSplit": 22191,
+        "fleetYear": 22190.9,
+        "fleetUsed": 22190.9,
+        "rate": 33.94203389677751,
+        "rateSplit": 33.94188094272454,
+        "rateYear": 33.94203389677751,
+        "modeUsed": "yearly",
+        "fleetVintage": "the 2025 count for this vehicle type, an estimate",
+        "fleetSource": "the vehicle-in-service workbook's own year axis"
+      }
+    ],
+    "ownMove": -0.08775052493011604,
+    "flatMove": 0.03500367484678657,
+    "directionDiffers": true
+  },
+  "states": [
+    {
+      "tag": "opening state",
+      "flex": {
+        "selCust": [
+          "IUK"
+        ],
+        "selFam": "all",
+        "clock": "CY",
+        "metric": "abs",
+        "fleetMode": "yearly",
+        "drillFam": null,
+        "drillCat": null,
+        "drillBand": null,
+        "bread": "Level: All vehicle types \u00e2\u20ac\u201d click a bar to go deeper, or a level name to come back up",
+        "pnRows": 0,
+        "drillInk": {
+          "sampled": 548940,
+          "nonWhite": 89132,
+          "pct": 16.24
+        },
+        "bandInk": {
+          "sampled": 379030,
+          "nonWhite": 61313,
+          "pct": 16.18
+        },
+        "funnelInk": {
+          "sampled": 470520,
+          "nonWhite": 61409,
+          "pct": 13.05
+        },
+        "normInk": {
+          "sampled": 379030,
+          "nonWhite": 199032,
+          "pct": 52.51
+        },
+        "targetInk": {
+          "sampled": 379030,
+          "nonWhite": 33717,
+          "pct": 8.9
+        },
+        "drillLabels": [
+          "Brake rotor",
+          "Brake pad",
+          "Air filter",
+          "Blower filter",
+          "Fuel filter",
+          "Oil filter",
+          "Clutch disc",
+          "Brake shoe",
+          "Clutch pressure plate",
+          "Release bearing",
+          "Clutch kit",
+          "Pilot bearing"
+        ],
+        "bandLabels": [
+          "3.5 t GVW (N35 Grafter)",
+          "5.5 t GVW (N50 / N55)",
+          "7.5 t class (N50 / N62 / N75)"
+        ],
+        "funnelLabels": [
+          "N-series truck",
+          "Heavy truck (F-series and C&E)",
+          "Light vehicle (D-Max)",
+          "Parts used across more than one family",
+          "No vehicle reference found"
+        ],
+        "metricChips": [
+          "abs:on",
+          "pv:off",
+          "units:off"
+        ],
+        "normRows": 3,
+        "industryRows": 4,
+        "bandCards": 3,
+        "bandSplitRows": 6,
+        "bandEvRows": 31,
+        "canvasIds": [
+          "c_funnel",
+          "c_norm",
+          "c_target",
+          "c_band",
+          "c_drill",
+          "c_before",
+          "c_mix",
+          "c_fleet"
+        ]
+      }
+    },
+    {
+      "tag": "c_norm lines",
+      "own": [
+        59.47509800039597,
+        53.120695430791905,
+        53.44881328599484
+      ],
+      "flat": [
+        52.090986648170635,
+        51.55710291312641,
+        53.448581584879506
+      ],
+      "fleet": [
+        20204,
+        22389,
+        23067.9
+      ],
+      "labels": [
+        "Vehicles in service, that period\u00e2\u20ac\u2122s own fleet",
+        "Euro per vehicle, divided by that period\u00e2\u20ac\u2122s own fleet",
+        "The same euro, divided by the single 2025 estimate"
+      ]
+    },
+    {
+      "tag": "table rows",
+      "normRows": 3,
+      "pv": true
+    }
+  ],
+  "keys": [
+    {
+      "canvas": "c_funnel",
+      "words": 50,
+      "text": "CY2025 = January to December 2025, EUR/vehCY2024 = January to December 2024, EUR/vehthe second bar is the same twelve months a year earlier, so the length difference is the move. Click any bar to open"
+    },
+    {
+      "canvas": "c_norm",
+      "words": 70,
+      "text": "euro per vehicle, divided by that period\u00e2\u20ac\u2122s own fleet (left axis, solid line \u00e2\u20ac\u201d the default in force)the same euro divided by the single 2025 estimate (dashed line, the comparison)vehicles in service pe"
+    },
+    {
+      "canvas": "c_target",
+      "words": 22,
+      "text": "billed per vehicle, divided by that period\u00e2\u20ac\u2122s own fleetthe same euro divided by the single 2025 estimatetarget spend per vehicle, dashed, where a target exists"
+    },
+    {
+      "canvas": "c_band",
+      "words": 33,
+      "text": "CY2025 = January to December 2025 billed euroCY2024 = January to December 2024 \u00e2\u20ac\u201d the same months a year earlierone bar per weight band; the pair of bars is the move. Click a bar to open the part numbe"
+    },
+    {
+      "canvas": "c_drill",
+      "words": 28,
+      "text": "CY2025 = January to December 2025CY2024 = January to December 2024shared across bands, counted onceweight not stated by the sourcesthe last three lines add up to the N-series total; the band bars abov"
+    },
+    {
+      "canvas": "c_before",
+      "words": 26,
+      "text": "as shipped (ISZE_PMS_Family_Evolution.html as shipped, read from 6 QA case files taken 19 Sep 2026)correctedCY2025 = January to December 2025, service parts only, the whole network \u00e2\u20ac\u201d the same scope th"
+    },
+    {
+      "canvas": "c_mix",
+      "words": 52,
+      "text": "N-series truck \u00e2\u20ac\u201d 61.1% (EUR 753,204) on 22,191 vehicles in serviceHeavy truck (F-series and C&E) \u00e2\u20ac\u201d 2.6% (EUR 32,109) on 877 vehicles in serviceLight vehicle (D-Max) \u00e2\u20ac\u201d 0.2% (EUR 2,150) on 0 vehicles in"
+    },
+    {
+      "canvas": "c_fleet",
+      "words": 24,
+      "text": "N-series truck \u00e2\u20ac\u201d 22,191, billed EUR 0.75M = EUR 753,204 over 22,191 vehiclesHeavy truck (F-series and C&E) \u00e2\u20ac\u201d 877, billed EUR 0.03M = EUR 32,109 over 877 vehicles"
+    }
+  ],
+  "labels": {
+    "normHeads": [
+      "Period",
+      "Months billed",
+      "Billed EUR",
+      "Units",
+      "Vehicles on the flat 2025 estimate",
+      "Vehicles on that period\u00e2\u20ac\u2122s own fleet",
+      "The same period on the spend model\u00e2\u20ac\u2122s own count",
+      "EUR per vehicle, flat 2025 estimate",
+      "EUR per vehicle, that period\u00e2\u20ac\u2122s own fleet",
+      "EUR per vehicle, spend model count",
+      "The fleet year, and what it is",
+      "Denominator the chart uses"
+    ]
+  },
+  "payLoad": {
+    "years": 41,
+    "firstYear": 1990,
+    "lastYear": 2030,
+    "markets": 18,
+    "reconcileAgree": 18,
+    "reconcileTotal": 18,
+    "gaps": 0,
+    "defaultDenominator": "yearly"
+  },
+  "notes": {
+    "metricNote": "Euro per vehicle in service is the comparable rate: it divides the same billing by the vehicles the parts were sold for, so a fleet that grew no longer flatters a flat euro line. A rate can still move because the fleet moved rather than because the billing did, and the fleet column below is there to show which.",
+    "fleetNote": "In force: that period\u00e2\u20ac\u2122s own fleet, by vehicle type. Vehicles in service for this selection: 23,068, against 23,068 on the single 2025 estimate and 23,068 on the 2025 count this period \u00e2\u20ac\u201d they coincide here only because 2025 is the estimate year itself, so a single period proves nothing about the difference between them; read the table below across all three periods. the 2025 count for this vehicle type, an estimate.",
+    "norm": "Every period here is divided by its own fleet. Two answers are drawn on purpose: the solid line is the per-period fleet, the dashed line is the one 2025 estimate, and where they disagree about direction that disagreement is the finding. In your selection the rate went from EUR 53 to EUR 53 per vehicle (+0.6%) while the absolute euro went +3.7%. On the single 2025 estimate the same two periods read EUR 52 to EUR 53 (+3.7%), which is the euro move restated as a rate rather than a rate that can move on its own. Over the whole span CY2023 = January to December 2023 to CY2025 = January to December 2025 the two denominators read +2.6% on the single 2025 estimate against -10.1% on each period\u00e2\u20ac\u2122s own fleet. They disagree about the direction, so which denominator is used is not cosmetic: the flat one is only the euro move, and the per-period one is the rate a reader can compare between periods. What the 2025 denominator is made of, from the workbook\u00e2\u20ac\u2122s own rows: ITUK 22,191 on the LD row, ITUK 877 on the F-series row. Where the denominator comes from. Both are read from the vehicle-in-service workbook. The single estimate is the model\u00e2\u20ac\u2122s own three-way split, one vintage labelled 2025E; it is the second option in the control above and it stays on the page, because a reader should be able to check what the flat answer was rather than be told it was wrong. The default is the workbook\u00e2\u20ac\u2122s own count for the period, summed from the rows that name a vehicle type (the LD and MD rows are the N-series truck, the F-series row the heavy truck and the light-commercial row the light vehicle). Two defects in that source are carried here, not hidden. LD is a label, not a weight class: 6.5/7.5 t in Israel and about 3.5 t in most of Europe, two different parts spend rates on one label. The band is read per market, from the market's own measured 3.5 t share, never assumed. Open issue LD-LABEL. Israel's CV rows run about 25% LOW in every year against the Israeli ministry's own registrations, so a per-truck figure on UTI is flattered by an understated denominator. Open issue UIO-FCAST. Forward periods are not measured. 2026 to 2030 are forecast, not measured: the workbook scraps about 3% a year from 2026 while the 1990-2025 history uses a survival curve implying about 10.2% (trucks) and 12.3% (light vehicles), so the forward years are overstated by +9% in 2026 rising to about +59% by 2030 network-wide and worse per market. Open issue UIO-FCAST. The billing runs from January 2023, so a period later than 2025 would be a forecast denominator with nothing to divide, and those periods are excluded from the chart rather than shown as a fall.",
+    "normHead": "The two denominators, side by side, for every period",
+    "target": "This is our own target, not an industry benchmark. A target spend per vehicle exists for 2025 and for the part-year 2026 only. A year with no target is shown without one rather than back-filled. The target is per market, so it shows where the gap between what we billed per vehicle and what a vehicle in that market is worth is widest; it does not say what share of that market\u00e2\u20ac\u2122s parts demand we hold. A market with no dashed line has no target on disk for the period shown.",
+    "industry": "The industry question, answered honestlyQuestionAnswerIs an industry benchmark shown on this page?No. No industry or all-makes benchmark exists on disk at the grain this page works at \u00e2\u20ac\u201d market, year and vehicle type. Every rate on this page is our own billing against our own fleet and, where stated, against our own target spend. Nothing here says what share of a market's total parts demand we hold, because no source on disk can say it.What was searched fora third-party parts-market size, by market and yearan all-makes vehicles-in-service count, by market and yearan independent service-spend be"
+  }
+}

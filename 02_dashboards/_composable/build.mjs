@@ -699,7 +699,7 @@ function computePrismSnap() {
   const gap = y25.reduce((s, r) => s + num(r.addressable_uncaptured_eur), 0);
 
   const gpsSrc =
-    built.find((m) => m.id === "gps_pure_sales")?.source || "01_data/00_derived/gps_pure_sales_2026-08-13.csv";
+    built.find((m) => m.id === "gps_pure_sales")?.source || "01_data/00_derived/gps_pure_sales_2026-08-13_v2.csv";
   const gpsRows = parseCsv(fs.readFileSync(path.join(ISZE_ROOT, gpsSrc), "utf8"));
   let gpsFy2026 = 0;
   let gpsRowsKept = 0;

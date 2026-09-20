@@ -2,7 +2,7 @@
 """
 DB → DLR price/volume response — ITUK + UTI only.
 
-Honest scope (Mode B):
+Honest scope (internal):
   - Volume axis = distributor sell-out qty (true DB→DLR layer).
   - Price axis = upstream ISZE→DB median ASP (billing) and/or PR00 sim list SP.
     We do NOT observe dealer purchase invoices → never claim true DB→DLR price
@@ -337,7 +337,7 @@ def write_md(out: pd.DataFrame, meta: dict) -> None:
     proxy_cs = out[out["method"] == "cross_section_lnq_lnp_asp"]
     proxy_ex = out[out["method"] == "list_shock_exposure_2025_2026"]
     lines = [
-        "# Price response DB→DLR — ITUK + UTI (Mode B method note)",
+        "# Price response DB→DLR — ITUK + UTI (internal method note)",
         "",
         "**As of:** 2026-08-10  ",
         "**Output:** `01_data/00_derived/price_elasticity_db_dlr_ituk_uti.csv`  ",

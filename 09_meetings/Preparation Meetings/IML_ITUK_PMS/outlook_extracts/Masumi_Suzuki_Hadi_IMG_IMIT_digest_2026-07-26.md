@@ -1,6 +1,6 @@
 # Outlook digest — Masumi / Suzuki (IML) / Hadi / IMG / IMIT (2026-07-26)
 
-**Jerome-only** (Mode B). Scanned Outlook Web today. Not exhaustive of 112k inbox — focused on these people/orgs + live threads.
+**Jerome-only** (internal). Scanned Outlook Web today. Not exhaustive of 112k inbox — focused on these people/orgs + live threads.
 
 **Hadi = Hadewijch Tibos** (`hadewijch.tibos@isuzu-e.com`).
 

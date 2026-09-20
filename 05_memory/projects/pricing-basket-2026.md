@@ -40,5 +40,5 @@
 - Alloc with street: `20260810T171626Z__alloc__t3pct` — +3.0000% exact; `oem_benchmark` on air_filter + oil_filter.
 - ZPR1 vs PR00 diagnostic (basket PNs): `01_data/00_derived/pricing_zpr1_pr00_diff_basket_20260810.csv` (UTI≠UMI).
 - Evening pass 2: Ford shoe 1713904 still open (Ford shop 2138025 ≠ proven supersession). Eucon COMPARABLE = DAF/Hilux/Ranger only — no L200/Transit/Sprinter/MAN/Crafter maps. No new alloc (no new street).
-- Readiness / street-vs-Isuze: `01_data/00_derived/oem_peer_readiness_20260810.json` · Mode B brief: `01_data/01_Pricing/PRICING_STATUS_BRIEF_2026-08-10.md`.
+- Readiness / street-vs-Isuze: `01_data/00_derived/oem_peer_readiness_20260810.json` · internal brief: `01_data/01_Pricing/PRICING_STATUS_BRIEF_2026-08-10.md`.
 - CLI: `python -m isze_pricing.cli diagnose`.

@@ -1,4 +1,4 @@
-"""Build ISZE PMS complementary draft PPTX. No DAF. Mode A language. Never write ORIGINAL.pptx."""
+"""Build ISZE PMS complementary draft PPTX. No DAF. shared language. Never write ORIGINAL.pptx."""
 from __future__ import annotations
 
 import os

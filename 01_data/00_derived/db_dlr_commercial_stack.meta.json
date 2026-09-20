@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-25T11:24:24+00:00",
+  "generated_at": "2026-09-19T19:06:53+00:00",
   "builder_version": "db-dlr-stack-v1",
   "year": 2025,
   "distributors": [
@@ -11,12 +11,12 @@
   ],
   "no_alloc_run": true,
   "replenishment": {
-    "bridge_rows": 82951,
+    "bridge_rows": 84826,
     "dealer_rows": 65619,
-    "summary_rows": 20572,
-    "exception_rows": 1595,
+    "summary_rows": 20750,
+    "exception_rows": 1934,
     "by_db": {
-      "GREECE": 2545,
+      "GREECE": 2723,
       "IRELAND": 5613,
       "ITUK": 5719,
       "IUK": 4414,
@@ -24,15 +24,15 @@
     }
   },
   "revision_queue": {
-    "rows": 20572,
+    "rows": 20750,
     "action_counts": {
-      "REVIEW_LEAKAGE": 11316,
-      "REVIEW_OVERSTOCK": 4961,
-      "REVIEW_HIGH_LIST_EXPOSURE": 2053,
-      "REVIEW_PROXY_ADVERSE": 1092,
-      "HOLD_DEFAULT": 1035,
-      "REVIEW_IAM_UNDERCUT": 84,
-      "RAISE_OK_ROOM_VS_IAM": 31
+      "REVIEW_LEAKAGE": 6878,
+      "HOLD_DEFAULT": 4493,
+      "REVIEW_HIGH_LIST_EXPOSURE": 3819,
+      "REVIEW_OVERSTOCK": 3771,
+      "REVIEW_PROXY_ADVERSE": 1614,
+      "REVIEW_IAM_UNDERCUT": 140,
+      "RAISE_OK_ROOM_VS_IAM": 35
     },
     "ks_matched": 302
   },
@@ -56,7 +56,7 @@
     },
     "ireland": {
       "n_pn": 5431,
-      "qty": 106678.0,
+      "qty": 53339.0,
       "years": [
         2025
       ],
@@ -64,14 +64,19 @@
     },
     "iuk": {
       "n_pn": 4248,
-      "qty": 497276.0,
+      "qty": 248638.0,
       "years": [
         2025
       ],
       "grain_raw": "network_pn"
     },
     "greece": {
-      "error": "no GREECE sell-out"
+      "n_pn": 2101,
+      "qty": 24777.0,
+      "years": [
+        2025
+      ],
+      "grain_raw": "network_pn"
     }
   },
   "outputs": {

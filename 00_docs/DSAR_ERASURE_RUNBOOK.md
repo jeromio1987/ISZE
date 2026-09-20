@@ -1,11 +1,11 @@
-# DSAR / erasure runbook — interaction layer (Mode B · internal)
+# DSAR / erasure runbook — interaction layer (internal · internal)
 
 **Gate:** G0a · [`G0A_LOCAL_MAIL_SCOPE.md`](G0A_LOCAL_MAIL_SCOPE.md)  
 **Roadmap:** [`roadmaps/ai_sales_intelligence.md`](roadmaps/ai_sales_intelligence.md) §7.4 task **2a.6** · compliance checklist §14 items 8–9  
 **Owner (ops):** account holder / eng · **Owner (legal clock):** DPO — erase within **30 days** of a valid erasure request  
 **Status:** Runnable 2026-08-12 — derived parquet only; Outlook never touched
 
-This is Mode B. Do not paste into Mode A decks or distributor mail.
+This is internal. Do not paste into shared decks or distributor mail.
 
 ---
 
@@ -58,7 +58,7 @@ Script: [`04_tools/interactions/purge_expired.py`](../04_tools/interactions/purg
 | `--stakeholder-id <hash>` | DSAR erase mode (dry-run unless `--apply`) |
 | `--lookup` | With `--stakeholder-id`: counts only, never writes |
 
-**Hard rules:** never opens Outlook · never sends · never touches Sales/Parts mailboxes · never ships Mode A output from this folder.
+**Hard rules:** never opens Outlook · never sends · never touches Sales/Parts mailboxes · never ships shared output from this folder.
 
 ---
 
@@ -129,7 +129,7 @@ Expected after apply + rebuild: `interaction_fact_rows = 0`, `commitment_fact_ro
 
 - Original messages still in Outlook (ordinary mailbox retention / legal hold — separate policy)
 - Shared Sales/Parts mailboxes (out of G0a; blocked until G0b)
-- Any Mode A artefact that never received this data (should be none by design)
+- Any shared artefact that never received this data (should be none by design)
 - Re-ingest: a later `collect_mapi.py` run can recreate derived rows if the mail is still in the mailbox and still matches the allow-list. For a lasting erasure, also remove or exclude the source message under normal mail governance, or pause re-collect for that address until policy says otherwise.
 
 ---

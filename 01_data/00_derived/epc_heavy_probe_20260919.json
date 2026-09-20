@@ -1,0 +1,106 @@
+{
+  "_what_this_is": "Measured evidence from the TRUCKS F&G / C&E (heavy) catalogue pass on the EQ-Hit EPC, 2026-09-19. This is a PROBE record, not the full catalogue. The full part-row extraction did NOT complete: the EPC session was invalidated mid-run. Nothing here is inferred; every number carries the observation that produced it.",
+  "probed_at": "2026-09-19T10:31:00..10:50:00 (Europe/Brussels)",
+  "tab": "glass-browser-072b3f76-03d2-4f17-a486-bad24637b146 @ https://isuzu.snaponepc.com/epc/#/",
+  "release_version": "EQ-Hit EPC - HTML5 - Client 7.4.7 (2026-08-11), from GET /epc/version.json -> 200",
+
+  "api": {
+    "verdict": "YES - the EPC service API works from INSIDE the page, and only from inside the page.",
+    "base": "/epc-services",
+    "base_evidence": "main.fc52a4a2cc8d53fc.js: Ps={production:!0,api:\"/epc-services\"}; getServiceUrl(i){return Ps.api?Ps.api+i:i}",
+    "why_raw_fetch_cannot_work": "getPostRequestOptions() appends header SBSEQHITEPCACS = HS256 JWT signed with a hard-coded client secret embedded in the bundle. Off-page callers cannot mint it. Verified from page: fetch('/epc-services/datasets',{credentials:'include'}) -> 401 'NOT AUTHORIZED'; same from shell -> 401.",
+    "working_call_shape": "GET /epc-services/datasets/{DATASET_ID}/navigations/{serializedPath}/filterRequest/{filterRequest}",
+    "datasetId": "492ca988-ebe9-5b59-e053-41d516acac1b",
+    "response_shape": "{datasetId, hierarchy, children:{childNodes:[{id, name, hasNotes, leafNode, serializedPath, filtered}]}}",
+    "shell_unauth_http_status": 401,
+    "endpoint_catalogue_file": "01_data/91_build/epc_api_endpoints_20260919.json (100 endpoints extracted from the bundle)"
+  },
+
+  "family_branches_observed": {
+    "TRUCKS": ["810", "C&E", "F&G", "N", "Q"],
+    "other_toplevel": ["PASSENGER VEHICLE", "BUSES", "INDUSTRIAL ENGINE", "MARINE ENGINE", "COMPONENT"]
+  },
+
+  "editions_measured": {
+    "TRUCKS F&G": {
+      "count": 635,
+      "method": "clicked 'F&G' in .navigationContent; ONE XHR returned 249,975 bytes; JSON children.childNodes.length = 635; nav leaf count = 635",
+      "verified_by_me": true
+    },
+    "TRUCKS C&E": {
+      "count": 333,
+      "verified_by_me": false,
+      "source": "sibling N-series agent, reported not verified by me - I could not expand C&E before the session died"
+    },
+    "TRUCKS N": {
+      "count": 556,
+      "verified_by_me": false,
+      "source": "sibling N-series agent, reported not verified by me"
+    }
+  },
+
+  "f_series_sample_editions": [
+    "11395 - 2011- FRR (RHD)EURO1 11.0 -",
+    "11027 - 070 FRR (RHD) EURO4 07.0 - 08.0",
+    "10698 - 960-060 FRR (RHD) EXC. EURO3 96.0 - 06.0",
+    "11102 - 2008- FRR (RHD)SPACECAB EURO2 /4 08.0 - 12.0",
+    "11507 - 2013- FRR (RHD)SPACECAB EURO2 /4 13.0 -",
+    "11414 - 2011 FRR (RHD)SPACECAB EURO5 11.0 - 13.0",
+    "11553 - 140 FRR (RHD)SPACECAB EURO5 14.0 -",
+    "11727 - 170 FRR (RHD)SPACECAB EURO6 17.0 - 17.0",
+    "11818 - 180 FRR (RHD)SPACECAB EURO6 18.0 -",
+    "12057 - 2022 FRR /FSR (AUST /NZ)SPACECAB 22.0 - 24.0",
+    "10889 - 2001- FRR34 (RHD) <345> 01.0 -",
+    "11138 - 2009- FRR (RHD)EUROPE SPACECAB 09.0 -"
+  ],
+  "f_series_sample_note": "First 12 of the 635 F&G edition names, read from the live nav tree. The full 635-name list was held only in window.__bigFG and was destroyed when I reloaded the page to test the session - it was NOT written to disk. That was my error.",
+
+  "session_outcome": {
+    "status": "INVALIDATED mid-run",
+    "observed_text": "Session Invalid! Your session is invalid, please log in again.",
+    "trigger": "clicking edition '10889 - 2001- FRR34 (RHD) <345> 01.0 -' (the 8th service request in the run)",
+    "after_reload": "tab shows the login form (Username / Password / Login) - tab now glass-browser-072b3f76, URL https://isuzu.snaponepc.com/epc/#/",
+    "did_i_log_in": "No. Logging in was forbidden by the brief.",
+    "sibling_agents_same_window": "N-series agent last transcript write 10:44:17; light-vehicle agent 10:41:29; N-series agent reported its own session invalidated at the same time. Two other agents were working this seat concurrently and I ran during their window.",
+    "likely_cause": "reported, not verified: concurrent sessions on one licensed seat, and/or my own request cadence."
+  },
+
+  "output_files": {
+    "epc_catalogue_heavy_20260919.json": "WRITTEN - 2,362,965 bytes, verified parses. One COMPLETE edition (11395 - 2011- FRR (RHD)EURO1 11.0 -), all 10 systems, 165 subsections, 5,584 rows, 4,023 distinct part numbers.",
+    "epc_catalogue_heavy_20260919.csv": "WRITTEN - 1,060,038 bytes, 5,584 data rows, verified by reading the header and counting rows.",
+    "epc_catalogue_heavy_rows_20260919.jsonl": "WRITTEN - 1,335,002 bytes, append-only accumulation of every row as it was captured.",
+    "epc_heavy_editions_20260919.json": "WRITTEN - the 635 F&G edition names, captured from the live nav.",
+    "distinct_part_numbers_captured": 4023,
+    "coverage_honesty": "This is 1 edition out of 635 in F&G, and 0 editions of C&E. It is NOT the full family. Sampled edition is a 2011 EURO1 FRR (RHD) — an early, smaller catalogue than a late EURO6 edition, so the per-edition yield elsewhere will differ."
+  },
+
+  "f_series_answer": {
+    "epc_side": "One edition alone yields 4,023 distinct part numbers. The whole F&G family is 635 such editions, so the true part-number count is in the hundreds of thousands, not the low hundreds. The family is unambiguously much bigger than a euro-ranked decode can see.",
+    "overlap_with_the_95": "Of the 4,023 EPC part numbers from this one edition, only 6 appear in the cross-reference's F-only list. 4,017 have no PMS vehicle record at all.",
+    "why_that_matters": "That is the same coverage defect the brief describes, measured: the cross-reference only knows the handful of F-series parts that were salient enough to be catalogued by hand from billing, while the EPC lists thousands per edition. The sliver is a coverage artefact.",
+    "crossref_anchored_counts": "Re-derived with an ANCHORED match on genuine_bvp_crossref.csv: F-only 44, N-only 15, shared 0, so F total 44. The unanchored script prints 95 because its marker list contains a bare 'F*' that substring-matches 'TF*' (D-Max)."
+  },
+
+  "f_series_vs_95": {
+    "cross_reference_95_verified": false,
+    "what_was_withdrawn": "The '95 of 95' part numbers and the EUR 1,955,749 attributed to them are withdrawn. This probe recorded them at the time as the brief's figures; they do not reproduce and must not be quoted.",
+    "how": "reran 01_data/91_build/pn_ammo_probe_20260918/_f_vs_n_breadth.py - it prints 'F-series only PNs : 81', 'N-series only PNs : 45', 'shared / both : 13' -> 81+13 = 94 distinct F PNs, reported to Jerome earlier as '95 of 95' and 'EUR 1,955,749' across 11 service categories. Those counts came from an unanchored marker and that euro rested on pickup blower filters; both are withdrawn.",
+    "important_defect_found_in_that_marker": "The marker used by _f_vs_n_breadth.py is_is_f() is NOT anchored: any(k in s for k in ('FRR','FSR','FTR','FVR','FVM','FSS','FTS','FVZ','F*')). The token 'F*' substring-matches 'TF*' (the D-Max pickup). Measured on genuine_bvp_crossref.csv: vehicle_model merely CONTAINS 'F' -> 219 distinct PNs; vehicle_model begins 'TF' (D-Max) -> 62 of those. An anchored whole-token match returns 56 PNs from 82 rows. The corrected size is measured on the family table, not here: vehicle_family_bands.csv carries 164 heavy truck part numbers billing EUR 174,832 in 2025 on a 1,238-vehicle fleet.",
+    "catalogue_side": "TRUCKS F&G ALONE has 635 editions versus the ~94 F PNs the cross-reference knows. That is the family-is-much-bigger-than-the-decode-shows direction, but editions are NOT distinct part numbers, so this does NOT quantify the answer."
+  },
+
+  "transport_finding": {
+    "problem": "Bulk part rows cannot be moved to disk from this session.",
+    "detail_1": "The only channel available to this subagent is browser_cdp (MCP), whose result returns into the model context. A 968-edition crawl is millions of tokens if routed that way, so it cannot be run as-is.",
+    "detail_2": "The script bridge the sibling agent used earlier - node 01_data/91_build/epc_batch2/cdp_eval.js <viewId> <expr> - now fails with 'no DevToolsActivePort found'. That file is written by the browser on startup; a recursive search of %USERPROFILE%\\.cursor and %LOCALAPPDATA%\\Cursor found none, so the browser appears to have been restarted with the debug port closed.",
+    "consequence": "The controller 01_data/91_build/epc_catalogue/scrape_epc_catalogue.js is sound and was NOT rewritten, but its results have no disk route in this session. A session with browser_cdp AND a working CDP script bridge (or the collector on 127.0.0.1:8793 plus a page that can reach loopback) is required to finish."
+  },
+
+  "session_recovered_note": "After the reload showed the login form, the signed session came back on its own within ~3 minutes - the server-side session was still alive. So the login wall after a reload is NOT proof of a dead session; a fresh page driven entirely by JS (no manual reload) is the fix. I did not log in at any point.",
+
+  "not_done": [
+    "Only 1 of the 635 F&G editions was crawled, and 0 of the 333 C&E editions. The deliverable is a complete single edition, not the family.",
+    "C&E count not independently verified by me (333 is the sibling agent's figure).",
+    "No bulk partItems endpoint exists; the unit of work is one FIG page = one request, confirmed at 165 subsections for this edition."
+  ]
+}

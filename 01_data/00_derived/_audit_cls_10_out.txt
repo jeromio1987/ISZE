@@ -1,0 +1,70 @@
+﻿==============================================================================
+1. ENGINE AIR FILTRATION - WHERE IT ACTUALLY SITS
+   (18-month window 2025-01-01..2026-06-30, gross billed)
+
+   256 part numbers read as an engine air-cleaner element. They sit in:
+   node                                                       PNs   billed EUR     units
+   Comfort parts > Air conditioning > Other A/C               122      998,360         0
+   Competitive parts > Air system > Other air system            6      162,252         0
+   Competitive parts > Filters > Air filter                   128       42,534         0
+   TOTAL engine air filtration                                256    1,203,146         0
+
+   inside Competitive parts > Filters > Air filter : EUR 42,534
+   outside it                                      : EUR 1,160,612  (96.5% of engine air filtration)
+   -> the published network air-filter figure captures roughly 4% of the category
+
+   for contrast, cabin / blower filtration (legitimately A/C): 147 PNs, EUR 1,622,097
+
+==============================================================================
+2. HOW THE MISFILE SPLITS BY DISTRIBUTOR  (needs the sales grain)
+
+   customer                                      air filt EUR    units  misfiled EUR      %
+   1797.0                                             220,673   12,637       219,504    99%
+   2194.0                                             201,631    7,147       176,907    88%
+   89.0                                               145,766    8,477       145,535   100%
+   90.0                                                65,572    3,481        62,469    95%
+   92.0                                                54,133    2,605        53,097    98%
+   86.0                                                51,954    2,722        51,954   100%
+   93.0                                                49,118    2,560        49,091   100%
+   76.0                                                44,806    1,983        38,649    86%
+   2181.0                                              42,584    2,294        42,584   100%
+   UNIVERSAL MOTORS ISRAEL LTD                         40,417    2,458        40,233   100%
+   I.M. PARTS & SERVICE Limited                        32,097    1,710        32,097   100%
+   66.0                                                28,715    1,833        27,427    96%
+   2294.0                                              26,855    1,536        26,618    99%
+   393.0                                               26,037    1,703        25,475    98%
+   537.0                                               22,476    1,143        22,476   100%
+   2731.0                                              16,180      632        16,180   100%
+   396.0                                               15,764      806        15,764   100%
+   ISUZU TRUCK (UK) LIMITED                            15,753      587        14,205    90%
+   2732.0                                               9,248      390         9,248   100%
+   2679.0                                               8,717      413         8,717   100%
+   2027.0                                               8,642      320         7,920    92%
+   KOMTRANSKOMPLEKT LLC                                 8,051      480         8,051   100%
+
+==============================================================================
+3. TWO DIFFERENT DEFECTS, NOT ONE NUMBER
+
+   (a) WRONG SYSTEM - the part is in a family it has no physical relation to
+       1,274 part numbers, EUR 1,844,034 billed
+         air_filtration      128 PNs  EUR  1,160,612
+         ball_joint_arm       67 PNs  EUR    126,243
+         bumper              201 PNs  EUR    148,994
+         king_pin            536 PNs  EUR    219,775
+         steering_core       235 PNs  EUR    171,854
+         window_regulator    107 PNs  EUR     16,556
+
+   (b) OBJECT TYPE vs SYSTEM OF USE - defensible either way, but applied
+       inconsistently across the same tree
+       2,272 part numbers, EUR 247,150 billed
+         brake_friction        3 PNs  EUR          0
+         clutch_core          10 PNs  EUR         35
+         fuel_filter           7 PNs  EUR         19
+         gasket             1423 PNs  EUR    154,452
+         harness             673 PNs  EUR     55,201
+         lamp                  9 PNs  EUR      7,692
+         mirror                9 PNs  EUR        111
+         oil_filter            9 PNs  EUR        461
+         radiator_water_pump   19 PNs  EUR         50
+         silencer            101 PNs  EUR     29,049
+         turbo                 9 PNs  EUR         82

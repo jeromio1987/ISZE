@@ -1,0 +1,146 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Pricing_Revision_AIM_Source.html",
+  "artifact_mtime_ms": 1789797607238,
+  "written_at": "2026-09-19T06:00:14.267827Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Pricing_Revision_AIM_Source.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "6605204 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\OPEN_Pricing_Revision_AIM_Source.cmd"
+    },
+    {
+      "id": "open_cmd_crlf",
+      "ok": true,
+      "detail": "CRLF launcher"
+    },
+    {
+      "id": "qa_probe",
+      "ok": true,
+      "detail": "{\"errors\": [], \"kpi\": 6, \"kpiVals\": [\"5.96%\", \"\\u20ac1,652,141\", \"\\u20ac34,993,609\", \"\\u20ac47,213\", \"93.6%\", \"95.3%\"], \"drill\": 23, \"movers\": 60, \"custs\": 73, \"custPn\": 23, \"custPnSort\": {\"key\": \"step\", \"dir\": -1}, \"cust\": -1, \"custL1\": -1, \"custL2\": null, \"custL3\": null, \"crumb\": \"Network\", \"custCrumb\": \"Network\", \"charts\": [{\"id\": \"c-cust-mix\", \"type\": \"bar\", \"points\": 23, \"drawn\": true}, {\"id\": \"c-league\", \"type\": \"bar\", \"points\": 22, \"drawn\": true}, {\"id\": \"c-l1\", \"type\": \"bar\", \"points\": 2"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "2 PNG \u2014 agent must image-Read: C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\original_network_home.png; C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\original_spine_l3.png"
+    },
+    {
+      "id": "network_aim_without_soldto",
+      "ok": true,
+      "detail": "cust=-1 custPn=23 charts=[{'id': 'c-cust-mix', 'type': 'bar', 'points': 23, 'drawn': True}, {'id': 'c-league', 'type': 'bar', 'points': 22, 'drawn': True}, {'id': 'c-l1', 'type': 'bar', 'points': 23, 'drawn': True}, {'id': 'c-mix', 'type': 'doughnut', 'points': 4, 'drawn': True}, {'id': 'c-src', 'type': 'bar', 'points': 20, 'drawn': True}]"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "kpi=6 drill=23"
+    },
+    {
+      "id": "spine_kpi_filtered",
+      "ok": true,
+      "detail": "spine step=87171.6551 all=1660928.4299999997 kpi=['6.81%', '\u20ac87,172', '\u20ac1,660,928', '\u20ac52,484', '93.6%', '95.3%']"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\original_network_home.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\original_spine_l3.png"
+  ],
+  "notes": "original: AIM drill KPIs follow filtered slice; prototype: All-network DB cards + zoom",
+  "qa": {
+    "errors": [],
+    "kpi": 6,
+    "kpiVals": [
+      "5.96%",
+      "\u20ac1,652,141",
+      "\u20ac34,993,609",
+      "\u20ac47,213",
+      "93.6%",
+      "95.3%"
+    ],
+    "drill": 23,
+    "movers": 60,
+    "custs": 73,
+    "custPn": 23,
+    "custPnSort": {
+      "key": "step",
+      "dir": -1
+    },
+    "cust": -1,
+    "custL1": -1,
+    "custL2": null,
+    "custL3": null,
+    "crumb": "Network",
+    "custCrumb": "Network",
+    "charts": [
+      {
+        "id": "c-cust-mix",
+        "type": "bar",
+        "points": 23,
+        "drawn": true
+      },
+      {
+        "id": "c-league",
+        "type": "bar",
+        "points": 22,
+        "drawn": true
+      },
+      {
+        "id": "c-l1",
+        "type": "bar",
+        "points": 23,
+        "drawn": true
+      },
+      {
+        "id": "c-mix",
+        "type": "doughnut",
+        "points": 4,
+        "drawn": true
+      },
+      {
+        "id": "c-src",
+        "type": "bar",
+        "points": 20,
+        "drawn": true
+      }
+    ],
+    "spine": {
+      "ok": true,
+      "step": 87171.6551,
+      "all": 1660928.4299999997,
+      "rows": 8089,
+      "kpiVals": [
+        "6.81%",
+        "\u20ac87,172",
+        "\u20ac1,660,928",
+        "\u20ac52,484",
+        "93.6%",
+        "95.3%"
+      ],
+      "chartVals": [
+        1660928.4299999997
+      ],
+      "custCrumb": "Network \u203a Not on AIM spine \u203a Not on AIM spine \u203a Not classified at L3",
+      "qMix": "Level 3 selected. Bars show parts billed for this slice (\u20ac1,660,928), not the network step. Slice step is \u20ac87,172. The table lists the part numbers. Click the breadcrumb to step back."
+    }
+  }
+}

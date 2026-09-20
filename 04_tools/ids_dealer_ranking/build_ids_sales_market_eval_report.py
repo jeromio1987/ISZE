@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Mode A IDS × sales × market evaluation HTML (self-contained Chart.js)."""
+"""Build shared IDS × sales × market evaluation HTML (self-contained Chart.js)."""
 from __future__ import annotations
 
 import json
@@ -227,7 +227,7 @@ ul.gaps li{{margin:.3rem 0}}
   <p>Structured evaluation of Isuzu Dealer Standard (IDS) audit results alongside distributor sales KPIs
   (PMS total capture, GPS €/UIO, fill) and aftersales market-pressure indicators — for constructive debate
   among dealers, distributors, and the OEM.</p>
-  <p class="meta">Mode A briefing · built {built} · join grain: country / distributor averages · verification green</p>
+  <p class="meta">shared briefing · built {built} · join grain: country / distributor averages · verification green</p>
 </header>
 
 <main>

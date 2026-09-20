@@ -1,6 +1,6 @@
 """Curated open issues for ITUK, GERMANY (ISD), PORTUGAL (Imotors).
 
-Mode B only in this file’s comments. open_lead is Mode A: distributor · country.
+internal only in this file’s comments. open_lead is shared: distributor · country.
 Never sold-to, never person names, never “not UMI / not Motolusa / not Ireland”.
 """
 from __future__ import annotations

@@ -1,6 +1,6 @@
 # Action Ledger review — 20260825
 
-**Mode B · internal only.** Attribution wording: co-movement only.
+**internal · internal only.** Attribution wording: co-movement only.
 
 ## Data-sufficiency verdict
 

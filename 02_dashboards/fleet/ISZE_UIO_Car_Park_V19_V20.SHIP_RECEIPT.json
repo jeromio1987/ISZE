@@ -1,0 +1,55 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\fleet\\ISZE_UIO_Car_Park_V19_V20.html",
+  "artifact_mtime_ms": 1789585217663,
+  "written_at": "2026-09-16T19:00:22.359Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\fleet\\ISZE_UIO_Car_Park_V19_V20.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "42257 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=false hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN cmd present (OPEN_ISZE_UIO_Car_Park_V19_V20.cmd)"
+    },
+    {
+      "id": "ship_gate",
+      "ok": true,
+      "detail": "ship_gate_check.ps1 exit 0"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "3 PNG(s) — agent must have image-Read before shipping"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\fleet\\_qa_uio_carpark\\01_decision_1440.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\fleet\\_qa_uio_carpark\\02_operating_1440.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\fleet\\_qa_uio_carpark\\03_rules_1440.png"
+  ],
+  "notes": "Added chapter C: V19 DB-level rules (7 lanes) + V20 seven problems + 6 new data sources; paint ruleCards=7 problems=7 newData=6"
+}

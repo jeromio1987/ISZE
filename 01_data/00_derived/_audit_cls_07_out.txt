@@ -1,0 +1,50 @@
+﻿PART TEXT DRIFT: classified list 13-Mar-2026  vs  live price master 10-Aug-2026
+  part numbers in the classified list      164,380
+  part numbers in the live price master    165,358
+  present in both                          162,904
+  description IDENTICAL                    162,881 (99.99%)
+  description CHANGED                      23 (0.01%)   EUR 12,347 (0.02% of billed)
+  in classified list but NOT in live master 1,476
+  in live master but NOT classified         2,454   EUR 21,781
+
+  top 30 changed-text parts by billed euro:
+    EUR      6,323  8978265280  GUIDE ASM; AIR                     -> GUIDE ASM : AIR                    | node stays Air system > Other air system
+    EUR      2,456  0911105220  NUT; LWR LINK TO FRT C/MBR         -> NUT; BRKT TO TRANSFER              | node stays Hardware > Nut
+    EUR        900  8982841330  THERMOSTAT                         -> THERMOSTAT (82.0░ C)               | node stays Cooling > Thermostat
+    EUR        794  7552590891  CONTROL UNIT; ELEC                 -> CONTROL UNIT; CENTRAL              | node stays Electrical sensors > Control unit
+    EUR        614  8978202950  HEADLAMP UNIT                      -> k0109AMP UNIT                      | node stays Lighting > Headlamp
+    EUR        453  8980383460  ACCUMULATOR; HYDRO BOOSTER         -> c0268dLATOR; HYDRO BOOSTER         | node stays Miscellaneous > Review needed
+    EUR        263  7552590631  CONTROL UNIT; ELEC                 -> CONTROL UNIT; CENTRAL              | node stays Electrical sensors > Control unit
+    EUR        263  7552590641  CONTROL UNIT; ELEC                 -> CONTROL UNIT; CENTRAL              | node stays Electrical sensors > Control unit
+    EUR        208  8979053430  COVER; RECLINING                   -> 3 VER; RECLINING                   | node stays Miscellaneous > Review needed
+    EUR         63  8981109861  HOSE; PCV                          -> HOSE: PCV                          | node stays Miscellaneous > Review needed
+    EUR         11  8980260821  PIPE; BRK                          -> PIPE BRK                           | node stays Brake parts > Brake hose / pipe
+    EUR          0  5867140631  SERVICE CONNECTOR HARNESS;E175     -> HARNESS KIT                        | node stays Electrical sensors > Harness / cable
+    EUR          0  5867140632  SERVICE CONNECTOR HARNESS;E175     -> HARNESS KIT                        | node stays Electrical sensors > Harness / cable
+    EUR          0  7552590630  CONTROL UNIT; ELEC                 -> CONTROL UNIT; CENTRAL              | node stays Electrical sensors > Control unit
+    EUR          0  7552590640  CONTROL UNIT; ELEC                 -> CONTROL UNIT; CENTRAL              | node stays Electrical sensors > Control unit
+    EUR          0  7552590890  CONTROL UNIT; ELEC                 -> CONTROL UNIT; CENTRAL              | node stays Electrical sensors > Control unit
+    EUR          0  8970872040  BOLT; GRAND HARNESS                -> BOLT; GROUND HARNESS               | node stays Electrical sensors > Harness / cable
+    EUR          0  8973636750  JOINT; EYE,FUEL OUTER              -> HOSE; FUEL                         | node stays Fuel system > Other fuel system
+    EUR          0  8979438070  HOSE; RUBBER,VSV                   -> nOSE; RUBBER,VSV                   | node stays Hardware > Rubber / grommet
+    EUR          0  8980103310  RUBBER; CUSHION,ENG MTG,RR         -> 8980103310SHION,ENG MTG,RR         | node stays Hardware > Rubber / grommet
+    EUR          0  8982062550  PIPE; BRK                          -> nIPE; BRK                          | node stays Brake parts > Brake hose / pipe
+    EUR          0  EAVY500574  BSIS Bracket                       -> BSIS Bracket (LHD)                 | node stays Hardware > Bracket / stay
+    EUR          0  PEN  POLOSHIRTS_ASC                     -> PEN_ASC                            | node stays Miscellaneous > Review needed
+
+-> C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\_audit_cls_description_drift.csv
+
+  the 'FILTER; ACL' clash, explained part by part:
+    58 part numbers now read 'FILTER; ACL'; assigned groups: {'Air conditioning': 58}
+      EUR   381,447  8974995480  classified text FILTER; ACL                            -> Air conditioning > Other A/C
+      EUR   120,375  1876101132  classified text FILTER; ACL                            -> Air conditioning > Other A/C
+      EUR    90,579  8981772710  classified text FILTER; ACL                            -> Air conditioning > Other A/C
+      EUR    61,727  5876150521  classified text FILTER; ACL                            -> Air conditioning > Other A/C
+      EUR    57,008  8983214130  classified text FILTER; ACL                            -> Air conditioning > Other A/C
+      EUR    51,210  8976739570  classified text FILTER; ACL                            -> Air conditioning > Other A/C
+      EUR    40,896  5876150022  classified text FILTER; ACL                            -> Air conditioning > Other A/C
+      EUR    25,957  8981402660  classified text FILTER; ACL                            -> Air conditioning > Other A/C
+      EUR    25,320  8981402650  classified text FILTER; ACL                            -> Air conditioning > Other A/C
+      EUR    25,279  5876150012  classified text FILTER; ACL                            -> Air conditioning > Other A/C
+      EUR    23,725  5876150021  classified text FILTER; ACL                            -> Air conditioning > Other A/C
+      EUR    20,150  5876102900  classified text FILTER; ACL                            -> Air conditioning > Other A/C

@@ -1,0 +1,831 @@
+﻿# Overnight corrective work queue
+
+Written by the overnight orchestrator. **This file is a queue, not a change log.**
+Every item here needs Jerome to approve it. The orchestrator never applies a fix: it is
+read-only on all deliverables by design (00_docs/RUNBOOK_ROUTINE_HANDOVER.md section 5).
+
+
+### 2026-09-17 22:27 - cycle 2, angle `numbers_tie_out`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 00:00 - cycle 3, angle `receipt_mtime_drift`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 00:20 - cycle 4, angle `language_sweep`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 00:40 - cycle 5, angle `locked_file_integrity`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 01:00 - cycle 6, angle `html_first_paint`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 01:20 - cycle 7, angle `coverage_honesty`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 01:40 - cycle 8, angle `entity_separation`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 02:01 - cycle 9, angle `excel_formula_errors`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 02:20 - cycle 10, angle `gaps_need_context`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 02:40 - cycle 11, angle `cross_artifact_consistency`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 03:00 - cycle 12, angle `chart_form_quality`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 03:20 - cycle 13, angle `blank_pages`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 03:40 - cycle 14, angle `orphan_artifact`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 04:00 - cycle 15, angle `memory_markdown_drift`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 04:20 - cycle 16, angle `receipt_quality`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 04:40 - cycle 17, angle `workstream_scan`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 05:00 - cycle 18, angle `numbers_tie_out`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 05:20 - cycle 19, angle `receipt_mtime_drift`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 05:34 - cycle 20, angle `language_sweep`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 05:40 - cycle 21, angle `locked_file_integrity`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 06:20 - cycle 22, angle `html_first_paint`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 06:40 - cycle 23, angle `coverage_honesty`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_AIM_Truck_Catalogue_2026-09-18.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_AIM_Truck_Catalogue_2026-09-18.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+
+### 2026-09-18 07:00 - cycle 24, angle `entity_separation`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 07:27 - cycle 25, angle `excel_formula_errors`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`
+
+### 2026-09-18 07:41 - cycle 26, angle `gaps_need_context`
+
+- **[high] 01_data/01_Pricing** - receipt no longer covers its file: Pricing_Revision_AIM_Source_Analysis.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `01_data/01_Pricing/Pricing_Revision_AIM_Source_Analysis.xlsx`
+- **[high] 02_dashboards/hub** - receipt no longer covers its file: ISZE_OS_Hub.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/hub/ISZE_OS_Hub.html`
+- **[high] 02_dashboards/ops** - receipt no longer covers its file: ISZE_OS_Console.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/ops/ISZE_OS_Console.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html`
+- **[high] 02_dashboards/pricing** - receipt no longer covers its file: ISZE_Price_BP_Weighted_Compare.xlsx was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.xlsx`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Aftermarket_BI_Command_Center.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Aftermarket_BI_Command_Center.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_DB_Leakage_Review_CY2025.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_DB_Leakage_Review_CY2025.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_Exec_Aftersales_Paper.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html`
+- **[high] 02_dashboards/sales** - receipt no longer covers its file: ISZE_PMS_Family_Compare.html was modified after its receipt was written
+  - Suggested action: re-run the verifier and rewrite the receipt, or withdraw the done claim
+  - Evidence: `02_dashboards/sales/ISZE_PMS_Family_Compare.html`

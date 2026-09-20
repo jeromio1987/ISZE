@@ -8,6 +8,31 @@
 
 ## [Unreleased — v2.0 build in progress]
 
+### 2026-09-18
+
+#### Fixed — the collapsed `LD` UIO row is now split per market, not just for the UK
+- The 2026-09-17 change split ITUK's `LD` row. The token is not one vehicle: it is 6.5/7.5 t in Israel and 3.5 t in most of Europe, and every market outside the UK priced the whole row at the N75 rate (€739).
+- `modules/data_prep.py` — `_split_collapsed_ld_rows()` now reads `data/uio_ld_n35_share.csv` and splits every market with a measured share. Rows are keyed on `distributor_code`; each row names its own basis. A **zero share is a pass-through, not a deletion** — a deliberate no-op for a market that runs no 3.5 t truck.
+- `data/uio_ld_n35_share.csv` (new) — share and basis per market: Helwig parc bands (Germany 22.0%), SIMI bands (Ireland 6.3%), workbook section 2.B read live (ITUK 50.5%), CV claim VINs plus the ministry table (Israel 0%), JP VIN register shipment mix elsewhere (Portugal 62.0%, Malta 36.9%, Belgium 91.8%, Cyprus 5.3%). A shipment mix sits normally below the parc share, so those three corrections are conservative.
+- `_uk_ld_split_ratio()` — the section 2.B reader no longer indexes a fixed column; it locates the family rows by label and takes the largest number on the row, so a sheet relayout cannot silently return zero. A >2 pp disagreement between the live 2.B read and the CSV prints a warning.
+- `pages/22_Parc_Cohort.py` — the Nominal GVW chart carries a caption stating that the number inside a chassis code is not a tonnage.
+- Measured 2025E target-wallet effect: **Portugal ×0.801, Malta ×0.895, Ireland ×0.979, Belgium ×0.981, Germany ×0.982, Cyprus ×0.993. Israel and ITUK unchanged.**
+- Tests: full suite **71 passed**.
+
+#### Fixed — a zero split share deleted the market's fleet instead of leaving it alone
+- Caught by the offline split test before it left the session. `if n35_share <= 0: continue` dropped the row from both the split list and the passthrough set, so **Israel's 6,059 trucks vanished** and UTI's ceiling fell by €8.3M (the row was retained only through the `MD` line, at the wrong rate). Fixed by collecting zero-share rows into an explicit pass-through set. Israel is now provably unchanged.
+
+### 2026-09-17
+
+#### Fixed — NON_PARTS non-part rows leaking into the parts base
+- `sap_sold_to_mapping.csv` remapped four non-part entities to a new code `NON_PARTS` on 2026-09-03, but `NON_PARTS` was never added to `EXCLUDED_CODES`. Nine CY2026 rows / **€180,715.11** (service fees, demurrage, e-credit) entered the GPS-facing parts base through the `line_kind == "part"` filter, taking a live recompute to €112,270,022 against the published €112,089,307.
+- Fixed in `modules/data_prep.py` (`EXCLUDED_CODES` + `NON_PARTS`) and `modules/sales_loader.py` (`NON_PART_LINE_KIND` + the four placeholder PNs). Recompute now returns **€112,089,307.0** exactly.
+- CY2025 untouched — €0 of the leak fell in 2025 — so the 51.1% network GPS anchor did not move.
+
+#### Added — machine-checkable parts-base bridge
+- `scripts/build_metrics_snapshot.py` now emits `sales.parts_base_data_through` and `sales.parts_base_through_prior_quarter_eur` (same method, prior quarter-end cut). The two published values (`€103.57M` @ 2026-03-31, `€112.09M` @ 2026-06-30) are the same series at two cut-off dates, not two definitions. Both anchored in `facts_anchor.yaml`; bridge documented in `FACTS.md` §4.1 and `DECISIONS.md` 2026-09-17.
+- Verify: 116 pass / 0 warn / 0 fail; facts-drift ALIGNED.
+
 ### 2026-08-18
 
 #### Added — duplicate tabs dropped (cross-link, not merge)

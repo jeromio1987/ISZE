@@ -304,11 +304,17 @@ the leak.
 |---|---|
 | **Make CIS class-dependent** | End the flat 0.40. This is the structural fix — without it there is no ability to differentiate at all |
 | **Segment by Qingling overlap** | Chinese equivalent exists (wear, PMS, mechanical) → cut to 40–45% GM; 60% is fictional margin on volume you don't have. No Chinese equivalent (Euro 6/7 aftertreatment, electronics, safety) → hold 60%+ |
-| **Gate on evidence** | Scrape Kazakh/Russian marketplaces (Emex.kz, Exist.kz, Satu.kz, Kolesa.kz, Avtoto) for actual ISZE PNs before setting any number. Incremental target for the existing scraper stack, not a new build |
+| **Gate on evidence** | Scrape Kazakh/Russian marketplaces for actual ISZE PNs before setting any number. Incremental target for the existing scraper stack, not a new build. **Corrected 2026-09-18 — the list in this row was wrong.** `emex.kz` is **not a parts shop**: it is EMEX LLP, a courier and freight forwarder in Almaty selling delivery and customs clearance, with no parts catalogue at all. The parts front-end is `emex.asia` (marketed as EMEX.RU plus LEOPART.KZ), and `emexdwc.kz` is a separate Dubai-warehouse operation. **Verified targets, 2026-09-18:** `exist.kz` is the best single source found — it decodes a real Isuzu OEM number and returns a price in one plain GET, **its robots.txt explicitly allows `/Price/` and `/Api/*`**, and the result page carries a `var _data` JSON array with the part number, description and per-supplier prices in the HTML before the login wall (which only gates the full supplier table). Its `.ru` twin runs the identical schema, so one parser serves both. `satu.kz` also works and is the one place Qingling-branded parts are both listed and priced. **Do not treat Kolesa.kz or Avtoto as part-number sources without checking** — they were named here but not assessed. **Caution on `exist.kz`:** prices come back in roubles against an Omsk office even though stock sits in Astana, so they are a Russian reference seen through a Kazakh portal, not a Kazakh retail price. |
 | **Re-export control first** | Monitor CIS purchase volume against CIS UIO. Spend/unit materially above plausible parc demand = product leaving the market. Put this in place *before* any cut |
 
 The governing sentence: **you cannot beat Qingling on price. You can stop pretending to
 compete on parts they have already won, and protect margin on parts they cannot follow.**
+
+**A correction on the Qingling overlap, added 2026-09-18.** Qingling parts do carry Isuzu-format numbers, including `-QL` suffixed variants that look like Qingling-specific markers on an Isuzu number — but **the market does not cross-reference the two schemes.** A live Kazakh listing was read: *"Вал распределительный 6HK1 TIER2 (Isuzu QingLing)"* at 90,000 ₸ — name-dropping Isuzu QingLing in the title and carrying **no OEM number at all**. The same marketplace mixes Chinese-format codes with Isuzu-format numbers in different listings.
+
+So **the overlap is real at part level, but a part-number scrape will not surface it.** The Chinese-licensed channel lists by **engine code and model name**. To price the overlap you must scrape by model — `ISUZU 100P`, `NKR55`, `NKR77`, `4JB1` — and map back by application. The "segment by Qingling overlap" action above therefore depends on a model-keyed scrape, not a PN-keyed one, and `satu.kz` is the one source found where Qingling-branded parts are both listed and priced.
+
+**One caution on the fresh targets, also 2026-09-18:** `exist.kz` returns prices in roubles against an Omsk office even though the stock sits in Astana. They are a Russian reference seen through a Kazakh portal, not a Kazakh retail price, and must be labelled as such.
 
 ---
 

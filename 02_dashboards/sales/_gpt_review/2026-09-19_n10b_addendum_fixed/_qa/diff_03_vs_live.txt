@@ -1,0 +1,68 @@
+--- live
++++ broken
+@@ -52,9 +52,9 @@
+  padding:3px 4px;border-radius:4px}
+ .bar-row.noclick{cursor:default}
+ .bar-row:hover,.bar-row.sel{background:#f0ebe1}
+ .bar-row .lbl{font-size:12.8px;color:var(--navy);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+-.bar-row .track{height:14px;background:#eef0f4;border-radius:3px;overflow:hidden;min-width:0;display:flex;position:relative}
++.bar-row .track{height:14px;background:#eef0f4;border-radius:3px;overflow:hidden;min-width:0;display:flex;position:relative}.bar-row .ref100{position:absolute;top:-2px;bottom:-2px;width:2px;background:#15233c;opacity:.7;z-index:2}.bar-row .fill{flex-shrink:0}
+ .bar-row .fill{display:block;height:100%;background:var(--navy)}
+ .bar-row .fill.hot{background:var(--terra)}
+ .bar-row .fill.rise{background:var(--rise)}
+ .bar-row .fill.g{background:var(--navy)}
+@@ -243,10 +243,19 @@
+     '</p><p class="s">'+sub+'</p></div>';
+ }
+ function bindClicks(sel){
+   document.querySelectorAll(sel).forEach(el=>{
+-    el.addEventListener('click', ()=>{
++    el.setAttribute('tabindex','0');
++    el.setAttribute('role','button');
++    const go=()=>{
+       if(el.dataset.db){ selDb=el.dataset.db; }
++      if(el.dataset.dorm!=null){ selDorm=parseInt(el.dataset.dorm,10); }
++      paint();
++    };
++    el.addEventListener('click', go);
++    el.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
++  });
++}
+       if(el.dataset.dorm!=null){ selDorm=parseInt(el.dataset.dorm,10); }
+       paint();
+     });
+   });
+@@ -397,19 +406,25 @@
+     const exp=Math.max(r.expected_qty||0,1);
+     const gq=Math.max((mix.g&&mix.g.actual_qty)||0,0);
+     const bq=Math.max((mix.b&&mix.b.actual_qty)||0,0);
+     const miss=Math.max(0, exp-(r.actual_qty||0));
+-    const sg=gq/exp*100, sb=bq/exp*100, sm=miss/exp*100;
+-    return '<div class="bar-row'+(r.db===selDb?' sel':'')+'" data-db="'+r.db+'" title="Expected '+num(exp)+'">'+
++    const sgRaw=gq/exp*100, sbRaw=bq/exp*100, smRaw=miss/exp*100;
++    /* N10B-054: common scale with room above 100% expected — do not let flex shrink exceedances. */
++    const scale=Math.max(100, sgRaw+sbRaw+smRaw);
++    const sg=sgRaw/scale*100, sb=sbRaw/scale*100, sm=smRaw/scale*100;
++    const refLeft=(100/scale)*100;
++    const over= (r.actual_qty||0) > exp;
++    return '<div class="bar-row'+(r.db===selDb?' sel':'')+'" data-db="'+r.db+'" tabindex="0" role="button" title="Expected '+num(exp)+(over?' · billed above expected':'')+'">'+
+       '<span class="lbl">'+r.label+'</span>'+
+-      '<span class="track">'+
+-        '<span class="fill g" style="width:'+sg+'%"></span>'+
+-        '<span class="fill b" style="width:'+sb+'%"></span>'+
+-        '<span class="fill m" style="width:'+sm+'%"></span>'+
++      '<span class="track" style="position:relative">'+
++        '<span class="fill g" style="width:'+sg+'%;flex-shrink:0"></span>'+
++        '<span class="fill b" style="width:'+sb+'%;flex-shrink:0"></span>'+
++        '<span class="fill m" style="width:'+sm+'%;flex-shrink:0"></span>'+
++        '<span class="ref100" style="left:'+refLeft+'%" title="100% of expected"></span>'+
+       '</span>'+
+-      '<span class="val">'+pct(r.capture)+'</span></div>';
++      '<span class="val">'+pct(r.capture)+(over?' · above model':'')+'</span></div>';
+   }).join('')+'</div>'+
+-  '<p class="ask" style="margin-top:10px"><span style="color:#15233c">■</span> Genuine · <span style="color:#3f5a86">■</span> Best-value · <span style="color:#c0552d">■</span> Not bought — each bar is 100% of expected units.</p>';
++  '<p class="ask" style="margin-top:10px"><span style="color:#15233c">■</span> Genuine · <span style="color:#3f5a86">■</span> Best-value · <span style="color:#c0552d">■</span> Not bought — the track scale is at least 100% of expected units; a mark shows the 100% line when any market exceeds it.</p>';
+   bindClicks('#main .bar-row');
+ }
+ 
+ function paintCaptureTrend(){

@@ -59,10 +59,19 @@ def resolve_pr00_path() -> Path:
 
 
 def _norm(pn) -> str | None:
+    """Normalize to the same 10-char zero-padded key used by aim / sales / the gate.
+
+    Previously used lstrip('0'), which made every leading-zero part number invisible
+    to the gate's PR00 join (audit 2026-09-17: 1,616 keys never checked).
+    """
     if pn is None:
         return None
     s = re.sub(r"\.0$", "", str(pn).strip().upper())
-    return s.lstrip("0") or "0"
+    if not s:
+        return None
+    if s.isdigit():
+        return s.zfill(10)
+    return s
 
 
 def _fig_key_from_parts(fig_no, key_no) -> str | None:
@@ -127,20 +136,23 @@ def build() -> int:
         key_no = row[i_key] if i_key is not None else None
         fk = _fig_key_from_parts(fig_no, key_no)
 
-        for i_pn_idx in (i_pn, i_new):
-            if i_pn_idx is None:
-                continue
-            n = _norm(row[i_pn_idx] if i_pn_idx < len(row) else None)
-            if not n or n in out:
-                continue
-            out[n] = {
-                "family": str(family or ""),
-                "group": str(group),
-                "level3_type": str(l3 or ""),
-                "fig_key": fk or "",
-                "fig_no": str(fig_no or "").replace(".0", "") if fig_no is not None else "",
-                "key_no": str(key_no or "").replace(".0", "") if key_no is not None else "",
-            }
+        # Own P/N always wins. Newest P/N is only a fallback when that key has no
+        # own row yet (audit 2026-09-17: 1,083 keys inherited a different node's
+        # description because first-writer-wins let a predecessor fill the successor).
+        own_n = _norm(row[i_pn] if i_pn is not None and i_pn < len(row) else None)
+        new_n = _norm(row[i_new] if i_new is not None and i_new < len(row) else None)
+        rec = {
+            "family": str(family or ""),
+            "group": str(group),
+            "level3_type": str(l3 or ""),
+            "fig_key": fk or "",
+            "fig_no": str(fig_no or "").replace(".0", "") if fig_no is not None else "",
+            "key_no": str(key_no or "").replace(".0", "") if key_no is not None else "",
+        }
+        if own_n:
+            out[own_n] = rec  # overwrite — own row is authoritative
+        if new_n and new_n not in out:
+            out[new_n] = dict(rec)
 
     wb.close()
 

@@ -1,0 +1,38 @@
+{
+  "angle": "cross_artifact_consistency",
+  "figures_tracked": 6,
+  "findings": [
+    {
+      "severity": "info",
+      "workstream": "cross-artifact",
+      "what": "published revision headline rate (5.9616) appears in 13 artifacts; confirm they mean the same basis in each",
+      "evidence": "02_dashboards/pricing/AIM_PRIORITY_LIST_HANDOFF.md, 02_dashboards/pricing/ISZE_AIM_Repertoire_Map_2026-09-17.html, 02_dashboards/pricing/ISZE_AIM_Repertoire_Spider_2026-09-17.html, 02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html, 02_dashboards/pricing/ISZE_Price_Increase_5pct_Flat_REVIEW_2026-09-17.html",
+      "action": "check the window and mask are stated identically in each",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "info",
+      "workstream": "cross-artifact",
+      "what": "filed revision step (1,652,140.71) appears in 8 artifacts; confirm they mean the same basis in each",
+      "evidence": "02_dashboards/pricing/AIM_PRIORITY_LIST_HANDOFF.md, 02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html, 02_dashboards/pricing/ISZE_Price_Increase_5pct_Flat_REVIEW_2026-09-17.html, 02_dashboards/pricing/ISZE_Pricing_Revision_AIM_Source.html, 02_dashboards/sales/ISZE_AIM_Classification_Paper.html",
+      "action": "check the window and mask are stated identically in each",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    },
+    {
+      "severity": "info",
+      "workstream": "cross-artifact",
+      "what": "in-scope billed euro (34,993,609.39) appears in 8 artifacts; confirm they mean the same basis in each",
+      "evidence": "02_dashboards/pricing/AIM_PRIORITY_LIST_HANDOFF.md, 02_dashboards/pricing/ISZE_AIM_Repertoire_Map_2026-09-17.html, 02_dashboards/pricing/ISZE_AIM_Repertoire_Spider_2026-09-17.html, 02_dashboards/pricing/ISZE_Price_BP_Weighted_Compare.html, 02_dashboards/pricing/ISZE_Pricing_Policy_Paper.html",
+      "action": "check the window and mask are stated identically in each",
+      "artifact_is_recent": false,
+      "attribution": "pre-existing backlog: written before this toolkit existed."
+    }
+  ],
+  "generated_utc": "2026-09-18T00:40:03Z",
+  "description": "The same figure across artifacts must mean the same basis",
+  "findings_count": 3,
+  "recent_count": 0,
+  "backlog_count": 3
+}

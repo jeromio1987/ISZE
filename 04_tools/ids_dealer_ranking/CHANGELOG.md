@@ -1,7 +1,7 @@
-# IDS dealer ranking / dashboard — changelog (Mode B)
+# IDS dealer ranking / dashboard — changelog (internal)
 
 **Scope:** Internal notes for `04_tools/ids_dealer_ranking/` builds, MIDI packs, and IDS HTML/Excel rebuilds.  
-**Not** for Mode A client HTML changelogs (those stay stripped per `isze-ids-delivery.mdc`).
+**Not** for shared client HTML changelogs (those stay stripped per `isze-ids-delivery.mdc`).
 
 Newest first. Append only.
 
@@ -55,7 +55,7 @@ Newest first. Append only.
   - **Suggested DB-level next steps** — 3–5 network actions; Owner/date/proof blank
   - **Pull scorecard** — blank monthly scaffold (% visited, % closed, incomplete cleared, escalations)
 - Dealer packs regenerated under v0.4 as annexes (same A/B as v0.3 content pattern).
-- Mode B OS doc: `05_memory/projects/ids-db-leverage-os.md` sharpened to rollup-first.
+- internal OS doc: `05_memory/projects/ids-db-leverage-os.md` sharpened to rollup-first.
 
 ### DB feedback sheet v0.3 (2026-08-11) — suggested next steps on exec summary
 
@@ -63,7 +63,7 @@ Newest first. Append only.
   `09_meetings/IDS_2026_DB_Feedback_Sheet_v0.3/` (does **not** overwrite v0.1 / v0.2).
 - Layer A exec summary: “Suggested next steps — edit in the meeting” table pre-seeded
   with 2–3 actions from the same top checklist gaps as Kaizen; Owner / Target date /
-  Proof blank. Mode A English; starters only.
+  Proof blank. shared English; starters only.
 - Kaizen on workshop pack unchanged (still 3–5 gap-seeded rows).
 - Layout: slight padding tighten so three suggestion rows still fit one A4 page.
 

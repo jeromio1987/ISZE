@@ -51,7 +51,7 @@ def write_open_cmd(html_name: str) -> None:
 
 def main() -> None:
     data = json.loads(PAYLOAD.read_text(encoding="utf-8"))
-    # Mode A face: drop internal codes from the embedded payload copy
+    # shared face: drop internal codes from the embedded payload copy
     data["meta"].pop("sold_to", None)
     data["meta"].pop("not", None)
     data["meta"].pop("uti_rows_in_sales_fact", None)

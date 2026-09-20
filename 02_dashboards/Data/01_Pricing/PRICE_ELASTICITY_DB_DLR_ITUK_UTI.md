@@ -1,4 +1,4 @@
-# Price response DB→DLR — ITUK + UTI (Mode B method note)
+# Price response DB→DLR — ITUK + UTI (internal method note)
 
 **As of:** 2026-08-10  
 **Output:** `01_data/00_derived/price_elasticity_db_dlr_ituk_uti.csv`  

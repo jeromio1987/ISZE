@@ -1,9 +1,9 @@
-# Hungary / AutoWallis — Mode B deep dive (raised bar)
+# Hungary / AutoWallis — internal deep dive (raised bar)
 
 **Audience:** Jerome only · **Not for AutoWallis**  
 **As of:** 2026-08-11  
 **Spine:** `MODE_B_DEEP_DIVE.json` + `MODE_B_DEEP_DIVE_v2.json` in this folder  
-**Mode A deck:** `ISZE_HUNGARY_Sales_Review_FY2027.pptx` (20 slides) — keep separate
+**shared deck:** `ISZE_HUNGARY_Sales_Review_FY2027.pptx` (20 slides) — keep separate
 
 ---
 
@@ -56,7 +56,7 @@
 | BVP € | 9.5K | 15.2K | **+5.8K** |
 | Basket total € | 47.9K | 52.0K | **+4.1K** |
 
-**Implication:** service parts did **not** collapse. High-value non-PMS genuine did. Old Mode B slide (“Genuine −€71K / BVP +€4K”) was directionally right on wallet, wrong if read as “workshop abandoned genuine filters.”
+**Implication:** service parts did **not** collapse. High-value non-PMS genuine did. Old internal slide (“Genuine −€71K / BVP +€4K”) was directionally right on wallet, wrong if read as “workshop abandoned genuine filters.”
 
 ### Brake pad exception (local substitution)
 
@@ -137,7 +137,7 @@ Wear capture improved off a low base; € gap barely moved. **Primary = total.**
 
 | Lens | Number | Use |
 |------|-------:|-----|
-| CY2025 claim-price parts | **€77,434** | Mode A growth caveat |
+| CY2025 claim-price parts | **€77,434** | shared growth caveat |
 | Fiscal GPS expense FY24 / 25 / 26 | €225 / €25,886 / **€102,418** | GPS netting |
 
 FY26 warranty / billing ≈ **30%**. Ex-warranty GPS on CY25 wallet ≈ **26.1%**.  
@@ -145,10 +145,10 @@ PM-sensor collapse in CY25 + warranty spike in FY26 — ask claims team whether 
 
 ---
 
-## 7. What to do with this in the meeting (Mode B → Mode A bridge)
+## 7. What to do with this in the meeting (internal → shared bridge)
 
-**Say (Mode A):** GPS 37.1%, PMS CY25 peers, brakes H1 −39%, IDS 86%, data ask, working S2D bridge.  
-**Know (Mode B):**
+**Say (shared):** GPS 37.1%, PMS CY25 peers, brakes H1 −39%, IDS 86%, data ask, working S2D bridge.  
+**Know (internal):**
 
 | If they say… | You have… |
 |--------------|-----------|

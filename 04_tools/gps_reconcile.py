@@ -554,18 +554,51 @@ def main() -> int:
         run_kosha_audit(rep)
 
     hard_fails = rep.hard_failures
+    # A hard check that never ran is not a hard check that passed. Before 2026-09-17 this report
+    # printed PASS with 7 of 14 hard checks SKIPPED under --skip-raw, including
+    # waterfall_vs_raw — the one that compares the two GPS ceilings. That is how a green report
+    # coexisted with a 5.34M euro ceiling disagreement. Now a skipped hard check forces PARTIAL.
+    hard_skipped = [c for c in rep.checks
+                    if c["severity"] == "hard" and c["status"] == "SKIP"]
+    soft_warn = [c for c in rep.checks if c["severity"] == "soft" and c["status"] == "WARN"]
+
+    if hard_fails:
+        result = "FAIL"
+    elif hard_skipped:
+        result = "PARTIAL"
+    elif soft_warn:
+        result = "PASS_WITH_WARNINGS"
+    else:
+        result = "PASS"
+
     payload = {
         "generated_at": _now(),
         "tolerances": {"identity_eur_per_cell": TOL_CELL, "waterfall_eur_per_stage": TOL_WATERFALL,
                        "cross_basis_pct": TOL_SOFT_PCT, "unmapped_payer_hard_eur": UNK_HARD_EUR},
-        "result": "FAIL" if hard_fails else "PASS",
+        "result": result,
         "hard_failures": len(hard_fails),
+        "hard_skipped": len(hard_skipped),
+        "soft_warnings": len(soft_warn),
+        "not_verified": [c["id"] for c in hard_skipped],
+        "result_note": (
+            "PARTIAL: hard checks were skipped, so this run does not verify the whole chain."
+            if result == "PARTIAL" else
+            "PASS: every hard check ran and passed."
+            if result == "PASS" else
+            "PASS_WITH_WARNINGS: every hard check ran and passed; soft checks raised warnings."
+            if result == "PASS_WITH_WARNINGS" else
+            "FAIL: at least one hard check failed."),
         "checks": rep.checks,
     }
     args.json_out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     print("\n" + "=" * 72)
-    print(f"RESULT: {payload['result']}  ({len(rep.checks)} checks, {len(hard_fails)} hard failures)")
+    print(f"RESULT: {result}  ({len(rep.checks)} checks, "
+          f"{len(hard_fails)} hard failures, {len(hard_skipped)} hard skipped)")
+    if hard_skipped:
+        print(f"  NOT VERIFIED by this run: {', '.join(c['id'] for c in hard_skipped)}")
     print(f"Report: {args.json_out}")
+    # Exit non-zero only on a genuine hard failure. PARTIAL is informative, not a build stop,
+    # so existing callers that treat exit 0 as "no failures" keep working.
     return 1 if hard_fails else 0
 
 

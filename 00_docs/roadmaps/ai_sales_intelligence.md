@@ -465,7 +465,7 @@ Tasks 3.1–3.7 all require intent classification + implicit-commitment detectio
 | 4.0 | Extract cc_depth — **skipped**; `n_cc` already on interaction_fact | done |
 | 4.1–4.8 | Signal calculators + alert router | **done 2026-08-18** |
 | 4.9 | Manual calibration on 6mo backfill (you: threshold tuning) | 1 d — **open** |
-| 4.10 | Dashboard / ops runbook integration | 1 d — after 4.9; no Mode A until you say ship |
+| 4.10 | Dashboard / ops runbook integration | 1 d — after 4.9; no shared until you say ship |
 
 **Exit criteria:** account_health.parquet shipping monthly, no false alerts from malformed data, top-3 accounts flagged monthly.
 
@@ -661,7 +661,7 @@ Every KPI below must be added to `03_analytics/Isuzu/prism/docs/metric_dictionar
 | 10 | Works council / employee reps consulted — **required before shared `Sales`/`Parts` mailboxes enter scope** | HR | G0b |
 | 11 | EU residency; LLM under DPA + SCCs + zero-retention, in writing — **n/a for P2a (no egress)** | Legal + IT | G0b |
 | 12 | Role-based access to profiles; audit log on every read | IT | G2 |
-| 13 | **No personal names in Mode A output** — existing external-language rule applies to every artefact here | You | every release |
+| 13 | **No personal names in shared output** — existing external-language rule applies to every artefact here | You | every release |
 | 14 | **Competition law** — never store or model another OEM's pricing intent from DB correspondence; flag and drop | Legal | design |
 | 15 | Vendor review through procurement | Procurement | G0b |
 
@@ -724,7 +724,7 @@ Model tier: all of these are **CHEAP** except P6 profile generation, which is **
 | **B2** | CRM elsewhere in ISZE/IML not visible here? | Changes §7 schema | You | Open |
 | **B3** | Current forecast process with measurable error? | P5 improves vs creates baseline | You | **Workspace: none** (P5.1) — confirm external |
 | **B4** | DPO for ISZE, or via IML legal? | P0 is 2 weeks or 8 | You | Open |
-| **B5** | Year-matched PR00/ZPR1 list-to-pocket joins not signed off | Do not quote leakage euros in Mode A | Data eng → Jerome | **Validation ran 2026-08-19** (`list_to_pocket_validation_2023_2025.csv`). Now waiting on written sign-off — `DECISIONS.md` 2026-08-25 |
+| **B5** | Year-matched PR00/ZPR1 list-to-pocket joins not signed off | Do not quote leakage euros in shared | Data eng → Jerome | **Validation ran 2026-08-19** (`list_to_pocket_validation_2023_2025.csv`). Now waiting on written sign-off — `DECISIONS.md` 2026-08-25 |
 | **B6** | EPC validation of the supersession map (925 PN / €2.48M billed-on-old) | Supersession € stays indicative | Data eng | Open — buildable today |
 | **B7** | P4 alert thresholds are drafts that fire on most of the book | Account health cannot be used as a call list | Jerome | Open — hub §2 B5 |
 
@@ -758,6 +758,6 @@ Model tier: all of these are **CHEAP** except P6 profile generation, which is **
 | 2026-08-12 | **UMI/UTI allow-list fixed.** Own-mailbox probe (domains only): `umi.co.il` / `uti.co.il`. Master xlsx + `db_domains.yaml` updated; Armenia/Kazakhstan/Palestine still no contact. Kept as separate DBs (never blend). |
 | 2026-08-12 | **2a.5 + 2a.7 built.** `build_stakeholder_dim.py` → `stakeholder_dim.parquet` (functional role from topic mix, `consensus_width`, `stakeholder_churn_flag`, 10-interaction evidence bar) + `db_response_latency.parquet` (p50/p90 inbound→reply per DB). Commitment extraction moved into the collector: type, `due_date`, `owner_side`, `has_amount`, `sentence_sha256` — **explicit dated promises only, no met/missed status**. `suggest_db_domains.py` added for the three DBs still without contacts (proposes, never writes). 24-month collect re-run so both fact tables come from one pass. **G2 still not claimable** — 2a.6 (delete job) and the 2a.7 state machine remain open. |
 | 2026-08-12 | **2a.6 closed.** DSAR runbook `00_docs/DSAR_ERASURE_RUNBOOK.md`; `purge_expired.py` hardened (dry-run default, `--apply`, `--stakeholder-id`, `--lookup`; retention cascade only deletes rows tied to expired ids — never re-syncs dim to a partial fact). Retention dry-run: **0** expired across interaction/commitment/stakeholder. `--apply` not run. **G2 still blocked on P2b gold set** (not on 2a.6). |
-| 2026-08-19 | **Track A executed further.** P1.3 supersession delta (`supersession_billing_delta.csv`) and P1.4 list-to-pocket validation (`list_to_pocket_validation_2023_2025.csv`) built. P5.2 + P5.6 forecast built out of order (548 series, median WAPE 49.4%) with `pages/19_Forecast.py`. P4 ops triage pack added. All Mode B. |
-| 2026-08-25 | **P8 Action Ledger** shipped over nine derived surfaces — 23,236 opportunities, €22.1M of mixed-basis source cells (never one wallet). Leakage euros held in Mode B until list-to-pocket is signed. |
+| 2026-08-19 | **Track A executed further.** P1.3 supersession delta (`supersession_billing_delta.csv`) and P1.4 list-to-pocket validation (`list_to_pocket_validation_2023_2025.csv`) built. P5.2 + P5.6 forecast built out of order (548 series, median WAPE 49.4%) with `pages/19_Forecast.py`. P4 ops triage pack added. All internal. |
+| 2026-08-25 | **P8 Action Ledger** shipped over nine derived surfaces — 23,236 opportunities, €22.1M of mixed-basis source cells (never one wallet). Leakage euros held in internal until list-to-pocket is signed. |
 | 2026-08-26 | Status block added at the top: §3's phase table is the plan, not the state. Blockers §18 re-scored — B5 moved from build to sign-off; B6 (EPC validation) and B7 (P4 thresholds) opened. |

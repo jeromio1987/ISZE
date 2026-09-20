@@ -1,4 +1,4 @@
-# Target Study + Attrition vs N75 PMS study (Mode B)
+# Target Study + Attrition vs N75 PMS study (internal)
 
 **Jerome-only.** Sources: Apr 24 Wrap-Up zip → `outlook_extracts/ITUK_Parts_Sales_Target_Study_20260409.xlsx` + `Attrition_Rate.xlsx`. Author of Target Study = **Masumi** (ISZE); Duncan reviewed.
 

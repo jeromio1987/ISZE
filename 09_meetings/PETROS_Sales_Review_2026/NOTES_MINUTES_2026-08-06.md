@@ -6,7 +6,7 @@
 
 **Attendees:** Panagiotis Zoglopotitis (Loutsios Group), Hadewijch Tibos, Koen Matheussen.
 
-## Locked takeaways (Mode B)
+## Locked takeaways (internal)
 
 - CY soft; **FY Apr–Jul sales ~+24% / orders ~+4%** after Jan–Mar SAP pain.
 - Prior-year StD clarified **~€820–850K** (higher than first assumed).

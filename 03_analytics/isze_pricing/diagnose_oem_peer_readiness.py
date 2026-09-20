@@ -1,4 +1,4 @@
-"""OEM peer readiness + street-vs-Isuze diagnostic (Mode B).
+"""OEM peer readiness + street-vs-Isuze diagnostic (internal).
 
 Does not invent prices. Writes derived CSVs and prints a gate summary.
 

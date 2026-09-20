@@ -23,7 +23,7 @@
    - Never invent KPIs. Do not quote legacy PMS capture from old HTML without PRISM check.
 6. **Pipeline changes:** run `.cursor/skills/isze-verify-pipeline` (or `03_analytics/Isuzu/prism/scripts/run_pipeline_and_verify.ps1`) before citing capture %, GPS, or BVP mix.
 7. **Excel deliverables:** run checks in `00_docs/EXCEL_PRE_DELIVERY_CHECK.md` before shipping any workbook to Jerome.
-8. **Ship gate (all Mode A HTML / dashboards):** `.cursor/rules/isze-ship-gate.mdc` — exit 0 ≠ done; run verify + paint check before claiming done. **IDS HTML / maps / client packs:** also `isze-ids-delivery.mdc` + `04_tools/ids_dealer_ranking/IDS_2026_LOGIC_CHECK.md` §6b. Paint evidence: `isze-verify-rendered-output.mdc`.
+8. **Ship gate (all shared HTML / dashboards):** `.cursor/rules/isze-ship-gate.mdc` — exit 0 ≠ done; run verify + paint check before claiming done. **IDS HTML / maps / client packs:** also `isze-ids-delivery.mdc` + `04_tools/ids_dealer_ranking/IDS_2026_LOGIC_CHECK.md` §6b. Paint evidence: `isze-verify-rendered-output.mdc`.
 9. **GPS / ITUK:** read `01_data/91_build/GPS_FILE_LINEAGE.md` and `.cursor/rules/isze-gps-ituk.mdc` — ITUK never on kickback or Other DBs tabs; dealer £ ≠ ISZE € wallet.
 10. **Deploy mirror:** never read or edit `07_deploy/Master Dashboard/context/` — regenerated from `00_docs/context_sync_whitelist.txt`.
 
@@ -41,19 +41,19 @@
 - Prefer `01_data/gpt_safe/` for external / GPT uploads.
 - Tender live feed: **`01_data/dashboards/tender_data.json`** only.
 
-## External IML / meeting language (Cursor + Claude)
+## Shared vs internal language (Cursor + Claude)
 
-Shared rule: `.cursor/rules/isze-external-iml-language.mdc` — **always on**.
+Shared rule: `.cursor/rules/isze-external-iml-language.mdc` — **always on**.  
+**Never use the old A/B audience labels** in chat or files Jerome opens — say **shared / external** vs **internal / private**.
 
-**Mode shorthand (Jerome):** **A** = outside / dashboards / Excel · **B** = internal sparring.  
-**Defaults:** this chat = **B**; `02_dashboards/`, meeting HTML, and Excel studies = **A**.
+**Defaults:** this chat = **internal**; `02_dashboards/`, meeting HTML, and Excel studies = **shared**.
 
-- **A — shared** decks/HTML/PDF/email: never use internal nicknames (**IML v7**, **Model B**, **PRISM lane**). Say **IML service schedule** and point to the real business source (Apr 2026 PMS analysis / trip report / business case / GIDSS). No personal contact names — roles only (IML / ITUK).
-- **B — sparring / private notes:** nicknames and blunt traps OK (`FACTS.md`, `DECISIONS.md`, memory, speaker notes, agent chat).
+- **Shared** decks/HTML/PDF/email: never use internal nicknames (**IML v7**, **Model B**, **PRISM lane**). Say **IML service schedule** and point to the real business source (Apr 2026 PMS analysis / trip report / business case / GIDSS). No personal contact names — roles only (IML / ITUK).
+- **Internal** sparring / private notes: nicknames and blunt traps OK (`FACTS.md`, `DECISIONS.md`, memory, speaker notes, agent chat).
 
 ## Production — ask Jerome first
 
-Scheduled SKILL paths, `06_uio/_CURRENT/*.xlsx` formulas, `sales_fact.parquet` rebuilds, GitHub Pages deploy. Outward mail/packs/versions: `.cursor/rules/isze-no-ship-without-ok.mdc` (draft-only; no silent version overwrite; rebuild/ship only on explicit ask).
+Scheduled SKILL paths, `06_uio/_CURRENT/*.xlsx` formulas, `sales_fact.parquet` rebuilds, GitHub Pages deploy. Outward mail/packs/versions: `.cursor/rules/isze-no-ship-without-ok.mdc` (draft-only; no silent version overwrite; rebuild/ship only on explicit ask). Customer / distributor mail: attach shared `.pptx`/`.pdf` only (never `.cmd`/`.md`/`.csv`/`.zip`/scripts); see skill `isze-managers-meeting-reply` § Customer attachments.
 
 ## Memory vs markdown
 

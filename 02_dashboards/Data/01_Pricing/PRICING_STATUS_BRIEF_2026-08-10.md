@@ -1,6 +1,6 @@
-# Pricing programme — Mode B status brief (2026-08-10 evening)
+# Pricing programme — internal status brief (2026-08-10 evening)
 
-**Audience:** Jerome only (Mode B). No Mode A ship.  
+**Audience:** Jerome only (internal). No shared ship.  
 **Alloc baseline:** `20260810T171626Z__alloc__t3pct` — **+3.0000% exact**.
 
 ---
@@ -60,7 +60,7 @@
 - Scrape list: `...\oem_peer_scrape_list.csv`
 - Last alloc: `...\runs\20260810T171626Z__alloc__t3pct\`
 - Readiness: `C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\oem_peer_readiness_20260810.json`
-- **Dashboard (Mode A):** `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\ISZE_Pricing_Engine_Readiness_Dashboard.html`
+- **Dashboard (shared):** `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\ISZE_Pricing_Engine_Readiness_Dashboard.html`
 - Dashboard JSON: `C:\Users\jerom\Desktop\claude\ISZE\01_data\14_dashboards\pricing_engine_readiness.json`
-- Mode B comparison notes: `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\PRICING_ENGINE_VS_CLASS_NOTES_B.md`
+- internal comparison notes: `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\PRICING_ENGINE_VS_CLASS_NOTES_B.md`
 - Rebuild dashboard: `python 02_dashboards/pricing/_build/build_pricing_engine_readiness_dashboard.py`

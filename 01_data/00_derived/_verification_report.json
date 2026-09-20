@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-08-25T17:19:54Z",
+  "generated_at": "2026-09-19T13:00:24Z",
   "data_root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data",
   "summary": {
-    "pass": 116,
-    "warn": 0,
+    "pass": 153,
+    "warn": 1,
     "fail": 0,
     "ok": true
   },
@@ -13,7 +13,7 @@
       "status": "pass",
       "message": "Found raw/sales/CY2023-2024.XLSX",
       "detail": {
-        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\12_raw\\sales\\CY2023-2024.XLSX"
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\sales\\CY2023-2024.XLSX"
       }
     },
     {
@@ -21,7 +21,7 @@
       "status": "pass",
       "message": "Found raw/sales/CY2024-2025.XLSX",
       "detail": {
-        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\12_raw\\sales\\CY2024-2025.XLSX"
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\sales\\CY2024-2025.XLSX"
       }
     },
     {
@@ -29,7 +29,7 @@
       "status": "pass",
       "message": "Found raw/sales/sales_2026tillApril.XLSX",
       "detail": {
-        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\12_raw\\sales\\sales_2026tillApril.XLSX"
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\sales\\sales_2026tillApril.XLSX"
       }
     },
     {
@@ -37,7 +37,7 @@
       "status": "pass",
       "message": "Found raw/reference/BVP PARTS CATALOG.xlsx",
       "detail": {
-        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\12_raw\\reference\\BVP PARTS CATALOG.xlsx"
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\raw\\reference\\BVP PARTS CATALOG.xlsx"
       }
     },
     {
@@ -313,6 +313,38 @@
       }
     },
     {
+      "id": "derived.lost_sales_model.csv",
+      "status": "pass",
+      "message": "Found lost_sales_model.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_model.csv"
+      }
+    },
+    {
+      "id": "derived.lost_sales_market.csv",
+      "status": "pass",
+      "message": "Found lost_sales_market.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_market.csv"
+      }
+    },
+    {
+      "id": "derived.lost_sales_competitor_pn.csv",
+      "status": "pass",
+      "message": "Found lost_sales_competitor_pn.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_competitor_pn.csv"
+      }
+    },
+    {
+      "id": "derived.lost_sales_competitor_coverage.csv",
+      "status": "pass",
+      "message": "Found lost_sales_competitor_coverage.csv",
+      "detail": {
+        "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_competitor_coverage.csv"
+      }
+    },
+    {
       "id": "config.data_status",
       "status": "pass",
       "message": "Core data_status OK",
@@ -358,6 +390,88 @@
       "message": "No stale v16/v17/v18 UIO copies in fallback paths",
       "detail": {
         "stale": []
+      }
+    },
+    {
+      "id": "uio_year.rows",
+      "status": "pass",
+      "message": "Fleet by year 1,279 rows",
+      "detail": {
+        "rows": 1279
+      }
+    },
+    {
+      "id": "uio_year.schema",
+      "status": "pass",
+      "message": "Schema OK",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.reconcile_2025",
+      "status": "pass",
+      "message": "2025 column reproduces the derived fleet split, worst delta 0.0154 vehicles",
+      "detail": {
+        "worst_delta": 0.0154,
+        "rows": 18,
+        "worst_market": "ITUK"
+      }
+    },
+    {
+      "id": "uio_year.actual_years_complete",
+      "status": "pass",
+      "message": "No gaps inside the actual range from 2023 onward across 18 markets",
+      "detail": {
+        "markets": 18,
+        "blocking": []
+      }
+    },
+    {
+      "id": "uio_year.historical_gaps",
+      "status": "warn",
+      "message": "Named hole(s) in the workbook's older years, left unfilled: ['DENMARK 2012', 'DENMARK 2013']",
+      "detail": {
+        "historical": [
+          "DENMARK 2012",
+          "DENMARK 2013"
+        ]
+      }
+    },
+    {
+      "id": "uio_year.no_negative_actuals",
+      "status": "pass",
+      "message": "No negative fleet counts in the actual range",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.is_actual",
+      "status": "pass",
+      "message": "is_actual agrees with the year on every row",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.is_estimate",
+      "status": "pass",
+      "message": "is_estimate agrees with the year on every row",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.is_forecast",
+      "status": "pass",
+      "message": "is_forecast agrees with the year on every row",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.basis_values",
+      "status": "pass",
+      "message": "basis values ['actual', 'estimate', 'forecast']",
+      "detail": {}
+    },
+    {
+      "id": "uio_year.defect_notes",
+      "status": "pass",
+      "message": "The LD-label note is carried on the LD rows rather than dropped",
+      "detail": {
+        "rows_with_note": 443
       }
     },
     {
@@ -407,9 +521,9 @@
     {
       "id": "sales_fact.unmapped",
       "status": "pass",
-      "message": "UNMAPPED 6 (0.00%) after distributor map",
+      "message": "UNMAPPED 0 (0.00%) after distributor map",
       "detail": {
-        "unmapped": 6,
+        "unmapped": 0,
         "max_pct": 1.0
       }
     },
@@ -546,17 +660,17 @@
     {
       "id": "p1.ituk.oil_filter.2024",
       "status": "pass",
-      "message": "ITUK oil_filter 2024 capture 83.5% (band 82%\u201392%)",
+      "message": "ITUK oil_filter 2024 capture 56.4% (band 52%\u201361%)",
       "detail": {
-        "capture_rate": 0.8347
+        "capture_rate": 0.5641
       }
     },
     {
       "id": "p1.ituk.oil_filter.2025",
       "status": "pass",
-      "message": "ITUK oil_filter 2025 capture 116.4% (band 115%\u2013128%)",
+      "message": "ITUK oil_filter 2025 capture 78.7% (band 74%\u201384%)",
       "detail": {
-        "capture_rate": 1.1643
+        "capture_rate": 0.7867
       }
     },
     {
@@ -780,25 +894,25 @@
     {
       "id": "contract.vor_airfreight_risk",
       "status": "pass",
-      "message": "vor_airfreight_risk 502 rows",
+      "message": "vor_airfreight_risk 508 rows",
       "detail": {
-        "rows": 502
+        "rows": 508
       }
     },
     {
       "id": "contract.vor_seasonality",
       "status": "pass",
-      "message": "vor_seasonality 3,127 rows",
+      "message": "vor_seasonality 3,367 rows",
       "detail": {
-        "rows": 3127
+        "rows": 3367
       }
     },
     {
       "id": "contract.vor_profile",
       "status": "pass",
-      "message": "vor_profile 228 rows",
+      "message": "vor_profile 248 rows",
       "detail": {
-        "rows": 228
+        "rows": 248
       }
     },
     {
@@ -812,9 +926,9 @@
     {
       "id": "contract.part_lifecycle",
       "status": "pass",
-      "message": "part_lifecycle 505 rows",
+      "message": "part_lifecycle 513 rows",
       "detail": {
-        "rows": 505
+        "rows": 513
       }
     },
     {
@@ -836,25 +950,25 @@
     {
       "id": "contract.price_premium",
       "status": "pass",
-      "message": "price_premium 419 rows",
+      "message": "price_premium 448 rows",
       "detail": {
-        "rows": 419
+        "rows": 448
       }
     },
     {
       "id": "contract.basket_correlation",
       "status": "pass",
-      "message": "basket_correlation 2,123 rows",
+      "message": "basket_correlation 2,403 rows",
       "detail": {
-        "rows": 2123
+        "rows": 2403
       }
     },
     {
       "id": "contract.substitution_timeline",
       "status": "pass",
-      "message": "substitution_timeline 502 rows",
+      "message": "substitution_timeline 508 rows",
       "detail": {
-        "rows": 502
+        "rows": 508
       }
     },
     {
@@ -866,12 +980,201 @@
       }
     },
     {
+      "id": "contract.lost_sales_model",
+      "status": "pass",
+      "message": "lost_sales_model 4,245 rows",
+      "detail": {
+        "rows": 4245
+      }
+    },
+    {
+      "id": "contract.lost_sales_market",
+      "status": "pass",
+      "message": "lost_sales_market 54 rows",
+      "detail": {
+        "rows": 54
+      }
+    },
+    {
+      "id": "contract.lost_sales_competitor_coverage",
+      "status": "pass",
+      "message": "lost_sales_competitor_coverage 2 rows",
+      "detail": {
+        "rows": 2
+      }
+    },
+    {
+      "id": "contract.lost_sales_pn_action",
+      "status": "pass",
+      "message": "lost_sales_pn_action 78 rows",
+      "detail": {
+        "rows": 78
+      }
+    },
+    {
       "id": "contract.distributor_geo",
       "status": "pass",
       "message": "distributor_geo 23 rows",
       "detail": {
         "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\03_analytics\\Isuzu\\prism\\data\\distributor_geo.csv"
       }
+    },
+    {
+      "id": "lost_sales.billed_ties_to_parts_base",
+      "status": "pass",
+      "message": "billed EUR 112,089,306.89 vs parts base EUR 112,089,306.89 (delta 0.00)",
+      "detail": {
+        "delta_eur": 0.0
+      }
+    },
+    {
+      "id": "lost_sales.price_split_blanks_the_part_year",
+      "status": "pass",
+      "message": "0 part-year rows carry a full-year price split",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales.price_split_closes",
+      "status": "pass",
+      "message": "max residual EUR 0.01 over 2,162 rows",
+      "detail": {
+        "max_residual_eur": 0.01
+      }
+    },
+    {
+      "id": "lost_sales.mix_term_is_not_degenerate",
+      "status": "pass",
+      "message": "65.0% of split rows carry a non-zero mix effect",
+      "detail": {
+        "mix_nonzero_share": 0.6503
+      }
+    },
+    {
+      "id": "lost_sales.distributors",
+      "status": "pass",
+      "message": "22 distributors",
+      "detail": {
+        "distributors": 22
+      }
+    },
+    {
+      "id": "lost_sales.years",
+      "status": "pass",
+      "message": "years present [2023, 2024, 2025, 2026]",
+      "detail": {
+        "years": [
+          2023,
+          2024,
+          2025,
+          2026
+        ]
+      }
+    },
+    {
+      "id": "lost_sales.pms_category_coverage_bounded",
+      "status": "pass",
+      "message": "service-axis coverage 20.77% of billed euro",
+      "detail": {
+        "coverage_pct": 20.77
+      }
+    },
+    {
+      "id": "lost_sales.ceiling_rows_are_labelled",
+      "status": "pass",
+      "message": "0 rows carry a ceiling without the market-level label",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales.gap_types_present",
+      "status": "pass",
+      "message": "gap types present ['catalog_gap', 'substitution', 'under_service']",
+      "detail": {
+        "gap_types": [
+          "catalog_gap",
+          "substitution",
+          "under_service"
+        ]
+      }
+    },
+    {
+      "id": "lost_sales.down_trade_verdicts_documented",
+      "status": "pass",
+      "message": "verdicts ['bvp_share_up_volume_held', 'bvp_share_up_volume_lost', 'no_bvp_in_market', 'pre_bvp_entry', 'stable']",
+      "detail": {
+        "verdicts": [
+          "bvp_share_up_volume_held",
+          "bvp_share_up_volume_lost",
+          "no_bvp_in_market",
+          "pre_bvp_entry",
+          "stable"
+        ]
+      }
+    },
+    {
+      "id": "lost_sales.partial_year_momentum_is_like_for_like",
+      "status": "pass",
+      "message": "0 part-year rows are not on a same-months basis",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_competitor.sources_named",
+      "status": "pass",
+      "message": "sources ['KS trade (GBP to EUR)', 'multi-brand bridge']",
+      "detail": {
+        "sources": [
+          "KS trade (GBP to EUR)",
+          "multi-brand bridge"
+        ]
+      }
+    },
+    {
+      "id": "lost_sales_competitor.median_index_bounded",
+      "status": "pass",
+      "message": "median index range 1.61\u20132.52",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_competitor.coverage_is_partial",
+      "status": "pass",
+      "message": "largest source covers 8.01% of billed euro (must read as partial, not whole)",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_pn_action.levers_documented",
+      "status": "pass",
+      "message": "levers ['below_margin_floor', 'insufficient_pricing_data', 'landed_cost_not_price', 'price_or_incentive_actionable']",
+      "detail": {
+        "levers": [
+          "below_margin_floor",
+          "insufficient_pricing_data",
+          "landed_cost_not_price",
+          "price_or_incentive_actionable"
+        ]
+      }
+    },
+    {
+      "id": "lost_sales_pn_action.actionable_rows_have_cost_and_price",
+      "status": "pass",
+      "message": "20 actionable rows, 0 of them missing cost or competitor price",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_pn_action.landed_cost_verdict_matches_the_numbers",
+      "status": "pass",
+      "message": "0 rows call it a landed-cost problem without the competitor below cost",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_pn_action.actionable_rows_have_a_floor_price",
+      "status": "pass",
+      "message": "20 actionable rows, 20 with a positive dealer price at the floor",
+      "detail": {}
+    },
+    {
+      "id": "lost_sales_pn_action.actionable_set_is_not_empty",
+      "status": "pass",
+      "message": "20 part numbers are actionable on price or incentive, 24 need a landed-cost answer",
+      "detail": {}
     },
     {
       "id": "action_ledger.artefacts",

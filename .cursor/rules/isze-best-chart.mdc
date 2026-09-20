@@ -1,0 +1,29 @@
+---
+description: Always pick the best chart form for the business question — no spaghetti slopes, no pie leagues, no one-bar-for-everything
+alwaysApply: true
+---
+
+# Best chart — always (ISZE)
+
+Jerome, 2026-09-16: always think and do the best chart for the job.
+
+**Full map + method:** skill `isze-best-chart` → `.cursor/skills/isze-best-chart/SKILL.md`  
+**Design brief:** `01_data/90_INBOX/_kpi_graph_design_proposal.md`
+
+## Instant fails
+
+- Slope / bump with more than ~6 labelled series (small markets overlapping = FAIL)
+- Pie/donut comparing many distributors or many families
+- Every chart the same horizontal bar
+- Chart title that is only a section name, not the business question
+- Overlapping labels “fixed” by shrinking type — change the form or split the panel
+- Gap shown without euro + family + fleet (see `isze-gaps-need-context.mdc`)
+
+## Instant defaults
+
+- Rank / who wins → ranked bars + reference
+- Mix inside one DB × one family → donut ≤4 segments
+- Fleet direction → slope for top fleets only; change bars for the rest
+- Dropdown = question or parts family, not a raw chart-type picker
+
+When building or reviewing any chart in `02_dashboards/`, meeting packs, or KPI lab work: load and follow `isze-best-chart`.

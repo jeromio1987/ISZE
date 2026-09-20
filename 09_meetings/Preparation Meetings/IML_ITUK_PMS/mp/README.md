@@ -9,7 +9,7 @@
 | `SHARE/DATA_ASKS_IML_and_all_DBs.md` | Asks |
 | `SHARE/EMAIL_DRAFTS.md` | Mail drafts |
 
-## JEROME_ONLY (Mode B — do not share as-is)
+## JEROME_ONLY (internal — do not share as-is)
 
 | File | Use |
 |------|-----|

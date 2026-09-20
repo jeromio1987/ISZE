@@ -1,7 +1,7 @@
 """Aftermarket BI data layer — replenishment + revision + Book B aggregates.
 
-Mode B internal. UTI≠UMI · IUK≠ITUK · IRELAND≠IUK.
-Reference sell-out = PR00 × 1.785 (field: reference_sellout_eur).
+internal internal. UTI≠UMI · IUK≠ITUK · IRELAND≠IUK.
+Reference dealer price = PR00 × 1.785 (field: reference_sellout_eur).
 """
 
 from __future__ import annotations
@@ -24,11 +24,20 @@ from tier_a_dashboard_common import (
 
 PIPELINE_LABEL = {
     "balanced": "Balanced",
-    "leakage_high_sellthrough": "Leakage — high sell-through",
-    "leakage_no_bill": "Leakage — sell-out without bill",
-    "overstock_low_sellthrough": "Overstock — low sell-through",
-    "overstock_no_sellout": "Overstock — no sell-out",
+    "leakage_high_sellthrough": "Leakage — high sales to dealer",
+    "leakage_no_bill": "Leakage — sales to dealer without bill",
+    "overstock_low_sellthrough": "Overstock — low sales to dealer",
+    "overstock_no_sellout": "Overstock — no sales to dealer",
     "no_activity": "No activity",
+}
+
+# Table and chart column labels. Centralised so a label change is made once, not
+# in every builder that renders the same column. The JSON field names stay as
+# they are (sellout_qty etc.) — only the label a person reads is written here.
+COL_LABELS = {
+    "sales_to_dealer_eur": "Sales to dealer €",
+    "sales_to_dealer_qty": "Sales to dealer qty",
+    "ref_dealer_price_eur": "Reference dealer price €",
 }
 
 DB_NOTES = {
@@ -187,7 +196,7 @@ def vehicle_plain_label(
     *,
     desc_map: dict[str, str] | None = None,
 ) -> str:
-    """Plain vehicle/parc label from Book B bucket + AIM — not VIN-level."""
+    """Plain vehicle/parc label from price list bucket + AIM — not VIN-level."""
     parts: list[str] = []
     b = (bucket or "").lower()
     h = (hint or "").lower()
@@ -205,13 +214,13 @@ def vehicle_plain_label(
         elif "dmax" in b or "lcv" in b:
             parts.append("D-Max LCV parc")
         else:
-            parts.append(f"Book B bucket: {bucket.replace('_', ' ')}")
+            parts.append(f"Price list bucket: {bucket.replace('_', ' ')}")
     if db == "ITUK" and ("n75" in h or "truck" in a or "intake" in a):
         parts.append("Likely N75/truck wear (AIM proxy)")
     if db == "IUK" and ("lcv" in b or "d-max" in h or "dmax" in h):
         parts.append("D-Max LCV parc")
     if db == "GREECE":
-        parts.append("No sell-out in CY2025 file")
+        parts.append("No dealer sales in CY2025 file")
     if not parts and a:
         parts.append(f"AIM family: {aim_l1}")
     if not parts:
@@ -505,9 +514,16 @@ def build_network_aggregates(rev: pd.DataFrame, aim_map: dict[str, dict[str, str
     net_bill = rev["bill_qty_n"].sum()
     net_sell = rev["sellout_qty_n"].sum()
 
+    # Two distinct sides of the price index, reported separately.
+    # ks_price_index = peer shop price / our reference dealer price.
+    #   < 1 -> the peer shop is cheaper than us -> we look expensive   -> guardrail.
+    #   > 1 -> the peer shop is dearer than us  -> we hold the premium -> raise defensible.
+    # Do not union these into one number: they call for opposite commercial action.
+    ks_index = pd.to_numeric(rev.get("ks_price_index"), errors="coerce")
     iam_mask = rev["recommended_action"] == "REVIEW_IAM_UNDERCUT"
-    ks_mask = pd.to_numeric(rev.get("ks_price_index"), errors="coerce") < 1
-    iam_count = int((iam_mask | ks_mask.fillna(False)).sum())
+    iam_count = int((iam_mask | (ks_index < 1).fillna(False)).sum())
+    raise_mask = rev["recommended_action"] == "RAISE_OK_ROOM_VS_IAM"
+    raise_count = int((raise_mask | (ks_index > 1).fillna(False)).sum())
 
     high_list = rev.loc[pd.to_numeric(rev.get("category_list_exposure_pct"), errors="coerce").fillna(0) >= 5]
     high_list_eur = safe_float(high_list["gap_eur"].sum(), ndigits=0)
@@ -525,6 +541,7 @@ def build_network_aggregates(rev: pd.DataFrame, aim_map: dict[str, dict[str, str
         "db_count": len(by_db),
         "pn_count": int(len(rev)),
         "iam_undercut_count": iam_count,
+        "raise_defensible_count": raise_count,
         "high_list_exposure_eur": high_list_eur,
         "book_b_weighted_eur": None,
     }
@@ -726,9 +743,11 @@ def book_b_aggregates(bb: pd.DataFrame, rev: pd.DataFrame | None = None) -> dict
 
     iam_rows = [_bb_row(r) for _, r in iam_source.iterrows()]
     if rev is not None and len(iam_rows) < 26:
+        # Top-up rows must come from the guardrail side only (peer shop cheaper than us).
+        # Do NOT union in ks_price_index < 1 here: that would pull the raise-defensible
+        # band into a register whose whole point is to list where we look expensive.
         extra = rev.loc[
-            (rev["recommended_action"] == "REVIEW_IAM_UNDERCUT")
-            | (pd.to_numeric(rev.get("ks_price_index"), errors="coerce") < 1)
+            rev["recommended_action"] == "REVIEW_IAM_UNDERCUT"
         ].head(80)
         seen = {(r["pn"], r["db"]) for r in iam_rows}
         for _, r in extra.iterrows():
@@ -949,7 +968,7 @@ def build_genius_charts(
     weighted = float((net.get("hero") or {}).get("book_b_weighted_eur") or 0)
     blocked = float(bb_agg.get("conflict_blocked_eur") or 0)
     out["book_b_bullets"] = [
-        {"label": "Book B weighted ambition", "actual_eur": weighted, "blocked_eur": blocked},
+        {"label": "Price list weighted ambition", "actual_eur": weighted, "blocked_eur": blocked},
         {"label": "Growth bucket conflicts", "actual_eur": blocked, "blocked_eur": blocked},
     ]
     return out

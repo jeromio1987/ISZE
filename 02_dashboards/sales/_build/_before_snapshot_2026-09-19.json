@@ -1,0 +1,96 @@
+{
+  "eur": {
+    "n_series_truck": {
+      "2023": 982416,
+      "2024": 1024406,
+      "2025": 922485,
+      "2026": 511938
+    },
+    "heavy_truck": {
+      "2023": 31853,
+      "2024": 32041,
+      "2025": 21844,
+      "2026": 13012
+    },
+    "light_vehicle": {
+      "2023": 1053664,
+      "2024": 1650153,
+      "2025": 1751095,
+      "2026": 832123
+    },
+    "shared_across_families": {
+      "2023": 1697182,
+      "2024": 1901482,
+      "2025": 1966797,
+      "2026": 983852
+    },
+    "no_vehicle_reference": {
+      "2023": 1175784,
+      "2024": 1205627,
+      "2025": 1125549,
+      "2026": 548277
+    }
+  },
+  "units": {
+    "n_series_truck": {
+      "2023": 12022,
+      "2024": 14007,
+      "2025": 11974,
+      "2026": 6233
+    },
+    "heavy_truck": {
+      "2023": 225,
+      "2024": 255,
+      "2025": 189,
+      "2026": 112
+    },
+    "light_vehicle": {
+      "2023": 28588,
+      "2024": 46163,
+      "2025": 48691,
+      "2026": 21869
+    },
+    "shared_across_families": {
+      "2023": 136861,
+      "2024": 161857,
+      "2025": 158772,
+      "2026": 79256
+    },
+    "no_vehicle_reference": {
+      "2023": 63968,
+      "2024": 65492,
+      "2025": 64384,
+      "2026": 31319
+    }
+  },
+  "billed2025": 5787696,
+  "attributedShare": 0.4657,
+  "resolution": {
+    "resolved_single_family": 434,
+    "pooled_shared": 257,
+    "unattributed": 344,
+    "by_source": {
+      "crossref_single": 253,
+      "epc_two_source": 181
+    },
+    "both_sources_speak": {
+      "banding_and_decode_both_name_one_family": 181,
+      "of_which_they_disagree": 0,
+      "note": "where the tonnage banding and the model-range decode both name exactly one family, this many disagree; those parts are pooled rather than trusted to either source, and they are not given a family by the cross-reference"
+    },
+    "rule": "epc_two_source \u2014 the tonnage banding and the model-range decode both name one family and agree, which is stronger than either alone; crossref_single \u2014 the cross-reference catalogue names one family and carries no wildcard, and it may not override a part the banding pooled."
+  },
+  "source": "ISZE_PMS_Family_Evolution.html as shipped, read from 6 QA case files taken 19 Sep 2026",
+  "periods": [
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "complete": [
+    2023,
+    2024,
+    2025
+  ],
+  "available": true
+}

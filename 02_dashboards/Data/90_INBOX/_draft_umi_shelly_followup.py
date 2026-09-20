@@ -1,7 +1,7 @@
 """Create ONE Outlook draft to Shelly Cohen (UMI 1797). Save — do NOT Send.
 
 Reply on her 12 Aug 'Re: Meeting' request for the presentation.
-Attaches: Mode A presentation, Israel LCV dealer-standards HTML pack, commercial PN declines.
+Attaches: shared presentation, Israel LCV dealer-standards HTML pack, commercial PN declines.
 """
 from __future__ import annotations
 

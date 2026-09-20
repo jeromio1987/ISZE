@@ -1,9 +1,9 @@
 ---
-description: Spoken and Mode A labels — no wallet, no dump of ×1.785, gloss Book B, no bot English
+description: Spoken and shared-UI labels — no wallet, no Mode A/B, no dump of ×1.785, no bot English
 alwaysApply: true
 ---
 
-# Spoken labels (ISZE chat + Mode A UI)
+# Spoken labels (ISZE chat + shared UI)
 
 Cross-link street words: `isze-pricing-no-street-ui.mdc`. Do not copy that whole file here.
 
@@ -11,6 +11,7 @@ Cross-link street words: `isze-pricing-no-street-ui.mdc`. Do not copy that whole
 
 | Do not say | Say |
 |---|---|
+| **Mode A / Mode B** (any form) | **shared / external** vs **internal / private**. Never use Mode A or Mode B in chat or in files Jerome opens. |
 | wallet / wallet € / parts wallet | **parts billed** vs **target spend per truck** (or “what we billed” vs “GPS target € per unit”) |
 | street / street fills / street index | **OEM peer retail** / **reference dealer price** / **price index** (shop ÷ reference dealer price) |
 | **sell-out / sell out / sellout** | **sales to dealer** (Jerome has asked repeatedly — this is a banned word, not a style preference) |
@@ -21,6 +22,28 @@ Filenames that contain a banned word may be quoted **once** in a footnote.
 
 JSON field names (`peer_street_eur`, `wallet_eur`) may stay in pipeline code. Labels to Jerome and in dashboards must not.
 
+## Talk in margins, never in factors
+
+**Jerome, 2026-09-17:** *"please work with margins like I do not factors, I asked this before?"*
+
+He has asked more than once. This is a hard rule.
+
+| Do not write | Write instead |
+|---|---|
+| class factor 0.47 / `class_factor` | **53% margin** |
+| factor band 0.70–1.35 (launch) | **margin band** — state as margin, e.g. 30% to −35% vs class, or as a price multiple with the margin beside it |
+| `qingling_overlap_gm: 0.45` | **45% margin on parts a Chinese equivalent exists for** |
+| `no_overlap_gm: 0.60` | **60% margin where it cannot be followed** |
+| `CIS factor_flat: 0.40` | **60% margin, flat across the catalogue** |
+| `source_discount: J 0.62 / T 0.611` | state the **margin** it implies, once, then the code |
+| "1 − class_factor" | just the margin |
+
+**Why:** the factor is the **divisor**; the margin is the **decision**. `SP = FOB / factor`, so `margin = 1 − factor`. Jerome thinks, quotes and negotiates in margin. A pack he reads that says "factor 0.47" makes him do the arithmetic himself, and it hides the fact that a factor *is* a margin someone set.
+
+**Where the code may keep its own name:** JSON/YAML field names (`class_factor`, `qingling_overlap_gm`) stay as they are in files — same convention as `peer_street_eur`. Only the **label he reads** is a margin. If a factor must be shown for traceability, show the margin first and the factor in a footnote.
+
+**This extends to the class codes.** C / D / F / J / M / P / T / V are IML's letters and carry no commercial meaning to him on their own. Write the margin: "class C (53% margin)", not "class C (factor 0.47)".
+
 ## Talk plainly
 
 Default to plain business English. Say “trucks in service”, not parc; “what we billed”, not capture; “dealer price”, not a bare formula. Keep a real term only when it is the clearest word for the thing, and gloss it the first time. No shorthand that only an agent would invent.
@@ -29,6 +52,6 @@ Default to plain business English. Say “trucks in service”, not parc; “wha
 
 First time a formula or internal code appears in a pack, add one plain English sentence. Then the code is fine.
 
-## Bot English — never in chat or Mode A
+## Bot English — never in chat or shared packs
 
-loss function, grain, cartoon, brain, SPAR, ship-gate, harness.
+loss function, grain, cartoon, brain, SPAR, ship-gate, harness, Mode A, Mode B.

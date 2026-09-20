@@ -156,6 +156,55 @@ secrets.toml
 isze_config.json
 .streamlit/secrets.toml
 
+# --- Mail / correspondence (private; never commit) ---
+# Meeting packs under 09_meetings/ are deliverables and stay trackable — only the
+# mail-extract trees are excluded, never 09_meetings/ itself.
+*.msg
+*.eml
+*.pst
+*.ost
+*.mbox
+*.vcf
+*.ics
+**/outlook_extracts/**
+09_meetings/_MAIL_MINUTES_*/
+
+# --- Scraped competitor price exports inside the tracked pricing raw folder ---
+# Named families only. A blanket 01_data/01_Pricing/_raw/** would hide files that
+# are tracked on purpose (browser scrape scripts, manifest json, catalogue tree);
+# see the nested 01_data/01_Pricing/_raw/.gitignore for the detail.
+01_data/01_Pricing/_raw/iam_sku_*.csv
+01_data/01_Pricing/_raw/iam_sku_*.json
+01_data/01_Pricing/_raw/ks_*.csv
+01_data/01_Pricing/_raw/ks_*.json
+01_data/01_Pricing/_raw/_ks_*.csv
+01_data/01_Pricing/_raw/_ks_*.json
+01_data/01_Pricing/_raw/oem_peer_*.csv
+01_data/01_Pricing/_raw/oem_peer_*.json
+01_data/01_Pricing/_raw/spareto_*.csv
+01_data/01_Pricing/_raw/spareto_*.json
+
+# --- Browser profile residue (cookies, sessions, saved logins) ---
+_chrome_profile/
+**/_chrome_profile/
+
+# --- Backup churn (regenerable by definition) ---
+*.bak_*
+*.bak2_*
+*.bak_pre_*
+*.backup_*
+*_backup_*
+*.old
+# A bare *.bak rule was approved by Jerome on 2026-09-19 (loose backup files were
+# showing up as committable in the working tree). It was applied, then removed by
+# another process the same day. Do not remove it again without his instruction.
+# An ignore rule never untracks a file that is already committed, so this rule is
+# safe for the three .bak files tracked on purpose:
+#   01_data/00_derived/bvp_pn_dimension.csv.bak
+#   01_data/00_derived/price_premium.csv.bak
+#   02_dashboards/sales/_build/_extracted/original_app.js.bak
+*.bak
+
 # --- Binaries & large media ---
 *.exe
 *.dll

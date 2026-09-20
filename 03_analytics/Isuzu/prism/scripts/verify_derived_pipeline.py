@@ -603,6 +603,10 @@ def _check_csv_min_rows(report: Report, fx: dict[str, Any], key: str, cid: str) 
         "basket_correlation": "basket_correlation.csv",
         "substitution_timeline": "substitution_timeline.csv",
         "capture_recovery_model": "capture_recovery_model.csv",
+        "lost_sales_model": "lost_sales_model.csv",
+        "lost_sales_market": "lost_sales_market.csv",
+        "lost_sales_competitor_coverage": "lost_sales_competitor_coverage.csv",
+        "lost_sales_pn_action": "lost_sales_pn_action.csv",
     }.get(key)
     if not rel:
         return
@@ -612,6 +616,264 @@ def _check_csv_min_rows(report: Report, fx: dict[str, Any], key: str, cid: str) 
     df = pd.read_csv(path)
     n = len(df)
     _chk(report, cid, n >= int(cfg.get("min_rows", 1)), f"{key} {n:,} rows", rows=n)
+
+
+def check_lost_sales_model(report: Report, fx: dict[str, Any]) -> None:
+    """Tie the lost-sales model back to the parts base and to the contracts it borrows from.
+
+    These are the checks that stop a rebuild from looking fine while it has quietly lost a family,
+    mis-joined the taxonomy, or drifted off ``sales_fact``.
+    """
+    cfg = fx.get("lost_sales_model", {})
+    path = DERIVED_DIR / "lost_sales_model.csv"
+    if not cfg or not path.exists():
+        return
+    df = pd.read_csv(path, low_memory=False)
+
+    # 1. Billed euro must equal the parts base, to the cent. A family that fails to classify is
+    #    still a row (unclassified_pn), so nothing may fall out of this sum.
+    from modules.data_prep import load_distributor_mapping
+    from modules.sales_loader import load_prism_sales
+    from config import resolve_mapping_path
+
+    df_map = load_distributor_mapping(str(resolve_mapping_path()))
+    sales, _ = load_prism_sales(df_map)
+    if "line_kind" in sales.columns:
+        sales = sales[sales["line_kind"] == "part"]
+    sales = sales[~sales["is_credit_note"]]
+    base_eur = float(sales["net_sales_value"].sum())
+    model_eur = float(df["net_sales_eur"].sum())
+    delta = abs(model_eur - base_eur)
+    _chk(
+        report,
+        "lost_sales.billed_ties_to_parts_base",
+        delta <= float(cfg.get("max_billed_delta_eur", 1.0)),
+        f"billed EUR {model_eur:,.2f} vs parts base EUR {base_eur:,.2f} (delta {delta:,.2f})",
+        delta_eur=round(delta, 2),
+    )
+
+    # 2. The price split must close. A non-zero residual means the three-way decomposition is
+    #    arithmetically broken, which is exactly the defect it exists to fix elsewhere.
+    #    Only the full-year pairs are checked: part-year pairs are deliberately left blank because
+    #    the full-year split compares a part year against a full year.
+    pr = df.dropna(subset=["delta_total_eur"])
+    if not pr.empty:
+        pr = pr[pr["year"] < int(pd.Timestamp.today().year)]
+        bad_years = df[df["delta_total_eur"].notna() & (df["year"] >= int(pd.Timestamp.today().year))]
+        _chk(
+            report,
+            "lost_sales.price_split_blanks_the_part_year",
+            len(bad_years) == 0,
+            f"{len(bad_years):,} part-year rows carry a full-year price split",
+        )
+        residual = (
+            pr["delta_volume_eur"] + pr["delta_price_eur"] + pr["delta_mix_eur"]
+            - pr["delta_total_eur"]
+        ).abs()
+        _chk(
+            report,
+            "lost_sales.price_split_closes",
+            float(residual.max()) <= float(cfg.get("max_price_residual_eur", 1.0)),
+            f"max residual EUR {residual.max():,.2f} over {len(pr):,} rows",
+            max_residual_eur=round(float(residual.max()), 2),
+        )
+        # 3. The mix term must actually vary. All-zero mix is the signature of measuring price at
+        #    the same grain as the mix axis, which makes the split an identity rather than a split.
+        mix_share = float((pr["delta_mix_eur"].abs() > 0.01).mean())
+        _chk(
+            report,
+            "lost_sales.mix_term_is_not_degenerate",
+            mix_share > 0.10,
+            f"{mix_share:.1%} of split rows carry a non-zero mix effect",
+            mix_nonzero_share=round(mix_share, 4),
+        )
+
+    # 4. Market coverage.
+    n_dist = int(df["distributor_code"].nunique())
+    _chk(
+        report,
+        "lost_sales.distributors",
+        n_dist >= int(cfg.get("min_distinct_distributors", 18)),
+        f"{n_dist} distributors",
+        distributors=n_dist,
+    )
+    years = sorted(int(y) for y in df["year"].dropna().unique())
+    want = [int(y) for y in cfg.get("years", [])]
+    _chk(
+        report,
+        "lost_sales.years",
+        all(y in years for y in want),
+        f"years present {years}",
+        years=years,
+    )
+
+    # 5. The service axis must be present but honestly bounded. A sudden jump to near-total
+    #    coverage means the join has started treating missing values as a real category.
+    covered = float(
+        df.loc[df["pms_category"] != "not_a_service_family", "net_sales_eur"].sum()
+    )
+    coverage_pct = 100 * covered / model_eur if model_eur else 0.0
+    _chk(
+        report,
+        "lost_sales.pms_category_coverage_bounded",
+        float(cfg.get("min_pms_category_coverage_pct", 0))
+        <= coverage_pct
+        <= float(cfg.get("max_pms_category_coverage_pct", 100)),
+        f"service-axis coverage {coverage_pct:.2f}% of billed euro",
+        coverage_pct=round(coverage_pct, 2),
+    )
+
+    # 6. Money may not be invented: every family row that is not explicitly market-level must
+    #    carry no ceiling, and the ceiling rows must declare what they are.
+    if "ceilings_are_market_level" in df.columns:
+        leak = df[
+            df["ceilings_are_market_level"].isna() & df["theoretical_wallet_eur"].notna()
+        ]
+        _chk(
+            report,
+            "lost_sales.ceiling_rows_are_labelled",
+            len(leak) == 0,
+            f"{len(leak):,} rows carry a ceiling without the market-level label",
+        )
+
+    # 7. Gap types and down-trade verdicts stay inside the documented vocabulary.
+    allowed_gaps = set(cfg.get("require_gap_types", []))
+    present_gaps = set(df["gap_type"].dropna().unique())
+    missing = allowed_gaps - present_gaps
+    _chk(
+        report,
+        "lost_sales.gap_types_present",
+        not missing,
+        f"gap types present {sorted(present_gaps)}" + (f" — missing {sorted(missing)}" if missing else ""),
+        gap_types=sorted(present_gaps),
+    )
+    allowed_verdicts = set(cfg.get("down_trade_verdicts", []))
+    verdicts = set(df["down_trade_verdict"].dropna().unique())
+    unexpected = verdicts - allowed_verdicts
+    _chk(
+        report,
+        "lost_sales.down_trade_verdicts_documented",
+        not unexpected,
+        f"verdicts {sorted(verdicts)}" + (f" — undocumented {sorted(unexpected)}" if unexpected else ""),
+        verdicts=sorted(verdicts),
+    )
+
+    # 8. Momentum must be like-for-like on the part year. A current-year row compared against a
+    #    full year would read as a collapse that did not happen.
+    mo = df.dropna(subset=["momentum_basis"])
+    if not mo.empty:
+        bad = mo[(mo["is_partial_year"]) & (mo["momentum_basis"] != "jan_jun")]
+        _chk(
+            report,
+            "lost_sales.partial_year_momentum_is_like_for_like",
+            len(bad) == 0,
+            f"{len(bad):,} part-year rows are not on a same-months basis",
+        )
+
+
+def check_lost_sales_competitor(report: Report, fx: dict[str, Any]) -> None:
+    """Competitor coverage must stay bounded and must name its sources."""
+    cfg = fx.get("lost_sales_competitor_coverage", {})
+    path = DERIVED_DIR / "lost_sales_competitor_coverage.csv"
+    if not cfg or not path.exists():
+        return
+    df = pd.read_csv(path)
+    sources = set(df["source"].dropna().astype(str))
+    want = set(cfg.get("require_sources", []))
+    missing = want - sources
+    _chk(
+        report,
+        "lost_sales_competitor.sources_named",
+        not missing,
+        f"sources {sorted(sources)}" + (f" — missing {sorted(missing)}" if missing else ""),
+        sources=sorted(sources),
+    )
+    med = df["median_index_reference_vs_competitor"].dropna()
+    if not med.empty:
+        ok = (
+            float(cfg.get("min_median_index", 0)) <= float(med.min())
+            and float(med.max()) <= float(cfg.get("max_median_index", 99))
+        )
+        _chk(
+            report,
+            "lost_sales_competitor.median_index_bounded",
+            ok,
+            f"median index range {med.min():.2f}–{med.max():.2f}",
+        )
+    # Coverage must never be presented as complete. The whole point of publishing it is that most
+    # of the book has no competing price on disk.
+    if "coverage_pct_of_book_all_years" in df.columns:
+        worst = float(df["coverage_pct_of_book_all_years"].max())
+        _chk(
+            report,
+            "lost_sales_competitor.coverage_is_partial",
+            worst < 50.0,
+            f"largest source covers {worst:.2f}% of billed euro (must read as partial, not whole)",
+        )
+
+
+def check_lost_sales_pn_action(report: Report, fx: dict[str, Any]) -> None:
+    """The part-number action layer: the decision test must be internally consistent.
+
+    Every row that recommends a lever has to have the evidence that lever claims to rest on. A
+    "price_or_incentive_actionable" row with no competitor price would be a guessed instruction.
+    """
+    cfg = fx.get("lost_sales_pn_action", {})
+    path = DERIVED_DIR / "lost_sales_pn_action.csv"
+    if not cfg or not path.exists():
+        return
+    df = pd.read_csv(path, low_memory=False)
+
+    levers = set(df["recommended_lever"].dropna().unique())
+    allowed = set(cfg.get("levers", []))
+    unexpected = levers - allowed
+    _chk(
+        report,
+        "lost_sales_pn_action.levers_documented",
+        not unexpected,
+        f"levers {sorted(levers)}" + (f" — undocumented {sorted(unexpected)}" if unexpected else ""),
+        levers=sorted(levers),
+    )
+
+    # Actionable rows must carry both a cost and a competitor price.
+    act = df[df["recommended_lever"] == "price_or_incentive_actionable"]
+    missing = act[act["cost_landed_eur"].isna() | act["competitor_price_eur"].isna()]
+    _chk(
+        report,
+        "lost_sales_pn_action.actionable_rows_have_cost_and_price",
+        len(missing) == 0,
+        f"{len(act)} actionable rows, {len(missing)} of them missing cost or competitor price",
+    )
+
+    # The cost test must be true whenever the lever says so, and false otherwise.
+    bad_cost = df[
+        (df["recommended_lever"] == "landed_cost_not_price")
+        & (~df["competitor_below_our_cost"].astype(bool))
+    ]
+    _chk(
+        report,
+        "lost_sales_pn_action.landed_cost_verdict_matches_the_numbers",
+        len(bad_cost) == 0,
+        f"{len(bad_cost)} rows call it a landed-cost problem without the competitor below cost",
+    )
+
+    # An actionable row must have a usable dealer price at the margin floor, otherwise the
+    # "could we match" answer it rests on was computed from nothing.
+    act_floor = act["dealer_price_at_gm_floor_eur"].dropna()
+    _chk(
+        report,
+        "lost_sales_pn_action.actionable_rows_have_a_floor_price",
+        len(act_floor) == len(act) and bool((act_floor > 0).all()),
+        f"{len(act)} actionable rows, {len(act_floor)} with a positive dealer price at the floor",
+    )
+    n_actionable = int((df["recommended_lever"] == "price_or_incentive_actionable").sum())
+    _chk(
+        report,
+        "lost_sales_pn_action.actionable_set_is_not_empty",
+        n_actionable >= 1,
+        f"{n_actionable} part numbers are actionable on price or incentive, "
+        f"{int((df['recommended_lever'] == 'landed_cost_not_price').sum())} need a landed-cost answer",
+    )
 
 
 def check_parts_catalog_dimension(report: Report, fx: dict[str, Any]) -> None:
@@ -731,6 +993,10 @@ def check_strategic_contracts(report: Report, fx: dict[str, Any]) -> None:
         "basket_correlation",
         "substitution_timeline",
         "capture_recovery_model",
+        "lost_sales_model",
+        "lost_sales_market",
+        "lost_sales_competitor_coverage",
+        "lost_sales_pn_action",
     ):
         _check_csv_min_rows(report, fx, key, f"contract.{key}")
 
@@ -875,6 +1141,107 @@ def check_prism_bundle(report: Report) -> None:
         _chk(report, "prism.bvp_bundle", False, f"Bundle load failed: {e}")
 
 
+def check_uio_by_market_type_year(report: Report, fx: dict[str, Any]) -> None:
+    """DI-3: the published fleet year axis.
+
+    Three things must hold, because the whole point of the file is that a euro-per-vehicle
+    figure can divide by the fleet of its own period:
+      1. its 2025 column reconciles to the derived fleet split the spend model reads;
+      2. no year inside the actual range is missing or negative for a market that has any
+         row at all, so a rate cannot silently land on an empty denominator;
+      3. the actual / estimate / forecast flags are present on every row and agree with the
+         year, so a forecast cannot be read as measured.
+    """
+    path = DERIVED_DIR / "uio_by_market_type_year.csv"
+    if not path.is_file():
+        _chk(report, "uio_year.exists", False,
+             "uio_by_market_type_year.csv missing — run scripts/build_uio_by_market_type_year.py")
+        return
+    df = pd.read_csv(path)
+    _chk(report, "uio_year.rows", len(df) > 0, f"Fleet by year {len(df):,} rows", rows=len(df))
+
+    cfg = fx.get("uio_by_market_type_year", {})
+    required = cfg.get("required_columns", [])
+    missing = [c for c in required if c not in df.columns]
+    _chk(report, "uio_year.schema", not missing,
+         "Schema OK" if not missing else f"Missing {missing}")
+    if missing:
+        return
+
+    # 1. reconciliation to the derived bucket file, on the 2025 estimate column
+    bucket = pd.read_csv(PRISM_ROOT / "data" / "uio_by_model_bucket.csv")
+    est = int(cfg.get("estimate_year", 2025))
+    got = (df[df.year == est]
+           .groupby("distributor_code")
+           .apply(lambda g: g.loc[g.vehicle_class == "CV", "uio_units"].sum()
+                  + g.loc[g.vehicle_class == "LCV", "uio_units"].sum(),
+                  include_groups=False))
+    merged = bucket.set_index("distributor_code").join(
+        got.rename("per_year"), how="left").fillna(0.0)
+    merged["expected"] = merged.cv_std_uio + merged.f_series_uio + merged.lcv_uio
+    merged["delta"] = (merged.per_year - merged.expected).abs()
+    worst = float(merged.delta.max()) if len(merged) else 0.0
+    tol = float(cfg.get("reconcile_tolerance_units", 0.5))
+    _chk(report, "uio_year.reconcile_2025", worst <= tol,
+         f"2025 column reproduces the derived fleet split, worst delta {worst:.4f} vehicles",
+         worst_delta=round(worst, 4), rows=len(merged),
+         worst_market=(merged.delta.idxmax() if len(merged) else None))
+
+    # 2. no missing or negative year inside the actual range, per market.
+    #
+    # The workbook itself carries an older hole: the Denmark light-commercial row has no 2012 or
+    # 2013 at all. That is a real gap in the controlled file, so it is named rather than filled.
+    # The hard requirement is that no gap falls inside the range a page can divide by — the billing
+    # window this rebuild is about, 2023 onwards. An older hole is a named warn, not a silent pass.
+    actual_through = int(cfg.get("actual_through", 2024))
+    hard_from = int(cfg.get("hard_gap_from_year", 2023))
+    markets = sorted(df.distributor_code.unique())
+    negative: list[str] = []
+    blocking_gaps: list[str] = []
+    historical_gaps: list[str] = []
+    for db in markets:
+        sub = df[df.distributor_code == db]
+        have = set(int(y) for y in sub.year.unique())
+        if not have:
+            continue
+        for gap in sorted(set(range(min(have), actual_through + 1)) - have):
+            (blocking_gaps if gap >= hard_from else historical_gaps).append(f"{db} {gap}")
+        neg = sub[(sub.year <= actual_through) & (sub.uio_units < 0)]
+        if len(neg):
+            negative.append(f"{db} negative in {sorted(set(neg.year))}")
+    _chk(report, "uio_year.actual_years_complete", not blocking_gaps,
+         f"No gaps inside the actual range from {hard_from} onward across {len(markets)} markets"
+         if not blocking_gaps
+         else f"Gaps inside the working range: {blocking_gaps[:8]}",
+         markets=len(markets), blocking=blocking_gaps)
+    _chk(report, "uio_year.historical_gaps", not historical_gaps,
+         f"No gap anywhere in the actual range ({len(markets)} markets)"
+         if not historical_gaps
+         else f"Named hole(s) in the workbook's older years, left unfilled: {historical_gaps[:8]}",
+         warn=bool(historical_gaps), historical=historical_gaps)
+    _chk(report, "uio_year.no_negative_actuals", not negative,
+         "No negative fleet counts in the actual range"
+         if not negative else f"Negative actuals: {negative[:5]}")
+
+    # 3. the flags are present and agree with the year
+    flags = {"is_actual": lambda y: y <= actual_through,
+             "is_estimate": lambda y: y == est,
+             "is_forecast": lambda y: y > est}
+    for col, want in flags.items():
+        bad = int((df[col] != df.year.map(want)).sum())
+        _chk(report, f"uio_year.{col}", bad == 0,
+             f"{col} agrees with the year on every row"
+             if bad == 0 else f"{col} disagrees with the year in {bad} rows")
+    basis = set(df.basis.unique())
+    _chk(report, "uio_year.basis_values",
+         basis <= {"actual", "estimate", "forecast"},
+         f"basis values {sorted(basis)}")
+    _chk(report, "uio_year.defect_notes",
+         bool(str(df.band_note.fillna("")).replace("nan", "").strip()),
+         "The LD-label note is carried on the LD rows rather than dropped",
+         rows_with_note=int((df.band_note.fillna("") != "").sum()))
+
+
 def check_config_status(report: Report) -> None:
     st = data_status()
     critical = ["sales_parquet", "bvp_dimension", "bvp_pms_capture", "raw_cy2025", "raw_cy2023_24"]
@@ -990,6 +1357,7 @@ def main() -> int:
     check_derived_files(report, fx)
     check_config_status(report)
     check_uio_canonical(report, fx)
+    check_uio_by_market_type_year(report, fx)
     check_sales_fact(report, fx)
     check_dimension(report, fx)
     check_crossref(report, fx)
@@ -1004,6 +1372,9 @@ def main() -> int:
     check_sales_by_fig_key(report, fx)
     check_aim_gps_matrix(report, fx)
     check_strategic_contracts(report, fx)
+    check_lost_sales_model(report, fx)
+    check_lost_sales_competitor(report, fx)
+    check_lost_sales_pn_action(report, fx)
     check_action_ledger(report)
     check_prism_bundle(report)
     write_reports(report)

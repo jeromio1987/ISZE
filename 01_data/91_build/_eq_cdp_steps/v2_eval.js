@@ -1,0 +1,1 @@
+(function(){try{eval(atob(window.__EQB64)); return typeof window.__eqDoubtLookup;}catch(e){return 'ERR:'+e.message;}})()

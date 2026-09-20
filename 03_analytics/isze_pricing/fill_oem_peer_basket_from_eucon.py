@@ -1,6 +1,6 @@
 """Extend oem_peer_basket.csv from Eucon 2023 OEM surveys + street scrape probe.
 
-Rules (Mode B):
+Rules (internal):
   - Fill peer_oe_pn only for clear COMPARABLE 1:1 Isuzu×Brand maps.
   - Market-align: LCV×Toyota / LCV×Ford(Ranger); IUK|GERMANY×DAF.
   - Never IUK Ford Transit ← Ranger survey Ford.

@@ -25,7 +25,7 @@ def check_saty(profile: dict, fails: list[str]) -> None:
     if not note:
         return
     if SATY_BANNED.search(note):
-        fails.append(f"saty_note has Mode B / export jargon: {note[:140]!r}")
+        fails.append(f"saty_note has internal / export jargon: {note[:140]!r}")
     if "%" in note and "SOR" not in note.upper() and "VOR" not in note.upper():
         fails.append("saty_note has % but no SOR/VOR coded-mix framing")
 
@@ -38,7 +38,7 @@ def check_sold_to(profile: dict, fails: list[str]) -> None:
     if str(int(st)) == "1797" and key != "UMI":
         fails.append(f"sold_to 1797 is UMI — profile key is {key}")
     if str(int(st)) == "1799":
-        fails.append("sold_to 1799 is UTI — never build an IDS-Israel / UMI Mode A from UTI")
+        fails.append("sold_to 1799 is UTI — never build an IDS-Israel / UMI shared from UTI")
 
 
 def check_exclude(profile: dict, fails: list[str]) -> None:

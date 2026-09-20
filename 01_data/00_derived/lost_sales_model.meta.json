@@ -1,0 +1,68 @@
+{
+  "generated_at": "2026-09-18T20:05:05+00:00",
+  "generated_by": "modules/lost_sales_build.py",
+  "grain": "distributor_code x aim_l1 x family_7 x pms_category x year",
+  "source_sales": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\sales_fact.parquet",
+  "rows": 4245,
+  "distributors": 22,
+  "years": [
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "tieouts": {
+    "parts_base_eur": 112089306.89,
+    "model_billed_eur": 112089306.89,
+    "billed_delta_eur": -0.0,
+    "pms_category_covered_eur": 23279464.57,
+    "pms_category_coverage_pct_of_billed": 20.77,
+    "largest_market_uncaptured_eur": 6647507.08
+  },
+  "sources": {
+    "billing": "sales_fact.parquet via load_prism_sales (parts only, ex credit notes)",
+    "family_axis": "aim_master_v2.csv -> aim_l1_fixed (99.3% of euro)",
+    "service_axis": "bvp_pn_dimension.csv (PMS registry) then parts_catalog_dimension.csv",
+    "ceiling": "wallet_waterfall.csv (market level, not decomposable by family)",
+    "service_gap": "pms_capture_by_db_year.csv line_type=total",
+    "gap_type": "capture_recovery_model.csv (latest complete year only)",
+    "pn_action_pricing": "margin_opportunity_top200.csv + competitor_common_basis.csv + price_collection_worklist_filled.csv + sellout_aim_top_pn_2025.csv",
+    "trend": "capture_trajectory.csv (part-year guarded upstream)",
+    "price_split": "computed here from billing; revenue_waterfall.csv has a zero mix term",
+    "down_trade": "substitution_timeline.csv",
+    "competitor": "competitor_common_basis.csv + price_collection_worklist_filled.csv",
+    "realisation": "pr00_realization_by_db_cy.csv"
+  },
+  "limits": [
+    "No fitted price response exists. One complete dealer-level sell-out year, so there is no elasticity coefficient and no causal claim on the price axis.",
+    "Ceiling columns in the family file are MARKET level and repeated on every family row (ceilings_are_market_level=True). They must not be summed.",
+    "The ceiling is a target spend at list, not a forecast. actionable_gap_eur restates it at observed list realisation; that is still not a recoverable amount.",
+    "2026 is a part year: 7 months of billing against a full-year denominator. is_partial_year marks every affected row.",
+    "2026-2030 UIO denominators are overstated (+9% to +59%, worse per market) so nothing forward-looking is published in this model. It stops at actuals.",
+    "Competitor prices cover a small part of the book. The uncovered remainder is a named gap, not a zero. Two vintages and two tiers are kept separate and never blended.",
+    "Apr-Jun 2026 credit-note netting is unverified (no SaTy column in the SAP extract).",
+    "There is no web demand series on disk. Web enters as price and listing presence only.",
+    "down_trade_verdict is a rule over BVP share and total family units, not a measurement.",
+    "Part-number pricing depth (cost, margin, competitor price and the resulting lever) exists on a minority of the book. Everywhere else the answer stays at family or market level and the lever column is blank rather than guessed.",
+    "Two clocks are shown on purpose. ISZE plans on a financial year running April to March; the calendar year is also shown because the billing extracts arrive as calendar-year files. They can give different answers, so both are published."
+  ],
+  "outputs": {
+    "family": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_model.csv",
+    "market": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_market.csv",
+    "competitor_pn": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_competitor_pn.csv",
+    "competitor_coverage": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_competitor_coverage.csv",
+    "pn_action": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_pn_action.csv",
+    "fiscal_year_series": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_fiscal_year.csv",
+    "fiscal_q1": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\lost_sales_fiscal_q1.csv"
+  },
+  "fiscal_year": {
+    "definition": "ISZE financial year runs April to March; the label is the calendar year that closes it, so FY2026 = Apr 2025 to Mar 2026",
+    "complete_fiscal_years_in_data": [
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "closed_months_of_current_fiscal_year": 3
+  }
+}

@@ -32,7 +32,24 @@ DB_LABEL = {
     "GR": "Greece",
 }
 
-# Digits in series code → nominal GVW tonnes (ISZJ class, not plated weight).
+# Series → nominal GVW in tonnes. The chassis number is NOT a tonnage: an FRR90 is an 11–12 t
+# truck and an FSR90 is 13.5 t, but reading "90" as 9.0 t made both look like 9-tonners and made
+# the 3,238-truck register look like 26,689 t when it is really 19,687 t (V20_SPEC §Problem 7).
+#
+# NL/NM/NN/NP and FR/FS are ISZJ series prefixes. Where a range is quoted (FRR 11–12 t) the lower
+# bound is used so the figure is not overstated.
+SERIES_GVW_T = {
+    "NLR": 3.5,    # N35 Grafter
+    "NKR": 3.5,    # older N35 designation
+    "NMR": 5.5,
+    "NNR": 6.5,
+    "NPR": 7.5,    # NPR75 — the one case the old numeric map got right
+    "NQR": 7.5,
+    "FRR": 11.0,   # FRR90, 11–12 t
+    "FSR": 13.5,   # FSR90, 13.5 t
+}
+
+# Numeric suffix → nominal GVW. Kept ONLY to record what the code says, never to set gvw_t.
 GVW_FROM_CODE = {
     "75": 7.5,
     "85": 8.5,
@@ -74,6 +91,7 @@ def _parse_model(name: str) -> dict:
         "series": None,
         "gvw_code": None,
         "gvw_t": None,
+        "gvw_t_source": None,
         "hand_code": None,  # L≈LHD, U≈RHD (ISZJ convention on export names)
         "model_suffix": None,
         "wheelbase_code": None,
@@ -91,7 +109,14 @@ def _parse_model(name: str) -> dict:
     series, gvw, hand, suffix = m.group(1).upper(), m.group(2), m.group(3).upper(), m.group(4)
     out["series"] = series
     out["gvw_code"] = gvw
-    out["gvw_t"] = GVW_FROM_CODE.get(gvw)
+    # Tonnage comes from the series, not the number. Fall back to the numeric code only when the
+    # series is unknown, and say so, so a bad decode is visible instead of silent.
+    if series in SERIES_GVW_T:
+        out["gvw_t"] = SERIES_GVW_T[series]
+        out["gvw_t_source"] = "series"
+    else:
+        out["gvw_t"] = GVW_FROM_CODE.get(gvw)
+        out["gvw_t_source"] = "numeric_code" if out["gvw_t"] else None
     # Prefer single trailing L/U as hand; FRR90SL → hand SL kept as cab pack, last char if L/U
     if hand in {"L", "U"}:
         out["hand_code"] = hand
@@ -251,6 +276,7 @@ def build(asof: date = ASOF) -> pd.DataFrame:
         "series",
         "gvw_code",
         "gvw_t",
+        "gvw_t_source",
         "hand_code",
         "model_suffix",
         "wheelbase_code",

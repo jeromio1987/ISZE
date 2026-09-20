@@ -1,0 +1,39 @@
+{
+  "generated": "2026-09-18T06:02:33.100959+00:00",
+  "built_by": "01_data/91_build/build_aim_classification_v2.py",
+  "purpose": "Two-axes lock 2026-09-17: Axis A = catalog_l1/l2/l3 identity (figure-anchored); Axis B = commercial score beside Axis A (contested per part per market) \u2014 not built as scored columns in this file yet. Legacy workbook_l* is context only. Do not invent a fourth layer. Do not hang identity views from a commercial parent.",
+  "decision_ref": "DECISIONS.md 2026-09-17 \u2014 AIM classification: two axes locked",
+  "source": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_pn_classification.csv",
+  "source_modified": "2026-09-18T06:02:29.881047+00:00",
+  "rows": 164667,
+  "axis_a_identity": "catalog_l1 / catalog_l2 / catalog_l3",
+  "axis_b_commercial_score": "separate measured attribute (contested / captive per part per market) \u2014 NOT a Level-1 parent; not scored in this CSV yet",
+  "legacy_workbook_context": "workbook_l1 / workbook_l2 / workbook_l3 (neither Axis A nor Axis B)",
+  "counts": {
+    "catalog_node_present": 155152,
+    "catalog_residual_other_review": 9459,
+    "workbook_axis_kind": {
+      "axis_a_vocabulary_echo": 139970,
+      "system": 15748,
+      "blank": 8306,
+      "placeholder": 643
+    },
+    "axis_conflict_rows": 15748,
+    "description_ambiguous_rows": 876,
+    "distinct_ambiguous_descriptions": 94
+  },
+  "catalogue_verification_vs_pr00": {
+    "rows_checked": 164609,
+    "rows_matching": 163555,
+    "match_pct": 99.3597,
+    "note": "COPY-INTEGRITY ONLY: catalogue columns vs pr00_classification.csv. Both come from the same GPT workbook. This does NOT prove the classification is correct against customs codes, Isuzu figures, or part text. Keys are zero-padded to 10 characters on both sides."
+  },
+  "consumer_contract": [
+    "Axis A (identity): group by catalog_l1/l2/l3. Wear and family views hang from catalog_l2/l3 or fig_key \u2014 never from a commercial posture parent (king-pin case).",
+    "Axis B (commercial score): contested/captive per part per market sits beside Axis A. Never the hang-from parent for identity views. Do not invent a fourth taxonomy layer.",
+    "Filter catalog_node_present=1 for a real Axis A family view.",
+    "Report catalog_residual=1 (Other / review) as a named residual, never as a family.",
+    "workbook_l1 is legacy AIM system context \u2014 neither Axis A nor Axis B. Never group workbook_l1 with catalog_l2.",
+    "Spoken labels: shared/external vs internal; sales to dealer; price list / price revision; parts billed; reference dealer price. No street / sell-out / Book B."
+  ]
+}

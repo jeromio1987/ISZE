@@ -329,6 +329,47 @@ returns next year.
 
 ---
 
+### Correction — 2026-09-18: the "LD" label is not a weight class
+
+The table above reads Israel's `LD` row as light (3.5 t) trucks. **It is not.** Two independent
+sources agree that UTI's Israeli fleet contains no 3.5 t Isuzu truck at all:
+
+- The **CV warranty VIN register** for UTI, 2,360 distinct VINs / 3,394 claims, Dec 2023 → Mar 2026:
+  `NPR75` 895, `FRR90` 817, `FSR90` 627, `NPR85` 13, `NPR88` 8 — and **zero** `NLR` / `NKR` / `NMR`.
+- The **Ministry of Transport table** in this section, whose smallest band is 6.5–7.5 t.
+
+So the Israel `LD` row is the whole N-series fleet at 6.5/7.5 t and it is **already priced at the
+7.5 t parts-wallet rate (€739)**, which is correct. The rate was deliberately left unchanged.
+What was wrong is the label: `LD` means 6.5/7.5 t in Israel and 3.5 t in most of Europe, and the
+same token drives the wallet rate per market. The workbook now says so — see cell **B92** of
+`1.UIO Overview`, and Changelog rows V19-5 to V19-7.
+
+**Consequence for the GPS / parts-wallet layer in §Problem 6:** the per-market 3.5 t shares below
+were measured on shipments 2020–2026. The generator was since rebuilt to use each market's own
+best available basis, and the numbers that matter are:
+
+| Market | Share of the `LD` row that is 3.5 t | Basis used |
+|---|---:|---|
+| ISRAEL | **0 %** | CV claim VINs + ministry table — nothing to split |
+| ITUK (UK) | 50.5 % | workbook sheet `2. Vehicle Volume` §B, read live |
+| PORTUGAL | 62.0 % | JP VIN register, 2,111 shipments |
+| MALTA | 36.9 % | JP VIN register, 130 shipments |
+| GERMANY | **22.0 %** | Helwig parc bands (153 at or under 3.5 t of 697) |
+| BELGIUM | 91.8 % | JP VIN register, 49 shipments |
+| IRELAND | 6.3 % | SIMI weight bands |
+| CYPRUS | 5.3 % | JP VIN register, 114 shipments |
+| GREECE | 0 % | 4 shipments only — left unchanged rather than measure with four vehicles |
+
+**Germany and Malta above contradict the table in §Problem 6**, which lists them as "0 % — no
+change". Germany's wallet is €3.8 m, so that is not a rounding item. The Germany basis here is a
+parc breakdown, not a shipment mix, so it is the better number.
+
+Measured 2025E wallet impact: Portugal €3.05 m → €2.45 m (its GPS % rises by about a quarter),
+Malta −10.5 %, Ireland −2.1 %, Belgium −1.9 %, Germany −1.8 %, Cyprus −0.7 %. Israel and the UK are
+unchanged. Split table: `03_analytics/Isuzu/prism/data/uio_ld_n35_share.csv`.
+
+---
+
 ## Problem 5 — Four markets have no real fleet history at all
 
 Belgium, Cyprus, Malta and Greece are built from the IML backbone and the old scrap-adjusted car park,
@@ -438,6 +479,158 @@ Fix: rewrite the method sections and the source list to describe what the rebuil
 
 ---
 
+## Problem 9 — The car park has no tonnage dimension at all *(added 19 September 2026)*
+
+This is the root defect behind `LD-LABEL`. The workbook's own mapping sheet states it plainly, so it
+does not need to be inferred:
+
+| Where | What it says |
+|---|---|
+| `Assumptions & Mapping` **A8** | `N-Series (NLR, NMR, NNR, NPR, N35, N50/55, N62/65, N75)` |
+| `Assumptions & Mapping` **B8** | `LD (N-series label — weight differs by market)` |
+| `Assumptions & Mapping` **C8** | *"Key assumption: all N-prefix = LD"* |
+| `Cover` **C8** | `LD (N-series; 3.5 t or 6.5/7.5 t depending on market), MD, F-Series (N-series excl.), LCV` |
+| `1.UIO Overview` **B92** | *"LD — label only; NOT a weight class…"* (the 2026-09-18 relabel) |
+
+The 2026-09-18 relabel corrected the **label**. The **dimension** is still missing: `1.UIO Overview` has
+one row per market × vehicle class × model type × year, and `model type` stops at `LD` / `MD` /
+`F-Series` / `LCV` (columns D7 and below). There is no tonnage column anywhere in the workbook. Every
+per-tonnage fleet denominator in the workspace therefore inherits the collapse, and the 3.5 t share that
+the parts-wallet model applies (`uio_ld_n35_share.csv`) is a **downstream patch on a collapsed row**,
+not a measurement in the fleet model itself.
+
+**This problem is a spec change plus evidence. It is not authorised as a model rebuild** — see
+*Scope of this change* below.
+
+### The dimension to add
+
+```
+market × vehicle class × tonnage band × year
+```
+
+**Band set — take the sources' own bands, do not invent a finer one:**
+
+| Band | Source bands that map to it | Note |
+|---|---|---|
+| **3.5 t** | JP register `gvw_t` 3.5 (NLR); SIMI `N Series 3.5T`; I-Motors `3.5 Ton`; Helwig `<=3.40` + `3.41–3.50`; ITUK list `N35` | bands the two 3.5 t sources split at 3.40/3.50 will be recombined |
+| **5.5 t** | JP register `gvw_t` 5.5 (NMR); I-Motors `5 ton`; ITUK list `N50`/`N55` | |
+| **6.5 t** | JP register `gvw_t` 6.5 (NNR); ITUK list `N62`/`N65`; UTI `6.5 TON` | |
+| **7.5 t** | JP register `gvw_t` 7.5 (NPR); SIMI `N series 7.5T`; I-Motors `7,5 ton`; ITUK list `N75` (incl. `N75.190`); UTI `7.5 TON` | |
+| **11 t** | JP register `gvw_t` 11.0 (FRR); I-Motors `11 Ton`; UTI `10TON` + `11 TON` | UTI's two 10 t classes are merged to this band |
+| **13.5 t** | JP register `gvw_t` 13.5 (FSR); I-Motors `14 Ton`; UTI `12 TON`; ITUK list `F135`/`F150`/`F180` | band boundaries differ; see caveat |
+
+**Grouping decision (justified, not arbitrary):** six bands, to be **reported as three groups** —
+`3.5 t` alone (it is the one that changes the parts wallet), `5.5–7.5 t` (the N-series middle), and
+`11–13.5 t` (F-series) — because no market has a source fine enough to defend the six as separate
+denominators, and the 3.5 t cut is the only one with a different wallet rate (€296 vs €739) behind it.
+
+**Boundary caveat that must be printed, not buried:** the band edges are not the same across sources.
+Helwig's Nfz table **stops at 7.51–12.00 t** (`2026-06-11_ISD_Fahrzeugbestand_-_Basis_-_Übersicht_D_.xlsx`
+sheet `Table`, D30 = 35) and carries **no 12 t+ row at all** — so on the German parc a `13.5 t` band
+would silently mean "nothing", not zero. Band 6 is therefore **unestablished for Germany** and must be
+emitted as null, never as 0.
+
+### Where each market's tonnage comes from — measured
+
+| Market | Tonnage source | File · sheet/column | Explicit band labels? | Period |
+|---|---|---|---|---|
+| **ITUK (UK)** | Duncan's VIN list + workbook ITUK parc | `01_data/90_INBOX/Duncan_VIN_20260723/2026-07-23_VIN_List_23_07_2026.xlsx` sheet `VIN List 23_07_2026` col `model` (`N35`, `N75`, `N50`, `N62`…); workbook `2. Vehicle Volume` §B rows 26–33 (cols C–U) | yes (`N35`–`N75`) | list 2008→2026; workbook parc 2024 |
+| **ISZE 7 markets** (BE, CY, DE, GR, IE, MT, PT) | JP VIN register | `01_data/07_UIO/vin/VIN_register.parquet` cols `series`, `gvw_t`, `gvw_t_source`, `db_label`, `invoice_year` | yes (`gvw_t` 3.5/5.5/6.5/7.5/11.0/13.5) | **2020 → 2026 only** |
+| **Germany** | Helwig Schmitt external parc | `…/_isd_std_mail_20260818/attachments/2026-06-11_ISD_Fahrzeugbestand_-_Basis_-_Übersicht_D_.xlsx` sheet `Table` C24:C30 / D24:D30 | yes | snapshot 31/12/2025 (**parc, not flow**) |
+| **Ireland** | SIMI national registrations | `01_data/07_UIO/isuzuregdata.xlsx` sheet `Sheet2` A5/A6 | yes (`N Series 3.5T`, `N series 7.5T`) | 2010 → 2025 |
+| **Portugal** | **NEW — I-Motors registration register, per VIN** | `01_data/07_UIO/Matriculas Isuzu SAP.xlsx` sheets `2005-2019` (bands J–N, chassis B, date P) **and** `2019-2026` (bands I–M, chassis B, date O); `SUM` sheet rows 11–15 | yes (`3.5 Ton`, `5 ton`, `7,5 ton`, `11 Ton`, `14 Ton`) | **2005 → 2026-06** |
+| **Israel (UTI)** | UTI registration data by GVW band | `01_data/90_INBOX/_imie_mail_20260730/UIO ISUZU 2025.xlsx` sheet `גיליון1` — header row 1: `6.5 TON` / `7.5 TON` / `10TON` / `11 TON` / `12 TON`, rows 2–33 years 1994–2025 | yes | **1994 → 2025** |
+
+**Fleet-path detail, stated because two per-VIN registers exist:** ITUK already has a **per-VIN**
+model-label list (`N35` 11,739 / `N75` 11,554 distinct VINs). The JP register (`VIN_register.parquet`)
+excludes ITUK and UTI by construction (`scope_cv_ex_ituk_uti` = True on all 3,238 rows;
+`SCOPE_EXCLUDE_DB = {"ITUK","UK","UTI","UMI"}` in `01_data/07_UIO/vin/build_vin_register.py`). So the
+ITUK tonnage layer needs no new pack — it needs the existing list **aggregated by `model` ×
+registration year**, which is exactly the shape the new dimension requires.
+
+### Where the tonnage is *not* measured
+
+Two of the JP register's seven markets are flow-inferred rather than parc-measured, and this must be
+labelled rather than silently published as a measurement:
+
+| Market | Why | Evidence |
+|---|---|---|
+| **Malta** | **No 3.5 t truck in the register at all.** Destination MT = 130 shipments: NPR 73, NMR 48, FRR 9, **NLR 0**. `uio_ld_n35_share.csv` keeps a 36.9 % N35 share for Malta labelled `unmeasured`. An NMR is a 5.5 t truck — reading it as 3.5 t is the same misread that was already caught once. | register `db_label=Malta` × `series`: NMR 48, NPR 73, FRR 9 |
+| **Cyprus** | **No 3.5 t truck in the register at all.** Destination CY = 114 shipments: NPR 60, NNR 48, NMR 6, **NLR 0**. The `uio_ld_n35_share.csv` row carries share 0.053 tagged `unmeasured`. | register `db_label=Cyprus` × `series` |
+
+For both, the honest reading is **zero measured 3.5 t**, not "share unknown": the register covers the
+whole 2020→2026 window and finds none. The fallback for a market with **no tonnage source at all** is a
+row-level `tonnage_basis = "not measured"` and a **null** band split — never a silent default and never
+a share borrowed from another market.
+
+### The `LD` collapse — what replaces it, and the meaning problem
+
+Replacing the token is the easy half. The hard half is that **`LD` does not decode to one band, and the
+meaning differs by market**, so it cannot simply be renamed:
+
+| Market | What `LD` actually holds | Basis |
+|---|---|---|
+| **Israel (UTI)** | the whole N-series at **6.5/7.5 t** — no 3.5 t exists | **verified:** CV claim VINs hold zero NLR/NMR/NNR across 2,143 distinct VINs; **reported, not verified:** the Ministry of Transport band table starting at 6.5–7.5 t (the source is a PDF slide picture, not a data file — see the note below) |
+| **Portugal** | **60.6 % 3.5 t** | I-Motors register N-series 2005–2026: `3.5 Ton` 2,209 of (`3.5` + `5` + `7,5`) 3,646 = 60.6 % |
+| **Ireland** | **30.9 % 3.5 t** (parc basis) | SIMI bands; `uio_ld_n35_share.csv` row (was 0.063 on a wrongly-attributed shipment number) |
+| **Germany** | **22.0 % 3.5 t** | Helwig `3.41–3.50 t` 153 of `3.41–7.50 t` 697 |
+| **ITUK (UK)** | **50.5 %** (workbook §B: N35 10,900 of 21,584 N-series) | workbook `2. Vehicle Volume` §B |
+| **Belgium** | **85.7 %** (register NLR 42 of 49) | JP register |
+| **Malta / Cyprus / Greece** | **0 % measured** | register holds no NLR |
+
+So the replacement is not "split `LD` into bands by a fixed ratio". It is: **each market carries its own
+measured band split, from its own source, with its own basis and period — and the split must be stated
+in the row, not applied from a global assumption.** Greece is the case that shows why: its `LD` row is
+**37 units** (2025E) on 4 shipments, so it gets `tonnage_basis = "not measured"` and stays unsplit
+rather than being given a ratio derived from four vehicles.
+
+### Additive to the year dimension
+
+This is **additive**: the existing 1990–2030 year axis stays exactly as it is, and tonnage becomes an
+extra key on `1.UIO Overview`. A per-year, per-band fleet therefore becomes possible for the first time
+— `market × LD_band × year` — and `03_analytics/Isuzu/prism/scripts/build_uio_by_market_type_year.py`,
+which already publishes the year axis (`01_data/00_derived/uio_by_market_type_year.csv`), is the natural
+place to carry it, with a `band` column and a `tonnage_basis` column beside the existing `band_note`.
+
+### Honest coverage of any future per-band denominator
+
+| Market | Tonnage basis | Period a band split can be defended for |
+|---|---|---|
+| ITUK (UK) | per-VIN model label, 29,935 VINs | 2008 → 2026 |
+| Portugal | per-VIN registration register, banded | **2005 → 2026** |
+| Israel (UTI) | registration data by GVW band | **1994 → 2025** |
+| Germany | Helwig parc snapshot | 31/12/2025 only (no history) |
+| Ireland | SIMI banded registrations | 2010 → 2025 |
+| Belgium, Cyprus, Malta, Greece | JP register shipments | **2020 → 2026 only** |
+| Every other row in the workbook (Iceland, Norway, Sweden, Denmark, Netherlands, Luxembourg, France, Switzerland, Spain, Italy, Poland, Austria, Hungary, Serbia, Romania, Bulgaria, Azores) | **none** — `LD` rows are blank in most of these and carry no band source | not defensible |
+
+That is the coverage: **six markets with a usable tonnage basis and a long enough period to build a
+per-band fleet, and everything else unmeasured.** A per-band denominator can be quoted for those six
+and for no others.
+
+### Scope of this change — and what is separately broken
+
+**This section records a spec change and the evidence for it. It does not authorise a V20 rebuild.**
+The model rebuild is a separate decision and the 2026–2030 forecast columns must not be re-based on this
+work. Separately and independently, **the 2026–2030 rows are known-broken** (`UIO-FCAST`: ~3 %/yr scrap
+from 2026 against a ~10.2 % CV / ~12.3 % LCV curve, +9 % in 2026 rising to +59 % by 2030;
+`01_data/00_derived/_data_integrity_open_issues.md`). A tonnage dimension built on top of a broken
+forecast would simply give the error more keys.
+
+### Open items this section does **not** close
+
+- **The band edges differ by source** (Helwig stops at 12.00 t; I-Motors says `14 Ton`; UTI says
+  `12 TON`). The six-band set is a reconciliation, not a measurement, and the reconciliation rule is
+  written above rather than verified against a truck.
+- **`9.5 t` has no home.** The NMR88 is described as a 9.5 t truck in
+  `uio_ld_n35_share.csv`'s Malta note while `SERIES_GVW_T` maps NMR to 5.5 t. Malta carries 48 NMR and
+  Cyprus 6. Until that is resolved, those units cannot be placed in a band honestly.
+- **The 3.5 t Norway / Sweden question is unverified.** The JP register does not cover those markets.
+  Measured distance (under-built by about 17 % vs the manufacturer 20,000 km, which would fit a 3.5 t)
+  is **not** model identification and is not used here.
+
+---
+
 ## Deliberately not touching
 
 - **UK CV only — sheet `4. ITUK UIO Projection` and Overview rows 22 and 24.** Those already use real
@@ -460,6 +653,9 @@ Fix: rewrite the method sections and the source list to describe what the rebuil
    parallel. Nothing is corrupted today because the VIN file isn't wired into anything, but the GPS
    half is live and affecting Portugal now.
 6. **Rewrite the documentation** (Problem 7).
+7. **Add the tonnage dimension** (Problem 9) — **spec only for now, and it is a model change.** Do not
+   start this until Jerome authorises a rebuild. It sits after the survival-curve fix because a band
+   split applied to an overstated fleet is a more precise wrong number, not a better one.
 
 Before touching the live file, save a dated copy into the `_Archive` folder. Right now the only copy of
 V19 that exists is the working file itself.
@@ -483,6 +679,11 @@ V19 that exists is the working file itself.
 **Contents:** 3,238 trucks, every one with a unique VIN, no duplicates, all 17 characters valid.
 **Covers:** Portugal 2,111 · Ireland 647 · Germany 183 · Malta 130 · Cyprus 114 · Belgium 49 · Greece 4.
 **Period:** 2020 to mid-2026.
+**Tonnage:** each row carries a measured `gvw_t` from the ISZJ series (`gvw_t_source = series` on all
+3,238 rows), so this file is also the tonnage source for those seven markets — see §Problem 9.
+Production dates run from **2019-08** and it includes **34 re-export rows**.
+It is **not** the only per-VIN register in the workspace: ITUK has one too (29,935 VINs, 2008→2026,
+`90_INBOX/Duncan_VIN_20260723/`) and Portugal has a banded one back to 2005 (`07_UIO/Matriculas Isuzu SAP.xlsx`).
 
 ### First thing to be clear about
 
@@ -564,16 +765,118 @@ Concretely, for V20:
 
 ---
 
+## The ITUK (Duncan) VIN packs — what each one actually contains *(added 19 September 2026)*
+
+Every file below was opened and read. `01_data/90_INBOX/Duncan_VIN_20260723/`.
+
+| File | What it actually is | Per-VIN? | Model label? | Reg date? | Odometer? |
+|---|---|---|---|---|---|
+| `2026-07-23_VIN_List_23_07_2026.xlsx` (1.74 MB, sheet `VIN List 23_07_2026`, 103,515 rows) | **A real per-VIN register.** 103,515 rows → **29,935 unique VINs**, model label + registration date. Registration dates span **2008-01-02 → 2026-05-01**. The three named columns (`Complete Engine `, `CAB ASM…`) are **100 % empty** — headers only. | **yes** | **yes** (`N35`, `N75`, `N50`, `N55`, `N62`, `N65`, `F110`, `F120`, `F135`, `F180`, `N75.190`, plus `NQR(7)`, `NPR(3)`, `NKR(T)`, `DEMO`, `REF`, `unknown`) | **yes** | **no** |
+| `2026-01-15_Fleet_VIN_list_2014_-_2024_study.xlsx` (3.32 MB) | Cohort study. Sheet `N35_N75` = **8,199 unique VINs, no duplicates**, reg dates **2014-01-01 → 2024-02-05**, with a **production date** column. Sheet `Sheet1` = **8,589 unique VINs** (a **superset** — it adds 390 F110/F120/F135 units). Sheet `pivot` is a Japanese-labelled summary (`個数 / vin`) by model × year. | **yes** | **yes** (`N35`, `N75`, `N50`, `N55`, `N62`, `N65`, `F110`, `F120`, `F135`) | **yes** | **no** |
+| `2025-12-01_Fleet_VIN_list_2014_-_2024_study.xlsx` (3.43 MB) | Same layout as the January file, **older revision**: `N35_N75` sheet has **no production-date column** (4 cols vs 5), and Sheet1 still holds the same 8,589 VINs. Superseded by the January file. | **yes** | **yes** | **yes** | **no** |
+| `2026-03-17_CBU_Master_Data_-_Appended.xlsx` (3.12 MB, sheet `Master`, 12,011 rows) | **Build-to-registration lifecycle tracker.** **12,011 unique VINs, one row each.** 49 columns: order month, shipping date, completion date, model code, model name, engine no, key no, UK arrival, DCU fit, order dealer, into bodybuilder, bodybuild complete, invoice date, invoice-to name, **registration date**, registration mark, non-RAV, customer (CRM). Registration dates **2021-09-24 → 2025-12-08**, **1,787 rows with no registration date** (built but not registered). VINs are distinct from the JP register (overlap **0**). | **yes** | **yes** (model *name*, e.g. `NLR87AU-ED5LAYE`, `NPR75U-…`) | **yes** | **no** |
+| `2026-07-17_P700_ITUK_TRUCK_ARRIVALS.xlsx` (10 KB, sheet `Table 1`) | **A monthly arrivals plan, not a register.** 6 rows: `TOTAL`, `N35`, `N55`, `N65`, `N75`, `F110`, `F135`; 18 monthly columns **Oct-26 → Mar-28**. No VIN, no vehicle. | **no** | row label only | no | **no** |
+| `2026-07-27_VIN_engine_cab_enquiries_2020_2026.xlsx` (18 KB) | **41 deduplicated VIN enquiry references** extracted from mailbox snippets. Sheets `VIN Enquiries` (41 rows), `Summary`, `Source Index`. Its own limitation note (B9): *"based on returned search snippets, not opened full email bodies."* Workbook split: 20 rows tagged Cab, 21 tagged Engine (both `B5`+`B6` = 41 ✓). | **yes** | no | no | **no** |
+
+### Correction to the existing note
+
+The standing note said the list has *model and registration date, no odometer and no transmission*.
+**Confirmed from the files** — there is no odometer/mileage column in any of the six (the two empty
+columns in the VIN list are named for an engine and a cab, and are empty). The note is correct.
+
+### The APL file is a summary, not a register — as suspected
+
+`01_data/90_INBOX/APL_ITUK_202607/2026-07-27_VIN_List_23_07_2026_20260724.xlsx` has three sheets:
+`Sheet2` = **`Count of vin` pivoted by registration year** (rows = model: `N35`, `N75`, `NLR85`,
+`NLR87`, `NLR88`, `NNR85`, `NNR88`, `N123`, `T123M`); `Workfile` (29,936 rows) and
+`VIN List 23_07_2026` (103,515 rows). So the workbook does carry the underlying list — but the
+audit **opened the summary sheet only** and confirms it is a spreadsheet *about* VINs, not the register.
+Use `2026-07-23_VIN_List_23_07_2026.xlsx` directly.
+
+### Verdict — yes, ITUK can now produce a fleet by tonnage and by year
+
+**It could not before, and the spec should record that it now can.** The per-VIN model label
+(`N35` / `N75` / `N50` / `N62` / `F110` / `F135` …) plus the registration date is exactly a
+**tonnage band × year** count, on a base of **29,935 VINs spanning 2008 → 2026**. Aggregating the
+`model` column by `registration_date` year gives ITUK a measured band × year registration series with
+no new source required. The two caveats are real but bounded: **no odometer** (so this cannot produce
+km/year) and **no transmission** (so AT/MT splits remain out of reach) — neither is a tonnage question.
+
+**Ceiling on what that gives you:** it is a **registration flow**, not a parc. The workbook's ITUK parc
+of 22,389 is a survival-curve convolution of those registration cohorts, so a parc-by-band number
+requires running the same survival curve per band — which is a model change, and is out of scope here.
+
+### Israel — the tonnage question is already answered without a VIN pack
+
+**Yes, Israel's tonnage is obtainable, and the file was already in the workspace.** The spec's *Still
+open* list said *"Where is the Israeli government extract?"* — the **UTI registration data by GVW band**
+is on disk:
+
+`01_data/90_INBOX/_imie_mail_20260730/UIO ISUZU 2025.xlsx`, sheet `גיליון1` — the sheet name the
+`Assumptions & Mapping` sheet has been citing as `UIO_ISUZU_2025.xlsx` sheet `גיליון1` all along.
+
+| | 1994 | 2000 | 2010 | 2020 | 2024 | 2025 |
+|---|---:|---:|---:|---:|---:|---:|
+| 6.5 t | 1 | 14 | 39 | 16 | 7 | 10 |
+| 7.5 t | – | 13 | 327 | 325 | 393 | 369 |
+| 10 t | – | – | 53 | 165 | 173 | 199 |
+| 11 t | – | – | – | 36 | 73 | 59 |
+| 12 t | – | – | 27 | 128 | 213 | 160 |
+| **Total** | **1** | **27** | **446** | **670** | **859** | **797** |
+
+*(rows 2–33, years 1994–2025; row 34 totals `755 / 8,150 / 2,293 / 564 / 1,924 / 13,686`.)*
+
+So Israel has a **31-year (1994–2025) band × year** registration series. It is a **flow, not a parc** —
+the parcel in the workbook (row 7 = 6,059; row 8 = 4,277) is the surviving convolution of these cohorts
+on the 20-year emerging-market curve, which is why the two totals differ. Building an Israel
+**parc-by-band** therefore means applying the existing Israel survival curve **per band**, and the bands
+are UTI's coarse 6.5/7.5/10/11/12 rather than a true GVW ladder.
+
+**This does not close `UIO-FCAST`.** The same file's 2025 column totals 797 registrations against a
+workbook row 7+8 parc of 10,336; the ~25 % understatement in the CV rows is a separate defect and the
+band table does not resolve it.
+
+### The Israel CV claim register — corrects the wording of the `V19-6` changelog entry
+
+`1.UIO Overview` cell B92 and changelog `V19-6` say the CV warranty VIN register *"holds NPR75/FRR75
+only"* / *"contains NPR75, FRR90 and FSR90 only, zero NLR"* — **the second half is verified; the "FRR75"
+wording is not a series that exists.** Counted directly from the source claim files by decoding the
+series out of each 17-character `VIN17`:
+
+| File | Israel rows | Distinct VINs | NPR | FRR | FSR | NLR | NMR | NNR |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `01_data/06_Warranty/Warranty_CV_2025.xlsx` sheet `Sheet1` | 1,082 | **898** | 326 | 319 | 253 | **0** | **0** | **0** |
+| `01_data/CV_Warranty_01-08_2026.xlsx` sheet `Sheet1` | 1,506 | **1,245** | 287 | 539 | 419 | **0** | **0** | **0** |
+
+**The substance holds: zero NLR, zero NMR, zero NNR across 2,143 distinct Israel claim VINs.** The
+per-series counts the two decoded files give (NPR 326+287, FRR 319+539, FSR 253+419) do **not**
+reproduce the `NPR75 895 / FRR90 817 / FSR90 627` cited in `uio_ld_n35_share.csv` and `_data_integrity_open_issues.md`;
+the two files overlap in period (the 2025 file's claims run into 2026 dates), and the two claim
+extracts may not be the same population. **The NPR/FRR/FSR figure is therefore *reported, not verified*
+in this pass; the zero-NLR/NMR/NNR finding is verified here.**
+
+---
+
 ## Still open
 
-- **Where is the Israeli government extract?** The presentation is a picture of the data, not the data.
-  Slide 14's chart can't be read reliably — it has 14 bars for 13 years, a duplicated 2022 label and one
-  bar with no number on it. We need the file: registration year by weight class, plus their class
-  definitions. Without it, the 3,259-truck gap can't be split across the three explanations.
+- **The Israeli government extract is a PDF picture, not a file.** The Ministry of Transport band table
+  in §Problem 4 comes from the UTI presentation PDF, and the path quoted in this spec
+  (`C:\Users\jerom\Downloads\מצגת לחלפים בלגיה - אפריל 2026.pdf`) **does not resolve on disk — not
+  verified.** The *registration* band table **is** on disk and is what the tonnage section uses:
+  `01_data/90_INBOX/_imie_mail_20260730/UIO ISUZU 2025.xlsx` sheet `גיליון1`. The **parc** band table
+  (6.5–7.5 t = 8,610 etc., §Problem 4) still has no data file behind it.
+- **The Israel CV band source has no 3.5 t column at all** — its smallest band is 6.5 t, so it
+  corroborates "no 3.5 t in Israel" by omission and cannot independently measure a 3.5 t fleet.
+  *The older phrasing of this item, and the second half of the N35-split item below, are superseded —
+  the registration band table has been found.*
 - **Is €296 or €250 the right wallet for a 3.5-tonne Grafter?** The targets file says €296 on its own
   line; the code routes N35 to the €250 pickup rate. Someone has to decide which is intended.
-- **Where does the N35 split come from for years before 2020?** The VIN register only covers 2020
-  onward, and the Portugal correction needs the mix across the whole fleet.
+- **Where does the N35 split come from for years before 2020?** **Partly answered 19 September 2026** —
+  Italy and Portugal are not covered by the JP register at all, so this question never applied to them:
+  Portugal has a **per-VIN banded registration register back to 2005** (`Matriculas Isuzu SAP.xlsx`) and
+  Israel has a band table back to **1994** (`UIO ISUZU 2025.xlsx`). What remains open is the **parc**
+  mix before 2020 for the JP-register markets (BE, CY, DE, GR, IE, MT), where the register is a
+  2020→2026 shipment flow and not a parc.
 - **Two source files cited in the workbook do not exist on disk.** `IMIT_forecast.xlsx` and
   `UIO_ISUZU_2025.xlsx` are named in the `Data Sources` sheet but are not in the ISZE folders, Downloads,
   Desktop, Documents or OneDrive. The pickup numbers do reconcile to the November 2025 IMIT study, so

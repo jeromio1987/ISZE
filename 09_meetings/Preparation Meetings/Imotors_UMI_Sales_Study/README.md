@@ -23,7 +23,7 @@ Rules: [`CUSTOMER_PACK_RULES.md`](CUSTOMER_PACK_RULES.md)
 - **All 22 customers** (not only I Motors + UMI)
 - **Part-number depth:** vanished / new / continuing qty droppers + channel-shift test (customer-local vs network-wide vs shift)
 - Figures refreshed from current `sales_fact` + canonical `pms_capture_by_db_year` (`model_bucket`)
-- Same Mode A rules: one network YoY benchmark, GPS now-vs-past only, PMS never silent-cap, no “PR00” wording
+- Same shared rules: one network YoY benchmark, GPS now-vs-past only, PMS never silent-cap, no “PR00” wording
 
 ## Earlier
 

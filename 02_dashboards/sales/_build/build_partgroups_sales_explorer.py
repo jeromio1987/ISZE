@@ -126,10 +126,10 @@ def patch_app_js(original: str) -> str:
     """Adapt original explorer JS for external JSON, lazy pnyear, and tabs."""
     js = original
 
-    # Mode A wording in competitive notes
-    js = js.replace("Mode B / Jerome-only", "Internal / Jerome-only")
+    # shared wording in competitive notes
+    js = js.replace("internal / Jerome-only", "Internal / Jerome-only")
     js = js.replace("Mode-B work-in-progress", "internal work-in-progress")
-    js = js.replace("explicitly a Mode B", "explicitly an internal")
+    js = js.replace("explicitly a internal", "explicitly an internal")
 
     old_boot = """  function parseCompact(id){
     var obj = JSON.parse(document.getElementById(id).textContent);

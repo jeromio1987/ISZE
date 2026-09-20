@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>The new AIM logic — what changes and why</title>
+<style>
+:root{
+  --navy:#15233c; --ink:#1a2433; --paper:#f7f4ee; --cream:#fffdf8;
+  --terra:#c0552d; --teal:#2a6f6a; --gold:#b8892a; --line:#d5cfc4; --mute:#5a6575;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#e8e4db;color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.5}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;color:var(--navy);margin:0 0 .4em;font-weight:600}
+.wrap{max-width:1060px;margin:0 auto;padding:1.3rem .9rem 3rem}
+.page{background:var(--cream);border:1px solid var(--line);border-radius:10px;padding:1.9rem 2rem 2.1rem;margin:0 0 1.3rem;box-shadow:0 8px 26px rgba(21,35,60,.07)}
+.kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--terra);font-weight:700;margin-bottom:.5rem}
+.lede{font-size:1.1rem;color:var(--mute);max-width:44rem}
+.hero{background:linear-gradient(145deg,#15233c,#243552 60%,#2a6f6a 150%);color:#f7f4ee;border-radius:12px;padding:1.5rem 1.6rem;margin-top:1.1rem}
+.hero .acro{font-family:Georgia,serif;font-size:2.1rem;color:#fff;letter-spacing:.02em}
+.hero p{color:#cfd6e2;margin:.5rem 0 0}
+.tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.2rem .5rem;border-radius:4px;background:rgba(255,255,255,.14);color:#f7f4ee;margin-bottom:.5rem}
+table{width:100%;border-collapse:collapse;font-size:.87rem;margin-top:.7rem}
+th,td{padding:.45rem .5rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute)}
+td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem}
+@media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:1.05rem 1.15rem}
+.card.bad{border-top:4px solid #8a9099}
+.card.good{border-top:4px solid var(--teal)}
+.card h3{font-size:1rem}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.85rem .9rem}
+.kpi .v{font-family:Georgia,serif;font-size:1.5rem;color:var(--navy);line-height:1.1}
+.kpi .l{font-size:.72rem;color:var(--mute);margin-top:.3rem;text-transform:uppercase;letter-spacing:.05em}
+.principle{display:grid;grid-template-columns:2.4rem 1fr;gap:.8rem;align-items:start;background:#fff;border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem;margin:.6rem 0}
+.principle .n{width:2.4rem;height:2.4rem;border-radius:9px;background:var(--paper);color:var(--terra);font-family:Georgia,serif;font-weight:800;font-size:1.15rem;display:grid;place-items:center}
+.principle h4{margin:0 0 .25rem;font-size:1rem}
+.principle p{margin:0;font-size:.9rem;color:var(--mute)}
+.callout{border-left:4px solid var(--terra);background:#fff4ec;border-radius:10px;padding:1rem 1.15rem;margin-top:1rem;font-size:.92rem}
+.callout.ok{border-left-color:var(--teal);background:#eef5f4}
+.callout.warn{border-left-color:var(--gold);background:#fdf6e6}
+.flow{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;margin:1rem 0 .3rem}
+.chip{background:var(--navy);color:#f7f4ee;border-radius:999px;padding:.42rem .8rem;font-size:.82rem;font-weight:600}
+.chip.t{background:var(--teal)} .chip.r{background:var(--terra)} .chip.g{background:var(--gold)}
+.arr{color:var(--mute);font-size:1.15rem}
+.step{background:#fff;border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem;position:relative;margin:.55rem 0}
+.step .num{position:absolute;left:-.55rem;top:1rem;width:2rem;height:2rem;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.step{padding-left:2rem}
+.step h4{margin:0 0 .25rem;font-size:.98rem}
+.step p{margin:0;font-size:.88rem;color:var(--mute)}
+.badge{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.18rem .45rem;border-radius:4px}
+.badge.ok{background:#e4f1ef;color:var(--teal)}
+.badge.open{background:#fdf0dd;color:var(--gold)}
+.badge.no{background:#f1e6e3;color:var(--terra)}
+.foot{font-size:.74rem;color:var(--mute);margin-top:1rem;border-top:1px solid var(--line);padding-top:.7rem}
+code{background:var(--paper);padding:.08rem .3rem;border-radius:3px;font-size:.85em}
+.timeline td{font-size:.86rem}
+.big{font-family:Georgia,serif;font-size:1.6rem;color:var(--navy)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- 1 -->
+<section class="page">
+  <div class="kicker">Internal · logic briefing · read before I start</div>
+  <h1>The new AIM logic</h1>
+  <p class="lede">This is the plan, stated before any work. If something here is wrong, the time to say so is now — after the transform, a mistake is expensive.</p>
+
+  <div class="hero">
+    <span class="tag">What the acronym means</span>
+    <div class="acro">AIM = Aftermarket Intelligence Model</div>
+    <p>Source: <code>05_memory/glossary.md</code>, line 126. It came from the original GPT-built framework <code>isuzu_aftermarket_full_build_v1.xlsx</code>. One important nuance: the name promises a <em>model</em>, and the part of it that actually works is the <strong>classification</strong> — the taxonomy. The scoring layer (strategic score, pricing-risk map) was tested in August and did not clear a year-ahead test. So when I say "the new AIM system", I mean the classification rebuilt properly, not the scorecard revived.</p>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="page">
+  <div class="kicker">Section 2 · the problem in numbers</div>
+  <h2>What is actually broken today</h2>
+  <p class="lede">Measured on the classification file, weighted by parts billed 1 Jan 2025 – 30 Jun 2026.</p>
+
+  <div class="grid3">
+    <div class="kpi"><div class="v">79.4%</div><div class="l">of euro sits on the wrong axis</div></div>
+    <div class="kpi"><div class="v">2 axes</div><div class="l">in one Level-1 column</div></div>
+    <div class="kpi"><div class="v">71</div><div class="l">descriptions mapping to &gt;1 family</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card bad">
+      <h3>Today</h3>
+      <p style="font-size:.9rem;color:var(--mute);margin:0 0 .5rem">One column, <code>aim_l1</code>, holds two different vocabularies as peers:</p>
+      <ul style="font-size:.88rem;color:var(--mute);margin:0;padding-left:1.1rem">
+        <li>Commercial posture: Competitive parts, Repair parts, Accident parts…</li>
+        <li>System names: Engine, Brakes, Electrical, Body Exterior, Transmission…</li>
+      </ul>
+      <p style="font-size:.88rem;color:var(--mute);margin:.6rem 0 0">And the workbook layer joins on <strong>description text</strong>, so the same description can land in two families.</p>
+    </div>
+    <div class="card good">
+      <h3>After the transform</h3>
+      <p style="font-size:.9rem;color:var(--mute);margin:0 0 .5rem">Identity is the <strong>part number plus the manufacturer figure key</strong>. Nothing joins on free text.</p>
+      <ul style="font-size:.88rem;color:var(--mute);margin:0;padding-left:1.1rem">
+        <li>Governed tree in its own columns</li>
+        <li>System vocabulary kept, clearly named, as an attribute</li>
+        <li>Only one column may be charted as "the taxonomy"</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="page">
+  <div class="kicker">Section 3 · the new logic</div>
+  <h2>Six principles</h2>
+
+  <div class="principle"><div class="n">1</div><div><h4>Identity is the part number plus the figure key</h4><p>A part number is unique and permanent. A description is free text and collides. The manufacturer's figure key groups parts by assembly. Identity = <code>part_number</code> + <code>fig_no</code>/<code>key_no</code>. No join on description, anywhere.</p></div></div>
+
+  <div class="principle"><div class="n">2</div><div><h4>Two axes, two sets of columns, never mixed</h4><p>The governed commercial tree lives in <code>catalog_l1/l2/l3</code>. The system vocabulary lives in <code>workbook_l1/l2/l3</code>. A hard flag marks every row so a chart cannot accidentally blend them.</p></div></div>
+
+  <div class="principle"><div class="n">3</div><div><h4>The catalogue tree is the only governed axis</h4><p>7 postures, 25 families, 172 types. It ties to PR00 at 100% on 163,014 checked part numbers. That is the axis management sees and the axis pricing is read on.</p></div></div>
+
+  <div class="principle"><div class="n">4</div><div><h4>The EPC is the naming authority</h4><p>The Isuzu Snapon EPC returns the manufacturer's own part name and figure by part number. It settles the ambiguous descriptions and names the residual. This is a new capability, found today — it was not available when the old file was built.</p></div></div>
+
+  <div class="principle"><div class="n">5</div><div><h4>Figure key is structure, never competition</h4><p>Two parts under figure <code>411-025</code> belong to the same assembly. That is a structural grouping signal. It is <strong>not</strong> proof that no competitor exists, and it may never produce a "Captive" or "Contested" label by itself. This is the exact mistake that labelled €12.96M as captive this morning.</p></div></div>
+
+  <div class="principle"><div class="n">6</div><div><h4>Every figure carries its basis</h4><p>Window and scope stated in the same breath as the number. Residual named, never hidden. 90.6% of billed euro sits on a governed node; the rest is declared.</p></div></div>
+</section>
+
+<!-- 4 -->
+<section class="page">
+  <div class="kicker">Section 4 · honest status</div>
+  <h2>What is proven, and what is not</h2>
+
+  <table>
+    <thead><tr><th>Statement</th><th>Status</th><th>Evidence</th></tr></thead>
+    <tbody>
+      <tr><td>Part-number keys are perfect: 164,667 rows, no duplicates, all 10 characters</td><td><span class="badge ok">Verified</span></td><td>full-key pass</td></tr>
+      <tr><td>Catalogue columns tie to PR00 at 100%</td><td><span class="badge ok">Verified</span></td><td>163,014 rows checked</td></tr>
+      <tr><td>97.9% of part numbers carry a figure key (161,129 across 13,847 figures)</td><td><span class="badge ok">Verified</span></td><td>file count</td></tr>
+      <tr><td>EPC figure <code>4-11</code> = our <code>fig_no 411</code> — same system, different format</td><td><span class="badge ok">Verified</span></td><td>live EPC query on <code>8983767550</code></td></tr>
+      <tr><td>Safety gate passes 13 of 13</td><td><span class="badge ok">Verified</span></td><td><code>aim_classification_gate.json</code></td></tr>
+      <tr><td>EPC can be queried in bulk to rename many parts</td><td><span class="badge open">Unproven</span></td><td>one part queried by hand. Bulk access not yet tested — this is the main open risk</td></tr>
+      <tr><td>Figure key identifies competitors</td><td><span class="badge no">Rejected</span></td><td>two parts under one figure may be left/right or an assembly. Structure only</td></tr>
+      <tr><td>The system vocabulary can be auto-merged into the catalogue posture</td><td><span class="badge no">Rejected</span></td><td>measured alignment is only 19–83% per system. It cannot be forced</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout warn">
+    <strong>The one thing that could slow this down.</strong> The EPC worked live for one part number. I have not proven I can pull names for thousands of parts automatically. I will test that early. If bulk is not possible, the naming pass becomes a targeted pass on the ambiguous and residual parts only — which still fixes the 71 collisions and the FILTER ASM case, but not in one sweep.
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="page">
+  <div class="kicker">Section 5 · execution</div>
+  <h2>What I will do, in order</h2>
+
+  <div class="flow">
+    <span class="chip">1 · Transform</span><span class="arr">→</span>
+    <span class="chip t">2 · Master</span><span class="arr">→</span>
+    <span class="chip t">3 · Gates</span><span class="arr">→</span>
+    <span class="chip r">4 · Pricing on AIM</span><span class="arr">→</span>
+    <span class="chip g">5 · QA + receipts</span>
+  </div>
+
+  <div class="step"><div class="num">1</div><h4>Transform the AIM system</h4><p>Rebuild the classification on the six principles. Key on part number and figure key, split the axes into named columns, resolve the 71 ambiguous descriptions, and name the residual (starting with <code>8982878080 FILTER ASM</code>, which alone is 44.6% of the Other-filter block). The original file is never overwritten.</p></div>
+
+  <div class="step"><div class="num">2</div><h4>Produce the full AIM master</h4><p>One Excel workbook, one row per part number: the governed tree, the retained system attribute, figure key, the IML price-class letter retained as an attribute, provenance, and the flags. Plus a coverage sheet, a family summary, and a checks sheet. This is "the full master" rebuilt on the corrected logic — it replaces the old Parts Master as the working reference.</p></div>
+
+  <div class="step"><div class="num">3</div><h4>Extend the safety gates</h4><p>The existing gate covers the taxonomy. I add checks for the new master: figure-key integrity, no description joins, no duplicate identity, every row's basis declared, and a drift comparison against the previous run.</p></div>
+
+  <div class="step"><div class="num">4</div><h4>Pricing revision analysis on the AIM axis</h4><p>Family-level price-move analysis on the governed tree: which families carry the euro and which moved hardest on this revision, by distributor, with euro per truck where a fleet count exists. Built on the corrected master, so the false "Captive" labels do not reappear. The revision total must still reconcile to €1,652,140.71 and 5.9616% — if it does not, something is wrong and I stop.</p></div>
+
+  <div class="step"><div class="num">5</div><h4>QA and evidence</h4><p>Screenshots read one by one, receipts written, and every number traceable to a file and a command.</p></div>
+</section>
+
+<!-- 6 -->
+<section class="page">
+  <div class="kicker">Section 6 · time</div>
+  <h2>How long, honestly</h2>
+
+  <table class="timeline">
+    <thead><tr><th>Step</th><th>Realistic time</th><th>Can it land tonight?</th></tr></thead>
+    <tbody>
+      <tr><td>1 · Transform the classification</td><td class="num">2–3 h</td><td>Yes</td></tr>
+      <tr><td>2 · Full AIM master workbook</td><td class="num">1.5–2 h</td><td>Yes</td></tr>
+      <tr><td>3 · Extended gates</td><td class="num">1 h</td><td>Yes</td></tr>
+      <tr><td>4 · Pricing revision on the AIM axis</td><td class="num">1.5–2 h</td><td>At a push</td></tr>
+      <tr><td>5 · QA, screenshots, receipts</td><td class="num">1 h</td><td>At a push</td></tr>
+      <tr><td><strong>Total</strong></td><td class="num"><strong>7–9 h</strong></td><td><strong>Only if the EPC bulk test passes early</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout ok">
+    <strong>My honest recommendation.</strong> Steps 1–3 tonight is realistic and safe. Step 4 on the same night is possible but it is the step where a rushed number becomes a wrong number in front of management. I would rather give you a transformed classification, a full master, and gates tonight, and the pricing analysis first thing tomorrow on a master you have already seen. If you want step 4 tonight as well, I will do it — but I will flag anything I could not verify.
+  </div>
+
+  <p class="foot">
+    Logic briefing v1 · 17 September 2026 · internal · no work started on the transform<br/>
+    Verified sources: <code>aim_pn_classification.csv</code>, <code>pr00_classification.csv</code>, <code>sales_fact.parquet</code>, <code>aim_classification_gate.json</code>, live Isuzu Snapon EPC query.
+  </p>
+</section>
+
+</div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated": "2026-08-25T18:14:24Z",
+    "generated": "2026-09-19T05:58:36Z",
     "year": 2025,
     "verification_ok": true,
     "sources": [
@@ -16,27 +16,27 @@
     ]
   },
   "headline": {
-    "addressable_gap_eur": 29691944.0,
-    "network_gps_pct": 49.3,
+    "addressable_gap_eur": 24727686.0,
+    "network_gps_pct": 53.7,
     "active_defection_alerts": 24,
     "substitution_families_at_risk": 7,
     "grow_capture_count": 0,
     "defend_count": 6,
     "competitive_pn_tracked": 12,
-    "tender_pipeline_90d": 2,
-    "tender_stale_days": 0
+    "tender_pipeline_90d": 5,
+    "tender_stale_days": 4
   },
   "wallet": {
     "year": 2025,
-    "theoretical_wallet_eur": 60217570.0,
+    "theoretical_wallet_eur": 55253312.0,
     "captured_genuine_eur": 29692068.0,
     "captured_bvp_eur": 1064704.0,
-    "addressable_uncaptured_eur": 29691944.0,
-    "gps_pct": 49.3,
+    "addressable_uncaptured_eur": 24727686.0,
+    "gps_pct": 53.7,
     "waterfall": [
       {
         "label": "Theoretical wallet",
-        "value": 60217570.0,
+        "value": 55253312.0,
         "type": "total"
       },
       {
@@ -51,7 +51,7 @@
       },
       {
         "label": "Addressable gap",
-        "value": 29691944.0,
+        "value": 24727686.0,
         "type": "remainder"
       }
     ],
@@ -59,8 +59,8 @@
       {
         "distributor_code": "ITUK",
         "country": "United Kingdom",
-        "addressable_uncaptured_eur": 11611765.0,
-        "gps_pct": 32.4
+        "addressable_uncaptured_eur": 6647507.0,
+        "gps_pct": 45.6
       },
       {
         "distributor_code": "IUK",
@@ -622,18 +622,10 @@
     {
       "distributor_code": "BELGIUM",
       "category": "brake_shoe",
-      "capture_pct": 6.8,
-      "revenue_gap_eur": 344450.0,
-      "tam_eur": 369392.0,
+      "capture_pct": 6.7,
+      "revenue_gap_eur": 346326.0,
+      "tam_eur": 371274.0,
       "region": "Benelux"
-    },
-    {
-      "distributor_code": "ITUK",
-      "category": "urea_filter",
-      "capture_pct": 11.3,
-      "revenue_gap_eur": 342356.0,
-      "tam_eur": 385940.0,
-      "region": "UK/IE"
     },
     {
       "distributor_code": "UMI",
@@ -644,12 +636,28 @@
       "region": "MENA"
     },
     {
+      "distributor_code": "ITUK",
+      "category": "brake_shoe",
+      "capture_pct": 8.1,
+      "revenue_gap_eur": 325637.0,
+      "tam_eur": 354279.0,
+      "region": "UK/IE"
+    },
+    {
       "distributor_code": "GERMANY",
       "category": "clutch_disc",
-      "capture_pct": 3.2,
-      "revenue_gap_eur": 319817.0,
-      "tam_eur": 330281.0,
+      "capture_pct": 3.1,
+      "revenue_gap_eur": 321800.0,
+      "tam_eur": 332263.0,
       "region": "DACH"
+    },
+    {
+      "distributor_code": "ITUK",
+      "category": "brake_pad",
+      "capture_pct": 49.2,
+      "revenue_gap_eur": 311991.0,
+      "tam_eur": 614538.0,
+      "region": "UK/IE"
     },
     {
       "distributor_code": "IUK",
@@ -657,6 +665,14 @@
       "capture_pct": 28.8,
       "revenue_gap_eur": 288133.0,
       "tam_eur": 404449.0,
+      "region": "UK/IE"
+    },
+    {
+      "distributor_code": "ITUK",
+      "category": "clutch_disc",
+      "capture_pct": 9.3,
+      "revenue_gap_eur": 285260.0,
+      "tam_eur": 314457.0,
       "region": "UK/IE"
     },
     {
@@ -668,43 +684,27 @@
       "region": "MENA"
     },
     {
+      "distributor_code": "ITUK",
+      "category": "clutch_pressure_plate",
+      "capture_pct": 9.1,
+      "revenue_gap_eur": 253290.0,
+      "tam_eur": 278770.0,
+      "region": "UK/IE"
+    },
+    {
       "distributor_code": "UTI",
       "category": "clutch_pressure_plate",
       "capture_pct": 1.4,
       "revenue_gap_eur": 251091.0,
       "tam_eur": 254638.0,
       "region": "MENA"
-    },
-    {
-      "distributor_code": "UMI",
-      "category": "blower_filter",
-      "capture_pct": 0.7,
-      "revenue_gap_eur": 246608.0,
-      "tam_eur": 248349.0,
-      "region": "MENA"
-    },
-    {
-      "distributor_code": "SWEDEN",
-      "category": "clutch_disc",
-      "capture_pct": 0.2,
-      "revenue_gap_eur": 245918.0,
-      "tam_eur": 246502.0,
-      "region": "Nordics"
-    },
-    {
-      "distributor_code": "GERMANY",
-      "category": "brake_shoe",
-      "capture_pct": 3.5,
-      "revenue_gap_eur": 240987.0,
-      "tam_eur": 249853.0,
-      "region": "DACH"
     }
   ],
   "competitive_fusion": {
     "available": true,
     "autodoc_scraped_at": "2026-05-30 11:52:00",
-    "ks_scraped_at": "2026-08-24 07:00:10",
-    "scrape_stale_days": 87,
+    "ks_scraped_at": "2026-09-15 06:16:31",
+    "scrape_stale_days": 112,
     "gbp_eur": 1.17,
     "bogus_filter_gbp": 3.05,
     "items": [
@@ -856,31 +856,58 @@
   },
   "tender_horizon": {
     "available": true,
-    "generated_at": "2026-08-25",
-    "stale_days": 0,
+    "generated_at": "2026-09-15",
+    "stale_days": 4,
     "stats": {
-      "opportunities": 226,
-      "attack": 0,
-      "selective": 11,
-      "due_14d": 18
+      "opportunities": 376,
+      "attack": 1,
+      "selective": 15,
+      "due_14d": 28
     },
     "horizon_days": 90,
     "items": [
       {
-        "title": "Fourniture livraison maintenance et assistance de 1 véhicule de type …",
-        "country": "France",
-        "deadline_date": "2026-10-09",
-        "days_to_deadline": 45,
-        "opportunity_score": 56,
+        "title": "Provision of a Cosy Homes in Lancashire (CHiL) Delivery Partner for D…",
+        "country": "United Kingdom",
+        "deadline_date": "2026-10-15",
+        "days_to_deadline": 30,
+        "opportunity_score": 82,
+        "decision": "Attack",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "WP4051 ICS Pathway 1 Services and a Community Reablement Service",
+        "country": "United Kingdom",
+        "deadline_date": "2026-10-02",
+        "days_to_deadline": 17,
+        "opportunity_score": 61,
         "decision": "Selective",
         "lifecycle": "competition"
       },
       {
-        "title": "Marché public de fournitures portant sur l’achat, la livraison et la …",
+        "title": "Aankoop van vrachtwagen met onderhoudscontract (5 jaar)",
         "country": "Belgium",
-        "deadline_date": "2026-09-08",
-        "days_to_deadline": 14,
-        "opportunity_score": 55,
+        "deadline_date": "2026-10-15",
+        "days_to_deadline": 30,
+        "opportunity_score": 58,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Aankoop van koelbestelwagens en pick-upbestelwagens en initiële oplei…",
+        "country": "Belgium",
+        "deadline_date": "2026-09-30",
+        "days_to_deadline": 15,
+        "opportunity_score": 57,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Fourniture livraison maintenance et assistance de 1 véhicule de type …",
+        "country": "France",
+        "deadline_date": "2026-10-09",
+        "days_to_deadline": 24,
+        "opportunity_score": 56,
         "decision": "Selective",
         "lifecycle": "competition"
       }

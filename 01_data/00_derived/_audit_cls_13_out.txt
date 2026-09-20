@@ -1,0 +1,92 @@
+﻿-> C:\Users\jerom\Desktop\claude\ISZE\01_data\00_derived\_audit_cls_leaf_quality.csv   (171 leaves)
+
+==============================================================================
+LEAVES CARRYING REAL MONEY THAT ARE TOO COARSE TO ACT ON
+(>= EUR 250k billed, and either 15+ distinct HS subheadings or a list price
+ spread above 50x median, or one part number over 40% of the leaf)
+
+  leaf                                                  billed EUR   PNs  HS6  nouns  px max/med  top PN %
+  Electrical sensors > Sensor                            4,624,608  1108   29     33        24.7     23.4%
+  Brake parts > Brake disc                               2,057,926   475    9     17        28.5     48.5%
+  Exhaust > Aftertreatment                               2,038,790  2241   45     71      1014.8     20.0%
+  Steering > Steering gear / unit                        1,923,171  1208   20     36        27.0     64.4%
+  Body parts > Bumper                                    1,563,028  1479   16     42        39.4     14.8%
+  Filters > Fuel filter                                  1,360,621   814   24     33        18.9     26.7%
+  Lighting > Tail / combination lamp                     1,294,691   774   17     26        13.4      4.9%
+  Air conditioning > Other A/C                           1,113,634   780   38     44        23.7     34.3%
+  Filters > Oil filter                                   1,017,131   845   19     36       103.4     34.8%
+  Filters > Other filter                                   992,218   237   22     38       153.2     46.4%
+  Exhaust > EGR component                                  989,246   934   19     25         9.0     17.3%
+  Transmission parts > Other transmission                  875,971   983   28     46        45.2     17.5%
+  Body parts > Door                                        828,961  6153   32     94       333.1      7.9%
+  Turbo > Turbocharger                                     823,931   532   20     21         2.7     38.6%
+  Lighting > Headlamp                                      809,824  1863   31     48         5.5      4.5%
+  Air conditioning > Blower / fan                          741,131   439   24     21        34.8     48.1%
+  Suspension > Leaf / suspension spring                    686,992  1767   14     27        53.5     14.6%
+  Hydraulic / mechanical > Linkage / lever                 684,359  3056   34     85        26.1     10.1%
+  Transmission parts > Differential / axle                 603,566  1821   36     60       246.4      7.4%
+  Electrical sensors > Control unit                        589,697  4720   26     14         2.9     42.3%
+  Body parts > Glass / window                              564,593  1288   25     42        15.4     24.7%
+  Body parts > Interior trim                               548,137  4578   40    103        30.1      4.2%
+  Electrical sensors > Harness / cable                     524,627  9022   50     66        19.4      9.3%
+  Cooling > Radiator                                       461,874   484    4      5         4.5     51.4%
+  Exhaust > Exhaust pipe                                   441,954   912   18     20        14.4     71.9%
+  Body parts > Other body                                  432,973  1771   38     63      1434.8     10.0%
+  Brake parts > Brake shoe / lining                        427,416   889   18     22         7.7     21.3%
+  Air system > Other air system                            394,485  1877   52    105        20.7     31.4%
+  Body parts > Step / guard                                388,890  1507   16     43        82.6      5.4%
+  Cooling > Other cooling                                  375,150   703    4      9         6.6     41.0%
+  Fuel system > Fuel pump                                  316,347   223   17     27        21.0     52.7%
+  Hardware > Pin                                           296,875  1338   33     59       184.6     21.2%
+  Injectors > Injector                                     294,107   127   15     23         5.7     62.2%
+  Electrical sensors > Meter / gauge                       283,936  1706   40     66        18.2     21.7%
+  Transmission parts > Gear set / gear                     261,338   541   10     23        38.9     40.2%
+
+  35 leaves, EUR 31,632,196 = 66.5% of the 18-month book
+
+==============================================================================
+LEAVES WHERE ONE PART NUMBER IS THE 'FAMILY'  (top PN >= 40% of leaf euro,
+and the leaf bills over EUR 100k)
+
+  leaf                                                  billed EUR   PNs  top PN %
+  Brake parts > Brake disc                               2,057,926   475     48.5%
+  Steering > Steering gear / unit                        1,923,171  1208     64.4%
+  Filters > Other filter                                   992,218   237     46.4%
+  Air conditioning > Blower / fan                          741,131   439     48.1%
+  Electrical sensors > Control unit                        589,697  4720     42.3%
+  Cooling > Radiator                                       461,874   484     51.4%
+  Exhaust > Exhaust pipe                                   441,954   912     71.9%
+  Cooling > Other cooling                                  375,150   703     41.0%
+  Fuel system > Fuel pump                                  316,347   223     52.7%
+  Injectors > Injector                                     294,107   127     62.2%
+  Transmission parts > Gear set / gear                     261,338   541     40.2%
+  Exhaust > Silencer / muffler                             224,428   652     48.2%
+  Clutch parts > Clutch kit                                198,503    83     66.5%
+  Brake parts > Brake drum                                 169,414   267     69.0%
+  Fuel system > Other fuel system                          110,999   501     40.3%
+
+==============================================================================
+PRICE SPREAD INSIDE A SINGLE LEAF  (worst 20 by max/median list price,
+leaves with >= 50 priced parts)
+
+  leaf                                                     min    median         max  max/med
+  Body parts > Other body                                    0        12      16,615    1,435x
+  Exhaust > Aftertreatment                                   0        11      11,518    1,015x
+  Hardware > Clip                                            0         2         914      438x
+  Hardware > Nut                                             0         1         477      401x
+  Body parts > Door                                          0        28       9,163      333x
+  Hardware > Spacer / retainer                               0         4       1,121      291x
+  Gaskets / seals > Oil seal / seal                          0         7       1,980      280x
+  Transmission parts > Differential / axle                   0        14       3,503      246x
+  Hardware > Spring                                          0         3         667      218x
+  Hardware > Bolt                                            0         1         233      190x
+  Hardware > Pin                                             0        10       1,829      185x
+  Filters > Other filter                                     0        19       2,985      153x
+  Suspension > Bushing / mount                               1         5         603      126x
+  Body parts > Handle / lock                                 0        56       6,478      115x
+  Filters > Oil filter                                       1        14       1,473      103x
+  Hardware > Rubber / grommet                                0        13       1,269       97x
+  Electrical sensors > Relay / solenoid / fuse               0        13       1,217       94x
+  Injectors > Injection pump                                 0        61       5,627       92x
+  Body parts > Step / guard                                  0        30       2,507       83x
+  Clutch parts > Other clutch                                0        18       1,448       82x

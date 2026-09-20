@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ISZE car park — UIO V19 vs V20</title>
+<style>
+:root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--ink:#222;--line:#ded8ca;--mid:#3f5a86;--muted:#5f5d57;--rise:#2f6b4f;--amber:#8a6d1d}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.5 "Segoe UI",Helvetica,Arial,sans-serif}
+h1,h2,h3,.serif{font-family:Georgia,"Times New Roman",serif;font-weight:400}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px 48px}
+header.top{background:var(--navy);color:var(--paper);padding:28px 0 22px;margin-bottom:14px}
+header.top .wrap{padding-bottom:0}
+.flag{display:inline-block;background:var(--terra);color:#fff;font-size:11.5px;font-weight:700;
+ letter-spacing:.08em;text-transform:uppercase;padding:4px 10px;border-radius:3px;margin-bottom:12px}
+header.top h1{margin:0 0 8px;font-size:26px;line-height:1.2;color:var(--paper);max-width:960px}
+header.top p{margin:0;color:#dfd8cb;max-width:920px;font-size:14.2px}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 14px}
+.seg{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{appearance:none;border:0;background:transparent;padding:10px 14px;font:13.5px/1.2 "Segoe UI",sans-serif;
+ color:var(--navy);cursor:pointer;font-weight:600}
+.seg button.on{background:var(--navy);color:var(--paper)}
+.seg.method button.on{background:var(--terra);color:#fff}
+.hero{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 14px}
+@media(max-width:900px){.hero{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.hero{grid-template-columns:1fr}}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 14px;position:relative}
+.kpi .k{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);font-weight:700;margin:0 0 4px}
+.kpi .v{font-family:Georgia,serif;font-size:24px;color:var(--navy);margin:0;line-height:1.15}
+.kpi .s{margin:4px 0 0;font-size:12.2px;color:var(--muted)}
+.ill{cursor:help;border-bottom:1px dotted #a9a294}
+.ill .tp{display:none;position:absolute;left:12px;right:12px;top:calc(100% - 4px);z-index:40;
+ background:var(--navy);color:var(--paper);font-size:12.2px;line-height:1.45;padding:10px 12px;
+ border-radius:6px;box-shadow:0 8px 22px rgba(0,0,0,.28)}
+.ill:hover .tp,.ill:focus .tp{display:block}
+.amber{background:#fff8e6;border:1px solid #e6c86a;color:#5a4a12;border-radius:6px;padding:10px 12px;font-size:13px;margin:0 0 14px}
+.chapter{display:none}
+.chapter.on{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:980px){.grid2,.grid3{grid-template-columns:1fr}}
+.panel{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px 12px;min-width:0}
+.panel.full{margin-bottom:14px}
+.panel h2{margin:0 0 4px;font-size:17px;color:var(--navy)}
+.panel .ask{margin:0 0 12px;font-size:13.2px;color:#4d4b45}
+.bars{display:flex;flex-direction:column;gap:5px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 88px;gap:8px;align-items:center;padding:3px 4px;border-radius:4px}
+.bar-row .lbl{font-size:12.6px;color:var(--navy);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-row .track{height:14px;background:#eef0f4;border-radius:3px;overflow:hidden;min-width:0;position:relative}
+.bar-row .fill{display:block;height:100%;background:var(--navy)}
+.bar-row .fill.hot{background:var(--terra)}
+.bar-row .fill.rise{background:var(--rise)}
+.bar-row .val{font-size:12.4px;color:#3d3b36;text-align:right;font-variant-numeric:tabular-nums}
+.dev{display:grid;grid-template-columns:160px 1fr 90px;gap:8px;align-items:center;padding:4px}
+.dev .zero{position:relative;height:16px;background:#eef0f4;border-radius:3px}
+.dev .zero::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:#9aa3b2}
+.dev .neg,.dev .pos{position:absolute;top:0;height:100%;border-radius:2px}
+.dev .neg{right:50%;background:var(--terra)}
+.dev .pos{left:50%;background:var(--rise)}
+.chartsvg{width:100%;height:auto;display:block}
+.callout{font-size:12.8px;color:var(--navy);background:#f0ebe1;border-left:3px solid var(--terra);
+ padding:8px 10px;margin-top:10px;border-radius:0 4px 4px 0}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.4px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px;border-radius:1px}
+.foot{margin-top:18px;padding-top:12px;border-top:1px solid var(--line);font-size:12.2px;color:var(--muted)}
+.foot b{color:var(--navy)}
+.chip{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+ background:#f0ebe1;color:var(--navy);padding:2px 7px;border-radius:3px;margin-left:6px}
+.chip.lock{background:#ffe8df;color:var(--terra)}
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:980px){.rules-grid{grid-template-columns:1fr}}
+.rule-card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.rule-card h3{margin:0 0 6px;font-size:15px;color:var(--navy)}
+.rule-card .dbs{font-size:11.5px;color:var(--terra);font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin:0 0 8px}
+.rule-card ul{margin:0;padding-left:18px;font-size:13px;color:#3d3b36}
+.rule-card li{margin:0 0 5px}
+.engine{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 14px;margin-bottom:14px}
+.engine ol,.engine ul{margin:6px 0 0;padding-left:18px;font-size:13.2px}
+.engine li{margin:0 0 6px}
+.prob{border-left:3px solid var(--terra);padding:8px 10px;margin:0 0 10px;background:#faf7f1;border-radius:0 6px 6px 0}
+.prob .pid{font-size:11px;font-weight:700;color:var(--terra);letter-spacing:.06em;text-transform:uppercase}
+.prob h4{margin:2px 0 4px;font-size:14.5px;color:var(--navy);font-family:Georgia,serif;font-weight:400}
+.prob p{margin:0 0 4px;font-size:13px;color:#3d3b36}
+.prob .ev{font-size:12.4px;color:var(--muted)}
+.ndata{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:900px){.ndata{grid-template-columns:1fr}}
+.ndata .card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:11px 12px}
+.ndata h4{margin:0 0 4px;font-size:14px;color:var(--navy);font-family:Georgia,serif;font-weight:400}
+.ndata p{margin:0 0 4px;font-size:12.8px;color:#3d3b36}
+.ndata .path{font-size:11.5px;color:var(--muted);font-family:Consolas,monospace;word-break:break-all}
+.lockbox{background:#fff;border:1px solid #e6a88a;border-left:4px solid var(--terra);border-radius:8px;padding:12px 14px;margin-bottom:14px}
+.lockbox .big{font-family:Georgia,serif;font-size:28px;color:var(--navy);margin:4px 0}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+<span class="flag">Car park · UIO V19 vs V20</span>
+<h1>Trucks in service — what V19 says, and what V20 corrects</h1>
+<p>Two chapters: why the 2026–2030 forecast is overstated under V19, and who holds how many trucks today.
+Network figures are <b>ex-MIDI</b> (ISZE-only). Only <b>IUK light commercial CY2026F = 44,926</b> is a locked V20 number; other V20 series are modelled from the V20 specification.</p>
+</div></header>
+
+<div class="wrap">
+<div class="controls">
+<div class="seg" id="chSeg" role="tablist" aria-label="Chapter">
+<button type="button" class="on" data-ch="decision">A · Decision brief</button>
+<button type="button" data-ch="operating">B · Operating car park</button>
+<button type="button" data-ch="rules">C · V19 rules &amp; V20 spec</button>
+</div>
+<div class="seg method" id="methSeg" role="tablist" aria-label="Method">
+<button type="button" data-m="both" class="on">Both methods</button>
+<button type="button" data-m="v19">V19 only</button>
+<button type="button" data-m="v20">V20 only</button>
+</div>
+</div>
+
+<div class="amber" id="amber">Do not quote V19 2026–2030 externally until survival-curve fix ships. V20 status: draft method — workbook not rebuilt yet except the locked IUK figure.</div>
+
+<div class="hero" id="hero"></div>
+
+<section class="chapter on" id="ch-decision">
+<div class="panel full">
+<h2 id="t-a1">V19 keeps growing after 2025; the corrected method turns down</h2>
+<p class="ask">ISZE network trucks in service (ex-MIDI). Vertical rule marks where V19 switches from survival curves to a flat 3% scrap rule.</p>
+<svg class="chartsvg" id="svgNet" viewBox="0 0 720 280" role="img" aria-label="Network trajectory V19 vs V20"></svg>
+<div class="legend" id="legNet"></div>
+<div class="callout">Annotation: from 2026 the methods diverge. By 2030 V19 is 37.7% too high on this basis (205,357 vs 149,134).</div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2 id="t-a2">How large is the overstatement each year?</h2>
+<p class="ask">Gap = V19 minus modelled V20 on the ex-MIDI network. Bars show units; labels show % too high.</p>
+<div class="bars" id="gapBars"></div>
+</div>
+<div class="panel">
+<h2 id="t-a3">Are we assuming a 10-year truck or a 33-year truck?</h2>
+<p class="ask">Share of a cohort still in service by age. Flat 3% scrap implies a ~33-year life — three times the file’s own historical curves.</p>
+<svg class="chartsvg" id="svgSurv" viewBox="0 0 720 280" role="img" aria-label="Survival curves"></svg>
+<div class="legend" id="legSurv"></div>
+<div class="callout">Ireland check in the spec: at 216 light-truck registrations a year, steady state is ~2,100 under real scrap — ~7,200 under 3%.</div>
+</div>
+</div>
+</section>
+
+<section class="chapter" id="ch-operating">
+<div class="panel full">
+<h2 id="t-b1">Who has the largest fleet today?</h2>
+<p class="ask">Trucks in service, calendar 2025, ISZE distributors only (MIDI Europe Italy/Spain out). Israel UTI and UMI stay separate. United Kingdom IUK vs ITUK stay separate.</p>
+<div class="bars" id="rankBars"></div>
+</div>
+
+<div class="grid2">
+<div class="panel">
+<h2 id="t-b2">Who moves most when the method is fixed?</h2>
+<p class="ask">Change from V19 to V20 on known worked examples. Negative = fleet shrinks under the corrected survival method.</p>
+<div id="moverBars"></div>
+</div>
+<div class="panel">
+<h2 id="t-b3">Does the pickup fleet grow or shrink to 2030?</h2>
+<p class="ask">Pickup / light commercial basket vs commercial vehicles. V19 grows pickups while registrations fall; V20 turns pickups down.</p>
+<svg class="chartsvg" id="svgMix" viewBox="0 0 720 280" role="img" aria-label="Pickup vs CV small multiples"></svg>
+<div class="legend" id="legMix"></div>
+<div class="callout">IMIT pickup registrations fall from 16,977 (2024) to 10,845 (2026). A falling registration rate cannot grow a mature fleet.</div>
+</div>
+</div>
+
+<div class="panel full">
+<h2>Locked detail — IUK light commercial</h2>
+<p class="ask">Row 25 only. CY2026F locked at 44,926 (scrap 12.3% + IMIT regs ≈ 3,020). V19’s 49,280 must not be used for GPS planning.</p>
+<svg class="chartsvg" id="svgIuk" viewBox="0 0 720 220" role="img" aria-label="IUK LCV V19 vs V20"></svg>
+</div>
+</section>
+
+<section class="chapter" id="ch-rules">
+<div class="amber">Chapter C is the rule set behind the charts: how V19 builds each distributor lane today, and what V20 changes with the new evidence (VIN register, Israel MoT, IMIT, locked IUK).</div>
+<div id="rulesHost"></div>
+</section>
+
+<p class="foot"><b>Sources:</b> V19 network totals from <code>06_uio/_CURRENT/README.md</code> (ex-MIDI, 2026-07-09 pull);
+distributor ranks from <code>01_data/91_build/uio_2026.json</code>; V20 method and overstate % from <code>06_uio/_CURRENT/V20_SPEC.md</code>.
+Hover dotted KPI labels for definitions. Built 2026-09-16.</p>
+</div>
+
+<script type="application/json" id="payload">{"meta": {"title": "ISZE car park — UIO V19 vs V20", "built": "2026-09-16", "v19_source": "ISUZU_UIO_Overview_2026.xlsx (v19) via README 2026-07-09 + uio_2026.json", "v20_source": "06_uio/_CURRENT/V20_SPEC.md — modelled; only IUK LCV CY2026F=44926 locked", "basis": "Network charts use ex-MIDI (ISZE-only) Grand Total", "amber": "Do not quote V19 2026–2030 externally until survival-curve fix ships", "uk_rows_in_extract": [{"country": "U KING", "dist": "ITUK", "mtype": "F-Series", "2024": 805.0, "2025": 877.0, "2026": 963.2, "2027": 1055.3, "2028": 1141.0}, {"country": "U KING", "dist": "ITUK", "mtype": "LD", "2024": 21584.0, "2025": 22190.9, "2026": 23209.9, "2027": 24336.2, "2028": 25293.8}, {"country": "U KING", "dist": "IUK", "mtype": "LCV", "2024": 48876.0, "2025": 47783.0, "2026": 49280.0, "2027": 50202.0, "2028": 51096.0}], "mtypes_present": ["F-SERIES", "LCV", "LD", "MD"]}, "network": {"years": [2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030], "v19_ex_midi": [151715, 160125, 163199, 172379, 180848, 189118, 197333, 205357], "v20_ex_midi": [151715, 160125, 163199, 159906, 156443, 153505, 151097, 149134], "v19_incl_midi_2030": 309125, "method_break_year": 2025.5}, "gap": [{"year": 2026, "v19": 172379, "v20": 159906, "gap_units": 12473, "overstate_pct": 7.8}, {"year": 2027, "v19": 180848, "v20": 156443, "gap_units": 24405, "overstate_pct": 15.6}, {"year": 2028, "v19": 189118, "v20": 153505, "gap_units": 35613, "overstate_pct": 23.2}, {"year": 2029, "v19": 197333, "v20": 151097, "gap_units": 46236, "overstate_pct": 30.6}, {"year": 2030, "v19": 205357, "v20": 149134, "gap_units": 56223, "overstate_pct": 37.7}], "survival": {"truck_curve": [{"age": 0, "surv": 100.0}, {"age": 1, "surv": 90.39}, {"age": 2, "surv": 81.71}, {"age": 3, "surv": 73.86}, {"age": 4, "surv": 66.76}, {"age": 5, "surv": 60.35}, {"age": 6, "surv": 54.55}, {"age": 7, "surv": 49.31}, {"age": 8, "surv": 44.57}, {"age": 9, "surv": 40.29}, {"age": 10, "surv": 36.42}, {"age": 11, "surv": 32.92}, {"age": 12, "surv": 29.76}, {"age": 13, "surv": 26.9}, {"age": 14, "surv": 24.31}, {"age": 15, "surv": 21.98}, {"age": 16, "surv": 19.87}, {"age": 17, "surv": 17.96}, {"age": 18, "surv": 16.23}, {"age": 19, "surv": 14.67}, {"age": 20, "surv": 13.26}], "pickup_curve": [{"age": 0, "surv": 100.0}, {"age": 1, "surv": 88.39}, {"age": 2, "surv": 78.12}, {"age": 3, "surv": 69.05}, {"age": 4, "surv": 61.03}, {"age": 5, "surv": 53.94}, {"age": 6, "surv": 47.68}, {"age": 7, "surv": 42.14}, {"age": 8, "surv": 37.24}, {"age": 9, "surv": 32.92}, {"age": 10, "surv": 29.1}, {"age": 11, "surv": 25.72}, {"age": 12, "surv": 22.73}, {"age": 13, "surv": 20.09}, {"age": 14, "surv": 17.76}, {"age": 15, "surv": 15.69}, {"age": 16, "surv": 13.87}, {"age": 17, "surv": 12.26}, {"age": 18, "surv": 10.84}, {"age": 19, "surv": 9.58}, {"age": 20, "surv": 8.47}], "flat_3pct_implied": [{"age": 0, "surv": 100.0}, {"age": 1, "surv": 97.04}, {"age": 2, "surv": 94.17}, {"age": 3, "surv": 91.38}, {"age": 4, "surv": 88.68}, {"age": 5, "surv": 86.06}, {"age": 6, "surv": 83.51}, {"age": 7, "surv": 81.04}, {"age": 8, "surv": 78.64}, {"age": 9, "surv": 76.32}, {"age": 10, "surv": 74.06}, {"age": 11, "surv": 71.87}, {"age": 12, "surv": 69.74}, {"age": 13, "surv": 67.68}, {"age": 14, "surv": 65.68}, {"age": 15, "surv": 63.73}, {"age": 16, "surv": 61.85}, {"age": 17, "surv": 60.02}, {"age": 18, "surv": 58.24}, {"age": 19, "surv": 56.52}, {"age": 20, "surv": 54.85}], "labels": {"truck": "Historical truck survival (~9.9 yr life, ~10.2% scrap/yr)", "pickup": "Historical pickup survival (~8.1 yr life, ~12.3% scrap/yr)", "flat": "V19 forecast rule (~33 yr life, 3% scrap/yr)"}}, "markets_ranked_2025": [{"market": "United Kingdom (IUK)", "uio_2025": 47783, "uio_2024": 48876, "uio_2026_v19": 49280}, {"market": "United Kingdom (ITUK)", "uio_2025": 23068, "uio_2024": 22389, "uio_2026_v19": 24173}, {"market": "Israel (UMI)", "uio_2025": 18542, "uio_2024": 18349, "uio_2026_v19": 18886}, {"market": "Germany", "uio_2025": 13780, "uio_2024": 13464, "uio_2026_v19": 14757}, {"market": "Israel (UTI)", "uio_2025": 10336, "uio_2024": 10049, "uio_2026_v19": 10760}, {"market": "Belgium", "uio_2025": 9565, "uio_2024": 9283, "uio_2026_v19": 10153}, {"market": "Sweden", "uio_2025": 8443, "uio_2024": 7221, "uio_2026_v19": 9090}, {"market": "Norway", "uio_2025": 7929, "uio_2024": 8237, "uio_2026_v19": 8111}, {"market": "Portugal", "uio_2025": 7208, "uio_2024": 6903, "uio_2026_v19": 8444}, {"market": "Greece", "uio_2025": 3742, "uio_2024": 3118, "uio_2026_v19": 4285}, {"market": "Hungary", "uio_2025": 3734, "uio_2024": 3714, "uio_2026_v19": 3992}, {"market": "Cyprus", "uio_2025": 2308, "uio_2024": 2072, "uio_2026_v19": 2634}, {"market": "Ireland", "uio_2025": 2161, "uio_2024": 1951, "uio_2026_v19": 2778}, {"market": "Finland", "uio_2025": 1204, "uio_2024": 1259, "uio_2026_v19": 1308}, {"market": "Romania", "uio_2025": 1071, "uio_2024": 986, "uio_2026_v19": 1209}, {"market": "Malta", "uio_2025": 1040, "uio_2024": 1054, "uio_2026_v19": 1108}, {"market": "Denmark", "uio_2025": 851, "uio_2024": 830, "uio_2026_v19": 945}, {"market": "Iceland", "uio_2025": 406, "uio_2024": 342, "uio_2026_v19": 439}], "movers": [{"market": "IUK LCV (row 25)", "metric": "CY2026F trucks in service", "v19": 49280, "v20": 44926, "delta": -4354, "locked": true, "note": "Only V20 figure locked (30 Jul 2026)"}, {"market": "Ireland light trucks", "metric": "CY2030F", "v19": 1645, "v20": 1382, "delta": -263, "locked": false, "note": "V20_SPEC worked example"}, {"market": "Ireland pickups", "metric": "CY2030F", "v19": 3174, "v20": 2527, "delta": -647, "locked": false, "note": "V20_SPEC worked example"}, {"market": "ISZE network (ex-MIDI)", "metric": "CY2030F", "v19": 205357, "v20": 149134, "delta": -56223, "locked": false, "note": "V20 = V19 ÷ (1 + 37.7% overstate)"}, {"market": "Pickup / LCV basket", "metric": "CY2030F vs 2025", "v19": 196653, "v20": 142813, "delta": -53840, "locked": false, "note": "V19 grows ~23%; V20 must fall with registrations"}], "mix": {"years": [2025, 2026, 2027, 2028, 2029, 2030], "v19_pickup": [160141, 170068, 179405, 188407, 192530, 196653], "v20_pickup": [160141, 157763, 155195, 152928, 147420, 142813], "v19_cv": [98453, 99246, 100096, 101122, 105167, 109212], "v20_cv": [98453, 92065, 86588, 82080, 80526, 79312], "pickup_regs_imit": {"2024": 16977, "2025": 15312, "2026": 10845, "2027": 10595}}, "iuk_lcv": {"years": [2024, 2025, 2026, 2027, 2028, 2029, 2030], "v19": [48876, 47783, 49280, 50202, 51096, 51950, 52804], "v20": [48876, 47783, 44926, 42420, 40222, 38295, 36605], "locked_2026": 44926}, "ireland_2030": {"trucks_light_v19": 1645, "trucks_light_v20": 1382, "pickups_v19": 3174, "pickups_v20": 2527}, "kpis": {"v19_2025": 163199, "v19_2030": 205357, "v20_2030": 149134, "overstate_2030_pct": 37.7, "iuk_locked": 44926, "iuk_v19_2026": 49280}, "rules": {"v19": {"title": "UIO V19 — how the car park is built today (distributor level)", "status": "Canonical live workbook: 06_uio/_CURRENT/ISUZU_UIO_Overview_2026.xlsx (Changelog = v19). Confirmed 2026-07-16.", "engine": ["History (roughly 1990–2025): trucks registered each year × survival curve = trucks still in service. Truck curve ≈ 9.9-year life (~10.2% scrap/year). Pickup curve ≈ 8.1-year life (~12.3% scrap/year).", "Forecast (2026–2030) on most Overview rows: flat rule UIO × 0.97 + new registrations (3% scrap). That is the known defect V20 replaces.", "Grand Total (sheet 1 row 2) is a SUMPRODUCT. MIDI toggle B4: policy default Exclude MIDI for ISZE KPIs; live file has often been left on Include — check before quoting.", "Russia excluded from all totals."], "lanes": [{"lane": "ITUK commercial (Overview rows 22 LD + 24 F-Series)", "dbs": ["ITUK"], "rules": ["Separate sheet: 4. ITUK UIO Projection — not the flat 3% rule.", "2008–2024: SMMT / DVLA registered car park (actual).", "2025–2030: cohort × model survival (N35/N75 from ITUK attrition pack; N50/55 and N62/65 use N75 curve; F-series uses IML CV Advanced Economy).", "New regs: Niguri FY25/26–FY27/28, then flat 2,446/year.", "Owner-operator floor: pre-2008 and 2008–2010 cohorts held at 90% survival / 10% scrap every forecast year (V15/V17 fix).", "Sheet 1 rows 22 and 24 are live-linked to Sheet 4 Section C. Leave alone in V20."]}, {"lane": "IUK light commercial / D-Max (Overview row 25)", "dbs": ["IUK"], "rules": ["Hardcoded on Overview — not linked to Sheet 4.", "V19 uses the same broken 3% scrap + regs roll-forward from 2026F.", "2025E 47,783 is kept (direction matches IMIT). V19 2026F 49,280 is wrong-direction and must not be used for GPS.", "V20 locks CY2026F at 44,926 (see V20 chapter)."]}, {"lane": "Ireland + Portugal (registration-quality history)", "dbs": ["Isuzu Ireland", "Imotors"], "rules": ["June 2026: replaced estimates with government / dealer registration data (SIMI-class for Ireland).", "History rebuilt correctly with survival curves — fleet levels went down vs prior estimates (that drop was correct).", "Forecast columns still inherit the network-wide 3% scrap bug until V20."]}, {"lane": "Israel UTI (CV light + medium)", "dbs": ["UTI"], "rules": ["V19-1 / V19-2 Changelog: UTI parc rebuilt on UTI shipment file (2024 10,049 → 2025 10,336 → 2026 10,760 → 2027 10,972).", "UMI is a separate Israel distributor — never blend UTI + UMI into one 'Israel' for IDS or GPS.", "V20: government Ministry of Transport register shows UTI row still ~25% low every year — rebuild required."]}, {"lane": "Israel UMI", "dbs": ["UMI"], "rules": ["Separate row set from UTI. IDS Israel country pack is UMI network only.", "Do not average or blend with UTI for any IDS-linked or single 'Israel' headline."]}, {"lane": "Other ISZE distributors (IML backbone)", "dbs": ["IBX", "ISD-Lang", "AutoWallis", "RSA", "Nordic Auto.", "Isuzu Denmark", "Isuzu Sverige", "Isuzu Rom Auto", "GasanZammit", "Loutsios & Sons", "Petros Petropoulos", "BL"], "rules": ["IML calculation.xlsx backbone: shipment × survival convolution (Hasegawa-style) for history.", "From V18 (June 2026): forecast driven by IMIT LCV study + ISZE CV mid-term plan registrations, still compounded with the 3% scrap rule on Overview forecast columns.", "Belgium, Cyprus, Malta, Greece: no real registration history — IML / scrap-adjusted estimates only (low confidence; VIN check implies impossible 0.3–3% scrap).", "Germany: history for 2019–2024 partly fabricated by running 3% backwards from a 2025 point — treat as indicative."]}, {"lane": "MIDI Europe (Italy, Spain in extract; FR/CH/PL/RS in full workbook scope)", "dbs": ["MIDI Europe"], "rules": ["Included or excluded via Sheet 1 B4. Exclude for Kosha / action-plan / ISZE-only KPIs.", "Contribute ~92.6k (2024) to ~103.8k (2030F) when included.", "This pack’s network charts use ex-MIDI totals."]}], "sources_v19": ["IML calculation.xlsx — backbone most markets 1990–2026", "LCV UIO (November 2025) EU Study IMIT.xlsx — LCV survival + registration forecasts", "UIO.xlsx ITUK sheet — SMMT/DVLA car park 2008–2024", "ISZE CV FY2025–FY2030 mid-term plan (12RS) — truck registration plan inputs", "Niguri FY25.26 Extract — ITUK internal forecast", "Parts Sales vs Model Mix attrition ITUK.pptx — N35/N75 survival", "Ireland / Portugal government & dealer registration updates (June 2026)", "UTI shipment-based Israel rebuild (V19-1/V19-2, July 2026 Changelog)"], "quote_rules": ["Historical years through 2025: usable with source caveats by market.", "2026–2030 under V19: do not quote externally until survival-curve fix ships.", "Always state MIDI include/exclude.", "Always keep IUK ≠ ITUK and UTI ≠ UMI."]}, "v20": {"title": "UIO V20 — specification and new evidence (not a finished workbook yet)", "status": "Draft in 06_uio/_CURRENT/V20_SPEC.md (27 Jul 2026, amended 30 Jul). Nothing built into the live xlsx yet except the locked IUK LCV decision for planning.", "locked": [{"item": "IUK LCV CY2026F", "value": "44,926", "formula": "47,783 × (1 − 12.3%) + IMIT regs ≈ 3,020", "vs_v19": "V19 had 49,280 (+3.1%) — wrong direction; do not use"}], "problems": [{"id": "P1", "name": "Forecast scrap rate", "fix": "Delete flat 3% rule for 2026–2030. Use the same survival curves as history on every Overview row except ITUK rows 22/24 (already correct) and Israel (full rebuild).", "evidence": "Grand Total too high by 7.8% (2026) → 37.7% (2030). Ireland 2030 light trucks 1,645 vs 1,382; pickups 3,174 vs 2,527."}, {"id": "P2", "name": "Pickup direction", "fix": "Same survival fix — pickups turn down on their own when scrap is real.", "evidence": "IMIT ISZE pickup regs 16,977 (2024) → 10,845 (2026). V19 pickup fleet still grows ~22.8% to 2030. Steady state at 10,845 × 8.1 yr ≈ 88k vs ~125k on the road."}, {"id": "P3", "name": "Sales plan vs registrations", "fix": "Use mid-term plan one-to-one for the level (Jerome 27 Jul). Smooth year-to-year; do not treat each plan year as exact registrations. Split empty medium-duty 'plan only' rows out of Grand Total until a real registration appears.", "evidence": "Ireland shipments vs SIMI regs 2020–2024: 451 vs 445 (within 1.3%). Single years swing ±50–70. VIN file: zero medium-duty units in 3,238 trucks — Portugal MD plan to 498 by 2030 is fiction."}, {"id": "P4", "name": "Israel government register", "fix": "Rebuild UTI rows on Ministry of Transport data (as Ireland was rebuilt). Add 7.6–10 t and 12.1–16 t classes. Add age floor for 15+ year trucks. Do not multiply by 1.25.", "evidence": "MoT 2026 (30 Jun) 14,019 vs model 10,760 (−23%). Gap ~3.3–3.7k stable across years. Light row 6,101 vs 8,610 (−29%); medium 4,659 vs 5,409 (−14%). 1,680 trucks first registered 1999–2010 still on road."}, {"id": "P5", "name": "Low-confidence markets", "fix": "Flag Belgium, Cyprus, Malta, Greece for registration-based rebuild. Do not treat implied 0.3–3% scrap as real.", "evidence": "VIN × fleet movement only looks plausible for Ireland (13.3%/yr) and Portugal (7.4%/yr)."}, {"id": "P6", "name": "Weight class → target spend per truck (GPS)", "fix": "Fix VIN GVW decode (NLR=3.5 t not 8.5 t). Split LD car park into N35 vs N75-class where needed. Make GPS mapper able to return the Grafter rate.", "evidence": "3,238 VINs look 8.24 t average vs true ~6.08 t. Portugal ~68.5% of N-series is 3.5 t → target spend per truck overstated; GPS % understated ~quarter (indicative)."}, {"id": "P7", "name": "Documentation drift", "fix": "Rewrite Data Sources / method notes to match June rebuild numbers (Ireland/Portugal descriptions still quote old decay paths).", "evidence": "Ireland pickups note says 2,648 in 2030 while sheet shows 3,174; Portugal truck note still says 3% decay with no plan."}], "new_data": [{"name": "VIN shipment register", "path": "01_data/07_UIO/vin/ (VIN_register.csv / parquet)", "what": "3,238 unique VINs, 2020–mid-2026. Portugal 2,111 · Ireland 647 · Germany 183 · Malta 130 · Cyprus 114 · Belgium 49 · Greece 4.", "use": "Shipments from Japan — not registrations. Measures scrappage, plan-vs-reality, MD fiction, weight decode. Do not substitute for UIO.", "note": "2025 zero shipments outside Portugal = P700 changeover, not a missing file."}, {"name": "Israel Ministry of Transport fleet (via UTI July 2026 pack)", "path": "UTI parts presentation slides 14–17 (MoT registered Isuzu)", "what": "Government registered fleet by year and weight class; 14,019 at 30 Jun 2026.", "use": "Primary anchor for Israel V20 rebuild (UTI lane only)."}, {"name": "IMIT November 2025 LCV study", "path": "LCV UIO (November 2025) EU Study IMIT", "what": "Pickup / LCV registration forecasts and UK D-Max fleet path under 12-year life.", "use": "IUK LCV regs (~3,020 in 2026E) and network pickup decline case."}, {"name": "ISZE CV mid-term plan FY2025–FY2030", "path": "ISZE_CV_FY2025-FY2030_mid-term_plan___12RS.xlsx", "what": "Planned truck volumes by market (Europe total 630 → 1,325 → 1,935).", "use": "Forecast registration inputs; level OK one-to-one, annual profile needs smoothing."}, {"name": "Ireland / Portugal registration rebuilds (June 2026)", "path": "Already inside V19 workbook history columns", "what": "Real registration-based history replacing scrap-adjusted estimates.", "use": "Keep; do not confuse with the forecast-method bug introduced the same week."}, {"name": "Measured annual distance (parallel aftersales work)", "path": "01_data/00_derived/warranty_cv_km_age_by_market.csv and IUK N35 mileage study", "what": "IUK N35 Grafter ~14,494 km/yr; UTI ~51,680; weight-class spread N35/N75/F.", "use": "Not a UIO count input — changes how hard a given UIO works for parts demand / GPS context."}], "build_order": ["Archive a dated V19 copy first", "1. Israel MoT rebuild", "2. Survival-curve forecast fix (P1+P2) including IUK LCV row 25 @ 44,926", "3. Sales-plan smoothing + plan-only MD rows out of Grand Total", "4. Flag BE/CY/MT/GR low confidence", "5. Weight decode + GPS N35 target (can run in parallel)", "6. Rewrite documentation"], "acceptance": ["Back-cast to 2025 for Ireland, Portugal, Israel lands within one unit — no jump at 2025/2026", "Pickup fleet 2030 < 2025", "IUK LCV CY2026F = 44,926", "Israel 2026 reconciles to 14,019 class by class", "No row grows faster than regs ÷ survival length", "Every forecast cell traces to a named file on disk", "B4 = Exclude MIDI before Kosha / action-plan quotes"]}}}</script>
+<script>
+(function(){
+const D = JSON.parse(document.getElementById('payload').textContent);
+let chapter = 'decision';
+let method = 'both';
+
+const fmt = n => Math.round(n).toLocaleString('en-GB');
+const $ = id => document.getElementById(id);
+
+function hero(){
+  const k = D.kpis;
+  $('hero').innerHTML = `
+  <div class="kpi"><div class="k ill">2025 fleet (V19)<span class="tp">Ex-MIDI ISZE network trucks in service, calendar 2025 from the V19 workbook README pull.</span></div>
+  <p class="v">${fmt(k.v19_2025)}</p><p class="s">Actual / estimate year before forecast break</p></div>
+  <div class="kpi"><div class="k ill">2030 under V19<span class="tp">Ex-MIDI Grand Total if the flat 3% scrap forecast is left unchanged.</span></div>
+  <p class="v">${fmt(k.v19_2030)}</p><p class="s">Do not quote externally</p></div>
+  <div class="kpi"><div class="k ill">2030 modelled V20<span class="tp">Same 2030 total divided by (1 + 37.7% overstatement) from V20_SPEC Problem 1. Not a locked workbook cell.</span></div>
+  <p class="v">${fmt(k.v20_2030)}</p><p class="s">~${k.overstate_2030_pct}% below V19</p></div>
+  <div class="kpi"><div class="k ill">IUK LCV 2026F<span class="tp">Only locked V20 figure (30 Jul 2026): 47,783 × (1 − 12.3%) + 3,020 = 44,926.</span></div>
+  <p class="v">${fmt(k.iuk_locked)}</p><p class="s">vs V19 ${fmt(k.iuk_v19_2026)} <span class="chip lock">Locked</span></p></div>`;
+}
+
+function lineChart(svg, years, series, opts){
+  const W=720,H=opts.h||280,pad={t:24,r:24,b:36,l:56};
+  const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+  const vals = series.flatMap(s => s.y.filter(v => v!=null));
+  let ymin = Math.min(...vals), ymax = Math.max(...vals);
+  const span = ymax - ymin || 1;
+  ymin = Math.max(0, ymin - span*0.08); ymax = ymax + span*0.08;
+  const x = i => pad.l + (years.length<=1 ? iw/2 : iw * i/(years.length-1));
+  const y = v => pad.t + ih * (1 - (v-ymin)/(ymax-ymin));
+  let g = `<rect x="0" y="0" width="${W}" height="${H}" fill="#fff"/>`;
+  // grid
+  for(let i=0;i<5;i++){
+    const yy = pad.t + ih*i/4;
+    const val = ymax - (ymax-ymin)*i/4;
+    g += `<line x1="${pad.l}" y1="${yy}" x2="${W-pad.r}" y2="${yy}" stroke="#eee8dc"/>`;
+    g += `<text x="${pad.l-8}" y="${yy+4}" text-anchor="end" font-size="11" fill="#5f5d57">${fmt(val)}</text>`;
+  }
+  years.forEach((yr,i)=>{
+    g += `<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="11" fill="#5f5d57">${yr}</text>`;
+  });
+  if(opts.breakAt!=null){
+    const bi = years.findIndex(y=>y>=Math.ceil(opts.breakAt));
+    if(bi>0){
+      const bx = (x(bi-1)+x(bi))/2;
+      g += `<line x1="${bx}" y1="${pad.t}" x2="${bx}" y2="${pad.t+ih}" stroke="#c0552d" stroke-dasharray="5 4"/>`;
+      g += `<text x="${bx+4}" y="${pad.t+12}" font-size="11" fill="#c0552d">method break</text>`;
+    }
+  }
+  series.forEach(s => {
+    if(s.hide) return;
+    const pts = s.y.map((v,i)=> v==null?null:`${x(i)},${y(v)}`).filter(Boolean).join(' ');
+    g += `<polyline fill="none" stroke="${s.color}" stroke-width="${s.width||2.5}" points="${pts}"/>`;
+    s.y.forEach((v,i)=>{
+      if(v==null) return;
+      g += `<circle cx="${x(i)}" cy="${y(v)}" r="3.2" fill="${s.color}"/>`;
+    });
+  });
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = g;
+}
+
+function paintNet(){
+  const years = D.network.years;
+  const show19 = method!=='v20';
+  const show20 = method!=='v19';
+  lineChart($('svgNet'), years, [
+    {y: D.network.v19_ex_midi, color:'#15233c', hide:!show19},
+    {y: D.network.v20_ex_midi, color:'#c0552d', hide:!show20, width:2.8}
+  ], {breakAt:2025.5, h:280});
+  $('legNet').innerHTML = `
+    <span><i style="background:#15233c"></i>V19 (live workbook)</span>
+    <span><i style="background:#c0552d"></i>V20 modelled (survival through forecast)</span>`;
+}
+
+function paintGap(){
+  const max = Math.max(...D.gap.map(g=>g.gap_units));
+  $('gapBars').innerHTML = D.gap.map(g => {
+    const w = 100*g.gap_units/max;
+    return `<div class="bar-row"><div class="lbl">${g.year}</div>
+      <div class="track"><span class="fill hot" style="width:${w}%"></span></div>
+      <div class="val">${fmt(g.gap_units)} · ${g.overstate_pct}%</div></div>`;
+  }).join('');
+}
+
+function paintSurv(){
+  const ages = D.survival.truck_curve.map(p=>p.age);
+  const sTruck = D.survival.truck_curve.map(p=>p.surv);
+  const sPick = D.survival.pickup_curve.map(p=>p.surv);
+  const sFlat = D.survival.flat_3pct_implied.map(p=>p.surv);
+  const W=720,H=280,pad={t:24,r:24,b:36,l:48};
+  const iw=W-pad.l-pad.r, ih=H-pad.t-pad.b;
+  const x = i => pad.l + iw * i/(ages.length-1);
+  const y = v => pad.t + ih * (1 - v/100);
+  let g = `<rect width="${W}" height="${H}" fill="#fff"/>`;
+  for(let i=0;i<=4;i++){
+    const yy=pad.t+ih*i/4;
+    g += `<line x1="${pad.l}" y1="${yy}" x2="${W-pad.r}" y2="${yy}" stroke="#eee8dc"/>`;
+    g += `<text x="${pad.l-6}" y="${yy+4}" text-anchor="end" font-size="11" fill="#5f5d57">${100-i*25}%</text>`;
+  }
+  [0,5,10,15,20].forEach(a=>{
+    const i=ages.indexOf(a); if(i<0) return;
+    g += `<text x="${x(i)}" y="${H-10}" text-anchor="middle" font-size="11" fill="#5f5d57">${a}y</text>`;
+  });
+  const mk=(arr,col,w=2.4)=>{
+    const pts=arr.map((v,i)=>`${x(i)},${y(v)}`).join(' ');
+    return `<polyline fill="none" stroke="${col}" stroke-width="${w}" points="${pts}"/>`;
+  };
+  g += mk(sTruck,'#15233c') + mk(sPick,'#3f5a86') + mk(sFlat,'#c0552d',2.8);
+  $('svgSurv').innerHTML = g;
+  $('legSurv').innerHTML = `
+    <span><i style="background:#15233c"></i>Truck history (~9.9 yr)</span>
+    <span><i style="background:#3f5a86"></i>Pickup history (~8.1 yr)</span>
+    <span><i style="background:#c0552d"></i>V19 flat 3% (~33 yr)</span>`;
+}
+
+function paintRank(){
+  const rows = D.markets_ranked_2025;
+  const max = rows[0].uio_2025;
+  $('rankBars').innerHTML = rows.map((r,i) => {
+    const w = 100*r.uio_2025/max;
+    const hot = i<3 ? 'hot' : '';
+    return `<div class="bar-row"><div class="lbl" title="${r.market}">${r.market}</div>
+      <div class="track"><span class="fill ${hot}" style="width:${w}%"></span></div>
+      <div class="val">${fmt(r.uio_2025)}</div></div>`;
+  }).join('');
+}
+
+function paintMovers(){
+  const rows = D.movers;
+  const maxAbs = Math.max(...rows.map(r=>Math.abs(r.delta)));
+  $('moverBars').innerHTML = rows.map(r => {
+    const pct = 50 * Math.abs(r.delta) / maxAbs;
+    const lock = r.locked ? '<span class="chip lock">Locked</span>' : '';
+    const side = r.delta < 0
+      ? `<span class="neg" style="width:${pct}%"></span>`
+      : `<span class="pos" style="width:${pct}%"></span>`;
+    return `<div class="dev"><div class="lbl" style="font-size:12.5px;font-weight:600;color:#15233c">${r.market}${lock}
+      <div style="font-weight:400;color:#5f5d57;font-size:11px">${r.metric}</div></div>
+      <div class="zero">${side}</div>
+      <div class="val" style="text-align:right;font-size:12.4px">${r.delta>0?'+':''}${fmt(r.delta)}</div></div>`;
+  }).join('');
+}
+
+function paintMix(){
+  const years = D.mix.years;
+  const show19 = method!=='v20';
+  const show20 = method!=='v19';
+  // two panels in one SVG
+  const W=720,H=280,pad={t:28,r:16,b:32,l:48};
+  const mid = W/2;
+  function panel(x0, x1, title, v19, v20, col19, col20){
+    const iw=x1-x0-16, ih=H-pad.t-pad.b;
+    const vals=[...v19,...v20];
+    let ymin=Math.min(...vals), ymax=Math.max(...vals);
+    const span=ymax-ymin||1; ymin=Math.max(0,ymin-span*0.1); ymax+=span*0.1;
+    const x = i => x0+8 + iw*i/(years.length-1);
+    const y = v => pad.t + ih*(1-(v-ymin)/(ymax-ymin));
+    let g = `<text x="${x0+8}" y="16" font-size="13" fill="#15233c" font-family="Georgia,serif">${title}</text>`;
+    for(let i=0;i<3;i++){
+      const yy=pad.t+ih*i/2;
+      g += `<line x1="${x0+8}" y1="${yy}" x2="${x1-8}" y2="${yy}" stroke="#eee8dc"/>`;
+    }
+    years.forEach((yr,i)=> g += `<text x="${x(i)}" y="${H-8}" text-anchor="middle" font-size="10" fill="#5f5d57">${yr}</text>`);
+    const mk=(arr,col,hide)=>{
+      if(hide) return '';
+      const pts=arr.map((v,i)=>`${x(i)},${y(v)}`).join(' ');
+      return `<polyline fill="none" stroke="${col}" stroke-width="2.4" points="${pts}"/>`;
+    };
+    return g + mk(v19,col19,!show19) + mk(v20,col20,!show20);
+  }
+  let g = `<rect width="${W}" height="${H}" fill="#fff"/>`;
+  g += panel(0, mid, 'Pickup / LCV basket', D.mix.v19_pickup, D.mix.v20_pickup, '#15233c', '#c0552d');
+  g += panel(mid, W, 'Commercial vehicles', D.mix.v19_cv, D.mix.v20_cv, '#15233c', '#c0552d');
+  g += `<line x1="${mid}" y1="20" x2="${mid}" y2="${H-20}" stroke="#ded8ca"/>`;
+  $('svgMix').innerHTML = g;
+  $('legMix').innerHTML = `<span><i style="background:#15233c"></i>V19</span><span><i style="background:#c0552d"></i>V20 modelled</span>`;
+}
+
+function paintIuk(){
+  lineChart($('svgIuk'), D.iuk_lcv.years, [
+    {y: D.iuk_lcv.v19, color:'#15233c', hide: method==='v20'},
+    {y: D.iuk_lcv.v20, color:'#c0552d', hide: method==='v19', width:2.8}
+  ], {breakAt:2025.5, h:220});
+}
+
+function paintRules(){
+  const R = D.rules; if(!R) { $('rulesHost').innerHTML = '<p class="amber">Rules payload missing.</p>'; return; }
+  const v19 = R.v19, v20 = R.v20;
+  let h = '';
+  h += `<div class="panel full"><h2>${v19.title}</h2>
+    <p class="ask">${v19.status}</p>
+    <div class="engine"><b>Engine rules (all distributors)</b><ol>${v19.engine.map(x=>'<li>'+x+'</li>').join('')}</ol></div>
+    <div class="engine"><b>When you may quote V19</b><ul>${v19.quote_rules.map(x=>'<li>'+x+'</li>').join('')}</ul></div>
+    <h2 style="margin-top:8px">Distributor lanes</h2>
+    <div class="rules-grid">${v19.lanes.map(L => `
+      <div class="rule-card"><h3>${L.lane}</h3>
+      <div class="dbs">${(L.dbs||[]).join(' · ')}</div>
+      <ul>${L.rules.map(r=>'<li>'+r+'</li>').join('')}</ul></div>`).join('')}</div>
+    <div class="engine"><b>V19 source files</b><ul>${v19.sources_v19.map(x=>'<li>'+x+'</li>').join('')}</ul></div>
+  </div>`;
+
+  const lock = (v20.locked||[])[0] || {};
+  h += `<div class="panel full"><h2>${v20.title}</h2>
+    <p class="ask">${v20.status}</p>
+    <div class="lockbox"><div class="dbs">Locked decision · 30 Jul 2026</div>
+      <div>${lock.item||'IUK LCV CY2026F'}</div>
+      <div class="big">${lock.value||'44,926'}</div>
+      <p style="margin:0;font-size:13px">${lock.formula||''}</p>
+      <p style="margin:4px 0 0;font-size:12.5px;color:var(--muted)">${lock.vs_v19||''}</p>
+    </div>
+    <h2>Seven problems in the V20 spec</h2>
+    ${(v20.problems||[]).map(p => `
+      <div class="prob"><div class="pid">${p.id}</div><h4>${p.name}</h4>
+      <p><b>Fix:</b> ${p.fix}</p>
+      <p class="ev"><b>Evidence:</b> ${p.evidence}</p></div>`).join('')}
+    <h2 style="margin-top:12px">New data received (feeds V20)</h2>
+    <div class="ndata">${(v20.new_data||[]).map(n => `
+      <div class="card"><h4>${n.name}</h4>
+      <p class="path">${n.path}</p>
+      <p>${n.what}</p>
+      <p><b>Use:</b> ${n.use}</p>
+      ${n.note?('<p class="ev">'+n.note+'</p>'):''}</div>`).join('')}</div>
+    <div class="grid2" style="margin-top:14px">
+      <div class="engine"><b>Build order</b><ol>${(v20.build_order||[]).map(x=>'<li>'+x+'</li>').join('')}</ol></div>
+      <div class="engine"><b>Acceptance checks</b><ul>${(v20.acceptance||[]).map(x=>'<li>'+x+'</li>').join('')}</ul></div>
+    </div>
+  </div>`;
+  $('rulesHost').innerHTML = h;
+}
+
+function paint(){
+  hero();
+  paintNet(); paintGap(); paintSurv();
+  paintRank(); paintMovers(); paintMix(); paintIuk();
+  if(chapter==='rules') paintRules();
+  document.querySelectorAll('.chapter').forEach(el => el.classList.toggle('on', el.id === 'ch-'+chapter));
+  // count bar-rows for ship gate
+  window.__paint = {
+    gapRows: document.querySelectorAll('#gapBars .bar-row').length,
+    rankRows: document.querySelectorAll('#rankBars .bar-row').length,
+    moverRows: document.querySelectorAll('#moverBars .dev').length,
+    ruleCards: document.querySelectorAll('#rulesHost .rule-card').length,
+    problems: document.querySelectorAll('#rulesHost .prob').length,
+    newData: document.querySelectorAll('#rulesHost .ndata .card').length
+  };
+}
+
+$('chSeg').addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  chapter = b.dataset.ch;
+  $('chSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
+  paint();
+});
+$('methSeg').addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  method = b.dataset.m;
+  $('methSeg').querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b));
+  paint();
+});
+paint();
+})();
+</script>
+</body>
+</html>

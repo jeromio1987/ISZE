@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build self-contained Aftermarket Live Pricing briefing (embedded scrape JSON).
 
-JP-clear Mode A: Block-0 margin frame first, then charts.
+JP-clear shared: Block-0 margin frame first, then charts.
 Reference = customer/workshop price after distributor +40% and dealer +27.5%.
 Never lead with PR00×1.785. Never say \"soft\". Custom formula popovers.
 Double-click / file:// OK. Local Plotly only (no CDN).
@@ -142,7 +142,7 @@ td.under{{color:var(--red);font-weight:600}}
   <h2>Notes</h2>
   <ul class="notes" id="caveats"></ul>
 </section>
-<p class="foot">Self-contained briefing · scrape embedded · Mode A · Rebuild via partgroups payload builder</p>
+<p class="foot">Self-contained briefing · scrape embedded · shared · Rebuild via partgroups payload builder</p>
 </div>
 <script type="application/json" id="scrape-data">{payload}</script>
 <script>

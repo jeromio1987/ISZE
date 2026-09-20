@@ -1,0 +1,20 @@
+﻿import pandas as pd
+L=pd.read_parquet("pricing_aim_source_lines.parquet"); L["pn"]=L.part_number.astype(str).str.strip()
+B=pd.read_csv("price_bp_weighted_compare_pn.csv",dtype={"part_number":str}); B=B[B.in_scope==True].copy(); B["pn"]=B.part_number.astype(str).str.strip()
+print("SPINE rows",len(L),"prior_base_jpy null",L.prior_base_jpy.isna().sum(),"new null",L.new_base_jpy.isna().sum())
+print("SPINE priced_both",int((L.priced_both==True).sum()))
+print("SPINE priced_both & prior null",int(((L.priced_both==True)&L.prior_base_jpy.isna()).sum()))
+print()
+print("BP in_scope rows",len(B),"bp_prior_revised null",B.bp_prior_revised.isna().sum(),"bp_new_jpy null",B.bp_new_jpy.isna().sum())
+print("BP both present",int((B.bp_prior_revised.notna()&B.bp_new_jpy.notna()).sum()))
+print()
+print("--- cross: rows where spine prior null but bp prior present ---")
+mg=L[["pn","prior_base_jpy","new_base_jpy","priced_both","qty","billed_eur"]].merge(
+   B[["pn","bp_prior_revised","bp_new_jpy","unpriced_reason","billed_qty","net_sales_value"]],on="pn",how="outer",indicator=True)
+print(mg._merge.value_counts().to_string())
+w=mg[(mg.prior_base_jpy.isna())&(mg.bp_prior_revised.notna())]
+print("spine prior null but bp prior present: rows",len(w),"eur %.0f"%w.billed_eur.fillna(0).sum())
+print(w.head(10)[["pn","prior_base_jpy","bp_prior_revised","priced_both","unpriced_reason","billed_eur"]].to_string())
+print()
+print("bp_prior_revised describe:"); print(B.bp_prior_revised.describe().to_string())
+print("spine prior_base_jpy describe:"); print(L.prior_base_jpy.describe().to_string())

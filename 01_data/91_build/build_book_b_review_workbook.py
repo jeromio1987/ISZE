@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Book B revision review workbook — filterable HTML (Mode B).
+"""Price list revision review workbook — filterable HTML (internal).
 
 Reads  : revision_book_b_top_review.csv
 Writes : 01_data/01_Pricing/BOOK_B_REVISION_REVIEW_20260819.html
@@ -57,7 +57,7 @@ def build_payload(df: pd.DataFrame) -> dict:
     return {
         "built_at": built_at,
         "dbs": dbs_in_data,
-        "book_b": bb_agg,
+        "price_list": bb_agg,
         "hero": {
             "row_count": len(rows),
             "leakage_rows": len(leak),
@@ -78,14 +78,17 @@ def _book_b_rows(rows: list[dict]) -> str:
     parts = []
     for r in rows:
         aim_cell = SSR.pill("aim", r.get("aim")) if r.get("aim") and r.get("aim") != "—" else "—"
+        bill_qty = SSR.fmt_int(r.get("bill_qty"))
+        dealer_qty = SSR.fmt_int(r.get("sellout_qty"))
+        qty_gap = SSR.fmt_int(r.get("qty_gap"))
         parts.append(
             f'<tr data-pn="{SSR.esc(r.get("pn",""))}" data-db="{SSR.esc(r.get("db",""))}" '
             f'data-action="{SSR.esc(r.get("action",""))}" data-pipeline="{SSR.esc(r.get("pipeline",""))}">'
             f'<td>{SSR.esc(r.get("pn"))}</td><td>{SSR.esc(r.get("db"))}</td>'
             f'<td>{SSR.pill(r.get("action_class","act"), r.get("action") or "")}</td>'
             f'<td>{SSR.pill(r.get("pipeline_class","act"), r.get("pipeline") or "")}</td>'
-            f'<td>{aim_cell}</td><td class="num">{SSR.fmt_int(r.get("bill_qty"))}</td>'
-            f'<td class="num">{SSR.fmt_int(r.get("sellout_qty"))}</td><td class="num">{SSR.fmt_int(r.get("qty_gap"))}</td>'
+            f'<td>{aim_cell}</td><td class="num">{bill_qty}</td>'
+            f'<td class="num">{dealer_qty}</td><td class="num">{qty_gap}</td>'
             f'<td class="num">{SSR.fmt_num(r.get("ks_index")) if r.get("ks_index") is not None else "—"}</td>'
             f'<td class="bucket">{SSR.esc(r.get("bucket"))}</td>'
             f'<td class="num">{SSR.fmt_int(r.get("forecast_eur"))}</td></tr>'
@@ -96,21 +99,21 @@ def _book_b_rows(rows: list[dict]) -> str:
 def write_html(payload: dict) -> None:
     built = (payload.get("built_at") or "")[:10]
     H = payload.get("hero") or {}
-    bb = payload.get("book_b") or {}
+    bb = payload.get("price_list") or {}
     rows = payload.get("rows") or []
     dbs = payload.get("dbs") or []
 
     hero = SSR.hero_kpis([
         (SSR.fmt_int(H.get("leakage_rows")), "REVIEW_LEAKAGE rows", f'of {SSR.fmt_int(H.get("row_count"))} in register',
-         "Rows flagged REVIEW_LEAKAGE in the Book B revision queue. Provisional — no allocation run applied."),
+         "Rows flagged REVIEW_LEAKAGE in the price list revision queue. Provisional — no allocation run applied."),
         (SSR.fmt_int(H.get("book_b_conflicts")), "Ambition vs guardrail", f'{SSR.fmt_int(H.get("iam_undercut_count"))} IAM undercut',
-         "Growth/ambition Book B bucket rows that also carry HOLD, proxy adverse, IAM undercut, or high list exposure."),
+         "Growth/ambition price list bucket rows that also carry HOLD, proxy adverse, IAM undercut, or high list exposure."),
         (SSR.esc(H.get("biggest_db")), "Biggest leakage DB", f'{SSR.fmt_int(H.get("biggest_db_gap"))} unit gap',
-         "DB with largest sell-out minus bill qty gap among REVIEW_LEAKAGE rows."),
+         "DB with largest sales to dealer minus bill qty gap among REVIEW_LEAKAGE rows."),
         (SSR.esc(H.get("top_pn")), "Top leakage PN", f'Gap {SSR.fmt_int(H.get("top_pn_gap"))} units',
          "Highest qty gap among leakage review rows."),
         (str(len(H.get("by_action") or {})), "Action types", "Filter dropdown",
-         "KS index = shop price ÷ reference sell-out where KS quote exists."),
+         "KS index = shop price ÷ reference dealer price where KS quote exists."),
     ])
     callout = (
         f"<strong>Headline:</strong> {SSR.fmt_int(H.get('leakage_rows'))} REVIEW_LEAKAGE rows · "
@@ -157,14 +160,14 @@ def write_html(payload: dict) -> None:
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Book B Revision Review</title>
+<title>Price List Revision Review</title>
 <style>{T.TIER_A_CSS}{SSR_CSS}</style>
 </head>
 <body>
 <div class="hero">
   <div class="hero-inner">
-    <div class="brand">Isuzu Europe · Book B · Mode B internal</div>
-    <h1>Book B Revision Review</h1>
+    <div class="brand">Isuzu Europe · Price list · internal internal</div>
+    <h1>Price List Revision Review</h1>
     <div class="rule"></div>
     <p class="lead">Top non-HOLD revision queue · provisional forecast weights · no alloc run · charts first. IUK≠ITUK · UTI≠UMI.</p>
     <div class="hero-kpis" id="hero-kpis">{hero}</div>
@@ -183,23 +186,23 @@ def write_html(payload: dict) -> None:
     <div class="card"><h3>Register donut</h3><p class="cap">Leakage vs guardrail vs other · row counts</p>{pipe_donut}</div>
   </div>
   <div class="grid2">
-    <div class="card"><h3>Book B bucket × action</h3><p class="cap">Stacked counts · ambition vs guardrail visible</p>{stacked_html}</div>
+    <div class="card"><h3>Price list bucket × action</h3><p class="cap">Stacked counts · ambition vs guardrail visible</p>{stacked_html}</div>
     <div class="card"><h3>Recommended action mix</h3><p class="cap">Top 500 review pack · no alloc</p>{action_chart}</div>
   </div>
   <h2><span class="no">↓</span> · Revision register</h2>
-  <p class="lead">Sortable drill-down · Book B bucket column — full width, no cut-off.</p>
+  <p class="lead">Sortable drill-down · price list bucket column — full width, no cut-off.</p>
   <div class="table-scroll">
   <table class="matrix" id="tbl">
     <thead><tr>
       <th data-key="pn">PN</th><th data-key="db">DB</th><th data-key="action">Action</th><th data-key="pipeline">Pipeline</th>
-      <th data-key="aim">AIM L1</th><th data-key="bill_qty" class="num">Bill qty</th><th data-key="sellout_qty" class="num">Sell-out</th>
+      <th data-key="aim">AIM L1</th><th data-key="bill_qty" class="num">Bill qty</th><th data-key="sellout_qty" class="num">Sales to dealer</th>
       <th data-key="qty_gap" class="num">Qty gap</th><th data-key="ks_index" class="num">KS index</th>
-      <th data-key="bucket">Book B bucket</th><th data-key="forecast_eur" class="num">Forecast €</th>
+      <th data-key="bucket">Price list bucket</th><th data-key="forecast_eur" class="num">Forecast €</th>
     </tr></thead>
     <tbody>{_book_b_rows(rows)}</tbody>
   </table>
   </div>
-  <p class="foot">Built {built} · SSR charts · Source: revision_book_b_top_review.csv · Provisional weights — no alloc · Internal Mode B.</p>
+  <p class="foot">Built {built} · SSR charts · Source: revision_book_b_top_review.csv · Provisional weights — no alloc · Internal internal.</p>
 </div>
 <script>
 document.querySelectorAll('#db-filters button').forEach(btn=>{{

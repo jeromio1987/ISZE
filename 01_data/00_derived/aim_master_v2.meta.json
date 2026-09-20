@@ -1,0 +1,67 @@
+{
+  "generated": "2026-09-17T20:07:10.205134+00:00",
+  "basis": {
+    "file": "price_bp_weighted_compare_pn.csv",
+    "filter": "in_scope == True",
+    "window": [
+      "2025-07-01",
+      "2026-06-30"
+    ]
+  },
+  "priority_rows": 15872,
+  "step_eur_total": 1652140.71,
+  "billed_eur_total": 34993609.39,
+  "fixes_applied": 1291,
+  "l1_before": {
+    "Accident & Body": 8340691.0,
+    "Brakes": 4733988.0,
+    "Cabin Interior": 979907.0,
+    "Chassis Frame": 790017.0,
+    "Clutch": 200287.0,
+    "Cooling": 556456.0,
+    "Driveline Axle": 843177.0,
+    "Electrical": 2857702.0,
+    "Engine": 1086247.0,
+    "Fluids Chemicals": 897275.0,
+    "Fuel System": 2639904.0,
+    "Intake Exhaust Emission": 7505408.0,
+    "Literature Marketing": 273277.0,
+    "Logistics Packaging": 103.0,
+    "Lubrication": 72271.0,
+    "Maintenance Service": 4695276.0,
+    "Steering": 2386039.0,
+    "Suspension": 693746.0,
+    "Tools Equipment": 20994.0,
+    "Transmission": 921101.0,
+    "Wheels Hub": 1825039.0
+  },
+  "l1_after": {
+    "Accident & Body": 6338894.0,
+    "Brakes": 4733988.0,
+    "Cabin Interior": 979907.0,
+    "Chassis Frame": 790017.0,
+    "Clutch": 200287.0,
+    "Cooling": 556456.0,
+    "Driveline Axle": 843177.0,
+    "Electrical": 2269250.0,
+    "Engine": 1086247.0,
+    "Fluids Chemicals": 897275.0,
+    "Fuel System": 2639904.0,
+    "Intake Exhaust Emission": 7505408.0,
+    "Lighting": 2590249.0,
+    "Literature Marketing": 273277.0,
+    "Logistics Packaging": 103.0,
+    "Lubrication": 72271.0,
+    "Maintenance Service": 4695276.0,
+    "Steering": 2386039.0,
+    "Suspension": 693746.0,
+    "Tools Equipment": 20994.0,
+    "Transmission": 921101.0,
+    "Wheels Hub": 1825039.0
+  },
+  "flagged_not_forced": [
+    "Bumpers split across L2 Bumpers and Panels",
+    "Lubricants under Fluids Chemicals vs separate Lubrication L1",
+    "Filters appear under four L1s"
+  ]
+}

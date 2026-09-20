@@ -74,7 +74,7 @@ flagged in memory_review_W30_2026.txt through memory_review_W34_2026.txt)_
 | CR | Cost Reduction |
 | SPLR | Supplier |
 | KPI | Key Performance Indicator matrix |
-| Genuine with BVP alternative | Display label for mix bucket `genuine_contested`: genuine PN that has a BVP catalogue pair. Use this in Mode A and all spoken/written comms — not “genuine contested” (sounds like AIM/street fight). Code/CSV field names may stay `genuine_contested_*`. |
+| Genuine with BVP alternative | Display label for mix bucket `genuine_contested`: genuine PN that has a BVP catalogue pair. Use this in shared and all spoken/written comms — not “genuine contested” (sounds like AIM/street fight). Code/CSV field names may stay `genuine_contested_*`. |
 | Genuine only | Genuine PN with no BVP catalogue alternative |
 | BVP | Best Value Parts — ISZE value-tier SKU |
 

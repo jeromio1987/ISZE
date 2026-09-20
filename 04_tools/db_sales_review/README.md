@@ -34,15 +34,15 @@ python build_deck.py --db ISD
 python qa_contact_sheet.py --pptx "..\..\09_meetings\ISD_Sales_Review_2026\ISZE_ISD_Sales_Review_FY2027.pptx"
 ```
 
-**Full pack (Mode A + deep dive)** — preferred for Hungary / IBX / UMI and next DBs:
+**Full pack (shared + deep dive)** — preferred for Hungary / IBX / UMI and next DBs:
 
 ```bash
 python build_full_deck.py --db IBX
 ```
 
-See blueprint §7. Lands `ISZE_<DB>_Sales_Review_FY2027.pptx` plus `_ModeA_only.pptx`.
+See blueprint §7. Lands `ISZE_<DB>_Sales_Review_FY2027.pptx` plus `_shared_only.pptx`.
 
-The Mode A-only deck lands in its `09_meetings\<DB>_Sales_Review_2026\` folder. The QA step exports the PDF and stitches the slides into
+The shared-only deck lands in its `09_meetings\<DB>_Sales_Review_2026\` folder. The QA step exports the PDF and stitches the slides into
 3×2 contact sheets — read those instead of opening 18 separate images. The mandatory
 visual QA pass in the blueprint is satisfied by looking at the sheets.
 
@@ -77,7 +77,7 @@ Build-enabled profiles: `IUK`, `ISD`, `IBX`, `PETROS`, `IRELAND`, `UMI`, `NORWAY
 - **Warranty exclusion (all DBs):** ERP has no warranty doc type. Movers drop PNs that appear
   on `warranty_raw_grain.csv` claim lines for that DB (assess-month window with a 3-month lag
   before the prior H1) plus a PN/description text heuristic (PM sensor / warranty / campaign /
-  recall). Mode A takeaways label the chart **commercial / ex-warranty**. Limitation: all
+  recall). shared takeaways label the chart **commercial / ex-warranty**. Limitation: all
   billing of a claim-matched PN is dropped, not only the claim units.
 - **Growth is incremental only:** prior-period sales must be above zero. Prior-zero /
   current-positive lines are quarantined on the New Business slide for validation as a new

@@ -1,0 +1,33 @@
+# Delegator board — read it, append to it
+
+**Always on for this workspace.** Companion doc: `00_docs/agent/DELEGATOR_BOARD.md`.
+
+There is no message channel between agents on this machine — Cursor exposes no tool for one agent
+to ping another. The board is the substitute. It is how the next agent learns what the last one
+changed.
+
+## At the start of a substantive run
+
+Read the last ~10 rows of `00_docs/agent/DELEGATOR_BOARD.md`. If a recent row names a file you are
+about to touch, that file changed recently — check what moved before building on it.
+
+## When you finish a substantive piece of work
+
+Append one line:
+
+```
+| YYYY-MM-DD HH:mm | <your agent name> | <what changed, one clause> | <files you wrote> | <next step, or None> |
+```
+
+One line. This is a change log, not a report — the detail belongs in the file you wrote.
+
+## When the board says AIM moved
+
+Read `00_docs/agent/DELEGATOR_REFRESH_HOWTO.md` before doing anything. The pricing deliverables it
+lists are **locked read-only** (Jerome, 2026-09-17). New work goes to new dated files.
+
+## Do not
+
+- Do not write to the locked pricing deliverables listed in the howto.
+- Do not treat a board row as permission to rebuild, publish, or move a price.
+- Do not paste reports into the board.

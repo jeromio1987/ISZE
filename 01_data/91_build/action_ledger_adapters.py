@@ -1,4 +1,4 @@
-"""P8 Action Ledger — nine source adapters (Mode B, deterministic).
+"""P8 Action Ledger — nine source adapters (internal, deterministic).
 
 Each adapter returns a DataFrame in the opportunity schema (§4.1) or raises.
 Euro figures are carried verbatim from the named source column — never recomputed.

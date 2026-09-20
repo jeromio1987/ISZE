@@ -1,6 +1,6 @@
 """Year-matched PR00 realization + ZPR1/MOS/NO_LIST/VPACC findings MVP.
 
-Outputs under 01_data/00_derived/ + Mode A HTML under 02_dashboards/pricing/.
+Outputs under 01_data/00_derived/ + shared HTML under 02_dashboards/pricing/.
 List-to-pocket figures are provisional (QA pending) — integrity score included.
 """
 from __future__ import annotations
@@ -732,7 +732,7 @@ Join to pricing metrics is thin (PIC / stream keys, not dealer).</p>
 <div class="foot">
 Sources: sales_fact.parquet · pricing_pr00_ie40_YYYY.parquet · pricing_zpr1_YYYY.parquet ·
 no_pr00_gap_cy2025_ranked.csv · KPI Master File june 2026.xlsx · vpacc_fy2027_action_plan_july.parquet.<br>
-Mode A pack · UTI and UMI kept separate · Built {UTC_NOW}
+shared pack · UTI and UMI kept separate · Built {UTC_NOW}
 </div>
 </div>
 </body></html>

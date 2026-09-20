@@ -1,0 +1,23 @@
+{
+  "built": "2026-09-17T22:09:19",
+  "method": "revenue rank x criticality (judgement) x competition (graded from disk)",
+  "basis": {
+    "revenue": "pricing_aim_source_lines.parquet, priced_both == True, billed euro summed by PN",
+    "margin": "pricing_list_pn.gm",
+    "competition": "2 = alternative visible with its price (KS or Eucon); 1 = alternative visible by PN (Autodoc names) ; 0 = nothing on disk"
+  },
+  "headline": {
+    "top200_billed_eur": 15550157.549999999,
+    "top200_share_of_book_pct": 52.43912548186831,
+    "top200_margin_pct": 50.80561540706243,
+    "high_opportunity_pns": 7,
+    "high_opportunity_billed_eur": 259686.02,
+    "high_opportunity_margin_pct": 51.006173513925575
+  },
+  "caveats": [
+    "Criticality is a judgement, not a measurement. It is a mapping from the catalogue family to the cost of the vehicle being off the road. Edit and re-run.",
+    "Competition grade 1 rests on the Autodoc file's part-number and brand columns only. Its price column is unusable (277 of 298 rows carry the identical 2.34).",
+    "Grade 0 means nothing on disk, NOT that no competitor exists. It is a statement about our evidence, not about the market.",
+    "Margins are the class-implied margins. The cost behind them is FOB euro implied by the class, not a purchase cost."
+  ]
+}

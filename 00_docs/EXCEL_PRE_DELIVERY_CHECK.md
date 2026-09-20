@@ -158,7 +158,7 @@ Full detail: [`IDS_2026_LOGIC_CHECK.md`](../04_tools/ids_dealer_ranking/IDS_2026
 | Col C | Max points only — never dealer data |
 | Countries | 13 built; Denmark/MIDI excluded |
 | Error register | E01–E11 in IDS doc |
-| Map / geo / Mode A UI | §6b in IDS doc + `.cursor/rules/isze-ids-delivery.mdc`; `build_ids_dashboard.py` geo sanity |
+| Map / geo / shared UI | §6b in IDS doc + `.cursor/rules/isze-ids-delivery.mdc`; `build_ids_dashboard.py` geo sanity |
 
 ```powershell
 cd ISZE\04_tools\ids_dealer_ranking

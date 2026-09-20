@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-08-26
 **Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md) · **Routing:** `00_docs/ROUTING.yaml` → `edit_html_dashboard`
-**Mode:** everything here is **Mode A** (outside-facing language rules apply) unless the row says Mode B / internal.
+**Mode:** everything here is **shared** (outside-facing language rules apply) unless the row says internal / internal.
 
 ---
 
@@ -61,13 +61,13 @@ JSON feeds come from `01_data/14_dashboards/*.json` (alias `01_data/dashboards/`
 
 | Dashboard | File | State |
 |---|---|---|
-| **Action Ledger** (P8) | `ops/ISZE_Action_Ledger.html` + `_Hub.html` | Active **Mode B** — mixed-basis stakes, never one wallet |
+| **Action Ledger** (P8) | `ops/ISZE_Action_Ledger.html` + `_Hub.html` | Active **internal** — mixed-basis stakes, never one wallet |
 | OS data map | `ops/ISZE_OS_Data_Map.html` | Internal planning — YAML `00_docs/ISZE_OS_DATA_MAP.yaml`, rebuild `ops/build_os_data_map.py` |
 | Tender Monitor | `ops/ISZE_Tender_Monitor_v2.html` | Active — feed `01_data/14_dashboards/tender_data.json` |
 | Commercial model map | `ops/ISZE_Commercial_Model_Map.html` | Reference |
 | Tools legal map · AI tools overview | `ops/ISZE_Tools_Legal_Map.html` · `ops/ISZE_AI_Tools_Overview.html` | Reference |
 
-### Pricing — **Mode B / internal QA until list-to-pocket is signed** (hub §1 item 2)
+### Pricing — **internal / internal QA until list-to-pocket is signed** (hub §1 item 2)
 
 | Dashboard | File | State |
 |---|---|---|
@@ -94,7 +94,7 @@ Non-ISZE: `side/PROPERTIQ.html`.
 |---|---|---|
 | **V4 — Supabase live Master KPIs** | Not started | Schema + credentials (hub §1 item 11) |
 | **Filename renames to canonical `vN`-free names** | Blocked by design | Build scripts hardcode `vN` — plan in [`CANONICAL.md`](../CANONICAL.md) |
-| **Competitor vintage labels (Mode A)** | Meta already flags vintages; the UI label is not built | Jerome (B10) — PartsPool 2026-03-29 ≠ Eucon UK 2023 |
+| **Competitor vintage labels (shared)** | Meta already flags vintages; the UI label is not built | Jerome (B10) — PartsPool 2026-03-29 ≠ Eucon UK 2023 |
 | Hygiene | Archive stale UIO v11; monthly sales update protocol | nothing |
 
 **V3 is done:** Golden Window overlay, Competitiveness Class C, Master ↔ PRISM links, single-home navigation rewrite.

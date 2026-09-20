@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node 'c:\\Users\\jerom\\Desktop\\claude\\ISZE\\.codex\\hooks\\db-sales-review-on-stop.mjs'"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node 'c:\\Users\\jerom\\Desktop\\claude\\ISZE\\.codex\\hooks\\exec-aftersales-on-stop.mjs'"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node 'c:\\Users\\jerom\\Desktop\\claude\\ISZE\\.codex\\hooks\\mypens-verify-on-stop.mjs'"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node 'c:\\Users\\jerom\\Desktop\\claude\\ISZE\\.codex\\hooks\\decisions-awaiting-on-stop.mjs'"
+          }
+        ]
+      }
+    ]
+}
+}

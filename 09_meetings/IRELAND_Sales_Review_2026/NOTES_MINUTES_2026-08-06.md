@@ -6,7 +6,7 @@
 
 **Attendees:** John Cummins (Parts & Logistics, Harris Group), Koen Matheussen.
 
-## Locked takeaways (Mode B)
+## Locked takeaways (internal)
 
 - ISZE YTD sales **−10%** / orders **−17%** vs Ireland internal **~+7% vs budget** — prior special-price stock still flowing.
 - Proposed StD **~€3.5M** vs Ireland YE internal slightly **>€3M**; UIO **+18.4%** needs Carl / Keith Dempsey check.

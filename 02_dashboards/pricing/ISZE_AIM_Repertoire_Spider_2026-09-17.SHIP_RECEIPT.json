@@ -1,0 +1,68 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_AIM_Repertoire_Spider_2026-09-17.html",
+  "artifact_mtime_ms": 1789677847418,
+  "written_at": "2026-09-17T20:46:10.284Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_AIM_Repertoire_Spider_2026-09-17.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "3023490 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=false"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN cmd present (OPEN_ISZE_AIM_Repertoire_Map.cmd, OPEN_ISZE_AIM_Repertoire_Spider.cmd, OPEN_ISZE_IAM_Price_vs_Billed_PN.cmd)"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "21 PNG(s) — agent must have image-Read before shipping"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\01_map_nothing_selected.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\02_header.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\03_legend.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\04_controls.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\05_hover_tooltip.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\06_panel_l1.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\06b_panel_centre.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\07_search.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\08_map_leaf_selected.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\08b_map_narrow_leaf.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\09_panel_leaf.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\10_map_all_connections.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\10b_map_selected_ribbons.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\12_colour_step.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\13_colour_move.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\14_filtered_distributor.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\15_zoomed.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\16_category_hidden.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\17_narrow.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\18_full.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa_spider\\19_map_default_hairball.png"
+  ],
+  "notes": "21 PNGs taken in real Chrome via file:// at 1600x1000 and 980px wide. All 21 image-Read one at a time at full size before shipping (21 taken, 21 read). Paint check: canvas 3116x1680 with 380+ distinct sampled colours; rings, ring labels, ribbons and the hover tooltip all present. Geometry: leaf euro partitions the book exactly (34,993,609 = 34,993,609), all 168 leaves carry at least one market connection, 2,921 leaf-to-market links on the map. Interactive QA in real Chrome 36/36 PASS."
+}

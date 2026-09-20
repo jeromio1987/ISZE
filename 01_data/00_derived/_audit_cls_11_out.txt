@@ -1,0 +1,44 @@
+﻿ENGINE AIR FILTRATION - euro, family and fleet together
+window 2025-01-01..2026-06-30 (18 months). Family = engine air-cleaner element.
+
+   market           fleet 2025   billed EUR    units  EUR/truck  units/truck  misfiled %
+   UTI                  10,336      228,545   12,257       22.1        1.186         99%
+   ITUK                 22,389      217,383    7,734        9.7        0.345         88%
+   IUK                  47,783      177,863   10,187        3.7        0.213        100%
+   IBX                 UNKNOWN       71,028    3,799   no fleet     no fleet         95%
+   Norway              UNKNOWN       59,170    3,102   no fleet     no fleet        100%
+   Ireland             UNKNOWN       52,605    2,267   no fleet     no fleet         86%
+   ISD                 UNKNOWN       46,402    2,435   no fleet     no fleet        100%
+   Sverige             UNKNOWN       45,807    2,447   no fleet     no fleet        100%
+   RSA                 UNKNOWN       35,647    2,259   no fleet     no fleet         96%
+   Imotors             UNKNOWN       35,578    1,691   no fleet     no fleet         98%
+   CIS-KTK             UNKNOWN       34,906    2,016   no fleet     no fleet         99%
+   UMI                  18,542       32,545    2,838        1.8        0.153         99%
+   Loutsios            UNKNOWN       28,133    1,829   no fleet     no fleet         98%
+   Imotors             UNKNOWN       26,395    1,271   no fleet     no fleet         99%
+   AutoWallis          UNKNOWN       26,144    1,316   no fleet     no fleet        100%
+   ROM Auto            UNKNOWN       19,255      966   no fleet     no fleet        100%
+   GA                  UNKNOWN       17,942      705   no fleet     no fleet        100%
+   CBC                 UNKNOWN       11,380      476   no fleet     no fleet        100%
+   Nordic FI           UNKNOWN       10,398      495   no fleet     no fleet        100%
+   Danmark             UNKNOWN       10,128      380   no fleet     no fleet         93%
+   NETWORK (top 20)    163,459    1,187,253   60,470        7.3        0.370
+
+   full window total: EUR 1,203,146 on 61,243 units across 27 customers
+   of which misfiled out of the Filters family: EUR 1,160,612 on 59,608 units
+
+==============================================================================
+EQ / PEER-CATALOGUE EVIDENCE ALREADY ON DISK
+
+  aim_gap_suggestions_20260702.csv: 987 rows
+  eq_hit values: {'': 987}
+  validated    : {'precedent_desc_20260702': 190, '': 797}
+  confidence   : {'3.74': 6, '4.0': 81, '3.87': 10, '3.9': 63, '3.88': 1, '3.89': 4, '3.83': 2, '3.99': 5, '3.81': 1, '3.93': 11, '3.95': 4, '3.85': 1, '3.75': 1, '5.69': 1, '1.28': 1, '0.0': 1, '1.0': 153, '1110.94': 1, '1.21': 16, '1.02': 34, '1.36': 8, '1.12': 11, '1.64': 7, '1.24': 3, '1.37': 5, '1.19': 9, '1.2': 10, '1.25': 15, '1.11': 10, '1.77': 1, '1.13': 25, '1.08': 37, '1.44': 5, '1.18': 13, '1.01': 93, '1.06': 36, '1.38': 27, '1.09': 19, '1.14': 10, '1.03': 43, '1.47': 2, '1.16': 5, '1.67': 1, '1.04': 25, '1.58': 2, '1.1': 38, '1.15': 6, '1.05': 24, '2.02': 1, '1.07': 13, '1.97': 1, '2.31': 1, '1.17': 4, '1.33': 3, '1.55': 2, '1.45': 1, '1.72': 2, '1.63': 3, '2.93': 1, '1.22': 2, '1.32': 2, '2.24': 2, '2.66': 1, '7.46': 1, '1.26': 3, '2.63': 1, '2.01': 1, '1.29': 1, '2.08': 3, '1.34': 3, '1.62': 1, '1.94': 1, '2.44': 1, '1.43': 1, '1.49': 1, '2.13': 3, '2.29': 2, '1.74': 1, '1.93': 1, '2.1': 1, '1.42': 4, '1.6': 1, '1.91': 2, '1.56': 1, '4.13': 3, '2.53': 1, '1.8': 1, '1.85': 1, '1.57': 1, '1.82': 2, '1.27': 2, '3.58': 1, '1.66': 1, '1.73': 1, '2.61': 2, '1.46': 2, '1.61': 1, '1.86': 1, '2.21': 1, '2.07': 1, '2.16': 1, '1.81': 1, '1.9': 1, '3.21': 1, '2.23': 1}
+
+  sample rows with an eq_hit:
+
+  competitiveness_autodoc_risk.csv: 298 rows  cols=['part_number', 'description', 'pr00_eur', 'autodoc_min_eur', 'ratio', 'aim_class', 'aim_category', 'Rev_CY2025_EUR', 'Autodoc_CheapestBrand']
+
+  iam_ks_price_gap.csv: 374 rows  cols=['db', 'pn', 'description', 'isze_price_eur', 'isze_price_source', 'proj_retail_eur', 'delta_pct', 'delta_vs_proj_retail_pct', 'isze_exposed']
+
+  iam_mekonomen_price_gap.csv: 67 rows  cols=['db', 'pn', 'description', 'isze_price_eur', 'isze_price_source', 'proj_retail_eur', 'delta_pct', 'delta_vs_proj_retail_pct', 'isze_exposed']

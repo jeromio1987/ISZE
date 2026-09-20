@@ -5,6 +5,19 @@
 # roadmaps/ai_sales_intelligence.md, DATA_INTEGRITY_FLAGS_2026-05-28.md,
 # 01_data/00_derived/_data_integrity_open_issues.md (2026-08-17).
 # Completeness index is a planning catalogue — not FACTS-quotable.
+#
+# Added 2026-09-18. Four optional fields on every item:
+#   grain         what ONE ROW of the dataset represents. null where no actual
+#                 dataset exists yet (the item is an ask or a scope decision).
+#   market_key    the column that identifies the market/distributor, spelled as in
+#                 the file. null means the dataset has no market dimension at all
+#                 (for example a part-number price file) — it can never be mapped.
+#   geo           exact (real latitude/longitude in the dataset) | approximate (a
+#                 coordinate exists but is derived, e.g. a country centroid) | none
+#                 (no coordinates anywhere in it, so it can never go on a map)
+#   source_entity who the data comes from, in this file's own naming. null where it
+#                 could not be established from evidence.
+# A null is an honest answer, not a gap to fill with a guess.
 
 version: 1
 snapshot_date: 2026-08-18
@@ -54,6 +67,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 06_uio/_CURRENT/
+        grain: "One row per country x CV/LCV x model type x distributor, with one column per year from 1990 to 2030."
+        market_key: "Ctry Code"
+        geo: "none"
+        source_entity: "IML / ITUK / IMIT / ISZE"
       - id: ituk_dvla_lane
         name: ITUK DVLA parc lane (signed-off, separate from network league)
         status: have
@@ -61,6 +78,10 @@ capabilities:
         owner: IML / ITUK
         ask: null
         artefact: prism verification_fixtures / iml_v7_ituk_cy2025.yaml
+        grain: "One row per ITUK PMS category (oil, fuel and air filter, clutch, brakes) on the CY2025 DVLA car park of 22,389 vehicles."
+        market_key: "distributor"
+        geo: "none"
+        source_entity: "IML / ITUK"
       - id: vin_register
         name: JP VIN register (rolling 60-month PMS cohort)
         status: partial
@@ -68,6 +89,10 @@ capabilities:
         owner: ISZJ
         ask: Transmission map (AT/MT) and later ITUK/UTI VIN packs.
         artefact: 01_data/07_UIO/vin/
+        grain: "One row per VIN (one vehicle) in the Japan SKD + CBU shipment extract."
+        market_key: "db_code"
+        geo: "none"
+        source_entity: "IML"
       - id: lcv_scr_cutoffs
         name: LCV chassis / registration-year cutoffs (SCR vs non-SCR interval)
         status: need
@@ -76,6 +101,10 @@ capabilities:
         owner: IMIT
         ask: Chassis or registration-year cutoffs from IMIT so the LCV parc can be weighted 15k vs 20k.
         artefact: 01_data/03_PMS/service_schedules/
+        grain: "No row-grain dataset yet. The held evidence is one OEM service-schedule PDF per LCV generation (RG, RG21, RT56, RT88)."
+        market_key: null
+        geo: "none"
+        source_entity: "IMIT"
 
   - id: gps
     name: GPS / wallet
@@ -88,6 +117,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/00_derived/sales_fact.parquet
+        grain: "One row per SAP billing line. A given sold-to and part number can repeat within one billing date, so a row is a line, not a unique combination."
+        market_key: "sold_to_sap"
+        geo: "none"
+        source_entity: "ISZE"
       - id: gps_spu
         name: Spend per unit by distributor
         status: have
@@ -95,6 +128,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/00_derived/gps_spu_by_distributor.csv
+        grain: "One row per distributor per year."
+        market_key: "distributor_code"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: gps_ex_warranty
         name: Ex-warranty GPS
         status: have
@@ -103,6 +140,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/00_derived/gps_spu_by_distributor.csv
+        grain: "One row per distributor per year, with the warranty-parts share taken out (same file as spend per unit by distributor)."
+        market_key: "distributor_code"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: gps_fy_workbook
         name: Locked fiscal GPS workbook
         status: have
@@ -110,6 +151,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/ISZE_GPS_Calculator_v9.xlsx
+        grain: "One row per distributor on the GPS 2025 sheet, with one column per measure (UIO, target spend, parts billed incl. warranty, warranty input, GPS %)."
+        market_key: "Distributor"
+        geo: "none"
+        source_entity: "ISZE"
       - id: umi_lcv_warranty
         name: Israel LCV warranty (UMI)
         status: have
@@ -118,6 +163,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/UMI warranty data 202301 - 202605 (1).xlsx
+        grain: "One row per warranty claim line (repair order x line number x part)."
+        market_key: "Country Code"
+        geo: "none"
+        source_entity: null
       - id: cv_blank_country
         name: CV Sheet4 “blank country €314k”
         status: closed
@@ -127,6 +176,10 @@ capabilities:
         ask: null
         how_to_find: Open Warranty_CV_2025.xlsx sheet DATA WITHOUT MIDI (not the Sheet4 pivot). Skip PARTNBR 0 / 0000000000. Remaining valid-PN euros sit on UK / Ireland / Israel / Portugal / Germany rows. Nov–Dec 2025 CV is not in this extract — it is in CV Warranty.xlsx sheet 10_25-12_2025 (2025-09-18 → 2025-12-17).
         artefact: 01_data/90_INBOX/warranty_audit_2026-07-27/SANITY.md
+        grain: "One row per CV warranty claim line (repair order line x part) on the DATA WITHOUT MIDI sheet."
+        market_key: "CTY"
+        geo: "none"
+        source_entity: "IMG / ISD"
       - id: cv_price_map
         name: Ireland / Portugal CV unpriced real part numbers
         status: partial
@@ -135,6 +188,10 @@ capabilities:
         owner: ISZE
         ask: Leave the lower bound, or price the 1+42 real PNs from the ITUK map.
         artefact: 01_data/90_INBOX/warranty_audit_2026-07-27/SANITY.md
+        grain: "One row per CV claim part line that has a value but no list price (15 Ireland rows, 114 Portugal rows)."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
       - id: lcv_warranty_dec2025
         name: LCV claim extract after November 2025
         status: need
@@ -143,6 +200,10 @@ capabilities:
         owner: Warranty team
         ask: Next LCV claim-assessment export covering December 2025 onward.
         artefact: 01_data/06_Warranty/Warranty_LCV_2025.xlsx
+        grain: "One row per LCV warranty claim line (repair order x operation x part) in the ExportClaimAssessment export."
+        market_key: "CountryCode"
+        geo: "none"
+        source_entity: "IMG / ISD"
       - id: billing_gross_spa
         name: Gross, SPA and condition columns on the SAP billing extract
         status: closed
@@ -150,6 +211,10 @@ capabilities:
         owner: —
         ask: null
         artefact: ISZE_ROADMAP.md / DECISIONS.md 2026-08-11
+        grain: "One row per SAP billing line (the sales_fact grain); the gross, SPA and condition columns themselves are not available."
+        market_key: "sold_to_sap"
+        geo: "none"
+        source_entity: "ISZE"
 
   - id: pms
     name: PMS capture
@@ -162,6 +227,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/00_derived/pms_capture_by_db_year.csv
+        grain: "One row per distributor x year x PMS category x line type (genuine, BVP or total)."
+        market_key: "distributor_code"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: gps_base_18db
         name: 18-distributor GPS-base / PMS parc config
         status: have
@@ -169,6 +238,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: pms_capture_assumptions.yaml
+        grain: "One row per assumption (service interval, wear factor, consumable factor), with per-distributor overrides keyed by distributor code."
+        market_key: "UTI / ITUK"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: iml_air_oil
         name: IML-confirmed air-to-oil replacement ratio
         status: need
@@ -176,6 +249,10 @@ capabilities:
         owner: IML
         ask: Confirm the air-to-oil replacement ratio.
         artefact: pms_capture_assumptions.yaml / pms_service_intervals.md
+        grain: "No dataset. A single replacement ratio held today as one consumable factor (air element every second oil service, 0.5)."
+        market_key: null
+        geo: "none"
+        source_entity: "IML"
       - id: ituk_brake_factor
         name: ITUK brake wear factor (0.4 vs 0.8)
         status: need
@@ -183,6 +260,10 @@ capabilities:
         owner: ITUK
         ask: Brake replacement evidence so the 0.4 vs 0.8 basis can be chosen.
         artefact: ISZE_ROADMAP.md
+        grain: "No dataset. A single brake replacement-rate factor for ITUK (currently 0.4, with 0.8 a candidate basis)."
+        market_key: null
+        geo: "none"
+        source_entity: "ITUK"
       - id: n35_registry
         name: N35 / RZ4E / 4JZ1 PMS part-number registry
         status: need
@@ -190,6 +271,10 @@ capabilities:
         owner: IML / ISZE
         ask: N35 PMS registry comparable to the 55-PN N75 set.
         artefact: 01_data/15_gpt_safe/GPT_DEEP_DIVE_BRIEFING_2026-05-15.md
+        grain: "Not built. Intended as one row per N35 / RZ4E / 4JZ1 PMS part number, comparable to the 55-part N75 registry."
+        market_key: null
+        geo: "none"
+        source_entity: "IML"
       - id: out_of_gps_base
         name: Put CIS / Palestine markets into the 18-db GPS-base
         status: closed
@@ -197,6 +282,10 @@ capabilities:
         owner: —
         ask: null
         artefact: 01_data/00_derived/_data_integrity_open_issues.md
+        grain: "Not a dataset. A scope decision: the CIS and Palestine markets stay outside the 18-distributor GPS base."
+        market_key: null
+        geo: "none"
+        source_entity: null
 
   - id: mix
     name: Mix / BVP
@@ -209,6 +298,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/00_derived/mix_genuine_bvp_pms.csv
+        grain: "One row per distributor x year x product group x product subgroup (PMS taxonomy)."
+        market_key: "distributor_code"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: substitution
         name: Substitution flags (genuine collapse as BVP rises)
         status: have
@@ -216,6 +309,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/00_derived/substitution_by_db_year.csv
+        grain: "One row per distributor x year x product subgroup (paired genuine-with-BVP-alternative basket)."
+        market_key: "distributor_code"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: dealer_sellout_coverage
         name: Dealer sell-out (sales-to-dealer) network coverage
         status: partial
@@ -223,6 +320,10 @@ capabilities:
         owner: Distributors
         ask: Sell-out extracts from the remaining DBs, same long schema.
         artefact: 01_data/12_raw/dealer_sales/
+        grain: "One row per distributor x source file x grain x year/period x part number x dealer, in the canonical long format."
+        market_key: "distributor_code"
+        geo: "approximate"
+        source_entity: "ITUK / IUK / Harris Group / Petros / Imotors / Rom Auto / UTI"
       - id: elasticity
         name: Quote ISZE→distributor price-volume elasticity
         status: closed
@@ -230,6 +331,10 @@ capabilities:
         owner: —
         ask: null
         artefact: price_volume_elasticity.README.md
+        grain: "One row per PMS category, with the fitted price-volume coefficient (qty-weighted on year-on-year log deltas, 2023-2025)."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
 
   - id: price
     name: Price / IAM
@@ -242,13 +347,21 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/00_derived/parts_catalog_dimension.csv
+        grain: "One row per part number in the catalogue dimension."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
       - id: iam_scrape_vintage
         name: IAM competitor file vintages labelled on the join
         status: partial
-        integrity: PartsPool Autodoc DE/NO is 2026-03-29, not Eucon UK 2023. Builder meta already flags; Mode A / HTML country packs need a rebuild/ship to show the label.
+        integrity: PartsPool Autodoc DE/NO is 2026-03-29, not Eucon UK 2023. Builder meta already flags; shared / HTML country packs need a rebuild/ship to show the label.
         owner: ISZE
-        ask: Rebuild/ship Mode A packs when asked so the vintage is visible, not only in the builder.
+        ask: Rebuild/ship shared packs when asked so the vintage is visible, not only in the builder.
         artefact: 01_data/00_derived/eucon_price_gap.csv
+        grain: "One row per Isuzu part number with the scraped competitor price set attached."
+        market_key: "Countries_Found"
+        geo: "none"
+        source_entity: "PartsPool / Autodoc"
       - id: dated_lists
         name: Dated PR00 and ZPR1 lists 2023–2026
         status: have
@@ -256,6 +369,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/01_Pricing/history/
+        grain: "One row per part number x price column on the IE40 PR00 sheet; the ZPR1 files carry one sheet per customer (1799, 1797, 2372)."
+        market_key: "Customer"
+        geo: "none"
+        source_entity: "ISZE"
       - id: pr00_coverage
         name: Catalogue PR00 coverage (~98.2%)
         status: have
@@ -263,6 +380,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/00_derived/pn_coverage_classification.csv
+        grain: "One row per part number, classified by its PR00 coverage status."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
       - id: list_to_pocket
         name: Year-matched list-to-pocket join (validated)
         status: partial
@@ -270,6 +391,10 @@ capabilities:
         owner: ISZE
         ask: Run and sign off the year-matched list-to-pocket join.
         artefact: 01_data/01_Pricing/history/
+        grain: "One row per grain x year x payer-or-distributor, holding the list-to-pocket realization percentage. The payer column is blank on the distributor-grain rows, so those rows carry the percentage only."
+        market_key: "payer_or_db"
+        geo: "none"
+        source_entity: "ISZE"
       - id: residual_24pn
         name: Residual 24 part numbers / €67k ZPR1-path hardware
         status: partial
@@ -277,6 +402,10 @@ capabilities:
         owner: ISZE
         ask: Park or price the 24 ZPR1-path hardware PNs.
         artefact: 01_data/00_derived/pn_coverage_classification.csv
+        grain: "One row per part number; the 24 ZPR1-path hardware parts are a subset of it."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
       - id: epc_supersession
         name: EPC-validated supersession (billed-on-old)
         status: need
@@ -284,6 +413,10 @@ capabilities:
         owner: IML / ISZJ
         ask: EPC validation of billed-on-old supersessions.
         artefact: 00_docs/roadmaps/ai_sales_intelligence.md §6
+        grain: "One row per superseded part number billed on the old number (925 parts / EUR 2.48M on the IE40 map, not yet validated)."
+        market_key: null
+        geo: "none"
+        source_entity: "IML / ISZJ"
       - id: billing_gross_spa_price
         name: Gross / SPA / condition on billing (pricing decomposition)
         status: closed
@@ -291,6 +424,10 @@ capabilities:
         owner: —
         ask: null
         artefact: ISZE_ROADMAP.md 2026-08-11
+        grain: "One row per SAP billing line (the sales_fact grain); the pricing-decomposition columns are not available."
+        market_key: "sold_to_sap"
+        geo: "none"
+        source_entity: "ISZE"
 
 
   - id: fill
@@ -304,6 +441,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/00_derived/dealer_leakage_ituk.csv
+        grain: "One row per ITUK dealer x PMS category (260 rows)."
+        market_key: "dealer_name"
+        geo: "approximate"
+        source_entity: "ITUK"
       - id: offset_vor
         name: VOR / airfreight / movement (Offset Insights)
         status: have
@@ -311,6 +452,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 03_analytics/Isuzu/prism/pages/12_Offset_Insights.py
+        grain: "One row per distributor x product family x year (vehicle-off-road share, airfreight risk score)."
+        market_key: "distributor_code"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: network_fill
         name: Honest network fill-rate (not the reported good fill)
         status: need
@@ -318,6 +463,10 @@ capabilities:
         owner: Distributors
         ask: Fill / lost-sales extracts on the same grain as sell-out, where a DB will share them.
         artefact: null
+        grain: null
+        market_key: null
+        geo: "none"
+        source_entity: null
 
   - id: dealer
     name: Dealer / IDS
@@ -330,6 +479,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 05_memory/projects/ids-db-leverage-os.md
+        grain: "One row per IDS dealer (563 dealers in the v0.4 rollup); partly exported as one workbook per dealer."
+        market_key: "ids_tab"
+        geo: "exact"
+        source_entity: "ISZE"
       - id: std_partial
         name: Sales-to-dealer files (current markets)
         status: partial
@@ -337,6 +490,10 @@ capabilities:
         owner: Distributors
         ask: null
         artefact: 01_data/12_raw/dealer_sales/
+        grain: "One row per distributor x source file x grain x period x part number x dealer, in the canonical long format."
+        market_key: "distributor_code"
+        geo: "approximate"
+        source_entity: "ITUK / IUK / Harris Group / Petros / Imotors / Rom Auto / UTI"
       - id: network_sellout
         name: Network-wide dealer sell-out
         status: need
@@ -344,6 +501,10 @@ capabilities:
         owner: Distributors / ISZE
         ask: Remaining DB sell-out as a FY2027 condition, same schema.
         artefact: 01_data/DATA_MANIFEST.md §05
+        grain: "Not built network-wide. Intended to be the canonical long format: one row per distributor x period x part number, plus dealer where the distributor reports it."
+        market_key: null
+        geo: "none"
+        source_entity: null
       - id: pull_scorecard
         name: PIC-matrix monthly Pull scorecard (visited / closed / incomplete)
         status: need
@@ -351,6 +512,10 @@ capabilities:
         owner: Distributors (PIC)
         ask: Fill the monthly Pull (visited YTD, actions closed, incomplete cleared).
         artefact: 09_meetings/IDS_2026_DB_Feedback_Sheet_v0.4/
+        grain: "Not filled. Intended as one row per distributor per month (visited year-to-date, actions closed, incomplete cleared)."
+        market_key: null
+        geo: "none"
+        source_entity: "Distributors"
       - id: ids_sales_correlation
         name: Use IDS scores to predict parts sales
         status: closed
@@ -358,6 +523,10 @@ capabilities:
         owner: —
         ask: null
         artefact: ids_correlation_scan_2026-08-10.md
+        grain: "One row per IDS dealer with its score paired against parts sales for the correlation scan."
+        market_key: "ids_tab"
+        geo: "exact"
+        source_entity: "ISZE"
 
   - id: cadence
     name: Account cadence
@@ -370,6 +539,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/17_interactions/
+        grain: "One row per local-mail interaction from the 24-month MAPI run; derived fields only, no message bodies."
+        market_key: "db_code"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: early_warning
         name: Early Warning / defection alerts
         status: have
@@ -377,13 +550,21 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/00_derived/defection_alerts.csv
+        grain: "One row per level (distributor or dealer) x entity x PMS category."
+        market_key: "distributor_code"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: p4_account_health
         name: P4 account-health tables
         status: partial
-        integrity: Builder live 2026-08-18. Draft thresholds. Not a KPI. No Mode A / PRISM widget until calibration.
+        integrity: Builder live 2026-08-18. Draft thresholds. Not a KPI. No shared / PRISM widget until calibration.
         owner: ISZE (Jerome calibrate)
         ask: Calibrate P4 thresholds (task 4.9) before any widget.
         artefact: 00_docs/P4_DETERMINISTIC_SIGNALS.md
+        grain: "One row per distributor per month (215 rows)."
+        market_key: "db_code"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: signal_order_latency
         name: Signal → order latency as a published KPI
         status: need
@@ -391,6 +572,10 @@ capabilities:
         owner: ISZE
         ask: Publish after P4 calibration, with the sales-fact end-date caveat.
         artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.1
+        grain: "One row per distributor per month, the same grain as account health; the latency value is null after the sales-fact end date (2026-03-31)."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
       - id: crm
         name: CRM
         status: org
@@ -398,6 +583,10 @@ capabilities:
         owner: ISZE org
         ask: null
         artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.2
+        grain: null
+        market_key: null
+        geo: "none"
+        source_entity: null
       - id: transcripts
         name: Call transcripts
         status: org
@@ -405,6 +594,10 @@ capabilities:
         owner: ISZE org
         ask: null
         artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.2
+        grain: null
+        market_key: null
+        geo: "none"
+        source_entity: null
       - id: graph_mail
         name: Cloud Graph / OAuth mailbox
         status: org
@@ -412,6 +605,10 @@ capabilities:
         owner: Tenant admin
         ask: null
         artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.3
+        grain: null
+        market_key: null
+        geo: "none"
+        source_entity: null
 
   - id: forecast
     name: Forecast
@@ -424,6 +621,10 @@ capabilities:
         owner: ISZE
         ask: Spec an order-rate × parc model once P4 latency exists.
         artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.1
+        grain: "Not built. Intended as one row per distributor x period with an order rate against the vehicle parc."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
       - id: live_erp
         name: Live ERP write-back / continuous extract
         status: org
@@ -431,6 +632,10 @@ capabilities:
         owner: ISZE org / SAP
         ask: null
         artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.2
+        grain: "Not built. Intended as one row per SAP billing line (the sales_fact grain), delivered continuously instead of as a periodic extract."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
 
   - id: stakeholder
     name: Stakeholder model
@@ -443,6 +648,10 @@ capabilities:
         owner: ISZE sales
         ask: Name decision rights (pricing / stock / PMS) per DB from the stakeholder dimension.
         artefact: 00_docs/roadmaps/ai_sales_intelligence.md §1.1
+        grain: "One row per stakeholder (203 in the local-mail stakeholder dimension), with the decision right recorded per distributor."
+        market_key: "db_code"
+        geo: "approximate"
+        source_entity: "ISZE"
 
   - id: plan
     name: Plan / GPS%
@@ -455,6 +664,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/11_planning/budget_per_DB_reviewed_24042026.xlsx
+        grain: "One row per customer / distributor on the Incentive FY27 sheet (ITUK, IUK, UMI, UTI, IBX, ISD, Portugal, Ireland, Norway, Sweden, KTK), plus a total row. The other sheet is one cost line per budget item."
+        market_key: "Customer"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: vpacc
         name: FY2027 VPACC action plan
         status: have
@@ -462,6 +675,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/11_planning/
+        grain: "One row per action point in the FY2027 VPACC action plan (121 items), with one column per month."
+        market_key: "db"
+        geo: "approximate"
+        source_entity: "ISZE"
       - id: kosha
         name: Kosha / 2030 plan tracker
         status: have
@@ -469,6 +686,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 02_dashboards/fleet/ISZE_Plan_Tracker_2030.html
+        grain: "One row per fiscal year, with columns for the IML business plan, realistic low and high, gap to midpoint and comment."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
       - id: gps_pct_honesty
         name: Honest GPS% vs as-presented workbook
         status: partial
@@ -476,6 +697,10 @@ capabilities:
         owner: ISZE
         ask: Per-DB, publish fiscal GPS% from the locked workbook or say it is absent.
         artefact: 09_meetings/*_Operating_Dashboard_2026/DATA_INTEGRITY.md
+        grain: "One row per distributor, holding the published fiscal GPS% or an explicit statement that it is absent."
+        market_key: "distributor_code"
+        geo: "approximate"
+        source_entity: "ISZE"
 
   - id: quote
     name: Quote gate
@@ -488,6 +713,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 01_data/00_derived/_verification_report.json
+        grain: "One row per pipeline check (id, status, message, detail)."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
       - id: facts
         name: FACTS narrative anchors
         status: have
@@ -495,6 +724,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: FACTS.md
+        grain: "One row per headline fact, each carrying its source and as-of date."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
       - id: flags_c_h
         name: Remaining quote-guards (interval factor and credit notes)
         status: partial
@@ -502,6 +735,10 @@ capabilities:
         owner: IML (C) / SAP (H, not expected soon)
         ask: IML air:oil number. Do not wait on ERP for H.
         artefact: 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
+        grain: "One row per integrity flag (A to H), each with a severity and a quote-guard note."
+        market_key: null
+        geo: "none"
+        source_entity: "ISZE"
       - id: page10_di_stale
         name: PRISM Data Integrity page — “DI items pipeline does not check”
         status: have
@@ -509,6 +746,10 @@ capabilities:
         owner: ISZE
         ask: null
         artefact: 03_analytics/Isuzu/prism/pages/10_Data_Integrity.py
+        grain: "One row per pipeline check, plus per-distributor reconciliation rows, on the PRISM Data Integrity page."
+        market_key: "distributor_code"
+        geo: "approximate"
+        source_entity: "ISZE"
 
 closed_doors:
   - id: cv_blank_parse
@@ -588,11 +829,11 @@ asks:
   - rank: 12
     item: p4_account_health
     who: Jerome
-    ask: Calibrate P4 thresholds before any Mode A / PRISM widget.
+    ask: Calibrate P4 thresholds before any shared / PRISM widget.
   - rank: 13
     item: iam_scrape_vintage
     who: ISZE
-    ask: Rebuild/ship Mode A packs when asked so IAM vintages (PartsPool 2026-03-29 vs Eucon UK 2023) are visible on the pack, not only in the builder.
+    ask: Rebuild/ship shared packs when asked so IAM vintages (PartsPool 2026-03-29 vs Eucon UK 2023) are visible on the pack, not only in the builder.
   - rank: 14
     item: network_fill
     who: Distributors

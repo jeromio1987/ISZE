@@ -1,0 +1,50 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_AIM_Classification_Paper.html",
+  "artifact_mtime_ms": 1789742848670,
+  "written_at": "2026-09-18T14:54:23.102Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_AIM_Classification_Paper.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "284386 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN cmd present (OPEN_Aftermarket_BI_Command_Center.cmd, OPEN_DB_DLR_Replenishment.cmd, OPEN_Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.cmd)"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "3 PNG(s) — agent must have image-Read before shipping"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_aim_paper\\cover.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_aim_paper\\kpi_toc.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_aim_paper\\tax_cards.png"
+  ],
+  "notes": "Rebuilt 2026-09-18 from aim_master_v2.csv (165,213) + aim_pn_classification_v2.csv. Hero 165,213; catalogue card 7/27/176 x 164,667; AIM labels 18,619 incl 2,417 gap_auto. Image-read cover+kpi+tax by agent."
+}

@@ -818,3 +818,257 @@ Built C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\is
   Attack targets: 2
   Action queue: 7
 Done: ma 24/08/2026  7:33:32,64 
+ 
+============================================================ 
+Run started: di 15/09/2026  6:16:06,19 
+============================================================ 
+============================================================
+  ISZE TENDER MONITOR v3
+  Last 30 days | Markets: UK, EU/TED, DE(+OV), BE, NL, FR, PL, ES, IT, RO, Norway, Finland, Israel, IEC
+  CPV codes: 10 (surgical — ISZE targets only)
+  TED country filter: 29 markets (incl. CYP, MLT)
+  TED detail fetch: OFF (cap=40, delay=0.5s; set ISZE_TED_FETCH_DETAIL=1 to enable)
+============================================================
+
+[UK] Fetching from Find a Tender...
+  [UK] API response keys: ['uri', 'version', 'extensions', 'publishedDate', 'publisher', 'license']
+  Page 1: 0 releases (total: 0)
+[UK] Zero releases on page 1 with stages filter — retrying without it...
+  [UK] Without stages filter: 100 releases
+  Page 2: 0 releases (total: 100)
+[UK] Total fetched: 100
+[UK] Matches: 31 (excluded 1 by CPV gate)
+
+[CF] Fetching from Contracts Finder (UK lower-value, OCDS API)...
+  [CF] 'vehicle maintenance': 91 new matches
+  [CF] 'repair and maintenance': 429 rate-limited — waiting 120s
+[CF] Total unique matches: 91
+
+[TED] Fetching from TED Europa (v3 — surgical CPV + country filter)...
+  Query: (PC=34131000 OR PC=34113000 OR PC=34136000 OR PC=34130000 OR PC=34136200 OR PC=50110000 OR PC=50112000 OR PC=50114000 OR PC=50116000 OR PC=50111000) AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN OR CY=CYP OR CY=MLT) AND PD>=20260816
+  Status: 200
+  Fetched 100 (running total: 100)
+  Status: 200
+  Fetched 100 (running total: 200)
+  Status: 200
+  Fetched 100 (running total: 300)
+  Status: 200
+  Fetched 100 (running total: 400)
+  Status: 200
+  Fetched 100 (running total: 500)
+  Status: 200
+  Fetched 100 (running total: 600)
+  Status: 200
+  Fetched 100 (running total: 700)
+  Status: 200
+  Fetched 37 (running total: 737)
+  Status: 200
+[TED] Total fetched: 737 — applying keyword + CPV exclusion filter...
+[TED] Keyword matches: 558
+  Excluded by CPV gate:   72
+  Excluded by keyword:    107
+  Detail fetch: attempted=0 ok=0 (cap=0)
+  After list(+detail): deadline=71/558 (12%) | value=0/558 (0%) | fleet=17/558 (3%)
+
+[NL] Fetching from TenderNed RSS...
+[NL] TenderNed: 25 keyword matches
+
+[DE] Fetching Germany national feed (service.bund RSS)…
+  [DE] service.bund RSS: 15 keyword matches (of feed items)
+  [DE] DTVP RSS still unavailable (HTTP 404) — RETIRED (TED-only)
+[DE] Total Germany national results: 14
+
+[DE OV] Fetching oeffentlichevergabe Open Data (csv.zip, vehicle CPV/keyword)...
+  [DE OV] 2026-08: scanned≈22892 vehicle-ish +288 (zip 16862546 bytes)
+  [DE OV] 2026-09: scanned≈10627 vehicle-ish +288 (zip 7725662 bytes)
+[DE OV] Unique matches: 576 (scanned≈33519 across ['2026-08', '2026-09'])
+
+[Doffin] Fetching from Doffin Public API (Norway)...
+  GET https://dof-notices-prod-api.azure-api.net/public/v2/search
+  [kjøretøy] page 1 – Status: 200
+  [lastebil] page 1 – Status: 200
+  [pickup] page 1 – Status: 200
+  [varebil] page 1 – Status: 200
+  [chassis] page 1 – Status: 200
+  [vedlikehold kjøretøy] page 1 – Status: 200
+  [truck] page 1 – Status: 200
+  [isuzu] page 1 – Status: 200
+[Doffin] Total unique: 49
+
+[HILMA] Fetching from HILMA AVP Search (Finland)...
+  POST https://api.hankintailmoitukset.fi/avp/eformnotices/docs/search
+  Status: 200
+[HILMA] Got 100 notices (odata.count=424)
+[HILMA] Matches: 65
+
+[BE] Fetching from publicprocurement.be SEA API…
+  [BE] CPV+deadline p1: +15 (page=17, totalCount=17)
+  [BE] term=voertuig p1: +0 (page=12, totalCount=12)
+  [BE] term=véhicule p1: +0 (page=12, totalCount=12)
+  [BE] term=vehicle p1: +0 (page=11, totalCount=11)
+  [BE] term=camion p1: +0 (page=9, totalCount=9)
+  [BE] term=bestelwagen p1: +0 (page=4, totalCount=4)
+  [BE] term=pickup p1: +0 (page=0, totalCount=0)
+[BE] Total Belgium SEA: 15
+
+[IL] Fetching Israel tenders via mr.gov.il (live)…
+  [IL] AC 'רכב': 3 new (products=4)
+  [IL] AC 'טנדר': 4 new (products=4)
+  [IL] AC 'משאית': 4 new (products=4)
+  [IL] AC 'תחזוקה': 0 new (products=4)
+  [IL] AC 'צי רכב': 2 new (products=4)
+  [IL] AC 'רכב מסחרי': 4 new (products=4)
+  [IL] HTML: 0 keyword matches (20 cards)
+  [IL] HTML: 0 keyword matches (20 cards)
+[IL] Live matches: 17 (AC=17, HTML=0)
+
+[IEC] Electric Company of Israel — domestic probe + global-iec HTML…
+  [IEC] domestic: GEO_BLOCKED — iec.co.il domestic supplier tenders (Access Denied from outside Israel). Vehicle / leasing packs live here…
+  [IEC] global: 7 international tenders parsed; 0 vehicle-keyword hits → 0 rows
+  [IEC] No vehicle/fleet/leasing hits on international list (UMI chase likely on GEO_BLOCKED domestic portal).
+[IEC] Vehicle-keyword matches: 0
+
+[FR BOAMP] Fetching OpenDataSoft records (vehicle/objet filter)...
+  [FR BOAMP] API total_count≈9796 · page=80
+[FR BOAMP] Matches in lookback: 46
+
+[PL BZP] Fetching e-Zamówienia notices (CPV filter)...
+  [PL BZP] CPV 34131000: 8 rows
+  [PL BZP] CPV 34130000: 20 rows
+  [PL BZP] CPV 34136000: 1 rows
+  [PL BZP] CPV 34136200: 0 rows
+  [PL BZP] CPV 34113000: 12 rows
+  [PL BZP] CPV 50114000: 0 rows
+  [PL BZP] CPV 50110000: 4 rows
+[PL BZP] Unique matches: 39
+
+[ES PLACSP] Fetching Atom syndication (vehicle keyword filter)...
+  [ES PLACSP] licitacionesPerfilesContratanteCompleto3.atom: 8 keyword matches
+[ES PLACSP] Matches: 8
+
+[IT PNCP] Fetching pubblicitalegale avvisi (vehicle keyword filter)...
+  [IT PNCP] API totalElements≈3480
+  [IT PNCP] page 0: scanned=100 hits+=0
+  [IT PNCP] page 1: scanned=100 hits+=2
+  [IT PNCP] page 2: scanned=100 hits+=3
+  [IT PNCP] page 3: scanned=100 hits+=2
+  [IT PNCP] page 4: scanned=100 hits+=2
+  [IT PNCP] page 5: scanned=100 hits+=1
+  [IT PNCP] page 6: scanned=100 hits+=1
+  [IT PNCP] page 7: scanned=100 hits+=0
+  [IT PNCP] page 8: scanned=100 hits+=0
+  [IT PNCP] page 9: scanned=100 hits+=0
+  [IT PNCP] page 10: scanned=100 hits+=1
+  [IT PNCP] page 11: scanned=100 hits+=3
+  [IT PNCP] page 12: scanned=100 hits+=1
+  [IT PNCP] page 13: scanned=100 hits+=0
+  [IT PNCP] page 14: scanned=100 hits+=1
+  [IT PNCP] page 15: scanned=100 hits+=3
+  [IT PNCP] page 16: scanned=100 hits+=0
+  [IT PNCP] page 17: scanned=100 hits+=1
+  [IT PNCP] page 18: scanned=100 hits+=1
+  [IT PNCP] page 19: scanned=100 hits+=1
+[IT PNCP] Unique matches: 23 (scanned≈2000)
+
+[RO SEAP] Fetching e-licitatie NoticeCommon list (vehicle CPV/keyword)...
+  [RO SEAP] API total≈2049
+  [RO SEAP] page 0: scanned=100 hits+=11
+  [RO SEAP] page 1: scanned=100 hits+=5
+  [RO SEAP] page 2: scanned=100 hits+=4
+  [RO SEAP] page 3: scanned=100 hits+=4
+  [RO SEAP] page 4: scanned=100 hits+=7
+  [RO SEAP] page 5: scanned=100 hits+=7
+  [RO SEAP] page 6: scanned=100 hits+=10
+  [RO SEAP] page 7: scanned=100 hits+=7
+  [RO SEAP] page 8: scanned=100 hits+=5
+  [RO SEAP] page 9: scanned=100 hits+=6
+  [RO SEAP] page 10: scanned=100 hits+=4
+  [RO SEAP] page 11: scanned=100 hits+=9
+  [RO SEAP] page 12: scanned=100 hits+=8
+  [RO SEAP] page 13: scanned=100 hits+=4
+  [RO SEAP] page 14: scanned=100 hits+=2
+  [RO SEAP] page 15: scanned=100 hits+=4
+  [RO SEAP] page 16: scanned=100 hits+=2
+  [RO SEAP] page 17: scanned=100 hits+=4
+  [RO SEAP] page 18: scanned=100 hits+=5
+  [RO SEAP] page 19: scanned=100 hits+=8
+  [RO SEAP] page 20: scanned=49 hits+=4
+[RO SEAP] Unique matches: 120 (scanned≈2049)
+
+[AT USP] Fetching Ausschreibungssuche tenderlist (vehicle CPV window)...
+  [AT USP] API filtered≈37
+  [AT USP] page 0: scanned=37 hits+=25
+[AT USP] Unique matches: 25 (scanned≈37)
+
+[PT BASE] Fetching dados.gov anúncios JSON (vehicle/fleet keyword)...
+  [PT BASE] downloading anuncios2026.json …
+[PT BASE] Matches: 72 (scanned≈22537)
+
+✓ Saved: C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isuzu_tenders_v3.xlsx
+  UK (Find a Tender): 31
+  UK (Contracts Finder): 91
+  TED EU:   558
+  Germany:  14 (service.bund) + 576 (oeffentlichevergabe) + TED above-threshold
+  Norway:   49
+  Finland:  65
+  Israel:   17
+  IEC Israel: 0
+  Belgium:  15
+  Netherlands: 25
+  France BOAMP: 46
+  Poland BZP: 39
+  Spain PLACSP: 8
+  Italy PNCP: 23
+  Romania SEAP: 120
+  Austria USP: 25
+  Portugal BASE: 72
+
+============================================================
+SOURCE HEALTH: issues / non-active notes
+  [RETIRED] Belgium RSS: count=0 zero_runs=9 RETIRED — HTML SPA shell; live source is Belgium publicprocurement.be SEA
+  [BLOCKED] Estonia RHR: count=0 zero_runs=0 rhr/api/public/v1/opendata HTTP 500 — wait for ministry fix
+  [RETIRED] Germany DTVP/NRW: count=0 zero_runs=4 RETIRED — TED-only honesty for DTVP (no free feed); use TED DEU + Germany service.bund
+  [BLOCKED] Greece KIMDIS: count=0 zero_runs=0 Open-data URL is login shell; need Promitheus credentials
+  [SKIPPED] IEC iec.co.il domestic: count=0 zero_runs=0 GEO_BLOCKED — iec.co.il domestic supplier tenders (Access Denied from outside Israel). Vehicle / leasing packs live here, not on global-iec. Abroad pointer: https://www.global-iec.com/activeTenders.html
+  [RETIRED] Israel RSS: count=0 zero_runs=5 RETIRED — HTML SPA shell, 0 <item>; live = Israel mr.gov.il
+  [SUSPECT] Israel data.gov.il: count=0 zero_runs=5 demoted — live mr.gov.il succeeded; CKAN frozen Feb 2021
+  [CODE_READY] Lithuania CVP IS: count=0 zero_runs=0 POST cft-details-export returns 401 without VPT apiKey — CODE_READY
+  [BLOCKED] Slovakia UVO: count=0 zero_runs=0 Vestnik HTML recaptcha; no free list API
+============================================================
+
+Done.
+============================================================
+Built C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v2.html
+  Raw notices: 402
+  Opportunities: 376
+  Attack targets: 1
+  Action queue: 3
+Published: C:\Users\jerom\Desktop\claude\ISZE\01_data\dashboards\tender_data.json
+  Size: 2.56 MB  Modified: 09/15/2026 06:20:49
+Built C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v2.html
+  Raw notices: 402
+  Opportunities: 376
+  Attack targets: 1
+  Action queue: 3
+Building from isuzu_tenders_v3.xlsx
+[Isuzu+not-for-us gate] filtered snapshot: notices 402->402 (-0), opportunities 376->326 (-50)
+[Aftersales] tagged 39 of 326 opportunities
+Wrote C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v4_opportunities.xlsx
+Built C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v4_opportunity.html
+Wrote C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v4_data.json
+  Opportunities: 326
+  Sized (GPS €): 11
+  Unsized (no GPS €): 315
+  With fleet count: 23
+  No fleet in notice: 303
+  Fleet but no GPS € (map or product-fit): 12
+  Addressable GPS sum EUR: 55785.9
+  Stated fleet in captured notices (pickup/truck): 392 (20 rows) — NOT market potential
+  Stated fleet all segments: 413 (23 rows)
+  Aftersales tagged: 39 of 326
+  Product segments: lcv_van=1, pickup=75, rm_only=9, truck=183, weak=58
+  Source health: present
+  Workbook sheets: 18 from isuzu_tenders_v3.xlsx
+  Revenue shares: FY27 BP loaded
+  IDS dealer: preserved (linked)
+Done: di 15/09/2026  6:20:54,77 

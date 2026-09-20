@@ -150,7 +150,7 @@ def filter_country_payload(full: dict[str, Any], country: str) -> dict[str, Any]
 
 # Multi-country chrome that is redundant when the HTML already contains one country.
 # Keep: national avg, anonymous network avg, Map hover vs national, Country vs network tab.
-# Strip: Country filter / By country / Country radar / Changelog (Mode A colleague packs).
+# Strip: Country filter / By country / Country radar / Changelog (shared colleague packs).
 COUNTRY_ONLY_CSS = """
 <style id="country-only-ui">
   /* Single-country pack: hide DB-level country filter and multi-country tabs/panels */
@@ -198,7 +198,7 @@ def strip_multi_country_chrome(html: str) -> str:
 
 
 def strip_changelog_chrome(html: str) -> str:
-    """Remove Changelog tab + panel from Mode A country packs (client/colleague HTML)."""
+    """Remove Changelog tab + panel from shared country packs (client/colleague HTML)."""
     html = re.sub(
         r'\s*<button class="tab" data-tab="changelog" type="button">'
         r"Changelog</button>",
@@ -299,7 +299,7 @@ Country-only dealer compare for ISZE / IMG colleagues. English UI.
 - Dealers: **{dealer_count}**
 - Geo pinned: {geo.get("geo_ok", "—")} · missing: {geo.get("geo_missing", "—")}
 - Map: Leaflet + OpenStreetMap / CARTO (needs internet when opening HTML)
-- **No Country filter / By country / Country radar / Changelog** — Mode A colleague pack
+- **No Country filter / By country / Country radar / Changelog** — shared colleague pack
 - Benchmarks kept: dealer vs **{country} national average**, anonymous full-network average
 
 ## Network average

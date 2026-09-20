@@ -1,0 +1,158 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Price_Increase_5pct_Flat_REVIEW_2026-09-17.html",
+  "artifact_mtime_ms": 1789675693585,
+  "written_at": "2026-09-17T20:35:51Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "ISZE_Price_Increase_5pct_Flat_REVIEW_2026-09-17.html, Price_Increase_5pct_Flat_REVIEW_2026-09-17.xlsx, price_increase_5pct_summary.json"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "html 227,215 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no http(s) asset refs"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\OPEN_ISZE_Price_Increase_5pct_Flat_REVIEW.cmd"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "embedded payload clean"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "77 table rows, 8 canvas captures"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "17 PNGs on disk; 8 canvas captures, all painted; agent image-read 4 of them at full size: el_kpis (hero), el_note1 (which number is money), el_card1 (immovable set), el_card2 (family chart)"
+    },
+    {
+      "id": "excel_pre_delivery",
+      "ok": true,
+      "detail": "04_tools/excel_pre_delivery_check.py exit=0"
+    },
+    {
+      "id": "locked_files_untouched",
+      "ok": true,
+      "detail": "builder's declared write targets asserted non-locked; builder reads only price_bp_weighted_compare_pn.csv, aim_master_v2.csv, chart.umd.min.js"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_card1.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_card10.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_card2.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_card3.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_card4.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_card5.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_card6.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_card7.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_card8.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_card9.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_header.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_kpis.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_note1.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_note2.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\el_note3.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\review_desktop.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\_qa\\review_narrow.png"
+  ],
+  "counts": {
+    "pass": 80,
+    "warn": 0,
+    "fail": 0
+  },
+  "warnings": [],
+  "failures": [],
+  "headline": {
+    "rate_under_review_pct": 5.0,
+    "step_5pct_on_all_in_scope_eur": 1749680.47,
+    "step_5pct_on_movable_eur": 1629792.63,
+    "euro_weighted_move_pct": 5.0,
+    "primary_label": "Value of a flat +5% on the in-scope base",
+    "collectable_label": "Collectable once lines with no move available are excluded",
+    "note": "Both figures are reported with equal weight. A single flat rate makes the euro-weighted move equal the rate itself. The collectable figure is the one that lands as money; the larger figure is the arithmetic on the whole in-scope base and must not be quoted as cash."
+  },
+  "paint_check": [
+    {
+      "width": 1400,
+      "tag": "desktop",
+      "canvases": [
+        {
+          "w": 585,
+          "h": 330,
+          "painted": true,
+          "nonwhite": 43982
+        },
+        {
+          "w": 585,
+          "h": 330,
+          "painted": true,
+          "nonwhite": 49643
+        },
+        {
+          "w": 1222,
+          "h": 330,
+          "painted": true,
+          "nonwhite": 88663
+        },
+        {
+          "w": 1222,
+          "h": 330,
+          "painted": true,
+          "nonwhite": 143840
+        }
+      ]
+    },
+    {
+      "width": 900,
+      "tag": "narrow",
+      "canvases": [
+        {
+          "w": 822,
+          "h": 330,
+          "painted": true,
+          "nonwhite": 64133
+        },
+        {
+          "w": 822,
+          "h": 330,
+          "painted": true,
+          "nonwhite": 70298
+        },
+        {
+          "w": 822,
+          "h": 330,
+          "painted": true,
+          "nonwhite": 59567
+        },
+        {
+          "w": 822,
+          "h": 330,
+          "painted": true,
+          "nonwhite": 95469
+        }
+      ]
+    }
+  ],
+  "note": "Paper exercise. Nothing published, nothing mailed, no live list touched. Builder exit 0 is not proof; this receipt covers the rendered artifact. Correction pass 2026-09-17: the movability mask, the collectable figure and the rate-basis note were corrected; the earlier figures (1,647 immovable lines, EUR 4.48M, EUR 1,525,518 collectable, 5.9787% / 6.2347% rates and the unreproducible-denominator claim) were wrong and have been withdrawn.",
+  "screenshot_read_count": 4,
+  "screenshot_taken_count": 17,
+  "companion_artifacts": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\Price_Increase_5pct_Flat_REVIEW_2026-09-17.xlsx",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\price_5pct_review_2026-09-17\\price_increase_5pct_summary.json"
+  ]
+}

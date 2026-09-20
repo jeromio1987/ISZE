@@ -144,7 +144,7 @@ part3 = r'''
 <ul>
   <li>New dashboard shells without a new data contract.</li>
   <li>Composite 0–100 “risk scores” without pre-registered backtests.</li>
-  <li>ISZE→DB elasticity charts for Mode A.</li>
+  <li>ISZE→DB elasticity charts for shared.</li>
   <li>Re-asking SAP for gross/SPA/condition columns.</li>
   <li>Cloning Data Integrity / Early Warning into yet another HTML.</li>
   <li>Expanding revision_exception_queue UI before Monday triage exists.</li>
@@ -161,7 +161,7 @@ part3 = r'''
   <li>Draft UMI sell-out ask (mirror UTI PartSales language).</li>
   <li>Emit long CSVs for ITUK / UTI / Greece from existing raw.</li>
   <li>Quarantine prism UIO_v17.xlsx.</li>
-  <li>Label Mode A competitor packs with Eucon 2023 vs PartsPool 2026-03 vintages.</li>
+  <li>Label shared competitor packs with Eucon 2023 vs PartsPool 2026-03 vintages.</li>
   <li>Write DECISIONS entry: leakage € stays internal until list-to-pocket signed.</li>
   <li>Add “mailbox intake” stub to AUTOMATION_REGISTER (even if script lands next week).</li>
 </ol>
@@ -184,7 +184,7 @@ part3 = r'''
     <tr><td>P4</td><td>Account-health / who-went-quiet signals</td></tr>
     <tr><td>P5</td><td>Forecast track</td></tr>
     <tr><td>P8</td><td>Action Ledger pipeline</td></tr>
-    <tr><td>Mode A / Mode B</td><td>External-shareable vs internal-only surfaces</td></tr>
+    <tr><td>shared / internal</td><td>External-shareable vs internal-only surfaces</td></tr>
     <tr><td>FACTS</td><td>Single narrative authority for headline numbers</td></tr>
   </tbody>
 </table>

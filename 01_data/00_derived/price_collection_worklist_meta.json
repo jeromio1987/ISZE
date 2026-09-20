@@ -1,0 +1,21 @@
+{
+  "built": "2026-09-17T22:12:12",
+  "what": "top-200 revenue part numbers where a competing brand is identified and its price is not held",
+  "counts": {
+    "part_numbers": 139,
+    "billed_eur": 10353140.870000001,
+    "brand_named": 58,
+    "brand_named_billed_eur": 4045980.9899999998,
+    "criticality_A": 67
+  },
+  "how_to_use": [
+    "One row per part number. The competing brand column names the alternative where the Autodoc extract identified one.",
+    "Fill competitor_price_eur, the brand actually found, the source, the evidence tier and the date. Leave the tier blank where no price could be found - a blank is a result.",
+    "The price index column is our reference dealer price divided by the competing price. Under 0.95 we are cheaper; over 1.15 we are more expensive."
+  ],
+  "caveats": [
+    "The competing brand comes from the Autodoc extract. That file's PRICE column is unusable (277 of 298 rows carry the identical 2.34), so only the brand name is used here. Nothing in this list is priced off that file.",
+    "The Autodoc scrape itself is frozen behind Cloudflare. The brands named are catalogue brands with their own published catalogues, so this is a manual or targeted lookup per part number, not a bulk scrape.",
+    "63% of these part numbers have no brand named. They still have a rival - the extract identified one part number or a sibling under the same figure key - but not a brand, so they need a different route."
+  ]
+}

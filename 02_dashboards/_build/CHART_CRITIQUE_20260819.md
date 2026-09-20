@@ -1,6 +1,6 @@
 # Chart critique — all Tier A dashboards · 2026-08-19
 
-**Mode B internal · brutal honest UX audit**  
+**internal internal · brutal honest UX audit**  
 Scope: every SSR chart/viz in the four rebuilt HTML packs.  
 Fix pass: P0/P1 patched in `render_ssr_charts.py` + builders same day.
 
@@ -54,7 +54,7 @@ Each DB repeats:
 | AIM L1 bars | network | Top 15 families | **good** | Same data as treemap — redundant | P2 defer dedupe |
 | IAM scatter | network | KS index vs € gap | **good** | Dots unlabelled except hover title | P2: label top 3 outliers |
 | Book B bullet dual | network | Ambition vs guardrail | **good** | Second row duplicates first visually | P2: drop duplicate row |
-| Book B bucket weights | network | Horizontal bars by bucket | **good** | Bucket names truncated (`other_gf_1_0`) | P2 OK for Mode B |
+| Book B bucket weights | network | Horizontal bars by bucket | **good** | Bucket names truncated (`other_gf_1_0`) | P2 OK for internal |
 | Top 20 PNs bar | network | PN+DB in label | **good** | Labels long | title= hover exists |
 | ITUK dealer top 5 | network | Leaderboard list | **good** | Only ITUK — correct grain | — |
 
@@ -76,7 +76,7 @@ Each DB repeats:
 | Ambition vs guardrail bullet | Book B weighted vs blocked | **good** | — | — |
 | Bucket × action heatmap | Count grid | **good** | No legend key for colour scale | P2: add "hot = high count" key |
 | Stacked bucket × action bars | Stacked counts | **good** | No legend for colours — must hover | P2 |
-| IAM / list / share tables | Registers | **good** | Table-heavy tab — expected for Mode B | — |
+| IAM / list / share tables | Registers | **good** | Table-heavy tab — expected for internal | — |
 
 ---
 
@@ -99,7 +99,7 @@ Each DB repeats:
 |-----|---------------|---------|-------|-----|
 | Leakage unit gap by DB | Qty gap by DB | **misleading → P0** | Label said € but values were unit counts (6,227 not €6,227) | Renamed to units + fmt_int |
 | Register donut | Row count split | **misleading → P0** | "REVIEW_LEAKAGE: €289" — 289 is rows not euro | fmt_int legend |
-| Book B bucket × action stacked | Stacked counts per bucket | **good** | Bucket labels cryptic — OK Mode B | P2 |
+| Book B bucket × action stacked | Stacked counts per bucket | **good** | Bucket labels cryptic — OK internal | P2 |
 | Recommended action mix | Horizontal count bars | **good** | Long action names truncate | title= OK |
 | Revision register table | 500 rows | **good** | — | — |
 

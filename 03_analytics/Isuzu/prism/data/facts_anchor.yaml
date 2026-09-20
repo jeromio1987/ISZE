@@ -11,10 +11,22 @@ anchors:
   # 2026-08-25: parts base 103.57M -> 112.09M. sales_fact 477,505 -> 514,037
   # after wiring Q1FY2027.XLSX (2026 Apr–Jun). Prior Jul-03 note still applies
   # for CR/RE exclusion; Q1FY2027 has no SaTy so Apr–Jun CR/RE is sign-based only.
+  #
+  # 2026-09-17: both published values are the SAME METHOD at two cut-off dates —
+  # bridge in FACTS.md section 4.1. A third, undocumented movement was found and
+  # fixed: NON_PARTS (9 rows / EUR 180,715.11, all CY2026) was leaking into the
+  # parts base because sap_sold_to_mapping.csv mapped it to a code that was never
+  # in EXCLUDED_CODES. See data_prep.EXCLUDED_CODES + sales_loader.NON_PART_LINE_KIND.
+  # Recompute after the fix returns 112,089,307 exactly.
   - key: sales.parts_base_eur
     facts_value: 112089307
     tol_pct: 0.5
     facts_ref: "FACTS.md section 4 - parts base (2023–2026-06, ex-credit-notes/returns)"
+
+  - key: sales.parts_base_through_prior_quarter_eur
+    facts_value: 103573715
+    tol_pct: 0.5
+    facts_ref: "FACTS.md section 4.1 - same method cut at 2026-03-31 (the prior published value)"
 
   # 2026-07-15: PRISM lane re-based on the real per-distributor UIO bucket
   # split (cv_std/f_series/lcv) instead of the old hardcoded 2-market N75/LCV
@@ -76,10 +88,17 @@ anchors:
   # captured_total_eur rose EUR30.20M -> EUR30.76M from the more-complete 2025
   # re-export (CY2024-2025.XLSX), partially offset by CR/RE exclusion
   # (~EUR509K removed from 2025). Verified: 30,756,771.61 / 60,217,570 = 51.08%.
+  # 2026-09-17: 51.1 -> 55.7. THE WALLET MOVED, not the capture. ITUK's collapsed "LD" UIO
+  # row was being priced entirely at the N75 rate (EUR739) when 10,900 of its trucks are N35
+  # (EUR296). Splitting them — data_prep._split_collapsed_ld_rows, reading the workbook's own
+  # sheet '2. Vehicle Volume' section B — cut the ITUK ceiling EUR17.18M -> EUR12.21M and the
+  # network wallet EUR60.22M -> EUR55.25M, so the same capture reads 5.6 points higher. ITUK
+  # alone moved (32.4% -> 45.6%); the other 17 markets are unchanged because none of them has an
+  # N35 fleet. Verified: 30,756,771.61 / 55,253,312 = 55.66%.
   - key: waterfall.network.gps_pct_2025
-    facts_value: 51.1
+    facts_value: 55.7
     tol_pct: 0.5
-    facts_ref: "GPS - network CY2025 (ex-MIDI, ex-credit-notes/returns)"
+    facts_ref: "GPS - network CY2025 (ex-MIDI, ex-credit-notes/returns; N35/N75 split applied 2026-09-17)"
 
   - key: verify.fail
     facts_value: 0

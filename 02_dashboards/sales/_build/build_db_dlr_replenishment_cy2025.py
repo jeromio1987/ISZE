@@ -1,10 +1,10 @@
-"""Multi-DB replenishment dashboard CY2025 — bill vs dealer sell-out.
+"""Multi-DB replenishment dashboard CY2025 — bill vs dealer sales to dealer.
 
 Reads  : replenishment_summary_cy2025.parquet, replenishment_exceptions_cy2025.csv
 Writes : 02_dashboards/sales/ISZE_DB_DLR_Replenishment_CY2025.html
          02_dashboards/sales/OPEN_DB_DLR_Replenishment.cmd
 
-Mode B. UTI≠UMI · IUK≠ITUK · IRELAND≠IUK.
+internal. UTI≠UMI · IUK≠ITUK · IRELAND≠IUK.
 UX shell cloned from ISZE_OS_Data_Map.html + Command Center charts.
 """
 
@@ -30,6 +30,8 @@ ISZE = Path(__file__).resolve().parents[3]
 DERIVED = ISZE / "01_data" / "00_derived"
 OUT_HTML = ISZE / "02_dashboards" / "sales" / "ISZE_DB_DLR_Replenishment_CY2025.html"
 OUT_CMD = ISZE / "02_dashboards" / "sales" / "OPEN_DB_DLR_Replenishment.cmd"
+
+LABELS = BI.COL_LABELS
 
 
 def build_payload() -> dict:
@@ -72,15 +74,18 @@ def _repl_rows(rows: list[dict]) -> str:
     parts = []
     for r in rows:
         aim_cell = SSR.pill("aim", r.get("aim")) if r.get("aim") and r.get("aim") != "—" else "—"
+        # Payload key stays sellout_qty (data contract + drill-down JS); the
+        # visible column header is the shared label below.
+        dealer_qty = r.get("sellout_qty")
         parts.append(
             f'<tr data-pn="{SSR.esc(r.get("pn",""))}" data-db="{SSR.esc(r.get("db",""))}" '
             f'data-signal="{SSR.esc(r.get("signal",""))}" data-gap_eur="{r.get("gap_eur") or 0}" '
-            f'data-bill_qty="{r.get("bill_qty") or 0}" data-sellout_qty="{r.get("sellout_qty") or 0}" '
+            f'data-bill_qty="{r.get("bill_qty") or 0}" data-sellout_qty="{dealer_qty or 0}" '
             f'data-qty_gap="{r.get("qty_gap") or 0}" data-ratio="{r.get("ratio") or ""}" data-bill_eur="{r.get("bill_eur") or 0}">'
             f'<td>{SSR.esc(r.get("pn"))}</td><td>{SSR.esc(r.get("db"))}</td>'
             f'<td>{SSR.pill(r.get("signal_class","act"), r.get("signal") or "")}</td>'
             f'<td>{aim_cell}</td><td class="num">{SSR.fmt_eur(r.get("gap_eur"))}</td>'
-            f'<td class="num">{SSR.fmt_int(r.get("bill_qty"))}</td><td class="num">{SSR.fmt_int(r.get("sellout_qty"))}</td>'
+            f'<td class="num">{SSR.fmt_int(r.get("bill_qty"))}</td><td class="num">{SSR.fmt_int(dealer_qty)}</td>'
             f'<td class="num">{SSR.fmt_int(r.get("qty_gap"))}</td>'
             f'<td class="num">{SSR.fmt_num(r.get("ratio")) if r.get("ratio") is not None else "—"}</td>'
             f'<td class="num">{SSR.fmt_int(r.get("bill_eur"))}</td></tr>'
@@ -96,19 +101,20 @@ def write_html(payload: dict) -> None:
     rows = payload.get("rows") or []
 
     hero = SSR.hero_kpis([
-        (SSR.fmt_eur_compact(H.get("total_gap_eur")), "Network € leakage", "Reference sell-out × qty gap",
-         "Sum of € at risk from revision queue join. PR00×1.785 reference sell-out where priced."),
-        (SSR.esc(H.get("top_pn", "—")), "Top leakage PN", f'{SSR.esc(H.get("top_pn_db", ""))} · {SSR.fmt_eur(H.get("top_pn_gap_eur"))}',
-         "Highest € gap in exception register."),
-        (SSR.fmt_int(H.get("leakage_pn_count")), "Leakage PNs", "Network pipeline",
-         "PNs with leakage pipeline signal across five DBs."),
-        (f'{round(float(H.get("network_sell_through") or 0)*100)}%', "Network sell-through", "All five DBs",
-         "Total dealer sell-out qty ÷ total ISZE bill qty. CY2025."),
-        (str(len(dist)), "DBs in view", "UTI≠UMI · IUK≠ITUK", "Each DB is a separate sell-out file grain."),
+        (SSR.fmt_eur_compact(H.get("total_gap_eur")), "Five-DB reference-price exposure", "Reference dealer price × qty gap",
+         "Five-distributor observed subset. Reference dealer price × qty gap where sales to dealer exceed ISZE bill — modelled valuation, not observed lost revenue."),
+        (SSR.esc(H.get("top_pn", "—")), "Top mismatch PN", f'{SSR.esc(H.get("top_pn_db", ""))} · {SSR.fmt_eur(H.get("top_pn_gap_eur"))}',
+         "Largest reference-price exposure in the exception register."),
+        (SSR.fmt_int(H.get("leakage_pn_count")), "Mismatch PNs (sales > bill)", "Five-distributor subset",
+         "PNs where sales to dealer exceed ISZE bill across five DBs with sales-to-dealer data."),
+        (f'{round(float(H.get("network_sell_through") or 0)*100)}%', "Five-DB sales-to-dealer ratio", "Five-distributor subset",
+         "Total sales to dealer qty ÷ total ISZE bill qty. CY2025."),
+        (str(len(dist)), "DBs in view", "UTI≠UMI · IUK≠ITUK", "Each DB is a separate dealer sales file grain."),
     ])
     callout = (
         f"<strong>Headline:</strong> {SSR.esc(H.get('biggest_db'))} · PN <strong>{SSR.esc(H.get('top_pn'))}</strong> · ~"
-        f"{SSR.fmt_eur(H.get('top_pn_gap_eur'))} gap · network {SSR.fmt_eur(H.get('total_gap_eur'))}."
+        f"{SSR.fmt_eur(H.get('top_pn_gap_eur'))} reference-price exposure · five-distributor subset total "
+        f"{SSR.fmt_eur(H.get('total_gap_eur'))}."
     )
     signals = sorted({str(r.get("signal") or "") for r in rows if r.get("signal")})
     sig_opts = '<option value="">All signals</option>' + "".join(f'<option value="{SSR.esc(s)}">{SSR.esc(s)}</option>' for s in signals)
@@ -118,12 +124,12 @@ def write_html(payload: dict) -> None:
     eur_chart = SSR.leakage_db_comparison(dist, label_key="db", value_key="gap_eur")
     mix_chart = SSR.pipeline_mix_bar(
         {"leakage": mix.get("leakage"), "overstock": mix.get("overstock"), "balanced": mix.get("balanced")},
-        labels=("Leakage PNs", "Overstock PNs", "Balanced PNs"),
+        labels=("Mismatch PNs (sales > bill)", "Overstock PNs", "Balanced PNs"),
         value_fmt=lambda v: SSR.fmt_int(v),
     )
     pipe_donut = SSR.pipeline_donut_svg(
         {"leakage": mix.get("leakage"), "overstock": mix.get("overstock"), "balanced": mix.get("balanced")},
-        labels=("Leakage PNs", "Overstock PNs", "Balanced PNs"),
+        labels=("Mismatch PNs (sales > bill)", "Overstock PNs", "Balanced PNs"),
         value_fmt=lambda v: SSR.fmt_int(v),
     )
     leak_over = []
@@ -134,7 +140,7 @@ def write_html(payload: dict) -> None:
         mx = max(float(d.get("leakage_pn") or 0), float(d.get("overstock_pn") or 0), 1)
         mix_db_html += (
             f'<div class="bar-row"><span class="lbl">{SSR.esc(d.get("db"))}</span><span class="track" style="display:flex;height:16px">'
-            f'<span class="fill" style="width:{100*float(d.get("leakage_pn") or 0)/mx:.1f}%;background:{SSR.COLORS["leak"]}" title="Leakage"></span>'
+            f'<span class="fill" style="width:{100*float(d.get("leakage_pn") or 0)/mx:.1f}%;background:{SSR.COLORS["leak"]}" title="Mismatch (sales > bill)"></span>'
             f'<span class="fill" style="width:{100*float(d.get("overstock_pn") or 0)/mx:.1f}%;background:{SSR.COLORS["over"]}" title="Overstock"></span>'
             f"</span></div>"
         )
@@ -147,15 +153,24 @@ def write_html(payload: dict) -> None:
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>DB→DLR Replenishment CY2025</title>
-<style>{T.TIER_A_CSS}{SSR_CSS}</style>
+<style>{T.TIER_A_CSS}{SSR_CSS}
+.basis-strip{{display:flex;flex-wrap:wrap;gap:10px 18px;margin:0 0 18px;padding:10px 14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:6px;font-size:12px;color:#c8d0dc}}
+.basis-strip span{{white-space:nowrap}}
+.basis-strip strong{{color:#f7f4ee;font-weight:600}}
+</style>
 </head>
 <body>
 <div class="hero">
   <div class="hero-inner">
-    <div class="brand">Isuzu Europe · Mode B internal</div>
+    <div class="brand">Isuzu Europe · Internal</div>
     <h1>DB→DLR Replenishment — CY2025</h1>
     <div class="rule"></div>
-    <p class="lead">ISZE bill vs dealer sell-out · five DBs · € leakage from reference sell-out where available. UTI is sold_to 1799 only — never blended with UMI.</p>
+    <p class="lead">Which part numbers show the largest mismatch between ISZE billing and sales to dealer — and where should each distributor review replenishment or stocking? Five distributors with sales-to-dealer data · UTI sold_to 1799 only, never blended with UMI.</p>
+    <div class="basis-strip">
+      <span><strong>OBSERVED</strong> — Parts billed through 30 June 2026</span>
+      <span><strong>SALES TO DEALER</strong> — Available for five distributors only</span>
+      <span><strong>MODELLED</strong> — Reference dealer price valuation of qty gaps (not observed lost revenue)</span>
+    </div>
     <div class="hero-kpis" id="hero-kpis">{hero}</div>
   </div>
 </div>
@@ -168,13 +183,13 @@ def write_html(payload: dict) -> None:
 <div class="wrap">
   <div class="callout" id="leakCallout">{callout}</div>
   <div class="grid2">
-    <div class="card"><h3>Network comparison · € leakage by DB</h3><p class="cap">Five DBs side-by-side · reference sell-out × qty gap</p>{eur_chart}</div>
-    <div class="card"><h3>Pipeline donut · PN counts</h3><p class="cap">Leakage vs overstock vs balanced</p>{pipe_donut}</div>
+    <div class="card"><h3>Five-DB comparison · reference-price exposure</h3><p class="cap">Five-distributor observed subset · side-by-side · reference dealer price × qty gap</p>{eur_chart}</div>
+    <div class="card"><h3>Pipeline donut · PN counts</h3><p class="cap">Mismatch vs overstock vs balanced · operational signals</p>{pipe_donut}</div>
   </div>
   <div class="grid2">
-    <div class="card"><h3>Pipeline mix bar</h3><p class="cap">Leakage vs overstock vs balanced · PN counts</p>{mix_chart}</div>
-    <div class="card"><h3>Pipeline signal mix by DB</h3><p class="cap">Leakage vs overstock PN counts</p><div class="bar-rows">{mix_db_html}</div></div>
-    <div class="card"><h3>Sell-through by DB</h3><p class="cap">Dealer sell-out qty ÷ ISZE bill qty</p>{st_chart}</div>
+    <div class="card"><h3>Pipeline mix bar</h3><p class="cap">Mismatch vs overstock vs balanced · PN counts</p>{mix_chart}</div>
+    <div class="card"><h3>Pipeline signal mix by DB</h3><p class="cap">Mismatch vs overstock PN counts by DB</p><div class="bar-rows">{mix_db_html}</div></div>
+    <div class="card"><h3>Sales to dealer vs bill by DB</h3><p class="cap">Sales to dealer qty ÷ ISZE bill qty by DB</p>{st_chart}</div>
   </div>
   <h2><span class="no">↓</span> · Exception register</h2>
   <p class="lead">Sortable drill-down · filter by DB chip or signal · AIM L1 when mapped.</p>
@@ -182,14 +197,14 @@ def write_html(payload: dict) -> None:
   <table class="matrix" id="tbl">
     <thead><tr>
       <th data-key="pn">PN</th><th data-key="db">DB</th><th data-key="signal">Signal</th><th data-key="aim">AIM L1</th>
-      <th data-key="gap_eur" class="num">€ gap</th><th data-key="bill_qty" class="num">Bill qty</th>
-      <th data-key="sellout_qty" class="num">Sell-out qty</th><th data-key="qty_gap" class="num">Qty gap</th>
+      <th data-key="gap_eur" class="num">Reference-price exposure €</th><th data-key="bill_qty" class="num">Bill qty</th>
+      <th data-key="sellout_qty" class="num">{LABELS['sales_to_dealer_qty']}</th><th data-key="qty_gap" class="num">Qty gap</th>
       <th data-key="ratio" class="num">Ratio</th><th data-key="bill_eur" class="num">Bill €</th>
     </tr></thead>
     <tbody>{_repl_rows(rows)}</tbody>
   </table>
   </div>
-  <p class="foot">Built {built} · SSR charts · Sources: replenishment_summary_cy2025.parquet, replenishment_exceptions_cy2025.csv · Internal Mode B.</p>
+  <p class="foot">Built {built} · SSR charts · Sources: replenishment_summary_cy2025.parquet, replenishment_exceptions_cy2025.csv · Internal.</p>
 </div>
 <script>
 document.querySelectorAll('#db-filters button').forEach(btn=>{{

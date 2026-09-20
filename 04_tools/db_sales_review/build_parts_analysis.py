@@ -13,7 +13,7 @@ Method (identical for every DB — see ..\\ppt_template_v2\\DB_SALES_REVIEW_BLUE
     warranty document type, so claim-matched PN exclusion is the line-level cut
   · parts rolled up to ITC family (Newest P/N) as well as raw PN
   · join on 'Material'; 'Material Number' holds the description, not a PN
-  · Mode A movers carry largest-EUR PN drivers (increase and decrease);
+  · shared movers carry largest-EUR PN drivers (increase and decrease);
     optional vehicle_model from BVP/PMS application tables when present
 """
 from __future__ import annotations
@@ -711,7 +711,7 @@ def build(dbkey: str):
     decl_pn = pn_ex.nsmallest(TOP_N, "Delta_EUR")
     grow_pn_ranked = grow_pn.nlargest(TOP_N, "Delta_EUR")
 
-    # Per-category largest EUR PN drivers (commercial) for Mode A deep-dives
+    # Per-category largest EUR PN drivers (commercial) for shared deep-dives
     category_pn_drivers = {}
     for cat_name, g in pn_ex.groupby("Category", dropna=False):
         if not cat_name or cat_name in {"UNCLASSIFIED"}:

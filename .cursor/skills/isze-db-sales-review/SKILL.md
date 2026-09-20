@@ -1,7 +1,7 @@
 ---
 name: isze-db-sales-review
 description: >-
-  Build and QA ISZE distributor Sales Review decks (Mode A + deep dive). Use when
+  Build and QA ISZE distributor Sales Review decks (shared + deep dive). Use when
   rebuilding IBX/UMI/Hungary/etc packs, editing db_sales_review, PBI slides, PMS
   Best bars, SaTy/GPS notes, sold_to Israel UMI≠UTI, or after loader changes.
 ---
@@ -10,7 +10,7 @@ description: >-
 
 ## When to use
 
-Any `build_parts_analysis.py` / `build_deck.py` / `build_full_deck.py` work, or Mode A critique of a `09_meetings/*_Sales_Review_*` PPTX.
+Any `build_parts_analysis.py` / `build_deck.py` / `build_full_deck.py` work, or shared critique of a `09_meetings/*_Sales_Review_*` PPTX.
 
 ## Mandatory pipeline
 
@@ -33,7 +33,7 @@ Any `build_parts_analysis.py` / `build_deck.py` / `build_full_deck.py` work, or 
 | Stale summary | `_summary.json` older than last `common.py` / profile sold_to change without re-analysis |
 | Exclude cats | `exclude_movers_cats` set without a profile comment citing Jerome ask |
 
-## Mode A slide rules
+## shared slide rules
 
 - **Audience first** — see `presentation.md`. No jargon; every line for the distributor in the room.
 - Lead with official Power BI when present; skip orders if `skip_pbi_orders`.

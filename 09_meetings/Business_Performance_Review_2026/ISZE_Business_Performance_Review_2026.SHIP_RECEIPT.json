@@ -1,0 +1,32 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Business_Performance_Review_2026\\ISZE_Business_Performance_Review_2026.pptx",
+  "artifact_mtime_ms": 1789625188431,
+  "written_at": "2026-09-17T06:08:28.049Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Business_Performance_Review_2026\\ISZE_Business_Performance_Review_2026.pptx"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "2158069 bytes"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "pptx size gate"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Business_Performance_Review_2026\\_qa\\render\\s14.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Business_Performance_Review_2026\\_qa\\render\\s15.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Business_Performance_Review_2026\\_qa\\render\\s11.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Business_Performance_Review_2026\\_qa\\render\\s36.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\Business_Performance_Review_2026\\_qa\\render\\s05.png"
+  ],
+  "notes": "BPR 2.0 FIXED and re-verified through a REAL renderer (PowerPoint COM, 40 slides exported to PNG + PDF). Root cause of the clipping: the previous QA composited slides with PIL and my own text-wrap estimate, so it could not see how PowerPoint wraps. Title layout now measures real Calibri metrics, adjusts size, and places the rule after the lines actually needed; body content follows that rule. Split-row charts: legend moved above the plot and the unnamed remainder now drawn as an explicit Other/uncoded leg. Render QA over all 40 PNGs: no title-rule collisions, no bottom overrun, no text on bars, no empty slides."
+}

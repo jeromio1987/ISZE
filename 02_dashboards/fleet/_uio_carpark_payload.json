@@ -1,0 +1,633 @@
+{
+  "meta": {
+    "title": "ISZE car park \u2014 UIO V19 vs V20",
+    "built": "2026-09-16",
+    "v19_source": "ISUZU_UIO_Overview_2026.xlsx (v19) via README 2026-07-09 + uio_2026.json",
+    "v20_source": "06_uio/_CURRENT/V20_SPEC.md \u2014 modelled; only IUK LCV CY2026F=44926 locked",
+    "basis": "Network charts use ex-MIDI (ISZE-only) Grand Total",
+    "amber": "Do not quote V19 2026\u20132030 externally until survival-curve fix ships",
+    "uk_rows_in_extract": [
+      {
+        "country": "U KING",
+        "dist": "ITUK",
+        "mtype": "F-Series",
+        "2024": 805.0,
+        "2025": 877.0,
+        "2026": 963.2,
+        "2027": 1055.3,
+        "2028": 1141.0
+      },
+      {
+        "country": "U KING",
+        "dist": "ITUK",
+        "mtype": "LD",
+        "2024": 21584.0,
+        "2025": 22190.9,
+        "2026": 23209.9,
+        "2027": 24336.2,
+        "2028": 25293.8
+      },
+      {
+        "country": "U KING",
+        "dist": "IUK",
+        "mtype": "LCV",
+        "2024": 48876.0,
+        "2025": 47783.0,
+        "2026": 49280.0,
+        "2027": 50202.0,
+        "2028": 51096.0
+      }
+    ],
+    "mtypes_present": [
+      "F-SERIES",
+      "LCV",
+      "LD",
+      "MD"
+    ]
+  },
+  "network": {
+    "years": [
+      2023,
+      2024,
+      2025,
+      2026,
+      2027,
+      2028,
+      2029,
+      2030
+    ],
+    "v19_ex_midi": [
+      151715,
+      160125,
+      163199,
+      172379,
+      180848,
+      189118,
+      197333,
+      205357
+    ],
+    "v20_ex_midi": [
+      151715,
+      160125,
+      163199,
+      159906,
+      156443,
+      153505,
+      151097,
+      149134
+    ],
+    "v19_incl_midi_2030": 309125,
+    "method_break_year": 2025.5
+  },
+  "gap": [
+    {
+      "year": 2026,
+      "v19": 172379,
+      "v20": 159906,
+      "gap_units": 12473,
+      "overstate_pct": 7.8
+    },
+    {
+      "year": 2027,
+      "v19": 180848,
+      "v20": 156443,
+      "gap_units": 24405,
+      "overstate_pct": 15.6
+    },
+    {
+      "year": 2028,
+      "v19": 189118,
+      "v20": 153505,
+      "gap_units": 35613,
+      "overstate_pct": 23.2
+    },
+    {
+      "year": 2029,
+      "v19": 197333,
+      "v20": 151097,
+      "gap_units": 46236,
+      "overstate_pct": 30.6
+    },
+    {
+      "year": 2030,
+      "v19": 205357,
+      "v20": 149134,
+      "gap_units": 56223,
+      "overstate_pct": 37.7
+    }
+  ],
+  "survival": {
+    "truck_curve": [
+      {
+        "age": 0,
+        "surv": 100.0
+      },
+      {
+        "age": 1,
+        "surv": 90.39
+      },
+      {
+        "age": 2,
+        "surv": 81.71
+      },
+      {
+        "age": 3,
+        "surv": 73.86
+      },
+      {
+        "age": 4,
+        "surv": 66.76
+      },
+      {
+        "age": 5,
+        "surv": 60.35
+      },
+      {
+        "age": 6,
+        "surv": 54.55
+      },
+      {
+        "age": 7,
+        "surv": 49.31
+      },
+      {
+        "age": 8,
+        "surv": 44.57
+      },
+      {
+        "age": 9,
+        "surv": 40.29
+      },
+      {
+        "age": 10,
+        "surv": 36.42
+      },
+      {
+        "age": 11,
+        "surv": 32.92
+      },
+      {
+        "age": 12,
+        "surv": 29.76
+      },
+      {
+        "age": 13,
+        "surv": 26.9
+      },
+      {
+        "age": 14,
+        "surv": 24.31
+      },
+      {
+        "age": 15,
+        "surv": 21.98
+      },
+      {
+        "age": 16,
+        "surv": 19.87
+      },
+      {
+        "age": 17,
+        "surv": 17.96
+      },
+      {
+        "age": 18,
+        "surv": 16.23
+      },
+      {
+        "age": 19,
+        "surv": 14.67
+      },
+      {
+        "age": 20,
+        "surv": 13.26
+      }
+    ],
+    "pickup_curve": [
+      {
+        "age": 0,
+        "surv": 100.0
+      },
+      {
+        "age": 1,
+        "surv": 88.39
+      },
+      {
+        "age": 2,
+        "surv": 78.12
+      },
+      {
+        "age": 3,
+        "surv": 69.05
+      },
+      {
+        "age": 4,
+        "surv": 61.03
+      },
+      {
+        "age": 5,
+        "surv": 53.94
+      },
+      {
+        "age": 6,
+        "surv": 47.68
+      },
+      {
+        "age": 7,
+        "surv": 42.14
+      },
+      {
+        "age": 8,
+        "surv": 37.24
+      },
+      {
+        "age": 9,
+        "surv": 32.92
+      },
+      {
+        "age": 10,
+        "surv": 29.1
+      },
+      {
+        "age": 11,
+        "surv": 25.72
+      },
+      {
+        "age": 12,
+        "surv": 22.73
+      },
+      {
+        "age": 13,
+        "surv": 20.09
+      },
+      {
+        "age": 14,
+        "surv": 17.76
+      },
+      {
+        "age": 15,
+        "surv": 15.69
+      },
+      {
+        "age": 16,
+        "surv": 13.87
+      },
+      {
+        "age": 17,
+        "surv": 12.26
+      },
+      {
+        "age": 18,
+        "surv": 10.84
+      },
+      {
+        "age": 19,
+        "surv": 9.58
+      },
+      {
+        "age": 20,
+        "surv": 8.47
+      }
+    ],
+    "flat_3pct_implied": [
+      {
+        "age": 0,
+        "surv": 100.0
+      },
+      {
+        "age": 1,
+        "surv": 97.04
+      },
+      {
+        "age": 2,
+        "surv": 94.17
+      },
+      {
+        "age": 3,
+        "surv": 91.38
+      },
+      {
+        "age": 4,
+        "surv": 88.68
+      },
+      {
+        "age": 5,
+        "surv": 86.06
+      },
+      {
+        "age": 6,
+        "surv": 83.51
+      },
+      {
+        "age": 7,
+        "surv": 81.04
+      },
+      {
+        "age": 8,
+        "surv": 78.64
+      },
+      {
+        "age": 9,
+        "surv": 76.32
+      },
+      {
+        "age": 10,
+        "surv": 74.06
+      },
+      {
+        "age": 11,
+        "surv": 71.87
+      },
+      {
+        "age": 12,
+        "surv": 69.74
+      },
+      {
+        "age": 13,
+        "surv": 67.68
+      },
+      {
+        "age": 14,
+        "surv": 65.68
+      },
+      {
+        "age": 15,
+        "surv": 63.73
+      },
+      {
+        "age": 16,
+        "surv": 61.85
+      },
+      {
+        "age": 17,
+        "surv": 60.02
+      },
+      {
+        "age": 18,
+        "surv": 58.24
+      },
+      {
+        "age": 19,
+        "surv": 56.52
+      },
+      {
+        "age": 20,
+        "surv": 54.85
+      }
+    ],
+    "labels": {
+      "truck": "Historical truck survival (~9.9 yr life, ~10.2% scrap/yr)",
+      "pickup": "Historical pickup survival (~8.1 yr life, ~12.3% scrap/yr)",
+      "flat": "V19 forecast rule (~33 yr life, 3% scrap/yr)"
+    }
+  },
+  "markets_ranked_2025": [
+    {
+      "market": "United Kingdom (IUK)",
+      "uio_2025": 47783,
+      "uio_2024": 48876,
+      "uio_2026_v19": 49280
+    },
+    {
+      "market": "United Kingdom (ITUK)",
+      "uio_2025": 23068,
+      "uio_2024": 22389,
+      "uio_2026_v19": 24173
+    },
+    {
+      "market": "Israel (UMI)",
+      "uio_2025": 18542,
+      "uio_2024": 18349,
+      "uio_2026_v19": 18886
+    },
+    {
+      "market": "Germany",
+      "uio_2025": 13780,
+      "uio_2024": 13464,
+      "uio_2026_v19": 14757
+    },
+    {
+      "market": "Israel (UTI)",
+      "uio_2025": 10336,
+      "uio_2024": 10049,
+      "uio_2026_v19": 10760
+    },
+    {
+      "market": "Belgium",
+      "uio_2025": 9565,
+      "uio_2024": 9283,
+      "uio_2026_v19": 10153
+    },
+    {
+      "market": "Sweden",
+      "uio_2025": 8443,
+      "uio_2024": 7221,
+      "uio_2026_v19": 9090
+    },
+    {
+      "market": "Norway",
+      "uio_2025": 7929,
+      "uio_2024": 8237,
+      "uio_2026_v19": 8111
+    },
+    {
+      "market": "Portugal",
+      "uio_2025": 7208,
+      "uio_2024": 6903,
+      "uio_2026_v19": 8444
+    },
+    {
+      "market": "Greece",
+      "uio_2025": 3742,
+      "uio_2024": 3118,
+      "uio_2026_v19": 4285
+    },
+    {
+      "market": "Hungary",
+      "uio_2025": 3734,
+      "uio_2024": 3714,
+      "uio_2026_v19": 3992
+    },
+    {
+      "market": "Cyprus",
+      "uio_2025": 2308,
+      "uio_2024": 2072,
+      "uio_2026_v19": 2634
+    },
+    {
+      "market": "Ireland",
+      "uio_2025": 2161,
+      "uio_2024": 1951,
+      "uio_2026_v19": 2778
+    },
+    {
+      "market": "Finland",
+      "uio_2025": 1204,
+      "uio_2024": 1259,
+      "uio_2026_v19": 1308
+    },
+    {
+      "market": "Romania",
+      "uio_2025": 1071,
+      "uio_2024": 986,
+      "uio_2026_v19": 1209
+    },
+    {
+      "market": "Malta",
+      "uio_2025": 1040,
+      "uio_2024": 1054,
+      "uio_2026_v19": 1108
+    },
+    {
+      "market": "Denmark",
+      "uio_2025": 851,
+      "uio_2024": 830,
+      "uio_2026_v19": 945
+    },
+    {
+      "market": "Iceland",
+      "uio_2025": 406,
+      "uio_2024": 342,
+      "uio_2026_v19": 439
+    }
+  ],
+  "movers": [
+    {
+      "market": "IUK LCV (row 25)",
+      "metric": "CY2026F trucks in service",
+      "v19": 49280,
+      "v20": 44926,
+      "delta": -4354,
+      "locked": true,
+      "note": "Only V20 figure locked (30 Jul 2026)"
+    },
+    {
+      "market": "Ireland light trucks",
+      "metric": "CY2030F",
+      "v19": 1645,
+      "v20": 1382,
+      "delta": -263,
+      "locked": false,
+      "note": "V20_SPEC worked example"
+    },
+    {
+      "market": "Ireland pickups",
+      "metric": "CY2030F",
+      "v19": 3174,
+      "v20": 2527,
+      "delta": -647,
+      "locked": false,
+      "note": "V20_SPEC worked example"
+    },
+    {
+      "market": "ISZE network (ex-MIDI)",
+      "metric": "CY2030F",
+      "v19": 205357,
+      "v20": 149134,
+      "delta": -56223,
+      "locked": false,
+      "note": "V20 = V19 \u00f7 (1 + 37.7% overstate)"
+    },
+    {
+      "market": "Pickup / LCV basket",
+      "metric": "CY2030F vs 2025",
+      "v19": 196653,
+      "v20": 142813,
+      "delta": -53840,
+      "locked": false,
+      "note": "V19 grows ~23%; V20 must fall with registrations"
+    }
+  ],
+  "mix": {
+    "years": [
+      2025,
+      2026,
+      2027,
+      2028,
+      2029,
+      2030
+    ],
+    "v19_pickup": [
+      160141,
+      170068,
+      179405,
+      188407,
+      192530,
+      196653
+    ],
+    "v20_pickup": [
+      160141,
+      157763,
+      155195,
+      152928,
+      147420,
+      142813
+    ],
+    "v19_cv": [
+      98453,
+      99246,
+      100096,
+      101122,
+      105167,
+      109212
+    ],
+    "v20_cv": [
+      98453,
+      92065,
+      86588,
+      82080,
+      80526,
+      79312
+    ],
+    "pickup_regs_imit": {
+      "2024": 16977,
+      "2025": 15312,
+      "2026": 10845,
+      "2027": 10595
+    }
+  },
+  "iuk_lcv": {
+    "years": [
+      2024,
+      2025,
+      2026,
+      2027,
+      2028,
+      2029,
+      2030
+    ],
+    "v19": [
+      48876,
+      47783,
+      49280,
+      50500,
+      51600,
+      52200,
+      52804
+    ],
+    "v20": [
+      48876,
+      47783,
+      44926,
+      42420,
+      40222,
+      38295,
+      36605
+    ],
+    "locked_2026": 44926
+  },
+  "ireland_2030": {
+    "trucks_light_v19": 1645,
+    "trucks_light_v20": 1382,
+    "pickups_v19": 3174,
+    "pickups_v20": 2527
+  },
+  "kpis": {
+    "v19_2025": 163199,
+    "v19_2030": 205357,
+    "v20_2030": 149134,
+    "overstate_2030_pct": 37.7,
+    "iuk_locked": 44926,
+    "iuk_v19_2026": 49280
+  }
+}

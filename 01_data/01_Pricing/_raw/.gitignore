@@ -1,0 +1,37 @@
+# Scraped competitor price exports — private raw material, not a deliverable (2026-09-19).
+# Named families only, never a blanket ignore for this folder: several files here are
+# tracked on purpose (browser scrape scripts, manifest json, catalogue tree).
+# Root .gitignore repeats these as defence in depth.
+
+iam_sku_*.csv
+iam_sku_*.json
+ks_*.csv
+ks_*.json
+_ks_*.csv
+_ks_*.json
+oem_peer_*.csv
+oem_peer_*.json
+spareto_*.csv
+spareto_*.json
+
+# Price-list workbooks and priced master exports — private raw material, not a deliverable (2026-09-19).
+# Named families only, by stem plus a required .xls* extension: a bare *.xls* here would be
+# redundant with the root global workbook rule, would obscure which file it protects, and would
+# sit over the tracked scrape scripts and json in this folder.
+# Stems keep the real filename casing; .xls* covers .xls/.xlsx/.xlsm/.xlsb.
+Price_file*.xls*
+PRICE_CD*.xls*
+CY2026_Price_Revision*.xls*
+PR00_*.xls*
+ZPR1_UPLOAD_LAYOUT_*.xls*
+EXPORT_ZPR1*.xls*
+parts_master*.xls*
+pricing_simulation_*.xls*
+spa2_*.xls*
+UTI_final_price_file*.xls*
+SAP_Pull_PN_Validity_List*.xls*
+eucon_*.xls*
+Eucon_*.xls*
+# Bare 2023.xlsx (mixed PR00 + ZPR1). The stem is a year with no family word, so it is named
+# on its own rather than reached with a wider pattern.
+2023.xls*

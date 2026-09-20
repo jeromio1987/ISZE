@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Price revision - distributor, family and source of supply</title>
+<style>
+:root{
+  --navy:#15233c; --navy2:#1d3054; --terra:#c0552d; --paper:#f7f4ee;
+  --ink:#22262e; --muted:#6b6459; --line:#d9d3c8; --band:#eef3f9;
+  --good:#1e6b4f; --amber:#a8721f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:14px;line-height:1.5}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:var(--navy);margin:0}
+h1{font-size:26px;letter-spacing:-.2px}
+h2{font-size:19px;margin-bottom:2px}
+h3{font-size:15px}
+.wrap{max-width:1360px;margin:0 auto;padding:22px 22px 60px}
+header.top{border-bottom:3px solid var(--navy);padding-bottom:14px;margin-bottom:18px}
+.sub{color:var(--muted);font-size:13px;margin-top:6px}
+.badge{display:inline-block;background:var(--navy);color:var(--paper);
+  font-size:11px;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 9px;border-radius:2px;margin-right:8px}
+
+.controls{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;
+  background:#fff;border:1px solid var(--line);border-left:4px solid var(--terra);
+  padding:14px 16px;margin-bottom:18px}
+.ctrl{display:flex;flex-direction:column;gap:5px}
+.ctrl label{font-size:11px;letter-spacing:.7px;text-transform:uppercase;color:var(--muted)}
+select{font-size:14px;padding:7px 10px;border:1px solid var(--line);background:#fff;
+  color:var(--ink);border-radius:2px;min-width:190px}
+select:focus{outline:2px solid var(--terra);outline-offset:-1px}
+.seg{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.seg button{background:#fff;border:0;border-right:1px solid var(--line);
+  padding:7px 13px;font-size:13px;cursor:pointer;color:var(--ink)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--navy);color:var(--paper)}
+.reset{background:#fff;border:1px solid var(--line);padding:7px 13px;font-size:13px;
+  cursor:pointer;color:var(--terra);border-radius:2px}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));
+  gap:12px;margin-bottom:20px}
+.kpi{background:#fff;border:1px solid var(--line);padding:13px 15px;position:relative;
+  border-top:3px solid var(--navy)}
+.kpi .lab{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:center;gap:5px}
+.kpi .val{font-size:24px;font-weight:600;color:var(--navy);margin-top:5px;
+  font-variant-numeric:tabular-nums}
+.kpi .note{font-size:11.5px;color:var(--muted);margin-top:3px}
+.kpi.t{border-top-color:var(--terra)}
+.info{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;
+  border-radius:50%;background:var(--navy);color:#fff;font-size:9.5px;cursor:help;
+  position:relative;flex:0 0 auto}
+.info .tip{display:none;position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
+  width:268px;background:var(--navy);color:var(--paper);font-size:12px;line-height:1.45;
+  padding:9px 11px;border-radius:3px;z-index:60;text-transform:none;letter-spacing:0;
+  font-weight:400;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.info .tip b{color:#f0b49a}
+.info:hover .tip,.info:focus .tip{display:block}
+
+.grid{display:grid;gap:16px;margin-bottom:18px}
+.g2{grid-template-columns:1fr 1fr}
+.g1{grid-template-columns:1fr}
+@media(max-width:980px){.g2{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);padding:15px 16px 12px}
+.card .q{font-size:14px;color:var(--muted);margin:2px 0 12px}
+.chartbox{position:relative;height:340px}
+.chartbox.tall{height:410px}
+.chartbox.short{height:250px}
+
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:8px 9px;
+  font-weight:600;font-size:11.5px;letter-spacing:.4px;text-transform:uppercase;
+  position:sticky;top:0;white-space:nowrap}
+#cust-pn th{cursor:pointer;user-select:none}
+#cust-pn th .sortmark{opacity:.45;font-size:10px;margin-left:4px;font-weight:400}
+#cust-pn th.on .sortmark{opacity:1;color:#f0b49a}
+th.n,td.n{text-align:right;font-variant-numeric:tabular-nums}
+td{padding:6px 9px;border-bottom:1px solid var(--line)}
+tbody tr:nth-child(even){background:var(--band)}
+tbody tr:hover{background:#e3ecf6}
+tbody tr.clickable{cursor:pointer}
+tbody tr.sel{background:#f6e3da!important;box-shadow:inset 3px 0 0 var(--terra)}
+.tblwrap{max-height:430px;overflow:auto;border:1px solid var(--line)}
+.pill{display:inline-block;padding:1px 7px;border-radius:9px;font-size:11px;
+  border:1px solid var(--line);background:var(--paper);color:var(--muted)}
+.pill.jp{border-color:#9db4cf;color:#2c4b74}
+.pill.th{border-color:#d9b48c;color:#8a5622}
+.pill.na{border-color:#c9c2b6;color:#8a8275}
+.muted{color:var(--muted)}
+.warn{background:#fdf3e3;border:1px solid #e6cf9f;border-left:4px solid var(--amber);
+  padding:11px 14px;font-size:12.5px;color:#5e4a1c;margin-bottom:18px}
+.foot{font-size:12px;color:var(--muted);border-top:1px solid var(--line);
+  padding-top:12px;margin-top:24px}
+.crumb{font-size:12.5px;color:var(--muted);margin-bottom:9px}
+.crumb b{color:var(--navy)}
+.crumb span{cursor:pointer;color:var(--terra);text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div><span class="badge">Price revision</span><span class="badge" style="background:var(--terra)">Internal</span></div>
+  <h1 style="margin-top:9px">Where the parts price revision lands</h1>
+  <div class="sub">By distributor, by AIM family at all three levels, and by source of supply:
+    Japan through IML or Thailand through IMIT. Parts billed 1 July 2025 to 30 June 2026.
+    Opens from Explorer with no server and no internet — the data and charts are inside the file.
+    <span id="genline"></span></div>
+</header>
+
+<div class="warn" id="errbar" style="display:none"></div>
+
+<div class="warn">
+  <b>What the headline is.</b> The percentage is a base-price move: the euro increase measured against
+  the prior base price, weighted by the quantities actually billed. It is not a revenue, margin or
+  elasticity outcome, and no demand response is modelled. Parts billed euro covers every in-scope line;
+  the weighted percentage covers only lines priced on both sides, which is stated on every panel.
+</div>
+
+<div class="controls">
+  <div class="ctrl">
+    <label for="db">Distributor</label>
+    <select id="db"></select>
+  </div>
+  <div class="ctrl">
+    <label for="cust">Customer (sold-to, optional)</label>
+    <select id="cust" style="min-width:320px"></select>
+  </div>
+  <div class="ctrl">
+    <label for="src">Source of supply</label>
+    <select id="src"></select>
+  </div>
+  <div class="ctrl">
+    <label>Include</label>
+    <div class="seg" id="meas">
+      <button data-m="pct" class="on">Weighted %</button>
+      <button data-m="step">Step EUR</button>
+      <button data-m="billed">Parts billed EUR</button>
+    </div>
+  </div>
+  <div class="ctrl">
+    <label>&nbsp;</label>
+    <button class="reset" id="reset">Reset to network</button>
+  </div>
+</div>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="grid g2" id="cust-drill">
+  <div class="card">
+    <h2 id="t-cust-mix">Which AIM families move most?</h2>
+    <div class="q" id="q-cust-mix">Level 1 for the current slice (all distributors, or one). Click a bar to
+      open level 2. A sold-to customer is optional and narrows the same path.</div>
+    <div class="chartbox tall"><canvas id="c-cust-mix"></canvas></div>
+  </div>
+  <div class="card">
+    <h2 id="t-cust-pn">Drill table — level 1 → level 2 → level 3</h2>
+    <div class="crumb" id="cust-crumb">Network — AIM level 1. Click a row to go deeper.</div>
+    <div class="q" id="q-cust-pn">Click a row to go deeper. On the part-number list, click a column header to re-sort.</div>
+    <div class="tblwrap" style="max-height:410px"><table id="cust-pn"><thead></thead><tbody></tbody></table></div>
+  </div>
+</div>
+
+<div class="grid g2">
+  <div class="card">
+    <h2 id="t-league">Which distributor carries the biggest price step?</h2>
+    <div class="q" id="q-league"></div>
+    <div class="chartbox"><canvas id="c-league"></canvas></div>
+  </div>
+  <div class="card">
+    <h2 id="t-l1">Where the revision sits across the AIM families</h2>
+    <div class="q" id="q-l1"></div>
+    <div class="chartbox"><canvas id="c-l1"></canvas></div>
+  </div>
+</div>
+
+<div class="grid g2">
+  <div class="card">
+    <h2 id="t-mix">Which level 2 family carries the most of it?</h2>
+    <div class="q" id="q-mix"></div>
+    <div class="chartbox tall"><canvas id="c-mix"></canvas></div>
+  </div>
+  <div class="card">
+    <h2 id="t-src">Japan against Thailand, on the same families</h2>
+    <div class="q" id="q-src"></div>
+    <div class="chartbox tall"><canvas id="c-src"></canvas></div>
+  </div>
+</div>
+
+<div class="grid g1">
+  <div class="card">
+    <h2>The drill: level 1 → level 2 → level 3 → part numbers</h2>
+    <div class="crumb" id="crumb"></div>
+    <div class="q">Click a row to go one level deeper. At level 3, the next click lists the part
+      numbers. The euro and the weighted percentage are the selected distributor and source only.</div>
+    <div class="tblwrap"><table id="drill"><thead></thead><tbody></tbody></table></div>
+  </div>
+</div>
+
+<div class="grid g1">
+  <div class="card">
+    <h2>The biggest individual part numbers</h2>
+    <div class="q">Read with the family and the source beside them. A part number on its own is a
+      quantity, not a finding.</div>
+    <div class="tblwrap" style="max-height:340px"><table id="movers"><thead></thead><tbody></tbody></table></div>
+  </div>
+</div>
+
+<div class="grid g1">
+  <div class="card">
+    <h2>The accounts, as billed</h2>
+    <div class="q">The 25 in-scope sold-to accounts. Germany trades through 2516 and 601, Portugal
+      through 519 and 92; those stay apart here and roll up in the distributor view.</div>
+    <div class="tblwrap" style="max-height:380px"><table id="custs"><thead></thead><tbody></tbody></table></div>
+  </div>
+</div>
+
+<div class="foot" id="foot"></div>
+</div>
+
+<script type="application/json" id="payload">/* [STRIPPED 6185 KB] */</script>
+<script>/* [STRIPPED 196 KB] */</script>
+<script>/* [STRIPPED 58 KB] */</script>
+</body>
+</html>

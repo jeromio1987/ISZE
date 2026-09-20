@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-08-25T17:21:01Z",
+  "as_of": "2026-09-17T13:47:43Z",
   "generator": "scripts/build_metrics_snapshot.py",
   "metrics": {
     "sales_fact.rows": {
@@ -21,6 +21,16 @@
       "value": 112089307.0,
       "source": "GPS-facing, parts only (line_kind=part), ex-credit-notes/returns",
       "note": "the parts base"
+    },
+    "sales.parts_base_data_through": {
+      "value": "2026-06-30",
+      "source": "max billing_date in sales_fact",
+      "note": "billing horizon behind the parts base"
+    },
+    "sales.parts_base_through_prior_quarter_eur": {
+      "value": 103573715.0,
+      "source": "GPS-facing, parts only, cut at the prior quarter end",
+      "note": "same method, data through 2026-03-31 \u2014 bridge companion to sales.parts_base_eur"
     },
     "ituk.oil_filter.2023.genuine.capture_uncapped_pct": {
       "value": 73.8,
@@ -205,12 +215,12 @@
     "ituk.oil_filter.uio_units": {
       "value": 23068,
       "source": "pms_capture_by_db_year.csv",
-      "note": "DVLA Mar 2026 override, constant across years"
+      "note": "model_bucket_split: cv_std 22,190.9 + f_series 877.0"
     },
     "ituk.oil_filter.expected_qty": {
       "value": 11680.2,
       "source": "pms_capture_by_db_year.csv",
-      "note": "22389 x 0.5 svc/yr x 70%"
+      "note": "23068 bucket UIO x 0.5 svc/yr x 100% addressable"
     },
     "mix.ITUK.genuine_share_eur_pct_2025": {
       "value": 97.3,
@@ -223,7 +233,7 @@
       "note": "overall parts mix, EUR basis"
     },
     "waterfall.network.wallet_eur_2025": {
-      "value": 60217570.0,
+      "value": 55253312.0,
       "source": "wallet_waterfall.csv",
       "note": "GPS max-spend ceiling"
     },
@@ -233,7 +243,7 @@
       "note": ""
     },
     "waterfall.network.gps_pct_2025": {
-      "value": 51.1,
+      "value": 55.7,
       "source": "wallet_waterfall.csv",
       "note": ""
     },
@@ -263,7 +273,7 @@
       "note": ""
     },
     "verify.generated": {
-      "value": "2026-08-25T17:19:54Z",
+      "value": "2026-09-17T05:47:43Z",
       "source": "_verification_report.json",
       "note": ""
     }

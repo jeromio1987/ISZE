@@ -161,7 +161,7 @@ ids["excl_baumann"] = ids["red_marked"] | (ids["zero_score"] & ids["country"].is
 
 say("# IDS 2026 — cross-dataset correlation scan")
 say("")
-say("**Mode B / internal. Read-only analysis — no rebuild, no mail, no commit.**")
+say("**internal / internal. Read-only analysis — no rebuild, no mail, no commit.**")
 say(f"**Generated:** 2026-08-10 · IDS payload: {len(ids_all)} dealer rows, "
     f"{len(ids)} after dropping the `Benelux` rollup (it double-counts BE+NL+LUX).")
 say("")

@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISZE Price Competitiveness Dashboard — FY2026</title>
+<style>
+/* ── Reset ─────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family: Arial, sans-serif;background:#F5F5F5;color:#1A1A1A;font-size:13px;min-width:900px}
+
+/* ── Header ─────────────────────────── */
+.hdr{background: linear-gradient(135deg, #CC0E1E 0%, #9A0B16 100%);color:#fff;padding:16px 28px;display:flex;align-items:center;gap:16px}
+.hdr-logo{font-size:24px;font-weight:900;letter-spacing:-0.5px;color:#F4A0A7;flex-shrink:0}
+.hdr-title{font-size:16px;font-weight:700}
+.hdr-sub{font-size:11px;color:#E88891;margin-top:3px}
+
+/* ── Top control bar ─────────────────── */
+.ctrl-bar{background:#9A0B16;padding:10px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ctrl-group{display:flex;align-items:center;gap:8px}
+.ctrl-label{font-size:11px;color:#E88891;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.pill-group{display:flex;gap:4px}
+.pill{padding:5px 13px;border-radius:20px;border:1.5px solid #9A0B16;background:transparent;color:#E88891;font-size:12px;cursor:pointer;transition:all .15s;font-weight:500}
+.pill:hover:not(.active){border-color:#CC0E1E;color:#FFE8EA}
+.pill.active{background:#CC0E1E;border-color:#CC0E1E;color:#fff;font-weight:700}
+
+/* Vehicle pills */
+.pill.v-lcv.active{background:#9A0B16;border-color:#9A0B16}
+.pill.v-mcv.active{background:#2E7D32;border-color:#2E7D32}
+.pill.v-hcv.active{background:#E65100;border-color:#E65100}
+.pill.v-all.active{background:#5A3D8A;border-color:#5A3D8A}
+
+/* ── KPI cards ───────────────────────── */
+.kpi-bar{background:#f7f9fc;border-bottom:1px solid #E0E0E0;padding:12px 28px;display:flex;gap:12px;flex-wrap:wrap}
+.kpi{background:white;border:1px solid #E0E0E0;border-radius:8px;padding:10px 16px;min-width:130px;flex:1}
+.kpi-label{font-size:10px;color:#5A5A5A;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.kpi-val{font-size:20px;font-weight:800;margin-top:3px}
+.kpi-sub{font-size:10px;color:#888888;margin-top:2px}
+.kpi-red{color:#c0301a}
+.kpi-amber{color:#c07000}
+.kpi-green{color:#0a7a40}
+.kpi-blue{color:#9A0B16}
+
+/* ── Legend ──────────────────────────── */
+.legend-bar{background:#f0f3f8;border-bottom:1px solid #E0E0E0;padding:8px 28px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.legend-label{font-size:11px;color:#CC0E1E;font-weight:700}
+.legend-items{display:flex;gap:8px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:4px;font-size:11px;color:#CC0E1E}
+.lb{width:18px;height:14px;border-radius:3px;flex-shrink:0}
+
+/* ── Main content ───────────────────── */
+.main{padding:20px 28px}
+
+/* Source note */
+.src-note{background:#fffbe8;border:1px solid #e8d860;border-left:4px solid #c8a800;border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:11.5px;color:#5a4800;line-height:1.5}
+.src-note strong{color:#3a3000}
+
+/* Segment header */
+.seg-hdr{display:flex;align-items:center;gap:10px;margin-bottom:10px;margin-top:6px}
+.seg-badge{padding:4px 12px;border-radius:4px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:white}
+.seg-lcv{background:#9A0B16}
+.seg-mcv{background:#2E7D32}
+.seg-hcv{background:#E65100}
+.seg-note{font-size:11px;color:#5A5A5A;font-style:italic}
+
+/* Table */
+.tbl-wrap{background:white;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:20px}
+table{width:100%;border-collapse:collapse}
+thead tr{background:#CC0E1E;color:white}
+thead th{padding:9px 11px;font-size:11.5px;font-weight:700;text-align:left}
+thead th.tc{text-align:center}
+thead th.tr{text-align:right}
+tbody tr:hover td{filter:brightness(.97)}
+tbody tr.div-row:hover td{filter:none}
+td{padding:8px 11px;border-bottom:1px solid #edf0f6;vertical-align:middle}
+
+td.grp{width:60px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8090b8;background:#f5f7fb;border-right:2px solid #dde3ee;white-space:nowrap}
+td.pname{font-weight:600;color:#9A0B16;min-width:170px}
+td.pr00c{text-align:right;color:#333;width:76px}
+td.amc{text-align:right;color:#777;font-style:italic;width:76px}
+td.confc{text-align:center;width:50px}
+
+.ic{text-align:center;font-weight:800;border-radius:4px;padding:6px 8px;font-size:12.5px;transition:all .2s;width:85px}
+.ic .ps{font-size:9.5px;font-weight:400;opacity:.82;display:block;margin-top:1px}
+
+/* Index colour scale */
+.lt1  {background:#0d7a40;color:#fff}
+.r1   {background:#3aac62;color:#fff}
+.r2   {background:#8ecc5a;color:#2a4000}
+.r3   {background:#f5d040;color:#4a3800}
+.r4   {background:#f07a28;color:#fff}
+.r5   {background:#dc3820;color:#fff}
+.r6   {background:#9a1010;color:#fff}
+
+.div-row td{background:#eef2fa;padding:4px 11px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:#5c72a0;border-top:2px solid #ccd6ee;border-bottom:none}
+
+/* Column hide on level toggle */
+.hide-asc .col-asc{display:none}
+.hide-db  .col-db {display:none}
+.hide-dlr .col-dlr{display:none}
+
+/* Hidden segment */
+.seg-block.hidden{display:none}
+
+/* confidence dots */
+.ch{color:#0d7a40;font-weight:900}
+.cm{color:#c07000;font-weight:900}
+.cl{color:#a03000;font-weight:900}
+
+.footnote{margin-top:6px;font-size:11px;color:#6880a8;line-height:1.7}
+.footnote strong{color:#334}
+
+.badge2{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10.5px;font-weight:700;margin:1px 2px;vertical-align:middle}
+.b-red{background:#fcd8d0;color:#8a1800}
+.b-amber{background:#fff0cc;color:#7a5000}
+.b-green{background:#d0f0e0;color:#0a5a30}
+.b-gray{background:#e8edf8;color:#3a4a70}
+
+.tbl-wrap.lcv thead tr{background:#15527a}
+.tbl-wrap.mcv thead tr{background:#155a44}
+.tbl-wrap.hcv thead tr{background:#5a3a18}
+
+hr.seg-divider{border:none;border-top:2px solid #d4dcea;margin:24px 0 20px}
+
+.comparison-note{background:#f0f5ff;border:1px solid #c0d0f0;border-radius:6px;padding:10px 16px;margin-bottom:16px;font-size:11.5px;line-height:1.6;color:#1a3060}
+
+/* ── Tab nav ─────────────────────────── */
+.tab-nav{background:#162540;border-bottom:2px solid #CC0E1E;display:flex;padding:0 28px;gap:0}
+.tab-btn{padding:11px 20px;font-size:12.5px;font-weight:700;color:#7a9ec8;border:none;background:transparent;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;letter-spacing:.2px}
+.tab-btn:hover:not(.tab-active){color:#b0ccee}
+.tab-btn.tab-active{color:#fff;border-bottom-color:#CC0E1E}
+.tab-page{display:none}
+.tab-page.tab-visible{display:block}
+
+/* ── Sources page ─────────────────────── */
+.src-page{padding:20px 28px}
+.src-section{margin-bottom:28px}
+.src-section-title{font-size:13px;font-weight:800;color:#9A0B16;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #d4dcea;text-transform:uppercase;letter-spacing:.5px}
+.src-table{width:100%;border-collapse:collapse;background:white;border-radius:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.src-table thead tr{background:#CC0E1E;color:white}
+.src-table th{padding:8px 11px;font-size:11px;font-weight:700;text-align:left}
+.src-table td{padding:7px 11px;border-bottom:1px solid #edf0f6;font-size:11.5px;vertical-align:top;line-height:1.45}
+.src-table tr:last-child td{border-bottom:none}
+.src-table tr:hover td{background:#f7f9fc}
+.src-seg-hdr td{background:#eef2fa!important;font-weight:800;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:#5c72a0;padding:5px 11px;border-top:2px solid #ccd6ee}
+.pn-chip{display:inline-block;font-family:monospace;font-size:10.5px;background:#eef2fa;color:#1a3060;padding:1px 6px;border-radius:3px;border:1px solid #c8d4ee;white-space:nowrap}
+.brand-chip{display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:700;margin:1px 2px;white-space:nowrap}
+.bc-iam{background:#dbeafe;color:#1e40af}
+.bc-oem{background:#ede9fe;color:#5b21b6}
+.conf-high{color:#0a7a40;font-weight:800}
+.conf-med {color:#c07000;font-weight:800}
+.conf-low {color:#a03000;font-weight:800}
+.meth-box{background:#fffbe8;border:1px solid #e8d860;border-left:4px solid #c8a800;border-radius:6px;padding:12px 16px;margin-bottom:16px;font-size:11.5px;color:#4a3800;line-height:1.6}
+.meth-box h4{font-size:12px;color:#3a2800;margin-bottom:6px}
+.meth-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:900px){.meth-grid{grid-template-columns:1fr}}
+.meth-card{background:white;border:1px solid #E0E0E0;border-radius:6px;padding:12px 14px}
+.meth-card h5{font-size:11px;font-weight:800;text-transform:uppercase;color:#CC0E1E;letter-spacing:.4px;margin-bottom:6px}
+.meth-card p{font-size:11.5px;color:#334;line-height:1.55;margin:0}
+.limit-box{background:#fff0f0;border:1px solid #f0c8c0;border-left:4px solid #c03020;border-radius:6px;padding:12px 16px;font-size:11.5px;color:#5a1810;line-height:1.6;margin-bottom:16px}
+
+/* ── Formula bar ─────────────────────── */
+.formula-bar{background:#0d1a30;border-bottom:1px solid #1e3050;padding:7px 28px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.formula-label{font-size:11px;color:#E88891;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.formula-expr{font-family:monospace;font-size:12px;color:#a8d0ff;background:#162540;border:1px solid #2a4060;border-radius:4px;padding:3px 10px;white-space:nowrap}
+.formula-expr .fv{color:#7dd8a0;font-weight:700}
+.formula-expr .fd{color:#ffd060}
+.formula-note{font-size:10.5px;color:#507090;margin-left:8px;font-style:italic}
+
+/* AM mode pills get a distinct accent */
+.pill.am-iam-r.active{background:#1a5fa0;border-color:#1a5fa0}
+.pill.am-iam-t.active{background:#1a7a5a;border-color:#1a7a5a}
+.pill.am-oem-r.active{background:#6a3a90;border-color:#6a3a90}
+.pill.am-oem-t.active{background:#8a4020;border-color:#8a4020}
+
+/* ═══════════════════════════════════════════════════
+   ISZE BRAND OVERRIDE — Isuzu Red #CC0E1E · Arial
+   ═══════════════════════════════════════════════════ */
+
+/* Custom properties reset */
+:root {
+  --brand-red:    #CC0E1E;
+  --brand-dark:   #9A0B16;
+  --brand-light:  #FFE8EA;
+  --brand-xlight: #FFF5F5;
+  --black:        #1A1A1A;
+  --gray:         #5A5A5A;
+  --ltgray:       #F5F5F5;
+  --border:       #E0E0E0;
+  --white:        #FFFFFF;
+}
+
+/* Body + font */
+body { font-family: Arial, sans-serif !important; background: #F5F5F5 !important; color: #1A1A1A !important; }
+
+/* ── Header ── */
+.header, .top-bar, .hdr {
+  background: linear-gradient(135deg, #CC0E1E 0%, #9A0B16 100%);
+  border-bottom: none !important;
+  color: #FFFFFF !important;
+}
+.header h1, .top-bar h1, .hdr-title, .hdr h1 { color: #FFFFFF !important; }
+.header .sub, .top-bar .meta, .hdr-sub { color: rgba(255,255,255,0.8) !important; }
+.hdr-logo { color: #FFFFFF !important; font-family: Arial Black, Arial, sans-serif !important; }
+
+/* ── Sub-bar / control bar ── */
+.sub-bar, .ctrl-bar, .tabs, .nav {
+  background: #1A1A1A !important;
+  border-bottom-color: #CC0E1E !important;
+}
+.sub-bar span, .ctrl-bar .ctrl-label { color: #E0E0E0 !important; }
+.tab, .nav-tab { color: rgba(255,255,255,0.7) !important; font-family: Arial, sans-serif !important; }
+.tab.active, .nav-tab.active { color: #FFFFFF !important; border-bottom-color: #CC0E1E !important; }
+.tab:hover:not(.active), .nav-tab:hover { color: #FFFFFF !important; }
+
+/* ── KPI cards ── */
+.kpi-card, .kpi { background: #FFFFFF !important; border: 1px solid #E0E0E0 !important; box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important; }
+.kpi-card { border-left: 4px solid #CC0E1E !important; border-top: none !important; }
+.kpi { border-left: 4px solid #CC0E1E !important; border-top: none !important; }
+.kpi.red, .kpi-card.red { border-left-color: #CC0E1E !important; }
+.kpi.green, .kpi-card.green { border-left-color: #2E7D32 !important; }
+.kpi.orange, .kpi-card.orange, .kpi.amber, .kpi-card.amber { border-left-color: #E65100 !important; }
+.kpi.blue, .kpi-card.blue { border-left-color: #CC0E1E !important; }
+.kpi-val, .kpi-value, .value { color: #1A1A1A !important; }
+.kpi-label, .kpi_label, .label { color: #5A5A5A !important; }
+.kpi-sub, .sub { color: #888888 !important; }
+
+/* ── Cards ── */
+.card { background: #FFFFFF !important; border: 1px solid #E0E0E0 !important; border-radius: 8px !important; box-shadow: 0 1px 4px rgba(0,0,0,0.08) !important; }
+.card h3, .section-title, .sec-title, .card-title { color: #1A1A1A !important; border-bottom-color: #CC0E1E !important; font-family: Arial Black, Arial, sans-serif !important; }
+
+/* ── Tables ── */
+th { background: #CC0E1E !important; color: #FFFFFF !important; font-family: Arial, sans-serif !important; }
+tr.total td, tfoot td { background: #FFE8EA !important; border-top-color: #CC0E1E !important; }
+tr:hover td { background: #FFF5F5 !important; }
+
+/* ── Badges ── */
+.badge { background: #CC0E1E !important; color: #FFFFFF !important; }
+.badge-internal { background: #FFE8EA !important; color: #CC0E1E !important; }
+
+/* ── Section titles ── */
+.section-title, .sec-title { color: #1A1A1A !important; border-bottom-color: #CC0E1E !important; }
+
+/* ── Links ── */
+a { color: #CC0E1E !important; }
+.nav-links a { color: rgba(255,255,255,0.8) !important; }
+.nav-links a.active { color: #FFFFFF !important; background: rgba(255,255,255,0.2) !important; }
+
+/* ── Verdict / alert bars ── */
+.verdict-bar, .update-banner {
+  background: #FFF5F5 !important;
+  border-left-color: #CC0E1E !important;
+  color: #1A1A1A !important;
+  border-color: #FFE8EA !important;
+}
+.verdict-bar h2 { color: #CC0E1E !important; }
+.verdict-bar p, .verdict-bar strong { color: #1A1A1A !important; }
+
+/* ── Year-end box / summary panels ── */
+.year-end-box {
+  background: #FFF5F5 !important;
+  border-color: #FFE8EA !important;
+}
+.ye-label { color: #5A5A5A !important; }
+
+/* ── Footer ── */
+footer, .footer {
+  background: #1A1A1A !important;
+  color: #AAAAAA !important;
+  border-top: 3px solid #CC0E1E !important;
+  padding: 14px 28px !important;
+  text-align: center !important;
+}
+footer a, .footer a { color: #FFE8EA !important; }
+
+/* ── Progress bars ── */
+.prog-bar-bg { background: #F0F0F0 !important; }
+.prog-label, .prog-val { color: #5A5A5A !important; }
+
+/* ── Status pills light theme ── */
+.sp-active { background: #e8f5e9 !important; color: #2e7d32 !important; border-color: #a5d6a7 !important; }
+.sp-risk { background: #fff3e0 !important; color: #e65100 !important; border-color: #ffcc80 !important; }
+.sp-hot { background: #FFE8EA !important; color: #CC0E1E !important; border-color: #FFAAB0 !important; }
+.sp-plan { background: #e8eaf6 !important; color: #283593 !important; border-color: #9fa8da !important; }
+
+/* ── Connection map nodes ── */
+.conn-map { background: #FFFFFF !important; border-color: #E0E0E0 !important; }
+.conn-node { background: #F5F5F5 !important; border-color: #E0E0E0 !important; }
+.conn-node-name { color: #CC0E1E !important; }
+.conn-arrow { color: #CC0E1E !important; }
+
+/* ── Project cards ── */
+.proj-card { background: #FFFFFF !important; border-color: #E0E0E0 !important; }
+.proj-card:hover { border-color: #CC0E1E !important; background: #FFF5F5 !important; }
+.proj-name { color: #1A1A1A !important; }
+.proj-sub, .proj-desc { color: #5A5A5A !important; }
+.file-link { background: #F5F5F5 !important; color: #CC0E1E !important; border-color: #E0E0E0 !important; }
+.file-link:hover { background: #FFE8EA !important; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar-track { background: #F5F5F5; }
+::-webkit-scrollbar-thumb { background: #CC0E1E; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #9A0B16; }
+
+
+/* ── Scraper Intel styles ── */
+.stab { padding:10px 20px;font-size:12.5px;font-weight:700;color:#7a9ec8;border:none;background:transparent;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;letter-spacing:.2px }
+.stab.stab-active { color:#fff;border-bottom-color:#CC0E1E }
+.stab:hover:not(.stab-active) { color:#b0ccee }
+.cat-pill { padding:4px 10px;border-radius:14px;border:1.5px solid #d0d8ee;background:transparent;color:#5a72a0;font-size:11px;cursor:pointer;transition:all .15s;font-weight:500 }
+.cat-pill:hover:not(.active) { border-color:#CC0E1E;color:#CC0E1E }
+.cat-pill.active { background:#CC0E1E;border-color:#CC0E1E;color:#fff;font-weight:700 }
+.sort-btn { font-size:10.5px;cursor:pointer;border:1px solid #ddd;padding:2px 8px;border-radius:3px;background:#f5f5f5;color:#444;font-family:Arial,sans-serif }
+.sort-btn:hover { background:#eee;border-color:#CC0E1E;color:#CC0E1E }
+.scr-pane {}
+
+
+.basis-strip{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 0 14px;padding:10px 14px;
+background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45;color:#222}
+.basis-strip b{color:#15233c;letter-spacing:.04em;text-transform:uppercase;font-size:10px;margin-right:4px}
+</style>
+<script src="_ui/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="_ui/editorial.css">
+  <link rel="stylesheet" href="_ui/editorial-full.css">
+  <script src="_ui/editorial-charts.js"></script>
+  <script src="_ui/isze-shell.js" defer=""></script>
+<script>
+/* local-file data loader — added 2026-08-01.
+   fetch() is blocked on file:// URLs, so these dashboards could never load their
+   JSON by double-click. The matching *.preload.js assigns the data to
+   window.__PRELOADS__; this shim serves it from there and falls back to a real
+   fetch() when the page is served over HTTP. */
+window.__PRELOADS__ = window.__PRELOADS__ || {};
+window.__localFetch = function (url) {
+  var d = window.__PRELOADS__[url];
+  if (d !== undefined) {
+    return Promise.resolve({ ok: true, status: 200,
+      json: function () { return Promise.resolve(d); },
+      text: function () { return Promise.resolve(JSON.stringify(d)); } });
+  }
+  return fetch(url);
+};
+</script>
+<script src="Data/dashboards/isze_data.preload.js"></script>
+</head>
+<body class="isze-editorial"><header id="isze-editorial-chrome"><a class="ed-logo" href="index.html"><span>ISZE</span> Intelligence</a><nav><a href="index.html">Home</a><a href="BI_PACKS.html">Dashboard Index</a><a href="MASTER_DASHBOARD.html">Mission Control</a><a href="PROJECT_HUB.html">Project Hub</a><a href="AI_Operations_Explorer.html">AI Ops</a></nav><div class="ed-page">ISZE Price Competitiveness Dashboard — FY2026</div></header>
+<div class="basis-strip"><div><b>Observed</b> Shop / peer quotes where scraped</div><div><b>Reference</b> Reference dealer price = list × 1.40 × 1.275 (price index = shop ÷ reference)</div><div><b>Coverage</b> Peer coverage is incomplete — do not read as full-network</div></div>
+
+<div data-isze-stamp="" style="background:#1F2937;color:#F3F4F6;font:11px/1.5 Arial,sans-serif;padding:5px 14px;text-align:right;letter-spacing:.3px;border-bottom:2px solid #CC0E1E"><span style="opacity:.65">📅 File last updated:</span> <strong>2026-05-22</strong> <span style="opacity:.55">— verify underlying data freshness before sharing externally</span></div>
+<div id="isze-offline-banner" style="display:none;position:sticky;top:0;z-index:9999;background:#7f1d1d;color:#fecaca;padding:12px 24px;text-align:center;font-size:13px;font-weight:600;letter-spacing:.02em;">⚠&nbsp; Data unavailable — open from SharePoint or reload when connected.</div>
+<div style="background:#1A1A1A;padding:7px 24px;display:flex;align-items:center;gap:20px;font-size:11px;font-family:Arial,sans-serif;border-bottom:2px solid #CC0E1E">
+  <a href="../hub/index.html" style="color:#CC0E1E;text-decoration:none;font-weight:700;white-space:nowrap">⬛ ISZE Hub</a>
+  <span style="color:#555">|</span>
+  <a href="../hub/MASTER_DASHBOARD.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Master Dashboard</a>
+  <a href="AIM_Dashboard_CY2026.html" style="color:#aaa;text-decoration:none;white-space:nowrap">AIM</a>
+  <a href="ISZE_Competitiveness_Dashboard.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Competitiveness</a>
+  <a href="ISZE_Monthly_Sales_Tracker.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Sales Tracker</a>
+  <a href="../fleet/ITUK_ZEV_Golden_Window_Dashboard.html" style="color:#aaa;text-decoration:none;white-space:nowrap">ZEV / Golden Window</a>
+  <a href="../fleet/ISUZU_UIO_Dashboard_2026.html" style="color:#aaa;text-decoration:none;white-space:nowrap">UIO</a>
+  <a href="../fleet/ISZE_FY2026_YearEnd_Review.html" style="color:#aaa;text-decoration:none;white-space:nowrap">FY2026 Review</a>
+  <a href="../ops/ISZE_Tender_Monitor_v2.html" style="color:#aaa;text-decoration:none;white-space:nowrap">Tender Monitor</a>
+</div>
+
+
+<!-- ── HEADER ── -->
+<div class="hdr">
+  <div class="hdr-logo">ISZE</div>
+  <div>
+    <div class="hdr-title">Price Competitiveness Dashboard — VP Parts vs Aftermarket &nbsp;|&nbsp; FY2026</div>
+    <div class="hdr-sub">Segments: D-Max (LCV) · N-Series (MCV) · F-Series (HCV) &nbsp;·&nbsp; Markets: UK / DE / FR &nbsp;·&nbsp; PR00 price list<br>IAM scrape (KS/Tranzparts/TMC/Mekonomen/Auto365): see <code>04_tools/autodoc_scraper/scrape_asof.json</code> · Autodoc Class C tables frozen (Cloudflare-retired)</div>
+  </div>
+</div>
+
+<!-- ── TAB NAV ── -->
+<div class="tab-nav">
+  <button class="tab-btn tab-active" id="tab-heatmap" onclick="switchTab('heatmap')">📊 Competitiveness Heatmap</button>
+  <button class="tab-btn" id="tab-scraper" onclick="switchTab('scraper')">📡 Live Scraper Intel</button>
+  <button class="tab-btn" id="tab-assumptions" onclick="switchTab('assumptions')">⚠️ Assumptions &amp; Corrections</button>
+  <button class="tab-btn" id="tab-sources" onclick="switchTab('sources')">📋 Sources &amp; Assumptions</button>
+</div>
+
+<!-- ══════════════════ PAGE 1: HEATMAP ══════════════════ -->
+<div class="tab-page tab-visible" id="page-heatmap">
+
+<!-- ── CONTROLS ── -->
+<div class="ctrl-bar">
+  <div class="ctrl-group">
+    <span class="ctrl-label">Segment</span>
+    <div class="pill-group" id="seg-pills">
+      <button class="pill v-all active" onclick="setSeg('all')" id="seg-all">All</button>
+      <button class="pill v-lcv" onclick="setSeg('lcv')" id="seg-lcv">🚙 D-Max (LCV)</button>
+      <button class="pill v-mcv" onclick="setSeg('mcv')" id="seg-mcv">🚛 N-Series (MCV)</button>
+      <button class="pill v-hcv" onclick="setSeg('hcv')" id="seg-hcv">🚚 F-Series (HCV)</button>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Market</span>
+    <div class="pill-group">
+      <button class="pill active" onclick="setMkt('uk')" id="mkt-uk">🇬🇧 UK</button>
+      <button class="pill" onclick="setMkt('de')" id="mkt-de">🇩🇪 DE</button>
+      <button class="pill" onclick="setMkt('fr')" id="mkt-fr">🇫🇷 FR</button>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Price level</span>
+    <div class="pill-group">
+      <button class="pill active" onclick="setLvl('all')" id="lvl-all">All levels</button>
+      <button class="pill" onclick="setLvl('asc')" id="lvl-asc">ASC</button>
+      <button class="pill" onclick="setLvl('db')" id="lvl-db">DB</button>
+      <button class="pill" onclick="setLvl('dlr')" id="lvl-dlr">DLR/Fleet</button>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <span class="ctrl-label">Compare vs</span>
+    <div class="pill-group">
+      <button class="pill am-iam-r active" onclick="setAM('iam_r')" id="am-iam_r">IAM retail</button>
+      <button class="pill am-iam-t" onclick="setAM('iam_t')" id="am-iam_t">IAM → DB trade</button>
+      <button class="pill am-oem-r" onclick="setAM('oem_r')" id="am-oem_r">OEM-equiv retail</button>
+      <button class="pill am-oem-t" onclick="setAM('oem_t')" id="am-oem_t">OEM-equiv → DB trade</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── FORMULA BAR ── -->
+<div class="formula-bar">
+  <span class="formula-label">Index formula:</span>
+  <span class="formula-expr" id="formula-expr"><span class="fv">ISZE price at level</span> ÷ <span class="fd">IAM retail</span></span>
+  <span class="formula-note" id="formula-note">IAM retail = budget AM brands (Nipparts, Borg&amp;Beck, NK) at consumer price (Autodoc/eBay UK). Most conservative view — retail is higher than what workshops actually pay.</span>
+</div>
+
+<!-- ── KPI CARDS ── -->
+<div class="kpi-bar" id="kpi-bar">
+    <div class="kpi">
+      <div class="kpi-label">Avg DLR index</div>
+      <div class="kpi-val kpi-green">1.60×</div>
+      <div class="kpi-sub">vs AM retail at fleet level</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Peak DLR index</div>
+      <div class="kpi-val kpi-red">3.30×</div>
+      <div class="kpi-sub">worst-exposed category</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Critical (&gt;3×)</div>
+      <div class="kpi-val kpi-red">1</div>
+      <div class="kpi-sub">categories at DLR level</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Exposed (1.5–3×)</div>
+      <div class="kpi-val kpi-amber">19</div>
+      <div class="kpi-sub">categories need attention</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Competitive (&lt;1.5×)</div>
+      <div class="kpi-val kpi-green">15</div>
+      <div class="kpi-sub">categories at/near parity</div>
+    </div>
+  </div>
+
+<!-- ── LEGEND ── -->
+<div class="legend-bar">
+  <span class="legend-label" id="legend-label">Index = Genuine ÷ IAM retail:</span>
+  <div class="legend-items">
+    <div class="li"><div class="lb lt1"></div>&lt;1.0× cheaper than AM</div>
+    <div class="li"><div class="lb r1"></div>1.0–1.2× parity</div>
+    <div class="li"><div class="lb r2"></div>1.2–1.5× mild premium</div>
+    <div class="li"><div class="lb r3"></div>1.5–2.0× caution</div>
+    <div class="li"><div class="lb r4"></div>2.0–3.0× exposed</div>
+    <div class="li"><div class="lb r5"></div>3.0–4.0× high risk</div>
+    <div class="li"><div class="lb r6"></div>&gt;4.0× ⚠ critical</div>
+  </div>
+  <span style="margin-left:auto;font-size:10px;color:#888888">Chain (FACTS.md §7, aftermarket comparison): PR00 → DB (+40%) → DLR (+27.5%) = ×1.785 to reference dealer price &nbsp;|&nbsp; Hover part name for data note</span>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="src-note" style="margin-top:12px"><strong>Class C · Autodoc &lt; 75% PR00</strong> (298 PNs scraped)</div><div class="tbl-wrap"><table><tbody><tr><th>PN</th><th>Description</th><th class="tr">PR00</th><th class="tr">Autodoc min</th><th class="tr">Ratio</th></tr><tr><td>5873112438</td><td>ENGINE ASM; PARTIAL</td><td class="r">€4,834.77</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>5873112386</td><td>ENGINE ASM; PARTIAL</td><td class="r">€4,111.21</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8976607440</td><td>TRANSMISSION ASM; MANUAL</td><td class="r">€3,839.60</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983939000</td><td>TRANSMISSION ASM; AUTO</td><td class="r">€3,739.81</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982236420</td><td>TRANSMISSION ASM; MANUAL</td><td class="r">€3,057.48</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8976671380</td><td>ENGINE ASM; PARTIAL</td><td class="r">€3,039.00</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983882610</td><td>ENGINE ASM; PARTIAL</td><td class="r">€2,987.54</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552348290</td><td>STEERING UNIT</td><td class="r">€2,268.04</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552348280</td><td>STEERING UNIT</td><td class="r">€2,268.04</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552348310</td><td>STEERING UNIT</td><td class="r">€2,268.04</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552283740</td><td>TRANSFER ASM</td><td class="r">€2,181.58</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8975359391</td><td>DPD ASM</td><td class="r">€2,162.48</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983320764</td><td>DPD ASM</td><td class="r">€2,021.73</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982278993</td><td>DPD ASM</td><td class="r">€1,610.08</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981974530</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981901180</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982932120</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981901150</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8975074440</td><td>FILTER ASM</td><td class="r">€1,402.15</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8975536860</td><td>BODY ASM; REAR</td><td class="r">€1,388.79</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981776324</td><td>DPD ASM</td><td class="r">€1,281.85</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983682091</td><td>PIPE; EXH</td><td class="r">€1,276.51</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983952370</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,225.40</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983516580</td><td>CATALYST ASM</td><td class="r">€1,206.10</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982049420</td><td>FILTER ASM</td><td class="r">€1,152.02</td><td class="r">€2.34</td><td class="r">0%</td></tr></tbody></table></div>
+<div class="src-note" style="margin-top:12px"><strong>Class C · Autodoc &lt; 75% PR00</strong> (298 PNs scraped)</div><div class="tbl-wrap"><table><tbody><tr><th>PN</th><th>Description</th><th class="tr">PR00</th><th class="tr">Autodoc min</th><th class="tr">Ratio</th></tr><tr><td>5873112438</td><td>ENGINE ASM; PARTIAL</td><td class="r">€4,834.77</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>5873112386</td><td>ENGINE ASM; PARTIAL</td><td class="r">€4,111.21</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8976607440</td><td>TRANSMISSION ASM; MANUAL</td><td class="r">€3,839.60</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983939000</td><td>TRANSMISSION ASM; AUTO</td><td class="r">€3,739.81</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982236420</td><td>TRANSMISSION ASM; MANUAL</td><td class="r">€3,057.48</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8976671380</td><td>ENGINE ASM; PARTIAL</td><td class="r">€3,039.00</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983882610</td><td>ENGINE ASM; PARTIAL</td><td class="r">€2,987.54</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552348290</td><td>STEERING UNIT</td><td class="r">€2,268.04</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552348280</td><td>STEERING UNIT</td><td class="r">€2,268.04</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552348310</td><td>STEERING UNIT</td><td class="r">€2,268.04</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552283740</td><td>TRANSFER ASM</td><td class="r">€2,181.58</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8975359391</td><td>DPD ASM</td><td class="r">€2,162.48</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983320764</td><td>DPD ASM</td><td class="r">€2,021.73</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982278993</td><td>DPD ASM</td><td class="r">€1,610.08</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981974530</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981901180</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982932120</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981901150</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8975074440</td><td>FILTER ASM</td><td class="r">€1,402.15</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8975536860</td><td>BODY ASM; REAR</td><td class="r">€1,388.79</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981776324</td><td>DPD ASM</td><td class="r">€1,281.85</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983682091</td><td>PIPE; EXH</td><td class="r">€1,276.51</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983952370</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,225.40</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983516580</td><td>CATALYST ASM</td><td class="r">€1,206.10</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982049420</td><td>FILTER ASM</td><td class="r">€1,152.02</td><td class="r">€2.34</td><td class="r">0%</td></tr></tbody></table></div>
+<!-- ISZE_AUTODOC_CLASS_C -->
+<div class="src-note">
+  <strong>Data sources:</strong>
+  PR00 prices = <strong>IE40 actual price list as of 13 March 2026</strong> (164,382 lines, EUR). D-Max parts identified by ABC code priority (A–D = top volume) and cross-reference to pricing simulation qty-weights.
+  N-Series &amp; F-Series PR00 = price clusters from IE40 — <em>segment assignment by price range &amp; description; no direct PN→model mapping without EQ-HIT. Validate before using externally.</em>
+  Aftermarket (AM) prices = D-Max from Autodoc UK scraped <strong>9 May 2026, GBP × 1.17</strong> (300 PNs queried, 110 with prices). Previous estimate (Feb–Mar 2026, ×1.18) superseded for all 6 PMS/Brakes PNs with live scrape data.
+  N-Series &amp; F-Series AM = estimated from European truck parts market knowledge (fewer AM brands, specialist suppliers).
+  DE market AM −8%; FR +5% vs UK EUR equivalent.
+  Confidence: <span class="ch">●●●</span> High · <span class="cm">●●○</span> Medium · <span class="cl">●○○</span> Low.
+</div>
+
+<!-- ── D-MAX SEGMENT ── -->
+<div class="seg-block" id="blk-lcv">
+  <div class="seg-hdr">
+    <span class="seg-badge seg-lcv">D-Max &nbsp;·&nbsp; LCV</span>
+    <span class="seg-note">D-Max TFR/TFS (4JJ1 · 4JK1 · RZ4E) &nbsp;·&nbsp; PR00 from IE40 price list 13 Mar 2026 (ABC A/B/C priority parts)</span>
+  </div>
+  <div class="tbl-wrap lcv" id="tbl-lcv"><table>
+    <thead><tr>
+      <th style="width:58px">Group</th>
+      <th style="min-width:165px">Part category</th>
+      <th class="tr" style="width:74px">PR00 (€)</th>
+      <th class="tr" style="width:88px">IAM retail (UK)</th>
+      <th class="tc col-asc" style="width:86px">ASC idx<br><span style="font-size:10px;opacity:.7;font-weight:400">→DB</span></th>
+      <th class="tc col-db" style="width:86px">DB idx<br><span style="font-size:10px;opacity:.7;font-weight:400">→DLR</span></th>
+      <th class="tc col-dlr" style="width:86px">DLR idx<br><span style="font-size:10px;opacity:.7;font-weight:400">fleet</span></th>
+      <th class="tc" style="width:48px">Conf.</th>
+    </tr></thead><tbody><tr class="div-row"><td colspan="8">PMS</td></tr><tr>
+      <td class="grp">PMS</td>
+      <td class="pname" title="PR00: 8982705240 €6.80 ABC:A (TH) — IE40 13 Mar 2026. IAM retail: Autodoc UK scraped 9 May 2026 — avg £14.15 (KAVO PARTS, BORG &amp; BECK etc.) → €16.6 @ 1.17. Min £6.00. OEM-equiv (Mann-Filter/Mahle) retail ~€15. ✅ ISZE beats AM at DLR (0.91×).">Oil filter</td>
+      <td class="pr00c">€6.80</td>
+      <td class="amc">€16.60</td>
+      <td class="ic lt1 col-asc">0.41×<span class="ps">€6.80</span></td><td class="ic lt1 col-db">0.57×<span class="ps">€9.52</span></td><td class="ic lt1 col-dlr">0.73×<span class="ps">€12.14</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr><tr>
+      <td class="grp">PMS</td>
+      <td class="pname" title="PR00: 8981596930 €13.85 ABC:A (TH) — IE40 13 Mar 2026. IAM retail: Autodoc UK scraped 9 May 2026 — avg £17.54 → €20.5 @ 1.17. Min £5.00. OEM-equiv (Mann-Filter) retail ~€25. ✅ ISZE beats AM at DLR (0.74×).">Fuel filter (kit)</td>
+      <td class="pr00c">€13.85</td>
+      <td class="amc">€20.50</td>
+      <td class="ic lt1 col-asc">0.68×<span class="ps">€13.85</span></td><td class="ic lt1 col-db">0.95×<span class="ps">€19.39</span></td><td class="ic r2 col-dlr">1.21×<span class="ps">€24.72</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr><tr>
+      <td class="grp">PMS</td>
+      <td class="pname" title="PR00: FILTER; AIR CLEANER €14.45 (8974995480, IE40 13 Mar 2026). IAM retail: Autodoc UK scraped 9 May 2026 — avg £32.57 → €38 @ 1.17. Min £11.00. Range wide — budget brands pull floor down. OEM-equiv (Mann-Filter/Donaldson) retail ~€32. ✅ ISZE beats AM at DLR (0.84×) — AM avg higher than OE-equiv!">Air filter</td>
+      <td class="pr00c">€14.45</td>
+      <td class="amc">€38.00</td>
+      <td class="ic lt1 col-asc">0.38×<span class="ps">€14.45</span></td><td class="ic lt1 col-db">0.53×<span class="ps">€20.23</span></td><td class="ic lt1 col-dlr">0.68×<span class="ps">€25.79</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr><tr>
+      <td class="grp">PMS</td>
+      <td class="pname" title="PR00: €16.33 (8975554500, IE40). IAM retail: Autodoc UK scraped 9 May 2026 — avg £10.19 → €11.9 @ 1.17. Min £7.00. OEM-equiv (Mann-Filter/Mahle) retail ~€20. ⚠️ PR00 already above AM retail at ASC level (1.37×) — exposure worsens vs previous estimate.">Cabin filter</td>
+      <td class="pr00c">€16.33</td>
+      <td class="amc">€11.90</td>
+      <td class="ic r2 col-asc">1.37×<span class="ps">€16.33</span></td><td class="ic r3 col-db">1.92×<span class="ps">€22.86</span></td><td class="ic r4 col-dlr">2.45×<span class="ps">€29.15</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr><tr>
+      <td class="grp">PMS</td>
+      <td class="pname" title="PR00: THERMOSTAT €10.31 ABC:A (multiple JP variants, IE40 13 Mar 2026). IAM retail: Autodoc est. €12. OEM-equiv (Gates/Wahler/Behr) retail ~€17.">Thermostat</td>
+      <td class="pr00c">€10.31</td>
+      <td class="amc">€12.00</td>
+      <td class="ic lt1 col-asc">0.86×<span class="ps">€10.31</span></td><td class="ic r2 col-db">1.20×<span class="ps">€14.43</span></td><td class="ic r3 col-dlr">1.53×<span class="ps">€18.40</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr><tr class="div-row"><td colspan="8">Brakes</td></tr><tr>
+      <td class="grp">Brakes</td>
+      <td class="pname" title="PR00: PAD KIT; CALIPER,DISC BRK,FRT €82.25 ABC:A (8975056801, TH) — IE40 13 Mar 2026. IAM retail: Autodoc UK scraped 9 May 2026 — avg £62.40 → €73 @ 1.17. Min £47.00. Previous estimate (€35) was based on Feb-Mar 2026 floor; real market avg is 2.1× higher. OEM-equiv (Brembo/ATE/Ferodo) retail ~€65. DLR ratio revised from 5.2× → 2.5×.">Brake pads (front)</td>
+      <td class="pr00c">€82.25</td>
+      <td class="amc">€73.00</td>
+      <td class="ic r1 col-asc">1.13×<span class="ps">€82.25</span></td><td class="ic r3 col-db">1.58×<span class="ps">€115.15</span></td><td class="ic r4 col-dlr">2.01×<span class="ps">€146.82</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr><tr>
+      <td class="grp">Brakes</td>
+      <td class="pname" title="PR00: ROTOR; DISC BRK,FRT €79.26 ABC:A (8983767550, IE40 13 Mar 2026). IAM retail: Autodoc UK scraped 9 May 2026 — min £55.00 → €64 @ 1.17 (used as floor). Avg £143.41 → €167.8 (near-parity with ISZE DLR!). Previous estimate (€42) was floor-only — actual market far higher. OEM-equiv (Brembo/ATE/Bosch) retail ~€78. DLR ratio revised from 4.2× → 2.75× at floor; 1.05× at avg AM.">Brake disc (front)</td>
+      <td class="pr00c">€79.26</td>
+      <td class="amc">€64.00</td>
+      <td class="ic r2 col-asc">1.24×<span class="ps">€79.26</span></td><td class="ic r3 col-db">1.73×<span class="ps">€110.96</span></td><td class="ic r4 col-dlr">2.21×<span class="ps">€141.48</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr><tr>
+      <td class="grp">Brakes</td>
+      <td class="pname" title="PR00: From pricing simulation (IE40 DRUM;BRAKE €144.58 assigned to HCV). IAM retail: est. £38–45→€48. OEM-equiv (ATE/Brembo) retail ~€72.">Brake drum (rear) <span title="PR00 from pricing simulation — no confirmed IE40 PN" style="font-size:9px;background:#ffe4cc;color:#7a3800;border:1px solid #ff9f40;border-radius:3px;padding:1px 4px;vertical-align:middle;cursor:help">SIM</span></td>
+      <td class="pr00c">€72.49</td>
+      <td class="amc">€48.00</td>
+      <td class="ic r3 col-asc">1.51×<span class="ps">€72.49</span></td><td class="ic r4 col-db">2.11×<span class="ps">€101.49</span></td><td class="ic r4 col-dlr">2.70×<span class="ps">€129.39</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr><tr class="div-row"><td colspan="8">Clutch</td></tr><tr>
+      <td class="grp">Clutch</td>
+      <td class="pname" title="PR00: CLUTCH KIT €162.62–€194.69 range (IE40 13 Mar 2026), mid €178. IAM retail: eBay UK £95–130, mid £105→€130. OEM-equiv (LuK/Valeo/Sachs) retail ~€200.">Clutch kit (3-pce) <span title="PR00 is mid of IE40 range — see Assumptions tab" style="font-size:9px;background:#e8f0fe;color:#1a3a80;border:1px solid #9ab0f5;border-radius:3px;padding:1px 4px;vertical-align:middle;cursor:help">RANGE</span></td>
+      <td class="pr00c">€178.00</td>
+      <td class="amc">€130.00</td>
+      <td class="ic r2 col-asc">1.37×<span class="ps">€178.00</span></td><td class="ic r3 col-db">1.92×<span class="ps">€249.20</span></td><td class="ic r4 col-dlr">2.44×<span class="ps">€317.73</span></td>
+      <td class="confc"><span class="cm">●●○</span></td>
+    </tr><tr>
+      <td class="grp">Clutch</td>
+      <td class="pname" title="PR00: DISC; CLUTCH €157.24 ABC:B (8982120690/8983225020, TH) — IE40 13 Mar 2026. IAM retail: est. £70–80→€85. OEM-equiv (LuK/Valeo) retail ~€125.">Clutch disc (standalone)</td>
+      <td class="pr00c">€157.24</td>
+      <td class="amc">€85.00</td>
+      <td class="ic r3 col-asc">1.85×<span class="ps">€157.24</span></td><td class="ic r4 col-db">2.59×<span class="ps">€220.14</span></td><td class="ic r5 col-dlr">3.30×<span class="ps">€280.67</span></td>
+      <td class="confc"><span class="cm">●●○</span></td>
+    </tr><tr class="div-row"><td colspan="8">Susp.</td></tr><tr>
+      <td class="grp">Susp.</td>
+      <td class="pname" title="PR00: ABSORBER ASM; SHOCK,FRT €35.20 ABC:B (8976485560/561, IE40 13 Mar 2026). IAM retail: KYB Autodoc UK £31–84, mid £45→€55. OEM-equiv (KYB OE/Bilstein/Sachs) retail ~€85.">Shock absorber (front)</td>
+      <td class="pr00c">€35.20</td>
+      <td class="amc">€55.00</td>
+      <td class="ic lt1 col-asc">0.64×<span class="ps">€35.20</span></td><td class="ic lt1 col-db">0.90×<span class="ps">€49.28</span></td><td class="ic r1 col-dlr">1.14×<span class="ps">€62.83</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr><tr>
+      <td class="grp">Susp.</td>
+      <td class="pname" title="PR00: ABSORBER ASM; SHOCK,RR €25.12 ABC:A (8975595540, IE40 13 Mar 2026). IAM retail: est. £40→€48. OEM-equiv (KYB OE/Sachs) retail ~€72.">Shock absorber (rear)</td>
+      <td class="pr00c">€25.12</td>
+      <td class="amc">€48.00</td>
+      <td class="ic lt1 col-asc">0.52×<span class="ps">€25.12</span></td><td class="ic lt1 col-db">0.73×<span class="ps">€35.17</span></td><td class="ic lt1 col-dlr">0.93×<span class="ps">€44.84</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr><tr>
+      <td class="grp">Susp.</td>
+      <td class="pname" title="PR00: JOINT; BALL,KNUCKLE ARM €27.98 (1443610483/484, IE40 13 Mar 2026). IAM retail: est. £22–28→€28. OEM-equiv (Moog/Lemförder/TRW) retail ~€45.">Ball joint (lower)</td>
+      <td class="pr00c">€27.98</td>
+      <td class="amc">€28.00</td>
+      <td class="ic lt1 col-asc">1.00×<span class="ps">€27.98</span></td><td class="ic r2 col-db">1.40×<span class="ps">€39.17</span></td><td class="ic r3 col-dlr">1.78×<span class="ps">€49.94</span></td>
+      <td class="confc"><span class="cm">●●○</span></td>
+    </tr><tr class="div-row"><td colspan="8">Elec.</td></tr><tr>
+      <td class="grp">Elec.</td>
+      <td class="pname" title="PR00: SENSOR; O2 €60.04 DE origin = Bosch OEM supply (8982054020, IE40 13 Mar 2026). IAM retail: est. £55→€65. OEM-equiv (Bosch/NGK/Denso) retail ~€100.">O2 / Lambda sensor</td>
+      <td class="pr00c">€60.04</td>
+      <td class="amc">€65.00</td>
+      <td class="ic lt1 col-asc">0.92×<span class="ps">€60.04</span></td><td class="ic r2 col-db">1.29×<span class="ps">€84.06</span></td><td class="ic r3 col-dlr">1.65×<span class="ps">€107.17</span></td>
+      <td class="confc"><span class="cm">●●○</span></td>
+    </tr><tr>
+      <td class="grp">Elec.</td>
+      <td class="pname" title="PR00: PLUG; GLOW €18.59 ABC:A (8983320410, JP) — IE40 13 Mar 2026. IAM retail: Autodoc UK £8–14, mid £12→€14. OEM-equiv (NGK/Bosch/Denso) retail ~€22.">Glow plug</td>
+      <td class="pr00c">€18.59</td>
+      <td class="amc">€14.00</td>
+      <td class="ic r2 col-asc">1.33×<span class="ps">€18.59</span></td><td class="ic r3 col-db">1.86×<span class="ps">€26.03</span></td><td class="ic r4 col-dlr">2.37×<span class="ps">€33.18</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr><tr>
+      <td class="grp">Elec.</td>
+      <td class="pname" title="PR00: VALVE; EGR €235.55 (PN 8983320160, ABC:A, TH, IE40 13 Mar 2026) — highest ABC rank, Thailand-sourced = current D-Max (4JJ3 engine). JP variant at €124.98 (ABC:B, 8982382450–55) exists for older 3.0D variants. AM retail: est. €160–210, mid €185. OEM-equiv (Pierburg/BorgWarner/Continental) retail est. €290. High confidence on PR00 (ABC:A confirmed).">EGR valve</td>
+      <td class="pr00c">€235.55</td>
+      <td class="amc">€185.00</td>
+      <td class="ic r2 col-asc">1.27×<span class="ps">€235.55</span></td><td class="ic r3 col-db">1.78×<span class="ps">€329.77</span></td><td class="ic r4 col-dlr">2.27×<span class="ps">€420.46</span></td>
+      <td class="confc"><span class="ch">●●●</span></td>
+    </tr></tbody></table></div>
+  <div class="footnote" id="foot-lcv"><strong>D-Max summary — AM prices: Autodoc UK scraped 9 May 2026, GBP × 1.17. PR00: IE40 13 Mar 2026.</strong>
+      <span class="badge2 b-green">PMS COMPETITIVE</span> Oil filter 0.91× DLR, fuel filter 0.74× DLR, air filter 0.84× DLR — ISZE <em>beats</em> AM market on all three at every price level. Previous estimates (Feb-Mar 2026) understated AM prices.
+      <span class="badge2 b-red">Cabin filter exposed</span> AM avg €11.9 vs PR00 €16.33 — ISZE above AM at ASC level (1.37×); DLR 3.0×. Loyalty risk on cabin filter.
+      <span class="badge2 b-amber">Brakes revised</span> Pads 2.5× DLR (was 5.2× — old estimate was floor, real avg £62.40/€73). Disc 2.75× at AM floor (was 4.2×); AM avg near-parity with ISZE DLR at 1.05×. Clutch disc 4.1×, drum 3.4× unchanged.
+      <span class="badge2 b-green">Shocks competitive</span> Rear shock 1.16× DLR — near parity. Front 1.42×.
+      <span class="badge2 b-amber">EGR (2.9×) &amp; ball joint (2.2×) exposed</span> Drive-away risk unchanged. Glow plug (2.9×) above AM at ASC.</div>
+</div>
+
+<hr class="seg-divider" id="div-mcv">
+
+<!-- ── N-SERIES SEGMENT ── -->
+<div class="seg-block" id="blk-mcv">
+  <div class="seg-hdr">
+    <span class="seg-badge seg-mcv">N-Series &nbsp;·&nbsp; MCV</span>
+    <span class="seg-note">NPR / NQR / NRR (4HK1 · 4JJ1) &nbsp;·&nbsp; PR00 from IE40 13 Mar 2026, higher-price cluster (JP-source, ABC A/B); no PN→model map without EQ-HIT — validate</span>
+  </div>
+  <div class="tbl-wrap mcv" id="tbl-mcv"><table>
+    <thead><tr>
+      <th style="width:58px">Group</th>
+      <th style="min-width:165px">Part category</th>
+      <th class="tr" style="width:74px">PR00 (€)</th>
+      <th class="tr" style="width:88px">IAM retail (UK)</th>
+      <th class="tc col-asc" style="width:86px">ASC idx<br><span style="font-size:10px;opacity:.7;font-weight:400">→DB</span></th>
+      <th class="tc col-db" style="width:86px">DB idx<br><span style="font-size:10px;opacity:.7;font-weight:400">→DLR</span></th>
+      <th class="tc col-dlr" style="width:86px">DLR idx<br><span style="font-size:10px;opacity:.7;font-weight:400">fleet</span></th>
+      <th class="tc" style="width:48px">Conf.</th>
+    </tr></thead><tbody><tr class="div-row"><td colspan="8">PMS</td></tr><tr>
+      <td class="grp">PMS</td>
+      <td class="pname" title="PR00: ELEMENT; OIL FILTER €14.45 ABC:A (8983282070, JP) + €14.25 ABC:C (8982984040, JP) — IE40 13 Mar 2026. Segment assignment estimated (JP-source, higher price vs D-Max €6.80). AM: Specialist truck filter (Mann/Mahle) est. €28–35, mid €30.">Oil filter <span title="Data corrected 30 Mar 2026 — see Assumptions tab" style="font-size:9px;background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:3px;padding:1px 4px;vertical-align:middle;cursor:help">CORR</span></td>
+      <td class="pr00c">€14.35</td>
+      <td class="amc">€30.00</td>
+      <td class="ic lt1 col-asc">0.48×<span class="ps">€14.35</span></td><td class="ic lt1 col-db">0.67×<span class="ps">€20.09</span></td><td class="ic lt1 col-dlr">0.85×<span class="ps">€25.61</span></td>
+      <td class="confc"><span class="cm">●●○</span></td>
+    </tr><tr>
+      <td class="grp">PMS</td>
+      <td class="pname" title="PR00: ELEMENT KIT; FUEL FILTER €20.29 range in IE40 (estimated N-Series cluster). AM: Estimated medium-duty truck filter €30–40, mid €35. Confidence LOW — segment assignment not confirmed.">Fuel filter (kit) <span title="Data corrected 30 Mar 2026 — see Assumptions tab" style="font-size:9px;background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:3px;padding:1px 4px;vertical-align:middle;cursor:help">CORR</span></td>
+      <td class="pr00c">€20.29</td>
+      <td class="amc">€35.00</td>
+      <td class="ic lt1 col-asc">0.58×<span class="ps">€20.29</span></td><td class="ic lt1 col-db">0.81×<span class="ps">€28.41</span></td><td class="ic r1 col-dlr">1.03×<span class="ps">€36.22</span></td>
+      <td class="confc"><span class="cm">●●○</span></td>
+    </tr><tr>
+      <td class="grp">PMS</td>
+      <td class="pname" title="PR00: FILTER/ELEMENT; AIR CLEANER range €17–45 in IE40; €31 used as representative N-Series estimate. AM: Larger truck element, fewer AM brands, est. €45–65, mid €55.">Air filter</td>
+      <td class="pr00c">€31.00</td>
+      <td class="amc">€55.00</td>
+      <td class="ic lt1 col-asc">0.56×<span class="ps">€31.00</span></td><td class="ic lt1 col-db">0.79×<span class="ps">€43.40</span></td><td class="ic r1 col-dlr">1.01×<span class="ps">€55.33</span></td>
+      <td class="confc"><span class="cm">●●○</span></td>
+    </tr><tr>
+        <td class="grp">PMS</td>
+        <td class="pname" title="N/A — N-Series cab typically has no cabin pollen filter.">Cabin filter</td>
+        <td class="pr00c" colspan="6" style="color:#aaa;font-style:italic;text-align:left;padding-left:12px">— N/A for this segment</td>
+      </tr><tr class="div-row"><td colspan="8">Brakes</td></tr><tr>
+      <td class="grp">Brakes</td>
+      <td class="pname" title="PR00: PAD KIT; DISC BRK range in IE40 €81–103 for non-D-Max variants (JP-source). Weighted mid ~€92. AM: Ferodo/ATE medium truck pads est. €65–95, mid €80.">Brake pads (front)</td>
+      <td class="pr00c">€92.00</td>
+      <td class="amc">€80.00</td>
+      <td class="ic r1 col-asc">1.15×<span class="ps">€92.00</span></td><td class="ic r3 col-db">1.61×<span class="ps">€128.80</span></td><td class="ic r4 col-dlr">2.05×<span class="ps">€164.22</span></td>
+      <td class="confc"><span class="cm">●●○</span></td>
+    </tr><tr>
+      <td class="grp">Brakes</td>
+      <td class="pname" title="PR00: ROTOR; DISC BRK range €158–166 JP-source cluster in IE40 13 Mar 2026. AM: Medium-duty truck disc, limited AM brands, est. €100–150, mid €125.">Brake disc (front)</td>
+      <td class="pr00c">€158.83</td>
+      <td class="amc">€125.00</td>
+      <td class="ic r2 col-asc">1.27×<span class="ps">€158.83</span></td><td class="ic r3 col-db">1.78×<span class="ps">€222.36</span></td><td class="ic r4 col-dlr">2.27×<span class="ps">€283.51</span></td>
+      <td class="confc"><span class="cm">●●○</span></td>
+    </tr><tr>
+      <td class="grp">Brakes</td>
+      <td class="pname" title="PR00: DRUM;BRAKE €144.58 (5423150330, JP) in IE40 — likely commercial truck drum. Lower cluster €108–127 used as N-Series estimate. AM: Estimated medium truck drum €90–130, mid €110. Confidence LOW.">Brake drum (rear)</td>
+      <td class="pr00c">€115.00</td>
+      <td class="amc">€110.00</td>
+      <td class="ic r1 col-asc">1.05×<span class="ps">€115.00</span></td><td class="ic r2 col-db">1.46×<span class="ps">€161.00</span></td><td class="ic r3 col-dlr">1.87×<span class="ps">€205.27</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr><tr class="div-row"><td colspan="8">Clutch</td></tr><tr>
+      <td class="grp">Clutch</td>
+      <td class="pname" title="PR00: CLUTCH KIT €260.22 (1876101940, IE40 13 Mar 2026) — upper range consistent with N-Series 4HK1 engine. Range in IE40: €260–374 for larger kits. AM: Sachs/LuK medium-duty est. €250–350, mid €270. Confidence LOW — segment assignment estimated.">Clutch kit</td>
+      <td class="pr00c">€260.00</td>
+      <td class="amc">€270.00</td>
+      <td class="ic lt1 col-asc">0.96×<span class="ps">€260.00</span></td><td class="ic r2 col-db">1.35×<span class="ps">€364.00</span></td><td class="ic r3 col-dlr">1.72×<span class="ps">€464.10</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr><tr>
+      <td class="grp">Clutch</td>
+      <td class="pname" title="PR00: DISC; CLUTCH €84.47 (ABC:C, JP — eg. 8972599400, 8980370042, IE40 13 Mar 2026). Multiple matching PNs at this price point. AM: Sachs/Valeo standalone disc mid-duty, est. €80–110, mid €95. Medium confidence — JP price cluster consistent with N-Series 4HK1 range.">Clutch disc (standalone)</td>
+      <td class="pr00c">€84.47</td>
+      <td class="amc">€95.00</td>
+      <td class="ic lt1 col-asc">0.89×<span class="ps">€84.47</span></td><td class="ic r2 col-db">1.24×<span class="ps">€118.26</span></td><td class="ic r3 col-dlr">1.59×<span class="ps">€150.78</span></td>
+      <td class="confc"><span class="cm">●●○</span></td>
+    </tr><tr class="div-row"><td colspan="8">Elec.</td></tr><tr>
+      <td class="grp">Elec.</td>
+      <td class="pname" title="PR00: VALVE; EGR 4HK1 €151.32 (PNs 8982382470 / 8981795461 / 8982382473, ABC:C, JP, IE40 13 Mar 2026). Description explicitly names 4HK1 engine — the primary N-Series EU engine. AM: BorgWarner/Continental/Pierburg reman, est. €110–150, mid €130. Medium confidence.">EGR valve (4HK1)</td>
+      <td class="pr00c">€151.32</td>
+      <td class="amc">€130.00</td>
+      <td class="ic r1 col-asc">1.16×<span class="ps">€151.32</span></td><td class="ic r3 col-db">1.63×<span class="ps">€211.85</span></td><td class="ic r4 col-dlr">2.08×<span class="ps">€270.11</span></td>
+      <td class="confc"><span class="cm">●●○</span></td>
+    </tr><tr class="div-row"><td colspan="8">Susp.</td></tr><tr>
+      <td class="grp">Susp.</td>
+      <td class="pname" title="PR00: Higher-cluster front shocks €42–46 (moderate qty). AM: Monroe/Sachs medium truck shock est. €70–100, mid €85. Confidence LOW.">Shock absorber (front)</td>
+      <td class="pr00c">€45.00</td>
+      <td class="amc">€85.00</td>
+      <td class="ic lt1 col-asc">0.53×<span class="ps">€45.00</span></td><td class="ic lt1 col-db">0.74×<span class="ps">€63.00</span></td><td class="ic lt1 col-dlr">0.94×<span class="ps">€80.32</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr><tr>
+      <td class="grp">Susp.</td>
+      <td class="pname" title="PR00: €25–29 rear shock mid-cluster. AM: Est. €65–85, mid €75. Confidence LOW.">Shock absorber (rear)</td>
+      <td class="pr00c">€28.00</td>
+      <td class="amc">€75.00</td>
+      <td class="ic lt1 col-asc">0.37×<span class="ps">€28.00</span></td><td class="ic lt1 col-db">0.52×<span class="ps">€39.20</span></td><td class="ic lt1 col-dlr">0.67×<span class="ps">€49.98</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr></tbody></table></div>
+  <div class="footnote" id="foot-mcv"><strong>N-Series (MCV) notes:</strong>
+      <span class="badge2 b-gray">Lower AM competition</span> Fewer aftermarket brands make medium-truck parts vs LCV — AM prices are higher, which reduces the competitiveness gap.
+      <span class="badge2 b-amber">Brakes still exposed</span> Brake pads at DB/DLR level remain a risk.
+      <span class="badge2 b-green">Shocks competitive at DB</span> AM is thin enough that genuine is actually well-placed.
+      ⚠ <em>PR00 values = estimated from price clusters in simulation — confirm against EQ-HIT catalog. AM prices = estimates only (confidence LOW/MEDIUM).</em></div>
+</div>
+
+<hr class="seg-divider" id="div-hcv">
+
+<!-- ── F-SERIES SEGMENT ── -->
+<div class="seg-block" id="blk-hcv">
+  <div class="seg-hdr">
+    <span class="seg-badge seg-hcv">F-Series &nbsp;·&nbsp; HCV</span>
+    <span class="seg-note">FRR / FVR / FVM (6HK1 · 6WG1) &nbsp;·&nbsp; PR00 from IE40 13 Mar 2026, highest-price cluster; AM estimated (thin market) — directional only, validate with EQ-HIT</span>
+  </div>
+  <div class="tbl-wrap hcv" id="tbl-hcv"><table>
+    <thead><tr>
+      <th style="width:58px">Group</th>
+      <th style="min-width:165px">Part category</th>
+      <th class="tr" style="width:74px">PR00 (€)</th>
+      <th class="tr" style="width:88px">IAM retail (UK)</th>
+      <th class="tc col-asc" style="width:86px">ASC idx<br><span style="font-size:10px;opacity:.7;font-weight:400">→DB</span></th>
+      <th class="tc col-db" style="width:86px">DB idx<br><span style="font-size:10px;opacity:.7;font-weight:400">→DLR</span></th>
+      <th class="tc col-dlr" style="width:86px">DLR idx<br><span style="font-size:10px;opacity:.7;font-weight:400">fleet</span></th>
+      <th class="tc" style="width:48px">Conf.</th>
+    </tr></thead><tbody><tr class="div-row"><td colspan="8">PMS</td></tr><tr>
+      <td class="grp">PMS</td>
+      <td class="pname" title="PR00: €18–22 cluster (J-source, low qty). AM: Large-capacity truck oil filter, specialist brands, est. €40–60. Confidence LOW.">Oil filter</td>
+      <td class="pr00c">€20.00</td>
+      <td class="amc">€50.00</td>
+      <td class="ic lt1 col-asc">0.40×<span class="ps">€20.00</span></td><td class="ic lt1 col-db">0.56×<span class="ps">€28.00</span></td><td class="ic lt1 col-dlr">0.71×<span class="ps">€35.70</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr><tr>
+      <td class="grp">PMS</td>
+      <td class="pname" title="PR00: €41.33 J-source variant (qty 347 — highest-price fuel filter in simulation). AM: Heavy truck fuel filter, very few AM brands, est. €50–70. Confidence LOW.">Fuel filter (large)</td>
+      <td class="pr00c">€41.33</td>
+      <td class="amc">€60.00</td>
+      <td class="ic lt1 col-asc">0.69×<span class="ps">€41.33</span></td><td class="ic lt1 col-db">0.96×<span class="ps">€57.86</span></td><td class="ic r2 col-dlr">1.23×<span class="ps">€73.77</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr><tr>
+      <td class="grp">PMS</td>
+      <td class="pname" title="PR00: €42–52 cluster. AM: Large panel filter, Donaldson/Baldwin alternatives, est. €75–110, mid €90. Confidence LOW.">Air filter</td>
+      <td class="pr00c">€47.00</td>
+      <td class="amc">€90.00</td>
+      <td class="ic lt1 col-asc">0.52×<span class="ps">€47.00</span></td><td class="ic lt1 col-db">0.73×<span class="ps">€65.80</span></td><td class="ic lt1 col-dlr">0.93×<span class="ps">€83.89</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr><tr>
+        <td class="grp">PMS</td>
+        <td class="pname" title="N/A — F-Series cab typically has no cabin pollen filter.">Cabin filter</td>
+        <td class="pr00c" colspan="6" style="color:#aaa;font-style:italic;text-align:left;padding-left:12px">— N/A for this segment</td>
+      </tr><tr class="div-row"><td colspan="8">Brakes</td></tr><tr>
+      <td class="grp">Brakes</td>
+      <td class="pname" title="PR00: €102–123 high-end pad cluster. AM: Heavy truck pads (Ferodo Heavy Duty), very limited AM, est. €110–150, mid €130. Confidence LOW.">Brake pads (front)</td>
+      <td class="pr00c">€110.00</td>
+      <td class="amc">€130.00</td>
+      <td class="ic lt1 col-asc">0.85×<span class="ps">€110.00</span></td><td class="ic r1 col-db">1.18×<span class="ps">€154.00</span></td><td class="ic r3 col-dlr">1.51×<span class="ps">€196.35</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr><tr>
+      <td class="grp">Brakes</td>
+      <td class="pname" title="PR00: €230–236 top cluster (J-source). AM: Large truck disc, very few AM brands, est. €170–230, mid €200. Confidence LOW.">Brake disc (front)</td>
+      <td class="pr00c">€233.00</td>
+      <td class="amc">€200.00</td>
+      <td class="ic r1 col-asc">1.17×<span class="ps">€233.00</span></td><td class="ic r3 col-db">1.63×<span class="ps">€326.20</span></td><td class="ic r4 col-dlr">2.08×<span class="ps">€415.90</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr><tr>
+      <td class="grp">Brakes</td>
+      <td class="pname" title="PR00: €231–234 cluster (FRT drums in simulation). AM: Heavy truck drum, est. €180–260, mid €220. Confidence LOW — AM market very thin at this level.">Brake drum (front/rear)</td>
+      <td class="pr00c">€235.00</td>
+      <td class="amc">€220.00</td>
+      <td class="ic r1 col-asc">1.07×<span class="ps">€235.00</span></td><td class="ic r2 col-db">1.50×<span class="ps">€329.00</span></td><td class="ic r3 col-dlr">1.91×<span class="ps">€419.47</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr><tr class="div-row"><td colspan="8">Clutch</td></tr><tr>
+        <td class="grp">Clutch</td>
+        <td class="pname" title="N/A — F-Series uses pneumatic clutch assist; limited clutch kit data in simulation. Excluded to avoid misleading estimates.">Clutch kit / disc</td>
+        <td class="pr00c" colspan="6" style="color:#aaa;font-style:italic;text-align:left;padding-left:12px">— N/A for this segment</td>
+      </tr><tr class="div-row"><td colspan="8">Susp.</td></tr><tr>
+      <td class="grp">Susp.</td>
+      <td class="pname" title="PR00: €50–103 top shock cluster. AM: Heavy-duty Sachs/Monroe truck shock, est. €90–130, mid €110. Confidence LOW.">Shock absorber (front)</td>
+      <td class="pr00c">€75.00</td>
+      <td class="amc">€110.00</td>
+      <td class="ic lt1 col-asc">0.68×<span class="ps">€75.00</span></td><td class="ic lt1 col-db">0.95×<span class="ps">€105.00</span></td><td class="ic r2 col-dlr">1.22×<span class="ps">€133.88</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr><tr>
+      <td class="grp">Susp.</td>
+      <td class="pname" title="PR00: Estimated from upper rear shock range. AM: Est. €80–120, mid €100. Confidence LOW.">Shock absorber (rear)</td>
+      <td class="pr00c">€60.00</td>
+      <td class="amc">€100.00</td>
+      <td class="ic lt1 col-asc">0.60×<span class="ps">€60.00</span></td><td class="ic lt1 col-db">0.84×<span class="ps">€84.00</span></td><td class="ic r1 col-dlr">1.07×<span class="ps">€107.10</span></td>
+      <td class="confc"><span class="cl">●○○</span></td>
+    </tr></tbody></table></div>
+  <div class="footnote" id="foot-hcv"><strong>F-Series (HCV) notes:</strong>
+      <span class="badge2 b-green">Thin AM market = lower exposure</span> Heavy truck AM parts are expensive and scarce — the competitiveness gap narrows significantly vs LCV.
+      <span class="badge2 b-amber">Discs &amp; drums borderline</span> Still 1.0–1.3× at DLR level in some categories.
+      ⚠ <em>All F-Series values are LOW confidence estimates. PR00 values are from the highest-price clusters in the simulation but model assignment is not confirmed. Use for directional analysis only.</em></div>
+</div>
+
+</div><!-- /main -->
+
+</div><!-- /page-heatmap -->
+
+<!-- ══════════════════ PAGE 2: SOURCES & ASSUMPTIONS ══════════════════ -->
+<div class="tab-page" id="page-sources">
+<div class="src-page">
+
+  <!-- Methodology cards -->
+  <div class="src-section">
+    <div class="src-section-title">Methodology &amp; Price Chain</div>
+    <div class="meth-grid">
+      <div class="meth-card">
+        <h5>PR00 Price Source</h5>
+        <p><strong>File:</strong> IE40 Price list as of 13 March 2026 (164,382 lines, EUR).<br>
+        <strong>D-Max selection:</strong> Parts with ABC code A, B, or C (top volume movers) cross-referenced against pricing simulation qty-weights. Where multiple ABC:A variants exist, the most frequent PN is used.<br>
+        <strong>N/F-Series:</strong> Higher JP-source price clusters in IE40, no direct PN→model mapping. Must be validated against EQ-HIT before external use.</p>
+      </div>
+      <div class="meth-card">
+        <h5>Price Chain Logic</h5>
+        <p><strong>ASC (PR00):</strong> IE40 list price — what the Authorised Service Centre pays ISZE.<br>
+        <strong>DB level:</strong> PR00 × 1.40 → distributor uplift +40%.<br>
+        <strong>DLR / Fleet:</strong> DB price × 1.275 → dealer uplift +27.5%. Full chain PR00 → reference dealer price = <strong>×1.785</strong>.<br>
+        <strong>Convention:</strong> this is the FACTS.md §7 apples-to-apples chain for benchmarking genuine against aftermarket. ISZE's own-EUR rule (35% margin = ÷0.65) is a different convention and is deliberately <em>not</em> used here.<br>
+        <strong>Index:</strong> Each price level ÷ AM retail = competitiveness ratio. &lt;1.0× = genuine cheaper than AM.</p>
+      </div>
+      <div class="meth-card">
+        <h5>Aftermarket (AM) Prices — D-Max</h5>
+        <p><strong>Source:</strong> Autodoc.co.uk scraped <strong>9 May 2026</strong> — 300 PNs queried, 110 with prices (36.7% hit rate).<br>
+        <strong>FX:</strong> GBP × 1.17 = EUR equivalent (updated from ×1.18 Feb–Mar 2026).<br>
+        <strong>IAM tier:</strong> Budget/standard quality (Nipparts, Borg&amp;Beck, NK) — mid of search range.<br>
+        <strong>OEM-equiv:</strong> Premium OE-supplier brands (Bosch, Valeo, LuK, Brembo, Mann-Filter) — ~1.3–1.6× IAM.</p>
+      </div>
+      <div class="meth-card">
+        <h5>Market Adjustments &amp; N/F-Series AM</h5>
+        <p><strong>DE market:</strong> AM prices × 0.92 (more competitive IAM market).<br>
+        <strong>FR market:</strong> AM prices × 1.05 (slightly higher retail).<br>
+        <strong>N/F-Series AM:</strong> Estimated from European commercial truck parts market knowledge. Fewer brands = higher AM prices and smaller genuine premium gap. All LOW confidence.</p>
+      </div>
+    </div>
+    <div class="limit-box">
+      ⚠ <strong>Limitations to be aware of:</strong>
+      N-Series and F-Series PR00 prices are estimated by price clustering in the IE40 file — no direct part-number to vehicle-model mapping exists without EQ-HIT data.
+      AM prices for N/F-Series are estimates only and should be treated as directional.
+      D-Max AM prices are based on a spot check (Feb–Mar 2026) and may not reflect seasonal promotions or bulk pricing available to workshops.
+      Competitiveness index is vs retail AM — workshop/trade prices from Autodoc/GSF/EuroParts will be lower, making genuine parts look less competitive than shown.
+    </div>
+  </div>
+
+  <!-- D-Max sources table -->
+  <div class="src-section">
+    <div class="src-section-title">🚙 D-Max (LCV) — Part-by-Part Sources</div>
+    <table class="src-table">
+      <thead><tr>
+        <th style="width:80px">Group</th>
+        <th style="min-width:140px">Part</th>
+        <th style="width:76px">PR00 (€)</th>
+        <th style="min-width:160px">IE40 Reference (PN · ABC · Origin)</th>
+        <th style="min-width:140px">AM Price Source</th>
+        <th style="min-width:200px">IAM Brands</th>
+        <th style="min-width:160px">OEM-Equiv Brands</th>
+        <th style="width:60px">Conf.</th>
+      </tr></thead>
+      <tbody>
+        <tr class="src-seg-hdr"><td colspan="8">PMS — Periodic Maintenance Service</td></tr>
+        <tr>
+          <td>PMS</td><td><strong>Oil filter</strong></td><td>€6.80</td>
+          <td><span class="pn-chip">8982705240</span> ABC:A · TH<br><small style="color:#888">ELEMENT; OIL FILTER</small></td>
+          <td>Autodoc UK scraped 9 May 2026<br>Avg £14.15 → <strong>€16.60</strong> ×1.17</td>
+          <td><span class="brand-chip bc-iam">Nipparts</span><span class="brand-chip bc-iam">Borg&amp;Beck</span><span class="brand-chip bc-iam">NK</span><span class="brand-chip bc-iam">Comline</span></td>
+          <td><span class="brand-chip bc-oem">Mann-Filter</span><span class="brand-chip bc-oem">Mahle</span><span class="brand-chip bc-oem">Bosch</span></td>
+          <td><span class="conf-high">●●●</span></td>
+        </tr>
+        <tr>
+          <td>PMS</td><td><strong>Fuel filter (kit)</strong></td><td>€13.85</td>
+          <td><span class="pn-chip">8981596930</span> ABC:A · TH<br><small style="color:#888">ELEMENT KIT; FUEL FILTER</small></td>
+          <td>Autodoc UK scraped 9 May 2026<br>Avg £17.54 → <strong>€20.50</strong> ×1.17</td>
+          <td><span class="brand-chip bc-iam">Nipparts</span><span class="brand-chip bc-iam">Comline</span><span class="brand-chip bc-iam">Quinton Hazell</span></td>
+          <td><span class="brand-chip bc-oem">Mann-Filter</span><span class="brand-chip bc-oem">Mahle</span></td>
+          <td><span class="conf-high">●●●</span></td>
+        </tr>
+        <tr>
+          <td>PMS</td><td><strong>Air filter</strong></td><td>€14.45</td>
+          <td><span class="pn-chip">8971786090/91/92</span> ABC:D · JP<br><small style="color:#888">FILTER; AIR CLEANER (3 variants)</small></td>
+          <td>Autodoc UK scraped 9 May 2026<br>Avg £32.57 → <strong>€38.00</strong> ×1.17</td>
+          <td><span class="brand-chip bc-iam">Nipparts</span><span class="brand-chip bc-iam">Comline</span><span class="brand-chip bc-iam">WIX</span></td>
+          <td><span class="brand-chip bc-oem">Mann-Filter</span><span class="brand-chip bc-oem">Mahle</span><span class="brand-chip bc-oem">Donaldson</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr>
+          <td>PMS</td><td><strong>Cabin / pollen filter</strong></td><td>€16.33</td>
+          <td><span class="pn-chip">8975554500</span> (simulation file)<br><small style="color:#888">Not found in IE40 by keyword — different description likely</small></td>
+          <td>Autodoc UK scraped 9 May 2026<br>Avg £10.19 → <strong>€11.90</strong> ×1.17 ⚠️</td>
+          <td><span class="brand-chip bc-iam">Comline</span><span class="brand-chip bc-iam">Borg&amp;Beck</span></td>
+          <td><span class="brand-chip bc-oem">Mann-Filter</span><span class="brand-chip bc-oem">Mahle</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr>
+          <td>PMS</td><td><strong>Thermostat</strong></td><td>€10.31</td>
+          <td><span class="pn-chip">8972318870</span> + 4 others ABC:A · JP<br><small style="color:#888">THERMOSTAT (identical price, multiple PNs)</small></td>
+          <td>Autodoc UK est. £10<br>→ €12.00</td>
+          <td><span class="brand-chip bc-iam">Nipparts</span><span class="brand-chip bc-iam">Quinton Hazell</span></td>
+          <td><span class="brand-chip bc-oem">Gates</span><span class="brand-chip bc-oem">Wahler</span><span class="brand-chip bc-oem">Behr</span></td>
+          <td><span class="conf-high">●●●</span></td>
+        </tr>
+        <tr class="src-seg-hdr"><td colspan="8">Brakes</td></tr>
+        <tr>
+          <td>Brakes</td><td><strong>Brake pads (front disc)</strong></td><td>€82.25</td>
+          <td><span class="pn-chip">8975056800</span> <span class="pn-chip">8975056801</span> <span class="pn-chip">8975546610</span> ABC:A · TH<br><small style="color:#888">PAD KIT; CALIPER, DISC BRK, FRT</small></td>
+          <td>Autodoc UK scraped 9 May 2026<br>Avg £62.40 → <strong>€73.00</strong> ×1.17 (min £47)</td>
+          <td><span class="brand-chip bc-iam">Borg&amp;Beck</span><span class="brand-chip bc-iam">Nipparts</span><span class="brand-chip bc-iam">NK</span></td>
+          <td><span class="brand-chip bc-oem">Brembo</span><span class="brand-chip bc-oem">ATE</span><span class="brand-chip bc-oem">Textar</span><span class="brand-chip bc-oem">Ferodo</span></td>
+          <td><span class="conf-high">●●●</span></td>
+        </tr>
+        <tr>
+          <td>Brakes</td><td><strong>Brake disc (front rotor)</strong></td><td>€79.26</td>
+          <td><span class="pn-chip">8983767530</span> <span class="pn-chip">8983767550</span> ABC:A · JP<br><small style="color:#888">ROTOR; DISC BRK, FRT</small></td>
+          <td>Autodoc UK scraped 9 May 2026<br>Min £55 → <strong>€64.00</strong> ×1.17 (avg £143)</td>
+          <td><span class="brand-chip bc-iam">NK</span><span class="brand-chip bc-iam">Nipparts</span><span class="brand-chip bc-iam">Borg&amp;Beck</span></td>
+          <td><span class="brand-chip bc-oem">Brembo</span><span class="brand-chip bc-oem">ATE</span><span class="brand-chip bc-oem">Bosch</span></td>
+          <td><span class="conf-high">●●●</span></td>
+        </tr>
+        <tr>
+          <td>Brakes</td><td><strong>Brake drum (rear)</strong></td><td>€72.49</td>
+          <td><em>From pricing simulation</em> (IE40 only has <span class="pn-chip">5423150330</span> DRUM;BRAKE €144.58 — assigned to HCV)<br><small style="color:#888">D-Max drum PN not isolated in IE40 without EQ-HIT</small></td>
+          <td>Estimated £38–45<br>→ €48.00</td>
+          <td><span class="brand-chip bc-iam">NK</span><span class="brand-chip bc-iam">Nipparts</span></td>
+          <td><span class="brand-chip bc-oem">ATE</span><span class="brand-chip bc-oem">Brembo</span></td>
+          <td><span class="conf-low">●○○</span></td>
+        </tr>
+        <tr class="src-seg-hdr"><td colspan="8">Clutch</td></tr>
+        <tr>
+          <td>Clutch</td><td><strong>Clutch kit (3-piece)</strong></td><td>€178.00</td>
+          <td><span class="pn-chip">5876102060</span> €162.62 ABC:D · CN &amp; <span class="pn-chip">5876102320</span> €194.69 ABC:C · CN<br><small style="color:#888">CLUTCH KIT — mid of D-Max range used</small></td>
+          <td>eBay UK £95–130<br>Quality mid £105 → €130.00</td>
+          <td><span class="brand-chip bc-iam">Nipparts</span><span class="brand-chip bc-iam">Borg&amp;Beck</span></td>
+          <td><span class="brand-chip bc-oem">LuK</span><span class="brand-chip bc-oem">Valeo</span><span class="brand-chip bc-oem">Sachs</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr>
+          <td>Clutch</td><td><strong>Clutch disc (standalone)</strong></td><td>€157.24</td>
+          <td><span class="pn-chip">8982120690</span> <span class="pn-chip">8983225020</span> ABC:B · TH<br><small style="color:#888">DISC; CLUTCH (both €157.24)</small></td>
+          <td>Estimated standalone disc<br>£70–80 → €85.00</td>
+          <td><span class="brand-chip bc-iam">Nipparts</span></td>
+          <td><span class="brand-chip bc-oem">LuK</span><span class="brand-chip bc-oem">Valeo</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr class="src-seg-hdr"><td colspan="8">Suspension</td></tr>
+        <tr>
+          <td>Susp.</td><td><strong>Shock absorber (front)</strong></td><td>€35.20</td>
+          <td><span class="pn-chip">8976485560</span> <span class="pn-chip">8976485561</span> ABC:B<br><small style="color:#888">ABSORBER ASM; SHOCK, FRT</small></td>
+          <td>KYB Autodoc UK £31–84<br>Mid £45 → €55.00</td>
+          <td><span class="brand-chip bc-iam">Bilstein B4</span><span class="brand-chip bc-iam">KYB Excel-G</span><span class="brand-chip bc-iam">Kayaba</span></td>
+          <td><span class="brand-chip bc-oem">KYB (OE)</span><span class="brand-chip bc-oem">Sachs</span><span class="brand-chip bc-oem">Monroe</span></td>
+          <td><span class="conf-high">●●●</span></td>
+        </tr>
+        <tr>
+          <td>Susp.</td><td><strong>Shock absorber (rear)</strong></td><td>€25.12</td>
+          <td><span class="pn-chip">8975595540</span> ABC:A<br><small style="color:#888">ABSORBER ASM; SHOCK, RR</small></td>
+          <td>Autodoc UK est. £40<br>→ €47.00</td>
+          <td><span class="brand-chip bc-iam">KYB Excel-G</span><span class="brand-chip bc-iam">Kayaba</span></td>
+          <td><span class="brand-chip bc-oem">KYB (OE)</span><span class="brand-chip bc-oem">Sachs</span></td>
+          <td><span class="conf-high">●●●</span></td>
+        </tr>
+        <tr>
+          <td>Susp.</td><td><strong>Ball joint (lower / knuckle arm)</strong></td><td>€27.98</td>
+          <td><span class="pn-chip">1443610483</span> <span class="pn-chip">1443610484</span><br><small style="color:#888">JOINT; BALL, KNUCKLE ARM</small></td>
+          <td>Estimated quality brand<br>£22–28 → €28.00</td>
+          <td><span class="brand-chip bc-iam">Nipparts</span><span class="brand-chip bc-iam">NK</span></td>
+          <td><span class="brand-chip bc-oem">Moog</span><span class="brand-chip bc-oem">Lemförder</span><span class="brand-chip bc-oem">TRW</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr class="src-seg-hdr"><td colspan="8">Electrical / Emissions</td></tr>
+        <tr>
+          <td>Elec.</td><td><strong>O2 / Lambda sensor</strong></td><td>€60.04</td>
+          <td><span class="pn-chip">8982054020</span> origin: DE<br><small style="color:#888">SENSOR; O2 — DE origin = Bosch OEM supply</small></td>
+          <td>Estimated quality brand<br>£55 → €65.00</td>
+          <td><span class="brand-chip bc-iam">Nipparts</span><span class="brand-chip bc-iam">Delphi</span></td>
+          <td><span class="brand-chip bc-oem">Bosch</span><span class="brand-chip bc-oem">NGK/NTK</span><span class="brand-chip bc-oem">Denso</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr>
+          <td>Elec.</td><td><strong>Glow plug</strong></td><td>€18.59</td>
+          <td><span class="pn-chip">8983320410</span> ABC:A · JP<br><small style="color:#888">PLUG; GLOW (also €14.44 ABC:B variants)</small></td>
+          <td>NGK/Bosch Autodoc UK<br>£8–14 each → €14.00</td>
+          <td><span class="brand-chip bc-iam">Nipparts</span><span class="brand-chip bc-iam">Comline</span></td>
+          <td><span class="brand-chip bc-oem">NGK</span><span class="brand-chip bc-oem">Bosch</span><span class="brand-chip bc-oem">Denso</span></td>
+          <td><span class="conf-high">●●●</span></td>
+        </tr>
+        <tr>
+          <td>Elec.</td><td><strong>EGR valve</strong></td><td>€124.98</td>
+          <td><span class="pn-chip">8983320160</span> ABC:A · TH · €235.55<br><small style="color:#888">VALVE; EGR — highest ABC rank, TH-sourced (current D-Max 4JJ3). JP variant 8982382450–55 ABC:B €124.98 = older 3.0D.</small></td>
+          <td>Pierburg / BorgWarner<br>est. £80 → €95.00</td>
+          <td><span class="brand-chip bc-iam">Delphi</span></td>
+          <td><span class="brand-chip bc-oem">Pierburg</span><span class="brand-chip bc-oem">BorgWarner</span><span class="brand-chip bc-oem">Continental</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- N-Series sources -->
+  <div class="src-section">
+    <div class="src-section-title">🚛 N-Series (MCV) — Source Notes</div>
+    <div class="meth-box">
+      <h4>Important caveat — all N-Series PR00 values are estimated</h4>
+      Without EQ-HIT catalog data, it is not possible to directly map a PR00 part number to the N-Series model. The prices used are derived from JP-source price clusters in the IE40 file that are distinct from D-Max (TH-sourced) ranges. Key improvements from IE40 deep analysis (Mar 2026): oil filter calibrated to JP ABC:A (€9.96), brake disc to JP ABC:C (€158.83), clutch disc identified at JP ABC:C (€84.47), EGR explicitly confirmed for 4HK1 engine at €151.32 (description includes engine name in IE40). This must still be validated in EQ-HIT before use in any external document or customer-facing communication.
+    </div>
+    <table class="src-table">
+      <thead><tr>
+        <th style="width:80px">Group</th><th style="min-width:140px">Part</th><th>PR00 (€)</th>
+        <th>IE40 Reference / Basis</th><th>AM Estimate Basis</th><th>IAM Brands</th><th>OEM-Equiv Brands</th><th>Conf.</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td>PMS</td><td><strong>Oil filter</strong></td><td>€9.96</td>
+          <td><span class="pn-chip">5876100130</span> ABC:A · JP · €9.96<br><small style="color:#888">ELEMENT; OIL FILTER — JP ABC:A (highest ranking). Distinct from D-Max TH ABC:A at €6.80.</small></td>
+          <td>Mann/Mahle truck filter<br>est. €28–35 mid €30</td>
+          <td><span class="brand-chip bc-iam">Mann-Filter</span><span class="brand-chip bc-iam">WIX</span><span class="brand-chip bc-iam">Fleetguard</span></td>
+          <td><span class="brand-chip bc-oem">Mahle</span><span class="brand-chip bc-oem">Donaldson</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr>
+          <td>PMS</td><td><strong>Fuel filter</strong></td><td>€14.31</td>
+          <td><span class="pn-chip">1878100710</span> ABC:E · JP · €14.31<br><small style="color:#888">ELEMENT KIT; FUEL FILTER — JP ABC:E price point consistent with N-Series range. Multiple PNs at same price.</small></td>
+          <td>Medium truck filter<br>est. €30–40 mid €35</td>
+          <td><span class="brand-chip bc-iam">Mann-Filter</span><span class="brand-chip bc-iam">Fleetguard</span></td>
+          <td><span class="brand-chip bc-oem">Mahle</span><span class="brand-chip bc-oem">Donaldson</span></td>
+          <td><span class="conf-low">●○○</span></td>
+        </tr>
+        <tr>
+          <td>PMS</td><td><strong>Air filter</strong></td><td>€31.00</td>
+          <td>ELEMENT; AIR CLEANER range €17–45 in IE40<br><small style="color:#888">€31 representative estimate for N-Series</small></td>
+          <td>Large truck element<br>est. €45–65 mid €55</td>
+          <td><span class="brand-chip bc-iam">Donaldson</span><span class="brand-chip bc-iam">Baldwin</span><span class="brand-chip bc-iam">WIX</span></td>
+          <td><span class="brand-chip bc-oem">Mann-Filter</span><span class="brand-chip bc-oem">Mahle</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr>
+          <td>Brakes</td><td><strong>Brake pads</strong></td><td>€92.00</td>
+          <td>PAD KIT; DISC BRK range €81–103 JP-source (non-D-Max)<br><small style="color:#888">Weighted mid ~€92</small></td>
+          <td>Ferodo/ATE medium truck<br>est. €65–95 mid €80</td>
+          <td><span class="brand-chip bc-iam">Ferodo</span><span class="brand-chip bc-iam">ATE</span></td>
+          <td><span class="brand-chip bc-oem">Brembo</span><span class="brand-chip bc-oem">Textar</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr>
+          <td>Brakes</td><td><strong>Brake disc</strong></td><td>€158.83</td>
+          <td><span class="pn-chip">8973872290</span> ABC:C · JP · €158.83<br><small style="color:#888">ROTOR; DISC BRK,FRT — JP ABC:C. Multiple PNs at this exact price (8971686311, 8973718760). Confirmed IE40 13 Mar 2026.</small></td>
+          <td>Medium truck disc<br>est. €100–150 mid €125</td>
+          <td><span class="brand-chip bc-iam">ATE</span><span class="brand-chip bc-iam">Zimmermann</span></td>
+          <td><span class="brand-chip bc-oem">Brembo</span><span class="brand-chip bc-oem">Bosch</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr>
+          <td>Brakes</td><td><strong>Brake drum</strong></td><td>€115.00</td>
+          <td><span class="pn-chip">5423150330</span> DRUM;BRAKE €144.58 JP (IE40)<br><small style="color:#888">€115 used as N-Series estimate; €144.58 may be HCV</small></td>
+          <td>Medium truck drum<br>est. €90–130 mid €110</td>
+          <td><span class="brand-chip bc-iam">Ferodo</span><span class="brand-chip bc-iam">ATE</span></td>
+          <td><span class="brand-chip bc-oem">Brembo</span></td>
+          <td><span class="conf-low">●○○</span></td>
+        </tr>
+        <tr>
+          <td>Clutch</td><td><strong>Clutch kit</strong></td><td>€260.00</td>
+          <td><span class="pn-chip">1876101940</span> €260.22 (IE40)<br><small style="color:#888">CLUTCH KIT — upper range (N-Series 4HK1 assumed). IE40 range €260–374 for larger kits</small></td>
+          <td>Sachs/LuK medium-duty<br>est. €250–350 mid €270</td>
+          <td><span class="brand-chip bc-iam">Nipparts</span></td>
+          <td><span class="brand-chip bc-oem">LuK</span><span class="brand-chip bc-oem">Valeo</span><span class="brand-chip bc-oem">Sachs</span></td>
+          <td><span class="conf-low">●○○</span></td>
+        </tr>
+        <tr>
+          <td>Clutch</td><td><strong>Clutch disc (standalone)</strong></td><td>€84.47</td>
+          <td><span class="pn-chip">8972599400</span> ABC:C · JP · €84.47<br><small style="color:#888">DISC; CLUTCH — multiple PNs at this exact price (ABC:C/F JP). Consistent N-Series price tier. IE40 13 Mar 2026.</small></td>
+          <td>Sachs/Valeo standalone disc<br>est. €80–110 mid €95</td>
+          <td><span class="brand-chip bc-iam">Nipparts</span><span class="brand-chip bc-iam">Valeo</span></td>
+          <td><span class="brand-chip bc-oem">LuK</span><span class="brand-chip bc-oem">Sachs</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr>
+          <td>Elec.</td><td><strong>EGR valve (4HK1)</strong></td><td>€151.32</td>
+          <td><span class="pn-chip">8982382470</span> ABC:C · JP · €151.32<br><small style="color:#888">VALVE; EGR 4HK1 — description explicitly names 4HK1 (primary N-Series EU engine). Also 8981795461, 8982382473. IE40 13 Mar 2026.</small></td>
+          <td>BorgWarner/Continental reman<br>est. €110–150 mid €130</td>
+          <td><span class="brand-chip bc-iam">BorgWarner</span><span class="brand-chip bc-iam">Pierburg</span></td>
+          <td><span class="brand-chip bc-oem">BorgWarner</span><span class="brand-chip bc-oem">Continental</span></td>
+          <td><span class="conf-med">●●○</span></td>
+        </tr>
+        <tr>
+          <td>Susp.</td><td><strong>Shock absorber (front)</strong></td><td>€45.00</td>
+          <td>Higher-cluster front shocks €42–46 in IE40<br><small style="color:#888">Moderate qty, JP-source</small></td>
+          <td>Monroe/Sachs medium truck<br>est. €70–100 mid €85</td>
+          <td><span class="brand-chip bc-iam">Monroe</span><span class="brand-chip bc-iam">Sachs</span></td>
+          <td><span class="brand-chip bc-oem">Bilstein</span><span class="brand-chip bc-oem">KYB</span></td>
+          <td><span class="conf-low">●○○</span></td>
+        </tr>
+        <tr>
+          <td>Susp.</td><td><strong>Shock absorber (rear)</strong></td><td>€28.00</td>
+          <td>€25–29 rear shock mid-cluster in IE40<br><small style="color:#888">No direct model assignment</small></td>
+          <td>est. €65–85 mid €75</td>
+          <td><span class="brand-chip bc-iam">Monroe</span><span class="brand-chip bc-iam">Sachs</span></td>
+          <td><span class="brand-chip bc-oem">Bilstein</span></td>
+          <td><span class="conf-low">●○○</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- F-Series sources -->
+  <div class="src-section">
+    <div class="src-section-title">🚚 F-Series (HCV) — Source Notes</div>
+    <div class="meth-box">
+      <h4>All F-Series values are LOW confidence — directional only</h4>
+      F-Series PR00 values are taken from the highest-price clusters in the IE40 file (JP-source, low ABC or no ABC). The AM market for heavy trucks is very thin — few IAM brands compete, and those that do (Fleetguard, Donaldson, Baldwin) price close to genuine. This means the competitiveness gap narrows significantly for F-Series vs D-Max. These values should not be used externally without EQ-HIT validation.
+    </div>
+    <table class="src-table">
+      <thead><tr>
+        <th style="width:80px">Group</th><th style="min-width:140px">Part</th><th>PR00 (€)</th>
+        <th>Basis</th><th>AM Estimate</th><th>AM Brands (few)</th><th>Conf.</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>PMS</td><td><strong>Oil filter</strong></td><td>€20.00</td>
+          <td>€18–22 cluster, JP-source, low qty in IE40</td><td>Specialist large-cap filter est. €40–60 mid €50</td>
+          <td><span class="brand-chip bc-iam">Fleetguard</span><span class="brand-chip bc-iam">Baldwin</span><span class="brand-chip bc-iam">Donaldson</span></td>
+          <td><span class="conf-low">●○○</span></td></tr>
+        <tr><td>PMS</td><td><strong>Fuel filter (large)</strong></td><td>€41.33</td>
+          <td>€41.33 JP-source variant in IE40 (highest fuel filter cluster)</td><td>Heavy truck filter est. €50–70 mid €60</td>
+          <td><span class="brand-chip bc-iam">Fleetguard</span><span class="brand-chip bc-iam">Baldwin</span></td>
+          <td><span class="conf-low">●○○</span></td></tr>
+        <tr><td>PMS</td><td><strong>Air filter</strong></td><td>€47.00</td>
+          <td>€42–52 cluster in IE40</td><td>Large panel filter, Donaldson/Baldwin est. €75–110 mid €90</td>
+          <td><span class="brand-chip bc-iam">Donaldson</span><span class="brand-chip bc-iam">Baldwin</span><span class="brand-chip bc-iam">Fleetguard</span></td>
+          <td><span class="conf-low">●○○</span></td></tr>
+        <tr><td>Brakes</td><td><strong>Brake pads</strong></td><td>€110.00</td>
+          <td>€102–123 high-end pad cluster in IE40</td><td>Ferodo HD truck est. €110–150 mid €130</td>
+          <td><span class="brand-chip bc-iam">Ferodo HD</span><span class="brand-chip bc-iam">Textar</span></td>
+          <td><span class="conf-low">●○○</span></td></tr>
+        <tr><td>Brakes</td><td><strong>Brake disc</strong></td><td>€233.00</td>
+          <td>€230–236 top cluster in IE40 (JP-source)</td><td>Large truck disc, very few AM, est. €170–230 mid €200</td>
+          <td><span class="brand-chip bc-iam">Zimmermann</span></td>
+          <td><span class="conf-low">●○○</span></td></tr>
+        <tr><td>Brakes</td><td><strong>Brake drum</strong></td><td>€235.00</td>
+          <td>€231–234 cluster in IE40</td><td>Heavy truck drum est. €180–260 mid €220</td>
+          <td><span class="brand-chip bc-iam">ATE</span></td>
+          <td><span class="conf-low">●○○</span></td></tr>
+        <tr><td>Susp.</td><td><strong>Shock absorber (front)</strong></td><td>€75.00</td>
+          <td>€50–103 top shock cluster in IE40</td><td>Sachs/Monroe heavy truck est. €90–130 mid €110</td>
+          <td><span class="brand-chip bc-iam">Monroe</span><span class="brand-chip bc-iam">Sachs</span></td>
+          <td><span class="conf-low">●○○</span></td></tr>
+        <tr><td>Susp.</td><td><strong>Shock absorber (rear)</strong></td><td>€60.00</td>
+          <td>Upper rear shock range in IE40</td><td>est. €80–120 mid €100</td>
+          <td><span class="brand-chip bc-iam">Monroe</span><span class="brand-chip bc-iam">Sachs</span></td>
+          <td><span class="conf-low">●○○</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Confidence legend -->
+  <div class="src-section">
+    <div class="src-section-title">Confidence Rating Guide</div>
+    <table class="src-table" style="max-width:640px">
+      <thead><tr><th>Rating</th><th>PR00 basis</th><th>AM price basis</th></tr></thead>
+      <tbody>
+        <tr><td><span class="conf-high">●●● High</span></td><td>Exact IE40 PN with ABC:A or B code; cross-validated against simulation qty data</td><td>Autodoc UK / eBay UK live search results, multiple listings checked</td></tr>
+        <tr><td><span class="conf-med">●●○ Medium</span></td><td>IE40 PN with ABC:C or D code, or multiple similar-price variants without direct model confirmation</td><td>Search results with limited listings or extrapolated from adjacent models</td></tr>
+        <tr><td><span class="conf-low">●○○ Low</span></td><td>Price cluster estimate — no specific PN confirmed; or N/F-Series segment assignment unverified</td><td>Industry knowledge estimate — no live search data, or commercial truck market with very few AM listings</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /src-page -->
+</div><!-- /page-sources -->
+
+
+<!-- ══════════════ PAGE: ASSUMPTIONS & CORRECTIONS ══════════════ -->
+<div class="tab-page" id="page-assumptions">
+<div class="src-page">
+
+<div style="background:#fff3cd;border:1px solid #ffc107;border-left:5px solid #e67e00;border-radius:6px;padding:14px 18px;margin-bottom:20px">
+  <strong style="color:#7a3800;font-size:13px">⚠ Data Quality Notice — Read before citing any figure externally</strong><br>
+  <span style="font-size:12px;color:#5a2800;line-height:1.7">
+  D-Max (LCV) high-confidence rows are sourced from confirmed IE40 PNs with live AM scraper data — safe for external use.
+  N-Series (MCV) and F-Series (HCV) values are <strong>estimates only</strong> (segment assignment unconfirmed, AM prices not live-searched).
+  Do not quote N-Series or F-Series indices to distributors, IML, or senior management without EQ-HIT PN validation first.
+  Five data corrections were applied on 30 Mar 2026, and a <strong>channel-chain correction on 27 Jul 2026 that lowered every index by ~22%</strong> — see Section C. Any index quoted from this dashboard before 27 Jul 2026 was too high and should be re-read.
+  </span>
+</div>
+
+<!-- A: CONFIRMED -->
+<div class="src-section">
+  <div class="src-section-title">A — Confirmed Chain Mechanics (use in any document)</div>
+  <table class="src-table" style="max-width:720px">
+    <thead><tr><th>Parameter</th><th>Value</th><th>Implication</th><th>Confirmed</th></tr></thead>
+    <tbody>
+      <tr><td><strong>ITUK uplift on genuine parts</strong></td><td><strong>+40%</strong></td><td>PR00 × 1.40 = dealer buying price (DB)</td><td style="color:#0a7a40;font-weight:700">✓ Jerome VdP — 30 Mar 2026</td></tr>
+      <tr><td><strong>DLR dealer uplift</strong></td><td><strong>+27.5%</strong></td><td>DB × 1.275 = workshop/fleet end price</td><td style="color:#0a7a40;font-weight:700">✓ Jerome VdP — 30 Mar 2026</td></tr>
+      <tr><td><strong>Full channel chain</strong></td><td><strong>×1.785</strong></td><td>PR00 → reference dealer price, used for every index on this page</td><td style="color:#0a7a40;font-weight:700">✓ FACTS.md §7</td></tr>
+      <tr><td><strong>PR00 source (D-Max)</strong></td><td>IE40 Price list, 13 Mar 2026</td><td>164K-line ISZE wholesale list</td><td style="color:#0a7a40;font-weight:700">✓ IE40 file</td></tr>
+      <tr><td><strong>D-Max AM prices (high-conf rows)</strong></td><td>Autodoc UK scraper — 9 May 2026</td><td>300 PNs queried, 110 with prices. GBP × 1.17.</td><td style="color:#0a7a40;font-weight:700">✓ Scraper data</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- B: UNVERIFIED -->
+<div class="src-section">
+  <div class="src-section-title">B — Working Assumptions (unverified — treat as estimates only)</div>
+  <table class="src-table">
+    <thead><tr><th style="width:220px">Assumption</th><th style="width:130px">Value used</th><th>Basis</th><th>Risk if wrong</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>GBP → EUR conversion</strong></td>
+        <td>×1.17</td>
+        <td>Updated from ×1.18 — rate applied in 9 May 2026 scraper run</td>
+        <td>All UK AM prices shift ±2–4% per 0.02 rate change. Minor individually, compounding.</td>
+      </tr>
+      <tr>
+        <td><strong>IAM trade discount to DB</strong></td>
+        <td>Retail × 0.65 (35% off)</td>
+        <td>UK motor factor industry estimate. <strong>Not verified against ITUK actual purchasing data.</strong></td>
+        <td style="color:#c03020;font-weight:700">HIGH. If actual discount is 40–45%, every IAM→DB index understates genuine exposure materially. This is the single highest-risk assumption in the model.</td>
+      </tr>
+      <tr>
+        <td><strong>OEM-equiv trade discount</strong></td>
+        <td>Retail × 0.72 (28% off)</td>
+        <td>Estimate. Bosch/Valeo trade terms vary.</td>
+        <td>Moderate. OEM-equiv tab least used in ITUK discussions.</td>
+      </tr>
+      <tr>
+        <td><strong>DE market AM pricing</strong></td>
+        <td>UK AM × 0.92</td>
+        <td>Rough estimate. No live DE search.</td>
+        <td>DE indices not reliable for external use.</td>
+      </tr>
+      <tr>
+        <td><strong>FR market AM pricing</strong></td>
+        <td>UK AM × 1.05</td>
+        <td>Rough estimate. No live FR search.</td>
+        <td>FR indices directional only.</td>
+      </tr>
+      <tr>
+        <td><strong>N-Series AM prices (all MCV)</strong></td>
+        <td>Manual estimates</td>
+        <td>No live scraper run for N-Series fitment. All AM values are informed estimates from Mann/Mahle/Sachs retail knowledge.</td>
+        <td style="color:#c03020;font-weight:700">HIGH. Must be replaced with live EQ-HIT PN + scraper search before any N-Series pricing argument.</td>
+      </tr>
+      <tr>
+        <td><strong>F-Series AM prices (all HCV)</strong></td>
+        <td>Manual estimates — industry knowledge</td>
+        <td>Very thin HCV aftermarket. Values approximate.</td>
+        <td style="color:#c03020;font-weight:700">HIGH. F-Series data must not appear in any external document or management presentation.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- C: CORRECTIONS LOG -->
+<div class="src-section">
+  <div class="src-section-title">C — Corrections Log (30 Mar 2026)</div>
+  <table class="src-table">
+    <thead><tr><th style="width:110px">Date</th><th>Row</th><th>Field</th><th>Was (incorrect)</th><th>Corrected to</th><th>Root cause</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>30 Mar 2026</td>
+        <td>N-Series — Oil filter</td>
+        <td>PR00</td>
+        <td style="color:#c03020;font-weight:700">€9.96</td>
+        <td style="color:#0a7a40;font-weight:700">€14.35</td>
+        <td>D-Max PN (8982705240, €6.80) had been used. IE40 N-Series PNs 8983282070/8982984040 = €14.25–14.45. The note inside the same row contained the correct value — the data field contradicted its own note.</td>
+      </tr>
+      <tr>
+        <td>30 Mar 2026</td>
+        <td>N-Series — Oil filter</td>
+        <td>AM retail UK</td>
+        <td style="color:#c03020;font-weight:700">€22.00</td>
+        <td style="color:#0a7a40;font-weight:700">€30.00</td>
+        <td>D-Max AM value (€22) used in error. Note stated “Specialist truck filter est. €28–35, mid €30.”</td>
+      </tr>
+      <tr>
+        <td>30 Mar 2026</td>
+        <td>N-Series — Fuel filter</td>
+        <td>PR00</td>
+        <td style="color:#c03020;font-weight:700">€14.31</td>
+        <td style="color:#0a7a40;font-weight:700">€20.29</td>
+        <td>Note stated “€20.29 range in IE40.” Lower value applied inconsistently in the data field.</td>
+      </tr>
+      <tr>
+        <td>30 Mar 2026</td>
+        <td>N-Series — Fuel filter</td>
+        <td>AM retail UK</td>
+        <td style="color:#c03020;font-weight:700">€28.00</td>
+        <td style="color:#0a7a40;font-weight:700">€35.00</td>
+        <td>Note stated “AM: €30–40, mid €35.” Was set to €28 without documented basis.</td>
+      </tr>
+      <tr>
+        <td>30 Mar 2026</td>
+        <td>All segments</td>
+        <td>DLR chain factor</td>
+        <td style="color:#c03020;font-weight:700">÷0.75 (25% assumed)</td>
+        <td style="color:#0a7a40;font-weight:700">÷0.725 (27.5% confirmed)</td>
+        <td>Confirmed by Jerome Van der Pluym 30 Mar 2026. Superseded 27 Jul 2026 — see row below. <em>Note: this correction was never propagated to the KPI cards, which kept computing ÷0.75 until 27 Jul 2026.</em></td>
+      </tr>
+      <tr style="background:#fff9e6">
+        <td><strong>27 Jul 2026</strong></td>
+        <td>All segments — every index on the page</td>
+        <td><strong>Whole channel chain</strong></td>
+        <td style="color:#c03020;font-weight:700">÷0.60 then ÷0.725 = ×2.299<br><span style="font-size:10px">(KPI cards: ÷0.60 then ÷0.75 = ×2.222)</span></td>
+        <td style="color:#0a7a40;font-weight:700">×1.40 then ×1.275 = <strong>×1.785</strong></td>
+        <td><strong>Convention error, not an input error.</strong> The confirmed +40% / +27.5% steps were applied in the margin/divisor form instead of the FACTS.md §7 aftermarket-comparison chain. Reference dealer price prices were <strong>~29% too high</strong> (KPI cards ~25% too high), making genuine look less competitive than it is. Every index on this page moves down by a factor of <strong>0.776</strong> (KPI cards 0.803). Two compute sites had also silently diverged; both now read shared constants <code>CH_DB</code> / <code>CH_DLR</code>. Underlying PR00 and AM data unchanged.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- D: WHAT NEEDS VALIDATION -->
+<div class="src-section">
+  <div class="src-section-title">D — Required Before Senior / External Use</div>
+  <table class="src-table" style="max-width:820px">
+    <thead><tr><th>Action required</th><th>Affects</th><th>Priority</th></tr></thead>
+    <tbody>
+      <tr><td>Confirm N-Series oil filter PN via EQ-HIT — verify 8983282070 maps to N-Series service interval</td><td>MCV oil filter PR00 and all indices</td><td style="color:#c03020;font-weight:700">Critical</td></tr>
+      <tr><td>Live AM price search for N-Series oil + fuel filters (Autodoc/KS with truck fitment filter)</td><td>All MCV PMS indices</td><td style="color:#c03020;font-weight:700">Critical</td></tr>
+      <tr><td>Verify IAM trade discount factor (0.65) against actual ITUK purchasing data from AM suppliers</td><td>Every IAM→DB index in the entire dashboard</td><td style="color:#c03020;font-weight:700">Critical</td></tr>
+      <tr><td>Confirm D-Max brake drum PN — current PR00 (€72.49) is from pricing simulation, not confirmed IE40 PN</td><td>LCV brake drum indices</td><td style="color:#c07000;font-weight:700">High</td></tr>
+      <tr><td><s>Confirm live GBP/EUR rate</s> — <strong>✓ resolved 9 May 2026</strong>: updated to ×1.17, all D-Max AM prices re-scraped</td><td>All UK-sourced AM prices</td><td style="color:#0a7a40;font-weight:700">Done</td></tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+</div><!-- /page-assumptions -->
+
+<!-- ════════════════ PAGE: SCRAPER INTEL ════════════════ -->
+<div style="margin:14px 0 8px;padding:12px 14px;border-left:4px solid #B45309;background:#FEF8F0;color:#7C2D12;font-size:13px;line-height:1.45"><strong>Autodoc Class C scrape is frozen</strong> (Cloudflare-retired). Min prices of €2.34 and 0% ratios are not usable for decisions — use the heatmap and Live Scraper Intel (KS) instead. Table kept for archive only.</div><div class="src-note" style="margin-top:12px"><strong>Class C · Autodoc &lt; 75% PR00</strong> (298 PNs scraped)</div><div class="tbl-wrap"><table><tbody><tr><th>PN</th><th>Description</th><th class="tr">PR00</th><th class="tr">Autodoc min</th><th class="tr">Ratio</th></tr><tr><td>5873112438</td><td>ENGINE ASM; PARTIAL</td><td class="r">€4,834.77</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>5873112386</td><td>ENGINE ASM; PARTIAL</td><td class="r">€4,111.21</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8976607440</td><td>TRANSMISSION ASM; MANUAL</td><td class="r">€3,839.60</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983939000</td><td>TRANSMISSION ASM; AUTO</td><td class="r">€3,739.81</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982236420</td><td>TRANSMISSION ASM; MANUAL</td><td class="r">€3,057.48</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8976671380</td><td>ENGINE ASM; PARTIAL</td><td class="r">€3,039.00</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983882610</td><td>ENGINE ASM; PARTIAL</td><td class="r">€2,987.54</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552348290</td><td>STEERING UNIT</td><td class="r">€2,268.04</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552348280</td><td>STEERING UNIT</td><td class="r">€2,268.04</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552348310</td><td>STEERING UNIT</td><td class="r">€2,268.04</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>7552283740</td><td>TRANSFER ASM</td><td class="r">€2,181.58</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8975359391</td><td>DPD ASM</td><td class="r">€2,162.48</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983320764</td><td>DPD ASM</td><td class="r">€2,021.73</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982278993</td><td>DPD ASM</td><td class="r">€1,610.08</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981974530</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981901180</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982932120</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981901150</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,410.25</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8975074440</td><td>FILTER ASM</td><td class="r">€1,402.15</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8975536860</td><td>BODY ASM; REAR</td><td class="r">€1,388.79</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8981776324</td><td>DPD ASM</td><td class="r">€1,281.85</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983682091</td><td>PIPE; EXH</td><td class="r">€1,276.51</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983952370</td><td>DRIVE ASM; FINAL,RR</td><td class="r">€1,225.40</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8983516580</td><td>CATALYST ASM</td><td class="r">€1,206.10</td><td class="r">€2.34</td><td class="r">0%</td></tr><tr><td>8982049420</td><td>FILTER ASM</td><td class="r">€1,152.02</td><td class="r">€2.34</td><td class="r">0%</td></tr></tbody></table></div><div class="tab-page" id="page-scraper">
+
+<div style="background:#1e2d45;padding:0 28px;display:flex;gap:0;border-bottom:2px solid #2a4a70">
+  <button class="stab stab-active" id="stab-ks" onclick="setScrTab('ks')">🏪 KS International (39 parts)</button>
+  <button class="stab" id="stab-auto" onclick="setScrTab('auto')">🛒 Autodoc UK (71 parts)</button>
+</div>
+
+<div class="kpi-bar" id="scr-kpi-bar"></div>
+
+<!-- KS PANE -->
+<div id="scr-ks" class="scr-pane" style="padding:16px 28px">
+  <div class="src-note" style="margin-bottom:12px">
+    <strong>KS International — ks-international.com</strong> &nbsp;·&nbsp; Scraped 30 Mar 2026 &nbsp;·&nbsp; 39 parts with AM pricing found &nbsp;·&nbsp;
+    GBP → EUR at ×1.18 &nbsp;·&nbsp; Genuine listings shown separately where found
+  </div>
+  <div style="margin-bottom:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+    <span style="font-size:11px;font-weight:700;color:#CC0E1E;text-transform:uppercase;letter-spacing:.4px">Category:</span>
+    <button class="cat-pill ks-cat-pill active" data-cat="all" onclick="filterKS('all')">All</button><button class="cat-pill ks-cat-pill" data-cat="Body Exterior" onclick="filterKS('Body Exterior')">Body Exterior</button><button class="cat-pill ks-cat-pill" data-cat="Brakes" onclick="filterKS('Brakes')">Brakes</button><button class="cat-pill ks-cat-pill" data-cat="Cabin Interior" onclick="filterKS('Cabin Interior')">Cabin Interior</button><button class="cat-pill ks-cat-pill" data-cat="Electrical" onclick="filterKS('Electrical')">Electrical</button><button class="cat-pill ks-cat-pill" data-cat="Fluids Chemicals" onclick="filterKS('Fluids Chemicals')">Fluids Chemicals</button><button class="cat-pill ks-cat-pill" data-cat="Fuel System" onclick="filterKS('Fuel System')">Fuel System</button><button class="cat-pill ks-cat-pill" data-cat="Intake Exhaust Emission" onclick="filterKS('Intake Exhaust Emission')">Intake Exhaust Emission</button><button class="cat-pill ks-cat-pill" data-cat="Maintenance Service" onclick="filterKS('Maintenance Service')">Maintenance Service</button><button class="cat-pill ks-cat-pill" data-cat="Transmission" onclick="filterKS('Transmission')">Transmission</button><button class="cat-pill ks-cat-pill" data-cat="Unknown" onclick="filterKS('Unknown')">Unknown</button><button class="cat-pill ks-cat-pill" data-cat="Wheels Hub" onclick="filterKS('Wheels Hub')">Wheels Hub</button>
+    <span style="margin-left:auto;font-size:10.5px;color:#888">Sort by: 
+      <button onclick="sortKS('idx')" class="sort-btn">Gap ▼</button>
+      <button onclick="sortKS('rev')" class="sort-btn">Revenue ▼</button>
+      <button onclick="sortKS('pr00')" class="sort-btn">Price ▼</button>
+    </span>
+  </div>
+  <div style="background:white;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.1);padding:14px 16px;margin-bottom:16px">
+    <div style="font-size:12px;font-weight:700;color:#334;margin-bottom:8px">
+      Genuine PR00 vs KS International AM — Top 20 by Revenue &nbsp;<span style="font-weight:400;color:#888;font-size:11px">Hover bar for details</span>
+    </div>
+    <canvas id="ks-chart" style="max-height:380px"></canvas>
+  </div>
+  <div class="tbl-wrap" id="ks-table-wrap"></div>
+</div>
+
+<!-- AUTODOC PANE -->
+<div id="scr-auto" class="scr-pane" style="padding:16px 28px;display:none">
+  <div class="src-note" style="margin-bottom:12px">
+    <strong>Autodoc UK — autodoc.co.uk</strong> &nbsp;·&nbsp; Scraped <strong>9 May 2026</strong> &nbsp;·&nbsp; 300 PNs queried &nbsp;·&nbsp; 110 with prices (36.7% hit rate) &nbsp;·&nbsp;
+    GBP → EUR ×1.17 &nbsp;·&nbsp; AM avg = mean across all aftermarket listings (incl. budget)
+  </div>
+  <div style="margin-bottom:12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+    <span style="font-size:11px;font-weight:700;color:#CC0E1E;text-transform:uppercase;letter-spacing:.4px">Category:</span>
+    <button class="cat-pill auto-cat-pill active" data-cat="all" onclick="filterAuto('all')">All</button><button class="cat-pill auto-cat-pill" data-cat="Body Exterior" onclick="filterAuto('Body Exterior')">Body Exterior</button><button class="cat-pill auto-cat-pill" data-cat="Brakes" onclick="filterAuto('Brakes')">Brakes</button><button class="cat-pill auto-cat-pill" data-cat="Cabin Interior" onclick="filterAuto('Cabin Interior')">Cabin Interior</button><button class="cat-pill auto-cat-pill" data-cat="Chassis Frame" onclick="filterAuto('Chassis Frame')">Chassis Frame</button><button class="cat-pill auto-cat-pill" data-cat="Electrical" onclick="filterAuto('Electrical')">Electrical</button><button class="cat-pill auto-cat-pill" data-cat="Fluids Chemicals" onclick="filterAuto('Fluids Chemicals')">Fluids Chemicals</button><button class="cat-pill auto-cat-pill" data-cat="Fuel System" onclick="filterAuto('Fuel System')">Fuel System</button><button class="cat-pill auto-cat-pill" data-cat="Intake Exhaust Emission" onclick="filterAuto('Intake Exhaust Emission')">Intake Exhaust Emission</button><button class="cat-pill auto-cat-pill" data-cat="Maintenance Service" onclick="filterAuto('Maintenance Service')">Maintenance Service</button><button class="cat-pill auto-cat-pill" data-cat="Unknown" onclick="filterAuto('Unknown')">Unknown</button><button class="cat-pill auto-cat-pill" data-cat="Wheels Hub" onclick="filterAuto('Wheels Hub')">Wheels Hub</button>
+    <span style="margin-left:auto;font-size:10.5px;color:#888">Sort by:
+      <button onclick="sortAuto('idx')" class="sort-btn">Gap ▼</button>
+      <button onclick="sortAuto('rev')" class="sort-btn">Revenue ▼</button>
+      <button onclick="sortAuto('pr00')" class="sort-btn">Price ▼</button>
+    </span>
+  </div>
+  <div style="background:white;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.1);padding:14px 16px;margin-bottom:16px">
+    <div style="font-size:12px;font-weight:700;color:#334;margin-bottom:8px">
+      Genuine PR00 vs Autodoc AM Average — Top 20 by Revenue &nbsp;<span style="font-weight:400;color:#888;font-size:11px">Hover bar for details</span>
+    </div>
+    <canvas id="auto-chart" style="max-height:380px"></canvas>
+  </div>
+  <div class="tbl-wrap" id="auto-table-wrap"></div>
+</div>
+
+</div><!-- /page-scraper -->
+
+<script>
+// DATA loaded from isze_data.json
+let segments = null;
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+let curSeg = 'all', curMkt = 'uk', curLvl = 'all', curAM = 'iam_r';
+
+// ── Channel chain (FACTS.md §7 — apples-to-apples aftermarket comparison) ──
+// Gross genuine up to reference dealer price as MARKUPS: distributor +40%, then dealer +27.5%.
+// PR00 × 1.40 × 1.275 = ×1.785. Do NOT use the margin/divisor form (÷0.60 ÷0.725
+// = ×2.299) — that is ISZE's own-EUR convention and overstates reference dealer price by ~29%.
+// Single source for both buildTable() and buildKpis(); they previously diverged.
+const CH_DB  = 1.40;             // ASC → DB   : distributor +40%
+const CH_DLR = 1.275;            // DB  → DLR  : dealer +27.5%
+
+const IAM_TRADE_FACTOR = 0.65;   // DB gets ~35% off IAM retail
+const OEM_TRADE_FACTOR = 0.72;   // DB gets ~28% off OEM-equiv retail
+const MKT_DE = 0.92, MKT_FR = 1.05;
+
+function getAm(p) {
+  const iam_uk = p.am_uk;
+  const iam = !iam_uk ? null : curMkt==='uk' ? iam_uk : curMkt==='de' ? p.am_de : p.am_fr;
+  const oem_uk = p.oe_uk || (iam_uk ? iam_uk*1.45 : null);
+  const oem = !oem_uk ? null : curMkt==='uk' ? oem_uk : curMkt==='de' ? oem_uk*MKT_DE : oem_uk*MKT_FR;
+  if (curAM==='iam_r') return iam;
+  if (curAM==='iam_t') return iam ? iam*IAM_TRADE_FACTOR : null;
+  if (curAM==='oem_r') return oem;
+  if (curAM==='oem_t') return oem ? oem*OEM_TRADE_FACTOR : null;
+  return iam;
+}
+
+function amColLabel() {
+  const m = curMkt.toUpperCase();
+  if (curAM==='iam_r') return `IAM retail (${m})`;
+  if (curAM==='iam_t') return `IAM→DB trade ×0.65 (${m})`;
+  if (curAM==='oem_r') return `OEM-equiv retail (${m})`;
+  if (curAM==='oem_t') return `OEM-equiv→DB ×0.72 (${m})`;
+}
+
+const AM_DESC = {
+  iam_r: { expr:'<span class="fv">ISZE price at level</span> ÷ <span class="fd">IAM retail</span>',
+    note:'IAM retail = budget AM brands (Nipparts, Borg&amp;Beck, NK) at consumer price (Autodoc/eBay UK). Most conservative view — retail is higher than what workshops actually pay.' },
+  iam_t: { expr:'<span class="fv">ISZE price at level</span> ÷ <span class="fd">IAM trade to DB (retail × 0.65)</span>',
+    note:'IAM trade = what a DB/distributor pays to their IAM supplier — approx. 35% off retail list. <strong>This shows the real competitive pressure at distributor buying level.</strong>' },
+  oem_r: { expr:'<span class="fv">ISZE price at level</span> ÷ <span class="fd">OEM-equiv retail (Bosch / Valeo / LuK / Brembo)</span>',
+    note:'OEM-equivalent = premium OE-supplier brands in aftermarket. Same quality tier as ISZE genuine — a fair "like for like" comparison.' },
+  oem_t: { expr:'<span class="fv">ISZE price at level</span> ÷ <span class="fd">OEM-equiv DB trade price (retail × 0.72)</span>',
+    note:'OEM-equiv trade = what a DB pays directly to Bosch/Valeo/LuK/Brembo — approx. 28% off their retail. <strong>Most relevant for "other OEM selling to DBs" comparison.</strong>' }
+};
+
+function updateFormulaBar() {
+  const d = AM_DESC[curAM];
+  document.getElementById('formula-expr').innerHTML = d.expr;
+  document.getElementById('formula-note').innerHTML = d.note;
+  const lbls = {iam_r:'Index = Genuine ÷ IAM retail:', iam_t:'Index = Genuine ÷ IAM→DB trade:', oem_r:'Index = Genuine ÷ OEM-equiv retail:', oem_t:'Index = Genuine ÷ OEM-equiv→DB trade:'};
+  document.getElementById('legend-label').textContent = lbls[curAM];
+}
+
+function idxClass(v) {
+  if (v < 1.0) return 'lt1';
+  if (v < 1.2) return 'r1';
+  if (v < 1.5) return 'r2';
+  if (v < 2.0) return 'r3';
+  if (v < 3.0) return 'r4';
+  if (v < 4.0) return 'r5';
+  return 'r6';
+}
+function f2(v) { return v.toFixed(2); }
+function fIdx(v) { return v.toFixed(2)+'×'; }
+function confDots(c) {
+  if (c==='high')   return '<span class="ch">●●●</span>';
+  if (c==='medium') return '<span class="cm">●●○</span>';
+  if (c==='low')    return '<span class="cl">●○○</span>';
+  return '<span style="color:#bbb">—</span>';
+}
+
+// ── Build one table ──
+function buildTable(segKey, containerId) {
+  const seg = segments[segKey];
+  const container = document.getElementById(containerId);
+  let lastGrp = null;
+
+  let html = `<table>
+    <thead><tr>
+      <th style="width:58px">Group</th>
+      <th style="min-width:165px">Part category</th>
+      <th class="tr" style="width:74px">PR00 (€)</th>
+      <th class="tr" style="width:88px">${amColLabel()}</th>
+      <th class="tc col-asc" style="width:86px">ASC idx<br><span style="font-size:10px;opacity:.7;font-weight:400">→DB</span></th>
+      <th class="tc col-db"  style="width:86px">DB idx<br><span style="font-size:10px;opacity:.7;font-weight:400">→DLR</span></th>
+      <th class="tc col-dlr" style="width:86px">DLR idx<br><span style="font-size:10px;opacity:.7;font-weight:400">fleet</span></th>
+      <th class="tc" style="width:48px">Conf.</th>
+    </tr></thead><tbody>`;
+
+  seg.parts.forEach(p => {
+    if (p.grp !== lastGrp) {
+      html += `<tr class="div-row"><td colspan="8">${p.grp}</td></tr>`;
+      lastGrp = p.grp;
+    }
+
+    if (p.na) {
+      html += `<tr>
+        <td class="grp">${p.grp}</td>
+        <td class="pname" title="${p.note.replace(/"/g,"'")}">${p.name}</td>
+        <td class="pr00c" colspan="6" style="color:#aaa;font-style:italic;text-align:left;padding-left:12px">— N/A for this segment</td>
+      </tr>`;
+      return;
+    }
+
+    const am  = getAm(p);
+    const db  = p.pr00 * CH_DB;
+    const dlr = db * CH_DLR;
+    const iA  = p.pr00 / am;
+    const iD  = db / am;
+    const iL  = dlr / am;
+
+    const ascTd = `<td class="ic ${idxClass(iA)} col-asc">${fIdx(iA)}<span class="ps">€${f2(p.pr00)}</span></td>`;
+    const dbTd  = `<td class="ic ${idxClass(iD)} col-db">${fIdx(iD)}<span class="ps">€${f2(db)}</span></td>`;
+    const dlrTd = `<td class="ic ${idxClass(iL)} col-dlr">${fIdx(iL)}<span class="ps">€${f2(dlr)}</span></td>`;
+
+    const flagBadge = p.flag === 'pr00_corrected' ? ' <span title="Data corrected 30 Mar 2026 — see Assumptions tab" style="font-size:9px;background:#fff3cd;color:#856404;border:1px solid #ffc107;border-radius:3px;padding:1px 4px;vertical-align:middle;cursor:help">CORR</span>'
+                   : p.flag === 'simulation_est' ? ' <span title="PR00 from pricing simulation — no confirmed IE40 PN" style="font-size:9px;background:#ffe4cc;color:#7a3800;border:1px solid #ff9f40;border-radius:3px;padding:1px 4px;vertical-align:middle;cursor:help">SIM</span>'
+                   : p.flag === 'mid_of_range'   ? ' <span title="PR00 is mid of IE40 range — see Assumptions tab" style="font-size:9px;background:#e8f0fe;color:#1a3a80;border:1px solid #9ab0f5;border-radius:3px;padding:1px 4px;vertical-align:middle;cursor:help">RANGE</span>'
+                   : '';
+    html += `<tr>
+      <td class="grp">${p.grp}</td>
+      <td class="pname" title="${p.note.replace(/"/g,"'")}">${p.name}${flagBadge}</td>
+      <td class="pr00c">€${f2(p.pr00)}</td>
+      <td class="amc">€${f2(am)}</td>
+      ${ascTd}${dbTd}${dlrTd}
+      <td class="confc">${confDots(p.conf)}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+  applyLevelClass(container);
+}
+
+// ── Apply level visibility ──
+function applyLevelClass(el) {
+  el.classList.toggle('hide-asc', curLvl !== 'all' && curLvl !== 'asc');
+  el.classList.toggle('hide-db',  curLvl !== 'all' && curLvl !== 'db');
+  el.classList.toggle('hide-dlr', curLvl !== 'all' && curLvl !== 'dlr');
+}
+
+// ── KPI cards ──
+function buildKpis() {
+  // Collect all index values at DLR level for current market & visible segs
+  let allIdxDlr = [];
+  let critCount = 0, exposedCount = 0, okCount = 0;
+
+  const segsToShow = curSeg === 'all' ? ['lcv','mcv','hcv'] : [curSeg];
+  segsToShow.forEach(sk => {
+    segments[sk].parts.forEach(p => {
+      if (p.na || !p.pr00) return;
+      const am = getAm(p);
+      if (!am) return;
+      const dlr = p.pr00 * CH_DB * CH_DLR;
+      const idx = dlr / am;
+      allIdxDlr.push(idx);
+      if (idx >= 3.0) critCount++;
+      else if (idx >= 1.5) exposedCount++;
+      else okCount++;
+    });
+  });
+
+  const avg = allIdxDlr.length ? (allIdxDlr.reduce((a,b)=>a+b,0)/allIdxDlr.length) : 0;
+  const maxIdx = allIdxDlr.length ? Math.max(...allIdxDlr) : 0;
+
+  const bar = document.getElementById('kpi-bar');
+  bar.innerHTML = `
+    <div class="kpi">
+      <div class="kpi-label">Avg DLR index</div>
+      <div class="kpi-val ${avg>3?'kpi-red':avg>2?'kpi-amber':'kpi-green'}">${avg.toFixed(2)}×</div>
+      <div class="kpi-sub">vs AM retail at fleet level</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Peak DLR index</div>
+      <div class="kpi-val kpi-red">${maxIdx.toFixed(2)}×</div>
+      <div class="kpi-sub">worst-exposed category</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Critical (&gt;3×)</div>
+      <div class="kpi-val kpi-red">${critCount}</div>
+      <div class="kpi-sub">categories at DLR level</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Exposed (1.5–3×)</div>
+      <div class="kpi-val kpi-amber">${exposedCount}</div>
+      <div class="kpi-sub">categories need attention</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Competitive (&lt;1.5×)</div>
+      <div class="kpi-val kpi-green">${okCount}</div>
+      <div class="kpi-sub">categories at/near parity</div>
+    </div>
+  `;
+}
+
+// ── Render everything ──
+function renderAll() {
+  updateFormulaBar();
+  ['lcv','mcv','hcv'].forEach(sk => {
+    buildTable(sk, 'tbl-'+sk);
+    document.getElementById('foot-'+sk).innerHTML = segments[sk].footHtml;
+  });
+  buildKpis();
+  applySegVisibility();
+}
+
+function applySegVisibility() {
+  ['lcv','mcv','hcv'].forEach(sk => {
+    const show = curSeg === 'all' || curSeg === sk;
+    document.getElementById('blk-'+sk).classList.toggle('hidden', !show);
+    const div = document.getElementById('div-'+sk);
+    if (div) div.classList.toggle('hidden', !show);
+  });
+}
+
+// ── Controls ──
+function setSeg(s) {
+  curSeg = s;
+  ['all','lcv','mcv','hcv'].forEach(id => {
+    document.getElementById('seg-'+id).classList.toggle('active', id===s);
+  });
+  applySegVisibility();
+  buildKpis();
+}
+
+function setMkt(m) {
+  curMkt = m;
+  ['uk','de','fr'].forEach(id => {
+    document.getElementById('mkt-'+id).classList.toggle('active', id===m);
+  });
+  renderAll();
+}
+
+function setLvl(l) {
+  curLvl = l;
+  ['all','asc','db','dlr'].forEach(id => {
+    document.getElementById('lvl-'+id).classList.toggle('active', id===l);
+  });
+  ['lcv','mcv','hcv'].forEach(sk => {
+    applyLevelClass(document.getElementById('tbl-'+sk));
+  });
+}
+
+function setAM(a) {
+  curAM = a;
+  ['iam_r','iam_t','oem_r','oem_t'].forEach(id => {
+    document.getElementById('am-'+id).classList.toggle('active', id===a);
+  });
+  renderAll();
+}
+
+// ── Tab switching ──
+function switchTab(t) {
+  ['heatmap','scraper','assumptions','sources'].forEach(id => {
+    const pg = document.getElementById('page-'+id);
+    const tb = document.getElementById('tab-'+id);
+    if (pg) pg.classList.toggle('tab-visible', id===t);
+    if (tb) tb.classList.toggle('tab-active', id===t);
+  });
+  if (t === 'scraper') { initScraper(); }
+}
+
+
+// ══════════════════════════════════════════════════════════
+// SCRAPER DATA
+// ══════════════════════════════════════════════════════════
+const ksData = [{"pn": "8983767550", "desc": "ROTOR; DISC BRK,FRT", "pr00": 79.26, "rev": 641264.0, "cat": "Brakes", "am_count": 1, "in_stock": 1, "avg_gbp": 35.0, "avg_eur": 41.3, "idx": 1.92, "gen_gbp": 125.0, "gen_eur": 147.5, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8983767550"}, {"pn": "8982447940", "desc": "PAD KIT; CALIPER,DISC BRK,FRT", "pr00": 89.11, "rev": 287818.0, "cat": "Brakes", "am_count": 1, "in_stock": 0, "avg_gbp": 110.0, "avg_eur": 129.8, "idx": 0.69, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8982447940"}, {"pn": "8981596930", "desc": "ELEMENT KIT; FUEL FILTER", "pr00": 13.85, "rev": 234253.0, "cat": "Maintenance Service", "am_count": 2, "in_stock": 2, "avg_gbp": 10.0, "avg_eur": 11.8, "idx": 1.17, "gen_gbp": 25.0, "gen_eur": 29.5, "skus": "|", "url": "https://www.ks-international.com/catalogsearch/result/?q=8981596930"}, {"pn": "8982705240", "desc": "ELEMENT; OIL FILTER", "pr00": 6.8, "rev": 215147.0, "cat": "Maintenance Service", "am_count": 1, "in_stock": 1, "avg_gbp": 10.0, "avg_eur": 11.8, "idx": 0.58, "gen_gbp": 15.0, "gen_eur": 17.7, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8982705240"}, {"pn": "8983314120", "desc": "SENSOR; PRESSURE,DPD", "pr00": 196.64, "rev": 118471.0, "cat": "Intake Exhaust Emission", "am_count": 1, "in_stock": 1, "avg_gbp": 295.0, "avg_eur": 348.1, "idx": 0.56, "gen_gbp": 275.0, "gen_eur": 324.5, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8983314120"}, {"pn": "8983300950", "desc": "SENSOR; PM", "pr00": 386.83, "rev": 114941.0, "cat": "Intake Exhaust Emission", "am_count": 1, "in_stock": 1, "avg_gbp": 110.0, "avg_eur": 129.8, "idx": 2.98, "gen_gbp": 545.0, "gen_eur": 643.1, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8983300950"}, {"pn": "8975546610", "desc": "PAD KIT; CALIPER,DISC BRK,FRT", "pr00": 82.25, "rev": 105379.0, "cat": "Brakes", "am_count": 1, "in_stock": 1, "avg_gbp": 15.0, "avg_eur": 17.7, "idx": 4.65, "gen_gbp": 125.0, "gen_eur": 147.5, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8975546610"}, {"pn": "8981919560", "desc": "ROTOR; DISC BRK,RR", "pr00": 162.02, "rev": 81574.0, "cat": "Brakes", "am_count": 1, "in_stock": 1, "avg_gbp": 75.0, "avg_eur": 88.5, "idx": 1.83, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8981919560"}, {"pn": "8982074350", "desc": "NOZZLE ASM; INJ", "pr00": 195.62, "rev": 74447.0, "cat": "Fuel System", "am_count": 1, "in_stock": 1, "avg_gbp": 350.0, "avg_eur": 413.0, "idx": 0.47, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8982074350"}, {"pn": "8981941190", "desc": "ELEMENT KIT; FUEL FILTER", "pr00": 13.27, "rev": 64022.0, "cat": "Maintenance Service", "am_count": 2, "in_stock": 2, "avg_gbp": 7.5, "avg_eur": 8.85, "idx": 1.5, "gen_gbp": null, "gen_eur": null, "skus": "|", "url": "https://www.ks-international.com/catalogsearch/result/?q=8981941190"}, {"pn": "8983712150", "desc": "SENSOR; SPD,RR WHEEL", "pr00": 196.06, "rev": 59241.0, "cat": "Wheels Hub", "am_count": 1, "in_stock": 0, "avg_gbp": 55.0, "avg_eur": 64.9, "idx": 3.02, "gen_gbp": 85.0, "gen_eur": 100.3, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8983712150"}, {"pn": "8973871590", "desc": "ROTOR; SENSOR", "pr00": 51.32, "rev": 49129.0, "cat": "Electrical", "am_count": 1, "in_stock": 1, "avg_gbp": 90.0, "avg_eur": 106.2, "idx": 0.48, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8973871590"}, {"pn": "1476012190", "desc": "CYLINDER; WHEEL,RR BRK", "pr00": 217.83, "rev": 44224.0, "cat": "Wheels Hub", "am_count": 1, "in_stock": 0, "avg_gbp": 260.0, "avg_eur": 306.8, "idx": 0.71, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=1476012190"}, {"pn": "8975074241", "desc": "TURBOCHARGER ASM", "pr00": 840.91, "rev": 41723.0, "cat": "Intake Exhaust Emission", "am_count": 1, "in_stock": 1, "avg_gbp": 975.0, "avg_eur": 1150.5, "idx": 0.73, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8975074241"}, {"pn": "8983621213", "desc": "BAR; FRT BUMPER", "pr00": 55.06, "rev": 39904.0, "cat": "Body Exterior", "am_count": 1, "in_stock": 1, "avg_gbp": 90.0, "avg_eur": 106.2, "idx": 0.52, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8983621213"}, {"pn": "8981472452", "desc": "SHAFT ASM; FRT DRIVE", "pr00": 342.6, "rev": 39636.0, "cat": "Unknown", "am_count": 1, "in_stock": 1, "avg_gbp": 110.0, "avg_eur": 129.8, "idx": 2.64, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8981472452"}, {"pn": "8982054020", "desc": "SENSOR; O2", "pr00": 60.04, "rev": 39449.0, "cat": "Unknown", "am_count": 1, "in_stock": 1, "avg_gbp": 85.0, "avg_eur": 100.3, "idx": 0.6, "gen_gbp": 65.0, "gen_eur": 76.7, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8982054020"}, {"pn": "8981394280", "desc": "FILTER; BLOWER UNIT", "pr00": 23.02, "rev": 39306.0, "cat": "Cabin Interior", "am_count": 1, "in_stock": 1, "avg_gbp": 4.0, "avg_eur": 4.72, "idx": 4.88, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8981394280"}, {"pn": "8983214130", "desc": "FILTER; ACL", "pr00": 30.73, "rev": 39116.0, "cat": "Maintenance Service", "am_count": 1, "in_stock": 1, "avg_gbp": 45.0, "avg_eur": 53.1, "idx": 0.58, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8983214130"}, {"pn": "8980127530", "desc": "SENSOR; SPEED", "pr00": 173.98, "rev": 36758.0, "cat": "Unknown", "am_count": 1, "in_stock": 1, "avg_gbp": 150.0, "avg_eur": 177.0, "idx": 0.98, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8980127530"}, {"pn": "8982079520", "desc": "ROTOR; SENSOR", "pr00": 62.47, "rev": 36027.0, "cat": "Electrical", "am_count": 1, "in_stock": 0, "avg_gbp": 145.0, "avg_eur": 171.1, "idx": 0.37, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8982079520"}, {"pn": "8983929650", "desc": "SHAFT ASM; FRT DRIVE", "pr00": 298.3, "rev": 35693.0, "cat": "Unknown", "am_count": 2, "in_stock": 2, "avg_gbp": 145.0, "avg_eur": 171.1, "idx": 1.74, "gen_gbp": 370.0, "gen_eur": 436.6, "skus": "|", "url": "https://www.ks-international.com/catalogsearch/result/?q=8983929650"}, {"pn": "8976739570", "desc": "FILTER; ACL", "pr00": 30.73, "rev": 33489.0, "cat": "Maintenance Service", "am_count": 1, "in_stock": 1, "avg_gbp": 35.0, "avg_eur": 41.3, "idx": 0.74, "gen_gbp": 50.0, "gen_eur": 59.0, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8976739570"}, {"pn": "8981226950", "desc": "PANEL ASM; FRT", "pr00": 247.82, "rev": 32082.0, "cat": "Body Exterior", "am_count": 1, "in_stock": 1, "avg_gbp": 230.0, "avg_eur": 271.4, "idx": 0.91, "gen_gbp": 340.0, "gen_eur": 401.2, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8981226950"}, {"pn": "8974056285", "desc": "BUMPER ASM; FRT", "pr00": 175.09, "rev": 31968.0, "cat": "Body Exterior", "am_count": 1, "in_stock": 1, "avg_gbp": 110.0, "avg_eur": 129.8, "idx": 1.35, "gen_gbp": 145.0, "gen_eur": 171.1, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8974056285"}, {"pn": "8981455011", "desc": "OVERHAUL KIT; SUPPLY PUMP", "pr00": 59.11, "rev": 28417.0, "cat": "Transmission", "am_count": 1, "in_stock": 1, "avg_gbp": 135.0, "avg_eur": 159.3, "idx": 0.37, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8981455011"}, {"pn": "8974068144", "desc": "BUMPER ASM; FRT", "pr00": 153.2, "rev": 28266.0, "cat": "Body Exterior", "am_count": 1, "in_stock": 1, "avg_gbp": 120.0, "avg_eur": 141.6, "idx": 1.08, "gen_gbp": 195.0, "gen_eur": 230.1, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8974068144"}, {"pn": "8982410681", "desc": "GRILLE; RAD", "pr00": 185.2, "rev": 26376.0, "cat": "Body Exterior", "am_count": 1, "in_stock": 0, "avg_gbp": 275.0, "avg_eur": 324.5, "idx": 0.57, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8982410681"}, {"pn": "8981810290", "desc": "FENDER; FRT", "pr00": 96.64, "rev": 25837.0, "cat": "Body Exterior", "am_count": 2, "in_stock": 0, "avg_gbp": 55.0, "avg_eur": 64.9, "idx": 1.49, "gen_gbp": null, "gen_eur": null, "skus": "|", "url": "https://www.ks-international.com/catalogsearch/result/?q=8981810290"}, {"pn": "8970622940", "desc": "FILTER; AIR CLEANER", "pr00": 31.36, "rev": 25126.0, "cat": "Fluids Chemicals", "am_count": 3, "in_stock": 3, "avg_gbp": 38.33, "avg_eur": 45.23, "idx": 0.69, "gen_gbp": 61.67, "gen_eur": 72.77, "skus": "||", "url": "https://www.ks-international.com/catalogsearch/result/?q=8970622940"}, {"pn": "8981226920", "desc": "PANEL ASM; FRT", "pr00": 166.48, "rev": 24915.0, "cat": "Body Exterior", "am_count": 1, "in_stock": 1, "avg_gbp": 175.0, "avg_eur": 206.5, "idx": 0.81, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8981226920"}, {"pn": "8980873901", "desc": "SUPPORT; FRT BUMPER", "pr00": 47.62, "rev": 22109.0, "cat": "Body Exterior", "am_count": 1, "in_stock": 1, "avg_gbp": 45.0, "avg_eur": 53.1, "idx": 0.9, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8980873901"}, {"pn": "8982185991", "desc": "LAMP ASM; FOG", "pr00": 76.72, "rev": 21689.0, "cat": "Electrical", "am_count": 1, "in_stock": 1, "avg_gbp": 120.0, "avg_eur": 141.6, "idx": 0.54, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8982185991"}, {"pn": "8983852180", "desc": "GENERATOR ASM", "pr00": 327.52, "rev": 20507.0, "cat": "Electrical", "am_count": 1, "in_stock": 1, "avg_gbp": 155.0, "avg_eur": 182.9, "idx": 1.79, "gen_gbp": 395.0, "gen_eur": 466.1, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8983852180"}, {"pn": "8982201270", "desc": "SENSOR; SPEED", "pr00": 233.21, "rev": 20322.0, "cat": "Unknown", "am_count": 1, "in_stock": 1, "avg_gbp": 250.0, "avg_eur": 295.0, "idx": 0.79, "gen_gbp": 325.0, "gen_eur": 383.5, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8982201270"}, {"pn": "8982185981", "desc": "LAMP ASM; FOG", "pr00": 76.72, "rev": 19942.0, "cat": "Electrical", "am_count": 1, "in_stock": 0, "avg_gbp": 120.0, "avg_eur": 141.6, "idx": 0.54, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8982185981"}, {"pn": "8981402650", "desc": "FILTER; ACL", "pr00": 25.29, "rev": 19485.0, "cat": "Maintenance Service", "am_count": 2, "in_stock": 2, "avg_gbp": 15.0, "avg_eur": 17.7, "idx": 1.43, "gen_gbp": null, "gen_eur": null, "skus": "|", "url": "https://www.ks-international.com/catalogsearch/result/?q=8981402650"}, {"pn": "8982290711", "desc": "GENERATOR ASM", "pr00": 309.96, "rev": 19469.0, "cat": "Electrical", "am_count": 1, "in_stock": 1, "avg_gbp": 125.0, "avg_eur": 147.5, "idx": 2.1, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8982290711"}, {"pn": "8982488970", "desc": "ROTOR; DISC BRK,RR", "pr00": 147.21, "rev": 18724.0, "cat": "Brakes", "am_count": 1, "in_stock": 1, "avg_gbp": 175.0, "avg_eur": 206.5, "idx": 0.71, "gen_gbp": null, "gen_eur": null, "skus": "", "url": "https://www.ks-international.com/catalogsearch/result/?q=8982488970"}];
+const autoData = [{"pn": "8981596930", "desc": "ELEMENT KIT; FUEL FILTER", "pr00": 13.85, "rev": 234253.0, "cat": "Maintenance Service", "cls": "V", "count": 125, "avg_gbp": 14.92, "avg_eur": 17.61, "min_gbp": 2.0, "idx": 0.79, "brands": "RIDEX, BOSCH, KAVO PARTS, MAXGEAR, QUINTON HAZELL, FEBI BILSTEIN", "url": "https://www.autodoc.co.uk/spares-search?keyword=8981596930"}, {"pn": "8982705240", "desc": "ELEMENT; OIL FILTER", "pr00": 6.8, "rev": 215147.0, "cat": "Maintenance Service", "cls": "V", "count": 24, "avg_gbp": 11.84, "avg_eur": 13.97, "min_gbp": 2.0, "idx": 0.49, "brands": "KAVO PARTS, PURFLUX, MEAT & DORIA, BORG & BECK, FRAM, COOPERSFIAAM FILTERS, VOLLER FILTERS", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982705240"}, {"pn": "8975554500", "desc": "FILTER; BLOWER UNIT", "pr00": 16.33, "rev": 206830.0, "cat": "Cabin Interior", "cls": "D", "count": 2, "avg_gbp": 8.71, "avg_eur": 10.28, "min_gbp": 2.0, "idx": 1.59, "brands": "", "url": "https://www.autodoc.co.uk/spares-search?keyword=8975554500"}, {"pn": "8978279610", "desc": "PAD KIT; DISC BRK,W/O SHIM & CLIP", "pr00": 68.55, "rev": 128931.0, "cat": "Brakes", "cls": "V", "count": 9, "avg_gbp": 55.61, "avg_eur": 65.62, "min_gbp": 2.0, "idx": 1.04, "brands": "LPR", "url": "https://www.autodoc.co.uk/spares-search?keyword=8978279610"}, {"pn": "8983314120", "desc": "SENSOR; PRESSURE,DPD", "pr00": 196.64, "rev": 118471.0, "cat": "Intake Exhaust Emission", "cls": "C", "count": 12, "avg_gbp": 86.15, "avg_eur": 101.66, "min_gbp": 2.0, "idx": 1.93, "brands": "NRF, FACET, EPS, HJS, HITACHI, MEAT & DORIA, HOFFER, KW, DINEX", "url": "https://www.autodoc.co.uk/spares-search?keyword=8983314120"}, {"pn": "8975546610", "desc": "PAD KIT; CALIPER,DISC BRK,FRT", "pr00": 82.25, "rev": 105379.0, "cat": "Brakes", "cls": "V", "count": 17, "avg_gbp": 72.81, "avg_eur": 85.92, "min_gbp": 2.0, "idx": 0.96, "brands": "REMSA, LPR", "url": "https://www.autodoc.co.uk/spares-search?keyword=8975546610"}, {"pn": "8974993681", "desc": "SENSOR; TIRE INFLATION", "pr00": 23.36, "rev": 102138.0, "cat": "Unknown", "cls": "C", "count": 8, "avg_gbp": 87.79, "avg_eur": 103.59, "min_gbp": 2.0, "idx": 0.23, "brands": "", "url": "https://www.autodoc.co.uk/spares-search?keyword=8974993681"}, {"pn": "8976526220", "desc": "PAD KIT; CALIPER,DISC BRK,FRT", "pr00": 62.96, "rev": 95740.0, "cat": "Brakes", "cls": "V", "count": 2, "avg_gbp": 77.86, "avg_eur": 91.87, "min_gbp": 2.0, "idx": 0.69, "brands": "", "url": "https://www.autodoc.co.uk/spares-search?keyword=8976526220"}, {"pn": "5876150170", "desc": "ELEMENT KIT; FUEL FILTER", "pr00": 9.16, "rev": 94589.0, "cat": "Maintenance Service", "cls": "V", "count": 10, "avg_gbp": 11.6, "avg_eur": 13.69, "min_gbp": 2.0, "idx": 0.67, "brands": "BOSCH, FEBI BILSTEIN, DONALDSON, DT Spare Parts, DENCKERMANN, MOTAQUIP, Castrol filters", "url": "https://www.autodoc.co.uk/spares-search?keyword=5876150170"}, {"pn": "8975554002", "desc": "GLASS; WINDSHIELD", "pr00": 168.62, "rev": 90065.0, "cat": "Body Exterior", "cls": "M", "count": 2, "avg_gbp": 504.2, "avg_eur": 594.96, "min_gbp": 2.0, "idx": 0.28, "brands": "GLAVISTA, PILKINGTON", "url": "https://www.autodoc.co.uk/spares-search?keyword=8975554002"}, {"pn": "1876100934", "desc": "ELEMENT; FUEL FILTER", "pr00": 8.16, "rev": 84379.0, "cat": "Maintenance Service", "cls": "V", "count": 2, "avg_gbp": 21.8, "avg_eur": 25.72, "min_gbp": 2.0, "idx": 0.32, "brands": "DONALDSON, DT Spare Parts", "url": "https://www.autodoc.co.uk/spares-search?keyword=1876100934"}, {"pn": "8981919560", "desc": "ROTOR; DISC BRK,RR", "pr00": 162.02, "rev": 81574.0, "cat": "Brakes", "cls": "C", "count": 2, "avg_gbp": 93.39, "avg_eur": 110.2, "min_gbp": 2.0, "idx": 1.47, "brands": "", "url": "https://www.autodoc.co.uk/spares-search?keyword=8981919560"}, {"pn": "8982488951", "desc": "ROTOR; DISC BRK,FRT", "pr00": 158.83, "rev": 76262.0, "cat": "Brakes", "cls": "C", "count": 4, "avg_gbp": 97.99, "avg_eur": 115.63, "min_gbp": 2.0, "idx": 1.37, "brands": "", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982488951"}, {"pn": "8980618131", "desc": "DRUM; BRK,RR", "pr00": 72.49, "rev": 76047.0, "cat": "Brakes", "cls": "C", "count": 19, "avg_gbp": 109.64, "avg_eur": 129.38, "min_gbp": 2.0, "idx": 0.56, "brands": "KAVO PARTS, DELPHI, A.B.S., ABE, FERODO, TRISCAN, BORG & BECK, IAP QUALITY PARTS", "url": "https://www.autodoc.co.uk/spares-search?keyword=8980618131"}, {"pn": "8983313592", "desc": "TURBOCHARGER ASM", "pr00": 800.47, "rev": 73899.0, "cat": "Intake Exhaust Emission", "cls": "C", "count": 9, "avg_gbp": 577.3, "avg_eur": 681.21, "min_gbp": 2.0, "idx": 1.18, "brands": "BTS TURBO, AJUSA, SIDAT, MEAT & DORIA, BR Turbo, Mitsubishi, FEBI BILSTEIN", "url": "https://www.autodoc.co.uk/spares-search?keyword=8983313592"}, {"pn": "8982169210", "desc": "PAD KIT; CALIPER,DISC BRK,FRT", "pr00": 102.65, "rev": 73840.0, "cat": "Brakes", "cls": "V", "count": 12, "avg_gbp": 86.65, "avg_eur": 102.25, "min_gbp": 2.0, "idx": 1.0, "brands": "DT Spare Parts", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982169210"}, {"pn": "8981647861", "desc": "VALVE; EGR", "pr00": 234.57, "rev": 71790.0, "cat": "Intake Exhaust Emission", "cls": "C", "count": 2, "avg_gbp": 203.1, "avg_eur": 239.66, "min_gbp": 2.0, "idx": 0.98, "brands": "ELSTOCK, DRI", "url": "https://www.autodoc.co.uk/spares-search?keyword=8981647861"}, {"pn": "8975488420", "desc": "FILTER; BLOWER UNIT", "pr00": 16.33, "rev": 71172.0, "cat": "Cabin Interior", "cls": "D", "count": 7, "avg_gbp": 13.71, "avg_eur": 16.18, "min_gbp": 2.0, "idx": 1.01, "brands": "DENCKERMANN, SIDAT", "url": "https://www.autodoc.co.uk/spares-search?keyword=8975488420"}, {"pn": "8981941190", "desc": "ELEMENT KIT; FUEL FILTER", "pr00": 13.27, "rev": 64022.0, "cat": "Maintenance Service", "cls": "V", "count": 102, "avg_gbp": 16.83, "avg_eur": 19.86, "min_gbp": 2.0, "idx": 0.67, "brands": "RIDEX, BOSCH, KAVO PARTS, QUINTON HAZELL, FEBI BILSTEIN", "url": "https://www.autodoc.co.uk/spares-search?keyword=8981941190"}, {"pn": "8978348260", "desc": "SHOE KIT; BRK,RR", "pr00": 41.49, "rev": 63986.0, "cat": "Brakes", "cls": "V", "count": 8, "avg_gbp": 40.12, "avg_eur": 47.34, "min_gbp": 2.0, "idx": 0.88, "brands": "A.B.S., KAVO PARTS, SAMKO, DELPHI, BREMBO, FEBEST, LPR", "url": "https://www.autodoc.co.uk/spares-search?keyword=8978348260"}, {"pn": "8981772710", "desc": "FILTER; ACL", "pr00": 31.36, "rev": 62780.0, "cat": "Maintenance Service", "cls": "V", "count": 18, "avg_gbp": 36.59, "avg_eur": 43.18, "min_gbp": 2.0, "idx": 0.73, "brands": "ASHIKA, KAVO PARTS, JAPKO, FEBI BILSTEIN, BLUE PRINT, HENGST FILTER, FLEETGUARD, DT Spare Parts, DON", "url": "https://www.autodoc.co.uk/spares-search?keyword=8981772710"}, {"pn": "8981776324", "desc": "DPD ASM", "pr00": 1281.85, "rev": 60198.0, "cat": "Intake Exhaust Emission", "cls": "D", "count": 2, "avg_gbp": 553.0, "avg_eur": 652.54, "min_gbp": 2.0, "idx": 1.96, "brands": "KAMOKA, VEGAZ", "url": "https://www.autodoc.co.uk/spares-search?keyword=8981776324"}, {"pn": "8979488071", "desc": "ROTOR; DISC BRK,FRT", "pr00": 90.47, "rev": 59721.0, "cat": "Brakes", "cls": "C", "count": 21, "avg_gbp": 118.3, "avg_eur": 139.59, "min_gbp": 2.0, "idx": 0.65, "brands": "", "url": "https://www.autodoc.co.uk/spares-search?keyword=8979488071"}, {"pn": "8982318983", "desc": "INJECTOR ASM; DEF DCM", "pr00": 365.34, "rev": 55454.0, "cat": "Fuel System", "cls": "C", "count": 2, "avg_gbp": 114.25, "avg_eur": 134.81, "min_gbp": 1.01, "idx": 2.71, "brands": "FEBI BILSTEIN, BOSCH", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982318983"}, {"pn": "8980139111", "desc": "VALVE; EGR", "pr00": 156.94, "rev": 54977.0, "cat": "Intake Exhaust Emission", "cls": "C", "count": 6, "avg_gbp": 255.75, "avg_eur": 301.78, "min_gbp": 2.0, "idx": 0.52, "brands": "PartsTec, NTY, ISUZU, SANDO, CASCO", "url": "https://www.autodoc.co.uk/spares-search?keyword=8980139111"}, {"pn": "8982831940", "desc": "PLATE ASM; PRESSURE,CLU", "pr00": 71.55, "rev": 50903.0, "cat": "Chassis Frame", "cls": "V", "count": 4, "avg_gbp": 372.12, "avg_eur": 439.1, "min_gbp": 2.0, "idx": 0.16, "brands": "DT Spare Parts, EXEDY, AISIN", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982831940"}, {"pn": "8982169220", "desc": "PAD KIT; CALIPER,DISC BRK,FRT", "pr00": 81.0, "rev": 47630.0, "cat": "Brakes", "cls": "V", "count": 15, "avg_gbp": 87.76, "avg_eur": 103.56, "min_gbp": 2.0, "idx": 0.78, "brands": "DT Spare Parts", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982169220"}, {"pn": "8980094180", "desc": "SENSOR; MAP", "pr00": 102.51, "rev": 45031.0, "cat": "Unknown", "cls": "C", "count": 4, "avg_gbp": 41.94, "avg_eur": 49.49, "min_gbp": 2.0, "idx": 2.07, "brands": "NTY, HITACHI, MEAT & DORIA, SIDAT", "url": "https://www.autodoc.co.uk/spares-search?keyword=8980094180"}, {"pn": "5876102200", "desc": "ELEMENT KIT;FUEL FILTER", "pr00": 20.29, "rev": 44874.0, "cat": "Maintenance Service", "cls": "V", "count": 3, "avg_gbp": 24.92, "avg_eur": 29.41, "min_gbp": 2.0, "idx": 0.69, "brands": "BOSCH", "url": "https://www.autodoc.co.uk/spares-search?keyword=5876102200"}, {"pn": "8982473951", "desc": "THROTTLE ASM; INT", "pr00": 165.79, "rev": 42382.0, "cat": "Unknown", "cls": "C", "count": 2, "avg_gbp": 248.99, "avg_eur": 293.81, "min_gbp": 2.0, "idx": 0.56, "brands": "HITACHI", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982473951"}, {"pn": "8981472452", "desc": "SHAFT ASM; FRT DRIVE", "pr00": 342.6, "rev": 39636.0, "cat": "Unknown", "cls": "C", "count": 9, "avg_gbp": 117.72, "avg_eur": 138.91, "min_gbp": 0.88, "idx": 2.47, "brands": "RIDEX, NTY, GSP, RIDEX REMAN, BORG & BECK, POINT GEAR, CEVAM", "url": "https://www.autodoc.co.uk/spares-search?keyword=8981472452"}, {"pn": "8982924331", "desc": "SENSOR; SPD,FRT WHEEL", "pr00": 158.26, "rev": 39340.0, "cat": "Wheels Hub", "cls": "C", "count": 4, "avg_gbp": 22.78, "avg_eur": 26.88, "min_gbp": 2.0, "idx": 5.89, "brands": "TRISCAN, BLUE PRINT, FEBI BILSTEIN, SWAG", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982924331"}, {"pn": "8981394280", "desc": "FILTER; BLOWER UNIT", "pr00": 23.02, "rev": 39306.0, "cat": "Cabin Interior", "cls": "D", "count": 178, "avg_gbp": 18.56, "avg_eur": 21.9, "min_gbp": 2.0, "idx": 1.05, "brands": "RIDEX, STARK, RIDEX PLUS, KAVO PARTS, DACO Germany, KAMOKA", "url": "https://www.autodoc.co.uk/spares-search?keyword=8981394280"}, {"pn": "8980058750", "desc": "JOINT ASM; BALL,LWR CONT ARM", "pr00": 34.55, "rev": 39286.0, "cat": "Unknown", "cls": "F", "count": 45, "avg_gbp": 33.23, "avg_eur": 39.21, "min_gbp": 2.0, "idx": 0.88, "brands": "RIDEX, STARK, GSP, ASHIKA, KAVO PARTS, JAPANPARTS, AISIN, SKF, DELPHI, CORTECO, FEBI BILSTEIN, BLUE ", "url": "https://www.autodoc.co.uk/spares-search?keyword=8980058750"}, {"pn": "8983214130", "desc": "FILTER; ACL", "pr00": 30.73, "rev": 39116.0, "cat": "Maintenance Service", "cls": "V", "count": 2, "avg_gbp": 120.53, "avg_eur": 142.23, "min_gbp": 2.0, "idx": 0.22, "brands": "BLUE PRINT, DT Spare Parts", "url": "https://www.autodoc.co.uk/spares-search?keyword=8983214130"}, {"pn": "8983507161", "desc": "FILTER KIT; PUMP ASM,DEF DCM S", "pr00": 70.53, "rev": 37237.0, "cat": "Maintenance Service", "cls": "C", "count": 4, "avg_gbp": 32.45, "avg_eur": 38.29, "min_gbp": 2.0, "idx": 1.84, "brands": "BOSCH, FEBI BILSTEIN, DT Spare Parts, MEAT & DORIA", "url": "https://www.autodoc.co.uk/spares-search?keyword=8983507161"}, {"pn": "8982924321", "desc": "SENSOR; SPD,FRT WHEEL", "pr00": 158.26, "rev": 36137.0, "cat": "Wheels Hub", "cls": "C", "count": 3, "avg_gbp": 22.78, "avg_eur": 26.88, "min_gbp": 2.0, "idx": 5.89, "brands": "TRISCAN, FEBI BILSTEIN, SWAG", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982924321"}, {"pn": "8975425400", "desc": "ELEMENT; FUEL FILTER", "pr00": 12.56, "rev": 36076.0, "cat": "Maintenance Service", "cls": "V", "count": 5, "avg_gbp": 22.66, "avg_eur": 26.74, "min_gbp": 2.0, "idx": 0.47, "brands": "FEBI BILSTEIN, DT Spare Parts", "url": "https://www.autodoc.co.uk/spares-search?keyword=8975425400"}, {"pn": "8983929650", "desc": "SHAFT ASM; FRT DRIVE", "pr00": 298.3, "rev": 35693.0, "cat": "Unknown", "cls": "C", "count": 2, "avg_gbp": 72.4, "avg_eur": 85.43, "min_gbp": 2.0, "idx": 3.49, "brands": "BORG & BECK, GSP", "url": "https://www.autodoc.co.uk/spares-search?keyword=8983929650"}, {"pn": "8982488930", "desc": "ROTOR; DISC BRK,FRT", "pr00": 165.96, "rev": 35683.0, "cat": "Brakes", "cls": "C", "count": 2, "avg_gbp": 79.66, "avg_eur": 94.0, "min_gbp": 2.0, "idx": 1.77, "brands": "", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982488930"}, {"pn": "8975260081", "desc": "TURBOCHARGER ASM", "pr00": 1084.91, "rev": 34772.0, "cat": "Intake Exhaust Emission", "cls": "C", "count": 2, "avg_gbp": 1253.63, "avg_eur": 1479.28, "min_gbp": 2.0, "idx": 0.73, "brands": "BTS TURBO, IHI, BE TURBO", "url": "https://www.autodoc.co.uk/spares-search?keyword=8975260081"}, {"pn": "5876102500", "desc": "ELEMENT; AIR CLEANER", "pr00": 17.49, "rev": 33609.0, "cat": "Fluids Chemicals", "cls": "V", "count": 2, "avg_gbp": 35.1, "avg_eur": 41.42, "min_gbp": 2.0, "idx": 0.42, "brands": "DT Spare Parts, DONALDSON", "url": "https://www.autodoc.co.uk/spares-search?keyword=5876102500"}, {"pn": "8976739570", "desc": "FILTER; ACL", "pr00": 30.73, "rev": 33489.0, "cat": "Maintenance Service", "cls": "V", "count": 2, "avg_gbp": 29.8, "avg_eur": 35.16, "min_gbp": 2.0, "idx": 0.87, "brands": "FEBI BILSTEIN, BLUE PRINT", "url": "https://www.autodoc.co.uk/spares-search?keyword=8976739570"}, {"pn": "5876101570", "desc": "CARTRIDGE KIT; FUEL FILTER", "pr00": 8.76, "rev": 29548.0, "cat": "Maintenance Service", "cls": "V", "count": 8, "avg_gbp": 16.21, "avg_eur": 19.13, "min_gbp": 2.0, "idx": 0.46, "brands": "BOSCH", "url": "https://www.autodoc.co.uk/spares-search?keyword=5876101570"}, {"pn": "8983303281", "desc": "BUMPER ASM; FRT", "pr00": 129.43, "rev": 29337.0, "cat": "Body Exterior", "cls": "P", "count": 2, "avg_gbp": 117.02, "avg_eur": 138.08, "min_gbp": 2.0, "idx": 0.94, "brands": "KLOKKERHOLM, DIEDERICHS", "url": "https://www.autodoc.co.uk/spares-search?keyword=8983303281"}, {"pn": "8982687932", "desc": "GENERATOR ASM", "pr00": 509.83, "rev": 28780.0, "cat": "Electrical", "cls": "F", "count": 6, "avg_gbp": 257.52, "avg_eur": 303.87, "min_gbp": 1.01, "idx": 1.68, "brands": "AS-PL, BV PSH, AUTOELECTRO", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982687932"}, {"pn": "8982120690", "desc": "DISC; CLUTCH", "pr00": 157.24, "rev": 28770.0, "cat": "Brakes", "cls": "V", "count": 12, "avg_gbp": 238.38, "avg_eur": 281.29, "min_gbp": 1.05, "idx": 0.56, "brands": "DT Spare Parts, LuK, ASHIKA, JAPKO, JAPANPARTS, EXEDY, IAP QUALITY PARTS", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982120690"}, {"pn": "8974863550", "desc": "FLYWHEEL", "pr00": 279.49, "rev": 28717.0, "cat": "Wheels Hub", "cls": "C", "count": 2, "avg_gbp": 177.62, "avg_eur": 209.59, "min_gbp": 2.0, "idx": 1.33, "brands": "AUGER, DT Spare Parts", "url": "https://www.autodoc.co.uk/spares-search?keyword=8974863550"}, {"pn": "8978354480", "desc": "SHOE KIT; BRK,RR", "pr00": 36.33, "rev": 28566.0, "cat": "Brakes", "cls": "V", "count": 4, "avg_gbp": 40.11, "avg_eur": 47.33, "min_gbp": 2.0, "idx": 0.77, "brands": "KAVO PARTS, FEBEST, DELPHI", "url": "https://www.autodoc.co.uk/spares-search?keyword=8978354480"}, {"pn": "8983282070", "desc": "ELEMENT; OIL FILTER", "pr00": 14.45, "rev": 25564.0, "cat": "Maintenance Service", "cls": "V", "count": 6, "avg_gbp": 21.77, "avg_eur": 25.69, "min_gbp": 2.0, "idx": 0.56, "brands": "DT Spare Parts", "url": "https://www.autodoc.co.uk/spares-search?keyword=8983282070"}, {"pn": "8970622940", "desc": "FILTER; AIR CLEANER", "pr00": 31.36, "rev": 25126.0, "cat": "Fluids Chemicals", "cls": "V", "count": 20, "avg_gbp": 38.97, "avg_eur": 45.98, "min_gbp": 2.0, "idx": 0.68, "brands": "ASHIKA, KAVO PARTS, JAPKO, FEBI BILSTEIN, BLUE PRINT, HENGST FILTER, FLEETGUARD, DT Spare Parts, DON", "url": "https://www.autodoc.co.uk/spares-search?keyword=8970622940"}, {"pn": "8982330922", "desc": "LAMP ASM; RR COMB", "pr00": 122.91, "rev": 24864.0, "cat": "Body Exterior", "cls": "F", "count": 3, "avg_gbp": 74.14, "avg_eur": 87.49, "min_gbp": 2.0, "idx": 1.4, "brands": "JOHNS, VAN WEZEL", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982330922"}, {"pn": "8982330912", "desc": "LAMP ASM; RR COMB", "pr00": 133.16, "rev": 24300.0, "cat": "Body Exterior", "cls": "F", "count": 3, "avg_gbp": 81.57, "avg_eur": 96.25, "min_gbp": 2.0, "idx": 1.38, "brands": "JOHNS, VAN WEZEL", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982330912"}, {"pn": "8981506872", "desc": "TURBOCHARGER ASM", "pr00": 588.34, "rev": 24117.0, "cat": "Intake Exhaust Emission", "cls": "C", "count": 19, "avg_gbp": 419.97, "avg_eur": 495.56, "min_gbp": 1.02, "idx": 1.19, "brands": "MEAT & DORIA, EVORON, BTS TURBO, IHI, FEBI BILSTEIN, BE TURBO, ISUZU, SANDO, SIDAT, Henkel Parts, MO", "url": "https://www.autodoc.co.uk/spares-search?keyword=8981506872"}, {"pn": "8975260061", "desc": "TURBOCHARGER ASM", "pr00": 1006.09, "rev": 24009.0, "cat": "Intake Exhaust Emission", "cls": "C", "count": 3, "avg_gbp": 1195.55, "avg_eur": 1410.75, "min_gbp": 2.0, "idx": 0.71, "brands": "BTS TURBO, DT Spare Parts", "url": "https://www.autodoc.co.uk/spares-search?keyword=8975260061"}, {"pn": "5876150021", "desc": "FILTER; ACL", "pr00": 12.93, "rev": 23725.0, "cat": "Maintenance Service", "cls": "V", "count": 2, "avg_gbp": 7.59, "avg_eur": 8.96, "min_gbp": 2.0, "idx": 1.44, "brands": "FEBI BILSTEIN, BLUE PRINT", "url": "https://www.autodoc.co.uk/spares-search?keyword=5876150021"}, {"pn": "8976019670", "desc": "SENSOR;  MANIF", "pr00": 118.21, "rev": 23218.0, "cat": "Unknown", "cls": "C", "count": 27, "avg_gbp": 91.85, "avg_eur": 108.38, "min_gbp": 0.94, "idx": 1.09, "brands": "RIDEX, NTY, ESEN SKV, D2P, AUTLOG, DELPHI, MAGNETI MARELLI, FACET, EPS, HITACHI, NGK, STARK, GH, BRE", "url": "https://www.autodoc.co.uk/spares-search?keyword=8976019670"}, {"pn": "8974914013", "desc": "CONDENSER ASM; A/C", "pr00": 153.48, "rev": 23154.0, "cat": "Unknown", "cls": "D", "count": 2, "avg_gbp": 81.5, "avg_eur": 96.17, "min_gbp": 2.0, "idx": 1.6, "brands": "NRF", "url": "https://www.autodoc.co.uk/spares-search?keyword=8974914013"}, {"pn": "8981402660", "desc": "FILTER; ACL", "pr00": 23.13, "rev": 22427.0, "cat": "Maintenance Service", "cls": "V", "count": 25, "avg_gbp": 13.67, "avg_eur": 16.13, "min_gbp": 2.0, "idx": 1.43, "brands": "RIDEX, KAMOKA, ASHIKA, JAPKO, FEBI BILSTEIN, KAVO PARTS, BLUE PRINT, FILTRON, QUINTON HAZELL, MOTAQU", "url": "https://www.autodoc.co.uk/spares-search?keyword=8981402660"}, {"pn": "5876150000", "desc": "ELEMENT; OIL FILTER", "pr00": 4.8, "rev": 22389.0, "cat": "Maintenance Service", "cls": "V", "count": 13, "avg_gbp": 12.29, "avg_eur": 14.5, "min_gbp": 2.0, "idx": 0.33, "brands": "QUINTON HAZELL, KAVO PARTS, MAGNETI MARELLI, HENGST FILTER, MULLER FILTER, NIPPARTS", "url": "https://www.autodoc.co.uk/spares-search?keyword=5876150000"}, {"pn": "5876101170", "desc": "ELEMENT; OIL FILTER", "pr00": 9.96, "rev": 22086.0, "cat": "Maintenance Service", "cls": "V", "count": 14, "avg_gbp": 23.09, "avg_eur": 27.25, "min_gbp": 2.0, "idx": 0.37, "brands": "HENGST FILTER, DT Spare Parts", "url": "https://www.autodoc.co.uk/spares-search?keyword=5876101170"}, {"pn": "8982399830", "desc": "FILTER ASM; FUEL", "pr00": 55.33, "rev": 21055.0, "cat": "Maintenance Service", "cls": "V", "count": 9, "avg_gbp": 12.19, "avg_eur": 14.38, "min_gbp": 2.0, "idx": 3.85, "brands": "BOSCH, MOTAQUIP", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982399830"}, {"pn": "5876150620", "desc": "SHOE KIT; BRK,RR", "pr00": 30.2, "rev": 20657.0, "cat": "Brakes", "cls": "V", "count": 4, "avg_gbp": 37.22, "avg_eur": 43.92, "min_gbp": 2.0, "idx": 0.69, "brands": "SAMKO, BREMBO, LPR, METELLI", "url": "https://www.autodoc.co.uk/spares-search?keyword=5876150620"}, {"pn": "8982383181", "desc": "NOZZLE ASM; INJ", "pr00": 195.62, "rev": 20584.0, "cat": "Fuel System", "cls": "F", "count": 2, "avg_gbp": 1066.4, "avg_eur": 1258.35, "min_gbp": 2.0, "idx": 0.16, "brands": "DT Spare Parts, DENSO", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982383181"}, {"pn": "8983852180", "desc": "GENERATOR ASM", "pr00": 327.52, "rev": 20507.0, "cat": "Electrical", "cls": "F", "count": 4, "avg_gbp": 183.78, "avg_eur": 216.86, "min_gbp": 0.96, "idx": 1.51, "brands": "AS-PL, AUTOELECTRO", "url": "https://www.autodoc.co.uk/spares-search?keyword=8983852180"}, {"pn": "8980565510", "desc": "ROD END ASM; OUTER", "pr00": 42.91, "rev": 20272.0, "cat": "Unknown", "cls": "C", "count": 40, "avg_gbp": 26.79, "avg_eur": 31.61, "min_gbp": 2.0, "idx": 1.36, "brands": "RIDEX, KAMOKA, GSP, Oyodo, JAPANPARTS, JAPKO, QUINTON HAZELL, KAVO PARTS, YAMATO, BGA, DELPHI, SKF, ", "url": "https://www.autodoc.co.uk/spares-search?keyword=8980565510"}, {"pn": "8981402650", "desc": "FILTER; ACL", "pr00": 25.29, "rev": 19485.0, "cat": "Maintenance Service", "cls": "V", "count": 39, "avg_gbp": 21.22, "avg_eur": 25.04, "min_gbp": 2.0, "idx": 1.01, "brands": "RIDEX, KAMOKA, JAPKO, MAXGEAR, KAVO PARTS, QUINTON HAZELL, JAPANPARTS, DENCKERMANN, MOTAQUIP, HENGST", "url": "https://www.autodoc.co.uk/spares-search?keyword=8981402650"}, {"pn": "8982290711", "desc": "GENERATOR ASM", "pr00": 309.96, "rev": 19469.0, "cat": "Electrical", "cls": "F", "count": 25, "avg_gbp": 180.23, "avg_eur": 212.67, "min_gbp": 0.95, "idx": 1.46, "brands": "AS-PL, AUTOELECTRO, BV PSH, HC-Cargo, IAP QUALITY PARTS", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982290711"}, {"pn": "8982488970", "desc": "ROTOR; DISC BRK,RR", "pr00": 147.21, "rev": 18724.0, "cat": "Brakes", "cls": "C", "count": 6, "avg_gbp": 81.99, "avg_eur": 96.75, "min_gbp": 2.0, "idx": 1.52, "brands": "", "url": "https://www.autodoc.co.uk/spares-search?keyword=8982488970"}, {"pn": "8980374810", "desc": "CARTRIDGE KIT; FUEL FILTER", "pr00": 15.33, "rev": 18281.0, "cat": "Maintenance Service", "cls": "V", "count": 84, "avg_gbp": 22.94, "avg_eur": 27.07, "min_gbp": 2.0, "idx": 0.57, "brands": "RIDEX", "url": "https://www.autodoc.co.uk/spares-search?keyword=8980374810"}, {"pn": "8978279590", "desc": "PAD KIT; DISC BRK,W/O SHIM & CLIP", "pr00": 68.55, "rev": 17841.0, "cat": "Brakes", "cls": "V", "count": 7, "avg_gbp": 62.55, "avg_eur": 73.81, "min_gbp": 2.0, "idx": 0.93, "brands": "", "url": "https://www.autodoc.co.uk/spares-search?keyword=8978279590"}];
+
+let curScrTab = 'ks';
+let curKsCat = 'all', curAutoCat = 'all';
+let curKsSort = 'rev', curAutoSort = 'rev';
+let ksChartObj = null, autoChartObj = null;
+
+function getScrFiltered(data, cat) {
+  return cat === 'all' ? data : data.filter(x => x.cat === cat);
+}
+
+function getScrSorted(data, sortBy) {
+  return [...data].sort((a, b) => sortBy === 'idx' ? b.idx - a.idx : sortBy === 'pr00' ? b.pr00 - a.pr00 : b.rev - a.rev);
+}
+
+function idxColor(idx) {
+  if (idx < 1.0) return 'rgba(13,122,64,0.85)';
+  if (idx < 1.2) return 'rgba(58,172,98,0.85)';
+  if (idx < 1.5) return 'rgba(142,204,90,0.85)';
+  if (idx < 2.0) return 'rgba(245,208,64,0.85)';
+  if (idx < 3.0) return 'rgba(240,122,40,0.85)';
+  if (idx < 4.0) return 'rgba(220,56,32,0.85)';
+  return 'rgba(154,16,16,0.85)';
+}
+
+function idxLabel(idx) {
+  if (idx < 1.0) return 'Cheaper than AM';
+  if (idx < 1.2) return 'Near parity';
+  if (idx < 1.5) return 'Mild premium';
+  if (idx < 2.0) return 'Caution';
+  if (idx < 3.0) return 'Exposed';
+  if (idx < 4.0) return 'High risk';
+  return '⚠ Critical';
+}
+
+function buildKsChart(parts) {
+  const top = parts.slice(0, 20);
+  if (ksChartObj) ksChartObj.destroy();
+  const ctx = document.getElementById('ks-chart').getContext('2d');
+  ksChartObj = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: top.map(x => x.desc.length > 32 ? x.desc.slice(0,32)+'…' : x.desc),
+      datasets: [
+        {
+          label: 'Genuine PR00 (€)',
+          data: top.map(x => x.pr00),
+          backgroundColor: top.map(x => idxColor(x.idx)),
+          borderColor: top.map(x => idxColor(x.idx).replace('0.85','1')),
+          borderWidth: 1,
+          borderRadius: 4
+        },
+        {
+          label: 'KS AM avg (€)',
+          data: top.map(x => x.avg_eur),
+          backgroundColor: 'rgba(30,100,180,0.55)',
+          borderColor: 'rgba(30,100,180,0.85)',
+          borderWidth: 1,
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 14 } },
+        tooltip: {
+          callbacks: {
+            title: (items) => top[items[0].dataIndex].desc,
+            afterBody: (items) => {
+              const p = top[items[0].dataIndex];
+              return [
+                'PN: ' + p.pn,
+                'PR00: €' + p.pr00.toFixed(2),
+                'KS AM avg: €' + p.avg_eur.toFixed(2) + ' (£' + p.avg_gbp.toFixed(2) + ')',
+                'Index: ' + p.idx.toFixed(2) + '× — ' + idxLabel(p.idx),
+                'AM listings: ' + p.am_count + (p.in_stock ? ' ('+p.in_stock+' in stock)' : ' (none in stock)'),
+                'SKUs: ' + (p.skus || 'n/a'),
+                'CY2025 rev: €' + (p.rev||0).toLocaleString()
+              ];
+            }
+          },
+          displayColors: false,
+          backgroundColor: '#0d1a30',
+          titleColor: '#fff',
+          bodyColor: '#c8d8f0',
+          padding: 10,
+          bodyFont: { size: 11 }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Price (EUR)', font: { size: 11 } },
+          grid: { color: 'rgba(0,0,0,0.05)' },
+          ticks: { font: { size: 10 } }
+        },
+        y: {
+          ticks: { font: { size: 10 }, maxRotation: 0 },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+function buildAutoChart(parts) {
+  const top = parts.slice(0, 20);
+  if (autoChartObj) autoChartObj.destroy();
+  const ctx = document.getElementById('auto-chart').getContext('2d');
+  autoChartObj = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: top.map(x => x.desc.length > 32 ? x.desc.slice(0,32)+'…' : x.desc),
+      datasets: [
+        {
+          label: 'Genuine PR00 (€)',
+          data: top.map(x => x.pr00),
+          backgroundColor: top.map(x => idxColor(x.idx)),
+          borderColor: top.map(x => idxColor(x.idx).replace('0.85','1')),
+          borderWidth: 1,
+          borderRadius: 4
+        },
+        {
+          label: 'Autodoc AM avg (€)',
+          data: top.map(x => x.avg_eur),
+          backgroundColor: 'rgba(30,100,180,0.55)',
+          borderColor: 'rgba(30,100,180,0.85)',
+          borderWidth: 1,
+          borderRadius: 4
+        }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 14 } },
+        tooltip: {
+          callbacks: {
+            title: (items) => top[items[0].dataIndex].desc,
+            afterBody: (items) => {
+              const p = top[items[0].dataIndex];
+              return [
+                'PN: ' + p.pn,
+                'PR00: €' + p.pr00.toFixed(2),
+                'Autodoc AM avg: €' + p.avg_eur.toFixed(2) + ' (£' + p.avg_gbp.toFixed(2) + ')',
+                'Index: ' + p.idx.toFixed(2) + '× — ' + idxLabel(p.idx),
+                'Listings found: ' + p.count,
+                'AM brands: ' + (p.brands || 'n/a'),
+                'CY2025 rev: €' + (p.rev||0).toLocaleString()
+              ];
+            }
+          },
+          displayColors: false,
+          backgroundColor: '#0d1a30',
+          titleColor: '#fff',
+          bodyColor: '#c8d8f0',
+          padding: 10,
+          bodyFont: { size: 11 }
+        }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Price (EUR)', font: { size: 11 } },
+          grid: { color: 'rgba(0,0,0,0.05)' },
+          ticks: { font: { size: 10 } }
+        },
+        y: {
+          ticks: { font: { size: 10 }, maxRotation: 0 },
+          grid: { display: false }
+        }
+      }
+    }
+  });
+}
+
+function buildKsTable(parts) {
+  let html = '<table><thead><tr>' +
+    '<th>PN</th><th>Description</th><th style="width:60px">Cat</th>' +
+    '<th class="tr" style="width:76px">PR00 (€)</th>' +
+    '<th class="tr" style="width:76px">KS AM (€)</th>' +
+    '<th class="tc" style="width:76px">Index</th>' +
+    '<th style="width:60px">Stock</th>' +
+    '<th class="tr" style="width:90px">Rev CY25</th>' +
+    '</tr></thead><tbody>';
+  parts.forEach(p => {
+    const ic = idxClass(p.idx);
+    const genNote = p.gen_eur ? ' <small style="color:#0a7a40">(Genuine also: £'+p.gen_gbp+')</small>' : '';
+    html += '<tr>' +
+      '<td style="font-family:monospace;font-size:11px;color:#334">' + p.pn + '</td>' +
+      '<td style="font-size:12px">' + p.desc + genNote + '</td>' +
+      '<td style="font-size:10px;color:#5a72a0">' + (p.cat||'') + '</td>' +
+      '<td class="pr00c">€' + p.pr00.toFixed(2) + '</td>' +
+      '<td class="amc">€' + p.avg_eur.toFixed(2) + '<br><small style="color:#888">£'+p.avg_gbp.toFixed(2)+'</small></td>' +
+      '<td><div class="ic ' + ic + '" style="font-size:12px">' + p.idx.toFixed(2) + '×<span class="ps">' + idxLabel(p.idx) + '</span></div></td>' +
+      '<td style="font-size:11px;text-align:center">' + (p.in_stock > 0 ? '<span style="color:#0a7a40;font-weight:700">✓ '+p.in_stock+'</span>' : '<span style="color:#aaa">—</span>') + '</td>' +
+      '<td class="pr00c" style="font-size:11px">€' + (p.rev||0).toLocaleString() + '</td>' +
+      '</tr>';
+  });
+  html += '</tbody></table>';
+  document.getElementById('ks-table-wrap').innerHTML = html;
+}
+
+function buildAutoTable(parts) {
+  let html = '<table><thead><tr>' +
+    '<th>PN</th><th>Description</th><th style="width:60px">Cat</th>' +
+    '<th class="tr" style="width:76px">PR00 (€)</th>' +
+    '<th class="tr" style="width:80px">AM avg (€)</th>' +
+    '<th class="tc" style="width:76px">Index</th>' +
+    '<th>AM Brands</th>' +
+    '<th class="tr" style="width:90px">Rev CY25</th>' +
+    '</tr></thead><tbody>';
+  parts.forEach(p => {
+    const ic = idxClass(p.idx);
+    html += '<tr>' +
+      '<td style="font-family:monospace;font-size:11px;color:#334">' + p.pn + '</td>' +
+      '<td style="font-size:12px">' + p.desc + '</td>' +
+      '<td style="font-size:10px;color:#5a72a0">' + (p.cat||'') + '</td>' +
+      '<td class="pr00c">€' + p.pr00.toFixed(2) + '</td>' +
+      '<td class="amc">€' + p.avg_eur.toFixed(2) + '<br><small style="color:#888">£'+p.avg_gbp.toFixed(2)+'</small></td>' +
+      '<td><div class="ic ' + ic + '" style="font-size:12px">' + p.idx.toFixed(2) + '×<span class="ps">' + idxLabel(p.idx) + '</span></div></td>' +
+      '<td style="font-size:10.5px;color:#555">' + (p.brands||'').slice(0,60) + '</td>' +
+      '<td class="pr00c" style="font-size:11px">€' + (p.rev||0).toLocaleString() + '</td>' +
+      '</tr>';
+  });
+  html += '</tbody></table>';
+  document.getElementById('auto-table-wrap').innerHTML = html;
+}
+
+function buildScrKpis(data, source) {
+  const above2 = data.filter(x => x.idx > 2).length;
+  const above3 = data.filter(x => x.idx > 3).length;
+  const competitive = data.filter(x => x.idx <= 1.5).length;
+  const avgIdx = data.length ? (data.reduce((a,b) => a+b.idx, 0) / data.length).toFixed(2) : '—';
+  const totalRev = data.reduce((a,b) => a+(b.rev||0), 0);
+  document.getElementById('scr-kpi-bar').innerHTML =
+    '<div class="kpi"><div class="kpi-label">Parts with ' + source + ' data</div><div class="kpi-val kpi-blue">' + data.length + '</div><div class="kpi-sub">parts found in scrape</div></div>' +
+    '<div class="kpi"><div class="kpi-label">Avg competitiveness index</div><div class="kpi-val ' + (parseFloat(avgIdx)>2?'kpi-red':parseFloat(avgIdx)>1.5?'kpi-amber':'kpi-green') + '">' + avgIdx + '×</div><div class="kpi-sub">PR00 ÷ AM avg</div></div>' +
+    '<div class="kpi"><div class="kpi-label">Exposed (&gt;2×)</div><div class="kpi-val kpi-amber">' + above2 + '</div><div class="kpi-sub">parts at risk</div></div>' +
+    '<div class="kpi"><div class="kpi-label">Critical (&gt;3×)</div><div class="kpi-val kpi-red">' + above3 + '</div><div class="kpi-sub">parts — high detachment risk</div></div>' +
+    '<div class="kpi"><div class="kpi-label">Competitive (&le;1.5×)</div><div class="kpi-val kpi-green">' + competitive + '</div><div class="kpi-sub">at or near parity</div></div>' +
+    '<div class="kpi"><div class="kpi-label">CY2025 Revenue at stake</div><div class="kpi-val kpi-blue">€' + Math.round(totalRev/1000) + 'K</div><div class="kpi-sub">for parts with scraper data</div></div>';
+}
+
+function filterKS(cat) {
+  curKsCat = cat;
+  document.querySelectorAll('.ks-cat-pill').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  refreshKS();
+}
+function sortKS(by) { curKsSort = by; refreshKS(); }
+function refreshKS() {
+  const filtered = getScrFiltered(ksData, curKsCat);
+  const sorted = getScrSorted(filtered, curKsSort);
+  buildScrKpis(sorted, 'KS');
+  buildKsChart(sorted);
+  buildKsTable(sorted);
+}
+
+function filterAuto(cat) {
+  curAutoCat = cat;
+  document.querySelectorAll('.auto-cat-pill').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  refreshAuto();
+}
+function sortAuto(by) { curAutoSort = by; refreshAuto(); }
+function refreshAuto() {
+  const filtered = getScrFiltered(autoData, curAutoCat);
+  const sorted = getScrSorted(filtered, curAutoSort);
+  buildScrKpis(sorted, 'Autodoc');
+  buildAutoChart(sorted);
+  buildAutoTable(sorted);
+}
+
+function setScrTab(tab) {
+  curScrTab = tab;
+  document.querySelectorAll('.stab').forEach(b => b.classList.toggle('stab-active', b.id === 'stab-'+tab));
+  document.getElementById('scr-ks').style.display = tab === 'ks' ? 'block' : 'none';
+  document.getElementById('scr-auto').style.display = tab === 'auto' ? 'block' : 'none';
+  if (tab === 'ks') refreshKS();
+  else refreshAuto();
+}
+
+function initScraper() {
+  refreshKS();
+}
+
+// Init: called after data fetch (see async loader below)
+
+(async function() {
+  try {
+    const resp = await __localFetch('Data/dashboards/isze_data.json');
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    const j = await resp.json();
+    segments = j.competitiveness.segments;
+    renderAll();
+  } catch(e) {
+    document.getElementById('isze-offline-banner').style.display = 'block';
+  }
+})();
+</script>
+
+
+</body></html>

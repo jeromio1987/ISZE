@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>IDS 2026 — Dealer Compare</title>
   <!-- Local Leaflet (no integrity/crossorigin): SRI blocks file:// double-click in Chromium -->
-  <link rel="stylesheet" href="../_ui/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="../../../_ui/leaflet.css" />
   <style>
     :root {
       --navy: #1a2744;
@@ -511,7 +510,7 @@
       return Number.isFinite(n) ? n : null;
     }
 
-    /** Workspace aliases → Mode A country labels (search / filter help). */
+    /** Workspace aliases → shared country labels (search / filter help). */
     const COUNTRY_SEARCH_ALIASES = {
       "uk lcv": ["iuk", "uk (iuk)", "uk_lcv"],
       "uk cv": ["ituk", "uk (ituk)", "uk_cv"],
@@ -1395,11 +1394,10 @@
 
     init();
   </script>
-  <script src="../_ui/leaflet.js"></script>
   <script>
     /* CDN fallback if local _ui missing (online only) */
     if (typeof L === "undefined") {
-      document.write('<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"><\/script>');
+      document.write('<script src="../../../_ui/leaflet.js"><\/script>');
     }
   </script>
 </body>

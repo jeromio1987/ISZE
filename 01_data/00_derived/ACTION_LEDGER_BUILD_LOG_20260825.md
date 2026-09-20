@@ -11,7 +11,7 @@
 1. **VRAAG** — Opportunity → Action → Outcome spine over existing green derived surfaces. Not a new analysis. Not a new KPI.
 2. **BRON** — only the nine §5 files under `01_data/00_derived/` and `01_data/17_interactions/`. No file outside that list enters v1.
 3. **METHODE** — euros unchanged from source columns. Ledger re-states; it does not re-compute. No margin convention applied here.
-4. **BUITEN SCOPE** — §11 / §13 of the prompt (Book B allocation, Mode A, mail LLM/P2b, new KPIs, raw sales XLSX, tenth adapter, etc.).
+4. **BUITEN SCOPE** — §11 / §13 of the prompt (Book B allocation, shared, mail LLM/P2b, new KPIs, raw sales XLSX, tenth adapter, etc.).
 
 ---
 

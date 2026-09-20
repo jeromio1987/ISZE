@@ -1,0 +1,1024 @@
+{
+ "what": "Isuzu D-Max (2021, double cab) turntable, fixed hero camera, vehicle yaw",
+ "resolution": [
+  1500,
+  860
+ ],
+ "samples": 64,
+ "cycle_settings": {
+  "engine": "CYCLES",
+  "device": "GPU",
+  "adaptive_sampling": true,
+  "adaptive_threshold": 0.00800000037997961,
+  "denoising": true,
+  "denoiser": "OPENIMAGEDENOISE",
+  "max_bounces": 14,
+  "film_transparent": true,
+  "view_transform": "AgX",
+  "look": "AgX - Punchy"
+ },
+ "camera": {
+  "type": "ORTHO",
+  "az_deg": 80.0,
+  "el_deg": 18.0,
+  "location": [
+   14.9857,
+   -2.6424,
+   5.7762
+  ],
+  "aim": [
+   0.0,
+   0.0,
+   0.8319
+  ],
+  "matrix": [
+   [
+    0.17364801,
+    -0.30432239,
+    0.9366079,
+    14.9857254
+   ],
+   [
+    0.98480785,
+    0.05366022,
+    -0.16514911,
+    -2.64238763
+   ],
+   [
+    -7e-08,
+    0.95105654,
+    0.309017,
+    5.77615452
+   ],
+   [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+   ]
+  ],
+  "ortho_scale_hero_yaw0": 6.012017,
+  "ortho_scale_used": 6.731418,
+  "fit_mode": "ONE fixed ortho_scale for every frame, taken over the union of all yaws",
+  "hero_parity_reference": 6.686607360839844,
+  "hero_parity_ok": true,
+  "union_fit_worst_yaw_deg": 150.0,
+  "hero_parity_at_hero_resolution": 6.6866,
+  "hero_parity_note": "The ortho fit depends on the frame aspect, so parity cannot be checked by comparing a 1500x860 fit with the hero 2600x1120 one. It is checked arithmetically: the same camera model over the same measured yaw-0 extents (u=2.8190, v=1.3506 m) gives 6.6866 at the hero frame shape, against the 6.686607 cam_hero.json recorded. Verified 2026-09-18 from _probe/framing_probe.json; no new render needed."
+ },
+ "motion": {
+  "mode": "vehicle rotates about its own vertical axis; camera, lights and floor fixed",
+  "frames": 48,
+  "step_deg": 7.5,
+  "yaws_deg": [
+   0.0,
+   7.5,
+   15.0,
+   22.5,
+   30.0,
+   37.5,
+   45.0,
+   52.5,
+   60.0,
+   67.5,
+   75.0,
+   82.5,
+   90.0,
+   97.5,
+   105.0,
+   112.5,
+   120.0,
+   127.5,
+   135.0,
+   142.5,
+   150.0,
+   157.5,
+   165.0,
+   172.5,
+   180.0,
+   187.5,
+   195.0,
+   202.5,
+   210.0,
+   217.5,
+   225.0,
+   232.5,
+   240.0,
+   247.5,
+   255.0,
+   262.5,
+   270.0,
+   277.5,
+   285.0,
+   292.5,
+   300.0,
+   307.5,
+   315.0,
+   322.5,
+   330.0,
+   337.5,
+   345.0,
+   352.5
+  ],
+  "wrap_step_deg": 7.5,
+  "spin_objects": 48
+ },
+ "reuse": {
+  "source": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_truck_catalogue_2026-09-18\\dmax_render\\build_dmax_render.py",
+  "sha256": "d1e253a9ccf55f587515500f2146fe68396f0053c8eb6790d9812b0d05574744",
+  "note": "material, detail, smoothing, studio and camera blocks are sliced out of build_dmax_render.py at run time and executed verbatim, so there is one copy of them and this render cannot drift from the hero",
+  "line_ranges": {
+   "camera": [
+    701,
+    745
+   ],
+   "details": [
+    388,
+    554
+   ],
+   "matdefs": [
+    355,
+    383
+   ],
+   "materials": [
+    121,
+    352
+   ],
+   "smoothing": [
+    562,
+    580
+   ],
+   "studio": [
+    585,
+    695
+   ]
+  },
+  "anchors": {
+   "materials": {
+    "start": "\nPAINTS = {\n",
+    "end": "print(\"materials restyled:\", len(bpy.data.materials))",
+    "gives": "automotive shaders (paint / glass / chrome / rubber / alloy) + restyle()"
+   },
+   "matdefs": {
+    "start": "def new_material(name, base",
+    "end": "MAT_PAINT = bpy.data.materials.get('2021_Isuzu_Dmax_Valencia_Orange')",
+    "gives": "the supplementary detail materials"
+   },
+   "details": {
+    "start": "ADDED = []",
+    "end": "print(\"detail objects added: %d\" % len(ADDED))",
+    "gives": "badge, number plates, door handles, wipers, fuel doors placed from measurement"
+   },
+   "smoothing": {
+    "start": "bpy.ops.object.select_all(action='DESELECT')\nfor o in drawable:\n    o.select_set(True)",
+    "end": "        p.use_smooth = False",
+    "gives": "auto-smooth so panels curve and panel gaps stay crisp"
+   },
+   "studio": {
+    "start": "scene = bpy.context.scene\nworld = bpy.data.worlds.new(\"studio\")",
+    "end": "floor.is_shadow_catcher = True",
+    "gives": "world HDRI, Cycles settings, key/fill/top/rim rig, shadow-catcher floor"
+   },
+   "camera": {
+    "start": "cam_data = bpy.data.cameras.new(\"HERO_CAM\")",
+    "end": "print(\"camera aim : %.3f %.3f %.3f\" % tuple(TARGET))",
+    "gives": "the orthographic camera and the hero's own fit_ortho()"
+   }
+  }
+ },
+ "model": {
+  "glb": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_truck_catalogue_2026-09-18\\dmax_render\\_assets\\dmax_2021_objaverse.glb",
+  "size_m": {
+   "length": 5.404205322265625,
+   "width_incl_mirrors": 2.0713000297546387,
+   "height": 1.80843985080719
+  },
+  "scale_m_per_unit": 0.025592329299112808,
+  "axle_find_method": "brake rotors"
+ },
+ "timing": {
+  "per_frame_seconds": [
+   12.73,
+   14.05,
+   12.49,
+   13.64,
+   15.09,
+   15.65,
+   14.27,
+   13.34,
+   13.51,
+   12.36,
+   12.92,
+   13.54,
+   13.91,
+   13.83,
+   14.77,
+   13.91,
+   14.75,
+   13.81,
+   12.96,
+   18.19,
+   15.34,
+   16.48,
+   13.69,
+   15.4,
+   15.89,
+   16.07,
+   22.31,
+   14.7,
+   15.13,
+   15.8,
+   13.74,
+   14.66,
+   13.17,
+   12.53,
+   14.91,
+   13.82,
+   16.63,
+   13.62,
+   15.36,
+   14.03,
+   15.23,
+   12.63,
+   13.51,
+   12.16,
+   12.26,
+   14.1,
+   13.34,
+   12.64
+  ],
+  "mean_frame_seconds": 14.35,
+  "total_render_seconds": 688.99,
+  "total_seconds_this_process": 692.56
+ },
+ "frames": [
+  {
+   "index": 0,
+   "yaw_deg": 0.0,
+   "png": "f_000.png",
+   "render_seconds": 12.73,
+   "world_bbox_min": [
+    -1.0357,
+    -2.7021,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.0357,
+    2.7021,
+    1.8084
+   ]
+  },
+  {
+   "index": 1,
+   "yaw_deg": 7.5,
+   "png": "f_001.png",
+   "render_seconds": 14.05,
+   "world_bbox_min": [
+    -1.3681,
+    -2.7918,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.3715,
+    2.7977,
+    1.8084
+   ]
+  },
+  {
+   "index": 2,
+   "yaw_deg": 15.0,
+   "png": "f_002.png",
+   "render_seconds": 12.49,
+   "world_bbox_min": [
+    -1.6803,
+    -2.8403,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.6869,
+    2.8455,
+    1.8084
+   ]
+  },
+  {
+   "index": 3,
+   "yaw_deg": 22.5,
+   "png": "f_003.png",
+   "render_seconds": 13.64,
+   "world_bbox_min": [
+    -1.9636,
+    -2.8562,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.9734,
+    2.8446,
+    1.8084
+   ]
+  },
+  {
+   "index": 4,
+   "yaw_deg": 30.0,
+   "png": "f_004.png",
+   "render_seconds": 15.09,
+   "world_bbox_min": [
+    -2.2134,
+    -2.8233,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.2262,
+    2.8012,
+    1.8084
+   ]
+  },
+  {
+   "index": 5,
+   "yaw_deg": 37.5,
+   "png": "f_005.png",
+   "render_seconds": 15.65,
+   "world_bbox_min": [
+    -2.4253,
+    -2.742,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.4409,
+    2.7217,
+    1.8084
+   ]
+  },
+  {
+   "index": 6,
+   "yaw_deg": 45.0,
+   "png": "f_006.png",
+   "render_seconds": 14.27,
+   "world_bbox_min": [
+    -2.5957,
+    -2.6138,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.6138,
+    2.5957,
+    1.8084
+   ]
+  },
+  {
+   "index": 7,
+   "yaw_deg": 52.5,
+   "png": "f_007.png",
+   "render_seconds": 13.34,
+   "world_bbox_min": [
+    -2.7217,
+    -2.4409,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.742,
+    2.4253,
+    1.8084
+   ]
+  },
+  {
+   "index": 8,
+   "yaw_deg": 60.0,
+   "png": "f_008.png",
+   "render_seconds": 13.51,
+   "world_bbox_min": [
+    -2.8012,
+    -2.2262,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8233,
+    2.2134,
+    1.8084
+   ]
+  },
+  {
+   "index": 9,
+   "yaw_deg": 67.5,
+   "png": "f_009.png",
+   "render_seconds": 12.36,
+   "world_bbox_min": [
+    -2.8446,
+    -1.9734,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8562,
+    1.9636,
+    1.8084
+   ]
+  },
+  {
+   "index": 10,
+   "yaw_deg": 75.0,
+   "png": "f_010.png",
+   "render_seconds": 12.92,
+   "world_bbox_min": [
+    -2.8455,
+    -1.6869,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8403,
+    1.6803,
+    1.8084
+   ]
+  },
+  {
+   "index": 11,
+   "yaw_deg": 82.5,
+   "png": "f_011.png",
+   "render_seconds": 13.54,
+   "world_bbox_min": [
+    -2.7977,
+    -1.3715,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.7918,
+    1.3681,
+    1.8084
+   ]
+  },
+  {
+   "index": 12,
+   "yaw_deg": 90.0,
+   "png": "f_012.png",
+   "render_seconds": 13.91,
+   "world_bbox_min": [
+    -2.7021,
+    -1.0357,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.7021,
+    1.0357,
+    1.8084
+   ]
+  },
+  {
+   "index": 13,
+   "yaw_deg": 97.5,
+   "png": "f_013.png",
+   "render_seconds": 13.83,
+   "world_bbox_min": [
+    -2.7977,
+    -1.3681,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.7918,
+    1.3715,
+    1.8084
+   ]
+  },
+  {
+   "index": 14,
+   "yaw_deg": 105.0,
+   "png": "f_014.png",
+   "render_seconds": 14.77,
+   "world_bbox_min": [
+    -2.8455,
+    -1.6803,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8403,
+    1.6869,
+    1.8084
+   ]
+  },
+  {
+   "index": 15,
+   "yaw_deg": 112.5,
+   "png": "f_015.png",
+   "render_seconds": 13.91,
+   "world_bbox_min": [
+    -2.8446,
+    -1.9636,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8562,
+    1.9734,
+    1.8084
+   ]
+  },
+  {
+   "index": 16,
+   "yaw_deg": 120.0,
+   "png": "f_016.png",
+   "render_seconds": 14.75,
+   "world_bbox_min": [
+    -2.8012,
+    -2.2134,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8233,
+    2.2262,
+    1.8084
+   ]
+  },
+  {
+   "index": 17,
+   "yaw_deg": 127.5,
+   "png": "f_017.png",
+   "render_seconds": 13.81,
+   "world_bbox_min": [
+    -2.7217,
+    -2.4253,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.742,
+    2.4409,
+    1.8084
+   ]
+  },
+  {
+   "index": 18,
+   "yaw_deg": 135.0,
+   "png": "f_018.png",
+   "render_seconds": 12.96,
+   "world_bbox_min": [
+    -2.5957,
+    -2.5957,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.6138,
+    2.6138,
+    1.8084
+   ]
+  },
+  {
+   "index": 19,
+   "yaw_deg": 142.5,
+   "png": "f_019.png",
+   "render_seconds": 18.19,
+   "world_bbox_min": [
+    -2.4253,
+    -2.7217,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.4409,
+    2.742,
+    1.8084
+   ]
+  },
+  {
+   "index": 20,
+   "yaw_deg": 150.0,
+   "png": "f_020.png",
+   "render_seconds": 15.34,
+   "world_bbox_min": [
+    -2.2134,
+    -2.8012,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.2262,
+    2.8233,
+    1.8084
+   ]
+  },
+  {
+   "index": 21,
+   "yaw_deg": 157.5,
+   "png": "f_021.png",
+   "render_seconds": 16.48,
+   "world_bbox_min": [
+    -1.9636,
+    -2.8446,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.9734,
+    2.8562,
+    1.8084
+   ]
+  },
+  {
+   "index": 22,
+   "yaw_deg": 165.0,
+   "png": "f_022.png",
+   "render_seconds": 13.69,
+   "world_bbox_min": [
+    -1.6803,
+    -2.8455,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.6869,
+    2.8403,
+    1.8084
+   ]
+  },
+  {
+   "index": 23,
+   "yaw_deg": 172.5,
+   "png": "f_023.png",
+   "render_seconds": 15.4,
+   "world_bbox_min": [
+    -1.3681,
+    -2.7977,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.3715,
+    2.7918,
+    1.8084
+   ]
+  },
+  {
+   "index": 24,
+   "yaw_deg": 180.0,
+   "png": "f_024.png",
+   "render_seconds": 15.89,
+   "world_bbox_min": [
+    -1.0357,
+    -2.7021,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.0357,
+    2.7021,
+    1.8084
+   ]
+  },
+  {
+   "index": 25,
+   "yaw_deg": 187.5,
+   "png": "f_025.png",
+   "render_seconds": 16.07,
+   "world_bbox_min": [
+    -1.3715,
+    -2.7977,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.3681,
+    2.7918,
+    1.8084
+   ]
+  },
+  {
+   "index": 26,
+   "yaw_deg": 195.0,
+   "png": "f_026.png",
+   "render_seconds": 22.31,
+   "world_bbox_min": [
+    -1.6869,
+    -2.8455,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.6803,
+    2.8403,
+    1.8084
+   ]
+  },
+  {
+   "index": 27,
+   "yaw_deg": 202.5,
+   "png": "f_027.png",
+   "render_seconds": 14.7,
+   "world_bbox_min": [
+    -1.9734,
+    -2.8446,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.9636,
+    2.8562,
+    1.8084
+   ]
+  },
+  {
+   "index": 28,
+   "yaw_deg": 210.0,
+   "png": "f_028.png",
+   "render_seconds": 15.13,
+   "world_bbox_min": [
+    -2.2262,
+    -2.8012,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.2134,
+    2.8233,
+    1.8084
+   ]
+  },
+  {
+   "index": 29,
+   "yaw_deg": 217.5,
+   "png": "f_029.png",
+   "render_seconds": 15.8,
+   "world_bbox_min": [
+    -2.4409,
+    -2.7217,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.4253,
+    2.742,
+    1.8084
+   ]
+  },
+  {
+   "index": 30,
+   "yaw_deg": 225.0,
+   "png": "f_030.png",
+   "render_seconds": 13.74,
+   "world_bbox_min": [
+    -2.6138,
+    -2.5957,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.5957,
+    2.6138,
+    1.8084
+   ]
+  },
+  {
+   "index": 31,
+   "yaw_deg": 232.5,
+   "png": "f_031.png",
+   "render_seconds": 14.66,
+   "world_bbox_min": [
+    -2.742,
+    -2.4253,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.7217,
+    2.4409,
+    1.8084
+   ]
+  },
+  {
+   "index": 32,
+   "yaw_deg": 240.0,
+   "png": "f_032.png",
+   "render_seconds": 13.17,
+   "world_bbox_min": [
+    -2.8233,
+    -2.2134,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8012,
+    2.2262,
+    1.8084
+   ]
+  },
+  {
+   "index": 33,
+   "yaw_deg": 247.5,
+   "png": "f_033.png",
+   "render_seconds": 12.53,
+   "world_bbox_min": [
+    -2.8562,
+    -1.9636,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8446,
+    1.9734,
+    1.8084
+   ]
+  },
+  {
+   "index": 34,
+   "yaw_deg": 255.0,
+   "png": "f_034.png",
+   "render_seconds": 14.91,
+   "world_bbox_min": [
+    -2.8403,
+    -1.6803,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8455,
+    1.6869,
+    1.8084
+   ]
+  },
+  {
+   "index": 35,
+   "yaw_deg": 262.5,
+   "png": "f_035.png",
+   "render_seconds": 13.82,
+   "world_bbox_min": [
+    -2.7918,
+    -1.3681,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.7977,
+    1.3715,
+    1.8084
+   ]
+  },
+  {
+   "index": 36,
+   "yaw_deg": 270.0,
+   "png": "f_036.png",
+   "render_seconds": 16.63,
+   "world_bbox_min": [
+    -2.7021,
+    -1.0357,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.7021,
+    1.0357,
+    1.8084
+   ]
+  },
+  {
+   "index": 37,
+   "yaw_deg": 277.5,
+   "png": "f_037.png",
+   "render_seconds": 13.62,
+   "world_bbox_min": [
+    -2.7918,
+    -1.3715,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.7977,
+    1.3681,
+    1.8084
+   ]
+  },
+  {
+   "index": 38,
+   "yaw_deg": 285.0,
+   "png": "f_038.png",
+   "render_seconds": 15.36,
+   "world_bbox_min": [
+    -2.8403,
+    -1.6869,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8455,
+    1.6803,
+    1.8084
+   ]
+  },
+  {
+   "index": 39,
+   "yaw_deg": 292.5,
+   "png": "f_039.png",
+   "render_seconds": 14.03,
+   "world_bbox_min": [
+    -2.8562,
+    -1.9734,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8446,
+    1.9636,
+    1.8084
+   ]
+  },
+  {
+   "index": 40,
+   "yaw_deg": 300.0,
+   "png": "f_040.png",
+   "render_seconds": 15.23,
+   "world_bbox_min": [
+    -2.8233,
+    -2.2262,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.8012,
+    2.2134,
+    1.8084
+   ]
+  },
+  {
+   "index": 41,
+   "yaw_deg": 307.5,
+   "png": "f_041.png",
+   "render_seconds": 12.63,
+   "world_bbox_min": [
+    -2.742,
+    -2.4409,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.7217,
+    2.4253,
+    1.8084
+   ]
+  },
+  {
+   "index": 42,
+   "yaw_deg": 315.0,
+   "png": "f_042.png",
+   "render_seconds": 13.51,
+   "world_bbox_min": [
+    -2.6138,
+    -2.6138,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.5957,
+    2.5957,
+    1.8084
+   ]
+  },
+  {
+   "index": 43,
+   "yaw_deg": 322.5,
+   "png": "f_043.png",
+   "render_seconds": 12.16,
+   "world_bbox_min": [
+    -2.4409,
+    -2.742,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.4253,
+    2.7217,
+    1.8084
+   ]
+  },
+  {
+   "index": 44,
+   "yaw_deg": 330.0,
+   "png": "f_044.png",
+   "render_seconds": 12.26,
+   "world_bbox_min": [
+    -2.2262,
+    -2.8233,
+    -0.0
+   ],
+   "world_bbox_max": [
+    2.2134,
+    2.8012,
+    1.8084
+   ]
+  },
+  {
+   "index": 45,
+   "yaw_deg": 337.5,
+   "png": "f_045.png",
+   "render_seconds": 14.1,
+   "world_bbox_min": [
+    -1.9734,
+    -2.8562,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.9636,
+    2.8446,
+    1.8084
+   ]
+  },
+  {
+   "index": 46,
+   "yaw_deg": 345.0,
+   "png": "f_046.png",
+   "render_seconds": 13.34,
+   "world_bbox_min": [
+    -1.6869,
+    -2.8403,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.6803,
+    2.8455,
+    1.8084
+   ]
+  },
+  {
+   "index": 47,
+   "yaw_deg": 352.5,
+   "png": "f_047.png",
+   "render_seconds": 12.64,
+   "world_bbox_min": [
+    -1.3715,
+    -2.7918,
+    -0.0
+   ],
+   "world_bbox_max": [
+    1.3681,
+    2.7977,
+    1.8084
+   ]
+  }
+ ]
+}

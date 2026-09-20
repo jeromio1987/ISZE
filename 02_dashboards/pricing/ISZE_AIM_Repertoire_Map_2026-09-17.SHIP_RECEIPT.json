@@ -1,0 +1,69 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_AIM_Repertoire_Map_2026-09-17.html",
+  "artifact_mtime_ms": 1789676371778,
+  "written_at": "2026-09-17T20:23:35.024Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_AIM_Repertoire_Map_2026-09-17.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "3220523 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN cmd present (OPEN_ISZE_AIM_Repertoire_Map.cmd, OPEN_ISZE_IAM_Price_vs_Billed_PN.cmd, OPEN_ISZE_IAM_Quality_Positioning_Engine.cmd)"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "22 PNG(s) — agent must have image-Read before shipping"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\01_header.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\02_scope.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\03_kpis.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\04_controls.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\05_residual.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\06_card1.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\06_card2.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\06_card3.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\06_card4.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\06_card5.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\06_card6.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\07_level2.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\08_level2_table.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\09_dist_table.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\10_level3_table.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\11_leaf_pn_table.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\12_level4.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\13_table_step_metric.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\14_search.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\15_pn_search.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\16_narrow.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_build\\aim_repertoire_map_2026-09-17\\_qa\\17_full.png"
+  ],
+  "notes": "22 PNGs taken in real Chrome via file:// at 1440x950 and 900px wide. All 22 image-Read one at a time at full size by the agent before shipping (22 taken, 22 read). Paint check: 3 canvases each over 80 distinct sampled colours, 8 category bars at level 1, 2 amber residual bars, 5 KPI tiles. Deterministic verifier 25/25 PASS: payload ties to EUR 34,993,609.39 billed / EUR 1,652,140.18 step / 5.9616%. Interactive QA in real Chrome 44/44 PASS."
+}

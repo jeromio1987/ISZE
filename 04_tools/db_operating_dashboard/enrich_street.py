@@ -21,7 +21,7 @@ TIERS_CSV = os.path.join(ISZE, "04_tools", "autodoc_scraper", "iam_brand_tiers.c
 AUTO365 = os.path.join(ISZE, "04_tools", "autodoc_scraper", "auto365_results.csv")
 IDS_DIR = os.path.join(ISZE, "02_dashboards", "ids")
 
-# Pricing-engine Mode A policy ladder (same numbers as the readiness dashboard).
+# Pricing-engine shared policy ladder (same numbers as the readiness dashboard).
 BRAND_CEILINGS = [
     {"tier": 4, "label": "OE / premium IAM", "ceiling_pct": 30,
      "example": "Bosch, Denso, Delphi, Febi, Hengst"},
@@ -1616,7 +1616,7 @@ def enrich(L, db, reg, book_tot, ws_rows, iam_lane, book_pn=None, top30_pns=None
     over_n = sum(1 for r in brand_rows if r.get("over_brand_ceiling"))
     L["sections"]["brand_quality"] = {
         "policy_ladder": BRAND_CEILINGS,
-        "source": "iam_brand_tiers.csv + pricing-engine Mode A ceilings (+30/+60/+150/+250)",
+        "source": "iam_brand_tiers.csv + pricing-engine shared ceilings (+30/+60/+150/+250)",
         "n_iam_pns_in_this_db": len(brand_rows),
         "n_over_ceiling": over_n,
         "rows": [

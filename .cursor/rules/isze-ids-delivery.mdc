@@ -1,5 +1,5 @@
 ---
-description: IDS dashboards / maps / client packs — Mode A ship gate (geo, tiles, UI, GPS lock)
+description: IDS dashboards / maps / client packs — shared ship gate (geo, tiles, UI, GPS lock)
 alwaysApply: true
 ---
 
@@ -9,12 +9,12 @@ alwaysApply: true
 
 **Authority first:** before rebuild/ship, email, or version change → `isze-no-ship-without-ok.mdc`. This file is QA *after* Jerome authorized the work — not permission to do the work.
 
-Cross-refs (do not duplicate): Mode A/B → `isze-external-iml-language.mdc`; Israel UTI≠UMI → `isze-israel-uti-umi.mdc`; Benelux/BE/NL/LUX country labels → `ids_paths.py` + existing Benelux rules; Excel layout → `IDS_2026_LOGIC_CHECK.md`.
+Cross-refs (do not duplicate): shared/B → `isze-external-iml-language.mdc`; Israel UTI≠UMI → `isze-israel-uti-umi.mdc`; Benelux/BE/NL/LUX country labels → `ids_paths.py` + existing Benelux rules; Excel layout → `IDS_2026_LOGIC_CHECK.md`.
 
-## Ship blockers (Mode A HTML / packs)
+## Ship blockers (shared HTML / packs)
 
 1. **Map tiles** — Open the HTML and confirm basemap tiles paint (not a blank outline box). No ship until tiles load visually.
-2. **No client changelog** — Strip Changelog / agent build notes from Mode A packs (Imotors, Portugal, shared dealer compare). Keep notes in `CHANGELOG.md` / Mode B only.
+2. **No client changelog** — Strip Changelog / agent build notes from shared packs (Imotors, Portugal, shared dealer compare). Keep notes in `CHANGELOG.md` / internal only.
 3. **No Weak-sector clutter** — No dark “Weak sector” radar overlays or similar diagnostic clutter in client-facing HTML.
 4. **Geo sanity always** — Run geo clustering check (`ids_dealer_geo.sanity_check_geo_clustering` via `build_ids_dashboard.py`). **Do not ship** if ≥50% of a country’s pins are country-centre clustered (Poland Łódź-class blobs). Fix city/address mapping; `--skip-geo-sanity` only if Jerome explicitly allows.
 5. **All listed countries** — After “all countries OK”, spot-check residual networks (esp. FR / IT / ES / CH). No leftover country-centre blobs.

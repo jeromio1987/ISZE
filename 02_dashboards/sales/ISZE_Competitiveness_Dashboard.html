@@ -314,6 +314,10 @@ footer a, .footer a { color: #FFE8EA !important; }
 .sort-btn:hover { background:#eee;border-color:#CC0E1E;color:#CC0E1E }
 .scr-pane {}
 
+
+.basis-strip{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 0 14px;padding:10px 14px;
+background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45;color:#222}
+.basis-strip b{color:#15233c;letter-spacing:.04em;text-transform:uppercase;font-size:10px;margin-right:4px}
 </style>
 <script src="../_ui/chart.umd.min.js"></script>
   <link rel="stylesheet" href="../_ui/editorial.css">
@@ -337,9 +341,11 @@ window.__localFetch = function (url) {
   return fetch(url);
 };
 </script>
-<script src="../Data/dashboards/isze_data.preload.js"></script>
+<script src="Data/dashboards/isze_data.preload.js"></script>
 </head>
 <body>
+<div class="basis-strip"><div><b>Observed</b> Shop / peer quotes where scraped</div><div><b>Reference</b> Reference dealer price = list × 1.40 × 1.275 (price index = shop ÷ reference)</div><div><b>Coverage</b> Peer coverage is incomplete — do not read as full-network</div></div>
+
 <div data-isze-stamp style="background:#1F2937;color:#F3F4F6;font:11px/1.5 Arial,sans-serif;padding:5px 14px;text-align:right;letter-spacing:.3px;border-bottom:2px solid #CC0E1E"><span style="opacity:.65">📅 File last updated:</span> <strong>2026-05-22</strong> <span style="opacity:.55">— verify underlying data freshness before sharing externally</span></div>
 <div id="isze-offline-banner" style="display:none;position:sticky;top:0;z-index:9999;background:#7f1d1d;color:#fecaca;padding:12px 24px;text-align:center;font-size:13px;font-weight:600;letter-spacing:.02em;">⚠&nbsp; Data unavailable — open from SharePoint or reload when connected.</div>
 <div style="background:#1A1A1A;padding:7px 24px;display:flex;align-items:center;gap:20px;font-size:11px;font-family:Arial,sans-serif;border-bottom:2px solid #CC0E1E">
@@ -441,7 +447,7 @@ window.__localFetch = function (url) {
     <div class="li"><div class="lb r5"></div>3.0–4.0× high risk</div>
     <div class="li"><div class="lb r6"></div>&gt;4.0× ⚠ critical</div>
   </div>
-  <span style="margin-left:auto;font-size:10px;color:#888888">Chain (FACTS.md §7, aftermarket comparison): PR00 → DB (+40%) → DLR (+27.5%) = ×1.785 to street &nbsp;|&nbsp; Hover part name for data note</span>
+  <span style="margin-left:auto;font-size:10px;color:#888888">Chain (FACTS.md §7, aftermarket comparison): PR00 → DB (+40%) → DLR (+27.5%) = ×1.785 to reference dealer price &nbsp;|&nbsp; Hover part name for data note</span>
 </div>
 
 <!-- ── MAIN ── -->
@@ -535,7 +541,7 @@ window.__localFetch = function (url) {
         <h5>Price Chain Logic</h5>
         <p><strong>ASC (PR00):</strong> IE40 list price — what the Authorised Service Centre pays ISZE.<br>
         <strong>DB level:</strong> PR00 × 1.40 → distributor uplift +40%.<br>
-        <strong>DLR / Fleet:</strong> DB price × 1.275 → dealer uplift +27.5%. Full chain PR00 → street = <strong>×1.785</strong>.<br>
+        <strong>DLR / Fleet:</strong> DB price × 1.275 → dealer uplift +27.5%. Full chain PR00 → reference dealer price = <strong>×1.785</strong>.<br>
         <strong>Convention:</strong> this is the FACTS.md §7 apples-to-apples chain for benchmarking genuine against aftermarket. ISZE's own-EUR rule (35% margin = ÷0.65) is a different convention and is deliberately <em>not</em> used here.<br>
         <strong>Index:</strong> Each price level ÷ AM retail = competitiveness ratio. &lt;1.0× = genuine cheaper than AM.</p>
       </div>
@@ -907,7 +913,7 @@ window.__localFetch = function (url) {
     <tbody>
       <tr><td><strong>ITUK uplift on genuine parts</strong></td><td><strong>+40%</strong></td><td>PR00 &times; 1.40 = dealer buying price (DB)</td><td style="color:#0a7a40;font-weight:700">&#10003; Jerome VdP &mdash; 30 Mar 2026</td></tr>
       <tr><td><strong>DLR dealer uplift</strong></td><td><strong>+27.5%</strong></td><td>DB &times; 1.275 = workshop/fleet end price</td><td style="color:#0a7a40;font-weight:700">&#10003; Jerome VdP &mdash; 30 Mar 2026</td></tr>
-      <tr><td><strong>Full channel chain</strong></td><td><strong>&times;1.785</strong></td><td>PR00 &rarr; street, used for every index on this page</td><td style="color:#0a7a40;font-weight:700">&#10003; FACTS.md &sect;7</td></tr>
+      <tr><td><strong>Full channel chain</strong></td><td><strong>&times;1.785</strong></td><td>PR00 &rarr; reference dealer price, used for every index on this page</td><td style="color:#0a7a40;font-weight:700">&#10003; FACTS.md &sect;7</td></tr>
       <tr><td><strong>PR00 source (D-Max)</strong></td><td>IE40 Price list, 13 Mar 2026</td><td>164K-line ISZE wholesale list</td><td style="color:#0a7a40;font-weight:700">&#10003; IE40 file</td></tr>
       <tr><td><strong>D-Max AM prices (high-conf rows)</strong></td><td>Autodoc UK scraper &mdash; 9 May 2026</td><td>300 PNs queried, 110 with prices. GBP &times; 1.17.</td><td style="color:#0a7a40;font-weight:700">&#10003; Scraper data</td></tr>
     </tbody>
@@ -1018,7 +1024,7 @@ window.__localFetch = function (url) {
         <td><strong>Whole channel chain</strong></td>
         <td style="color:#c03020;font-weight:700">&divide;0.60 then &divide;0.725 = &times;2.299<br><span style="font-size:10px">(KPI cards: &divide;0.60 then &divide;0.75 = &times;2.222)</span></td>
         <td style="color:#0a7a40;font-weight:700">&times;1.40 then &times;1.275 = <strong>&times;1.785</strong></td>
-        <td><strong>Convention error, not an input error.</strong> The confirmed +40% / +27.5% steps were applied in the margin/divisor form instead of the FACTS.md &sect;7 aftermarket-comparison chain. Street prices were <strong>~29% too high</strong> (KPI cards ~25% too high), making genuine look less competitive than it is. Every index on this page moves down by a factor of <strong>0.776</strong> (KPI cards 0.803). Two compute sites had also silently diverged; both now read shared constants <code>CH_DB</code> / <code>CH_DLR</code>. Underlying PR00 and AM data unchanged.</td>
+        <td><strong>Convention error, not an input error.</strong> The confirmed +40% / +27.5% steps were applied in the margin/divisor form instead of the FACTS.md &sect;7 aftermarket-comparison chain. Reference dealer price prices were <strong>~29% too high</strong> (KPI cards ~25% too high), making genuine look less competitive than it is. Every index on this page moves down by a factor of <strong>0.776</strong> (KPI cards 0.803). Two compute sites had also silently diverged; both now read shared constants <code>CH_DB</code> / <code>CH_DLR</code>. Underlying PR00 and AM data unchanged.</td>
       </tr>
     </tbody>
   </table>
@@ -1111,9 +1117,9 @@ let segments = null;
 let curSeg = 'all', curMkt = 'uk', curLvl = 'all', curAM = 'iam_r';
 
 // ── Channel chain (FACTS.md §7 — apples-to-apples aftermarket comparison) ──
-// Gross genuine up to street as MARKUPS: distributor +40%, then dealer +27.5%.
+// Gross genuine up to reference dealer price as MARKUPS: distributor +40%, then dealer +27.5%.
 // PR00 × 1.40 × 1.275 = ×1.785. Do NOT use the margin/divisor form (÷0.60 ÷0.725
-// = ×2.299) — that is ISZE's own-EUR convention and overstates street by ~29%.
+// = ×2.299) — that is ISZE's own-EUR convention and overstates reference dealer price by ~29%.
 // Single source for both buildTable() and buildKpis(); they previously diverged.
 const CH_DB  = 1.40;             // ASC → DB   : distributor +40%
 const CH_DLR = 1.275;            // DB  → DLR  : dealer +27.5%
@@ -1667,7 +1673,7 @@ function initScraper() {
 
 (async function() {
   try {
-    const resp = await __localFetch('../Data/dashboards/isze_data.json');
+    const resp = await __localFetch('Data/dashboards/isze_data.json');
     if (!resp.ok) throw new Error('HTTP ' + resp.status);
     const j = await resp.json();
     segments = j.competitiveness.segments;

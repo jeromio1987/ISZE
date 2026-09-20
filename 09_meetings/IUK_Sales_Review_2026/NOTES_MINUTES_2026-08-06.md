@@ -6,7 +6,7 @@
 
 **Attendees:** John Lennon (GM Parts), Aaron Singh-Chutti (Parts Inventory), Hadewijch Tibos, Koen Matheussen.
 
-## Locked takeaways (Mode B)
+## Locked takeaways (internal)
 
 - Sales **+5%** / orders **−3%**; Apr–Jul sales **+18%** / orders **−27%** — destock toward **€2.0–2.5M**.
 - Brakes **−€243K**, body **−€147K**; dealers want competitive second-line (brakes/wipers).

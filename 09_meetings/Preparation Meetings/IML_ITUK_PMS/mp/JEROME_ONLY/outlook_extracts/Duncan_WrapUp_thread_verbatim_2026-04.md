@@ -1,6 +1,6 @@
 # Verbatim — RE: Wrap Up PMS documentation (thread)
 
-**Mode B · Jerome only.** Extracted from Outlook reading pane 2026-07-26.  
+**internal · Jerome only.** Extracted from Outlook reading pane 2026-07-26.  
 Attachments on Duncan’s 24 Apr reply: `ITUK_Parts_Sales_Target_Study_20260409.xlsx`, `Attrition_Rate.xlsx`.
 
 ---

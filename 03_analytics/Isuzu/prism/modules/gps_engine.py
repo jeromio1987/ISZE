@@ -331,7 +331,9 @@ def calculate_model_weighted_gps(
             seg_u = str(seg).strip().upper()
             if group == "Other_LCV" or seg_u == "LCV":
                 return float(targets.get("LCV_D_Max", 250))
-            return float(targets.get("N75_N50_N62", 1120))
+            # Was hardcoded 1120 — the same wrong figure the docstring carried. Now uses the
+            # loaded rate so the fallback cannot disagree with the CSV.
+            return float(targets.get("N75_N50_N62", 739))
 
         uio_rows["target_eur"] = uio_rows.apply(
             lambda r: _target_for_group(r["model_group"], r["cv_lcv"]), axis=1

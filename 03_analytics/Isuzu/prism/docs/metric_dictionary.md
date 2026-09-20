@@ -42,9 +42,16 @@ All factors editable in `data/pms_capture_assumptions.yaml` — see `docs/pms_se
 
 | Scope | services_per_year | addressable_pct | wear (brake) |
 |-------|-------------------|-----------------|--------------|
-| N75 (ITUK, UTI, …) | **0.5** | **70%** | 0.5 |
-| LCV (IUK, UMI) | 1.0 | 70% | 0.5 |
-| N35 blend (all) | 0.75 | 70% | 0.5 |
+| N75 (ITUK, UTI, …) | **0.5** | **100%** | 0.5 |
+| LCV (IUK, UMI) | 1.0 | **100%** | 0.5 |
+| N35 blend (all) | 0.75 | **100%** | 0.5 |
+
+**addressable_pct is 100%, not 70%.** This table said 70% until 2026-09-17, contradicting the
+narrative further down the same file, `FACTS.md` §2, `pms_capture_assumptions.yaml`
+(`addressable_pct: 1.0`) and the live code (`pms_engine.py`, `pms_capture_config.py` — both `1.00`).
+The 70% was the value before Jerome set 100% on 2026-07-03. No code change was needed; the table
+was simply never updated, so a reader of this table would have understood every capture percentage
+in the estate to be 43% higher than the pipeline computes.
 
 **ITUK UIO override:** **22,389** (DVLA Mar 2026) — not V13 surviving parc alone.
 
@@ -102,6 +109,27 @@ High capture % means “more filter units sold than the N75-only proxy expects,�
 **UIO:** Year-specific when available; else **2024 proxy** (`uio_proxy_used = True`). ITUK uses **22,389** when override applies.
 
 **Do not confuse with:** part-level “genuine parts share” in older specs — in PRISM, **GPS = spend per unit only**.
+
+### There is more than one GPS percentage, and only one is anchored
+
+This section previously documented only the dead flat-€150 target below, which no shipped dashboard
+uses. That omission is part of how two live GPS percentages came to coexist without a reader being
+able to tell which was which. **Four denominators exist in the code:**
+
+| Basis | Denominator | ITUK CY2025 | Live? |
+|---|---|---:|---|
+| **Ceiling capture** (drift-anchored) | UIO × per-model ceiling (296/739/887/250) | **32.4%** | Yes — `wallet_waterfall.csv`, pinned by `facts_anchor.yaml` line 91 |
+| **Upper reference** | v9 `max_spend_eur` workbook | **47.0%** | Yes — `gps_spu_by_distributor.csv`, `isze_data.json` |
+| Trade-study vintage | v9 snapshot, stale sales column | 45.6% | Yes — GPS dashboard, flagged stale by its own memo |
+| Dead flat target | flat **€150** per vehicle | 165.7% | **No** — legacy helper only, do not quote |
+
+The two live percentages differ by **14.6 points on identical billing**, because
+`uio_by_model_bucket.csv` carries no N35 bucket while `uio_v19_gps.json` does. Do not put either on
+a page that leaves the building until that split is resolved — see
+`00_docs/GPS_PMS_ALIGNMENT_20260917.md`.
+
+**Legacy target (used by no shipped dashboard):** green ≥ €150, amber €50–150, red &lt; €50,
+against `GPS_TARGET_EUR_PER_UNIT = 150.0` in `modules/gps_engine.py`.
 
 ---
 

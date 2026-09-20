@@ -1,0 +1,270 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifacts": {
+    "html": {
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Price_BP_Weighted_Compare.html",
+      "mtime_ms": 1789651033034,
+      "sha256": "a13c7ed7700d12c3e2959ceac7b9693e58bc0dcce1ecd48402e95d41756d40c9"
+    },
+    "xlsx": {
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Price_BP_Weighted_Compare.xlsx",
+      "mtime_ms": 1789651503810,
+      "sha256": "6db44ae3549379592986fb6321fbfba2e7dda4c932ea12366eb9428bf0765838"
+    },
+    "launcher": {
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\OPEN_ISZE_Price_BP_Weighted_Compare.cmd",
+      "mtime_ms": 1789651033036
+    },
+    "meta": {
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\price_bp_weighted_compare_meta.json",
+      "sha256": "861333fc479c9bbb047fda80cec7bdee4d40d5fe5f91190330d6e11494847f68"
+    },
+    "customer_csv": {
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\price_bp_weighted_compare_customer.csv",
+      "sha256": "0676a4d7ab59ab8e36073355d0d1da9f1abc99a8434f072b283b0f8e82bd1d74"
+    }
+  },
+  "written_at": "2026-09-17T13:29:22Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "html_exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Price_BP_Weighted_Compare.html (244,801 bytes)"
+    },
+    {
+      "id": "xlsx_exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Price_BP_Weighted_Compare.xlsx (4,469,691 bytes)"
+    },
+    {
+      "id": "cmd_exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\OPEN_ISZE_Price_BP_Weighted_Compare.cmd (340 bytes)"
+    },
+    {
+      "id": "meta_exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\price_bp_weighted_compare_meta.json (11,950 bytes)"
+    },
+    {
+      "id": "customer_csv_exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\price_bp_weighted_compare_customer.csv (7,104 bytes)"
+    },
+    {
+      "id": "html_min_size",
+      "ok": true,
+      "detail": "244,426 chars"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart CDN reference"
+    },
+    {
+      "id": "payload_present",
+      "ok": true,
+      "detail": "payload script block found"
+    },
+    {
+      "id": "payload_no_nan",
+      "ok": true,
+      "detail": "payload has no NaN/Infinity"
+    },
+    {
+      "id": "payload_customers",
+      "ok": true,
+      "detail": "22 distributors in payload"
+    },
+    {
+      "id": "payload_top_pn",
+      "ok": true,
+      "detail": "25 part numbers in payload"
+    },
+    {
+      "id": "top_pn_descriptions_populated",
+      "ok": true,
+      "detail": "all 25 ranked part numbers carry a description"
+    },
+    {
+      "id": "top_pn_description_rendered",
+      "ok": true,
+      "detail": "the part-number table declares a Description column"
+    },
+    {
+      "id": "pn_table_column_order",
+      "ok": true,
+      "detail": "columns: ['Part number', 'Description', 'Class', 'Weighted increase', 'Value of the step', 'L12M qty']"
+    },
+    {
+      "id": "pn_desc_in_row_renderer",
+      "ok": true,
+      "detail": "the row renderer emits the description cell"
+    },
+    {
+      "id": "pn_desc_wraps",
+      "ok": true,
+      "detail": "the description column wraps long text instead of clipping or widening the panel"
+    },
+    {
+      "id": "israel_two_rows",
+      "ok": true,
+      "detail": "Israel labels: ['UMI', 'UTI']"
+    },
+    {
+      "id": "no_banned_vocabulary",
+      "ok": true,
+      "detail": "clean"
+    },
+    {
+      "id": "headline_matches_meta",
+      "ok": true,
+      "detail": "payload 5.9616% vs meta 5.9616%"
+    },
+    {
+      "id": "excluded_buckets_present",
+      "ok": true,
+      "detail": "buckets: ['lubricant_no_pr00_in_sap', 'no_price_on_one_side', 'rebate_or_non_part_admin']"
+    },
+    {
+      "id": "excluded_buckets_named",
+      "ok": true,
+      "detail": "every bucket carries a plain name and a why; unnamed: []"
+    },
+    {
+      "id": "excluded_no_machine_labels",
+      "ok": true,
+      "detail": "clean"
+    },
+    {
+      "id": "lubricant_bucket_names_umi",
+      "ok": true,
+      "detail": "lubricant bucket owner: [{'code': '1797', 'label': 'UMI', 'eur': 505722.18, 'share_pct': 100.0}]"
+    },
+    {
+      "id": "lubricant_bucket_is_umi_only",
+      "ok": true,
+      "detail": "1 customer(s), 100.0% of the bucket"
+    },
+    {
+      "id": "lubricant_detail_locked",
+      "ok": true,
+      "detail": "7 part numbers, EUR 505,722.18, 11,827 units"
+    },
+    {
+      "id": "lubricant_detail_in_html",
+      "ok": true,
+      "detail": "each lubricant part number and a lubricant description appears in the page"
+    },
+    {
+      "id": "out_of_scope_named",
+      "ok": true,
+      "detail": "non-parts: ['ISUZU TRUCK UK LIMITED', 'sold-to 2970', 'IMIO'], direct: ['IMG']"
+    },
+    {
+      "id": "lubricant_rule_identical",
+      "ok": true,
+      "detail": "two-signal rule: 7 rows / 7 part numbers / EUR 505722.18 / 11827 units, identical to the former prefix rule"
+    },
+    {
+      "id": "cmd_crlf",
+      "ok": true,
+      "detail": "17 CRLF, 0 stray LF"
+    },
+    {
+      "id": "cmd_starts_html",
+      "ok": true,
+      "detail": "launcher references the sibling HTML"
+    },
+    {
+      "id": "xlsx_sheets",
+      "ok": true,
+      "detail": "sheets: ['Read me', 'Overview', 'By class', 'Excluded', 'Checks', 'PN data']"
+    },
+    {
+      "id": "xlsx_live_formulas",
+      "ok": true,
+      "detail": "142,851 live formula cells on PN data"
+    },
+    {
+      "id": "xlsx_pn_description_column",
+      "ok": true,
+      "detail": "PN data columns: ['distributor', 'customer_code', 'country', 'part_number', 'description', 'class', 'l12m_qty', 'l12m_billed_eur', 'bp_new_jpy', 'bp_prior_jpy', 'delta_jpy', 'delta_pct', 'step_eur']"
+    },
+    {
+      "id": "xlsx_pn_description_populated",
+      "ok": true,
+      "detail": "no blank description in the first 2,000 PN data rows"
+    },
+    {
+      "id": "xlsx_pn_delta_column_follows_description",
+      "ok": true,
+      "detail": "delta_jpy is column K, step_eur is column M: 'delta_jpy', 'step_eur'"
+    },
+    {
+      "id": "xlsx_overview_formulas",
+      "ok": true,
+      "detail": "113 SUMPRODUCT cells on Overview (the rollup is not hardcoded)"
+    },
+    {
+      "id": "xlsx_excluded_named",
+      "ok": true,
+      "detail": "Excluded sheet names each bucket, its owner and the lubricant part numbers"
+    },
+    {
+      "id": "xlsx_excluded_no_machine_labels",
+      "ok": true,
+      "detail": "clean"
+    },
+    {
+      "id": "csv_distributor_rows",
+      "ok": true,
+      "detail": "22 distributor rows"
+    },
+    {
+      "id": "csv_israel_rows",
+      "ok": true,
+      "detail": "2 Israel rows (UMI/UTI + combined)"
+    },
+    {
+      "id": "csv_network_matches_meta",
+      "ok": true,
+      "detail": "csv 5.9616% vs meta 5.9616%"
+    },
+    {
+      "id": "coverage_locked",
+      "ok": true,
+      "detail": "98.57% of quantity, 93.15% of L12M value"
+    },
+    {
+      "id": "step_value_locked",
+      "ok": true,
+      "detail": "EUR 1,652,140.71"
+    },
+    {
+      "id": "excluded_total_locked",
+      "ok": true,
+      "detail": "1,036 rows, EUR 2,397,756.76, 17,727 units"
+    }
+  ],
+  "headline": {
+    "network_weighted_increase_pct": 5.9616,
+    "value_of_step_eur": 1652140.71,
+    "window": {
+      "start": "2025-07-01",
+      "end": "2026-06-30",
+      "basis": "last 12 months of available billing (sales_fact ends 2026-06-30)"
+    },
+    "qty_coverage_pct": 98.57,
+    "eur_coverage_pct": 93.15
+  },
+  "visual_qa": {
+    "screenshots_dir": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa_bp_weighted",
+    "taken": 39,
+    "read": 39,
+    "read_by": "the agent, one at a time, full resolution",
+    "notes": "Render checked at 1440/1280/1024/390. Two ranked bar charts with a dashed reference line, a class bar chart, and six tables. 34 renders from qa_price_bp_weighted_compare.py (4 full pages, 27 slices, 3 chart zooms, 1 hover), 3 focused clips of the relabelled excluded section from _qa_excluded_focus.py, and 2 focused clips of the part-number table from _qa_pntable_focus.py. The Description column is the second column of the part-number table, populated for all 25 ranked rows with no clipped cell at 1440 or 390 (the table scrolls inside its own panel at 390 without widening the page). No blank canvas, no clipped text, no white-on-pale, no console errors."
+  },
+  "open": "cmd-only - the launcher is written and not auto-started"
+}

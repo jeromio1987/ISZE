@@ -149,6 +149,9 @@ with c1:
             st.warning(f"Series chart unavailable: {e}")
 with c2:
     st.markdown("#### Nominal GVW class")
+    st.caption("GVW comes from the ISZJ series (NLR 3.5 t, NMR 5.5 t, NNR 6.5 t, NPR 7.5 t, "
+               "FRR 11 t, FSR 13.5 t). The number inside the chassis code is NOT a tonnage — "
+               "an FRR90 is an 11–12 t truck, not a 9-tonner.")
     if "gvw_t" in view:
         try:
             g = view["gvw_t"].value_counts().sort_index().reset_index()

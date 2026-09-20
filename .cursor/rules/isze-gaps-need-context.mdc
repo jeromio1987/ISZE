@@ -1,0 +1,77 @@
+---
+description: Quantified gaps/leakages MUST carry context (euro + service family + fleet denominator), never bare units
+alwaysApply: true
+---
+
+# Gaps and leakages — context is mandatory (hard rule)
+
+Jerome, 2026-09-16: *"The amount of pieces doesn't tell us anything, or it's engines or it's bolts.
+Quantity doesn't mean anything in context. We need to know context, and context is GPS, PMS, and
+parts classification. Capish? Make this a fucking hard rule."*
+
+## The rule
+
+**A unit or piece count is never a finding. It is an ingredient.**
+
+Any quantified gap, leakage, defection or shortfall presented to Jerome — in chat, HTML, deck,
+workbook or mail — must carry all three contexts below, or it is not finished:
+
+| Context | What it means |
+|---|---|
+| **Euro** | What the quantity is worth, on an observed average selling price. Euro is the decision currency. |
+| **Service family / parts classification** | Which part family and PMS category the part belongs to. "258,824 units" is meaningless; "258,824 units of oil filters" is a finding. |
+| **Fleet denominator** | The vehicles-in-service (UIO) base and its weight class, so the quantity can be read as a rate per vehicle, not an absolute. |
+
+## Hard failures
+
+1. **Leading with a unit count.** Do not open a finding, chart title, KPI tile or slide with pieces,
+   units or quantity. Lead with euro, or with a rate against the fleet.
+2. **A unit count with no family.** A number of pieces without the part family attached is banned.
+   Engines and bolts are both "units".
+3. **A unit count with no denominator.** A gap without the fleet base beside it cannot be judged,
+   because the same absolute gap means opposite things in a large and a small market.
+4. **Volume leak expressed without a service family breakdown.** If a leak is quoted in euro but
+   the family is not stated, the reader cannot decide the response.
+
+## Where a rate replaces a count
+
+Prefer these forms over raw quantity:
+
+- **Euro per vehicle in service** (this is the GPS / spend-per-unit basis).
+- **Units per vehicle per year**, against the expected service interval.
+- **Share of expected demand**: units billed as a percentage of units the model expects — the PMS
+  capture basis.
+- **Euro gap** against the modelled ceiling (the uncaptured GPS value).
+
+## Worked example — the correction that produced this rule
+
+Wrong: *"IUK has a gap of 258,824 units."*
+
+Right: *"IUK's service-part gap is EUR 5.8M across 4 filter and wear families, on 47,783 light
+commercial vehicles in service. That is 82.7% of its expected service demand not covered by recorded
+sales, and it is inflated because the model applies a flat 20,000 km annual distance while IUK's
+measured N35 Grafter fleet averages 14,494 km/yr."*
+
+The second version can be acted on. The first cannot.
+
+## Companion rule — mileage is measured, not assumed
+
+Where a measured annual distance exists for a market or a weight class, it **replaces** the flat
+global assumption for that segment. Known measured sources:
+
+| Segment | Measured | Source |
+|---|---|---|
+| IUK N35 Grafter | **14,494 km/yr** (9,006 mi median) | `03_analytics/Isuzu/pms-pilot/n35 mileages all.xlsx` — 18,277 odometer intervals, 5,421 vehicles |
+| UTI Israel (N75) | **51,680 km/yr** | CV warranty odometer, confirmed against the market's own 50,000 |
+| N35 / N75 / F-series (all-market) | 12,165 / 35,217 / 45,630 km/yr | CV warranty odometer; **provisional** pending a duplicate-sheet check |
+| Mainland LCV markets | per-distributor, see file | `01_data/08_Distributor/EU_Mileage_by_country_IMG_2020-11_to_2026-06.xlsx` (IMIT service data; RG/D-Max only; **IUK absent**) |
+
+**Do not use the `Annual Mileage` column in `n35 mileages all.xlsx`.** It divides odometer by a
+shrinking vehicle age, so the latest reading equals the odometer itself (one vehicle reads
+63,273 mi/yr on a 63,273-mile clock). Derive from odometer deltas over elapsed time instead.
+
+## Applies to
+
+`04_tools/db_sales_review/`, shared decks, `09_meetings/*_Sales_Review_*`, leakage and
+replenishment work, every KPI tile, and any chat answer quoting a gap. Still gated by
+`isze-no-ship-without-ok.mdc` for rebuild/ship.

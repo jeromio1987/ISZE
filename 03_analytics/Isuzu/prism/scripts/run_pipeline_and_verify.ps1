@@ -40,6 +40,9 @@ $postVerify = @(
     'scripts/build_attach_rates.py',
     'scripts/build_dealer_leakage.py',
     'scripts/build_price_volume_elasticity.py',
+    # lost-sales model (2026-09-18) — must run AFTER the ceiling (wallet_waterfall, above) and
+    # AFTER the strategic contracts (capture_recovery_model, substitution_timeline). Keep it here.
+    'scripts/build_lost_sales_model.py',
     # ops early-warning list (2026-07-17) — consumes defection_alerts (above),
     # vor_seasonality (build_strategic_contracts) and pms_capture_by_db, so it
     # must run after them. db_aftersales_risk.csv is optional context here: the

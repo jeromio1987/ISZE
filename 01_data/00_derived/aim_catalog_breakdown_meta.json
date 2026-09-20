@@ -1,0 +1,94 @@
+{
+  "generated": "2026-09-17T19:46:03+00:00",
+  "purpose": "Catalogue identity tree Axis A (catalog_l1/l2/l3) crossed against distributor on the last 12 months of billed parts. Two-axes lock 2026-09-17: commercial score is Axis B beside, not the parent. Derived tables only - no elasticity, no allocation run, no price proposal.",
+  "window": {
+    "start": "2025-07-01",
+    "end": "2026-06-30"
+  },
+  "basis_note": "Two scheme bases are emitted in every file. 'catalog_full' uses every billed row that carries a catalogue node. 'pr00_catalog_only' is the literal restriction to aim_source == 'pr00_catalog'. The catalogue node columns are populated on far more rows than that flag implies, because aim_source is a precedence label for aim_l1, not a completeness flag for catalog_l1.",
+  "method": {
+    "weighted_increase": "SUM(qty * bp_new_jpy) / SUM(qty * bp_prior_revised) - 1 over rows priced on both sides",
+    "step_eur": "sum of value_eur_step (summed over all rows in the node; nulls skipped)",
+    "fleet_denominator": "gps_spu_by_distributor.csv 2025 uio_units",
+    "join_key": "part_number, 10-character zero-padded string both sides"
+  },
+  "join": {
+    "window": {
+      "start": "2025-07-01",
+      "end": "2026-06-30"
+    },
+    "in_scope_rows": 48653,
+    "in_scope_distinct_pn": 15872,
+    "in_scope_billed_eur": 34993609.39,
+    "in_scope_qty": 1243227.0,
+    "rows_matched_to_classification": 48634,
+    "rows_not_matched": 19,
+    "join_rate_rows_pct": 99.9609,
+    "eur_matched": 34212357.3,
+    "eur_not_matched": 781252.09,
+    "join_rate_eur_pct": 97.7674,
+    "pn_len_all_10_chars_in_classification": true,
+    "rows_with_pn_not_10_chars_in_weight_base": 3,
+    "pn_join_rate_pct": 99.9609
+  },
+  "coverage_of_in_scope": {
+    "catalog_l1_populated": {
+      "rows": 48529,
+      "distinct_pn": 15789,
+      "l12m_billed_eur": 33638906.22,
+      "share_of_in_scope_eur_pct": 96.1287
+    },
+    "catalog_l1_real_drop_review": {
+      "rows": 46199,
+      "distinct_pn": 14969,
+      "l12m_billed_eur": 32497577.71,
+      "share_of_in_scope_eur_pct": 92.8672
+    },
+    "other_review": {
+      "rows": 2330,
+      "distinct_pn": 820,
+      "l12m_billed_eur": 1141328.51,
+      "share_of_in_scope_eur_pct": 3.2615
+    },
+    "catalog_l1_null": {
+      "rows": 124,
+      "distinct_pn": 83,
+      "l12m_billed_eur": 1354703.17,
+      "share_of_in_scope_eur_pct": 3.8713
+    },
+    "belongs_to_pr00_catalog": {
+      "rows": 12222,
+      "distinct_pn": 4712,
+      "l12m_billed_eur": 4397447.12,
+      "share_of_in_scope_eur_pct": 12.5664
+    },
+    "attributable_to_a_catalogue_node_eur": 32497577.71,
+    "unattributed_eur": 2496031.68
+  },
+  "tie_out_network": {
+    "mine_weighted_increase_pct": 5.9616,
+    "shipped_weighted_increase_pct": 5.9616,
+    "mine_step_eur": 1652140.71,
+    "shipped_step_eur": 1652140.71
+  },
+  "tie_out_per_distributor_ok": true,
+  "tie_out_per_distributor_max_abs_increase_delta_pp": 0.0,
+  "tie_out_per_distributor_max_abs_l12m_delta_eur": 0.0,
+  "distributors_without_fleet_denominator": [
+    "ARMENIA",
+    "KAZAKHSTAN",
+    "PALESTINE",
+    "UKRAINE"
+  ],
+  "distributors_without_fleet_denominator_billed_eur": {
+    "ARMENIA": 311487.7,
+    "KAZAKHSTAN": 159124.1,
+    "PALESTINE": 42099.65,
+    "UKRAINE": 1026580.75
+  },
+  "price_class_note": "bp_new_class is the coarse IML class factor (C, D, F, J, M, P, T, V) in the pricing spec. It is IML-owned and is not something ISZE changes; it is carried here as a retained attribute only.",
+  "price_class_unclassified": {
+    "rows": 448,
+    "l12m_billed_eur": 2084369.76
+  }
+}

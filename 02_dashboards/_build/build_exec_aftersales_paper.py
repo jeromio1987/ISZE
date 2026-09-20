@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Mode A exec aftersales paper (self-contained HTML + Chart.js inline)."""
+"""Build shared exec aftersales paper (self-contained HTML + Chart.js inline)."""
 from __future__ import annotations
 
 import importlib.util
@@ -17,8 +17,8 @@ BILLING_MAX = "2026-06-30"
 VERIFY_PASS, VERIFY_FAIL = 116, 0
 
 REF_SELL_OUT_EN = (
-    "Reference dealer sell-out is the ISZE list price times 1.40 to the dealer "
-    "times 1.275 to the customer price we use as the dealer sell-out we compare to shops "
+    "Reference dealer price is the ISZE list price times 1.40 to the dealer "
+    "times 1.275 to the customer price we use as the reference dealer price we compare to shops "
     "(= ×1.785). Price index = shop or aftermarket quote ÷ that reference."
 )
 
@@ -50,6 +50,49 @@ def load_placeholder_share(year: str = "2025") -> tuple[int, float]:
 PLACEHOLDER_N, PLACEHOLDER_SHARE = load_placeholder_share()
 PLACEHOLDER_PCT = f"{PLACEHOLDER_SHARE * 100:.0f}%"
 PLACEHOLDER_PCT_1 = f"{PLACEHOLDER_SHARE * 100:.1f}%"
+
+
+def load_ceiling(year: str = "2025") -> dict:
+    """Derive the ceiling headline from wallet_waterfall.csv instead of hardcoding it.
+
+    Every one of these figures used to be a literal in this file: "EUR 60.2M", "51.1%",
+    "EUR 30.76M". When the N35/N75 split landed on 2026-09-17 the wallet fell to EUR 55.25M and
+    the same billed book read 55.7% — and this paper kept printing the old numbers because they
+    were typed, not read. Deriving them means the next pipeline change flows through, and
+    verify_exec_aftersales_paper.py can assert the page against the source.
+    """
+    import csv
+
+    rows = [r for r in csv.DictReader(WALLET_WATERFALL.open(newline="", encoding="utf-8-sig"))
+            if r["year"] == year]
+    wall = sum(float(r["theoretical_wallet_eur"]) for r in rows)
+    cap = sum(float(r["captured_total_eur"]) for r in rows)
+    uncap = sum(float(r["addressable_uncaptured_eur"]) for r in rows)
+    pct = (cap / wall * 100) if wall else 0.0
+    return {
+        "rows": len(rows), "wallet": wall, "captured": cap,
+        "uncaptured": uncap, "pct": pct,
+        "wallet_m": wall / 1e6, "captured_m": cap / 1e6,
+        "wallet_s": f"€{wall / 1e6:.2f}M", "captured_s": f"€{cap / 1e6:.2f}M",
+        "pct_s": f"{pct:.1f}%", "uncaptured_m": uncap / 1e6,
+    }
+
+
+CEILING = load_ceiling()
+
+# ITUK's own cover on the same basis, for the "largest euro pool below the ceiling" line.
+ITUK_PCT = None
+try:
+    import csv as _csv
+
+    _r = [r for r in _csv.DictReader(WALLET_WATERFALL.open(newline="", encoding="utf-8-sig"))
+          if r["year"] == "2025" and r["distributor_code"] == "ITUK"]
+    if _r:
+        ITUK_PCT = float(_r[0]["gps_pct"])
+        ITUK_WALLET_M = float(_r[0]["theoretical_wallet_eur"]) / 1e6
+        ITUK_SPU = (float(_r[0]["theoretical_wallet_eur"]) / float(_r[0]["uio_units"]))
+except Exception:
+    ITUK_PCT = None
 
 
 def load_tender_stats() -> dict:
@@ -301,10 +344,10 @@ def build_html() -> str:
     )
     repl = bars(
         [
-            ("Billed, no matching sell-out", 500, "500", "#c0552d"),
-            ("High sell-through vs bill", 400, "400", "#c48a16"),
-            ("Sell-out with no bill", 380, "380", "#2b4a78"),
-            ("Low sell-through", 315, "315", "#8a6a4a"),
+            ("Billed, no matching sales to dealer", 500, "500", "#c0552d"),
+            ("High sales to dealer vs bill", 400, "400", "#c48a16"),
+            ("Sales to dealer with no bill", 380, "380", "#2b4a78"),
+            ("Low sales to dealer", 315, "315", "#8a6a4a"),
         ],
         max_v=500,
     )
@@ -314,7 +357,7 @@ def build_html() -> str:
         ((str(k), int(v)) for k, v in (tender["source_counts"] or {}).items()),
         key=lambda kv: -kv[1],
     )[:8]
-    # Strip emoji flags for Mode A labels
+    # Strip emoji flags for shared labels
     def _src_label(raw: str) -> str:
         clean = "".join(ch for ch in raw if ord(ch) < 128).strip(" -_")
         return clean or raw[:18]
@@ -428,13 +471,13 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
   <p style="padding:8px 12mm 0;color:#a9bad4;letter-spacing:.16em;text-transform:uppercase;font-size:11px;margin:0">Aftersales commercialisation · not vehicle manufacturing</p>
   <h1>The quotable gap is clutch and brake — not the filter worked example</h1>
   <div class="rule"></div>
-  <p class="thesis">We billed <b style="color:#fff">€30.8M against a €60.2M CY2025 target-spend ceiling</b> (51.1%). <b style="color:#fff">{PLACEHOLDER_PCT} of that ceiling is a flat €250/UIO placeholder</b> — cover reads 29–44% under defensible alternatives. The largest quotable component gaps are <b style="color:#fff">clutch disc €3.14M, brake pad €2.78M, brake shoe €2.47M</b> (46% of an €18.22M basket gap). Independent unit volume is <b style="color:#fff">UNKNOWN</b>. Ready levers already sit on the table.</p>
+  <p class="thesis">We billed <b style="color:#fff">{CEILING['captured_s']} against a {CEILING['wallet_s']} CY2025 target-spend ceiling</b> ({CEILING['pct_s']}). <b style="color:#fff">{PLACEHOLDER_PCT} of that ceiling is a flat €250/UIO placeholder</b> — cover reads 29–44% under defensible alternatives. The largest quotable component gaps are <b style="color:#fff">clutch disc €3.14M, brake pad €2.78M, brake shoe €2.47M</b> (46% of an €18.22M basket gap). Independent unit volume is <b style="color:#fff">UNKNOWN</b>. Ready levers already sit on the table.</p>
   <div class="stats">
     <div class="stat" tabindex="0">
       <div class="l">Parts billed vs target · CY2025</div>
-      <div class="v">51.1%</div>
-      <div class="s">€30.76M of €60.22M · {PLACEHOLDER_PCT} of ceiling is flat €250/UIO</div>
-      <div class="tip">Captured parts billed ÷ max-spend ceiling (target spend per truck × parc — not a forecast). {PLACEHOLDER_N} near-flat markets at ~€250/UIO hold {PLACEHOLDER_PCT} of the ceiling. Sensitivity: 43.6% (non-flat median €364), 40.6% (Portugal €423), 29.4% (ITUK €745). Traffic-light spend per truck is a sibling metric on page 3.</div>
+      <div class="v">{CEILING['pct_s']}</div>
+      <div class="s">{CEILING['captured_s']} of {CEILING['wallet_s']} · {PLACEHOLDER_PCT} of ceiling is flat €250/UIO</div>
+      <div class="tip">Captured parts billed ÷ max-spend ceiling (target spend per truck × trucks in service — not a forecast). {PLACEHOLDER_N} near-flat markets at ~€250/UIO hold {PLACEHOLDER_PCT} of the ceiling. Sensitivity: 43.6% (non-flat median €364), 40.6% (Portugal €423), 29.4% (ITUK €745). Traffic-light spend per truck is a sibling metric on page 3.</div>
     </div>
     <div class="stat" tabindex="0">
       <div class="l">Top 3 category gaps</div>
@@ -471,7 +514,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
     <div><b>15</b> What would change our mind</div>
     <div><b>16</b> Sources and verify stamp</div>
   </div>
-  <footer class="pf">Mode A · English · printable A4 · self-contained (no network required to paint)</footer>
+  <footer class="pf">shared · English · printable A4 · self-contained (no network required to paint)</footer>
 </section>
 """)
 
@@ -483,7 +526,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
 <div class="grid2">
   <div class="card">
     <h3>What the numbers are</h3>
-    <p><b>Parts billed vs target</b> — euros billed versus a max-spend ceiling (target spend per truck × parc). <b>Ceiling is not a forecast</b>, and about {PLACEHOLDER_PCT} of it is a flat €250/UIO placeholder — page 3 prints the sensitivity. Green spend-per-truck is ≥ €150. Spend per truck and workshop cover are two different questions.</p>
+    <p><b>Parts billed vs target</b> — euros billed versus a max-spend ceiling (target spend per truck × trucks in service). <b>Ceiling is not a forecast</b>, and about {PLACEHOLDER_PCT} of it is a flat €250/UIO placeholder — page 3 prints the sensitivity. Green spend-per-truck is ≥ €150. Spend per truck and workshop cover are two different questions.</p>
     <p><b>PMS total</b> — units sold in the service basket versus expected demand. Headline is total (genuine + BVP). Genuine is a quality lens only.</p>
     <p><b>Component gap ranking</b> — from the opportunity matrix. That ranking is the euro lead; the UK-truck IML oil-filter story is a method illustration.</p>
     <p><b>Gross margin</b> on page 8 is Eucon scraped-set evidence (or UNKNOWN). External industry GP composites stay labelled external.</p>
@@ -491,35 +534,35 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
   </div>
   <div class="card">
     <h3>What the numbers are not</h3>
-    <p><b>Two UK-truck covers exist.</b> Method illustration = IML service schedule (oil-filter 35.1%, UIO 22,389, gap €2.04M). Distributor ranking uses one shared denominator (bucketed parc 23,068). They answer different questions. IML filters assume 1.25 services/yr; the network lane uses 0.5 — that alone is a 2.5× denominator difference.</p>
+    <p><b>Two UK-truck covers exist.</b> Method illustration = IML service schedule (oil-filter 35.1%, UIO 22,389, gap €2.04M). Distributor ranking uses one shared denominator (bucketed trucks in service 23,068). They answer different questions. IML filters assume 1.25 services/yr; the network lane uses 0.5 — that alone is a 2.5× denominator difference.</p>
     <p><b>Israel is two distributors</b> — UTI and UMI — always two rows. The Israel dealer-score round is UMI only.</p>
     <p><b>IUK is not ITUK.</b> Ireland is not IUK. Independent-garage <b>unit volume is UNKNOWN</b>. <code>100% − PMS</code> is residual, not IAM alone. Telematics and subscriptions have <b>no workspace data</b> — sized as a modelled option or named as a data gap, never merged into an internal KPI.</p>
   </div>
 </div>
 <div class="unk-panel"><span class="unk-tag">UNKNOWN</span> Independent-garage unit share · unsigned list-to-pocket euros · air-filter interval pending IML confirmation · UK-truck brake wear 0.4 vs 0.8 · ISZE realised CO-PA margin by category · connected-vehicle / VIN feed.</div>
-<div class="callout good">{REF_SELL_OUT_EN} We say OEM peer retail / dealer sell-out / reference dealer sell-out — never a slang label for the counter.</div>
+<div class="callout good">{REF_SELL_OUT_EN} We say OEM peer retail / reference dealer price — never slang for the counter.</div>
 <p class="lede" style="margin-top:10px"><span class="legend"><span><i class="tl g"></i>Green ≥ €150/UIO or a signed fact</span> <span><i class="tl a"></i>Amber — incomplete or watch</span> <span><i class="tl r"></i>Red — material gap on a signed definition</span> <span><i class="tl" style="background:#6b6256"></i>Grey — UNKNOWN</span></span></p>
 """))
 
     # --- 3 GPS ---
     pages.append(page(3, "Billed vs target", "Parts billed versus target spend — and the placeholder in the ceiling",
-        f"CY2025 the hub billed €30.76M against a €60.22M max-spend ceiling (51.1%). About {PLACEHOLDER_PCT} of that ceiling is a flat €250/UIO placeholder — the same billed book reads 29–44% cover under defensible alternatives.",
+        f"CY2025 the hub billed {CEILING['captured_s']} against a {CEILING['wallet_s']} max-spend ceiling ({CEILING['pct_s']}). About {PLACEHOLDER_PCT} of that ceiling is a flat €250/UIO placeholder — the same billed book reads 29–44% cover under defensible alternatives.",
         f"""
-<p class="lede">Spend per truck on the traffic light is green in 15 of 18 markets with parc. That is not the same as filling the ceiling: ITUK is green at €249/truck and still sits at 32.4% of its target spend — the largest euro pool below the ceiling.</p>
-<div class="callout amber"><b>{PLACEHOLDER_PCT} of the €60.22M ceiling is a flat €250/UIO placeholder</b> ({PLACEHOLDER_N} near-flat markets). Sensitivity if those markets used other signed targets: non-flat median €364 → cover <b>43.6%</b>; Portugal €423 → <b>40.6%</b>; ITUK €745 → <b>29.4%</b>. The €29M residual inherits the assumption. Ceiling = max-spend, not a forecast.</div>
+<p class="lede">Spend per truck on the traffic light is green in 15 of 18 markets with trucks in service. That is not the same as filling the ceiling: ITUK is green per truck and still sits at {ITUK_PCT:.1f}% of its target spend — the largest euro pool below the ceiling.</p>
+<div class="callout amber"><b>{PLACEHOLDER_PCT} of the {CEILING['wallet_s']} ceiling is a flat €250/UIO placeholder</b> ({PLACEHOLDER_N} near-flat markets). Sensitivity if those markets used other signed targets: non-flat median €364 → cover <b>43.6%</b>; Portugal €423 → <b>40.6%</b>; ITUK €745 → <b>29.4%</b>. The {('€%.0fM' % CEILING['uncaptured_m'])} residual inherits the assumption. Ceiling = max-spend, not a forecast.</div>
 <div class="chartbox">
   <div class="chartttl">Euros still below the target-spend ceiling concentrate in three distributors · CY2025</div>
   {below_ceiling_bars}
   <div class="chart-wrap"><canvas id="cBelowCeiling" aria-hidden="true"></canvas></div>
 </div>
 <div class="chartbox">
-  <div class="chartttl">Spend per truck is green across most of the parc; Hungary, UK LCV and Greece are amber · CY2025</div>
+  <div class="chartttl">Spend per truck is green across most of the trucks in service; Hungary, UK LCV and Greece are amber · CY2025</div>
   {gps_spu}
   <div class="chart-wrap"><canvas id="cGps" aria-hidden="true"></canvas></div>
 </div>
 <div class="grid2">
   <div class="callout amber"><b>UMI warranty distorts the green light.</b> Headline spend per truck is €179 (green). Strip warranty parts and it is €82 (red). This paper recommends the room keep both figures and prefer the ex-warranty number when comparing capture quality across distributors.</div>
-  <div class="unk-panel"><span class="unk-tag">UNKNOWN</span> Ukraine, Armenia, Kazakhstan and Palestine bill parts but have no GPS parc in this league — about €1.62M CY2025 omitted, not zero. MIDI is not an ISZE customer row here. 2026 YTD spend per truck is half a year against a full-year parc — it is not a traffic light.</div>
+  <div class="unk-panel"><span class="unk-tag">UNKNOWN</span> Ukraine, Armenia, Kazakhstan and Palestine bill parts but have no GPS trucks in service in this league — about €1.62M CY2025 omitted, not zero. MIDI is not an ISZE customer row here. 2026 YTD spend per truck is half a year against a full-year trucks-in-service base — it is not a traffic light.</div>
 </div>
 <p class="lede">2026 year-to-date parts billed in the 18 GPS markets: <b>€8.76M</b> through {BILLING_MAX}. That is a stub, not a run-rate.</p>
 """))
@@ -539,13 +582,13 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
   {gap_types}
   <div class="chart-wrap"><canvas id="cGapTypes" aria-hidden="true"></canvas></div>
 </div>
-<div class="callout"><b>Method illustration — not the opportunity lead.</b> IML UK-truck service schedule: filters 1.25/yr (network lane uses 0.5 — a 2.5× denominator difference), clutch and brake 0.5, parc 22,389. Oil-filter cover 35.1%, five-category gap €2.04M (air €736k, brake €642k, clutch €393k). Keep this as the worked example of schedule math — do not let it own the room’s priority list.</div>
+<div class="callout"><b>Method illustration — not the opportunity lead.</b> IML UK-truck service schedule: filters 1.25/yr (network lane uses 0.5 — a 2.5× denominator difference), clutch and brake 0.5, trucks in service 22,389. Oil-filter cover 35.1%, five-category gap €2.04M (air €736k, brake €642k, clutch €393k). Keep this as the worked example of schedule math — do not let it own the room’s priority list.</div>
 <div class="chartbox">
   <div class="chartttl">IML UK-truck five-category gap euros (method illustration) · CY2025</div>
   {iml_gap}
   <div class="chart-wrap"><canvas id="cImlGap" aria-hidden="true"></canvas></div>
 </div>
-<div class="callout amber"><b>Network-comparable ranking uses a different denominator</b> (bucketed parc 23,068 for the UK truck row). On that ranking UK truck oil-filter total is above 100% uncapped — valid when actuals include sales beyond the truck-only proxy. It is <b>not</b> the 35.1% IML figure. Ireland’s uncapped 191% is why this paper does not plot a “best market” series.</div>
+<div class="callout amber"><b>Network-comparable ranking uses a different denominator</b> (bucketed trucks in service 23,068 for the UK truck row). On that ranking UK truck oil-filter total is above 100% uncapped — valid when actuals include sales beyond the truck-only proxy. It is <b>not</b> the 35.1% IML figure. Ireland’s uncapped 191% is why this paper does not plot a “best market” series.</div>
 <div class="chartbox">
   <div class="chartttl">Network-comparable oil-filter total (capped display) — for ranking only · CY2025</div>
   {pms_net}
@@ -588,7 +631,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
   <tbody>
     <tr><td>Ireland</td><td class="n">389</td><td><i class="tl g"></i>Green</td><td class="n">124.2%</td><td class="n">100% cap</td><td class="n">95.5%</td></tr>
     <tr><td>UTI (Israel)</td><td class="n">322</td><td><i class="tl g"></i>Green</td><td class="n">40.3%</td><td class="n">91%</td><td class="n">88.9%</td></tr>
-    <tr><td>ITUK (UK truck)</td><td class="n">249</td><td><i class="tl g"></i>Green</td><td class="n">32.4%</td><td class="n">100% cap</td><td class="n">97.3%</td></tr>
+    <tr><td>ITUK (UK truck)</td><td class="n">249</td><td><i class="tl g"></i>Green</td><td class="n">{ITUK_PCT:.1f}%</td><td class="n">100% cap</td><td class="n">97.3%</td></tr>
     <tr><td>Belgium</td><td class="n">220</td><td><i class="tl g"></i>Green</td><td class="n">86.0%</td><td class="n">63%</td><td class="n">96.6%</td></tr>
     <tr><td>Portugal</td><td class="n">209</td><td><i class="tl g"></i>Green</td><td class="n">56.0%</td><td class="n">52%</td><td class="n">94.0%</td></tr>
     <tr><td>Germany</td><td class="n">197</td><td><i class="tl g"></i>Green</td><td class="n">66.6%</td><td class="n">15%</td><td class="n">99.3%</td></tr>
@@ -602,7 +645,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
 </table>
 <p class="lede">*Oil-filter total is the <b>network-comparable</b> rate (capped at 100% for display). ITUK’s 35.1% IML figure is the method illustration on page 4 — do not substitute it into this column. †UMI ex-warranty spend per truck is €82 — <b>prefer that number when comparing capture quality</b>; keep €179 when describing billed book including warranty.</p>
 <div class="callout amber">Ireland’s billed-vs-target above 100% means parts billed exceeded the max-spend ceiling — over-target, not a data bug. Germany’s 15% oil-filter total on the shared denominator is the weak workshop row in this league, despite a green spend-per-truck.</div>
-<div class="unk-panel"><span class="unk-tag">UNKNOWN</span> No “Israel” average. No IUK+ITUK blend. CIS rows without parc stay off this table.</div>
+<div class="unk-panel"><span class="unk-tag">UNKNOWN</span> No “Israel” average. No IUK+ITUK blend. CIS rows without trucks in service stay off this table.</div>
 """))
 
     # --- 7 IDS ---
@@ -664,7 +707,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
   </div>
   <div class="unk-panel">
     <span class="unk-tag">UNKNOWN</span>
-    Independent-garage <b>unit volume</b>. ISZE realised gross margin by category (CO-PA) is not in the workspace — Eucon is the interim layer. Dealer sell-out longs exist only for five distributors (54.4% of GPS billed euro).
+    Independent-garage <b>unit volume</b>. ISZE realised gross margin by category (CO-PA) is not in the workspace — Eucon is the interim layer. Sales-to-dealer files exist for six distributors including Portugal (60.0% of GPS billed euro).
   </div>
 </div>
 <div class="callout">Full scatter: sibling launcher <kbd>OPEN_ISZE_IAM_Price_vs_Billed_PN.cmd</kbd>. A pocket gap between list and net billed <b>exists</b> as an internal question; the euro is <b>not signed</b> for external quote.</div>
@@ -672,11 +715,11 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
 
     # --- 9 Demand ---
     pages.append(page(9, "Operations", "Demand, replenishment, forecast honesty",
-        "Sell-out files cover 54.4% of GPS billed euro (five distributors). Replenishment exceptions are therefore a half-the-book fact. Forecast median WAPE 49.4% on 548 of 636 series is normal for intermittent spares — a surface, not a signed live forecast.",
+        "Sales-to-dealer files cover 60.0% of GPS billed euro (six distributors including Portugal). Replenishment exceptions remain an observed-subset fact. Forecast median WAPE 49.4% on 548 of 636 series is normal for intermittent spares — a surface, not a signed live forecast.",
         f"""
-<p class="lede">Sell-out files exist for ITUK, IUK, Ireland, UTI and Greece = <b>54.4% of GPS billed euro</b> (€16.74M of €30.76M). Germany + Belgium + Portugal would add €6.36M and lift visibility to <b>75.1%</b>. Everywhere else, “no exception” would mean “no file,” not a clean pipeline.</p>
+<p class="lede">Sales-to-dealer files exist for ITUK, IUK, Ireland, UTI, Greece and Portugal = <b>60.0% of GPS billed euro</b> (€18.45M of €30.76M). Germany + Belgium would add €4.65M and lift visibility to <b>75.1%</b>. Everywhere else, “no exception” would mean “no file,” not a clean pipeline.</p>
 <div class="chartbox">
-  <div class="chartttl">1,595 CY2025 exception rows sit on five distributors only — 54.4% of billed euro, not the whole network</div>
+  <div class="chartttl">1,595 CY2025 exception rows sit on the observed sales-to-dealer subset — not the whole network</div>
   {repl}
   <div class="chart-wrap"><canvas id="cRepl" aria-hidden="true"></canvas></div>
 </div>
@@ -685,7 +728,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
     <h3>Forecast surface (not go-live)</h3>
     <p><b>548 of 636</b> series back-tested. Median WAPE <b>49.4%</b> — defensible for intermittent spare parts (practice often cites 40–70%). Bias % and Forecast Value Added vs the naive baseline are not yet printed. Gate G1 is <b>unsigned</b>. Override policy is also unsigned.</p>
   </div>
-  <div class="unk-panel"><span class="unk-tag">UNKNOWN</span> Realised euros past the billing horizon. Growth-factor 1.24 / 1.25 still unsigned. Book B (the price list we might change) cannot become a price move until alloc ambition is named (+4% / +5% / launch-only) — about €510k–€638k/yr on the L12M basis.</div>
+  <div class="unk-panel"><span class="unk-tag">UNKNOWN</span> Realised euros past the billing horizon. Growth-factor 1.24 / 1.25 still unsigned. The price list we might revise cannot become a price move until alloc ambition is named (+4% / +5% / launch-only) — about €510k–€638k/yr on the L12M basis.</div>
 </div>
 <div class="callout amber">Do not read 2026 year-to-date as a decline versus CY2025. Capture-trend alerts that treated a stub year as a full year were a known false cliff; complete-year declining pairs still on the books: Ireland clutch kit, ITUK brake rotor, Romania brake rotor, Romania clutch kit, UTI clutch kit (five, not thirty-three).</div>
 """))
@@ -726,15 +769,15 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
   <thead><tr><th>Hole</th><th>What we know</th><th>What we do not</th></tr></thead>
   <tbody>
     <tr><td>Warranty flow</td><td>€4.72M parts billed = 14.6% of book; claim expense €4.22M → €3.18M (−25%); UMI warranty is 54% of UMI’s book</td><td>Whether the claim decline is quality or tighter authorisation — and whether dealers then push work into customer-pay at lower capture</td></tr>
-    <tr><td>Telematics / subscriptions</td><td>No VIN / connected-vehicle feed in the workspace. External sizing only: at 5% attach × €20/unit/month on the 163k GPS parc ≈ €1.96M/yr gross (illustrative)</td><td>OEM data ownership; real attach; ISZE product position</td></tr>
+    <tr><td>Telematics / subscriptions</td><td>No VIN / connected-vehicle feed in the workspace. External sizing only: at 5% attach × €20/unit/month on the 163k GPS trucks in service ≈ €1.96M/yr gross (illustrative)</td><td>OEM data ownership; real attach; ISZE product position</td></tr>
     <tr><td>Independent volume</td><td>Price baskets exist on the scraped PN set (page 8)</td><td>Unit share. Residual of PMS is not IAM.</td></tr>
     <tr><td>List-to-pocket</td><td>A pocket gap exists as an internal question</td><td>A signed euro for this room</td></tr>
-    <tr><td>Sell-out coverage</td><td>Five DBs = 54.4% of GPS billed euro; DE+BE+PT would reach 75.1%</td><td>Every other GPS market — source gap, not 0%</td></tr>
+    <tr><td>Sales-to-dealer coverage</td><td>Six DBs including Portugal = 60.0% of GPS billed euro; DE+BE would reach 75.1%</td><td>Every other GPS market — source gap, not 0%</td></tr>
     <tr><td>Account health</td><td>10 RED / 6 AMBER of 17 on 2026-08 snapshot · <b>thresholds_calibrated: false</b></td><td>A signed call list (Early Warning remains the sales call list)</td></tr>
     <tr><td>Defection queue</td><td>25 alerts across 14 distributors; 9 carry zero trailing-12-month revenue</td><td>Recoverable base on the zero-revenue rows</td></tr>
     <tr><td>Air / brake factors</td><td>Network air 0.5 provisional; UK-truck brake 0.4 applied</td><td>IML-locked ratios</td></tr>
     <tr><td>Forecast G1</td><td>WAPE 49.4% on 548 of 636 series</td><td>Go-live signature, bias %, FVA vs naive</td></tr>
-    <tr><td>CIS / MIDI</td><td>Bill or warranty may exist (~€1.62M CIS without parc)</td><td>GPS league rows (by design)</td></tr>
+    <tr><td>CIS / MIDI</td><td>Bill or warranty may exist (~€1.62M CIS without trucks in service)</td><td>GPS league rows (by design)</td></tr>
   </tbody>
 </table>
 <div class="callout amber">Credit and return lines on positive value were excluded from GPS and PMS as a documented judgment — not an ERP-confirmed netting rule. If the next extract with sales-type codes reverses the call, GPS and capture move.</div>
@@ -761,7 +804,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
         "A large distributor where BVP becomes the sold book.")}
     {cell(
         "A price-revision pack and a no-list register already exist.",
-        "Book B (the price list we might change): 6,326 PNs · €12.76M L12M · +4% ≈ €510k/yr · +5% ≈ €638k/yr. NO_LIST ≈ €4.96M / 251 PNs.",
+        "The price list we might revise: 6,326 PNs · €12.76M L12M · +4% ≈ €510k/yr · +5% ≈ €638k/yr. NO_LIST ≈ €4.96M / 251 PNs.",
         "Alloc ambition still unsigned (no_alloc_run). Realised CO-PA margin by category still missing.",
         "One signed alloc ambition and a named owner for the 251 no-list PNs.")}
   </div>
@@ -774,7 +817,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
         "A brake/clutch pilot with pre-registered success criteria — or a fitment audit that reclassifies the gap.")}
     {cell(
         "The headline cover inherits a flat-ceiling placeholder.",
-        "51.1% of €60.22M · " + PLACEHOLDER_PCT + " of ceiling at flat €250/UIO · sensitivity 29.4–43.6%.",
+        f"{CEILING['pct_s']} of {CEILING['wallet_s']} · " + PLACEHOLDER_PCT + " of ceiling at flat €250/UIO · sensitivity 29.4–43.6%.",
         "Per-market age-spend curves.",
         "Age-band targets replacing the flat €250 assumption.")}
     {cell(
@@ -788,21 +831,21 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
 
     # --- 13 SWOT O/T ---
     pages.append(page(13, "SWOT · external", "Opportunities and threats — still sourced or UNKNOWN",
-        "Named euro opportunities are the matrix clutch/brake gaps, Book B alloc ambition, no-list PNs, and DE/BE/PT sell-out; the named threat is independent price without independent volume — plus a telematics option with no VIN feed.",
+        "Named euro opportunities are the matrix clutch/brake gaps, price-list revision ambition, no-list PNs, and DE/BE sales-to-dealer files; the named threat is independent price without independent volume — plus a telematics option with no VIN feed.",
         f"""
 <div class="swot">
   <div class="swot-q">
     <h3>Opportunities</h3>
     {cell(
-        "Sign Book B alloc ambition — highest return per unit of effort already built.",
+        "Sign price-list revision ambition — highest return per unit of effort already built.",
         "6,326 PNs · €12.76M L12M. +4% ≈ €510k/yr · +5% ≈ €638k/yr on L12M. Pack built 2026-08-19; no_alloc_run today.",
         "Which ambition (+4% / +5% / launch-only). Cross-check vs price-index &lt; 0.5 lines before publishing.",
         "One signed alloc ambition.")}
     {cell(
-        "Close no-list and the three missing sell-out files.",
-        "NO_LIST ≈ €4.96M / 251 PNs. DE+BE+PT sell-out would lift visibility 54.4% → 75.1% of billed euro.",
+        "Close no-list and the two missing sales-to-dealer files (Germany, Belgium).",
+        "NO_LIST ≈ €4.96M / 251 PNs. DE+BE sales-to-dealer files would lift visibility 60.0% → 75.1% of billed euro.",
         "Owner for the 251 PNs. DB IT cooperation for the three files.",
-        "Named owners and three verified sell-out longs.")}
+        "Named owners and verified sales-to-dealer longs.")}
     {cell(
         "Brake and clutch capture is the pilot, not oil filter.",
         "€8.39M in the top three categories. Eucon rotor GM 40.8% / pad kit 32.2% for margin prioritisation.",
@@ -810,20 +853,20 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
         "Pre-registered ≥8 pt capture lift on brake pad (and clutch) with price-index guardrails.")}
     {cell(
         "Telematics is a modelled option — or a written no.",
-        "Illustrative: 5% attach × €20/unit/month on 163k GPS parc ≈ €1.96M/yr gross (external sizing). Comparable to base-case 36-month component SOM.",
+        "Illustrative: 5% attach × €20/unit/month on 163k GPS trucks in service ≈ €1.96M/yr gross (external sizing). Comparable to base-case 36-month component SOM.",
         "VIN / connected-vehicle feed and OEM data ownership — data we do not have.",
         "A board decision either to build or to state ISZE will not.")}
   </div>
   <div class="swot-q">
     <h3>Threats</h3>
     {cell(
-        "Independent price at the counter undercuts reference dealer sell-out on a thin basket.",
+        "Independent price at the counter undercuts reference dealer price on a thin basket.",
         f"{n_parts} PN on the scraped ∩ billed set · {n_below} with a shop quote below reference. Coverage too thin to be share.",
         "Independent unit volume. Vintage labels must stay honest on every shared price file.",
         "One family of independent unit counts, or honest vintage labels on every shared price file.")}
     {cell(
         "Calling residual PMS “independent share” would steer the room at the wrong enemy.",
-        "Target-spend residual ~€29M · matrix gap €18.22M · IML UK-truck schedule gap €2.04M. Different questions.",
+        f"Target-spend residual ~{('€%.0fM' % CEILING['uncaptured_m'])} · matrix gap €18.22M · IML UK-truck schedule gap €2.04M. Different questions.",
         "The true IAM split of either residual.",
         "Any IAM % invented from 100% − PMS — refuse it.")}
     {cell(
@@ -835,17 +878,17 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
         "The ICE peak window (2025–2032) is time-bounded; a new composite score will not extend it.",
         "Stance: peak ICE D-Max / N-series parts window is open now. Scoring 0–100 is closed.",
         "Exact year of peak by market.",
-        "Parc cohort by market — not a revived score.")}
+        "Fleet cohort by market — not a revived score.")}
   </div>
 </div>
 """))
 
     # --- 14 Asks ---
     pages.append(page(14, "90 days", "Ready levers and five asks already on the table",
-        "Lead with what is already built: Book B alloc ambition, no-list ownership, and DE/BE/PT sell-out. Then the five signed asks. Nothing here is a new programme.",
+        "Lead with what is already built: price-list revision ambition, no-list ownership, and DE/BE sales-to-dealer files. Then the five signed asks. Nothing here is a new programme.",
         """
 <div class="ask"><div class="no">1</div><div>
-  <h3>Book B (the price list we might change) — alloc ambition +4% / +5% / launch-only</h3>
+  <h3>The price list we might revise — alloc ambition +4% / +5% / launch-only</h3>
   <p>6,326 PNs · €12.76M L12M already packed. +4% ≈ €510k/yr · +5% ≈ €638k/yr. Highest return-per-effort action available today. <b>No answer:</b> no DB-specific list move that survives the guardrails.</p>
 </div></div>
 <div class="ask"><div class="no">2</div><div>
@@ -854,7 +897,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
 </div></div>
 <div class="ask"><div class="no">3</div><div>
   <h3>Sign list-to-pocket — or keep realization internal</h3>
-  <p>Year-matched list-to-net joins ran as validation. Until there is a written sign-off, this paper will not quote the pocket euro. <b>No answer:</b> Mode A packs stay silent on realization.</p>
+  <p>Year-matched list-to-net joins ran as validation. Until there is a written sign-off, this paper will not quote the pocket euro. <b>No answer:</b> shared packs stay silent on realization.</p>
 </div></div>
 <div class="ask"><div class="no">4</div><div>
   <h3>G1 — sign the forecast surface, or wait</h3>
@@ -865,7 +908,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
   <p>Draft flags: 10 RED / 6 AMBER of 17 · <b>thresholds_calibrated: false</b>. Defection: 25 alerts, 9 with zero trailing revenue. <b>No answer:</b> that queue is not a call list. Early warning on sales stays the call list until amber/red are signed.</p>
 </div></div>
 <div class="unk-panel"><span class="unk-tag">NOT AN ASK</span> Nordic tender API keys — done. Gross/SPA on billing — closed, net-only forever. A new 0–100 score — closed. Oil-filter as the network opportunity lead — retired by the matrix. This paper is not a new programme on the build queue.</div>
-<p class="lede">Also waiting: UK-truck brake 0.4 vs 0.8; DE/BE/PT sell-out files; growth-factor 1.24/1.25; DPO path before any telematics build; connected-vehicle position (build or written no).</p>
+<p class="lede">Also waiting: UK-truck brake 0.4 vs 0.8; DE/BE sales-to-dealer files files; growth-factor 1.24/1.25; DPO path before any telematics build; connected-vehicle position (build or written no).</p>
 """))
 
     # --- 15 Falsifiers ---
@@ -873,16 +916,16 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
         "These are the smallest facts that would rewrite the thesis — not moving goalposts.",
         f"""
 <ol style="padding-left:18px;max-width:92ch">
-  <li style="margin-bottom:8px"><b>Age-spend curves replacing flat €250/UIO</b> on the {PLACEHOLDER_N} placeholder markets. Would rewrite the 51.1% headline and the €29M residual.</li>
+  <li style="margin-bottom:8px"><b>Age-spend curves replacing flat €250/UIO</b> on the {PLACEHOLDER_N} placeholder markets. Would rewrite the {CEILING['pct_s']} headline and the {('€%.0fM' % CEILING['uncaptured_m'])} residual.</li>
   <li style="margin-bottom:8px"><b>One family of independent unit counts</b> (oil or air, one large market). Would retire “IAM volume UNKNOWN.”</li>
   <li style="margin-bottom:8px"><b>ISZE realised gross margin by category (CO-PA)</b>. Would replace Eucon scraped-set GP as the prioritisation layer.</li>
   <li style="margin-bottom:8px"><b>Written list-to-pocket sign-off</b> on year-matched joins — or kill the figure if the join fails.</li>
   <li style="margin-bottom:8px"><b>G1 on the forecast surface</b> (or an explicit wait), plus bias % / FVA vs naive.</li>
-  <li style="margin-bottom:8px"><b>Germany or Belgium dealer sell-out long</b>. Would prove whether replenishment leakage is a five-DB story or a network pattern (path to 75.1% of billed euro).</li>
+  <li style="margin-bottom:8px"><b>Germany or Belgium sales-to-dealer long</b>. Would prove whether replenishment leakage is a five-DB story or a network pattern (path to 75.1% of billed euro).</li>
   <li style="margin-bottom:8px"><b>Next SAP extract with sales-type codes for Apr–Jun 2026</b>. Would confirm or reverse the credit/return judgment.</li>
   <li style="margin-bottom:8px"><b>A connected-vehicle / VIN decision</b> — build telematics or state in writing that ISZE will not.</li>
 </ol>
-<div class="callout">If none of these arrive, the thesis on page 1 still holds: we bill about half a ceiling that is {PLACEHOLDER_PCT} placeholder; the quotable gap is clutch and brake (€8.39M of €18.22M); Eucon GP and Book B are ready levers; independent volume is UNKNOWN; tenders are footprint not parts €.</div>
+<div class="callout">If none of these arrive, the thesis on page 1 still holds: we bill about half a ceiling that is {PLACEHOLDER_PCT} placeholder; the quotable gap is clutch and brake (€8.39M of €18.22M); Eucon GP and the price list are ready levers; independent volume is UNKNOWN; tenders are footprint not parts €.</div>
 """))
 
     # --- 16 Sources ---
@@ -892,15 +935,15 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
 <table class="src">
   <thead><tr><th>Claim in this paper</th><th>Definition / grain</th><th>Where</th></tr></thead>
   <tbody>
-    <tr><td>51.1% · €30.76M / €60.22M · {PLACEHOLDER_PCT} flat €250</td><td>Parts billed vs max-spend ceiling; placeholder share of ceiling</td><td>max-spend waterfall CSV (assumption_note)</td></tr>
+    <tr><td>{CEILING['pct_s']} · {CEILING['captured_s']} / {CEILING['wallet_s']} · {PLACEHOLDER_PCT} flat €250</td><td>Parts billed vs max-spend ceiling; placeholder share of ceiling</td><td>max-spend waterfall CSV (assumption_note)</td></tr>
     <tr><td>€18.22M · clutch disc €3.14M · brake pad €2.78M · brake shoe €2.47M</td><td>PMS opportunity matrix CY2025 category gaps</td><td>pms_opportunity_matrix.csv</td></tr>
     <tr><td>Substitution €11.4M / under-service €9.6M / catalogue gap €2.2M</td><td>Capture recovery model year 2026</td><td>capture_recovery_model.csv</td></tr>
     <tr><td>35.1% · €2.04M · UIO 22,389</td><td>IML service schedule method illustration, UK truck</td><td>Apr 2026 PMS analysis / FACTS §1</td></tr>
     <tr><td>€2.21M GP at risk · rotor 40.8% · pad kit 32.2%</td><td>Eucon UK 2023 scraped set (not CO-PA)</td><td>eucon_price_gap.csv</td></tr>
     <tr><td>NO_LIST ≈ €4.96M / 251 PNs</td><td>Pricing findings network no usable list</td><td>pricing_history_findings.json</td></tr>
     <tr><td>Warranty €4.72M = 14.6% · claims €3.18M (−25%)</td><td>Parts billed warranty share; claim expense YoY</td><td>gps_spu + warranty_by_db_year</td></tr>
-    <tr><td>Sell-out 54.4% of billed euro (to 75.1% with DE/BE/PT)</td><td>Five DBs with sell-out longs / GPS billed</td><td>max-spend waterfall CSV + sell-out longs</td></tr>
-    <tr><td>Book B 6,326 PNs · €12.76M · +4%/+5%</td><td>Revision pack; no_alloc_run</td><td>book_b_bucket_summary + revision meta</td></tr>
+    <tr><td>Sales to dealer 60.0% of billed euro (to 75.1% with DE/BE)</td><td>Six DBs with sales-to-dealer longs / GPS billed</td><td>max-spend waterfall CSV + sales-to-dealer longs</td></tr>
+    <tr><td>Price list 6,326 PNs · €12.76M · +4%/+5%</td><td>Revision pack; no_alloc_run</td><td>book_b_bucket_summary + revision meta</td></tr>
     <tr><td>{t_ops} opportunities · {t_due} due 14d · ~€{t_gps:,.0f}/yr addressable</td><td>Live tender feed as of {t_asof or 'build'}</td><td>tender_data.json</td></tr>
     <tr><td>WAPE 49.4% · 548 of 636</td><td>Unsigned forecast surface</td><td>forecast_baseline.meta.json</td></tr>
     <tr><td>10 RED / 6 AMBER · thresholds_calibrated: false</td><td>Account-health draft flags</td><td>account_health.meta.json</td></tr>
@@ -979,7 +1022,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
 """ + (
         f"  bar('cPrice', {json.dumps(pn_labels)}, {json.dumps(pn_vals)}, [{','.join(pn_cols)}]);\n"
     ) + (
-        "  bar('cRepl', ['No sell-out','High ST','No bill','Low ST'], [500,400,380,315],\n"
+        "  bar('cRepl', ['No sales to dealer','High vs bill','No bill','Low vs bill'], [500,400,380,315],\n"
         "      [terr,'#c48a16','#2b4a78','#8a6a4a']);\n"
         f"  bar('cTender', {json.dumps([_src_label(l)[:16] for l, _ in src_items] or ['Live'])},\n"
         f"      {json.dumps([float(v) for _, v in src_items] or [float(t_ops)])},\n"
@@ -1005,7 +1048,7 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
 def main() -> None:
     html = build_html()
     low = html.lower()
-    for bad in ("street", "wallet", "iml v7", "model b", "prism lane", "jerome"):
+    for bad in ("street", "wallet", "sell-out", "sell-through", "book b", "iml v7", "model b", "prism lane", "jerome"):
         if bad in low:
             raise SystemExit(f"forbidden token in HTML: {bad}")
     if "cdn.jsdelivr" in low or "cdnjs.cloudflare" in low:

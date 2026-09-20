@@ -1,0 +1,8 @@
+source,part_numbers,billed_eur,pct_of_book_eur,price_kind,note
+"Same-shop listings (KS), the panel in the paper",43,2873778.8499999996,8.816394167137329,"same-shop trade, GBP","ONE UK source, fanned across 18 market rows. GBP ex-VAT at 1.17"
+"Eucon IAM cross-reference (822 rows, never joined)",41,3961117.2300000004,12.152212353403321,"online IAM, EUR, DE/NO","432 IAM part numbers, 155 brands, countries ['DE', 'NO']"
+Eucon/PartsPool gap file (the 44 we quote),41,3961117.2300000004,12.152212353403321,"online IAM, EUR, DE/NO",min/avg/max competitor EUR and a brand list per part number
+"Autodoc extract (brand names only, prices corrupt)",293,18582629.32,57.0091831342287,none usable,277 of 298 rows carry the identical value 2.34
+"The worklist (rival named, price not held)",139,10353140.87,31.76214160592737,none yet,the 139 to go and price
+UNION of every competitor source on disk,300,18648794.94,57.21217098287024,"mixed tiers, never blended",includes sources whose price is unusable
+UNION of sources that carry a USABLE price,76,5369216.41,16.472084565317907,two real tiers,KS trade GBP + Eucon/PartsPool online IAM EUR

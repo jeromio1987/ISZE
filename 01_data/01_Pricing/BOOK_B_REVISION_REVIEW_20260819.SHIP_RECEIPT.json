@@ -1,0 +1,54 @@
+{
+  "schema": "ship_receipt/v1",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\BOOK_B_REVISION_REVIEW_20260819.html",
+  "artifact_mtime_ms": 1789805230563,
+  "written_at": "2026-09-19T08:22:14.558Z",
+  "ok": true,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\BOOK_B_REVISION_REVIEW_20260819.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "267110 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN cmd present (OPEN_AIM_class_status_overview_20260919.cmd, OPEN_BOOK_B_REVISION_REVIEW.cmd, OPEN_ISZE_Pricing_Framework.cmd)"
+    },
+    {
+      "id": "ship_gate",
+      "ok": true,
+      "detail": "ship_gate_check.ps1 exit 0"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "2 PNG(s) — agent must have image-Read before shipping"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\_langfix_qa\\bookb_1440.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\_langfix_qa\\bookb_full_3400.png"
+  ],
+  "notes": "Language fix only: 11 banned labels removed by editing the builder (01_data/91_build/build_book_b_review_workbook.py), then rebuilt. check_spoken_labels.ps1 = 0 violations. No figure changed."
+}

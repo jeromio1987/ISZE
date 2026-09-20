@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing stack applied ÔÇö IML + IMIT + exchange rate + discount</title>
+<style>
+:root{--navy:#15233c;--terra:#c0552d;--paper:#f7f4ee;--ink:#22262e;
+ --muted:#6b6459;--line:#d9d3c8;--band:#eef3f9;--good:#1e6b4f;--amber:#a8721f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+ font-size:14px;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 20px 56px}
+h1,h2{font-family:Georgia,"Times New Roman",serif;color:var(--navy);margin:0}
+h1{font-size:25px} h2{font-size:17px;margin:0 0 3px}
+header{border-bottom:3px solid var(--navy);padding-bottom:14px;margin-bottom:18px}
+.sub{color:var(--muted);font-size:13px;margin-top:6px;max-width:900px}
+.badge{display:inline-block;background:var(--navy);color:var(--paper);font-size:11px;
+ letter-spacing:.6px;text-transform:uppercase;padding:3px 9px;margin-right:8px}
+.badge.g{background:var(--good)} .badge.t{background:var(--terra)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+ gap:12px;margin:0 0 18px}
+.kpi{background:#fff;border:1px solid var(--line);border-top:3px solid var(--navy);
+ padding:12px 14px}
+.kpi.g{border-top-color:var(--good)} .kpi.t{border-top-color:var(--terra)}
+.kpi .l{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.kpi .v{font-size:23px;font-weight:600;color:var(--navy);margin-top:4px;
+ font-variant-numeric:tabular-nums}
+.kpi .s{font-size:11.5px;color:var(--muted);margin-top:2px}
+.card{background:#fff;border:1px solid var(--line);padding:15px 16px;margin-bottom:16px}
+.card .q{font-size:12.5px;color:var(--muted);margin:2px 0 11px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{background:var(--navy);color:var(--paper);text-align:left;padding:8px 9px;
+ font-size:11px;letter-spacing:.5px;text-transform:uppercase;font-weight:600}
+td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+tbody tr:nth-child(even){background:var(--band)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.big{font-weight:700;color:var(--navy);font-size:14.5px}
+.sub2{font-size:11px;color:var(--muted);font-weight:400}
+.tag{display:inline-block;font-size:10.5px;letter-spacing:.4px;text-transform:uppercase;
+ padding:2px 7px;border-radius:2px;color:#fff;white-space:nowrap}
+.tag.inside{background:var(--good)} .tag.above{background:var(--terra)}
+.tag.below{background:var(--amber)}
+.note{background:#fff;border:1px solid var(--line);border-left:4px solid var(--terra);
+ padding:13px 15px;margin-bottom:16px;font-size:13px}
+.note.g{border-left-color:var(--good)}
+.note p{margin:0 0 8px} .note p:last-child{margin:0}
+footer{margin-top:26px;padding-top:12px;border-top:1px solid var(--line);
+ font-size:12px;color:var(--muted)}
+footer p{margin:0 0 5px}
+</style>
+</head>
+<body><div class="wrap">
+<header>
+  <div><span class="badge">Pricing stack applied</span>
+  <span class="badge g">INSIDE the 4ÔÇô6% band</span>
+  <span class="badge t">1 Oct 2026 rate window</span></div>
+  <h1 style="margin-top:10px">Where the price lands once every live move is applied</h1>
+  <p class="sub">The formula applied source by source ÔÇö the IML and IMIT base-price
+  revisions, the Japan exchange rate and the Japan purchase discount ÔÇö on the same
+  in-scope base the published revision uses: 48,653 rows, 15,872 part numbers,
+  EUR 32.60M priced, 1,225,500 units, window 1 Jul 2025 to 30 Jun 2026.
+  Class factors are IML's and are unchanged.</p>
+</header>
+
+<div class="kpis">
+  <div class="kpi g"><div class="l">Whole book</div>
+    <div class="v">+5.74%</div>
+    <div class="s">inside the 4ÔÇô6% band</div></div>
+  <div class="kpi"><div class="l">IML Japan</div>
+    <div class="v">+5.73%</div>
+    <div class="s">revision +6.21% + rates -0.45%</div></div>
+  <div class="kpi t"><div class="l">IMIT Thailand</div>
+    <div class="v">+6.31%</div>
+    <div class="s">no rate move, so the revision passes in full</div></div>
+  <div class="kpi"><div class="l">Billed before ÔåÆ after</div>
+    <div class="v">EUR 1.87M</div>
+    <div class="s">EUR 32.60M ÔåÆ EUR 34.47M</div></div>
+</div>
+
+<div class="note g"><p><b>The IMIT revision was found, not missing.</b> The published
+5.96% is a blend. Split on the source field, Thailand's own yen
+base-price revision is <b>+6.31%</b> and Japan's is
+<b>+6.21%</b>. Neither is assumed.</p></div>
+
+<div class="card">
+  <h2>The stack, source by source</h2>
+  <p class="q">The move is (1 + revision) ├ù exchange-rate factor ├ù discount factor ÔêÆ 1.
+  The exchange rate sits in the denominator of the cost formula, so a higher rate lowers
+  our euro cost; the discount is the share of the yen base price we pay, so a higher
+  discount raises it.</p>
+  <table>
+    <thead><tr><th>Source</th><th class="n">Base revision</th>
+    <th class="n">Exchange rate</th><th class="n">Discount</th>
+    <th class="n">Total move</th><th class="n">vs band</th></tr></thead>
+    <tbody><tr><td><b>IML Japan</b><div class="sub2">9,420 part numbers ┬À 47.2% of billed</div></td><td class="n">+6.21%</td><td class="n">163.7 ÔåÆ 178.5</td><td class="n">62.0% ÔåÆ 67.3%</td><td class="n big">+5.73%</td><td class="n"><span class="tag inside">inside the band</span></td></tr><tr><td><b>IMIT Thailand</b><div class="sub2">5,197 part numbers ┬À 43.7% of billed</div></td><td class="n">+6.31%</td><td class="n">no move</td><td class="n">no change</td><td class="n big">+6.31%</td><td class="n"><span class="tag above">above the band</span></td></tr><tr><td><b>no source label</b><div class="sub2">656 part numbers ┬À 9.0% of billed</div></td><td class="n">+3.06%</td><td class="n">ÔÇö</td><td class="n">ÔÇö</td><td class="n big">+3.06%</td><td class="n"><span class="tag below">below the band</span></td></tr>
+    <tr><td><b>Whole priced book</b><div class="sub2">weighted by billed euro</div></td>
+    <td class="n">ÔÇö</td><td class="n">ÔÇö</td><td class="n">ÔÇö</td>
+    <td class="n big">+5.74%</td>
+    <td class="n"><span class="tag inside">inside the band</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="note"><p><b>The two rate moves nearly cancel on Japan.</b>
+The exchange rate takes our euro cost down 8.29%;
+the discount takes it up 8.55%. Net
+-0.45%. So the base-price revision is doing essentially all of the work
+on Japan. Thailand has no offsetting exchange-rate move ÔÇö the Suzuki rate is
+Japan-sourced only ÔÇö so its revision passes through almost in full.</p></div>
+
+<div class="card">
+  <h2>The gap to the 4ÔÇô6% band</h2>
+  <p class="q">We are already inside the band, so nothing has to be found to get there.
+  The question is whether to stay near the top. Targets are stated two ways: the further
+  price action on the book, and the Japan revision that would deliver the target with the
+  rate moves as they are.</p>
+  <table>
+    <thead><tr><th class="n">Target</th>
+    <th class="n">Further price action on the book</th>
+    <th class="n">Japan revision needed</th><th class="n">vs settled Japan</th></tr></thead>
+    <tbody><tr><td class="n">4%</td><td class="n">1.74 pp <span class="sub2">(give back)</span></td><td class="n">4.47%</td><td class="n">-1.74 pp</td></tr><tr><td class="n">5%</td><td class="n">0.74 pp <span class="sub2">(give back)</span></td><td class="n">5.48%</td><td class="n">-0.73 pp</td></tr><tr><td class="n">6%</td><td class="n">0.26 pp <span class="sub2">(add)</span></td><td class="n">6.48%</td><td class="n">+0.27 pp</td></tr></tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>The un-re-priced cost base</h2>
+  <p class="q">Does the selling price list still carry the old cost base? Checked on the
+  Japan lines of the price list.</p>
+  <table>
+    <thead><tr><th>Cost basis applied to the formula</th>
+    <th class="n">List price reproduced within 1 cent</th></tr></thead>
+    <tbody>
+      <tr><td>163.7 JPY/EUR, discount 62.0%
+        <span class="sub2">the old terms</span></td>
+        <td class="n big">87.36%</td></tr>
+      <tr><td>178.5 JPY/EUR, discount 62.0%</td>
+        <td class="n">0.01%</td></tr>
+      <tr><td>163.7 JPY/EUR, discount 67.3%</td>
+        <td class="n">0.02%</td></tr>
+      <tr><td>178.5 JPY/EUR, discount 67.3%
+        <span class="sub2">the live terms</span></td>
+        <td class="n">6.97%</td></tr>
+    </tbody>
+  </table>
+  <p class="q" style="margin-top:11px">The list is on the old terms, so it has not been
+  re-based. In euro on the Japan side the discount is not being absorbed: the discount
+  adds EUR 701k to the Japan cost base while the exchange rate takes back
+  EUR -738k, a net of EUR -37k
+  (-0.45%). The margin on the yen base price fell from
+  38.0% to 32.7%, a loss of
+  5.3 points, and the exchange-rate move offsets it. What is
+  genuinely un-re-priced is the base revision: the list still carries the pre-revision
+  base price.</p>
+</div>
+
+<div class="card">
+  <h2>The formula, and the class margins</h2>
+  <p class="q">FOB_EUR = BP_JPY ├À FX ├ù source discount. SP_EUR = FOB_EUR ├À class factor.
+  Margin on the yen base price = 1 ÔêÆ discount. Margin on the sales price = 1 ÔêÆ class
+  factor. The class factors are IML's and are not changed here.</p>
+  <table>
+    <thead><tr><th>Class</th><th class="n">Factor</th>
+    <th class="n">Margin on the sales price</th></tr></thead>
+    <tbody><tr><td>C</td><td class="n">0.470</td><td class="n">53.0%</td></tr><tr><td>D</td><td class="n">0.480</td><td class="n">52.0%</td></tr><tr><td>F</td><td class="n">0.525</td><td class="n">47.5%</td></tr><tr><td>J</td><td class="n">0.555</td><td class="n">44.5%</td></tr><tr><td>M</td><td class="n">0.500</td><td class="n">50.0%</td></tr><tr><td>P</td><td class="n">0.440</td><td class="n">56.0%</td></tr><tr><td>V</td><td class="n">0.550</td><td class="n">45.0%</td></tr><tr><td>T</td><td class="n">0.800</td><td class="n">20.0%</td></tr></tbody>
+  </table>
+</div>
+
+<footer>
+  <p>Volume and mix held flat ÔÇö this is the arithmetic of the price move, not a
+  forecast. The move is applied to the billed euro on the in-scope revision base, so the
+  numbers tie to the published revision.</p>
+  <p>656 priced part numbers carry no source label, 9.03% of the priced book by billed
+  euro; they receive their own base revision of
+  +3.06% with no exchange-rate relief and no
+  discount change. The Thailand revision is derived from the price file by the same
+  index method as Japan's, not quoted to us directly.</p>
+  <p>Built 2026-09-19T04:39:50+00:00 ┬À window 2025-07-01 to
+  2026-06-30 ┬À no workbook, paper or shipped pack was rebuilt.</p>
+</footer>
+</div>
+</body></html>

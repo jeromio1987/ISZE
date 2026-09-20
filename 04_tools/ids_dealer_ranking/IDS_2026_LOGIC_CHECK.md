@@ -59,7 +59,7 @@ python build_ids_dashboard.py
 
 ## 0. MIDI — Tomoe Baumann average rule (NEVER FORGET)
 
-**On behalf of Tomoe Baumann (IMG).** Logged 2026-08-10 from her **2026-07-31 08:58** mail. Full Mode B changelog: [`CHANGELOG.md`](CHANGELOG.md) in this folder.
+**On behalf of Tomoe Baumann (IMG).** Logged 2026-08-10 from her **2026-07-31 08:58** mail. Full internal changelog: [`CHANGELOG.md`](CHANGELOG.md) in this folder.
 
 **Exact rule:** *“red marked DLRs in the ranking list are to be excluded for the average calculation. For Italy and Switzerland, all DLRs are to be included.”*
 
@@ -213,7 +213,7 @@ After `build_ids_dashboard.py`:
 
 ---
 
-## 6b. Pre-ship map / geo / UI (Mode A)
+## 6b. Pre-ship map / geo / UI (shared)
 
 Agent rule: `.cursor/rules/isze-ids-delivery.mdc` (always on). Automated geo: `ids_dealer_geo.sanity_check_geo_clustering` (wired into `build_ids_dashboard.py` — refuses write on hard fail unless `--skip-geo-sanity`).
 
@@ -222,7 +222,7 @@ Agent rule: `.cursor/rules/isze-ids-delivery.mdc` (always on). Automated geo: `i
 | M1 | Basemap tiles load (open HTML) | Real map, not blank outline box |
 | M2 | Geo clustering | No country with ≥50% country-centre blob; FR/IT/ES/CH not residual blobs after “all OK” |
 | M3 | English labels | Full English country names — no `goed`/`slecht`, no `MIDI_CH`/`BE` as UI |
-| M4 | Mode A shell | No Changelog / agent notes; no dark “Weak sector” overlay |
+| M4 | shared shell | No Changelog / agent notes; no dark “Weak sector” overlay |
 | M5 | Map in compare | Map merged into dealer compare when asked; hover = score vs national avg |
 | M6 | Locked GPS | Jerome-locked slide figures (e.g. Portugal 63.3%) not overwritten by unverified pipeline |
 
@@ -286,9 +286,9 @@ After rebuild, mark each country when **layout QA** (`ids_report_qa.py`) and **l
 | `ids_report_extract.py` | Extract data for dashboard |
 | `build_ids_dashboard.py` | Offline HTML dashboard (+ geo sanity gate) |
 | `ids_dealer_geo.py` | Dealer lat/lon + `sanity_check_geo_clustering` |
-| `ids_paths.py` | Paths and country resolution (English Mode A labels) |
+| `ids_paths.py` | Paths and country resolution (English shared labels) |
 | `reports/_template/2026 IDS Evaluation Result Report_DK.xls` | DK master (sheet `DK26`) |
-| `.cursor/rules/isze-ids-delivery.mdc` | IDS Mode A ship gate (maps/geo/UI) |
+| `.cursor/rules/isze-ids-delivery.mdc` | IDS shared ship gate (maps/geo/UI) |
 
 ---
 

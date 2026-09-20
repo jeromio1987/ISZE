@@ -1,0 +1,24 @@
+﻿price_bp_weighted_compare_pn.csv rows: 50,729
+in_scope rows: 48,653
+
+A. network weighted base-price increase
+   rows priced on both sides : 47,617
+   recomputed                : 5.9616%
+   claimed in the note       : 5.9616%
+   verdict                   : MATCH
+
+B. step euro
+   recomputed                : 1,652,140.71
+   claimed in the note       : 1,652,140.71
+   verdict                   : MATCH
+
+   join to the classification: 48,574/48,653 rows (99.8376%)
+   increase on matched rows  : 5.9616%  (vs 5.9616% on all in-scope)
+   step euro on matched rows : 1,651,562.01  (unmatched carries 578.70)
+
+C. key integrity, recomputed on the file
+   rows 164,667   duplicate part numbers 0   keys not exactly 10 chars 0
+   BUT keys that do not join pr00_classification: 1,653 (leading zero: 1,616)
+
+D. description-rule error rate, recomputed
+   flagged part numbers 3,546   EUR 2,091,184 of 50,712,963 = 4.12%

@@ -8,7 +8,7 @@ Writes : 01_data/17_interactions/account_health.parquet  (+ .meta.json)
 One row per distributor × month. Alert level is NONE | AMBER | RED from the
 draft thresholds in 00_docs/P4_DETERMINISTIC_SIGNALS.md — uncalibrated.
 Jerome still owns the 1-day threshold pass (task 4.9). Do not put this on a
-Mode A pack.
+shared pack.
 
 CC-depth: interaction_fact.n_cc (already collected). Not a new MAPI field.
 UTI and UMI stay separate rows. Own mailbox only (G0a).
@@ -579,6 +579,51 @@ def main() -> int:
         print("\nflagged (draft thresholds - not calibrated):")
         show = flagged[["db_code", "alert_level", "alert_reasons", "commitment_met_rate", "activity_drop_pct"]]
         print(show.to_string(index=False))
+
+    triage_path = os.path.join(IN_DIR, "ACCOUNT_HEALTH_OPS_TRIAGE.md")
+    csv_path = os.path.join(IN_DIR, "account_health_ops_triage.csv")
+    flagged_csv = os.path.join(IN_DIR, "account_health_latest_flagged.csv")
+    export_cols = [
+        "db_code",
+        "year_month",
+        "alert_level",
+        "alert_reasons",
+        "commitment_met_rate",
+        "activity_drop_pct",
+        "stakeholder_churn_pct",
+        "overdue_commitments",
+        "n_30d",
+    ]
+    keep = [c for c in export_cols if c in snap.columns]
+    snap[keep].to_csv(csv_path, index=False)
+    flagged[keep].to_csv(flagged_csv, index=False)
+    lines = [
+        "# Account health ops triage (internal · draft · not a KPI)",
+        "",
+        f"Latest month: **{latest}** · flagged: **{len(flagged)}** distributors",
+        "",
+        "Uncalibrated thresholds. Jerome owns calibration (4.9). Do not put this on a Monday pack.",
+        "",
+        "| DB | Level | Reasons | Activity drop |",
+        "|----|-------|---------|---------------|",
+    ]
+    for _, r in flagged.iterrows():
+        drop = r.get("activity_drop_pct")
+        drop_s = f"{float(drop)*100:.0f}%" if pd.notna(drop) else "—"
+        lines.append(
+            f"| {r['db_code']} | {r['alert_level']} | {str(r.get('alert_reasons') or '').replace('|', '/')} | {drop_s} |"
+        )
+    if flagged.empty:
+        lines.append("| — | NONE | No draft flags this month | — |")
+    lines += [
+        "",
+        "Full export: `account_health_ops_triage.csv` · calibration: `account_health_calibration.csv`",
+        "",
+        "Went quiet = activity drop and/or stakeholder churn on draft thresholds. Not a meeting KPI.",
+    ]
+    with open(triage_path, "w", encoding="utf-8") as fh:
+        fh.write("\n".join(lines) + "\n")
+    print(f"wrote {triage_path}")
     return 0
 
 

@@ -1,0 +1,212 @@
+{
+  "generated": "2026-09-19T10:52:02+00:00",
+  "workbook": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\ISZE_Pricing_Stack_Simulation_2026-09-19.xlsx",
+  "sheets": [
+    "Legends",
+    "PR00",
+    "UTI",
+    "UMI",
+    "CIS"
+  ],
+  "architecture": "Jerome's own: no VLOOKUP (class factor written per row as a literal), no SUMPRODUCT, one row per part number, scalar arithmetic, aggregates pre-computed in Python and written as literal values, current price hardcoded.",
+  "method": {
+    "formula": "weighted_increase = SUM(qty x delta_jpy) / SUM(qty x bp_prior) - 1",
+    "recipe": "in_scope == TRUE AND unpriced_reason IS NULL -> 47,617 rows -> 5.961599%",
+    "recipe_rows": 47617,
+    "reproduces_published_index": 0.059616,
+    "computed": 0.05961599453926434,
+    "no_factor_chain": true,
+    "exchange_rate_is_a_decision": false,
+    "why": "The exchange rate and the purchase discount are both already in force, so neither is a forward move."
+  },
+  "live_inputs": {
+    "fx": 178.5,
+    "fx_list_base": 163.7,
+    "fx_previous_vintage": 172.6,
+    "discount_live": {
+      "J": 0.673,
+      "T": 0.611
+    },
+    "discount_j_prior": 0.62,
+    "class_factors": {
+      "C": 0.47,
+      "D": 0.48,
+      "F": 0.525,
+      "J": 0.555,
+      "M": 0.5,
+      "P": 0.44,
+      "V": 0.55,
+      "T": 0.8
+    },
+    "cis_factor": 0.4,
+    "zpr1_differential": -0.1,
+    "target": 0.05,
+    "band": [
+      0.04,
+      0.06
+    ]
+  },
+  "whole_book": {
+    "weighted_increase": 0.05961599453926434,
+    "japan": 0.06208063018487108,
+    "thailand": 0.06308754566062438
+  },
+  "by_source": {
+    "J": {
+      "rows": 22731,
+      "billed": 15401370.75,
+      "weight_share": 0.4771209169238828,
+      "increase": 0.06208063018487108
+    },
+    "T": {
+      "rows": 23085,
+      "billed": 14252360.9,
+      "weight_share": 0.4308056503308608,
+      "increase": 0.06308754566062438
+    },
+    "(none)": {
+      "rows": 1801,
+      "billed": 2942120.98,
+      "weight_share": 0.09207343274525637,
+      "increase": 0.030601185620378314
+    }
+  },
+  "figure_replaced": {
+    "earlier_method": "(1 + revision) x (FX_old / FX_new) x (discount_new / discount_old) - 1",
+    "earlier_whole": 0.018,
+    "earlier_japan": 0.0574,
+    "earlier_thailand": -0.0245,
+    "earlier_per_market": {
+      "PR00": 0.0024,
+      "UTI": 0.0517,
+      "UMI": -0.007,
+      "CIS": 0.0328
+    },
+    "corrected_whole": 0.05961599453926434
+  },
+  "markets": {
+    "PR00": {
+      "recipe_rows": 32434,
+      "rows": 32434,
+      "sheet_rows": 10968,
+      "part_numbers": 10968,
+      "billed": 12831245.780000001,
+      "increase": 0.05921147633739341,
+      "japan": 0.06392482296934246,
+      "thailand": 0.06400111391423328,
+      "no_label": 0.02408760892427406,
+      "no_label_share": 0.11946846477727013,
+      "billed_japan": 3586722.9200000004,
+      "billed_thailand": 7777202.640000001,
+      "rows_japan": 5995,
+      "rows_thailand": 4546,
+      "note": "Main EU distributor list. Full class-factor engine - the reference basis.",
+      "basis": "class",
+      "billed_after": 13599710.881566565
+    },
+    "UTI": {
+      "recipe_rows": 1869,
+      "rows": 1869,
+      "sheet_rows": 1869,
+      "part_numbers": 1869,
+      "billed": 3400405.3899999997,
+      "increase": 0.05580775741103503,
+      "japan": 0.05631158659190771,
+      "thailand": 0.09239494017373363,
+      "no_label": 0.044610654247508284,
+      "no_label_share": 0.04534232071252538,
+      "billed_japan": 3246001.06,
+      "billed_thailand": 2563.65,
+      "rows_japan": 1790,
+      "rows_thailand": 3,
+      "note": "Israel, sold-to 1799. Never combined with UMI.",
+      "basis": "class",
+      "billed_after": 3591208.457191541
+    },
+    "UMI": {
+      "recipe_rows": 2428,
+      "rows": 2428,
+      "sheet_rows": 2428,
+      "part_numbers": 2428,
+      "billed": 2429159.96,
+      "increase": 0.056370090038081556,
+      "japan": 0.0621401380084074,
+      "thailand": 0.06272469573483705,
+      "no_label": 0.020114808450078382,
+      "no_label_share": 0.1466740673963239,
+      "billed_japan": 444445.61,
+      "billed_thailand": 1640047.4899999998,
+      "rows_japan": 609,
+      "rows_thailand": 1725,
+      "note": "Israel, sold-to 1797. Never combined with UTI.",
+      "basis": "class",
+      "billed_after": 2568526.9002569146
+    },
+    "CIS": {
+      "recipe_rows": 3090,
+      "rows": 3090,
+      "sheet_rows": 2674,
+      "part_numbers": 2674,
+      "billed": 1455811.07,
+      "increase": 0.04845536721908188,
+      "japan": 0.04644539475736338,
+      "thailand": 0.0637690838485076,
+      "no_label": 0.04463258629454378,
+      "no_label_share": 0.03271326594087597,
+      "billed_japan": 1220344.3299999998,
+      "billed_thailand": 184886.69,
+      "rows_japan": 1950,
+      "rows_thailand": 625,
+      "note": "GA Armenia and CBC Kazakhstan. Class-independent: one margin across the catalogue, so no class-factor column is looked up on this sheet.",
+      "basis": "flat",
+      "billed_after": 1526141.5912377355
+    }
+  },
+  "ebp_evidence": [
+    {
+      "n": 1,
+      "claim": "The Export Base Price is built up from IML's own costs, and our purchase price is a discount off it.",
+      "source": "Masumi Hayakawa (IML), 10 November 2025",
+      "detail": "62% on vehicle parts and 73.5% on industrial engines, applied to IML's Export Base Price. EBP 1,000 JPY gives a purchase price of 620 JPY on vehicle parts."
+    },
+    {
+      "n": 2,
+      "claim": "IML builds its offer price from supplier cost plus a target gross profit.",
+      "source": "Hideya Kondou (ISZJ), 24 November 2020",
+      "detail": "Normal at 25% gross profit, Best at 17%."
+    },
+    {
+      "n": 3,
+      "claim": "The discount change and the base-price revision happen at the same moment.",
+      "source": "Takayoshi Suzuki, 22 December 2025",
+      "detail": "Valid from 5 January 2026, \"the same timing with annual EBP revision\"."
+    },
+    {
+      "n": 4,
+      "claim": "The base price and the class letter arrive together from Japan.",
+      "source": "Peeraya Sawangsaensak (IMIT), 29 April 2026",
+      "detail": "\"Please find the B/P, Price Class, and remark as detailed below.\""
+    }
+  ],
+  "open_items": [
+    {
+      "id": "IE_RATE",
+      "title": "Our configuration carries only the vehicle-parts rate",
+      "detail": "config.yaml holds J: 0.673, the vehicle-parts rate. The industrial-engine rate is 73.5% in 2025 and 79.7% in 2026. Our configuration applies 67.3% to everything Japan-sourced.",
+      "action": "config.yaml is left alone. Ask IML to confirm the current industrial-engine rate and its part families."
+    },
+    {
+      "id": "REVISION_SIZE",
+      "title": "IML states a different revision size from ours",
+      "detail": "IML says the CY2026 EBP revision is around 3% for ISZE (weighted average). We measure 5.9616%. Likely different revisions or scopes.",
+      "action": "Open reconciliation item. Ask IML for the window, the scope and the weighting behind the 3%."
+    }
+  ],
+  "caveats": [
+    "The weighted increase is measured on the price comparison itself. No exchange rate and no discount is multiplied into it.",
+    "Rows with no source label are reported separately, never assigned to Japan or Thailand.",
+    "Volume and mix are held flat. This is the arithmetic of the price move.",
+    "CIS current prices sit on the class factors even though the configuration wants a flat 60% margin, so the switch is reported separately.",
+    "The result blocks are literal values, computed in Python, so they render the instant the file opens."
+  ]
+}

@@ -257,7 +257,7 @@ PRISM already answers the commercial questions: Early Warning = who to call this
 
 | Do | What it is | Benefit | Don’t |
 |---|---|---|---|
-| **1. Hide internal tabs** | Leakage Sankey, Attach, Elasticity, Aftermarket scrape stay in the app but only when `PRISM_INTERNAL=true`. Done 2026-08-18. Launcher: run_prism_internal.ps1 (same window as usual PRISM; close the other one first). | You can open PRISM with a distributor in the room without Mode B charts on screen. Gated. | Leave them on Decision / Offset / Customer Risk for every user |
+| **1. Hide internal tabs** | Leakage Sankey, Attach, Elasticity, Aftermarket scrape stay in the app but only when `PRISM_INTERNAL=true`. Done 2026-08-18. Launcher: run_prism_internal.ps1 (same window as usual PRISM; close the other one first). | You can open PRISM with a distributor in the room without internal charts on screen. Gated. | Leave them on Decision / Offset / Customer Risk for every user |
 | **2. Optional: kill duplicate tabs** | ✅ **done 2026-08-18.** Dropped Strategic Most exposed + Basket correlation, Insights BVP × Capture, BVP PMS/GPS/AIM tabs. Cross-links to Early Warning / AIM × GPS Matrix / PMS / GPS / AIM Review. Pages not merged. | Less hunting. Same numbers. | The 7-tab Network Intelligence rewrite (phases 3–8 as a block) |
 | **3. Freeze the other two apps** | Streamlit :8503 is the product. Dash :8050 and Evidence.dev: no new charts, no second KPI spine. | Agents stop “improving” apps you don’t open | Rebuild PRISM in Evidence |
 

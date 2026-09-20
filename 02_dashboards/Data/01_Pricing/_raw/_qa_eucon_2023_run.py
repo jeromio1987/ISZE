@@ -1,4 +1,4 @@
-"""Hard QA for Eucon 2023 Price Survey rawdata — Mode B scratch; not a deliverable."""
+"""Hard QA for Eucon 2023 Price Survey rawdata — internal scratch; not a deliverable."""
 from __future__ import annotations
 
 import csv

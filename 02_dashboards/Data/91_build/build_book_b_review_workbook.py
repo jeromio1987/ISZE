@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Book B revision review workbook — filterable HTML (Mode B).
+"""Book B revision review workbook — filterable HTML (internal).
 
 Reads  : revision_book_b_top_review.csv
 Writes : 01_data/01_Pricing/BOOK_B_REVISION_REVIEW_20260819.html
@@ -154,7 +154,7 @@ def write_html(payload: dict) -> None:
 <body>
 <div class="hero">
   <div class="hero-inner">
-    <div class="brand">Isuzu Europe · Book B · Mode B internal</div>
+    <div class="brand">Isuzu Europe · Book B · internal internal</div>
     <h1>Book B Revision Review</h1>
     <div class="rule"></div>
     <p class="lead">Top non-HOLD revision queue · provisional forecast weights · no alloc run · charts first. IUK≠ITUK · UTI≠UMI.</p>
@@ -186,7 +186,7 @@ def write_html(payload: dict) -> None:
     <tbody>{_book_b_rows(rows)}</tbody>
   </table>
   </div>
-  <p class="foot">Built {built} · SSR charts · Source: revision_book_b_top_review.csv · Provisional weights — no alloc · Internal Mode B.</p>
+  <p class="foot">Built {built} · SSR charts · Source: revision_book_b_top_review.csv · Provisional weights — no alloc · Internal internal.</p>
 </div>
 <script>
 document.querySelectorAll('#db-filters button').forEach(btn=>{{

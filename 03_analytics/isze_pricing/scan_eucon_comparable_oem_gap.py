@@ -1,4 +1,4 @@
-"""List Eucon 2023 COMPARABLE OEs not yet in oem_peer_basket (Mode B hygiene).
+"""List Eucon 2023 COMPARABLE OEs not yet in oem_peer_basket (internal hygiene).
 
 Writes 01_data/00_derived/eucon_comparable_oem_gap_20260810.csv
 Usage: python 03_analytics/isze_pricing/scan_eucon_comparable_oem_gap.py

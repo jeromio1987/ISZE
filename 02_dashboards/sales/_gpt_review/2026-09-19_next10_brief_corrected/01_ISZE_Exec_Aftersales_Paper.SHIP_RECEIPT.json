@@ -1,0 +1,36 @@
+﻿{
+    "ok":  true,
+    "scope":  "corrected working copy for review - NOT copied to a live 02_dashboards path, NOT an approved shared version",
+    "artifact":  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_gpt_review\\2026-09-19_next10_brief_corrected\\01_ISZE_Exec_Aftersales_Paper.html",
+    "bytes":  281648,
+    "sha256":  "E14A80260B288E1A852ADE043625E0924AED01E379D7F2E1C4E8EE62D026F7D7",
+    "mtime_utc":  "2026-09-19T18:10:33.552256+00:00",
+    "generated_utc":  "2026-09-19T18:11:13.414510+00:00",
+    "covers_mtime":  true,
+    "changed_this_pass":  true,
+    "checks":  {
+                   "inline_js_parse":  "node --check on every \u003cscript\u003e block: 0 failures",
+                   "markup_element_ids_unique":  "0 duplicate static ids; all static getElementById targets resolve",
+                   "visible_verification_statement":  "read from 01_data/00_derived/_verification_report.json, generated_at 2026-09-19T13:00:24Z, summary pass 153 warn 1 fail 0",
+                   "rendered":  "headless Chrome screenshot taken AND image-read at full resolution, one at a time, by the agent writing this receipt",
+                   "print_output":  "A4 print-to-PDF inspected by the agent writing this receipt; page 16 source row renders with the ITUK arithmetic"
+               },
+    "live_verification_source":  {
+                                     "path":  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_verification_report.json",
+                                     "generated_at":  "2026-09-19T13:00:24Z",
+                                     "summary":  {
+                                                     "pass":  153,
+                                                     "warn":  1,
+                                                     "fail":  0,
+                                                     "ok":  true
+                                                 },
+                                     "warn_check":  [
+                                                        "uio_year.historical_gaps"
+                                                    ]
+                                 },
+    "notes":  "F01: ITUK source row added (target €12,212,051 - billed €5,564,543.92 = gap €6,647,507.08, fleet 23,067) so the corrected gap is checkable on the page; row verified in the printed PDF.",
+    "not_run":  [
+                    "interaction toggles (market/family/period/measure) not clicked through",
+                    "keyboard navigation and narrow-screen layout not tested"
+                ]
+}

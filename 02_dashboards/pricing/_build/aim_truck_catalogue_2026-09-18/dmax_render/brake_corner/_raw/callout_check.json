@@ -1,0 +1,244 @@
+{
+ "callouts": [
+  {
+   "id": "A",
+   "caption": "Brake disc",
+   "part": "disc",
+   "box": [
+    296,
+    64,
+    664,
+    214
+   ],
+   "anchor": [
+    536,
+    906
+   ],
+   "anchor_on_own_part": true,
+   "anchor_also_on": []
+  },
+  {
+   "id": "B",
+   "caption": "Brake pads",
+   "part": "pads",
+   "box": [
+    404,
+    1786,
+    816,
+    1942
+   ],
+   "anchor": [
+    826,
+    1040
+   ],
+   "anchor_on_own_part": true,
+   "anchor_also_on": []
+  },
+  {
+   "id": "C",
+   "caption": "Brake caliper",
+   "part": "caliper",
+   "box": [
+    824,
+    64,
+    1216,
+    214
+   ],
+   "anchor": [
+    1056,
+    690
+   ],
+   "anchor_on_own_part": true,
+   "anchor_also_on": []
+  },
+  {
+   "id": "D",
+   "caption": "Road wheel",
+   "part": "wheel",
+   "box": [
+    1116,
+    1786,
+    1496,
+    1942
+   ],
+   "anchor": [
+    1481,
+    1300
+   ],
+   "anchor_on_own_part": true,
+   "anchor_also_on": []
+  },
+  {
+   "id": "E",
+   "caption": "Tyre",
+   "part": "tyre",
+   "box": [
+    1972,
+    1786,
+    2392,
+    1942
+   ],
+   "anchor": [
+    2280,
+    1720
+   ],
+   "anchor_on_own_part": true,
+   "anchor_also_on": []
+  }
+ ],
+ "checks": {
+  "label_vs_label": [
+   {
+    "a": "A",
+    "b": "B",
+    "overlap": false
+   },
+   {
+    "a": "A",
+    "b": "C",
+    "overlap": false
+   },
+   {
+    "a": "A",
+    "b": "D",
+    "overlap": false
+   },
+   {
+    "a": "A",
+    "b": "E",
+    "overlap": false
+   },
+   {
+    "a": "B",
+    "b": "C",
+    "overlap": false
+   },
+   {
+    "a": "B",
+    "b": "D",
+    "overlap": false
+   },
+   {
+    "a": "B",
+    "b": "E",
+    "overlap": false
+   },
+   {
+    "a": "C",
+    "b": "D",
+    "overlap": false
+   },
+   {
+    "a": "C",
+    "b": "E",
+    "overlap": false
+   },
+   {
+    "a": "D",
+    "b": "E",
+    "overlap": false
+   }
+  ],
+  "leader_vs_leader": [
+   {
+    "a": "A",
+    "b": "B",
+    "cross": false
+   },
+   {
+    "a": "A",
+    "b": "C",
+    "cross": false
+   },
+   {
+    "a": "A",
+    "b": "D",
+    "cross": false
+   },
+   {
+    "a": "A",
+    "b": "E",
+    "cross": false
+   },
+   {
+    "a": "B",
+    "b": "C",
+    "cross": false
+   },
+   {
+    "a": "B",
+    "b": "D",
+    "cross": false
+   },
+   {
+    "a": "B",
+    "b": "E",
+    "cross": false
+   },
+   {
+    "a": "C",
+    "b": "D",
+    "cross": false
+   },
+   {
+    "a": "C",
+    "b": "E",
+    "cross": false
+   },
+   {
+    "a": "D",
+    "b": "E",
+    "cross": false
+   }
+  ],
+  "leader_through_other_label": [],
+  "anchors_verified": true,
+  "labels_inside_frame": [
+   {
+    "id": "A",
+    "inside": true
+   },
+   {
+    "id": "B",
+    "inside": true
+   },
+   {
+    "id": "C",
+    "inside": true
+   },
+   {
+    "id": "D",
+    "inside": true
+   },
+   {
+    "id": "E",
+    "inside": true
+   }
+  ],
+  "label_over_own_part": [
+   {
+    "id": "A",
+    "own_part_under_label_pct": 0.0
+   },
+   {
+    "id": "B",
+    "own_part_under_label_pct": 0.0
+   },
+   {
+    "id": "C",
+    "own_part_under_label_pct": 0.0
+   },
+   {
+    "id": "D",
+    "own_part_under_label_pct": 0.0
+   },
+   {
+    "id": "E",
+    "own_part_under_label_pct": 0.0
+   }
+  ]
+ },
+ "failures": [],
+ "notes": [],
+ "verdict": "PASS"
+}

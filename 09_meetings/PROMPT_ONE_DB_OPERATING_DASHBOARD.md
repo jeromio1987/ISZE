@@ -78,7 +78,7 @@ Visual bar to beat (open these; do not copy the composable desk):
 15. **Charts:** no overlapping labels, bar thickness ≥18px, ≤6 axis ticks, round memorable ticks. If Chart.js still overlaps after two tries → inline SVG.
 16. **Do not write to Downloads or `.cursor`.** Only under `C:\Users\jerom\Desktop\claude\`.
 17. **Do not edit `07_deploy/`.**
-18. **Customer-facing Mode A** never shows internal colleague names, old-vs-corrected number tables, or file paths. This dashboard is internal, but still: no “Claude guessed”.
+18. **Customer-facing shared** never shows internal colleague names, old-vs-corrected number tables, or file paths. This dashboard is internal, but still: no “Claude guessed”.
 19. **Power BI / accounting wins** when Jerome has supplied a cut (`db_profiles.yaml` `pbi:`). Do not keep a derived billing number “for comparison” on the hero.
 20. **Crossref is incomplete.** `genuine_bvp_crossref.csv` missing a BVP does **not** prove none exists. Label “no BVP in crossref” vs “no BVP in catalog”. SPA only when ISZE would actually SPA that PN.
 
@@ -101,7 +101,7 @@ Sticky tab bar. Each tab is a room. Hero strip stays visible.
 
 ### B. GPS + PMS (the commercial spine)
 
-Clone the *thinking* of the recent DB packs (Hungary Mode B, Portugal/IUK sales-review blueprint), not their numbers.
+Clone the *thinking* of the recent DB packs (Hungary internal, Portugal/IUK sales-review blueprint), not their numbers.
 
 Must show:
 

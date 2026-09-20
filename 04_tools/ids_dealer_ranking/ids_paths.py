@@ -32,7 +32,7 @@ MIDI_FILE = DATA_ROOT / "MIDI" / "MIDI_FR.xlsx"
 
 SKIP_DIRS = {"rankings", "reports", "__pycache__", "MIDI", "_EXPORT"}
 
-# On-disk folder name -> English country / tab label (Mode A — shared sheets & dashboard)
+# On-disk folder name -> English country / tab label (shared — shared sheets & dashboard)
 #
 # UK: do not flip these two. IUK = I.M. PARTS & SERVICE Limited (sold-to 2574),
 # the LCV / D-Max distributor. ITUK = ISUZU TRUCK (UK) LIMITED (sold-to 2575),

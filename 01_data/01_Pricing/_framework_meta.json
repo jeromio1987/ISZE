@@ -1,0 +1,108 @@
+{
+  "workbook": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\ISZE_Pricing_Framework.xlsx",
+  "built": "2026-09-18T23:09:26",
+  "window": "2025-07-01 to 2026-06-30 (the L12M in-scope revision base)",
+  "priced_part_numbers": 15273,
+  "weight_sum": 4536625382.0,
+  "books": {
+    "Frozen": {
+      "part_numbers": 24.0,
+      "billed_eur": 2008248.87,
+      "billed_qty": 33833.0,
+      "weight_pct": 6.316813399162876
+    },
+    "Launch": {
+      "part_numbers": 103.0,
+      "billed_eur": 22047.670000000006,
+      "billed_qty": 451.0,
+      "weight_pct": 0.06367109374868811
+    },
+    "Ramp": {
+      "part_numbers": 2385.0,
+      "billed_eur": 6688753.32,
+      "billed_qty": 318453.0,
+      "weight_pct": 19.92234976213868
+    },
+    "Working": {
+      "part_numbers": 12761.0,
+      "billed_eur": 23876802.770000003,
+      "billed_qty": 872763.0,
+      "weight_pct": 73.69716574494976
+    }
+  },
+  "launch_part_numbers_no_l12m": 2839,
+  "ramp_part_numbers_with_l12m": 2795,
+  "frozen_part_numbers": 24,
+  "index_recomputed": 0.05961599453926425,
+  "dials_are_inputs": [
+    "target weighted increase",
+    "target on current sales price",
+    "per-line cap",
+    "per-line floor",
+    "distributor margin assumption",
+    "FX (live, 178.5)",
+    "purchase discounts",
+    "settled base-price revision (5.9616%, on file)",
+    "scenario base revision (7.0%, agent-written, NOT on file)",
+    "per-book uplift"
+  ],
+  "rates": {
+    "fx_live": 178.5,
+    "fx_live_period": [
+      "2026-10-01",
+      "2027-03-31"
+    ],
+    "fx_prior_172_6_period": [
+      "2026-04-01",
+      "2026-09-30"
+    ],
+    "fx_prior_163_7_as_of": "2025-10-01",
+    "fx_prior_163_7_note": "what the settled 5.9616% base-price revision was priced on",
+    "discount_live": {
+      "J": 0.673,
+      "T": 0.611
+    },
+    "discount_prior": {
+      "J": 0.62,
+      "T": 0.611
+    },
+    "base_revision_settled": 0.059616,
+    "base_revision_settled_source": "aim_pricing_recalc_2026-09-17.json (generated 2026-09-17): weighted 5.9616%, step EUR 1,652,140.71",
+    "base_revision_scenario": 0.07,
+    "base_revision_scenario_note": "agent-written on 2026-09-18 to size the ceiling case. NOT a quotation from IML and no file in the workspace states it.",
+    "fx_cost_factor_old_over_new": 0.9171,
+    "discount_cost_factor": 1.0855,
+    "net_on_landed_cost": 0.995483,
+    "euro_move_settled_revision": 0.05483,
+    "euro_move_scenario_revision": 0.065167,
+    "margin_on_yen_base_price_old": 0.38,
+    "margin_on_yen_base_price_new": 0.327
+  },
+  "computed_block": {
+    "columns": [
+      "U Source",
+      "V BP JPY carried",
+      "W FOB EUR COMPUTED",
+      "X GM COMPUTED",
+      "Y GM delta vs class pp",
+      "Z GM gap to book pp"
+    ],
+    "formula": "W = V / FX * VLOOKUP(U, Dials discount table, 2, FALSE)",
+    "authority": "K (Current SP EUR) stays CARRIED - the computed block is a cross-check",
+    "computed_margin_median_pct": 53.2144797241269,
+    "computed_margin_book_weighted_pct": 53.15042909390749,
+    "computed_rows_used": 14617
+  },
+  "caveats": [
+    "SP_EUR is carried from the price file, not recomputed - 12.8% of rows carry a deliberate override and recomputing would invent a price for them.",
+    "The computed cost is an INDICATIVE cross-check: it assumes the yen base price is the cost base and that the discount applies cleanly. It is not a purchase cost, and the 12.8% that do not reproduce the chain are exactly where it is weakest.",
+    "The computed margin is one row per part number (15,273) on the L12M in-scope book; the 51.09% book margin finance quotes is a different grain (45,816 rows at DB x part number) on the carried class margin. Do not equate them.",
+    "Per-part PURCHASE cost exists on the SPA lines only; everywhere else the computed margin rests on the class factor and the discount, not on a purchase price.",
+    "The 35% distributor margin is an assumption, not a measurement.",
+    "BASE REVISION PROVENANCE. The settled revision is 5.9616% yen, on file and sourced to aim_pricing_recalc_2026-09-17.json (step EUR 1,652,140.71, ties out to the published figure). The 7.0% revision is a SCENARIO written by the agent on 2026-09-18 and is NOT sourced - no file in the workspace states it. It is retained only to size what happens above Jerome's band; it must never be presented as a revision that is coming.",
+    "The 5.9616% is a YEN base-price move. The euro move is smaller because the net rate drift is -0.45%: 1.059616 x 0.995483 = 1.054832, so +5.48% in euro, which is already inside the 4-6% band. The +6.52% figure belongs to the 7% scenario only.",
+    "Ramp growth factors are unsigned midpoints, and 3,390 of 3,605 RG21 parts sit at a factor of 1.0, which means not treated as ramping.",
+    "The frozen book is small by coverage (the bridge reaches 0.50% of the catalogue), not by importance.",
+    "No volume response to a price change is assumed anywhere."
+  ]
+}

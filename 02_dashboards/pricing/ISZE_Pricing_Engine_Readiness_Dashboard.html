@@ -323,7 +323,7 @@ svg.ch .ax{font-size:11px;fill:#444}
   </div>
   <div class="card">
     <h3>Maturity matrix — prior vs engine</h3>
-    <p class="cap">Mode A labels. Class factors still set SP = FOB / factor; the revision logic is what changed.</p>
+    <p class="cap">shared labels. Class factors still set SP = FOB / factor; the revision logic is what changed.</p>
     <table>
       <thead><tr><th>Dimension</th><th>Prior process</th><th>Engine</th></tr></thead>
       <tbody><tr><td><b>Index discipline</b></td><td>Target % often applied uniformly</td><td>+3% weighted exact; logged</td></tr><tr><td><b>Who pays</b></td><td>Same % most lines</td><td>Raise funds; defend/contested cut</td></tr><tr><td><b>Street gate</b></td><td>Ad hoc / wrong point risk</td><td>Evidence tiers + hold-when-blind</td></tr><tr><td><b>OEM peer gate</b></td><td>None</td><td>oem_benchmark (≥3 priced peers)</td></tr><tr><td><b>Brand ceilings</b></td><td>Flat premium thinking</td><td>+30/+60/+150/+250 ladder</td></tr><tr><td><b>IML vs ISZE</b></td><td>Often blurred on revision</td><td>BP pass-through vs Δ decision separated</td></tr><tr><td><b>θ / parc</b></td><td>Not in list revision</td><td>θ_parc live; θ_interval pending map</td></tr><tr><td><b>Audit trail</b></td><td>No run registry</td><td>Reason codes + run IDs</td></tr></tbody>
@@ -703,7 +703,7 @@ svg.ch .ax{font-size:11px;fill:#444}
 </svg>
     </div>
     <div class="card">
-      <h3>Gate logic (Mode A)</h3>
+      <h3>Gate logic (shared)</h3>
       <ul class="checklist">
         <li><b>T3_eucon (and stronger):</b> may move within tier limits; street read at PR00 × 1.785.</li>
         <li><b>T5_none:</b> NO_EVIDENCE_HOLD — no invented street; base lift only.</li>
@@ -788,7 +788,7 @@ svg.ch .ax{font-size:11px;fill:#444}
 
 <section id="we-talk">
   <h3 class="sub">9 · What you can tell a distributor</h3>
-  <p class="lead">Short callouts — Mode A English, no internal nicknames.</p>
+  <p class="lead">Short callouts — shared English, no internal nicknames.</p>
   <div class="talks"><div class="talk"><h4>Same index, fairer mix</h4><p>We still deliver a +3% weighted list increase (€173,041 on €5,768,025). The engine does not invent a bigger bill — it changes which lines carry it.</p></div><div class="talk"><h4>Defend lines are not loaded like captive</h4><p>Where genuine capture is already lost and street is above market, the engine cuts or holds (e.g. IUK brake pads/rotors). A flat +3% would have raised those the same as captive filters.</p></div><div class="talk"><h4>Blind weight is still partly the old world</h4><p>23.8% of basket € still takes the unbenchmarked base lift (NO_EVIDENCE_HOLD, ~6.1% weighted). Differentiation is real where evidence exists — honest about where it does not.</p></div><div class="talk"><h4>Street on the right point</h4><p>Street comparisons use PR00 × 1.785 (street factor), not raw list — correcting the Eucon-era misread. No oem_benchmark without enough priced peer OEs.</p></div><div class="talk"><h4>New models need mix, not only +3%</h4><p>D-Max 2.2 (15k oil interval) is a θ / launch-book story: protect interval-linked wear with mix rules; do not claim volume from the list move alone.</p></div></div>
   <div class="callout amber">
     <b>Sales evolution (honest scope).</b> Both paths deliver €173,041 extra list revenue on the €5,768,025 L12M weight. Mix of who pays differs by ~€94,886 reallocated. No volume win/loss is claimed.
@@ -802,7 +802,7 @@ svg.ch .ax{font-size:11px;fill:#444}
   Sources: allocation run 20260810T171626Z__alloc__t3pct; OEM peer readiness 2026-08-10; D-Max launch run 20260806T154452Z__launch__dmax_22_base;
   pricing action map (213 PMS cells); Spec layers 0–5; class factors and brand ceilings from resolved pricing config.
   Charts are inline SVG — no external libraries, no network calls.
-  Mode A · English UI · Built 2026-08-12.
+  shared · English UI · Built 2026-08-12.
 </div>
 </div>
 <script>

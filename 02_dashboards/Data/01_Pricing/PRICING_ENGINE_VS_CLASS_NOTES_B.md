@@ -1,8 +1,8 @@
-# Pricing engine vs class / uniform — Mode B notes
+# Pricing engine vs class / uniform — internal notes
 
 **Audience:** Jerome only.  
 **Alloc:** `20260810T171626Z__alloc__t3pct` (+3.0000% exact).  
-**Dashboard (Mode A):** `02_dashboards/pricing/ISZE_Pricing_Engine_Readiness_Dashboard.html`  
+**Dashboard (shared):** `02_dashboards/pricing/ISZE_Pricing_Engine_Readiness_Dashboard.html`  
 **JSON:** `01_data/14_dashboards/pricing_engine_readiness.json`  
 **Tab:** **Why the engine** (deep Before vs Engine) · sticky next to Readiness.
 
@@ -76,7 +76,7 @@ Zone wtd Δ (engine): raise **~6.3%**, defend **~1.5%**, contested **~1.0%**. Un
 
 ---
 
-## External one-liners (Mode A — from Why tab)
+## External one-liners (shared — from Why tab)
 
 1. Same +3% weighted bill; different lines carry it (~€95k reallocated).
 2. Defend / above-market wear is cut or held — not loaded like captive filters.

@@ -1,0 +1,264 @@
+{
+  "generated": "2026-09-17T13:51:59+00:00",
+  "built_by": "01_data/91_build/build_other_filter_split.py",
+  "basis": "catalog_full - catalogue columns on ALL rows, not restricted to aim_source == 'pr00_catalog'",
+  "window": {
+    "start": "2025-07-01",
+    "end": "2026-06-30",
+    "basis": "L12M billed parts in the shipped comparison"
+  },
+  "bucket": {
+    "catalog_l2": "Filters",
+    "catalog_l3": "Other filter"
+  },
+  "in_scope_row_count": 184,
+  "in_scope_row_count_all_scope_incl": 193,
+  "out_of_scope_rows": [
+    {
+      "network_role": "direct_account",
+      "rows": 4,
+      "part_numbers": 4,
+      "qty": 47.0,
+      "eur": 3675.7300000000005
+    },
+    {
+      "network_role": "not_a_customer",
+      "rows": 5,
+      "part_numbers": 5,
+      "qty": 9.0,
+      "eur": 2556.3500000000004
+    }
+  ],
+  "join_missing": {
+    "rows": 132,
+    "part_numbers": 87,
+    "l12m_billed_eur": 1563337.28
+  },
+  "reconciliation": {
+    "focus_file_network_qty": 6655.0,
+    "focus_file_network_eur": 668819.46,
+    "focus_file_network_step_eur": 27774.1,
+    "focus_file_network_weighted_increase_pct": 4.6841,
+    "focus_file_network_priced_qty": 6652.0,
+    "focus_file_network_n_pn": 48,
+    "focus_file_sum_of_distributor_qty": 6655.0,
+    "focus_file_sum_of_distributor_eur": 668819.46,
+    "recomputed_qty": 6655.0,
+    "recomputed_eur": 668819.46,
+    "recomputed_step_eur": 27774.1,
+    "recomputed_weighted_increase_pct": 4.6841,
+    "recomputed_priced_qty": 6652.0,
+    "recomputed_n_pn": 48,
+    "qty_delta": 0.0,
+    "eur_delta": 0.0,
+    "step_eur_delta": -0.0,
+    "weighted_increase_delta_pp": -0.0,
+    "n_pn_delta": 0,
+    "ties_out": true
+  },
+  "taxonomy": {
+    "unique_part_numbers_in_node": 237,
+    "of_which_billed_l12m": 48,
+    "unbilled_tail": {
+      "n_pn_unbilled_in_taxonomy": 189,
+      "by_group": {
+        "Aftertreatment filter assemblies (exhaust particulate)": 29,
+        "Crankcase ventilation (VCV) filter assemblies": 2,
+        "Filter covers, pipes and fitting hardware": 2,
+        "Hydraulic / transmission strainers and screens": 4,
+        "Oil-filter elements filed under Other filter": 4,
+        "Unresolved filter parts (no product evidence)": 147,
+        "Urea / DEF (AdBlue) filter elements and kits": 1
+      },
+      "by_aim_l3": {
+        "Other filter": 178,
+        "Filter Assembly": 6,
+        "Strainer": 4,
+        "Filter Element": 1
+      },
+      "with_description": 14,
+      "with_fig_key": 182
+    }
+  },
+  "big_part": {
+    "part_number": "8982878080",
+    "billed_description": "FILTER ASM",
+    "description_norm": "FILTER ASM",
+    "aim_l1": "Maintenance Service",
+    "aim_l2": "Filters",
+    "aim_l3": "Filter Assembly",
+    "catalog_l1": "Competitive parts",
+    "catalog_l2": "Filters",
+    "catalog_l3": "Other filter",
+    "fig_key": "150-558",
+    "fig_key_label": "Other filter",
+    "filter_part_role": "assembly",
+    "aim_source": "aim_workbook",
+    "bp_new_class": "D",
+    "identification_source": "external aftermarket catalogue lookups by part number",
+    "identified_as": "Diesel particulate filter (DPF) assembly for Isuzu 4HK1 engines (NPR-HD / NPR-XD / NQR / NRR / FTR). Sold new or as a remanufactured / core-exchange unit.",
+    "aim_workbook_l1_is_wrong_for_this_part": true,
+    "qty": 277.0,
+    "eur": 298159.98,
+    "share_of_bucket_pct": 44.58,
+    "step_eur": 9690.77,
+    "step_eur_per_unit": 34.98,
+    "bp_new_jpy": 148897.0,
+    "bp_prior_revised_jpy": 143170.0,
+    "delta_pct": 4.0001,
+    "net_billed_eur_per_unit": 1076.39,
+    "n_distributors": 5,
+    "by_distributor": [
+      {
+        "distributor_code": "GERMANY",
+        "country": "Germany",
+        "qty": 1.0,
+        "eur": 1356.47,
+        "step_eur": 34.98,
+        "n_customers": 1,
+        "uio_units_2025": 12855.0,
+        "billed_eur_per_truck": 0.11
+      },
+      {
+        "distributor_code": "IRELAND",
+        "country": "Ireland",
+        "qty": 1.0,
+        "eur": 1179.54,
+        "step_eur": 34.98,
+        "n_customers": 1,
+        "uio_units_2025": 3056.0,
+        "billed_eur_per_truck": 0.39
+      },
+      {
+        "distributor_code": "ITUK",
+        "country": "United Kingdom",
+        "qty": 79.0,
+        "eur": 85494.27,
+        "step_eur": 2763.79,
+        "n_customers": 1,
+        "uio_units_2025": 22389.0,
+        "billed_eur_per_truck": 3.82
+      },
+      {
+        "distributor_code": "PORTUGAL",
+        "country": "Portugal",
+        "qty": 3.0,
+        "eur": 3422.9,
+        "step_eur": 104.95,
+        "n_customers": 1,
+        "uio_units_2025": 8176.0,
+        "billed_eur_per_truck": 0.42
+      },
+      {
+        "distributor_code": "UTI",
+        "country": "Israel",
+        "qty": 193.0,
+        "eur": 206706.8,
+        "step_eur": 6752.05,
+        "n_customers": 1,
+        "uio_units_2025": 10336.0,
+        "billed_eur_per_truck": 20.0
+      }
+    ],
+    "out_of_scope_rows": {
+      "rows": 2,
+      "qty": 5.0,
+      "eur": 5561.76,
+      "roles": [
+        "direct_account",
+        "not_a_customer"
+      ]
+    }
+  },
+  "vcv_check": {
+    "qty": 1438.0,
+    "eur": 65593.32,
+    "markets": 14,
+    "uio_of_its_markets_unique": 127419.0,
+    "uio_sum_of_customer_rows_double_counted": 136446.0,
+    "units_per_truck_per_year": 0.0113,
+    "implied_years_between_replacements": 88.6,
+    "top_market": "UMI",
+    "top_market_eur": 41804.51,
+    "top_market_share_pct": 63.7,
+    "note": "not a service interval - this is stocking behaviour. UMI is ~2/3 of the volume.",
+    "by_market": {
+      "BELGIUM": {
+        "qty": 33.0,
+        "eur": 1665.96
+      },
+      "CYPRUS": {
+        "qty": 1.0,
+        "eur": 53.56
+      },
+      "DENMARK": {
+        "qty": 5.0,
+        "eur": 279.83
+      },
+      "GERMANY": {
+        "qty": 15.0,
+        "eur": 750.9
+      },
+      "GREECE": {
+        "qty": 24.0,
+        "eur": 1257.68
+      },
+      "HUNGARY": {
+        "qty": 6.0,
+        "eur": 306.36
+      },
+      "ICELAND": {
+        "qty": 3.0,
+        "eur": 150.3
+      },
+      "IRELAND": {
+        "qty": 2.0,
+        "eur": 99.9
+      },
+      "IUK": {
+        "qty": 250.0,
+        "eur": 11797.5
+      },
+      "NORWAY": {
+        "qty": 69.0,
+        "eur": 3342.18
+      },
+      "PALESTINE": {
+        "qty": 3.0,
+        "eur": 86.88
+      },
+      "PORTUGAL": {
+        "qty": 42.0,
+        "eur": 2099.0
+      },
+      "SWEDEN": {
+        "qty": 38.0,
+        "eur": 1898.76
+      },
+      "UMI": {
+        "qty": 947.0,
+        "eur": 41804.51
+      }
+    }
+  },
+  "aftertreatment_check": {
+    "aftertreatment_pns_billed": 8,
+    "aftertreatment_eur": 494115.49,
+    "aftertreatment_all_class_D": true,
+    "existing_Exhaust_Aftertreatment_pns_in_taxonomy": 2241,
+    "fig_150_558_members_in_taxonomy": 39,
+    "fig_150_558_members_by_current_node": {
+      "Other filter": 37,
+      "Review needed": 2
+    },
+    "note": "figure key 150-558 sits inside the 150-xxx exhaust aftertreatment figure sequence; its members already split across two nodes today, so the node assignment is applied inconsistently inside one figure group. A move would be a PRISM-owned taxonomy change."
+  },
+  "no_fleet_markets": [
+    "ARMENIA",
+    "KAZAKHSTAN",
+    "PALESTINE",
+    "UKRAINE"
+  ],
+  "network_uio_2025_18_markets": 163459.0,
+  "note": "report only; the source taxonomy in 03_analytics/Isuzu/prism/modules/aim_pn_classifier.py is PRISM-owned and was not touched"
+}

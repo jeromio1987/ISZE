@@ -1,0 +1,22 @@
+{
+  "angle": "locked_file_integrity",
+  "baseline_created": false,
+  "n_files": 203,
+  "n_baselined": 203,
+  "findings": [
+    {
+      "severity": "high",
+      "workstream": "locked files",
+      "what": "LOCKED file was modified: 02_dashboards/pricing/ISZE_Pricing_Revision_AIM_Source.SHIP_RECEIPT.json (mtime now 2026-09-17T20:18:15Z)",
+      "evidence": "02_dashboards/pricing/ISZE_Pricing_Revision_AIM_Source.SHIP_RECEIPT.json",
+      "action": "a locked deliverable changed; log the collision and do NOT fix it - escalate to Jerome",
+      "artifact_is_recent": true,
+      "attribution": "recent: written at or after this toolkit's stamp. Not attributable to a specific agent - another agent may be writing concurrently."
+    }
+  ],
+  "generated_utc": "2026-09-18T03:40:03Z",
+  "description": "Hash the locked files and report any modification",
+  "findings_count": 1,
+  "recent_count": 1,
+  "backlog_count": 0
+}

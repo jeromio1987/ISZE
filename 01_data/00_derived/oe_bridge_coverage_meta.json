@@ -1,0 +1,29 @@
+{
+  "built": "2026-09-18T06:33:21",
+  "source_files": [
+    "01_data/01_Pricing/_raw/spareto_oe_sweep_20260918.csv",
+    "01_data/01_Pricing/_raw/spareto_all_cards_20260918.json",
+    "(rescued from the system temp folder on 2026-09-18 before it was swept)"
+  ],
+  "counts": {
+    "tested": 58,
+    "cards": 35,
+    "with_iam_number_and_price": 35,
+    "with_iam_number_no_price": 0,
+    "returned_nothing": 23
+  },
+  "value": {
+    "billed_eur_resolved": 2782752.31,
+    "pct_of_priced_book": 8.53713612460887
+  },
+  "reconciliation": [
+    "The review reported '35 came back with an IAM part number AND a EUR price'. 35 is the number of keys in the cards file. The sweep CSV reports n_brands>0 on 33. The count with BOTH a number and a price is stated above and is lower than either, because some cards carry a brand with no price.",
+    "The sweep CSV's own euro_hits column reads 0 on every row, so it does not carry the price flag at all. The prices live only in the cards JSON."
+  ],
+  "caveats": [
+    "A distributor's list price is not a market price and is not comparable to our PR00 or our reference dealer price. Do not put these in the same column.",
+    "The source is a third-party multi-brand lookup. Its provenance and its licence to redistribute are NOT established. Keep internal until checked.",
+    "The bridge resolved part numbers we already knew have a named competitor. The rate across all 15,273 priced part numbers will be lower.",
+    "UNIT-OF-MEASURE FAULT, found 2026-09-18 by a downstream review and confirmed here: two rows price far above any plausible retail. 8980252486 and 8982127181, both EGR coolers, carry EUR 1,851.82 and EUR 1,975.98 against our own list of EUR 258.74 - 7.16x and 7.64x. A bridge price many times our own list is a quantity-unit mismatch (a kit or pack priced as one unit), not a competitor price. EXCLUDE these two from any commercial statement until the unit is confirmed. Excluding them, the resolved set is 33 part numbers worth EUR 2,594,755 = 7.96% of the priced book, against 35 / EUR 2,782,752 / 8.54% including them."
+  ]
+}

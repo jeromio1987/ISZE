@@ -1,0 +1,2195 @@
+{
+ "generated": "2026-09-18",
+ "generator": "02_dashboards/globe/build_market_spine.py",
+ "sources": {
+  "measures": "01_data/00_derived/gps_spu_by_distributor.csv",
+  "coordinates": "03_analytics/Isuzu/prism/data/distributor_geo.csv",
+  "pms_panel": "01_data/00_derived/pms_capture_by_db_year.csv",
+  "entities": "01_data/00_derived/distributor_dimension.csv"
+ },
+ "settings": {
+  "schema_version": 2,
+  "height_metric": "gap_eur",
+  "color_metric": "capture_vs_max",
+  "metrics": {
+   "gap_eur": {
+    "label": "Uncaptured parts spend",
+    "long_label": "Target spend for the market minus what we billed for parts",
+    "unit": "EUR",
+    "format": "eur",
+    "height_reference": 6271367.08,
+    "color_scale": {
+     "type": "ramp",
+     "mode": "sqrt",
+     "stops": [
+      {
+       "at": 0.0,
+       "color": "#e8e2d6"
+      },
+      {
+       "at": 1.0,
+       "color": "#c0552d"
+      }
+     ],
+     "missing_color": "#6b7280",
+     "note": "Continuous ramp on a square-root scale. Euro values span two orders of magnitude across these markets, so equal-width colour bands would put every market except three in the palest class."
+    }
+   },
+   "capture_vs_max": {
+    "label": "Share of target spend captured",
+    "long_label": "Parts billed divided by the target spend for the market",
+    "unit": "share",
+    "format": "pct",
+    "height_reference": 1.0,
+    "color_scale": {
+     "type": "step",
+     "classes": [
+      {
+       "max": 0.4,
+       "color": "#b23a3a",
+       "label": "under 40% captured"
+      },
+      {
+       "max": 0.55,
+       "color": "#c0552d",
+       "label": "40% to 55% captured"
+      },
+      {
+       "max": 0.7,
+       "color": "#d99a3c",
+       "label": "55% to 70% captured"
+      },
+      {
+       "max": 0.85,
+       "color": "#7fa96b",
+       "label": "70% to 85% captured"
+      },
+      {
+       "max": 1.01,
+       "color": "#3f7d4f",
+       "label": "85% captured or more"
+      }
+     ],
+     "missing_color": "#6b7280",
+     "note": "Class breaks sit in the gaps between natural clusters in the 2025 data, not on round numbers: 35% | 40-55% (six markets) | 55-70% (four) | 70-85% (four) | 84-92% (three)."
+    }
+   },
+   "spend_per_unit_eur": {
+    "label": "What we billed per truck",
+    "long_label": "Parts billed divided by the vehicles in service",
+    "unit": "EUR per truck",
+    "format": "eur",
+    "height_reference": 388.57,
+    "color_scale": {
+     "type": "step",
+     "classes": [
+      {
+       "max": 150,
+       "color": "#b23a3a",
+       "label": "under EUR 150 per truck"
+      },
+      {
+       "max": 190,
+       "color": "#c0552d",
+       "label": "EUR 150 to 190 per truck"
+      },
+      {
+       "max": 230,
+       "color": "#d99a3c",
+       "label": "EUR 190 to 230 per truck"
+      },
+      {
+       "max": 280,
+       "color": "#7fa96b",
+       "label": "EUR 230 to 280 per truck"
+      },
+      {
+       "max": 100000,
+       "color": "#3f7d4f",
+       "label": "EUR 280 or more per truck"
+      }
+     ],
+     "missing_color": "#6b7280",
+     "note": "Observed range EUR 88 to 389 across the 18 markets."
+    }
+   },
+   "total_sales_eur": {
+    "label": "Parts billed",
+    "long_label": "Parts revenue billed into the market",
+    "unit": "EUR",
+    "format": "eur",
+    "height_reference": 6131920.41,
+    "color_scale": {
+     "type": "ramp",
+     "mode": "sqrt",
+     "stops": [
+      {
+       "at": 0.0,
+       "color": "#e8e2d6"
+      },
+      {
+       "at": 1.0,
+       "color": "#c0552d"
+      }
+     ],
+     "missing_color": "#6b7280"
+    }
+   },
+   "max_spend_eur": {
+    "label": "Target spend for the market",
+    "long_label": "Modelled parts spend the market should support",
+    "unit": "EUR",
+    "format": "eur",
+    "height_reference": 11945750.0,
+    "color_scale": {
+     "type": "ramp",
+     "mode": "sqrt",
+     "stops": [
+      {
+       "at": 0.0,
+       "color": "#e8e2d6"
+      },
+      {
+       "at": 1.0,
+       "color": "#c0552d"
+      }
+     ],
+     "missing_color": "#6b7280"
+    }
+   }
+  },
+  "height": {
+   "mode": "sqrt_floor",
+   "floor_m": 35000,
+   "peak_m": 700000,
+   "reference": 6271367.08,
+   "note": "Column height above ground, read by MapLibre as fill-extrusion height in metres. The gap ranges from EUR 16,218 to EUR 6,271,367, a 387-fold spread, so every column gets a 35 km base from which the square root of the value adds up to 700 km. On a plain linear scale the smallest fifteen markets would be a flat line, and the floor is what makes a small gap still clickable and visible."
+  },
+  "projection": {
+   "default": "globe",
+   "fallback": "mercator",
+   "note": "Globe is the default. If the browser cannot paint the extruded columns on the globe, the toolbar switch drops to a flat map."
+  },
+  "year": 2025,
+  "footprint_half_km": 60.0,
+  "pair_separation_km": 160.0,
+  "gap_range_eur": {
+   "min": 16218.43,
+   "max": 6271367.08
+  },
+  "glossary": {
+   "GPS": "Global Parts Support — the parts-spend model that sets a target spend per truck.",
+   "PMS": "Parts Market Scan — the model that compares what a market should buy against what it did buy.",
+   "UIO": "Units In Operation — the vehicles in service that could buy parts.",
+   "DB": "Distributor."
+  }
+ },
+ "columns": [
+  {
+   "id": "belgium",
+   "distributor_code": "BELGIUM",
+   "label": "Benelux (IBX)",
+   "display_name": "Benelux (IBX)",
+   "country": "Belgium",
+   "region": "WEST",
+   "scope": "MIXED",
+   "territory_label": "Benelux",
+   "lat": 50.85,
+   "lon": 4.35,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 345062.38,
+   "total_sales_eur": 2109331.62,
+   "max_spend_eur": 2454394.0,
+   "capture_vs_max": 0.8594,
+   "spend_per_unit_eur": 219.86,
+   "spend_per_unit_ex_warranty_eur": 212.08,
+   "uio_units": 9594,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       3.4962986956271003,
+       50.30737696022573
+      ],
+      [
+       5.203701304372899,
+       50.30737696022573
+      ],
+      [
+       5.203701304372899,
+       51.39262303977427
+      ],
+      [
+       3.4962986956271003,
+       51.39262303977427
+      ],
+      [
+       3.4962986956271003,
+       50.30737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 339980.57,
+     "revenue_gap_eur": 1382312.22,
+     "expected_rev_eur": 1722292.79,
+     "capture_weighted": 0.1974,
+     "families": 13
+    },
+    "genuine": {
+     "actual_rev_eur": 258822.54,
+     "revenue_gap_eur": 1694545.67,
+     "expected_rev_eur": 1953368.21,
+     "capture_weighted": 0.1325,
+     "families": 13
+    },
+    "bvp": {
+     "actual_rev_eur": 81158.03,
+     "revenue_gap_eur": 970256.28,
+     "expected_rev_eur": 1051414.31,
+     "capture_weighted": 0.0772,
+     "families": 10
+    },
+    "top_gap_families": [
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 344450.44,
+      "capture_rate": 0.0675
+     },
+     {
+      "category": "Brake Pad",
+      "gap_eur": 201082.2,
+      "capture_rate": 0.2578
+     },
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 159779.97,
+      "capture_rate": 0.0881
+     }
+    ]
+   }
+  },
+  {
+   "id": "cyprus",
+   "distributor_code": "CYPRUS",
+   "label": "Cyprus (Loutsios)",
+   "display_name": "Cyprus (Loutsios)",
+   "country": "Cyprus",
+   "region": "SOUTH",
+   "scope": "MIXED",
+   "territory_label": "Mediterranean",
+   "lat": 35.17,
+   "lon": 33.36,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 247823.89,
+   "total_sales_eur": 428443.11,
+   "max_spend_eur": 676267.0,
+   "capture_vs_max": 0.6335,
+   "spend_per_unit_eur": 185.63,
+   "spend_per_unit_ex_warranty_eur": 173.48,
+   "uio_units": 2308,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       32.70064598063523,
+       34.62737696022573
+      ],
+      [
+       34.01935401936477,
+       34.62737696022573
+      ],
+      [
+       34.01935401936477,
+       35.71262303977427
+      ],
+      [
+       32.70064598063523,
+       35.71262303977427
+      ],
+      [
+       32.70064598063523,
+       34.62737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 138183.24,
+     "revenue_gap_eur": 231895.66,
+     "expected_rev_eur": 370078.9,
+     "capture_weighted": 0.3734,
+     "families": 14
+    },
+    "genuine": {
+     "actual_rev_eur": 82185.09,
+     "revenue_gap_eur": 316506.5,
+     "expected_rev_eur": 398691.59,
+     "capture_weighted": 0.2061,
+     "families": 14
+    },
+    "bvp": {
+     "actual_rev_eur": 55998.15,
+     "revenue_gap_eur": 186175.83,
+     "expected_rev_eur": 242173.98,
+     "capture_weighted": 0.2312,
+     "families": 9
+    },
+    "top_gap_families": [
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 36851.55,
+      "capture_rate": 0.0748
+     },
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 36514.78,
+      "capture_rate": 0.1405
+     },
+     {
+      "category": "Clutch Pressure Plate",
+      "gap_eur": 27370.13,
+      "capture_rate": 0.1156
+     }
+    ]
+   }
+  },
+  {
+   "id": "denmark",
+   "distributor_code": "DENMARK",
+   "label": "Denmark",
+   "display_name": "Denmark",
+   "country": "Denmark",
+   "region": "NORDICS",
+   "scope": "LCV",
+   "territory_label": "Nordics",
+   "lat": 56.26,
+   "lon": 9.5,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 65018.49,
+   "total_sales_eur": 148220.51,
+   "max_spend_eur": 213239.0,
+   "capture_vs_max": 0.6951,
+   "spend_per_unit_eur": 174.17,
+   "spend_per_unit_ex_warranty_eur": 163.46,
+   "uio_units": 851,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       8.529596070776297,
+       55.71737696022573
+      ],
+      [
+       10.470403929223703,
+       55.71737696022573
+      ],
+      [
+       10.470403929223703,
+       56.80262303977427
+      ],
+      [
+       8.529596070776297,
+       56.80262303977427
+      ],
+      [
+       8.529596070776297,
+       55.71737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 47102.54,
+     "revenue_gap_eur": 107030.89,
+     "expected_rev_eur": 154133.43,
+     "capture_weighted": 0.3056,
+     "families": 12
+    },
+    "genuine": {
+     "actual_rev_eur": 43811.76,
+     "revenue_gap_eur": 112342.42,
+     "expected_rev_eur": 156154.18,
+     "capture_weighted": 0.2806,
+     "families": 11
+    },
+    "bvp": {
+     "actual_rev_eur": 3290.78,
+     "revenue_gap_eur": 19328.02,
+     "expected_rev_eur": 22618.8,
+     "capture_weighted": 0.1455,
+     "families": 2
+    },
+    "top_gap_families": [
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 27180.7,
+      "capture_rate": 0.0353
+     },
+     {
+      "category": "Brake Pad",
+      "gap_eur": 16450.74,
+      "capture_rate": 0.3586
+     },
+     {
+      "category": "Clutch Pressure Plate",
+      "gap_eur": 14026.31,
+      "capture_rate": 0.047
+     }
+    ]
+   }
+  },
+  {
+   "id": "finland",
+   "distributor_code": "FINLAND",
+   "label": "Finland (Nordic)",
+   "display_name": "Finland (Nordic)",
+   "country": "Finland",
+   "region": "NORDICS",
+   "scope": "LCV",
+   "territory_label": "Nordics",
+   "lat": 60.17,
+   "lon": 24.94,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 23079.39,
+   "total_sales_eur": 277920.61,
+   "max_spend_eur": 301000.0,
+   "capture_vs_max": 0.9233,
+   "spend_per_unit_eur": 230.83,
+   "spend_per_unit_ex_warranty_eur": 190.4,
+   "uio_units": 1204,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       23.856453376211352,
+       59.62737696022573
+      ],
+      [
+       26.02354662378865,
+       59.62737696022573
+      ],
+      [
+       26.02354662378865,
+       60.71262303977427
+      ],
+      [
+       23.856453376211352,
+       60.71262303977427
+      ],
+      [
+       23.856453376211352,
+       59.62737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 42802.37,
+     "revenue_gap_eur": 149716.55,
+     "expected_rev_eur": 192518.92,
+     "capture_weighted": 0.2223,
+     "families": 10
+    },
+    "genuine": {
+     "actual_rev_eur": 40251.05,
+     "revenue_gap_eur": 155339.42,
+     "expected_rev_eur": 195590.47,
+     "capture_weighted": 0.2058,
+     "families": 10
+    },
+    "bvp": {
+     "actual_rev_eur": 2551.32,
+     "revenue_gap_eur": 70226.85,
+     "expected_rev_eur": 72778.17,
+     "capture_weighted": 0.0351,
+     "families": 5
+    },
+    "top_gap_families": [
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 34714.04,
+      "capture_rate": 0.0125
+     },
+     {
+      "category": "Brake Pad",
+      "gap_eur": 28775.99,
+      "capture_rate": 0.1869
+     },
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 20058.77,
+      "capture_rate": 0.0365
+     }
+    ]
+   }
+  },
+  {
+   "id": "germany",
+   "distributor_code": "GERMANY",
+   "label": "Germany (ISD)",
+   "display_name": "ISUZU SALES DEUTSCHLAND GMBH",
+   "country": "Germany",
+   "region": "WEST",
+   "scope": "MIXED",
+   "territory_label": "DACH",
+   "lat": 51.17,
+   "lon": 10.45,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 876352.18,
+   "total_sales_eur": 2535931.82,
+   "max_spend_eur": 3412284.0,
+   "capture_vs_max": 0.7432,
+   "spend_per_unit_eur": 197.27,
+   "spend_per_unit_ex_warranty_eur": 177.07,
+   "uio_units": 12855,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       9.590388239659129,
+       50.62737696022573
+      ],
+      [
+       11.30961176034087,
+       50.62737696022573
+      ],
+      [
+       11.30961176034087,
+       51.71262303977427
+      ],
+      [
+       9.590388239659129,
+       51.71262303977427
+      ],
+      [
+       9.590388239659129,
+       50.62737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 390119.45,
+     "revenue_gap_eur": 1857082.2,
+     "expected_rev_eur": 2247201.65,
+     "capture_weighted": 0.1736,
+     "families": 13
+    },
+    "genuine": {
+     "actual_rev_eur": 338079.5,
+     "revenue_gap_eur": 1971668.23,
+     "expected_rev_eur": 2309747.73,
+     "capture_weighted": 0.1464,
+     "families": 13
+    },
+    "bvp": {
+     "actual_rev_eur": 52039.95,
+     "revenue_gap_eur": 1277676.24,
+     "expected_rev_eur": 1329716.19,
+     "capture_weighted": 0.0391,
+     "families": 9
+    },
+    "top_gap_families": [
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 319816.99,
+      "capture_rate": 0.0317
+     },
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 240987.1,
+      "capture_rate": 0.0355
+     },
+     {
+      "category": "Brake Pad",
+      "gap_eur": 212369.86,
+      "capture_rate": 0.3889
+     }
+    ]
+   }
+  },
+  {
+   "id": "greece",
+   "distributor_code": "GREECE",
+   "label": "Greece (RSA)",
+   "display_name": "Greece (RSA)",
+   "country": "Greece",
+   "region": "SOUTH",
+   "scope": "MIXED",
+   "territory_label": "Mediterranean",
+   "lat": 39.07,
+   "lon": 21.82,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 433289.06,
+   "total_sales_eur": 520303.94,
+   "max_spend_eur": 953593.0,
+   "capture_vs_max": 0.5456,
+   "spend_per_unit_eur": 139.04,
+   "spend_per_unit_ex_warranty_eur": 124.04,
+   "uio_units": 3742,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "amber",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       21.12576635190174,
+       38.52737696022573
+      ],
+      [
+       22.514233648098262,
+       38.52737696022573
+      ],
+      [
+       22.514233648098262,
+       39.61262303977427
+      ],
+      [
+       21.12576635190174,
+       39.61262303977427
+      ],
+      [
+       21.12576635190174,
+       38.52737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 154619.53,
+     "revenue_gap_eur": 414168.4,
+     "expected_rev_eur": 568787.93,
+     "capture_weighted": 0.2718,
+     "families": 12
+    },
+    "genuine": {
+     "actual_rev_eur": 109696.46,
+     "revenue_gap_eur": 509581.79,
+     "expected_rev_eur": 619278.25,
+     "capture_weighted": 0.1771,
+     "families": 12
+    },
+    "bvp": {
+     "actual_rev_eur": 44923.07,
+     "revenue_gap_eur": 360744.61,
+     "expected_rev_eur": 405667.68,
+     "capture_weighted": 0.1107,
+     "families": 10
+    },
+    "top_gap_families": [
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 73661.24,
+      "capture_rate": 0.0497
+     },
+     {
+      "category": "Brake Pad",
+      "gap_eur": 68720.28,
+      "capture_rate": 0.3105
+     },
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 68478.63,
+      "capture_rate": 0.087
+     }
+    ]
+   }
+  },
+  {
+   "id": "hungary",
+   "distributor_code": "HUNGARY",
+   "label": "Hungary (AutoWallis)",
+   "display_name": "Hungary (AutoWallis)",
+   "country": "Hungary",
+   "region": "EAST",
+   "scope": "LCV",
+   "territory_label": "Central & Eastern Europe",
+   "lat": 47.16,
+   "lon": 19.5,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 603469.42,
+   "total_sales_eur": 330030.58,
+   "max_spend_eur": 933500.0,
+   "capture_vs_max": 0.3535,
+   "spend_per_unit_eur": 88.39,
+   "spend_per_unit_ex_warranty_eur": 67.65,
+   "uio_units": 3734,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "amber",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       18.707318145830342,
+       46.61737696022573
+      ],
+      [
+       20.292681854169658,
+       46.61737696022573
+      ],
+      [
+       20.292681854169658,
+       47.70262303977427
+      ],
+      [
+       18.707318145830342,
+       47.70262303977427
+      ],
+      [
+       18.707318145830342,
+       46.61737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 89618.09,
+     "revenue_gap_eur": 488268.31,
+     "expected_rev_eur": 577886.4,
+     "capture_weighted": 0.1551,
+     "families": 10
+    },
+    "genuine": {
+     "actual_rev_eur": 74883.54,
+     "revenue_gap_eur": 480519.58,
+     "expected_rev_eur": 555403.12,
+     "capture_weighted": 0.1348,
+     "families": 8
+    },
+    "bvp": {
+     "actual_rev_eur": 14734.55,
+     "revenue_gap_eur": 274124.07,
+     "expected_rev_eur": 288858.62,
+     "capture_weighted": 0.051,
+     "families": 7
+    },
+    "top_gap_families": [
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 110422.55,
+      "capture_rate": 0.0094
+     },
+     {
+      "category": "Brake Pad",
+      "gap_eur": 97350.62,
+      "capture_rate": 0.156
+     },
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 71225.4,
+      "capture_rate": 0.0048
+     }
+    ]
+   }
+  },
+  {
+   "id": "iceland",
+   "distributor_code": "ICELAND",
+   "label": "Iceland (BL)",
+   "display_name": "Iceland (BL)",
+   "country": "Iceland",
+   "region": "NORDICS",
+   "scope": "LCV",
+   "territory_label": "Nordics",
+   "lat": 64.96,
+   "lon": -19.02,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 16218.43,
+   "total_sales_eur": 85281.57,
+   "max_spend_eur": 101500.0,
+   "capture_vs_max": 0.8402,
+   "spend_per_unit_eur": 210.05,
+   "spend_per_unit_ex_warranty_eur": 192.73,
+   "uio_units": 406,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -20.293444969217376,
+       64.41737696022572
+      ],
+      [
+       -17.746555030782623,
+       64.41737696022572
+      ],
+      [
+       -17.746555030782623,
+       65.50262303977426
+      ],
+      [
+       -20.293444969217376,
+       65.50262303977426
+      ],
+      [
+       -20.293444969217376,
+       64.41737696022572
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 16141.59,
+     "revenue_gap_eur": 46818.63,
+     "expected_rev_eur": 62960.22,
+     "capture_weighted": 0.2564,
+     "families": 11
+    },
+    "genuine": {
+     "actual_rev_eur": 15797.69,
+     "revenue_gap_eur": 47390.94,
+     "expected_rev_eur": 63188.63,
+     "capture_weighted": 0.25,
+     "families": 11
+    },
+    "bvp": {
+     "actual_rev_eur": 343.9,
+     "revenue_gap_eur": 10825.97,
+     "expected_rev_eur": 11169.87,
+     "capture_weighted": 0.0308,
+     "families": 1
+    },
+    "top_gap_families": [
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 12232.04,
+      "capture_rate": 0.0246
+     },
+     {
+      "category": "Brake Pad",
+      "gap_eur": 9796.04,
+      "capture_rate": 0.2217
+     },
+     {
+      "category": "Clutch Pressure Plate",
+      "gap_eur": 7544.59,
+      "capture_rate": 0.0246
+     }
+    ]
+   }
+  },
+  {
+   "id": "ireland",
+   "distributor_code": "IRELAND",
+   "label": "Ireland",
+   "display_name": "Ireland",
+   "country": "Ireland",
+   "region": "WEST",
+   "scope": "MIXED",
+   "territory_label": "UK & Ireland",
+   "lat": 53.35,
+   "lon": -7.95,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 203717.38,
+   "total_sales_eur": 1187458.62,
+   "max_spend_eur": 1391176.0,
+   "capture_vs_max": 0.8536,
+   "spend_per_unit_eur": 388.57,
+   "spend_per_unit_ex_warranty_eur": 377.16,
+   "uio_units": 3056,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -8.852938375604895,
+       52.80737696022573
+      ],
+      [
+       -7.047061624395106,
+       52.80737696022573
+      ],
+      [
+       -7.047061624395106,
+       53.89262303977427
+      ],
+      [
+       -8.852938375604895,
+       53.89262303977427
+      ],
+      [
+       -8.852938375604895,
+       52.80737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 272660.48,
+     "revenue_gap_eur": 123281.47,
+     "expected_rev_eur": 395941.95,
+     "capture_weighted": 0.6886,
+     "families": 13
+    },
+    "genuine": {
+     "actual_rev_eur": 220668.31,
+     "revenue_gap_eur": 167802.93,
+     "expected_rev_eur": 388471.24,
+     "capture_weighted": 0.568,
+     "families": 13
+    },
+    "bvp": {
+     "actual_rev_eur": 51992.17,
+     "revenue_gap_eur": 175281.08,
+     "expected_rev_eur": 227273.25,
+     "capture_weighted": 0.2288,
+     "families": 10
+    },
+    "top_gap_families": [
+     {
+      "category": "Urea (AdBlue) Filter",
+      "gap_eur": 40530.34,
+      "capture_rate": 0.0805
+     },
+     {
+      "category": "Blower Unit Filter",
+      "gap_eur": 23713.85,
+      "capture_rate": 0.1162
+     },
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 20631.89,
+      "capture_rate": 0.3014
+     }
+    ]
+   }
+  },
+  {
+   "id": "ituk",
+   "distributor_code": "ITUK",
+   "label": "Isuzu Truck UK",
+   "display_name": "ISUZU TRUCK (UK) LIMITED",
+   "country": "United Kingdom",
+   "region": "UK",
+   "scope": "CV",
+   "territory_label": "UK & Ireland",
+   "lat": 54.0,
+   "lon": -3.22264,
+   "coord_offset_applied": true,
+   "coord_shared_with": [
+    "IUK"
+   ],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 6271367.08,
+   "total_sales_eur": 5564543.92,
+   "max_spend_eur": 11835911.0,
+   "capture_vs_max": 0.4701,
+   "spend_per_unit_eur": 248.54,
+   "spend_per_unit_ex_warranty_eur": 231.82,
+   "uio_units": 22389,
+   "uio_missing": false,
+   "uio_source": "ituk_dvla_2026",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [
+    "distributor_geo.csv puts ITUK on the same coordinate as IUK; the two are drawn as offset columns here."
+   ],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -4.139617556041782,
+       53.45737696022573
+      ],
+      [
+       -2.3056596508631118,
+       53.45737696022573
+      ],
+      [
+       -2.3056596508631118,
+       54.54262303977427
+      ],
+      [
+       -4.139617556041782,
+       54.54262303977427
+      ],
+      [
+       -4.139617556041782,
+       53.45737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 1229349.71,
+     "revenue_gap_eur": 1322261.9,
+     "expected_rev_eur": 2551611.61,
+     "capture_weighted": 0.4818,
+     "families": 12
+    },
+    "genuine": {
+     "actual_rev_eur": 1097997.87,
+     "revenue_gap_eur": 1349648.51,
+     "expected_rev_eur": 2447646.38,
+     "capture_weighted": 0.4486,
+     "families": 12
+    },
+    "bvp": {
+     "actual_rev_eur": 131351.84,
+     "revenue_gap_eur": 1076986.37,
+     "expected_rev_eur": 1208338.21,
+     "capture_weighted": 0.1087,
+     "families": 8
+    },
+    "top_gap_families": [
+     {
+      "category": "Urea (AdBlue) Filter",
+      "gap_eur": 342356.18,
+      "capture_rate": 0.1129
+     },
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 210750.38,
+      "capture_rate": 0.1196
+     },
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 183286.62,
+      "capture_rate": 0.1374
+     }
+    ]
+   }
+  },
+  {
+   "id": "iuk",
+   "distributor_code": "IUK",
+   "label": "Isuzu UK",
+   "display_name": "Isuzu UK",
+   "country": "United Kingdom",
+   "region": "UK",
+   "scope": "LCV",
+   "territory_label": "UK & Ireland",
+   "lat": 54.0,
+   "lon": -0.77736,
+   "coord_offset_applied": true,
+   "coord_shared_with": [
+    "ITUK"
+   ],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 5813829.59,
+   "total_sales_eur": 6131920.41,
+   "max_spend_eur": 11945750.0,
+   "capture_vs_max": 0.5133,
+   "spend_per_unit_eur": 128.33,
+   "spend_per_unit_ex_warranty_eur": 106.26,
+   "uio_units": 47783,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "amber",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [
+    "distributor_geo.csv puts IUK on the same coordinate as ITUK; the two are drawn as offset columns here."
+   ],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -1.6943403491368882,
+       53.45737696022573
+      ],
+      [
+       0.13961755604178194,
+       53.45737696022573
+      ],
+      [
+       0.13961755604178194,
+       54.54262303977427
+      ],
+      [
+       -1.6943403491368882,
+       54.54262303977427
+      ],
+      [
+       -1.6943403491368882,
+       53.45737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 1170884.65,
+     "revenue_gap_eur": 5802175.46,
+     "expected_rev_eur": 6973060.11,
+     "capture_weighted": 0.1679,
+     "families": 12
+    },
+    "genuine": {
+     "actual_rev_eur": 1023119.62,
+     "revenue_gap_eur": 6133433.73,
+     "expected_rev_eur": 7156553.35,
+     "capture_weighted": 0.143,
+     "families": 12
+    },
+    "bvp": {
+     "actual_rev_eur": 147765.03,
+     "revenue_gap_eur": 2236555.34,
+     "expected_rev_eur": 2384320.37,
+     "capture_weighted": 0.062,
+     "families": 6
+    },
+    "top_gap_families": [
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 1338472.75,
+      "capture_rate": 0.0449
+     },
+     {
+      "category": "Brake Pad",
+      "gap_eur": 806882.05,
+      "capture_rate": 0.2407
+     },
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 694104.74,
+      "capture_rate": 0.0558
+     }
+    ]
+   }
+  },
+  {
+   "id": "malta",
+   "distributor_code": "MALTA",
+   "label": "Malta (GasanZammit)",
+   "display_name": "Malta (GasanZammit)",
+   "country": "Malta",
+   "region": "SOUTH",
+   "scope": "MIXED",
+   "territory_label": "Mediterranean",
+   "lat": 35.94,
+   "lon": 14.38,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 172324.73,
+   "total_sales_eur": 206502.27,
+   "max_spend_eur": 378827.0,
+   "capture_vs_max": 0.5451,
+   "spend_per_unit_eur": 198.56,
+   "spend_per_unit_ex_warranty_eur": 181.04,
+   "uio_units": 1040,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       13.714281929191937,
+       35.39737696022573
+      ],
+      [
+       15.045718070808064,
+       35.39737696022573
+      ],
+      [
+       15.045718070808064,
+       36.48262303977427
+      ],
+      [
+       13.714281929191937,
+       36.48262303977427
+      ],
+      [
+       13.714281929191937,
+       35.39737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 37866.87,
+     "revenue_gap_eur": 121155.95,
+     "expected_rev_eur": 159022.82,
+     "capture_weighted": 0.2381,
+     "families": 12
+    },
+    "genuine": {
+     "actual_rev_eur": 37590.99,
+     "revenue_gap_eur": 119883.79,
+     "expected_rev_eur": 157474.78,
+     "capture_weighted": 0.2387,
+     "families": 12
+    },
+    "bvp": {
+     "actual_rev_eur": 275.88,
+     "revenue_gap_eur": 55175.31,
+     "expected_rev_eur": 55451.19,
+     "capture_weighted": 0.005,
+     "families": 3
+    },
+    "top_gap_families": [
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 24324.63,
+      "capture_rate": 0.0163
+     },
+     {
+      "category": "Brake Pad",
+      "gap_eur": 21417.44,
+      "capture_rate": 0.2766
+     },
+     {
+      "category": "Blower Unit Filter",
+      "gap_eur": 13371.59,
+      "capture_rate": 0.2482
+     }
+    ]
+   }
+  },
+  {
+   "id": "norway",
+   "distributor_code": "NORWAY",
+   "label": "Norway (Rutebiler)",
+   "display_name": "RUTEBILEIERNES STANDARDISERING AS",
+   "country": "Norway",
+   "region": "NORDICS",
+   "scope": "LCV",
+   "territory_label": "Nordics",
+   "lat": 60.47,
+   "lon": 8.47,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 565698.07,
+   "total_sales_eur": 1416551.93,
+   "max_spend_eur": 1982250.0,
+   "capture_vs_max": 0.7146,
+   "spend_per_unit_eur": 178.65,
+   "spend_per_unit_ex_warranty_eur": 141.99,
+   "uio_units": 7929,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       7.3764527488223015,
+       59.92737696022573
+      ],
+      [
+       9.5635472511777,
+       59.92737696022573
+      ],
+      [
+       9.5635472511777,
+       61.01262303977427
+      ],
+      [
+       7.3764527488223015,
+       61.01262303977427
+      ],
+      [
+       7.3764527488223015,
+       59.92737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 333934.5,
+     "revenue_gap_eur": 612666.62,
+     "expected_rev_eur": 946601.12,
+     "capture_weighted": 0.3528,
+     "families": 10
+    },
+    "genuine": {
+     "actual_rev_eur": 316325.12,
+     "revenue_gap_eur": 578608.5,
+     "expected_rev_eur": 894933.62,
+     "capture_weighted": 0.3535,
+     "families": 9
+    },
+    "bvp": {
+     "actual_rev_eur": 17609.38,
+     "revenue_gap_eur": 202519.76,
+     "expected_rev_eur": 220129.14,
+     "capture_weighted": 0.08,
+     "families": 3
+    },
+    "top_gap_families": [
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 140920.4,
+      "capture_rate": 0.0464
+     },
+     {
+      "category": "Brake Pad",
+      "gap_eur": 132181.26,
+      "capture_rate": 0.4373
+     },
+     {
+      "category": "Blower Unit Filter",
+      "gap_eur": 96259.32,
+      "capture_rate": 0.309
+     }
+    ]
+   }
+  },
+  {
+   "id": "portugal",
+   "distributor_code": "PORTUGAL",
+   "label": "Portugal (Imotors)",
+   "display_name": "IMOTORS-Importacao e Comercio",
+   "country": "Portugal",
+   "region": "SOUTH",
+   "scope": "MIXED",
+   "territory_label": "Iberia",
+   "lat": 39.4,
+   "lon": -8.22,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 1784275.01,
+   "total_sales_eur": 1709793.99,
+   "max_spend_eur": 3494069.0,
+   "capture_vs_max": 0.4893,
+   "spend_per_unit_eur": 209.12,
+   "spend_per_unit_ex_warranty_eur": 193.15,
+   "uio_units": 8176,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -8.917506519038879,
+       38.85737696022573
+      ],
+      [
+       -7.522493480961123,
+       38.85737696022573
+      ],
+      [
+       -7.522493480961123,
+       39.94262303977427
+      ],
+      [
+       -8.917506519038879,
+       39.94262303977427
+      ],
+      [
+       -8.917506519038879,
+       38.85737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 316318.86,
+     "revenue_gap_eur": 773599.03,
+     "expected_rev_eur": 1089917.89,
+     "capture_weighted": 0.2902,
+     "families": 14
+    },
+    "genuine": {
+     "actual_rev_eur": 203984.21,
+     "revenue_gap_eur": 889829.28,
+     "expected_rev_eur": 1093813.49,
+     "capture_weighted": 0.1865,
+     "families": 12
+    },
+    "bvp": {
+     "actual_rev_eur": 112334.65,
+     "revenue_gap_eur": 416824.22,
+     "expected_rev_eur": 529158.87,
+     "capture_weighted": 0.2123,
+     "families": 9
+    },
+    "top_gap_families": [
+     {
+      "category": "Clutch Booster",
+      "gap_eur": 130029.94,
+      "capture_rate": 0.01
+     },
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 123506.8,
+      "capture_rate": 0.118
+     },
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 97955.93,
+      "capture_rate": 0.177
+     }
+    ]
+   }
+  },
+  {
+   "id": "romania",
+   "distributor_code": "ROMANIA",
+   "label": "Romania (ROM Auto)",
+   "display_name": "Romania (ROM Auto)",
+   "country": "Romania",
+   "region": "EAST",
+   "scope": "LCV",
+   "territory_label": "Central & Eastern Europe",
+   "lat": 45.94,
+   "lon": 24.97,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 92531.57,
+   "total_sales_eur": 175218.43,
+   "max_spend_eur": 267750.0,
+   "capture_vs_max": 0.6544,
+   "spend_per_unit_eur": 163.6,
+   "spend_per_unit_ex_warranty_eur": 145.51,
+   "uio_units": 1071,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       24.19493821964666,
+       45.39737696022573
+      ],
+      [
+       25.74506178035334,
+       45.39737696022573
+      ],
+      [
+       25.74506178035334,
+       46.48262303977427
+      ],
+      [
+       24.19493821964666,
+       46.48262303977427
+      ],
+      [
+       24.19493821964666,
+       45.39737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 48663.28,
+     "revenue_gap_eur": 128351.9,
+     "expected_rev_eur": 177015.18,
+     "capture_weighted": 0.2749,
+     "families": 13
+    },
+    "genuine": {
+     "actual_rev_eur": 42824.16,
+     "revenue_gap_eur": 136801.48,
+     "expected_rev_eur": 179625.64,
+     "capture_weighted": 0.2384,
+     "families": 13
+    },
+    "bvp": {
+     "actual_rev_eur": 5839.12,
+     "revenue_gap_eur": 69295.28,
+     "expected_rev_eur": 75134.4,
+     "capture_weighted": 0.0777,
+     "families": 7
+    },
+    "top_gap_families": [
+     {
+      "category": "Brake Pad",
+      "gap_eur": 25720.59,
+      "capture_rate": 0.2708
+     },
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 24220.34,
+      "capture_rate": 0.0794
+     },
+     {
+      "category": "Brake Rotor",
+      "gap_eur": 17761.53,
+      "capture_rate": 0.2054
+     }
+    ]
+   }
+  },
+  {
+   "id": "sweden",
+   "distributor_code": "SWEDEN",
+   "label": "Sweden",
+   "display_name": "Sweden",
+   "country": "Sweden",
+   "region": "NORDICS",
+   "scope": "LCV",
+   "territory_label": "Nordics",
+   "lat": 60.13,
+   "lon": 18.64,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 832287.82,
+   "total_sales_eur": 1278462.18,
+   "max_spend_eur": 2110750.0,
+   "capture_vs_max": 0.6057,
+   "spend_per_unit_eur": 151.42,
+   "spend_per_unit_ex_warranty_eur": 128.96,
+   "uio_units": 8443,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       17.557770756772236,
+       59.58737696022573
+      ],
+      [
+       19.722229243227765,
+       59.58737696022573
+      ],
+      [
+       19.722229243227765,
+       60.67262303977427
+      ],
+      [
+       17.557770756772236,
+       60.67262303977427
+      ],
+      [
+       17.557770756772236,
+       59.58737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 268549.17,
+     "revenue_gap_eur": 1032357.95,
+     "expected_rev_eur": 1300907.12,
+     "capture_weighted": 0.2064,
+     "families": 10
+    },
+    "genuine": {
+     "actual_rev_eur": 250198.42,
+     "revenue_gap_eur": 1067317.12,
+     "expected_rev_eur": 1317515.54,
+     "capture_weighted": 0.1899,
+     "families": 10
+    },
+    "bvp": {
+     "actual_rev_eur": 18350.75,
+     "revenue_gap_eur": 242079.7,
+     "expected_rev_eur": 260430.45,
+     "capture_weighted": 0.0705,
+     "families": 2
+    },
+    "top_gap_families": [
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 245917.91,
+      "capture_rate": 0.0024
+     },
+     {
+      "category": "Brake Pad",
+      "gap_eur": 179111.42,
+      "capture_rate": 0.2496
+     },
+     {
+      "category": "Brake Shoe",
+      "gap_eur": 155667.9,
+      "capture_rate": 0.0178
+     }
+    ]
+   }
+  },
+  {
+   "id": "umi",
+   "distributor_code": "UMI",
+   "label": "UMI Israel",
+   "display_name": "UNIVERSAL MOTORS ISRAEL LTD",
+   "country": "Israel",
+   "region": "ISRAEL",
+   "scope": "LCV",
+   "territory_label": "Middle East & Africa",
+   "lat": 31.05,
+   "lon": 34.01116,
+   "coord_offset_applied": true,
+   "coord_shared_with": [
+    "UTI"
+   ],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 1316155.84,
+   "total_sales_eur": 3319344.16,
+   "max_spend_eur": 4635500.0,
+   "capture_vs_max": 0.7161,
+   "spend_per_unit_eur": 179.02,
+   "spend_per_unit_ex_warranty_eur": 82.42,
+   "uio_units": 18542,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [
+    "distributor_geo.csv puts UMI on the same coordinate as UTI; the two are drawn as offset columns here."
+   ],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       33.38202996636103,
+       30.50737696022573
+      ],
+      [
+       34.640289995194436,
+       30.50737696022573
+      ],
+      [
+       34.640289995194436,
+       31.59262303977427
+      ],
+      [
+       33.38202996636103,
+       31.59262303977427
+      ],
+      [
+       33.38202996636103,
+       30.50737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 244060.77,
+     "revenue_gap_eur": 1760113.58,
+     "expected_rev_eur": 2004174.35,
+     "capture_weighted": 0.1218,
+     "families": 11
+    },
+    "genuine": {
+     "actual_rev_eur": 122564.62,
+     "revenue_gap_eur": 1731434.19,
+     "expected_rev_eur": 1853998.81,
+     "capture_weighted": 0.0661,
+     "families": 9
+    },
+    "bvp": {
+     "actual_rev_eur": 121496.15,
+     "revenue_gap_eur": 1288973.48,
+     "expected_rev_eur": 1410469.63,
+     "capture_weighted": 0.0861,
+     "families": 9
+    },
+    "top_gap_families": [
+     {
+      "category": "Brake Pad",
+      "gap_eur": 332399.47,
+      "capture_rate": 0.0874
+     },
+     {
+      "category": "Clutch Disc",
+      "gap_eur": 274156.57,
+      "capture_rate": 0.0388
+     },
+     {
+      "category": "Blower Unit Filter",
+      "gap_eur": 246607.5,
+      "capture_rate": 0.007
+     }
+    ]
+   }
+  },
+  {
+   "id": "uti",
+   "distributor_code": "UTI",
+   "label": "UTI Israel",
+   "display_name": "UNIVERSAL TRUCKS ISRAEL LTD",
+   "country": "Israel",
+   "region": "ISRAEL",
+   "scope": "CV",
+   "territory_label": "Middle East & Africa",
+   "lat": 31.05,
+   "lon": 35.68884,
+   "coord_offset_applied": true,
+   "coord_shared_with": [
+    "UMI"
+   ],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": 4939788.06,
+   "total_sales_eur": 3331511.94,
+   "max_spend_eur": 8271300.0,
+   "capture_vs_max": 0.4028,
+   "spend_per_unit_eur": 322.32,
+   "spend_per_unit_ex_warranty_eur": 297.56,
+   "uio_units": 10336,
+   "uio_missing": false,
+   "uio_source": "v18_actual",
+   "traffic_light": "green",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [
+    "distributor_geo.csv puts UTI on the same coordinate as UMI; the two are drawn as offset columns here."
+   ],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       35.05971000480557,
+       30.50737696022573
+      ],
+      [
+       36.31797003363897,
+       30.50737696022573
+      ],
+      [
+       36.31797003363897,
+       31.59262303977427
+      ],
+      [
+       35.05971000480557,
+       31.59262303977427
+      ],
+      [
+       35.05971000480557,
+       30.50737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": {
+    "year": 2025,
+    "total": {
+     "actual_rev_eur": 627170.66,
+     "revenue_gap_eur": 1863298.48,
+     "expected_rev_eur": 2490469.14,
+     "capture_weighted": 0.2518,
+     "families": 11
+    },
+    "genuine": {
+     "actual_rev_eur": 257545.53,
+     "revenue_gap_eur": 2562950.72,
+     "expected_rev_eur": 2820496.25,
+     "capture_weighted": 0.0913,
+     "families": 11
+    },
+    "bvp": {
+     "actual_rev_eur": 369625.13,
+     "revenue_gap_eur": 546440.47,
+     "expected_rev_eur": 916065.6,
+     "capture_weighted": 0.4035,
+     "families": 6
+    },
+    "top_gap_families": [
+     {
+      "category": "Brake Pad",
+      "gap_eur": 456181.37,
+      "capture_rate": 0.0704
+     },
+     {
+      "category": "Clutch Booster",
+      "gap_eur": 388139.65,
+      "capture_rate": 0.0178
+     },
+     {
+      "category": "Clutch Pressure Plate",
+      "gap_eur": 251090.54,
+      "capture_rate": 0.0139
+     }
+    ]
+   }
+  }
+ ],
+ "unmodelled": [
+  {
+   "id": "armenia",
+   "distributor_code": "ARMENIA",
+   "label": "Armenia",
+   "display_name": "Grand Avto LLC",
+   "country": "Armenia",
+   "region": "CIS",
+   "scope": null,
+   "territory_label": "CIS",
+   "lat": 40.18,
+   "lon": 44.51,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": null,
+   "total_sales_eur": 274583.25,
+   "max_spend_eur": null,
+   "capture_vs_max": null,
+   "spend_per_unit_eur": null,
+   "spend_per_unit_ex_warranty_eur": null,
+   "uio_units": null,
+   "uio_missing": true,
+   "uio_source": "v18_proxy_2025",
+   "traffic_light": "unknown",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [
+    "no vehicles-in-service count (UIO) in the source; the fleet denominator is missing, so no euro-per-truck rate is shown. This is a data gap, not a zero."
+   ],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       43.804539677729764,
+       39.63737696022573
+      ],
+      [
+       45.21546032227023,
+       39.63737696022573
+      ],
+      [
+       45.21546032227023,
+       40.72262303977427
+      ],
+      [
+       43.804539677729764,
+       40.72262303977427
+      ],
+      [
+       43.804539677729764,
+       39.63737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": null
+  },
+  {
+   "id": "kazakhstan",
+   "distributor_code": "KAZAKHSTAN",
+   "label": "Kazakhstan",
+   "display_name": "CBC-Trans LLP",
+   "country": "Kazakhstan",
+   "region": "CIS",
+   "scope": null,
+   "territory_label": "CIS",
+   "lat": 48.02,
+   "lon": 66.92,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": null,
+   "total_sales_eur": 161948.74,
+   "max_spend_eur": null,
+   "capture_vs_max": null,
+   "spend_per_unit_eur": null,
+   "spend_per_unit_ex_warranty_eur": null,
+   "uio_units": null,
+   "uio_missing": true,
+   "uio_source": "v18_proxy_2025",
+   "traffic_light": "unknown",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [
+    "no vehicles-in-service count (UIO) in the source; the fleet denominator is missing, so no euro-per-truck rate is shown. This is a data gap, not a zero."
+   ],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       66.11418456357809,
+       47.47737696022573
+      ],
+      [
+       67.72581543642191,
+       47.47737696022573
+      ],
+      [
+       67.72581543642191,
+       48.56262303977427
+      ],
+      [
+       66.11418456357809,
+       48.56262303977427
+      ],
+      [
+       66.11418456357809,
+       47.47737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": null
+  },
+  {
+   "id": "palestine",
+   "distributor_code": "PALESTINE",
+   "label": "Palestine",
+   "display_name": "KIMA LATEJARET AL MARKABAT CO",
+   "country": "Palestine",
+   "region": "MIDDLE_EAST",
+   "scope": null,
+   "territory_label": "Middle East & Africa",
+   "lat": 31.95,
+   "lon": 35.23,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": null,
+   "total_sales_eur": 27335.98,
+   "max_spend_eur": null,
+   "capture_vs_max": null,
+   "spend_per_unit_eur": null,
+   "spend_per_unit_ex_warranty_eur": null,
+   "uio_units": null,
+   "uio_missing": true,
+   "uio_source": "v18_proxy_2025",
+   "traffic_light": "unknown",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [
+    "no vehicles-in-service count (UIO) in the source; the fleet denominator is missing, so no euro-per-truck rate is shown. This is a data gap, not a zero."
+   ],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       34.59478465965626,
+       31.40737696022573
+      ],
+      [
+       35.86521534034373,
+       31.40737696022573
+      ],
+      [
+       35.86521534034373,
+       32.492623039774266
+      ],
+      [
+       34.59478465965626,
+       32.492623039774266
+      ],
+      [
+       34.59478465965626,
+       31.40737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": null
+  },
+  {
+   "id": "ukraine",
+   "distributor_code": "UKRAINE",
+   "label": "Ukraine",
+   "display_name": "KOMTRANSKOMPLEKT LLC",
+   "country": "Ukraine",
+   "region": "CIS",
+   "scope": null,
+   "territory_label": "CIS",
+   "lat": 48.38,
+   "lon": 31.17,
+   "coord_offset_applied": false,
+   "coord_shared_with": [],
+   "year": 2025,
+   "period_basis": "full_year",
+   "gap_eur": null,
+   "total_sales_eur": 1160671.97,
+   "max_spend_eur": null,
+   "capture_vs_max": null,
+   "spend_per_unit_eur": null,
+   "spend_per_unit_ex_warranty_eur": null,
+   "uio_units": null,
+   "uio_missing": true,
+   "uio_source": "v18_proxy_2025",
+   "traffic_light": "unknown",
+   "coverage_note": "FULL YEAR - calendar year complete.",
+   "notes": [
+    "no vehicles-in-service count (UIO) in the source; the fleet denominator is missing, so no euro-per-truck rate is shown. This is a data gap, not a zero."
+   ],
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       30.358501822105723,
+       47.83737696022573
+      ],
+      [
+       31.98149817789428,
+       47.83737696022573
+      ],
+      [
+       31.98149817789428,
+       48.92262303977427
+      ],
+      [
+       30.358501822105723,
+       48.92262303977427
+      ],
+      [
+       30.358501822105723,
+       47.83737696022573
+      ]
+     ]
+    ]
+   },
+   "pms": null
+  }
+ ],
+ "not_included": [
+  {
+   "item": "Warranty parts",
+   "why": "Source sits with IMG and is market-level only, on three conflicting euro bases. Not reconciled, so not plotted."
+  },
+  {
+   "item": "Fleet size workbook (UIO)",
+   "why": "The workbook needs a name crosswalk to distributor codes before its counts can be joined to this map."
+  },
+  {
+   "item": "Price revision",
+   "why": "Separate track. No market-level figures wired into this data set."
+  },
+  {
+   "item": "Live tenders",
+   "why": "Tracked elsewhere and not keyed to distributor_code, so it does not join to these columns."
+  },
+  {
+   "item": "Sales to dealer",
+   "why": "Not wired for every market on this map; coverage is partial, so it would compare unlike things."
+  }
+ ],
+ "build_log": [
+  "excluded from the map: UNMAPPED — no coordinates in distributor_geo.csv",
+  "verified: UMI -> sold_to_sap 1797 and UTI -> sold_to_sap 1799 are distinct, even though both sit under payer 1797. The Israel split is preserved.",
+  "coordinate shared in the source by UMI and UTI; spread apart on the map (160 km centre-to-centre), both labelled.",
+  "coordinate shared in the source by ITUK and IUK; spread apart on the map (160 km centre-to-centre), both labelled."
+ ]
+}

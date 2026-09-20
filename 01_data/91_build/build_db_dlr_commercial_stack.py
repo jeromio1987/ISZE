@@ -78,17 +78,28 @@ def build_replenishment() -> dict:
                     on=["distributor_code", "part_number", "year_month"],
                     how="left",
                 )
-                d["bill_qty"] = pd.to_numeric(d.get("bill_qty"), errors="coerce").fillna(0)
-                d["bill_eur"] = pd.to_numeric(d.get("bill_eur"), errors="coerce").fillna(0)
-                d["sell_through_ratio"] = np.where(
-                    d["bill_qty"] > 0,
-                    d["sellout_qty"] / d["bill_qty"],
-                    np.nan,
-                )
-                d["pipeline_signal"] = [
-                    C.classify_pipeline(b, s)
-                    for b, s in zip(d["bill_qty"], d["sellout_qty"])
-                ]
+                # DEFECT FOUND 2026-09-18, NOT FIXED HERE - the fix needs a source we
+                # do not hold. `bill_m` is network billing at part x month grain and
+                # carries NO dealer. Merging it onto dealer x part x month therefore
+                # copies the whole network's billed quantity onto EVERY dealer row for
+                # that part and month. Measured consequence in the output: bill_qty
+                # totals 2,267,082 against sellout_qty 224,548, and the ratio is not a
+                # constant - it swings 5.1x to 21.0x by month, scaling with how many
+                # dealers sold the part.
+                #
+                # So the billed quantity on a dealer row is NOT that dealer's purchase.
+                # It is marked as unavailable below rather than left readable as real.
+                # The sell-out side IS correct - it is the dealer's own reported sales.
+                # The source workbook (Sales to Dealers_ITUK_CY2025.xlsx) carries
+                # QUANTITY only, so a true per-dealer value cannot be built from what
+                # is on disk. It needs a dealer-level billed VALUE from SAP.
+                d["bill_qty_network_carried"] = pd.to_numeric(
+                    d.get("bill_qty"), errors="coerce").fillna(0)
+                d["bill_qty"] = np.nan
+                d["bill_eur"] = np.nan
+                d["bill_basis"] = "UNAVAILABLE - network billing has no dealer key"
+                d["sell_through_ratio"] = np.nan
+                d["pipeline_signal"] = "NOT COMPUTABLE AT DEALER GRAIN"
                 d["grain"] = "dealer_pn"
                 dealer_parts.append(d)
 
@@ -157,7 +168,14 @@ def _israel_note(db: str) -> str:
 
 
 def _recommended_action(row: pd.Series, proxy_adverse: bool) -> str:
-    if row.get("ks_has_quote") and pd.notna(row.get("ks_price_index")) and row["ks_price_index"] > 1.05:
+    # --- Price-index direction. DO NOT INVERT. ---
+    # ks_price_index = peer shop price / our reference dealer price
+    # (computed in db_dlr_commercial_common.load_ks_pn_index: shop_eur / reference_sellout_eur).
+    # Below 1.0  -> the peer shop is CHEAPER than us -> we are the expensive one -> guardrail.
+    # Above 1.0  -> the peer shop is DEARER than us  -> we hold the premium -> a raise is defensible.
+    if row.get("ks_has_quote") and pd.notna(row.get("ks_price_index")) and row["ks_price_index"] < 0.80:
+        # Peer shop more than 20% BELOW our reference dealer price: we look expensive.
+        # Guardrail side - do NOT raise here; this is where we are uncompetitive.
         return "REVIEW_IAM_UNDERCUT"
     if proxy_adverse:
         return "REVIEW_PROXY_ADVERSE"
@@ -166,7 +184,9 @@ def _recommended_action(row: pd.Series, proxy_adverse: bool) -> str:
         return "REVIEW_LEAKAGE"
     if sig.startswith("overstock"):
         return "REVIEW_OVERSTOCK"
-    if row.get("ks_has_quote") and pd.notna(row.get("ks_price_index")) and row["ks_price_index"] < 0.95:
+    if row.get("ks_has_quote") and pd.notna(row.get("ks_price_index")) and row["ks_price_index"] > 1.10:
+        # Peer shop more than 10% ABOVE our reference dealer price: we already hold the premium.
+        # Raise-defensible side - a list increase is defensible on this evidence.
         return "RAISE_OK_ROOM_VS_IAM"
     if pd.notna(row.get("planned_sp_pct_chg_2025_2026")) and float(row["planned_sp_pct_chg_2025_2026"]) > 8:
         return "REVIEW_HIGH_LIST_EXPOSURE"

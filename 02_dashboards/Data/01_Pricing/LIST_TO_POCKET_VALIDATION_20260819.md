@@ -1,4 +1,4 @@
-# List-to-pocket validation (Mode B · 2026-08-19)
+# List-to-pocket validation (internal · 2026-08-19)
 
 PR00 list vs realized net billing by CY 2023–2025. **Provisional — QA pending.**
 

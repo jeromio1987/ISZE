@@ -1,6 +1,6 @@
 # IDS 2026 — Portugal pack (Imotors)
 
-Meeting pack for Imotors / Portugal. **Mode A** (external language).
+Meeting pack for Imotors / Portugal. **shared** (external language).
 
 ## Contents
 

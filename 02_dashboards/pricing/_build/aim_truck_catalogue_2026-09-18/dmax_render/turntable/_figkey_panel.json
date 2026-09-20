@@ -1,0 +1,827 @@
+{
+ "built_for": "Isuzu D-Max turntable, zones on frame 1",
+ "window": "2023 to 2026 to date",
+ "sources": [
+  "01_data/00_derived/sales_by_db_fig_key_year.csv (net_sales_eur, fig_key, fig_key_label, billed_qty, distinct_pns)",
+  "01_data/00_derived/parts_catalog_dimension.csv (part_number, fig_key, fig_key_label, pms_category)",
+  "01_data/00_derived/aim_pn_classification_v2.csv (part_number, catalog_l1, catalog_l2, catalog_l3)",
+  "03_analytics/Isuzu/prism/data/gps_model_targets.csv (model_group, target_eur_per_vehicle, notes)"
+ ],
+ "total_eur": 103993892.94,
+ "total_fig_keys": 5841,
+ "placed_eur": 89694850.06,
+ "placed_pct": 86.25,
+ "unplaced_eur": 14299042.88,
+ "unplaced_pct": 13.75,
+ "unplaced_reasons": [
+  {
+   "reason": "not a figure key",
+   "eur": 4198489.44,
+   "pct": 4.04
+  },
+  {
+   "reason": "Review needed or Unmapped",
+   "eur": 3806717.69,
+   "pct": 3.66
+  },
+  {
+   "reason": "chapter is not in the zone map",
+   "eur": 3227462.36,
+   "pct": 3.1
+  },
+  {
+   "reason": "a part every vehicle carries in no fixed place",
+   "eur": 3066373.39,
+   "pct": 2.95
+  }
+ ],
+ "zones": [
+  {
+   "k": "front",
+   "name": "Front and lamps",
+   "where": "Nose of the vehicle",
+   "basis": "Positional",
+   "eur": 14713948.24,
+   "share_pct": 14.15,
+   "target_eur": 41.01,
+   "fig_keys": 315,
+   "part_numbers": 7899,
+   "brake_eur": 4924427.55,
+   "brake_share_pct": 4.74,
+   "brake_part_numbers": 976,
+   "brake_buckets": [
+    {
+     "k": "front axle",
+     "label": "Positional - front axle",
+     "eur": 4924427.55,
+     "part_numbers": 976
+    }
+   ]
+  },
+  {
+   "k": "engine",
+   "name": "Engine bay",
+   "where": "Under the bonnet and the front of the chassis",
+   "basis": "Positional",
+   "eur": 26975860.94,
+   "share_pct": 25.94,
+   "target_eur": 75.19,
+   "fig_keys": 982,
+   "part_numbers": 37441,
+   "brake_eur": 192292.48,
+   "brake_share_pct": 0.18,
+   "brake_part_numbers": 389,
+   "brake_buckets": [
+    {
+     "k": "engine bay (not axle-positional)",
+     "label": "Engine bay - not an axle position",
+     "eur": 192292.48,
+     "part_numbers": 389
+    }
+   ]
+  },
+  {
+   "k": "cab",
+   "name": "Cab, doors and glass",
+   "where": "The driver's box",
+   "basis": "Positional",
+   "eur": 7619776.32,
+   "share_pct": 7.33,
+   "target_eur": 21.24,
+   "fig_keys": 724,
+   "part_numbers": 21673,
+   "brake_eur": 0,
+   "brake_share_pct": 0.0,
+   "brake_part_numbers": 0,
+   "brake_buckets": []
+  },
+  {
+   "k": "chassis",
+   "name": "Chassis, driveline and brakes",
+   "where": "Under the body, along the frame",
+   "basis": "Positional",
+   "eur": 24856405.1,
+   "share_pct": 23.9,
+   "target_eur": 69.28,
+   "fig_keys": 1172,
+   "part_numbers": 24484,
+   "brake_eur": 6836645.81,
+   "brake_share_pct": 6.57,
+   "brake_part_numbers": 6345,
+   "brake_buckets": [
+    {
+     "k": "chapter does not say which axle",
+     "label": "Chapter does not say which axle",
+     "eur": 5299935.32,
+     "part_numbers": 4614
+    },
+    {
+     "k": "at a wheel (not one place)",
+     "label": "At a wheel - not one place",
+     "eur": 1419271.09,
+     "part_numbers": 954
+    },
+    {
+     "k": "runs between axles (not one place)",
+     "label": "Runs between axles - not one place",
+     "eur": 117439.4,
+     "part_numbers": 777
+    }
+   ]
+  },
+  {
+   "k": "rear",
+   "name": "Rear, body and hardware",
+   "where": "Behind the cab",
+   "basis": "Positional",
+   "eur": 4744525.46,
+   "share_pct": 4.56,
+   "target_eur": 13.22,
+   "fig_keys": 311,
+   "part_numbers": 7872,
+   "brake_eur": 1679159.25,
+   "brake_share_pct": 1.61,
+   "brake_part_numbers": 2605,
+   "brake_buckets": [
+    {
+     "k": "rear axle",
+     "label": "Positional - rear axle",
+     "eur": 1679159.25,
+     "part_numbers": 2605
+    }
+   ]
+  },
+  {
+   "k": "elec",
+   "name": "Electrical and sensors",
+   "where": "Runs the whole length",
+   "basis": "Functional, not positional",
+   "eur": 10784334.0,
+   "share_pct": 10.37,
+   "target_eur": 30.06,
+   "fig_keys": 337,
+   "part_numbers": 12113,
+   "brake_eur": 0,
+   "brake_share_pct": 0.0,
+   "brake_part_numbers": 0,
+   "brake_buckets": []
+  }
+ ],
+ "target": {
+  "eur_per_vehicle_per_year": 250.0,
+  "note": "ISZE GPS maximum (LCV)",
+  "basis": "EUR 250 is the official target for one vehicle for one year. A per-zone target is that figure split by each zone's share of what we billed across the whole catalogue. It is an allocation, not a separately published per-zone target. It is a target for the whole vehicle, not for brakes only.",
+  "like_for_like": {
+   "years": [
+    "2023",
+    "2024",
+    "2025"
+   ],
+   "markets": 12,
+   "billed_eur": 77574481.72,
+   "ceiling_eur": 96411750.0,
+   "billed_share_pct": 80.5,
+   "by_year": [
+    {
+     "year": "2023",
+     "billed_eur": 24743083.62,
+     "ceiling_eur": 30809000.0,
+     "share_pct": 80.3
+    },
+    {
+     "year": "2024",
+     "billed_eur": 26955885.07,
+     "ceiling_eur": 32503250.0,
+     "share_pct": 82.9
+    },
+    {
+     "year": "2025",
+     "billed_eur": 25875513.03,
+     "ceiling_eur": 33099500.0,
+     "share_pct": 78.2
+    }
+   ],
+   "note": "Only the markets that carry a vehicle count are included, and the ceiling is each year's vehicles in service at the official rate. 2026 is left out because the billing file holds a part year. This covers all parts, not only brakes."
+  }
+ },
+ "brake": {
+  "total_eur": 13632525.09,
+  "share_of_catalogue_pct": 13.11,
+  "positional_eur": 6603586.8,
+  "positional_pct": 48.4,
+  "buckets": [
+   {
+    "k": "front axle",
+    "label": "Positional - front axle",
+    "why": "The chapter is the front brake chapter, so the part lands on the front of the vehicle.",
+    "eur": 4924427.55,
+    "share_pct": 36.1,
+    "fig_keys": 52,
+    "part_numbers": 976,
+    "examples": [
+     "Pad kit; caliper,disc BRK,FRT",
+     "Brake disc",
+     "Pad kit; disc BRK,w/o shim & clip",
+     "Review needed",
+     "Shoe kit; BRK,FRT"
+    ],
+    "home_zone": "front",
+    "pn_sample": [
+     "1094401010",
+     "1095832160",
+     "1095832690",
+     "1095832691",
+     "1095832880",
+     "1095833450",
+     "1095833460",
+     "1095833590",
+     "1095833620",
+     "1095833650",
+     "1095833651",
+     "1095833700",
+     "1095833850",
+     "1095833851"
+    ],
+    "sample_keys": [
+     "301-001",
+     "301-002",
+     "301-004",
+     "301-005",
+     "301-006",
+     "301-008",
+     "301-009",
+     "301-015"
+    ]
+   },
+   {
+    "k": "rear axle",
+    "label": "Positional - rear axle",
+    "why": "The chapter is the rear brake chapter, so the part lands on the rear of the vehicle.",
+    "eur": 1679159.25,
+    "share_pct": 12.3,
+    "fig_keys": 148,
+    "part_numbers": 2605,
+    "examples": [
+     "Wheel cylinder",
+     "Shoe kit; BRK,RR",
+     "Brake disc",
+     "Parking brake component",
+     "Shoe; BRK,RR"
+    ],
+    "home_zone": "rear",
+    "pn_sample": [
+     "0286506200",
+     "0811220200",
+     "0918055090",
+     "0918055120",
+     "1090460010",
+     "1090460011",
+     "1090460012",
+     "1090460020",
+     "1090460030",
+     "1093330330",
+     "1093331380",
+     "1093331390",
+     "1093636170",
+     "1093636870"
+    ],
+    "sample_keys": [
+     "305-001",
+     "305-002",
+     "305-005",
+     "305-006",
+     "305-009",
+     "305-016",
+     "305-017",
+     "305-018"
+    ]
+   },
+   {
+    "k": "engine bay (not axle-positional)",
+    "label": "Engine bay - not an axle position",
+    "why": "A master cylinder or a brake booster sits in the engine bay. It is a brake part with a real place, but that place is not an axle.",
+    "eur": 192292.48,
+    "share_pct": 1.4,
+    "fig_keys": 16,
+    "part_numbers": 389,
+    "examples": [
+     "Master cylinder",
+     "Brake booster",
+     "Other brake",
+     "Cap / plug",
+     "Review needed"
+    ],
+    "home_zone": "engine",
+    "pn_sample": [
+     "1475002070",
+     "1475002071",
+     "1475002140",
+     "1475002141",
+     "1475002230",
+     "1475002231",
+     "5475002660",
+     "5475003220",
+     "5475003221",
+     "5475190410",
+     "5475190470",
+     "5475190480",
+     "5475190510",
+     "5475190520"
+    ],
+    "sample_keys": [
+     "330-001",
+     "330-002",
+     "330-003",
+     "330-006",
+     "330-008",
+     "330-046",
+     "330-076",
+     "330-077"
+    ]
+   },
+   {
+    "k": "at a wheel (not one place)",
+    "label": "At a wheel - not one place",
+    "why": "An ABS sensor or a wheel-speed sensor is fitted at each wheel. It cannot be put on one zone without inventing which wheel.",
+    "eur": 1419271.09,
+    "share_pct": 10.4,
+    "fig_keys": 35,
+    "part_numbers": 954,
+    "examples": [
+     "Sensor",
+     "ABS component",
+     "Brake hose / pipe",
+     "Other brake",
+     "Linkage / lever"
+    ],
+    "home_zone": "chassis",
+    "pn_sample": [
+     "0583106200",
+     "0583306200",
+     "0721805120",
+     "0921070050",
+     "1831274600",
+     "1831274601",
+     "1831276020",
+     "1831276021",
+     "1831276022",
+     "1831276023",
+     "1831279200",
+     "1831279201",
+     "1831279202",
+     "5474110230"
+    ],
+    "sample_keys": [
+     "315-002",
+     "315-011",
+     "315-020",
+     "315-022",
+     "350-007",
+     "350-008",
+     "350-009",
+     "350-011"
+    ]
+   },
+   {
+    "k": "runs between axles (not one place)",
+    "label": "Runs between axles - not one place",
+    "why": "A brake pipe or a brake hose runs the length of the vehicle between the axles.",
+    "eur": 117439.4,
+    "share_pct": 0.9,
+    "fig_keys": 35,
+    "part_numbers": 777,
+    "examples": [
+     "Brake hose / pipe",
+     "Air hose / pipe"
+    ],
+    "home_zone": "chassis",
+    "pn_sample": [
+     "0052126100",
+     "0052127000",
+     "0052127300",
+     "0052136000",
+     "0053114500",
+     "0053116500",
+     "0053126100",
+     "0053127000",
+     "0053135300",
+     "0073003100",
+     "0286508250",
+     "0574944001",
+     "1093636080",
+     "1093641310"
+    ],
+    "sample_keys": [
+     "150-025",
+     "155-042",
+     "155-052",
+     "310-334",
+     "320-012",
+     "320-224",
+     "352-001",
+     "352-002"
+    ]
+   },
+   {
+    "k": "chapter does not say which axle",
+    "label": "Chapter does not say which axle",
+    "why": "The part is a brake part but its chapter is a general chassis chapter, so the catalogue does not state a position.",
+    "eur": 5299935.32,
+    "share_pct": 38.9,
+    "fig_keys": 214,
+    "part_numbers": 4614,
+    "examples": [
+     "Brake disc",
+     "Differential / axle",
+     "Other brake",
+     "Brake drum",
+     "Sensor"
+    ],
+    "home_zone": "chassis",
+    "pn_sample": [
+     "0027575000",
+     "0028147400",
+     "0035663000",
+     "0046503000",
+     "0047503000",
+     "0078075801",
+     "0078076101",
+     "0108056600",
+     "0108058900",
+     "0108062500",
+     "0108066700",
+     "0108112500",
+     "0108116700",
+     "0108562500"
+    ],
+    "sample_keys": [
+     "155-006",
+     "155-025",
+     "155-137",
+     "155-139",
+     "155-184",
+     "155-186",
+     "156-001",
+     "156-005"
+    ]
+   }
+  ]
+ },
+ "tests": {
+  "prefix_consistency": {
+   "clean": {
+    "prefixes": 105,
+    "eur": 52046978.58,
+    "pct": 50.0
+   },
+   "noise": {
+    "prefixes": 120,
+    "eur": 32702474.64,
+    "pct": 31.4
+   },
+   "conflict": {
+    "prefixes": 30,
+    "eur": 15045950.28,
+    "pct": 14.5,
+    "list": [
+     {
+      "prefix": "146",
+      "eur": 6993444.39,
+      "zones": {
+       "elec": 4027529.19,
+       "chassis": 2046686.27,
+       "engine": 438567.53
+      },
+      "purity": 0.618
+     },
+     {
+      "prefix": "060",
+      "eur": 1527677.15,
+      "zones": {
+       "engine": 907092.27,
+       "elec": 505571.6,
+       "chassis": 99338.8
+      },
+      "purity": 0.6
+     },
+     {
+      "prefix": "350",
+      "eur": 1061421.83,
+      "zones": {
+       "elec": 748551.2,
+       "chassis": 308610.95
+      },
+      "purity": 0.708
+     },
+     {
+      "prefix": "620",
+      "eur": 912483.15,
+      "zones": {
+       "rear": 593178.02,
+       "cab": 311096.69,
+       "front": 1100.51,
+       "chassis": 433.02,
+       "engine": 4.47
+      },
+      "purity": 0.655
+     },
+     {
+      "prefix": "480",
+      "eur": 891797.14,
+      "zones": {
+       "chassis": 144832.18,
+       "elec": 130521.13,
+       "rear": 5196.48,
+       "engine": 901.58
+      },
+      "purity": 0.515
+     },
+     {
+      "prefix": "226",
+      "eur": 594250.58,
+      "zones": {
+       "chassis": 101810.77,
+       "cab": 88834.69,
+       "elec": 834.22,
+       "engine": 6.64
+      },
+      "purity": 0.532
+     },
+     {
+      "prefix": "014",
+      "eur": 419859.24,
+      "zones": {
+       "engine": 81681.13,
+       "chassis": 64879.99,
+       "elec": 1808.98,
+       "cab": 1254.2
+      },
+      "purity": 0.546
+     },
+     {
+      "prefix": "730",
+      "eur": 414710.68,
+      "zones": {
+       "cab": 110084.31,
+       "engine": 109398.86,
+       "chassis": 57112.64,
+       "elec": 331.74
+      },
+      "purity": 0.398
+     },
+     {
+      "prefix": "013",
+      "eur": 307432.72,
+      "zones": {
+       "elec": 16890.16,
+       "engine": 11511.95
+      },
+      "purity": 0.595
+     },
+     {
+      "prefix": "301",
+      "eur": 267867.11,
+      "zones": {
+       "chassis": 142462.44,
+       "front": 36749.33,
+       "engine": 580.56
+      },
+      "purity": 0.792
+     },
+     {
+      "prefix": "025",
+      "eur": 262937.26,
+      "zones": {
+       "elec": 84780.02,
+       "engine": 33101.28,
+       "chassis": 165.35
+      },
+      "purity": 0.718
+     },
+     {
+      "prefix": "020",
+      "eur": 222322.57,
+      "zones": {
+       "elec": 25825.57,
+       "chassis": 23080.94,
+       "engine": 879.15
+      },
+      "purity": 0.519
+     },
+     {
+      "prefix": "260",
+      "eur": 186084.68,
+      "zones": {
+       "rear": 30.79,
+       "chassis": 27.75,
+       "cab": 13.68
+      },
+      "purity": 0.426
+     },
+     {
+      "prefix": "828",
+      "eur": 141933.97,
+      "zones": {
+       "elec": 95773.15,
+       "chassis": 29476.64,
+       "cab": 12666.87,
+       "engine": 3307.36
+      },
+      "purity": 0.678
+     },
+     {
+      "prefix": "052",
+      "eur": 130576.12,
+      "zones": {
+       "elec": 47098.5,
+       "chassis": 23239.39,
+       "engine": 8354.08
+      },
+      "purity": 0.599
+     },
+     {
+      "prefix": "131",
+      "eur": 115143.14,
+      "zones": {
+       "engine": 29182.19,
+       "chassis": 7768.14,
+       "elec": 46.9
+      },
+      "purity": 0.789
+     },
+     {
+      "prefix": "740",
+      "eur": 100082.03,
+      "zones": {
+       "cab": 41683.62,
+       "elec": 16697.77,
+       "front": 1092.24,
+       "chassis": 288.48
+      },
+      "purity": 0.697
+     },
+     {
+      "prefix": "865",
+      "eur": 97265.85,
+      "zones": {
+       "engine": 48959.45,
+       "cab": 32489.4,
+       "front": 1451.05,
+       "elec": 4.19,
+       "chassis": 0.64
+      },
+      "purity": 0.591
+     },
+     {
+      "prefix": "061",
+      "eur": 84675.99,
+      "zones": {
+       "elec": 54121.58,
+       "engine": 17726.82,
+       "cab": 2908.25,
+       "chassis": 25.15
+      },
+      "purity": 0.724
+     },
+     {
+      "prefix": "852",
+      "eur": 62449.09,
+      "zones": {
+       "engine": 1603.39,
+       "elec": 438.54
+      },
+      "purity": 0.785
+     },
+     {
+      "prefix": "253",
+      "eur": 41975.2,
+      "zones": {
+       "chassis": 24266.8,
+       "engine": 13948.64
+      },
+      "purity": 0.635
+     },
+     {
+      "prefix": "322",
+      "eur": 39601.48,
+      "zones": {
+       "elec": 28737.35,
+       "engine": 9272.42,
+       "chassis": 1131.42
+      },
+      "purity": 0.734
+     },
+     {
+      "prefix": "235",
+      "eur": 37529.55,
+      "zones": {
+       "chassis": 1603.98,
+       "cab": 1377.48,
+       "elec": 13.53
+      },
+      "purity": 0.536
+     },
+     {
+      "prefix": "225",
+      "eur": 32868.61,
+      "zones": {
+       "elec": 9834.04,
+       "cab": 2722.21,
+       "engine": 22.62,
+       "chassis": 1.69
+      },
+      "purity": 0.782
+     },
+     {
+      "prefix": "205",
+      "eur": 24206.87,
+      "zones": {
+       "chassis": 16463.63,
+       "engine": 5045.14,
+       "elec": 297.18
+      },
+      "purity": 0.755
+     },
+     {
+      "prefix": "874",
+      "eur": 23069.74,
+      "zones": {
+       "engine": 608.9,
+       "elec": 371.89
+      },
+      "purity": 0.621
+     },
+     {
+      "prefix": "515",
+      "eur": 22719.85,
+      "zones": {
+       "chassis": 6360.62,
+       "elec": 2881.46,
+       "cab": 1589.72
+      },
+      "purity": 0.587
+     },
+     {
+      "prefix": "670",
+      "eur": 18890.48,
+      "zones": {
+       "front": 3978.88,
+       "cab": 3899.06,
+       "rear": 567.02,
+       "chassis": 22.04,
+       "elec": 3.38
+      },
+      "purity": 0.47
+     },
+     {
+      "prefix": "710",
+      "eur": 9237.51,
+      "zones": {
+       "cab": 51.98,
+       "elec": 31.77
+      },
+      "purity": 0.621
+     },
+     {
+      "prefix": "370",
+      "eur": 1436.3,
+      "zones": {
+       "chassis": 313.04,
+       "elec": 213.58
+      },
+      "purity": 0.594
+     }
+    ]
+   }
+  },
+  "route_compare": {
+   "strict": {
+    "fig_key_label_eur": 81541158.17,
+    "fig_key_label_pct": 78.4,
+    "category_name_eur": 83276648.96,
+    "category_name_pct": 80.1
+   },
+   "with_fallback": {
+    "fig_key_label_eur": 90351948.2,
+    "fig_key_label_pct": 86.9,
+    "category_name_eur": 93323941.44,
+    "category_name_pct": 89.7
+   },
+   "disagree_keys": 20,
+   "disagree_eur": 410234.46,
+   "disagree_pct": 0.39
+  },
+  "label_drift": {
+   "keys_with_more_than_one_label": 100,
+   "keys_total": 5841,
+   "weak_dominant": 61,
+   "eur_in_drifted_keys": 6654511.81
+  },
+  "jerome_checks": {
+   "positional_keyword_pct_measured": 78.4,
+   "review_needed_pct": 3.69,
+   "unmapped_pct": 1.94,
+   "not_a_fig_key_pct": 4.04
+  }
+ }
+}

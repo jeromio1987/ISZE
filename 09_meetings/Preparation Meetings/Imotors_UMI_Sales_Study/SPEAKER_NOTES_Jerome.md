@@ -17,7 +17,7 @@ Use **separate** HTML/PDF per meeting. Do not open the V2 dual deck with the cus
 
 ## UMI (`ISZE_UMI_Deep_Study_V3`)
 
-1. Scope — UMI only; **UTI≠UMI — never blend** UTI into IDS Israel / PMS / GPS for this pack (say Mode A aloud: “IDS Israel = UMI network only”).
+1. Scope — UMI only; **UTI≠UMI — never blend** UTI into IDS Israel / PMS / GPS for this pack (say shared aloud: “IDS Israel = UMI network only”).
 2. Sales down — volume story.
 3. SaTy + light LCV network benchmark (no naming peers that confuse the room).
 4. GPS % looks healthier than volume — say the tension early.
@@ -29,5 +29,5 @@ Use **separate** HTML/PDF per meeting. Do not open the V2 dual deck with the cus
 
 ## Language
 
-External (Mode A): **IML service schedule** (filters ≈1.25×/yr, wear ≈0.5×/yr). No “IML v7” / “Model B”. No “keep UTI out” / “never blend” on shared HTML/PDF/Excel.
-Internal (Mode B, this file): UTI≠UMI blunt is OK.
+External (shared): **IML service schedule** (filters ≈1.25×/yr, wear ≈0.5×/yr). No “IML v7” / “Model B”. No “keep UTI out” / “never blend” on shared HTML/PDF/Excel.
+Internal (internal, this file): UTI≠UMI blunt is OK.

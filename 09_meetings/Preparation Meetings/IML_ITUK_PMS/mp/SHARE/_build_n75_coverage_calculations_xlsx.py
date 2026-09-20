@@ -1,4 +1,4 @@
-# Build Mode A Excel: how N75 PMS coverage % on the complementary pack is calculated.
+# Build shared Excel: how N75 PMS coverage % on the complementary pack is calculated.
 # Outputs (same file, two paths). Does not touch any PowerPoint.
 
 from copy import copy

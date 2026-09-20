@@ -1,0 +1,48 @@
+---
+description: >-
+  Before any ISZE presentation/deck/PPTX: overview first, ask Jerome clarifying
+  questions, wait for answers, then build. Per-slide Volvo-boardroom quality bar.
+  Use when creating or revising PowerPoint decks, sales reviews, meeting packs,
+  or presentation builders.
+globs: "**/*.{pptx,PPTX},**/build*deck*.py,**/ppt_template_v2/**,**/09_meetings/**,**/Presentaion style/**,**/presentation*/**"
+alwaysApply: false
+---
+
+# Boardroom deck process (ISZE)
+
+Jerome, 2026-09-19: do not jump straight into slides.
+
+## Gate order (hard)
+
+1. **Overview first** — short storyline: purpose, audience, slide list, charts, visuals (trucks/WH photos/icons). Chat only. No PPTX yet.
+2. **Ask clarifying questions** — audience (internal vs shared), decision the room must take, markets, style (house vs other), depth/slide count, which visuals OK. **Wait for his answers.**
+3. **Build only after he answers** — and only with **rebuild** / **ship** when the pack is shared/outward (`isze-no-ship-without-ok.mdc`). Internal working drafts still need the overview + Q&A gate above.
+4. **Per-slide boardroom check** (silent, while building — **mandatory, not a slogan**):
+   After *every* slide is laid out, stop and ask: *Would this hold in a boardroom where Volvo is acquiring Isuzu?*
+   If no → redo that slide before the next. No lazy text walls, no empty style shells, no question-only wallpaper without insight.
+   **Scar (2026-09-19):** Jerome caught internal rule-text on a shared footprint slide (“Never one blended Israel next to IDS”) because this check was written in the rule and still skipped. Skipping the check after a slide = same class of failure as MapChart.
+5. **HARD visual gate — every slide before “done”** (not optional, not “I looked at the builder”):
+   1. Export that slide as PNG (COM / `export_slide` / stamped export).
+   2. **Image-Read the PNG yourself** (full resolution). Counting files ≠ reading.
+   3. On the PNG, run the Volvo check again out loud in your head: would a stranger in that room understand every line, and would any line embarrass ISZE?
+   4. Only then move to the next slide or claim the deck ready.
+   If export or image-Read is skipped → the slide is **not done**. Saying “Volvo bar” in chat without the PNG is the same failure as MapChart.
+
+## Instant fails
+
+- Building a deck in the same turn he first asked, with no overview and no questions answered
+- Style prototypes with no real numbers / no charts that earn the page
+- Gap slides without **euro + service family + fleet** (`isze-gaps-need-context.mdc`)
+- Banned spoken labels (`isze-spoken-labels.mdc`) or Mode A/B (`isze-external-iml-language.mdc`)
+- Claiming done without opening the PPTX (`isze-verify-rendered-output.mdc` + roast-before-send)
+- **MapChart / third-party map watermarks** (`mapchart.net`, similar generators) — banned. Hard ban.
+- **Tool-dump footprint** — pasting a Leaflet/IDS UI crop (zoom buttons, page chrome, “Network dealer map” header) into a boardroom slide is also FAIL. Ambition bar = the ISZE globe product frame (uncaptured columns on markets, ~564 dealers as the network under it), designed into the slide with chrome stripped — not a print-screen of either MapChart or the IDS HTML. Source still lives under `02_dashboards/globe/` / `02_dashboards/ids/`; the *slide* must look boardroom, not dashboard.
+- Clipped text, ghost truck cutouts, Chinese / foreign plates on hero imagery
+- **One chart form for every story** — six ranked bars with different titles = FAIL. Each chart slide needs a different business question and a form that matches it (`isze-best-chart`).
+- Claiming a slide done without the PNG export + image-Read gate above
+- **Skipping the Volvo check after a slide** — writing the rule and still shipping = FAIL. The check is after every slide, not once per deck.
+- **Internal agent rules on the slide** — e.g. “Never one blended Israel next to IDS”, “UTI≠UMI”, “Mode …”, pipeline bans, agent slang. Shared boardroom copy states the business fact only (two named distributors, what each sells). Rule-language stays in `.mdc` / chat, never on the PNG.
+
+## Related
+
+- Charts: `isze-best-chart.mdc` · House PPT: `04_tools/ppt_template_v2/` · SPAR: no shared rebuild until he says rebuild/ship

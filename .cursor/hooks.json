@@ -27,6 +27,10 @@
         "command": "node .cursor/hooks/mypens-verify-on-stop.mjs"
       },
       {
+        "command": "node .cursor/hooks/decisions-awaiting-on-stop.mjs",
+        "loop_limit": 1
+      },
+      {
         "command": "node .cursor/hooks/block-workspace-open-paths.mjs",
         "loop_limit": 1
       }

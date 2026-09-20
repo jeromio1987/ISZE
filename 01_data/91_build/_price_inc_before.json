@@ -1,0 +1,144 @@
+{
+  "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\01_Pricing\\Price_increase_by_part_group_per_customer.xlsx",
+  "sheets": [
+    "By part group (network)",
+    "Most and least up per customer",
+    "Every customer x part group",
+    "Increase % grid"
+  ],
+  "network_sheet": {
+    "header": [
+      "Family",
+      "Part group",
+      "Part numbers",
+      "L12M qty",
+      "L12M billed (EUR)",
+      "Step (EUR)",
+      "Increase %"
+    ],
+    "rows": 26,
+    "step_sum_eur": 1652140.69,
+    "billed_sum_eur": 34993609.39,
+    "qty_sum": 1243227,
+    "part_numbers_sum": 15872,
+    "rate_min_pct": 1.9101,
+    "rate_max_pct": 7.7945,
+    "top_by_rate": "Brake parts"
+  },
+  "most_least": {
+    "header": [
+      "Customer",
+      "Highest",
+      "Lowest",
+      "Highest step (EUR)"
+    ],
+    "rows": 20,
+    "nan_cells": [
+      "C5",
+      "C8",
+      "C10",
+      "C19"
+    ]
+  },
+  "customer_group": {
+    "header": [
+      "Customer",
+      "Family",
+      "Part group",
+      "Part numbers",
+      "L12M qty",
+      "L12M billed (EUR)",
+      "Step (EUR)",
+      "Increase %",
+      "EUR per truck",
+      "Rank by step in that customer"
+    ],
+    "rows": 562,
+    "step_sum_eur": 1652140.71,
+    "billed_sum_eur": 34993609.39,
+    "blank_per_truck": 97
+  },
+  "grid": {
+    "header": [
+      "Customer",
+      "Air conditioning",
+      "Air system",
+      "Belts",
+      "Body parts",
+      "Brake parts",
+      "Clutch parts",
+      "Consumables",
+      "Cooling",
+      "Electrical sensors",
+      "Engine parts",
+      "Exhaust",
+      "Filters",
+      "Fuel system",
+      "Gaskets / seals",
+      "Hardware",
+      "Hydraulic / mechanical",
+      "Injectors",
+      "Lighting",
+      "Mirrors",
+      "Miscellaneous",
+      "Starter / alternator",
+      "Steering",
+      "Suspension",
+      "Transmission parts",
+      "Turbo",
+      "UNCLASSIFIED"
+    ],
+    "rows": 22,
+    "cols": 27
+  },
+  "defects_before": {
+    "By part group (network)": {
+      "freeze_panes": null,
+      "autofilter": null,
+      "default_width_cols": 0,
+      "cols": 7,
+      "formula_cells": 0,
+      "conditional_formats": 0,
+      "fills": 0,
+      "number_formats": [
+        "General"
+      ]
+    },
+    "Most and least up per customer": {
+      "freeze_panes": null,
+      "autofilter": null,
+      "default_width_cols": 0,
+      "cols": 4,
+      "formula_cells": 0,
+      "conditional_formats": 0,
+      "fills": 0,
+      "number_formats": [
+        "General"
+      ]
+    },
+    "Every customer x part group": {
+      "freeze_panes": null,
+      "autofilter": null,
+      "default_width_cols": 0,
+      "cols": 10,
+      "formula_cells": 0,
+      "conditional_formats": 0,
+      "fills": 0,
+      "number_formats": [
+        "General"
+      ]
+    },
+    "Increase % grid": {
+      "freeze_panes": null,
+      "autofilter": null,
+      "default_width_cols": 0,
+      "cols": 27,
+      "formula_cells": 0,
+      "conditional_formats": 0,
+      "fills": 0,
+      "number_formats": [
+        "General"
+      ]
+    }
+  }
+}

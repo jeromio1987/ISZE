@@ -1,4 +1,4 @@
-# P4 account-health — calibration runbook (Mode B)
+# P4 account-health — calibration runbook (internal)
 
 **Owner:** Jerome (task 4.9) · **Builder:** `build_account_health.py` · **Export:** `export_account_health_calibration.py`
 

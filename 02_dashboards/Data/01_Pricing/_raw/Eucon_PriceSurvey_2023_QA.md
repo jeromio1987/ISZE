@@ -1,4 +1,4 @@
-# Eucon 2023 Price Survey — hard QA (Mode B)
+# Eucon 2023 Price Survey — hard QA (internal)
 
 **Date:** 2026-08-10  
 **Verdict (first):** **Crossrefs (OEM Isuzu PN ↔ peer OE PN) are safe to use for mapping. Survey prices are NOT usable as street / retail as-is** — Isuzu “ISZE price” tracks **IE40/PR00 list EUR** (2023 vintage ≈ 2026 PR00), and OEM competitor prices are **GBP list**. IAM has explicit list vs workshop columns. **No ×1.785 (or any street restatement) appears in the workbooks.** Do not feed survey Isuzu or OEM GBP into `peer_street_eur` or action-map street deltas without restating.

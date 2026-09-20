@@ -1,0 +1,36 @@
+{
+  "ok": true,
+  "scope": "corrected working copy for review - NOT copied to a live 02_dashboards path, NOT an approved shared version",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_gpt_review\\2026-09-19_next10_brief_corrected\\04_ISZE_AIM_Classification_Paper.html",
+  "bytes": 290918,
+  "sha256": "A813B9A6C1B4D6991D96AFC75C032E473AFFEC8444C53E6E44091B9B272487F4",
+  "mtime_utc": "2026-09-19T17:57:06.368999+00:00",
+  "generated_utc": "2026-09-19T18:08:09.100821+00:00",
+  "covers_mtime": true,
+  "changed_this_pass": true,
+  "checks": {
+    "inline_js_parse": "node --check on every <script> block: 0 failures",
+    "markup_element_ids_unique": "0 duplicate static ids; all static getElementById targets resolve",
+    "visible_verification_statement": "read from 01_data/00_derived/_verification_report.json, generated_at 2026-09-19T13:00:24Z, summary pass 153 warn 1 fail 0",
+    "rendered": "headless Chrome screenshot taken AND image-read at full resolution, one at a time, by the agent writing this receipt"
+  },
+  "live_verification_source": {
+    "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_verification_report.json",
+    "generated_at": "2026-09-19T13:00:24Z",
+    "summary": {
+      "pass": 153,
+      "warn": 1,
+      "fail": 0,
+      "ok": true
+    },
+    "warn_check": [
+      "uio_year.historical_gaps"
+    ]
+  },
+  "notes": "Verification badge updated to the live report (153/1/0, 2026-09-19 13:00 UTC).",
+  "not_run": [
+    "interaction toggles (market/family/period/measure) not clicked through",
+    "print / A4 output not inspected",
+    "keyboard navigation and narrow-screen layout not tested"
+  ]
+}

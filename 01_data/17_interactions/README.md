@@ -23,7 +23,7 @@
 - Own mailbox only until G0b
 - Salt for `stakeholder_id` is outside the repo (`%LOCALAPPDATA%\ISZE\interactions_salt.txt`)
 - Folder is gitignored — regenerate locally
-- Do not put Mode A decks / shared HTML on top of this without a separate decision
+- Do not put shared decks / shared HTML on top of this without a separate decision
 - **Evidence bar:** rows below 10 interactions carry `sufficient_evidence = False`. They are written, never displayed — and `role_inferred` is blanked on them rather than published weak.
 - `role_inferred` is a **functional** label from topic mix (`parts_manager` / `finance` / `workshop` / `md`). Not personality.
 - Commitment `met` = later same-thread activity at/after `due_date` (deterministic proxy). Not LLM-judged.

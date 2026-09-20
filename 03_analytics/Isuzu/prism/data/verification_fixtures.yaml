@@ -58,13 +58,28 @@ ituk_pilot:
   uio_tolerance: 0
   # UIO × 0.5 svc/yr × 100% addressable (Jerome 2026-07-03).
   # Actuals = registry + BVP-catalog PMS PNs (incl. multi-model + cross-OEM) — do not strip sales.
+  #
+  # RE-BASED 2026-09-18 for the N35 / N75 interval split. N35 (NLR87 RZ4E) runs a 20,000 km factory
+  # interval and N75 (NPR75 4HK1) runs 40,000, so the blended cv_std rate for ITUK becomes
+  # 0.5 × (1 + 0.5051) = 0.7526 rather than a flat 0.5. Expected demand rises ~50% and the capture
+  # bands move DOWN accordingly.
+  #
+  # Scope note, because two lanes exist and this band governs only one of them:
+  #   * THIS band governs the PRISM lane (pms_capture_by_db_year.csv) only.
+  #   * The IML v7 lane (iml_v7_ituk_cy2025.yaml, oil-filter cover 35.1%, the externally published
+  #     deck) is NOT covered and is NOT changed.
+  # The two were already different by design (IML 35.1% vs PRISM 116.4%), so this correction does not
+  # create a divergence — it corrects the internal lane while leaving the agreed external one alone.
+  # NOTE: 35.1% is the IML v7 figure and is NOT this band. A PRISM-lane value of 35.1% would be a
+  # coincidence, so these bands are set from the measured PRISM-lane output (2024 56.4%, 2025 78.7%).
+  # Bands widened to +/-5% to absorb the fractional N35 split inherited from section 2.B.
   oil_filter_total_capture:
     "2024":
-      min: 0.82
-      max: 0.92
+      min: 0.52
+      max: 0.61
     "2025":
-      min: 1.15
-      max: 1.28
+      min: 0.74
+      max: 0.84
 
 required_derived:
   - sales_fact.parquet
@@ -101,6 +116,23 @@ required_derived:
   - parts_catalog_dimension.csv
   - sales_by_db_fig_key_year.csv
   - aim_gps_matrix.csv
+  - lost_sales_model.csv
+  - lost_sales_market.csv
+  - lost_sales_competitor_pn.csv
+  - lost_sales_competitor_coverage.csv
+
+uio_by_market_type_year:
+  # The fleet year axis. 2025 column must reproduce the derived fleet split the spend model
+  # reads; 1990-2024 is the actual range and must carry no gap or negative inside it.
+  required_columns: [distributor_code, market, vehicle_class, model_type, year, uio_units,
+                     is_actual, is_estimate, is_forecast, basis, source_note]
+  estimate_year: 2025
+  actual_through: 2024
+  # A gap from this year onward is a failure; an older hole is a named warning. The Denmark
+  # light-commercial row has no 2012-2013 in the workbook itself; nothing this rebuild divides by
+  # reaches back that far, and the hole is reported rather than filled.
+  hard_gap_from_year: 2023
+  reconcile_tolerance_units: 0.5
 
 aim_gps_matrix:
   min_rows: 50
@@ -173,6 +205,42 @@ substitution_timeline:
 capture_recovery_model:
   min_rows: 50
   gap_types: [substitution, under_service, catalog_gap]
+
+# Lost-sales model (2026-09-18). Ties out to the parts base and to the existing strategic
+# contracts, so a rebuild that silently drops a family or mis-joins the taxonomy fails here.
+lost_sales_model:
+  min_rows: 1000
+  max_billed_delta_eur: 1.0
+  max_price_residual_eur: 1.0
+  min_distinct_distributors: 18
+  years: [2023, 2024, 2025, 2026]
+  require_gap_types: [substitution, under_service, catalog_gap]
+  max_pms_category_coverage_pct: 40.0
+  min_pms_category_coverage_pct: 5.0
+  down_trade_verdicts:
+    - stable
+    - bvp_share_up_volume_held
+    - bvp_share_up_volume_lost
+    - no_bvp_in_market
+    - insufficient_years
+    - pre_bvp_entry
+
+lost_sales_market:
+  min_rows: 40
+
+lost_sales_competitor_coverage:
+  min_rows: 2
+  max_median_index: 5.0
+  min_median_index: 1.0
+  require_sources: [KS trade (GBP to EUR), multi-brand bridge]
+
+lost_sales_pn_action:
+  min_rows: 50
+  levers:
+    - price_or_incentive_actionable
+    - below_margin_floor
+    - landed_cost_not_price
+    - insufficient_pricing_data
 
 distributor_geo:
   min_rows: 15

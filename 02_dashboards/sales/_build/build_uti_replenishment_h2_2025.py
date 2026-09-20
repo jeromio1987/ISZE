@@ -1,4 +1,4 @@
-"""UTI CY2025 sell-through + H2 2025 replenishment (Mode B).
+"""UTI CY2025 sell-through + H2 2025 replenishment (internal).
 
 ISZE→UTI billed qty (sold_to_sap 1799 only) vs UTI→dealer PartSales.
 Does not rebuild existing dealer-sellout HTML. Does not send mail.
@@ -439,7 +439,7 @@ def build() -> dict:
     abs_gap_h2 = abs(so_h2_tot - si_h2_tot)
     h2_st = (so_h2_tot / si_h2_tot * 100) if si_h2_tot else None
 
-    # Verdict heuristics (Mode B)
+    # Verdict heuristics (internal)
     lumpy_si = bool(cv_si is not None and cv_so is not None and cv_si > 1.4 * cv_so and cv_si > 0.35)
     lag_replenish = bool(
         corr_lag1 is not None and corr0 is not None and corr_lag1 > corr0 + 0.08 and corr_lag1 > 0.4
@@ -631,7 +631,7 @@ td.num,th.num{{text-align:right}}
 </head>
 <body>
 <div class="cover">
-  <div class="badge">Mode B · UTI 1799 · not UMI · 13 Aug 2026</div>
+  <div class="badge">internal · UTI 1799 · not UMI · 13 Aug 2026</div>
   <h1>UTI is not replenishing month-for-month — dealer offtake is smooth, buy-in is lumpy</h1>
   <div class="rule"></div>
   <p class="verdict" id="verdictLine">{v["line"]}</p>
@@ -689,7 +689,7 @@ td.num,th.num{{text-align:right}}
   </div>
   <p class="muted" id="y26note"></p>
 
-  <p class="foot">Sources: ISZE billing to UTI (sold-to SAP 1799) and UTI network PartSales (qty month + YTD). PNs rolled to ITC newest code. No dealer names in the extract. H1 2025 monthly sell-out (Feb–Jul) not in the mailbox. Internal Mode B — not a client pack.</p>
+  <p class="foot">Sources: ISZE billing to UTI (sold-to SAP 1799) and UTI network PartSales (qty month + YTD). PNs rolled to ITC newest code. No dealer names in the extract. H1 2025 monthly sell-out (Feb–Jul) not in the mailbox. Internal internal — not a client pack.</p>
 </div>
 <script>{chart}
 </script>

@@ -1,4 +1,4 @@
-# Jerome-only notes (Mode B)
+# Jerome-only notes (internal)
 
 Shared files for the meeting live in **`../SHARE/`**.
 

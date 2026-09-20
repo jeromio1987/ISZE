@@ -1,0 +1,20 @@
+{
+  "built": "2026-09-17T21:52:50",
+  "margin_identity": "gross margin = 1 - class_factor; independent of FX and of base price",
+  "chain_factors": {
+    "distributor": 1.4,
+    "dealer": 1.275,
+    "reference": 1.7849999999999997
+  },
+  "fx": {
+    "rate_in_use": 163.7,
+    "rate_2023_10": 146.6,
+    "rate_2024_10": 159.4,
+    "eur_price_change_from_2023_rate_pct": 11.664392905866293
+  },
+  "caveats": [
+    "The chain applies the distributor and dealer percentages to OUR reduced price. In practice a distributor defending its own absolute margin may not pass the full reduction through, which makes the dealer price fall less than shown. No evidence on pass-through exists on disk; this is arithmetic.",
+    "The 43 part numbers are all tagged brand tier 1 with one or two competitors, and up to 18 markets share one part number. Treat as a signal.",
+    "FX sensitivity assumes the yen base price is held. In practice IML revises it."
+  ]
+}

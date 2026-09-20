@@ -224,7 +224,7 @@ def apply_oem_benchmark_to_config_block(
 
 
 def oem_readiness_markdown(path: Path | None = None, min_n: int = 3) -> str:
-    """Short Mode B block for alloc summary — priced peers vs oem_benchmark gate."""
+    """Short internal block for alloc summary — priced peers vs oem_benchmark gate."""
     df = load_oem_peer_basket(path)
     if df.empty or "peer_street_eur" not in df.columns:
         return "\n\n### OEM peer readiness\n\nBasket missing — no oem_benchmark gate report.\n"

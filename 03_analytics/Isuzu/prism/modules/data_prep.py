@@ -30,6 +30,8 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
+PRISM_DATA = Path(__file__).resolve().parent.parent / "data"
+
 # ─── SOLD_TO NAME → DISTRIBUTOR CODE ─────────────────────────────────────────
 # Resolves SAP sold_to name variants → internal distributor_code
 #
@@ -93,6 +95,14 @@ EXCLUDED_CODES = {
     "NETHERLANDS",      # UIO ≈ 1, covered under BELGIUM entity sales
     "LUXEMBOURG",       # UIO = 0
     "TURKEY",           # Not an ISZE customer — exclude from all analysis
+    # NON_PARTS: non-part sold_to entities (service fees, demurrage, e-credit).
+    # Added 2026-09-17. These were mapped UNMAPPED -> NON_PARTS on 2026-09-03 to
+    # stop them tripping the unmapped warning, but NON_PARTS was never added here,
+    # so 9 rows / EUR 180,715.11 leaked into the GPS-facing parts base and lifted
+    # it from the published EUR 112,089,307 to EUR 112,270,022. Their placeholder
+    # part numbers are also registered in NON_PART_LINE_KIND (sales_loader) as the
+    # second line of defence if this code is ever remapped.
+    "NON_PARTS",
 }
 
 # Distributors not in master CSV — metadata added here
@@ -241,11 +251,200 @@ def load_uio_detail_from_excel(filepath: str) -> pd.DataFrame:
 
     df = pd.DataFrame(rows)
     if not df.empty:
+        df = _split_collapsed_ld_rows(df, filepath)
         print(
             f"[data_prep] UIO detail: {len(df):,} rows | "
             f"{df['distributor_code'].nunique()} distributors"
         )
     return df
+
+
+# ─── N35 / N75 split, per market (2026-09-17, extended 2026-09-18) ───────────
+# The workbook's '1.UIO Overview' sheet labels EVERY N-prefix model "LD", so the N35 Grafter
+# fleet is indistinguishable from the N75 fleet. The GPS rate card needs them apart: N35 is
+# EUR 296 per vehicle and N75 is EUR 739. Collapsed, the whole UK truck fleet was priced at the
+# N75 rate — EUR 4.83M too high on the ITUK ceiling, which made the same billing read as 32.4%
+# instead of 47.0% and left two published GPS percentages that both looked authoritative.
+#
+# The UK split comes from the workbook itself: '2. Vehicle Volume', section B ("ITUK UK Car
+# Par[k]", sourced from UIO.xlsx — ITUK sheet) gives the UK carpark by model family:
+# N35 10,900 / N75 9,359 / N50/55 651 / N62/65 257 / UNSPEC 417 / F 805.
+#
+# Every other market's share is in prism/data/uio_ld_n35_share.csv — see the block below the
+# UK reader for the basis of each one.
+UK_LD_SPLIT_DISTRIBUTORS = {"ITUK"}
+_UK_LD_SPLIT_CACHE: dict | None = None
+LD_SPLIT_CSV = PRISM_DATA / "uio_ld_n35_share.csv"
+_LD_SPLIT_CACHE: dict[str, tuple[float, str]] | None = None
+WORKBOOK_2B_TOLERANCE_PP = 0.02  # warn if the live 2.B read disagrees with the CSV by >2 pp
+
+
+def _uk_ld_split_ratio(filepath: str) -> tuple[float, float]:
+    """(n35_share, n75_share) of a collapsed UK 'LD' truck row, from the workbook's section 2.B.
+
+    Section 2.B numbers the columns itself (its "Total" sits in column 20, not Excel's column T),
+    so the family rows are located by label and the first numeric cell on the row is used —
+    that is the Total column whatever the sheet layout is.
+
+    Falls back to (0.0, 1.0) — i.e. the historic behaviour — if the section cannot be read, so
+    a workbook layout change degrades to the old number rather than crashing the pipeline.
+    """
+    global _UK_LD_SPLIT_CACHE
+    if _UK_LD_SPLIT_CACHE is not None:
+        return _UK_LD_SPLIT_CACHE["n35"], _UK_LD_SPLIT_CACHE["n75"]
+    try:
+        import openpyxl  # noqa: PLC0415
+
+        wb = openpyxl.load_workbook(filepath, read_only=True, data_only=True)
+        ws = wb["2. Vehicle Volume"]
+        fam: dict[str, float] = {}
+        started = False
+        for r in ws.iter_rows(min_row=1, max_row=ws.max_row, values_only=True):
+            first = str(r[1]).strip() if r[1] is not None else ""
+            if first.upper().startswith("SECTION B"):
+                started = True
+                continue
+            if not started or not first or first.lower() == "model":
+                continue
+            if first.lower().startswith("grand"):
+                break
+            nums = [v for v in r if isinstance(v, (int, float))]
+            if nums:
+                # The financial-year grid occupies the first columns and the per-model columns sit
+                # after the "Total" header, so the largest number on the row is the parc count.
+                fam[first.upper()] = float(max(nums))
+        wb.close()
+        n35 = fam.get("N35", 0.0)
+        n75 = (fam.get("N75", 0.0) + fam.get("N50/55", 0.0)
+               + fam.get("N62/65", 0.0) + fam.get("UNSPEC", 0.0))
+        tot = n35 + n75
+        if tot <= 0:
+            raise ValueError("no UK N35/N75 rows found in section 2.B")
+        ratio = (n35 / tot, n75 / tot)
+        _UK_LD_SPLIT_CACHE = {"n35": ratio[0], "n75": ratio[1], "families": fam}
+        print(f"[data_prep] UK LD split from workbook section 2.B: "
+              f"N35 {n35:,.0f} / N75-group {n75:,.0f} -> {ratio[0]:.3f} / {ratio[1]:.3f}")
+        return ratio
+    except Exception as e:  # noqa: BLE001
+        print(f"[data_prep] WARNING: could not read the UK LD split ({e}); "
+              f"LD rows stay unsplit and the N35 band is priced at the N75 rate.")
+        _UK_LD_SPLIT_CACHE = {"n35": 0.0, "n75": 1.0}
+        return 0.0, 1.0
+
+
+def _ld_split_table() -> dict[str, tuple[float, str]]:
+    """market code -> (n35_share, basis) for every market with a measured 'LD' mix.
+
+    Until 2026-09-18 only ITUK was split. Every other market's whole CV 'LD' row was priced at
+    the N75 rate (EUR 739), so any market running 3.5 t Grafters had its target wallet — and
+    therefore its GPS % — understated. Portugal is the material case.
+
+    The share for each market is measured, not assumed, and the basis is named in the CSV:
+
+      * ``helwig_parc_bands``   — the workbook's own section 3e parc breakdown (Germany).
+      * ``simi_bands_parc``     — SIMI weight bands, scrap-adjusted to a PARC at the reference year
+        (Ireland). The parc basis is the right one because this share splits a parc, not a flow.
+      * ``unmeasured``          — no usable basis exists; the market's rate is deliberately held
+        rather than guessed (Malta, Cyprus as of 2026-09-18).
+      * ``cv_claims_plus_ministry`` — Israel, where the answer is zero: no 3.5 t truck exists in
+        that market, so its 'LD' row is 6.5/7.5 t and already carries the right rate.
+      * ``jp_vin_shipments``    — JP VIN register shipment mix, an approximation of the parc.
+      * ``workbook_2b``         — ITUK. The live read from section 2.B always wins for the UK.
+
+    Why the shipment basis is conservative: 3.5 t registrations are growing across the network,
+    so the share of recent *shipments* is above the share of the *parc*. Portugal's shipment mix
+    is 62.0% while the parc proxy in V20_SPEC §Problem 6 read 68.5%. Where a parc-basis number
+    exists (Germany, Ireland) it is used instead.
+
+    Any market not in the CSV keeps its row unsplit and its historic behaviour, so this cannot
+    move a number for a market nobody measured. A zero share is a deliberate no-op, not a
+    failure: it means the N35 band does not exist in that market.
+    """
+    global _LD_SPLIT_CACHE
+    if _LD_SPLIT_CACHE is not None:
+        return _LD_SPLIT_CACHE
+    table: dict[str, tuple[float, str]] = {}
+    try:
+        csv = pd.read_csv(LD_SPLIT_CSV)
+        for _, r in csv.iterrows():
+            # Keyed on distributor_code, which is what the loader emits. The market name is for
+            # humans; the code is the join key.
+            code = str(r["distributor_code"]).strip().upper()
+            table[code] = (float(r["n35_share"]), str(r["basis"]))
+    except Exception as e:  # noqa: BLE001
+        print(f"[data_prep] WARNING: could not read {LD_SPLIT_CSV.name} ({e}); "
+              f"the UK row will still be split from the workbook.")
+        table["ITUK"] = (0.0, "fallback")        # 0.0 => _uk_ld_split_ratio still governs the UK
+    _LD_SPLIT_CACHE = table
+    return table
+
+
+def _split_collapsed_ld_rows(df: pd.DataFrame, filepath: str) -> pd.DataFrame:
+    """Split a collapsed CV 'LD' truck row into explicit N35 and N75 rows, per market.
+
+    Affects only CV rows labelled exactly "LD" whose distributor has a measured share in
+    uio_ld_n35_share.csv. A market with no measured share keeps its row as-is.
+    """
+    if df.empty or "model" not in df.columns:
+        return df
+
+    shares = _ld_split_table()
+    if not shares:
+        return df
+
+    is_ld = df["model"].astype(str).str.strip().str.upper().eq("LD")
+    market = df["distributor_code"].astype(str).str.strip().str.upper()
+    mask = is_ld & market.isin(shares.keys())
+    if not mask.any():
+        return df
+
+    workbook_share = _uk_ld_split_ratio(filepath)[0] if "ITUK" in shares else None
+
+    split_rows = []
+    keep_rows: list[dict] = []
+    summary: dict[str, tuple[float, str]] = {}
+    for _, r in df[mask].iterrows():
+        code = str(r["distributor_code"]).strip().upper()
+        n35_share, basis = shares[code]
+        if code == "ITUK" and workbook_share:
+            n35_share = workbook_share          # live read always wins for the UK
+        if n35_share <= 0:
+            # No 3.5 t band in this market (Israel). The row must pass through UNCHANGED — it is
+            # not split, and it must not be dropped either: dropping it loses the whole market's
+            # trucks and charges the other UTI segment at the wrong rate.
+            keep_rows.append(r.to_dict())
+            summary[code] = (0.0, basis)
+            continue
+        units = float(r["uio_units"])
+        n35_units = int(round(units * n35_share))
+        split_rows.append({**r.to_dict(), "model": "N35", "uio_units": n35_units})
+        split_rows.append({**r.to_dict(), "model": "N75",
+                           "uio_units": int(round(units * (1.0 - n35_share)))})
+        summary[code] = (n35_share, basis)
+
+    if not split_rows:
+        return df
+
+    parts = []
+    for code, (share, basis) in sorted(summary.items(), key=lambda kv: -kv[1][0]):
+        if share <= 0:
+            parts.append(f"{code} no change [{basis}]")
+        else:
+            parts.append(f"{code} {share:.1%} [{basis}]")
+
+    out = pd.concat(
+        [df[~mask], pd.DataFrame(split_rows), pd.DataFrame(keep_rows)],
+        ignore_index=True,
+    )
+    print(f"[data_prep] 'LD' rows: {len(split_rows) // 2} split into N35 + N75, "
+          f"{len(keep_rows)} left unchanged: " + ", ".join(parts))
+
+    if workbook_share is not None:
+        csv_share = shares["ITUK"][0]
+        if abs(workbook_share - csv_share) > WORKBOOK_2B_TOLERANCE_PP:
+            print(f"[data_prep] WARNING: UK 2.B reads {workbook_share:.1%} but "
+                  f"{LD_SPLIT_CSV.name} says {csv_share:.1%} — the workbook moved; update the CSV.")
+    return out
 
 
 def load_uio_from_excel(filepath: str) -> pd.DataFrame:

@@ -1,4 +1,4 @@
-"""PRISM — P5 Forecast (read-only, Mode B internal).
+"""PRISM — P5 Forecast (read-only, internal internal).
 
 Portfolio view: DB × category baseline forecast, backtest WAPE, next-6-month outlook.
 Source: forecast_final.parquet, backtest_report.parquet, forecast_final_*.csv

@@ -1,4 +1,4 @@
-# Supersession billing delta (Mode B · 2026-08-19)
+# Supersession billing delta (internal · 2026-08-19)
 
 Map rows: **925** · still billing on old PN: **925** · € on old PN (all-time in sales_fact): **€7,174,209**
 

@@ -33,7 +33,7 @@
 | PASS | HTML contains CY2025 realization | looked for 96.0% |
 | PASS | HTML contains integrity score | score=48 |
 | PASS | HTML € formatting (no raw+ M) | bad_samples=[] |
-| PASS | Mode A language (no IML v7 / Model B) | scanned |
+| PASS | shared language (no IML v7 / Model B) | scanned |
 | PASS | PRISM verification green | {'pass': 106, 'warn': 0, 'fail': 0, 'ok': True} |
 | PASS | Pack separates green verification from list-to-pocket | provisional language + verification note present |
 | PASS | GPS UTI≠UMI values distinct | UTI=322 UMI=179 |
