@@ -277,6 +277,27 @@ Thumbs.db
 01_data/_build/
 01_data/_INBOX/
 
+# --- QA screenshot churn -------------------------------------------------
+# Verification screenshots are regenerated on every build and were never meant
+# to be versioned. 1,516 of them had accumulated (390 MB) before this rule.
+# They are QA evidence for a single build, not artefacts of the repo.
+# Exception (do NOT ignore): 02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/**
+#   REVIEW_DMAX_RENDER.html embeds qa_accuracy_sheet.png as page content, and the
+#   render tree is a designed visual set, not throwaway QA.
+**/_qa/**
+**/_qa_*/**
+**/_qa*/*.png
+**/_qa*/*.jpg
+**/_qa*/*.jpeg
+**/_qa*/*.webp
+**/_qa*/*.gif
+**/_gpt_review/**
+_tmp_*.png
+_tmp_*.jpg
+_qa*.png
+_qa*.jpg
+!02_dashboards/pricing/_build/aim_truck_catalogue_2026-09-18/dmax_render/**
+
 # --- Action Ledger transient build artefacts ---
 # One .txt per build run; the curated ACTION_LEDGER_BUILD_LOG_*.md is tracked.
 01_data/00_derived/action_ledger_build_log_*.txt
