@@ -4,7 +4,7 @@
 'use strict';
 (function(root){
 const D=JSON.parse(document.getElementById('case-data').textContent);
-const E=AIMEngine, X=AIMExport, C=AIMCandidates, K=AIMCases, CT=AIMContracts;
+const E=AIMEngine, X=AIMExport, C=AIMCandidates, K=AIMCases, CT=AIMContracts, M=AIMComparable;
 const store=AIMScenario.makeScenarioStore(D,E);
 const repo=K.makeRepository({
   forceMemory: !(function(){try{root.localStorage.setItem('__t','1');root.localStorage.removeItem('__t');return true;}catch(e){return false;}})()
@@ -17,7 +17,12 @@ const pct=v=>v===null||v===undefined||!Number.isFinite(Number(v))?'Not comparabl
 const signedEUR=v=>`${v>0?'+':''}${eur(v)}`;
 const color=v=>v===null||v===undefined?'':v<0?'neg':v>0?'pos':'';
 const views=['decision','position','objectives','economics','candidates','case','action'];
-const TAB_LABELS=[['decision','Sales evidence'],['position','Price position'],['objectives','Two objectives'],['economics','Price & profit test'],['candidates','Candidates'],['action','Internal action']];
+/* Every view key needs a label here. `views` above is the set of keys the router
+   accepts; TAB_LABELS is what a reader sees. The `case` key - the exact-part
+   review reached from a candidate row - was in the first list and missing from
+   the second, so its tab rendered the raw word "case". Found during the MARKET
+   panel work; pre-existing at HEAD, not introduced then. */
+const TAB_LABELS=[['decision','Sales evidence'],['position','Price position'],['objectives','Two objectives'],['economics','Price & profit test'],['candidates','Candidates'],['case','Part review'],['action','Internal action']];
 const ordered=['IMOTORS-CABIN','ITUK-TURBO','ITUK-PADS','ITUK-DISCS','IMOTORS-OIL'];
 let state={caseId:'IMOTORS-CABIN',compare:'half',view:'objectives',objective:'revenue',market:'all',billingMetric:'billingEUR',
            candidateQuery:'',candidatePage:1,candidatePageSize:50,candidateCriteria:{},
@@ -234,6 +239,342 @@ function archiveOfferTable(offers){
  if(!offers.length)return '<p>No priced exact-number competitor records are included in this export. Earlier web evidence is retained separately below.</p>';
  return `<div class="tablewrap"><table class="offers-table"><thead><tr><th>Seller / manufacturer part</th><th>Advertised amount</th><th>Tax / contents</th><th>Use and provenance</th></tr></thead><tbody>${offers.map(o=>`<tr><td><b>${esc(o.brand||'Not supplied')}</b><br><span class="pn">${esc(o.manufacturer_part_number||'Not supplied')}</span><br>${esc(o.seller)}</td><td class="n">${o.price_original?`${esc(o.currency_original)} ${num(Number(o.price_original),2)}`:'No usable price'}<br><span class="small">${esc(o.observation_date)}</span>${o.currency_original==='GBP'&&o.normalised_price_eur&&o.vat_included_excluded==='VAT included (UK 20%)'?`<br><span class="small">Recorded conversion: EUR ${num(Number(o.normalised_price_eur),2)} ex VAT<br>Historical 1.17 EUR/GBP; not current FX</span>`:''}</td><td>${esc(o.vat_included_excluded)}<br><span class="small">${esc(o.pack_quantity)}; ${esc(o.kit_contents)}<br>Delivery charges: ${esc(o.mandatory_delivery_or_other_charges)}</span></td><td><b>${esc(o.use)}</b><br><span class="small">${esc(o.match_reason)}<br>${esc(o.historical_label)}<br>${esc(o.pointer)}</span><br>${safeLink(o.source_url,'Recorded source')}</td></tr>`).join('')}</tbody></table></div>`;
 }
+/* ===========================================================================
+   MARKET-07 / MARKET-08 on a screen (view developer).
+
+   src/data/comparable.js computes the comparable-price panel and declares its
+   own contract; it draws nothing. This block is what a reader sees of it, and it
+   recomputes nothing: every figure, every reason code and every explanatory
+   sentence below is read from the panel's return value. Where the panel refuses
+   to state a figure, the screen states the refusal.
+
+   Three things this view exists to keep apart, because the artifact's earlier
+   revisions ran them together:
+
+     1. A date. Three list snapshots, four archive offers, an earlier web pass
+        and ten competitor observations sat on one screen, so a retired figure
+        read as a current price range.
+     2. A commercial price level. An advertised retail price by another seller is
+        not an ISZE net distributor price, and it is not proof our net terms are
+        too high.
+     3. Two kinds of evidence. What we bought and sold ourselves says nothing
+        about where our price sits against another seller. The panel returns them
+        as two separately named outputs with a different declared kind each, and
+        they are drawn as two panels that say so.
+
+   What a reader most often gets here, on the authorised payload, is the
+   unavailable state: NOTHING REACHES AN AGREED BASIS. That is the honest answer
+   for this file, not a broken view, and it renders as an amber state naming the
+   reason on every row and the smallest thing that would change it.
+   =========================================================================== */
+
+/* What each declared price level is, in the words a reader needs before seeing
+   any figure on it. The commercial rule the panel enforces is unreadable without
+   this, so the table is on the screen and not in a footnote. */
+const MARKET_LEVEL_TRAITS={
+  isze_net_distributor:'our own terms, a price that actually changed hands',
+  isze_net_list:'our own terms, a carried list figure rather than a transaction',
+  distributor_dealer_transaction:'a price that changed hands between a distributor and a dealer',
+  public_advertised_retail:'an advertised price by a different seller; the pack, tax and delivery basis may not be stated',
+  oem_peer_retail:'a reference dealer price published by a peer manufacturer, used as a comparison convention only',
+  list:'our own terms, a carried list figure',
+  observed_billing_average:'our own recorded billing average',
+  competitor_advertised:'an advertised price by another seller',
+  reference_dealer:'a derived reference figure, not a transaction',
+  supplier_cost:'a purchase cost, which is not a selling price at any level'};
+function marketLevelNote(level){
+  if(!level)return 'no price level is declared on this row, so it may not be compared with any other figure';
+  return MARKET_LEVEL_TRAITS[level]||'the meaning of this price level is not declared here, so nothing is stated about it';
+}
+
+/* Every derived figure on this screen carries its own explanation on hover, in
+   the house colours. The frozen shell stylesheet declares no rule for it, so the
+   rule travels with the view rather than waiting for a stylesheet nobody
+   assembles. Nothing here is a title attribute: a title is not a tooltip a
+   reviewer can read beside the number. */
+const MARKET_TIP_STYLE=`<style>.mk-tip{position:relative;border-bottom:1px dotted #6b7c8c;cursor:help}`
+ +'.mk-tip:hover::after{content:attr(data-tip);position:absolute;left:0;bottom:135%;z-index:60;width:330px;'
+ +'background:#15233c;color:#f7f4ee;border-left:4px solid #c0552d;border-radius:6px;padding:9px 11px;'
+ +'font-size:11px;line-height:1.45;font-weight:400;text-align:left;white-space:normal;'
+ +'box-shadow:0 6px 18px rgba(0,0,0,.28)}</style>';
+const tip=(v,t)=>`<span class="mk-tip" data-tip="${esc(t)}">${v}</span>`;
+
+/* The declarations a reader makes about one held offer, and the two this screen
+   states by default.
+
+   A declaration is a fact about an observation that the record has to carry: which
+   commercial price level it is, what unit it counts in, whether its quote covers
+   a piece or a pack, what its product match rests on, and how its money is to be
+   adjusted. `comparable.js` refuses to invent any of them, and this screen will
+   not invent them either. So the record's own `observation_declarations` block is
+   forwarded key by key, and where the record declares nothing the declaration
+   stays missing and the observation is reported as unresolved rather than
+   admitted on a guess.
+
+   The two defaults below are readings of the file, stated on the screen and
+   overridable by the record:
+
+     the price level   the offers this component holds are public indexed
+                       listings by other sellers, which is an advertised retail
+                       observation and not our own net terms;
+     the match basis   the file's own match notes describe seller cross-references
+                       and similar listings, not approved equivalence.
+
+   Neither default can make an observation comparable on its own. Both are printed
+   under "Admissibility rule applied" so a reader can disagree with them. */
+const MARKET_OFFER_DECLARATION_KEYS=['level','unit','match_basis','role','amount_scope','pack',
+  'equivalence','vat_rate_unit','delivery_included','delivery_cost_eur','fx_rates'];
+function marketDeclarations(c,offer){
+  const declared=(offer&&offer.observation_declarations)||{};
+  const out={unit:c.unit,level:'public_advertised_retail',match_basis:'cross_reference'};
+  MARKET_OFFER_DECLARATION_KEYS.forEach(k=>{
+    if(Object.prototype.hasOwnProperty.call(declared,k)&&declared[k]!==null&&declared[k]!==undefined){
+      out[k]=declared[k];
+    }
+  });
+  return out;
+}
+function marketPanel(c){
+  const offers=(c.offers||[]).map(id=>(D.offers||{})[id]).filter(Boolean);
+  const observations=offers.map(o=>M.observationFromOffer(o,marketDeclarations(c,o)));
+  const result=M.panel({case_id:c.id,part_number:c.pn,market:c.market,unit:c.unit},observations,{
+    basis_level:'public_advertised_retail',basis_unit:c.unit,
+    basis_named_by:'the admissibility rule stated on this screen',
+    as_of:(D.meta&&D.meta.buildDate)||null,
+    own_movement:M.movementFromComparison((c.comparisons||{}).half)});
+  return {result,offers,observations};
+}
+
+/* The kind of evidence one observation is, in the two words a reader needs
+   before the figures. A dated advertised price and a recorded transaction are
+   different things; the table says which one each row is rather than leaving it
+   to the price level's name. */
+function marketEvidenceKind(r){
+  const info=M.levelInfo(r&&r.level);
+  if(info.is_our_terms)return {short:'our own recorded terms',
+    what:'our own price on this part, not an observation by another seller'};
+  if(info.is_actual_transaction)return {short:'a recorded transaction',
+    what:'a price that actually changed hands between a distributor and a dealer'};
+  if(info.is_advertised_observation)return {short:'a dated advertised price',
+    what:'a price another seller published on the date shown; it is not a quotation and it does not state what that seller paid'};
+  if(info.is_derived_reference)return {short:'a derived reference figure',
+    what:'a comparison convention, not a transaction and not revenue that was earned'};
+  if(info.restricted)return {short:'a purchase cost',
+    what:'what a buyer paid; it is not a selling price at any level'};
+  return {short:'kind not declared',
+    what:'the kind of evidence on this row is not declared here, so nothing is read from it'};
+}
+
+/* Every reason a row was left out, grouped and counted. A code is never printed
+   alone: it is looked up in the module's own declared list, and a code that list
+   does not know is reported as unknown rather than as a reviewed reason. */
+function marketReasonGroups(rows){
+  const order=[],byCode={};
+  (rows||[]).forEach(r=>{
+    (r.reason_codes||[]).forEach(code=>{
+      if(!byCode[code]){
+        const explained=M.explainExclusion(code);
+        byCode[code]={code,kind:explained.known?explained.kind:'unknown',known:explained.known,rows:[]};
+        order.push(code);
+      }
+      byCode[code].rows.push(r);
+    });
+  });
+  return order.map(code=>byCode[code]).sort((a,b)=>b.rows.length-a.rows.length);
+}
+
+/* One observation exactly as the panel returned it: the quote, every recorded
+   adjustment step, the match status, the date, the declared kind of evidence it
+   is, and the reason it stands where it does. Nothing here is recalculated and
+   no figure is derived in the view.
+
+   The adjusted figure and the rate handed to the shared rule are the two derived
+   numbers in the row, so each carries its own explanation on hover. */
+function marketOfferTable(rows,kindLabel){
+  if(!rows||!rows.length)return '';
+  return `<div class="tablewrap"><table><thead><tr><th>Observation</th><th>Price level and seller</th><th class="n">Quoted</th><th>Kind of evidence</th><th>Adjustment, step by step</th><th>Match</th><th>Date and recorded basis</th><th>Where this row stands</th></tr></thead><tbody>
+  ${rows.map(r=>{
+    const a=r.adjustment||{};
+    const steps=(a.steps||[]).length
+      ?a.steps.map(s=>`<div class="small">${esc(s.step||'adjustment')}: ${num(s.from,2)} &rarr; ${num(s.to,2)} <span class="small">(${esc(s.rule||'')})</span></div>`).join('')
+      :'<div class="small">No adjustment step is recorded for this row.</div>';
+    const vatUse=a.vat_rate_used
+      ?`<div class="small">Rate handed to the shared rule: ${tip('<b>'+num(a.vat_rate_used.passed_to_the_rule,2)+'</b>','The rate as the shared adjustment rule receives it, which is a percentage. The row declares its own unit as '+(a.vat_rate_used.declared_by_the_row_as||'not stated')+', and the file stores the number '+num(a.vat_rate_used.original_value,3)+'. A rate whose unit is not declared is left unresolved in the comparison module rather than guessed, because 0.20 as a fraction and 20 as a percentage differ by a factor of one hundred.')} declared by the row as ${esc(a.vat_rate_used.declared_by_the_row_as||'not stated')} (the file stores ${num(a.vat_rate_used.original_value,3)}).</div>`
+      :'';
+    const unresolved=(a.unresolved||[]).length
+      ?`<div class="small danger-line">Not adjusted: ${a.unresolved.map(u=>esc(u)).join(' ')}</div>`:'';
+    const codes=(r.reason_codes||[]).map(code=>`<span class="badge ${M.explainExclusion(code).kind==='unresolved'?'assumption':'review'}">${esc(code)}</span>`).join(' ');
+    const kind=marketEvidenceKind(r);
+    return `<tr><td class="pn">${esc(r.observation_id||'no identifier')}<div class="small">${esc(r.role||'role not stated')}</div></td>
+    <td>${esc(r.level_label||'level not declared')}<div class="small">${esc(r.seller||'seller not stated')} &middot; ${esc(r.market||'market not stated')}</div></td>
+    <td class="n">${r.quoted&&r.quoted.amount!==null?esc(String(r.quoted.currency||''))+' '+num(r.quoted.amount,2):'<span class="danger-line">no amount</span>'}<div class="small">${esc((r.quoted&&r.quoted.tax)||'tax basis not stated')}<br>${r.quoted&&r.quoted.amount_scope?esc(r.quoted.amount_scope):'piece or pack not stated'}</div></td>
+    <td class="small"><b>${esc(kind.short)}</b><div class="small">${esc(kind.what)}</div></td>
+    <td>${steps}${vatUse}${unresolved}<div class="small">${a.ok?tip('Adjusted figure '+num(a.value,2),'The quoted amount after every recorded nominal adjustment &mdash; tax removed at the stated rate, currency converted at the stated dated rate, and stated delivery added. It is derived only from the retained original and the recorded inputs on this row, and it is not a comparison with our own price.'):'<span class="danger-line">no adjusted figure is stated</span>'}</div></td>
+    <td class="small">${esc((r.match&&r.match.status)||'not stated')} on ${esc((r.match&&r.match.basis)||'a basis not stated')}</td>
+    <td class="small">${esc(r.retrieved||'no date recorded')}${r.age_days===null||r.age_days===undefined?'':'<br>'+num(r.age_days,0)+' day(s) before this build'}<br>${esc(kindLabel)}</td>
+    <td class="small">${r.selected===false?'Not selected: ':''}${esc(r.selection||'')}${codes?('<div style="margin-top:6px">'+codes+'</div>'):''}${r.reason?`<div class="small">${esc(r.reason)}</div>`:''}</td></tr>`;}).join('')}
+  </tbody></table></div>`;
+}
+
+/* What this part was billed and what the row itself says is unresolved. The
+   admissibility columns are shown, not hidden: a row left out by an evidence
+   ceiling or a screen is still a row, and hiding it is how a screener gets read
+   as an approved decision. */
+function marketRecordedRows(c){
+  const rows=(D.candidateScreen||[]).filter(r=>r.part_number===c.pn);
+  if(!rows.length)return unavailableBlock({
+    title:'No screened row carries this part number',
+    reason:'The candidate screen holds no row for this exact reference, so the billed quantity, billing and unit price behind its own screening rules are not shown here. A missing row is not a billed quantity of zero.',
+    required:'a screened row for '+c.pn+', which is how the billing below is verified',
+    scope:'candidate screen, this exact reference'});
+  const shown=rows.slice(0,50);
+  const withoutBilling=rows.filter(r=>!Number.isFinite(Number(r.observed_billing_eur))).length;
+  return `<div class="tablewrap"><table><thead><tr><th>Account</th><th class="n">Billed qty</th><th class="n">Billed</th><th class="n">Unit price</th><th class="n">List</th><th class="n">Parts purchase cost</th><th>Selection reason</th><th>Unresolved on the row</th></tr></thead><tbody>
+  ${shown.map(r=>`<tr><td>${esc(r.distributor)}</td><td class="n">${num(r.billed_qty,0)}</td><td class="n">${eur(r.observed_billing_eur)}</td><td class="n">${r.observed_unit_price===null?'-':eur(r.observed_unit_price,2)}</td><td class="n">${r.list_eur===null?'-':eur(r.list_eur,2)}</td><td class="n">${r.verified_cost_eur_oct26===null?'<span class="danger-line">not held</span>':eur(r.verified_cost_eur_oct26,4)}</td><td class="small">${esc(r.selection_reasons)}</td><td class="small">${esc(r.unresolved_inputs||'-')}</td></tr>`).join('')}
+  </tbody></table></div>
+  <p class="small">${num(rows.length,0)} screened row(s) carry this exact reference; ${num(shown.length,0)} shown.${withoutBilling?' '+num(withoutBilling,0)+' of them carry no billing value and are excluded from any total rather than counted as zero.':''} A row is a customer-part record, not a part: the same reference can appear on several. These counts and the unresolved notes are copied from the screen that owns that rule; they are not re-derived here.</p>`;
+}
+
+/* The unavailable state. An empty comparable set on this payload is the correct
+   output, so this names what is empty, what the panel said about each row, and
+   what evidence would fill it. A blank panel, a zero and a section that quietly
+   vanishes are all FAIL here. */
+function marketUnavailable(c,panelResult,groups,counts){
+  const request=M.missingEvidenceRequest(panelResult,{case_id:c.id,part_number:c.pn,market:c.market});
+  const asked=request&&request.ok?request:null;
+  const reasonList=groups.length
+    ?groups.map(g=>`<div class="evidence-line"><span>${esc(g.code)} <span class="small">(${esc(g.kind)})</span></span><b>${tip(num(g.rows.length,0)+' of '+num(counts.observations,0)+' observation(s)','How many of the observations read for this case carry this reason. One observation can carry several reasons at once, so these numbers do not add up to the number of rows: each row is counted once per reason it actually carries.')}</b></div>`).join('')
+    :'<div class="small">No observation was supplied for this case, so there is no reason code to list.</div>';
+  const decl=(D.meta&&D.meta.marketComparisonDeclarations)||{};
+  return unavailableBlock({
+    title:panelResult.observations_in?'Nothing reaches the agreed comparison basis':'No competitor observation is held for this case',
+    reason:(panelResult.statement||'')+' '+(counts.observations
+      ?counts.observations+' observation(s) were read and '+num(counts.excluded,0)+' of them were left out, each with a reason recorded below. The comparable set is empty because of what the rows and the file state, not because this view failed.'
+      :'The panel was given no observation at all, so it states no comparison. That is not a price of zero and it is not a statement that no competing offer exists.'),
+    required:asked?asked.smallest_missing_detail:'an observation that declares a price level, a unit, a tax basis and a product match basis',
+    scope:counts.observations?('every competitor observation this case holds ('+num(counts.all,0)+' in the file for it)'):
+      (decl.ceiling_never_price_action?'the competitor observations on this case':'the competitor observation set for this case')
+  })+`<div class="panel" style="margin-top:12px"><div class="eyebrow">Why each observation was left out</div>
+  <h3>Named reasons, counted on this case</h3>
+  ${reasonList}
+  <p class="small">A reason code is one of ${num(Object.keys(M.EXCLUSION_CODES).length,0)} this comparison module declares. It is looked up and never printed alone, and a code the module does not know is reported as unknown rather than as a reviewed reason. Every row it applies to is in the adjustment table below, with its own words and its own date.</p>
+  ${asked?`<div class="panel callout" style="margin-top:12px"><div class="eyebrow">Draft only &middot; nothing is sent from here</div>
+    <h3>The smallest thing missing: ${esc(String(asked.topic).replace(/_/g,' '))}</h3>
+    <p class="small">${esc(asked.smallest_missing_detail)}</p>
+    <div class="evidence-line"><span>What it is used for</span><b class="small">${esc(asked.use)}</b></div>
+    <div class="evidence-line"><span>Who is asked</span><b class="small">${esc(asked.audience)}</b></div>
+    <div class="evidence-line"><span>What comes back</span><b class="small">${esc(asked.response_offered)}</b></div>
+    <div class="evidence-line"><span>Observations affected</span><b>${num(asked.observations_affected,0)}</b></div>
+    <p class="small">This request does not ask for ${esc(asked.does_not_ask_for.join(', '))}. ${asked.other_gaps_not_asked_for.length?num(asked.other_gaps_not_asked_for.length,0)+' further gap(s) are recorded and deliberately not asked for in this request. ':''}It is composed as a draft; nothing here sends it, and the case keeps its own state.</p></div>`
+   :`<p class="small">Nothing this panel can ask for is missing: every observation is either in the comparable set or was left out for a reason it cannot resolve by asking anyone.</p>`}</div>`;
+}
+
+function marketView(c){
+ const built=marketPanel(c);
+ const p=built.result;
+ const observations=p.observations_in;
+ const excluded=(p.ineligible_offers||[]).length;
+ const eligible=(p.eligible_offers||[]).length;
+ const groups=marketReasonGroups(p.ineligible_offers||[]);
+ const counts={all:built.offers.length,observations,excluded,eligible};
+ const levels=[...new Set((p.candidate_bases&&p.candidate_bases.candidates||[]).map(b=>b.level))];
+ const movement=p.purchasing_movement||{};
+ const positioning=p.price_positioning||{};
+ const decl=(D.meta&&D.meta.marketComparisonDeclarations)||null;
+ const retained=(p.raw_records_retained||0)===observations;
+ return MARKET_TIP_STYLE+`<div class="inputsnote"><b>Comparable-price panel.</b> ${num(observations,0)} dated observation(s) are read for this case on a named commercial price level and a named unit. Nothing is summarised unless an approved aggregation rule says so, and the cheapest observation is not treated as the right one.</div>
+
+ <div class="panel warn"><span class="badge review">Advertised retail is not our net terms</span>
+ <p style="margin-top:12px">${esc(decl?decl.levels_kept_apart:'ISZE net distributor price, the reference dealer price, distributor and dealer transaction prices, and public advertised retail, are separate commercial levels and are kept apart.')}</p>
+ <p class="small">${esc(decl?decl.advertised_retail:'An advertised retail price is a dated observation by another seller. It is shown beside our own terms and is never presented as proof that our own net terms are too high, and it is never put into one figure with our own price.')} <b>${esc(decl?decl.price_action:'No price action is certified from this view.')}</b></p></div>
+
+ <div class="grid2">
+  <div class="panel"><span class="eyebrow">The comparison being built</span><h3>${esc((p.selected_basis&&p.selected_basis.level_label)||'No comparison basis is named')}</h3>
+   <div class="evidence-line"><span>Base price level</span><b>${esc(p.selected_basis&&p.selected_basis.level_label||'not named')}</b></div>
+   <div class="evidence-line"><span>Base unit</span><b>${esc(p.selected_basis&&p.selected_basis.unit||'not named')}</b></div>
+   <div class="evidence-line"><span>Named by</span><b class="small">${esc(p.selected_basis&&p.selected_basis.named_by||'not stated')}</b></div>
+   <div class="evidence-line"><span>Admissibility rule applied</span><b>${esc(decl&&decl.basis_admissibility||'as declared by the comparison module')}</b></div>
+   <p class="small">${esc(p.selected_basis?p.selected_basis.statement:'No two observations have been put beside each other and no index is stated, because no basis is named.')} ${esc(decl&&decl.view_honesty||'')}</p></div>
+  <div class="panel"><span class="eyebrow">What the panel counted</span><h3>${num(counts.all,0)} price offer(s) in the file; ${num(observations,0)} read by the panel; ${num(eligible,0)} comparable</h3>
+   <div class="evidence-line"><span>Price offers held for this case</span><b>${tip(num(counts.all,0),'The number of entry keys in the offers block that this case names, whether or not each one carries a usable price. An entry with a null price is held as a record and is not a price of zero.')}</b></div>
+   <div class="evidence-line"><span>Read by the panel</span><b>${tip(num(observations,0),'The offers that reached the comparison module as observations. An entry with no identifier, or with no price at all, is not silently dropped: it is counted separately below and on the case record.')}</b></div>
+   <div class="evidence-line"><span>Left out, with a named reason</span><b>${tip(num(excluded,0),'Observations the module refused on the named basis. Every one of them carries at least one reason code, all of them are listed below, and none of them is discarded: each keeps its own record and its own date on this screen.')}</b></div>
+   <div class="evidence-line"><span>Every row the panel read was retained</span><b>${tip(retained?'yes':'no &mdash; a row was not retained','Checked by the module itself: it serialises the caller\'s array before it works and compares it afterwards, so this is its own verdict on whether it modified the input, not a figure this screen calculated.')}</b></div>
+   <div class="evidence-line"><span>Offer(s) that reached no panel row</span><b>${num(counts.all-observations,0)}${counts.all-observations?' <span class="small">(no identifier or no price; never counted as zero)</span>':''}</b></div>
+   <p class="small">${num(p.raw_records_retained||0,0)} of ${num(observations,0)} observation(s) came back with their raw record intact. ${esc(p.all_exclusion_codes_named?'Every reason code on this case resolves in the declared list.':'A reason code on this case does not resolve in the declared list, so it is reported as unknown.')} A missing value is never counted as a zero, and a row is never dropped quietly.</p></div>
+ </div>
+
+ ${eligible?`<div class="panel good"><span class="eyebrow">Comparable observations</span><h3>${num(eligible,0)} observation(s) reached the named basis</h3>
+  <p class="small">${esc(p.eligible_offers[0].selection)}</p>
+  ${marketOfferTable(p.eligible_offers,'comparable on the named basis')}
+  <p class="small">${esc(p.aggregation?p.aggregation.statement:'No aggregation rule is declared, so no summary figure is stated.')}</p></div>`
+  :marketUnavailable(c,p,groups,counts)}
+
+ <div class="panel"><h3>Every price level present, and the base level each one is refused against</h3>
+  <p class="small">${esc((p.candidate_bases&&p.candidate_bases.statement)||'')} A comparison has to name a like-for-like level or a supported bridge. A level that is not on the basis is shown and is not put into one figure with it.</p>
+  <div class="tablewrap"><table><thead><tr><th>Price level</th><th>What it is, and what may not be read from it</th><th>Declared</th></tr></thead><tbody>
+  ${(levels.length?levels:['']).map(l=>{
+    const info=M.levelInfo(l);
+    return `<tr><td><b>${esc(info.label)}</b><div class="small">${esc(info.what_it_is||'the meaning of this level is not declared')}</div></td>
+    <td class="small">${esc(marketLevelNote(l))}</td>
+    <td class="small">${info.named?'declared':'<span class="danger-line">not declared</span>'}</td></tr>`;}).join('')}
+  </tbody></table></div>
+  <p class="small">${esc(decl&&decl.basis_admissibility||'')}${decl&&decl.bridge?' '+esc(decl.bridge):''}</p></div>
+
+ <div class="panel"><h3>Currency, tax and delivery, adjustment by adjustment</h3>
+  <p class="small">Each observation below carries the quote exactly as the file records it and every step recorded between that quote and a comparable figure. A tax rate whose unit the file does not declare is left unresolved rather than guessed, because a declared 0.20 fraction and a declared 20 percent rate are the same digits and a hundred-fold different amount.</p>
+  <p class="small">${esc(decl&&decl.vat_unit_defect||'')}</p>
+  ${marketOfferTable(p.ineligible_offers||[],'not comparable on the named basis')}
+  <p class="small">An adjusted figure appears only where every step could be completed from stated inputs. The original quote is kept beside it and is never overwritten.</p></div>
+
+ <div class="grid2">
+  <div class="panel"><span class="eyebrow">Evidence kind one &middot; our own records</span><h3>What we bought and sold on this part</h3>
+   <div class="evidence-line"><span>Declared evidence kind</span><b class="small">${esc(movement.evidence_kind||'')}</b></div>
+   ${movement.available?`<div class="tablewrap"><table><thead><tr><th>Recorded period</th><th class="n">Quantity</th><th class="n">Realised unit price</th></tr></thead><tbody>
+   ${(movement.periods||[]).map(x=>`<tr><td>${esc(x.label||'not stated')}</td><td class="n">${num(x.quantity,0)}</td><td class="n">${x.unit_price===null?'<span class="small">not stated</span>':tip(eur(x.unit_price,2),'Recorded billing divided by recorded quantity for that period and that part, copied from the movement the case already carries. It is a realised average on our own terms, not a list price and not a price observed from another seller.')}</td></tr>`).join('')}
+   </tbody></table></div>`
+   :unavailableBlock({title:'No recorded movement of our own volumes and realised prices for this case',
+     reason:'The case does not carry a recorded prior-and-later movement on this part, so what we bought and sold is not stated. Its absence is not a zero and it says nothing about another seller.',
+     required:'the case comparison the movement would be read from, or the recorded billing periods for this exact part',
+     scope:'our own records, this part'})}
+   <p class="small">${esc(movement.statement||'')}</p>
+   <p class="small"><b>Not proof of:</b> ${esc((movement.must_not_be_read_as||[]).join('; '))}. This panel is about us. On its own it positions nothing.</p></div>
+  <div class="panel ${positioning.available?'':'warn'}"><span class="eyebrow">Evidence kind two &middot; other sellers</span><h3>Where our price sits against another seller</h3>
+   <div class="evidence-line"><span>Declared evidence kind</span><b class="small">${esc(positioning.evidence_kind||'')}</b></div>
+   <div class="evidence-line"><span>Comparable offer(s) by other sellers</span><b>${num(positioning.comparable_offers_by_other_sellers||0,0)}</b></div>
+   <div class="evidence-line"><span>Index stated</span><b>${positioning.index_stated?'stated':'<span class="danger-line">not stated</span>'}</b></div>
+   <div class="evidence-line"><span>Basis the index would be stated on</span><b class="small">${esc(positioning.basis?positioning.basis.level_label+' in '+positioning.basis.unit:'no basis named')}</b></div>
+   <p class="small">${esc(positioning.statement||'')}</p>
+   <p class="small"><b>Not proof of:</b> ${esc((positioning.must_not_be_read_as||[]).join('; '))}. This panel is about somebody else's published price. It never states what we paid or earned.</p></div>
+ </div>
+ <div class="panel"><div class="eyebrow">These two panels are not interchangeable, and neither is derived from the other</div>
+  <p class="small">The left panel is our own recorded movement: what we bought and sold, from our own billing. The right panel is a dated price published by another seller. The comparison module returns them as two differently named outputs with a different declared kind of evidence each, so neither can be read as proof of the other. Purchasing movement is not proof of where our price sits against another seller. A price position is not proof of what we paid or what we earned, and it is not an approved price action.</p>
+  <p class="small">Nothing above is combined into one number. No index is computed from our own terms alone, and the price position is refused unless at least one comparable observation is somebody else's.</p></div>
+
+ <div class="panel"><h3>Saved comparisons, kept as they were saved</h3>
+  ${(p.saved_comparisons||[]).length?p.saved_comparisons.map(s=>`<div class="source-row"><b>${esc(s.comparison_id||'saved comparison')}</b><p class="small">Saved ${esc(s.saved_at||'with no recorded date')} on ${esc(s.basis||'a basis not stated')} at ${s.value===null?'no stated figure':eur(s.value,2)}. Rewritten by a newer price: <b>${s.rewritten?'yes':'no'}</b>.</p><p class="small">${esc(s.statement)}${s.superseded_by_observation_ids.length?' Superseding observations: '+esc(s.superseded_by_observation_ids.join(', '))+'.':''}</p></div>`).join(''):'<p class="small">No saved comparison is recorded for this case.</p>'}
+  <p class="small">Nothing on this screen rewrites one. A newer observation does not silently replace a figure that was saved from an earlier one, and no summary is invented to stand in for either. A saved figure stands as the figure that was saved, with the newer price shown beside it.</p></div>
+
+ <div class="panel"><h3>Other recorded observations for this part, under their own clock</h3>
+  <p class="small">Dates, recorded validity, provenance and every conflicting cached value on those screens are left exactly as they were recorded. Nothing below is a current customer quotation, and the earlier pass was not refreshed for this revision.</p>
+  <details><summary>Price levels and dated snapshots recorded for this case, as recorded</summary>${snapshotPanel(c)}</details>
+  <details><summary>Dated advertised records in the archive (${num(((c.packEvidence||{}).offers||[]).filter(o=>o.independent_offer).length,0)} independent record(s))</summary><p class="small">These records carry their own tax, contents and delivery basis as recorded. They are not adjusted onto a common basis on this screen and none of them is a quotation.</p>${archiveOfferTable(((c.packEvidence||{}).offers||[]).filter(o=>o.independent_offer))}</details>
+  <details><summary>Earlier web pass, kept separate</summary><p class="small">Retrieved for the earlier version and not refreshed in this revision. A missing record in the archive above does not erase these.</p>${(c.offers||[]).map(id=>(D.offers||{})[id]).filter(Boolean).map(o=>`<div class="source-row"><b>${esc(o.seller)} &middot; ${esc(o.part)} &middot; ${esc(o.market)}</b><p>${o.price===null?'Reference only':`${esc(o.currency)} ${num(o.price,2)}`} &middot; VAT ${esc(o.tax)}.<br>${esc(o.match)} ${esc(o.note)}</p><p class="small">${esc(o.freshness)} ${esc(o.verification)}</p>${safeLink(o.url,'Recorded source')}</div>`).join('')}</details>
+  <details><summary>What this part was billed, and what each row says is unresolved</summary>${marketRecordedRows(c)}</details></div>
+
+ <div class="panel warn"><h3>What this view does not say</h3>
+  <p class="small">No price optimum, no elasticity, no acceptable profit sacrifice and no minimum margin are stated here, and none is computed. ${esc(decl&&decl.ceiling_never_price_action||'')} A view that cannot make a like-for-like comparison says so; it does not fill the gap with a number.</p>
+  <div class="evidence-line"><span>Price action certified by this view</span><b>${p.price_action_certified?'<span class="danger-line">certified</span>':'not certified'}</b></div>
+  <div class="evidence-line"><span>Aggregation rule</span><b class="small">${esc(p.aggregation?p.aggregation.statement:'no rule declared')}</b></div>
+  <div class="evidence-line"><span>Scenario link from this comparison</span><b class="small">${esc(p.scenario_link&&p.scenario_link.statement||'')}</b></div></div>
+
+ <div class="panel"><h3>Where these records come from, and what may leave this file</h3>
+  <p class="small">The ${num(counts.all,0)} price offer(s) on this screen are copied field by field out of the authorised payload named in the source panel, with the dates and the conversion basis the payload itself records. No live price, no live exchange rate and no supplier cost is read. No address, no clickable page and no seller contact is printed. The screen carries no customer name beyond the account that was billed, no negotiation history, and no raw invoice line.</p>
+  <div class="rowactions"><button class="linkbutton" data-sources>Source and calculation basis</button><button class="linkbutton" data-sources>What passed the source review?</button></div></div>
+
+ ${relatedTable(c)}`;
+}
+
 function decision(c){
  const cmp=c.comparisons[state.compare];
  return `<div class="compare-row"><div><span class="eyebrow">Measured record</span><div class="small">${sourceButton()} &middot; no forecast or lost-sales attribution</div></div><select id="comparison" aria-label="Comparison period"><option value="half" ${state.compare==='half'?'selected':''}>January-June 2026 vs 2025</option><option value="annual" ${state.compare==='annual'?'selected':''}>Calendar 2025 vs 2024</option></select></div>
@@ -243,15 +584,33 @@ function decision(c){
  <div class="grid2">${chart(c,'price','Observed ISZE unit price',true)}<div class="panel"><div class="eyebrow">Reconcile the euro change</div><h3>${signedEUR(cmp.revenueDelta)} in recorded billing</h3><div class="evidence-line"><span>Quantity effect, at prior price</span><b class="${color(cmp.volumeEffect)}">${signedEUR(cmp.volumeEffect)}</b></div><div class="evidence-line"><span>Effective price / terms effect</span><b class="${color(cmp.effectivePriceEffect)}">${signedEUR(cmp.effectivePriceEffect)}</b></div><div class="ruleline small">Exact identity: (new quantity &minus; old quantity) &times; old price + new quantity &times; (new price &minus; old price). The second term includes mix of order conditions. It is not causal price elasticity or a measured price-list effect.</div><div class="scopebox"><b>${num(c.fleet)} ${c.market==='ITUK'?'trucks':'vehicles'} &middot; 2025 market reference</b><br>${esc(c.application)} No part-level demand gap or dealer rate is computed.</div></div></div>
  ${termsTable(c)}${relatedTable(c)}<div class="panel callout"><h3>The next commercial action</h3><p>${esc(c.next)}</p><div class="rowactions"><button class="button primary" data-view="economics">Test price and gross profit</button><button class="button" data-view="action">Prepare the internal review</button></div></div>`;
 }
+/* Price position.
+
+   This view used to be where every dated record landed at once: three list
+   snapshots, the offer archive, an earlier web pass and a readiness list side by
+   side, with nothing saying which clock or which commercial price level each one
+   stood on. The comparable-price panel now computes what a reader is allowed to
+   place beside our own terms, and this view draws that panel and keeps the
+   remaining dated evidence in sections that state their own clock.
+
+   The archive and the earlier web pass are deliberately NOT adjusted onto the
+   panel's basis here. Doing that by hand in a view is how two commercial price
+   levels got mixed before; the shared rule that would do it properly belongs to
+   src/data/evidence.js, and a view that guessed it would be a second definition
+   of the same thing. */
 function position(c){
- const e=c.packEvidence,leads=(e.offers||[]).filter(o=>o.independent_offer),other=(e.offers||[]).filter(o=>!o.independent_offer);
+ const e=c.packEvidence||{};
+ const leads=(e.offers||[]).filter(o=>o.independent_offer),other=(e.offers||[]).filter(o=>!o.independent_offer);
  const sellers=[...new Set(leads.map(o=>o.seller))];
  const prior=(c.offers||[]).map(id=>D.offers[id]).filter(Boolean);
   const turboHere=turboFor(c);
   const leadsBlock=leads.length
     ?`<div class="panel"><div class="compare-row"><div><div class="eyebrow">Archive &middot; exact part ${c.pn}</div><h3>${leads.length} advertised records from ${sellers.length} sellers</h3></div><span class="badge review">No approved comparable quotation</span></div><p class="small">These are dated advertised observations, not current customer quotations. An accepted seller cross-reference is not approval of fitment, kit contents, a delivered price or a tax-normalised comparison with ISZE. No fresh web validation was performed for this revision.</p>${archiveOfferTable(leads)}${other.length?`<details><summary>${other.length} unresolved, rejected or derived records kept out of the price decision</summary>${archiveOfferTable(other)}</details>`:''}</div>`
     :`${unavailableBlock({title:'No priced exact-number competitor record is held',reason:'No dated advertised record for this exact part number is in the held evidence. That is a gap in the file, not a statement that no competing offer exists.',required:'a dated quotation naming the part number, its contents, its tax basis and its delivery charge',scope:'held competitor observations'})}${other.length?`<details><summary>${other.length} unresolved, rejected or derived records kept out of the price decision</summary>${archiveOfferTable(other)}</details>`:''}`;
-  return `${turboHere?`<div class="panel callout"><div class="eyebrow">Resolved before this screen</div><h3>The turbo list-price conflict is already settled. It is not a question for the reader.</h3><p>${esc(turboHere.statement)}</p><div class="evidence-line"><span>Applicable list price for billing</span><b>${eur(turboHere.resolved_billable_list,2)}</b></div><div class="evidence-line"><span>Second observation, kept as a sensitivity</span><b>${turboHere.sensitivity_range.map(v=>eur(v,2)).join(' / ')}</b></div><div class="evidence-line"><span>Resolved by</span><b class="small">${esc(turboHere.resolved_by||'not stated')}</b></div><p class="small"><b>Still open:</b> ${esc(turboHere.open_statement||'not stated')}</p></div>`:''}${snapshotPanel(c)}${leadsBlock}<details class="prior-web"><summary>Earlier web evidence, kept separate (${prior.length} records)</summary><p class="small">Retrieved for version 0.1, with the cache-age limits below. These records were not part of the accepted archive and have not been refreshed in this revision. A missing record in that archive does not erase them.</p>${prior.map(o=>`<div class="source-row"><b>${esc(o.seller)} &middot; ${esc(o.part)} &middot; ${esc(o.market)}</b><p>${o.price===null?'Reference only':`${esc(o.currency)} ${num(o.price,2)}`} &middot; VAT ${esc(o.tax)}.<br>${esc(o.match)} ${esc(o.note)}</p><p class="small">${esc(o.freshness)} ${esc(o.verification)}</p>${safeLink(o.url,'Earlier source listing')}</div>`).join('')}</details>${relatedTable(c)}<div class="panel warn"><h3>What remains unresolved for this case</h3><div class="acceptance-grid">${(e.readiness||[]).map(r=>`<div><b>${esc(r.name)}</b><p class="small">${esc(r.status)}</p></div>`).join('')}</div><p class="small">Restricted model-cost records and the source invoice line were not copied into this browser file. The former generic reference-price multiplier and automatic price ceilings have been removed. ${esc(D.meta.confirmedRules.costTypeRequired||'')}</p><button class="button primary" data-view="economics">Test a stated price, not an inferred optimum</button></div>`;
+  return `${marketView(c)}
+ <div class="panel"><div class="eyebrow">Other recorded evidence, each under its own clock</div><h3>List snapshots, the archive and the earlier web pass</h3>
+  <p class="small">Each block below is kept under the clock and the commercial price level its own source recorded. None of it is placed beside the comparable set above and none of it is put into one figure with it.</p></div>
+ ${turboHere?`<div class="panel callout"><div class="eyebrow">Resolved before this screen</div><h3>The turbo list-price conflict is already settled. It is not a question for the reader.</h3><p>${esc(turboHere.statement)}</p><div class="evidence-line"><span>Applicable list price for billing</span><b>${eur(turboHere.resolved_billable_list,2)}</b></div><div class="evidence-line"><span>Second observation, kept as a sensitivity</span><b>${turboHere.sensitivity_range.map(v=>eur(v,2)).join(' / ')}</b></div><div class="evidence-line"><span>Resolved by</span><b class="small">${esc(turboHere.resolved_by||'not stated')}</b></div><p class="small"><b>Still open:</b> ${esc(turboHere.open_statement||'not stated')}</p></div>`:''}${snapshotPanel(c)}${leadsBlock}<details class="prior-web"><summary>Earlier web evidence, kept separate (${prior.length} records)</summary><p class="small">Retrieved for version 0.1, with the cache-age limits below. These records were not part of the accepted archive and have not been refreshed in this revision. A missing record in that archive does not erase them.</p>${prior.map(o=>`<div class="source-row"><b>${esc(o.seller)} &middot; ${esc(o.part)} &middot; ${esc(o.market)}</b><p>${o.price===null?'Reference only':`${esc(o.currency)} ${num(o.price,2)}`} &middot; VAT ${esc(o.tax)}.<br>${esc(o.match)} ${esc(o.note)}</p><p class="small">${esc(o.freshness)} ${esc(o.verification)}</p>${safeLink(o.url,'Earlier source listing')}</div>`).join('')}</details>${relatedTable(c)}<div class="panel warn"><h3>What remains unresolved for this case</h3><div class="acceptance-grid">${(e.readiness||[]).map(r=>`<div><b>${esc(r.name)}</b><p class="small">${esc(r.status)}</p></div>`).join('')}</div><p class="small">Restricted model-cost records and the source invoice line were not copied into this browser file. The former generic reference-price multiplier and automatic price ceilings have been removed. ${esc(D.meta.confirmedRules.costTypeRequired||'')}</p><button class="button primary" data-view="economics">Test a stated price, not an inferred optimum</button></div>`;
 }
 
 /* ------------------------------------------------------- corrected views */

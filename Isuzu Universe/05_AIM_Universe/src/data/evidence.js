@@ -1085,7 +1085,35 @@
   }
 
   /* MARKET-04: currency, tax and delivery adjustments are auditable. Every step
-     is a row, and a missing rate or basis leaves the figure unresolved. */
+     is a row, and a missing rate or basis leaves the figure unresolved.
+
+     THE TAX RATE MUST ARRIVE WITH ITS UNIT - read this before calling
+     ----------------------------------------------------------------
+     A rate of 0.2 and a rate of 20 are the same digits two orders of magnitude
+     apart. The difference between them is not a rounding difference: applied to
+     an advertised price it is a real figure that overstates a competitor by
+     about a fifth. So this rule never guesses the unit from the size of the
+     number. `ctx.vat_rate` is the rate expressed as a PERCENTAGE (20 means 20%)
+     and `ctx.vat_rate_unit` must say so. A caller holding a fraction multiplies
+     it by 100 before calling; it does not pass 0.2 and hope.
+
+     What this replaced: the rule used to compute `value / (1 + rate / 100)` while
+     the payload stores the rate as a fraction (`vat: 0.2`). Handing 0.2 to that
+     form divides by 1.002, removing 0.2% of tax instead of 20%. For AUTODOC UK at
+     76.99 GBP including 20% VAT at the payload's documented 1.17 EUR/GBP, the net
+     is EUR 75.07; the old form returned EUR 89.90, 19.8% too high. That direction
+     makes a competitor look a fifth more expensive than it is, which is exactly
+     the inference MARKET-05 exists to prevent.
+
+     The unit is a FACT about the row and it is now carried, not inferred: the
+     payload's own `net` column equals `price / (1 + vat)` on 5 of 5 rows that
+     state price, vat and net, including all 3 rows where the two units would
+     differ, so the payload's rate is a fraction and `src/data/comparable.js`
+     converts it and declares the unit. It is `VAT_RATE_UNIT_NOT_STATED` on a row
+     whose unit nobody declared - never an assumed one. Do not "helpfully" accept
+     a bare 0.2 here: an accepted undeclared unit is the defect coming back. */
+  var VAT_RATE_UNITS = ['percent'];
+
   function adjustToComparable(amount, ctx) {
     ctx = ctx || {};
     var steps = [];
@@ -1103,12 +1131,24 @@
 
     if (vatInclusive) {
       var rate = toNumberOrNull(ctx.vat_rate);
+      var unit = isBlank(ctx.vat_rate_unit) ? null : String(ctx.vat_rate_unit).toLowerCase();
       if (rate === null) {
         unresolved.push('the observation is tax inclusive and the rate is not stated');
+      } else if (VAT_RATE_UNITS.indexOf(unit) < 0) {
+        /* The rate is present and its unit is not declared. It is not converted
+           and it is not guessed: the row stays unresolved. A caller that knows
+           the rate is a fraction states 'percent' after multiplying by 100. */
+        unresolved.push(isBlank(unit)
+          ? 'the observation carries a tax rate of ' + rate + ' but does not state whether that is '
+            + 'a percentage or a fraction'
+          : 'the observation states its tax rate unit as "' + unit + '", which is not one of the '
+            + 'units this rule accepts (' + VAT_RATE_UNITS.join(', ') + ')');
       } else {
         var net = value / (1 + rate / 100);
         steps.push({ step: 'remove tax', from: value, to: round2(net),
-          rule: 'divide by 1 + the stated rate of ' + rate + '%' });
+          rate: rate, rate_unit: 'percent',
+          rule: 'divide by 1 + the stated rate of ' + rate + '%, the rate being declared as a '
+            + 'percentage on the observation' });
         value = net;
       }
     } else if (vatExclusive) {

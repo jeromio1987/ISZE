@@ -1283,8 +1283,15 @@ test('MARKET-04 currency, tax and delivery adjustments are auditable and unresol
   assert.equal(unknownTax.value, null);
   assert.ok(unknownTax.unresolved.some((u) => /tax basis is not stated/i.test(u)));
 
+  /* RE-POINTED 2026-09-22 (VAT unit correction). These two calls used to pass a
+     bare `vat_rate: 20` with no unit. The rule now requires the unit to be
+     declared, because a rate of 0.2 and a rate of 20 are the same digits two
+     orders of magnitude apart and a rule that guesses between them overstates a
+     competitor by about a fifth. The expected figures are unchanged: 20 as a
+     declared percentage was, and is, 20%. What changed is that the unit is now
+     stated rather than inferred from the magnitude. */
   const unknownFx = evidence.adjustToComparable(148.51, { currency: 'GBP',
-    tax: 'inclusive', vat_rate: 20 });
+    tax: 'inclusive', vat_rate: 20, vat_rate_unit: 'percent' });
   assert.equal(unknownFx.ok, false);
   assert.equal(unknownFx.value, null);
   assert.ok(unknownFx.unresolved.some((u) => /no dated rate to EUR/i.test(u)));
@@ -1292,10 +1299,12 @@ test('MARKET-04 currency, tax and delivery adjustments are auditable and unresol
   assert.equal(unknownFx.steps.length, 1, 'the tax step should still be recorded before the failure');
 
   const done = evidence.adjustToComparable(148.51, { currency: 'GBP', tax: 'inclusive',
-    vat_rate: 20, fx_to_eur: 1.17, fx_date: '2026-09-22', delivery_included: true });
+    vat_rate: 20, vat_rate_unit: 'percent', fx_to_eur: 1.17, fx_date: '2026-09-22',
+    delivery_included: true });
   assert.equal(done.ok, true, done.unresolved.join('; '));
   assert.equal(done.steps.length, 3, 'the delivery step should be recorded too');
   assert.equal(done.steps[0].step, 'remove tax');
+  assert.equal(done.steps[0].rate_unit, 'percent', 'the recorded tax step states the unit it used');
   assert.equal(done.steps[1].step, 'convert to EUR');
   assert.equal(done.steps[2].step, 'delivery basis');
   assert.match(done.statement, /each step and its rule is shown/i);
@@ -1309,6 +1318,100 @@ test('MARKET-04 currency, tax and delivery adjustments are auditable and unresol
   assert.equal(fxWithoutADate.steps.filter((s) => s.step === 'convert to EUR').length, 0);
   assert.ok(fxWithoutADate.unresolved.some((u) => /without the date/i.test(u)));
   assert.equal(fxWithoutADate.value, null, 'an unconverted figure was still returned as comparable');
+});
+
+/* ===========================================================================
+   The tax-rate unit (added 2026-09-22)
+
+   The defect these four checks exist for: the rule computed `value / (1 + rate /
+   100)` while the payload stores its rate as a fraction (`vat: 0.2`). Handing
+   0.2 to that form divides by 1.002 and removes 0.2% of tax instead of 20%,
+   which makes a competitor look about a fifth more expensive than it is. The
+   figures below are synthetic round numbers, not a real seller's prices.
+   =========================================================================== */
+
+test('MARKET-04a a tax rate whose unit is not declared leaves the amount unresolved, never guessed', () => {
+  /* Both of these are the same digits two orders of magnitude apart, and neither
+     states which it is. There is no default: a default is the defect. The tax
+     basis, currency and delivery are all stated, so the unit is the ONLY thing
+     left undone - the refusal is about the rate and nothing else. */
+  for (const rate of [0.2, 20]) {
+    const r = evidence.adjustToComparable(120, { currency: 'EUR', tax: 'inclusive',
+      vat_rate: rate, delivery_included: true });
+    assert.equal(r.ok, false, 'a bare rate of ' + rate + ' was accepted without a declared unit');
+    assert.equal(r.value, null, 'a figure was produced from a rate whose unit nobody stated');
+    assert.equal(r.steps.filter((s) => s.step === 'remove tax').length, 0,
+      'no tax step may be recorded when the unit is unknown, so no tax was removed: '
+      + JSON.stringify(r.steps));
+    assert.ok(r.steps.every((s) => s.to === s.from),
+      'no step recorded for an unknown rate may have moved the value: ' + JSON.stringify(r.steps));
+    assert.ok(r.unresolved.some((u) => /does not state whether that is a percentage or a fraction/i.test(u)),
+      'the refusal must name the ambiguity: ' + r.unresolved.join('; '));
+    assert.equal(r.unresolved.length, 1,
+      'the unit must be the only thing missing here, so nothing else is being blamed: '
+      + r.unresolved.join('; '));
+  }
+
+  /* And with the unit declared, the same numbers resolve. */
+  const declared = evidence.adjustToComparable(120, { currency: 'EUR', tax: 'inclusive',
+    vat_rate: 20, vat_rate_unit: 'percent', delivery_included: true });
+  assert.equal(declared.ok, true, declared.unresolved.join('; '));
+  assert.equal(declared.value, 100, '120 including 20% is 100 net');
+});
+
+test('MARKET-04b the digits do not decide the unit: 0.2 and 20 declared as percentages differ', () => {
+  /* The regression guard. A rule that "helpfully" treats a small number as a
+     fraction would return the same net for both of these. It must not: declared
+     as percentages they are 0.2% and 20%, and the answers differ by nearly 20
+     euro on a 120 euro inclusive amount. */
+  const asTwentyPercent = evidence.adjustToComparable(120, { currency: 'EUR', tax: 'inclusive',
+    vat_rate: 20, vat_rate_unit: 'percent', delivery_included: true });
+  const asZeroPointTwoPercent = evidence.adjustToComparable(120, { currency: 'EUR', tax: 'inclusive',
+    vat_rate: 0.2, vat_rate_unit: 'percent', delivery_included: true });
+
+  assert.equal(asTwentyPercent.value, 100);
+  assert.equal(asZeroPointTwoPercent.value, 119.76,
+    'a declared 0.2 percent rate removes 0.2 percent, not 20');
+  assert.notEqual(asTwentyPercent.value, asZeroPointTwoPercent.value,
+    'the two declarations were collapsed into one answer, so something is guessing from the magnitude');
+
+  /* A fraction is converted by the caller, and the rule records the unit it used. */
+  assert.equal(asTwentyPercent.steps[0].rate_unit, 'percent');
+  assert.equal(asTwentyPercent.steps[0].rate, 20);
+});
+
+test('MARKET-04c a rate unit that is not a declared unit is refused rather than coerced', () => {
+  const unknown = evidence.adjustToComparable(120, { currency: 'EUR', tax: 'inclusive',
+    vat_rate: 20, vat_rate_unit: 'twenty percent', delivery_included: true });
+  assert.equal(unknown.ok, false);
+  assert.equal(unknown.value, null);
+  assert.ok(unknown.unresolved.some((u) => /not one of the units this rule accepts/i.test(u)),
+    'an unrecognised unit must be named, not silently treated as a percentage: '
+    + unknown.unresolved.join('; '));
+});
+
+test('MARKET-04d a declared fraction is converted before the call, and the old wrong answer is not returned', () => {
+  /* The payload's own documented shape: a rate held as a fraction on the row and
+     converted by the caller to the percentage the rule asks for. A synthetic
+     inclusive amount of 120 at a documented rate of 1.5 gives 150.
+     The defect this replaces returned 179.64 here - it kept 99.8% of the tax. */
+  const convertedByTheCaller = evidence.adjustToComparable(120, {
+    currency: 'GBP', tax: 'inclusive', vat_rate: 20, vat_rate_unit: 'percent',
+    fx_to_eur: 1.5, fx_date: '2026-09-22', delivery_included: true
+  });
+  assert.equal(convertedByTheCaller.ok, true, convertedByTheCaller.unresolved.join('; '));
+  assert.equal(convertedByTheCaller.value, 150);
+  assert.notEqual(convertedByTheCaller.value, 179.64,
+    'the divide-by-1.002 answer was returned, so the rate was read at the wrong magnitude');
+
+  /* And the same inputs without the declaration are refused outright, not
+     quietly computed at whichever magnitude the number happens to look like. */
+  const undeclared = evidence.adjustToComparable(120, {
+    currency: 'GBP', tax: 'inclusive', vat_rate: 0.2,
+    fx_to_eur: 1.5, fx_date: '2026-09-22', delivery_included: true
+  });
+  assert.equal(undeclared.ok, false);
+  assert.equal(undeclared.value, null);
 });
 
 test('MARKET-05 old and conflicting observations stay visible', () => {

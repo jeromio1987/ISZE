@@ -10,6 +10,7 @@ list, so nothing states whether they are live.
 - `src/engine/engine.js`
 - `src/data/manifest.js`
 - `src/data/evidence.js`
+- `src/data/comparable.js`
 - `src/data/export.js`
 - `src/data/candidates.js`
 - `src/data/cases.js`
@@ -32,9 +33,9 @@ list, so nothing states whether they are live.
 
 ## ORPHANS (in neither list)
 
-- `src/data/comparable.js` - loaded by: tests/market_evidence.test.mjs
+None.
 
 ## Summary
 
-21 .js modules on disk, 9 shipped, 11 deliberately retired, 1 orphaned.
+20 .js modules on disk, 10 shipped, 11 deliberately retired, 0 orphaned.
 

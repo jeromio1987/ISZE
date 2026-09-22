@@ -48,6 +48,7 @@ const engine = require(path.join(ROOT, 'src/engine/engine.js'));
 const scenarioModule = require(path.join(ROOT, 'src/data/scenario.js'));
 const caseModule = require(path.join(ROOT, 'src/data/cases.js'));
 const exportModule = require(path.join(ROOT, 'src/data/export.js'));
+const comparableModule = require(path.join(ROOT, 'src/data/comparable.js'));
 const candidatesModule = require(path.join(ROOT, 'src/data/candidates.js'));
 
 const APP = path.join(ROOT, 'src/ui/app.js');
@@ -169,7 +170,10 @@ function loadApp({ storage, hash, caseId }) {
     AIMCandidates: candidatesModule,
     AIMCases: caseModule,
     AIMContracts: contracts,
-    AIMScenario: scenarioModule
+    AIMScenario: scenarioModule,
+    /* Assembled by tools/build.py beside the modules above, and read by
+       src/ui/app.js for the price-position view. */
+    AIMComparable: comparableModule
   };
   sandbox.window = sandbox;
   sandbox.globalThis = sandbox;

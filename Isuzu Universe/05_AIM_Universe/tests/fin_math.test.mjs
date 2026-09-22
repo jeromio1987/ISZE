@@ -21,7 +21,14 @@ const require = createRequire(import.meta.url);
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(HERE, '..');
 
-const engine = require(join(ROOT, 'src', 'engine', 'pricing.js'));
+/* RE-POINTED 2026-09-22 (duplicate-module correction). This suite loaded
+   src/engine/pricing.js, which tools/build.py lists in UNWIRED_MODULES and does
+   not assemble; the module the artifact runs is src/engine/engine.js. The two
+   were byte-identical at the moment of the repoint (sha256 both 1db7f3fb6fa8f399),
+   so no expected figure moved - which is why the repoint is safe here and not
+   merely convenient. Counting a green run from the retired copy would have gone
+   on reporting on a module nobody receives the first time engine.js changed. */
+const engine = require(join(ROOT, 'src', 'engine', 'engine.js'));
 const contracts = require(join(ROOT, 'src', 'data', 'contracts.js'));
 
 /* The engine is deliberately payload-free. The restricted business payload is

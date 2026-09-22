@@ -38,6 +38,7 @@ MODULES = [
     ("src/engine/engine.js", "calculation (one entry point)"),
     ("src/data/manifest.js", "source manifest"),
     ("src/data/evidence.js", "evidence states"),
+    ("src/data/comparable.js", "comparable-price panel (computes, renders nothing)"),
     ("src/data/export.js", "recipient-specific exports"),
     ("src/data/candidates.js", "candidate workbench"),
     ("src/data/cases.js", "durable case record"),
@@ -52,7 +53,14 @@ MODULES = [
 # increment. The build fails if a shipped module starts depending on one, so a
 # dead module cannot become a silent runtime error.
 UNWIRED_MODULES = [
-    ("src/engine/pricing.js", "superseded by src/engine/engine.js"),
+    # DELETED 2026-09-22 - the file is gone from the tree. The entry is kept as a
+    # tombstone on purpose: tests/accept/guard_09_module_scope.cjs G04 names this
+    # path and asserts it classifies as RETIRED. Pruning it here without changing
+    # that probe would fail a check this developer does not own, so the pruning is
+    # left to the integration owner together with the guard. Nothing is assembled
+    # from this entry and nothing reads it any more: tests/fin_math.test.mjs, the
+    # last loader, now asks src/engine/engine.js.
+    ("src/engine/pricing.js", "superseded by src/engine/engine.js; duplicate deleted 2026-09-22"),
     ("src/data/costbasis.js", "overlaps the engine's basis resolution"),
     ("src/case/schema.js", "duplicate case contract"),
     ("src/case/store.js", "duplicate case store"),

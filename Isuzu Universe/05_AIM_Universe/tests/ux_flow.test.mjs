@@ -67,6 +67,7 @@ const caseModule = require(path.join(ROOT, 'src/data/cases.js'));
 const candidateModule = require(path.join(ROOT, 'src/data/candidates.js'));
 const scenarioModule = require(path.join(ROOT, 'src/data/scenario.js'));
 const exportModule = require(path.join(ROOT, 'src/data/export.js'));
+const comparableModule = require(path.join(ROOT, 'src/data/comparable.js'));
 
 /* The module under test: the one tools/build.py assembles as "views and
    interaction". It is a single IIFE inside a <script> tag. */
@@ -316,7 +317,12 @@ function loadApp({ engineOverride } = {}) {
     AIMCandidates: candidateModule,
     AIMCases: caseModule,
     AIMContracts: contracts,
-    AIMScenario: scenarioModule
+    AIMScenario: scenarioModule,
+    /* The comparable-price panel is assembled by tools/build.py alongside the
+       modules above, and src/ui/app.js reads it for the price-position view. A
+       harness that leaves it out reports "AIMComparable is not defined" on every
+       view, so the shipped module list and this list move together. */
+    AIMComparable: comparableModule
   };
   sandbox.window = sandbox;
   sandbox.globalThis = sandbox;

@@ -9,6 +9,7 @@ reports a real result about code the assembled artifact does not run.
 - `src/engine/engine.js` - calculation (one entry point)
 - `src/data/manifest.js` - source manifest
 - `src/data/evidence.js` - evidence states
+- `src/data/comparable.js` - comparable-price panel (computes, renders nothing)
 - `src/data/export.js` - recipient-specific exports
 - `src/data/candidates.js` - candidate workbench
 - `src/data/cases.js` - durable case record
@@ -17,7 +18,7 @@ reports a real result about code the assembled artifact does not run.
 
 ## Retired (present but not assembled)
 
-- `src/engine/pricing.js` - superseded by src/engine/engine.js
+- `src/engine/pricing.js` - superseded by src/engine/engine.js; duplicate deleted 2026-09-22; **DELETED from the tree, entry kept as a tombstone**
 - `src/data/costbasis.js` - overlaps the engine's basis resolution
 - `src/case/schema.js` - duplicate case contract
 - `src/case/store.js` - duplicate case store
@@ -26,23 +27,31 @@ reports a real result about code the assembled artifact does not run.
 - `src/ui/scenario.js` - duplicate scenario view helper
 - `src/ui/failure.js` - duplicate failure view
 - `src/ui/candidates.js` - duplicate candidate view
+- `src/ui/views.js` - retired second view layer; every view it held is ported into src/ui/app.js
+- `src/ui/render.js` - retired second shell; the F05 guard and routing live in src/ui/app.js
 
 ## Tests, by what they load
 
-- `tests/accept/_diag_brief.cjs`
-    - shipped: src/data/export.js
+- `tests/accept/_diag_attach.cjs`  <-- LOADS A RETIRED MODULE
+    - RETIRED: src/output/recipients.js
+- `tests/accept/_diag_brief.cjs`  <-- LOADS A RETIRED MODULE
+    - shipped: src/data/contracts.js, src/data/export.js, src/engine/engine.js
+    - RETIRED: src/output/recipients.js
 - `tests/accept/accept_01_engine.cjs`  <-- LOADS A RETIRED MODULE
-    - shipped: src/data/export.js, src/engine/engine.js
-    - RETIRED: src/engine/pricing.js, src/output/recipients.js
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js
+    - RETIRED: src/output/recipients.js
+- `tests/accept/accept_03_conservation.cjs`
+    - shipped: src/data/candidates.js, src/data/evidence.js, src/data/manifest.js
 - `tests/accept/accept_04_participant.cjs`  <-- LOADS A RETIRED MODULE
-    - shipped: src/data/export.js
+    - shipped: src/data/contracts.js, src/data/export.js, src/engine/engine.js
     - RETIRED: src/output/recipients.js
 - `tests/accept/accept_05_08_safety.cjs`  <-- LOADS A RETIRED MODULE
-    - shipped: src/data/export.js
+    - shipped: src/data/candidates.js, src/data/contracts.js, src/data/export.js, src/data/manifest.js, src/engine/engine.js
     - RETIRED: src/output/recipients.js
 - `tests/accept/guard_09_module_scope.cjs`  <-- LOADS A RETIRED MODULE
     - shipped: src/data/export.js, src/engine/engine.js
     - RETIRED: src/data/costbasis.js, src/engine/pricing.js, src/output/recipients.js
+    - names a DELETED module in a comment (not a load): src/engine/pricing.js
 - `tests/accept/lib/harness.cjs`  <-- LOADS A RETIRED MODULE
     - shipped: src/data/candidates.js, src/data/cases.js, src/data/contracts.js, src/data/evidence.js, src/data/export.js, src/data/manifest.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
     - RETIRED: src/data/costbasis.js, src/output/recipients.js
@@ -55,21 +64,49 @@ reports a real result about code the assembled artifact does not run.
 - `tests/export_bytes.test.mjs`  <-- LOADS A RETIRED MODULE
     - shipped: src/data/contracts.js, src/engine/engine.js
     - RETIRED: src/output/recipients.js
-- `tests/export_shipped.test.mjs`  <-- LOADS A RETIRED MODULE
+- `tests/export_shipped.test.mjs`
     - shipped: src/data/contracts.js, src/data/export.js, src/ui/app.js
-    - RETIRED: src/output/recipients.js
-- `tests/fin_math.test.mjs`  <-- LOADS A RETIRED MODULE
-    - shipped: src/data/contracts.js
-    - RETIRED: src/engine/pricing.js
+- `tests/fin_math.test.mjs`
+    - shipped: src/data/contracts.js, src/engine/engine.js
+- `tests/market_evidence.test.mjs`
+    - shipped: src/data/comparable.js, src/data/evidence.js
 - `tests/run_tests.cjs`
     - shipped: src/data/candidates.js, src/data/cases.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js
-- `tests/ux_flow.test.mjs`
-    - shipped: src/data/candidates.js, src/data/cases.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
-    - unlisted: src/ui/render.js, src/ui/views.js
+- `tests/ux_flow.test.mjs`  <-- LOADS A RETIRED MODULE
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+    - RETIRED: src/ui/render.js, src/ui/views.js
+- `tests/ux_market.test.mjs`
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/evidence.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
 - `tests/ux_reopen.test.mjs`
-    - shipped: src/data/candidates.js, src/data/cases.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
+    - shipped: src/data/candidates.js, src/data/cases.js, src/data/comparable.js, src/data/contracts.js, src/data/export.js, src/data/scenario.js, src/engine/engine.js, src/ui/app.js
 
 ## Summary
 
-14 test files load a source module; 10 of them load a retired one.
+18 test files load a source module; 11 of them load a retired one.
+
+## Read this before acting on the number above
+
+This is a RAW TEXT SCAN. It cannot tell a misdirected load from a
+legitimate, in-file DECLARED comparison against a retired module - and
+a declared comparison is the right way to ask what the retired copy
+does, so some of the loads counted above are correct.
+
+`tests/accept/guard_09_module_scope.cjs` is the authority: it reads the
+declarations and fails only on an UNDECLARED retired load, which it
+reports as 3. Treat this file as the map, and that guard as the check.
+
+## What this scan deliberately does not count
+
+A retired entry whose file has been DELETED is a tombstone, not a live
+duplicate, so it is listed separately rather than counted as a retired
+load. The build keeps the entry on purpose so the guard that names it
+keeps working, and nothing can load a file that is not on disk:
+
+- `src/engine/pricing.js` - superseded by src/engine/engine.js; duplicate deleted 2026-09-22
+
+A module name that a test NAMES in order to assert it is not loaded is
+still counted, because the scan cannot tell that from a load. A real
+load is a require/import of a quoted path; the scan matches that shape
+and not bare prose, so a re-pointed test's explanation of what it used
+to load is no longer reported as a load.
 

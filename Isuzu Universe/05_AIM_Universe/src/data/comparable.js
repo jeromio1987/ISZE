@@ -563,7 +563,16 @@
     }
 
     var adjustment = evidence.adjustToComparable(o.amount, {
-      tax: o.tax, vat_rate: vatUnit.ok ? vatUnit.value : null, currency: o.currency,
+      tax: o.tax,
+      /* The rate and its unit travel together. The row declares the unit and
+         this file converts the fraction to the percentage the shared rule asks
+         for; the rule is told which unit it is being given, so neither side has
+         to infer it from the size of the number. A row that declares neither is
+         passed a null rate with the unit 'not stated', and the shared rule
+         reports that in its own words. */
+      vat_rate: vatUnit.ok ? vatUnit.value : null,
+      vat_rate_unit: vatUnit.ok ? 'percent' : 'not stated',
+      currency: o.currency,
       fx_to_eur: o.fx_to_eur, fx_date: o.fx_date,
       delivery_included: o.delivery_included, delivery_cost_eur: o.delivery_cost_eur
     });
