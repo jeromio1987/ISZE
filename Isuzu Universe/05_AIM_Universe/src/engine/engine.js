@@ -88,7 +88,9 @@
      is 1, and neither is a quantity an operator meant to type. */
   function toNumberOrNull(v) {
     if (isBlank(v)) return null;
-    if (typeof v === 'boolean' || typeof v === 'object' || typeof v === 'function') return null;
+    // Only numbers and numeric text are supported. Symbol must not throw and
+    // BigInt must not be silently narrowed; both are invalid at this boundary.
+    if (typeof v !== 'number' && typeof v !== 'string') return null;
     var n = Number(v);
     return Number.isFinite(n) ? n : null;
   }
@@ -197,13 +199,20 @@
              + '(expected YYYY-MM-DD). No cost basis has been assumed.' };
     }
 
-    var fwd = forwardBases(payload), match = null, undated = [], declared = [];
+    var fwd = forwardBases(payload), match = null, matches = [], undated = [], declared = [];
     for (var i = 0; i < fwd.length; i++) {
       var w = basisWindow(fwd[i]);
       declared.push(fwd[i].basis_id + ' (' + (w.from || '?') + ' to ' + (w.to || 'no declared end') + ')');
       if (!w.from || !w.to) { undated.push(fwd[i].basis_id); continue; }
-      if (effectiveDate >= w.from && effectiveDate <= w.to) { match = fwd[i]; break; }
+      if (effectiveDate >= w.from && effectiveDate <= w.to) { matches.push(fwd[i]); }
     }
+    if (matches.length > 1) {
+      return { ok: false, resolved: false, basis_id: null, source: 'none',
+        error: 'Multiple forward cost windows overlap on ' + effectiveDate + ': '
+          + matches.map(function (b) { return b.basis_id; }).join(', ')
+          + '. The source owner must resolve the ambiguity; array order is not a cost rule.' };
+    }
+    match = matches.length === 1 ? matches[0] : null;
     if (!match) {
       return { ok: false, resolved: false, basis_id: null, source: 'none',
         error: 'The offer effective date ' + effectiveDate + ' falls outside every declared '
@@ -297,20 +306,25 @@
      quoted, so they are held to two decimals. A zero move returns the baseline
      price unchanged rather than a phantom move on a four-decimal average. */
   function priceAfter(baselinePrice, deltaPct) {
-    if (!deltaPct) return round2(baselinePrice);
-    return round2(round2(baselinePrice) * (1 + deltaPct / 100));
+    var baselineNumber = toNumberOrNull(baselinePrice);
+    var delta = isBlank(deltaPct) ? 0 : toNumberOrNull(deltaPct);
+    if (baselineNumber === null || delta === null) return NaN;
+    return round2(round2(baselineNumber) * (1 + delta / 100));
   }
 
-  /* The one volume normalisation (F09). An explicit override wins; otherwise the
-     alternative's stated volume assumption is applied; otherwise the recorded
-     base quantity stands. Every caller uses this, so one alternative cannot get
-     two quantities through two entry points. */
+  /* A nonblank but invalid input must reach calculate() as invalid, not null.
+     Null means 'no value supplied' there and would silently restore the baseline.
+     NaN is a validation signal only; it is never returned in a financial result. */
   function quantityAfter(baseQuantity, alternative, opts) {
     opts = opts || {};
-    if (!isBlank(opts.quantity_after)) return toNumberOrNull(opts.quantity_after);
+    if (!isBlank(opts.quantity_after)) {
+      var explicit = toNumberOrNull(opts.quantity_after);
+      return explicit === null ? NaN : explicit;
+    }
     var v = alternative && alternative.volume_assumption;
-    if (!isBlank(v) && Number.isFinite(Number(v))) {
-      return baseQuantity * (1 + Number(v) / 100);
+    if (!isBlank(v)) {
+      var movement = toNumberOrNull(v);
+      return movement === null ? NaN : baseQuantity * (1 + movement / 100);
     }
     return baseQuantity;
   }
@@ -502,6 +516,34 @@
 
   /* --------------------------------------------------------- calculate -- */
 
+  /* Finite inputs can still overflow when multiplied. An invalid financial
+     result must not be marked usable, and JSON must not disguise Infinity/NaN
+     as null while leaving ok:true. Refuse the whole computed result. */
+  function finalizeResult(result) {
+    var invalidPaths = [], seen = new Set();
+    function visit(value, path) {
+      if (typeof value === 'number') {
+        if (!Number.isFinite(value)) invalidPaths.push(path);
+      } else if (value && typeof value === 'object' && !seen.has(value)) {
+        seen.add(value);
+        Object.keys(value).forEach(function (key) { visit(value[key], path ? path + '.' + key : key); });
+      }
+    }
+    visit(result, '');
+    if (!invalidPaths.length) return result;
+    var refused = blankResult();
+    ['evidence_period', 'offer_effective_date', 'cost_basis_id', 'quantity_label'].forEach(function (key) {
+      if (typeof result[key] === 'string') refused[key] = result[key];
+    });
+    if (result.migration_status) refused.migration_status = 'unresolved';
+    refused.error = 'The calculation exceeds the finite numeric range in: '
+      + invalidPaths.join(', ') + '. Check the stated units and inputs; no financial result is available.';
+    refused.errors = [refused.error];
+    refused.flags.push({ code: 'NUMERIC_RANGE_EXCEEDED', severity: 'high',
+      text: 'Arithmetic overflow: no financial result is available.', amount: null });
+    return refused;
+  }
+
   function calculate(scenario) {
     var R = blankResult();
     var input = scenario || {};
@@ -516,7 +558,7 @@
     if (!v.ok) {
       R.error = v.errors[0];
       R.errors = v.errors;
-      return R;
+      return finalizeResult(R);
     }
 
     var x = v.values;
@@ -675,7 +717,7 @@
         ? 100 * (1 - revRaw / R.quantity_after) : null;
       var lg = null;
       if (cost !== null && p1 > cost && R.gp_before !== null && R.quantity_after) {
-        lg = 100 * (1 - ((R.gp_before + support) / (p1 - cost)) / R.quantity_after);
+        lg = gpRaw === null ? null : 100 * (1 - gpRaw / R.quantity_after);
       }
       R.tolerable_loss_revenue_pct = lr === null ? null : round2(lr);
       R.tolerable_loss_gp_pct = lg === null ? null : round2(lg);
@@ -730,7 +772,7 @@
 
     R.ok = true;
     R.resolved = true;
-    return R;
+    return finalizeResult(R);
   }
 
   /* --------------------------------------------------------- migration -- */
@@ -747,9 +789,41 @@
     var fromC = from ? toNumberOrNull(from.cost) : null;
     var toP = to ? toNumberOrNull(to.price) : null;
     var toC = to ? toNumberOrNull(to.cost) : null;
-    var complete = !!(from && to && moved !== null && moved > 0
-      && fromP !== null && fromC !== null && toP !== null && toC !== null);
-
+    var migrationErrors = [];
+    if (!from || !to) migrationErrors.push('Both product lines must be supplied.');
+    if (moved === null || moved <= 0) migrationErrors.push('The transferred quantity must be finite and above zero.');
+    if (moved !== null && moved > x.quantity_before) {
+      migrationErrors.push('The transferred quantity exceeds the source population.');
+    }
+    if (fromP === null || fromP <= 0 || toP === null || toP <= 0) {
+      migrationErrors.push('Both product selling prices must be finite and above zero.');
+    }
+    if (fromC === null || fromC < 0 || toC === null || toC < 0) {
+      migrationErrors.push('Both product costs must be finite and non-negative.');
+    }
+    if (x.cost === null) {
+      migrationErrors.push('The unchanged-offer cost is missing. A missing baseline profit cannot be treated as zero.');
+    }
+    // The existing record represents one source-product population. A different
+    // source price/cost would mix two baselines; a broader range needs its own
+    // explicit record rather than silently inheriting this single-part total.
+    function sameBasisNumber(a, b) {
+      return a !== null && b !== null
+        && Math.abs(a - b) <= 1e-9 * Math.max(1, Math.abs(a), Math.abs(b));
+    }
+    if (fromP !== null && !sameBasisNumber(fromP, x.price_before)) {
+      migrationErrors.push('The source product price differs from the unchanged-offer price.');
+    }
+    if (fromC !== null && x.cost !== null && !sameBasisNumber(fromC, x.cost)) {
+      migrationErrors.push('The source product cost differs from the unchanged-offer cost.');
+    }
+    if (x.scope !== 'all') {
+      migrationErrors.push('A product migration is not an incremental-volume offer.');
+    }
+    if (x.quantity_after_supplied && x.quantity_after !== x.quantity_before) {
+      migrationErrors.push('This one-for-one migration keeps the total population unchanged; model new or lost volume separately.');
+    }
+    var complete = migrationErrors.length === 0;
     R.migration_status = complete ? 'modelled' : 'unresolved';
 
     if (!complete) {
@@ -759,7 +833,8 @@
         + 'transferred quantity, and the applicable price and parts cost of both the product being '
         + 'left and the product being taken up. Business moved between Genuine and BVP is not new '
         + 'business and is reported separately when it is measured.';
-      R.errors = [R.error];
+      R.error += ' ' + migrationErrors.join(' ');
+      R.errors = migrationErrors.length ? migrationErrors : [R.error];
       R.conditional.push('This alternative names a product migration. No financial result is '
         + 'stated for it until both product lines and the transferred quantity are supplied. The '
         + 'unchanged-offer figures beside it are the baseline, not the effect of the migration.');
@@ -767,7 +842,7 @@
         text: 'The migration is unresolved: no revenue change and no gross profit change are '
             + 'reported. A zero here would be a fabricated answer, not a measured one.',
         amount: null });
-      return R;
+      return finalizeResult(R);
     }
 
     var support = x.support;
@@ -802,7 +877,7 @@
       + 'is a stated assumption, not a forecast.');
     R.ok = true;
     R.resolved = true;
-    return R;
+    return finalizeResult(R);
   }
 
   /* ----------------------------------------------------------- baseline -- */
@@ -914,13 +989,14 @@
         price_before: b.price, price_after: p1,
         quantity_before: b.quantity, quantity_after: q1,
         scope: alternative.scope,
-        support_eur: alternative.support_eur || 0,
+        support_eur: isBlank(alternative.support_eur) ? 0 : alternative.support_eur,
         cost_eur: comparison.cost,
         cost_basis_id: comparison.basis_id,
         quantity_label: alternative.volume_label,
         kind: alternative.kind,
         migration: alternative.migration,
-        pack_size: opts.pack_size || alternative.pack_size_units || 1,
+        pack_size: opts.pack_size !== undefined ? opts.pack_size
+          : (alternative.pack_size_units !== undefined ? alternative.pack_size_units : 1),
         evidence_period: b.period,
         offer_effective_date: comparison.offer_effective_date
       });
@@ -980,13 +1056,14 @@
       quantity_after: q1,
       scope: (opts.scope !== undefined) ? opts.scope : alternative.scope,
       support_eur: (opts.support_eur !== undefined) ? opts.support_eur
-        : (alternative.support_eur || 0),
+        : (isBlank(alternative.support_eur) ? 0 : alternative.support_eur),
       cost_eur: cost,
       cost_basis_id: comparison.basis_id,
       quantity_label: opts.quantity_label || alternative.volume_label,
       kind: alternative.kind,
       migration: alternative.migration,
-      pack_size: opts.pack_size || alternative.pack_size_units || 1,
+      pack_size: opts.pack_size !== undefined ? opts.pack_size
+          : (alternative.pack_size_units !== undefined ? alternative.pack_size_units : 1),
       evidence_period: b.period,
       offer_effective_date: comparison.offer_effective_date
     });

@@ -14,6 +14,7 @@ original artifact, and it never writes into the restricted payload.
 """
 import argparse
 import hashlib
+from html import escape as html_escape
 import io
 import json
 import os
@@ -213,9 +214,22 @@ def build(payload_path):
     shell_html = read(REFERENCE)
     head, body = extract_shell(shell_html)
 
-    with io.open(payload_path, encoding="utf-8") as fh:
-        payload = json.load(fh)
-    payload_text = json.dumps(payload, separators=(",", ":"))
+    # Hash the exact bytes opened, not a re-serialization that hides changes in
+    # the source file. Preserve the legacy serialized digest under its old key.
+    with open(payload_path, "rb") as fh:
+        payload_raw = fh.read()
+
+    def reject_constant(value):
+        raise ValueError("Non-finite JSON constant refused: " + value)
+
+    payload = json.loads(payload_raw.decode("utf-8-sig"), parse_constant=reject_constant)
+    if not isinstance(payload, dict):
+        raise SystemExit("The payload must be a JSON object.")
+    payload_text = json.dumps(payload, separators=(",", ":"), allow_nan=False)
+    # application/json does not stop an HTML parser recognising </script>.
+    # JSON Unicode escapes preserve the data while keeping it inside its block.
+    payload_html_text = (payload_text.replace("&", "\\u0026")
+                         .replace("<", "\\u003c").replace(">", "\\u003e"))
 
     version = (payload.get("meta", {}) or {}).get("version", "AIM Pricing Decisions")
 
@@ -224,16 +238,16 @@ def build(payload_path):
     # Stamping the payload revision here would label the artifact 0.3 while its
     # own filename says v04 - the version-accuracy mistake this build exists to
     # remove. The payload revision is shown separately rather than dropped.
-    body = re.sub(r'<span class="version">[^<]*</span>',
-                  '<span class="version">Decision component %s &middot; payload %s</span>'
-                  % (COMPONENT_VERSION, str(version).replace("AIM Pricing Decisions ", "")),
-                  body)
+    version_stamp = '<span class="version">Decision component %s &middot; payload %s</span>' % (
+        COMPONENT_VERSION, html_escape(str(version).replace("AIM Pricing Decisions ", ""), quote=True))
+    # A callable replacement also keeps backslashes in source version text literal.
+    body = re.sub(r'<span class="version">[^<]*</span>', lambda _match: version_stamp, body)
     body = body.replace("Decision component 0.2", "Decision component " + COMPONENT_VERSION)
     body = body.replace("Decision component 0.1", "Decision component " + COMPONENT_VERSION)
 
-    parts = [head, "<body>", body]
+    parts = [head, "</head>", body]
     parts.append('<script id="case-data" type="application/json">')
-    parts.append(payload_text)
+    parts.append(payload_html_text)
     parts.append("</script>")
     for rel, _label in MODULES:
         path = os.path.join(ROOT, rel)
@@ -303,6 +317,9 @@ def build(payload_path):
         if term in lowered:
             findings.append("%s (%s)" % (term, why))
 
+    if findings:
+        raise SystemExit("Build refused before writing output: " + "; ".join(findings))
+
     os.makedirs(DIST, exist_ok=True)
     # The artifact name states which payload built it. One mutable file with a
     # fixed name meant any agent running the default build silently replaced the
@@ -335,7 +352,12 @@ def build(payload_path):
         "output_sha256": sha256(out_html),
         "payload_file": os.path.basename(payload_path),
         "payload_sha256": hashlib.sha256(payload_text.encode("utf-8")).hexdigest(),
-        "payload_is_synthetic": "synthetic" in payload_path.lower(),
+        "payload_sha256_basis": "legacy compact JSON serialization, before HTML escaping",
+        "payload_raw_sha256": hashlib.sha256(payload_raw).hexdigest(),
+        "payload_canonical_sha256": hashlib.sha256(payload_text.encode("utf-8")).hexdigest(),
+        "payload_canonical_basis": "Python compact JSON serialization; insertion order retained, not RFC canonical JSON",
+        "payload_embedded_sha256": hashlib.sha256(payload_html_text.encode("utf-8")).hexdigest(),
+        "payload_is_synthetic": is_synthetic,
         "shell_source": os.path.relpath(REFERENCE, ROOT),
         "shell_sha256": sha256(REFERENCE),
         "modules": [rel for rel, _ in MODULES],
