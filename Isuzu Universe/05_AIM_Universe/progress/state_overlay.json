@@ -1,147 +1,105 @@
 {
   "_note": "Evidence-backed state for the tasks that have landed. Merged by tools/build_progress.py. A state here must name the command that showed it. The integration owner writes this file; workers do not.",
   "_written_by": "integration owner",
-  "_written_at": "2026-09-22T13:55:00Z",
+  "_written_at": "2026-09-22T17:05:00Z",
   "_authority": "A state of technically verified means a named command was run and its output read. It does not mean human accepted, and it confers no business, technical, privacy or spending authority.",
   "_acceptance_run": {
     "command": "powershell -ExecutionPolicy Bypass -File tests/run_all.ps1",
-    "artifact": "dist/ISZE_AIM_Pricing_Decisions_v04_INTERNAL.html (real payload, 5151727 bytes, sha256 a35cf047b9aeb7c6c4e49272b85b7d84b8d2a6d3672f5a99cbba14e9b157f113)",
+    "artifact": "dist/ISZE_AIM_Pricing_Decisions_v04_INTERNAL.html (real payload, 5219707 bytes, sha256 74c3d30bd70d23520fbd4f6f32ef21be69fad9644675c69b0f53234fa7439755)",
     "results": {
-      "BASE-ENGINE": "11 pass / 19 fail of 30 - EXPECTED and correct, this is the frozen v03 reproduction",
-      "BASE-BROWSER": "29 pass / 1 fail of 30 - matches the review; the one failure is the v03 turbo formatter",
+      "BASE-ENGINE": "11 pass / 19 fail of 30 - EXPECTED, the frozen v03 reproduction",
+      "BASE-BROWSER": "29 pass / 1 fail of 30 - matches the review",
       "ACCEPT-01": "46 pass / 1 fail of 47",
       "ACCEPT-02": "52 pass / 0 fail of 52",
       "ACCEPT-03": "17 pass / 0 fail of 17",
+      "GUARD-09": "5 pass / 0 fail of 5",
       "ACCEPT-04": "13 pass / 0 fail of 13",
       "SAFE-05/08": "16 pass / 0 fail of 16"
     },
-    "reading": "Two checks fail. One is the deliberately unchanged v03 baseline. The other is R27, which asks for a candidate reporting period the source does not carry."
+    "reading": "Three non-zero checks, all correct: the two unchanged v03 baselines, and R27 which asks for a candidate reporting period the source does not carry.",
+    "module_suites": "ux_flow 14/0, ux_reopen 7/0, ux_market 12/0, market_evidence 32/0, run_tests 60/0, data_contracts 74/0, fin_math 58/0, paint_check 8/8, orphan_audit 0 orphans"
   },
   "states": {
-    "BASE-01": {
-      "state": "technically verified",
-      "evidence": [
-        "Frozen reference hash matches the original artifact: 7494CEA1955BE820D0082EEF15473610945663FBEFC7A06D7969C15822423E14 (5935584 bytes), re-checked after every rebuild.",
-        "Corrected a claim in the handoff: validate_v03.py and paint_seq.py are NOT missing. They are in Isuzu Universe/06_Working/_aim_pack_20260922/ with build_pack03.py, patch_v03.py and package_v03.py.",
-        "Both supplied baselines now reproduce: engine 11/19/30, browser 29/1/30."
-      ]
-    },
-    "BASE-02": {
-      "state": "technically verified",
-      "evidence": [
-        "git check-ignore confirms the restricted payload, the frozen reference and every assembled HTML are excluded by 05_AIM_Universe/.gitignore.",
-        "The build now writes a SYNTHETIC artifact under its own filename, so a synthetic rebuild can no longer overwrite the real-payload artifact silently. Cause of the 13:42 incident."
-      ]
-    },
-    "BASE-03": {
-      "state": "technically verified",
-      "evidence": [
-        "src/data/contracts.js reports CONTRACT_VERSION 3 and 114 declared fields.",
-        "v2 added bridge_* result fields, scenario.support_direction, and a written decision on support_eur in a participant brief.",
-        "v3 added SECTION_FIELDS and sectionFields(), because declaredFields() returned only top-level names and could not declare a section's contents. Measured before: the internal record's limits block was {}, the review lost the owner's explanation and note, and a saved revision log was []. Measured after: zero undeclared keys in the internal record."
-      ]
-    },
-    "BASE-04": {
-      "state": "technically verified",
-      "evidence": [
-        "tools/build.py assembles nine maintained modules onto the retained shell and writes a CRLF launcher beside the artifact.",
-        "It refuses to ship a module that reads a retired one, and reports banned-label findings.",
-        "tools/orphan_audit.py reports 2 orphans (src/ui/views.js, src/ui/render.js) - modules in neither list - which is a real gap in that guard and an open finding."
-      ]
-    },
-    "BASE-07": {
-      "state": "technically verified",
-      "evidence": [
-        "python tools/build.py --payload <file> [--check] builds and optionally runs the regression suite.",
-        "python tools/paint_check.py -> 8/8 on the real artifact, asserting the version stamp, the six view labels, case cards, visible commercial text, no leftover template mark and no banned label.",
-        "node tests/run_tests.cjs --payload payload/aim_payload_20260922.json -> 60 pass / 0 fail."
-      ]
-    },
-    "BASE-08": {
-      "state": "technically verified",
-      "evidence": [
-        "tools/build_progress.py writes progress/progress.json covering all 96 planned tasks with the five required states, and clamps a machine-written state at technically verified so it can never claim human acceptance."
-      ]
-    },
-    "BASE-05": { "state": "technically verified", "evidence": ["tests/run_all.ps1 runs every check, prints per-check pass/fail with the tested checksums, and states that exit 0 is not the same as accepted. BASE-BROWSER now reports a real count after the invocation fault was fixed (it was passing --chrome to a script whose flag is --browser-path)."] },
-    "BASE-06": { "state": "technically verified", "evidence": ["src/ui/app.js catches a view throw and paints viewErrorPanel(view, err) naming the failing view; the content region is cleared before building. ACCEPT-02 52/0 and the browser baseline shows the v03 turbo failure is gone from the corrected engine."] },
-    "FIN-01": { "state": "technically verified", "evidence": ["Negative, non-finite and non-numeric quantities and support are refused; zero, unknown, return and invalid are four separate states. ACCEPT-01 46/1, the one failure being R27 which is candidate data, not arithmetic."] },
-    "FIN-02": { "state": "technically verified", "evidence": ["One offer-effective date and one named cost basis per comparison; a differing basis is stated rather than applied. An invalid or out-of-window date resolves to nothing instead of defaulting to October."] },
-    "FIN-03": { "state": "technically verified", "evidence": ["Combined offer margin is reported profit over revenue: synthetic 25% -> 37.931%, and 40% -> 35% with 500 support deducted."] },
-    "FIN-04": { "state": "technically verified", "evidence": ["Support counted once; the result carries bridge_revenue_change, bridge_cost_change, bridge_support_eur and bridge_reconciles."] },
-    "FIN-05": { "state": "technically verified", "evidence": ["Incremental break-even split from all-volume: 125/200/210 -> 100/100/110, with required orderable quantities rounded up to a real pack."] },
+    "BASE-01": { "state": "technically verified", "evidence": ["Frozen reference hash matches the original artifact: 7494CEA1955BE820D0082EEF15473610945663FBEFC7A06D7969C15822423E14, re-checked after every rebuild.", "Corrected the handoff's claim: validate_v03.py and paint_seq.py were NOT missing; they are in 06_Working/_aim_pack_20260922/.", "Both supplied baselines reproduce: engine 11/19/30, browser 29/1/30."] },
+    "BASE-02": { "state": "technically verified", "evidence": ["git check-ignore confirms the restricted payload, frozen reference and every assembled HTML are excluded. Test run output is excluded too, after 277 output files were found to echo restricted cost values.", "A synthetic build now writes under its own filename, so it can no longer overwrite the real artifact silently."] },
+    "BASE-03": { "state": "technically verified", "evidence": ["CONTRACT_VERSION 3, 114 declared fields. v2 added bridge_* fields, support_direction, and the participant-brief support decision. v3 added SECTION_FIELDS, because a flat name list could not declare a section's contents and three sections were being silently emptied."] },
+    "BASE-04": { "state": "technically verified", "evidence": ["tools/build.py assembles twelve modules onto the retained shell and refuses to ship a module that reads a retired one.", "orphan_audit now reports 0 orphans after the two view-layer orphans were retired deliberately."] },
+    "BASE-05": { "state": "technically verified", "evidence": ["run_all.ps1 runs every check with tested checksums and states that exit 0 is not acceptance. BASE-BROWSER reports a real count after the invocation fault was fixed."] },
+    "BASE-06": { "state": "technically verified", "evidence": ["app.js catches a view throw, clears the content region first, and paints viewErrorPanel naming the failing view. Drilled by forcing the v03 throw."] },
+    "BASE-07": { "state": "technically verified", "evidence": ["build.py --payload <file> [--check]; paint_check.py 8/8; run_tests.cjs 60/0."] },
+    "BASE-08": { "state": "technically verified", "evidence": ["build_progress.py writes the 96-task record and clamps a machine-written state at technically verified."] },
+    "FIN-01": { "state": "technically verified", "evidence": ["Invalid, negative, non-finite and non-numeric inputs refused; zero, unknown, return and invalid are four separate states."] },
+    "FIN-02": { "state": "technically verified", "evidence": ["One offer-effective date and one named cost basis per comparison; an invalid or out-of-window date resolves to nothing rather than defaulting to October."] },
+    "FIN-03": { "state": "technically verified", "evidence": ["Combined offer margin is reported profit over revenue: 25% -> 37.931%, and 40% -> 35% with support deducted."] },
+    "FIN-04": { "state": "technically verified", "evidence": ["Support counted once; the result carries bridge_revenue_change, bridge_cost_change, bridge_support_eur, bridge_reconciles."] },
+    "FIN-05": { "state": "technically verified", "evidence": ["Incremental break-even split from all-volume: 125/200/210 -> 100/100/110, orderable quantities rounded up to a real pack."] },
     "FIN-06": { "state": "technically verified", "evidence": ["Required pack quantities rounded up to the smallest orderable quantity above the threshold."] },
-    "FIN-07": { "state": "technically verified", "evidence": ["One volume normalisation: PADS-VOL was 1400 through one entry point and 1750 through the other, now 1750 through both, across all 15 alternatives in all 5 cases."] },
-    "FIN-08": { "state": "technically verified", "evidence": ["Revenue and gross profit remain separate objectives with no invented composite score, optimum, elasticity or margin floor."] },
-    "DATA-05": { "state": "technically verified", "evidence": ["Conservation fixed. The old sum added setAside to buckets that already contained every received row, so it reported a difference exactly when a row was set aside and balance exactly when none was - it detected a set-aside, not a missing row. One shared rule now checks three identities. accept_03_conservation.cjs 16/1 -> 17/0."] },
-    "DATA-06": { "state": "technically verified", "evidence": ["The import log's conservation returned ok:true unconditionally and could never fail; both ledgers now share one rule. A second double-count was found in the same limb - a set-aside key re-imported later counted twice."] },
-    "DATA-08": { "state": "technically verified", "evidence": ["Conservation still fails on a genuine loss: a row held by the key index but absent from the store returns ok:false with STORE_DISAGREES_WITH_INDEX and names the missing row count. The old arithmetic would have called that balance."] },
+    "FIN-07": { "state": "technically verified", "evidence": ["One volume normalisation: PADS-VOL was 1400 through one entry point and 1750 through the other, now 1750 through both."] },
+    "FIN-08": { "state": "technically verified", "evidence": ["Revenue and gross profit stay separate objectives with no invented composite score, optimum, elasticity or margin floor."] },
+    "DATA-05": { "state": "technically verified", "evidence": ["Conservation fixed. The old sum added setAside to buckets that already held every received row, so it detected a set-aside rather than a missing row. accept_03 16/1 -> 17/0."] },
+    "DATA-06": { "state": "technically verified", "evidence": ["The import log's conservation returned ok:true unconditionally and could never fail; both ledgers now share one rule. A second double-count in a re-imported set-aside key was found and fixed."] },
+    "DATA-08": { "state": "technically verified", "evidence": ["Conservation still fails on a genuine loss: a row in the key index but absent from the store returns ok:false with STORE_DISAGREES_WITH_INDEX."] },
+    "DATA-04": { "state": "technically verified", "evidence": ["VAT unit. The shared rule divided by 1 + rate/100 while the payload stores a fraction. On AUTODOC UK it yielded EUR 89.90 against a correct EUR 75.07, 19.8% too high. The unit is now declared on the row and required by the rule; a bare 0.2 is refused. Four checks added."] },
     "REVIEW-01": { "state": "technically verified", "evidence": ["Candidate search and paging reach the whole permitted set rather than the first 300 rows, with a route from a row into its own part review."] },
-    "REVIEW-02": { "state": "technically verified", "evidence": ["Row counts are reported separately from distinct part numbers. Measured independently: 10543 rows, 7798 distinct part numbers, 15 costed rows covering 8 distinct parts - against a source sentence claiming 15 part numbers."] },
-    "CASE-01": { "state": "implemented", "evidence": ["Durable case record: versioned, append-only history, survives a restart, with reopen(caseId, version). It is a folder of files on one machine, not a shared service - see the open finding."] },
+    "REVIEW-02": { "state": "technically verified", "evidence": ["Row counts reported separately from distinct part numbers: 10543 rows, 7798 distinct parts, 15 costed rows covering 8 distinct parts against a source sentence claiming 15."] },
+    "REVIEW-05": { "state": "implemented", "evidence": ["The 'case' view key was missing from TAB_LABELS so the part-review tab rendered its raw key instead of a label. Now 'Part review', confirmed present in the assembled artifact. Recorded here rather than under a new id: the fix has no task of its own in the plan, and inventing one would inflate the count. (An earlier revision of this overlay used a made-up id 'KX-01' and tools/build_progress.py correctly refused it.)"] },
+    "MARKET-07": { "state": "implemented", "evidence": ["src/data/comparable.js is assembled and the price-position view draws it without recomputing anything. On the authorised payload the eligible set is empty on all five cases and renders as an explicit unavailable state naming the reason per row, not a blank panel. ux_market 12/0. NOT verified end to end, because no commercial comparison is possible from the current data."] },
+    "MARKET-08": { "state": "implemented", "evidence": ["The panel reads the exclusion codes and requests the smallest missing item as a draft ask, rather than asking for everything."] },
+    "CASE-01": { "state": "implemented", "evidence": ["Durable case record: versioned, append-only history, survives a restart. A folder of files on one machine, not a shared service - see the open finding."] },
     "CASE-07": { "state": "technically verified", "evidence": ["A stale write is refused with expected_version and actual_version rather than overwriting a newer revision."] },
-    "SAFE-03": { "state": "technically verified", "evidence": ["Recipient outputs are built from an allowlist. Both builders now agree; the shipped builder also refuses a restricted figure typed into free text rather than writing it. ACCEPT-04 13/0, SAFE-05/08 16/0."] },
-    "SAFE-04": { "state": "technically verified", "evidence": ["A member brief carries no cost, margin or gross-profit field, asserted on the produced bytes; the mutation proof holds - moving the internal cost from 60 to 41.75 leaves the brief byte-identical."] }
+    "SAFE-03": { "state": "technically verified", "evidence": ["Recipient outputs are built from an allowlist; the shipped builder also refuses a restricted figure typed into free text rather than writing it. ACCEPT-04 13/0, SAFE-05/08 16/0."] },
+    "SAFE-04": { "state": "technically verified", "evidence": ["A member brief carries no cost, margin or gross-profit field, asserted on produced bytes; the mutation proof holds."] }
   },
+  "closed_findings": [
+    { "id": "VAT-UNIT", "closed": "2026-09-22", "evidence": "Fixed in the shared rule and verified: AUTODOC UK returns EUR 75.07 with three auditable steps, and a bare 0.2 is refused with 'does not state whether that is a percentage or a fraction'. The payload's own net column proved the unit on 5 of 5 rows, including all 3 where the units would differ." },
+    { "id": "UX-TWO-LAYERS", "closed": "2026-09-22", "evidence": "Nine orphan-only features ported into src/ui/app.js; the two orphans retired deliberately with reasons. orphan_audit now reports 0 orphans and the build refuses to ship a module that reads a retired global." },
+    { "id": "DUP-01", "closed": "2026-09-22", "evidence": "src/engine/pricing.js was byte-identical to the shipped engine while the arithmetic suite loaded the retired copy. Repointed (58/0 before and after, identical because the files were identical) and deleted. Four other pairs RETAINED because the shipped module does not cover the behaviour - measured, not assumed: the export pair goes 11/0 to 2/9, the case store has zero of 27 checks repointable, costbasis has 6 of 8 functions absent from the engine." },
+    { "id": "F08-SHIPPED", "closed": "2026-09-22", "evidence": "The allowlist now carries the permitted CONTAINERS as well as leaf names, so a member brief is 944 bytes with all six sections rather than a 426-byte shell carrying only limits. The free-text refusal and the compound-filename check are in the shipped builder." },
+    { "id": "UNVERIFIED-CLAIM", "closed": "2026-09-22", "evidence": "The unreproducible byte figure was struck from the record and replaced with the measured position." }
+  ],
   "open_findings": [
-    {
-      "id": "AUDIT-SELF-CORRECTION",
-      "severity": "low",
-      "title": "My own module audit reported a wrong count, twice, and the corrected figures are below",
-      "finding": "The verification reviewer caught a fault in tools/orphan_audit.py and tools/module_audit.py that I wrote: both read the shipped-module list with a regex over the WHOLE of tools/build.py, so every entry in UNWIRED_MODULES also matched and was counted as shipped. That inflated the shipped count from 9 to 18.",
-      "measured_before": "Reported: shipped 18, retired 9; '8 of 10 test files load a retired module'.",
-      "measured_after": "Corrected: shipped 9, retired 9, orphans 2 (src/ui/render.js, src/ui/views.js). The misdirection figure is not directly comparable, because the corrected run also picks up the reviewer's declared comparisons as loads. The authority on misdirection is now tests/accept/guard_09_module_scope.cjs, which reads the in-file declarations and fails only on an UNDECLARED retired load: it reports 3, with G04 proving the guard can see a retired module so G02 is not vacuous.",
-      "impact": "The earlier figure overstated the problem. The substantive finding still stands - the view-layer test suite loads orphans that do not ship, the two view layers are not equivalent, and the build's guard could not see modules in neither list.",
-      "handling": "Both tools fixed to read only the region before UNWIRED_MODULES. tools/module_audit.py now states in its own output that it is a raw text scan and names the guard as the check, so a future reader does not act on the raw number. I have not re-derived every figure I reported from the faulty tool.",
-      "owner": "integration owner"
-    },
-    {
-      "id": "VAT-UNIT",
-      "severity": "critical",
-      "title": "A unit mismatch would have overstated every tax-inclusive competitor price by about 20%",
-      "finding": "src/data/evidence.js adjustToComparable() computes net = value / (1 + rate / 100), so it expects a VAT rate as a PERCENTAGE. The payload stores it as a FRACTION (vat: 0.2). Nothing reconciled the two and neither the field name nor the row stated the unit. Handing 0.2 to that rule divides by 1.002, removing 0.2% of tax instead of 20%.",
-      "measured": "For AUTODOC UK at 76.99 GBP including 20% VAT, at the payload's own documented 1.17 EUR/GBP: the correct net is EUR 75.07, and taking vat=0.2 as a percentage gives EUR 89.90, an overstatement of 19.8%. Verified with tools/_vat_unit_probe.cjs.",
-      "unit_resolved_by_the_data": "The payload proves its own unit rather than requiring an assumption: its net column equals price / (1 + vat) on 5 of 5 rows that state price, vat and net, including all 3 rows where the two units would give different answers. The two rows that also fit a percentage are the zero-VAT rows, where both units trivially agree. So the field is a fraction, and the net column is the proof.",
-      "impact": "An advertised competitor price would have appeared roughly a fifth higher than it is, which is the direction that argues our own net terms are too high. That is precisely the misuse MARKET-05 exists to prevent, so the two faults would have reinforced each other.",
-      "handling": "src/data/comparable.js now refuses to infer the unit from the size of the number - it requires the row to declare percent or fraction, and otherwise returns VAT_RATE_UNIT_NOT_STATED and leaves the row unresolved. The market agent found this by first producing the wrong number and being caught by its own test. The defect remains live in src/data/evidence.js, which is the shared rule; declaring vat_rate_unit on the observation records, or holding the rate as a fraction end to end, is the durable fix and is not yet applied.",
-      "owner": "integration owner (shared rule and the observation records)"
-    },
-    {
-      "id": "MARKET-NOT-WORKING-END-TO-END",
-      "severity": "high",
-      "title": "The payload currently contains no comparison that can be made, and the new panel is not assembled or wired",
-      "finding": "Two separate gaps. First, src/data/comparable.js is not in tools/build.py MODULES and nothing calls it, so it ships nothing and has no screen - a deliberate constraint, because the view layer was owned by another agent while it was written. Second, the exclusions on the real payload are dominated by PRODUCT_MATCH_UNRESOLVED and PACK_CONTENTS_UNKNOWN: every payload offer is matched on a seller cross-reference rather than exact equivalence, and no offer declares whether its quote is for a piece or a pack. So the eligible set is empty on the authorised data.",
-      "measured": "python tools/orphan_audit.py lists src/data/comparable.js as an orphan. node --test tests/market_evidence.test.mjs -> 32 pass / 0 fail, so the logic is exercised on fixtures rather than on the payload.",
-      "impact": "MARKET-07 exists as tested logic with no visible output, and the commercial question it answers cannot be answered from the current data. This is the honest position rather than a working panel.",
-      "handling": "Wiring needs two edits not yet made: add comparable.js to MODULES, and have app.js call it. The data gap needs the source to state pack contents and exact equivalence, which no code change supplies.",
-      "owner": "integration owner (wiring) + source owner (equivalence and pack contents)"
-    },
     {
       "id": "F08-IDENTITY",
       "severity": "high",
-      "title": "The shipped export builder still has no identity or attachment permission code",
-      "finding": "The allowlist and the free-text refusal are now in the shipped src/data/export.js, and the acceptance suite is green on the export. But the retired src/output/recipients.js exports 22 names including makeDevIdentity, requireApprovedIdentity, canRead, canAttach and findRestrictedInBytes, and the shipped module has no equivalent. Repointing the byte-level test at the shipped builder failed 9 of 11 for exactly this reason.",
-      "impact": "F08's data-disclosure half is closed. Its access-control half is not: permission for a participant to read a record, and refusal of a restricted attachment, are not implemented in what ships.",
+      "title": "The shipped export builder has the data-disclosure half of F08 but not the access-control half",
+      "finding": "The allowlist, the free-text refusal and the compound-filename check are all in the shipped src/data/export.js, and the acceptance suite is green. But the retired src/output/recipients.js holds the permission table - makeDevIdentity, requireApprovedIdentity, canRead, canAttach - and the shipped module has no equivalent. That module is RETAINED deliberately for this reason; deleting it would delete the permission table.",
+      "impact": "F08's disclosure half is closed. Its access-control half is not: whether a participant may read a record, and refusal of a restricted attachment, are not enforced in what ships.",
       "handling": "Wire the permission surface into the shipped builder, or state the restriction plainly as unimplemented. A browser-side allowlist is not access control, and no backend exists here to provide it.",
-      "owner": "integration owner + workflow developer"
-    },
-    {
-      "id": "UX-TWO-LAYERS",
-      "severity": "high",
-      "title": "Two view layers exist, they are not equivalent, and the tests load the one that does not ship",
-      "finding": "tools/build.py ships src/ui/app.js. src/ui/views.js and src/ui/render.js are in NEITHER the shipped list NOR the retired list, so the build's guard cannot see them. Both are loaded by tests/ux_flow.test.mjs, so that suite's result describes a layer the product does not run. The two are the same size (app.js 99172 bytes, views.js 77713) and not equivalent: the F05 guard is in app.js and absent from views.js; the UX-06 amber unavailable state is absent from app.js and present in views.js.",
-      "measured": "python tools/orphan_audit.py -> shipped 18, retired 9, orphans 2.",
-      "handling": "Reconcile into the shipped layer, then retire the orphans deliberately. In progress.",
-      "owner": "experience developer"
+      "owner": "integration owner"
     },
     {
       "id": "R27-CANDIDATE-PERIOD",
       "severity": "medium",
       "title": "The candidate records carry no reporting period, and the source cannot supply one",
-      "finding": "ACCEPT-01 R27 fails, and it should stay failing. The 10,543 candidate rows have no period, year or date field. The screening rule is described as running on 2025/2024 and H1 2026/2025, and none of those values is on the rows. Two rows also carry a null cost reconciliation because the price-file FOB value is empty for 5876150530 and 5876150531 - a null difference is not a match.",
-      "impact": "Nothing on the candidate screen can be promoted on its own evidence until a caller supplies a period it states itself. Guessing the period would be an invention.",
-      "handling": "Needs a commercial or source input, not a code change. Recorded as undeclared and left visible.",
+      "finding": "ACCEPT-01 R27 fails and should stay failing. The 10543 candidate rows have no period, year or date field, though the screening rule is described as running on 2025/2024 and H1 2026/2025. Two rows also carry a null cost reconciliation because the price-file FOB value is empty - a null difference is not a match.",
+      "handling": "Needs a commercial or source input. Guessing the period is the one thing the brief forbids.",
       "owner": "source owner (not an agent)"
+    },
+    {
+      "id": "MARKET-DATA-GAP",
+      "severity": "high",
+      "title": "The payload contains no comparable price observation that can be used",
+      "finding": "Every offer is excluded, dominated by PRODUCT_MATCH_UNRESOLVED (offers rest on seller cross-references, which is a candidate to inspect rather than approved equivalence) and PACK_CONTENTS_UNKNOWN (no offer declares whether its quote is for a piece or a pack). The panel is correct to exclude them all.",
+      "impact": "MARKET-07 has tested logic and a working screen but no answer. The commercial question - how our net terms compare with a competitor - cannot be answered from the data currently held.",
+      "handling": "Needs pack contents and an exact match basis in the source. No code change supplies either.",
+      "owner": "source owner (not an agent)"
+    },
+    {
+      "id": "PAYLOAD-PROVENANCE",
+      "severity": "medium",
+      "title": "The payload has no recorded digest, so an added key cannot be verified against the file's own statement",
+      "finding": "A key was added by hand to meta (marketComparisonDeclarations) because writing it back programmatically rewrote the envelope's recorded digest, which then no longer matched the file. The payload is excluded from version control, so it exists only on this machine with no history. The added key was verified against the authorised sibling copy instead: cases, candidateScreen, verifiedCosts, offers, sources and alternatives are all byte-identical, and exactly one key was added.",
+      "impact": "A restricted file that a reviewer cannot verify against its own recorded digest is weaker evidence than one that never carried the extra key. The byte difference is also explained: the repo copy is pretty-printed while the sibling is minified, which accounts for 1054709 of the 1054709 byte gap; the real content change is 2965 characters.",
+      "handling": "The right fix is a small builder in 01_data/91_build/ that regenerates the payload with its digest intact. That is outside the agent-owned area and is a decision about how the file should be produced.",
+      "owner": "integration owner + data owner"
+    },
+    {
+      "id": "MODULE-AUDIT-RESIDUAL",
+      "severity": "low",
+      "title": "My own module_audit still over-reports, and the generated audits are stale",
+      "finding": "tools/module_audit.py is a raw text scan and cannot tell a deliberately declared comparison against a retired module from a misdirected load. It reports 11 retired loads where the guard says the genuinely misdirected count is 0. It now says so in its own output and names guard_09_module_scope.cjs as the authority. docs/ORPHAN_AUDIT.md and MODULE_AUDIT.md were also stale at commit time because the module lists changed after they were generated.",
+      "handling": "Either rework the tool to read the in-file declarations the way the guard does, or delete it and let the guard be the only answer. Regenerate both reports before any further commit.",
+      "owner": "integration owner"
     },
     {
       "id": "F04-DATA",
@@ -149,7 +107,7 @@
       "title": "The payload still declares a split cost basis across alternatives",
       "finding": "The ranking resolves every row to one offer date and reports a single baseline, so the screen no longer shows two baselines. The underlying payload still declares the split: the no-action rows for pads, cabin filter and oil filter use SEP26 while some alternatives use OCT26.",
       "handling": "Data work, not a code fix.",
-      "owner": "data developer"
+      "owner": "data owner"
     },
     {
       "id": "F07-INPUT",
@@ -163,16 +121,16 @@
       "id": "DATA-ENTITY",
       "severity": "medium",
       "title": "A country name appears where a distributor name is expected in the candidate rows",
-      "finding": "Candidate rows carry distributor labels ITUK and PORTUGAL. PORTUGAL is a country, and the worked cases use ITUK and the I Motors / Portugal account. The source never states which legal entity PORTUGAL is.",
-      "handling": "Not renamed - renaming would invent the entity. Kept visible with every label as it appears. ITUK and IUK are separate entities and UTI and UMI must never be blended.",
+      "finding": "Candidate rows carry distributor labels ITUK and PORTUGAL. PORTUGAL is a country and the source never states which legal entity it is. ITUK and IUK are separate entities, and UTI and UMI must never be blended.",
+      "handling": "Not renamed - renaming would invent the entity. Kept visible with every label as it appears.",
       "owner": "commercial owner (not an agent)"
     },
     {
-      "id": "UNVERIFIED-CLAIM",
+      "id": "OIL-COST-FLAG",
       "severity": "low",
-      "title": "A reported byte figure was not measured and is not in the record",
-      "finding": "The export agent reported that the pre-fix brief leaked 1013 bytes. Its own test file contains no such value, so the figure was not produced by a command. Its actual work checks out on the numbers that can be measured.",
-      "handling": "Excluded from the record. The measured position is used instead: 426 bytes before the container fix, 944 after, and 11/0 on the byte-level check against the shipped builder.",
+      "title": "One case's costRecordPresent flag contradicts verifiedCosts",
+      "finding": "IMOTORS-OIL (part 5876150530) carries a verified cost of 2.3995 EUR on the forward basis while its packEvidence.costRecordPresent is false. Checked all five cases: the flag agrees on four and disagrees on exactly this one. So the objectives tab can rank a gross-profit alternative while the economics tab says no cost is applied.",
+      "handling": "Both statements are individually defensible; together they would confuse a reader. Needs a decision on which is authoritative for this case.",
       "owner": "integration owner"
     }
   ]
