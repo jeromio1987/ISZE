@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-09-22T15:03:34Z",
+  "written_at": "2026-09-22T16:51:34Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,21 +12,21 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 25,
-    "not started": 67,
-    "implemented": 4
+    "technically verified": 30,
+    "not started": 63,
+    "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 29,
+  "overlay_applied": 33,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
       "id": "F08-IDENTITY",
-      "severity": "high",
-      "title": "The shipped export builder has the data-disclosure half of F08 but not the access-control half",
-      "finding": "The allowlist, the free-text refusal and the compound-filename check are all in the shipped src/data/export.js, and the acceptance suite is green. But the retired src/output/recipients.js holds the permission table - makeDevIdentity, requireApprovedIdentity, canRead, canAttach - and the shipped module has no equivalent. That module is RETAINED deliberately for this reason; deleting it would delete the permission table.",
-      "impact": "F08's disclosure half is closed. Its access-control half is not: whether a participant may read a record, and refusal of a restricted attachment, are not enforced in what ships.",
-      "handling": "Wire the permission surface into the shipped builder, or state the restriction plainly as unimplemented. A browser-side allowlist is not access control, and no backend exists here to provide it.",
+      "severity": "medium",
+      "title": "The permission surface now ships, but a browser-side check is still not an authentication",
+      "finding": "REVISED 2026-09-22. The permission table, canRead, canAttach, makeDevIdentity and requireApprovedIdentity are now in the SHIPPED src/data/export.js, ported there so the case store's attachment check works in a browser. So the component-level permission logic is closed, and a participant cannot read the internal record through this component. What remains is narrower: there is no approved identity provider on this machine, so requireApprovedIdentity REFUSES an authenticated identity rather than accepting one. That refusal is deliberate - accepting one would be inventing authority - and a development identity is a declared role, not an authentication.",
+      "impact": "F08's disclosure half and its component-level access logic are both closed and tested. Real tenant policy, revocation and server-side enforcement remain unimplemented, because no backend exists here to provide them. A browser-side allowlist is not access control, and it is not described as one anywhere in the code.",
+      "handling": "Needs infrastructure and an identity owner. Until one exists, the honest position is the one the code takes: refuse an authenticated identity rather than invent authority.",
       "owner": "integration owner"
     },
     {
@@ -91,8 +91,26 @@
       "id": "OIL-COST-FLAG",
       "severity": "low",
       "title": "One case's costRecordPresent flag contradicts verifiedCosts",
-      "finding": "IMOTORS-OIL (part 5876150530) carries a verified cost of 2.3995 EUR on the forward basis while its packEvidence.costRecordPresent is false. Checked all five cases: the flag agrees on four and disagrees on exactly this one. So the objectives tab can rank a gross-profit alternative while the economics tab says no cost is applied.",
+      "finding": "One case carries a verified parts cost on the forward basis in verifiedCosts while its own packEvidence.costRecordPresent flag says false. The cost value is not repeated here: it is the restricted figure the payload holds, and it is cited by field name only. Checked all five cases: the flag agrees on four and disagrees on exactly one. So the objectives tab can rank a gross-profit alternative while the economics tab says no cost is applied.",
       "handling": "Both statements are individually defensible; together they would confuse a reader. Needs a decision on which is authoritative for this case.",
+      "owner": "integration owner"
+    },
+    {
+      "id": "PAYLOAD-STALE-HASH",
+      "severity": "medium",
+      "title": "The counts were taken against the payload staged before it was renewed, and cannot be re-derived without the restricted file",
+      "finding": "The restricted payload was regenerated during the session, so its bytes changed. Every count in _acceptance_run, and the artifact hash beside them, were taken against the payload staged before that renewal. The artifact itself was rebuilt AFTER the renewal and reproduces byte for byte, so the build is current; it is the counts that have not been re-derived against the renewed file.",
+      "impact": "Nothing is known to be wrong. The counts have not been re-derived against the renewed file, and doing so is a rebuild plus a full suite run. It cannot be finished from a clone: the payload is excluded from version control, so a machine without it cannot run these checks at all.",
+      "handling": "Re-run tests/run_all.ps1 against the renewed payload before treating these counts as current for that file.",
+      "owner": "integration owner"
+    },
+    {
+      "id": "RESTRICTED-VALUE-LEAK",
+      "severity": "medium",
+      "title": "Restricted figures and part numbers had been copied into tracked files, and the sweep that finds them was blind to a part number on its own",
+      "finding": "A sweep reads the real cost figures and part numbers out of the restricted payload and searches every git-tracked file for them. Its first run found a four-decimal supplier cost beside a part number in the progress record and real payload data copied into the data-contract test fixture. Checking the work by hand found more than the sweep reported: the sweep matched a FOUR-DECIMAL figure, so a real part number on its own line, a named seller beside an advertised price, and costs quoted to two decimals all passed it. Restricted part numbers were found in nine tracked files, and named competitor prices and seller names in one.",
+      "impact": "The exclusion scheme keeps the payload, the frozen reference and the assembled HTML out of version control. It does not stop a restricted VALUE being quoted in a tracked document, and a tracked document is versioned forever. Nothing had been committed, so nothing needed a history rewrite. The fixture's own values were replaced with invented ones, the affected documents were rewritten to cite FIELD NAMES instead of figures, and the checks that read the real payload now derive what they need from it in memory rather than asserting a literal copied out of it.",
+      "handling": "The sweep's match rule should be widened: a restricted PART NUMBER is identifying on its own, and so is a cost quoted to two decimals in a cost context. Until it is widened, a clean sweep run is not evidence that no restricted value is quoted - it is evidence that none of the forms the sweep knows about is quoted.",
       "owner": "integration owner"
     }
   ],
@@ -156,8 +174,10 @@
       "integrate_after": "The start prerequisites and the task checks.",
       "state": "technically verified",
       "evidence": [
-        "tools/build.py assembles twelve modules onto the retained shell and refuses to ship a module that reads a retired one.",
-        "orphan_audit now reports 0 orphans after the two view-layer orphans were retired deliberately."
+        "tools/build.py assembles twelve modules onto the retained shell, and the case pair is assembled BEFORE the case facade, because the facade reads it and a browser has no require to fall back on. tests/case_build_wiring.cjs 4/0.",
+        "The guard that refuses to ship a module reading an unwired one was BROKEN and is fixed, and this is the change that matters most in the batch. It derived the global to search for from the FILE NAME, so src/case/store.js became root.AIMStore while the file publishes root.AIMCaseStore. That derivation was wrong for every module in the tree, so the guard searched for strings that never occur and reported clean on every build. It is now driven by PUBLISHED_BY, a table read from each file's own assignment line and measured by tools/published_names.py.",
+        "The corrected guard immediately caught a real defect the old one had been shipping as a silent undefined: src/case/store.js read root.AIMOutput, a retired module. Fixed by porting the permission and identity surface into the shipped src/data/export.js and repointing the case store at it, which is also what closes the access-control half of F08 at component level.",
+        "orphan_audit reports 0 orphans after the two view-layer orphans were retired deliberately with reasons recorded."
       ],
       "blockers": []
     },
@@ -676,9 +696,11 @@
       "existing_finding": "F12",
       "can_start_after": "BASE-03",
       "integrate_after": "BASE-04",
-      "state": "implemented",
+      "state": "technically verified",
       "evidence": [
-        "Durable case record: versioned, append-only history, survives a restart. A folder of files on one machine, not a shared service - see the open finding."
+        "Durable case record: versioned, append-only history, and src/case/store.js is the one implementation. src/data/cases.js is a facade over it, and tests/case_service.test.mjs check C45 FAILS if a second state machine or a second rule book reappears.",
+        "A draft survives a REAL process restart: the parent writes the case, then runs tests/case_restart_child.cjs in a SEPARATE node process and reads its answer. The same check asserts the file's bytes AND its mtime are untouched, so the child provably only read. A restart proved by rebuilding the object in one process would pass even if the adapter held everything in memory.",
+        "A folder of files on one machine is not a shared service, and every description says so: describeStorage() states it, the bundle carries not_a_shared_service: true, and the app warns when storage is not durable. case_store 27/0, case_service 46/0."
       ],
       "blockers": []
     },
@@ -691,8 +713,12 @@
       "existing_finding": "F12",
       "can_start_after": "BASE-03",
       "integrate_after": "CASE-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "Nine states in force with an explicit transition table and a role for every move. The migration landed in ONE change: contracts.CASE_STATES publishes the nine target states, and the old-to-new mapping is in tests/case_store.test.mjs so the two runs can be read side by side.",
+        "A response issued and a case closed create no support, no outcome and no benefit. Checked against the benefit account, not only the record, and asserted per state rather than asserted-about: no state carries a monetary value.",
+        "Invalid transitions are rejected with the state and version retained, and every valid transition carries dated attribution."
+      ],
       "blockers": []
     },
     {
@@ -704,8 +730,12 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "CASE-02",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "Owner role, responding function, deputy and escalation route are stored, with the separate clocks (submitted, assigned, acknowledged, answered, resolved) rather than one updated-at.",
+        "A reassignment does not reset the clock: measured 3.0 days waiting before and 6.0 after, on the same submission timestamp, so the wait is the dealer's and it keeps running.",
+        "A dealer awaiting ISZE guidance is shown as awaiting that guidance, not as inactive or at fault."
+      ],
       "blockers": []
     },
     {
@@ -717,8 +747,11 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "CASE-02, FIN-08",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "Proposed terms, references, quantities, dates, conditions, currency and the approval reference are stored, with an amendment preserving the former terms and an expired offer no longer presented as available.",
+        "A draft cannot become approved by saving it, by writing the state, or by choosing the top-ranked row. No live price is set and no approver is impersonated; a local simulated approval is labelled synthetic."
+      ],
       "blockers": []
     },
     {
@@ -730,8 +763,12 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "CASE-02, CASE-04",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "Delivered support and outcomes are linked without double counting. A paid credit creates no incremental profit and no won quotation.",
+        "One action recorded under two modules is counted once, on a stable action identifier: measured 300 not 600 of support, 60 units not 120, and one gross-profit line across the two modules.",
+        "Purchase-cost difference, gross profit, capacity released and programme expenditure stay separate fields, and an unknown outcome stays unknown rather than becoming zero."
+      ],
       "blockers": []
     },
     {

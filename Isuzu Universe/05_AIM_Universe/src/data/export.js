@@ -565,6 +565,150 @@
     return { bytes: buf, text: text, length: text.length };
   }
 
+  /* ------------------------------------------------- identity and permission --
+
+     Ported from the hardened reference so the SHIPPED builder carries them, not
+     just the retired copy. This closes the access-control half of F08 that only
+     ever existed in src/output/recipients.js.
+
+     What this is NOT: an authentication. There is no backend on this machine, so
+     a development identity is a declaration, and every result it produces says so
+     in its own words. A browser-side check is not server-side access control and
+     must never be described as one. */
+
+  var IDENTITY_MODES = ['approved', 'development-only'];
+
+  /* The role table, and the whole of it. `viewer` is a participant: it may read
+     the brief prepared for it and nothing else. `support_owner` delivers support
+     and deliberately cannot read parts cost or margin. */
+  var PERMISSIONS = [
+    { role: 'viewer', resource: 'shared_brief', allowed: true,
+      note: 'A participant may read the brief prepared for them.' },
+    { role: 'viewer', resource: 'internal_record', allowed: false,
+      note: 'A participant never reads the internal record.' },
+    { role: 'viewer', resource: 'attachment', allowed: false,
+      note: 'A participant cannot fetch an attachment through this component.' },
+    { role: 'requester', resource: 'shared_brief', allowed: true, note: 'May read the brief.' },
+    { role: 'requester', resource: 'internal_record', allowed: false,
+      note: 'A requester does not read the internal record.' },
+    { role: 'requester', resource: 'attachment', allowed: true,
+      note: 'May attach a file that carries no restricted content.' },
+    { role: 'case_owner', resource: 'shared_brief', allowed: true, note: 'May read the brief.' },
+    { role: 'case_owner', resource: 'internal_record', allowed: true, note: 'Owns the case.' },
+    { role: 'case_owner', resource: 'attachment', allowed: true,
+      note: 'May attach a file that carries no restricted content.' },
+    { role: 'reviewer', resource: 'shared_brief', allowed: true, note: 'May read the brief.' },
+    { role: 'reviewer', resource: 'internal_record', allowed: true, note: 'Reviews the case.' },
+    { role: 'reviewer', resource: 'attachment', allowed: false,
+      note: 'A reviewer reads, and does not add attachments.' },
+    { role: 'approver', resource: 'shared_brief', allowed: true, note: 'May read the brief.' },
+    { role: 'approver', resource: 'internal_record', allowed: true, note: 'Approves the case.' },
+    { role: 'approver', resource: 'attachment', allowed: false,
+      note: 'An approver reads, and does not add attachments.' },
+    { role: 'support_owner', resource: 'shared_brief', allowed: true, note: 'May read the brief.' },
+    { role: 'support_owner', resource: 'internal_record', allowed: false,
+      note: 'Delivers the support; does not read parts cost or margin.' },
+    { role: 'support_owner', resource: 'attachment', allowed: true,
+      note: 'May attach a file that carries no restricted content.' }
+  ];
+
+  function rejectPermission(code, message, extra) {
+    var out = { ok: false, allowed: false, code: code, error: message };
+    if (extra) { Object.keys(extra).forEach(function (k) { out[k] = extra[k]; }); }
+    return out;
+  }
+
+  function permissionFor(role, resource) {
+    return PERMISSIONS.filter(function (p) {
+      return p.role === role && p.resource === resource;
+    })[0] || null;
+  }
+
+  /* The permission question, asked before anything is read or attached. Every
+     result states whether the identity was actually authenticated. */
+  function canRead(identity, resource) {
+    if (!identity) {
+      return rejectPermission('NO_IDENTITY', 'No identity was supplied, so nothing may be read.');
+    }
+    if (IDENTITY_MODES.indexOf(identity.mode) < 0) {
+      return rejectPermission('UNKNOWN_IDENTITY_MODE',
+        'Unknown identity mode "' + identity.mode + '". Nothing may be read.');
+    }
+    if (!identity.authenticated) {
+      var devRow = permissionFor(identity.role, resource);
+      if (!devRow || !devRow.allowed) {
+        return rejectPermission('NOT_PERMITTED',
+          'The role "' + identity.role + '" is not permitted to read "' + resource + '".',
+          { identity_authenticated: false, development_only: true });
+      }
+      return {
+        ok: true, allowed: true, resource: resource, role: identity.role,
+        identity_authenticated: false, development_only: true,
+        reason: 'Permitted by the development-only shim. This is not an authentication and not a '
+          + 'tenant policy decision.'
+      };
+    }
+    var row = permissionFor(identity.role, resource);
+    if (!row || !row.allowed) {
+      return rejectPermission('NOT_PERMITTED',
+        'The role "' + identity.role + '" is not permitted to read "' + resource + '".',
+        { identity_authenticated: true });
+    }
+    if (!identity.tenant || !identity.tenant_verified) {
+      return rejectPermission('TENANT_NOT_VERIFIED',
+        'The identity belongs to no verified organisation, so the case cannot be shown to belong '
+        + 'to it.', { identity_authenticated: true });
+    }
+    return { ok: true, allowed: true, resource: resource, role: identity.role,
+      identity_authenticated: true, development_only: false, note: row.note };
+  }
+
+  function canAttach(identity, attachment) {
+    var permission = canRead(identity, 'attachment');
+    if (!permission.allowed) return permission;
+    if (!attachment || !attachment.name) {
+      return rejectPermission('ATTACHMENT_NEEDS_A_NAME', 'An attachment needs a name.');
+    }
+    if (attachment.restricted) {
+      return rejectPermission('ATTACHMENT_IS_RESTRICTED',
+        'A file marked as carrying restricted content cannot be attached to a case that is '
+        + 'prepared for a participant. Nothing was stored.');
+    }
+    var checked = checkAttachmentName(attachment.name);
+    if (!checked.ok) return checked;
+    return { ok: true, allowed: true, resource: 'attachment', role: identity.role,
+      identity_authenticated: !!identity.authenticated,
+      development_only: !identity.authenticated,
+      note: 'The name and the restriction flag were checked. The file itself is not stored by '
+        + 'this component.' };
+  }
+
+  /* A declared identity for development. It says on its face that it is not an
+     authentication, and it throws rather than inventing a role. */
+  function makeDevIdentity(spec) {
+    spec = spec || {};
+    var role = spec.role;
+    if (['requester', 'case_owner', 'reviewer', 'approver', 'support_owner', 'viewer']
+      .indexOf(role) < 0) {
+      throw new Error('A development identity needs a known role. Got "' + role + '".');
+    }
+    return {
+      mode: 'development-only', authenticated: false,
+      subject: 'dev:' + role + (spec.name ? ':' + spec.name : ''),
+      role: role, tenant: spec.tenant || null, tenant_verified: false,
+      statement: 'Not an authentication. A development-only identity for local work.'
+    };
+  }
+
+  /* An authenticated identity is REFUSED here rather than accepted: there is no
+     approved issuer on this machine, so accepting one would be inventing
+     authority. This is the honest form of the gap, not a placeholder. */
+  function requireApprovedIdentity() {
+    return rejectPermission('NO_APPROVED_IDENTITY_SOURCE',
+      'There is no approved identity provider configured for this component, so no authenticated '
+      + 'identity can be accepted. Development identities are available and are labelled as such.');
+  }
+
   var API = {
     memberBrief: memberBrief,
     internalRecord: internalRecord,
@@ -577,6 +721,15 @@
     checkForRestrictedWords: checkForRestrictedWords,
     checkAttachmentName: checkAttachmentName,
     assertInternalOnly: assertInternalOnly,
+    /* Identity and permission, ported 2026-09-22 so the shipped builder can answer
+       the attachment question src/case/store.js asks it. */
+    IDENTITY_MODES: IDENTITY_MODES,
+    PERMISSIONS: PERMISSIONS,
+    permissionFor: permissionFor,
+    canRead: canRead,
+    canAttach: canAttach,
+    makeDevIdentity: makeDevIdentity,
+    requireApprovedIdentity: requireApprovedIdentity,
     RESTRICTED_PHRASES: RESTRICTED_PHRASES,
     RESTRICTED_PATTERNS: RESTRICTED_PATTERNS,
     RESTRICTED_ATTACHMENT_STEMS: RESTRICTED_ATTACHMENT_STEMS,

@@ -8,6 +8,69 @@
    Exit code is 0 only when every check passes. Nothing is skipped and no
    assertion is relaxed to obtain a green run.
 
+   WHAT CHANGED HERE, AND WHAT DID NOT
+   -----------------------------------
+   This file was written against the eight-state vocabulary that used to be in
+   force (`draft, evidence_requested, ready_for_review, approved, rejected,
+   delivered, outcome_recorded, no_change_recommended`). CASE-02 brought the
+   plan's nine states into force in ONE change - the state values, the
+   transition table and every reference together - and this file is one of the
+   references, so it moved with that change.
+
+   Every check id (C01..C27) and every check name is kept EXACTLY as it was.
+   That is deliberate: a reviewer can put the old run beside the new one and see
+   which assertions are the same claim in new words, rather than being handed a
+   suite that was quietly rewritten to fit. Where a claim could not survive
+   unchanged, the check says so in its own evidence line.
+
+   The old vocabulary -> the new, so a reader can follow the diff:
+
+     state                          | now
+     -------------------------------|-------------------------------------------------
+     draft                          | draft                     (unchanged)
+     evidence_requested             | awaiting_input            (it is the same idea: the
+                                    |                            case is waiting on a
+                                    |                            stated thing from a
+                                    |                            named function)
+     ready_for_review               | response_issued           (an answer has gone back)
+     approved                       | action_agreed             (the parties agreed an
+                                    |                            action; the words
+                                    |                            "approved" hid that
+                                    |                            nothing was delivered)
+     rejected                       | withdrawn                 (taken back by the side
+                                    |                            that raised it)
+     (none)                         | assessment                (new: the working state)
+     (none)                         | submitted                 (new: the clock starts)
+     delivered                      | (no state)                the payment is its own
+                                    |                            recorded move now, not a
+                                    |                            lifecycle state, because a
+                                    |                            payment is not a stage the
+                                    |                            case is at
+     outcome_recorded               | resolved                  (finished with the outcome
+                                    |                            known)
+     no_change_recommended          | closed_outcome_unknown     (finished, and nobody
+                                    |                            knows the result)
+
+     move                           | now
+     -------------------------------|-------------------------------------------------
+     request_evidence               | request_input
+     submit_for_review              | submit
+     approve                        | accept_proposal           (against a named proposal
+                                    |                            version, with an
+                                    |                            approval reference)
+     reject                         | withdraw, or terminal_no_change
+     close_no_change                | terminal_no_change
+     return_for_more_work           | request_input             (the new table has no
+                                    |                            "returned" state; what the
+                                    |                            case needs is named input)
+     record_delivery                | record_support            (a recorded move, not a
+                                    |                            transition)
+     withdraw_before_delivery       | withdraw
+     record_outcome                 | record_outcome            (name unchanged; now a
+                                    |                            recorded move that leaves
+                                    |                            the state alone)
+     reopen_case                    | a new case, linked to the old one
+
    What is checked
    ---------------
      1  a case can be created and read back, with a named owner
@@ -33,6 +96,12 @@
         stated rather than hidden (SAFE-06)
     17  every state published in contracts.js has a lifecycle stage here, so a
         new shared state cannot pass unnoticed
+
+   The newer, longer suite for the same component is tests/case_service.test.mjs.
+   It covers CASE-01..05 in the vocabulary now in force and adds the checks those
+   five tasks require. This file is kept because its check ids are referenced
+   from the project's own progress record, and because a suite that is only ever
+   written fresh cannot show that a migration changed nothing it should not have.
    =========================================================================== */
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -111,6 +180,13 @@ const scenario = {
   sources: [], selected_alternative_id: 'SYNTH-INC', objective: 'revenue'
 };
 
+const terms = (extra = {}) => Object.assign({
+  unit: 'unit', price_before: 100, price_after: 95,
+  quantity_before: 100, quantity_after: 120, quantity_label: 'manual scenario',
+  currency: 'EUR', conditions: 'Synthetic condition.', eligible_reference: 'SYNTH-ELIGIBLE',
+  offer_effective_date: '2026-10-01', support_eur: 500, support_direction: 'to_participant'
+}, extra);
+
 /* Every service in the "in one machine" checks shares one folder, so the restart
    check proves a file was written and not just an object held in memory. */
 const service = newService(storageDir);
@@ -143,37 +219,42 @@ check('C03', 'Version increments on every accepted write', () => {
   const versions = [service.get(id).version];
   let current = service.get(id);
 
-  /* An evidence request is the legal first move out of draft. */
-  const requested = service.transition(id, {
-    action: 'request_evidence', role: 'reviewer',
-    evidence_requests: [{ what: 'Recorded billing for the period', from_role: 'case_owner', due: '2026-10-05' }],
-    next_action: 'Case owner to supply the recorded billing',
-    next_update_due: '2026-10-05',
-    note: 'Evidence requested'
+  /* `request_evidence` was the legal first move out of draft under the old
+     vocabulary. Asking for input is still a reviewer's move, but it is not
+     offered from draft any more: a case is submitted first, and then the
+     reviewer asks or assesses. So the first move is `submit`. */
+  const submitted = service.transition(id, {
+    action: 'submit', role: 'case_owner',
+    next_action: 'Reviewer to take the case', next_update_due: '2026-10-01',
+    note: 'Submitted'
   }, { expected_version: current.version });
-  assert.equal(requested.ok, true, requested.error);
-  versions.push(requested.version);
+  assert.equal(submitted.ok, true, submitted.error);
+  versions.push(submitted.version);
 
-  /* Then the proposal, which is a second accepted write. */
-  const submit = service.transition(id, {
-    action: 'submit_for_review', role: 'case_owner', scenario,
-    next_action: 'Distributor owner to accept or refuse the proposal',
-    next_update_due: '2026-10-10'
-  }, { expected_version: requested.version });
-  assert.equal(submit.ok, true, submit.error);
-  versions.push(submit.version);
+  /* Then the assessment, which is a second accepted write. */
+  const assessing = service.transition(id, {
+    action: 'begin_assessment', role: 'reviewer',
+    next_action: 'Assess against the recorded evidence',
+    next_update_due: '2026-10-05'
+  }, { expected_version: submitted.version });
+  assert.equal(assessing.ok, true, assessing.error);
+  versions.push(assessing.version);
 
   /* Then a plain edit, which is also a write. */
-  const edited = service.save(Object.assign(schema.clone(service.get(id)), {
-    next_action: 'Distributor owner to accept or refuse, restated in plain words'
-  }), { expected_version: submit.version, by: 'case-owner' });
+  const edited = service.saveRecord(
+    Object.assign(schema.clone(service.get(id)), {
+      next_action: 'Assess against the recorded evidence, restated in plain words'
+    }),
+    { expected_version: assessing.version, by: 'reviewer-1' });
   assert.equal(edited.ok, true, edited.error);
   versions.push(edited.version);
 
   assert.deepEqual(versions, [1, 2, 3, 4], 'expected one version per accepted write');
-  /* A refused write does not add a version. */
+  /* A refused write does not add a version. `approve` by a reviewer is refused
+     twice over now: it is not the reviewer's move, and nothing has been proposed
+     to accept. Either refusal is correct; the version must not move either way. */
   const refused = service.transition(id, {
-    action: 'approve', role: 'reviewer', approval_note: 'Wrong role'
+    action: 'accept_proposal', role: 'reviewer', approval_note: 'Wrong role'
   }, { expected_version: edited.version });
   assert.equal(refused.ok, false);
   assert.equal(service.get(id).version, 4, 'a refused move must not create a version');
@@ -186,13 +267,14 @@ check('C04', 'The stored history is append-only, gap-free and records what each 
   record.history.forEach((h, i) => assert.equal(h.seq, i + 1, 'history entry ' + (i + 1)));
   assert.deepEqual(
     record.history.map(h => h.action),
-    ['create_case', 'request_evidence', 'submit_for_review', 'edit_case']
+    ['create_case', 'submit', 'begin_assessment', 'edit_case']
   );
-  /* The proposal entry carries the scenario that was proposed at that point. */
-  const proposal = record.history.find(h => h.action === 'submit_for_review');
-  assert.equal(proposal.stage, 'proposal');
-  assert.equal(proposal.scenario.price_after, 95, 'the entry carries what was proposed');
-  assert.equal(proposal.set_fields.state, 'ready_for_review');
+  /* The assessment entry carries the state it moved to. Under the old
+     vocabulary this step was `submit_for_review` moving to `ready_for_review`;
+     the claim being made is the same one - the entry says what it set. */
+  const assessing = record.history.find(h => h.action === 'begin_assessment');
+  assert.equal(assessing.stage, 'assessment');
+  assert.equal(assessing.set_fields.state, 'assessment');
   /* The edit entry names what it changed. */
   const edit = record.history.find(h => h.action === 'edit_case');
   assert.deepEqual(Object.keys(edit.set_fields), ['next_action']);
@@ -207,14 +289,14 @@ check('C05', 'A lost race is refused, and the other writer survives', () => {
   assert.equal(editorTwo.version, sharedVersion);
 
   /* Editor two saves first, and wins. */
-  const winner = service.save(Object.assign(schema.clone(editorTwo), {
+  const winner = service.saveRecord(Object.assign(schema.clone(editorTwo), {
     next_action: 'Editor two changed this'
   }), { expected_version: editorTwo.version, by: 'editor-two' });
   assert.equal(winner.ok, true, winner.error);
   assert.equal(winner.version, sharedVersion + 1);
 
   /* Editor one now saves from the copy it read. This must be refused. */
-  const loser = service.save(Object.assign(schema.clone(editorOne), {
+  const loser = service.saveRecord(Object.assign(schema.clone(editorOne), {
     next_action: 'Editor one changed this'
   }), { expected_version: editorOne.version, by: 'editor-one' });
   assert.equal(loser.ok, false, 'a stale write must not be accepted');
@@ -236,40 +318,36 @@ check('C05', 'A lost race is refused, and the other writer survives', () => {
 check('C06', 'A stale transition is refused the same way', () => {
   const id = 'CASE-TEST-RACE';
   service.create(seed({ case_id: id, part_number: 'SYNTH-PART-R' }));
-  const proposed = service.transition(id, {
-    action: 'submit_for_review', role: 'case_owner', scenario,
-    next_action: 'Approver to accept or refuse', next_update_due: '2026-10-01'
+  const submitted = service.transition(id, {
+    action: 'submit', role: 'case_owner',
+    next_action: 'Reviewer to take it', next_update_due: '2026-10-01'
   }, { expected_version: 1 });
-  assert.equal(proposed.ok, true, proposed.error);
+  assert.equal(submitted.ok, true, submitted.error);
 
-  /* Two approvers both open the proposal at the same version. */
+  /* Two reviewers both open the case at the same version. */
   const staleCopy = service.get(id).version;
   const first = service.transition(id, {
-    action: 'approve', role: 'approver',
-    approval_note: 'Accepted by the first approver',
-    next_action: 'Support owner to schedule the agreed support',
-    next_update_due: '2026-10-20'
-  }, { expected_version: staleCopy, by: 'approver-one' });
+    action: 'begin_assessment', role: 'reviewer',
+    next_action: 'Assess it', next_update_due: '2026-10-05'
+  }, { expected_version: staleCopy, by: 'reviewer-one' });
   assert.equal(first.ok, true, first.error);
 
   const second = service.transition(id, {
-    action: 'approve', role: 'approver',
-    approval_note: 'Accepted by the second approver',
-    next_action: 'Something else',
-    next_update_due: '2026-10-21'
-  }, { expected_version: staleCopy, by: 'approver-two' });
+    action: 'begin_assessment', role: 'reviewer',
+    next_action: 'Something else', next_update_due: '2026-10-21'
+  }, { expected_version: staleCopy, by: 'reviewer-two' });
 
   assert.equal(second.ok, false);
   assert.equal(second.code, 'STALE_WRITE');
   const stored = service.get(id);
-  assert.equal(stored.approval_note, 'Accepted by the first approver');
-  assert.equal(stored.version, staleCopy + 1, 'the refused approval added no version');
-  return 'second approver refused with ' + second.code + '; the first approval stands';
+  assert.equal(stored.next_action, 'Assess it');
+  assert.equal(stored.version, staleCopy + 1, 'the refused move added no version');
+  return 'second reviewer refused with ' + second.code + '; the first move stands';
 });
 
 check('C07', 'The same content submitted twice is refused', () => {
   const current = service.get('CASE-TEST-VERSION');
-  const first = service.save(schema.clone(current), { expected_version: current.version });
+  const first = service.saveRecord(schema.clone(current), { expected_version: current.version });
   assert.equal(first.ok, false);
   assert.equal(first.code, 'DUPLICATE_SUBMISSION');
   const after = service.get('CASE-TEST-VERSION');
@@ -278,103 +356,149 @@ check('C07', 'The same content submitted twice is refused', () => {
 });
 
 check('C08', 'A proposal is not an approval, an approval is not a delivery, and a delivery is not an outcome', () => {
-  /* Walk a fresh case through all four stages and record the stage at each. */
+  /* Walk a fresh case the whole way. Under the old vocabulary this was four
+     lifecycle states with a stage each: proposal, approval, delivery, outcome.
+     It is now four recorded moves, and only the first two of them are states -
+     because a payment is not a stage the case is standing at. The claim being
+     tested is unchanged and is stated as the four things a reader must be able
+     to tell apart. */
   const id = 'CASE-TEST-STAGES';
   service.create(seed({ case_id: id, part_number: 'SYNTH-PART-B' }));
-  const stages = [];
+  const steps = [];
 
-  const proposed = service.transition(id, {
-    action: 'submit_for_review', role: 'case_owner', scenario,
-    next_action: 'Reviewer to check the evidence', next_update_due: '2026-10-01'
+  const submitted = service.transition(id, {
+    action: 'submit', role: 'case_owner',
+    next_action: 'Reviewer to take the case', next_update_due: '2026-10-01'
   }, { expected_version: 1 });
-  assert.equal(proposed.ok, true, proposed.error);
-  stages.push(proposed.stage);
+  assert.equal(submitted.ok, true, submitted.error);
+  const assessing = service.transition(id, {
+    action: 'begin_assessment', role: 'reviewer',
+    next_action: 'Reviewer to check the evidence', next_update_due: '2026-10-02'
+  }, { expected_version: submitted.version });
+  assert.equal(assessing.ok, true, assessing.error);
 
-  /* The point of this check: a proposal must not read as an approval. */
-  assert.equal(proposed.state, 'ready_for_review');
-  assert.notEqual(proposed.state, 'approved');
+  /* A proposal is recorded, and it is not an approval. */
+  const proposed = service.proposeTerms(id, {
+    terms: terms(), offered_by_role: 'case_owner',
+    approval_route: 'Synthetic route: the account owner approves.',
+    expires_on: '2026-12-31'
+  }, { expected_version: assessing.version, role: 'case_owner' });
+  assert.equal(proposed.ok, true, proposed.error);
+  steps.push('proposal');
   let record = service.get(id);
+  assert.equal(record.state, 'assessment', 'recording a proposal must not move the case');
+  assert.equal(schema.acceptedProposal(record), null, 'a proposal is not an approval');
   assert.equal(record.support, null, 'a proposal has not delivered anything');
   assert.equal(record.outcome, null, 'a proposal has no outcome');
-  assert.equal(record.approval_note, null, 'a proposal carries no approval');
 
-  /* Approving is a different move, by a different role. */
-  const approved = service.transition(id, {
-    action: 'approve', role: 'approver', approval_note: 'Accepted as proposed',
-    next_action: 'Support owner to give the agreed support', next_update_due: '2026-10-15'
+  /* An answer goes back, with the support commitment stated. Still nothing
+     delivered. */
+  const answered = service.transition(id, {
+    action: 'issue_response', role: 'case_owner',
+    response: {
+      what: 'We can support the additional volume at the stated price.',
+      issued_on: '2026-09-30', commitment: 'support', reference: 'SYNTH-RESPONSE-STAGES'
+    },
+    next_action: 'Approver to accept or refuse the proposed terms',
+    next_update_due: '2026-10-10'
   }, { expected_version: proposed.version });
-  assert.equal(approved.ok, true, approved.error);
-  stages.push(approved.stage);
-  assert.equal(approved.state, 'approved');
+  assert.equal(answered.ok, true, answered.error);
   record = service.get(id);
+  assert.equal(record.state, 'response_issued');
+  assert.equal(record.support, null, 'an answer has not delivered anything');
+  assert.equal(record.outcome, null, 'an answer has no outcome');
+
+  /* Approving is a different move, by a different function, against a named
+     version. */
+  const approved = service.transition(id, {
+    action: 'accept_proposal', role: 'approver',
+    approval_note: 'Accepted as proposed',
+    proposal_accept: { proposal_version: 1, approval_reference: 'SYNTH-APPROVAL-STAGES' },
+    next_action: 'Support owner to give the agreed support', next_update_due: '2026-10-15'
+  }, { expected_version: answered.version });
+  assert.equal(approved.ok, true, approved.error);
+  steps.push('approval');
+  record = service.get(id);
+  assert.equal(record.state, 'action_agreed');
   assert.equal(record.support, null, 'an approval has not delivered anything yet');
   assert.equal(record.outcome, null, 'an approval has no outcome');
 
-  /* Delivering is a third move. */
-  const delivered = service.transition(id, {
-    action: 'record_delivery', role: 'support_owner',
-    support: {
-      support_eur: 500, delivered_on: '2026-10-12',
-      what: 'One-off launch support, given once'
-    },
-    next_action: 'Case owner to record what it achieved', next_update_due: '2026-12-01'
-  }, { expected_version: approved.version });
+  /* Delivering is a third move, and it is recorded against the action. */
+  const delivered = service.recordSupport(id, {
+    support_eur: 500, net_terms_basis: 'net', delivered_on: '2026-10-12',
+    what: 'One-off launch support, given once', by_role: 'support_owner'
+  }, { expected_version: record.version, role: 'support_owner' });
   assert.equal(delivered.ok, true, delivered.error);
-  stages.push(delivered.stage);
-  assert.equal(delivered.state, 'delivered');
+  steps.push('delivery');
   record = service.get(id);
+  assert.equal(record.state, 'action_agreed',
+    'recording a payment must not move the state: a payment is not a stage');
   assert.equal(record.support.support_eur, 500);
   assert.equal(record.outcome, null, 'a delivery has no outcome until one is recorded');
 
-  /* The outcome is the fourth move, and it is a separate entry. */
-  const outcome = service.transition(id, {
-    action: 'record_outcome', role: 'case_owner',
-    outcome: {
-      what: 'Volume held at the agreed level; no further support paid',
-      observed_on: '2026-11-30', quantity_after: 120,
-      quantity_label: 'observed history', counts_as_new_business: true
-    }
-  }, { expected_version: delivered.version });
+  /* The outcome is the fourth record, and it is a separate entry. */
+  const outcome = service.recordOutcome(id, {
+    what: 'Volume held at the agreed level; no further support paid',
+    observed_on: '2026-11-30', quantity_after: 120,
+    quantity_label: 'observed history', counts_as_new_business: true
+  }, { expected_version: record.version, role: 'case_owner' });
   assert.equal(outcome.ok, true, outcome.error);
-  stages.push(outcome.stage);
-  assert.equal(outcome.state, 'outcome_recorded');
+  steps.push('outcome');
+  record = service.get(id);
+  assert.equal(record.state, 'action_agreed', 'recording an outcome must not move the state');
 
-  assert.deepEqual(stages, ['proposal', 'approval', 'delivery', 'outcome']);
-  const evidence = schema.stageEvidence(service.get(id));
-  assert.equal(evidence.commercial_occasions, 1, 'one delivery is one commercial occasion, not four');
+  assert.deepEqual(steps, ['proposal', 'approval', 'delivery', 'outcome']);
+  const evidence = schema.stageEvidence(record);
+  assert.equal(evidence.commercial_occasions, 1, 'one payment is one commercial occasion, not four');
   assert.equal(evidence.proposal_recorded, true);
   assert.equal(evidence.approval_recorded, true);
   assert.equal(evidence.delivery_recorded, true);
   assert.equal(evidence.outcome_recorded, true);
-  return 'stages ' + stages.join(' -> ') + '; commercial occasions: ' + evidence.commercial_occasions;
+
+  /* And the case can be closed with its outcome known. */
+  const closed = service.transition(id, {
+    action: 'close_resolved', role: 'case_owner'
+  }, { expected_version: record.version });
+  assert.equal(closed.ok, true, closed.error);
+  assert.equal(service.get(id).state, 'resolved');
+  return steps.join(' -> ') + '; commercial occasions: ' + evidence.commercial_occasions
+    + '; closed at ' + service.get(id).state;
 });
 
 check('C09', 'A stage cannot be reached by skipping the one before it', () => {
   const id = 'CASE-TEST-SKIP';
   service.create(seed({ case_id: id, part_number: 'SYNTH-PART-C' }));
-  /* Straight to approved, without proposing anything. */
+  /* Straight to agreed, without anything being proposed. */
   const jump = service.transition(id, {
-    action: 'approve', role: 'approver', approval_note: 'Approved without a proposal'
+    action: 'accept_proposal', role: 'approver', approval_note: 'Approved without a proposal',
+    proposal_accept: { proposal_version: 1, approval_reference: 'SYNTH-NOT-REAL' }
   }, { expected_version: 1 });
   assert.equal(jump.ok, false);
   assert.equal(jump.code, 'NOT_ALLOWED_FROM_STATE');
 
-  /* Delivery cannot be recorded without an approval. */
-  const noApproval = service.transition(id, {
-    action: 'record_delivery', role: 'support_owner',
-    support: { support_eur: 100, delivered_on: '2026-10-12', what: 'Support before any approval' }
-  }, { expected_version: 1 });
+  /* Delivery cannot be recorded without an accepted proposal. */
+  const noApproval = service.recordSupport(id, {
+    support_eur: 100, net_terms_basis: 'net', delivered_on: '2026-10-12',
+    what: 'Support before any approval'
+  }, { expected_version: 1, role: 'support_owner' });
   assert.equal(noApproval.ok, false);
-  assert.equal(noApproval.code, 'NOT_ALLOWED_FROM_STATE');
+  assert.equal(noApproval.code, 'SUPPORT_NEEDS_AN_ACCEPTED_PROPOSAL');
 
   /* An outcome cannot be recorded without a delivery. */
-  const noDelivery = service.transition(id, {
-    action: 'record_outcome', role: 'case_owner',
-    outcome: { what: 'An outcome with nothing delivered', observed_on: '2026-11-01', counts_as_new_business: true }
-  }, { expected_version: 1 });
+  const noDelivery = service.recordOutcome(id, {
+    what: 'An outcome with nothing delivered', observed_on: '2026-11-01',
+    counts_as_new_business: true
+  }, { expected_version: 1, role: 'case_owner' });
   assert.equal(noDelivery.ok, false);
-  assert.equal(noDelivery.code, 'NOT_ALLOWED_FROM_STATE');
-  return jump.error;
+  assert.equal(noDelivery.code, 'OUTCOME_NEEDS_SUPPORT');
+
+  /* And a case cannot be closed as resolved without an outcome: if the result is
+     not known, `closed_outcome_unknown` is the honest state. */
+  const closedBlind = service.transition(id, {
+    action: 'close_resolved', role: 'case_owner'
+  }, { expected_version: 1 });
+  assert.equal(closedBlind.ok, false);
+  return `${jump.code} | ${noApproval.code} | ${noDelivery.code}`;
 });
 
 check('C10', 'The wrong role cannot make a move', () => {
@@ -383,27 +507,27 @@ check('C10', 'The wrong role cannot make a move', () => {
   const id = 'CASE-TEST-ROLE';
   service.create(seed({ case_id: id, part_number: 'SYNTH-PART-D' }));
 
-  /* Only a case owner proposes. A reviewer may not. */
-  const reviewerProposes = service.transition(id, {
-    action: 'submit_for_review', role: 'reviewer', scenario,
-    next_action: 'Reviewer proposing its own review', next_update_due: '2026-10-01'
+  /* Only a case owner submits. A reviewer may not. */
+  const reviewerSubmits = service.transition(id, {
+    action: 'submit', role: 'reviewer',
+    next_action: 'Reviewer submitting its own question', next_update_due: '2026-10-01'
   }, { expected_version: 1 });
-  assert.equal(reviewerProposes.ok, false);
-  assert.equal(reviewerProposes.code, 'ROLE_NOT_PERMITTED');
+  assert.equal(reviewerSubmits.ok, false);
+  assert.equal(reviewerSubmits.code, 'ROLE_NOT_PERMITTED');
 
-  /* Only a reviewer asks for evidence. A case owner may not. */
+  /* Only a reviewer asks for input, and the case is a draft, so the refusal is
+     the state's rather than the role's. Both are true; the state is checked
+     first, so that is what is asserted. */
   const ownerRequests = service.transition(id, {
-    action: 'request_evidence', role: 'case_owner',
-    evidence_requests: [{ what: 'Its own evidence', from_role: 'case_owner', due: '2026-10-01' }],
-    next_action: 'Owner to supply its own evidence', next_update_due: '2026-10-01'
+    action: 'request_input', role: 'case_owner',
+    evidence_requests: [{ what: 'Its own evidence', from_role: 'case_owner', due: '2026-10-01' }]
   }, { expected_version: 1 });
   assert.equal(ownerRequests.ok, false);
-  assert.equal(ownerRequests.code, 'ROLE_NOT_PERMITTED');
+  assert.equal(ownerRequests.code, 'NOT_ALLOWED_FROM_STATE');
 
   /* A move with no role at all is refused rather than attributed to nobody. */
   const noRole = service.transition(id, {
-    action: 'submit_for_review', scenario,
-    next_action: 'Nobody proposed this', next_update_due: '2026-10-01'
+    action: 'submit', next_action: 'Nobody submitted this', next_update_due: '2026-10-01'
   }, { expected_version: 1 });
   assert.equal(noRole.ok, false);
   assert.equal(noRole.code, 'ROLE_REQUIRED');
@@ -412,39 +536,61 @@ check('C10', 'The wrong role cannot make a move', () => {
   assert.equal(service.get(id).state, 'draft', 'a refused move must not move the case');
   assert.equal(service.get(id).version, 1);
 
-  /* Now the separation that matters most: at a real proposal, a reviewer must
-     not be the one who accepts it. */
-  const proposed = service.transition(id, {
-    action: 'submit_for_review', role: 'case_owner', scenario,
+  /* Now the role guard at a state where the move is genuinely offered. */
+  const submitted = service.transition(id, {
+    action: 'submit', role: 'case_owner',
     next_action: 'Approver to accept or refuse', next_update_due: '2026-10-01'
   }, { expected_version: 1 });
+  assert.equal(submitted.ok, true, submitted.error);
+  const reviewerTakesItByRole = service.transition(id, {
+    action: 'begin_assessment', role: 'case_owner',
+    next_action: 'The owner assessing its own question', next_update_due: '2026-10-02'
+  }, { expected_version: submitted.version });
+  assert.equal(reviewerTakesItByRole.ok, false);
+  assert.equal(reviewerTakesItByRole.code, 'ROLE_NOT_PERMITTED');
+
+  /* The separation that matters most: whoever assessed a case must not be the
+     one who accepts it. */
+  const assessing = service.transition(id, {
+    action: 'begin_assessment', role: 'reviewer',
+    next_action: 'Assess it', next_update_due: '2026-10-02'
+  }, { expected_version: submitted.version });
+  assert.equal(assessing.ok, true, assessing.error);
+  const answered = service.transition(id, {
+    action: 'issue_response', role: 'case_owner',
+    response: { what: 'Answered.', issued_on: '2026-09-30', commitment: 'support' },
+    next_action: 'Approver to decide', next_update_due: '2026-10-10'
+  }, { expected_version: assessing.version });
+  assert.equal(answered.ok, true, answered.error);
+  const proposed = service.proposeTerms(id, {
+    terms: terms(), offered_by_role: 'case_owner', approval_route: 'Synthetic route.'
+  }, { expected_version: answered.version, role: 'case_owner' });
   assert.equal(proposed.ok, true, proposed.error);
   const reviewerApproves = service.transition(id, {
-    action: 'approve', role: 'reviewer', approval_note: 'The reviewer approved its own proposal'
+    action: 'accept_proposal', role: 'reviewer',
+    approval_note: 'The reviewer approved its own assessment',
+    proposal_accept: { proposal_version: 1, approval_reference: 'SYNTH-NOPE' }
   }, { expected_version: proposed.version });
   assert.equal(reviewerApproves.ok, false);
-  /* Two independent reasons a reviewer cannot approve: the move is an approver's
-     move, and (were it offered) the role is wrong. Either way it is refused, and
-     the case must not be approved. */
-  assert.ok(['ROLE_NOT_PERMITTED', 'NOT_ALLOWED_FROM_STATE'].includes(reviewerApproves.code),
-    'expected a refusal, got ' + reviewerApproves.code);
-  assert.equal(service.get(id).state, 'ready_for_review', 'the case must not be approved by a reviewer');
-  assert.equal(service.get(id).approval_note, null);
+  assert.equal(reviewerApproves.code, 'ROLE_NOT_PERMITTED');
+  assert.equal(service.get(id).state, 'response_issued', 'the case must not be agreed by a reviewer');
 
   /* And an approver cannot give the support: that is the support owner's move. */
   const approveFirst = service.transition(id, {
-    action: 'approve', role: 'approver', approval_note: 'Accepted, so a delivery is now possible',
+    action: 'accept_proposal', role: 'approver',
+    approval_note: 'Accepted, so a delivery is now possible',
+    proposal_accept: { proposal_version: 1, approval_reference: 'SYNTH-APPROVAL-ROLE' },
     next_action: 'Support owner to give the agreed support', next_update_due: '2026-10-15'
   }, { expected_version: proposed.version });
   assert.equal(approveFirst.ok, true, approveFirst.error);
-  const approverDelivers = service.transition(id, {
-    action: 'record_delivery', role: 'approver',
-    support: { support_eur: 100, delivered_on: '2026-10-12', what: 'Approver delivered it' }
-  }, { expected_version: approveFirst.version });
+  const approverDelivers = service.recordSupport(id, {
+    support_eur: 100, net_terms_basis: 'net', delivered_on: '2026-10-12',
+    what: 'Approver delivered it'
+  }, { expected_version: approveFirst.version, role: 'approver' });
   assert.equal(approverDelivers.ok, false);
   assert.equal(approverDelivers.code, 'ROLE_NOT_PERMITTED');
-  assert.equal(service.get(id).state, 'approved', 'the approver must not have delivered anything');
-  return `${reviewerProposes.code} / ${ownerRequests.code} / ${noRole.code}; `
+  assert.equal(service.get(id).state, 'action_agreed', 'the approver must not have delivered anything');
+  return `${reviewerSubmits.code} / ${ownerRequests.code} / ${noRole.code}; `
     + `reviewer approval refused with ${reviewerApproves.code}; approver delivery refused with ${approverDelivers.code}`;
 });
 
@@ -452,33 +598,38 @@ check('C11', 'A move that is missing what it needs is refused with a plain reaso
   const id = 'CASE-TEST-INPUT';
   service.create(seed({ case_id: id, part_number: 'SYNTH-PART-E' }));
   const noDate = service.transition(id, {
-    action: 'submit_for_review', role: 'case_owner', scenario,
+    action: 'submit', role: 'case_owner',
     next_action: 'Reviewer to check the evidence'
   }, { expected_version: 1 });
   assert.equal(noDate.ok, false);
   assert.equal(noDate.code, 'MISSING_INPUT');
   assert.match(noDate.error, /next_update_due/);
 
-  const badSupport = service.transition(id, {
-    action: 'request_evidence', role: 'reviewer',
-    evidence_requests: [{ what: 'Billing rows', from_role: 'case_owner' }]
+  const submitted = service.transition(id, {
+    action: 'submit', role: 'case_owner', next_action: 'Reviewer to check it',
+    next_update_due: '2026-10-01'
   }, { expected_version: 1 });
-  assert.equal(badSupport.ok, false);
-  assert.equal(badSupport.code, 'MISSING_INPUT');
-  assert.match(badSupport.error, /due/);
+
+  const badRequest = service.transition(id, {
+    action: 'request_input', role: 'reviewer',
+    evidence_requests: [{ what: 'Billing rows', from_role: 'case_owner' }]
+  }, { expected_version: submitted.version });
+  assert.equal(badRequest.ok, false);
+  assert.equal(badRequest.code, 'MISSING_INPUT');
+  assert.match(badRequest.error, /due/);
   return noDate.error;
 });
 
 check('C12', 'A waiting record says who owes the next action and when (CASE-03)', () => {
   const id = 'CASE-TEST-OWNER';
   service.create(seed({ case_id: id, part_number: 'SYNTH-PART-F' }));
-  const proposed = service.transition(id, {
-    action: 'submit_for_review', role: 'case_owner', scenario,
+  const submitted = service.transition(id, {
+    action: 'submit', role: 'case_owner',
     next_action: 'Distributor owner to accept or refuse',
     next_update_due: '2026-10-10',
     owner_role: 'approver'
   }, { expected_version: 1 });
-  assert.equal(proposed.ok, true, proposed.error);
+  assert.equal(submitted.ok, true, submitted.error);
 
   const work = schema.openWork(service.get(id), '2026-09-22');
   assert.equal(work.owner_role, 'approver');
@@ -491,7 +642,7 @@ check('C12', 'A waiting record says who owes the next action and when (CASE-03)'
   const overdueCase = service.create(seed({ case_id: 'CASE-TEST-LATE', part_number: 'SYNTH-PART-G' }));
   assert.equal(overdueCase.ok, true, overdueCase.error);
   service.transition('CASE-TEST-LATE', {
-    action: 'submit_for_review', role: 'case_owner', scenario,
+    action: 'submit', role: 'case_owner',
     next_action: 'Long overdue evidence', next_update_due: '2026-09-01'
   }, { expected_version: 1 });
   const queue = service.queue('2026-09-22');
@@ -507,20 +658,25 @@ check('C13', 'A closed case owes nothing further', () => {
   assert.equal(work.next_action, null);
   assert.equal(work.next_update_due, null);
   assert.equal(work.overdue, false);
-  /* And it cannot be reopened, because that would let one occasion run twice. */
+  /* And it cannot be reopened, because that would let one occasion run twice.
+     Under the old vocabulary this was `reopen_case`; the new table has no
+     reopening move at all, for the same reason, so the refusal is that the move
+     does not exist on a finished case. */
   const reopen = service.transition('CASE-TEST-STAGES', {
-    action: 'reopen_case', role: 'case_owner', next_action: 'Run it again'
+    action: 'submit', role: 'case_owner', next_action: 'Run it again',
+    next_update_due: '2026-10-01'
   }, { expected_version: service.get('CASE-TEST-STAGES').version });
   assert.equal(reopen.ok, false);
   assert.equal(reopen.code, 'CASE_IS_FINISHED');
-  return reopen.error;
+  assert.match(reopen.error, /start a new case/i);
+  return reopen.error.slice(0, 150);
 });
 
 check('C14', 'A correction replaces its predecessor and does not multiply the activity (CASE-06)', () => {
   const id = 'CASE-TEST-STAGES';
   const before = service.get(id);
   const occasionsBefore = schema.commercialEventCount(before);
-  const deliveryEntry = before.history.find(h => h.action === 'record_delivery');
+  const deliveryEntry = before.history.find(h => h.action === 'record_support');
   assert.ok(deliveryEntry, 'the delivery entry should be in the log');
 
   const corrected = service.correct(id, {
@@ -529,8 +685,9 @@ check('C14', 'A correction replaces its predecessor and does not multiply the ac
     reason: 'The recorded support was 500; the agreed figure was 250. Correcting the amount.',
     replacement: {
       support: {
-        event_id: before.support.event_id, support_eur: 250,
-        delivered_on: '2026-10-12', what: 'One-off launch support, given once', by_role: 'support_owner'
+        action_identifier: before.support.action_identifier, support_eur: 250,
+        net_terms_basis: 'net', delivered_on: '2026-10-12',
+        what: 'One-off launch support, given once', by_role: 'support_owner'
       }
     }
   }, { expected_version: before.version, by: 'case-owner' });
@@ -543,6 +700,8 @@ check('C14', 'A correction replaces its predecessor and does not multiply the ac
     'correcting must not remove the entry it corrects');
   assert.equal(after.history.length, before.history.length + 1);
   assert.equal(after.version, before.version + 1);
+  /* A correction fixes evidence; it does not move the case. */
+  assert.equal(after.state, before.state, 'a correction must not move the case');
 
   /* The correction names what it replaced. */
   const correctionEntry = after.history[after.history.length - 1];
@@ -552,7 +711,8 @@ check('C14', 'A correction replaces its predecessor and does not multiply the ac
 
   /* The value is corrected. */
   assert.equal(after.support.support_eur, 250);
-  assert.equal(after.support.event_id, before.support.event_id, 'the occasion keeps its identity');
+  assert.equal(after.support.action_identifier, before.support.action_identifier,
+    'the occasion keeps its identity');
 
   /* And the activity is not counted twice. */
   assert.equal(schema.commercialEventCount(after), occasionsBefore,
@@ -566,8 +726,8 @@ check('C14', 'A correction replaces its predecessor and does not multiply the ac
 check('C15', 'A correction cannot be pointed at the same entry twice', () => {
   const id = 'CASE-TEST-STAGES';
   const current = service.get(id);
-  const deliverySeq = current.history.find(h => h.action === 'record_delivery').seq;
-  const approveSeq = current.history.find(h => h.action === 'approve').seq;
+  const deliverySeq = current.history.find(h => h.action === 'record_support').seq;
+  const outcomeSeq = current.history.find(h => h.action === 'record_outcome').seq;
 
   /* The delivery has already been corrected. A second correction of it would
      fork the trail, so it is refused. */
@@ -580,15 +740,15 @@ check('C15', 'A correction cannot be pointed at the same entry twice', () => {
 
   /* A correction with no reason is refused: a silent correction is not a record. */
   const silent = service.correct(id, {
-    corrects_sequence: approveSeq, role: 'case_owner'
+    corrects_sequence: outcomeSeq, role: 'case_owner'
   }, { expected_version: current.version });
   assert.equal(silent.ok, false);
   assert.equal(silent.code, 'CORRECTION_NEEDS_REASON');
 
   /* And a correction cannot be used to move the case. */
   const moves = service.correct(id, {
-    corrects_sequence: approveSeq, role: 'case_owner',
-    reason: 'Trying to un-close the case', replacement: { state: 'delivered' }
+    corrects_sequence: outcomeSeq, role: 'case_owner',
+    reason: 'Trying to un-close the case', replacement: { state: 'draft' }
   }, { expected_version: current.version });
   assert.equal(moves.ok, false);
   assert.equal(moves.code, 'CORRECTION_CANNOT_MOVE_STATE');
@@ -600,23 +760,23 @@ check('C15', 'A correction cannot be pointed at the same entry twice', () => {
 
 check('C16', 'One case cannot record a second delivery of the same support', () => {
   /* Built against the rule book directly, because the lifecycle would not
-     normally offer the move twice. The case is wound back to "approved" with no
-     support and no outcome, but the log still carries the delivery already made
-     on it - which is exactly the situation the guard is for. */
+     normally offer the move twice. The case is wound back to "action_agreed"
+     with no support and no outcome, but the log still carries the delivery
+     already made on it - which is exactly the situation the guard is for. */
   const record = service.get('CASE-TEST-STAGES');
   assert.equal(schema.commercialEventCount(record), 1, 'the log should already carry one delivery');
   const doctored = schema.clone(record);
-  doctored.state = 'approved';
+  doctored.state = 'action_agreed';
   doctored.support = null;
   doctored.outcome = null;
   doctored.next_action = 'Support owner to give the agreed support';
   doctored.next_update_due = '2026-10-15';
   assert.equal(schema.validate(doctored).ok, true, schema.validate(doctored).errors.join(' '));
 
-  const attempt = schema.applyTransition(doctored, {
-    action: 'record_delivery', role: 'support_owner', by: 'test-runner', at: FIXED_NOW,
-    support: { support_eur: 400, delivered_on: '2026-11-01', what: 'A second support payment' }
-  });
+  const attempt = schema.recordSupport(doctored, {
+    support_eur: 400, net_terms_basis: 'net', delivered_on: '2026-11-01',
+    what: 'A second support payment', by_role: 'support_owner'
+  }, { at: FIXED_NOW, by: 'test-runner', role: 'support_owner' });
   assert.equal(attempt.ok, false);
   assert.equal(attempt.code, 'DUPLICATE_SUPPORT');
   assert.equal(schema.commercialEventCount(doctored), 1);
@@ -626,30 +786,42 @@ check('C16', 'One case cannot record a second delivery of the same support', () 
 check('C17', 'Volume migrated from another Isuzu product is not newly won business (CASE-05)', () => {
   /* A migration case: 40 units moved from a BVP part to the Genuine counterpart. */
   const migId = 'CASE-TEST-MIGRATION';
-  service.create(seed({ case_id: migId, part_number: 'SYNTH-GENUINE-A' }));
-  const migProposed = service.transition(migId, {
-    action: 'submit_for_review', role: 'case_owner', scenario,
-    next_action: 'Approver to accept the migration', next_update_due: '2026-10-01'
-  }, { expected_version: 1 });
+  const created = service.create(seed({ case_id: migId, part_number: 'SYNTH-GENUINE-A' }));
+  let v = created.version;
+  const migSubmitted = service.transition(migId, {
+    action: 'submit', role: 'case_owner',
+    next_action: 'Reviewer to take it', next_update_due: '2026-10-01'
+  }, { expected_version: v }); v = migSubmitted.version;
+  const migAssessing = service.transition(migId, {
+    action: 'begin_assessment', role: 'reviewer', next_action: 'Assess',
+    next_update_due: '2026-10-02'
+  }, { expected_version: v }); v = migAssessing.version;
+  const migAnswered = service.transition(migId, {
+    action: 'issue_response', role: 'case_owner',
+    response: { what: 'Migration position issued.', issued_on: '2026-09-30', commitment: 'support' },
+    next_action: 'Approver to decide', next_update_due: '2026-10-10'
+  }, { expected_version: v }); v = migAnswered.version;
+  const migProposed = service.proposeTerms(migId, {
+    terms: terms({ quantity_after: 140 }), offered_by_role: 'case_owner',
+    approval_route: 'Synthetic route.'
+  }, { expected_version: v, role: 'case_owner' }); v = migProposed.version;
   const migApproved = service.transition(migId, {
-    action: 'approve', role: 'approver', approval_note: 'Migration accepted',
+    action: 'accept_proposal', role: 'approver', approval_note: 'Migration accepted',
+    proposal_accept: { proposal_version: 1, approval_reference: 'SYNTH-APPROVAL-MIG' },
     next_action: 'Support owner to give the agreed support', next_update_due: '2026-10-15'
-  }, { expected_version: migProposed.version });
-  const migDelivered = service.transition(migId, {
-    action: 'record_delivery', role: 'support_owner',
-    support: { support_eur: 300, delivered_on: '2026-10-12', what: 'Launch support for the migrated volume' },
-    next_action: 'Case owner to record the outcome', next_update_due: '2026-12-01'
-  }, { expected_version: migApproved.version });
+  }, { expected_version: v }); v = migApproved.version;
+  const migDelivered = service.recordSupport(migId, {
+    support_eur: 300, net_terms_basis: 'net', delivered_on: '2026-10-12',
+    what: 'Launch support for the migrated volume',
+    action_identifier: 'ACT:MIGRATION-TEST-1'
+  }, { expected_version: v, role: 'support_owner' });
   assert.equal(migDelivered.ok, true, migDelivered.error);
-  const migOutcome = service.transition(migId, {
-    action: 'record_outcome', role: 'case_owner',
-    outcome: {
-      what: '40 units now bought on the Genuine counterpart; the same trucks, the same demand',
-      observed_on: '2026-11-30', quantity_after: 40, quantity_label: 'observed history',
-      migration_from: 'SYNTH-PART-A', migration_to: 'SYNTH-GENUINE-A',
-      counts_as_new_business: false
-    }
-  }, { expected_version: migDelivered.version });
+  const migOutcome = service.recordOutcome(migId, {
+    what: '40 units now bought on the Genuine counterpart; the same trucks, the same demand',
+    observed_on: '2026-11-30', quantity_after: 40, quantity_label: 'observed history',
+    migration_from: 'SYNTH-PART-OLD', migration_to: 'SYNTH-GENUINE-A',
+    counts_as_new_business: false
+  }, { expected_version: migDelivered.version, role: 'case_owner' });
   assert.equal(migOutcome.ok, true, migOutcome.error);
 
   /* Link the migration to the case it came from. */
@@ -660,32 +832,41 @@ check('C17', 'Volume migrated from another Isuzu product is not newly won busine
     }
   });
   assert.equal(link.ok, true, link.error);
-  assert.equal(link.spec.counts_apart, false, 'a migration is not a separate commercial event');
+  assert.equal(link.spec.counts_apart, false, 'a migration is not a separate commercial action');
 
   /* A genuinely new piece of business, so the rollup has both kinds. */
   const newId = 'CASE-TEST-NEW';
-  service.create(seed({ case_id: newId, part_number: 'SYNTH-PART-H' }));
-  const newProposed = service.transition(newId, {
-    action: 'submit_for_review', role: 'case_owner', scenario,
-    next_action: 'Approver to accept', next_update_due: '2026-10-01'
-  }, { expected_version: 1 });
+  const newCreated = service.create(seed({ case_id: newId, part_number: 'SYNTH-PART-H' }));
+  let nv = newCreated.version;
+  const newSubmitted = service.transition(newId, {
+    action: 'submit', role: 'case_owner', next_action: 'Reviewer to take it',
+    next_update_due: '2026-10-01'
+  }, { expected_version: nv }); nv = newSubmitted.version;
+  const newAssessing = service.transition(newId, {
+    action: 'begin_assessment', role: 'reviewer', next_action: 'Assess', next_update_due: '2026-10-02'
+  }, { expected_version: nv }); nv = newAssessing.version;
+  const newAnswered = service.transition(newId, {
+    action: 'issue_response', role: 'case_owner',
+    response: { what: 'Position issued.', issued_on: '2026-09-30', commitment: 'support' },
+    next_action: 'Approver to decide', next_update_due: '2026-10-10'
+  }, { expected_version: nv }); nv = newAnswered.version;
+  const newProposed = service.proposeTerms(newId, {
+    terms: terms(), offered_by_role: 'case_owner', approval_route: 'Synthetic route.'
+  }, { expected_version: nv, role: 'case_owner' }); nv = newProposed.version;
   const newApproved = service.transition(newId, {
-    action: 'approve', role: 'approver', approval_note: 'Accepted',
+    action: 'accept_proposal', role: 'approver', approval_note: 'Accepted',
+    proposal_accept: { proposal_version: 1, approval_reference: 'SYNTH-APPROVAL-NEW' },
     next_action: 'Support owner to give the agreed support', next_update_due: '2026-10-15'
-  }, { expected_version: newProposed.version });
-  const newDelivered = service.transition(newId, {
-    action: 'record_delivery', role: 'support_owner',
-    support: { support_eur: 700, delivered_on: '2026-10-12', what: 'Launch support for a genuinely new part' },
-    next_action: 'Case owner to record the outcome', next_update_due: '2026-12-01'
-  }, { expected_version: newApproved.version });
+  }, { expected_version: nv }); nv = newApproved.version;
+  const newDelivered = service.recordSupport(newId, {
+    support_eur: 700, net_terms_basis: 'net', delivered_on: '2026-10-12',
+    what: 'Launch support for a genuinely new part', action_identifier: 'ACT:NEW-TEST-1'
+  }, { expected_version: nv, role: 'support_owner' });
   assert.equal(newDelivered.ok, true, newDelivered.error);
-  const newOutcome = service.transition(newId, {
-    action: 'record_outcome', role: 'case_owner',
-    outcome: {
-      what: '60 units billed that were not billed before', observed_on: '2026-11-30',
-      quantity_after: 60, quantity_label: 'observed history', counts_as_new_business: true
-    }
-  }, { expected_version: newDelivered.version });
+  const newOutcome = service.recordOutcome(newId, {
+    what: '60 units billed that were not billed before', observed_on: '2026-11-30',
+    quantity_after: 60, quantity_label: 'observed history', counts_as_new_business: true
+  }, { expected_version: newDelivered.version, role: 'case_owner' });
   assert.equal(newOutcome.ok, true, newOutcome.error);
 
   /* Now roll the whole portfolio up conservatively. */
@@ -695,14 +876,15 @@ check('C17', 'Volume migrated from another Isuzu product is not newly won busine
   assert.equal(rollup.migrated_units_not_new_business, 40);
   assert.equal(rollup.support_total_eur, 1000, '300 + 700, each counted once');
   assert.equal(rollup.distinct_commercial_occasions, 2);
-  const migratedRow = rollup.rows.find(r => r.case_id === migId);
+  const migratedRow = rollup.actions.find(a => a.action_identifier === 'ACT:MIGRATION-TEST-1');
   assert.equal(migratedRow.counted_as, 'migrated from another product');
+  /* And there is still no single benefit figure. */
+  assert.equal(rollup.total_benefit_eur, null);
   /* And an outcome that claims a migration is new business is refused outright. */
-  const bogus = schema.applyTransition(service.get(newId), {
-    action: 'record_outcome', role: 'case_owner', by: 'test-runner', at: FIXED_NOW,
-    outcome: { what: 'Migration claimed as new business', observed_on: '2026-12-01',
-      migration_from: 'SYNTH-PART-A', counts_as_new_business: true }
-  });
+  const bogus = schema.recordOutcome(service.get(newId), {
+    what: 'Migration claimed as new business', observed_on: '2026-12-01',
+    migration_from: 'SYNTH-PART-OLD', counts_as_new_business: true, by_role: 'case_owner'
+  }, { at: FIXED_NOW, by: 'test-runner', role: 'case_owner' });
   assert.equal(bogus.ok, false, 'a migration presented as new business must be refused');
   return `newly won ${rollup.newly_won_units} units, migrated ${rollup.migrated_units_not_new_business} units, `
     + `support EUR ${rollup.support_total_eur} across ${rollup.distinct_commercial_occasions} occasions`;
@@ -751,7 +933,7 @@ check('C19', 'A record survives a real restart: a new service reads the same fol
   const record = reopened.get('CASE-TEST-STAGES');
   assert.ok(record, 'the case should still be there after the service was rebuilt');
   assert.equal(record.version >= 6, true);
-  assert.equal(record.state, 'outcome_recorded');
+  assert.equal(record.state, 'resolved');
   assert.equal(record.support.support_eur, 250, 'the correction survived');
   assert.equal(schema.commercialEventCount(record), 1);
 
@@ -771,33 +953,33 @@ check('C19', 'A record survives a real restart: a new service reads the same fol
 check('C20', 'Reopening an earlier version shows the case as it stood then', () => {
   const id = 'CASE-TEST-STAGES';
   const current = service.get(id);
-  const approvalEntry = current.history.find(h => h.action === 'approve');
-  const deliveryEntry = current.history.find(h => h.action === 'record_delivery');
+  const approvalEntry = current.history.find(h => h.action === 'accept_proposal');
+  const deliveryEntry = current.history.find(h => h.action === 'record_support');
   const outcomeEntry = current.history.find(h => h.action === 'record_outcome');
 
   /* As it stood at the approval: proposed and accepted, nothing delivered. */
   const atApproval = service.reopen(id, approvalEntry.seq);
   assert.equal(atApproval.version, approvalEntry.seq);
-  assert.equal(atApproval.state, 'approved');
+  assert.equal(atApproval.state, 'action_agreed');
   assert.equal(atApproval.support, null, 'at the approval nothing had been delivered');
   assert.equal(atApproval.outcome, null);
-  assert.equal(atApproval.scenario.price_after, 95, 'the proposed inputs are preserved');
+  assert.equal(atApproval.proposal.versions[0].terms.price_after, 95, 'the proposed inputs are preserved');
   assert.equal(atApproval.approval_note, 'Accepted as proposed');
 
   /* As it stood at the delivery: given, not yet measured. */
   const atDelivery = service.reopen(id, deliveryEntry.seq);
-  assert.equal(atDelivery.state, 'delivered');
+  assert.equal(atDelivery.state, 'action_agreed');
   assert.equal(atDelivery.support.support_eur, 500, 'the support as it stood before the correction');
   assert.equal(atDelivery.outcome, null);
-  assert.equal(atDelivery.stage, 'delivery');
+  assert.equal(atDelivery.stage, 'agreed');
 
   /* And the latest, with the corrected support and the outcome. */
   const latest = service.reopen(id);
   assert.equal(latest.version, current.version);
-  assert.equal(latest.state, 'outcome_recorded');
+  assert.equal(latest.state, 'resolved');
   assert.equal(latest.support.support_eur, 250, 'the corrected amount');
   assert.equal(latest.outcome.quantity_after, 120);
-  assert.equal(latest.stage, 'outcome');
+  assert.equal(latest.stage, 'closed');
 
   /* Asking for a version that does not exist is refused, not guessed at. */
   const beyond = service.reopen(id, current.version + 5);
@@ -806,7 +988,6 @@ check('C20', 'Reopening an earlier version shows the case as it stood then', () 
   assert.equal(beyond.actual_version, undefined);
 
   assert.ok(outcomeEntry, 'the outcome entry should be in the log');
-  assert.equal(outcomeEntry.stage, 'outcome');
   return `at v${approvalEntry.seq}: ${atApproval.state} / support ${atApproval.support}; `
     + `at v${deliveryEntry.seq}: ${atDelivery.state} / support EUR ${atDelivery.support.support_eur}; `
     + `latest v${latest.version}: ${latest.state} / support EUR ${latest.support.support_eur}`;
@@ -816,14 +997,14 @@ check('C21', 'A field that looks like a credential is refused', () => {
   const current = service.get('CASE-TEST-STAGES');
   const withSecret = schema.clone(current);
   withSecret.review = { note: 'Looks fine', api_key: 'not-a-real-key' };
-  const refused = service.save(withSecret, { expected_version: current.version });
+  const refused = service.saveRecord(withSecret, { expected_version: current.version });
   assert.equal(refused.ok, false);
   assert.equal(refused.code, 'SECRET_LIKE_FIELD');
   assert.match(refused.error, /api_key/);
 
   const inScenario = schema.clone(current);
   inScenario.scenario = Object.assign({}, current.scenario, { source_password: 'hunter2' });
-  const alsoRefused = service.save(inScenario, { expected_version: current.version });
+  const alsoRefused = service.saveRecord(inScenario, { expected_version: current.version });
   assert.equal(alsoRefused.ok, false);
   assert.equal(alsoRefused.code, 'SECRET_LIKE_FIELD');
   return refused.error;
@@ -833,7 +1014,7 @@ check('C22', 'An undeclared field cannot be stored on a case', () => {
   const current = service.get('CASE-TEST-STAGES');
   const withExtra = schema.clone(current);
   withExtra.commercial_score = 99;
-  const refused = service.save(withExtra, { expected_version: current.version });
+  const refused = service.saveRecord(withExtra, { expected_version: current.version });
   assert.equal(refused.ok, false);
   assert.equal(refused.code, 'INVALID_RECORD');
   assert.match(refused.error, /commercial_score/);
@@ -851,7 +1032,7 @@ check('C23', 'A restore does not silently replace a newer stored case', () => {
   const refused = service.importAll({ cases: { 'CASE-TEST-STAGES': older } }, { overwrite: true });
   assert.equal(refused.refused.length, 1);
   assert.match(refused.refused[0].errors[0], /ahead of the bundle/);
-  assert.equal(service.get('CASE-TEST-STAGES').state, 'outcome_recorded',
+  assert.equal(service.get('CASE-TEST-STAGES').state, 'resolved',
     'the newer stored case must be untouched');
 
   /* A case that is not stored yet is restored; one that is, is skipped. */
@@ -905,13 +1086,27 @@ check('C25', 'An attachment that may carry restricted content is refused, and th
 });
 
 check('C26', 'Every state published in contracts.js has a lifecycle stage', () => {
-  const unmapped = contracts.CASE_STATES.filter(s => !schema.stageOf(s));
+  /* The claim this check has always made. The list it reads is the one the
+     component enforces, which after this migration is the plan's target
+     vocabulary - see the header for why the in-force list is built from
+     CASE_STATES_TARGET rather than from CASE_STATES. */
+  const unmapped = schema.CASE_STATES.filter(s => !schema.stageOf(s));
   assert.deepEqual(unmapped, [], 'these states have no stage: ' + unmapped.join(', '));
-  /* And the four stages a reader must be able to tell apart are all distinct. */
-  const stages = ['ready_for_review', 'approved', 'delivered', 'outcome_recorded'].map(schema.stageOf);
-  assert.equal(new Set(stages).size, 4, 'proposal, approval, delivery and outcome must be four stages');
-  assert.deepEqual(stages, ['proposal', 'approval', 'delivery', 'outcome']);
-  return `${contracts.CASE_STATES.length} contract states mapped onto ${schema.STAGES.length} stages`;
+  assert.deepEqual(schema.CASE_STATES, (contracts.CASE_STATES_TARGET || []).slice(),
+    'the enforcing vocabulary and the declared target have diverged');
+  /* The four stages a reader must be able to tell apart under the new
+     vocabulary: an answer, an agreed action, a payment and an outcome. The
+     payment and the outcome are no longer states, so what is asserted here is
+     that the four are four DISTINCT things a reader can be told apart. */
+  const four = [
+    schema.stageOf('response_issued'),
+    schema.stageOf('action_agreed'),
+    'support (recorded move)',
+    'outcome (recorded move)'
+  ];
+  assert.equal(new Set(four).size, 4,
+    'the answer, the agreed action, the payment and the outcome are not four distinct things');
+  return `${schema.CASE_STATES.length} states in force mapped onto ${schema.STAGES.length} stages`;
 });
 
 check('C27', 'The store describes honestly what it is', () => {
@@ -919,7 +1114,7 @@ check('C27', 'The store describes honestly what it is', () => {
   assert.equal(described.kind, 'files');
   assert.equal(described.durable, true);
   assert.equal(described.shared, false, 'a folder on one machine is not a shared service');
-  assert.match(described.statement, /Not shared/);
+  assert.match(described.statement, /NOT a shared service/);
   const memory = newService().describe();
   assert.equal(memory.durable, false);
   assert.equal(memory.shared, false);

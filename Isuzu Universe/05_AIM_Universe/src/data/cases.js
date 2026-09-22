@@ -1,28 +1,89 @@
 /* ===========================================================================
-   Durable case record (CASE-01 ... CASE-08, F12).
+   Durable case record - the repository the application calls (CASE-01, F12).
 
-   v03 kept one mutable blob in localStorage: no version, no history, no owner,
-   no separate proposal and outcome, and a second edit silently overwrote the
-   first. This module keeps an append-only revision log per case, so a case is
-   the sequence of decisions taken on it rather than whatever is in the box now.
+   WHY THIS FILE IS A FACADE AND NOT AN IMPLEMENTATION
+   ---------------------------------------------------
+   There were two case implementations in this tree, and they were not
+   equivalent:
 
-   Storage note: there is no approved shared backend for this component yet
-   (RUN-01 records that as an open decision). The record is deliberately written
-   behind this interface so that swapping the store for a real service does not
-   change the case shape or the callers.
+     this file          makeRepository()  - a version counter, a concurrency
+    10|                                          guard and an append-only revision
+                                            log. This is what the interface runs.
+     src/case/store.js  makeCaseService() - the whole lifecycle: create,
+                                            transition, the separate evidence /
+                                            support / outcome records, the file
+                                            adapter, the benefit account. This is
+                                            what the case checks run.
+
+   Two implementations of one concern is the defect this project has already
+   lost time to - two engines, two export builders, two view layers. So one of
+   them is the base and the other is retired on purpose rather than left beside
+    20|   it to drift.
+
+   The decision, recorded in docs/CASE_service.md and repeated here so a reader
+   of this file sees it without opening another:
+
+     src/case/schema.js and src/case/store.js are the base. They hold the
+     lifecycle, the nine states now in force, the separate clocks, the versioned
+     proposals, the support and outcome records, the benefit account and the file
+     adapter. Twenty-seven existing checks plus the CASE-01..05 checks run
+     against them.
+
+     This file is retired as a second implementation. It keeps the caller
+    30|     surface the rest of the component already uses.
+
+   What "retired" means here, exactly: no state machine, no second version
+   counter, no second duplicate guard and no second log format live in this file.
+   Every call goes to `src/case/store.js`. The names below exist because
+   `src/ui/app.js`, `tools/build.py` and five test files call
+   `AIMCases.makeRepository(...)`, and they are answered by the base.
+
+   THE COMPATIBILITY PROJECTION, AND WHY IT IS NOT A SECOND SHAPE
+   --------------------------------------------------------------
+   The old repository stored one record per case whose log was an array of
+   *revisions*, each carrying a whole `{ scenario, result, ... }` snapshot. The
+   base stores one record per case whose log is an array of *entries*, each
+   carrying the fields it set and a snapshot of the commercial content. Those are
+   the same information in two shapes.
+
+   40|   So the base shape is the one stored, and the old shape is projected on read.
+   `revisionsOf()` below maps the base log onto the revision shape for the two
+   readers that expect it - the browser journey and `tests/ux_reopen.test.mjs`,
+   both of which are outside this developer's ownership. The projection is
+   read-only and derived; there is no second copy on disk to drift, and
+   `load().revisions` cannot disagree with `history()`.
+
+   Storage
+   -------
+   The base's three adapters: memory, browser and files. `makeStore` below is
+   kept because `src/ui/app.js` reads `cases.store.isDurable()`; it is a thin
+   50|   wrapper over the base's browser adapter rather than a fourth storage
+   implementation.
+
+     A FOLDER OF FILES ON ONE MACHINE IS NOT A SHARED SERVICE, and neither is
+   browser storage. `describe()` says so in the words a reader needs, and the
+   exported bundle repeats it. Two people on two machines do not see each other;
+   there is no identity, no permission and no revocation here.
    =========================================================================== */
 (function (root) {
   'use strict';
 
-  var contracts = (typeof module === 'object' && module.exports)
-    ? require('./contracts.js') : root.AIMContracts;
+  var isNode = (typeof module === 'object' && module.exports);
+
+  var contracts = isNode ? require('./contracts.js') : root.AIMContracts;
+  var caseSchema = isNode ? require('../case/schema.js') : root.AIMCaseSchema;
+  var caseStore = isNode ? require('../case/store.js') : root.AIMCaseStore;
 
   var KEY = 'ISZE_AIM_CASES_V1';
 
-  function nowISO() { return new Date().toISOString(); }
+  /* Legacy keys a caller may pass that the base record does not carry. They are
+     dropped with a note rather than stored, because a field nothing declares is
+     the fault the contract was written to stop. `consistency` is a derived check
+     and can be recomputed at any time, which is why it is safe to drop. */
+  var LEGACY_ONLY_KEYS = ['consistency'];
 
-  /* Storage adapter. A browser keeps localStorage; Node keeps an object, so the
-     same tests run without a browser. */
+  /* --------------------------------------------------------------- storage -- */
+
   function makeStore(options) {
     options = options || {};
     var memory = {}, useMemory = options.forceMemory || false;
@@ -52,202 +113,295 @@
     return {
       readAll: readAll, writeAll: writeAll,
       isDurable: function () { return available && !useMemory; },
-      reset: function () { memory = {}; try { root.localStorage.removeItem(KEY); } catch (e) {} }
+      reset: function () { memory = {}; try { root.localStorage.removeItem(KEY); } catch (e) {} },
+      describe: function () { return caseStore.describeStorage(useMemory || !available ? 'memory' : 'browser'); }
     };
   }
+
+  /* The storage adapter the base service expects, built from a legacy-shaped
+     store object. A translation, not a fourth adapter. */
+  function adapterFromLegacyStore(legacy) {
+    return {
+      describe: function () { return legacy.describe(); },
+      readIndex: function () { return Object.keys(legacy.readAll()).sort(); },
+      load: function (id) { var all = legacy.readAll(); return all[id] ? all[id] : null; },
+      loadAll: function () { return legacy.readAll(); },
+      save: function (id, record) {
+        var all = legacy.readAll();
+        all[id] = record;
+        var written = legacy.writeAll(all);
+        return { ok: written.ok !== false, durable: !!written.durable, error: written.reason };
+      },
+      remove: function (id) {
+        var all = legacy.readAll();
+        delete all[id];
+        legacy.writeAll(all);
+        return { ok: true };
+      }
+    };
+  }
+
+  /* ---------------------------------------------------- the read projection -- */
+
+  /* The base log, in the revision shape the two outside readers expect. Derived
+     on every read from the one stored log, so the two cannot disagree. */
+  function revisionsOf(record) {
+    if (!record || !Array.isArray(record.history)) return [];
+    return record.history.map(function (h, i) {
+      return {
+        revision: h.seq,
+        recorded_at: h.recorded_at,
+        supersedes: i === 0 ? null : h.seq - 1,
+        state: h.to_state || h.state || null,
+        note: h.note || null,
+        recorded_by: h.recorded_by || null,
+        /* The record this revision carried. The base snapshots the commercial
+           content on every entry, so this is read, not guessed. */
+        record: {
+          scenario: h.scenario === undefined ? null : h.scenario,
+          result: h.result === undefined ? null : h.result,
+          review: h.review === undefined ? null : h.review,
+          part_number: record.part_number || null,
+          consistency: h.consistency === undefined ? null : h.consistency
+        }
+      };
+    });
+  }
+
+  /* The base log, in the history shape the interface's revision table expects.
+     `src/ui/app.js` renders `h.revision`, `h.state` and `h.supersedes`, and it is
+     not this developer's file to change, so the same projection serves it. */
+  function historyForDisplay(record) {
+    return revisionsOf(record).map(function (r) {
+      return {
+        revision: r.revision, recorded_at: r.recorded_at, state: r.state,
+        supersedes: r.supersedes, recorded_by: r.recorded_by, note: r.note
+      };
+    });
+  }
+
+  /* A stored case as the old repository returned it: the base record, with the
+     derived revision log attached. Nothing here is written back. */
+  function asLegacyRecord(record) {
+    if (!record) return null;
+    var out = caseSchema.clone(record);
+    out.revisions = revisionsOf(record);
+    return out;
+  }
+
+  /* ------------------------------------------------------------ repository -- */
 
   function makeRepository(options) {
-    var store = (options && options.store) || makeStore(options);
+    options = options || {};
+    var legacy = options.store || makeStore(options);
+    var adapter = options.adapter || adapterFromLegacyStore(legacy);
+    var service = caseStore.makeCaseService(Object.assign({}, options, { adapter: adapter }));
 
-    function load(caseId) {
-      var all = store.readAll();
-      return all[caseId] ? all[caseId] : null;
+    /* Which declared responding function, if any, a legacy caller's free-text
+       role names. Anything else is a person or a label, not a function, and it
+       is stored as the case owner rather than pretended into the role list. */
+    function respondingFunction(label) {
+      if (typeof label !== 'string') return null;
+      return caseSchema.ROLES.indexOf(label) >= 0 ? label : null;
     }
 
-    function list() {
-      var all = store.readAll();
-      return Object.keys(all).map(function (id) {
-        var c = all[id];
-        return {
-          case_id: id, version: c.version, state: c.state,
-          owner_role: c.owner_role, next_action: c.next_action,
-          next_update_due: c.next_update_due,
-          part_number: c.revisions.length ? c.revisions[0].record.part_number : null,
-          updated_at: c.updated_at, revision_count: c.revisions.length
-        };
-      }).sort(function (a, b) { return String(b.updated_at).localeCompare(String(a.updated_at)); });
-    }
+    /* The repository's original `save(caseId, record, meta)`. It writes through
+       the base's one write path - it is not a second implementation - and it
+       maps the old arguments onto it. The mapping is deliberately conservative
+       in three places, each for a reason the plan gives:
 
-    /* Append a revision. Never overwrite: a correction is a new revision that
-       names its predecessor, so the decision made on the old evidence survives. */
+       1. `meta.state` is NOT applied. A case reaches a state by a recorded move,
+          by a named responding function, with a date and a log entry. A case
+          that a save could put straight into `approved` would be the very thing
+          CASE-04 forbids, so the state is left where the log puts it and the
+          caller is told in the returned note what was stored.
+
+       2. `meta.owner_role` is applied only when it names a declared responding
+          function. "Pricing" or "role A" is a label, not a function, so it is
+          kept as the case owner and the case is left with no function that owes
+          an answer - which is honest for a draft and is visible in the queue.
+
+       3. Legacy-only keys are dropped with a note, rather than stored as fields
+          nothing declares. */
     function save(caseId, record, meta) {
       meta = meta || {};
-      var all = store.readAll();
-      var existing = all[caseId] || null;
-      var expected = meta.expected_version;
-      var currentVersion = existing ? existing.version : 0;
+      if (!caseId) return { ok: false, code: 'CASE_ID_REQUIRED', error: 'A case needs a stable id.' };
+      var notes = [];
+      var existing = service.load(caseId);
 
-      /* Concurrency guard (CASE-07). A writer working from a stale copy is told
-         rather than allowed to clobber. */
-      if (expected !== undefined && expected !== null && expected !== currentVersion) {
-        return { ok: false, conflict: true, expected_version: expected,
-          actual_version: currentVersion,
-          error: 'This case was changed by someone else after you opened it (expected version '
-            + expected + ', the record is at ' + currentVersion + '). Reload before saving.' };
+      var fns = respondingFunction(meta.owner_role);
+      if (meta.owner_role && !fns) {
+        notes.push('"' + meta.owner_role + '" is not one of the declared responding functions ('
+          + caseSchema.ROLES.join(', ') + '), so it was recorded as the case owner and the case still '
+          + 'has no function that owes the next answer.');
       }
 
-      var state = meta.state || (existing ? existing.state : 'draft');
-      if (contracts.CASE_STATES.indexOf(state) < 0) {
-        return { ok: false, error: 'Unknown case state "' + state + '".' };
+      var dropped = LEGACY_ONLY_KEYS.filter(function (k) {
+        return record && Object.prototype.hasOwnProperty.call(record, k);
+      });
+      if (dropped.length) {
+        notes.push('Dropped ' + dropped.join(', ') + ': not declared on a case record. A consistency '
+          + 'verdict is a derived check and can be recomputed, so nothing was lost.');
       }
 
-      /* Reject a duplicate submission of the same revision content. */
-      if (existing) {
-        var last = existing.revisions[existing.revisions.length - 1];
-        if (last && JSON.stringify(last.record) === JSON.stringify(record)
-            && last.state === state) {
-          return { ok: false, duplicate: true,
-            error: 'That is the same content as the current revision. Nothing was saved.' };
+      if (!existing) {
+        var created = service.create({
+          case_id: caseId,
+          customer: (record && record.customer) || meta.customer || 'Not stated',
+          market: (record && record.market) || meta.market || null,
+          part_number: (record && record.part_number) || meta.part_number || 'Not stated',
+          owner_role: fns,
+          owner: fns ? (meta.owner || null) : (meta.owner || meta.owner_role || null),
+          description: (record && record.description) || null,
+          unit: (record && record.unit) || null,
+          scope_note: (record && record.scope_note) || null,
+          evidence_period: (record && record.evidence_period) || meta.evidence_period || null,
+          next_action: meta.next_action || null,
+          next_update_due: meta.next_update_due || null,
+          scenario: (record && record.scenario) || null,
+          result: (record && record.result) || null,
+          review: (record && record.review) || null,
+          sources: (record && record.sources) || [],
+          by: meta.recorded_by,
+          note: meta.note
+        });
+        if (!created.ok) {
+          /* A first save that the lifecycle will not accept as a new case (an
+             unusable part reference, say) is still refused, in the same words. */
+          return created;
         }
+        if (meta.state && meta.state !== created.record.state) {
+          notes.push('The case was created at "' + created.record.state + '", not at "' + meta.state
+            + '": a case reaches a state by a recorded move with a responding function and a date, '
+            + 'not by being saved into it.');
+        }
+        var out = {
+          ok: true, version: created.version, durable: created.durable,
+          warning: null, notes: notes.length ? notes : null,
+          case: service.summarize(created.record), record: asLegacyRecord(created.record)
+        };
+        /* The old caller reads `result.case.state`; the state that was stored is
+           reported, so the difference from what was asked for is visible. */
+        out.case_requested_state = meta.state || null;
+        out.case = out.case;
+        return out;
       }
 
-      var version = currentVersion + 1;
-      var revision = {
-        revision: version,
-        recorded_at: nowISO(),
-        supersedes: currentVersion || null,
-        state: state,
-        record: record,
-        note: meta.note || null,
-        recorded_by: meta.recorded_by || 'unspecified'
-      };
+      /* An edit. The base's own write path, with the version guard and the
+         duplicate guard, and the state left where the log puts it. */
+      var next = caseSchema.clone(existing);
+      if (record && record.scenario !== undefined) next.scenario = record.scenario;
+      if (record && record.result !== undefined) next.result = record.result;
+      if (record && record.review !== undefined) next.review = record.review;
+      if (record && record.sources !== undefined) next.sources = record.sources;
+      if (meta.next_action !== undefined) next.next_action = meta.next_action;
+      if (meta.next_update_due !== undefined) next.next_update_due = meta.next_update_due;
+      if (fns) next.owner_role = fns;
 
-      var next = {
-        case_id: caseId,
-        version: version,
-        state: state,
-        owner_role: meta.owner_role || (existing ? existing.owner_role : null),
-        next_action: meta.next_action !== undefined ? meta.next_action
-          : (existing ? existing.next_action : null),
-        next_update_due: meta.next_update_due !== undefined ? meta.next_update_due
-          : (existing ? existing.next_update_due : null),
-        created_at: existing ? existing.created_at : revision.recorded_at,
-        updated_at: revision.recorded_at,
-        /* The revision log is the case. Nothing is ever removed from it. */
-        revisions: (existing ? existing.revisions : []).concat([revision]),
-        outcome: meta.outcome !== undefined ? meta.outcome : (existing ? existing.outcome : null),
-        delivered_support: meta.delivered_support !== undefined
-          ? meta.delivered_support : (existing ? existing.delivered_support : null)
-      };
-
-      all[caseId] = next;
-      var written = store.writeAll(all);
-      return {
-        ok: true, version: version, durable: written.durable,
-        warning: written.ok ? null : written.reason,
-        case: summarize(next)
-      };
-    }
-
-    /* A correction names the revision it replaces and never multiplies the
-       activity it corrects. */
-    function correct(caseId, replacementRecord, meta) {
-      meta = meta || {};
-      var existing = load(caseId);
-      if (!existing) return { ok: false, error: 'No such case to correct.' };
-      return save(caseId, replacementRecord, {
-        expected_version: meta.expected_version,
-        state: meta.state || existing.state,
-        note: meta.note || ('Correction of revision ' + (meta.corrects_revision || existing.version)),
-        recorded_by: meta.recorded_by,
-        owner_role: existing.owner_role,
-        next_action: existing.next_action,
-        next_update_due: existing.next_update_due,
-        outcome: existing.outcome,
-        delivered_support: existing.delivered_support
+      var expected = meta.expected_version === undefined || meta.expected_version === null
+        ? existing.version : meta.expected_version;
+      var saved = service.saveRecord(next, {
+        expected_version: expected, by: meta.recorded_by, note: meta.note, role: fns
       });
-    }
-
-    function summarize(caseRecord) {
-      var latest = caseRecord.revisions[caseRecord.revisions.length - 1];
-      return {
-        case_id: caseRecord.case_id, version: caseRecord.version, state: caseRecord.state,
-        owner_role: caseRecord.owner_role, next_action: caseRecord.next_action,
-        next_update_due: caseRecord.next_update_due,
-        updated_at: caseRecord.updated_at,
-        revision_count: caseRecord.revisions.length,
-        latest_revision: latest ? latest.revision : null,
-        scenario: latest ? latest.record.scenario || null : null,
-        result: latest ? latest.record.result || null : null
-      };
-    }
-
-    function history(caseId) {
-      var c = load(caseId);
-      if (!c) return [];
-      return c.revisions.map(function (r) {
-        return { revision: r.revision, recorded_at: r.recorded_at, state: r.state,
-          supersedes: r.supersedes, recorded_by: r.recorded_by, note: r.note };
-      });
-    }
-
-    /* Reopen with the same assumptions and the same results (UX-08). */
-    function reopen(caseId, version) {
-      var c = load(caseId);
-      if (!c) return null;
-      var wanted = version || c.version;
-      var rev = c.revisions.filter(function (r) { return r.revision === wanted; })[0];
-      if (!rev) return null;
-      return { case_id: caseId, version: wanted, state: rev.state,
-        scenario: rev.record.scenario, result: rev.record.result,
-        review: rev.record.review || null };
-    }
-
-    /* The actionable queue (CASE-08): what is due, and who owes it. */
-    function queue(asOfDate) {
-      var today = asOfDate || nowISO().slice(0, 10);
-      return list().map(function (row) {
-        var overdue = !!(row.next_update_due && row.next_update_due < today);
+      if (!saved.ok) {
+        /* Reported in the old vocabulary the callers already handle. */
         return {
-          case_id: row.case_id, state: row.state, owner_role: row.owner_role,
-          next_action: row.next_action, next_update_due: row.next_update_due,
-          overdue: overdue, version: row.version, part_number: row.part_number
+          ok: false,
+          conflict: saved.code === 'STALE_WRITE',
+          duplicate: saved.code === 'DUPLICATE_SUBMISSION',
+          code: saved.code,
+          error: saved.error,
+          expected_version: saved.expected_version, actual_version: saved.actual_version
         };
-      }).filter(function (row) {
-        return row.next_update_due || row.next_action || row.state !== 'draft';
-      }).sort(function (a, b) {
-        if (a.overdue !== b.overdue) return a.overdue ? -1 : 1;
-        return String(a.next_update_due || '9999').localeCompare(String(b.next_update_due || '9999'));
-      });
+      }
+      if (meta.state && meta.state !== saved.record.state) {
+        notes.push('The case stayed at "' + saved.record.state + '", not at "' + meta.state
+          + '": a case reaches a state by a recorded move with a responding function and a date, '
+          + 'not by being saved into it.');
+      }
+      return {
+        ok: true, version: saved.version, durable: true, warning: null,
+        notes: notes.length ? notes : null,
+        changed_fields: saved.changed_fields,
+        case: service.summarize(saved.record), record: asLegacyRecord(saved.record)
+      };
     }
 
-    function exportAll() {
-      return { schema: 'isze-aim-cases', contract_version: contracts.CONTRACT_VERSION,
-        exported_at: nowISO(), cases: store.readAll() };
-    }
+    var repository = {
+      /* -- what the interface and the existing checks call ---------------- */
+      save: save,
+      load: function (caseId) { return asLegacyRecord(service.load(caseId)); },
+      list: function () { return service.list(); },
+      history: function (caseId) {
+        var record = service.load(caseId);
+        if (!record) return [];
+        return historyForDisplay(record);
+      },
+      reopen: function (caseId, version) { return service.reopen(caseId, version); },
+      correct: function (caseId, record, meta) {
+        meta = meta || {};
+        /* The caller names the revision it is correcting, which is the base's
+           `corrects_sequence`. Translated here rather than in a second
+           implementation, and the base's own rules (a reason, a role, no state
+           move) still apply. */
+        return service.correct(caseId, Object.assign({}, record, {
+          corrects_sequence: meta.corrects_sequence !== undefined
+            ? meta.corrects_sequence : meta.corrects_revision,
+          reason: meta.reason,
+          role: meta.role,
+          replacement: record
+        }), meta);
+      },
+      queue: function (asOf) { return service.queue(asOf); },
+      exportAll: function () { return service.exportAll(); },
+      importAll: function (bundle, options2) { return service.importAll(bundle, options2); },
+      summarize: function (record) { return service.summarize(record); },
+      store: legacy,
 
-    /* Recovery from an exported bundle (RUN-07). */
-    function importAll(bundle, options2) {
-      options2 = options2 || {};
-      if (!bundle || !bundle.cases) return { ok: false, error: 'Not a case bundle.' };
-      var all = store.readAll(), added = 0, skipped = 0;
-      Object.keys(bundle.cases).forEach(function (id) {
-        if (all[id] && !options2.overwrite) { skipped++; return; }
-        all[id] = bundle.cases[id]; added++;
-      });
-      var written = store.writeAll(all);
-      return { ok: true, added: added, skipped: skipped, durable: written.durable };
-    }
-
-    return {
-      save: save, load: load, list: list, history: history, reopen: reopen,
-      correct: correct, queue: queue, exportAll: exportAll, importAll: importAll,
-      summarize: summarize, store: store
+      /* -- the lifecycle, reached through the same object ---------------- */
+      create: service.create,
+      get: service.get,
+      transition: service.transition,
+      saveRecord: service.saveRecord,
+      remove: service.remove,
+      attach: service.attach,
+      linkCases: service.linkCases,
+      linkIssues: service.linkIssues,
+      repairLinks: service.repairLinks,
+      recordAssessment: service.recordAssessment,
+      proposeTerms: service.proposeTerms,
+      expireProposal: service.expireProposal,
+      recordSupport: service.recordSupport,
+      recordOutcome: service.recordOutcome,
+      benefitAccount: service.benefitAccount,
+      conservativeRollup: service.conservativeRollup,
+      obligationStatement: service.obligationStatement,
+      describe: service.describe,
+      LINK_RELATIONS: service.LINK_RELATIONS,
+      history_statement: service.history_statement,
+      /* Named so a reader can see this is a facade and where the rules live. */
+      authoritative_implementation: 'src/case/store.js + src/case/schema.js',
+      _service: service,
+      _adapter: adapter
     };
+    return repository;
   }
 
-  var API = { makeStore: makeStore, makeRepository: makeRepository, KEY: KEY,
-    CASE_STATES: (contracts && contracts.CASE_STATES) || [] };
+  /* `CASE_STATES` is published from the shared contract, not held here. A copy
+     in this file is how a second vocabulary starts. */
+  var API = {
+    makeStore: makeStore,
+    makeRepository: makeRepository,
+    KEY: KEY,
+    CASE_STATES: (contracts && contracts.CASE_STATES) || [],
+    /* What this module is: a caller surface over the base, so a reader of the
+       shipped list can see that no rule book lives here. */
+    RETIRED_AS_IMPLEMENTATION: true,
+    AUTHORITATIVE_IMPLEMENTATION: 'src/case/store.js + src/case/schema.js',
+    describeStorage: caseStore.describeStorage,
+    revisionsOf: revisionsOf
+  };
+
   root.AIMCases = API;
-  if (typeof module === 'object' && module.exports) module.exports = API;
+  if (isNode) module.exports = API;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

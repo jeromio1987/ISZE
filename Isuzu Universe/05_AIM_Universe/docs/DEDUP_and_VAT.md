@@ -333,32 +333,28 @@ payload stores it as a **fraction** (`vat: 0.2`). Handing `0.2` to a rule that
 expects `20` divides by `1.002` instead of `1.20`, which removes 0.2% of the tax
 and leaves the rest in the figure.
 
-On the row that exposed it:
+On the row that exposed it, whose price, rate and net all come from the restricted
+payload and are cited here by field name rather than repeated:
 
 | | amount | rate read as | net |
 |---|---|---|---|
-| Correct | 76.99 GBP incl. 20% VAT, at the payload's documented 1.17 EUR/GBP | 20% | **EUR 75.07** |
-| The fault as written | same | 0.2 read as 0.2% | EUR 89.90 |
-| | | | **19.8% too high** |
+| Correct | the payload's own `price`, at the documented rate | 20% | matches the payload's own `net` |
+| The fault as written | the same `price` | 0.2 read as 0.2% | about 19.8% above the payload's own `net` |
 
-The direction matters more than the size. Overstating a competitor's price by a
-fifth is exactly the inference `MARKET-05` exists to prevent: an advertised
-retail price is not proof that our own net terms are too high, and a figure that
-inflates it by 20% manufactures that proof.
+The fault is a relative one: it under-removes the tax, so the resulting net figure
+lands roughly a fifth above the payload's own `net` column. The direction matters
+more than the size. Overstating a competitor's price by a fifth is exactly the
+inference `MARKET-05` exists to prevent: an advertised retail price is not proof
+that our own net terms are too high, and a figure that inflates it by 20%
+manufactures that proof.
 
 ### The unit was resolved from the data, not assumed
 
-`node tools/_vat_unit_probe.cjs` tests the payload's own `net` column against
-both readings:
+`node tools/_vat_unit_probe.cjs` tests the payload's own `net` column against both
+readings. The probe prints the seller and the values; what matters is its summary,
+and it reads:
 
 ```
-seller                 price     vat   net(payload)   price/(1+vat)   price/(1+vat/100)
-AUTODOC UK            76.99    0.2   64.1583        64.1583 YES     76.8363
-Truckstop Group       77.7     0     77.7000        77.7000 YES     77.7000 YES
-AUTODOC Portugal      22.49    0.23  18.2846        18.2846 YES     22.4384
-Ashika France         25.2     0.2   21.0000        21.0000 YES     25.1497
-Balleydier Parts      18.03    0     18.0300        18.0300 YES     18.0300 YES
-
 rows with price, vat and net : 5
 fit as a FRACTION           : 5
 fit as a PERCENT            : 2  (both zero-VAT rows, where both units agree trivially)
@@ -366,7 +362,9 @@ fit as a PERCENT            : 2  (both zero-VAT rows, where both units agree tri
 
 Five of five rows fit a fraction, including all three rows where the two units
 would give different answers. The two rows that also fit a percentage are the
-zero-VAT rows. The payload proves its own unit, so this needed no assumption.
+zero-VAT rows, where the two readings coincide and prove nothing. The payload
+proves its own unit, so this needed no assumption. The seller names and the
+individual amounts stay in the probe's own output, which is a run, not a file.
 
 ### The choice, and why
 
@@ -436,7 +434,7 @@ used, which the old rule never did.
 
 | | Before the fix | After the fix |
 |---|---|---|
-| AUTODOC UK, 76.99 GBP incl. 20% VAT, 1.17 EUR/GBP | EUR **89.90** | EUR **75.07** |
+| The affected row (a UK seller's advertised price, inclusive of 20% VAT, at the payload's documented rate) | the faulty net figure, about 19.8% above the payload's own `net` | the payload's own `net`, matched exactly |
 | Error against the correct net | +19.8% | 0 |
 | The same row with no declared unit | silently computed at a guessed magnitude | refused: `ok: false`, `value: null` |
 | The unit in the recorded step | absent - the rule's own prose asserted "20%" while it had been given 0.2 | `rate: 20, rate_unit: 'percent'` |

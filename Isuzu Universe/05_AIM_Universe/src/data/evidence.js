@@ -1099,9 +1099,10 @@
 
      What this replaced: the rule used to compute `value / (1 + rate / 100)` while
      the payload stores the rate as a fraction (`vat: 0.2`). Handing 0.2 to that
-     form divides by 1.002, removing 0.2% of tax instead of 20%. For AUTODOC UK at
-     76.99 GBP including 20% VAT at the payload's documented 1.17 EUR/GBP, the net
-     is EUR 75.07; the old form returned EUR 89.90, 19.8% too high. That direction
+     form divides by 1.002, removing 0.2% of tax instead of 20%. Take the payload's
+     own `net` column as the witness: it proves the fraction reading on every row
+     that has a rate at all, and the old form returned a figure about a fifth too
+     high on the rows where the two readings differ. That direction
      makes a competitor look a fifth more expensive than it is, which is exactly
      the inference MARKET-05 exists to prevent.
 

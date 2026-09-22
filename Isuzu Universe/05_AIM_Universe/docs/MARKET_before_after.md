@@ -393,19 +393,21 @@ which is what MARKET-08's request asks for.
 
 When a person supplies the facts the payload leaves open, the panel does produce
 a comparable offer, and the arithmetic differs from what the payload's numbers
-imply if you take them at face value. The AUTODOC UK observation for the pad case
-is `76.99 GBP` including 20% VAT at a documented `1.17`. The correct figure is
-`76.99 ÷ 1.20 × 1.17 = 75.07 EUR`. Three ways of getting it wrong, all
+imply if you take them at face value. Taking the pad case's advertised observation
+— the row's own `price`, `vat` and the documented rate — the correct net follows
+from that row's amount and rate. Three ways of getting it wrong, all
 reproducible from the retained inputs:
 
 | What is done with the rate | Figure | Error |
 |---|---|---|
-| The unit is declared as a percentage (`20`) | **75.07 EUR** | — correct |
-| The 0.20 fraction handed over as if it were a percentage | 89.90 EUR | 19.7% too high |
-| Tax not removed at all | 90.08 EUR | 20.0% too high |
+| The unit is declared as a percentage (`20`) | matches the payload's own `net` | — correct |
+| The 0.20 fraction handed over as if it were a percentage | about 20% above the correct net | 19.7% too high |
+| Tax not removed at all | about 25% above the correct net | 20.0% too high |
 
 That 19.7% is not a rounding question, so the arithmetic is asserted directly in
-the checks.
+the checks. The three figures are deliberately not printed here: they are
+derived from a restricted observation, and the check recomputes them from the
+payload's own row in memory.
 
 ## A payload unit mismatch that produces a confident wrong number
 
@@ -421,10 +423,11 @@ states which unit it is. Handing `0.2` straight to the rule removes 0.2% of tax
 instead of 20%, which is a 19% error on the price, and nothing in the chain
 complains.
 
-My first draft did exactly that and produced `89.90 EUR` for a row whose correct
-figure is `75.07 EUR`. I caught it by working the arithmetic by hand rather than
-trusting the output, and the fix is that the panel now requires the unit to be
-declared. A rate whose unit is not stated is left unresolved with the reason
+My first draft did exactly that and produced a confident figure for a row whose
+correct net is about a fifth lower. I caught it by working the arithmetic by hand
+rather than trusting the output, and the fix is that the panel now requires the
+unit to be declared. A rate whose unit is not stated is left unresolved with the
+reason
 `VAT_RATE_UNIT_NOT_STATED` rather than guessed, because inferring the unit from
 the size of the number is precisely the assumption that produces a confident
 wrong price.

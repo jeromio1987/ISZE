@@ -122,25 +122,42 @@ H.test(run, 'S01c', 'The participant brief route writes a brief that is a valid 
   return `${files.length} participant brief(s) carry their declared schema and an offer`;
 });
 
-H.test(run, 'S02', 'The recovery bundle contains the saved revision, so it can restore the work', () => {
-  const bundles = shipped.filter(f => f.endsWith('recovery_bundle.out'));
-  H.isTrue(bundles.length > 0, 'no recovery bundle was written');
-  const findings = [];
-  let totalCases = 0;
-  for (const f of bundles) {
-    const parsed = JSON.parse(fs.readFileSync(path.join(EXPORT_DIR, f), 'utf8'));
-    const ids = Object.keys(parsed.cases || {});
-    totalCases += ids.length;
-    if (!ids.length) findings.push(`${f} contains no case`);
-    for (const id of ids) {
-      const rec = parsed.cases[id];
-      if (!rec.revisions || !rec.revisions.length) findings.push(`${f}/${id} has no revision`);
-      else {
-        const last = rec.revisions[rec.revisions.length - 1];
-        if (!last.record || !last.record.scenario) findings.push(`${f}/${id} latest revision has no scenario`);
+  H.test(run, 'S02', 'The recovery bundle contains the saved revision, so it can restore the work', () => {
+    const bundles = shipped.filter(f => f.endsWith('recovery_bundle.out'));
+    H.isTrue(bundles.length > 0, 'no recovery bundle was written');
+    const findings = [];
+    let totalCases = 0;
+    for (const f of bundles) {
+      const parsed = JSON.parse(fs.readFileSync(path.join(EXPORT_DIR, f), 'utf8'));
+      const ids = Object.keys(parsed.cases || {});
+      totalCases += ids.length;
+      if (!ids.length) findings.push(`${f} contains no case`);
+      for (const id of ids) {
+        const rec = parsed.cases[id];
+        /* REVISED 2026-09-22. The record used to carry a `revisions` array. The
+           case service now keeps an append-only `history` log instead - that is
+           CASE-02's requirement - and src/data/cases.js maps it to the revision
+           shape on read. This check was therefore asserting a key the record no
+           longer has, and the requirement it was written for was measured as
+           broken when it was not: verified by round-tripping the real bundle into
+           a fresh empty store, which restored version, scenario, result and state.
+
+           The requirement is unchanged. What is asserted is that the bundle
+           carries an append-only log with at least one entry, and that the
+           latest entry holds a scenario - a bundle that cannot restore the work
+           still fails. `revisions` is accepted too, so this reads either shape. */
+        const log = Array.isArray(rec.revisions) && rec.revisions.length
+          ? rec.revisions
+          : (Array.isArray(rec.history) ? rec.history : null);
+        if (!log || !log.length) {
+          findings.push(`${f}/${id} has no append-only log entry to restore from`);
+          continue;
+        }
+        const last = log[log.length - 1];
+        const scenario = last.record ? last.record.scenario : last.scenario;
+        if (!scenario) findings.push(`${f}/${id} latest log entry has no scenario`);
       }
     }
-  }
   H.eq(findings.length, 0, 'the recovery bundle cannot restore the work: ' + JSON.stringify(findings));
   return `${bundles.length} bundle(s) carrying ${totalCases} case record(s), each with a scenario`;
 });

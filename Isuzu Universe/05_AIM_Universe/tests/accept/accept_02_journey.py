@@ -365,9 +365,14 @@ def main() -> int:
             page.evaluate("([c]) => { location.hash = new URLSearchParams("
                           "{case:c, view:'action', compare:'half'}).toString(); }", [case_id])
             page.wait_for_timeout(350)
+            # A case reaches a state by a recorded move, not by being saved into
+            # it. `submitted` is the target vocabulary's equivalent of what this
+            # journey used to ask for (`ready_for_review`), which the contract
+            # retired on 2026-09-22 when the state set moved to the nine the plan
+            # names. The assertions below are unchanged.
             page.fill("#a-next", "Acceptance journey: confirm the recalculated assumption.")
             page.fill("#a-owner", "case_owner")
-            page.select_option("#a-status", "ready_for_review")
+            page.select_option("#a-status", "submitted")
             page.click("#save-case")
             page.wait_for_timeout(400)
             saved = page.evaluate("""(cid) => {

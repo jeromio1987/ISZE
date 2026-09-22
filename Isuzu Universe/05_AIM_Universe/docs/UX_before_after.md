@@ -118,13 +118,14 @@ KPI tiles, in the table caption and in the coverage paragraph.
 
 **Proof.** `UX04` and `UX05`, and the browser:
 
-> candidate_search: searched "8983487290" (file index 3000), rows_returned 2
+> candidate_search: searched the worst-case position in the index (file index 3000), rows_returned 2
 > candidate_last_page: "Rows 10,526 to 10,543 of 10,543 matching · page 422 of 422"
-> candidate_route: routed_to "8983487290", view "case", render_state "built"
+> candidate_route: routed_to that same screened row, view "case", render_state "built"
 
 In `06_candidates_search_beyond_300_full.png` the result is a real table with the
-part number in the Part column, its desk description, billed quantity 430,
-observed billing €164,615.63, observed unit price €382.83, and "not held" in
+part number in the Part column, its desk description, its billed quantity, its
+observed billing and observed unit price (all read from the payload, not repeated
+here), and "not held" in
 **both** the List and Parts purchase cost columns. In
 `07_candidates_last_page_full.png` the counter reads "Rows 10,526 to 10,543 of
 10,543 matching · page 422 of 422 · 100% of the matching rows reached" with 18

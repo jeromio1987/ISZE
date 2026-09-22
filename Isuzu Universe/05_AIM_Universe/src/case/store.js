@@ -7,7 +7,7 @@
    One JSON blob in browser storage under the key ISZE_AIM_PRICING_02. Saving
    again replaced the blob. Two people, or one person in two tabs, silently
    overwrote each other. There was no version, no owner, no history and no way
-   to say what the case was before the last edit.
+    10|   to say what the case was before the last edit.
 
    What this file does
    -------------------
@@ -19,29 +19,40 @@
 
    Storage that exists today
    -------------------------
-     memory     - a test, or a demonstration. Nothing survives.
+    20|     memory     - a test, or a demonstration. Nothing survives.
      browser    - the same browser profile only. It survives a page reload, and
                   only sometimes a browser restart. It was never tested across a
                   real restart, so it is not claimed to be durable.
-     files      - one JSON file per case in a folder. This one really does
-                  survive a restart and is the default here.
+     files      - one JSON file per case in a folder, written to a temporary file
+                  and moved into place. This one really does survive a restart
+                  and is the default here.
 
    What none of them is
    --------------------
-   None of these three is a shared service. Files on one machine are not a
-   shared service either: two people on two machines do not see each other, and
-   a file folder has no identity, no permission and no revocation. The adapter
-   reports what it is in `describe()`, and the interface is the same one a
-   server would implement, so moving to a server later does not change a case
-   record or a caller.
+    30|   NONE OF THESE THREE IS A SHARED SERVICE, and a folder of files is not one
+   either. Files on one machine are not shared: two people on two machines do not
+   see each other, a file folder has no identity, no permission and no
+   revocation, and nothing here can tell one reader from another. Where a case
+   record states its storage, it states that in those words. The interface is the
+   same one a server would implement, so moving to a server later does not change
+   a case record or a caller.
 
    Concurrency
    -----------
-   Optimistic, on the version number. A caller reads a record, keeps the version
+    40|   Optimistic, on the version number. A caller reads a record, keeps the version
    it read, and passes it back as `expected_version`. If the stored record has
    moved on, the write is refused with code `STALE_WRITE` and the caller is told
    what it would have overwritten. Nothing is merged silently and nothing is
    clobbered.
+
+   The service surface
+   -------------------
+   The names below are the ones the application and the tests already call, so
+   there is one repository and not two. `create`, `get`, `list`, `queue`,
+   `history`, `reopen`, `save`, `transition`, `correct`, `exportAll`, `importAll`
+    50|   and `remove` are the durable-record surface; the CASE-03..05 moves are the
+   ones added for the plan's later tasks, and they are all in `src/case/schema.js`
+   rather than in a second implementation here.
    =========================================================================== */
 (function (root) {
   'use strict';
@@ -78,18 +89,23 @@
       memory: {
         kind: 'memory', durable: false, shared: false,
         statement: 'Held in this process only. Nothing survives the process ending.'
+          + ' This is not a shared service.'
       },
       browser: {
         kind: 'browser', durable: false, shared: false,
         statement: 'Held in this browser profile only. Survives a page reload; a real browser '
-          + 'restart was never tested, so it is not claimed.'
+          + 'restart was never tested, so it is not claimed. This is not a shared service: nobody '
+          + 'else can read it, and it cannot be given to anyone.'
       },
       files: {
         kind: 'files', durable: true, shared: false,
-        statement: 'One JSON file per case on this machine. Survives a restart. Not shared '
-          + 'between people or machines, and it carries no identity of its own.'
+        statement: 'One JSON file per case in a folder on this one machine. Survives a restart. '
+          + 'It is NOT a shared service: two people on two machines do not see each other, the '
+          + 'folder has no identity, no permissions and no revocation, and this component cannot '
+          + 'tell one reader from another.'
       }
-    }[kind] || { kind: kind, durable: false, shared: false, statement: 'Unknown storage.' };
+    }[kind] || { kind: kind, durable: false, shared: false,
+      statement: 'Unknown storage. It is not a shared service.' };
     return Object.assign(base, extra || {});
   }
 
@@ -145,7 +161,8 @@
   /* File storage. One file per case, plus an index of case ids. Each write goes
      to a temporary file first and is then moved into place, so a write that is
      interrupted leaves the previous version intact rather than half a file.
-     This is the adapter that makes a durable record real on this machine. */
+     This is the adapter that makes a durable record real on this machine - and
+     it is still not a shared service, which `describe()` says. */
   function makeFileAdapter(options) {
     options = options || {};
     var dir = options.dir;
@@ -229,6 +246,9 @@
     return Object.assign({ ok: false, code: code, error: error }, extra || {});
   }
 
+  /* The names the application already calls, mapped onto the service's own
+     methods. Keeping them means one repository and one caller surface rather
+     than a second module beside this one. */
   function makeCaseService(options) {
     options = options || {};
     var adapter = options.adapter;
@@ -238,6 +258,8 @@
     var devIdentityPrefix = options.identityMode === 'development-only' ? 'dev:' : '';
 
     var storage = adapter.describe();
+
+    function identity(by) { return devIdentityPrefix + (by || caller); }
 
     /* ------------------------------------------------------------- reads -- */
 
@@ -264,8 +286,12 @@
         if (!r) return null;
         return {
           case_id: r.case_id, version: r.version, state: r.state, stage: schema.stageOf(r.state),
-          owner_role: r.owner_role, next_action: r.next_action, next_update_due: r.next_update_due,
+          owner_role: r.owner_role, owner: r.owner || null,
+          next_action: r.next_action, next_update_due: r.next_update_due,
           customer: r.customer, part_number: r.part_number,
+          action_identifier: r.action_identifier || null,
+          submitted_at: r.submitted_at || null,
+          answered_at: r.answered_at || null,
           updated_at: r.updated_at, revisions: r.history.length,
           support_counted_eur: r.support ? r.support.support_eur : 0,
           outcome_recorded: !!r.outcome
@@ -283,14 +309,22 @@
       return found.record.history.map(function (h) { return schema.clone(h); });
     }
 
-    /* What is open, who owes it and when (CASE-03). Overdue first. */
+    /* What is open, who owes it and when (CASE-03). Overdue first. The row
+       carries the separate clocks and the waiting time, so a screen can show a
+       dealer waiting on ISZE as waiting on ISZE rather than as inactive. */
     function queue(asOfDate) {
       return list().map(function (row) {
         var record = adapter.load(row.case_id);
         return schema.openWork(record, asOfDate);
       }).filter(function (row) {
-        return row && !row.closed && (row.next_action || row.next_update_due);
+        return row && !row.closed && (row.next_action || row.next_update_due
+          || row.state === 'awaiting_input');
       }).sort(function (a, b) {
+        /* A case waiting on the dealer is not more urgent than one waiting on us,
+           so the two are separated rather than sorted into one line. */
+        var aOurs = a.awaiting === 'the dealer' ? 1 : 0;
+        var bOurs = b.awaiting === 'the dealer' ? 1 : 0;
+        if (aOurs !== bOurs) return aOurs - bOurs;
         if (a.overdue !== b.overdue) return a.overdue ? -1 : 1;
         return String(a.next_update_due || '9999-12-31').localeCompare(String(b.next_update_due || '9999-12-31'));
       });
@@ -319,11 +353,20 @@
         scenario: rebuilt.scenario,
         result: rebuilt.result,
         review: rebuilt.review,
+        assessment: rebuilt.assessment || null,
+        response: rebuilt.response || null,
+        proposal: rebuilt.proposal || null,
         support: rebuilt.support,
         outcome: rebuilt.outcome,
         approval_note: rebuilt.approval_note,
         next_action: rebuilt.next_action,
         next_update_due: rebuilt.next_update_due,
+        action_identifier: record.action_identifier || null,
+        submitted_at: rebuilt.submitted_at || null,
+        assigned_at: rebuilt.assigned_at || null,
+        acknowledged_at: rebuilt.acknowledged_at || null,
+        answered_at: rebuilt.answered_at || null,
+        resolved_at: rebuilt.resolved_at || null,
         as_at: rebuilt.updated_at,
         note: 'Rebuilt from the log at version ' + rebuilt.version + '. Not a recalculation.'
       };
@@ -345,7 +388,7 @@
       if (expectedVersion === undefined || expectedVersion === null) return null;
       if (record.version === expectedVersion) return null;
       return reject('STALE_WRITE',
-        'Someone else changed this case after you opened it. You were working from version '
+        'This case was changed by someone else after you opened it. You were working from version '
         + expectedVersion + ' and the stored record is at version ' + record.version
         + '. Nothing was written and nothing was overwritten. Reload the case and redo the change.',
         { expected_version: expectedVersion, actual_version: record.version });
@@ -354,7 +397,11 @@
     /* Create a case. A second create on the same id is refused: it would make a
        second revision of someone else's decision. */
     function create(seed) {
-      seed = Object.assign({}, seed, { by: devIdentityPrefix + (seed && seed.by ? seed.by : caller) });
+      /* The creation entry is stamped from the same clock as every later move.
+         Otherwise a case is created on the wall clock and answered on the
+         service clock, and its own validation refuses the first transition
+         because the answer predates the question. */
+      seed = Object.assign({ at: clock() }, seed, { by: identity(seed && seed.by) });
       if (!seed.case_id) return reject('CASE_ID_REQUIRED', 'A case needs a stable id.');
       var existing = adapter.load(seed.case_id);
       if (existing) {
@@ -368,7 +415,8 @@
       if (secret) return secret;
       var written = adapter.save(seed.case_id, built.record);
       if (!written.ok) return reject('NOT_DURABLE', written.error || 'The store refused the write.');
-      return { ok: true, record: built.record, storage: storage, durable: !!written.durable };
+      return { ok: true, record: built.record, version: built.record.version,
+        storage: storage, durable: !!written.durable };
     }
 
     /* Write a whole record. Used by the case screen for a field edit as well as
@@ -395,7 +443,7 @@
       var at = clock();
       prepared.version = stored.version + 1;
       prepared.updated_at = at;
-      prepared.updated_by = devIdentityPrefix + (options2.by || caller);
+      prepared.updated_by = identity(options2.by);
 
       /* The same content saved twice is refused, so a double click does not
          become a second revision that reads like a second decision. */
@@ -425,6 +473,9 @@
         stage: schema.stageOf(prepared.state),
         scenario: prepared.scenario || null,
         result: prepared.result || null,
+        assessment: prepared.assessment || null,
+        response: prepared.response || null,
+        proposal: prepared.proposal || null,
         support: prepared.support || null,
         outcome: prepared.outcome || null,
         review: prepared.review || null,
@@ -443,6 +494,51 @@
       };
     }
 
+    /* The repository's original `save(caseId, record, meta)` shape, kept because
+       the application and the existing checks call it that way. It writes the
+       same record through the same path - it is not a second implementation. */
+    function saveAtCaseId(caseId, record, meta) {
+      meta = meta || {};
+      if (!caseId) return reject('CASE_ID_REQUIRED', 'A case needs a stable id.');
+      if (adapter.load(caseId)) {
+        return save(Object.assign({}, schema.clone(record), {
+          case_id: caseId,
+          state: meta.state || (adapter.load(caseId).state)
+        }), {
+          expected_version: meta.expected_version === undefined ? adapter.load(caseId).version : meta.expected_version,
+          by: meta.recorded_by, note: meta.note, role: meta.role
+        });
+      }
+      /* A first write on a case that does not exist yet is a create, not an
+         edit of nothing. The record shape is grown to a full case record so the
+         lifecycle rules apply from the first version rather than from the
+         second. */
+      var seed = Object.assign({}, meta, {
+        case_id: caseId,
+        customer: (record && record.customer) || meta.customer || 'Not stated',
+        market: (record && record.market) || meta.market || null,
+        part_number: (record && record.part_number) || meta.part_number || 'Not stated',
+        owner_role: meta.owner_role || (record && record.owner_role) || null,
+        next_action: meta.next_action,
+        next_update_due: meta.next_update_due,
+        scenario: record && record.scenario ? record.scenario : null,
+        result: record && record.result ? record.result : null,
+        review: record && record.review ? record.review : null,
+        sources: (record && record.sources) || [],
+        by: meta.recorded_by
+      });
+      var created = create(seed);
+      if (!created.ok) return created;
+      if (meta.state && meta.state !== 'draft') {
+        return reject('CANNOT_START_IN_ANOTHER_STATE',
+          'Case "' + caseId + '" was created at draft. A case cannot be created already at "'
+          + meta.state + '": start it and make the move, so the log says who moved it and when.',
+          { record: created.record, version: created.version, created_state: 'draft' });
+      }
+      return { ok: true, version: created.version, durable: created.durable,
+        warning: null, case: summarize(created.record), record: created.record };
+    }
+
     /* Move the case to its next state. The rule book is in schema.js; this
        wrapper adds the version guard, the clock and the caller's identity. */
     function transition(caseId, move, options2) {
@@ -454,8 +550,12 @@
       if (stale) return stale;
 
       var fullMove = Object.assign({}, move, {
-        at: clock(),
-        by: devIdentityPrefix + (options2.by || move.by || caller)
+        /* A caller that names a time gets it, so a case can be recorded against
+           the date it happened rather than the date it was typed. Otherwise the
+           service clock is used. Either way the value ends up in the log entry
+           and is validated, so a fabricated date is visible rather than silent. */
+        at: move.at || options2.at || clock(),
+        by: identity(options2.by || move.by)
       });
       var applied = schema.applyTransition(stored, fullMove);
       if (!applied.ok) return applied;
@@ -486,7 +586,7 @@
 
       var fullCorrection = Object.assign({}, correction, {
         at: clock(),
-        by: devIdentityPrefix + (correction && correction.by ? correction.by : caller)
+        by: identity(options2.by || (correction && correction.by))
       });
       var applied = schema.applyCorrection(stored, fullCorrection);
       if (!applied.ok) return applied;
@@ -499,6 +599,78 @@
         storage: storage
       };
     }
+
+    /* ------------------------------------------ the moves that are not states -- */
+
+    function applyMove(caseId, fn, payload, options2) {
+      options2 = options2 || {};
+      var found = requireRecord(caseId);
+      if (found.error) return found.error;
+      var stored = found.record;
+      var stale = guardVersion(stored, options2.expected_version);
+      if (stale) return stale;
+      var applied = fn(stored, payload, {
+        /* A caller that names a time gets it, so a record can be dated when the
+           thing happened rather than when it was typed. */
+        at: options2.at || clock(),
+        by: identity(options2.by), role: options2.role, note: options2.note
+      });
+      if (!applied.ok) return applied;
+      var secret = guardSecrets(applied.record);
+      if (secret) return secret;
+      var written = adapter.save(caseId, applied.record);
+      if (!written.ok) return reject('NOT_DURABLE', written.error || 'The store refused the write.');
+      return { ok: true, record: applied.record, version: applied.record.version,
+        state: applied.record.state, storage: storage };
+    }
+
+    /* CASE-02: what was assessed, kept out of the response that was sent. */
+    function recordAssessment(caseId, assessment, options2) {
+      return applyMove(caseId, schema.recordAssessment, assessment, options2);
+    }
+    /* CASE-04: proposed terms, versioned, with the version it amends. */
+    function proposeTerms(caseId, proposal, options2) {
+      return applyMove(caseId, schema.proposeTerms, proposal, options2);
+    }
+    /* CASE-04: stop offering a version, and say what was decided. */
+    function expireProposal(caseId, expiry, options2) {
+      return applyMove(caseId, schema.expireProposal, expiry, options2);
+    }
+    /* CASE-05: the support actually delivered, against an accepted proposal. */
+    function recordSupport(caseId, support, options2) {
+      return applyMove(caseId, schema.recordSupport, support, options2);
+    }
+    /* CASE-05: what the support achieved, with its evidence and its separate
+       measures. An unknown outcome is recorded as unknown, never filled in. */
+    function recordOutcome(caseId, outcome, options2) {
+      return applyMove(caseId, schema.recordOutcome, outcome, options2);
+    }
+
+    /* ------------------------------------------------ the record this service is -- */
+
+    /* The repository surface, named the way the application already calls it, so
+       there is one store rather than a second one beside this. */
+    function summarize(record) {
+      var latest = record.history[record.history.length - 1];
+      return {
+        case_id: record.case_id, version: record.version, state: record.state,
+        stage: schema.stageOf(record.state),
+        state_has_monetary_value: schema.monetaryWeightOf(record.state) !== 0,
+        owner_role: record.owner_role, next_action: record.next_action,
+        next_update_due: record.next_update_due,
+        action_identifier: record.action_identifier || null,
+        updated_at: record.updated_at,
+        revision_count: record.history.length,
+        latest_revision: latest ? latest.seq : null,
+        scenario: latest ? (latest.record ? latest.record.scenario : latest.scenario) || null : null,
+        result: latest ? (latest.record ? latest.record.result : latest.result) || null : null,
+        support: record.support ? record.support.support_eur : null,
+        outcome: record.outcome || null
+      };
+    }
+
+    /* The repository's `load`, which the application calls by case id. */
+    function load(caseId) { return get(caseId); }
 
     /* ------------------------------------------------- case-to-case links -- */
 
@@ -514,7 +686,7 @@
       return schema.clone(LINK_RELATIONS.indexOf(relation) >= 0
         ? { relation: relation, counts_apart: relation !== 'migrates_to' && relation !== 'replaces',
             note: relation === 'migrates_to'
-              ? 'One commercial occasion across two products. Not newly won business.'
+              ? 'One commercial action across two products. Not newly won business.'
               : relation === 'replaces'
                 ? 'The same commercial question, restated. Counted once.'
                 : 'Two separate decisions.' }
@@ -542,13 +714,13 @@
       if (staleB) return staleB;
 
       var at = clock();
-      var by = devIdentityPrefix + (options2.by || caller);
+      var by = identity(options2.by);
       var spec = linkSpec(relation);
       var linkId = 'link:' + firstId + '<>' + secondId + ':' + relation;
 
       var preparedA = schema.applyLink(a.record, Object.assign({
         link_id: linkId, other_case_id: secondId, linked_at: at, linked_by: by
-      }, spec), { at: at, by: by, role: schema.stageOf(a.record.state) ? a.record.owner_role : null });
+      }, spec), { at: at, by: by, role: a.record.owner_role });
       if (!preparedA.ok) return preparedA;
       var preparedB = schema.applyLink(b.record, Object.assign({
         link_id: linkId, other_case_id: firstId, linked_at: at, linked_by: by
@@ -618,62 +790,43 @@
 
     /* --------------------------------------------------------- the rollup -- */
 
-    /* CASE-05. One commercial occasion is counted once, across whichever cases
-       and products it was recorded on. Volume migrated from another product is
-       reported separately and is never added to newly won business. */
+    /* The cases an account covers, from either a list of case ids or a list of
+       stored records. A caller holding the record it just wrote should not have
+       to reload it, and a caller holding ids should not have to load them. */
+    function recordsFor(caseIds) {
+      var items = (caseIds && caseIds.length) ? caseIds : adapter.readIndex();
+      return items.map(function (item) {
+        if (typeof item === 'string') return adapter.load(item);
+        if (item && item.case_id) return item;
+        return null;
+      }).filter(Boolean);
+    }
+
+    /* CASE-05. One action is counted once, across whichever cases and products
+       it was recorded on. The four measures stay separate, a migration is not
+       newly won business, and a paid credit is not profit. The whole rule book
+       is in schema.benefitAccount; this is the store's way of asking it about
+       the cases on disk. */
     function conservativeRollup(caseIds, asOfDate) {
-      var ids = caseIds && caseIds.length ? caseIds : adapter.readIndex();
-      var occasions = {};
-      var migratedUnits = 0;
-      var newBusinessUnits = 0;
-      var unresolvedUnits = 0;
-      var rows = [];
-
-      ids.forEach(function (id) {
-        var record = adapter.load(id);
-        if (!record) return;
-        var support = record.support ? record.support.support_eur : 0;
-        var eventId = (record.support && record.support.event_id)
-          || (record.outcome && record.outcome.event_id)
-          || ('case:' + id);
-        if (!occasions[eventId]) occasions[eventId] = { event_id: eventId, support_eur: 0, cases: [] };
-        /* Support is added once per occasion, not once per case that names it. */
-        if (!occasions[eventId].cases.length) occasions[eventId].support_eur += support;
-        occasions[eventId].cases.push(id);
-
-        var units = record.outcome && typeof record.outcome.quantity_after === 'number'
-          ? record.outcome.quantity_after : null;
-        if (units === null) {
-          unresolvedUnits += 1;
-        } else if (record.outcome.migration_from) {
-          migratedUnits += units;
-        } else if (record.outcome.counts_as_new_business === true) {
-          newBusinessUnits += units;
-        }
-        rows.push({
-          case_id: id, state: record.state, stage: schema.stageOf(record.state),
-          occasion: eventId, support_eur: support,
-          units: units,
-          counted_as: units === null ? 'unresolved'
-            : record.outcome.migration_from ? 'migrated from another product'
-              : record.outcome.counts_as_new_business ? 'newly won' : 'not counted as new business'
-        });
-      });
-
-      var occasionList = Object.keys(occasions).map(function (k) { return occasions[k]; });
+      var account = schema.benefitAccount(recordsFor(caseIds), asOfDate);
       return {
-        as_of: asOfDate || clock().slice(0, 10),
-        cases: rows.length,
-        distinct_commercial_occasions: occasionList.length,
-        support_total_eur: occasionList.reduce(function (s, o) { return s + o.support_eur; }, 0),
-        newly_won_units: newBusinessUnits,
-        migrated_units_not_new_business: migratedUnits,
-        cases_without_a_recorded_outcome: unresolvedUnits,
-        occasions: occasionList,
-        rows: rows,
-        note: 'Support is counted once per commercial occasion. Volume migrated from another Isuzu '
-          + 'product is reported on its own line and is not added to newly won business.'
+        as_of: account.as_of,
+        cases: account.cases,
+        distinct_commercial_occasions: account.distinct_actions,
+        support_total_eur: account.support_total_eur,
+        newly_won_units: account.newly_won_units,
+        migrated_units_not_new_business: account.migrated_units_not_new_business,
+        cases_without_a_recorded_outcome: account.cases_without_a_recorded_outcome,
+        actions: account.actions,
+        lines: account.lines,
+        total_benefit_eur: null,
+        note: account.statement
       };
+    }
+
+    /* The four measures, on their own, for one action or for the whole store. */
+    function benefitAccount(caseIds, asOfDate) {
+      return schema.benefitAccount(recordsFor(caseIds), asOfDate);
     }
 
     /* -------------------------------------------------- export and restore -- */
@@ -683,8 +836,12 @@
       return {
         schema: 'isze-aim-cases',
         record_schema_version: schema.RECORD_SCHEMA_VERSION,
+        contract_version: root.AIMContracts ? root.AIMContracts.CONTRACT_VERSION : null,
         exported_at: clock(),
+        /* Repeated in the file a reader opens, not only in a screen. */
         storage: storage,
+        not_a_shared_service: true,
+        history_statement: schema.appendOnlyStatement(),
         cases: all
       };
     }
@@ -733,7 +890,7 @@
     /* There is no server and no approved file store, so no attachment bytes are
        written anywhere by this component. What is implemented is the
        permission check and the record of the gap. */
-    function attach(caseId, attachment, identity) {
+    function attach(caseId, attachment, identityObject) {
       var found = requireRecord(caseId);
       if (found.error) return found.error;
       var output = outputModule();
@@ -741,7 +898,7 @@
         return reject('OUTPUT_MODULE_MISSING',
           'The permission check could not be loaded, so the attachment was not checked and was not stored.');
       }
-      var permitted = output.canAttach(identity, attachment || {});
+      var permitted = output.canAttach(identityObject, attachment || {});
       var note = {
         case_id: caseId,
         declared_name: (attachment && attachment.name) || null,
@@ -768,13 +925,26 @@
       describe: function () { return storage; },
       create: create,
       get: get,
+      load: load,
       list: list,
       queue: queue,
       history: history,
       reopen: reopen,
-      save: save,
+      /* A record write, in the shape the application already calls. */
+      save: saveAtCaseId,
+      /* The same write, at the service's own shape, for a caller that holds a
+         whole record. */
+      saveRecord: save,
       transition: transition,
       correct: correct,
+      recordAssessment: recordAssessment,
+      proposeTerms: proposeTerms,
+      expireProposal: expireProposal,
+      recordSupport: recordSupport,
+      recordOutcome: recordOutcome,
+      summarize: summarize,
+      obligationStatement: obligationStatementFor,
+      benefitAccount: benefitAccount,
       linkCases: linkCases,
       linkIssues: linkIssues,
       repairLinks: repairLinks,
@@ -783,17 +953,30 @@
       importAll: importAll,
       remove: remove,
       attach: attach,
+      /* The honest statement about what kind of record this is. A screen should
+         print it where a reader can see it. */
+      history_statement: schema.appendOnlyStatement(),
       LINK_RELATIONS: LINK_RELATIONS,
-      _adapter: adapter
+      _adapter: adapter,
+      _schema: schema
     };
   }
 
-  /* `attach` asks the output module whether a file may be attached. The same
-     lookup the rest of the workspace uses, so this works both in Node and when
-     the files are loaded as plain scripts in a browser. */
+  function obligationStatementFor(caseId, asOfDate) {
+    var record = this._adapter.load(caseId);
+    if (!record) return 'No such case.';
+    return schema.obligationStatement(record, asOfDate);
+  }
+
+  /* `attach` asks the output module whether a file may be attached. It used to
+     ask src/output/recipients.js, which the build RETIRES - so in a browser this
+     resolved to undefined and every attachment was refused with
+     OUTPUT_MODULE_MISSING. The permission surface now lives in the module the
+     build actually ships, src/data/export.js, which is assembled before this one
+     for exactly this reason. */
   function outputModule() {
-    if (typeof module === 'object' && module.exports) return require('../output/recipients.js');
-    return root.AIMOutput;
+    if (typeof module === 'object' && module.exports) return require('../data/export.js');
+    return root.AIMExport;
   }
 
   var API = {
@@ -802,6 +985,7 @@
     makeFileAdapter: makeFileAdapter,
     makeCaseService: makeCaseService,
     scanForSecrets: scanForSecrets,
+    describeStorage: describeStorage,
     INDEX_NAME: INDEX_NAME
   };
   root.AIMCaseStore = API;

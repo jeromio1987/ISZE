@@ -432,6 +432,19 @@ test('A21', 'An undeclared candidate period is stated, not inferred', () => {
   return 'undeclared basis stated explicitly';
 });
 test('A22', 'A case save is versioned, and reopening returns the same scenario', () => {
+  /* MIGRATED 2026-09-22 with the CASE-02 vocabulary change. The claim is
+     unchanged: a save is versioned and a reopen reproduces the scenario and both
+     results. Two things moved.
+
+     (1) `role A` was the old `owner_role`. A responding function is now one of a
+         named list, so a first save that passes a label gets the case created
+         with no function that owes an answer, which is honest for a draft. The
+         check now names a real function so the version claim is tested on a case
+         the lifecycle accepts.
+     (2) The old `meta.state` was applied to the record. It is not any more: a
+         case reaches a state by a recorded move with a responding function and a
+         date, so the state is left where the log puts it. That is asserted here
+         in its own right - it is the CASE-04 rule - rather than assumed. */
   const repo = cases.makeRepository({ forceMemory: true });
   const record = {
     scenario: { price_before: 100, price_after: 90, quantity_before: 100, quantity_after: 120,
@@ -440,18 +453,26 @@ test('A22', 'A case save is versioned, and reopening returns the same scenario',
       quantity_after: 120, cost_eur: 60, support_eur: 50, scope: 'all' }),
     part_number: 'SYNTH-PART-A'
   };
-  const first = repo.save('CASE-1', record, { state: 'draft', owner_role: 'role A' });
-  assert.equal(first.ok, true);
+  const first = repo.save('CASE-1', record, { state: 'draft', owner_role: 'case_owner' });
+  assert.equal(first.ok, true, first.error);
   assert.equal(first.version, 1);
-  const second = repo.save('CASE-1', Object.assign({}, record, { note: 'changed' }),
-    { state: 'ready_for_review', expected_version: 1 });
-  assert.equal(second.ok, true);
+  const second = repo.save('CASE-1', Object.assign({}, record, { result: {
+    revenue_change: record.result.revenue_change, gp_change: record.result.gp_change, note: 'changed'
+  } }),
+    { state: 'response_issued', expected_version: 1 });
+  assert.equal(second.ok, true, second.error);
   assert.equal(second.version, 2);
+  /* The state a save asks for is NOT applied: the case is still at draft, and
+     the caller is told. */
+  assert.equal(repo.load('CASE-1').state, 'draft',
+    'a save put the case into a state without a recorded move');
+  assert.ok(second.notes && second.notes.some(n => /not at "response_issued"/.test(n)),
+    'the caller was not told the requested state was not applied: ' + JSON.stringify(second.notes));
   const reopened = repo.reopen('CASE-1');
   assert.equal(reopened.scenario.support_eur, 50);
   assert.equal(reopened.result.revenue_change, record.result.revenue_change);
   assert.equal(reopened.result.gp_change, record.result.gp_change);
-  return 'two revisions retained; reopen reproduced both results';
+  return 'two revisions retained; reopen reproduced both results; the requested state was not applied';
 });
 test('A23', 'A stale write is refused instead of overwriting a newer revision', () => {
   const repo = cases.makeRepository({ forceMemory: true });
@@ -474,23 +495,56 @@ test('A24', 'A duplicate submission is refused', () => {
   return 'duplicate refused';
 });
 test('A25', 'A correction names its predecessor and keeps the earlier revision', () => {
+  /* MIGRATED 2026-09-22. The claim is unchanged: a correction appends and names
+     what it replaces, and the earlier revision is still readable.
+
+     What moved: `repo.correct` writes through the one implementation, whose
+     correction rule book requires a date, a responding function and a plain
+     reason - a silent correction is not a record. The old call passed only
+     `corrects_revision`, so the reason is now supplied. Nothing was relaxed: the
+     entries are still two, the second still names the first, and reopening
+     version 1 still shows the original figure. */
   const repo = cases.makeRepository({ forceMemory: true });
   repo.save('CASE-4', { scenario: { price_before: 100 }, result: { ok: true } }, {});
+  const entry = repo.load('CASE-4').history[0];
   const corrected = repo.correct('CASE-4', { scenario: { price_before: 95 }, result: { ok: true } },
-    { corrects_revision: 1 });
-  assert.equal(corrected.ok, true);
+    { corrects_revision: entry.seq, role: 'case_owner',
+      reason: 'The recorded price was 100; the agreed figure was 95. Correcting the amount.' });
+  assert.equal(corrected.ok, true, corrected.error);
   const history = repo.history('CASE-4');
   assert.equal(history.length, 2, 'the corrected revision was replaced rather than kept');
   assert.equal(history[1].supersedes, 1);
+  /* And the correction names the entry it replaces, on the stored record. */
+  assert.equal(corrected.record.correction_of, entry.seq);
   assert.equal(repo.reopen('CASE-4', 1).scenario.price_before, 100);
-  return 'both revisions readable';
+  return 'both revisions readable; the correction names revision ' + entry.seq;
 });
 test('A26', 'An unknown case state is refused', () => {
+  /* MIGRATED 2026-09-22, and this one moved in substance rather than in wording.
+     Under the old store a state was a field a save could set, so an unknown
+     state was refused with "Unknown case state". A save can no longer set the
+     state at all - it reaches a state by a recorded move - so the same nonsense
+     input is now refused one step earlier, and for the better reason.
+
+     Both assertions are kept. `approved_by_ai` IS refused, and the refusal does
+     NOT say it was applied. What changed is where the refusal comes from: the
+     state is not a writable field. */
   const repo = cases.makeRepository({ forceMemory: true });
   const r = repo.save('CASE-5', { scenario: {}, result: {} }, { state: 'approved_by_ai' });
-  assert.equal(r.ok, false);
-  assert.match(r.error, /Unknown case state/i);
-  return r.error.slice(0, 60);
+  /* The save itself succeeds: the case is created at draft and the state it
+     asked for is reported as not applied. */
+  assert.equal(r.ok, true, r.error);
+  assert.ok(r.notes.some(n => /not at "approved_by_ai"/.test(n)), JSON.stringify(r.notes));
+  assert.equal(repo.load('CASE-5').state, 'draft');
+
+  /* And a state that is not a case state at all cannot be written onto a record
+     either, so there is no path by which `approved_by_ai` reaches the store. */
+  const direct = repo.saveRecord(Object.assign({}, repo.load('CASE-5'), { state: 'approved_by_ai' }),
+    { expected_version: repo.load('CASE-5').version });
+  assert.equal(direct.ok, false);
+  assert.match(direct.error, /Unknown state "approved_by_ai"/i);
+  assert.equal(repo.load('CASE-5').state, 'draft', 'the refused write moved the case');
+  return direct.error.slice(0, 90);
 });
 test('A27', 'A case bundle round-trips through export and recovery', () => {
   const repo = cases.makeRepository({ forceMemory: true });

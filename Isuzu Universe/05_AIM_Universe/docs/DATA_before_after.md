@@ -200,7 +200,8 @@ as a judgement about the parts.
 The screen rule's own claim is cross-checked. It says cost is held for 15 part
 numbers; the rows hold a cost on 15 rows covering 8 part numbers. The difference
 is reported and neither figure is preferred. The cost register cross-check also
-finds one part in the register that is not on the screen at all (`8982488950`),
+finds one part in the register that is not on the screen at all (named in the
+report by field, not by number),
 and reports it rather than quietly widening the screen to cover it.
 
 The cost column is named once, with its basis: `verified_cost_eur_oct26` on the
@@ -386,7 +387,7 @@ state, and guessing would make a table look complete at the cost of being wrong.
 | Item | Why it stays unresolved |
 |---|---|
 | Candidate reporting period | The rows carry none of the period fields the screen rule names. No period has been inferred. |
-| Two reconciliation differences | The price-file FOB value is empty for `5876150530` and `5876150531`, so the difference is null. A null difference is not a match. |
+| Two reconciliation differences | The price-file FOB value is empty for two of the register part numbers, so the difference is null. A null difference is not a match. |
 | Screen rule coverage figure | The rule states 15 part numbers; the rows cover 8. Reported, not reconciled. |
 | Pack row count | Header 3,945 against 3,856 in the tables. Carried as a difference. |
 | Purchasing account and site | The candidate rows carry neither field. Not filled in. |

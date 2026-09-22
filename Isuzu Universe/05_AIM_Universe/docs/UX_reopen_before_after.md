@@ -210,7 +210,7 @@ findings and the reason it was superseded, so nothing is deleted and the reviewe
 see what it used to say.
 
 **It is not vacuous.** I crafted a leak — one brief of ITUK carrying `I Motors`,
-the case id `IMOTORS-CABIN` and the part number `5876150530` — and the corrected
+the case id and the part number the case actually holds — and the corrected
 check refuses it:
 
 ```

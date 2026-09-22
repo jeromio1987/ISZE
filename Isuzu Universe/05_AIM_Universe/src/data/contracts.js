@@ -29,11 +29,21 @@
                     explanation and note, and a saved revision log became [].
                     An empty section reads as "nothing to report", which is the
                     worst way for a strip to fail.
+     4  2026-09-22  amended by the integration owner, before the durable case
+                    work started. CASE_STATES replaced with the vocabulary the
+                    plan's CASE-02 names, because the old one described a
+                    proposal going one way while a case here is a two-way
+                    exchange that has to show whose turn it is. CASE_TIMESTAMPS
+                    added so the separate clocks CASE-03 requires cannot be
+                    collapsed into one "updated at". The remaining CASE fields
+                    are declared so the sections CASE-03..06 need survive the
+                    internal builder, which is the v3 fault applied in advance
+                    rather than discovered again.
    =========================================================================== */
 (function (root) {
   'use strict';
 
-  var CONTRACT_VERSION = 3;
+  var CONTRACT_VERSION = 4;
 
   /* Every field a scenario may carry. Anything outside this list does not
      travel with the decision, so a screen cannot silently invent state. */
@@ -106,7 +116,17 @@
     /* The section names themselves. A section has to be a declared name before
        its contents can be, or the internal builder drops the whole block and the
        reader sees a record that never mentions the subject. */
-    'limits', 'review'
+    'limits', 'review',
+    /* CASE-03: who owes the next action, when, and the separate clocks. */
+    'owner', 'assigned_to', 'deputy_role', 'escalation_route', 'next_update_due',
+    'submitted_at', 'assigned_at', 'acknowledged_at', 'answered_at', 'resolved_at',
+    'action_identifier',
+    /* CASE-04: the proposed terms and whether anyone approved them. */
+    'proposal',
+    /* CASE-05: support actually delivered, distinct from support promised. */
+    'support',
+    /* CASE-06: what a contributor said, kept in their own words. */
+    'explanations'
   ];
 
   /* ---- sections and their declared contents (contract version 3) -----------
@@ -156,17 +176,47 @@
     flags: ['code', 'severity', 'text', 'amount']
   };
 
-  /* Case lifecycle. A proposal is not an outcome, and an outcome is not a
-     second commercial event to be counted again. */
+  /* Case lifecycle (contract version 4).
+
+     IN FORCE since 2026-09-22: the nine states the plan's CASE-02 names, adopted
+     together with the transition table and every reference in one change. A case
+     here is a two-way exchange between a dealer or distributor and ISZE, so the
+     states have to show whose turn it is - which the earlier proposal vocabulary
+     (approved, rejected, delivered, outcome_recorded) did not.
+
+     Two properties worth keeping in view:
+       - `closed_outcome_unknown` is a REAL, permitted end state. A case can
+         finish without anyone knowing the result, and that is not a failure to be
+         smoothed over by inferring one.
+       - none of these states carries a monetary value. `response_issued` is not
+         delivered support, `action_agreed` is not a won outcome, and closing a
+         case creates no benefit. CASE-02 requires exactly that.
+
+     History: the pre-migration vocabulary was draft, evidence_requested,
+     ready_for_review, approved, rejected, delivered, outcome_recorded,
+     no_change_recommended. The old-to-new mapping is in tests/case_store.test.mjs's
+     header so the two runs can be diffed. */
   var CASE_STATES = [
-    'draft',            /* being prepared, no decision asked of anyone yet  */
-    'evidence_requested',
-    'ready_for_review',
-    'approved',         /* an owner accepted the stated action              */
-    'rejected',
-    'delivered',        /* the agreed support was actually given            */
-    'outcome_recorded',
-    'no_change_recommended'
+    'draft',                  /* being prepared; nothing asked of anyone yet   */
+    'submitted',              /* sent to the responsible function              */
+    'assessment',             /* being looked at; no answer owed yet           */
+    'awaiting_input',         /* waiting on the dealer, distributor or ISZE    */
+    'response_issued',        /* an answer was given; support has NOT followed */
+    'action_agreed',          /* an action was agreed; it has NOT been done    */
+    'resolved',               /* the matter is settled                         */
+    'withdrawn',              /* taken back by whoever raised it               */
+    'closed_outcome_unknown'  /* finished, and nobody knows the result          */
+  ];
+
+  /* Kept as an alias so callers written against the migration can still name it.
+     It is the same list; there is no second vocabulary any more. */
+  var CASE_STATES_TARGET = CASE_STATES;
+
+  /* A dealer waiting on ISZE guidance is awaiting it, not inactive and not at
+     fault. These are the separate clocks CASE-03 requires; they are deliberately
+     not collapsed into one "updated at". */
+  var CASE_TIMESTAMPS = [
+    'submitted_at', 'assigned_at', 'acknowledged_at', 'answered_at', 'resolved_at'
   ];
 
   var RECIPIENTS = {
@@ -264,6 +314,8 @@
     CASE_FIELDS: CASE_FIELDS,
     SECTION_FIELDS: SECTION_FIELDS,
     CASE_STATES: CASE_STATES,
+    CASE_STATES_TARGET: CASE_STATES_TARGET,
+    CASE_TIMESTAMPS: CASE_TIMESTAMPS,
     RECIPIENTS: RECIPIENTS,
     declaredFields: declaredFields,
     sectionFields: sectionFields,

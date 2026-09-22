@@ -284,7 +284,7 @@ so what was seen in each is stated here:
 | `07_candidates_empty_search_amber.png` | yes | Candidates tab with the search box holding `zzzz-no-such-part-zzzz`, the amber block saying no candidate row matches and that the filter excluded the rows, and the pager reading "No rows match the current search." with Next and Last page greyed. |
 | `crop_07_...` (element box) | yes | The empty-search amber block alone: cream fill 90.4%, 725 px of amber accent, the amber heading and the reason in full. |
 | `09_selected_part_review.png` | yes | The selected-part review of a screened part. The strip at the top names that part, and the panel says no case record exists for it yet. No route control inside the review. |
-| `crop_09_...` (element box) | yes | The part strip alone: `EAVY500574` in monospace, the description, "screened candidate row, not a worked case", 79.3% of the crop in the strip's own fill. |
+| `crop_09_...` (element box) | yes | The part strip alone: the case part number in monospace, the description, "screened candidate row, not a worked case", 79.3% of the crop in the strip's own fill. |
 | `03_pads_objectives_revenue.png` and `04_..._grossProfit.png` | yes | The same case under both objectives. The "Ordering only" panel is present in both; the same nine rows are shown with both measures on each; the ranked table's order differs between the two while the baselines and prices do not. |
 | `06_candidates_search_reached.png` | yes | The candidate table narrowed to a single row with pager "Rows 1 to 1 of 1 matching · page 1 of 1". |
 | `11_action_saved.png` | yes | The internal action tab with the save status line reading "Case at revision 1, state draft, last saved ...". |
@@ -406,7 +406,7 @@ like a code defect:
    states it at the top.
 
 5. **The payload holds two views of the oil case's cost.** `verifiedCosts[]` holds a
-   parts purchase cost for part `5876150530` while
+   parts purchase cost for that part while
    `cases[IMOTORS-OIL].packEvidence.costRecordPresent` is `false`, and the engine
    resolves the cost from `verifiedCosts`. So the objectives tab ranks a
    gross-profit alternative for that case (on the held cost) while the economics tab

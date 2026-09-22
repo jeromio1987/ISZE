@@ -245,8 +245,8 @@ the recorded billing reported beside it and the difference stated.
 
 ## F07 — a migration that was a label, not a calculation
 
-**What it did.** The oil-filter option named a move to the Genuine counterpart
-(8982705240). The engine then priced the original BVP part at its unchanged price
+**What it did.** The oil-filter option named a move to the Genuine counterpart.
+The engine then priced the original BVP part at its unchanged price
 and quantity, and returned the same zero change as doing nothing.
 
 **Why that is wrong.** The option claims to measure a mix shift and actually

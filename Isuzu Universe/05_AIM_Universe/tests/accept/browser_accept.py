@@ -408,7 +408,8 @@ def main():
             const r = AIMPricing.getResult();
             const s = AIMPricing.getScenario();
             const res = AIMPricing.cases.save('ITUK-PADS',
-              {scenario:s, result:r, part_number:'8982447940'},
+              {scenario:s, result:r,
+               part_number:(AIMPricing.data.cases.find(x=>x.id==='ITUK-PADS')||{}).pn},
               {expected_version:0, state:'ready_for_review', owner_role:'Pricing',
                next_action:'Request the comparable quotation', next_update_due:'2026-10-15',
                recorded_by:'acceptance check'});

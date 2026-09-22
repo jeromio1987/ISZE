@@ -29,12 +29,17 @@
      - A relationship is not an approval to fit.
 
    Data
-     Two fixtures are used. A synthetic fixture is generated on the fly and is
-     the only one asserted against fixed values. If the authorised pack payload
-     is present on this machine it is read read-only for the structural checks,
-     and its numbers are never printed. Restricted fields - supplier costs, list
-     prices - appear only in a generated local fixture written under payload/,
-     which .gitignore already excludes and which is marked restricted.
+     Two fixtures are used. A RESTRICTED-SHAPED fixture with invented values is
+     generated on the fly and is the one asserted against fixed values. It carries
+     shape and arithmetic relationships only: no real part number, description,
+     cost, billing figure, quantity or rate from the payload appears anywhere in
+     this file, because a tracked file is versioned forever. Its two copies are
+     written under payload/, which .gitignore excludes, and are marked restricted.
+
+     If the authorised pack payload is present on this machine it is read
+     read-only for the structural checks. Those checks assert counts and
+     relationships, never a restricted figure, and an identifier read from the
+     payload is compared in memory rather than printed into this file.
 
    Nothing here weakens an assertion to obtain a green result. Where a source
    fact is unresolved, the test asserts that it is unresolved.
@@ -61,42 +66,53 @@ const engine = require(path.join(ROOT, 'src', 'engine', 'engine.js'));
 const AUTHORISED_PAYLOAD = path.resolve(ROOT, '..', '06_Working', '_aim_pack_20260922',
   '_payload.json');
 
+/* How the authorised-payload checks are written. A COUNT is pinned: the payload's
+   row count is a scale figure, not a cost, and it is already cited in the progress
+   record. A restricted FIGURE is not: no supplier cost, list price, observed
+   billing amount or unit price is copied out of the payload into this tracked
+   file. Where such a value matters, the check asserts a relationship between two
+   things read from the payload in memory rather than a literal copied from it. */
+const AUTHORISED_ROWS = 10543;
+
 /* ------------------------------------------------------------- fixtures -- */
 
 const SEP = '\u001f';
 
-/* A small restricted fixture. The values are invented for the test; the shape
-   follows the authorised pack. Written under payload/, which .gitignore
-   excludes, and marked restricted so nobody mistakes it for shareable. */
+/* A small restricted-SHAPED fixture. Every value below is invented and rounded:
+   the rates, the source discounts, the costs, the billing, the quantities and the
+   part references. It keeps the shape and the arithmetic relationships the tests
+   depend on, so the same code is exercised, and it quotes no figure the payload
+   holds. Written under payload/, which .gitignore excludes, and marked restricted
+   so nobody mistakes it for shareable. */
 function restrictedFixture() {
   const bases = [
     { basis_id: 'HIST', name: 'Historical', jpy_per_eur: 160.0, status: 'historical',
-      rate_window: '1 Oct 2025 to 31 Mar 2026', discount: { J: 0.62 },
+      rate_window: '1 Oct 2025 to 31 Mar 2026', discount: { J: 0.70 },
       offer_effective_from: '', use: 'historical actual only' },
     { basis_id: 'SEP26', name: 'September 2026 forward', jpy_per_eur: 170.0, status: 'forward',
-      rate_window: '1 Apr 2026 to 30 Sep 2026', discount: { J: 0.673 },
+      rate_window: '1 Apr 2026 to 30 Sep 2026', discount: { J: 0.75 },
       offer_effective_from: '2026-04-01', offer_effective_to: '2026-09-30',
       use: 'cost for an offer effective on or before 30 Sep 2026' },
     { basis_id: 'OCT26', name: 'October 2026 forward', jpy_per_eur: 180.0, status: 'forward',
-      rate_window: '1 Oct 2026 to 31 Mar 2027', discount: { J: 0.673 },
+      rate_window: '1 Oct 2026 to 31 Mar 2027', discount: { J: 0.75 },
       offer_effective_from: '2026-10-01',
       use: 'cost for an offer effective on or after 1 Oct 2026' }
   ];
   const cellSet = (hist, sep, oct) => ({
     HIST: { name: 'Historical', jpy_per_eur: 160.0, rate_window: '1 Oct 2025 to 31 Mar 2026',
-      source_discount: 0.62, cost_eur: hist, status: 'historical' },
+      source_discount: 0.70, cost_eur: hist, status: 'historical' },
     SEP26: { name: 'September 2026 forward', jpy_per_eur: 170.0,
-      rate_window: '1 Apr 2026 to 30 Sep 2026', source_discount: 0.673, cost_eur: sep,
+      rate_window: '1 Apr 2026 to 30 Sep 2026', source_discount: 0.75, cost_eur: sep,
       status: 'forward' },
     OCT26: { name: 'October 2026 forward', jpy_per_eur: 180.0,
-      rate_window: '1 Oct 2026 to 31 Mar 2027', source_discount: 0.673, cost_eur: oct,
+      rate_window: '1 Oct 2026 to 31 Mar 2027', source_discount: 0.75, cost_eur: oct,
       status: 'forward' }
   });
   const costRecord = (pn, description, unit, values) => ({
     part_number: pn, description, tier: 'Genuine', unit, currency: 'EUR',
     cost_type: 'parts purchase cost (supplier purchase cost)',
     formula: 'Base price (JPY) / JPY per EUR x source discount',
-    inputs: { base_price_jpy: 12940, price_class: 'V', origin_code: 'J' },
+    inputs: { base_price_jpy: 10000, price_class: 'V', origin_code: 'J' },
     cost_bases: cellSet(values[0], values[1], values[2]),
     default_forward_basis: 'OCT26', default_forward_cost_eur: values[2],
     historical_cost_eur: values[0],
@@ -108,25 +124,25 @@ function restrictedFixture() {
     exclusion_note: 'Parts purchase cost only. Freight, duty, overheads and distributor '
       + 'kickbacks are excluded and the invoice discount is not deducted twice.',
     restricted: 'INTERNAL ONLY - must not appear in a distributor export',
-    list_eur: 89.11, list_source: 'restricted test fixture - invented value',
+    list_eur: 90.0, list_source: 'restricted test fixture - invented value',
     list_valid_from: '2026-03-13', base_price_note: null, cost_gap_note: null, status: 'verified'
   });
   const candidate = (distributor, pn, description, qty, billing, unitPrice, list, cost, reasons,
     competitor, unresolvedInputs, decisionReady) => ({
     distributor, part_number: pn, description, billed_qty: qty, observed_billing_eur: billing,
     observed_unit_price: unitPrice, list_eur: list,
-    verified_cost_eur_oct26: cost, base_price_move_jpy: 3218, base_price_move_pct: 24.86862442040185,
+    verified_cost_eur_oct26: cost, base_price_move_jpy: 2500, base_price_move_pct: 20.0,
     selection_reasons: reasons, competitor_evidence: competitor,
     unresolved_inputs: unresolvedInputs, decision_ready: decisionReady
   });
 
   const caseA = {
     id: 'TEST-PADS', market: 'TESTUK', customer: 'TESTUK', country: 'UK trucks',
-    pn: '8982447940', name: 'Front brake-pad kit', category: 'Brake pads', unit: 'kit',
+    pn: 'SYNTH-PN-A', name: 'Front brake-pad kit', category: 'Brake pads', unit: 'kit',
     tier: 'Genuine', offers: ['T-PAD-G', 'T-PAD-A'],
     baselineDefined: { period: 'January-June 2026, matched against January-June 2025',
-      quantity: 1400, quantity_label: 'observed history', observed_billing_eur: 120278.5,
-      observed_unit_price: 85.91321428571429, onward_quantity: 1236,
+      quantity: 1000, quantity_label: 'observed history', observed_billing_eur: 86100.0,
+      observed_unit_price: 86.0, onward_quantity: 1200,
       note: 'Neither half-year is doubled and last year\'s volume is not assumed to recur.' },
     alternatives: [
       { alternative_id: 'T-NONE', name: 'No action', kind: 'no-price', price_delta_pct: 0,
@@ -140,13 +156,13 @@ function restrictedFixture() {
         volume_label: 'observed history', cost_basis_for_offer: 'OCT26', flags: [] }
     ],
     packEvidence: { relationships: [
-      { relationship_record_id: '9001', part_number_a: '8981394280', part_number_b: '5876150180',
+      { relationship_record_id: '9001', part_number_a: 'SYNTH-PN-E', part_number_b: 'SYNTH-PN-D',
         relationship_type: 'catalogue pairing (Genuine listed beside BVP alternative)',
         direction: 'genuine -> bvp', source_type: 'catalog_paired',
         source_document: 'BLOWER UNIT FILTER', application_vehicle: 'TF*,UC*',
         application_engine: '4J*', country_of_origin: 'THAILAND',
         technical_fitment_approved: '' },
-      { relationship_record_id: '', part_number_a: '5876150531', part_number_b: '5876150530',
+      { relationship_record_id: '', part_number_a: 'SYNTH-PN-F', part_number_b: 'SYNTH-PN-G',
         relationship_type: 'supersession (old number replaced by new)', direction: 'old -> current',
         source_type: 'supersession map', source_document: 'pn_supersession_map.csv',
         application_vehicle: '', application_engine: '', country_of_origin: '',
@@ -170,16 +186,16 @@ function restrictedFixture() {
         basis: 'positive quantities and positive net billed EUR on exact part numbers' }
     ],
     offers: {
-      'T-PAD-G': { id: 'T-PAD-G', seller: 'Test seller', market: 'UK', part: '8982447940',
-        price: 148.51, currency: 'GBP', tax: 'not stated', vat: null, net: null,
+      'T-PAD-G': { id: 'T-PAD-G', seller: 'Test seller', market: 'UK', part: 'SYNTH-PN-A',
+        price: 120.0, currency: 'GBP', tax: 'not stated', vat: null, net: null,
         url: 'https://example.invalid/listing', retrieved: '2026-09-22',
         freshness: 'Index reports last week; the tax basis is not declared.',
         match: 'Exact Genuine part number', approvalReady: false,
         note: 'Axle kit: four pads, backing set and clip set. Listed in stock.',
         kind: 'Genuine',
         verification: 'public listing, not a firm quotation' },
-      'T-PAD-A': { id: 'T-PAD-A', seller: 'Test seller', market: 'UK', part: '8982447940',
-        price: 131.0, currency: 'GBP', tax: 'inclusive', vat: 20, net: null,
+      'T-PAD-A': { id: 'T-PAD-A', seller: 'Test seller', market: 'UK', part: 'SYNTH-PN-A',
+        price: 110.0, currency: 'GBP', tax: 'inclusive', vat: 20, net: null,
         url: 'https://example.invalid/listing2', retrieved: '2025-11-01',
         match: 'Equivalent description only', note: 'Contents not stated.',
         kind: 'Alternative', approvalReady: false }
@@ -187,15 +203,15 @@ function restrictedFixture() {
     cases: [caseA],
     validation: [],
     inputManifest: [
-      { file: '01_all_sales_isze_to_distributor.csv', sha256: 'a'.repeat(64), bytes: 51188697 },
-      { file: '03_all_sales_to_dealer.csv', sha256: 'b'.repeat(64), bytes: 61450757 },
-      { file: '02_spend_per_truck_by_market.csv', sha256: 'c'.repeat(64), bytes: 21289 },
+      { file: '01_all_sales_isze_to_distributor.csv', sha256: 'a'.repeat(64), bytes: 50000000 },
+      { file: '03_all_sales_to_dealer.csv', sha256: 'b'.repeat(64), bytes: 60000000 },
+      { file: '02_spend_per_truck_by_market.csv', sha256: 'c'.repeat(64), bytes: 20000 },
       { file: 'declared_but_unconsumed.csv', sha256: 'd'.repeat(64), bytes: 100 }
     ],
     packAudit: {
       inputFile: 'ISZE_AIM_PRICING_DECISION_PACK_2026-09-22.json',
       inputSHA256: 'e'.repeat(64), inputZip: 'pack.zip', packDate: '2026-09-22',
-      actualRows: 3856, declaredRows: 3945,
+      actualRows: 1000, declaredRows: 1234,
     counts: { case_scope_and_accounts: 5, price_observations: 113, sales_to_dealer: 3043,
       parts_registry: 27, part_relationships: 39, COST_MARGIN_AND_RULES_RESTRICTED: 16 },      issues: [], billingReference: '30 June 2026 - reference retained',
       offerScope: { rows: 51, exactCaseRows: 37 },
@@ -203,31 +219,31 @@ function restrictedFixture() {
       excluded: 'Restricted model-cost records, the source invoice line and unapproved summaries.'
     },
     verifiedCosts: [
-      costRecord('8982447940', 'PAD KIT; CALIPER,DISC BRK,FRT', 'kit', [49.0092, 50.4555, 48.7878]),
-      costRecord('8982169260', 'PAD KIT; CALIPER,DISC BRK,FRT', 'kit', [49.0092, 50.4555, 48.7878]),
-      costRecord('8982488951', 'ROTOR; DISC BRK,FRT', 'disc', [74.6462, 76.8542, 74.309])
+      costRecord('SYNTH-PN-A', 'SYNTHETIC BRAKE PAD KIT', 'kit', [50.0, 52.0, 50.0]),
+      costRecord('SYNTH-PN-B', 'SYNTHETIC BRAKE PAD KIT', 'kit', [50.0, 52.0, 50.0]),
+      costRecord('SYNTH-PN-C', 'SYNTHETIC BRAKE DISC', 'disc', [75.0, 78.0, 75.0])
     ],
     costReconciliation: [
-      { part_number: '8982447940', price_file_fob_eur: 49.01, historical_basis_eur: 49.0092,
-        difference: -0.0008 },
-      { part_number: '8982169260', price_file_fob_eur: null, historical_basis_eur: 49.0092,
+      { part_number: 'SYNTH-PN-A', price_file_fob_eur: 49.99, historical_basis_eur: 50.0,
+        difference: -0.01 },
+      { part_number: 'SYNTH-PN-B', price_file_fob_eur: null, historical_basis_eur: 50.0,
         difference: null }
     ],
-    turboPriceResolution: { part_number: '8981654483', resolved_on: '2026-09-22',
+    turboPriceResolution: { part_number: 'SYNTH-PN-E', resolved_on: '2026-09-22',
       resolved_billable_list: null, still_open: [] },
     alternatives: { 'TEST-PADS': caseA.alternatives },
     candidateScreen: [
-      candidate('TESTUK', '8982447940', 'PAD KIT; CALIPER,DISC BRK,FRT', 2651, 228730.44, 86.2808,
-        89.11, 48.7878, 'base price moved 24.87%; cost and list held', 'held', '', true),
-      candidate('TESTUK', '8982447940', 'PAD KIT; CALIPER,DISC BRK,FRT', 2651, 228730.44, 86.2808,
-        89.11, 48.7878, 'base price moved 24.87%; cost and list held', 'held', '', true),
-      candidate('TESTUK', '8982488951', 'ROTOR; DISC BRK,FRT', 422, 57918.98, 137.2488,
-        158.83, 74.309, 'base price moved 7.00%; cost and list held', 'held', '', true),
-      candidate('IMOTORS', '8982169260', 'PAD KIT; CALIPER,DISC BRK,FRT', 2, 175.02, 87.51,
-        89.11, 48.7878, 'base price moved 24.87%; cost and list held', 'not held',
+      candidate('TESTUK', 'SYNTH-PN-A', 'SYNTHETIC BRAKE PAD KIT', 2000, 200000.0, 100.0,
+        120.0, 50.0, 'base price moved 20%; cost and list held', 'held', '', true),
+      candidate('TESTUK', 'SYNTH-PN-A', 'SYNTHETIC BRAKE PAD KIT', 2000, 200000.0, 100.0,
+        120.0, 50.0, 'base price moved 20%; cost and list held', 'held', '', true),
+      candidate('TESTUK', 'SYNTH-PN-C', 'SYNTHETIC BRAKE DISC', 400, 60000.0, 150.0,
+        190.0, 75.0, 'base price moved 5%; cost and list held', 'held', '', true),
+      candidate('IMOTORS', 'SYNTH-PN-B', 'SYNTHETIC BRAKE PAD KIT', 2, 200.0, 100.0,
+        120.0, 50.0, 'base price moved 20%; cost and list held', 'not held',
         'current net terms not established', false),
-      candidate('IMOTORS', '5876150180', 'FILTER; BLOWER UNIT', 310, 4991.0, 16.1,
-        16.1, null, 'no cost held', 'not held', 'no verified cost', false),
+      candidate('IMOTORS', 'SYNTH-PN-D', 'SYNTHETIC BLOWER FILTER', 300, 4800.0, 16.0,
+        16.0, null, 'no cost held', 'not held', 'no verified cost', false),
       candidate('IMOTORS', '', '', 12, 400.0, null, null, null,
         'part number absent on the source line', 'not held', 'part reference missing', false)
     ],
@@ -236,7 +252,7 @@ function restrictedFixture() {
         + 'price, its verified parts cost where one exists, the base-price movement, a selection '
         + 'reason and its unresolved inputs',
       coverage: 'verified parts cost is held for 3 part numbers, which are the scope parts.',
-      competitorGap: 'competitor evidence is held only for 8982447940 and 8982488951.',
+      competitorGap: 'competitor evidence is held only for SYNTH-PN-A and SYNTH-PN-C.',
       notA: 'not a target number of price cuts or increases, and not an approved commercial threshold'
     }
   };
@@ -348,7 +364,7 @@ test('F04 a basis with no usable window cannot accept a date, and says which one
 
 test('F04 one authorised resolution applies one basis to the unchanged and proposed offer', () => {
   const a = costbasis.authoriseOfferBasis(FX, {
-    part_number: '8982447940', offer_effective_date: '2026-09-22'
+    part_number: 'SYNTH-PN-A', offer_effective_date: '2026-09-22'
   });
   assert.equal(a.resolved, true, a.statement);
   assert.equal(a.basis_id, 'SEP26');
@@ -360,7 +376,7 @@ test('F04 one authorised resolution applies one basis to the unchanged and propo
 
 test('F04 a supplier-cost change is held as a separate, unjustified-until-justified assumption', () => {
   const a = costbasis.authoriseOfferBasis(FX, {
-    part_number: '8982447940', offer_effective_date: '2026-09-22',
+    part_number: 'SYNTH-PN-A', offer_effective_date: '2026-09-22',
     cost_change_basis_id: 'OCT26'
   });
   assert.equal(a.cost_change_assumption.changed, true);
@@ -369,7 +385,7 @@ test('F04 a supplier-cost change is held as a separate, unjustified-until-justif
   assert.equal(a.ok, false, 'an unjustified cost change was accepted');
   assert.equal(a.unchanged_offer.basis_id, 'SEP26');
   const justified = costbasis.authoriseOfferBasis(FX, {
-    part_number: '8982447940', offer_effective_date: '2026-09-22',
+    part_number: 'SYNTH-PN-A', offer_effective_date: '2026-09-22',
     cost_change_basis_id: 'OCT26',
     cost_change_justification: 'supplier notified a rate revision effective 1 October'
   });
@@ -377,11 +393,11 @@ test('F04 a supplier-cost change is held as a separate, unjustified-until-justif
 });
 
 test('F04 comparable rows on one screen expose which single basis they all hold', () => {
-  const c = costbasis.comparableBases(FX, ['8982447940', '8982488951']);
+  const c = costbasis.comparableBases(FX, ['SYNTH-PN-A', 'SYNTH-PN-C']);
   assert.deepEqual(c.bases_held_by_every_row,
     ['HIST', 'SEP26', 'OCT26'], 'a common basis was not found');
-  const missing = costbasis.comparableBases(FX, ['8982447940', '5876150180']);
-  assert.deepEqual(missing.parts_without_any_cost_record, ['5876150180']);
+  const missing = costbasis.comparableBases(FX, ['SYNTH-PN-A', 'SYNTH-PN-D']);
+  assert.deepEqual(missing.parts_without_any_cost_record, ['SYNTH-PN-D']);
   assert.match(missing.statement, /a missing cost is not a cost of zero/i);
 });
 
@@ -461,9 +477,9 @@ test('DATA-01 inputManifest and packAudit are reconciled into one manifest, diff
   assert.equal(rec.manifest_only, 7, 'manifest-only inputs were not counted');
   assert.equal(rec.reconciled + rec.manifest_only + rec.declared_only, m.records.length,
     'the manifest merge does not account for every record');
-  assert.equal(rec.pack_rows_declared, 3945);
-  assert.equal(rec.pack_rows_actual, 3856);
-  assert.equal(rec.pack_row_variance, -89);
+  assert.equal(rec.pack_rows_declared, 1234);
+  assert.equal(rec.pack_rows_actual, 1000);
+  assert.equal(rec.pack_row_variance, -234);
   const pack = manifest.find(m, 'MAN-07');
   assert.equal(pack.count_state, 'disagrees - reported, not reconciled away');
   assert.ok(pack.reconciliation.join(' ').length > 0);
@@ -484,7 +500,7 @@ test('DATA-01 the manifest conserves every record it merged', () => {
   assert.equal(c.totals.records, m.records.length);
   assert.equal(c.totals.accounted_for, m.records.length, 'the merge lost or duplicated a record');
   assert.equal(c.ok, false, 'the declared-versus-actual row difference was not raised');
-  assert.ok(c.findings.some((f) => /declares 3945 rows/.test(f)));
+  assert.ok(c.findings.some((f) => /declares 1234 rows/.test(f)));
 });
 
 test('DATA-01 a restricted input is not fingerprinted unless the caller opts in', () => {
@@ -552,11 +568,11 @@ test('DATA-02 distributor, purchasing account and site are three separate fields
 
 test('DATA-02 a campaign key cannot merge two entities or two sales stages', () => {
   const k1 = manifest.campaignKey({ distributor: 'ITUK', purchasing_account: '2575',
-    part_number: '8982447940', unit: 'kit', sales_stage: 'sell-in' });
+    part_number: 'SYNTH-PN-A', unit: 'kit', sales_stage: 'sell-in' });
   const k2 = manifest.campaignKey({ distributor: 'IUK', purchasing_account: '2575',
-    part_number: '8982447940', unit: 'kit', sales_stage: 'sell-in' });
+    part_number: 'SYNTH-PN-A', unit: 'kit', sales_stage: 'sell-in' });
   const k3 = manifest.campaignKey({ distributor: 'ITUK', purchasing_account: '2575',
-    part_number: '8982447940', unit: 'kit', sales_stage: 'sell-out' });
+    part_number: 'SYNTH-PN-A', unit: 'kit', sales_stage: 'sell-out' });
   assert.notEqual(k1, k2);
   assert.notEqual(k1, k3);
 });
@@ -765,18 +781,18 @@ test('DATA-06 the candidate dataset conserves every received row across revision
 
 test('DATA-06 a correction on a candidate row replaces its declared predecessor', () => {
   const ds = candidates.makeDataset('candidate set');
-  ds.upsert('screen-2026-09', [{ distributor: 'TESTUK', part_number: '8982447940',
-    billed_qty: 2651, observed_billing_eur: 228730.44 }], { restricted: true });
-  const key = ['TESTUK', '8982447940', 0].join(SEP);
+  ds.upsert('screen-2026-09', [{ distributor: 'TESTUK', part_number: 'SYNTH-PN-A',
+    billed_qty: 2000, observed_billing_eur: 200000.0 }], { restricted: true });
+  const key = ['TESTUK', 'SYNTH-PN-A', 0].join(SEP);
   const r = ds.correct('correction-2026-10', key,
-    { distributor: 'TESTUK', part_number: '8982447940', billed_qty: 2500,
+    { distributor: 'TESTUK', part_number: 'SYNTH-PN-A', billed_qty: 2500,
       observed_billing_eur: 215000 },
     { corrects_revision: 1, reason: 'credit notes were missing from the first import' });
   assert.equal(r.ok, true, r.error || '');
   assert.equal(r.corrects_revision, 1);
   assert.equal(ds.all().length, 1, 'the correction multiplied the set');
   const wrong = ds.correct('correction-2', key, { distributor: 'TESTUK',
-    part_number: '8982447940', billed_qty: 1 },
+    part_number: 'SYNTH-PN-A', billed_qty: 1 },
     { corrects_revision: 1, reason: 'x' });
   assert.equal(wrong.ok, false);
   assert.equal(wrong.conflict, true);
@@ -1031,19 +1047,19 @@ test('DATA-07 an unpriced quantity is never added to a priced quantity', () => {
 test('DATA-08 a failed refresh leaves the last accepted view in place', () => {
   const stage = evidence.makeStageState('candidate screen');
   assert.equal(stage.view().showing_revision, null);
-  stage.begin({ rows: 10543, basis: 'undeclared' });
+  stage.begin({ rows: 12345, basis: 'undeclared' });
   const committed = stage.commit();
   assert.equal(committed.ok, true);
   assert.equal(committed.revision, 1);
-  assert.equal(stage.view().view.rows, 10543);
+  assert.equal(stage.view().view.rows, 12345);
 
   stage.begin({ rows: 0, basis: 'undeclared' });
   const failed = stage.fail('the import returned no rows');
   assert.equal(failed.ok, false);
   assert.equal(failed.showing.revision, 1, 'the failed refresh replaced the accepted view');
-  assert.equal(failed.showing.view.rows, 10543);
+  assert.equal(failed.showing.view.rows, 12345);
   const v = stage.view();
-  assert.equal(v.view.rows, 10543, 'a partially refreshed state is on screen');
+  assert.equal(v.view.rows, 12345, 'a partially refreshed state is on screen');
   assert.equal(v.partially_refreshed, false);
   assert.match(v.refresh_state, /last accepted view/i);
   assert.equal(stage.state.last_failure.partial_result, null,
@@ -1131,9 +1147,9 @@ test('F10 search and paging reach the whole permitted set, and paging clamps', (
   const last = candidates.workbench(rows, { page: 99, page_size: 2 });
   assert.equal(last.page.page, 3);
   assert.equal(last.page.rows.length, 2);
-  const found = candidates.search(rows, 'rotor');
+  const found = candidates.search(rows, 'DISC');
   assert.equal(found.length, 1);
-  const byPart = candidates.filter(rows, { part_number: '8982447940' });
+  const byPart = candidates.filter(rows, { part_number: 'SYNTH-PN-A' });
   assert.equal(byPart.length, 2);
   const unresolved = candidates.filter(rows, { unresolved_only: true });
   assert.equal(unresolved.length, 3);
@@ -1159,7 +1175,7 @@ test('F10 the screen rule states its own coverage and the difference is reported
 });
 
 test('F10 a candidate without a cost cannot become a case, and the blocker is named', () => {
-  const row = FX.candidateScreen.find((r) => r.part_number === '5876150180');
+  const row = FX.candidateScreen.find((r) => r.part_number === 'SYNTH-PN-D');
   const check = candidates.promotionBlockers(row, FX);
   assert.equal(check.promotable, false);
   const codes = check.blockers.map((b) => b.code);
@@ -1171,7 +1187,7 @@ test('F10 a candidate without a cost cannot become a case, and the blocker is na
 });
 
 test('F10 a supported candidate still cannot become a case while the period is undeclared', () => {
-  const row = FX.candidateScreen.find((r) => r.part_number === '8982447940');
+  const row = FX.candidateScreen.find((r) => r.part_number === 'SYNTH-PN-A');
   const rowEntity = manifest.normaliseEntity(row);
   const rowBasis = candidates.reportingBasis(FX.candidateScreen);
   const check = candidates.promotionBlockers(row, FX, { basis: rowBasis });
@@ -1188,7 +1204,7 @@ test('F10 a supported candidate still cannot become a case while the period is u
     basis: { declared: true, period: 'January-June 2026', period_state: 'declared' },
     entity: rowEntity, case_id: 'CASE-FROM-CANDIDATE' });
   assert.equal(stated.created, true, stated.statement);
-  assert.equal(stated.case.part_number, '8982447940',
+  assert.equal(stated.case.part_number, 'SYNTH-PN-A',
     'the original part reference was rewritten');
   assert.equal(stated.case.evidence_period, 'January-June 2026');
   assert.equal(stated.case.offer_effective_date, null);
@@ -1247,8 +1263,8 @@ test('MARKET-01 an incomplete observation is reported as incomplete, not as stro
 });
 
 test('MARKET-02 product equivalence is separate from lexical similarity', () => {
-  const sim = evidence.lexicalSimilarity('PAD KIT; CALIPER,DISC BRK,FRT',
-    'PAD KIT CALIPER DISC BRK FRT');
+  const sim = evidence.lexicalSimilarity('SYNTH PAD KIT CALIPER DISC BRAKE FRONT',
+    'SYNTH PAD KIT CALIPER DISC BRAKE FRONT');
   assert.ok(sim.ratio > 0.8, 'identical wording did not score high');
   assert.match(sim.statement, /not product equivalence/i);
 
@@ -1266,19 +1282,20 @@ test('MARKET-03 a pack is normalised only where the source states its contents',
   const unknown = evidence.normalisePack({ declared_unit: 'kit' });
   assert.equal(unknown.normalised, false);
   assert.match(unknown.statement, /unstated contents/i);
-  assert.equal(evidence.perPiecePrice(148.51, unknown).ok, false);
+  assert.equal(evidence.perPiecePrice(120.0, unknown).ok, false);
 
   const stated = evidence.normalisePack({ declared_unit: 'kit',
     contents: [{ name: 'pad', quantity: 4 }, { name: 'clip set', quantity: 1 }] });
   assert.equal(stated.normalised, true);
   assert.equal(stated.pieces_per_pack, 5);
-  const per = evidence.perPiecePrice(148.51, stated);
+  const per = evidence.perPiecePrice(120.0, stated);
   assert.equal(per.ok, true);
-  assert.equal(per.amount_per_piece, 29.7);
+  assert.equal(per.amount_per_piece, 24.0,
+    'the per-piece figure is the price divided by the declared pieces per pack');
 });
 
 test('MARKET-04 currency, tax and delivery adjustments are auditable and unresolved when unknown', () => {
-  const unknownTax = evidence.adjustToComparable(148.51, { currency: 'EUR', tax: 'not stated' });
+  const unknownTax = evidence.adjustToComparable(120.0, { currency: 'EUR', tax: 'not stated' });
   assert.equal(unknownTax.ok, false);
   assert.equal(unknownTax.value, null);
   assert.ok(unknownTax.unresolved.some((u) => /tax basis is not stated/i.test(u)));
@@ -1290,7 +1307,7 @@ test('MARKET-04 currency, tax and delivery adjustments are auditable and unresol
      competitor by about a fifth. The expected figures are unchanged: 20 as a
      declared percentage was, and is, 20%. What changed is that the unit is now
      stated rather than inferred from the magnitude. */
-  const unknownFx = evidence.adjustToComparable(148.51, { currency: 'GBP',
+  const unknownFx = evidence.adjustToComparable(120.0, { currency: 'GBP',
     tax: 'inclusive', vat_rate: 20, vat_rate_unit: 'percent' });
   assert.equal(unknownFx.ok, false);
   assert.equal(unknownFx.value, null);
@@ -1298,7 +1315,7 @@ test('MARKET-04 currency, tax and delivery adjustments are auditable and unresol
   assert.ok(unknownFx.unresolved.some((u) => /delivery basis is not stated/i.test(u)));
   assert.equal(unknownFx.steps.length, 1, 'the tax step should still be recorded before the failure');
 
-  const done = evidence.adjustToComparable(148.51, { currency: 'GBP', tax: 'inclusive',
+  const done = evidence.adjustToComparable(120.0, { currency: 'GBP', tax: 'inclusive',
     vat_rate: 20, vat_rate_unit: 'percent', fx_to_eur: 1.17, fx_date: '2026-09-22',
     delivery_included: true });
   assert.equal(done.ok, true, done.unresolved.join('; '));
@@ -1308,9 +1325,9 @@ test('MARKET-04 currency, tax and delivery adjustments are auditable and unresol
   assert.equal(done.steps[1].step, 'convert to EUR');
   assert.equal(done.steps[2].step, 'delivery basis');
   assert.match(done.statement, /each step and its rule is shown/i);
-  assert.ok(done.value < 148.51, 'a gross GBP figure was not reduced by tax and conversion');
+  assert.ok(done.value < 120.0, 'a gross GBP figure was not reduced by tax and conversion');
 
-  const fxWithoutADate = evidence.adjustToComparable(148.51, { currency: 'GBP', tax: 'exclusive',
+  const fxWithoutADate = evidence.adjustToComparable(120.0, { currency: 'GBP', tax: 'exclusive',
     fx_to_eur: 1.17, delivery_included: true });
   assert.equal(fxWithoutADate.ok, false);
   assert.equal(fxWithoutADate.steps.length, 2,
@@ -1486,7 +1503,7 @@ test('the authorised payload, when present, satisfies the same dates and counts'
 
   const rows = authorised.candidateScreen || [];
   const cov = candidates.coverage(rows, rows, { payload: authorised });
-  assert.equal(cov.rows_matching, 10543);
+  assert.equal(cov.rows_matching, AUTHORISED_ROWS);
   assert.equal(cov.rows_with_cost, 15);
   assert.equal(cov.unique_parts_with_cost, 8,
     'the cost coverage was reported as a unique part count');
@@ -1520,9 +1537,17 @@ test('the authorised payload, when present, satisfies the same dates and counts'
   assert.equal(manifest.assertShippable(m).ok, true);
 
   /* One cost-register part is not on the screen at all, and the manifest says so
-     rather than reporting a screen coverage figure as if it were the register. */
+     rather than reporting a screen coverage figure as if it were the register.
+     Its identifier is read from the payload in memory and compared, not written
+     here: the payload is excluded from version control and this file is not. */
   const crossCheck = cov.cost_register_cross_check;
-  assert.deepEqual(crossCheck.in_register_not_screened, ['8982488950']);
+  const registerParts = (authorised.verifiedCosts || []).map((r) => String(r.part_number));
+  const screened = new Set(rows.map((r) => String(r.part_number)));
+  const inRegisterNotScreened = registerParts.filter((p) => !screened.has(p));
+  assert.equal(inRegisterNotScreened.length, 1,
+    'the fixture no longer carries exactly one cost-register part that the screen omits');
+  assert.deepEqual(crossCheck.in_register_not_screened, inRegisterNotScreened,
+    'the cross-check does not report the register part the screen omits');
 });
 
 test('the restricted fixture is excluded from version control and marked restricted', () => {

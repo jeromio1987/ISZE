@@ -227,8 +227,8 @@ test('M05 an ISZE-net row against an advertised retail row is excluded without a
 
 test('M05 a bridge that is named but not accepted does not enable the comparison', () => {
   const ourTerms = cleanOffer({ observation_id: 'ISZE-NET', role: 'isze_terms',
-    level: 'isze_net_distributor', amount: 85.91 });
-  const retail = cleanOffer({ observation_id: 'RETAIL-AD', amount: 76.99 });
+    level: 'isze_net_distributor', amount: 90.0 });
+  const retail = cleanOffer({ observation_id: 'RETAIL-AD', amount: 80.0 });
 
   const half = comparable.panel(CTX, [ourTerms, retail], Object.assign({}, BASE, {
     basis_level: 'isze_net_distributor',
@@ -810,10 +810,18 @@ test('M04 on the payload, a tax rate whose unit is undeclared is reported rather
   }
   const payload = JSON.parse(readFileSync(PAYLOAD, 'utf8'));
 
-  /* The payload stores a VAT figure as a 0.20 fraction while evidence.js takes a
-     percentage, and the payload does not say which unit it used. Passing 0.2
-     through unconverted removes 0.2% of tax instead of 20%, which is why this is
-     an exclusion and not a rounding. */
+  /* WHAT THIS CHECK MEASURES. The payload stores a VAT figure as a fraction while
+     evidence.js takes a percentage, and the payload does not say which unit it
+     used. Passing the fraction through unconverted removes a fraction of a
+     percent of tax instead of the whole rate, which is why this is an exclusion
+     and not a rounding.
+
+     HOW IT IS WRITTEN. The amount, the seller and the identifier all come from
+     the restricted payload, and none of them is written into this tracked file.
+     The rate is supplied by the check as a declared percentage, because the unit
+     is what is under test. The expected figure is derived from the row's own
+     amount in memory, so the relationship is asserted rather than a literal
+     copied out of the payload. */
   const withFractions = payload.cases.map((oneCase) => {
     const adapted = (oneCase.offers || []).map((id) => comparable.observationFromOffer(payload.offers[id], {
       case_id: oneCase.id, unit: oneCase.unit, level: 'public_advertised_retail',
@@ -830,30 +838,50 @@ test('M04 on the payload, a tax rate whose unit is undeclared is reported rather
     'the payload carries tax-inclusive observations with an undeclared rate unit; the panel must '
     + 'name that rather than convert the fraction as though it were a percentage');
 
-  /* Declaring the unit converts correctly: 76.99 GBP including 20% VAT at a
-     documented 1.17 is 76.99 / 1.20 * 1.17 = 75.07 EUR, not 89.90. The basis is
-     named in the case's own unit, so the row is genuinely comparable and the
-     figure is asserted where a reader would actually see it. */
+  /* Declaring the unit converts correctly, and the correct figure follows from
+     the row's own amount, rate and rate. Where the source row states no rate,
+     there is no correction to test, so the first tax-inclusive row is the one
+     used and its presence is asserted rather than assumed. */
+  const offerIds = Object.keys(payload.offers);
+  const inclusiveId = offerIds.find((id) => {
+    const o = payload.offers[id];
+    return o && o.price !== null && o.price !== undefined
+      && String(o.tax || '').toLowerCase().indexOf('includ') >= 0
+      && o.vat !== null && o.vat !== undefined && Number(o.vat) > 0;
+  });
+  assert.ok(inclusiveId, 'the payload carries no tax-inclusive observation with a stated rate');
+
+  const source = payload.offers[inclusiveId];
+  const caseFor = payload.cases.find((c) => (c.offers || []).indexOf(inclusiveId) >= 0);
+  assert.ok(caseFor, 'the chosen observation belongs to no case in the payload, so no unit basis can '
+    + 'be taken from the case');
+  const fxRate = 1.17;
+  const round2 = (v) => Math.round(v * 100) / 100;
+  const expected = round2(source.price / 1.20 * fxRate);
+  const asFractionRead = round2(source.price / (1 + Number(source.vat) / 100) * fxRate);
+  assert.notEqual(expected, asFractionRead,
+    'the chosen row does not distinguish the two readings, so the check would prove nothing');
+
   const declared = comparable.panel(
-    { case_id: 'ITUK-PADS', part_number: '8982447940', market: 'ITUK', unit: 'kit' },
-    [comparable.observationFromOffer(payload.offers['PAD-A'], {
-      case_id: 'ITUK-PADS', unit: 'kit', level: 'public_advertised_retail',
+    { case_id: caseFor.id, part_number: caseFor.pn, market: caseFor.market, unit: caseFor.unit },
+    [comparable.observationFromOffer(source, {
+      case_id: caseFor.id, unit: caseFor.unit, level: 'public_advertised_retail',
       amount_scope: 'per_piece', match_basis: 'declared_equivalence', vat_rate_unit: 'fraction',
       equivalence: { declared: true, declared_by: 'role: product owner' }, delivery_included: true,
-      fx_rates: { GBP: { rate: 1.17, date: '2026-09-01' } }
+      fx_rates: { GBP: { rate: fxRate, date: '2026-09-01' } }
     })],
-    { basis_level: 'public_advertised_retail', basis_unit: 'kit', as_of: '2026-09-22' });
+    { basis_level: 'public_advertised_retail', basis_unit: caseFor.unit, as_of: '2026-09-22' });
 
   assert.equal(declared.ineligible_offers.length, 0,
     'with the VAT unit, the amount basis and the equivalence all declared, nothing should be left '
     + 'out: ' + JSON.stringify(declared.ineligible_offers.map((r) => r.reason_codes)));
   const row = declared.eligible_offers[0];
   assert.ok(row, 'the adapted observation should reach the comparable set');
-  assert.equal(row.adjustment.value, 75.07,
-    'a declared 20% fraction on 76.99 GBP at a documented 1.17 is 75.07 EUR');
-  assert.notEqual(row.adjustment.value, 89.9,
-    'treating the 0.20 fraction as a 20 percent rate is the defect this check exists for');
-  assert.equal(row.per_piece.value, 75.07, 'the comparable figure is the corrected one');
+  assert.equal(row.adjustment.value, expected,
+    'a declared rate must be removed at the rate stated, not at a fraction of a percent of it');
+  assert.notEqual(row.adjustment.value, asFractionRead,
+    'treating the fraction as a percentage rate is the defect this check exists for');
+  assert.equal(row.per_piece.value, expected, 'the comparable figure is the corrected one');
   assert.equal(row.adjustment.vat_rate_used.passed_to_the_rule, 20);
 });
 
@@ -877,7 +905,7 @@ test('M08 the request composed for a real payload case names the case and one th
 
   assert.equal(request.ok, true, JSON.stringify(request));
   assert.equal(request.case_id, 'ITUK-PADS');
-  assert.equal(request.part_number, '8982447940');
+  assert.equal(request.part_number, payload.cases.find((c) => c.id === 'ITUK-PADS').pn);
   assert.equal(request.draft_only, true);
   assert.equal(request.sent, false);
   const held = request.already_held.length;
