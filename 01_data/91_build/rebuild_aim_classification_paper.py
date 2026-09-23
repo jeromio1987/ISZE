@@ -2,7 +2,7 @@
 
 No historical builder existed for this hand-authored paper. This script refreshes
 the snapshot counts and dates from live derived files so the hero matches
-aim_master_v2.csv and the catalogue shape matches aim_pn_classification_v2.csv.
+aim_master_v2.csv and the catalogue shape matches aim_pn_classification_20260920.csv.
 """
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ D = ISZE / "01_data" / "00_derived"
 HTML = ISZE / "02_dashboards" / "sales" / "ISZE_AIM_Classification_Paper.html"
 OPEN = ISZE / "02_dashboards" / "sales" / "OPEN_ISZE_AIM_Classification_Paper.cmd"
 MASTER = D / "aim_master_v2.csv"
-CLASS = D / "aim_pn_classification_v2.csv"
+CLASS = D / "aim_pn_classification_20260920.csv"
 
 
 def count_master() -> tuple[int, int, int, int, int]:
@@ -65,33 +65,54 @@ def main() -> int:
     print(f"class_rows={class_n} catalog={c_l1}/{c_l2}/{c_l3}")
 
     t = HTML.read_text(encoding="utf-8")
-    # Hero: classified part numbers = live master spine count (Jerome's 18 Sep extract).
-    t = t.replace("<b>164,667</b>Classified part numbers",
-                  f"<b>{master_n:,}</b>Classified part numbers")
-    # Cover prepared date (snapshot), keep decision lock wording on 17 Sep elsewhere.
-    t = t.replace("<div><b>17 September 2026</b>Prepared for internal review</div>",
-                  "<div><b>18 September 2026</b>Prepared for internal review</div>")
-    # Price-list tree card: live catalogue classification shape.
-    old_shape = "7 / 25 / 171 · 164,667 parts"
+    import re
+
+    # Hero: classified part numbers = live master spine count
+    t = re.sub(
+        r"<b>[\d,]+</b>Classified part numbers",
+        f"<b>{master_n:,}</b>Classified part numbers",
+        t,
+        count=1,
+    )
+    # Cover prepared date
+    t = re.sub(
+        r"<div><b>\d+ September 2026</b>Prepared for internal review</div>",
+        "<div><b>20 September 2026</b>Prepared for internal review</div>",
+        t,
+        count=1,
+    )
+    # Price-list tree card: live catalogue classification shape (any prior N / N / N · N parts)
     new_shape = f"{c_l1} / {c_l2} / {c_l3} · {class_n:,} parts"
-    if old_shape not in t:
-        # tolerate already-partial patches
-        print("WARN: old catalogue shape string not found")
-    else:
-        t = t.replace(old_shape, new_shape)
-    # Category workbook card: live AIM-labelled PN count on master.
-    old_wb = "21 system names · 16,499 parts, ~79% of euro"
-    new_wb = (f"{aim_l1n} system names · {has_aim:,} parts with AIM labels"
-              f" (incl. {gap:,} auto-gap fills on 18 Sep)")
-    if old_wb in t:
-        t = t.replace(old_wb, new_wb)
-    else:
-        print("WARN: old workbook shape string not found")
-    # Live-as-of footer for the classification cut.
-    t = t.replace(
-        "Figures on the live classification as\n    of 17 September 2026.</p>",
-        "Figures on the live classification as\n    of 18 September 2026 "
+    t2, n_shape = re.subn(
+        r"\d+\s*/\s*\d+\s*/\s*\d+\s*·\s*[\d,]+\s*parts",
+        new_shape,
+        t,
+        count=1,
+    )
+    t = t2
+    if n_shape == 0:
+        print("WARN: catalogue shape string not found")
+    # Category workbook card
+    new_wb = (
+        f"{aim_l1n} system names · {has_aim:,} parts with AIM labels"
+        f" (incl. {gap:,} auto-gap fills)"
+    )
+    t2, n_wb = re.subn(
+        r"\d+\s+system names\s*·\s*[\d,]+\s*parts with AIM labels[^<]*",
+        new_wb,
+        t,
+        count=1,
+    )
+    t = t2
+    if n_wb == 0:
+        print("WARN: workbook shape string not found")
+    # Live-as-of footer
+    t = re.sub(
+        r"Figures on the live classification as\n\s*of \d+ September 2026[^<]*</p>",
+        "Figures on the live classification as\n    of 20 September 2026 "
         f"({master_n:,} part numbers on the AIM master spine).</p>",
+        t,
+        count=1,
     )
 
     HTML.write_text(t, encoding="utf-8", newline="\n")

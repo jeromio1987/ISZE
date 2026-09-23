@@ -1,11 +1,11 @@
 {
   "schema": "ship_receipt/v2",
   "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_PMS_Family_Evolution_v2.html",
-  "artifact_mtime_ms": 1789825105957,
-  "written_at": "2026-09-19T13:40:52.615Z",
+  "artifact_mtime_ms": 1790000402209,
+  "written_at": "2026-09-21T14:22:20.000Z",
   "ok": true,
-  "screenshots_taken": 11,
-  "screenshots_read": 11,
+  "screenshots_taken": 10,
+  "screenshots_read": 10,
   "checks": [
     {
       "id": "exists",
@@ -15,51 +15,80 @@
     {
       "id": "min_size",
       "ok": true,
-      "detail": "816486 bytes"
+      "detail": "834,152 bytes, sha256 38d03463f850ae7f9b9f5db27692f3c6e54ed2595449043ded379e058cddc865"
+    },
+    {
+      "id": "backup_taken_before_overwrite",
+      "ok": true,
+      "detail": "ISZE_PMS_Family_Evolution_v2.html.bak_20260921_20260921_152656 (832,997 bytes, sha256 ed566ed2bc263567890f49548299103597f7046e6fdd0a6defc035eaea8b3826, the page as it stood before this edit)"
     },
     {
       "id": "no_cdn",
       "ok": true,
-      "detail": "no chart/lib CDN"
+      "detail": "0 off-site src/href, 0 fetch(), 0 XMLHttpRequest; chart library inlined: False"
     },
     {
       "id": "no_nan_json",
       "ok": true,
-      "detail": "no NaN literals"
+      "detail": "payload parses; no NaN literal in the embedded JSON"
     },
     {
-      "id": "has_content_markers",
+      "id": "self_contained_on_load",
       "ok": true,
-      "detail": "chart=true rows=true hero=true"
+      "detail": "opened from file:// in headless Chrome: 0 console messages of any kind, 0 page errors, no off-site request"
+    },
+    {
+      "id": "rounding_note_present",
+      "ok": true,
+      "detail": "the net-move tile now carries, on its own small-print line: 'fleet -0.69 | price +0.67 | volume -0.38 | mix -0.62 (rounded to the cent; a cent out in total)'. One line (measured 1 line, 15.2 px high), inside the tile, not clipped, no overflow. No figure changed: the tile still reads -EUR 1.01 and the four terms still read -0.69 / +0.67 / -0.38 / -0.62."
+    },
+    {
+      "id": "fleet_totals_row_filled",
+      "ok": true,
+      "detail": "the fleet table's totals row 'All selected' 160,125 / 163,199 / +3,074 now carries a basis: the page works out at render time whether every row above shares one basis, and prints that basis when they do and a dash when they do not. On the default CY2024-CY2025 view every row reads 'estimate', so the totals row reads 'estimate'."
+    },
+    {
+      "id": "no_empty_cells",
+      "ok": true,
+      "detail": "all 5 tables swept on the rendered page (tbl, tbl10, t_fleet, t_bands and the evidence table): 0 empty cells, including the fleet totals row"
+    },
+    {
+      "id": "fleet_identity",
+      "ok": true,
+      "detail": "on every rendered row, (1 + change in billed euro) / (1 + change in euro per vehicle) = this fleet / last fleet. CY level 'vehicle type': 5 rows, worst gap 2.22e-16; CY drilled to tonnage bands: 5 rows, worst gap 2.22e-16; ISZE clock on the constant 2025 fleet: 5 rows, worst gap 1.11e-16. The ISZE clock correctly prints no per-vehicle rate, because its pair ends in a year whose fleet row is a forward figure."
     },
     {
       "id": "open_cmd",
       "ok": true,
-      "detail": "OPEN_ISZE_PMS_Family_Evolution_v2.cmd opens ISZE_PMS_Family_Evolution_v2.html (CRLF ok)"
+      "detail": "OPEN_ISZE_PMS_Family_Evolution_v2.cmd is 62 bytes, CRLF, and opens ISZE_PMS_Family_Evolution_v2.html. Not run."
     },
     {
-      "id": "ship_gate",
+      "id": "page_gate",
       "ok": true,
-      "detail": "ship_gate_check.ps1 exit 0"
+      "detail": "qa_family_evolution_v2.py exit 0, QA PASS. Ink measured from each canvas' own pixels: c_main 11.218% of 1340x300, c_dec 6.083% of 1340x290, c_price 31.161% of 653x230, and the five small multiples 5.675% to 31.676%. 0 page errors in the whole run, 0 console messages on a clean load."
+    },
+    {
+      "id": "deploy_sync",
+      "ok": true,
+      "detail": "sync_to_deploys.ps1 exit 0 after the gate passed: 130 files to 07_deploy/Master Dashboard and 130 to 07_deploy/publish-site. The deploy copy differs from source only by the BOM the sync adds (5 line-level differences, all the first line); every figure, the new note and the fleet totals row are identical."
     },
     {
       "id": "visual_screenshots",
       "ok": true,
-      "detail": "screenshots_taken 11, screenshots_read 11 (11 path(s) passed)"
+      "detail": "10 PNG(s) taken into _qa_v2_final and all 10 image-read by the agent before this receipt was written"
     }
   ],
   "screenshots": [
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2\\forms\\1440_two_columns_and_the_difference.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2\\forms\\1440_small_multiples.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2\\forms\\1440_ranked_table_with_bars.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2\\forms\\1440_gutter_crop.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2\\forms\\1440_small_multiple_crop.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2\\forms\\1000_two_columns_and_the_difference.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2\\forms\\1000_small_multiples.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2\\forms\\1000_ranked_table_with_bars.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2\\forms\\1440_the_worked_case.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2\\forms\\1000_gutter_crop.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2\\forms\\1000_small_multiple_crop.png"
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2_final\\01_top_all_customers.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2_final\\02_hero_tiles_1440.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2_final\\03_rounding_note_tile.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2_final\\04_fleet_table_totals.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2_final\\05_fleet_table_in_page.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2_final\\06_main_chart_1440.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2_final\\07_decomposition_chart.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2_final\\08_comparison_table.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2_final\\09_price_panel.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_v2_final\\10_drilled_n_series.png"
   ],
-  "notes": ""
+  "notes": "Two cosmetic defects fixed on top of the 21 September rebuild, and nothing else. (1) The net-move tile's headline reads -EUR 1.01 while the four terms beneath it add to -1.02, because each term is rounded to the cent on its own; the tile now says so in one short line on its own terms line. The note had to share that line rather than take a line of its own: an extra line made the tile 15 px taller and on the ISZE clock pushed the page's own 'More controls' control below the fold, where the page's gate could no longer click it (that was the single gate failure seen on the first attempt, and the note's placement is what fixed it). (2) The fleet table's totals row had an empty basis cell; the row now prints a single basis when every row above it carries the same one and a dash when they differ, which on the default view is 'estimate'. No figure, chart, order or wording elsewhere was touched, and the two deliberate notes about the agreed and internal schedules were left as they are."
 }

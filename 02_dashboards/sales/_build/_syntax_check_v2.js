@@ -575,8 +575,14 @@ function render(){
       +').<br>Last period: '+eur(R0)+' over '+n0(fA.value)+' vehicles.<br>'
       +'This is the measure that does not move just because the fleet moved.'});
   k.push({lab:'Net move per vehicle', cls:'g', val: pvAll.ok? eur2(pvAll.total):'n/a',
+    /* The four terms are each rounded to the cent on their own, so adding them can land a cent
+       away from the headline above them. The note is written INLINE, on the same small-print line
+       as the terms and in the same font, so the tile keeps the height it had before: a note on a
+       line of its own makes the tile 15 px taller, and on the ISZE clock the page's own More
+       controls control is then pushed below the fold and cannot be clicked. No figure changes. */
     sub: pvAll.ok? ('fleet '+sign(pvAll.fleet,2)+' | price '+sign(pvAll.price,2)+' | volume '
-      +sign(pvAll.vol,2)+' | mix '+sign(pvAll.mix,2)) : (pvAll.why||'not comparable'),
+      +sign(pvAll.vol,2)+' | mix '+sign(pvAll.mix,2)
+      +' (rounded to the cent; a cent out in total)') : (pvAll.why||'not comparable'),
     tip:'<b>The change in euro per vehicle, split</b><br>Fleet '+eur2(pvAll.ok?pvAll.fleet:null)
       +': what the fleet change alone took away or handed over.<br>Price '
       +eur2(pvAll.ok?pvAll.price:null)+' on the units actually sold.<br>Volume '
@@ -1410,7 +1416,7 @@ function renderStatic(pr, lvl){
     +'that is not derived from the two charts.';
 
   /* ── the fleet panel ──────────────────────────────────────────────────────────────────────── */
-  var rowsF='', total0=0, total1=0, inBand=false;
+  var rowsF='', total0=0, total1=0, inBand=false, basesThis={};
   markets().forEach(function(m){
     var y0=(D.fleet[m]||{})[String(pr.b)]||{}, y1=(D.fleet[m]||{})[String(pr.e)]||{};
     var f=D.flat[m]||{};
@@ -1421,17 +1427,24 @@ function renderStatic(pr, lvl){
     var v1 = S.band? (y1.n_series||0) : (y1[key]||0);
     var fv = S.band? (f.n_series||0) : (f[key]||0);
     total0+=v0; total1+=v1;
+    if(y1.basis) basesThis[y1.basis]=true; else basesThis['n/a']=true;
     rowsF+='<tr><td><b>'+m+'</b></td><td>'+n0(v0)+'</td><td>'+n0(v1)+'</td>'
       +'<td class="'+cls(v1-v0)+'">'+sign(v1-v0)+'</td>'
       +'<td>'+n0(fv)+'</td><td>'+(y1.basis||'n/a')+'</td></tr>';
   });
+  /* The totals row states a single basis only when every row above it carries that same one. Where
+     the rows mix bases - actual, estimated and forecast years all appear on the ISO clock - naming
+     one of them would be a claim about the whole row that its own figures do not support, so the
+     cell takes a dash and the caption beneath states each year's basis instead. */
+  var basisCells=Object.keys(basesThis);
+  var totalBasis = (basisCells.length===1)? basisCells[0] : '&mdash;';
   document.getElementById('t_fleet').tHead.innerHTML='<tr><th>Customer</th><th class="n">'
     +pr.bl.split(' ')[0]+'</th><th class="n">'+pr.el.split(' ')[0]+'</th><th class="n">change</th>'
     +'<th class="n">const 2025</th><th>basis</th></tr>';
   document.getElementById('t_fleet').tBodies[0].innerHTML=rowsF
     +'<tr style="font-weight:600"><td>All selected</td><td class="n">'+n0(total0)+'</td>'
     +'<td class="n">'+n0(total1)+'</td><td class="n '+cls(total1-total0)+'">'+sign(total1-total0)
-    +'</td><td class="n">&mdash;</td><td></td></tr>';
+    +'</td><td class="n">&mdash;</td><td class="n">'+totalBasis+'</td></tr>';
   document.getElementById('cap-fleet').innerHTML='Showing the '
     +(S.band? 'whole N-series fleet of each market, because the weight split of it is the band panel '
         +'above' : (S.fam? byKey(D.families,S.fam).label+' fleet' : 'whole fleet'))

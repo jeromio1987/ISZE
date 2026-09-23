@@ -243,7 +243,7 @@ def main() -> int:
         var qa2=window.__qa();
         var firstPn=null;
         var tr=document.querySelector('#cust-pn tbody tr');
-        if(tr && tr.cells.length>1) firstPn=tr.cells[0].textContent+' | '+tr.cells[7].textContent;
+        if(tr && tr.cells.length>1 && tr.cells[7]) firstPn=tr.cells[0].textContent+' | '+tr.cells[7].textContent;
         return JSON.stringify({
           picked:s.options[s.selectedIndex].text,
           cust:qa2.cust, custL1:qa2.custL1, custL2:qa2.custL2,
@@ -263,12 +263,13 @@ def main() -> int:
         var o=Array.prototype.filter.call(s.options,function(x){return x.text.trim()==='UTI';})[0]; if(!o) return JSON.stringify({error:'no UTI option'}); var i=o.value;
         if(i<0) return JSON.stringify({error:'UTI not in list'});
         s.value=String(i); s.dispatchEvent(new Event('change'));
-        var rows=Array.prototype.map.call(document.querySelectorAll('#custs tbody tr'),
-          function(tr){ return tr.cells[0].textContent+' '+tr.cells[1].textContent; });
+        var rows=Array.prototype.map.call(document.querySelectorAll('#brake-l2 tbody tr'),
+          function(tr){ return tr.cells[0].textContent+' '+tr.cells[6].textContent; });
         var league = (window.charts && charts['c-league'])
           ? charts['c-league'].data.labels : null;
         return JSON.stringify({picked:s.options[s.selectedIndex].text, crumb:document.getElementById('crumb').textContent,
-          accounts:rows.length, firstAccount:rows[0]||null, drillRows:document.querySelectorAll('#drill tbody tr').length,
+          brakeL2Rows:rows.length, firstBrakeL2:rows[0]||null,
+          drillRows:document.querySelectorAll('#drill tbody tr').length,
           leagueLabels:league, kpi:window.__qa().kpiVals}); })()
     """))
 
@@ -366,23 +367,90 @@ def main() -> int:
       (function(){ var s=document.getElementById('db');
         var o=Array.prototype.filter.call(s.options,function(x){return x.text.trim()==='ITUK';})[0]; var i=o.value;
         s.value=String(i); s.dispatchEvent(new Event('change'));
-        var rows=Array.prototype.map.call(document.querySelectorAll('#custs tbody tr'),
-          function(tr){ return tr.cells[0].textContent+' '+tr.cells[1].textContent; });
-        return JSON.stringify({dist:s.options[s.selectedIndex].text, n:rows.length, first:rows.slice(0,3)}); })()
+        var qa=window.__qa();
+        var tr=document.querySelector('#brake-pn tbody tr');
+        return JSON.stringify({dist:s.options[s.selectedIndex].text,
+          accountsTable:document.getElementById('custs')?1:0,
+          accountsRows:qa.accounts,
+          brakeL2:qa.brakeL2, brakePn:qa.brakePn, brakeFigs:qa.brakeFigs,
+          brakeFirstRow:tr? tr.cells[0].textContent+' | '+tr.cells[5].textContent
+            +' | '+tr.cells[6].textContent+' | '+tr.cells[7].textContent
+            +' | '+tr.cells[8].textContent : null,
+          concFigures:qa.concFigs, kpi:qa.kpiVals,
+          errors:qa.errors}); })()
     """))
 
-    # screenshots for visual inspection
-    for label, w, h, full in (("01_network", 1600, 2600, False),
-                              ("02_drill", 1600, 2600, False),
-                              ("03_900px", 900, 2600, False),
-                              ("04_fullpage", 1600, 1200, True)):
-        out = QA / f"shot_{label}.png"
-        subprocess.run([exe, "--headless=new", "--disable-gpu", "--hide-scrollbars",
-                        f"--window-size={w},{h}", f"--screenshot={out}",
-                        "--virtual-time-budget=8000", "--allow-file-access-from-files",
-                        url], capture_output=True, timeout=120)
-        if out.exists():
-            print(f"shot {out.name}  {out.stat().st_size/1024:.0f} KB  ({w}x{h})")
+    print("\n=== brake deep dive: ITUK, then filter to Pads & Shoes ===")
+    print(ev("""
+      (function(){
+        document.getElementById('reset').click();
+        var s=document.getElementById('db');
+        var o=Array.prototype.filter.call(s.options,function(x){return x.text.trim()==='ITUK';})[0];
+        s.value=String(o.value); s.dispatchEvent(new Event('change'));
+        var qa1=window.__qa();
+        var rows=Array.prototype.map.call(document.querySelectorAll('#brake-l2 tbody tr'),
+          function(tr){ return tr.cells[0].textContent+' '+tr.cells[6].textContent+' '+tr.cells[7].textContent; });
+        var l2ch=window.charts['c-brake'];
+        var trs=document.querySelectorAll('#brake-l2 tbody tr');
+        if(trs.length) trs[0].click();
+        var qa2=window.__qa();
+        return JSON.stringify({
+          scope:'ITUK', l2Rows:rows.length, l2First:rows.slice(0,3),
+          brakeFigs:qa1.brakeFigs, brakePn:qa1.brakePn,
+          chartType:l2ch?l2ch.config.type:null,
+          chartPoints:l2ch?l2ch.data.datasets[0].data.length:0,
+          clicked:trs.length?trs[0].cells[0].textContent:null,
+          afterClickPn:qa2.brakePn, selL2:qa2.brakeL2,
+          crumb:document.getElementById('brake-crumb').textContent,
+          errors:qa2.errors}); })()
+    """))
+    shot("live_08_brake_ituk.png")
+
+    print("\n=== brake deep dive at network, and the concentration toggle ===")
+    print(ev("""
+      (function(){
+        document.getElementById('reset').click();
+        var qaN=window.__qa();
+        var cs=document.getElementById('concscope');
+        cs.value='brake'; cs.dispatchEvent(new Event('change'));
+        var qaB=window.__qa();
+        var ch=window.charts['c-conc'];
+        var pts=ch?ch.data.datasets[0].data.length:0;
+        var first3=ch?ch.data.datasets[0].data.slice(0,3):null;
+        var lastPct=ch?ch.data.datasets[0].data[ch.data.datasets[0].data.length-1]:null;
+        var tr=document.querySelector('#brake-pn tbody tr');
+        return JSON.stringify({
+          netBrakeFigs:qaN.brakeFigs, netBrakePn:qaN.brakePn, netBrakeL2:qaN.brakeL2,
+          concScope:qaB.concScope, concFigs:qaB.concFigs,
+          concChartType:ch?ch.config.type:null, concPoints:pts, concFirst3:first3,
+          concFinal:lastPct, concTitle:document.getElementById('t-conc').textContent,
+          topBrakeRow:tr? tr.cells[0].textContent+' | '+tr.cells[7].textContent+' | '+tr.cells[8].textContent : null,
+          errors:qaB.errors}); })()
+    """))
+    set_viewport(1600, 1400)
+    shot("live_09_concentration_brake.png")
+
+    print("\n=== scroll to the two new sections at 1600px, and where the table was ===")
+    print(ev("""
+      (function(){
+        var t=document.getElementById('t-conc');
+        t.scrollIntoView({block:'start'});
+        window.scrollBy(0,-70);
+        return JSON.stringify({y:window.scrollY,
+          concTop:document.getElementById('conc-figs').getBoundingClientRect().top,
+          brakeTop:document.getElementById('t-brake').getBoundingClientRect().top,
+          pageH:document.documentElement.scrollHeight,
+          lastEl:document.querySelector('.wrap > div:last-of-type')? 'foot':'?',
+          accountsGone:document.getElementById('custs')===null}); })()
+    """))
+    time.sleep(1.0)
+    shot("live_10_concentration_view.png")
+    print(ev("(function(){var y=document.getElementById('t-brake').getBoundingClientRect().top;window.scrollBy(0,y-70);return window.scrollY;})()"))
+    time.sleep(1.0)
+    shot("live_11_brake_view.png")
+    print(ev("(function(){window.scrollTo(0,document.documentElement.scrollHeight);return window.scrollY;})()"))
+    time.sleep(1.0)
+    shot("live_12_page_end.png")
 
     s.close()
     proc.terminate()

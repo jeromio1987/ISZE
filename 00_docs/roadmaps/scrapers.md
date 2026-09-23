@@ -33,7 +33,7 @@ Ordered. Jerome's standing priority: **portal coverage before cosmetic UI**.
 
 | Prio | Item | State | Next |
 |------|------|-------|------|
-| **P0** | **National portal coverage** | Analysis done. Only **8/29** footprint countries have a live national source (UK, NL, BE, IL, FR, PL, NO, FI; DE partial via service.bund). ~69% are TED-only for below-threshold national buys — that, not a dashboard bug, is why fleet/vehicle KPIs look low | Wire **ES PLACSP**, **IT PNCP/ANAC**, **DE oeffentlichevergabe** open data. Evidence: `_COUNTRY_TENDER_PORTALS_MAP.md`, `_probe_country_portals_2026-08-25.json` |
+| **P0** | **National portal coverage** | **ES/IT/DE wired 2026-09-22.** Additive modules + weekly bat. Probe: ES Atom **216→10** gated · IT PNCP **22→2** · DE OV **590→163**. ES WAF cleared (Atom `rel=next`). National LIVE now includes ES+IT+DE (plus prior FR/PL/NO/FI/…). Evidence: `_probe_es_it_de_2026-09-22.json` | Maintain; optional ES monthly ZIP for deeper lookback; next dark portals from map (HU/IE/SE/…) |
 | **P1** | TED detail enrichment | Partial — capability code on; detail GET needs TED auth | Obtain TED auth, then enrich |
 | **P2** | Tender relevance scoring | Not started | Score 1–5 on title, country, value; filter ≥ 3 |
 | **P2** | `scrape_error` column (KS + successors) | Not started | Distinguish genuine price gap from scrape failure |

@@ -1,0 +1,181 @@
+{
+  "work_order": "R1",
+  "test_definitions": [
+    {
+      "id": "T01",
+      "name": "Source pin",
+      "valid_condition": "Hashes, lineage, cutoff and consumer refer to exact inputs.",
+      "invalid_example": "Alter a checksum or silently use another AIM file.",
+      "expected_rejection": "Input/version check rejects the altered input.",
+      "status": "not_run"
+    },
+    {
+      "id": "T02",
+      "name": "Commercial level",
+      "valid_condition": "Upstream billing and downstream quantities are separate facts.",
+      "invalid_example": "Add downstream valuation to billing as one revenue total.",
+      "expected_rejection": "Metric contract rejects mixed-level total.",
+      "status": "not_run"
+    },
+    {
+      "id": "T03",
+      "name": "Row grain and controls",
+      "valid_condition": "Monthly facts reconcile to compatible annual/dealer controls.",
+      "invalid_example": "Include annual summary and month rows in the same sum.",
+      "expected_rejection": "Double counting is detected; controls excluded from observations.",
+      "status": "not_run"
+    },
+    {
+      "id": "T04",
+      "name": "Keys and join conservation",
+      "valid_condition": "Raw part/account identifiers preserved; one classification or unmatched result per fact.",
+      "invalid_example": "Introduce duplicate canonical PN labels or a normalisation collision.",
+      "expected_rejection": "Join amplification/collision is reported and blocked.",
+      "status": "not_run"
+    },
+    {
+      "id": "T05",
+      "name": "Signed quantities",
+      "valid_condition": "Returns and adjustments follow documented source convention.",
+      "invalid_example": "Drop negative rows or flip their sign.",
+      "expected_rejection": "Reconciliation fails with a signed-value exception.",
+      "status": "not_run"
+    },
+    {
+      "id": "T06",
+      "name": "Period completeness",
+      "valid_condition": "Complete periods established from source coverage; CY and FY separate.",
+      "invalid_example": "Treat missing month as zero or sum CY and FY.",
+      "expected_rejection": "Unknown state preserved; mixed-clock calculation rejected.",
+      "status": "not_run"
+    },
+    {
+      "id": "T07",
+      "name": "Historical scope",
+      "valid_condition": "CY2025 dealer panel identified as historical; network history separate.",
+      "invalid_example": "Allocate 2026 network totals into 2025 dealers to imply current activity.",
+      "expected_rejection": "Unsupported dealer history is rejected.",
+      "status": "not_run"
+    },
+    {
+      "id": "T08",
+      "name": "Reference valuation",
+      "valid_condition": "Eligible signed quantity times documented price/unit/currency; unpriced remains unknown.",
+      "invalid_example": "Use missing price as zero or label reference value as dealer invoices.",
+      "expected_rejection": "Unpriced coverage/semantic failure visible; no revenue label.",
+      "status": "not_run"
+    },
+    {
+      "id": "T09",
+      "name": "Fleet denominator",
+      "valid_condition": "Only verified appropriate fleet supports a per-truck metric.",
+      "invalid_example": "Copy or sales-allocate market UIO into dealer rows.",
+      "expected_rejection": "Dealer euro-per-truck unavailable; field quarantined.",
+      "status": "not_run"
+    },
+    {
+      "id": "T10",
+      "name": "Classification-only adapter",
+      "valid_condition": "No accidental AIM billing values enter dealer facts/payload.",
+      "invalid_example": "Add l12m_billed_eur from full AIM master to a dealer view.",
+      "expected_rejection": "Unscoped commercial field rejected and totals unchanged.",
+      "status": "not_run"
+    },
+    {
+      "id": "T11",
+      "name": "Mix and alternatives",
+      "valid_condition": "Category mix and approved part alternatives have separate contracts.",
+      "invalid_example": "Treat same family as fitment approval or undefined capture as market share.",
+      "expected_rejection": "Part-alternative/capture assertion blocked.",
+      "status": "not_run"
+    },
+    {
+      "id": "T12",
+      "name": "Unit and denominator",
+      "valid_condition": "Mix uses compatible units or a declared value basis with valid denominator.",
+      "invalid_example": "Aggregate pads and kits as service counts, or render share with zero/negative denominator.",
+      "expected_rejection": "Unsupported total/share withheld with explanation.",
+      "status": "not_run"
+    },
+    {
+      "id": "T13",
+      "name": "Identity",
+      "valid_condition": "Approved relationship used only at supported account/site grain.",
+      "invalid_example": "Fuzzy-match an account to IDS or duplicate an account across sites.",
+      "expected_rejection": "Link remains unresolved; account totals not duplicated.",
+      "status": "not_run"
+    },
+    {
+      "id": "T14",
+      "name": "Geography",
+      "valid_condition": "Verified account location represented; unmapped still in totals/list.",
+      "invalid_example": "Infer distributor from country, invent a location or rank underperformance without fleet.",
+      "expected_rejection": "Invalid mapping/performance claim rejected.",
+      "status": "not_run"
+    },
+    {
+      "id": "T15",
+      "name": "IDS scope/date",
+      "valid_condition": "Available round, totals/detail and unknown date shown faithfully.",
+      "invalid_example": "Create question scores or use file timestamp as assessment date.",
+      "expected_rejection": "Unsupported detail/date rejected; no distributor audit label.",
+      "status": "not_run"
+    },
+    {
+      "id": "T16",
+      "name": "Tonnage v2",
+      "valid_condition": "Exclusive purchasing, modelled demand and market actuals remain distinct.",
+      "invalid_example": "Sum also_fits_band, allocate shared parts or multiply repeated market actuals.",
+      "expected_rejection": "Non-additive/allocated result blocked without reopening resolved v1 issues.",
+      "status": "not_run"
+    },
+    {
+      "id": "T17",
+      "name": "PRISM parity",
+      "valid_condition": "Same pinned inputs/basis produce matching reused metric or documented blocker.",
+      "invalid_example": "Substitute another model vintage or account-allocate a market output.",
+      "expected_rejection": "Parity/scope failure identified; no false validation.",
+      "status": "not_run"
+    },
+    {
+      "id": "T18",
+      "name": "Context navigation",
+      "valid_condition": "Distributor/family/period/basis persist; account change clears incompatible IDS link.",
+      "invalid_example": "Leave old account/assessment filter in hidden state.",
+      "expected_rejection": "Stale association cleared or blocked with explicit state.",
+      "status": "not_run"
+    },
+    {
+      "id": "T19",
+      "name": "Action evidence",
+      "valid_condition": "Draft links to exact source snapshot and permitted account/market scope.",
+      "invalid_example": "Create an action using another account or unapproved IDS question.",
+      "expected_rejection": "Invalid evidence link blocked; optional IDS relationship stays optional.",
+      "status": "not_run"
+    },
+    {
+      "id": "T20",
+      "name": "Boundary and privacy",
+      "valid_condition": "All writes inside fresh work root; returned prototype is synthetic.",
+      "invalid_example": "Embed dealer-named detail, broader billing or private identity table.",
+      "expected_rejection": "Payload/export inspection fails; excluded material is not returned.",
+      "status": "not_run"
+    },
+    {
+      "id": "T21",
+      "name": "Empty and unavailable modules",
+      "valid_condition": "Tender/price/IDS absence is visibly labelled and no current fact invented.",
+      "invalid_example": "Show synthetic notices/prices as current observations.",
+      "expected_rejection": "Synthetic/unavailable state enforced.",
+      "status": "not_run"
+    },
+    {
+      "id": "T22",
+      "name": "Usability",
+      "valid_condition": "Keyboard/list alternative and readable essential labels support the review task.",
+      "invalid_example": "Require hover/colour/map-only interpretation to understand a limitation.",
+      "expected_rejection": "Scenario fails usability until textual/keyboard alternative is available.",
+      "status": "not_run"
+    }
+  ]
+}

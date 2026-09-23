@@ -1,0 +1,16 @@
+Check,Result,Detail
+Source row count matches supplied control,PASS,514037
+Source monetary total matches rounded supplied control,PASS,Difference EUR 0.04
+Source max billing date,PASS,30 June 2026
+Prior/current months present,PASS,12 matched calendar months
+Distributor totals reconcile,PASS,Same transaction population
+Part-number totals reconcile,PASS,Same transaction population
+Catalogue-key totals reconcile,PASS,Unassigned retained
+Growth bridge reconciles,PASS,Residual max EUR 6.984919309616089e-10
+One catalogue key per normalised PN,PASS,No allocation of one part to multiple keys
+ITUK monthly network source is unique per month,PASS,"Year/YTD snapshots, named-dealer alternative and non-numeric surcharge references excluded"
+Other downstream source overlaps,REVIEW,"{('UTI', '2026-06'): 2}; no UTI downstream comparison calculated."
+Supplied aggregate reconciliation,REVIEW,Recomputed calendar totals do not match supplied market summaries. Treat all newly computed figures as provisional.
+ZKK/AIM mapping availability,NOT AVAILABLE,No transaction-level ZKK/AIM mapping; source fig_key is not assumed to be ZKK.
+Historical cost and SPA IDs,NOT AVAILABLE,"Gross profit, margin and SPA attribution not calculated."
+Potential repeated billing rows,REVIEW,16797 identical exported records retained: no invoice identifier to establish duplicates.

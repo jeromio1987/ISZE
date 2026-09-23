@@ -1,0 +1,36 @@
+﻿lines before: 391
+occurrences of '### 12.1 Harness result': [284, 337]
+removed lines 284..334 (first copy)
+replaced %% occurrences: 1
+lines after: 341
+
+--- headings ---
+  # UIO V20 ÔÇö assumptions log
+  ## 1. Purpose and authority
+  ## 2. The method
+  ### Curves used (unchanged from V19 sheet `3. UIO Calculation`)
+  ## 3. Scope ÔÇö what is in and what is out
+  ## 4. Exceptions and hooks in detail
+  ### 4.1 Israel (rows 7, 8) ÔÇö hook only
+  ### 4.2 UK CV (rows 22, 24) ÔÇö left alone
+  ### 4.3 UK LCV (row 25) ÔÇö locked
+  ### 4.4 Medium-duty plan-only block (rows 27, 52, 80, 89)
+  ### 4.5 Germany (rows 42, 43, 44) ÔÇö indicative
+  ### 4.6 Low-confidence histories
+  ### 4.7 FIX 1 ÔÇö r79 GREECE CV LD, and the rounding defect
+  ### 4.8 FIX 3 ÔÇö r54 PORTUGAL LCV and r90 CYPRUS LCV, and the seam that never fired
+  ### 4.9 Sources read for this pass, and what each one does or does not settle
+  ### 4.10 The LCV curve question, quantified
+  ### 4.11 A residue FIX 1 exposes: six rows recover a NEGATIVE registration input
+  ## 5. Sales plan handling
+  ## 6. Methodology seam in the history ÔÇö stated, not hidden
+  ## 7. Verification performed
+  ## 8. Open inputs needed ÔÇö where a computation was stopped rather than invented
+  ## 9. New-registration inputs written into the workbook
+  ## 10. What was deliberately not touched
+  ## 11. How to reproduce
+  ## 12. Independent verification (an external harness, not this builder)
+  ### 12.1 Harness result on this candidate
+  ### 12.2 `check7` ÔÇö the residual, left standing
+  ### 12.3 `check4` WARN ÔÇö carried, not a defect in this candidate
+  ### 12.4 Grand Total 2026-2030 ÔÇö three-way

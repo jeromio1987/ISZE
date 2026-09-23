@@ -641,11 +641,19 @@ function breakEvens(r){
   if(!r.ok)return '';
   const gp=(r.gp_change===null);
   const inc=(r.scope==='incremental');
+  /* The price direction decides what the two break-even figures mean. On a cut
+     the proposed price is lower, so the figures are quantities that have to be
+     reached. On a rise the same contribution arrives on fewer units, so the
+     figures are volume floors - the lowest totals volume may fall to before
+     each measure drops below the unchanged offer. Showing both under one
+     heading called "required" invites the rise case to be read backwards. */
+  const rising=r.price_after>r.price_before;
+  const cut=r.price_after<r.price_before;
   const chg=v=>(v===null||v===undefined||!Number.isFinite(v))?'-':pct(100*(v/Math.max(r.quantity_before,1)-1));
-  return `<div class="panel"><h3>The volume each measure needs</h3>
-  <p class="small"><b>${inc?'Incremental-only pricing.':'All-volume pricing.'}</b> ${inc?'Existing units keep the current price, so they already hold their revenue and their gross profit. Only additional units are tested against the support.':'The proposed price applies to every eligible unit, so the existing volume is repriced as well.'}</p>
+  return `<div class="panel"><h3>${rising?'The volume floor each measure allows':(cut?'The quantity each measure requires':'The volume each measure needs')}</h3>
+  <p class="small"><b>${inc?'Incremental-only pricing.':'All-volume pricing.'}</b> ${inc?'Existing units keep the current price, so they already hold their revenue and their gross profit. Only additional units are tested against the support.':'The proposed price applies to every eligible unit, so the existing volume is repriced as well.'}${rising?' <b>Because this is a price rise, the two figures below are floors, not targets: volume may fall as far as the lower of them before a measure drops below the unchanged offer.</b>':''}</p>
   <div class="tablewrap"><table>
-  <thead><tr><th>Test</th><th class="n">Required total quantity</th><th class="n">Change from the unchanged offer</th></tr></thead>
+  <thead><tr><th>Test</th><th class="n">${rising?'Lowest total quantity that still holds':'Required total quantity'}</th><th class="n">Change from the unchanged offer</th></tr></thead>
   <tbody>
   <tr><td>Hold revenue</td><td class="n">${num(r.qty_preserve_revenue,0)}</td><td class="n">${chg(r.qty_preserve_revenue)}</td></tr>
   <tr><td>Hold gross profit</td><td class="n">${r.qty_preserve_gp===null?(gp?'Cost required':'<span class="danger-line">Not attainable at this price</span>'):num(r.qty_preserve_gp,0)}</td><td class="n">${r.qty_preserve_gp===null?'Not calculated':chg(r.qty_preserve_gp)}</td></tr>
@@ -654,7 +662,7 @@ function breakEvens(r){
   <tr><td class="small" colspan="3">Pack size applied: ${num(r.pack_size,0)} unit(s). A quantity above a threshold is the smallest orderable multiple above it, not the threshold plus a fraction.</td></tr>
   ${r.price_after>r.price_before?`<tr><td><b>Tolerable volume loss</b></td><td class="n" colspan="2">Before revenue falls: <b>${E.fmtPct(r.tolerable_loss_revenue_pct)}</b> &middot; before gross profit falls: <b>${r.tolerable_loss_gp_pct===null?'-':E.fmtPct(r.tolerable_loss_gp_pct)}</b> &middot; binding limit <b>${E.fmtPct(r.tolerable_volume_loss_pct)}</b></td></tr>`:''}
   </tbody></table></div>
-  <p class="small ruleline">Where the evidence cannot predict volume, this states the quantity required and the test. It is not a false optimal price.</p>
+  <p class="small ruleline">Where the evidence cannot predict volume, this states ${rising?'the lowest quantity the price rise still allows (a floor, not a target) and the test':'the quantity required and the test'}. It is not a false optimal price.</p>
   ${E.conditionalTest(r).map(t=>`<p class="small"><b>The test:</b> ${esc(t)}</p>`).join('')}</div>`;
 }
 function objectives(c){
@@ -739,9 +747,11 @@ function objectives(c){
     const r=top.result;
     const chg=v=>(v===null||v===undefined||!Number.isFinite(v))?'-':pct(100*(v/Math.max(r.quantity_before,1)-1));
     const inc=(r.scope==='incremental');
-    return `<div class="panel"><h3>The volume the top-ranked option needs</h3>
-    <p class="small"><b>${esc(top.alternative.name)}</b> &middot; <b>${inc?'Incremental-only pricing.':'All-volume pricing.'}</b> ${inc?'Existing units keep the current price, so they already hold their revenue and their gross profit. Only additional units are tested against the support.':'The proposed price applies to every eligible unit, so the existing volume is repriced as well.'}</p>
-    <div class="tablewrap"><table><thead><tr><th>Test</th><th class="n">Required total quantity</th><th class="n">Change from the unchanged offer</th></tr></thead><tbody>
+    const rising=r.price_after>r.price_before;
+    const cut=r.price_after<r.price_before;
+    return `<div class="panel"><h3>${rising?'The volume floor the top-ranked option allows':(cut?'The quantity the top-ranked option requires':'The volume the top-ranked option needs')}</h3>
+    <p class="small"><b>${esc(top.alternative.name)}</b> &middot; <b>${inc?'Incremental-only pricing.':'All-volume pricing.'}</b> ${inc?'Existing units keep the current price, so they already hold their revenue and their gross profit. Only additional units are tested against the support.':'The proposed price applies to every eligible unit, so the existing volume is repriced as well.'}${rising?' <b>Because this is a price rise, the two figures below are floors, not targets: volume may fall as far as the lower of them before a measure drops below the unchanged offer.</b>':''}</p>
+    <div class="tablewrap"><table><thead><tr><th>Test</th><th class="n">${rising?'Lowest total quantity that still holds':'Required total quantity'}</th><th class="n">Change from the unchanged offer</th></tr></thead><tbody>
     <tr><td>Hold revenue</td><td class="n">${num(r.qty_preserve_revenue,0)}</td><td class="n">${chg(r.qty_preserve_revenue)}</td></tr>
     <tr><td>Hold gross profit</td><td class="n">${r.qty_preserve_gp===null?(r.gp_change===null?'Cost required':'<span class="danger-line">Not attainable at this price</span>'):num(r.qty_preserve_gp,0)}</td><td class="n">${r.qty_preserve_gp===null?'Not calculated':chg(r.qty_preserve_gp)}</td></tr>
     <tr><td>Exceed revenue (smallest orderable quantity)</td><td class="n">${r.extra_qty_to_exceed_revenue===null?'-':num(r.quantity_before+r.extra_qty_to_exceed_revenue,0)}</td><td class="n">${r.extra_qty_to_exceed_revenue===null?'-':num(r.extra_qty_to_exceed_revenue,0)+' more units'}</td></tr>
@@ -749,7 +759,7 @@ function objectives(c){
     <tr><td class="small" colspan="3">Pack size applied: ${num(r.pack_size,0)} unit(s). A quantity above a threshold is the smallest orderable multiple above it, not the threshold plus a fraction.</td></tr>
     ${r.price_after>r.price_before?`<tr><td><b>Tolerable volume loss</b></td><td class="n" colspan="2">Before revenue falls: <b>${pct(r.tolerable_loss_revenue_pct)}</b> &middot; before gross profit falls: <b>${r.tolerable_loss_gp_pct===null?'-':pct(r.tolerable_loss_gp_pct)}</b> &middot; binding limit <b>${pct(r.tolerable_volume_loss_pct)}</b></td></tr>`:''}
     </tbody></table></div>
-    <p class="small ruleline">Where the evidence cannot predict volume, this states the quantity required and the test. It is not a false optimal price.</p>
+    <p class="small ruleline">Where the evidence cannot predict volume, this states ${rising?'the lowest quantity the price rise still allows (a floor, not a target) and the test':'the quantity required and the test'}. It is not a false optimal price.</p>
     ${E.conditionalTest(r).map(t=>`<p class="small"><b>The test:</b> ${esc(t)}</p>`).join('')}</div>`;
   })()}
   ${s.selected_alternative_id?`<div class="panel callout"><h3>Selected for the decision</h3><p class="small">${esc((c.alternatives.find(a=>a.alternative_id===s.selected_alternative_id)||{}).name||'')} is now the record used by the price test, the internal action, the save and every export.</p><div class="rowactions"><button class="button primary" data-view="economics">Open it in the price &amp; profit test</button><button class="button" data-view="action">Prepare the internal review</button></div></div>`:''}

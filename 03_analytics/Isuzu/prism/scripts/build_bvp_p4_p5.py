@@ -42,12 +42,42 @@ from modules.data_prep import (  # noqa: E402
 from modules.gps_engine import calculate_spend_per_unit  # noqa: E402
 from modules.gps_warranty import apply_warranty_to_spu_frame  # noqa: E402
 from modules.sales_loader import load_prism_sales  # noqa: E402
+from modules.year_coverage import is_partial  # noqa: E402
 
 GPS_SPU_DB_CSV = DERIVED_DIR / "gps_spu_by_distributor.csv"
 GPS_SPU_FAMILY_CSV = DERIVED_DIR / "gps_spu_by_family.csv"
 GPS_SPU_PMS_CSV = DERIVED_DIR / "gps_spu_pms.csv"
 AIM_FAMILY_RISK_CSV = DERIVED_DIR / "aim_bvp_family_risk.csv"
 AIM_DB_YEAR_CSV = DERIVED_DIR / "aim_exposure_by_db_year.csv"
+
+# ── Partial-year annotation (added 2026-09-22, SPU-PARTIAL) ──────────────────
+# The family and PMS slices are a part-period numerator over a full-year fleet, so
+# `spu_eur` is a real rate and is left alone - it is the *comparison* with a full
+# year that is not like-for-like, and the file previously said nothing about it.
+# These two columns are the same annotation `enrich_gps_spu_v9.py` writes on
+# gps_spu_by_distributor.csv, so one reader learns one convention.
+PARTIAL_BASIS = "partial_year"
+FULL_BASIS = "full_year"
+PARTIAL_COVERAGE_NOTE = (
+    "PARTIAL YEAR - covers part of the calendar year, NOT 12 months. Do not "
+    "compare against a full-year row: the denominator beside it is a full-year "
+    "figure. See 01_data/00_derived/_data_integrity_open_issues.md."
+)
+FULL_COVERAGE_NOTE = "FULL YEAR - calendar year complete."
+PERIOD_COLUMNS = ("period_basis", "coverage_note")
+
+
+def _add_period_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Annotate each row with its own period basis. Re-emitted every run so the
+    annotation cannot be lost again the way it was on 2026-09-21."""
+    if df.empty or "year" not in df.columns:
+        return df
+    partial = df["year"].map(lambda y: is_partial(int(y)))
+    df["period_basis"] = partial.map({True: PARTIAL_BASIS, False: FULL_BASIS})
+    df["coverage_note"] = partial.map(
+        {True: PARTIAL_COVERAGE_NOTE, False: FULL_COVERAGE_NOTE}
+    )
+    return df
 
 # BVP catalog families → AIM Category L1 (for family-level risk weighting)
 FAMILY_TO_AIM_L1: dict[str, list[str]] = {
@@ -237,8 +267,10 @@ def build_p4(
                         }
                     )
 
-    pd.DataFrame(fam_rows).to_csv(GPS_SPU_FAMILY_CSV, index=False)
-    pd.DataFrame(pms_rows).to_csv(GPS_SPU_PMS_CSV, index=False)
+    fam_df = _add_period_columns(pd.DataFrame(fam_rows))
+    pms_df = _add_period_columns(pd.DataFrame(pms_rows))
+    fam_df.to_csv(GPS_SPU_FAMILY_CSV, index=False)
+    pms_df.to_csv(GPS_SPU_PMS_CSV, index=False)
     print(f"P4: {len(fam_rows)} rows -> {GPS_SPU_FAMILY_CSV}")
     print(f"P4: {len(pms_rows)} rows -> {GPS_SPU_PMS_CSV}")
 

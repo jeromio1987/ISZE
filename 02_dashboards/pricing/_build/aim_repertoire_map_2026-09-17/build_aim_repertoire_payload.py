@@ -5,7 +5,7 @@ Builds the embedded payload for ISZE_AIM_Repertoire_Map_2026-09-17.html.
 
 Basis (single, locked, same as the shipped revision pack):
   price_bp_weighted_compare_pn.csv, in_scope == True, window 2025-07-01..2026-06-30
-  AIM tree: aim_pn_classification_v2.csv -> catalog_l1 / catalog_l2 / catalog_l3
+  AIM tree: aim_pn_classification_20260920.csv -> catalog_l1 / catalog_l2 / catalog_l3
   Distributor: gps_db_label (the trading entity the pricing enquiry was run on)
 
 Every in-scope row is kept. A part number with no catalogue node is labelled
@@ -26,7 +26,7 @@ D = ISZE / "01_data" / "00_derived"
 HERE = ISZE / "02_dashboards" / "pricing" / "_build" / "aim_repertoire_map_2026-09-17"
 
 PN_FILE = D / "price_bp_weighted_compare_pn.csv"
-TREE_FILE = D / "aim_pn_classification_v2.csv"
+TREE_FILE = D / "aim_pn_classification_20260920.csv"
 OUT = HERE / "payload.json"
 
 FX = 163.7
@@ -207,7 +207,7 @@ def main() -> int:
             "window_label": "1 Jul 2025 to 30 Jun 2026",
             "fx_jpy_per_eur": FX,
             "source": "price_bp_weighted_compare_pn.csv (in_scope) x "
-                      "aim_pn_classification_v2.csv",
+                      "aim_pn_classification_20260920.csv",
             "l1": l1_names,
             "l2": [list(x) for x in l2_names],
             "l3": [list(x) for x in l3_names],

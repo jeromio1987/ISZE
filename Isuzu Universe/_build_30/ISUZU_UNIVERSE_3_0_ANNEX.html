@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<title>ISUZU / UNIVERSE 3.0 / ANNEX</title>
+<style>
+@page { size: A4; margin: 19mm 15mm 16mm 15mm; }
+* { box-sizing: border-box; }
+body { font: 10.1pt/1.5 "Segoe UI", Helvetica, Arial, sans-serif; color:#222; margin:0; }
+h1,h2,h3,h4 { font-family: Georgia, "Times New Roman", serif; color:#15233c; }
+h1 { font-size: 24pt; line-height:1.14; margin: 0 0 5mm 0; }
+h2 { font-size: 15pt; margin: 9mm 0 3mm; padding-bottom: 1.6mm;
+     border-bottom: 1.8pt solid #15233c; page-break-after: avoid; }
+h3 { font-size: 11.8pt; margin: 6mm 0 2mm; color:#1a2b4a; page-break-after: avoid; }
+h4 { font-size: 10.4pt; margin: 4.5mm 0 1.5mm; color:#c0552d; page-break-after: avoid; }
+p { margin: 0 0 2.5mm; }
+hr { border:0; border-top:1px solid #d8d2c8; margin: 5mm 0; }
+strong { color:#15233c; }
+em { color:#1a2b4a; }
+code { font-family: Consolas, "Courier New", monospace; font-size: 9pt;
+       background:#f2efe9; padding: 0 .6mm; }
+table { width:100%; border-collapse: collapse; font-size: 8.9pt; margin: 2mm 0 4mm;
+        page-break-inside: avoid; }
+th { background:#15233c; color:#f7f4ee; text-align:left; padding: 1.6mm 2mm;
+     font-weight:600; font-size:8.5pt; }
+td { padding: 1.4mm 2mm; border-bottom: .6pt solid #ddd7cc; vertical-align: top; }
+tr:nth-child(even) td { background:#faf8f3; }
+blockquote { margin: 3mm 0; padding: 2.6mm 3.6mm; background:#f4f1ea;
+             border-left: 2.8pt solid #c0552d; font-style: italic; }
+ul, ol { margin: 0 0 3mm 5mm; padding:0; }
+li { margin-bottom: 1.2mm; }
+figure { margin: 4mm 0 5mm; page-break-inside: avoid; text-align:center; }
+figure img { width: 100%; max-width: 178mm; height:auto; border: 1px solid #e6e1d7; }
+figcaption { font-size: 8.2pt; color:#5b6472; text-align:left; margin-top: 1.8mm;
+             line-height:1.42; }
+figcaption b { color:#15233c; }
+.pagebreak { page-break-after: always; height:0; }
+.cover-page { height: 252mm; display:flex; flex-direction:column; page-break-after: always;
+              padding-top: 3mm; }
+.cover-page .org { font-size: 10.5pt; letter-spacing:.30em; text-transform:uppercase;
+                   color:#15233c; font-weight:600; }
+.cover-page .family { font-size: 12.5pt; letter-spacing:.40em; text-transform:uppercase;
+                      color:#c0552d; margin-top:3mm; font-weight:700; }
+.cover-page .rule { border-top: 3pt solid #15233c; margin: 6mm 0 11mm; }
+.cover-page .title { font-family: Georgia, serif; font-size: 50pt; line-height:1.02;
+                     color:#15233c; margin:0; }
+.cover-page .strap { font-family: Georgia, serif; font-size: 16pt; line-height:1.45;
+                     color:#1a2b4a; margin: 7mm 0 0; max-width: 152mm; }
+.cover-page .grow { flex:1; }
+.cover-page .focus { border-top:1pt solid #d8d2c8; padding-top: 5mm; }
+.cover-page .focus .h { font-size: 8.4pt; letter-spacing:.20em; text-transform:uppercase;
+                        color:#5b6472; margin-bottom: 3mm; }
+.cover-page .focus li { font-size: 11pt; color:#15233c; margin-bottom: 2.4mm;
+                        font-family: Georgia, serif; }
+.cover-page .meta { border-top: 2.4pt solid #c0552d; margin-top: 7mm; padding-top: 4mm;
+                    font-size: 9.6pt; color:#15233c; font-weight:600; letter-spacing:.10em;
+                    text-transform:uppercase; }
+.cover-page .meta2 { font-size: 8.4pt; color:#5b6472; margin-top: 2mm; letter-spacing:.12em;
+                     text-transform:uppercase; }
+</style></head><body>
+
+<div class="cover-page">
+  <div class="org">ISZE / Parts Europe</div>
+  <div class="family">Annex</div>
+  <div class="rule"></div>
+  <div class="title">Universe 3.0</div>
+  <div class="strap">Tender framework, the IDS studio in full,<br>and the reference rules.</div>
+  
+  <div class="grow"></div>
+  <div class="focus">
+    <div class="h">What this annex carries</div>
+    <ul style="list-style:none;margin:0;padding:0"><li>Part A — tenders and headquarters support.</li><li>Part B — the IDS Development Studio.</li><li>Part C — measures, identities, periods and the recurring exchange.</li></ul>
+  </div>
+  <div class="meta">Annex to version 3.0 &nbsp;·&nbsp; 23 September 2026</div>
+  <div class="meta2">Internal &nbsp;·&nbsp; design detail and reference rules</div>
+</div>
+
+<h1>ISUZU / UNIVERSE 3.0 — ANNEX</h1>
+<p><strong>Design detail and reference rules</strong> · 23 September 2026 · Companion to the 25-page paper</p>
+<p>Detail behind chapters 5, 6 and 7 of the main paper, plus the reference rules the tool output depends on. Nothing here changes the recommendations or the money in the main paper. It exists so that a reader who wants to know how a release should behave can find it without reading a design specification in the middle of a funding case.</p>
+<p>Three parts. Part A is the full proposing framework for tenders and headquarters support. Part B is the IDS Development Studio in full. Part C is the reference rules — what a measure means, how periods and identities must stay apart, what the recurring exchange should carry, and the record each application keeps.</p>
+<p>This annex restores material that the review of 22 September cut from the 80-page edition when it moved the money and the participation case to the front. The 80-page edition and the Commercial Tools Edition of the same date are both withdrawn; this annex is the part of their content that the main paper no longer carries.</p>
+<hr>
+<h2>PART A — TENDERS AND HEADQUARTERS SUPPORT</h2>
+<h2>A1. What the framework is for</h2>
+<p>A tender is a specific collaboration, not a general network discussion. The lead distributor qualifies a local opportunity, the relevant Isuzu entities assemble a combined vehicle and aftersales proposition, and headquarters receives a brief that makes the requested decision unmistakable. The value is a stronger joint proposition and less reconstruction between functions, not a longer document.</p>
+<figure><img src="figures/f17_tender_parties.png" alt="Figure 17"><figcaption><b>Figure 17.</b> Proposed collaboration pattern. One function's agreement does not display the whole proposal as approved.</figcaption></figure>
+<h2>A2. Responsibilities — a common proposal does not merge them</h2>
+<p>Each function confirms the part of the offer it has authority to provide. One function's agreement does not display the whole proposal as approved.</p>
+<table><thead><tr><th>Participant</th><th>Contribution to the selected proposal</th></tr></thead><tbody>
+<tr><td>Lead distributor</td><td>Local requirements, commercial intent, bid ownership and the customer relationship</td></tr>
+<tr><td>Vehicle-sales function</td><td>Vehicle offer, relevant product positioning and decisions within its authority</td></tr>
+<tr><td>ISZE parts function</td><td>Parts scope, supported analysis and the proposed aftersales contribution</td></tr>
+<tr><td>Manufacturer / headquarters</td><td>Selected technical, product or support decisions requiring its authority</td></tr>
+</tbody></table>
+<p>The actual participants depend on the opportunity. The framework does not presume a universal headquarters committee, and a vehicle commitment cannot be inferred from a parts analysis. A technical confirmation is not a financial concession.</p>
+<h2>A3. The headquarters decision brief</h2>
+<p>The brief should lead with the opportunity and the specific support that would change the offer. It distinguishes what is known, what is proposed, and what remains dependent on another function.</p>
+<figure><img src="figures/f18_brief_sections.png" alt="Figure 18"><figcaption><b>Figure 18.</b> Proposed structure for a real opportunity. Blank information remains unconfirmed and is not filled with an assumption.</figcaption></figure>
+<table><thead><tr><th>Section</th><th>What the proposer completes</th></tr></thead><tbody>
+<tr><td>Opportunity</td><td>Lead distributor, source, requirement, known deadline and intended pursuit</td></tr>
+<tr><td>Combined offer</td><td>Vehicle and aftersales scope; participating functions and assumptions</td></tr>
+<tr><td>Requested decision</td><td>The specific support or confirmation required, its recipient and the decision deadline</td></tr>
+<tr><td>Commercial basis</td><td>Eligible activity, the unchanged alternative, relevant costs and the proposed contribution</td></tr>
+<tr><td>Responsibilities</td><td>Owner for each contribution; confirmed commitments and unresolved dependencies</td></tr>
+<tr><td>Outcome and learning</td><td>Actual submission, decision, known result and the reviewed reusable lesson</td></tr>
+</tbody></table>
+<p>Each statement carries its status: a documented requirement, distributor intent, a proposed contribution or a confirmed decision. Changes to scope or conditions identify the earlier version they affect.</p>
+<p>Vehicle revenue, parts revenue and a tender's total advertised value remain separate concepts. A tender's overall value is not expected Isuzu parts revenue, and an award is not parts billed.</p>
+<h2>A4. Readiness — requirements, not a score</h2>
+<p>Readiness should be explained by requirements, not compressed into an artificial score. The framework shows separate evidence checks instead: opportunity requirements identified, lead distributor confirmed, relevant functions assigned, eligible offer scope described, commercial assumptions stated and requested support defined. A missing item identifies the decision it prevents and the role that can resolve it.</p>
+<p>These checks do not establish the likelihood of winning. They describe the preparation of the proposal. A complete set can make a proposal ready for review while approval and award remain unknown.</p>
+<p>A complete draft is not an approval, and does not grant access to headquarters or claim that a tender has been accepted. The operating version would retain actual documents, accountable owners and source dates, and requirement or deadline changes would be versioned so every function can see whether the proposal it reviewed is still the one being pursued.</p>
+<h2>A5. Support economics — explain what the support would buy</h2>
+<p>Support should be assessed against a defined commercial proposition, not an assumed share of a notice value.</p>
+<table><thead><tr><th>State</th><th>What it records</th></tr></thead><tbody>
+<tr><td>Requested</td><td>The eligible support and its commercial purpose</td></tr>
+<tr><td>Approved</td><td>The actual decision, its terms and the authority behind it</td></tr>
+<tr><td>Observed</td><td>Award and related parts business, on their own evidence</td></tr>
+</tbody></table>
+<p>The proposal identifies the eligible parts or activities, proposed terms, relevant period and beneficiary. The financial comparison uses the same scope for the unchanged and the supported offer. Any forecast quantity is identified as a requirement, a commitment or a scenario rather than measured demand.</p>
+<p>ISZE parts gross profit can be compared on the documented net selling price and parts purchase cost basis. Other support and programme costs are shown separately when assessing contribution. A payment or concession is not automatically additional network profit: it is a cost to one party and a benefit to another. Where support is already included in the net price, it must not be deducted again.</p>
+<p>The manufacturer decision may also have a strategic rationale that is not reducible to a short-term parts calculation. That rationale should be stated rather than hidden inside an exaggerated return.</p>
+<h2>A6. Worked example — from a local ambition to a joint proposal</h2>
+<p>An illustrative journey. No actual value, customer or award is implied.</p>
+<ol>
+<li><strong>Opportunity.</strong> The distributor identifies a relevant opportunity and confirms an intention to investigate. It records the source requirements and the open questions. PRISM adds the supported market context, the vehicle function describes the possible vehicle offer, and ISZE identifies the relevant parts scope.</li>
+<li><strong>Combined case.</strong> The participating functions review the intended proposition together. The distributor explains the local competitive challenge; the Isuzu functions identify which contributions are possible within their authority and which require headquarters review. The proposal retains an unchanged-offer alternative so the requested support has a clear comparison.</li>
+<li><strong>Support decision.</strong> A concise headquarters brief states the requested decision, the supporting evidence, the conditions and the deadline. The response may confirm a contribution, amend the scope or decline. The distributor decides how to proceed with the actual bid through its existing route.</li>
+<li><strong>Outcome.</strong> The record distinguishes the submitted bid, the known award result and any documented related business. A reviewed lesson may improve the next proposal without distributing the original bid evidence to other distributors.</li>
+</ol>
+<h2>A7. Repeatable value</h2>
+<p>Each opportunity should improve the next proposal. The reusable asset is a clearer method and better evidence, not unrestricted access to previous bids.</p>
+<p>Learning should include opportunities not pursued and support not approved, as well as awarded tenders. A reasoned decision can prevent wasted effort, and a reported reason for losing remains attributed unless the evidence supports a stronger conclusion.</p>
+<p>The record keeps preparation effort, quality of the decision and commercial outcome distinct. Less preparation time can be useful even when the tender is not won. An award can occur for reasons unrelated to the framework. The programme must not select only favourable outcomes when evaluating its own usefulness.</p>
+<p><strong>What stays outside the framework.</strong> Actual customer contact, quotation production, technical approval, supply confirmation and tender submission remain in existing processes. Universe does not promise live availability and does not create new delivery obligations. It may retain a reference to an authorised decision when that helps evaluate the initiative.</p>
+<div class="pagebreak"></div>
+<h2>PART B — IDS DEVELOPMENT STUDIO IN FULL</h2>
+<h2>B1. The problem it solves</h2>
+<p>Isuzu Dealer Standards records the dealer's self-assessment. The studio makes that information explorable by section and question, retains its source wording, and helps the dealer turn a relevant priority into a development project one it controls. The product value is the ability to understand, choose, act and review in one coherent view.</p>
+<p>The dealer remains an active participant. A development objective is selected with the distributor rather than imposed by a low score, and it can concern the way the business manages its range, plans commercial activity or develops a customer segment where the questionnaire and the commercial evidence support that discussion.</p>
+<h2>B2. The five stages</h2>
+<figure><img src="figures/f19_ids_studio.png" alt="Figure 19"><figcaption><b>Figure 19.</b> Proposed analytical sequence. Each stage retains its own source period and evidence.</figcaption></figure>
+<h3>Explore — begin with the dealer's own profile</h3>
+<p>Make the original assessment understandable before anyone asks the dealer to select a project.</p>
+<p>The profile shows the actual questionnaire version, section, question and recorded answer. A recorded date or round identifies the assessment; an import date must not be substituted for a missing assessment date. Unanswered, not applicable and not supplied remain distinct states.</p>
+<p>A section view helps the dealer locate topics worth examining. A question view retains the detail that explains the section. Where a comparison group is appropriate and permitted, it uses a compatible questionnaire and a defined population, and it provides context rather than a distributor audit or a ranking of personal competence.</p>
+<p>The dealer should be able to bookmark a relevant topic, add a clarification and nominate a development ambition. That preserves the distinction between what the assessment recorded and what the dealer now intends to do.</p>
+<h3>Choose — a meaningful business ambition</h3>
+<p>The project should describe what becomes better for the dealer, not which box will be completed.</p>
+<table><thead><tr><th>Step</th><th>The question it answers</th></tr></thead><tbody>
+<tr><td>Ambition</td><td>What should improve?</td></tr>
+<tr><td>Baseline</td><td>What happens today?</td></tr>
+<tr><td>Work</td><td>Who will do what?</td></tr>
+<tr><td>Evidence</td><td>What would show implementation?</td></tr>
+</tbody></table>
+<p>The dealer and distributor identify the starting position, the work required, and the evidence that would show implementation. They also identify any assistance expected from ISZE or another function. A project waiting for that assistance remains distinguishable from a dealer project that has not progressed.</p>
+<p>The plan should be proportionate. A short project can have a small number of meaningful milestones; it does not need a complexity score or a mandatory financial claim. A more substantial development proposal may include resources, investment and an explicit review of its commercial rationale.</p>
+<h3>Progress — three records, three different stories</h3>
+<p>Keep the starting assessment, the project and any later reassessment visible beside one another. The structure is in the main paper, Figure 12.</p>
+<p>The interface allows the user to move along the development timeline and inspect each recorded change. Completing a milestone can advance project progress. It does not amend the original answer, raise an assessment score, or prove a commercial outcome.</p>
+<p>A later reassessment can add new evidence. Comparison is useful only where the questionnaire, the scoring basis and the relevant population are compatible. Where they are not, the tool can show both records accurately without presenting a misleading trend.</p>
+<p>This separation makes progress credible. A dealer can demonstrate implemented work before another assessment round exists, and an incomplete project remains visible without erasing the value of the original assessment.</p>
+<h3>Implement — the development record</h3>
+<p>Milestone states are states of the development work, not new IDS scores. The record should identify the state, the date, the relevant evidence and the person responsible for the next step. A completed milestone records what was accepted and by whom. A deferral, a changed objective or a missing supporting contribution remains visible with its reason.</p>
+<h3>Review — measure implementation and usefulness separately</h3>
+<p>Visible progress is valuable only when the work and its practical effect can be explained.</p>
+<table><thead><tr><th>Measure</th><th>What it is</th></tr></thead><tbody>
+<tr><td>Implemented</td><td>Work actually completed</td></tr>
+<tr><td>Useful</td><td>The participant's judgement</td></tr>
+<tr><td>Commercial</td><td>A matched result, where known</td></tr>
+<tr><td>Reassessed</td><td>A later actual IDS record</td></tr>
+</tbody></table>
+<p>Where a commercial outcome is evaluated, the record preserves a defined starting position and a compatible later observation, and it considers changes in product mix, market conditions, account scope and other initiatives. A before-and-after movement can be reported without claiming the project caused all of it.</p>
+<p>A participant with no eligible project at a particular time is not inactive.</p>
+<h2>B3. Commercial context — use it where it helps</h2>
+<p>A purchasing pattern can sharpen a development discussion without becoming an explanation of the assessment.</p>
+<p>A dealer-development conversation can be more useful when it includes an appropriate commercial observation: a range review may examine the composition of recorded purchasing, and a commercial-planning project may use a selected campaign baseline. The observation retains its own period and transaction meaning.</p>
+<p>The link requires a validated relationship between the source account and the assessment. A country name, a similar dealer name or a submission group is not sufficient. When the relationship is unresolved, the sources can remain available separately rather than be forced into a combined judgement.</p>
+<p>An assessment answer does not establish why purchasing changed. A strong self-assessment and a low measured spend per vehicle can concern different populations, definitions and time periods. The value of the connection is a better development question, not a causal verdict.</p>
+<p>The dealer should see the original wording and be able to correct the interpretation. That can improve both the commercial review and the relevance of the selected project. <strong>A correction that reduces the apparent problem is useful information.</strong></p>
+<h2>B4. Supporting development — assistance to a defined improvement</h2>
+<p>A dealer may need a specific resource to complete an agreed development project: relevant analytical guidance, a product-learning resource, or a bounded improvement activity. The project record can identify that need, the expected deliverable and the role that would provide it.</p>
+<table><thead><tr><th>Who</th><th>What it owns</th></tr></thead><tbody>
+<tr><td>Dealer</td><td>The selected development work</td></tr>
+<tr><td>Distributor</td><td>Review of relevance and its own contribution</td></tr>
+<tr><td>ISZE or a specialist</td><td>The specific assistance actually agreed</td></tr>
+</tbody></table>
+<p>Any co-investment proposal states its cost basis, eligible work, recipient and approval route. A proposed allocation is not a payment commitment. A project must not gain standing by submitting more sensitive information, reporting an inflated score or claiming an unsupported sales improvement.</p>
+<p>ISZE and the distributor distinguish their own commitments from the dealer's milestones. The interface can show that an input has been requested, confirmed or delivered without declaring the whole project complete, so the participant can see what it controls and what it is waiting for.</p>
+<p>A project can also proceed without financial assistance, using the tools and knowledge already available. That route is a normal option, not a fallback.</p>
+<h2>B5. Learning — reviewed examples, not shared records</h2>
+<p>The method can become reusable without sharing a dealer's private project record.</p>
+<p>An implemented project may contain a lesson worth sharing: a clearer review method, a useful product comparison, or an effective way to organise a commercial initiative. ISZE and the distributor can prepare a reviewed example describing its purpose, conditions, effort and evidence.</p>
+<p>The shared example contains only the information required to understand the method. Private comments, detailed financial terms and sensitive business circumstances remain in the original project. The contributor can correct the account and decide whether an identifiable example may be published.</p>
+<p>Recognition can acknowledge a useful correction, an implemented improvement or a transferable method. It is not a public league table based on turnover, uploaded records or self-assessment scores, and a dealer can decline publicity without losing access to the tools.</p>
+<div class="pagebreak"></div>
+<h2>PART C — REFERENCE RULES</h2>
+<h2>C1. Evidence labels</h2>
+<p>Every substantive claim in the paper and this annex carries one of four labels.</p>
+<figure><img src="figures/f22_evidence_labels.png" alt="Figure 22"><figcaption><b>Figure 22.</b> Measured activity, participant statements, modelled expectations and confirmed decisions are kept separate in every output.</figcaption></figure>
+<table><thead><tr><th>Label</th><th>How to describe it</th></tr></thead><tbody>
+<tr><td>Recorded</td><td>A source event or quantity on its actual period and coverage</td></tr>
+<tr><td>Reported</td><td>A participant's explanation, with attribution and date</td></tr>
+<tr><td>Modelled</td><td>A defined expectation or scenario, with its assumptions</td></tr>
+<tr><td>Confirmed</td><td>A specific decision or outcome supported by its own record</td></tr>
+</tbody></table>
+<h2>C2. Measures</h2>
+<table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+<tr><td>Parts billed</td><td>ISZE sales to the stated distributor on the stated source basis</td></tr>
+<tr><td>Sales to dealer</td><td>The distributor's recorded onward purchasing stage, at its own source and period</td></tr>
+<tr><td>Recorded workshop use</td><td>A separate observation, not additive to either of the above</td></tr>
+<tr><td>Parts gross profit</td><td>Revenue less the documented parts purchase cost of the quantities sold; freight, duty, overheads and distributor rebates excluded</td></tr>
+<tr><td>Gross margin</td><td>Parts gross profit divided by revenue</td></tr>
+<tr><td>Campaign contribution</td><td>Parts gross profit less additional campaign costs not already included</td></tr>
+<tr><td>Reference price</td><td>The applicable list reference for the stated entity and period; a reference valuation is not a transaction</td></tr>
+<tr><td>Deep concession</td><td>A billed price at least 20% under the reference price, on a line carrying a reference price</td></tr>
+<tr><td>Eligible fleet</td><td>The vehicles supported by the selected application evidence</td></tr>
+<tr><td>Spend per truck</td><td>A measured purchasing rate on a stated fleet basis</td></tr>
+<tr><td>Target spend</td><td>A modelled expectation, which depends on assumptions and technical applicability</td></tr>
+<tr><td>Progress</td><td>Project implementation, which is not a reassessment and not a commercial outcome</td></tr>
+</tbody></table>
+<p>Parts billed, sales to dealer and recorded workshop use must not be added together as network revenue, and must not be subtracted to infer inventory without the stock evidence.</p>
+<p>A monetary result identifies its currency, price level, date and valuation basis. A quantity-only source does not create recorded resale revenue or gross profit. A permitted reference valuation is a reference valuation, not a transaction.</p>
+<p><strong>A quantified opportunity needs three things:</strong> the euro basis, the product family or service category, and the eligible fleet or exposure. Where the relevant population or economic basis is missing, report a descriptive observation or a proposed investigation instead of assigning a recoverable-sales value.</p>
+<h2>C3. Identities — organisations, accounts and sites stay apart</h2>
+<table><thead><tr><th>Level</th><th>What it is</th></tr></thead><tbody>
+<tr><td>Organisation</td><td>The actual commercial entity</td></tr>
+<tr><td>Account</td><td>The source purchasing identity</td></tr>
+<tr><td>Site</td><td>Used only where validated</td></tr>
+<tr><td>Record</td><td>The original part and the evidence around it</td></tr>
+</tbody></table>
+<p>A purchasing account is not automatically a physical workshop. A dealer company can have several sites, and a source can combine them under one account. The programme retains the original identifier and name, then adds only validated relationships with their effective dates.</p>
+<p>The same principle applies to parts. The original transacted reference remains available alongside its classification and any separately governed successor or candidate BVP relationship. <strong>A later relationship must not silently rewrite a historical transaction.</strong></p>
+<p>IDS questions need their questionnaire version and source location as well as any local code. A repeated question code is not necessarily the same question, and assessment dates, reporting months and project-update dates serve different purposes.</p>
+<p>Unmatched records remain visible in their appropriate source totals. A relationship must not multiply values or remove genuine business because the product cannot yet connect the record.</p>
+<h2>C4. Periods and populations</h2>
+<p>Keep calendar and fiscal periods distinct. Isuzu's fiscal year runs April to March, while the historical examples in the main paper compare full calendar years. The billing reference for 2026 runs through 30 June 2026 and is a half year, not a full-year observation.</p>
+<table><thead><tr><th>Comparison</th><th>Required treatment</th></tr></thead><tbody>
+<tr><td>January to June against a full year</td><td>Do not describe the difference as growth or decline</td></tr>
+<tr><td>National against dealer records</td><td>Use each at its supported level; do not invent an allocation</td></tr>
+<tr><td>Recorded against expected service</td><td>State the technical model and the eligible population</td></tr>
+<tr><td>Old and corrected submissions</td><td>Replace the declared scope; do not add both versions</td></tr>
+</tbody></table>
+<p>A missing month is not filled with zero. An absent transaction line may be different from a source owner confirming no activity.</p>
+<p>Historical market fleets provide context where supported. They are not distributed across dealers by sales share, visits or geography, and parts that fit several vehicle classes are not allocated by fleet share and then described as measured class purchasing.</p>
+<p>ITUK is not IUK, and UMI is not UTI. Country aggregation must not silently combine their fleets or purchasing behaviour.</p>
+<h2>C5. The recurring exchange</h2>
+<figure><img src="figures/f20_exchange_fields.png" alt="Figure 20"><figcaption><b>Figure 20.</b> Proposed source standard. It describes business meaning rather than a prescribed technical file layout.</figcaption></figure>
+<p>The recurring standard describes business meaning rather than a prescribed technical file layout. The distributor and ISZE agree the included scope, the reporting calendar, the source owner and the correction method before treating a source as a recurring exchange.</p>
+<table><thead><tr><th>Information</th><th>Business definition to retain</th></tr></thead><tbody>
+<tr><td>Organisation and account</td><td>The actual distributor and the supported purchasing-account identity</td></tr>
+<tr><td>Product</td><td>The original reference; classification and relationships kept separately</td></tr>
+<tr><td>Period and quantity</td><td>The date meaning, calendar or fiscal basis, the unit and the signed treatment</td></tr>
+<tr><td>Coverage</td><td>Included products, channels and accounts; missing periods and wholesale scope</td></tr>
+<tr><td>Control and correction</td><td>Comparable control totals, generation date, version and predecessor</td></tr>
+<tr><td>Responsibility</td><td>The source owner, and the route for a definition change or a correction</td></tr>
+</tbody></table>
+<p>Retain identifiers as text, including any leading characters. Keep returns and adjustments distinguishable from positive activity. A revised month replaces its declared predecessor rather than becoming an additional month.</p>
+<p><strong>The default exchange is price-free.</strong> Selling prices, resale margins, customer identities, vehicle identifiers, full inventory and workshop job cards are not silently added to it. Sensitive financial or operational additions require an application-specific purpose and audience. An approved locally calculated aggregate may answer the question without transferring the underlying commercial book, and an aggregate is not automatically anonymous.</p>
+<p>Already supplied definitions are reused instead of repeatedly requested. Identical re-imports add no activity. Annual controls are not added to monthly observations, and national controls are not added to their dealer detail. Combined accounts stay combined unless the source genuinely supports a split.</p>
+<h2>C6. Record structures</h2>
+<h3>The campaign record</h3>
+<figure><img src="figures/f21_campaign_record.png" alt="Figure 21"><figcaption><b>Figure 21.</b> Proposed record structure. A complete draft remains a draft until conditions and authority are confirmed.</figcaption></figure>
+<table><thead><tr><th>Record</th><th>Key distinction</th></tr></thead><tbody>
+<tr><td>Selection</td><td>Candidate against eligible product and audience</td></tr>
+<tr><td>Assistance</td><td>Requested against approved against actually provided</td></tr>
+<tr><td>Economics</td><td>Gross profit against contribution after additional campaign costs</td></tr>
+<tr><td>Launch</td><td>Planned dates against actual dates and confirmed conditions</td></tr>
+<tr><td>Evaluation</td><td>Campaign activity against lasting additional business</td></tr>
+</tbody></table>
+<p>The record states the participant, the commercial objective, the original product references, the application and pack basis, the audience definition and the intended validity. A complete draft remains a draft until the relevant conditions and authority are confirmed.</p>
+<p>The financial comparison identifies baseline and proposed quantities, net prices, documented parts purchase cost, currency and effective dates. Fixed campaign expense and support are shown separately where they are not already included. A price-class margin is not substituted for the actual scenario margin.</p>
+<p>The result record uses the same eligible scope and states its follow-up period. It identifies returns, product displacement, account or coverage changes and other interventions where known. <strong>A later purchase is an observation, not automatic proof that the promotion caused additional demand.</strong></p>
+<h3>The proposal record</h3>
+<p>The tender proposal structure is in A3. Its outcome section keeps support decisions, bid submission, award and related business as separate states, and retains the reviewed lesson.</p>
+<h3>The development record</h3>
+<p>The IDS development record is in B2. Its assessment reference contains the original source, questionnaire, actual answer and available date; the development record contains the objective, the starting position, agreed milestones, owners and evidence. A later reassessment is a new record, not an automatically updated score.</p>
+<h2>C7. Application requirements</h2>
+<p>Each application has its own evidence needs. A missing optional source narrows the affected application, not the whole programme.</p>
+<table><thead><tr><th>Application</th><th>First useful output</th><th>Additional requirement before operating</th></tr></thead><tbody>
+<tr><td>Atlas</td><td>A product-level explanation of a movement</td><td>A pinned classification release and a supported period</td></tr>
+<tr><td>IDS progress</td><td>An explorable profile and a development plan</td><td>A validated source identity and real project evidence</td></tr>
+<tr><td>Tender collaboration</td><td>A structured opportunity and support proposal</td><td>Confirmed requirements, participants, authority and actual decision dates</td></tr>
+<tr><td>Deal of the Day</td><td>A selected offer scenario and a preparation brief</td><td>Approved terms, practical launch conditions and an evaluation basis</td></tr>
+</tbody></table>
+<p>There is no universal requirement to supply prices, stock, customer identities or workshop records.</p>
+<p>The production implementation must test these requirements at the point of use. A demonstration checklist or a good-looking screen is not evidence that the operating permissions, source validation and commercial authority have been implemented.</p>
+
+<div style="margin-top:8mm;border-top:1px solid #d8d2c8;padding-top:3mm;font-size:8pt;color:#5b6472">
+  ISUZU / UNIVERSE 3.0 annex · 23 September 2026 · companion to
+  <b>ISUZU_UNIVERSE_3_0_2026-09-23.pdf</b>. Read the main paper first: the recommendations and the
+  money are there, not here.
+</div>
+
+</body></html>

@@ -1,0 +1,93 @@
+{
+  "work_order": "R0",
+  "inspected_build": {
+    "expected_app_root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\UNIVERSE",
+    "expected_app_root_status": "absent",
+    "working_folder": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe",
+    "isze_git_head_file": "EVIDENCE/git_identity.txt",
+    "universe_version_label_v2_2": "unverified",
+    "inspected_at": "2026-09-21T06:43:45Z"
+  },
+  "files": [
+    {
+      "path": "EVIDENCE/BASELINE.md",
+      "sha256": "ba0784f199a28d123539e474f6a6cb4904ee4195143d4527da1083e37598b228",
+      "purpose": "Inspection evidence for C01-C06"
+    },
+    {
+      "path": "EVIDENCE/BASELINE_TEST_REPORT.md",
+      "sha256": "f4c48db100d1304383c3ddcf1e0341d66ebee398072e867af293abded93947cb",
+      "purpose": "Inspection evidence for C01-C06"
+    },
+    {
+      "path": "EVIDENCE/CRITIQUE_INDEX.md",
+      "sha256": "dd32c88af619985b5a5faa2721ae90b64964e23b7384c1acf3c4b6fa5b23f5b0",
+      "purpose": "Inspection evidence for C01-C06"
+    },
+    {
+      "path": "EVIDENCE/FEATURE_BASELINE.md",
+      "sha256": "34bc0c768ed7592e197561e8dc0eee09be800b9ebebd9c012e9b4dbc2afda431",
+      "purpose": "Inspection evidence for C01-C06"
+    },
+    {
+      "path": "EVIDENCE/git_identity.txt",
+      "sha256": "0c416eccfad5d236e8f53d338c85887b38a01f71d662fe1d950286011cdb33fd",
+      "purpose": "Inspection evidence for C01-C06"
+    },
+    {
+      "path": "EVIDENCE/PACK_STATUS.md",
+      "sha256": "a53bf88e03064df6c38d2998d9146c9894bffbd5cc00538d994bd419885ea9c3",
+      "purpose": "Inspection evidence for C01-C06"
+    },
+    {
+      "path": "EVIDENCE/REUSE_MAP.md",
+      "sha256": "5676d2f6a37c4dd393f6d879e8cf1d929699c7204080f0fb33a3ef2d08cba56d",
+      "purpose": "Inspection evidence for C01-C06"
+    },
+    {
+      "path": "EVIDENCE/roadmap_rewrite_R1.md",
+      "sha256": "beb11fe1bc31bf3273a551de1c29838a254db15aa01b6e98d321ce813181e3e2",
+      "purpose": "Inspection evidence for C01-C06"
+    },
+    {
+      "path": "ORIGINALS/Isuzu_Universe_Strategy_Paper_Reviewed_v2.pdf",
+      "sha256": "082d74df8895278ee2de778f5ddb639e24eab70ee77ba126bd7bc0affae3cf66",
+      "purpose": "Preserved original strategy input"
+    },
+    {
+      "path": "ORIGINALS/UNIVERSE_STRATEGY_REVIEW_CRITIQUE_2026-09-21.md",
+      "sha256": "afd1ca2753edc3f247ef6b9efb9a59a6ac9bd84faa0999f9aaa27368043f9f7b",
+      "purpose": "Preserved original strategy input"
+    },
+    {
+      "path": "R0_REVIEW.md",
+      "sha256": "9fe01653883a7cb799a7dc9b7ebf1cad65e4d0e7d74e7e3c9473ef8901559b70",
+      "purpose": "Explanatory R0 report"
+    },
+    {
+      "path": "SOURCE_MANIFEST.json",
+      "sha256": "4c103576d1608d1c12dbdbf1c5fba31f11f7edd6d6e934faf68547487600e009",
+      "purpose": "Machine-readable R0 control file"
+    },
+    {
+      "path": "TASK_DISPOSITION.json",
+      "sha256": "b376117d2c78463781c06eb42e3b04d9ceba5340126412aeec0f077426c9c835",
+      "purpose": "Machine-readable R0 control file"
+    }
+  ],
+  "missing_items": [
+    "Universe application root at Isuzu Universe/UNIVERSE",
+    "Verified application build label v2.2",
+    "Browser screenshots of atlas/IDS/AIM interaction",
+    "Named-dealer CY2025 detail CSV inside ZIP (excluded by privacy rule)"
+  ],
+  "redactions": [
+    "Excluded ITUK named-dealer line-level CSVs from return ZIP",
+    "Excluded PRISM bulk concatenated source .py from return ZIP (cite live paths)",
+    "No raw billing exports included"
+  ],
+  "privacy_review": {
+    "status": "completed",
+    "notes": "Manual review: ORIGINALS contain strategy paper and critique only. EVIDENCE contains markdown/text. No dealer purchase line files packaged. Aggregate schemas referenced by path."
+  }
+}

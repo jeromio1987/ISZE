@@ -1,9 +1,11 @@
 {
-  "schema": "ship_receipt/v1",
+  "schema": "ship_receipt/v2",
   "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_Pricing_Revision_AIM_Source.html",
-  "artifact_mtime_ms": 1789797607238,
-  "written_at": "2026-09-19T06:00:14.267827Z",
+  "artifact_mtime_ms": 1790078496819,
+  "written_at": "2026-09-22T12:03:41.100Z",
   "ok": true,
+  "screenshots_taken": 13,
+  "screenshots_read": 13,
   "checks": [
     {
       "id": "exists",
@@ -13,7 +15,7 @@
     {
       "id": "min_size",
       "ok": true,
-      "detail": "6605204 bytes"
+      "detail": "6873944 bytes"
     },
     {
       "id": "no_cdn",
@@ -26,121 +28,35 @@
       "detail": "no NaN literals"
     },
     {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
       "id": "open_cmd",
       "ok": true,
-      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\OPEN_Pricing_Revision_AIM_Source.cmd"
-    },
-    {
-      "id": "open_cmd_crlf",
-      "ok": true,
-      "detail": "CRLF launcher"
-    },
-    {
-      "id": "qa_probe",
-      "ok": true,
-      "detail": "{\"errors\": [], \"kpi\": 6, \"kpiVals\": [\"5.96%\", \"\\u20ac1,652,141\", \"\\u20ac34,993,609\", \"\\u20ac47,213\", \"93.6%\", \"95.3%\"], \"drill\": 23, \"movers\": 60, \"custs\": 73, \"custPn\": 23, \"custPnSort\": {\"key\": \"step\", \"dir\": -1}, \"cust\": -1, \"custL1\": -1, \"custL2\": null, \"custL3\": null, \"crumb\": \"Network\", \"custCrumb\": \"Network\", \"charts\": [{\"id\": \"c-cust-mix\", \"type\": \"bar\", \"points\": 23, \"drawn\": true}, {\"id\": \"c-league\", \"type\": \"bar\", \"points\": 22, \"drawn\": true}, {\"id\": \"c-l1\", \"type\": \"bar\", \"points\": 2"
+      "detail": "OPEN_ISZE_Pricing_Revision_AIM_Source.cmd, OPEN_Pricing_Revision_AIM_Source.cmd opens ISZE_Pricing_Revision_AIM_Source.html (CRLF ok)"
     },
     {
       "id": "visual_screenshots",
       "ok": true,
-      "detail": "2 PNG \u2014 agent must image-Read: C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\original_network_home.png; C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\original_spine_l3.png"
-    },
-    {
-      "id": "network_aim_without_soldto",
-      "ok": true,
-      "detail": "cust=-1 custPn=23 charts=[{'id': 'c-cust-mix', 'type': 'bar', 'points': 23, 'drawn': True}, {'id': 'c-league', 'type': 'bar', 'points': 22, 'drawn': True}, {'id': 'c-l1', 'type': 'bar', 'points': 23, 'drawn': True}, {'id': 'c-mix', 'type': 'doughnut', 'points': 4, 'drawn': True}, {'id': 'c-src', 'type': 'bar', 'points': 20, 'drawn': True}]"
-    },
-    {
-      "id": "has_content_markers",
-      "ok": true,
-      "detail": "kpi=6 drill=23"
-    },
-    {
-      "id": "spine_kpi_filtered",
-      "ok": true,
-      "detail": "spine step=87171.6551 all=1660928.4299999997 kpi=['6.81%', '\u20ac87,172', '\u20ac1,660,928', '\u20ac52,484', '93.6%', '95.3%']"
+      "detail": "screenshots_taken 13, screenshots_read 13 (13 path(s) passed)"
     }
   ],
   "screenshots": [
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\original_network_home.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\original_spine_l3.png"
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_1_concentration.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_2_concentration_chart.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_3_brake_figs.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_4_brake_chart.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_5_brake_l2_table.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_6_brake_pn_table.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_7_ituk_brake_figs.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_8_ituk_brake_l2.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_9_ituk_brake_pn.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_10_ituk_conc_figs.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_11_ituk_conc_chart.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_12_page_tail.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\_qa\\paint_13_bottom_viewport.png"
   ],
-  "notes": "original: AIM drill KPIs follow filtered slice; prototype: All-network DB cards + zoom",
-  "qa": {
-    "errors": [],
-    "kpi": 6,
-    "kpiVals": [
-      "5.96%",
-      "\u20ac1,652,141",
-      "\u20ac34,993,609",
-      "\u20ac47,213",
-      "93.6%",
-      "95.3%"
-    ],
-    "drill": 23,
-    "movers": 60,
-    "custs": 73,
-    "custPn": 23,
-    "custPnSort": {
-      "key": "step",
-      "dir": -1
-    },
-    "cust": -1,
-    "custL1": -1,
-    "custL2": null,
-    "custL3": null,
-    "crumb": "Network",
-    "custCrumb": "Network",
-    "charts": [
-      {
-        "id": "c-cust-mix",
-        "type": "bar",
-        "points": 23,
-        "drawn": true
-      },
-      {
-        "id": "c-league",
-        "type": "bar",
-        "points": 22,
-        "drawn": true
-      },
-      {
-        "id": "c-l1",
-        "type": "bar",
-        "points": 23,
-        "drawn": true
-      },
-      {
-        "id": "c-mix",
-        "type": "doughnut",
-        "points": 4,
-        "drawn": true
-      },
-      {
-        "id": "c-src",
-        "type": "bar",
-        "points": 20,
-        "drawn": true
-      }
-    ],
-    "spine": {
-      "ok": true,
-      "step": 87171.6551,
-      "all": 1660928.4299999997,
-      "rows": 8089,
-      "kpiVals": [
-        "6.81%",
-        "\u20ac87,172",
-        "\u20ac1,660,928",
-        "\u20ac52,484",
-        "93.6%",
-        "95.3%"
-      ],
-      "chartVals": [
-        1660928.4299999997
-      ],
-      "custCrumb": "Network \u203a Not on AIM spine \u203a Not on AIM spine \u203a Not classified at L3",
-      "qMix": "Level 3 selected. Bars show parts billed for this slice (\u20ac1,660,928), not the network step. Slice step is \u20ac87,172. The table lists the part numbers. Click the breadcrumb to step back."
-    }
-  }
+  "notes": ""
 }

@@ -124,17 +124,31 @@ EPC_FAMILY_MAP = {
 }
 
 # ── the cross-reference vocabulary ────────────────────────────────────────────────────────────
-# Named model codes. Each one is a real code on disk, not a pattern.
+# Named model codes come from the ONE canonical map
+# (`03_analytics/Isuzu/prism/data/series_to_band.csv`, via `modules/vehicle_bands.py`), not from a
+# dictionary here. Until 2026-09-23 this file held its own `CONCRETE` dictionary, which was one of
+# four places answering "what is this code?". It agreed with the canonical map on every code it
+# carried; the map simply carries two more (`NMR85`, `NQR90`).
+#
+# Note the two questions are separate and both are answered by the map: `vehicle_group` is what
+# KIND of vehicle a code names (which is what this file reports as a family), and `tonnage_band`
+# is which rung of the weight ladder it sits on. A C&E truck is a heavy truck with no tonnage
+# band; that is not a contradiction.
+PRISM_DIR = ROOT / "03_analytics" / "Isuzu" / "prism"
+sys.path.insert(0, str(PRISM_DIR))
+from modules import vehicle_bands  # noqa: E402
+
+_FAMILY_OF_GROUP = {
+    "n_series_truck": N_SERIES,
+    "heavy_truck": HEAVY,
+    "light_vehicle": LIGHT,
+}
+
 CONCRETE: dict[str, str] = {}
-for c in ("TFR", "TFS", "UCR", "UCS", "UBS", "UB"):
-    CONCRETE[c] = LIGHT
-for c in ("NLR", "NKR", "NMR", "NNR", "NPR", "NPS", "NQR", "NRR", "NHR", "NJR", "NKS", "NJS",
-          "NLS", "NMS", "NQS", "NK", "NL", "NJ", "NN", "NP", "NQ", "QKR", "QLR", "QMR", "PHR"):
-    CONCRETE[c] = N_SERIES
-for c in ("FRR", "FRD", "FRS", "FSR", "FSS", "FTS", "FTR", "FVR", "FVM", "FVZ", "FXM", "FXR",
-          "FXZ", "FYH", "GVR", "GVZ", "GXZ", "GXR", "PFR", "TBR",
-          "CVR", "CXH", "CXZ", "CYH", "CYZ", "CHR", "EXR", "EXZ"):
-    CONCRETE[c] = HEAVY
+for _code, _r in vehicle_bands.load_map().items():
+    _fam = _FAMILY_OF_GROUP.get((_r.get("vehicle_group") or "").strip())
+    if _fam:
+        CONCRETE[_code] = _fam
 
 # Wildcard codes. A pattern still names a family; only its precision is lower.
 WILDCARD: list[tuple[re.Pattern[str], str]] = [

@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-09-22T16:51:34Z",
+  "written_at": "2026-09-22T17:26:34Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -75,7 +75,7 @@
       "id": "F07-INPUT",
       "severity": "medium",
       "title": "The oil migration cannot be calculated from the payload as supplied",
-      "finding": "Both product lines' parts costs are present and the Genuine line's list price appears in the option's prose, but no transferred quantity is stated anywhere and there is no applicable net selling price for the Genuine part number 8982705240. The result is correctly unresolved rather than a fabricated zero.",
+      "finding": "Both product lines' parts costs are present and the Genuine line's list price appears in the option's prose, but no transferred quantity is stated anywhere and there is no applicable net selling price for the Genuine counterpart part number. The result is correctly unresolved rather than a fabricated zero.",
       "handling": "Needs a stated transferred quantity and an applicable net selling price for the Genuine number.",
       "owner": "commercial owner (not an agent)"
     },
@@ -411,7 +411,7 @@
       "integrate_after": "DATA-01",
       "state": "technically verified",
       "evidence": [
-        "VAT unit. The shared rule divided by 1 + rate/100 while the payload stores a fraction. On AUTODOC UK it yielded EUR 89.90 against a correct EUR 75.07, 19.8% too high. The unit is now declared on the row and required by the rule; a bare 0.2 is refused. Four checks added."
+        "VAT unit. The shared rule divided by 1 + rate/100 while the payload stores a fraction. On a UK tax-inclusive observation it yielded EUR 89.90 against a correct EUR 75.07, 19.8% too high. The unit is now declared on the row and required by the rule; a bare 0.2 is refused. Four checks added."
       ],
       "blockers": []
     },

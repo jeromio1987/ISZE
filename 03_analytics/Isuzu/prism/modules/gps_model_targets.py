@@ -44,17 +44,26 @@ def map_uio_row_to_model_group(model: str, cv_lcv: str) -> str:
     mapper used to return the N75 group for all of them and priced the whole N35 Grafter fleet at
     the N75 rate — a €4.83M error on the ITUK ceiling alone. Two paths now keep them apart:
 
-      * Explicit N35 / NMR / NLR codes -> N35_Grafter.
+      * Explicit N35 / NLR codes -> N35_Grafter.
       * Model literally "LD" -> resolved upstream. ``_interpolate_uio_detail`` splits a bare
         "LD" row into N35 and N75 rows using the workbook's own ITUK carpark breakdown
         (sheet '2. Vehicle Volume' section B), so this function only ever sees split rows.
+
+    NMR CORRECTED 2026-09-22. NMR previously fell into the N35_Grafter branch together with NLR,
+    which priced a 5.5 t N50/N55 truck at the 3.5 t rate. Two independent sources put NMR at
+    5.5 t, not 3.5 t: the VIN register (NMR85/NMR88 at 5.5 t) and Prism's own tonnage band build
+    (`scripts/build_nseries_tonnage_bands.py`: "NMR85/NMR88 sit at 5.5 t against NLR at 3.5 t").
+    NMR now maps to GROUP_N75_N50_N62, which is the €739 group and the honest band for a 5.5 t
+    truck. Affected population is small (Malta 48, Germany 81 shipped units) so the euro effect is
+    modest, but the old mapping was wrong on the facts and would have grown with the tonnage work.
     """
     m = (model or "").strip().upper()
     seg = (cv_lcv or "").strip().upper()
 
     # N35 Grafter. Checked BEFORE the generic LD rule, because the UIO workbook collapses
     # N35 into the "LD" label and only the ITUK carpark sheet separates them.
-    if "N35" in m or "GRAFTER" in m or "NLR" in m or "NMR" in m:
+    # NMR is deliberately NOT here — it is a 5.5 t N50/N55 truck (see docstring).
+    if "N35" in m or "GRAFTER" in m or "NLR" in m:
         return GROUP_N35_GRAFTER
 
     if "D-MAX" in m or "DMAX" in m or "D MAX" in m:

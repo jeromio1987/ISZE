@@ -50,7 +50,7 @@ import json
 import re
 import subprocess
 import sys
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from pathlib import Path
 
 import numpy as np
@@ -68,8 +68,12 @@ OUT_CMD = OUT_DIR / "OPEN_ISZE_PMS_Family_Evolution_v2.cmd"
 OLD_PAGES = [OUT_DIR / "ISZE_PMS_Family_Evolution.html",
              OUT_DIR / "ISZE_PMS_Family_Evolution_Deep.html"]
 CHARTJS = ROOT / "02_dashboards" / "_ui" / "chart.umd.min.js"
-SNAPSHOT = "2026-09-19"
 MIN_MONTHS = 12
+# The per-part-number billing layer is re-read from the current billing on every build. It used to
+# be read from a frozen 19 September cache, which is why the page kept printing 19 September family
+# numbers after the family table was rebuilt: the cache and the published table had parted company
+# and nothing compared them. `--use-cache` is kept for a fast repeat build within the same session.
+USE_CACHE = "--use-cache" in sys.argv
 
 norm = lambda x: (str(x).strip().lstrip("0") or "0")  # noqa: E731
 
@@ -91,7 +95,7 @@ FAM_KEYS = [f["key"] for f in FAMILIES]
 
 BANDS = [
     {"key": "3.5t_N35", "short": "3.5 t", "label": "3.5 t GVW (N35 Grafter)",
-     "note": "NLR and NMR - the N35 Grafter", "color": "#15233c"},
+     "note": "NLR and NKR - the N35 Grafter", "color": "#15233c"},
     {"key": "5.5t_N50_N55", "short": "5.5 t", "label": "5.5 t GVW (N50 / N55)",
      "note": "N50 and N55", "color": "#2f6b45"},
     {"key": "7.5t_N50_N62_N75", "short": "7.5 t", "label": "7.5 t class (N50 / N62 / N75)",
@@ -135,6 +139,75 @@ def rd(name: str, **kw) -> pd.DataFrame:
     if not p.is_file():
         die(f"missing {p}")
     return pd.read_csv(p, low_memory=False, **kw)
+
+
+def series_evidence_table() -> pd.DataFrame:
+    """The series -> band evidence table, read from the ONE authored map.
+
+    `01_data/00_derived/series_to_tonnage.csv` is a generated copy of
+    `03_analytics/Isuzu/prism/data/series_to_band.csv`: it is written by
+    `build_nseries_tonnage_bands.py` from that map and can never disagree with it at build time,
+    but it is a file on disk, so it only ever holds the map as of its last build. Leaving it to a
+    future edit of the map that is not followed by a rebuild would put a started-but-unbuilt change
+    into the evidence panel. Reading the map itself removes that window, and is the same read the
+    banded file the page's tonnage answers come from already uses.
+
+    The columns and their order are the ones the copy carries, so `seriesEvidence`,
+    `weightEvidence.settled` and the tie-out at the foot of the page are unchanged.
+    """
+    sys.path.insert(0, str(PDATA.parent))
+    from modules import vehicle_bands  # noqa: PLC0415
+
+    rows = []
+    for code, r in sorted(vehicle_bands.load_map().items()):
+        rows.append({
+            "series": code,
+            "tonnage_band": (r.get("tonnage_band") or "").strip() or vehicle_bands.UNRESOLVED,
+            "weight_label": (r.get("weight_label") or "").strip(),
+            "evidence_source": (r.get("evidence_source") or "").strip(),
+            "evidence_quote": (r.get("evidence_quote") or "").strip(),
+            "confidence": (r.get("confidence") or "").strip(),
+        })
+    return pd.DataFrame(rows)
+
+
+def tagged_billing() -> pd.DataFrame:
+    """The per-part-number billing layer, read from the current billing.
+
+    This is the read the page's euro comes out of, so it uses the project's OWN tagging path
+    (``modules.pms_tagging.tag_pms_sales``) and the published exclusions, exactly as the published
+    family table does. Reading it any other way is what let the page keep printing a family book
+    the published table no longer agreed with.
+    """
+    sys.path.insert(0, str(ROOT / "03_analytics" / "Isuzu" / "prism"))
+    from config import resolve_mapping_path  # noqa: PLC0415
+    from modules.data_prep import load_distributor_mapping  # noqa: PLC0415
+    from modules.pms_tagging import tag_pms_sales  # noqa: PLC0415
+    from modules.sales_loader import load_prism_sales  # noqa: PLC0415
+
+    df_map = load_distributor_mapping(str(resolve_mapping_path()))
+    raw, src = load_prism_sales(df_map)
+    print(f"billing read from {src} ({len(raw):,} rows)")
+    dim = pd.concat([pd.read_csv(DER / "bvp_pn_dimension.csv", dtype=str, low_memory=False),
+                     pd.read_csv(PDATA / "pms_capture_supplement.csv", dtype=str,
+                                 low_memory=False)], ignore_index=True)
+    sf = tag_pms_sales(raw, dim, fill_catalog_pms=True)
+    sf = sf[sf.is_pms.fillna(False)].copy()
+    if "is_credit_note" in sf.columns:
+        sf = sf[~sf.is_credit_note.fillna(False).astype(bool)].copy()
+    if "pms_capture_eligible" in sf.columns:
+        sf = sf[sf.pms_capture_eligible.fillna(True).astype(bool)].copy()
+    sf["pn"] = sf.part_number.map(norm)
+    sf["db"] = sf.distributor_code
+    sf["y"] = sf.year.astype("Int64")
+    sf["m"] = sf.month.astype("Int64")
+    sf["fy"] = sf.y + (sf.m >= 4).astype("Int64")
+    # The service family, from the same tagging the published table uses: the part registry is
+    # consulted before the catalogue. The banding table carries its own copy of the category and it
+    # disagrees with the pipeline on the clutch families, so the page follows the pipeline - that is
+    # what the published totals are built from.
+    sf["cat_pipeline"] = sf.pms_category
+    return sf[["pn", "db", "y", "m", "fy", "cat_pipeline", "net_sales_value", "billed_qty"]]
 
 
 def split_move(rows: list[list], member_of, cb: int, ce: int) -> dict:
@@ -182,7 +255,7 @@ def main() -> int:
     evo = rd("nseries_tonnage_evolution.csv")
     bands_dim = rd("vehicle_family_bands.csv").fillna("")
     nband = rd("epc_decode_nseries_banded.csv", dtype=str).fillna("")
-    series_bands = rd("series_to_tonnage.csv", dtype=str).fillna("")
+    series_bands = series_evidence_table()
     uio = rd("uio_by_market_type_year.csv")
     cap = rd("tonnage_capable_part_numbers.csv")
     buckets = pd.read_csv(PDATA / "uio_by_model_bucket.csv")
@@ -242,16 +315,51 @@ def main() -> int:
         return bs if len(bs) == 1 else bs + ["shared_across_bands"]
 
     # ── the billing: one frame, every euro on the page comes out of it ─────────────────────────
+    # Read from the current billing, not from a frozen copy, so the page cannot print a book the
+    # published family table has since moved away from. The cache is written after a successful read
+    # only so a repeat build in the same session can skip it with --use-cache.
     cache = BUILD_DIR / "_deep_billing_cache.parquet"
-    if not cache.is_file():
-        die(f"{cache.name} is not on disk - the part-number billing layer must be built first")
-    bill = pd.read_parquet(cache)
+    if USE_CACHE and cache.is_file():
+        bill = pd.read_parquet(cache)
+        print(f"billing read from the cache written earlier in this session ({len(bill):,} rows)")
+    else:
+        bill = tagged_billing()
+        BUILD_DIR.mkdir(parents=True, exist_ok=True)
+        bill.to_parquet(cache, index=False)
+        print(f"billing layer re-read and cached -> {cache.name} ({len(bill):,} rows)")
     bill["pn"] = bill.pn.astype(str).map(norm)
     bill = bill[bill.db.isin(MK)].copy()
-    bill["fam"] = bill.pn.map(PN_FAM)
-    bill = bill[bill.fam.notna()].copy()
-    bill["cat"] = bill.pn.map(PN_CAT)
-    bill = bill.dropna(subset=["cat"]).copy()
+    # The published family table places a part number in exactly one of five values, and a part the
+    # banding table does not resolve is POOLED - it is never dropped. Dropping it here is what made
+    # the page's pooled value short of the published one, so the page applies the published rule.
+    bill["fam"] = bill.pn.map(PN_FAM).fillna("shared_across_families")
+    unplaced = bill[~bill.pn.isin(PN_FAM)]
+    if len(unplaced):
+        print(f"pooled into 'shared' because the banding table places no family: "
+              f"{unplaced.pn.nunique()} part number(s), EUR {unplaced.net_sales_value.sum():,.2f}")
+    # ── the service family: the pipeline's own label, keyed by part number ──────────────────────
+    # The banding table carries its own copy of the service family and it answers differently from
+    # the pipeline on the clutch families, so keying the page on it puts euro in the wrong family
+    # and prints service-family totals the published table does not agree with. The pipeline's label
+    # is the one the published totals are built from, so it wins; the banding table's copy is only
+    # the fallback for a part number the pipeline did not label.
+    PN_CAT_PIPE: dict[str, str] = {}
+    if "cat_pipeline" in bill.columns:
+        for p, c in zip(bill.pn, bill.cat_pipeline):
+            if isinstance(c, str) and c and p not in PN_CAT_PIPE:
+                PN_CAT_PIPE[p] = c
+        print(f"service families taken from the pipeline for {len(PN_CAT_PIPE):,} part numbers; "
+              f"the banding table's copy is the fallback for the rest")
+
+    def service_family(cat: str) -> str:
+        return cat if cat in CAT_KEYS else "_outside_the_page"
+
+    def cell_family(pn: str) -> str:
+        c = PN_CAT_PIPE.get(pn, PN_CAT.get(pn))
+        return service_family(c if isinstance(c, str) else "")
+
+    bill = bill[bill.pn.map(cell_family) != "_outside_the_page"].copy()
+    bill["cat"] = bill.pn.map(cell_family)
 
     # ── the fleet: market x vehicle class x type x year ─────────────────────────────────────────
     uio["year"] = uio.year.astype(int)
@@ -359,17 +467,24 @@ def main() -> int:
     # ── the split, asserted in Python on the same atoms the page draws ─────────────────────────
     ci = CYC_IX["CY"]
     cyc_rows = atoms["CY"]
-    fam_of = [FAM_KEYS.index(PN_FAM[pn_order[i]]) for i in range(len(pn_order))]
+    # the same rule the billing frame uses: a part number the banding table does not place is
+    # pooled, never dropped, so the family axis always covers every part number on the page
+    fam_of = [FAM_KEYS.index(PN_FAM.get(pn_order[i], "shared_across_families"))
+              for i in range(len(pn_order))]
+    cat_of = [cell_family(pn_order[i]) for i in range(len(pn_order))]
 
     def member_fam(pn_i: int):
         return fam_of[pn_i]
+
+    def member_cat_of(pn: str) -> str:
+        return cell_family(pn)
 
     def member_band(pn_i: int):
         b = band_members(pn_order[pn_i])
         return b[0] if b else "_none"
 
     def member_cat(pn_i: int):
-        return PN_CAT.get(pn_order[pn_i], "_none")
+        return member_cat_of(pn_order[pn_i])
 
     def member_pn(pn_i: int):
         return pn_i
@@ -674,8 +789,18 @@ def main() -> int:
     print(f"never-banded markets: {neverbanded or 'none'} | no vehicle reference: "
           f"EUR {no_vehicle_ref['eur']:,.0f} on {no_vehicle_ref['pns']} part numbers")
 
+    # ── the snapshot the page states, derived from the billing it actually read ─────────────────
+    # This used to be a hand-set date. It stayed at 19 September while the data underneath it moved,
+    # so the page claimed a vintage it no longer had. It is now the last month with billing in the
+    # frame the page is built from, named as the month, because the billing is reported by month and
+    # naming a day would imply a mid-month cutoff the data does not have.
+    last_month = max((int(r.y), int(r.m)) for r in bill.dropna(subset=["y", "m"]).itertuples())
+    snapshot = date(last_month[0], last_month[1], 1).strftime("%B %Y")
+    print(f"snapshot stated on the page: {snapshot} (last month with billing in the frame, "
+          f"to the last day of that month)")
+
     payload = {
-        "snapshot": SNAPSHOT,
+        "snapshot": snapshot,
         "generated": datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC"),
         "markets": MARKETS,
         "lane": LANE,
@@ -688,7 +813,8 @@ def main() -> int:
         "pn": {
             "number": pn_order,
             "fam": fam_of,
-            "cat": [CAT_KEYS.index(PN_CAT[p]) if PN_CAT.get(p) in CAT_KEYS else 0 for p in pn_order],
+            "cat": [CAT_KEYS.index(cat_of[i]) if cat_of[i] in CAT_KEYS else 0
+                    for i in range(len(pn_order))],
             "bands": [band_members(p) for p in pn_order],
             "nbands": [int(PN_NBANDS.get(p, 0)) for p in pn_order],
             "fits": [PN_FITS.get(p, []) for p in pn_order],
@@ -750,7 +876,8 @@ def main() -> int:
     chart_js = CHARTJS.read_text(encoding="utf-8")
     chart_js = re.sub(r"//# sourceMappingURL=\S+", "", chart_js)
     html = (TEMPLATE.replace("__CHARTJS__", chart_js)
-            .replace("__PAYLOAD__", body).replace("__SNAPSHOT__", SNAPSHOT))
+            .replace("__PAYLOAD__", body).replace("__SNAPSHOT__", snapshot)
+            .replace("__OBSERVED__", snapshot))
 
     parts = html.split("<script>", 2)
     if len(parts) < 3:
@@ -1000,7 +1127,7 @@ ul.tight li{margin:2px 0}
 </header>
 
 <div class="basis-strip">
-  <div><b>Observed</b>Parts billed through 30 June 2026</div>
+  <div><b>Observed</b>Parts billed through __OBSERVED__</div>
   <div><b>Modelled</b>Service demand and rates where the IML schedule applies</div>
   <div><b>Fleet</b>Historical fleet basis only; forward figures from 2026 are not quoted as forecasts</div>
 </div>
@@ -1752,8 +1879,14 @@ function render(){
       +').<br>Last period: '+eur(R0)+' over '+n0(fA.value)+' vehicles.<br>'
       +'This is the measure that does not move just because the fleet moved.'});
   k.push({lab:'Net move per vehicle', cls:'g', val: pvAll.ok? eur2(pvAll.total):'n/a',
+    /* The four terms are each rounded to the cent on their own, so adding them can land a cent
+       away from the headline above them. The note is written INLINE, on the same small-print line
+       as the terms and in the same font, so the tile keeps the height it had before: a note on a
+       line of its own makes the tile 15 px taller, and on the ISZE clock the page's own More
+       controls control is then pushed below the fold and cannot be clicked. No figure changes. */
     sub: pvAll.ok? ('fleet '+sign(pvAll.fleet,2)+' | price '+sign(pvAll.price,2)+' | volume '
-      +sign(pvAll.vol,2)+' | mix '+sign(pvAll.mix,2)) : (pvAll.why||'not comparable'),
+      +sign(pvAll.vol,2)+' | mix '+sign(pvAll.mix,2)
+      +' (rounded to the cent; a cent out in total)') : (pvAll.why||'not comparable'),
     tip:'<b>The change in euro per vehicle, split</b><br>Fleet '+eur2(pvAll.ok?pvAll.fleet:null)
       +': what the fleet change alone took away or handed over.<br>Price '
       +eur2(pvAll.ok?pvAll.price:null)+' on the units actually sold.<br>Volume '
@@ -2587,7 +2720,7 @@ function renderStatic(pr, lvl){
     +'that is not derived from the two charts.';
 
   /* ── the fleet panel ──────────────────────────────────────────────────────────────────────── */
-  var rowsF='', total0=0, total1=0, inBand=false;
+  var rowsF='', total0=0, total1=0, inBand=false, basesThis={};
   markets().forEach(function(m){
     var y0=(D.fleet[m]||{})[String(pr.b)]||{}, y1=(D.fleet[m]||{})[String(pr.e)]||{};
     var f=D.flat[m]||{};
@@ -2598,17 +2731,24 @@ function renderStatic(pr, lvl){
     var v1 = S.band? (y1.n_series||0) : (y1[key]||0);
     var fv = S.band? (f.n_series||0) : (f[key]||0);
     total0+=v0; total1+=v1;
+    if(y1.basis) basesThis[y1.basis]=true; else basesThis['n/a']=true;
     rowsF+='<tr><td><b>'+m+'</b></td><td>'+n0(v0)+'</td><td>'+n0(v1)+'</td>'
       +'<td class="'+cls(v1-v0)+'">'+sign(v1-v0)+'</td>'
       +'<td>'+n0(fv)+'</td><td>'+(y1.basis||'n/a')+'</td></tr>';
   });
+  /* The totals row states a single basis only when every row above it carries that same one. Where
+     the rows mix bases - actual, estimated and forecast years all appear on the ISO clock - naming
+     one of them would be a claim about the whole row that its own figures do not support, so the
+     cell takes a dash and the caption beneath states each year's basis instead. */
+  var basisCells=Object.keys(basesThis);
+  var totalBasis = (basisCells.length===1)? basisCells[0] : '&mdash;';
   document.getElementById('t_fleet').tHead.innerHTML='<tr><th>Customer</th><th class="n">'
     +pr.bl.split(' ')[0]+'</th><th class="n">'+pr.el.split(' ')[0]+'</th><th class="n">change</th>'
     +'<th class="n">const 2025</th><th>basis</th></tr>';
   document.getElementById('t_fleet').tBodies[0].innerHTML=rowsF
     +'<tr style="font-weight:600"><td>All selected</td><td class="n">'+n0(total0)+'</td>'
     +'<td class="n">'+n0(total1)+'</td><td class="n '+cls(total1-total0)+'">'+sign(total1-total0)
-    +'</td><td class="n">&mdash;</td><td></td></tr>';
+    +'</td><td class="n">&mdash;</td><td class="n">'+totalBasis+'</td></tr>';
   document.getElementById('cap-fleet').innerHTML='Showing the '
     +(S.band? 'whole N-series fleet of each market, because the weight split of it is the band panel '
         +'above' : (S.fam? byKey(D.families,S.fam).label+' fleet' : 'whole fleet'))

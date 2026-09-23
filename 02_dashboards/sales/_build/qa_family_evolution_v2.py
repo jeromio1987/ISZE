@@ -172,6 +172,24 @@ def right_click_canvas(pg, canvas_id: str = "c_main") -> None:
     )
 
 
+def open_more_controls(pg) -> bool:
+    """Open the More controls panel, because the controls inside it start collapsed.
+
+    The measure, fleet and reset controls and the help button live inside a panel that begins
+    closed. A reader opens the panel before clicking anything in it; the gate has to do the same,
+    because a click on a control the reader cannot see is not a reading of the page.
+    """
+    already = js(pg, "() => { const d=document.getElementById('moreControls'); return !!(d&&d.open); }")
+    if already:
+        return True
+    pt = js(pg, """() => { const s=document.querySelector('#moreControls > summary');
+        const r=s.getBoundingClientRect();
+        return {x: Math.round(r.left + r.width/2), y: Math.round(r.top + r.height/2)}; }""")
+    pg.mouse.click(pt["x"], pt["y"])
+    pg.wait_for_timeout(350)
+    return bool(js(pg, "() => { const d=document.getElementById('moreControls'); return !!(d&&d.open); }"))
+
+
 def main() -> int:
     if not HTML.is_file():
         print(f"FAIL: {HTML} is not on disk")
@@ -247,9 +265,25 @@ def main() -> int:
             # between two different period pairs
             pg.select_option("#selClock", cl)
             pg.wait_for_timeout(500)
+            # A period pair containing a year from 2026 onward sits on a workbook fleet row that is
+            # a forward figure, and the page refuses to put a per-vehicle rate on it. That refusal is
+            # the page's own honesty rule, not a fault, so this check follows the page onto whichever
+            # denominator it chose and compares the matching figures the build recorded for that same
+            # denominator - rather than failing the page for being honest about the fleet it was given.
+            denom = js(pg, "() => window.__pmfe2.state.denom")
+            forward = js(pg, "() => { const p = window.__pmfe2.pair(); "
+                             "return p.b >= 2026 || p.e >= 2026; }")
+            if forward:
+                print(f"   {cl}: the pair {frame['base']}->{frame['end']} contains a year from 2026 "
+                      f"onward, so the page is on the '{denom}' fleet; the build's own figures for "
+                      f"that denominator are the ones compared")
             live = js(pg, "() => window.__pmfe2.pctCheck()")
             check(live.get("clock") == cl, f"the page is on the {cl} clock for the {cl} check",
                   str(live.get("clock")))
+            check(live.get("denom") == denom, f"the {cl} check read the denominator the page is on",
+                  str(live.get("denom")))
+            f_key = "f" if denom != "flat" else "flatF"
+            p_key = "ratePct" if denom != "flat" else "flatRatePct"
             worst_e = worst_f = worst_p = 0.0
             for fk, s in frame["byFamily"].items():
                 live_fam = live["byFamily"].get(fk)
@@ -257,9 +291,10 @@ def main() -> int:
                     continue
                 worst_e = max(worst_e,
                               abs((s["eur1"] - s["eur0"]) - (live_fam["eur1"] - live_fam["eur0"])))
-                worst_f = max(worst_f, abs(s["f1"] - live_fam["f1"]))
-                if s["ratePct"] is not None and live_fam["ratePct"] is not None:
-                    worst_p = max(worst_p, abs(s["ratePct"] - live_fam["ratePct"]))
+                if s.get(f_key + "1") is not None and live_fam.get(f_key + "1") is not None:
+                    worst_f = max(worst_f, abs(s[f_key + "1"] - live_fam[f_key + "1"]))
+                if s.get(p_key) is not None and live_fam.get(p_key) is not None:
+                    worst_p = max(worst_p, abs(s[p_key] - live_fam[p_key]))
             check(worst_e < 1.0, f"{cl}: every vehicle type's euro delta ties to the build",
                   f"largest gap EUR {worst_e:,.2f}")
             check(worst_f < 0.01, f"{cl}: every fleet figure ties to the build",
@@ -294,6 +329,8 @@ def main() -> int:
 
         # ── 2. the control inventory the brief requires ────────────────────────────────────────
         print("\n2. the control inventory")
+        check(open_more_controls(pg),
+              "the More controls panel opens from its own summary")
         inv = js(pg, """() => {
             const q = id => document.getElementById(id);
             const sc = q('selCust');
@@ -479,6 +516,7 @@ def main() -> int:
               js(pg, "() => document.activeElement.id"))
 
         # the help popup opens and closes on real clicks
+        check(open_more_controls(pg), "the More controls panel is open before the help control")
         pg.click("#btnHelp")
         pg.wait_for_timeout(250)
         check(js(pg, "() => window.__pmfe2.helpOpen()"), "the help popup opens from its button")
@@ -572,13 +610,26 @@ def main() -> int:
             pg.set_viewport_size({"width": w, "height": h})
             pg.wait_for_timeout(400)
             geo = js(pg, """() => {
+                /* Each toolbar is measured on its own. The primary toolbar and the panel behind
+                   More controls are two separate blocks on two separate rows of the page, so a
+                   bottom-line count taken across both would call a two-block layout a wrapping
+                   toolbar. What the check is actually for is that no single toolbar wraps onto a
+                   second line at this width. */
+                const blocks = Array.from(document.querySelectorAll('.controls')).map(c => {
+                  const kids = Array.from(c.querySelectorAll(':scope > .ctrl'));
+                  const bottoms = [...new Set(kids.map(e =>
+                    Math.round(e.getBoundingClientRect().bottom)))];
+                  const r = c.getBoundingClientRect();
+                  return {top: Math.round(r.top), bottom: Math.round(r.bottom),
+                          h: Math.round(r.height), lines: bottoms.length, bottoms: bottoms,
+                          visible: !!(c.offsetWidth || c.offsetHeight)}; });
                 const c = document.querySelector('.controls').getBoundingClientRect();
-                const kids = Array.from(document.querySelectorAll('.controls > .ctrl'));
-                const bottoms = [...new Set(kids.map(e =>
-                  Math.round(e.getBoundingClientRect().bottom)))];
                 const m = document.getElementById('c_main').getBoundingClientRect();
+                const worst = Math.max.apply(null, blocks.map(b => b.lines));
                 return {controlsTop: Math.round(c.top), controlsBottom: Math.round(c.bottom),
-                        controlsH: Math.round(c.height), lines: bottoms.length, bottoms: bottoms,
+                        controlsH: Math.round(c.height), lines: worst,
+                        blocks: blocks,
+                        allToolbarsSingleLine: blocks.every(b => b.lines <= 1),
                         mainTop: Math.round(m.top), mainBottom: Math.round(m.bottom),
                         canvases: document.querySelectorAll('canvas').length,
                         charts: Object.keys(window.__pmfe2.charts()).length}; }""")
@@ -593,12 +644,20 @@ def main() -> int:
             box = a[t:bb, l:r]
             ink = (box.max(axis=2) < 235)
             geo["mainBoxInkPct"] = round(100 * float(ink.mean()), 2)
-            print(f"   {w}x{h}: controls {geo['controlsTop']}->{geo['controlsBottom']} px "
-                  f"({geo['controlsH']} px tall, {geo['lines']} line(s)); "
+            print(f"   {w}x{h}: primary toolbar {geo['controlsTop']}->{geo['controlsBottom']} px "
+                  f"({geo['controlsH']} px tall, {geo['lines']} line(s) at most); "
                   f"first chart {geo['mainTop']}->{geo['mainBottom']}; "
                   f"ink in that box {geo['mainBoxInkPct']}%")
+            for bi, blk in enumerate(geo["blocks"]):
+                print(f"      toolbar {bi}: {blk['top']}->{blk['bottom']} px, "
+                      f"{blk['lines']} line(s) at {blk['bottoms']}, visible {blk['visible']}")
             if w >= 1440:
-                check(geo["lines"] == 1, f"{w}px: the toolbar is on one line", str(geo["bottoms"]))
+                check(geo["allToolbarsSingleLine"],
+                      f"{w}px: no toolbar wraps onto a second line",
+                      str([[b["lines"], b["bottoms"]] for b in geo["blocks"]]))
+                check(geo["blocks"][1]["visible"] is False or geo["blocks"][1]["lines"] <= 1,
+                      f"{w}px: the More controls panel does not wrap its own toolbar",
+                      str(geo["blocks"][1]["bottoms"]))
             check(geo["mainTop"] + 60 <= 900,
                   f"{w}px: the first chart starts inside the first viewport",
                   f"top {geo['mainTop']}")
@@ -895,6 +954,7 @@ def main() -> int:
                              ("f10", "#tbl10 tbody tr.clickable", "a ranked-table row")):
             pg.click(f"#segForm button[data-f='{k}']")
             pg.wait_for_timeout(400)
+            check(open_more_controls(pg), "the More controls panel is open before Reset")
             pg.click("#btnReset")
             pg.wait_for_timeout(400)
             before = js(pg, "() => window.__pmfe2.level()")

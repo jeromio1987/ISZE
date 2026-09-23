@@ -1,0 +1,118 @@
+﻿========================================================================================================================
+A. IS THERE A SEAM YEAR FROM WHICH A NON-NEGATIVE COHORT HISTORY EXISTS?
+========================================================================================================================
+
+r54  PORTUGL   LCV   V19 series 2010-2025: [1521, 1342, 1003, 900, 1049, 1236, 1555, 2186, 2635, 3253, 3267, 3313, 3418, 3766, 4410, 4733]
+   back-solve from 1990: negative implied cohorts (|.|>1 unit): [(2005, -14.6), (2006, -132.7), (2012, -34.0)]
+   best seam (fewest negatives strictly after it): seam=2013, still-negative years after it: none
+   seams that leave NO negative cohort anywhere after them: [2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020]
+
+r90  CYPRUS    LCV   V19 series 2010-2025: [8450, 7261, 6175, 5236, 4417, 3721, 3168, 2740, 2347, 2197, 1829, 1603, 1601, 1734, 1859, 2105]
+   back-solve from 1990: negative implied cohorts (|.|>1 unit): [(2014, -137.6)]
+   best seam (fewest negatives strictly after it): seam=1991, still-negative years after it: [(2014, -175.1)]
+   seams that leave NO negative cohort anywhere after them: NONE
+
+r26  IRELAND   CV    V19 series 2010-2025: [3766, 3303, 2848, 2390, 12, 190, 359, 498, 706, 820, 731, 718, 718, 713, 749, 731]
+   back-solve from 1990: negative implied cohorts (|.|>1 unit): [(2014, -1921.7), (2020, -15.7), (2021, -59.0), (2022, -47.1), (2023, -127.7), (2024, -39.1)]
+   best seam (fewest negatives strictly after it): seam=2014, still-negative years after it: [(2020, -80.1)]
+   seams that leave NO negative cohort anywhere after them: NONE
+
+r29  IRELAND   LCV   V19 series 2010-2025: [5836, 4736, 3795, 3060, 2472, 2097, 1817, 1620, 1435, 870, 884, 916, 1004, 1018, 1135, 1338]
+   back-solve from 1990: negative implied cohorts (|.|>1 unit): [(2012, -19.0), (2014, -53.9), (2019, -317.7)]
+   best seam (fewest negatives strictly after it): seam=2019, still-negative years after it: none
+   seams that leave NO negative cohort anywhere after them: [2019, 2020]
+
+r51  PORTUGL   CV    V19 series 2010-2025: [16964, 17320, 17166, 16605, 23, 96, 323, 619, 909, 1502, 1554, 1742, 1922, 2127, 2239, 2206]
+   back-solve from 1990: negative implied cohorts (|.|>1 unit): [(2014, -14813.5), (2023, -736.6), (2024, -822.8), (2025, -60.8)]
+   best seam (fewest negatives strictly after it): seam=2014, still-negative years after it: none
+   seams that leave NO negative cohort anywhere after them: [2014, 2015, 2016, 2017, 2018, 2019]
+
+r88  CYPRUS    CV    V19 series 2010-2025: [638, 506, 389, 281, 0, 5, 20, 45, 66, 101, 100, 119, 149, 200, 213, 203]
+   back-solve from 1990: negative implied cohorts (|.|>1 unit): [(2020, -7.7)]
+   best seam (fewest negatives strictly after it): seam=2013, still-negative years after it: none
+   seams that leave NO negative cohort anywhere after them: [2013, 2014, 2015, 2016, 2017, 2018]
+
+r33  BELGIUM   CV    V19 series 2010-2025: [0, 0, 0, 0, 6, 16, 37, 54, 66, 81, 92, 105, 105, 116, 123, 113]
+   back-solve from 1990: negative implied cohorts (|.|>1 unit): none
+   best seam (fewest negatives strictly after it): seam=1991, still-negative years after it: none
+   seams that leave NO negative cohort anywhere after them: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
+
+r79  GREECE    CV    V19 series 2010-2025: [0, 0, 0, 0, 1, 4, 23, 34, 42, 46, 49, 49, 47, 47, 43, 37]
+   back-solve from 1990: negative implied cohorts (|.|>1 unit): none
+   best seam (fewest negatives strictly after it): seam=1991, still-negative years after it: none
+   seams that leave NO negative cohort anywhere after them: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016]
+
+========================================================================================================================
+B. "RECONSTRUCT FROM THE SEAM AND SCALE TO THE SEAM LEVEL" - what input/k does it imply?
+========================================================================================================================
+
+--- r54  PORTUGL LCV ---
+   candidate-a seam rule (neg > 25% of fleet) = none
+   seam 2014: pre-2026 stock from post-seam cohorts = 4267.1 ; 2025 level = 4733 ; scale to 2025 = 1.109
+        scaled forecast = [5731, 6513, 7238, 7934, 8629] ; scaled input = [998, 998, 931, 932, 932] ; k with scaled input = [(2027, 0.962), (2028, 0.968), (2029, 0.967), (2030, 0.97)]
+        unscaled forecast = [5167, 5872, 6525, 7153, 7779] ; k with disclosed input = [(2027, 0.9623), (2028, 0.9682), (2029, 0.9675), (2030, 0.97)]
+   seam 2015: pre-2026 stock from post-seam cohorts = 4075.2 ; 2025 level = 4733 ; scale to 2025 = 1.161
+        scaled forecast = [5778, 6829, 7596, 8333, 9046] ; scaled input = [1045, 1045, 975, 976, 976] ; k with scaled input = [(2027, 1.001), (2028, 0.969), (2029, 0.968), (2030, 0.968)]
+        unscaled forecast = [4975, 5880, 6540, 7175, 7789] ; k with disclosed input = [(2027, 1.0011), (2028, 0.9694), (2029, 0.9686), (2030, 0.9684)]
+   seam 2005: pre-2026 stock from post-seam cohorts = 4122.3 ; 2025 level = 4733 ; scale to 2025 = 1.148
+        scaled forecast = [5766, 6794, 7720, 8336, 8941] ; scaled input = [1033, 1033, 964, 965, 965] ; k with scaled input = [(2027, 0.999), (2028, 0.994), (2029, 0.955), (2030, 0.957)]
+        unscaled forecast = [5022, 5917, 6724, 7260, 7787] ; k with disclosed input = [(2027, 0.9991), (2028, 0.9945), (2029, 0.9547), (2030, 0.9568)]
+   seam 2006: pre-2026 stock from post-seam cohorts = 4210.1 ; 2025 level = 4733 ; scale to 2025 = 1.124
+        scaled forecast = [5745, 6503, 7397, 8244, 8851] ; scaled input = [1012, 1011, 944, 945, 945] ; k with scaled input = [(2027, 0.956), (2028, 0.992), (2029, 0.987), (2030, 0.959)]
+        unscaled forecast = [5110, 5784, 6580, 7333, 7874] ; k with disclosed input = [(2027, 0.9558), (2028, 0.9924), (2029, 0.9867), (2030, 0.9592)]
+
+--- r90  CYPRUS LCV ---
+   candidate-a seam rule (neg > 25% of fleet) = none
+   seam 2014: pre-2026 stock from post-seam cohorts = 2873.1 ; 2025 level = 2105 ; scale to 2025 = 0.733
+        scaled forecast = [2382, 2366, 2411, 2427, 2528] ; scaled input = [277, 273, 273, 263, 263] ; k with scaled input = [(2027, 0.879), (2028, 0.904), (2029, 0.898), (2030, 0.933)]
+        unscaled forecast = [3252, 3229, 3291, 3313, 3450] ; k with disclosed input = [(2027, 0.8785), (2028, 0.904), (2029, 0.8976), (2030, 0.933)]
+   seam 2015: pre-2026 stock from post-seam cohorts = 2199.4 ; 2025 level = 2105 ; scale to 2025 = 0.957
+        scaled forecast = [2467, 3232, 3299, 3316, 3381] ; scaled input = [362, 356, 356, 343, 344] ; k with scaled input = [(2027, 1.166), (2028, 0.91), (2029, 0.901), (2030, 0.916)]
+        unscaled forecast = [2578, 3377, 3446, 3464, 3533] ; k with disclosed input = [(2027, 1.1656), (2028, 0.9103), (2029, 0.9011), (2030, 0.9163)]
+   seam 2005: pre-2026 stock from post-seam cohorts = 2811.7 ; 2025 level = 2105 ; scale to 2025 = 0.749
+        scaled forecast = [2389, 2665, 2893, 2748, 2682] ; scaled input = [284, 279, 279, 269, 269] ; k with scaled input = [(2027, 0.999), (2028, 0.981), (2029, 0.857), (2030, 0.878)]
+        unscaled forecast = [3190, 3559, 3865, 3671, 3583] ; k with disclosed input = [(2027, 0.9991), (2028, 0.9814), (2029, 0.857), (2030, 0.8782)]
+   seam 2006: pre-2026 stock from post-seam cohorts = 3116.7 ; 2025 level = 2105 ; scale to 2025 = 0.675
+        scaled forecast = [2361, 2318, 2566, 2722, 2622] ; scaled input = [256, 251, 251, 242, 242] ; k with scaled input = [(2027, 0.876), (2028, 0.999), (2029, 0.966), (2030, 0.874)]
+        unscaled forecast = [3495, 3433, 3800, 4030, 3882] ; k with disclosed input = [(2027, 0.8758), (2028, 0.9985), (2029, 0.9661), (2030, 0.8742)]
+
+========================================================================================================================
+C. RETENTION k FOR EVERY ROW, USING CANDIDATE b's DISCLOSED INPUT
+========================================================================================================================
+row  country   L/C  2030 value a -> b            | k (candidate a)                        | k (candidate b)                       
+9    ISRAEL    LCV  12249.0 -> 12248.0           | 0.875,0.866,0.862,0.850,0.850          | 0.875,0.866,0.862,0.850,0.850         
+12   ICELAND   LCV  562.0 -> 563.0               | 0.894,0.916,0.840,0.916,0.942          | 0.894,0.916,0.842,0.916,0.943         
+15   NORWAY    LCV  5070.0 -> 5068.0             | 0.862,0.868,0.835,0.844,0.836          | 0.862,0.868,0.835,0.844,0.835         
+18   SWEDEN    LCV  8885.0 -> 8886.0             | 0.917,0.908,0.908,0.911,0.897          | 0.917,0.908,0.908,0.911,0.897         
+19   DENMARK   LD   1.0 -> 1.0                   | 0.970,0.970,0.970,0.970,0.970          | 0.970,0.970,0.970,0.970,0.970         
+21   DENMARK   LCV  1038.0 -> 1038.0             | 0.906,0.920,0.892,0.892,0.900          | 0.906,0.920,0.892,0.892,0.900         
+25   U KING    LCV  34546.0 -> 34546.0           | 0.879,0.877,0.877,0.877,0.877          | 0.879,0.877,0.877,0.877,0.877         
+26   IRELAND   LD   1388.0 -> 1389.0             | 0.965,0.885,0.894,0.917,0.930          | 0.965,0.884,0.895,0.917,0.931         
+28   IRELAND   F-Series 59.0 -> 59.0                 | 0.937,0.934,0.918,0.897,0.887          | 0.926,0.945,0.918,0.884,0.901         
+29   IRELAND   LCV  2499.0 -> 2499.0             | 0.888,0.898,0.924,0.882,0.882          | 0.888,0.898,0.924,0.882,0.882         
+33   BELGIUM   LD   223.0 -> 224.0               | 0.899,0.910,0.911,0.922,0.930          | 0.899,0.910,0.917,0.928,0.926         
+35   BELGIUM   LCV  8502.0 -> 8503.0             | 0.880,0.889,0.885,0.886,0.888          | 0.880,0.889,0.885,0.886,0.888         
+42   GERMANY   LD   3493.0 -> 3493.0             | 0.911,0.988,0.923,0.908,0.945          | 0.911,0.987,0.924,0.908,0.945         
+43   GERMANY   MD   14.0 -> 14.0                 | 0.999,0.857,0.800,0.752,0.782          | 0.999,0.857,0.800,0.752,0.782         
+44   GERMANY   LCV  10597.0 -> 10597.0           | 0.887,0.887,0.874,0.872,0.862          | 0.887,0.887,0.875,0.872,0.861         
+51   PORTUGL   LD   3318.0 -> 3318.0             | 0.913,0.914,0.908,0.911,0.918          | 0.913,0.914,0.908,0.911,0.918         
+53   PORTUGL   F-Series 173.0 -> 173.0               | 0.948,0.934,0.918,0.902,0.877          | 0.948,0.934,0.918,0.902,0.877         
+54   PORTUGL   LCV  6251.0 -> 6691.0             | 0.889,0.886,0.898,0.898,0.907          | 0.871,0.904,0.945,0.928,0.916         
+58   ITALY     LD   31642.0 -> 31641.0           | 0.924,0.907,0.886,0.866,0.838          | 0.924,0.907,0.886,0.866,0.838         
+59   ITALY     MD   935.0 -> 935.0               | 0.964,0.878,0.869,0.853,0.832          | 0.964,0.878,0.869,0.853,0.832         
+60   ITALY     LCV  38138.0 -> 38137.0           | 0.883,0.889,0.887,0.890,0.896          | 0.883,0.889,0.887,0.890,0.896         
+61   MALTA     LD   242.0 -> 242.0               | 0.966,0.893,0.885,0.889,0.885          | 0.966,0.893,0.885,0.893,0.882         
+63   MALTA     LCV  780.0 -> 781.0               | 0.891,0.826,0.855,0.862,0.881          | 0.892,0.825,0.856,0.862,0.881         
+66   FINLAND   LCV  1086.0 -> 1086.0             | 0.810,0.857,0.822,0.836,0.897          | 0.811,0.857,0.822,0.836,0.896         
+69   POLAND    LCV  18.0 -> 16.0                 | 2.220,0.809,0.801,0.745,0.717          | 2.184,0.823,0.781,0.738,0.668          A-VIOLATION B-VIOLATION
+      A violations: [(2026, 2.22)]
+      B violations: [(2026, 2.1843)]
+75   HUNGARY   LCV  3040.0 -> 3040.0             | 0.866,0.860,0.878,0.872,0.873          | 0.866,0.860,0.878,0.872,0.873         
+79   GREECE    LD   107.0 -> 108.0               | 0.835,0.889,0.904,0.927,0.933          | 0.835,0.889,0.904,0.927,0.943         
+81   GREECE    LCV  5133.0 -> 5133.0             | 0.904,0.904,0.928,0.930,0.926          | 0.904,0.904,0.928,0.930,0.926         
+84   ROMANIA   LCV  1331.0 -> 1332.0             | 0.903,0.906,0.895,0.898,0.898          | 0.903,0.906,0.895,0.898,0.898         
+88   CYPRUS    LD   245.0 -> 244.0               | 1.138,0.867,0.860,0.865,0.874          | 1.138,0.867,0.856,0.864,0.874          A-VIOLATION B-VIOLATION
+      A violations: [(2026, 1.1382)]
+      B violations: [(2026, 1.1382)]
+90   CYPRUS    LCV  2614.0 -> 3868.0             | 0.883,0.879,0.886,0.884,0.894          | 1.365,0.964,0.952,0.931,0.921          B-VIOLATION
+      B violations: [(2026, 1.365)]

@@ -1,29 +1,31 @@
 {
-  "generated_at": "2026-09-19T05:50:32+00:00",
+  "generated_at": "2026-09-23T04:35:18+00:00",
   "generated_by": "03_analytics/Isuzu/prism/scripts/build_model_code_to_tonnage.py",
   "table": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\03_analytics\\Isuzu\\prism\\data\\model_code_to_tonnage.csv",
   "bands": [
     "LCV_D-Max",
     "3.5t_N35",
+    "5.5t_N50_N55",
     "7.5t_N50_N62_N75",
     "F_series_MD_heavy",
     "other"
   ],
-  "rows": 120,
-  "resolved": 70,
-  "unresolved": 50,
+  "rows": 121,
+  "resolved": 69,
+  "unresolved": 52,
   "by_band": {
-    "(blank)": 50,
+    "(blank)": 52,
     "other": 37,
     "F_series_MD_heavy": 17,
     "3.5t_N35": 2,
-    "7.5t_N50_N62_N75": 8,
+    "5.5t_N50_N55": 1,
+    "7.5t_N50_N62_N75": 6,
     "LCV_D-Max": 6
   },
   "by_confidence": {
-    "unresolved": 50,
-    "medium": 48,
-    "low": 16,
+    "unresolved": 52,
+    "medium": 46,
+    "low": 17,
     "high": 6
   },
   "resolved_codes": [
@@ -84,7 +86,6 @@
     "NKR",
     "NLR",
     "NMR",
-    "NMR85",
     "NNR",
     "NPR",
     "NPS",
@@ -116,6 +117,7 @@
     "GV",
     "GX",
     "GXR",
+    "NAN",
     "NHR",
     "NHS",
     "NJ",
@@ -125,6 +127,7 @@
     "NKS",
     "NL",
     "NLS",
+    "NMR85",
     "NMS",
     "NMS85",
     "NN",
@@ -171,11 +174,11 @@
     "single_band": 153,
     "shared": 79,
     "no_band_all_codes_unresolved": 0,
-    "eur_single": 31820527.82,
-    "eur_shared": 18738494.51,
-    "eur_with_vehicle": 50559022.33,
-    "eur_epc_found_nothing": 4824357.71,
-    "eur_total_distinct_pns": 55383380.04,
+    "eur_single": 4435550.0,
+    "eur_shared": 3282608.66,
+    "eur_with_vehicle": 7718158.66,
+    "eur_epc_found_nothing": 971781.43,
+    "eur_total_distinct_pns": 8689940.09,
     "top_unresolved_codes": [
       [
         "NN",
@@ -192,6 +195,10 @@
       [
         "NMS85",
         22
+      ],
+      [
+        "NMR85",
+        18
       ],
       [
         "NLS",

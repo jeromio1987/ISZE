@@ -66,7 +66,6 @@ NON_PART_RULE = {
     "TRANSPORT": "freight",
     "REBATE": "rebate",
     "LATEPAYMENTINTEREST": "finance",
-    "DISRACK01": "adjustment",
     "5874123810": "tool",
     "5874123811": "tool",
     "5874123812": "tool",
@@ -75,14 +74,41 @@ NON_PART_RULE = {
     "SERVICEFEEWITHINEEUROPE": "service_fee",   # ADDITION, not in sales_loader.py
     "COSTDEMURRAGE": "demurrage",
     "COMPENSATIONSSALEE-CREDIT": "e_credit",
+    # Non-parts that are neither freight nor financial: merchandising and core deposits.
+    # The workspace rule covers freight/financial lines; these are the same class of thing
+    # (a placeholder key sitting in the sales extract, not a spare part).
+    "20MTGKIT": "marketing_item", "60MTGKIT": "marketing_item",
+    "BOXES_ASC": "merchandise", "TOWEL_ASC": "merchandise",
+    "BACKPACK": "merchandise", "NOTEBOOK": "merchandise", "PEN": "merchandise",
+    "DISRACK01": "display",
+    "CORE_7.5": "core_deposit", "CORE_9": "core_deposit", "CORE_9.5": "core_deposit",
 }
+
+# Placeholder keys that are not spare parts but ARE items (lubricants under the 0550*
+# prefix, and a handful of tooling / electrical codes that appear only in the master
+# and carry no catalogue row). These keep full 10-character keys, so the gate's
+# key-length rule is not relaxed for them - they are excluded by identity, not by length.
+NON_PART_PREFIXES = ("0550",)
+NON_PART_KEYS = {"EA2200143", "EA530156", "EA530160", "EA530162", "EA530165", "EA530170",
+                 "F4640", "F4740", "INST00001"}
+
+# A non-part "part number" is, by definition, a key with no digits. Real Isuzu part
+# numbers always start with a digit. This is an IDENTITY test, not a length test: it is
+# what makes "SERVICEFEEWITHINEEUROPE" and "EA530156" non-parts even when the named rule
+# misses them, and it is what keeps "0550047337" (a genuine lubricant line) a part.
+def looks_like_non_part(pn: str) -> bool:
+    k = (pn or "").strip()
+    return bool(k) and not k[0].isdigit()
 
 
 def norm_key(k: str) -> str:
-    k = (k or "").strip().upper().replace(" ", "")
-    return k.lstrip("0") or k
+    return (k or "").strip().upper().replace(" ", "")
 
 
+# Matching uses the exact normalised key only. Stripping leading zeros would mark the
+# padding rows ("0000REBATE", "000SERVICE") as rebate / service fee, which is a different
+# thing: those are zero-euro placeholders, not the billed line. The billed entities match
+# on their own key.
 NON_PART_NORM = {norm_key(k): v for k, v in NON_PART_RULE.items()}
 
 
@@ -172,6 +198,11 @@ def main() -> int:
 
         # non-part financial / freight lines: tag them, never drop them
         line_kind = NON_PART_NORM.get(norm_key(pn), "part")
+        if line_kind == "part":
+            if pn.startswith(NON_PART_PREFIXES) or pn in NON_PART_KEYS:
+                line_kind = "lubricant_or_tool"
+            elif looks_like_non_part(pn):
+                line_kind = "non_part_unnamed"
         if line_kind != "part":
             counts["non_part_rows"] += 1
             counts["non_part_eur"] = counts.get("non_part_eur", 0.0) + (
@@ -192,6 +223,9 @@ def main() -> int:
             "workbook_l3": wk3,
             "workbook_axis_kind": kind,
             "workbook_source": s(v1r.get("aim_source")) or s(sp.get("aim_source")),
+            # kept under its original name too: 17 live scripts read `aim_source` from the
+            # older classification file, and this file has to be a drop-in for them.
+            "aim_source": s(v1r.get("aim_source")) or s(sp.get("aim_source")),
             # --- the governed AIM family (added: what a pack actually charts) ---
             "aim_l1_fixed": s(sp.get("aim_l1_fixed")),
             "aim_l2_fixed": s(sp.get("aim_l2_fixed")),
@@ -262,7 +296,8 @@ def main() -> int:
             "source": "03_analytics/Isuzu/prism/modules/sales_loader.py NON_PART_LINE_KIND (copied, that file NOT edited)",
             "keys": NON_PART_RULE,
             "additions_not_in_source": ["SERVICEFEEWITHINEEUROPE"],
-            "matching": "normalised: uppercase, spaces removed, leading zeros stripped (the master carries REBATE and 0000REBATE, and LATEPAYMENTINTEREST and 'LATE PAYMENT INTEREST', for the same entities)",
+            "matching": "exact normalised key (uppercase, spaces removed). Leading zeros are NOT stripped: padding rows such as 0000REBATE / 000SERVICE are zero-euro placeholders, not the billed line, and the billed entities match on their own key.",
+            "unnamed_fallback": "a non-empty key that does not start with a digit is tagged non_part_unnamed - that is the identity test for a non-part, not a length test",
             "effect": "tags line_kind; rows are kept, never dropped. Consumers that want parts revenue filter line_kind=='part'.",
         },
         "rows": len(rows),

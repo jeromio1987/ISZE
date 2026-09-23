@@ -24,7 +24,7 @@ from pathlib import Path
 ISZE = Path(r"C:\Users\jerom\Desktop\claude\ISZE")
 SRC = ISZE / "02_dashboards" / "pricing" / "_build" / "aim_repertoire_map_2026-09-17" / "payload.json"
 TARGETS = ISZE / "03_analytics" / "Isuzu" / "prism" / "data" / "gps_model_targets.csv"
-FLEET = ISZE / "01_data" / "00_derived" / "gps_spu_by_distributor.csv"
+FLEET = ISZE / "01_data" / "00_derived" / "wallet_waterfall.csv"  # D08 worksheet base 163,198
 HERE = Path(__file__).resolve().parent
 OUT = HERE / "truck_payload.json"
 
@@ -126,6 +126,8 @@ Z_PREFIX = {
     "Pin": "rear", "Spring": "rear", "Spacer": "rear", "Fastener": "rear",
     "Other hardware": "rear", "Rubber / grommet": "rear", "Cap / plug": "rear",
     "Bracket": "rear", "Oil / lubricant": "rear", "Grease": "rear",
+    "Hand tools": "rear", "Tool": "rear", "Jack": "rear",
+    "12V battery": "elec", "High-voltage battery": "elec", "Battery": "elec",
 }
 # Residual buckets are not physical: they get no zone and are named separately.
 NO_ZONE = {"Review needed", "Not classified at this level"}

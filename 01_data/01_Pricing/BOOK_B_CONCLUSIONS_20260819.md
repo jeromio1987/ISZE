@@ -1,5 +1,12 @@
 # Book B — conclusions (internal · 2026-08-19)
 
+> **2026-09-22 — the ambition question behind this file is CLOSED, permanently.** Jerome, verbatim:
+> *"delete price ambition I will come when it's done for now do a simulation on 5% increase and
+> than never ask again."* The "blocked on ambition" wording below is stale as a *question*: nothing
+> was rebuilt and this file was not rewritten. **Do not ask him to choose an ambition value.** Last
+> output: the +5% flat simulation of 2026-09-22 — record:
+> [`00_docs/PRICE_AMBITION_CLOSED_2026-09-22.md`](../../00_docs/PRICE_AMBITION_CLOSED_2026-09-22.md).
+
 **Status:** planning weight only — **not a publishable list revision.** No alloc run.  
 **Review pack:** `01_data/00_derived/revision_book_b_top_review.csv` (Build 2b)  
 **Full join:** `revision_book_b_review_pack.csv` · **Meta:** `revision_book_b_pack.meta.json`  

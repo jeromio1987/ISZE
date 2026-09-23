@@ -1,0 +1,36 @@
+{
+  "validator_self_tests": [
+    {
+      "test": "valid_structure",
+      "pass": true
+    },
+    {
+      "test": "tampered_file_rejected",
+      "pass": true
+    },
+    {
+      "test": "blocked_business_check_not_structural_failure",
+      "pass": true
+    },
+    {
+      "test": "unsafe_path_rejected",
+      "pass": true
+    },
+    {
+      "test": "missing_required_file_rejected",
+      "pass": true
+    }
+  ],
+  "note": "Tests here cover the handoff validator and roadmap board only; no Windows data, PRISM, source pipeline or actual Universe application was run.",
+  "roadmap_board_tests": {
+    "browser": "installed /usr/bin/chromium; content rendered in-memory (file navigation unavailable)",
+    "initial_task_count": 74,
+    "R1_scope_count": 15,
+    "owner_filter": true,
+    "task_search": true,
+    "embedded_document_download": true,
+    "mobile_horizontal_overflow": false,
+    "javascript_errors": [],
+    "scope": "Roadmap board only, not the Universe application"
+  }
+}

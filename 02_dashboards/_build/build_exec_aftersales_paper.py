@@ -81,18 +81,30 @@ def load_ceiling(year: str = "2025") -> dict:
 CEILING = load_ceiling()
 
 # ITUK's own cover on the same basis, for the "largest euro pool below the ceiling" line.
-ITUK_PCT = None
+# Per-market cover on the same basis, read from the ceiling file at build time.
+# These were hardcoded literals until 2026-09-22, which is why correcting the ceiling did
+# not change them: the printed league table kept the pre-correction numbers. Reading them
+# from the file means the next ceiling move cannot leave the table behind again.
+COVER_PCT: dict[str, float] = {}
 try:
     import csv as _csv
 
-    _r = [r for r in _csv.DictReader(WALLET_WATERFALL.open(newline="", encoding="utf-8-sig"))
-          if r["year"] == "2025" and r["distributor_code"] == "ITUK"]
+    _rows = [r for r in _csv.DictReader(WALLET_WATERFALL.open(newline="", encoding="utf-8-sig"))
+             if r["year"] == "2025"]
+    COVER_PCT = {r["distributor_code"]: float(r["gps_pct"]) for r in _rows}
+    _r = [r for r in _rows if r["distributor_code"] == "ITUK"]
     if _r:
         ITUK_PCT = float(_r[0]["gps_pct"])
         ITUK_WALLET_M = float(_r[0]["theoretical_wallet_eur"]) / 1e6
         ITUK_SPU = (float(_r[0]["theoretical_wallet_eur"]) / float(_r[0]["uio_units"]))
 except Exception:
     ITUK_PCT = None
+
+
+def cov(code: str) -> str:
+    """Cover % for a market, read from the ceiling file. Falls back to a visible gap."""
+    v = COVER_PCT.get(code)
+    return f"{v:.1f}%" if v is not None else "n/a"
 
 
 def load_tender_stats() -> dict:
@@ -122,7 +134,16 @@ def load_tender_stats() -> dict:
         "generated_at": meta.get("generated_at") or "",
         "opportunities": int(stats.get("opportunities") or 0),
         "due_14d": int(stats.get("due_14d") or 0),
-        "missing_value": int(stats.get("missing_value") or 0),
+        # 2026-09-20: counted over opportunities (the same rows the lists use), not
+        # over raw notices. The old key measured notices and disagreed with the
+        # page's own row count. Fall back for an older feed.
+        "missing_value": int(
+            stats.get("missing_value_opportunities", stats.get("missing_value")) or 0
+        ),
+        "missing_deadline": int(
+            stats.get("missing_deadline_opportunities", stats.get("missing_deadline")) or 0
+        ),
+        "lifecycle_unknown": int(stats.get("lifecycle_unknown") or 0),
         "raw_notices": int(stats.get("raw_notices") or 0),
         "aftersales_tagged": int(stats.get("aftersales_tagged") or 0),
         "portals_reporting": len(sources),
@@ -623,24 +644,24 @@ body.js-ok .chartbox:has(.chart-wrap) .bars{display:none}
     # --- 6 League ---
     pages.append(page(6, "League", "Distributor league — three separate columns",
         "Read three columns as three questions: spend per truck, network-comparable oil-filter cover, and genuine mix — never one blended score. Keep UTI, UMI, ITUK and IUK as four different rows.",
-        """
+        f"""
 <table>
   <thead>
     <tr><th>Distributor</th><th class="n">€ / truck</th><th>Light</th><th class="n">Billed vs target %</th><th class="n">Oil-filter total*</th><th class="n">Genuine mix</th></tr>
   </thead>
   <tbody>
-    <tr><td>Ireland</td><td class="n">389</td><td><i class="tl g"></i>Green</td><td class="n">124.2%</td><td class="n">100% cap</td><td class="n">95.5%</td></tr>
-    <tr><td>UTI (Israel)</td><td class="n">322</td><td><i class="tl g"></i>Green</td><td class="n">40.3%</td><td class="n">91%</td><td class="n">88.9%</td></tr>
-    <tr><td>ITUK (UK truck)</td><td class="n">249</td><td><i class="tl g"></i>Green</td><td class="n">{ITUK_PCT:.1f}%</td><td class="n">100% cap</td><td class="n">97.3%</td></tr>
-    <tr><td>Belgium</td><td class="n">220</td><td><i class="tl g"></i>Green</td><td class="n">86.0%</td><td class="n">63%</td><td class="n">96.6%</td></tr>
-    <tr><td>Portugal</td><td class="n">209</td><td><i class="tl g"></i>Green</td><td class="n">56.0%</td><td class="n">52%</td><td class="n">94.0%</td></tr>
-    <tr><td>Germany</td><td class="n">197</td><td><i class="tl g"></i>Green</td><td class="n">66.6%</td><td class="n">15%</td><td class="n">99.3%</td></tr>
-    <tr><td>UMI (Israel)</td><td class="n">179</td><td><i class="tl g"></i>Green†</td><td class="n">71.6%</td><td class="n">85%</td><td class="n">96.3%</td></tr>
-    <tr><td>Norway</td><td class="n">179</td><td><i class="tl g"></i>Green</td><td class="n">71.5%</td><td class="n">48%</td><td class="n">98.2%</td></tr>
-    <tr><td>Sweden</td><td class="n">151</td><td><i class="tl g"></i>Green</td><td class="n">60.6%</td><td class="n">49%</td><td class="n">99.9%</td></tr>
-    <tr><td>Greece</td><td class="n">139</td><td><i class="tl a"></i>Amber</td><td class="n">54.6%</td><td class="n">97%</td><td class="n">92.2%</td></tr>
-    <tr><td>IUK (UK LCV)</td><td class="n">128</td><td><i class="tl a"></i>Amber</td><td class="n">51.3%</td><td class="n">38%</td><td class="n">99.1%</td></tr>
-    <tr><td>Hungary</td><td class="n">88</td><td><i class="tl a"></i>Amber</td><td class="n">35.4%</td><td class="n">45%</td><td class="n">96.6%</td></tr>
+    <tr><td>Ireland</td><td class="n">389</td><td><i class="tl g"></i>Green</td><td class="n">{cov('IRELAND')}</td><td class="n">100% cap</td><td class="n">95.5%</td></tr>
+    <tr><td>UTI (Israel)</td><td class="n">322</td><td><i class="tl g"></i>Green</td><td class="n">{cov('UTI')}</td><td class="n">91%</td><td class="n">88.9%</td></tr>
+    <tr><td>ITUK (UK truck)</td><td class="n">249</td><td><i class="tl g"></i>Green</td><td class="n">{cov('ITUK')}</td><td class="n">100% cap</td><td class="n">97.3%</td></tr>
+    <tr><td>Belgium</td><td class="n">220</td><td><i class="tl g"></i>Green</td><td class="n">{cov('BELGIUM')}</td><td class="n">63%</td><td class="n">96.6%</td></tr>
+    <tr><td>Portugal</td><td class="n">209</td><td><i class="tl g"></i>Green</td><td class="n">{cov('PORTUGAL')}</td><td class="n">52%</td><td class="n">94.0%</td></tr>
+    <tr><td>Germany</td><td class="n">197</td><td><i class="tl g"></i>Green</td><td class="n">{cov('GERMANY')}</td><td class="n">15%</td><td class="n">99.3%</td></tr>
+    <tr><td>UMI (Israel)</td><td class="n">179</td><td><i class="tl g"></i>Green†</td><td class="n">{cov('UMI')}</td><td class="n">85%</td><td class="n">96.3%</td></tr>
+    <tr><td>Norway</td><td class="n">179</td><td><i class="tl g"></i>Green</td><td class="n">{cov('NORWAY')}</td><td class="n">48%</td><td class="n">98.2%</td></tr>
+    <tr><td>Sweden</td><td class="n">151</td><td><i class="tl g"></i>Green</td><td class="n">{cov('SWEDEN')}</td><td class="n">49%</td><td class="n">99.9%</td></tr>
+    <tr><td>Greece</td><td class="n">139</td><td><i class="tl a"></i>Amber</td><td class="n">{cov('GREECE')}</td><td class="n">97%</td><td class="n">92.2%</td></tr>
+    <tr><td>IUK (UK LCV)</td><td class="n">128</td><td><i class="tl a"></i>Amber</td><td class="n">{cov('IUK')}</td><td class="n">38%</td><td class="n">99.1%</td></tr>
+    <tr><td>Hungary</td><td class="n">88</td><td><i class="tl a"></i>Amber</td><td class="n">{cov('HUNGARY')}</td><td class="n">45%</td><td class="n">96.6%</td></tr>
   </tbody>
 </table>
 <p class="lede">*Oil-filter total is the <b>network-comparable</b> rate (capped at 100% for display). ITUK’s 35.1% IML figure is the method illustration on page 4 — do not substitute it into this column. †UMI ex-warranty spend per truck is €82 — <b>prefer that number when comparing capture quality</b>; keep €179 when describing billed book including warranty.</p>

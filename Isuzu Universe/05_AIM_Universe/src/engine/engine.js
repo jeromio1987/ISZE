@@ -658,14 +658,36 @@
     }
 
     /* ---- break-even, split by eligibility (F03) ---- */
+    /* The direction of the break-even figure depends on the direction of the
+       price move, and the two readings are opposites. On a price cut the
+       proposed price is lower, so more units are needed and the figure is a
+       quantity that has to be REACHED. On a price rise the proposed price is
+       higher, so the same contribution arrives on fewer units and the figure is
+       a VOLUME FLOOR: the lowest quantity volume may fall to before either
+       measure drops below the unchanged offer. Reading the second figure as
+       "the quantity we must sell" inverts it, and that misreading has already
+       produced a wrong conclusion in review, so the wording below names the
+       direction and the labels carry it as well. */
+    var rising = p1 > p0;
     var revRaw = null, gpRaw = null;
     if (scope === 'all') {
       revRaw = p1 > 0 ? R.revenue_before / p1 : null;
-      R.qty_preserve_revenue_label = 'all eligible units would need this price';
+      R.qty_preserve_revenue_label = rising
+        ? 'volume floor: all eligible units, the lowest total quantity at which revenue still '
+          + 'matches the unchanged offer'
+        : (p1 < p0
+          ? 'minimum quantity: all eligible units must reach this total, at this price, to hold revenue'
+          : 'all eligible units would need this price');
       if (cost !== null) {
         if (p1 > cost) {
           gpRaw = (R.gp_before + support) / (p1 - cost);
-          R.qty_preserve_gp_label = 'all eligible units would need this price';
+          R.qty_preserve_gp_label = rising
+            ? 'volume floor: all eligible units, the lowest total quantity at which gross profit '
+              + 'still matches the unchanged offer'
+            : (p1 < p0
+              ? 'minimum quantity: all eligible units must reach this total, at this price and after '
+                + 'the support, to hold gross profit'
+              : 'all eligible units would need this price');
         } else {
           R.qty_preserve_gp_label = 'not attainable: the proposed price does not exceed the parts '
             + 'cost, so no quantity restores gross profit';
@@ -680,8 +702,8 @@
       if (cost !== null) {
         if (p1 > cost) {
           gpRaw = q0 + support / (p1 - cost);
-          R.qty_preserve_gp_label = 'existing units plus the additional units needed to recover '
-            + 'the support at their incremental contribution';
+          R.qty_preserve_gp_label = 'minimum quantity: the existing units plus the additional units '
+            + 'that have to be reached to recover the support at their incremental contribution';
         } else if (support === 0) {
           gpRaw = q0;
           R.qty_preserve_gp_label = 'the existing units already hold gross profit, and no '
@@ -1107,11 +1129,16 @@
            + ' units to hold gross profit')
         + '. A commitment between the two holds revenue but loses gross profit.');
     } else if (r.price_after > r.price_before) {
-      out.push('Volume may fall by up to ' + fmtPct(r.tolerable_loss_revenue_pct)
+      out.push('This is a price rise, so the volume figures beside it are floors and not targets. '
+        + 'Volume may fall by up to ' + fmtPct(r.tolerable_loss_revenue_pct)
         + ' before revenue falls below the unchanged offer'
         + (r.tolerable_loss_gp_pct === null ? '' : ', and by up to '
            + fmtPct(r.tolerable_loss_gp_pct) + ' before gross profit does')
-        + '. The binding limit is ' + fmtPct(r.tolerable_volume_loss_pct) + '.');
+        + '. The binding limit is ' + fmtPct(r.tolerable_volume_loss_pct) + '. The lowest total '
+        + 'quantity revenue still holds at is ' + fmtNum(r.qty_preserve_revenue, 0) + ' units'
+        + (r.qty_preserve_gp === null ? '' : ', and for gross profit it is '
+           + fmtNum(r.qty_preserve_gp, 0) + ' units')
+        + '; volume below that loses the measure, and volume above it does not gain one.');
     } else if (r.support_eur) {
       out.push('The price is unchanged and ' + fmtNum(r.support_eur, 0) + ' EUR of support is '
         + 'added, so the unchanged volume does not by itself hold gross profit.');

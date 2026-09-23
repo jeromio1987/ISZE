@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from datetime import date, datetime
 from pathlib import Path
 
@@ -32,22 +33,37 @@ DB_LABEL = {
     "GR": "Greece",
 }
 
-# Series → nominal GVW in tonnes. The chassis number is NOT a tonnage: an FRR90 is an 11–12 t
-# truck and an FSR90 is 13.5 t, but reading "90" as 9.0 t made both look like 9-tonners and made
-# the 3,238-truck register look like 26,689 t when it is really 19,687 t (V20_SPEC §Problem 7).
+# Series -> nominal GVW in tonnes, from the ONE canonical map
+# (`03_analytics/Isuzu/prism/data/series_to_band.csv`, read through `modules/vehicle_bands.py`).
 #
-# NL/NM/NN/NP and FR/FS are ISZJ series prefixes. Where a range is quoted (FRR 11–12 t) the lower
-# bound is used so the figure is not overstated.
-SERIES_GVW_T = {
-    "NLR": 3.5,    # N35 Grafter
-    "NKR": 3.5,    # older N35 designation
-    "NMR": 5.5,
-    "NNR": 6.5,
-    "NPR": 7.5,    # NPR75 — the one case the old numeric map got right
-    "NQR": 7.5,
-    "FRR": 11.0,   # FRR90, 11–12 t
-    "FSR": 13.5,   # FSR90, 13.5 t
-}
+# Until 2026-09-23 this was a hand-typed dictionary here, and it was one of four places that each
+# held their own series -> weight answer. The chassis number is still NOT a tonnage: an FRR90 is
+# an 11–12 t truck and an FSR90 is 13.5 t, but reading "90" as 9.0 t made both look like
+# 9-tonners and made the 3,238-truck register look like 26,689 t when it is really ~19,545 t.
+# Where a range is quoted (FRR 11–12 t) the lower bound is used so the figure is not overstated.
+#
+# A series with no weight in the map is left unmapped on purpose - the register records
+# `gvw_t_source = numeric_code` for it rather than inventing a weight.
+def _load_series_gvw() -> dict[str, float]:
+    """Read the canonical map. Loaded by file path so it works however this script is invoked."""
+    import importlib.util  # noqa: PLC0415
+
+    prism = HERE.parents[2] / "03_analytics" / "Isuzu" / "prism"
+    spec = importlib.util.spec_from_file_location(
+        "vehicle_bands", prism / "modules" / "vehicle_bands.py")
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules["vehicle_bands"] = mod
+    spec.loader.exec_module(mod)
+
+    out: dict[str, float] = {}
+    for code in mod.load_map():
+        v = mod.gvw_t_for(code)
+        if v is not None:
+            out[code] = v
+    return out
+
+
+SERIES_GVW_T = _load_series_gvw()
 
 # Numeric suffix → nominal GVW. Kept ONLY to record what the code says, never to set gvw_t.
 GVW_FROM_CODE = {

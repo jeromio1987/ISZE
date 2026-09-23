@@ -26,6 +26,7 @@
 8. **Ship gate (all shared HTML / dashboards):** `.cursor/rules/isze-ship-gate.mdc` — exit 0 ≠ done; run verify + paint check before claiming done. **IDS HTML / maps / client packs:** also `isze-ids-delivery.mdc` + `04_tools/ids_dealer_ranking/IDS_2026_LOGIC_CHECK.md` §6b. Paint evidence: `isze-verify-rendered-output.mdc`.
 9. **GPS / ITUK:** read `01_data/91_build/GPS_FILE_LINEAGE.md` and `.cursor/rules/isze-gps-ituk.mdc` — ITUK never on kickback or Other DBs tabs; dealer £ ≠ ISZE € wallet.
 10. **Deploy mirror:** never read or edit `07_deploy/Master Dashboard/context/` — regenerated from `00_docs/context_sync_whitelist.txt`.
+11. **Series → weight band (one authored map):** the only place an Isuzu series code (`NLR`, `NMR`, `NPR`, `NKR`, …) is turned into a weight band is `03_analytics/Isuzu/prism/data/series_to_band.csv` — one row per code, edited by hand. Read it through `03_analytics/Isuzu/prism/modules/vehicle_bands.py` (`band_for`, `group_for`, `gvw_t_for`); the neutral derived table built from it is `01_data/00_derived/vehicle_band_applicability.csv`. No script may keep its own dictionary of series codes — the retired probe `01_data/91_build/pn_ammo_probe_20260918/_tonnage_capable.py` is what that cost us, because its own copy had `NKR` on the 5.5 t band.
 
 ## Edits & deploy
 

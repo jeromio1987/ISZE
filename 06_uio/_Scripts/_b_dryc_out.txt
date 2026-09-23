@@ -1,0 +1,18 @@
+﻿candidate B: changed cells vs V19 = 170
+
+A -> B changed rows: 1
+  r90  CYPRUS    LCV   A=[3252.0, 3506.0, 3708.0, 3811.0, 3868.0]  B=[2238.0, 2339.0, 2445.0, 2521.0, 2614.0]  d=[-1014.0, -1167.0, -1263.0, -1290.0, -1254.0]
+
+Grand Total A -> B:
+  2026  A=253145.15  B=252131.15  d=-1014.00 (-0.401%)
+  2027  A=246392.50  B=245225.50  d=-1167.00 (-0.474%)
+  2028  A=239403.81  B=238140.81  d=-1263.00 (-0.528%)
+  2029  A=232583.44  B=231293.44  d=-1290.00 (-0.555%)
+  2030  A=225964.19  B=224710.19  d=-1254.00 (-0.555%)
+
+harness signatures on the three fixed rows:
+  r54  deltas=[416, 538, 408, 307]  mean_ratio=0.9347  |mean-0.97|=0.0353  -> no check5 hit
+  r79  deltas=[14, 14, 14, 15]  mean_ratio=1.0238  |mean-0.97|=0.0538  -> no check5 hit
+  r90  deltas=[101, 106, 76, 93]  mean_ratio=0.9967  |mean-0.97|=0.0267  -> no check5 hit
+
+DRY RUN - nothing written.

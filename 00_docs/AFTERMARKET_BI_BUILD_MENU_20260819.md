@@ -57,7 +57,7 @@ Hard rules: **UTI ≠ UMI** · **IUK ≠ ITUK** · **IRELAND ≠ IUK** · refere
 
 | # | Build | Decision |
 |---|-------|----------|
-| B1 | Book B **alloc** | Ambition +4% / +5% / launch-only |
+| B1 | Book B **alloc** | **CLOSED 2026-09-22 — do not re-ask.** The ambition half (+4% / +5% / launch-only) is closed permanently per Jerome; the +5% flat simulation of 2026-09-22 is its last output. This row is historical. Record: `00_docs/PRICE_AMBITION_CLOSED_2026-09-22.md` |
 | B2 | **Seed €** for 9,591 no-L12M PNs | IML BOM vs UTI placeholders |
 | B3 | **Growth-factor sign-off** | Keep 1.24/1.25/×1.25 UTI table? |
 | B4 | **Guardrail policy** | Auto-HOLD on IAM-undercut + proxy-adverse? |

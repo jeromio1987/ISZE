@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All customers — the Power BI parts model against our own parts tree, January to September</title>
+<style>
+  :root{
+    --navy:#15233c; --terracotta:#c0552d; --paper:#f7f4ee;
+    --ink:#22252b; --muted:#5d6470; --line:#d9d2c6; --track:rgba(21,35,60,.09);
+    --blue:#4a6189; --pale:#9aa7ba;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font:15px/1.62 "Segoe UI",-apple-system,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 26px 72px}
+  header{background:var(--navy);color:var(--paper);padding:42px 0 36px;margin-bottom:32px}
+  header .wrap{padding-bottom:0;padding-top:0}
+  .kicker{font:600 11.5px/1 "Segoe UI",Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#c9b9a4;margin:0 0 14px}
+  h1{font:400 35px/1.2 Georgia,"Times New Roman",serif;margin:0 0 14px;color:#fff;max-width:940px}
+  .meta{font-size:13px;color:#b9c2d1;margin:0}
+  .meta b{color:#e8e2d8;font-weight:600}
+  h2{font:400 26px/1.25 Georgia,"Times New Roman",serif;color:var(--navy);margin:46px 0 14px;padding-top:22px;border-top:2px solid var(--navy)}
+  h2:first-of-type{border-top:0;padding-top:0;margin-top:8px}
+  h3{font:600 14.5px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);margin:28px 0 8px;letter-spacing:.02em}
+  p{margin:0 0 14px;max-width:900px}
+  .lede{font-size:16.5px;color:var(--navy)}
+  ul{margin:0 0 16px;padding-left:20px;max-width:900px}
+  li{margin:0 0 7px}
+  code{font:13px/1.5 "Cascadia Mono",Consolas,monospace;background:rgba(21,35,60,.07);padding:1px 5px;border-radius:3px}
+  .call{border-left:4px solid var(--terracotta);background:#fff;padding:16px 20px;margin:22px 0;max-width:960px}
+  .call p:last-child{margin-bottom:0}
+  .call .tag{font:600 11.5px/1 "Segoe UI",Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:var(--terracotta);display:block;margin-bottom:9px}
+  .ok{border-left-color:var(--navy)} .ok .tag{color:var(--navy)}
+  .fix{border-left-color:#8a6d3b} .fix .tag{color:#8a6d3b}
+
+  .scroll{overflow-x:auto;margin:18px 0 10px}
+  table{border-collapse:collapse;width:100%;background:#fff;font-size:13.3px;table-layout:fixed}
+  caption{caption-side:top;text-align:left;font:600 13.5px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);padding:0 0 9px}
+  th,td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:break-word}
+  thead th{background:var(--navy);color:var(--paper);font-weight:600;text-align:left;border-bottom:0}
+  thead th.n,td.n{text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:normal;word-break:keep-all;white-space:nowrap}
+  tbody tr:nth-child(even){background:#fdfcfa}
+  tbody tr.key{background:#fbf1ea}
+  tbody tr.key td{font-weight:600}
+  tbody tr.total td{border-top:2px solid var(--navy);font-weight:700;background:#f2ede3}
+  tbody tr.total td .sm{font-weight:400}
+  .neg{color:var(--terracotta)}
+  .pos{color:var(--navy)}
+  .sm{font-size:12px;color:var(--muted)}
+  td .sm{display:block;font-weight:400}
+  .mono{font:12.3px/1.5 "Cascadia Mono",Consolas,monospace}
+
+  .chart{background:#fff;border:1px solid var(--line);padding:20px 22px 16px;margin:20px 0 8px}
+  .chart .qtitle{font:600 14px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);margin:0 0 4px}
+  .chart .qsub{font-size:12.6px;color:var(--muted);margin:0 0 18px}
+  .legend{display:flex;gap:22px;align-items:center;margin:0 0 16px;font-size:12.4px;color:var(--muted);flex-wrap:wrap}
+  .sw{display:inline-block;width:22px;height:9px;border-radius:2px;margin-right:6px;vertical-align:1px}
+  .sw.e{background:var(--terracotta)} .sw.u{background:var(--navy)} .sw.b{background:var(--blue)} .sw.p{background:var(--pale)}
+  .crow{display:grid;grid-template-columns:210px 1fr 150px;gap:12px;align-items:center;padding:5px 0;border-bottom:1px solid #efeae0}
+  .crow:last-child{border-bottom:0}
+  .crow .lbl{font-size:12.7px;color:var(--navy);overflow-wrap:anywhere}
+  .crow .vals{font-size:12.3px;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tracks{display:flex;flex-direction:column;gap:3px}
+  .t{background:var(--track);border-radius:2px;height:9px;position:relative}
+  .t i{position:absolute;left:0;top:0;bottom:0;border-radius:2px;display:block;min-width:3px}
+  .t i.e{background:var(--terracotta)} .t i.u{background:var(--navy)} .t i.b{background:var(--blue)} .t i.p{background:var(--pale)}
+  .axis{display:grid;grid-template-columns:210px 1fr 150px;gap:12px;margin-top:9px;padding-top:7px;border-top:1px solid var(--line)}
+  .axis .ticks{display:flex;justify-content:space-between;font-size:11.3px;color:var(--muted)}
+  .yrgrp{display:grid;grid-template-columns:210px 1fr 150px;gap:12px;align-items:center;margin:18px 0 8px}
+  .yrgrp .h{font:600 12.8px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy)}
+
+  .stack{margin:22px 0 6px}
+  .stack .sl{font:600 13px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);margin:0 0 7px}
+  .stack .sl span{font-weight:400;color:var(--muted);font-size:12.4px}
+  .sbar{display:flex;height:36px;border-radius:3px;overflow:hidden;background:var(--track)}
+  .sbar b{display:flex;align-items:center;justify-content:center;color:#fff;font:600 11.4px/1 "Segoe UI",Arial,sans-serif;overflow:hidden;white-space:nowrap;padding:0 4px}
+  .key2{font-size:12.3px;color:var(--muted);margin:9px 0 0}
+  .foot{font-size:12.4px;color:var(--muted);margin-top:14px;max-width:960px}
+  .foot b{color:var(--navy);font-weight:600}
+  footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);font-size:12.4px;color:var(--muted)}
+  @media print{
+    body{background:#fff}
+    header{background:#15233c !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    h2{page-break-after:avoid}
+    table,.chart,.stack{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="kicker">Internal working note &middot; not for distribution</p>
+    <h1>All customers, January to September &mdash; his parts model against ours, and what each one can actually tell you</h1>
+    <p class="meta"><b>22 September 2026</b> &middot; Power BI <i>SALES DATA VP NEW</i> category export, all customers, both years with euro and units &middot; compared against our own part-level billing, 30 sold-to accounts, January&ndash;September 2024 against January&ndash;September 2025</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>Bottom line</h2>
+
+<p class="lede">His model has three levels and you have to go one level deeper than the report's menu before it means anything. At the top, one code called OTHERS holds 69% of his euro and inside it sit 25 of our 25 product families. One level down, on the figure key, his model is genuinely good &mdash; better than our own second level on two of three tests. The problem is the level everyone reads.</p>
+
+<p>The export is now the full one: all customers, euro and units, both years, three levels deep. That let me do something the earlier cut could not, which is test both models on identical measures rather than trade opinions. I ran seven tests the same way on his codes and on ours.</p>
+
+<p>Three results matter:</p>
+
+<ul>
+  <li>At his top level one code is 69% of the money. At our top level the biggest family is 39%. His eight categories merge our families &mdash; each of our seven lands mostly inside his OTHERS, and Repair parts sits 88.7% there.</li>
+  <li>One level down he wins. His second level puts 80.7% of a code's money into a single one of our families, and his value spread there is tighter than ours at the same depth. Our own workbook tree reaches 85.1% at its second level, so they are close, and both are far better than our catalogue tree. If you are reading his model at all, read it below the top.</li>
+  <li>The single most useful number in this pack is not a size. It is euro per unit. Inside his eight categories a piece is worth between &euro;4 and &euro;2,083 &mdash; a 491-fold range. Inside our seven families the range is &euro;6 to &euro;36, a six-fold range. That is why a chart by his categories cannot be read: it puts a &euro;4 wheel nut and a &euro;2,083 engine in the same two bars.</li>
+</ul>
+
+<div class="call">
+  <span class="tag">The one thing to take away</span>
+  <p>His euro does not reconcile to ours and cannot be made to. His own export says &euro;19.82M for January&ndash;September 2024; we invoiced &euro;26.08M to the same accounts in the same nine months. It is not a customer difference &mdash; his part list covers 95% to 99% of the value of every single one of our 30 accounts. It is the measure. Use his units, which tie out to the piece, and keep using our number for money.</p>
+</div>
+
+<h2>What I compared</h2>
+
+<p>You exported the category table with euro and units for both years, and it carries 17,956 part numbers under three levels:</p>
+
+<div class="scroll">
+<table style="table-layout:auto">
+<caption>The two models, side by side</caption>
+<thead><tr><th>Level</th><th>His model</th><th>Codes</th><th>Our model</th><th>Codes</th></tr></thead>
+<tbody>
+<tr><td>Top</td><td>CATEGORY</td><td>8</td><td>family (officially "level 1")</td><td>7</td></tr>
+<tr><td>Middle</td><td>ISZJ CLASSIFICATION</td><td>240</td><td>sub-family (level 2)</td><td>25</td></tr>
+<tr><td>Bottom</td><td>FIG KEY CLASSIFICATION</td><td>4,363</td><td>type (level 3)</td><td>167</td></tr>
+<tr><td>Parts covered</td><td colspan="4">the same 17,956 part numbers on both sides, joined on the part number; 98.1% of parts and 97.4% of the euro matched to a node in our tree</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Two points about method, because they change how you read the rest. Everything below uses <b>his</b> euro and <b>his</b> units, so no test depends on the two systems agreeing on money. Our tree is used only as the reference standard for whether his codes group sensible things together. And where I say "our tree" I mean the workbook tree, because that is the one that reads correctly; the catalogue tree is still in the file and still disagrees with it on 97% of the euro, which is a separate problem I flagged last week.</p>
+
+<h2>His money is not our money</h2>
+
+<div class="scroll">
+<table style="table-layout:auto">
+<caption>The same 30 accounts, the same nine months</caption>
+<thead><tr><th>&nbsp;</th><th class="n">Euro 2024</th><th class="n">Euro 2025</th><th class="n">Change</th><th class="n">Units 2024</th><th class="n">Units 2025</th><th class="n">Change</th></tr></thead>
+<tbody>
+<tr class="key"><td>His export, all customers</td><td class="n">&euro;19,818,811</td><td class="n">&euro;18,916,321</td><td class="n neg">&minus;4.6%</td><td class="n">760,688</td><td class="n">705,783</td><td class="n neg">&minus;7.2%</td></tr>
+<tr><td>Our billing, all 30 accounts</td><td class="n">&euro;26,083,987</td><td class="n">&euro;25,952,215</td><td class="n">&minus;0.5%</td><td class="n">960,637</td><td class="n">949,881</td><td class="n">&minus;1.1%</td></tr>
+<tr class="total"><td>Difference</td><td class="n">&minus;24.0%</td><td class="n">&minus;27.1%</td><td class="n">&nbsp;</td><td class="n">&minus;20.8%</td><td class="n">&minus;25.7%</td><td class="n">&nbsp;</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>I tested the obvious explanations and none of them holds.</p>
+
+<p><b>It is not a customer filter.</b> The export's part list covers 95% to 99% of the invoiced value of every one of our 30 accounts, and where I can check it exactly it matches: for sold-to 2194 it covers &euro;0 of &euro;203,394 &mdash; that account has no parts in his list and its 189,454 in 2025 is not there either. So the accounts are all in scope.</p>
+
+<p><b>It is not one order type.</b> The closest single cut I can make is ordinary stock plus urgent orders, which gives &euro;23.07M in 2024 against his &euro;19.82M &mdash; still 14% above him &mdash; but that same cut gives 876,203 units against his 760,688, which is 15% above. So the money and the units point in different directions and no single order-type rule explains both. His basis is narrower than that.</p>
+
+<p><b>It is not returns or credit.</b> Removing those changes the total by 2%, not 24%.</p>
+
+<p><b>And the direction disagrees.</b> His book is down 4.6% on euro and down 7.2% on units. Our whole book is down 0.5% on euro and 1.1% on units. Those are not the same year.</p>
+
+<div class="call fix">
+  <span class="tag">What this means in practice</span>
+  <p>His euro is on an invoiced basis I cannot reproduce from outside the report, and it is materially smaller than what we bill. His units are on a basis that is roughly 20&ndash;26% below ours. Take both as they are and do not mix them: <b>use his units for shape, ours for money</b>. If you want his euro to reconcile, the answer is the report's measure definition, not more arithmetic from me.</p>
+</div>
+
+<h2>Structure: what each model can and cannot group</h2>
+
+<p>Concentration is the first test. If one code holds most of the money, that code cannot be a category in any useful sense.</p>
+
+<div class="chart">
+  <p class="qtitle">How much of the money sits in the single biggest code at each level?</p>
+  <p class="qsub">His three levels against our three. Lower is better here &mdash; a code holding a fifth of the book is still too big to act on, one holding two thirds is a bin.</p>
+  <div class="legend">
+    <span><span class="sw.e"></span>His model</span>
+    <span><span class="sw.u"></span>Our model</span>
+  </div>
+
+  <div class="yrgrp"><div class="h">Top level</div><div></div><div></div></div>
+  <div class="crow"><div class="lbl">His 8 categories (OTHERS)</div>
+    <div><div class="t"><i class="e" style="width:99.4%"></i></div></div>
+    <div class="vals">69.0% of &euro;18.9M</div></div>
+  <div class="crow"><div class="lbl">Our 7 families (largest)</div>
+    <div><div class="t"><i class="u" style="width:56.2%"></i></div></div>
+    <div class="vals">39.0% of &euro;18.9M</div></div>
+
+  <div class="yrgrp"><div class="h">Middle level</div><div></div><div></div></div>
+  <div class="crow"><div class="lbl">His 240 subgroups (largest)</div>
+    <div><div class="t"><i class="e" style="width:10.2%"></i></div></div>
+    <div class="vals">7.1%</div></div>
+  <div class="crow"><div class="lbl">Our 25 sub-families (largest)</div>
+    <div><div class="t"><i class="u" style="width:18.2%"></i></div></div>
+    <div class="vals">12.6%</div></div>
+
+  <div class="yrgrp"><div class="h">Bottom level</div><div></div><div></div></div>
+  <div class="crow"><div class="lbl">His 4,363 figure keys (largest)</div>
+    <div><div class="t"><i class="e" style="width:7.2%"></i></div></div>
+    <div class="vals">5.0%</div></div>
+  <div class="crow"><div class="lbl">Our 167 types (largest)</div>
+    <div><div class="t"><i class="u" style="width:12.7%"></i></div></div>
+    <div class="vals">8.8%</div></div>
+
+  <div class="axis"><div></div><div class="ticks"><span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span><span>60%</span><span>70%</span></div><div></div></div>
+</div>
+
+<p>At the top his model is clearly the worse of the two &mdash; 69% against 39%. Below that he is fine, and by the bottom level both models are safely spread. So the problem is not that his model is crude. It is that his top level carries almost all the money and tells you the least.</p>
+
+<h2>Does a code group things that belong together?</h2>
+
+<p>This is the test that decides whether a chart is readable. I measured it two ways on the same euro. First, the spread of euro per unit inside a code, weighted by money &mdash; if a code holds one kind of part, its parts will have similar value per piece. Second, purity: whether the money in one of his codes sits inside a single one of our families.</p>
+
+<div class="scroll">
+<table style="table-layout:auto">
+<caption>Coherence of every level in both models, measured the same way</caption>
+<thead><tr><th>Model and level</th><th class="n">Codes</th><th class="n">Biggest code, share of euro</th><th class="n">Value spread inside a code<br><span class="sm">money-weighted, lower is tighter</span></th><th class="n">Purity against our families</th></tr></thead>
+<tbody>
+<tr><td>His 8 categories</td><td class="n">8</td><td class="n">69.0%</td><td class="n">1.37</td><td class="n neg">29.0%</td></tr>
+<tr><td>His 240 subgroups</td><td class="n">240</td><td class="n">7.1%</td><td class="n">0.99</td><td class="n pos">80.7%</td></tr>
+<tr><td>His 4,363 figure keys</td><td class="n">4,363</td><td class="n">5.0%</td><td class="n">&mdash;</td><td class="n">&mdash;</td></tr>
+<tr class="key"><td>Our 7 families</td><td class="n">7</td><td class="n">39.0%</td><td class="n neg">1.59</td><td class="n">52.3%</td></tr>
+<tr><td>Our 25 sub-families</td><td class="n">25</td><td class="n">12.6%</td><td class="n">1.29</td><td class="n">&mdash;</td></tr>
+<tr><td>Our 167 types</td><td class="n">167</td><td class="n">8.8%</td><td class="n">0.92</td><td class="n">100%</td></tr>
+<tr class="key"><td>Our workbook tree, level 2</td><td class="n">116</td><td class="n">7.9%</td><td class="n pos">0.88</td><td class="n pos">85.1%</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="foot">Purity is measured against our sub-families, so it flatters the deeper levels on any model including his &mdash; read it as a comparison between his subgroups and our workbook level 2, which are of similar depth, not as a comparison with our top level. The value-spread column is the one that is fair at every depth, because it only asks whether the pieces inside a code are worth similar amounts.</p>
+
+<p>Four readings, in order of usefulness:</p>
+
+<p><b>His subgroup level beats our sub-family level on purity, 80.7% against roughly the same depth, and his value spread at 0.99 is better than our 1.29.</b> That surprised me and it deserves saying plainly. On grouping like with like, his second level is good.</p>
+
+<p><b>Our workbook level 2 is the tightest thing on the table</b> at 0.88 spread and 85.1% purity. So if you want the best available cut of the book today, it is our workbook tree one level down, not his and not our top level. That is the recommendation from last week's note, now confirmed on three times the data.</p>
+
+<p><b>His top level is the worst instrument in either model</b> on both measures &mdash; 1.37 spread and 29.0% purity. Our top level is not much better on spread (1.59) but is nearly twice as pure. Neither top level should be charted alone.</p>
+
+<p><b>And our type level reaches 100% purity by construction</b>, which is worth saying only so nobody quotes it as a result. A level whose codes are defined as subsets of our sub-families will always score 100% against them.</p>
+
+<h2>Where his top level keeps our families</h2>
+
+<p>This is the practical consequence, in money. Every one of our seven families, and where his categories put it.</p>
+
+<div class="scroll">
+<table style="table-layout:auto">
+<caption>Our families against his categories, euro January&ndash;September 2025</caption>
+<thead><tr><th>Our family</th><th class="n">Total</th><th class="n">Share sitting in his single biggest category</th><th>Which category, and the runner-up</th></tr></thead>
+<tbody>
+<tr class="key"><td>Competitive parts</td><td class="n">&euro;7,378,343</td><td class="n">61.3%</td><td>OTHERS &euro;4,526,528, then COMPETITIVE PARTS &euro;1,838,178</td></tr>
+<tr><td>Repair parts</td><td class="n">&euro;3,882,679</td><td class="n neg">88.7%</td><td>OTHERS &euro;3,444,170, then ENGINE PARTS &euro;408,435</td></tr>
+<tr class="key"><td>Accident parts</td><td class="n">&euro;3,445,831</td><td class="n">67.8%</td><td>OTHERS &euro;2,337,245, then PANEL PARTS &euro;853,946</td></tr>
+<tr><td>High value repair</td><td class="n">&euro;1,781,817</td><td class="n">50.1%</td><td>OTHERS &euro;893,017, then EMISSION RELATED &euro;683,260</td></tr>
+<tr class="key"><td>Other / review</td><td class="n">&euro;806,444</td><td class="n neg">81.4%</td><td>OTHERS &euro;656,377, then SEMI COMPETITIVE &euro;57,779</td></tr>
+<tr><td>Comfort parts</td><td class="n">&euro;774,087</td><td class="n">55.1%</td><td>COMPETITIVE PARTS &euro;426,442, then OTHERS &euro;347,645</td></tr>
+<tr class="key"><td>Hardware &amp; consumables</td><td class="n">&euro;355,210</td><td class="n neg">99.7%</td><td>OTHERS &euro;354,006 &mdash; in effect the whole family</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Now the other direction. His single biggest category holds &euro;12.56M and this is what is inside it.</p>
+
+<div class="chart">
+  <p class="qtitle">What is inside his OTHERS category?</p>
+  <p class="qsub">His biggest code, &euro;12.56M of matched euro, broken by our families. Seven families shown; there are 25 in total inside it.</p>
+  <div class="crow"><div class="lbl">Electrical sensors</div>
+    <div><div class="t"><i class="e" style="width:99.4%"></i></div></div>
+    <div class="vals">&euro;2,377,681</div></div>
+  <div class="crow"><div class="lbl">Brake parts</div>
+    <div><div class="t"><i class="e" style="width:56.0%"></i></div></div>
+    <div class="vals">&euro;1,330,902</div></div>
+  <div class="crow"><div class="lbl">Body parts</div>
+    <div><div class="t"><i class="e" style="width:52.1%"></i></div></div>
+    <div class="vals">&euro;1,238,468</div></div>
+  <div class="crow"><div class="lbl">Lighting</div>
+    <div><div class="t"><i class="e" style="width:38.8%"></i></div></div>
+    <div class="vals">&euro;923,175</div></div>
+  <div class="crow"><div class="lbl">Exhaust</div>
+    <div><div class="t"><i class="e" style="width:38.1%"></i></div></div>
+    <div class="vals">&euro;905,303</div></div>
+  <div class="crow"><div class="lbl">Steering</div>
+    <div><div class="t"><i class="e" style="width:37.6%"></i></div></div>
+    <div class="vals">&euro;895,135</div></div>
+  <div class="crow"><div class="lbl">Transmission parts</div>
+    <div><div class="t"><i class="e" style="width:31.7%"></i></div></div>
+    <div class="vals">&euro;753,276</div></div>
+  <div class="crow"><div class="lbl">Remaining 18 families</div>
+    <div><div class="t"><i class="p" style="width:100%"></i></div></div>
+    <div class="vals">&euro;4,135,049</div></div>
+  <div class="axis"><div></div><div class="ticks"><span>&euro;0</span><span>&euro;0.5M</span><span>&euro;1M</span><span>&euro;1.5M</span><span>&euro;2M</span><span>&euro;2.5M</span></div><div></div></div>
+</div>
+
+<p>Note what is in there. Brake parts, at &euro;1.33M inside OTHERS, is a family his own model also carries under COMPETITIVE PARTS. So the same product family is split across two of his eight headings, and the bigger half is in the bin. The same is true of Body parts, which is in OTHERS, PANEL PARTS and GLASS PARTS. And Comfort parts, which is mostly in COMPETITIVE PARTS.</p>
+
+<p>The cleanest way to say it: of his eight categories, three are real product groupings at the top level &mdash; COMPETITIVE PARTS, ENGINE PARTS and GLASS PARTS &mdash; and the other five are either a residual or a slice of something that also appears elsewhere.</p>
+
+<h2>The commercial test: can a number tell you what it is?</h2>
+
+<p>This is the test I would run on any classification before putting it in front of a manager, and it is the one his model fails hardest.</p>
+
+<div class="chart">
+  <p class="qtitle">What is one piece worth inside a single code?</p>
+  <p class="qsub">Euro per unit, lowest code and highest code at each level. A level where codes span a huge range is a level where a total tells you nothing, because the parts inside cannot be compared with each other.</p>
+  <div class="legend">
+    <span><span class="sw.e"></span>His model</span>
+    <span><span class="sw.u"></span>Our model</span>
+    <span class="sm">Log scale is not used; the point is the ratio.</span>
+  </div>
+
+  <div class="crow"><div class="lbl">His 8 categories</div>
+    <div><div class="t"><i class="e" style="width:100%"></i></div></div>
+    <div class="vals">&euro;4.2 to &euro;2,083 &nbsp;<span class="neg">491&times;</span></div></div>
+  <div class="crow"><div class="lbl">His 240 subgroups</div>
+    <div><div class="t"><i class="e" style="width:100%"></i></div></div>
+    <div class="vals">&euro;5.5 to &euro;5,801 &nbsp;<span class="neg">1,056&times;</span></div></div>
+
+  <div class="yrgrp"><div class="h">&nbsp;</div><div></div><div></div></div>
+  <div class="crow"><div class="lbl">Our 7 families</div>
+    <div><div class="t"><i class="u" style="width:1.2%"></i></div></div>
+    <div class="vals">&euro;6.3 to &euro;35.7 &nbsp;<span class="pos">6&times;</span></div></div>
+  <div class="crow"><div class="lbl">Our 25 sub-families</div>
+    <div><div class="t"><i class="u" style="width:13.2%"></i></div></div>
+    <div class="vals">&euro;2.0 to &euro;127 &nbsp;65&times;</div></div>
+  <div class="axis"><div></div><div class="ticks"><span>0&times;</span><span>200&times;</span><span>400&times;</span><span>600&times;</span><span>800&times;</span><span>1,000&times;</span></div><div></div></div>
+</div>
+
+<p>Our top level is the only level in either model where the codes are commercially comparable: a piece is worth between &euro;6 and &euro;36 whichever of our seven families you are in. That is why our families can be charted together and his categories cannot.</p>
+
+<p>His categories span 491 times. LARGE PARTS is &euro;2,083 a piece and SEMI COMPETITIVE PARTS is &euro;4.2 &mdash; and they sit next to each other in the same bar chart. Put a rise in LARGE PARTS beside a fall in SEMI COMPETITIVE PARTS and the chart looks like a story about engines and nuts. It is a story about two bars whose parts are worth five hundred times different amounts.</p>
+
+<div class="scroll">
+<table style="table-layout:auto">
+<caption>His eight categories, ranked by what one piece is worth</caption>
+<thead><tr><th>Category</th><th class="n">Euro 2025</th><th class="n">Units 2025</th><th class="n">Euro per unit</th><th class="n">Share of euro</th><th class="n">Share of units</th><th class="n">Euro share vs unit share</th></tr></thead>
+<tbody>
+<tr><td>LARGE PARTS</td><td class="n">&euro;231,169</td><td class="n">111</td><td class="n">&euro;2,083</td><td class="n">1.2%</td><td class="n">0.0%</td><td class="n neg">77.7&times; heavier in money</td></tr>
+<tr><td>EMISSION RELATED PARTS</td><td class="n">&euro;1,649,074</td><td class="n">5,235</td><td class="n">&euro;315</td><td class="n">8.7%</td><td class="n">0.7%</td><td class="n neg">11.8&times; heavier in money</td></tr>
+<tr><td>PANEL PARTS</td><td class="n">&euro;911,177</td><td class="n">7,680</td><td class="n">&euro;119</td><td class="n">4.8%</td><td class="n">1.1%</td><td class="n">4.4&times;</td></tr>
+<tr><td>GLASS PARTS</td><td class="n">&euro;164,014</td><td class="n">1,386</td><td class="n">&euro;118</td><td class="n">0.9%</td><td class="n">0.2%</td><td class="n">4.4&times;</td></tr>
+<tr><td>ENGINE PARTS</td><td class="n">&euro;409,962</td><td class="n">6,025</td><td class="n">&euro;68</td><td class="n">2.2%</td><td class="n">0.9%</td><td class="n">2.5&times;</td></tr>
+<tr class="key"><td>OTHERS</td><td class="n">&euro;13,050,769</td><td class="n">481,745</td><td class="n">&euro;27</td><td class="n">69.0%</td><td class="n">68.3%</td><td class="n">1.0&times;</td></tr>
+<tr><td>COMPETITIVE PARTS</td><td class="n">&euro;2,296,681</td><td class="n">155,642</td><td class="n">&euro;15</td><td class="n">12.1%</td><td class="n">22.1%</td><td class="n pos">0.6&times;</td></tr>
+<tr><td>SEMI COMPETITIVE PARTS</td><td class="n">&euro;203,475</td><td class="n">47,959</td><td class="n">&euro;4.2</td><td class="n">1.1%</td><td class="n">6.8%</td><td class="n pos">0.16&times; lighter in money</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The last column is the practical test of a category, and it is the one I would use to judge any model. It asks whether a bar's height means the same thing in money as it does in volume. For OTHERS the answer is yes, and that is the one code whose two shares agree. For the rest it is no: EMISSION RELATED PARTS is twelve times heavier in money than in volume, and SEMI COMPETITIVE PARTS is six times lighter. So "which category is biggest" gives a different answer depending on whether you count euro or pieces, and for six of his eight categories the two answers disagree by a factor of two or more.</p>
+
+<h2>Movement: what a category hides</h2>
+
+<p>Two tests. How many codes you must read to explain most of the change, and how much money moves in opposite directions inside a single code.</p>
+
+<div class="scroll">
+<table style="table-layout:auto">
+<caption>Explaining the movement, and concealing it</caption>
+<thead><tr><th>Model and level</th><th class="n">Codes</th><th class="n">Codes to explain 80% of the change</th><th class="n">Codes hiding a rise and a fall</th><th class="n">Euro moving in opposite directions inside them</th></tr></thead>
+<tbody>
+<tr class="key"><td>His 8 categories</td><td class="n">8</td><td class="n">4</td><td class="n">8</td><td class="n neg">&euro;5.08M</td></tr>
+<tr><td>His 240 subgroups</td><td class="n">240</td><td class="n">39</td><td class="n">51</td><td class="n">&euro;3.48M</td></tr>
+<tr><td>Our 7 families</td><td class="n">7</td><td class="n">2</td><td class="n">8</td><td class="n neg">&euro;5.03M</td></tr>
+<tr><td>Our 25 sub-families</td><td class="n">25</td><td class="n">11</td><td class="n">24</td><td class="n">&euro;4.42M</td></tr>
+<tr><td>Our workbook level 1</td><td class="n">23</td><td class="n">9</td><td class="n">19</td><td class="n">&euro;4.43M</td></tr>
+<tr class="key"><td>Our workbook level 2</td><td class="n">116</td><td class="n">30</td><td class="n">51</td><td class="n">&euro;3.65M</td></tr>
+</table>
+</div>
+
+<p>His eight categories need only four codes to explain 80% of the movement, which looks efficient and is not. Every one of the eight hides a rise and a fall of more than &euro;20,000 inside it, and together they conceal <b>&euro;5.08M</b> of euro moving in opposite directions. The worst is OTHERS itself: &euro;3.89M going up and &euro;4.01M going down, inside one code, for a net change of about &minus;&euro;129,000.</p>
+
+<p>That is the number that should decide this argument. A category in which &euro;3.89M rises and &euro;4.01M falls, and which reports a net of &minus;&euro;129,000, cannot be the basis of a movement chart or a meeting discussion. The movement is real and it is the largest single thing in the book, and his top level cannot show it.</p>
+
+<p>His subgroup level is genuinely better here too: 51 codes hiding offsets rather than 8, and only &euro;3.48M concealed against &euro;5.08M. Our workbook level 2 is comparable at &euro;3.65M across 51 codes. Again the deeper levels of both models behave similarly and the top levels of both behave badly.</p>
+
+<h2>The accounts</h2>
+
+<p>Thirty sold-to accounts, our billing, the same nine months.</p>
+
+<div class="scroll">
+<table style="table-layout:auto">
+<caption>Our billing by account, January&ndash;September</caption>
+<thead><tr><th>Account</th><th class="n">Euro 2024</th><th class="n">Euro 2025</th><th class="n">Change</th><th class="n">Share of 2025</th><th class="n">Units 2025</th><th class="n">Euro per unit</th></tr></thead>
+<tbody>
+<tr class="key"><td>2574</td><td class="n">&euro;5,408,153</td><td class="n">&euro;4,758,783</td><td class="n neg">&minus;12.0%</td><td class="n">18.3%</td><td class="n">191,227</td><td class="n">&euro;24.9</td></tr>
+<tr class="key"><td>2575</td><td class="n">&euro;5,677,477</td><td class="n">&euro;4,282,561</td><td class="n neg">&minus;24.6%</td><td class="n">16.5%</td><td class="n">164,758</td><td class="n">&euro;26.0</td></tr>
+<tr><td>1797 &mdash; UMI, Israel light commercial</td><td class="n">&euro;2,681,819</td><td class="n">&euro;2,745,049</td><td class="n pos">+2.4%</td><td class="n">10.6%</td><td class="n">91,518</td><td class="n">&euro;30.0</td></tr>
+<tr><td>1799 &mdash; UTI, Israel commercial</td><td class="n">&euro;2,143,852</td><td class="n">&euro;2,707,581</td><td class="n pos">+26.3%</td><td class="n">10.4%</td><td class="n">96,310</td><td class="n">&euro;28.1</td></tr>
+<tr><td>90</td><td class="n">&euro;1,560,546</td><td class="n">&euro;1,667,987</td><td class="n pos">+6.9%</td><td class="n">6.4%</td><td class="n">55,056</td><td class="n">&euro;30.3</td></tr>
+<tr><td>2516</td><td class="n">&euro;1,150,669</td><td class="n">&euro;1,282,899</td><td class="n pos">+11.5%</td><td class="n">4.9%</td><td class="n">49,401</td><td class="n">&euro;26.0</td></tr>
+<tr><td>86</td><td class="n">&euro;879,024</td><td class="n">&euro;1,142,530</td><td class="n pos">+30.0%</td><td class="n">4.4%</td><td class="n">38,618</td><td class="n">&euro;29.6</td></tr>
+<tr><td>92 <span class="sm">new in 2025, no 2024 billing</span></td><td class="n">&mdash;</td><td class="n">&euro;1,067,660</td><td class="n">new</td><td class="n">4.1%</td><td class="n">33,547</td><td class="n">&euro;31.8</td></tr>
+<tr><td>2181</td><td class="n">&euro;769,344</td><td class="n">&euro;1,031,389</td><td class="n pos">+34.1%</td><td class="n">4.0%</td><td class="n">46,588</td><td class="n">&euro;22.1</td></tr>
+<tr><td>2294</td><td class="n">&euro;540,573</td><td class="n">&euro;969,107</td><td class="n pos">+79.3%</td><td class="n">3.7%</td><td class="n">49,694</td><td class="n">&euro;19.5</td></tr>
+<tr><td>76</td><td class="n">&euro;978,763</td><td class="n">&euro;933,403</td><td class="n neg">&minus;4.6%</td><td class="n">3.6%</td><td class="n">32,281</td><td class="n">&euro;28.9</td></tr>
+<tr><td>601</td><td class="n">&euro;801,550</td><td class="n">&euro;648,936</td><td class="n neg">&minus;19.0%</td><td class="n">2.5%</td><td class="n">8,552</td><td class="n">&euro;75.9</td></tr>
+<tr><td>519</td><td class="n">&euro;1,118,694</td><td class="n">&euro;186,210</td><td class="n neg">&minus;83.4%</td><td class="n">0.7%</td><td class="n">7,904</td><td class="n">&euro;23.6</td></tr>
+<tr><td>2733</td><td class="n">&euro;94,292</td><td class="n">&euro;213,128</td><td class="n pos">+126.0%</td><td class="n">0.8%</td><td class="n">5,356</td><td class="n">&euro;39.8</td></tr>
+<tr><td>2194 <span class="sm">6 units in the year</span></td><td class="n">&euro;203,394</td><td class="n">&euro;189,454</td><td class="n neg">&minus;6.9%</td><td class="n">0.7%</td><td class="n">6</td><td class="n neg">&euro;31,576</td></tr>
+<tr><td>15 smaller accounts</td><td class="n">&euro;2,075,837</td><td class="n">&euro;2,125,538</td><td class="n pos">+2.4%</td><td class="n">8.2%</td><td class="n">79,065</td><td class="n">&euro;26.9</td></tr>
+<tr class="total"><td>Total, 30 accounts</td><td class="n">&euro;26,083,987</td><td class="n">&euro;25,952,215</td><td class="n">&minus;0.5%</td><td class="n">100%</td><td class="n">949,881</td><td class="n">&euro;27.3</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Three things jump out and none of them were visible in the customer-filtered cut.</p>
+
+<p><b>The flat total hides two large accounts falling hard.</b> 2574 and 2575 are 35% of the book between them and both fell, by 12% and 25%. That is about &euro;2.04M of euro out. Nine accounts grew by more than 20% and covered it, so the network total reads a 0.5% decline. Any read that stops at the total would report a flat year in which a third of the business contracted sharply.</p>
+
+<p><b>Account 519 fell 83%, from &euro;1.12M to &euro;186,000.</b> That is a single account losing &euro;932,000, and it is the biggest single account-level fall in the book. It is worth a question on its own.</p>
+
+<p><b>Account 92 has no 2024 billing at all and &euro;1.07M in 2025.</b> Combined with 519 those two account-level facts are about &euro;2.0M of movement, and the second is pure growth from a standing start rather than a like-for-like decline. Neither is a product story.</p>
+
+<p>One caution: account 2194 shows &euro;189,454 across 6 units, which is &euro;31,576 a unit, and 601 runs at &euro;75.9 a unit against a network average of &euro;27.3. Both are worth a data check before either is quoted; the first looks like a units problem rather than a price one.</p>
+
+<h2>The biggest movements in each model</h2>
+
+<p>Same window, same euro. First his deepest level with names, then ours.</p>
+
+<div class="scroll">
+<table style="table-layout:auto">
+<caption>Biggest euro movements, his subgroups against our sub-families</caption>
+<thead><tr><th>His subgroups</th><th class="n">Euro 2025</th><th class="n">Change</th><th class="n">Euro per unit</th><th>Our sub-families</th><th class="n">Euro 2025</th><th class="n">Change</th><th class="n">Euro per unit</th></tr></thead>
+<tbody>
+<tr><td>PARTIAL ENGINE</td><td class="n">&euro;278,434</td><td class="n neg">&minus;51.3%</td><td class="n">&euro;5,801</td><td>Electrical sensors</td><td class="n">&euro;2,377,681</td><td class="n pos">+20.8%</td><td class="n">&euro;90.9</td></tr>
+<tr><td>ELECTRICAL CONTROL AND OTHER PARTS</td><td class="n">&euro;436,653</td><td class="n pos">+67.1%</td><td class="n">&euro;104.8</td><td>Exhaust</td><td class="n">&euro;1,474,308</td><td class="n neg">&minus;18.6%</td><td class="n">&euro;78.2</td></tr>
+<tr><td>FUEL INJECTION SYSTEM</td><td class="n">&euro;710,294</td><td class="n neg">&minus;16.5%</td><td class="n">&euro;42.2</td><td>Engine parts</td><td class="n">&euro;468,556</td><td class="n neg">&minus;39.2%</td><td class="n">&euro;81.5</td></tr>
+<tr><td>EMISSION PIPING</td><td class="n">&euro;440,000</td><td class="n neg">&minus;21.0%</td><td class="n">&euro;48.2</td><td>Body parts</td><td class="n">&euro;2,345,844</td><td class="n neg">&minus;6.6%</td><td class="n">&euro;34.4</td></tr>
+<tr><td>METER ASM</td><td class="n">&euro;122,634</td><td class="n pos">+888.7%</td><td class="n">&euro;111.0</td><td>Brake parts</td><td class="n">&euro;2,035,285</td><td class="n neg">&minus;7.0%</td><td class="n">&euro;53.0</td></tr>
+<tr><td>FRONT DISC BRAKE CALIPER</td><td class="n">&euro;700,383</td><td class="n neg">&minus;13.6%</td><td class="n">&euro;52.8</td><td>Suspension</td><td class="n">&euro;322,527</td><td class="n neg">&minus;25.2%</td><td class="n">&euro;22.7</td></tr>
+<tr><td>ROOF PANEL</td><td class="n">&euro;156,169</td><td class="n neg">&minus;37.7%</td><td class="n">&euro;49.6</td><td>Hydraulic / mechanical</td><td class="n">&euro;632,978</td><td class="n neg">&minus;12.0%</td><td class="n">&euro;44.9</td></tr>
+<tr><td>ECGI SYSTEM OR COMMON RAIL</td><td class="n">&euro;324,016</td><td class="n neg">&minus;21.8%</td><td class="n">&euro;96.6</td><td>Fuel system</td><td class="n">&euro;276,854</td><td class="n neg">&minus;21.5%</td><td class="n">&euro;55.5</td></tr>
+<tr><td>BLOWER UNIT</td><td class="n">&euro;204,548</td><td class="n neg">&minus;29.5%</td><td class="n">&euro;17.4</td><td>Miscellaneous</td><td class="n">&euro;806,444</td><td class="n pos">+10.1%</td><td class="n">&euro;34.1</td></tr>
+<tr><td>TURBOCHARGER SYSTEM</td><td class="n">&euro;337,405</td><td class="n pos">+27.1%</td><td class="n">&euro;33.2</td><td>Cooling</td><td class="n">&euro;453,982</td><td class="n pos">+15.8%</td><td class="n">&euro;39.2</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>The two lists agree on the substance and disagree on where to put it, which is the whole finding of this pack in one table. Both models see the same five stories: injection and emission equipment down hard, electrical control and sensors up, engines and engine assemblies down sharply, brake and suspension content down moderately, turbo and cooling up.</p>
+
+<p>But look at where the electrical story sits. In his model it is split between OTHERS and ELECTRICAL CONTROL AND OTHER PARTS. In ours it is one family, Electrical sensors, and it is the single biggest positive mover in the book at +&euro;409,000 on &euro;2.38M. A meeting working from his category menu would see a &euro;437,000 code rising 67% and would not see that behind it sits our entire sensors family, worth five times as much and growing. And a meeting working from our top level would see Brakes falling without seeing that the brake story lives mostly inside OTHERS.</p>
+
+<h2>Conclusions</h2>
+
+<h3>1. Read his model below the top level, or not at all</h3>
+<p>His second and third levels are sound. At second level his codes reach 80.7% purity and a tighter value spread than our sub-families, and his movement reading conceals less than ours does at a comparable depth. His top level is the worst instrument either of us has. The report's menu, and any chart built from it, is the one part of his model that should not be used.</p>
+
+<h3>2. Our workbook tree, one level down, remains the best cut available</h3>
+<p>0.88 value spread and 85.1% purity, the tightest of anything measured here, and it is also where our two models agree most. That is the third time this has come out the same way. The recommendation is unchanged: report on the workbook tree, at level 2, with level 3 behind it.</p>
+
+<h3>3. Use his units, our money</h3>
+<p>His euro is 24% to 27% below ours on the same accounts and the same nine months, and no cut of ours reproduces it. His units are the better of the two unit measures in one respect &mdash; they do not double-count the way ours do for the amount page &mdash; but they are also 20% to 26% below ours in scale. The honest position is that neither system's money should be mixed with the other's, and our invoiced total is the one that is a complete sum of what we billed.</p>
+
+<h3>4. Never chart his categories together</h3>
+<p>A piece is worth &euro;4 in one of his categories and &euro;2,083 in another. That is not a presentation problem, it is a definition problem, and it means the bars cannot be read against each other. If his top level must appear on a page, it should appear as a table with euro per unit beside every row, never as a bar chart.</p>
+
+<h3>5. The four things worth chasing, in order of return</h3>
+<p><b>Account 519 and account 92.</b> Together about &euro;2.0M of movement, one an 83% collapse and one an account with no 2024 billing at all. Neither is a product story and both are bigger than any family movement in the book.<br>
+<b>Accounts 2574 and 2575.</b> 35% of the network and both falling, &minus;12% and &minus;25%. Nine smaller accounts growing by more than 20% is what makes the total look flat.<br>
+<b>PARTIAL ENGINE.</b> The single biggest euro movement in the whole book, down &euro;294,000 or 51%, at &euro;5,801 a unit. One family, one question.<br>
+<b>Our air-cleaner mapping.</b> The same gap that showed up in the UMI cut: his air-cleaner rows carry &euro;509,000 and a large part of it we file as "Other filter". Worth closing on its own.</p>
+
+<h2>What this does not settle</h2>
+
+<ul>
+  <li><b>His euro basis.</b> I could not reproduce it and I am not going to keep guessing. It needs the report's own measure definition. Everything here that uses money uses it only within his model, never as a total.</li>
+  <li><b>Which nine months.</b> Both years are January to September. Our extract runs to 31 August 2026, so September 2025 is our own record rather than his August refresh.</li>
+  <li><b>No fleet counts in this cut.</b> Trucks in service are not in the export, so nothing here is a rate per vehicle. That makes these volume and money movements, not performance per truck. It is the one piece of context the gaps rule asks for that I cannot supply from this file.</li>
+  <li><b>Two account-level figures look wrong.</b> Account 2194 at &euro;31,576 a unit on 6 units, and 601 at &euro;75.9 a unit against a network average of &euro;27.3. Worth a data check before either is quoted.</li>
+  <li><b>The purity test flatters depth.</b> It is measured against our sub-families, so it favours deeper levels. I have used it only to compare levels of similar depth and I have said so where it appears.</li>
+  <li><b>Units are not comparable across families.</b> One sensor is not one bumper. Every unit comparison here is made inside one family, never across the book.</li>
+  <li><b>I have not tested his model against our figure key.</b> There is a third axis &mdash; the Japanese figure key we already carry &mdash; and it may well perform like his. Testing it would be the natural next step.</li>
+</ul>
+
+<h2>Sources</h2>
+
+<p class="foot">
+<b>His export:</b> <code>C:\Users\jerom\Downloads\data.xlsx</code> &mdash; sheet <i>Export</i>, 17,956 part numbers, three levels, euro and units for both years, all customers.<br>
+<b>Our billing:</b> part-level records for all 30 sold-to accounts, January&ndash;September 2024 and 2025, joined to our parts master for the family tree.<br>
+<b>Working files:</b> <code>ISZE\01_data\90_INBOX\_pbi_all_customers_20260922_parts.csv</code> (his part level), <code>_pbi_all_recon_20260922_accounts.csv</code> (per account), <code>_pbi_all_model_20260922_*</code> (the seven tests), <code>_pbi_all_final_20260922_joined.csv</code> (both levels on one row per part).<br>
+<b>Nothing was rebuilt, changed or overwritten.</b> This is a read-only measurement; the export and our source files are untouched.
+</p>
+
+<footer>
+  Internal working note prepared 22 September 2026. Contains internal file names, account codes, our parts tree and our billed euro &mdash; not for distribution outside ISZE.
+</footer>
+
+</div>
+</body>
+</html>

@@ -435,6 +435,19 @@ for d in DBS:
                               tot=float(s[s.year == y].total_eur.sum()))
                  for y in (2023, 2024, 2025)}
 DBS.sort(key=lambda r: -r['cy'])
+# D08: overlay worksheet fleet (wallet_waterfall CY2025) on modelled markets.
+# Keeps the ceiling from the same file it always did; does not re-run the wallet engine.
+_w25_uio = {
+    str(r.distributor_code): float(r.uio_units)
+    for _, r in wfall[wfall.year == 2025].iterrows()
+    if float(r.uio_units or 0) > 0
+}
+for _d in DBS:
+    if _d['inModel'] and _d['code'] in _w25_uio:
+        _wu = _w25_uio[_d['code']]
+        _d['uio'] = _wu
+        if _d.get('gpsTotal'):
+            _d['spu'] = float(_d['gpsTotal']) / _wu
 # Every modelled network figure uses the 18 modelled distributors only, so no numerator
 # is on a 22-code basis while its denominator is on 18.
 g25 = gps[(gps.year == 2025) & (~gps.distributor_code.isin(CIS4))]
@@ -444,9 +457,9 @@ N = dict(
     cyAll=float(cy_all.net_sales_value.sum()), cyAttr=float(cy25_attr), cyUn=float(cy25_unattr),
     fyAll=float(fy_all.net_sales_value.sum()), fyAttr=float(fy26_attr), fyUn=float(fy26_unattr),
     gpsCy=float(g25.total_sales_eur.sum()), gpsFy=float(sum(r['fy'] for r in DBS if r['inModel'])),
-    uio=float(g25.uio_units.sum()), uio24=float(g24.uio_units.sum()),
+    uio=float(sum(_w25_uio.values())), uio24=float(g24.uio_units.sum()),
     uio23=float(g23.uio_units.sum()),
-    spuCy=float(g25.total_sales_eur.sum() / g25.uio_units.sum()),
+    spuCy=float(g25.total_sales_eur.sum() / sum(_w25_uio.values())),
     # The modelled network median on the billing fact, so the story text quotes the same
     # basis as the league table and the hero tile rather than the narrower spend file.
     spuFactMed=float(np.median([r['cy'] / r['uio'] for r in DBS

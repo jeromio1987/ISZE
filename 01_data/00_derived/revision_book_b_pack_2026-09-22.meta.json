@@ -1,0 +1,47 @@
+{
+  "generated_at": "2026-09-22T17:14:31+00:00",
+  "builder_version": "revision-book-b-pack-v1",
+  "no_alloc_run": true,
+  "inputs": {
+    "book_b_provisional_weights": "01_data\\00_derived\\book_b_provisional_weights.csv",
+    "revision_exception_queue": "01_data\\00_derived\\revision_exception_queue.csv"
+  },
+  "outputs": {
+    "review_pack": "01_data\\00_derived\\revision_book_b_review_pack.csv",
+    "action_summary": "01_data\\00_derived\\revision_book_b_action_summary.csv",
+    "top_review": "01_data\\00_derived\\revision_book_b_top_review.csv"
+  },
+  "grain": {
+    "book_b": "network APL seed \u2014 one row per PN (no DB column)",
+    "revision_queue": "PN \u00d7 distributor_code (ITUK, UTI, IRELAND, IUK)",
+    "review_pack": "Book B left-join revision \u2014 fan-out to PN\u00d7DB where activity exists; else single book_b_pn_only row with NO_REVISION_ACTIVITY"
+  },
+  "counts": {
+    "book_b_pn": 15917,
+    "revision_queue_rows": 20750,
+    "revision_pn_unique": 14038,
+    "book_b_pn_in_revision": 5027,
+    "review_pack_rows": 19141,
+    "review_pack_pn_x_db": 8251,
+    "review_pack_pn_only": 10890,
+    "action_summary_rows": 56,
+    "top_review_rows": 500,
+    "top_review_cap": 500
+  },
+  "action_counts_in_pack": {
+    "NO_REVISION_ACTIVITY": 10890,
+    "REVIEW_LEAKAGE": 2151,
+    "REVIEW_HIGH_LIST_EXPOSURE": 1860,
+    "REVIEW_OVERSTOCK": 1777,
+    "HOLD_DEFAULT": 1438,
+    "REVIEW_PROXY_ADVERSE": 923,
+    "REVIEW_IAM_UNDERCUT": 74,
+    "RAISE_OK_ROOM_VS_IAM": 28
+  },
+  "notes": [
+    "Book B is network-level ambition seeds; revision guardrails are per DB \u2014 do not blend UTI\u2260UMI, IUK\u2260ITUK.",
+    "NO_REVISION_ACTIVITY = Book B seed with no CY2025 bill/sell-out row in revision queue.",
+    "Top review excludes HOLD_DEFAULT and RAISE_OK_ROOM_VS_IAM.",
+    "Cannot apply ambition % or alloc targets until Jerome sets Book B target and runs alloc."
+  ]
+}

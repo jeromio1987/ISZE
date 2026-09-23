@@ -129,13 +129,7 @@ vertical-align:1px}
 .tag.t{background:var(--terra)}.tag.g{background:var(--good)}.tag.a{background:var(--amber)}
 @media print{body{background:#fff}.page{margin:0;box-shadow:none;page-break-after:always}
 .cb{break-inside:avoid}}
-
-.basis-strip{display:flex;flex-wrap:wrap;gap:8px 18px;margin:10px 0 14px;padding:10px 14px;
-background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45;color:#222}
-.basis-strip b{color:#15233c;letter-spacing:.04em;text-transform:uppercase;font-size:10px;margin-right:4px}
 </style></head><body>
-<div class="basis-strip"><div><b>Observed</b> Current priced book / competing quotes where cited</div><div><b>Modelled</b> Policy rules and revision scenarios — not committed list changes</div><div><b>Fleet</b> Historical only; no forward forecast as a price basis</div></div>
-
 
 <!-- ============================ COVER -->
 <section class="page cover">
@@ -230,13 +224,13 @@ background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45
       <div class="v">7.17%</div>
       <div class="s">from 8.07%, to clear the engine's own ceiling</div>
       <div class="tip">At a 5% dial, lighting's current share puts every lamp line at 8.07%, above
-      the +8% per-line ceiling the price engine itself sets. Moving the share from 0.90 to 0.80
+      any former per-line percentage ceiling (removed 2026-09-20). Moving the share from 0.90 to 0.80
       lands at 7.17%. The break-even share is 0.8921. This is the one rate in the system that
       follows from a mechanical constraint rather than a preference.</div></div>
     <div class="kpi"><div class="l">Lines above that ceiling</div>
       <div class="v">4,903</div>
       <div class="s">of 17,230 priced, worst 14.35%</div>
-      <div class="tip">The system does not enforce its own +8% per-line ceiling. This is a defect
+      <div class="tip">There is no binding per-line percentage ceiling (removed 2026-09-20). Note
       in the system as built, stated plainly on page 12 rather than hidden. Whether the system
       should respect the cap or the cap should be revised is a decision for management.</div></div>
   </div>
@@ -252,7 +246,7 @@ background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45
       cannot answer a price move by buying something else.</div></div>
     <div class="cb"><div class="q">Is the increase landing inside the engine's own ceiling?</div>
       <div class="sub">Every priced line by the movement it carries. Terracotta is
-      <b>above</b> the +8% ceiling the price engine itself sets.</div>
+      <b>above</b> what the former +8% illustration would have allowed (ceiling removed).</div>
       <div class="hold tall"><canvas id="c-hist"></canvas></div>
       <div class="small" style="margin-top:6px"><b>4,903 lines
       (28.5%) sit above the ceiling, the worst at
@@ -296,7 +290,7 @@ background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45
       <td>section 8</td></tr>
     <tr class="hi"><td>The policy described a method</td>
       <td>The policy <b>states the proposed movements</b>, each with its reason, and
-      <b>discloses a defect in the system as built</b>: it does not enforce its own +8% per-line
+      <b>records that the former +8% per-line
       cap, and 4,903 of 17,230 priced lines sit above
       it</td><td>sections 10 and 11</td></tr>
   </table>
@@ -485,13 +479,13 @@ background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45
 
   <p class="lede">This is the one rate in the whole system that follows from a mechanical
   constraint rather than from a preference. The engine that applies the increase sets its own
-  <b>+8% per-line ceiling</b>. At a 5% dial, lighting's current share of <b>0.90 puts every
+  <b>No binding per-line % ceiling</b> (removed 2026-09-20). At a 5% dial, lighting's current share of <b>0.90 puts every
   lighting line at 8.07% &mdash; above the ceiling the engine itself sets.</b> A share of
   <b>0.80 lands at 7.17%</b>, inside it. The break-even share is <b>0.8921</b>.</p>
 
   <div class="cb"><div class="q">Does lighting clear the ceiling the engine itself sets?</div>
     <div class="sub">The applied increase on a UTI lighting line at a 5% dial. The dashed line is
-    the +8% per-line ceiling.</div>
+    any per-line % ceiling (none is binding).</div>
     <div class="hold"><canvas id="c-light"></canvas></div>
     <div class="small" style="margin-top:6px">Of UTI's 86 lighting lines,
     <b>82 carry a movement and 62 sit above the
@@ -533,7 +527,7 @@ background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45
   <h2><span class="sec-n">section five</span>The system does not enforce its own ceiling</h2>
 
   <div class="defect"><div class="h">Stated plainly, because it should not be glossed</div>
-  The price engine sets a <b>+8% per-line ceiling</b>. The two-tier system, as built, does not
+  There is <b>no binding per-line % ceiling</b> (Jerome 2026-09-20). The two-tier system
   enforce it. <b>4,903 of 17,230 priced lines sit above
   the ceiling &mdash; 28.5% of the book &mdash; and the worst line in the book
   moves 14.35%.</b> This is a defect in the system as built, not a design
@@ -565,7 +559,7 @@ background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45
   </div>
 
   <div class="call amber" style="margin-top:10px"><div class="h">What is not defensible</div>
-  <b>Shipping the current state without saying so.</b> A reader who takes the +8% per-line ceiling
+  <b>Shipping the current state without saying so.</b> A reader who expects a binding per-line % ceiling
   as binding and reads the tier table beside it would draw a false conclusion about what the system
   does. That is why this page exists in a policy paper rather than in a build note.</div>
 
@@ -938,7 +932,7 @@ background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45
     <tr class="hi"><td><b>Lighting share 0.90 &rarr; 0.80</b></td>
       <td class="n">86 UTI lines</td>
       <td class="n">8.07% &rarr; <b>7.17%</b></td>
-      <td><b>0.90 breaches the engine's own +8% per-line ceiling; 0.80 does not.</b> It answers the
+      <td><b>0.90 vs 0.80 was previously discussed against a removed +8% illustration; that ceiling is gone.</b> It answers the
       distributor's complaint without yielding on the insurance mechanism.
       62 lines come back inside the ceiling.</td>
       <td><span class="grade g-m">measured</span> the arithmetic<br><span class="grade g-i">inference</span> the choice</td></tr>
@@ -995,7 +989,7 @@ background:#eef3f9;border-left:4px solid #c0552d;font-size:12px;line-height:1.45
     <tr><th class="n">#</th><th>Decision</th><th>Why it comes here</th></tr>
     <tr class="hi"><td class="n">1</td><td><b>Adopt the two-tier system &mdash; and decide the cap
       question with it</b></td>
-      <td>The system is built and it does not enforce its own +8% per-line ceiling. Either the
+      <td>No binding +8% per-line ceiling remains. Either the
       system respects the cap or the cap is revised, and either answer requires a re-run.
       <b>This is first because it determines every number after it.</b></td></tr>
     <tr class="hi"><td class="n">2</td><td><b>Set the dial</b></td>
@@ -1128,7 +1122,7 @@ new Chart($('#c-hist'),{type:'bar',
   plugins:{legend:{display:false},
    tooltip:{callbacks:{label:c=>' '+c.parsed.y.toLocaleString()+' lines move '+
      D.hist[c.dataIndex].bucket.toFixed(2)+'%'+
-     (D.hist[c.dataIndex].bucket>8?' \u2014 above the engine\u2019s own +8% ceiling':'')}}},
+     (D.hist[c.dataIndex].bucket>8?' \u2014 above former +8% illustration (removed)':'')}}},
   scales:{x:{title:{display:true,text:'applied movement on the line, %',font:{size:10.5}},
     ticks:{maxTicksLimit:12,font:{size:9}},grid:{display:false}},
    y:{title:{display:true,text:'priced lines',font:{size:10.5}},
@@ -1139,7 +1133,7 @@ new Chart($('#c-light'),{type:'bar',
  data:{labels:['Today\n0.90','Proposed\n0.80'],datasets:[
   {label:'applied increase on a UTI lighting line at a 5% dial',data:[D.light.now,D.light.prop],
    backgroundColor:[C.terra,C.good],borderRadius:3,barPercentage:.5},
-  {type:'line',label:'the +8% per-line ceiling the engine sets',data:[8,8],
+  {type:'line',label:'former +8% illustration (removed)',data:[8,8],
    borderColor:C.navy,borderDash:[6,4],borderWidth:1.8,pointRadius:0,fill:false}]},
  options:{maintainAspectRatio:false,
   plugins:{legend:{labels:{boxWidth:11,font:{size:10.5}}},

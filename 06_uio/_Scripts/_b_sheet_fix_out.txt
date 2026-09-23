@@ -1,0 +1,20 @@
+﻿rewrote V20 ASSUMPTIONS rows 39..57
+dims after: A1:B58
+ 39| Fix pass b (2026-09-22b)
+ 40| FIX 1 r79 GREECE CV LD: the +14.0 x 5 straight line was a ROUNDING artefact, not a flat input. The recovered input UIO(t
+ 41| FIX 1 - still open: no Greek CV LD registration series exists on disk (IML 6.CV Vol ctry 230 = zero 1990-2026). The row'
+ 42| FIX 2 new sheet 'V20 REGS USED': per row and per year 2026-2030, the registration input actually used, the raw pre-smoot
+ 43| FIX 3 r54 PORTUGAL LCV (seam 2005) and r90 CYPRUS LCV (seam 2014): the seam detector required a negative cohort > 25% of
+ 44| FIX 3 - still open: the seam years are UNRECONSTRUCTABLE from the sources on disk; no positive-number guess was made. Ou
+ 45| r33 BELGIUM and r90's forecast behaviour were adjudicated CURVE and are not re-litigated. r33's own cells are untouched;
+ 46| Unchanged and out of scope: V19, the v18 archive, live price lists, uio_ld_n35_share.csv, the ceiling chain, every harne
+ 48| Independent verification of THIS candidate (2026-09-22b)
+ 49| Harness: 03_analytics/Isuzu/prism/scripts/verify_uio_v20.py - written separately; reads only workbook values, the curve 
+ 50| VERDICT: CONVICTED - 1 of 10 checks fails (candidate a: 3 of 10; live V19: 7 of 10).
+ 51| PASS check1_method_consistency: 0 of 81 rows switch method (candidate a: 4 - r33/r54/r79/r90). The fix is in the workboo
+ 52| PASS check5_flat_rule_present: 0 rows show the 3%% constant-ratio signature (candidate a: 2 - r33/r54). Near-miss list f
+ 53| FAIL check7_overstatement_curve: STATED RESIDUAL, deliberately not forced. Measured V19 overstatement 6.39% / 13.44% / 2
+ 54| WARN check4_vin_scrappage: unchanged from candidate a. The VIN register on disk was rebuilt 2026-09-18 and no longer rep
+ 55| PASS check2/2b Ireland, check3 steady state, check6 totals identity (all 41 years), check8 locked values (row 25 = 44,92
+ 56| Grand Total 2026-2030: V19 1,446,918 -> candidate a 1,190,448 -> candidate b 1,197,489. Candidate b is +0.59% vs candida
+ 57| Full report: C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\_uio_v20_B_verification_report.json

@@ -1,9 +1,9 @@
 {
   "schema": "ship_receipt/v2",
   "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\hub\\ISZE_OS_Hub.html",
-  "artifact_mtime_ms": 1789657826681,
-  "written_at": "2026-09-19T09:05:09.734Z",
-  "ok": false,
+  "artifact_mtime_ms": 1790097530876,
+  "written_at": "2026-09-22T17:25:38.380Z",
+  "ok": true,
   "screenshots_taken": 1,
   "screenshots_read": 1,
   "checks": [
@@ -15,7 +15,7 @@
     {
       "id": "min_size",
       "ok": true,
-      "detail": "132582 bytes"
+      "detail": "132551 bytes"
     },
     {
       "id": "no_cdn",
@@ -34,17 +34,17 @@
     },
     {
       "id": "open_cmd",
-      "ok": false,
-      "detail": "OPEN_ISZE_OS_Hub.cmd opens ISZE_OS_Hub.html but is not CRLF. OPEN_ISZE_OS_Hub.cmd has 2 LF-only line ending(s), 0 CRLF. Jerome double-clicks these in Explorer; rewrite the file with CRLF."
+      "ok": true,
+      "detail": "OPEN_ISZE_OS_Hub.cmd opens ISZE_OS_Hub.html (CRLF ok)"
     },
     {
       "id": "visual_screenshots",
       "ok": true,
-      "detail": "screenshots_taken 1, screenshots_read 1 (1 path(s) passed)"
+      "detail": "screenshots_taken 1, screenshots_read 1 (1 path(s) passed, 1 marked read)"
     }
   ],
   "screenshots": [
-    "C:\\Users\\jerom\\AppData\\Local\\Temp\\receipt_probe\\qa_shot_A.png"
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_qa\\d08_20260922\\hub.png"
   ],
   "notes": ""
 }

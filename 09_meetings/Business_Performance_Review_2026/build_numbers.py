@@ -101,28 +101,40 @@ def main():
         q[q.qtr == "Q2"].bd.dt.strftime("%Y-%m").unique().tolist()
     )
 
-    # GPS spend per truck, CY2025
+    # GPS spend per truck, CY2025 — fleet from wallet worksheet (D08: 163,198).
+    # Published ceiling kept from wallet_waterfall (EUR 55,253,312); engine not re-run.
     gps = pd.read_csv(DER / "gps_spu_by_distributor.csv")
-    g25 = gps[gps.year == 2025]
-    out["gps_cy2025"] = {
-        "by_db": {
-            LABELS.get(str(r.distributor_code), str(r.distributor_code)): {
-                "spend_per_unit": float(r.spend_per_unit_eur),
-                "uio": float(r.uio_units),
-                "billed_eur": float(r.total_sales_eur),
-            }
-            for r in g25.itertuples()
-        },
-        "network_spend_per_unit": float(
-            g25.total_sales_eur.sum() / g25.uio_units.sum()),
-        "network_median_spend_per_unit": float(g25.spend_per_unit_eur.median()),
-        "network_billed_eur": float(g25.total_sales_eur.sum()),
-        "network_uio": float(g25.uio_units.sum()),
-    }
-
-    # wallet / ceiling CY2025
+    g25_all = gps[gps.year == 2025]
+    g25 = g25_all[g25_all.uio_units > 0].copy()  # 18 fleet-bearing markets
     w = pd.read_csv(DER / "wallet_waterfall.csv")
     w25 = w[w.year == 2025]
+    wal_uio = {
+        str(r.distributor_code): float(r.uio_units)
+        for r in w25.itertuples() if float(r.uio_units) > 0
+    }
+    by_db = {}
+    for r in g25.itertuples():
+        code = str(r.distributor_code)
+        uio = float(wal_uio.get(code, r.uio_units))
+        billed = float(r.total_sales_eur)
+        by_db[LABELS.get(code, code)] = {
+            "spend_per_unit": billed / uio if uio else None,
+            "uio": uio,
+            "billed_eur": billed,
+        }
+    net_uio = float(sum(wal_uio.values()))
+    net_billed = float(g25.total_sales_eur.sum())
+    out["gps_cy2025"] = {
+        "by_db": by_db,
+        "network_spend_per_unit": net_billed / net_uio,
+        "network_median_spend_per_unit": float(
+            pd.Series([v["spend_per_unit"] for v in by_db.values() if v["spend_per_unit"]]).median()),
+        "network_billed_eur": net_billed,
+        "network_uio": net_uio,
+        "basis": "18-market billed / worksheet fleet 163198 (matched rate; not 22/18 mix)",
+    }
+
+    # wallet / ceiling CY2025 — published ceiling held
     out["ceiling_cy2025"] = {
         "theoretical_eur": float(w25.theoretical_wallet_eur.sum()),
         "captured_total_eur": float(w25.captured_total_eur.sum()),

@@ -66,7 +66,7 @@ fam_step["step_share"] = 100 * fam_step["step_eur"] / spine_step
 fam_step = fam_step.sort_values("step_eur", ascending=False).head(15)
 
 # --- the level test: family price move against family volume move
-aim = pd.read_csv(os.path.join(D, "aim_pn_classification_v2.csv"), dtype=str,
+aim = pd.read_csv(os.path.join(D, "aim_pn_classification_20260920.csv"), dtype=str,
                   usecols=["part_number", "catalog_l1"])
 aim["pn"] = aim["part_number"].astype(str).str.strip().str.zfill(10)
 aim = aim.drop_duplicates("pn")

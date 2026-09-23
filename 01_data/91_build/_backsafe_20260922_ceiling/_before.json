@@ -1,0 +1,441 @@
+{
+ "backup_set": "ceiling-correction 2026-09-22",
+ "workspace_root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE",
+ "taken_at": "2026-09-22T21:59:29",
+ "count": 41,
+ "files": [
+  {
+   "rel": "01_data/00_derived/wallet_waterfall.csv",
+   "group": "prism",
+   "role": "the locked ceiling table - rebuilt by build_wallet_waterfall.py",
+   "sha256_before": "e9c13fbcde9adcddae5d3dea9e49445d57bb2a4c09593019eb7b352eed1cc905",
+   "bytes": 13837,
+   "mtime_before": "2026-09-22T21:37:59",
+   "sha256_at_first_backup": "e9c13fbcde9adcddae5d3dea9e49445d57bb2a4c09593019eb7b352eed1cc905",
+   "recovered_from": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\_INBOX\\PPT_GPT_commercial_pack_2026-09-19\\01_core_gps_pms\\wallet_waterfall.csv",
+   "revertible": true
+  },
+  {
+   "rel": "01_data/00_derived/lost_sales_model.csv",
+   "group": "prism",
+   "role": "rebuilt by build_lost_sales_model.py, consumes the ceiling",
+   "sha256_before": null,
+   "bytes": 2727684,
+   "mtime_before": "2026-09-22T21:40:04",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "01_data/00_derived/lost_sales_market.csv",
+   "group": "prism",
+   "role": "rebuilt by build_lost_sales_model.py, per-market ceiling + cover",
+   "sha256_before": "880638af8e93297903c32178e548c926cac2f16490a0458c0c2a6be3d136edaa",
+   "bytes": 22185,
+   "mtime_before": "2026-09-22T21:40:04",
+   "sha256_at_first_backup": "880638af8e93297903c32178e548c926cac2f16490a0458c0c2a6be3d136edaa",
+   "recovered_from": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\_INBOX\\PPT_GPT_commercial_pack_2026-09-19\\07_competitor_pricing\\lost_sales_market.csv",
+   "revertible": true
+  },
+  {
+   "rel": "01_data/00_derived/lost_sales_competitor_pn.csv",
+   "group": "prism",
+   "role": "rebuilt by build_lost_sales_model.py (collateral)",
+   "sha256_before": "2b04fd21501a77c734d29023659c50bf4418f4fe36751e4d7ea1cbb933279a6d",
+   "bytes": 81945,
+   "mtime_before": "2026-09-22T21:40:04",
+   "sha256_at_first_backup": "2b04fd21501a77c734d29023659c50bf4418f4fe36751e4d7ea1cbb933279a6d"
+  },
+  {
+   "rel": "01_data/00_derived/lost_sales_competitor_coverage.csv",
+   "group": "prism",
+   "role": "rebuilt by build_lost_sales_model.py (collateral)",
+   "sha256_before": "94d6c2d2c6214e2a06f12a5d2879b4c66262dc02465790f749ec16b61263d085",
+   "bytes": 851,
+   "mtime_before": "2026-09-22T21:40:04",
+   "sha256_at_first_backup": "94d6c2d2c6214e2a06f12a5d2879b4c66262dc02465790f749ec16b61263d085"
+  },
+  {
+   "rel": "01_data/00_derived/lost_sales_model.meta.json",
+   "group": "prism",
+   "role": "rebuilt by build_lost_sales_model.py (collateral)",
+   "sha256_before": null,
+   "bytes": 4494,
+   "mtime_before": "2026-09-22T21:40:04",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "01_data/00_derived/revenue_runway.csv",
+   "group": "prism",
+   "role": "backed up to prove it does NOT move (reads the ceiling)",
+   "sha256_before": "55c6d6ab93205a2740c2a66c45dec45fc4321a04dc9686357db055bb2cf4c78b",
+   "bytes": 30898,
+   "mtime_before": "2026-08-17T08:21:34",
+   "sha256_at_first_backup": "55c6d6ab93205a2740c2a66c45dec45fc4321a04dc9686357db055bb2cf4c78b"
+  },
+  {
+   "rel": "01_data/00_derived/metrics_snapshot.json",
+   "group": "prism",
+   "role": "rebuilt by build_metrics_snapshot.py",
+   "sha256_before": "299b8eebe941c96867f4905c66f2bd4bf8d4f51e17e66b37a2f854964f178e26",
+   "bytes": 8541,
+   "mtime_before": "2026-09-22T21:42:18",
+   "sha256_at_first_backup": "299b8eebe941c96867f4905c66f2bd4bf8d4f51e17e66b37a2f854964f178e26",
+   "recovered_from": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\_backsafe_20260922_partial_year\\rewritten_by_checks\\metrics_snapshot.json",
+   "revertible": true
+  },
+  {
+   "rel": "01_data/00_derived/_verification_report.json",
+   "group": "prism",
+   "role": "rewritten by verify_derived_pipeline.py",
+   "sha256_before": null,
+   "bytes": 43023,
+   "mtime_before": "2026-09-22T21:44:44",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "01_data/00_derived/_verification_report.md",
+   "group": "prism",
+   "role": "rewritten by verify_derived_pipeline.py",
+   "sha256_before": null,
+   "bytes": 14104,
+   "mtime_before": "2026-09-22T21:44:44",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "03_analytics/Isuzu/prism/data/facts_anchor.yaml",
+   "group": "prism",
+   "role": "pins the published GPS % headline; re-based only if the drift check needs it",
+   "sha256_before": null,
+   "bytes": 6559,
+   "mtime_before": "2026-09-22T21:45:43",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "03_analytics/Isuzu/prism/data/uio_ld_n35_share.csv",
+   "group": "prism",
+   "role": "NOT to be changed - backed up so drift can be proven",
+   "sha256_before": "b69a060677bc82ce0169e2b9f0d655f619ff85503cb0fc58c24733323b379c60",
+   "bytes": 3397,
+   "mtime_before": "2026-09-20T07:40:04",
+   "sha256_at_first_backup": "b69a060677bc82ce0169e2b9f0d655f619ff85503cb0fc58c24733323b379c60"
+  },
+  {
+   "rel": "02_dashboards/sales/ISZE_KPI_Dashboard.html",
+   "group": "dashboard",
+   "role": "reads ceiling from one file, per-market maxSpend from the other",
+   "sha256_before": null,
+   "bytes": 312256,
+   "mtime_before": "2026-09-22T21:50:37",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "02_dashboards/ops/ISZE_OS_Console.html",
+   "group": "dashboard",
+   "role": "prints the network ceiling, cover and placeholder share",
+   "sha256_before": null,
+   "bytes": 97482,
+   "mtime_before": "2026-09-22T21:49:12",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "02_dashboards/hub/ISZE_OS_Hub.html",
+   "group": "dashboard",
+   "role": "prints the network ceiling, cover and placeholder share",
+   "sha256_before": null,
+   "bytes": 132551,
+   "mtime_before": "2026-09-22T21:49:11",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html",
+   "group": "dashboard",
+   "role": "derives its headline from the ceiling at build time",
+   "sha256_before": null,
+   "bytes": 279049,
+   "mtime_before": "2026-09-22T21:57:05",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "01_data/14_dashboards/isze_data.json",
+   "group": "dashboard",
+   "role": "carries addressable_gap_eur 24,727,686",
+   "sha256_before": "5e15f285a82cd0f7d0c4c468058445cc6596e880687fc45e9332a70070a86bcc",
+   "bytes": 63047,
+   "mtime_before": "2026-09-22T21:40:38",
+   "sha256_at_first_backup": "5e15f285a82cd0f7d0c4c468058445cc6596e880687fc45e9332a70070a86bcc",
+   "recovered_from": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\07_deploy\\publish-site\\Data\\dashboards\\isze_data.json",
+   "revertible": true
+  },
+  {
+   "rel": "01_data/14_dashboards/isze_data.preload.js",
+   "group": "dashboard",
+   "role": "same payload as isze_data.json",
+   "sha256_before": null,
+   "bytes": 43582,
+   "mtime_before": "2026-09-22T21:40:38",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "01_data/14_dashboards/viz/risk_cockpit.json",
+   "group": "dashboard",
+   "role": "carries the floored uncaptured figure",
+   "sha256_before": "f024b7e4f07425a46ea14cbb601154c5bc429a5dceb441b28be61d8a08b16fa8",
+   "bytes": 52368,
+   "mtime_before": "2026-09-22T21:40:39",
+   "sha256_at_first_backup": "f024b7e4f07425a46ea14cbb601154c5bc429a5dceb441b28be61d8a08b16fa8",
+   "recovered_from": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\07_deploy\\publish-site\\Data\\dashboards\\viz\\risk_cockpit.json",
+   "revertible": true
+  },
+  {
+   "rel": "02_dashboards/sales/risk_cockpit.data.js",
+   "group": "dashboard",
+   "role": "carries the floored uncaptured figure",
+   "sha256_before": "382812cca35aefe11f1edbc2a024a8a27d205748e7afd56c161f1ed68686a384",
+   "bytes": 52464,
+   "mtime_before": "2026-09-22T21:40:39",
+   "sha256_at_first_backup": "382812cca35aefe11f1edbc2a024a8a27d205748e7afd56c161f1ed68686a384",
+   "recovered_from": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\07_deploy\\Master Dashboard\\risk_cockpit.data.js",
+   "revertible": true
+  },
+  {
+   "rel": "09_meetings/Business_Performance_Review_2026/_bpr_numbers.json",
+   "group": "bpr",
+   "role": "slide 17 numbers block",
+   "sha256_before": null,
+   "bytes": 13008,
+   "mtime_before": "2026-09-22T21:52:42",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "09_meetings/Business_Performance_Review_2026/ISZE_Business_Performance_Review_2026.pptx",
+   "group": "bpr",
+   "role": "slide 17 prints the ceiling and cover",
+   "sha256_before": null,
+   "bytes": 2147363,
+   "mtime_before": "2026-09-22T21:53:26",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "09_meetings/BVDB_PBI_Data_Upload_2026-09-23/02_GPS/target_spend_waterfall.csv",
+   "group": "pack",
+   "role": "the per-market ceiling table going to the distributor",
+   "sha256_before": null,
+   "bytes": 24804,
+   "mtime_before": "2026-09-22T21:47:57",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "09_meetings/BVDB_PBI_Data_Upload_2026-09-23/00_START_HERE/HOW_TO.md",
+   "group": "pack",
+   "role": "carries the pack's disclosure notes",
+   "sha256_before": null,
+   "bytes": 14528,
+   "mtime_before": "2026-09-22T21:47:57",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "09_meetings/BVDB_PBI_Data_Upload_2026-09-23/00_START_HERE/MANIFEST.csv",
+   "group": "pack",
+   "role": "describes the pack contents",
+   "sha256_before": null,
+   "bytes": 5403,
+   "mtime_before": "2026-09-22T21:47:57",
+   "sha256_at_first_backup": null,
+   "revertible": false,
+   "not_revertible_reason": "the pre-change bytes were overwritten inside this backup folder and no byte-identical copy survives in the workspace; the file can only be reproduced by re-running its builder after restoring wallet_waterfall.csv"
+  },
+  {
+   "rel": "00_docs/agent/STATE_PACKET.md",
+   "group": "notes",
+   "role": "carries the published-ceiling line",
+   "sha256_before": "f3981c10485c88aa0eeaeabaa48d72f49e7882f6d1757a8808348cabae82d970",
+   "bytes": 78944,
+   "mtime_before": "2026-09-22T21:54:04",
+   "sha256_at_first_backup": "f3981c10485c88aa0eeaeabaa48d72f49e7882f6d1757a8808348cabae82d970"
+  },
+  {
+   "rel": "DECISIONS.md",
+   "group": "notes",
+   "role": "carries the 54,323,455 sentence",
+   "sha256_before": "ee447c48d755be647e0c753804f07435826af1210fc22aeea284952c7b78ecd5",
+   "bytes": 144406,
+   "mtime_before": "2026-09-22T20:21:02",
+   "sha256_at_first_backup": "ee447c48d755be647e0c753804f07435826af1210fc22aeea284952c7b78ecd5"
+  },
+  {
+   "rel": "00_docs/ISZE_ROADMAP.md",
+   "group": "notes",
+   "role": "carries the 54,323,455 sentence",
+   "sha256_before": "90f88f8d5a32d6752265a3d51bcb4738cef58b9f1aa85d23c3161a28ac59381a",
+   "bytes": 33933,
+   "mtime_before": "2026-09-22T20:03:57",
+   "sha256_at_first_backup": "90f88f8d5a32d6752265a3d51bcb4738cef58b9f1aa85d23c3161a28ac59381a"
+  },
+  {
+   "rel": "01_data/90_INBOX/D08_EXECUTION_2026-09-22.md",
+   "group": "notes",
+   "role": "carries the 54,323,455 sentence",
+   "sha256_before": "5fca1dc00ef463a9f30c622fde6fd9fdd86a660d4b98a52ad746099657a4d18a",
+   "bytes": 2449,
+   "mtime_before": "2026-09-22T19:26:04",
+   "sha256_at_first_backup": "5fca1dc00ef463a9f30c622fde6fd9fdd86a660d4b98a52ad746099657a4d18a"
+  },
+  {
+   "rel": "09_meetings/PORTUGAL_Operating_Dashboard_2026/NUMBERS_LEDGER.json",
+   "group": "opdash",
+   "role": "wallet_cy.ceiling_eur + hero chip 3,052,087",
+   "sha256_before": "00bbd44141c055a99afd0baba03d37d4e91a5f599081542448028433f354b9be",
+   "bytes": 639952,
+   "mtime_before": "2026-09-17T17:08:20",
+   "sha256_at_first_backup": "00bbd44141c055a99afd0baba03d37d4e91a5f599081542448028433f354b9be"
+  },
+  {
+   "rel": "09_meetings/PORTUGAL_Operating_Dashboard_2026/PORTUGAL_Operating_Dashboard.html",
+   "group": "opdash",
+   "role": "prints the market's ceiling chip",
+   "sha256_before": "7c9dd306224f3bab5bc21b35ffbd31b570b6ade33e8e79337c2a3116789ca790",
+   "bytes": 1296657,
+   "mtime_before": "2026-09-17T17:08:20",
+   "sha256_at_first_backup": "7c9dd306224f3bab5bc21b35ffbd31b570b6ade33e8e79337c2a3116789ca790"
+  },
+  {
+   "rel": "09_meetings/IRELAND_Operating_Dashboard_2026/NUMBERS_LEDGER.json",
+   "group": "opdash",
+   "role": "wallet_cy.ceiling_eur 956,313",
+   "sha256_before": "578f5e1e6c64c7ee15764512303582779203cd690909f71c65039325b746ad46",
+   "bytes": 686148,
+   "mtime_before": "2026-09-17T17:08:20",
+   "sha256_at_first_backup": "578f5e1e6c64c7ee15764512303582779203cd690909f71c65039325b746ad46"
+  },
+  {
+   "rel": "09_meetings/IRELAND_Operating_Dashboard_2026/IRELAND_Operating_Dashboard.html",
+   "group": "opdash",
+   "role": "prints the market's ceiling chip",
+   "sha256_before": "260698ab56a7ca15fe8a853f4cfbff785ed1043bf2037f35e31d6a51325ce6fa",
+   "bytes": 700596,
+   "mtime_before": "2026-09-17T17:08:19",
+   "sha256_at_first_backup": "260698ab56a7ca15fe8a853f4cfbff785ed1043bf2037f35e31d6a51325ce6fa"
+  },
+  {
+   "rel": "09_meetings/GERMANY_Operating_Dashboard_2026/NUMBERS_LEDGER.json",
+   "group": "opdash",
+   "role": "wallet_cy.ceiling_eur 3,808,128",
+   "sha256_before": "265f00fe5d9fa662cefe15fb1720d5e5fe950a85a0548717943e249d39177280",
+   "bytes": 667358,
+   "mtime_before": "2026-09-17T17:08:19",
+   "sha256_at_first_backup": "265f00fe5d9fa662cefe15fb1720d5e5fe950a85a0548717943e249d39177280"
+  },
+  {
+   "rel": "09_meetings/GERMANY_Operating_Dashboard_2026/GERMANY_Operating_Dashboard.html",
+   "group": "opdash",
+   "role": "prints the market's ceiling chip",
+   "sha256_before": "195939268819ce0635a90cd7aebf1648b1cb5cedf5532ac9eb8fcccbe2d77b8f",
+   "bytes": 696112,
+   "mtime_before": "2026-09-17T17:08:19",
+   "sha256_at_first_backup": "195939268819ce0635a90cd7aebf1648b1cb5cedf5532ac9eb8fcccbe2d77b8f"
+  },
+  {
+   "rel": "09_meetings/BELGIUM_Operating_Dashboard_2026/NUMBERS_LEDGER.json",
+   "group": "opdash",
+   "role": "wallet_cy.ceiling_eur 2,453,507",
+   "sha256_before": "4bae7b0e77fb515f578364a4014e8b9aa6537dc3f2995ef7f4f13f6ecdb29b4d",
+   "bytes": 693204,
+   "mtime_before": "2026-09-17T17:08:19",
+   "sha256_at_first_backup": "4bae7b0e77fb515f578364a4014e8b9aa6537dc3f2995ef7f4f13f6ecdb29b4d"
+  },
+  {
+   "rel": "09_meetings/BELGIUM_Operating_Dashboard_2026/BELGIUM_Operating_Dashboard.html",
+   "group": "opdash",
+   "role": "prints the market's ceiling chip",
+   "sha256_before": "f559f8406d0f4587f05fdbada8884ec153da20d3542fe9f5652c394a45b8d169",
+   "bytes": 1333413,
+   "mtime_before": "2026-09-17T17:08:19",
+   "sha256_at_first_backup": "f559f8406d0f4587f05fdbada8884ec153da20d3542fe9f5652c394a45b8d169"
+  },
+  {
+   "rel": "09_meetings/MALTA_Operating_Dashboard_2026/NUMBERS_LEDGER.json",
+   "group": "opdash",
+   "role": "wallet_cy.ceiling_eur 378,827",
+   "sha256_before": "cd9f26fcade1d6ace0fbb7d8b3a3169e1500a57b57899467fbfafaecd31c1751",
+   "bytes": 494568,
+   "mtime_before": "2026-09-17T17:08:20",
+   "sha256_at_first_backup": "cd9f26fcade1d6ace0fbb7d8b3a3169e1500a57b57899467fbfafaecd31c1751"
+  },
+  {
+   "rel": "09_meetings/MALTA_Operating_Dashboard_2026/MALTA_Operating_Dashboard.html",
+   "group": "opdash",
+   "role": "prints the market's ceiling chip",
+   "sha256_before": "7928d0953ec6809242b368d1c4953a44175a4a208e1c1cdc288919b8931c7fc0",
+   "bytes": 585367,
+   "mtime_before": "2026-09-17T17:08:20",
+   "sha256_at_first_backup": "7928d0953ec6809242b368d1c4953a44175a4a208e1c1cdc288919b8931c7fc0"
+  },
+  {
+   "rel": "09_meetings/CYPRUS_Operating_Dashboard_2026/NUMBERS_LEDGER.json",
+   "group": "opdash",
+   "role": "wallet_cy.ceiling_eur 676,267",
+   "sha256_before": "ae307136f682c128e01d961d1cc93a710b365f0d3e8492862e932905eafde652",
+   "bytes": 572796,
+   "mtime_before": "2026-09-17T17:08:19",
+   "sha256_at_first_backup": "ae307136f682c128e01d961d1cc93a710b365f0d3e8492862e932905eafde652"
+  },
+  {
+   "rel": "09_meetings/CYPRUS_Operating_Dashboard_2026/CYPRUS_Operating_Dashboard.html",
+   "group": "opdash",
+   "role": "prints the market's ceiling chip",
+   "sha256_before": "27aafa9f0096de1b48d2e40c858219b24b384110ad3427b715e4cda206607bdb",
+   "bytes": 628985,
+   "mtime_before": "2026-09-17T17:08:19",
+   "sha256_at_first_backup": "27aafa9f0096de1b48d2e40c858219b24b384110ad3427b715e4cda206607bdb"
+  }
+ ],
+ "missing_at_backup": [
+  "09_meetings/BVDB_PBI_Data_Upload_2026-09-23_corrected_20260922.zip"
+ ],
+ "readonly_flagged": [],
+ "recovery_run_at": "see _REVERTIBILITY.md",
+ "not_revertible": [
+  "01_data/00_derived/lost_sales_model.csv",
+  "01_data/00_derived/lost_sales_model.meta.json",
+  "01_data/00_derived/_verification_report.json",
+  "01_data/00_derived/_verification_report.md",
+  "03_analytics/Isuzu/prism/data/facts_anchor.yaml",
+  "02_dashboards/sales/ISZE_KPI_Dashboard.html",
+  "02_dashboards/ops/ISZE_OS_Console.html",
+  "02_dashboards/hub/ISZE_OS_Hub.html",
+  "02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html",
+  "01_data/14_dashboards/isze_data.preload.js",
+  "09_meetings/Business_Performance_Review_2026/_bpr_numbers.json",
+  "09_meetings/Business_Performance_Review_2026/ISZE_Business_Performance_Review_2026.pptx",
+  "09_meetings/BVDB_PBI_Data_Upload_2026-09-23/02_GPS/target_spend_waterfall.csv",
+  "09_meetings/BVDB_PBI_Data_Upload_2026-09-23/00_START_HERE/HOW_TO.md",
+  "09_meetings/BVDB_PBI_Data_Upload_2026-09-23/00_START_HERE/MANIFEST.csv"
+ ]
+}

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated": "2026-09-19T05:58:36Z",
+    "generated": "2026-09-22T19:40:39Z",
     "year": 2025,
     "verification_ok": true,
     "sources": [
@@ -16,27 +16,27 @@
     ]
   },
   "headline": {
-    "addressable_gap_eur": 24727686.0,
-    "network_gps_pct": 53.7,
+    "addressable_gap_eur": 23950221.0,
+    "network_gps_pct": 54.6,
     "active_defection_alerts": 24,
     "substitution_families_at_risk": 7,
     "grow_capture_count": 0,
-    "defend_count": 6,
+    "defend_count": 5,
     "competitive_pn_tracked": 12,
-    "tender_pipeline_90d": 5,
-    "tender_stale_days": 4
+    "tender_pipeline_90d": 30,
+    "tender_stale_days": 0
   },
   "wallet": {
     "year": 2025,
-    "theoretical_wallet_eur": 55253312.0,
+    "theoretical_wallet_eur": 54375729.0,
     "captured_genuine_eur": 29692068.0,
     "captured_bvp_eur": 1064704.0,
-    "addressable_uncaptured_eur": 24727686.0,
-    "gps_pct": 53.7,
+    "addressable_uncaptured_eur": 23950221.0,
+    "gps_pct": 54.6,
     "waterfall": [
       {
         "label": "Theoretical wallet",
-        "value": 55253312.0,
+        "value": 54375729.0,
         "type": "total"
       },
       {
@@ -51,7 +51,7 @@
       },
       {
         "label": "Addressable gap",
-        "value": 24727686.0,
+        "value": 23950221.0,
         "type": "remainder"
       }
     ],
@@ -75,12 +75,6 @@
         "gps_pct": 40.3
       },
       {
-        "distributor_code": "PORTUGAL",
-        "country": "Portugal",
-        "addressable_uncaptured_eur": 1342293.0,
-        "gps_pct": 56.0
-      },
-      {
         "distributor_code": "UMI",
         "country": "Israel",
         "addressable_uncaptured_eur": 1316156.0,
@@ -89,14 +83,20 @@
       {
         "distributor_code": "GERMANY",
         "country": "Germany",
-        "addressable_uncaptured_eur": 1272196.0,
-        "gps_pct": 66.6
+        "addressable_uncaptured_eur": 1204417.0,
+        "gps_pct": 67.8
       },
       {
         "distributor_code": "SWEDEN",
         "country": "Sweden",
         "addressable_uncaptured_eur": 832288.0,
         "gps_pct": 60.6
+      },
+      {
+        "distributor_code": "PORTUGAL",
+        "country": "Portugal",
+        "addressable_uncaptured_eur": 720321.0,
+        "gps_pct": 70.4
       },
       {
         "distributor_code": "HUNGARY",
@@ -331,11 +331,11 @@
   "aim_gps": {
     "year": 2025,
     "quadrant_counts": {
-      "defend": 6,
-      "priority_target": 6,
+      "defend": 5,
+      "priority_target": 5,
       "insufficient_data": 4,
-      "wallet_gap": 3,
-      "attach_gap": 3
+      "wallet_gap": 4,
+      "attach_gap": 4
     },
     "points": [
       {
@@ -363,8 +363,8 @@
       {
         "distributor_code": "DENMARK",
         "region": "Nordics",
-        "quadrant": "priority_target",
-        "quadrant_label": "Priority target (low GPS - low capture)",
+        "quadrant": "wallet_gap",
+        "quadrant_label": "Wallet gap (low GPS - high capture)",
         "gps_spu_eur": 174.2,
         "aim_high_risk_pct": 0.91,
         "gps_spu_prev": 213.6,
@@ -484,13 +484,13 @@
       {
         "distributor_code": "PORTUGAL",
         "region": "Iberia",
-        "quadrant": "defend",
-        "quadrant_label": "Defend (high GPS - high capture)",
+        "quadrant": "attach_gap",
+        "quadrant_label": "Attach gap (high GPS - low capture)",
         "gps_spu_eur": 209.1,
         "aim_high_risk_pct": 0.69,
         "gps_spu_prev": 222.6,
         "aim_prev": 0.95,
-        "color": "#3D6B4F"
+        "color": "#7A8FA6"
       },
       {
         "distributor_code": "ROMANIA",
@@ -556,6 +556,14 @@
       "region": "UK/IE"
     },
     {
+      "distributor_code": "BELGIUM",
+      "category": "urea_filter",
+      "capture_pct": 0.0,
+      "revenue_gap_eur": 721923.0,
+      "tam_eur": 722076.0,
+      "region": "Benelux"
+    },
+    {
       "distributor_code": "IUK",
       "category": "brake_shoe",
       "capture_pct": 5.6,
@@ -578,6 +586,14 @@
       "revenue_gap_eur": 485078.0,
       "tam_eur": 577412.0,
       "region": "UK/IE"
+    },
+    {
+      "distributor_code": "GERMANY",
+      "category": "urea_filter",
+      "capture_pct": 0.0,
+      "revenue_gap_eur": 473170.0,
+      "tam_eur": 473206.0,
+      "region": "DACH"
     },
     {
       "distributor_code": "IUK",
@@ -682,29 +698,13 @@
       "revenue_gap_eur": 274157.0,
       "tam_eur": 285232.0,
       "region": "MENA"
-    },
-    {
-      "distributor_code": "ITUK",
-      "category": "clutch_pressure_plate",
-      "capture_pct": 9.1,
-      "revenue_gap_eur": 253290.0,
-      "tam_eur": 278770.0,
-      "region": "UK/IE"
-    },
-    {
-      "distributor_code": "UTI",
-      "category": "clutch_pressure_plate",
-      "capture_pct": 1.4,
-      "revenue_gap_eur": 251091.0,
-      "tam_eur": 254638.0,
-      "region": "MENA"
     }
   ],
   "competitive_fusion": {
     "available": true,
     "autodoc_scraped_at": "2026-05-30 11:52:00",
-    "ks_scraped_at": "2026-09-15 06:16:31",
-    "scrape_stale_days": 112,
+    "ks_scraped_at": "2026-09-22 19:30:09",
+    "scrape_stale_days": 115,
     "gbp_eur": 1.17,
     "bogus_filter_gbp": 3.05,
     "items": [
@@ -856,39 +856,156 @@
   },
   "tender_horizon": {
     "available": true,
-    "generated_at": "2026-09-15",
-    "stale_days": 4,
+    "generated_at": "2026-09-22",
+    "stale_days": 0,
     "stats": {
-      "opportunities": 376,
-      "attack": 1,
-      "selective": 15,
-      "due_14d": 28
+      "opportunities": 619,
+      "attack": 2,
+      "selective": 204,
+      "due_14d": 45
     },
     "horizon_days": 90,
     "items": [
       {
-        "title": "Provision of a Cosy Homes in Lancashire (CHiL) Delivery Partner for D…",
-        "country": "United Kingdom",
-        "deadline_date": "2026-10-15",
-        "days_to_deadline": 30,
-        "opportunity_score": 82,
+        "title": "ACORD CADRU PENTRU SERVICII DE REPARATII AUTOVEHICULE",
+        "country": "Romania",
+        "deadline_date": "2026-10-23",
+        "days_to_deadline": 31,
+        "opportunity_score": 71,
         "decision": "Attack",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Raamovereenkomst onderhoud en herstellingen voertuigen <3,5 ton",
+        "country": "Belgium",
+        "deadline_date": "2026-10-21",
+        "days_to_deadline": 29,
+        "opportunity_score": 69,
+        "decision": "Selective",
         "lifecycle": "competition"
       },
       {
-        "title": "WP4051 ICS Pathway 1 Services and a Community Reablement Service",
-        "country": "United Kingdom",
-        "deadline_date": "2026-10-02",
-        "days_to_deadline": 17,
-        "opportunity_score": 61,
+        "title": "Raamovereenkomst voor het aankopen van vrachtwagens, diesel en zero-e…",
+        "country": "Belgium",
+        "deadline_date": "2026-10-16",
+        "days_to_deadline": 24,
+        "opportunity_score": 64,
         "decision": "Selective",
         "lifecycle": "competition"
+      },
+      {
+        "title": "Servicii de revizii si reparatii autovehicule",
+        "country": "Romania",
+        "deadline_date": "2026-10-19",
+        "days_to_deadline": 27,
+        "opportunity_score": 62,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "acord cadru furnizare   „reactivi compatibili automat Bond-Max IHC,IS…",
+        "country": "Romania",
+        "deadline_date": "2026-10-22",
+        "days_to_deadline": 30,
+        "opportunity_score": 62,
+        "decision": "Attack",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "„Servicii de reparare si intretinere a autovehiculelor si echipamente…",
+        "country": "Romania",
+        "deadline_date": "2026-10-22",
+        "days_to_deadline": 30,
+        "opportunity_score": 62,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Servicii de reparare, revizii si intretinere a autovehiculelor si ech…",
+        "country": "Romania",
+        "deadline_date": "2026-09-30",
+        "days_to_deadline": 8,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Italy – Repair and maintenance services of motor vehicles and associa…",
+        "country": "Italy",
+        "deadline_date": "2026-09-30",
+        "days_to_deadline": 8,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Maintenance, réparations et dépannage de plate-formes élévatrices mob…",
+        "country": "Belgium",
+        "deadline_date": "2026-10-01",
+        "days_to_deadline": 9,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "competition"
+      },
+      {
+        "title": "Ireland – Fleet management, repair and maintenance services – AP - 06…",
+        "country": "Ireland",
+        "deadline_date": "2026-10-01",
+        "days_to_deadline": 9,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Norway – Repair and maintenance services of cars – Workshop services",
+        "country": "Norway",
+        "deadline_date": "2026-10-01",
+        "days_to_deadline": 9,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Servici de REPARARE SI INTRETINERE A AUTOVEHICULELOR din dotarea parc…",
+        "country": "Romania",
+        "deadline_date": "2026-10-05",
+        "days_to_deadline": 13,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Servicii de reparare, piese si accesorii pentru autoturisme - DS Timis",
+        "country": "Romania",
+        "deadline_date": "2026-10-07",
+        "days_to_deadline": 15,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Netherlands – Fleet management, repair and maintenance services – Eur…",
+        "country": "Netherlands",
+        "deadline_date": "2026-10-12",
+        "days_to_deadline": 20,
+        "opportunity_score": 60,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Aquisição de serviços de reparação e manutenção de viaturas municipai…",
+        "country": "Portugal",
+        "deadline_date": "2026-09-24",
+        "days_to_deadline": 2,
+        "opportunity_score": 58,
+        "decision": "Selective",
+        "lifecycle": "unknown"
       },
       {
         "title": "Aankoop van vrachtwagen met onderhoudscontract (5 jaar)",
         "country": "Belgium",
         "deadline_date": "2026-10-15",
-        "days_to_deadline": 30,
+        "days_to_deadline": 23,
         "opportunity_score": 58,
         "decision": "Selective",
         "lifecycle": "competition"
@@ -897,19 +1014,127 @@
         "title": "Aankoop van koelbestelwagens en pick-upbestelwagens en initiële oplei…",
         "country": "Belgium",
         "deadline_date": "2026-09-30",
-        "days_to_deadline": 15,
+        "days_to_deadline": 8,
         "opportunity_score": 57,
         "decision": "Selective",
         "lifecycle": "competition"
       },
       {
+        "title": "SERVICII DE REPARARE ŞI DE INTREŢINERE IN POSTGARANTIE A AUTOTURISMEL…",
+        "country": "Romania",
+        "deadline_date": "2026-09-22",
+        "days_to_deadline": 0,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Naprawa skrzyni biegów w pojazdach służbowych",
+        "country": "Poland",
+        "deadline_date": "2026-09-23",
+        "days_to_deadline": 1,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Netherlands – Fleet management, repair and maintenance services – Wag…",
+        "country": "Netherlands",
+        "deadline_date": "2026-09-23",
+        "days_to_deadline": 1,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Netherlands – Fleet management, repair and maintenance services – Wag…",
+        "country": "Netherlands",
+        "deadline_date": "2026-09-23",
+        "days_to_deadline": 1,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Masini pentru intretinerea drumurilor pe timp de iarna",
+        "country": "Romania",
+        "deadline_date": "2026-09-25",
+        "days_to_deadline": 3,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Servicii reparații autoturism Mercedes Benz- dssv",
+        "country": "Romania",
+        "deadline_date": "2026-09-29",
+        "days_to_deadline": 7,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Germany – Repair and maintenance services of motor vehicles and assoc…",
+        "country": "Germany",
+        "deadline_date": "2026-09-29",
+        "days_to_deadline": 7,
+        "opportunity_score": 56,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "“Servicii de întreţinere şi reparații accidentale pentru autovehicule…",
+        "country": "Romania",
+        "deadline_date": "2026-09-16",
+        "days_to_deadline": -6,
+        "opportunity_score": 54,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
         "title": "Fourniture livraison maintenance et assistance de 1 véhicule de type …",
         "country": "France",
         "deadline_date": "2026-10-09",
-        "days_to_deadline": 24,
-        "opportunity_score": 56,
+        "days_to_deadline": 17,
+        "opportunity_score": 54,
         "decision": "Selective",
-        "lifecycle": "competition"
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Sweden – Repair and maintenance services of cars – Fordonsservice",
+        "country": "Sweden",
+        "deadline_date": "2026-09-14",
+        "days_to_deadline": -8,
+        "opportunity_score": 52,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Romania – Vehicle-fleet management services – Management de flota aut…",
+        "country": "Romania",
+        "deadline_date": "2026-09-18",
+        "days_to_deadline": -4,
+        "opportunity_score": 52,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Prestação de serviços de gestão, manutenção e reparação de frota auto…",
+        "country": "Portugal",
+        "deadline_date": "2026-09-21",
+        "days_to_deadline": -1,
+        "opportunity_score": 47,
+        "decision": "Selective",
+        "lifecycle": "unknown"
+      },
+      {
+        "title": "Spain – Repair and maintenance services of cars – CONTR 2026 271467 -…",
+        "country": "Spain",
+        "deadline_date": "2026-09-10",
+        "days_to_deadline": -12,
+        "opportunity_score": 46,
+        "decision": "Selective",
+        "lifecycle": "unknown"
       }
     ]
   },
@@ -921,15 +1146,15 @@
     ],
     "top_distributors": [
       "ITUK",
-      "IRELAND",
       "ICELAND",
+      "IRELAND",
       "MALTA",
-      "CYPRUS",
       "UTI",
+      "CYPRUS",
       "FINLAND",
-      "PALESTINE",
-      "UKRAINE",
       "DENMARK",
+      "UKRAINE",
+      "PALESTINE",
       "ROMANIA",
       "KAZAKHSTAN"
     ],
@@ -959,26 +1184,6 @@
             ]
           },
           {
-            "distributor_code": "IRELAND",
-            "points": [
-              {
-                "year": 2023,
-                "percentile": 100.0,
-                "rank": 1
-              },
-              {
-                "year": 2024,
-                "percentile": 100.0,
-                "rank": 1
-              },
-              {
-                "year": 2025,
-                "percentile": 100.0,
-                "rank": 1
-              }
-            ]
-          },
-          {
             "distributor_code": "ICELAND",
             "points": [
               {
@@ -995,6 +1200,26 @@
                 "year": 2025,
                 "percentile": 70.6,
                 "rank": 30
+              }
+            ]
+          },
+          {
+            "distributor_code": "IRELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 100.0,
+                "rank": 1
+              },
+              {
+                "year": 2024,
+                "percentile": 100.0,
+                "rank": 1
+              },
+              {
+                "year": 2025,
+                "percentile": 100.0,
+                "rank": 1
               }
             ]
           },
@@ -1019,26 +1244,6 @@
             ]
           },
           {
-            "distributor_code": "CYPRUS",
-            "points": [
-              {
-                "year": 2023,
-                "percentile": 23.5,
-                "rank": 77
-              },
-              {
-                "year": 2024,
-                "percentile": 41.2,
-                "rank": 60
-              },
-              {
-                "year": 2025,
-                "percentile": 47.1,
-                "rank": 54
-              }
-            ]
-          },
-          {
             "distributor_code": "UTI",
             "points": [
               {
@@ -1055,6 +1260,26 @@
                 "year": 2025,
                 "percentile": 94.1,
                 "rank": 7
+              }
+            ]
+          },
+          {
+            "distributor_code": "CYPRUS",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 23.5,
+                "rank": 77
+              },
+              {
+                "year": 2024,
+                "percentile": 41.2,
+                "rank": 60
+              },
+              {
+                "year": 2025,
+                "percentile": 47.1,
+                "rank": 54
               }
             ]
           },
@@ -1139,8 +1364,28 @@
               },
               {
                 "year": 2025,
-                "percentile": 94.1,
-                "rank": 7
+                "percentile": 88.2,
+                "rank": 13
+              }
+            ]
+          },
+          {
+            "distributor_code": "ICELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 35.3,
+                "rank": 66
+              },
+              {
+                "year": 2024,
+                "percentile": 0.0,
+                "rank": 101
+              },
+              {
+                "year": 2025,
+                "percentile": 58.8,
+                "rank": 42
               }
             ]
           },
@@ -1165,26 +1410,6 @@
             ]
           },
           {
-            "distributor_code": "ICELAND",
-            "points": [
-              {
-                "year": 2023,
-                "percentile": 35.3,
-                "rank": 66
-              },
-              {
-                "year": 2024,
-                "percentile": 0.0,
-                "rank": 101
-              },
-              {
-                "year": 2025,
-                "percentile": 52.9,
-                "rank": 48
-              }
-            ]
-          },
-          {
             "distributor_code": "MALTA",
             "points": [
               {
@@ -1194,33 +1419,13 @@
               },
               {
                 "year": 2024,
-                "percentile": 41.2,
-                "rank": 60
+                "percentile": 35.3,
+                "rank": 66
               },
               {
                 "year": 2025,
                 "percentile": 64.7,
                 "rank": 36
-              }
-            ]
-          },
-          {
-            "distributor_code": "CYPRUS",
-            "points": [
-              {
-                "year": 2023,
-                "percentile": 52.9,
-                "rank": 48
-              },
-              {
-                "year": 2024,
-                "percentile": 88.2,
-                "rank": 13
-              },
-              {
-                "year": 2025,
-                "percentile": 88.2,
-                "rank": 13
               }
             ]
           },
@@ -1231,6 +1436,26 @@
                 "year": 2023,
                 "percentile": 88.2,
                 "rank": 13
+              },
+              {
+                "year": 2024,
+                "percentile": 88.2,
+                "rank": 13
+              },
+              {
+                "year": 2025,
+                "percentile": 94.1,
+                "rank": 7
+              }
+            ]
+          },
+          {
+            "distributor_code": "CYPRUS",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 58.8,
+                "rank": 42
               },
               {
                 "year": 2024,
@@ -1254,8 +1479,8 @@
               },
               {
                 "year": 2024,
-                "percentile": 35.3,
-                "rank": 66
+                "percentile": 41.2,
+                "rank": 60
               },
               {
                 "year": 2025,
@@ -1279,8 +1504,8 @@
               },
               {
                 "year": 2025,
-                "percentile": 47.1,
-                "rank": 54
+                "percentile": 52.9,
+                "rank": 48
               }
             ]
           },
@@ -1294,8 +1519,8 @@
               },
               {
                 "year": 2024,
-                "percentile": 64.7,
-                "rank": 36
+                "percentile": 70.6,
+                "rank": 30
               },
               {
                 "year": 2025,
@@ -1331,26 +1556,6 @@
             ]
           },
           {
-            "distributor_code": "IRELAND",
-            "points": [
-              {
-                "year": 2023,
-                "percentile": 100.0,
-                "rank": 1
-              },
-              {
-                "year": 2024,
-                "percentile": 100.0,
-                "rank": 1
-              },
-              {
-                "year": 2025,
-                "percentile": 100.0,
-                "rank": 1
-              }
-            ]
-          },
-          {
             "distributor_code": "ICELAND",
             "points": [
               {
@@ -1367,6 +1572,26 @@
                 "year": 2025,
                 "percentile": 82.4,
                 "rank": 19
+              }
+            ]
+          },
+          {
+            "distributor_code": "IRELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 100.0,
+                "rank": 1
+              },
+              {
+                "year": 2024,
+                "percentile": 100.0,
+                "rank": 1
+              },
+              {
+                "year": 2025,
+                "percentile": 100.0,
+                "rank": 1
               }
             ]
           },
@@ -1391,6 +1616,26 @@
             ]
           },
           {
+            "distributor_code": "UTI",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 52.9,
+                "rank": 48
+              },
+              {
+                "year": 2024,
+                "percentile": 47.1,
+                "rank": 54
+              },
+              {
+                "year": 2025,
+                "percentile": 47.1,
+                "rank": 54
+              }
+            ]
+          },
+          {
             "distributor_code": "CYPRUS",
             "points": [
               {
@@ -1407,26 +1652,6 @@
                 "year": 2025,
                 "percentile": 58.8,
                 "rank": 42
-              }
-            ]
-          },
-          {
-            "distributor_code": "UTI",
-            "points": [
-              {
-                "year": 2023,
-                "percentile": 29.4,
-                "rank": 72
-              },
-              {
-                "year": 2024,
-                "percentile": 29.4,
-                "rank": 72
-              },
-              {
-                "year": 2025,
-                "percentile": 35.3,
-                "rank": 66
               }
             ]
           },
@@ -1517,26 +1742,6 @@
             ]
           },
           {
-            "distributor_code": "IRELAND",
-            "points": [
-              {
-                "year": 2023,
-                "percentile": 57.1,
-                "rank": 44
-              },
-              {
-                "year": 2024,
-                "percentile": 81.0,
-                "rank": 20
-              },
-              {
-                "year": 2025,
-                "percentile": 66.7,
-                "rank": 34
-              }
-            ]
-          },
-          {
             "distributor_code": "ICELAND",
             "points": [
               {
@@ -1553,6 +1758,26 @@
                 "year": 2025,
                 "percentile": 28.6,
                 "rank": 72
+              }
+            ]
+          },
+          {
+            "distributor_code": "IRELAND",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 57.1,
+                "rank": 44
+              },
+              {
+                "year": 2024,
+                "percentile": 81.0,
+                "rank": 20
+              },
+              {
+                "year": 2025,
+                "percentile": 66.7,
+                "rank": 34
               }
             ]
           },
@@ -1577,26 +1802,6 @@
             ]
           },
           {
-            "distributor_code": "CYPRUS",
-            "points": [
-              {
-                "year": 2023,
-                "percentile": 38.1,
-                "rank": 63
-              },
-              {
-                "year": 2024,
-                "percentile": 33.3,
-                "rank": 68
-              },
-              {
-                "year": 2025,
-                "percentile": 23.8,
-                "rank": 77
-              }
-            ]
-          },
-          {
             "distributor_code": "UTI",
             "points": [
               {
@@ -1613,6 +1818,26 @@
                 "year": 2025,
                 "percentile": 33.3,
                 "rank": 68
+              }
+            ]
+          },
+          {
+            "distributor_code": "CYPRUS",
+            "points": [
+              {
+                "year": 2023,
+                "percentile": 38.1,
+                "rank": 63
+              },
+              {
+                "year": 2024,
+                "percentile": 33.3,
+                "rank": 68
+              },
+              {
+                "year": 2025,
+                "percentile": 23.8,
+                "rank": 77
               }
             ]
           },
@@ -1637,22 +1862,22 @@
             ]
           },
           {
-            "distributor_code": "PALESTINE",
+            "distributor_code": "DENMARK",
             "points": [
               {
                 "year": 2023,
-                "percentile": 0.0,
-                "rank": 101
+                "percentile": 66.7,
+                "rank": 34
               },
               {
                 "year": 2024,
-                "percentile": 4.8,
-                "rank": 96
+                "percentile": 85.7,
+                "rank": 15
               },
               {
                 "year": 2025,
-                "percentile": 0.0,
-                "rank": 101
+                "percentile": 61.9,
+                "rank": 39
               }
             ]
           },
@@ -1677,22 +1902,22 @@
             ]
           },
           {
-            "distributor_code": "DENMARK",
+            "distributor_code": "PALESTINE",
             "points": [
               {
                 "year": 2023,
-                "percentile": 66.7,
-                "rank": 34
+                "percentile": 0.0,
+                "rank": 101
               },
               {
                 "year": 2024,
-                "percentile": 85.7,
-                "rank": 15
+                "percentile": 4.8,
+                "rank": 96
               },
               {
                 "year": 2025,
-                "percentile": 61.9,
-                "rank": 39
+                "percentile": 0.0,
+                "rank": 101
               }
             ]
           },

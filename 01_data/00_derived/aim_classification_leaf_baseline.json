@@ -1,0 +1,31 @@
+{
+  "revision": "catalog_symbolic_leaf_20260920",
+  "released": "2026-09-20",
+  "axis_a_l2_approved": 27,
+  "axis_a_l3_approved": 177,
+  "l3_note": "177 distinct catalog_l3 values. Baseline was 176 until 2026-09-20; see history.",
+  "released_by": "build_aim_classification_20260920.py - candidate file (not yet live)",
+  "history": [
+    {
+      "revision": "leaf_add_battery_tools_20260918",
+      "date": "2026-09-18",
+      "axis_a_l2_approved": 27,
+      "axis_a_l3_approved": 176,
+      "added_leaves": ["Battery", "Special tools", "12V battery", "High-voltage battery", "Jack", "Hand tools"],
+      "file": "aim_pn_classification_v2.csv",
+      "status": "SUPERSEDED 2026-09-20"
+    },
+    {
+      "revision": "catalog_symbolic_leaf_20260920",
+      "date": "2026-09-20",
+      "axis_a_l2_approved": 27,
+      "axis_a_l3_approved": 177,
+      "added_leaves": ["Filters / Filter element"],
+      "evidence": "One part number (5864052180) in the declared upstream pr00_classification.csv carries level3_type 'Filter element' under group 'Filters'. It carries no billed euro. The 18 Sep file dropped this leaf because that part number had no row in its own source. Released by Jerome's decision, 2026-09-20.",
+      "released_by_jerome": true,
+      "file": "aim_pn_classification_20260920.csv"
+    }
+  ],
+  "pending_not_released": null,
+  "how_to_release": "Add a history entry and set the top-level axis_a_l2_approved / axis_a_l3_approved. That is the only place the approved leaf counts live; do not relax the drift tolerance in verify_aim_classification.py."
+}

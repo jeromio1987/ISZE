@@ -162,7 +162,7 @@ auto_pns = set(auto["pn"])
 
 aim = pd.read_csv(os.path.join(DERIVED, "aim_pn_classification.csv"),
                   usecols=["part_number", "aim_l1"], dtype={"part_number": str})
-aim_v2 = pd.read_csv(os.path.join(DERIVED, "aim_pn_classification_v2.csv"),
+aim_v2 = pd.read_csv(os.path.join(DERIVED, "aim_pn_classification_20260920.csv"),
                      usecols=["part_number", "catalog_node_present",
                               "catalog_l1", "catalog_residual"],
                      dtype=str)

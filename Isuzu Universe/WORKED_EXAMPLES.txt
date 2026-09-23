@@ -1,0 +1,71 @@
+AIM RANGE DECISION PROTOTYPE - WORKED EXAMPLES
+Prepared 22 September 2026. All numbers are fabricated test inputs, not Isuzu commercial findings.
+
+BASIS
+One synthetic distributor; oil-filter service elements; 1,000 synthetic trucks in historical fleet context at 31 December 2025.
+Reference quantities from calendar 2025 are replayed as an unchanged-offer assumption for 1 October 2026 to 30 September 2027.
+Both alternatives use one fabricated forward cost basis valid for that entire period. Prices are ISZE-to-distributor net EUR excluding VAT.
+The baseline is EUR 112,000 revenue and EUR 45,000 gross profit at that forward cost basis; it is not historical reported profit.
+No assumed recovery or loss is presented as measured demand. The figures are not annual growth rates.
+
+COMPARISONS
+
+Hold both prices and quantities
+Revenue movement: EUR 0. Gross-profit movement: EUR 0.
+Profit movement per historical synthetic truck: EUR 0.
+Profit explanation: starting-volume price effect EUR 0; assumed lost business EUR 0; internal transfer EUR 0; assumed recovered business EUR 0; support EUR 0.
+Additional assumed recovery needed to preserve BOTH revenue and profit: 0 oil-filter elements on SYN-OIL-G, in packs of 10. This is a mathematical threshold, not evidence that those orders exist.
+
+Cut Genuine price without assuming recovered business
+Revenue movement: -EUR 10,000. Gross-profit movement: -EUR 10,000.
+Profit movement per historical synthetic truck: -EUR 10.
+Profit explanation: starting-volume price effect -EUR 10,000; assumed lost business EUR 0; internal transfer EUR 0; assumed recovered business EUR 0; support EUR 0.
+Additional assumed recovery needed to preserve BOTH revenue and profit: 340 oil-filter elements on SYN-OIL-G, in packs of 10. This is a mathematical threshold, not evidence that those orders exist.
+
+Lower BVP price with 400 assumed recovered filter sales
+Revenue movement: +EUR 21,000. Gross-profit movement: +EUR 6,000.
+Profit movement per historical synthetic truck: +EUR 6.
+Profit explanation: starting-volume price effect -EUR 1,000; assumed lost business EUR 0; internal transfer EUR 0; assumed recovered business +EUR 8,000; support -EUR 1,000.
+Additional assumed recovery needed to preserve BOTH revenue and profit: 0 oil-filter elements on SYN-OIL-B, in packs of 10. This is a mathematical threshold, not evidence that those orders exist.
+
+Same BVP total, but 200 recovered and 200 transferred from Genuine
+Revenue movement: +EUR 1,000. Gross-profit movement: -EUR 2,000.
+Profit movement per historical synthetic truck: -EUR 2.
+Profit explanation: starting-volume price effect -EUR 1,000; assumed lost business EUR 0; internal transfer -EUR 4,000; assumed recovered business +EUR 4,000; support -EUR 1,000.
+Additional assumed recovery needed to preserve BOTH revenue and profit: 100 oil-filter elements on SYN-OIL-B, in packs of 10. This is a mathematical threshold, not evidence that those orders exist.
+
+Raise Genuine price with 50 explicitly assumed lost filter sales
+Revenue movement: -EUR 250. Gross-profit movement: +EUR 2,750.
+Profit movement per historical synthetic truck: +EUR 2.75.
+Profit explanation: starting-volume price effect +EUR 5,000; assumed lost business -EUR 2,250; internal transfer EUR 0; assumed recovered business EUR 0; support EUR 0.
+Additional assumed recovery needed to preserve BOTH revenue and profit: 10 oil-filter elements on SYN-OIL-G, in packs of 10. This is a mathematical threshold, not evidence that those orders exist.
+
+THE COMMERCIAL DISTINCTION
+The two BVP examples both end with 600 BVP elements. Recovering all 400 added BVP filter sales produces EUR 6,000 more range profit.
+If 200 of those filter sales instead replace Genuine purchases, range profit falls by EUR 2,000. The BVP headline is identical; the range result differs by EUR 8,000.
+The second example needs 100 further assumed BVP recoveries to preserve range profit; that would also leave revenue EUR 6,500 above the unchanged offer.
+
+THE PRICE-CUT TEST
+A Genuine cut from EUR 100 to EUR 90 reduces profit by EUR 10,000 before any new recovery. With a unit cost of EUR 60, each further recovered unit contributes EUR 30.
+The mathematical profit requirement is 333.333... additional units; orderable packs require 340. At 330, profit is still EUR 100 lower. At 340, profit is EUR 200 higher.
+The engine does not infer that 340 filter sales are available, accepted, or economically caused by the discount.
+
+SENSITIVITY: BVP TRANSFER EXAMPLE
+Each row adds only the explicitly stated recovered BVP filter sales. All other assumptions remain fixed.
+0 further assumed oil-filter recoveries: revenue +EUR 1,000, profit -EUR 2,000.
+50 further assumed oil-filter recoveries: revenue +EUR 3,750, profit -EUR 1,000.
+100 further assumed oil-filter recoveries: revenue +EUR 6,500, profit EUR 0.
+150 further assumed oil-filter recoveries: revenue +EUR 9,250, profit +EUR 1,000.
+200 further assumed oil-filter recoveries: revenue +EUR 12,000, profit +EUR 2,000.
+
+LIMITS
+This is a conditional calculation, not measured demand or a recovery forecast.
+The unchanged offer replays the reference quantities using the same forward cost basis as the proposal; it is not historical reported profit.
+ISZE-to-distributor purchasing does not establish end-customer demand.
+The bridge reprices starting quantities before losses, transfers and recoveries; it is an arithmetic decomposition, not causal evidence.
+Recovery and loss quantities are supplied assumptions, not inferred from competitor offers or service-demand gaps.
+Declared source references and service equivalence are not verified by this module.
+Support is deducted once at range level, not allocated to product lines.
+Internal output includes costs and profit. Do not send it to distributors or connect it to a shared export without an approved audience-specific implementation.
+The source references in these examples are fabricated. Live records and documented service equivalence would need separate validation.
+This prototype is separate from the current component. No screen, existing calculation, saved case or distributor output was changed.

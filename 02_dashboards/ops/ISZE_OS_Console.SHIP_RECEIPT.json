@@ -1,9 +1,11 @@
 {
-  "schema": "ship_receipt/v1",
+  "schema": "ship_receipt/v2",
   "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\ISZE_OS_Console.html",
-  "artifact_mtime_ms": 1789575922710,
-  "written_at": "2026-09-16T16:29:05.203Z",
+  "artifact_mtime_ms": 1790097530176,
+  "written_at": "2026-09-22T17:25:38.094Z",
   "ok": true,
+  "screenshots_taken": 1,
+  "screenshots_read": 1,
   "checks": [
     {
       "id": "exists",
@@ -13,7 +15,7 @@
     {
       "id": "min_size",
       "ok": true,
-      "detail": "97465 bytes"
+      "detail": "97482 bytes"
     },
     {
       "id": "no_cdn",
@@ -33,67 +35,16 @@
     {
       "id": "open_cmd",
       "ok": true,
-      "detail": "OPEN cmd present (OPEN_ACTION_LEDGER.cmd, OPEN_ACTION_LEDGER_HUB.cmd, OPEN_ISZE_OS_Console.cmd)"
+      "detail": "OPEN_ISZE_OS_Console.cmd opens ISZE_OS_Console.html (CRLF ok)"
     },
     {
       "id": "visual_screenshots",
       "ok": true,
-      "detail": "52 PNG(s) — agent must have image-Read before shipping"
+      "detail": "screenshots_taken 1, screenshots_read 1 (1 path(s) passed, 1 marked read)"
     }
   ],
   "screenshots": [
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\hover_bar_value.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\hover_hero_chip.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\hover_queue_chip.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1024_slice01.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1024_slice02.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1024_slice03.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1024_slice04.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1024_slice05.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1024_slice06.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1280_slice01.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1280_slice02.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1280_slice03.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1280_slice04.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1280_slice05.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1280_slice06.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1440_slice01.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1440_slice02.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1440_slice03.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1440_slice04.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1440_slice05.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w1440_slice06.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_hero.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_loop.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_queue.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice01.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice02.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice03.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice04.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice05.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice06.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice07.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice08.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice09.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice10.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice11.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice12.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice13.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice14.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_slice15.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\w390_stack.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_chart1.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_chart2_growth.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_chart3_cover.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_chart4_split.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_chart5_visibility.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_chart6_capture.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_chart7_categories.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_chart8_km.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_grid2_top.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_honesty.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_loop_svg.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ops\\_qa_console\\zoom_queue.png"
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_qa\\d08_20260922\\console.png"
   ],
-  "notes": "charts=8 queue_rows=13 sensors=3 ledger_signals=6 honesty_rows=7. Screenshots taken 52, image-read 52 (all, one at a time, full res). Assertions 1440/1280/1024/390: horizontalOverflow false, outsideBox 0, clipped 0. Defects fixed this pass: stacked-bar segment text wrapping/clipping, 390px overflow on chart-5 value column, one metaphor removed from ledger caption. No CDN, no script tags, no canvas."
+  "notes": ""
 }

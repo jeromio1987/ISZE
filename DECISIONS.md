@@ -6,6 +6,84 @@
 
 ---
 
+## 2026-09-22 - The price adjustment ambition is closed, permanently
+
+**Status:** Accepted - Jerome, chat, 2026-09-22, verbatim: *"delete price ambition I will come when it's done for now do a simulation on 5% increase and than never ask again."*
+
+**Decision:** The price-ambition question (+4% / +5% / launch-only, and every form of it) is **closed permanently**. It is not deferred and not parked. No agent asks it again in any form. He returns to it himself when it is done.
+
+**Executed:** The +5% flat simulation was produced the same day and is its last output. New, dated files only; the 17 September pack was not overwritten:
+
+- `01_data/01_Pricing/Price_Increase_5pct_Flat_SIMULATION_2026-09-22.xlsx`
+- `02_dashboards/pricing/ISZE_Price_Increase_5pct_Flat_SIMULATION_2026-09-22.html`
+- `02_dashboards/pricing/ISZE_Price_Increase_5pct_Flat_SIMULATION_2026-09-22.SHIP_RECEIPT.json`
+- `02_dashboards/pricing/_build/price_5pct_review_2026-09-22/price_increase_5pct_sim_summary_2026-09-22.json`
+
+**Not executed, deliberately:** no price list, no price file and no pricing configuration was touched, and nothing was mailed. The simulation is arithmetic on paper only. `03_analytics/isze_pricing/config.yaml` was not opened for editing.
+
+**Number, for the record:** a flat +5% is **EUR 1,749,680.47** on the whole in-scope base and **EUR 1,629,792.63** collectable on the 47,617 lines that can take a new price, against the filed revision measured at **+5.9616%** / EUR 1,652,140.71 on the same lines. The two are separate readings of one base and are **never added**. On this base the refresh reproduced the 17 September figures to the cent, because the base file has not moved.
+
+**Docs updated:** `00_docs/PRICE_AMBITION_CLOSED_2026-09-22.md` (new, the superseding record) - `00_docs/ISZE_ROADMAP.md` section 2 ref B1 and section 5 - `00_docs/roadmaps/pricing.md` section 5 - `00_docs/DECISION_RECONCILE_20260916.md` B1 and B8 - and the "blocked on ambition" headers in `01_data/01_Pricing/PLAN_FORECAST_WEIGHTED_AMBITION.md`, `01_data/01_Pricing/BOOK_B_CONCLUSIONS_20260819.md`, `01_data/01_Pricing/DB_DLR_COMMERCIAL_STACK.md` and `00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md`. No pricing file was rewritten.
+
+**Scope limit:** this closes the **ambition** question only. The filed +5.9616% revision and the other pricing items (`roadmaps/pricing.md` sections 2.2 to 2.8) are untouched.
+
+---
+
+## 2026-09-20 - GPT review forcing decisions executed (8% cap / classification / Portugal)
+
+**Status:** Accepted - Jerome, chat, 2026-09-20, answering the recovered GPT review's three forcing decisions.
+
+### 1. Per-line +8% ceiling - not binding; deleted
+
+**What he said:** *"1) no binding delete it everywhere"*
+
+**Executed:**
+- `03_analytics/isze_pricing/config.yaml` - `allocation.cap` and `allocation.cap_top50` set to `null`
+- `03_analytics/isze_pricing/engine.py` - null caps mean no upper clip; floor still applies
+- Pricing roadmap and policy-paper REV3 builder / HTML rewritten so the +8% line is no longer presented as a live engine rule
+- Historical run folders under `isze_pricing/runs/` left as archives (not rewritten)
+
+### 2. Classification - make the export match the master
+
+**What he said:** *"2+3) just let it be correct"* (classification half)
+
+**Executed:**
+- Rebuilt `aim_pn_classification_20260920.csv` from live `aim_master_v2` + live `pr00_classification`
+- Synced `aim_pn_classification_v2.csv` workbook columns from that join (backup `*.bak_pre_master_sync_*`)
+- Synced fused `aim_pn_classification.csv` `aim_l1/l2/l3` from master (backup taken)
+- Spot-check: clutch pressure plate / clutch disc / tool interface now match master on the exports
+
+### 3. Portugal light share - accept 0.6364 on 2,206 base
+
+**What he said:** same line as (2)
+
+**Executed / recorded:**
+- `uio_ld_n35_share.csv` already holds Portugal **0.6364** / `imotors_parc_bands` / units **2206** - left as-is
+- Register **D24** closed as **decided** (2026-09-20): share accepted; **ceiling rebuild still not authorised**
+
+### Also recorded in the same pass - RECONSTRUCTED
+
+The three sections above are as written on 2026-09-20. This block was rebuilt from the
+decision-register entries of the same date (`00_docs/ISZE_ROADMAP.md`), which the 2026-09-21 drift
+audit confirms this entry referenced. Each line is one factual clause from the register. Treat the
+register as the authority, not this block.
+
+- **D01 / D02** - swap the two action labels in the revision exception builder, and widen the raise / no-raise band to **0.80 / 1.10** with brakes named first. Decided; **not executed.**
+- **D03** - the **margins reading** (37%, then 25-27.5%; combined multiple about 2.15-2.19). The multiplier chain is **not adopted**. Decided and informed; **not executed.**
+- **D08** - rebuild the five live dashboards, the AIM truck catalogue and the BPR deck so the fleet reads **163,198** and the per-truck slide becomes a matched rate (**EUR 188.16** on 163,459, **EUR 188.46** on 163,198). Caveat given at the time: re-running the engine yields **EUR 54,323,455** against the published **EUR 55,253,312**, so a rebuild re-bases the ceiling. **Approved, not run.**
+- **D13** - a bare `.bak` ignore rule added to `.gitignore`, and the nine files under `JEROME_ONLY/` untracked with `git rm --cached`; all nine verified still on disk. Nothing committed, nothing pushed.
+- **D15** - `class_factor.T` in `03_analytics/isze_pricing/config.yaml` changed from `0.80` to `0.60`, the 40% margin the price file charges; nothing else in that file touched. The live price list is still not touched.
+- **D24** - the Portugal share accepted at 0.6364 on the 2,206 base; the ceiling rebuild is **not** authorised.
+- **D25** - no pricing value, band, threshold, label or price file changes through the decision register. Pricing changes are Jerome's to start directly.
+- **D26** - the retired Aftermarket BI Command Center stays retired; the tier-A ship-gate update is outstanding and was deliberately not made.
+
+**Provenance for this whole entry:** it was truncated by an agent write probe on 2026-09-22 and
+restored the same day. No verbatim copy survived, so sections 1-3 were rewritten from the version
+read on disk before the truncation and the block above was reconstructed from the register. Nothing
+decided on 2026-09-20 was changed by the restoration.
+
+---
+
 ## 2026-09-19 — Late pass: four further directions recorded (D24, D25, D05, D26)
 
 **Status:** Recorded — Jerome, 2026-09-19, later than the entry below. Four directions are recorded here. **Two are decisions (D25 and D26). One is a factual correction that leaves the item open (D24). One is an instruction to stop the questions, with no answer given (D05).** A standing instruction on pricing is recorded with them, because it now governs every pricing item in this register.
@@ -102,7 +180,14 @@ Widen the raise and no-raise band to **0.80 and 1.10**, leaving the middle incon
 
 Rebuild the five live dashboards, the AIM truck catalogue and the Business Performance Review deck from their builders, so the fleet reads **163,198** and the **€198 per truck** slide becomes a matched rate. €198.10 is the only figure that divides a 22-entity euro total by an 18-market fleet; the two matched pairs are **€188.16** (18-market billed over the 18-market fleet of 163,459) and **€188.46** (the same euro over the 163,198 target-spend fleet).
 
-**The caveat he was given, and the limit on his yes.** The current engine no longer reproduces the published ceiling — re-running it now yields **€54,323,455** against the published **€55,253,312** — so the rebuild re-bases the ceiling and every rate that divides by it. His yes approves the **rebuild**. It does **not** approve the re-based ceiling as such: the new ceiling value may need its own look once the rebuild lands. **Not executed** — no builder has been run.
+**The caveat he was given, and the limit on his yes.** The current engine no longer reproduced the published ceiling — re-running it then yielded **€54,323,455** against the published **€55,253,312** — so the rebuild re-bases the ceiling and every rate that divides by it. His yes approved the **rebuild**. It did **not** approve the re-based ceiling as such: the new ceiling value may need its own look once the rebuild lands. **Not executed** at that date — no builder had been run.
+
+**Outcome, 2026-09-22 evening.** Jerome authorised the ceiling rebuild and it was executed. The
+ceiling is **€54,375,729** on CY2025, cover **56.6%**, uncaptured **€23,950,221** (per-market
+floored definition). **€54,323,455 was already stale on the day it was written** — it reproduces
+only against Portugal at share 0.6899, which was replaced on 2026-09-20 by 0.6364 — so the correct
+wall was €52,274 above the figure recorded here. Six markets moved and all six were **stale, not
+wrong**. Write-up and backup: `01_data\91_build\_backsafe_20260922_ceiling\MANIFEST.md`.
 
 ### 5. D13 — the ignore rules: two actions approved, both executed (urgency high)
 
@@ -205,6 +290,13 @@ Separate from D13, and deliberately not actioned: `git ls-files` confirms **eigh
 **What is recommended, not decided.** Rebuild. The corrected split at least labels itself unmeasured, where the basis it replaced was an undocumented guess. One caveat to record with the answer: Portugal is three-quarters of the movement (€674,246 of €929,857) and is a market Jerome knows better than the file does — if he knows the Portuguese light/heavy mix to be different, that one number should be overridden by hand before the rebuild. **A split option is his to take:** accept the seven shares that carry documentary evidence now, and hold only Portugal and Malta.
 
 **Blocks.** The whole ceiling rebuild chain — nothing downstream of the ceiling can be rebuilt honestly until the corrected shares are accepted or replaced. Rebuilding with nothing else changed moves the ceiling from €55,253,312 to €54,323,455, so coverage rises from 55.7% to 56.6% and the uncaptured value falls from €24,496,540 to €23,566,683. The fleet base is unchanged at 163,198 vehicles; what was wrong was how those vehicles were priced. The rebuild itself is D08's decision and is already held.
+
+**Closed 2026-09-22 evening.** The shares were accepted and the ceiling was rebuilt. The numbers
+in the sentence above are superseded: the ceiling is **€54,375,729** on today's Portugal share
+(0.6364, which replaced 0.6899 on 2026-09-20), not €54,323,455; cover is **56.6%**; and the
+uncaptured value is **€23,950,221** on the per-market floored definition, not €23,566,683. The
+direction of the argument above is what mattered and it was right: the fleet base was fine, the
+pricing of it was not.
 
 ### 5. D25 — the price-index band: one threshold or two tiers — the band is open, not settled (urgency high; partner D02)
 

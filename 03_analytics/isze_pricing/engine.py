@@ -31,9 +31,19 @@ def params_from_config(cfg: dict) -> "Params":
     from .theta import require_list
 
     a = cfg["allocation"]
+
+    def _opt_float(key: str):
+        v = a.get(key, None)
+        if v is None or v == "" or (isinstance(v, float) and pd.isna(v)):
+            return None
+        return float(v)
+
     return Params(
-        target=a["target"], cap=a["cap"], cap_top50=a["cap_top50"],
-        floor=a["floor"], policy_premium=a["policy_premium"],
+        target=float(a["target"]),
+        cap=_opt_float("cap"),
+        cap_top50=_opt_float("cap_top50"),
+        floor=float(a["floor"]),
+        policy_premium=a["policy_premium"],
         min_n=a["min_n"], pos_gain=a["pos_gain"],
         tier_limit=dict(a["tier_limit"]), theta_delta=dict(a["theta_delta"]),
         # a bare string here would degrade to a set of characters and hold
@@ -47,8 +57,9 @@ def params_from_config(cfg: dict) -> "Params":
 @dataclass
 class Params:
     target: float = 0.03          # weighted increase on net-to-DB
-    cap: float = 0.08             # per-line ceiling
-    cap_top50: float = 0.05       # tighter ceiling inside a DB's top-50 basket
+    # None = no per-line upper ceiling (Jerome 2026-09-20: 8% cap deleted)
+    cap: float | None = None
+    cap_top50: float | None = None
     floor: float = -0.12          # per-line floor
 
     # how far each evidence tier may move a line
@@ -231,7 +242,13 @@ def run(df: pd.DataFrame, p: Params | None = None) -> tuple[pd.DataFrame, dict]:
         out["theta_vetoed"] = False
 
     out["d_ex_base"] = out["d_pos"] + out["d_theta"]
-    out["cap_eff"] = np.where(out.get("is_top50", False), p.cap_top50, p.cap)
+    # No binding per-line upper ceiling (cap / cap_top50 may be None → ∞).
+    hi_default = np.inf if p.cap is None else float(p.cap)
+    hi_top50 = np.inf if p.cap_top50 is None else float(p.cap_top50)
+    if "is_top50" in out.columns:
+        out["cap_eff"] = np.where(out["is_top50"], hi_top50, hi_default)
+    else:
+        out["cap_eff"] = hi_default
     out["floor_eff"] = p.floor
 
     base = solve_base(out["weight"].to_numpy(float), out["d_ex_base"].to_numpy(float),
@@ -244,13 +261,17 @@ def run(df: pd.DataFrame, p: Params | None = None) -> tuple[pd.DataFrame, dict]:
     out["index_contribution_bp"] = w * out["delta"] * 10_000
     out["revenue_delta_eur"] = out["weight"] * out["delta"]
 
+    finite_cap = np.isfinite(out["cap_eff"].to_numpy(float))
     summary = {
         "rows": len(out),
         "base_eur": float(out["weight"].sum()),
         "delta_base": float(base),
         "weighted_increase": float((w * out["delta"]).sum()),
         "revenue_delta_eur": float(out["revenue_delta_eur"].sum()),
-        "n_capped": int((out["delta"] >= out["cap_eff"] - 1e-9).sum()),
+        "n_capped": int(
+            (finite_cap & (out["delta"].to_numpy(float)
+                           >= out["cap_eff"].to_numpy(float) - 1e-9)).sum()
+        ),
         "n_floored": int((out["delta"] <= out["floor_eff"] + 1e-9).sum()),
         "n_zero_evidence": int((out["evidence_tier"] == "T5_none").sum()),
         "n_unbenchmarked_premium": int(

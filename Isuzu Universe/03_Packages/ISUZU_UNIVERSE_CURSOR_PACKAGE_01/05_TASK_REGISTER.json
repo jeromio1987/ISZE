@@ -1,0 +1,1388 @@
+{
+  "date": "21 September 2026",
+  "reference": "reported v2.2; unverified",
+  "phases": [
+    {
+      "id": "P0",
+      "name": "Establish the truth",
+      "verb": "VERIFY",
+      "gate": "G0",
+      "outcome": "A verified baseline and a point-by-point response to the original critique.",
+      "exit": "The actual build, source packs, original paper and critique are reconciled. Every proposed change is classified as already satisfied, required, deferred or unresolved.",
+      "scope": "Read-only application review; write review artifacts only. No product redesign or data remodelling."
+    },
+    {
+      "id": "P1",
+      "name": "Certify the data meaning",
+      "verb": "DEFINE",
+      "gate": "G1",
+      "outcome": "One clear contract for identity, periods, commercial levels and financial measures.",
+      "exit": "Approved metric definitions, a source-coverage map, reconciled totals and executable checks. Unknowns remain explicit.",
+      "scope": "Audit and test before modifying the application. Corrected tonnage v2 supersedes v1."
+    },
+    {
+      "id": "P2",
+      "name": "Prove a dealer pilot",
+      "verb": "CONNECT",
+      "gate": "G2",
+      "outcome": "An ITUK dealer review connected to IDS only where identity is validated.",
+      "exit": "A declared pilot population reconciles to source. Dealer/site mappings are approved, exclusions are visible, and selected state survives the dealer-to-IDS journey.",
+      "scope": "A controlled ITUK candidate pilot, not a claim of network-wide readiness."
+    },
+    {
+      "id": "P3",
+      "name": "Make comparisons useful",
+      "verb": "COMPARE",
+      "gate": "G3",
+      "outcome": "Preserved portfolio breadth, better Genuine/BVP comparisons and defensible commercial review.",
+      "exit": "Every comparison states applicability, unit, price basis, source coverage and period. No unsupported leakage or band service-cover claims.",
+      "scope": "P2 and P3 may run in parallel after G1 when files and contracts do not overlap."
+    },
+    {
+      "id": "P4",
+      "name": "Make the experience exceptional",
+      "verb": "REFINE",
+      "gate": "G4",
+      "outcome": "A distinctive, fast interface with trustworthy interactions and clear evidence.",
+      "exit": "Named user journeys pass visual, accessibility, performance, security and numerical QA on the selected pilot.",
+      "scope": "Design exploration can start earlier; live-data integration waits for its data gates."
+    },
+    {
+      "id": "P5",
+      "name": "Operate and expand safely",
+      "verb": "OPERATE",
+      "gate": "G5",
+      "outcome": "A repeatable monthly review, controlled refresh and evidence-based expansion.",
+      "exit": "Refresh and rollback are proven, operational ownership is assigned, user acceptance is recorded, and the next distributor meets the same entry criteria.",
+      "scope": "PRISM integration is conditional on the source-code review; it is not presumed necessary."
+    }
+  ],
+  "tasks": [
+    {
+      "id": "C01",
+      "phase": "P0",
+      "owner": "Cursor",
+      "title": "Fingerprint the real baseline",
+      "work": "Identify the actual entry point, stack, active branch or equivalent snapshot, dirty working tree, version labels and reproducible start commands. Do not reset or overwrite local work.",
+      "inputs": "Repository at the user-supplied root.",
+      "output": "BASELINE.md plus tracked-file or SHA-256 manifest.",
+      "acceptance": "A second reviewer can identify exactly which build was inspected. Version 2.2 is confirmed, corrected or left explicitly unverified.",
+      "dependencies": [],
+      "status": "Ready",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C01",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C02",
+      "phase": "P0",
+      "owner": "Cursor",
+      "title": "Return the original critique and paper",
+      "work": "Read the exact critique path. Identify the paper it critiques from the file or repository; do not silently choose a different paper. Preserve both originals unchanged.",
+      "inputs": "Original critique and its referenced strategy paper.",
+      "output": "Original critique copy, exact paper identity, and CRITIQUE_INDEX.md with headings and source locations.",
+      "acceptance": "Every criticism can be traced to the original text; a missing paper is reported, not guessed.",
+      "dependencies": [],
+      "status": "Ready",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C02",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C03",
+      "phase": "P0",
+      "owner": "Cursor",
+      "title": "Inventory protected features and regressions",
+      "work": "Record where the portfolio overview and Genuine/BVP comparisons live, how they work, and whether the sales cube is absent and photographs remain deferred. Capture existing journeys before change.",
+      "inputs": "Running baseline and existing tests.",
+      "output": "FEATURE_BASELINE.md and labelled screenshots.",
+      "acceptance": "Existing work is recorded as present, partial, absent or unverified; no working feature is put back into the backlog as a rebuild without justification.",
+      "dependencies": [],
+      "status": "Ready",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C03",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C04",
+      "phase": "P0",
+      "owner": "Cursor",
+      "title": "Catalogue source packs and supersession",
+      "work": "Locate corrected tonnage v2 and the ITUK dealer-data/source-code pack. Inventory schemas, periods, source levels and correction evidence. Quarantine v1 from active ingestion without deleting originals.",
+      "inputs": "Pack manifests, read-me files, correction logs and source files.",
+      "output": "SOURCE_MANIFEST.json and PACK_STATUS.md.",
+      "acceptance": "The selected pack version and hash are explicit. Previously corrected v2 issues are marked resolved unless a new reproducible regression exists.",
+      "dependencies": [],
+      "status": "Ready",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C04",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C05",
+      "phase": "P0",
+      "owner": "Cursor",
+      "title": "Audit code reuse and PRISM boundaries",
+      "work": "Read the available source code and PRISM overview. Identify useful existing components, transformations, routes, output contracts and coupling. Do not infer what PRISM does from its name.",
+      "inputs": "Actual application code and any PRISM documentation.",
+      "output": "REUSE_MAP.md with reuse, adapter, isolate or investigate recommendations.",
+      "acceptance": "Every recommendation cites a file or function. No framework rewrite or duplicate calculation engine is proposed without evidence.",
+      "dependencies": [],
+      "status": "Ready",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C05",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C06",
+      "phase": "P0",
+      "owner": "Cursor",
+      "title": "Reproduce the baseline run",
+      "work": "Use documented local commands where available. Report test results, build errors, route failures and environment details. Do not install unknown dependencies or change configuration merely to manufacture a pass.",
+      "inputs": "C01 baseline and approved local environment.",
+      "output": "BASELINE_TEST_REPORT.md with commands, results and known limitations.",
+      "acceptance": "A failed or unavailable check remains visible; screenshots and a successful build are not represented as numerical validation.",
+      "dependencies": [
+        "C01"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C06",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C07",
+      "phase": "P0",
+      "owner": "Cursor",
+      "title": "Package a compact evidence handoff",
+      "work": "Assemble the baseline, critique, feature inventory, source manifests, reuse map and test report. Include only necessary safe samples; exclude credentials, caches and bulk unrelated data.",
+      "inputs": "C01-C06 outputs.",
+      "output": "A dated R0 review packet with MANIFEST.md and OPEN_QUESTIONS.md.",
+      "acceptance": "The packet is sufficient for ChatGPT to review without pretending it has local repository access. Missing items are listed.",
+      "dependencies": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C07",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A01",
+      "phase": "P0",
+      "owner": "ChatGPT",
+      "title": "Set the orchestration charter and current-state register",
+      "work": "Separate reported baseline, agreed decisions, verified evidence and proposals. Define the handoff loop and release authority.",
+      "inputs": "Existing conversation decisions; later reconcile to C07.",
+      "output": "Current-state register and orchestration charter in this roadmap.",
+      "acceptance": "No repository inspection, critique review or Cursor dispatch is falsely claimed.",
+      "dependencies": [],
+      "status": "Drafted",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A01",
+      "execution_status": "Specification draft available; not accepted"
+    },
+    {
+      "id": "A02",
+      "phase": "P0",
+      "owner": "ChatGPT",
+      "title": "Adjudicate the original critique point by point",
+      "work": "Read the original criticism alongside the exact paper and build evidence. Accept, partly accept, rebut with evidence, defer or flag each item as unverifiable.",
+      "inputs": "C02 originals; C03-C06 supporting evidence.",
+      "output": "CRITIQUE_RESPONSE.md with evidence, decision, affected ticket and acceptance test per item.",
+      "acceptance": "No criticism is invented or answered from a second-hand paraphrase. The original wording remains traceable.",
+      "dependencies": [
+        "C02",
+        "C07"
+      ],
+      "status": "Blocked",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A02",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A03",
+      "phase": "P0",
+      "owner": "ChatGPT",
+      "title": "Publish the verified maturity assessment",
+      "work": "Assess product journeys, data readiness, mapping readiness, test coverage and deployment evidence separately. Report unknowns rather than an invented completion percentage.",
+      "inputs": "C07 review packet.",
+      "output": "STATE_OF_UNIVERSE.md and a feature evidence register.",
+      "acceptance": "Each status is tied to a build or artifact. Reported v2.2 and proposed milestones are not confused.",
+      "dependencies": [
+        "C07"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A03",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A04",
+      "phase": "P0",
+      "owner": "ChatGPT",
+      "title": "Reconcile the backlog and decide G0",
+      "work": "Close tasks already satisfied by evidence, retain real gaps and convert accepted critique points into scoped work orders.",
+      "inputs": "A02-A03 and all P0 evidence.",
+      "output": "Approved next work order and G0 disposition.",
+      "acceptance": "No repeated tonnage-v1 feedback, no automatic redesign, and no unreviewed product change enters the next packet.",
+      "dependencies": [
+        "A02",
+        "A03"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A04",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C08",
+      "phase": "P1",
+      "owner": "Cursor",
+      "title": "Write dataset contracts",
+      "work": "For each selected source, record grain, keys, measures, units, commercial level, reporting clock, coverage, freshness and provenance. Record whether a value is observed, derived or modelled.",
+      "inputs": "Approved source inventory and real schema samples.",
+      "output": "DATA_CONTRACTS.md plus machine-readable schema checks.",
+      "acceptance": "Every source used by a pilot view has a contract; no field meaning is inferred only from a convenient column name.",
+      "dependencies": [
+        "A04",
+        "C04"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C08",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C09",
+      "phase": "P1",
+      "owner": "Cursor",
+      "title": "Normalize identifiers without destroying identity",
+      "work": "Preserve part numbers and customer/dealer/site IDs as strings. Keep original and normalized values, leading zeros and collision reports. Apply only approved equivalence rules.",
+      "inputs": "C08 contracts and source identifier samples.",
+      "output": "Identifier transforms and collision/alias exception report.",
+      "acceptance": "Normalization is reversible or traceable; two unrelated entities are never merged because a name or country looks similar.",
+      "dependencies": [
+        "C08"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C09",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C10",
+      "phase": "P1",
+      "owner": "Cursor",
+      "title": "Reconcile transactions at each commercial level",
+      "work": "Reconcile raw-to-loaded quantities and values separately for ISZE-to-distributor and distributor-to-dealer data. Test duplicates, returns, credits, unit conversions and exclusions.",
+      "inputs": "Transaction sources and C08 contracts.",
+      "output": "RECONCILIATION.md plus executable reconciliation tests.",
+      "acceptance": "Reported totals match the declared source scope within an agreed rounding tolerance. No cross-level double counting or join fan-out occurs.",
+      "dependencies": [
+        "C08",
+        "C09"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C10",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C11",
+      "phase": "P1",
+      "owner": "Cursor",
+      "title": "Make periods and coverage explicit",
+      "work": "Identify complete months, partial extracts, CY/FY calendars, time zones where relevant, and currency/FX policy. Retain source currency and original period before any derived presentation conversion.",
+      "inputs": "Source contracts and refresh history.",
+      "output": "PERIOD_COVERAGE.md and shared period-filter tests.",
+      "acceptance": "One clock and period per measure; L12 is anchored to twelve complete eligible months, not assumed to be the latest calendar year.",
+      "dependencies": [
+        "C08",
+        "C10"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C11",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C12",
+      "phase": "P1",
+      "owner": "Cursor",
+      "title": "Implement measure-basis metadata",
+      "work": "Carry quantity, valuation basis, transaction level, reporting period, currency, population and source alongside every metric. Keep reference-price valuation separate from actual billing and modelled demand.",
+      "inputs": "A06 draft dictionary, approved after source review.",
+      "output": "Metric metadata interface and rendering fixtures.",
+      "acceptance": "An unpriced quantity never becomes euros; an indicative reference valuation never appears under an actual-revenue label.",
+      "dependencies": [
+        "A06",
+        "C08",
+        "C11"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C12",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C13",
+      "phase": "P1",
+      "owner": "Cursor",
+      "title": "Provide lineage and exception evidence",
+      "work": "Connect each displayed aggregate to source version, scope, transformations and exclusions. Keep unmatched parts/dealers, missing prices and ambiguous applicability visible in an exception ledger.",
+      "inputs": "C08-C12 outputs.",
+      "output": "Evidence record and EXCEPTIONS.md or equivalent table.",
+      "acceptance": "A reviewer can explain an aggregate without downloading confidential bulk data; excluded records remain countable and retrievable within permission.",
+      "dependencies": [
+        "C10",
+        "C12"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C13",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C14",
+      "phase": "P1",
+      "owner": "Cursor",
+      "title": "Automate the non-negotiable data tests",
+      "work": "Turn the approved business rules into tests, including null versus zero, duplicate joins, clocks, quantities versus euros, exclusive versus pooled applicability and repeated market actuals.",
+      "inputs": "A05-A08 decisions and C08-C13 transforms.",
+      "output": "DATA_INVARIANTS test suite and G1 evidence report.",
+      "acceptance": "Deliberately broken fixtures fail the relevant tests; valid corrected tonnage-v2 fixtures pass.",
+      "dependencies": [
+        "C13",
+        "A05",
+        "A06",
+        "A07",
+        "A08"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C14",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A05",
+      "phase": "P1",
+      "owner": "ChatGPT",
+      "title": "Build the distributor source-coverage map",
+      "work": "Declare which source levels, periods, dealer populations and measure bases are available per distributor. Decide which comparisons are eligible before any ranking.",
+      "inputs": "C04, C08 and C11.",
+      "output": "COVERAGE_MAP.md with eligible, restricted and unknown uses.",
+      "acceptance": "Missing dealer data is recorded as unknown downstream activity, not zero. Warranty is not used to infer scheduled servicing.",
+      "dependencies": [
+        "A04",
+        "C08",
+        "C11"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A05",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A06",
+      "phase": "P1",
+      "owner": "ChatGPT",
+      "title": "Approve the metric and financial-basis dictionary",
+      "work": "Define what each figure means, its formula, denominator and forbidden interpretations. Refine the draft in this roadmap against actual source contracts.",
+      "inputs": "Draft dictionary plus C08-C11 evidence.",
+      "output": "Approved METRIC_DICTIONARY.md.",
+      "acceptance": "Measured quantities, indicative valuation, actual billing and modelled expectation cannot be confused by wording or presentation.",
+      "dependencies": [
+        "C08",
+        "C10",
+        "C11"
+      ],
+      "status": "Drafted",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A06",
+      "execution_status": "Specification draft available; not accepted"
+    },
+    {
+      "id": "A07",
+      "phase": "P1",
+      "owner": "ChatGPT",
+      "title": "Test ITUK pilot eligibility",
+      "work": "Profile the real ITUK data for grain, scope, periods, customer identity, values and source completeness. Select only justified dealer/site populations and measures.",
+      "inputs": "ITUK pack and C08-C11 reports.",
+      "output": "ITUK_PILOT_ELIGIBILITY.md with exclusions and unresolved questions.",
+      "acceptance": "A commercial-level pilot can proceed independently of IDS where dealer-to-IDS identity is not yet approved.",
+      "dependencies": [
+        "C08",
+        "C09",
+        "C10",
+        "C11"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A07",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A08",
+      "phase": "P1",
+      "owner": "ChatGPT",
+      "title": "Review corrected tonnage v2 once, against evidence",
+      "work": "Read the correction log and evidence before testing residual issues. Record closed corrections and test only remaining uncertainties or new regressions.",
+      "inputs": "Corrected tonnage v2, C04 and C13 evidence.",
+      "output": "TONNAGE_V2_DISPOSITION.md and G1 semantic decision.",
+      "acceptance": "No apportionment of shared parts; exclusive numerator uses the declared filter; CY and FY are not added; repeated market actuals remain context, not band numerator.",
+      "dependencies": [
+        "C04",
+        "C08",
+        "C13"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A08",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C15",
+      "phase": "P2",
+      "owner": "Cursor",
+      "title": "Create the approved dealer/customer/site bridge",
+      "work": "Implement a versioned identity bridge with source IDs, entity type, parent/child relationships, validity dates, approval provenance and mapping status. Support unmatched and multi-site customers explicitly.",
+      "inputs": "A09 mapping policy and actual source identities.",
+      "output": "DEALER_SITE_BRIDGE plus validation report.",
+      "acceptance": "No country, submission cohort or fuzzy-name inference creates an approved relationship. Multi-site billing is not allocated to sites without evidence.",
+      "dependencies": [
+        "C14",
+        "A09"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C15",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C16",
+      "phase": "P2",
+      "owner": "Cursor",
+      "title": "Ingest IDS as dated dealer assessments",
+      "work": "Preserve assessment date, dealer/site identity, questionnaire version, section scores, response completeness and source. Do not overwrite previous assessments with only the latest value.",
+      "inputs": "Actual IDS source and scoring definitions.",
+      "output": "IDS assessment contract and validated snapshots.",
+      "acceptance": "A score retains its date, scoring version and assessed population; dealer self-assessment is not renamed a distributor audit.",
+      "dependencies": [
+        "C14",
+        "A09"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C16",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C17",
+      "phase": "P2",
+      "owner": "Cursor",
+      "title": "Expose ambiguous and excluded joins",
+      "work": "Provide a mapping review table for approved, unresolved, rejected and out-of-scope joins. Measure one-to-many and many-to-many risks before enabling linked views.",
+      "inputs": "C15-C16 joins.",
+      "output": "JOIN_EXCEPTIONS and pre/post-join reconciliation.",
+      "acceptance": "Unresolved records stay outside linked metrics while remaining visible; row fan-out cannot inflate quantities or values.",
+      "dependencies": [
+        "C15",
+        "C16"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C17",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C18",
+      "phase": "P2",
+      "owner": "Cursor",
+      "title": "Build the dealer commercial review slice",
+      "work": "Use the existing architecture to show dealer purchasing by eligible period, category, part and Genuine/BVP tier with source-basis labels and declared coverage. A commercial-only version can use an approved commercial customer/dealer identity without an IDS site link. Unsupported site detail remains unavailable.",
+      "inputs": "Approved ITUK pilot slice and A10 review specification.",
+      "output": "Dealer commercial view with source-reconciled fixtures.",
+      "acceptance": "This is distributor-to-dealer purchasing where supported, not dealer-to-end-customer sales or inferred servicing. Commercial identity is validated for the declared population; IDS linking is not a prerequisite for this commercial-only scope.",
+      "dependencies": [
+        "C14",
+        "A07",
+        "A10"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C18",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C19",
+      "phase": "P2",
+      "owner": "Cursor",
+      "title": "Connect eligible IDS detail without scoring a distributor",
+      "work": "Add the linked assessment summary and sections only for approved identities. Show assessment date, matched population and denominator for any aggregate.",
+      "inputs": "C16-C18 and A11 comparison rules.",
+      "output": "Dealer-to-IDS view and linked-population summary.",
+      "acceptance": "A distributor node remains commercial. Any dealer-assessment summary names its exact population, date basis and scoring scope.",
+      "dependencies": [
+        "C18",
+        "C17",
+        "A11"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C19",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C20",
+      "phase": "P2",
+      "owner": "Cursor",
+      "title": "Preserve context across linked journeys",
+      "work": "Retain distributor, dealer, sales period, taxonomy filters and financial basis across drill-through. Keep the assessment date independent from the sales clock.",
+      "inputs": "A10 journey and existing route/state architecture.",
+      "output": "Shareable route/state contract and journey tests.",
+      "acceptance": "Opening IDS cannot silently change the sales period; unmatched mappings produce an explanation, not a fake zero.",
+      "dependencies": [
+        "C18",
+        "C19"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C20",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C21",
+      "phase": "P2",
+      "owner": "Cursor",
+      "title": "Return a representative pilot evidence set",
+      "work": "Test approved normal, unmatched, multi-site, missing-price, returns and partial-period cases. Reconcile visible totals before and after joins and filters. State whether the packet covers commercial-only or linked-IDS scope. A commercial-only packet cannot claim completion of C19/C20 or full G2.",
+      "inputs": "C15-C20 and agreed sample selection.",
+      "output": "PILOT_EVIDENCE.md, fixtures and screenshots.",
+      "acceptance": "The sample includes edge cases rather than only clean success paths; the declared pilot population is reproducible.",
+      "dependencies": [
+        "C18",
+        "A10"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "conditional_dependencies": {
+        "linked_IDS_scope": [
+          "C20",
+          "A11"
+        ]
+      },
+      "source_task_id": "C21",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A09",
+      "phase": "P2",
+      "owner": "ChatGPT",
+      "title": "Define and approve identity-mapping rules",
+      "work": "Separate distributor, commercial customer, dealer entity and physical site. Define the evidence needed for an approved link and route business ownership questions to Jerome or the responsible distributor.",
+      "inputs": "Draft policy here, source contracts and actual identity candidates.",
+      "output": "MAPPING_POLICY.md and mapping approval register.",
+      "acceptance": "ChatGPT does not invent site responsibility or certify a fuzzy match. Multi-site commercial facts stay at their measured grain.",
+      "dependencies": [
+        "C09",
+        "A07"
+      ],
+      "status": "Drafted",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A09",
+      "execution_status": "Specification draft available; not accepted"
+    },
+    {
+      "id": "A10",
+      "phase": "P2",
+      "owner": "ChatGPT",
+      "title": "Specify the connected dealer review",
+      "work": "Define a review that answers what was purchased, how the mix changed, what IDS actually says, what evidence is missing, and what follow-up is agreed.",
+      "inputs": "A07 eligibility and existing dealer/IDS journeys.",
+      "output": "DEALER_REVIEW_SPEC.md with fields, states and acceptance examples.",
+      "acceptance": "Commercial and assessment evidence stay separate; the review gives a distributor useful monthly output rather than only requesting data.",
+      "dependencies": [
+        "A07",
+        "A09"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A10",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A11",
+      "phase": "P2",
+      "owner": "ChatGPT",
+      "title": "Approve fair IDS comparisons",
+      "work": "Define eligible scoring versions, section denominators, dated cohorts, missing-response treatment and whether entity/site aggregation is permissible. Do not imply causation from coincident scores and purchases.",
+      "inputs": "IDS definitions and C16-C17 evidence.",
+      "output": "IDS_COMPARISON_RULES.md.",
+      "acceptance": "The displayed comparator is named and reproducible; inconsistent questionnaires or undefined populations are not pooled.",
+      "dependencies": [
+        "C16",
+        "C17"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A11",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A12",
+      "phase": "P2",
+      "owner": "ChatGPT",
+      "title": "Review pilot findings and decide G2",
+      "work": "Review numerical, identity and interaction evidence. Separate a usable commercial pilot from a still-blocked IDS connection and decide the scope actually supportable.",
+      "inputs": "C21 and A09-A11.",
+      "output": "PILOT_REVIEW.md and G2 decision.",
+      "acceptance": "The decision states accepted scope, exclusions, unresolved mapping ownership and any rejected claims. A limited commercial-pilot decision leaves full G2 and unresolved IDS tasks open.",
+      "dependencies": [
+        "C21",
+        "A10"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "conditional_dependencies": {
+        "full_G2_linked_IDS_scope": [
+          "A11",
+          "C20"
+        ]
+      },
+      "source_task_id": "A12",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C22",
+      "phase": "P3",
+      "owner": "Cursor",
+      "title": "Protect and strengthen the portfolio overview",
+      "work": "Keep the existing overview and its navigation. Improve filters, coverage states and links to evidence only where the audit identifies a gap; avoid substituting a dealer-only homepage.",
+      "inputs": "C03 protected-feature baseline and approved metric contracts.",
+      "output": "Portfolio improvements with before/after regression evidence.",
+      "acceptance": "Existing supported portfolio journeys still work; no removed sales cube is reintroduced under a new name.",
+      "dependencies": [
+        "C14",
+        "C03"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C22",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C23",
+      "phase": "P3",
+      "owner": "Cursor",
+      "title": "Build a documented Genuine/BVP relationship layer",
+      "work": "Use validated relationship data, not name similarity alone. Record fitment/applicability, relationship type, units/pack, range validity, price availability and source.",
+      "inputs": "A13 eligibility policy and actual parts reference data.",
+      "output": "GENUINE_BVP_RELATIONSHIPS with exception register.",
+      "acceptance": "Only evidence-supported comparisons are eligible; missing BVP coverage is not filled with speculative substitutes.",
+      "dependencies": [
+        "C14",
+        "A13"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C23",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C24",
+      "phase": "P3",
+      "owner": "Cursor",
+      "title": "Implement like-for-like comparisons",
+      "work": "Show eligible Genuine/BVP unit prices, quantities and mix with common unit, currency, date and transaction/reference basis. Explain non-comparable cases in place.",
+      "inputs": "C23 plus approved financial metadata.",
+      "output": "Comparison view and numeric fixtures.",
+      "acceptance": "Reference-price differences are labelled indicative, not realized savings or actual customer prices. Different pack sizes are not compared unadjusted.",
+      "dependencies": [
+        "C23",
+        "C12"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C24",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C25",
+      "phase": "P3",
+      "owner": "Cursor",
+      "title": "Show purchasing patterns with coverage context",
+      "work": "Describe regular, intermittent and absent recorded purchasing only within a declared complete scope. Support seasonality and returns visibility without inferring end-customer demand.",
+      "inputs": "Eligible dealer/distributor transactions and coverage map.",
+      "output": "Purchasing-pattern view with explicit unknown states.",
+      "acceptance": "No recorded purchase is not labelled leakage automatically; stock, applicability, availability and source completeness remain review questions.",
+      "dependencies": [
+        "C14",
+        "A14"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C25",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C26",
+      "phase": "P3",
+      "owner": "Cursor",
+      "title": "Integrate the three tonnage lenses safely",
+      "work": "Expose recorded exclusive-applicability purchasing, modelled expected demand by band, and market actual purchasing as separate views. Reuse v2 corrections rather than recreating v1 transformations.",
+      "inputs": "Approved v2 disposition and real corrected files.",
+      "output": "Tonnage integration with regression fixtures.",
+      "acceptance": "Use sums_to_n_series_total == yes where specified; single_band_only is the exclusive numerator; also_fits_band is non-additive; shared records remain pooled.",
+      "dependencies": [
+        "C14",
+        "A08"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C26",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C27",
+      "phase": "P3",
+      "owner": "Cursor",
+      "title": "Separate observed change, modelled potential and unknowns",
+      "work": "Display evidence class alongside each candidate review item. Keep measured change distinct from reference-valued or modelled potential and unassessed gaps.",
+      "inputs": "A14 policy and approved metric metadata.",
+      "output": "Commercial-review candidate schema and view.",
+      "acceptance": "No modelled band gap becomes measured leakage, service cover or a distributor-performance ranking.",
+      "dependencies": [
+        "C24",
+        "C25",
+        "C26",
+        "A14"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C27",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C28",
+      "phase": "P3",
+      "owner": "Cursor",
+      "title": "Export a defensible distributor review",
+      "work": "Export the selected scope, comparison tables, source basis, coverage exceptions and evidence references. Keep sales levels and dates in headings, not hidden footnotes only.",
+      "inputs": "A16 storyboard and approved comparison views.",
+      "output": "Review export and verification fixtures.",
+      "acceptance": "An exported screenshot or table remains interpretable outside the app and contains only authorized population data.",
+      "dependencies": [
+        "C27",
+        "A16"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C28",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A13",
+      "phase": "P3",
+      "owner": "ChatGPT",
+      "title": "Approve Genuine/BVP comparison eligibility",
+      "work": "Define the minimum evidence for comparable range, fitment, pack unit, price basis, validity and availability. Distinguish documented alternatives from broader category comparisons.",
+      "inputs": "Draft policy here and actual relationship sources.",
+      "output": "COMPARISON_ELIGIBILITY.md with accepted and rejected examples.",
+      "acceptance": "A valid category comparison never silently asserts technical interchangeability or realized financial benefit.",
+      "dependencies": [
+        "C08",
+        "C12"
+      ],
+      "status": "Drafted",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A13",
+      "execution_status": "Specification draft available; not accepted"
+    },
+    {
+      "id": "A14",
+      "phase": "P3",
+      "owner": "ChatGPT",
+      "title": "Design honest opportunity prioritization",
+      "work": "Classify review candidates by evidence strength and actionability. Require source coverage before rankings and define which additional facts are needed before discussing a commercial intervention.",
+      "inputs": "A05 coverage map and real purchasing/parts evidence.",
+      "output": "OPPORTUNITY_POLICY.md and review rubric.",
+      "acceptance": "Warranty, absent files, missing recorded purchasing and reference-valued gaps are not treated as proof of leakage.",
+      "dependencies": [
+        "A05",
+        "A06",
+        "A13"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A14",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A15",
+      "phase": "P3",
+      "owner": "ChatGPT",
+      "title": "Challenge financial and service-demand conclusions",
+      "work": "Trace representative displayed calculations to source. Test whether quantities, value bases, exclusive applicability and model assumptions support the stated conclusion.",
+      "inputs": "C24-C27 fixtures and source lineage.",
+      "output": "NUMERICAL_REVIEW.md and G3 calculation decision.",
+      "acceptance": "Every accepted claim is limited to its measured or modelled basis; repeated market actuals cannot become a band-specific ratio.",
+      "dependencies": [
+        "C27",
+        "A08"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A15",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A16",
+      "phase": "P3",
+      "owner": "ChatGPT",
+      "title": "Define the distributor monthly-review story",
+      "work": "Specify the practical return to distributors: connected dealer review, eligible Genuine/BVP comparison, purchasing-pattern discussion and owned follow-ups.",
+      "inputs": "A10, A14 and actual pilot capabilities.",
+      "output": "MONTHLY_REVIEW_STORYBOARD.md.",
+      "acceptance": "The story supports ISZE-to-distributor collaboration, not an invented direct-to-retail sales offer or complete-repair ordering workflow.",
+      "dependencies": [
+        "A10",
+        "A14"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A16",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C29",
+      "phase": "P4",
+      "owner": "Cursor",
+      "title": "Unify navigation without a framework rewrite",
+      "work": "Implement a coherent path from portfolio to distributor context, eligible dealer, part/category evidence and action. Reuse actual shared components and existing routing where possible.",
+      "inputs": "C05 reuse map and A17-A18 UX specification.",
+      "output": "Navigation change with route regression tests.",
+      "acceptance": "A user can return to the portfolio without losing context; the implementation fits the audited stack rather than assuming a new one.",
+      "dependencies": [
+        "A17",
+        "A18",
+        "C22",
+        "C20",
+        "A12",
+        "A15"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C29",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C30",
+      "phase": "P4",
+      "owner": "Cursor",
+      "title": "Apply a coherent visual system",
+      "work": "Use restrained dark surfaces, clear typography, deliberate Isuzu-red emphasis and generous space as a proposed visual direction. Reconcile with existing approved design tokens before changing working screens.",
+      "inputs": "Approved existing design assets and A17 brief.",
+      "output": "Shared tokens and component examples.",
+      "acceptance": "Numerical hierarchy is legible, status is not color-only, and decorative treatment never hides labels or changes semantic meaning.",
+      "dependencies": [
+        "A17"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C30",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C31",
+      "phase": "P4",
+      "owner": "Cursor",
+      "title": "Build signature views that reveal useful information",
+      "work": "Prototype a stable portfolio composition view, a Genuine/BVP purchasing time trace and a linked dealer commercial/assessment view. Choose scales and encodings from the real measure contract.",
+      "inputs": "A18 interaction specification and validated data slices.",
+      "output": "Three evaluated view prototypes, retaining only those that improve the task.",
+      "acceptance": "Area, position and color have labelled meanings; IDS is not combined into a synthetic sales-performance score; a table alternative exists.",
+      "dependencies": [
+        "C30",
+        "A18",
+        "C24",
+        "C19"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C31",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C32",
+      "phase": "P4",
+      "owner": "Cursor",
+      "title": "Add progressive detail and evidence drawers",
+      "work": "Keep overview screens focused while making definitions, scope, price basis, match status, exclusions and lineage available in one consistent evidence drawer.",
+      "inputs": "C13 evidence record and A18 specification.",
+      "output": "Reusable evidence panel and interaction tests.",
+      "acceptance": "Critical basis labels remain visible without opening the drawer; the drawer adds detail rather than concealing caveats.",
+      "dependencies": [
+        "C29",
+        "C31",
+        "C13"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C32",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C33",
+      "phase": "P4",
+      "owner": "Cursor",
+      "title": "Design every non-happy-path state",
+      "work": "Implement empty, unknown, filtered-out, stale, partial-period, denied-access, ambiguous-join and calculation-error states. Provide meaningful recovery and preserve user context.",
+      "inputs": "Source contracts, access model and pilot edge cases.",
+      "output": "State catalogue with executable view tests.",
+      "acceptance": "Unknown data never renders as zero; errors do not expose secrets; stale evidence is not displayed as current without a label.",
+      "dependencies": [
+        "C32"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C33",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C34",
+      "phase": "P4",
+      "owner": "Cursor",
+      "title": "Benchmark performance and accessibility",
+      "work": "Measure real dataset size, startup, filtering and drill-through on an agreed reference machine. Test keyboard access, focus order, contrast, reduced motion and table alternatives. Optimize only measured bottlenecks.",
+      "inputs": "Baseline run, actual pilot build and A19 user tasks.",
+      "output": "PERFORMANCE_ACCESSIBILITY_REPORT.md with before/after evidence.",
+      "acceptance": "Budgets are agreed from the baseline, not claimed in advance; any virtualization or worker is justified by measured need.",
+      "dependencies": [
+        "C33",
+        "A19"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C34",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C35",
+      "phase": "P4",
+      "owner": "Cursor",
+      "title": "Test access control and complete product regression",
+      "work": "Check distributor/dealer data isolation in the actual deployment model, including exports and underlying data delivery. Re-run protected-feature, semantic and journey tests.",
+      "inputs": "Audited deployment architecture, C14 and completed pilot views.",
+      "output": "SECURITY_REGRESSION.md and G4 evidence packet.",
+      "acceptance": "Client-side hiding alone is not claimed as authorization. A cross-distributor account cannot fetch or export unauthorized rows.",
+      "dependencies": [
+        "C34",
+        "C28"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C35",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A17",
+      "phase": "P4",
+      "owner": "ChatGPT",
+      "title": "Set the design brief against the existing baseline",
+      "work": "Translate the desired distinctive presentation into a practical hierarchy, layout, density and motion brief. Identify what must stay unchanged and what genuinely needs improvement.",
+      "inputs": "C03 screenshots, current approved styling and pilot use cases.",
+      "output": "VISUAL_BRIEF.md and annotated review criteria.",
+      "acceptance": "The brief is grounded in actual screens; no claim is made that an unseen presentation theme has been matched exactly.",
+      "dependencies": [
+        "C03",
+        "A10",
+        "A16"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A17",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A18",
+      "phase": "P4",
+      "owner": "ChatGPT",
+      "title": "Specify signature interactions and truth-preserving encodings",
+      "work": "Define what each proposed graphic helps the user decide, its grain, axes or area, tooltip, drill-through and uncertainty states. Reject visuals that merely decorate missing evidence.",
+      "inputs": "Draft interaction rules here plus validated metric contracts.",
+      "output": "INTERACTION_SPEC.md.",
+      "acceptance": "No arbitrary 3D globe, force-layout relationship or merged score creates a false analytic relationship. Motion helps orientation and can be reduced.",
+      "dependencies": [
+        "A06",
+        "A10",
+        "A13"
+      ],
+      "status": "Drafted",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A18",
+      "execution_status": "Specification draft available; not accepted"
+    },
+    {
+      "id": "A19",
+      "phase": "P4",
+      "owner": "ChatGPT",
+      "title": "Define task-based usability acceptance",
+      "work": "Write user tests for portfolio exploration, a like-for-like BVP comparison, a dealer-to-IDS review, an unknown-state explanation and a review export.",
+      "inputs": "A17-A18 and agreed ISZE/distributor tasks.",
+      "output": "USER_ACCEPTANCE_SCENARIOS.md.",
+      "acceptance": "Success means finding the right answer with its limitations, not merely clicking through a polished screen.",
+      "dependencies": [
+        "A17",
+        "A18"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A19",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A20",
+      "phase": "P4",
+      "owner": "ChatGPT",
+      "title": "Review visual, numerical and interaction evidence",
+      "work": "Inspect screenshots and returned run evidence against the brief and user tasks. Separate directly inspected appearance from interactions that still require local execution.",
+      "inputs": "C35 packet, screenshots and A19 scenarios.",
+      "output": "UX_REVIEW.md and G4 disposition.",
+      "acceptance": "No interaction is called tested solely from a screenshot, and no chart is accepted solely because it looks impressive.",
+      "dependencies": [
+        "C35",
+        "A19"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A20",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C36",
+      "phase": "P5",
+      "owner": "Cursor",
+      "title": "Make refreshes reproducible and safe",
+      "work": "Document ingest, validation and publishing steps. Preserve a last-known-good dataset, block failed new inputs and display dataset version and freshness.",
+      "inputs": "Approved source contracts and real operational environment.",
+      "output": "REFRESH_RUNBOOK.md and failure/recovery evidence.",
+      "acceptance": "A failed refresh cannot silently replace good data with partial or empty results; rollback is proven.",
+      "dependencies": [
+        "A20",
+        "C14"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C36",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C37",
+      "phase": "P5",
+      "owner": "Cursor",
+      "title": "Create a minimal review-action workflow",
+      "work": "Reuse a suitable existing action store if present. Capture owner, distributor/dealer scope, evidence reference, decision, due date and status with appropriate permissions.",
+      "inputs": "A21 playbook and C05 reuse findings.",
+      "output": "Action workflow and export contract.",
+      "acceptance": "Actions refer to an actual review and approved evidence. No autonomous external messages or commercial commitments are sent.",
+      "dependencies": [
+        "A21",
+        "C35"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C37",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C38",
+      "phase": "P5",
+      "owner": "Cursor",
+      "title": "Produce shareable, access-safe review packets",
+      "work": "Package the selected review with measure definitions, source versions, unresolved items and actions. Remove unauthorized populations and avoid embedding sensitive raw data unnecessarily.",
+      "inputs": "C28 exports and C37 action model.",
+      "output": "Reusable distributor review packet and access tests.",
+      "acceptance": "A shared packet includes enough provenance to interpret its numbers and no hidden rows from another distributor.",
+      "dependencies": [
+        "C28",
+        "C37"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C38",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C39",
+      "phase": "P5",
+      "owner": "Cursor",
+      "title": "Create release evidence and regression snapshots",
+      "work": "Capture the build fingerprint, dataset versions, tested journeys, reconciliation results, known issues and approved exceptions for each candidate release.",
+      "inputs": "Current code and data/test evidence.",
+      "output": "RELEASE_EVIDENCE.md with reproducible snapshots.",
+      "acceptance": "Source, data and review versions are traceable together; visual snapshots do not replace calculation tests.",
+      "dependencies": [
+        "C36",
+        "C38"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C39",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C40",
+      "phase": "P5",
+      "owner": "Cursor",
+      "title": "Prepare deployment, rollback and change notes",
+      "work": "Use the actual hosting and access model. Document migration scope, rollback point, protected features and known limitations. Do not deploy to shared users without explicit release authorization.",
+      "inputs": "C39 release packet and A22 decision.",
+      "output": "DEPLOYMENT_RUNBOOK.md and release candidate.",
+      "acceptance": "The release can be rolled back and its acceptance scope is clear. Jerome or the named product owner authorizes rollout.",
+      "dependencies": [
+        "C39",
+        "A22"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "C40",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C41",
+      "phase": "P5",
+      "owner": "Cursor",
+      "title": "Implement a PRISM adapter only if approved",
+      "work": "If the evidence-based decision calls for integration, reuse validated outputs through a narrow versioned contract. Otherwise record the deferral and leave the module independent.",
+      "inputs": "C05 source-code review and A24 decision.",
+      "output": "A small tested adapter, or documented no-integration decision.",
+      "acceptance": "No duplicate business-calculation engine is introduced; PRISM remains undefined until its actual code and purpose are reviewed.",
+      "dependencies": [
+        "C05",
+        "A24"
+      ],
+      "status": "Planned",
+      "priority": "Conditional",
+      "notes": "",
+      "source_task_id": "C41",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "C42",
+      "phase": "P5",
+      "owner": "Cursor",
+      "title": "Template onboarding for the next distributor",
+      "work": "Parameterize proven contracts, coverage reporting, identity mapping and access tests. Add a new market only through its own evidence and approvals.",
+      "inputs": "Accepted pilot, A24 expansion decision and operational runbooks.",
+      "output": "DISTRIBUTOR_ONBOARDING.md and reusable validation template.",
+      "acceptance": "Country or a previous distributor mapping never becomes a shortcut for validating the new population.",
+      "dependencies": [
+        "C40",
+        "A24"
+      ],
+      "status": "Planned",
+      "priority": "Conditional",
+      "notes": "",
+      "source_task_id": "C42",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A21",
+      "phase": "P5",
+      "owner": "ChatGPT",
+      "title": "Define the operating review and ownership loop",
+      "work": "Specify who supplies each dataset, who approves identity, who reviews exceptions and who owns actions. Define a repeatable review agenda without scheduling an unrequested automation.",
+      "inputs": "A16 story and pilot feedback.",
+      "output": "OPERATING_PLAYBOOK.md and responsibility matrix.",
+      "acceptance": "Each unresolved issue has an owner and next decision; the system provides useful output to participating distributors.",
+      "dependencies": [
+        "A12",
+        "A16"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A21",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A22",
+      "phase": "P5",
+      "owner": "ChatGPT",
+      "title": "Issue the release recommendation and G5 assessment",
+      "work": "Review operational, numerical, access and user-acceptance evidence. Recommend accept, limited pilot, hold or reject with explicit reasons; leave commercial rollout authority with Jerome.",
+      "inputs": "C39, A20, A21 and actual user feedback.",
+      "output": "RELEASE_REVIEW.md with approved scope and remaining risks.",
+      "acceptance": "No production readiness is claimed without execution and user evidence; an approved limited pilot is not called a network rollout.",
+      "dependencies": [
+        "C39",
+        "A20",
+        "A21"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A22",
+      "execution_status": "Not independently verified"
+    },
+    {
+      "id": "A23",
+      "phase": "P5",
+      "owner": "ChatGPT",
+      "title": "Measure pilot value without inventing impact",
+      "work": "Define baseline measures for correct task completion, review effort, traceability, unresolved mappings and action follow-through. Separate observed improvements from revenue hypotheses.",
+      "inputs": "Draft scorecard here and actual before/after review observations.",
+      "output": "PILOT_VALUE_SCORECARD.md.",
+      "acceptance": "No estimated savings, sales uplift or leakage recovery is reported as realized value without the required observations.",
+      "dependencies": [
+        "A19",
+        "A21"
+      ],
+      "status": "Drafted",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A23",
+      "execution_status": "Specification draft available; not accepted"
+    },
+    {
+      "id": "A24",
+      "phase": "P5",
+      "owner": "ChatGPT",
+      "title": "Decide the next distributor and PRISM role",
+      "work": "Compare next-market source readiness and business value. Choose reuse, integration, independence or deferral for PRISM from its inspected code, not its name. Recheck deferred scope before expansion.",
+      "inputs": "A12, A22, A23 and C05 evidence.",
+      "output": "NEXT_RELEASE_DECISION.md with entry criteria and conditional work order.",
+      "acceptance": "Expansion follows verified data/access readiness. Photography and the removed sales cube do not return by default.",
+      "dependencies": [
+        "A12",
+        "A22",
+        "A23",
+        "C05"
+      ],
+      "status": "Planned",
+      "priority": "Required",
+      "notes": "",
+      "source_task_id": "A24",
+      "execution_status": "Not independently verified"
+    }
+  ],
+  "revision": "R1 - consolidated strategy and first Cursor package",
+  "status_note": "Planning states only. No Cursor task has been dispatched, executed or accepted by this document.",
+  "source": "ISUZU_UNIVERSE_ORCHESTRATION_PACK_2026-09-21.zip / TASK_REGISTER.json",
+  "active_work_order": {
+    "id": "R0",
+    "selected_tasks": [
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07"
+    ],
+    "execution_status": "Prepared; not dispatched"
+  },
+  "revision_changes": [
+    {
+      "id": "R1-01",
+      "type": "sequencing correction",
+      "tasks": [
+        "C18",
+        "C19",
+        "C21",
+        "A12"
+      ],
+      "change": "Separate commercial-only pilot eligibility from the IDS-linking prerequisites. Full G2 still requires approved identity links, fair assessment comparisons and linked-journey evidence."
+    },
+    {
+      "id": "R1-02",
+      "type": "packaging clarification",
+      "tasks": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06",
+        "C07"
+      ],
+      "change": "Only R0 is selected in the first package. Later tasks remain planning work and are not implementation authorization."
+    },
+    {
+      "id": "R1-03",
+      "type": "evidence clarification",
+      "tasks": [
+        "A02",
+        "A03",
+        "A04"
+      ],
+      "change": "Original paper, original critique, repository and corrected packs have not been inspected in this session. Missing originals keep critique review pending."
+    }
+  ]
+}

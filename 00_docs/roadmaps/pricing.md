@@ -93,7 +93,7 @@ Per market:
 
 **What we hold as evidence.** Tiers T1–T3 — a usable competitor price — cover **880 lines and €5,369,216, which is 16.47% of the priced book**. T4 (category median) adds €1,554,429, taking it to **21.2%**. The remaining **78.8% has no competitor reference at all**. Source: [`_spec_basis_meta.json`](../../02_dashboards/pricing/_build/_spec_basis_meta.json), `tier_counts` / `tier_eur` / `billed_eur_priced`.
 
-**The ceiling that follows.** At the +8% per-line cap, applying the maximum move to every evidenced line yields **1.32 points on the whole book** — less than any market needs to reach even the 4% floor. An evidence-only policy therefore cannot close the gap on its own; the remainder would be a blanket move across the 83.5% with no benchmark. That is a decision about method, not a data problem.
+**Evidence coverage (no per-line % ceiling).** Only **16.47%** of the priced book has a usable competitor price. The former +8% per-line ceiling is **removed** (Jerome 2026-09-20 — not binding). Under that old illustration, maxing every evidenced line at +8% gave at most **1.32 points** on the whole book — still less than any market needs for a 4% floor. An evidence-only policy therefore cannot close the gap on its own; the remainder would be a blanket move across the 83.5% with no benchmark. That is a decision about method, not a data problem.
 
 **Live inputs, for traceability.** FX **178.5** JPY/EUR, live 1 Oct 2026 to 31 Mar 2027, confirmed in Suzuki san's mail `Exchange revision from Oct 2026` of 15 September 2026, and applying to **both** sources. Purchase discount **67.3%** Japan (**effective 5 January 2026**, per the mail of 22 December 2025), **61.1%** Thailand unchanged. Class factors as issued by IML: C 0.47 (53.0% margin), D 0.48 (52.0%), F 0.525 (47.5%), J 0.555 (44.5%), M 0.50 (50.0%), P 0.44 (56.0%), V 0.55 (45.0%), T 0.80 (20.0%).
 
@@ -176,7 +176,7 @@ This replaces an earlier section that proposed a "pass-through dial" for the cor
 
 ### 2.5 Competitor evidence — fund it, or accept 16.5%
 
-**The question.** Only **16.47%** of the priced book has a usable competitor price, and at the +8% cap that supports at most **1.32 points** on the whole book. Funding wider collection is a resourcing question, not a technical one — brakes proves it is achievable at 82.6% within one family.
+**The question.** Only **16.47%** of the priced book has a usable competitor price. Under the **former** +8% per-line ceiling (removed 2026-09-20), that supported at most **1.32 points** on the whole book. Funding wider collection is a resourcing question, not a technical one — brakes proves denser coverage is achievable within one family.
 
 **What we have.** 307 distinct part numbers across every independent source we hold. Brakes is the dense exception. Sources and their vintages: [`competitor_evidence_inventory.csv`](../../01_data/00_derived/competitor_evidence_inventory.csv).
 
@@ -256,6 +256,7 @@ All closed in [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md) §5 or `DECISIONS.md`. Re-
 
 | Closed | Reason |
 |---|---|
+| **The price adjustment ambition** (+4% / +5% / launch-only) | **Closed 2026-09-22, permanently.** Jerome, verbatim: *"delete price ambition I will come when it's done for now do a simulation on 5% increase and than never ask again."* The +5% flat simulation of 2026-09-22 is its last output. **Never re-ask in any form.** Record: [`PRICE_AMBITION_CLOSED_2026-09-22.md`](../PRICE_AMBITION_CLOSED_2026-09-22.md) |
 | **Gross / SPA / condition columns on the billing extract** | `sales_fact` is net-only forever. Do not re-ask |
 | **AIM pricing-risk as a decision surface**, and any new 0–100 score | Gate never fired; fitted replacements failed holdout. 2026-07-17 / 2026-08-18 |
 | **`db_aftersales_risk`** as its replacement | Parked 2026-08-18 |

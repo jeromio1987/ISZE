@@ -6,7 +6,7 @@
 
 | Prio | Item | Status | Owner | Blocker / NEXT |
 |------|------|--------|-------|----------------|
-| **P0** | **National portal coverage** (map → wire ES/IT/DE + keys) | **ANALYSIS DONE · WIRE NEXT** | Research → implement | See `_COUNTRY_TENDER_PORTALS_MAP.md` top 10 |
+| **P0** | **National portal coverage** (map → wire ES/IT/DE + keys) | **ES/IT/DE WIRED 2026-09-22** | Implement | Probe `_probe_es_it_de_2026-09-22.json` · modules `national_fetchers_{es,it,de}.py` · Nordics keys already DONE |
 | **P0** | Nordics Primary keys | **DONE** | Agent | verify ALL OK · health OK · NO/FI merged |
 | **P1** | GPS maps FR/PL/IT/ES | **DONE (null)** | Market UX + arrange | 0 newly mapped; floor €1,488.22 |
 | **P2** | Market table UX | **DONE** | Market UX sibling | Reason chips shipped — **below** portal coverage |
@@ -15,18 +15,18 @@
 
 ---
 
-## P0 — National portal coverage — **ANALYSIS DONE · WIRE NEXT**
+## P0 — National portal coverage — **ES / IT / DE WIRED (2026-09-22)**
 
 | Field | Value |
 |---|---|
-| **Status** | **ANALYSIS DONE** · implementation **not** this pass (Jerome: analysis first) |
-| **Why P0** | Fleet/vehicle KPI looks “too low” mainly because **~69% of footprint countries are TED-only for below-threshold** national buys — not a dashboard bug |
-| **DoD (analysis)** | Full country table + top-10 lift×feasibility + straight answers on 18 vehicles / LIVE vs DARK |
-| **Evidence** | `_COUNTRY_TENDER_PORTALS_MAP.md` · `_probe_country_portals_2026-08-25.json` · live `_source_health.json` |
-| **LIVE national today** | UK, NL, BE, IL, FR, PL, **NO, FI** (**8/29**) · DE **PARTIAL** (service.bund) |
-| **Wire next (#1–#5)** | ES PLACSP · IT PNCP/ANAC · DE oeffentlichevergabe Open Data — **NOT** Nordics keys (those are **DONE**) |
-| **Do not** | Prioritize cosmetic tabs/UI over portal wiring · invent fleet counts · treat TED as full national coverage · **ask Jerome for Nordics API keys again** |
-| **Cosmetic / UX** | Explicitly **below** this P0 — do not fight parallel dashboard agents, but do not queue UI ahead of portals |
+| **Status** | **WIRED** — additive modules + `tender_scraper_v3` wrappers + weekly bat + health OK |
+| **Why P0** | Fleet/vehicle KPI looks “too low” mainly because many footprint countries were TED-only for below-threshold national buys — not a dashboard bug |
+| **Probe 2026-09-22** | ES PLACSP Atom **216** raw → **10** gated · IT PNCP **22** → **2** · DE OV **590** → **163** |
+| **Evidence** | `_probe_es_it_de_2026-09-22.json` · `national_fetchers_{es,it,de}.py` · `scrape_es_it_de_side.py` · `_source_health.json` |
+| **LIVE national (ES/IT/DE)** | Spain **OK 216** (Atom `rel=next`, WAF cleared) · Italy **OK 22** · Germany OV **OK 590** (+ service.bund crumb) |
+| **Do not** | Invent fleet / GPS € · **ask Jerome for Nordics API keys again** · treat TED as full national coverage |
+| **Residual** | ES Atom window is recent updates (optional monthly ZIP for deeper history) · IT gate-tight · next dark portals from map (HU/IE/SE/…) |
+| **Cosmetic / UX** | Explicitly **below** portal coverage |
 
 ---
 

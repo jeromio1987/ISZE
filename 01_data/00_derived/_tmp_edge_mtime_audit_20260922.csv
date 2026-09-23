@@ -1,0 +1,31 @@
+consumer,consumer_file,consumer_mtime,reads,input_mtime,input_before_rebuild_start,verdict,note
+build_vehicle_family_bands.py,build_vehicle_family_bands.py,2026-09-19 12:09:59,genuine_bvp_crossref.csv,2026-09-21 12:33:53,yes,STALE EDGE (consumer older than input),crossref vehicle_model
+build_vehicle_family_bands.py,vehicle_family_bands.csv,2026-09-22 18:21:36,epc_decode_batch1_banded_20260919.csv,2026-09-19 07:50:32,yes,ok,EPC banded batch 1
+build_vehicle_family_bands.py,vehicle_family_bands.csv,2026-09-22 18:21:36,epc_decode_batch2_20260919.json,2026-09-19 08:17:47,yes,ok,EPC batch 2 json
+build_vehicle_family_bands.py,vehicle_family_bands.csv,2026-09-22 18:21:36,bvp_pn_dimension.csv,2026-09-21 12:33:53,yes,ok,universe
+build_vehicle_family_bands.py,vehicle_family_bands.csv,2026-09-22 18:21:36,pms_capture_supplement.csv,2026-09-21 11:38:19,yes,ok,universe supplement
+build_vehicle_family_bands.py,vehicle_family_bands.csv,2026-09-22 18:21:36,sales_fact.parquet,2026-09-21 12:33:33,yes,ok,euro per pn
+build_vehicle_family_bands.py,vehicle_family_bands.csv,2026-09-22 18:21:36,series_to_tonnage.csv,2026-09-22 19:55:27,no,STALE EDGE (consumer older than input),NOT READ (prose mention only)
+build_vehicle_family_bands.py,vehicle_family_bands.csv,2026-09-22 18:21:36,epc_decode_nseries_banded.csv,2026-09-22 19:55:29,no,STALE EDGE (consumer older than input),NOT READ (no reference in code)
+build_pms_tonnage_model.py,pms_tonnage_model.csv,2026-09-22 18:21:56,uio_by_model_bucket.csv,2026-07-15 17:59:30,yes,ok,fleet buckets
+build_pms_tonnage_model.py,pms_tonnage_model.csv,2026-09-22 18:21:56,uio_ld_n35_share.csv,2026-09-20 07:40:04,yes,ok,n35 share
+build_pms_tonnage_model.py,pms_tonnage_model.csv,2026-09-22 18:21:56,pms_capture_by_db_year.csv,2026-09-21 12:35:21,yes,ok,actuals
+build_pms_tonnage_model.py,pms_tonnage_model.csv,2026-09-22 18:21:56,sales_fact.parquet,2026-09-21 12:33:33,yes,ok,aim evolution billing
+build_pms_tonnage_model.py,pms_tonnage_model.csv,2026-09-22 18:21:56,aim_master_v2.csv,2026-09-20 09:24:12,yes,ok,aim levels
+build_pms_tonnage_model.py,pms_tonnage_model.csv,2026-09-22 18:21:56,distributor_dimension.csv,2026-08-19 18:23:50,yes,ok,db mapping
+build_nseries_tonnage_bands.py,nseries_tonnage_evolution.csv,2026-09-22 19:55:30,vehicle_family_bands.csv,2026-09-22 18:21:36,no,ok,family + universe
+build_nseries_tonnage_bands.py,nseries_tonnage_evolution.csv,2026-09-22 19:55:30,pms_tonnage_model.csv,2026-09-22 18:21:56,no,ok,lane column
+build_nseries_tonnage_bands.py,nseries_tonnage_evolution.csv,2026-09-22 19:55:30,epc_decode_batch1_banded_20260919.csv,2026-09-19 07:50:32,yes,ok,model_codes tokens
+build_nseries_tonnage_bands.py,nseries_tonnage_evolution.csv,2026-09-22 19:55:30,epc_decode_batch2_20260919.json,2026-09-19 08:17:47,yes,ok,edition strings
+build_nseries_tonnage_bands.py,nseries_tonnage_evolution.csv,2026-09-22 19:55:30,genuine_bvp_crossref.csv,2026-09-21 12:33:53,yes,ok,series + registry_model
+build_nseries_tonnage_bands.py,nseries_tonnage_evolution.csv,2026-09-22 19:55:30,bvp_pn_dimension.csv,2026-09-21 12:33:53,yes,ok,categories
+build_nseries_tonnage_bands.py,nseries_tonnage_evolution.csv,2026-09-22 19:55:30,pms_capture_supplement.csv,2026-09-21 11:38:19,yes,ok,categories supplement
+build_nseries_tonnage_bands.py,nseries_tonnage_evolution.csv,2026-09-22 19:55:30,_deep_billing_cache.parquet,2026-09-22 20:06:06,no,STALE EDGE (consumer older than input),billing
+build_nseries_tonnage_bands.py,nseries_tonnage_evolution.csv,2026-09-22 19:55:30,pms_capture_by_db_year.csv,2026-09-21 12:35:21,yes,ok,book markets
+_tonnage_capable.py,tonnage_capable_part_numbers.csv,2026-09-22 18:22:40,bvp_pn_dimension.csv,2026-09-21 12:33:53,yes,ok,categories
+_tonnage_capable.py,tonnage_capable_part_numbers.csv,2026-09-22 18:22:40,genuine_bvp_crossref.csv,2026-09-21 12:33:53,yes,ok,series evidence 1
+_tonnage_capable.py,tonnage_capable_part_numbers.csv,2026-09-22 18:22:40,epc_decode_batch1_20260919.json,2026-09-19 07:13:58,yes,ok,series evidence 2
+_tonnage_capable.py,tonnage_capable_part_numbers.csv,2026-09-22 18:22:40,epc_decode_batch2_20260919.json,2026-09-19 08:17:47,yes,ok,series evidence 2
+_tonnage_capable.py,tonnage_capable_part_numbers.csv,2026-09-22 18:22:40,sales_fact.parquet,2026-09-21 12:33:33,yes,ok,billing weight
+build_model_code_to_tonnage.py (NOT run 22 Sep),model_code_to_tonnage.csv,2026-09-19 07:50:32,epc_decode_batch1_20260919.json,2026-09-19 07:13:58,yes,ok,decode
+build_model_code_to_tonnage.py (NOT run 22 Sep),epc_decode_batch1_banded_20260919.csv,2026-09-19 07:50:32,epc_decode_worklist.csv,2026-09-19 09:02:56,yes,STALE EDGE (consumer older than input),billed euro

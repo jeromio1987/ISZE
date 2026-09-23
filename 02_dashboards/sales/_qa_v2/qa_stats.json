@@ -1,47 +1,106 @@
 {
   "viewport_geometry": {
     "1440": {
-      "controlsTop": 121,
-      "controlsBottom": 210,
+      "controlsTop": 111,
+      "controlsBottom": 199,
       "controlsH": 88,
       "lines": 1,
-      "bottoms": [
-        203
+      "blocks": [
+        {
+          "top": 111,
+          "bottom": 199,
+          "h": 88,
+          "lines": 1,
+          "bottoms": [
+            192
+          ],
+          "visible": true
+        },
+        {
+          "top": 850,
+          "bottom": 904,
+          "h": 55,
+          "lines": 1,
+          "bottoms": [
+            897
+          ],
+          "visible": true
+        }
       ],
-      "mainTop": 462,
-      "mainBottom": 762,
+      "allToolbarsSingleLine": true,
+      "mainTop": 446,
+      "mainBottom": 746,
       "canvases": 8,
       "charts": 3,
-      "mainBoxInkPct": 12.9
+      "mainBoxInkPct": 10.52
     },
     "1920": {
-      "controlsTop": 121,
-      "controlsBottom": 210,
+      "controlsTop": 111,
+      "controlsBottom": 199,
       "controlsH": 88,
       "lines": 1,
-      "bottoms": [
-        203
+      "blocks": [
+        {
+          "top": 111,
+          "bottom": 199,
+          "h": 88,
+          "lines": 1,
+          "bottoms": [
+            192
+          ],
+          "visible": true
+        },
+        {
+          "top": 850,
+          "bottom": 904,
+          "h": 55,
+          "lines": 1,
+          "bottoms": [
+            897
+          ],
+          "visible": true
+        }
       ],
-      "mainTop": 462,
-      "mainBottom": 762,
+      "allToolbarsSingleLine": true,
+      "mainTop": 446,
+      "mainBottom": 746,
       "canvases": 8,
       "charts": 3,
-      "mainBoxInkPct": 12.9
+      "mainBoxInkPct": 10.52
     },
     "1000": {
-      "controlsTop": 148,
-      "controlsBottom": 283,
-      "controlsH": 135,
-      "lines": 2,
-      "bottoms": [
-        229,
-        276
+      "controlsTop": 126,
+      "controlsBottom": 214,
+      "controlsH": 88,
+      "lines": 1,
+      "blocks": [
+        {
+          "top": 126,
+          "bottom": 214,
+          "h": 88,
+          "lines": 1,
+          "bottoms": [
+            207
+          ],
+          "visible": true
+        },
+        {
+          "top": 914,
+          "bottom": 969,
+          "h": 55,
+          "lines": 1,
+          "bottoms": [
+            962
+          ],
+          "visible": true
+        }
       ],
-      "mainTop": 630,
-      "mainBottom": 890,
+      "allToolbarsSingleLine": true,
+      "mainTop": 509,
+      "mainBottom": 769,
       "canvases": 8,
       "charts": 3,
-      "mainBoxInkPct": 12.02
+      "mainBoxInkPct": 9.43
     }
   },
   "controls": {
@@ -85,8 +144,8 @@
     "c_main": {
       "w": 1340,
       "h": 300,
-      "ink": 53412,
-      "inkPct": 13.287
+      "ink": 45066,
+      "inkPct": 11.21
     },
     "sml_0": {
       "zeroSize": true,
@@ -114,10 +173,10 @@
       "h": 0
     },
     "c_dec": {
-      "w": 714,
+      "w": 1340,
       "h": 290,
-      "ink": 14878,
-      "inkPct": 7.185
+      "ink": 23615,
+      "inkPct": 6.077
     },
     "c_price": {
       "w": 653,
@@ -151,12 +210,13 @@
     },
     "level 2": {
       "level": "cat",
-      "rows": 9,
+      "rows": 10,
       "labels": [
         "Clutch kit",
         "Brake pad",
         "Brake rotor",
         "Air filter",
+        "Clutch pressure plate",
         "Clutch disc",
         "Fuel filter",
         "Brake shoe",
@@ -166,9 +226,8 @@
     },
     "level 3": {
       "level": "pn",
-      "rows": 10,
+      "rows": 9,
       "labels": [
-        "5876100910",
         "8980400931",
         "8973107961",
         "5876100501",
@@ -183,9 +242,9 @@
   },
   "decomposition_axis": {
     "title": "euro per vehicle, in cents (EUR per vehicle in service)",
-    "lo": -13.560062783897713,
-    "hi": 12.662205709618092,
-    "step": 6.555567123378951,
+    "lo": -11.90790153143356,
+    "hi": 16.59411537291401,
+    "step": 7.125504226086893,
     "datasets": [
       "net move",
       "vol",
@@ -194,75 +253,45 @@
       "fleet"
     ],
     "ticks": [
-      "-13.56",
-      "-7.00",
-      "-45c",
-      "6.11",
-      "12.66"
+      "-11.91",
+      "-4.78",
+      "2.34",
+      "9.47",
+      "16.59"
     ]
   },
   "uti_kpis": [
     {
-      "lab": "Billed euro per vehicle, this period iBilled euro per vehicleEUR 600,738 billed in FY2026 = April 2025 - March 2026 over 10,760 vehicles in service (that period's own count).Last period: EUR 640,212 over 10,336 vehicles.This is the measure that does not move just because the fleet moved.",
-      "val": "EUR 55.83",
-      "sub": "last period EUR 61.94 (-9.9%)"
+      "lab": "Billed euro per vehicle, this period iBilled euro per vehicleEUR 587,397 billed in FY2026 = April 2025 - March 2026 over 10,336 vehicles in service (constant 2025 fleet (analytical)).Last period: EUR 624,026 over 10,336 vehicles.This is the measure that does not move just because the fleet moved.",
+      "val": "EUR 56.83",
+      "sub": "last period EUR 60.37 (-5.9%)"
     },
     {
-      "lab": "What drove it iThe change in euro per vehicle, splitFleet -EUR 2.44: what the fleet change alone took away or handed over.Price -EUR 1.31 on the units actually sold.Volume EUR 2.18 at last period's price.Mix -EUR 4.54: a different basket, at last period's prices.The four add up to the move in euro per vehicle.",
-      "val": "-EUR 6.11",
-      "sub": "fleet -2.44 | price -1.31 | volume +2.18 | mix -4.54"
+      "lab": "Net move per vehicle iThe change in euro per vehicle, splitFleet EUR 0.00: what the fleet change alone took away or handed over.Price -EUR 1.52 on the units actually sold.Volume EUR 2.58 at last period's price.Mix -EUR 4.61: a different basket, at last period's prices.The four add up to the move in euro per vehicle.",
+      "val": "-EUR 3.54",
+      "sub": "fleet +0.00 | price -1.52 | volume +2.58 | mix -4.61 (rounded to the cent; a cent out in total)"
     },
     {
-      "lab": "Billed euro, this period iBilled euroWhat was invoiced on the selected customers. Read it beside the fleet: a bigger fleet needs more euro just to stand still.",
-      "val": "EUR 0.60M",
-      "sub": "last period EUR 0.64M (-6.2%)"
-    },
-    {
-      "lab": "Vehicles in service, this period iThe denominator10,760 vehicles for FY2026 = April 2025 - March 2026.Basis: forecast.UTI CV rows run about 25% LOW in every year against the Israeli ministry's own registrations, so a per-truck figure on this denominator is flattered. Open issue UIO-FCAST.",
-      "val": "10,760",
-      "sub": "forecast | last period 10,336"
-    },
-    {
-      "lab": "Part numbers on the page iHow thick the base is109 part numbers billed by 1 customers in the periods read. A percentage on a small base is marked low-confidence rather than led with.",
-      "val": "109",
-      "sub": "1 customer with billing here"
-    },
-    {
-      "lab": "Cannot be placed on one vehicle type iPooled, and never spreadPart numbers that fit more than one vehicle type, or that no source names a vehicle for, are pooled. They are never divided across the types they fit, so this share of the book cannot appear inside a single vehicle type.",
-      "val": "55.1%",
-      "sub": "EUR 0.33M of EUR 0.60M billed"
+      "lab": "Fleet denominator iThe denominator10,336 vehicles for FY2026 = April 2025 - March 2026.Basis: constant 2025 fleet (analytical alternative).Constant 2025 fleet is an analytical alternative, not a forward forecast.",
+      "val": "10,336",
+      "sub": "constant 2025 fleet (analytical alternative) | last period 10,336"
     }
   ],
   "ituk_kpis": [
     {
-      "lab": "Billed euro per vehicle, this period iBilled euro per vehicleEUR 1,472,517 billed in FY2026 = April 2025 - March 2026 over 24,173 vehicles in service (that period's own count).Last period: EUR 1,041,205 over 23,068 vehicles.This is the measure that does not move just because the fleet moved.",
-      "val": "EUR 60.92",
-      "sub": "last period EUR 45.14 (+35.0%)"
+      "lab": "Billed euro per vehicle, this period iBilled euro per vehicleEUR 1,501,354 billed in FY2026 = April 2025 - March 2026 over 23,068 vehicles in service (constant 2025 fleet (analytical)).Last period: EUR 1,060,945 over 23,068 vehicles.This is the measure that does not move just because the fleet moved.",
+      "val": "EUR 65.08",
+      "sub": "last period EUR 45.99 (+41.5%)"
     },
     {
-      "lab": "What drove it iThe change in euro per vehicle, splitFleet -EUR 2.06: what the fleet change alone took away or handed over.Price EUR 9.03 on the units actually sold.Volume EUR 6.87 at last period's price.Mix EUR 1.94: a different basket, at last period's prices.The four add up to the move in euro per vehicle.",
-      "val": "EUR 15.78",
-      "sub": "fleet -2.06 | price +9.03 | volume +6.87 | mix +1.94"
+      "lab": "Net move per vehicle iThe change in euro per vehicle, splitFleet EUR 0.00: what the fleet change alone took away or handed over.Price EUR 9.23 on the units actually sold.Volume EUR 7.36 at last period's price.Mix EUR 2.50: a different basket, at last period's prices.The four add up to the move in euro per vehicle.",
+      "val": "EUR 19.09",
+      "sub": "fleet +0.00 | price +9.23 | volume +7.36 | mix +2.50 (rounded to the cent; a cent out in total)"
     },
     {
-      "lab": "Billed euro, this period iBilled euroWhat was invoiced on the selected customers. Read it beside the fleet: a bigger fleet needs more euro just to stand still.",
-      "val": "EUR 1.47M",
-      "sub": "last period EUR 1.04M (+41.4%)"
-    },
-    {
-      "lab": "Vehicles in service, this period iThe denominator24,173 vehicles for FY2026 = April 2025 - March 2026.Basis: forecast.nan",
-      "val": "24,173",
-      "sub": "forecast | last period 23,068"
-    },
-    {
-      "lab": "Part numbers on the page iHow thick the base is218 part numbers billed by 1 customers in the periods read. A percentage on a small base is marked low-confidence rather than led with.",
-      "val": "218",
-      "sub": "1 customer with billing here"
-    },
-    {
-      "lab": "Cannot be placed on one vehicle type iPooled, and never spreadPart numbers that fit more than one vehicle type, or that no source names a vehicle for, are pooled. They are never divided across the types they fit, so this share of the book cannot appear inside a single vehicle type.",
-      "val": "35.2%",
-      "sub": "EUR 0.52M of EUR 1.47M billed"
+      "lab": "Fleet denominator iThe denominator23,068 vehicles for FY2026 = April 2025 - March 2026.Basis: constant 2025 fleet (analytical alternative).Constant 2025 fleet is an analytical alternative, not a forward forecast.",
+      "val": "23,068",
+      "sub": "constant 2025 fleet (analytical alternative) | last period 23,068"
     }
   ],
   "page_errors": [],

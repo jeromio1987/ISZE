@@ -1,5 +1,40 @@
 # Handoff: air filter and the Focus cut (`Competitive parts > Filters`)
 
+> **Correction added 2026-09-20 — read this box before the rest.**
+>
+> This body is a **17 September** note and its numbers are on that day's state. Three things have
+> moved. The long section *"Which tree you are reading, because there are two"* **explains the air
+> cleaners correctly and its central judgement still holds** — the pricing work did not need the
+> misplacement corrected, and the two-tree reading of the 40 part numbers is still right. What is
+> now stale:
+>
+> 1. **The master-side misfile was fixed in the wrong direction, then properly.** The
+>    `Cleaning Chemicals` branch holds **0 part numbers** today. A 20 Sep pass
+>    (`figkey_aim_fix_20260920`) moved the set to `Air conditioning > Other A/C` (124 PNs /
+>    EUR 998,360) and `Air system > Other air system` (8 PNs / EUR 162,252) instead of to
+>    Filters — **132 PNs / EUR 1,160,612** in total, against the "12 elements / EUR 124,952" the
+>    state packet carried.
+> 2. **The cause was a stale copy, not a misclassification.** `build_aim_master.py` copied
+>    `pr00_classification.csv`'s tree into the master's `cat_l1/l2/l3` on **17 Sep 22:06** and was
+>    never re-copied after `pr00` was corrected at 19:50 and again at 22:22. The master is
+>    **98.34%** consistent with its own declared upstream; the older classification file is
+>    **99.36%**.
+> 3. **The numbers below are still correct for what they measure.** They are on the 12-month
+>    pricing basis and on the catalogue tree, and that tree has the air filter in the right place.
+>    Note the distinction the body already makes: **€1,203,146.04 on 256 PNs** is the whole leaf
+>    on the 18-month audit window; **€796,783.16 on 40 PNs** is the element-only subset on the
+>    12-month window. Both stand.
+>
+> **New dated file for any rebuild:** `01_data/00_derived/aim_pn_classification_20260920.csv`,
+> built from the declared upstream — 164,907 rows, air filter at **254 PNs / EUR 1.2M**. Builder
+> `01_data/91_build/build_aim_classification_20260920.py`, gate 17/18.
+>
+> **Before re-deriving anything below, say which tree and which window.** Only the master-side
+> misfile description and the state packet's element count were wrong. Full evidence:
+> `01_data/90_INBOX/AIM_V2_READINESS_2026-09-20.md`.
+
+
+
 **Written 2026-09-17.** Internal working material. Blunt is fine. This file changes nothing; it points at what already exists on disk.
 
 ---

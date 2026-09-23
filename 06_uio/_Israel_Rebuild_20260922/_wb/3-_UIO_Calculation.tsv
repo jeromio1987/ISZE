@@ -1,0 +1,41 @@
+	ISUZU — UIO Calculation Methodology  |  Cohort × Survival Rate												
+													
+	Section A: Survival Rates by Vehicle Type & Age												
+	Source: LCV UIO (November 2025)_EU_Study_Imit.xlsx — 'Survival Ratio' sheet | These rates represent the proportion of a vehicle cohort remaining in operation after N years.												
+	Vehicle Age (Years)	CV — Developed Countries	CV — Emerging Countries	LCV — All									
+	1	1	1	1									
+	2	0.99	0.99	0.98									
+	3	0.98	0.98	0.95									
+	4	0.97	0.97	0.92									
+	5	0.96	0.96	0.89									
+	6	0.95	0.95	0.84									
+	7	0.9	0.9	0.8									
+	8	0.8	0.85	0.65									
+	9	0.7	0.8	0.5									
+	10	0.55	0.75	0.4									
+	11	0.4	0.7	0.2									
+	12	0.3	0.6	0.1									
+	13	0.2	0.5	0									
+	14	0.1	0.4										
+	15	0.05	0.3										
+	16	0	0.2										
+	17		0.15										
+	18		0.1										
+	19		0.05										
+	20		0										
+													
+	Section B: Methodology — How UIO Is Calculated												
+		Step 1 — Collect vehicle sales data											
+		For each country/distributor, gather annual unit sales by model and calendar year (vintage cohort). Source: IML shipment records, ITUK car park data.											
+		Step 2 — Assign vehicle category											
+		Classify each cohort as CV (Developed), CV (Emerging), or LCV based on model type and market. ISZE Europe markets = CV Developed. LCV = separate curve.											
+		Step 3 — Apply survival rates											
+		For projection year Y and vintage cohort V: UIO(Y,V) = units_sold(V) × survival_rate(Y−V). If age > max rate age, survival = 0 (vehicle scrapped).											
+		Step 4 — Sum across cohorts											
+		Total UIO for year Y = Σ UIO(Y,V) across all vintage years V. This gives the estimated number of Isuzu vehicles still in operation.											
+		Step 5 — Forecast new sales											
+		For future years, add projected new sales cohorts from the IML mid-term plan (FY2025–FY2030) to the calculation.											
+		LCV note											
+		LCV survival rates use the 12-year window model. The IML LCV shipment forecast currently extends to FY2029 only (CY2028). FY2030 / CY2029 data is pending — see '1.UIO Overview' for clarification note.											
+	Section C: Formula Logic												
+	"UIO(Projection Year Y) = Σ [ Units Sold in Vintage Year V  ×  SurvivalRate(Y − V) ]  where SurvivalRate(age) comes from Section A above.  Example: N75 units sold in 2015 = 621 units.  In projection year 2025, vehicle age = 10 years → CV Developed survival = 55%.  UIO contribution = 621 × 0.55 = 342 units.  Full ITUK calculation is shown step-by-step in sheet ""4. ITUK UIO Projection""."												

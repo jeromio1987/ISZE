@@ -78,17 +78,51 @@ PRISM = ROOT / "03_analytics" / "Isuzu" / "prism"
 PDATA = PRISM / "data"
 CACHE = ROOT / "02_dashboards" / "sales" / "_build" / "_deep_billing_cache.parquet"
 
+sys.path.insert(0, str(PRISM))
+from modules import vehicle_bands  # noqa: E402
+
 OUT_SERIES = DER / "series_to_tonnage.csv"
 OUT_BANDED = DER / "epc_decode_nseries_banded.csv"
 OUT_EVO = DER / "nseries_tonnage_evolution.csv"
 OUT_META = DER / "nseries_tonnage_evolution.meta.json"
 
 norm = lambda x: (str(x).strip().lstrip("0") or "0")  # noqa: E731
-SNAPSHOT = "2026-09-19"
+
+# The date the EPC decode / series mapping this file is built from was taken. It is NOT the
+# billing window: the billing runs to whatever the tagged frame carries, and the billing window
+# is written to the meta as `billing_through`, read from the data. Named `snapshot` until
+# 2026-09-22, which read as though it dated the billing and was misquoted as the billing window.
+DECODE_SNAPSHOT = "2026-09-19"
 
 BAND_N35 = "3.5t_N35"
 BAND_N50 = "5.5t_N50_N55"
 BAND_N75 = "7.5t_N50_N62_N75"
+
+# --- CANONICAL FOUR-BAND SET (Jerome, 2026-09-22) ---------------------------------------------
+# Decision: the car park and every dashboard show FOUR bands, and they must match the GPS wallet
+# bands in `prism/data/gps_model_targets.csv` so a band never carries a weight it does not contain.
+#
+#   3.5 t        -> N35 Grafter                                  wallet EUR 296
+#   5.5 - 7.5 t  -> N55 / N65 / N75  (NMR 5.5, NNR 6.5, NPR 7.5) wallet EUR 739
+#   11 - 13.5 t  -> F110 / F135      (FRR 11, FSR 13.5)          wallet EUR 887
+#   pickup       -> D-Max / LCV                                  wallet EUR 250
+#
+# DELIBERATE: the top band is labelled "11-13.5 t", NOT "13.5 t". We shipped 284 FRR (11 t) against
+# only 30 FSR (13.5 t), so a band named 13.5 would be ~90% eleven-tonne trucks wearing the wrong
+# name. There is no 10 t and no 11.5 t truck in the European range (N35 3.5 / N55 5.5 / N65 6.5 /
+# N75 7.5 / F110 11 / F135 13.5); the Israeli ministry's 10-12 t band is a foreign reporting band,
+# not an Isuzu model, and is mapped onto these bands rather than reproduced as a row.
+BAND_F_SERIES = "11_13_5t_F110_F135"
+BAND_LCV_PICKUP = "pickup_LCV"
+
+CANONICAL_FOUR_BANDS = [BAND_N35, BAND_N50, BAND_N75, BAND_F_SERIES]
+CANONICAL_BAND_LABEL = {
+    BAND_N35: "3.5 t",
+    BAND_N50: "5.5 - 7.5 t",
+    BAND_N75: "5.5 - 7.5 t",
+    BAND_F_SERIES: "11 - 13.5 t",
+    BAND_LCV_PICKUP: "Pickup",
+}
 UNRESOLVED = "unresolved"
 NOT_N = "not_n_series"
 BANDS = [BAND_N35, BAND_N50, BAND_N75]
@@ -119,114 +153,73 @@ VINREG = ("JP VIN register — 01_data/07_UIO/vin/model_dimension.csv, the GVW c
           "manufacturer's own model names (NLR88L-FC5Y / NMR85L-FH5AYE / NPR75L-FL5VAY)")
 
 # ---------------------------------------------------------------------------------------------
-# The table. One tuple per series: (band, weight label, source, quote, confidence)
+# The series table is NO LONGER held here.
+#
+# Until 2026-09-23 this file carried its own `TABLE` dictionary of series -> band, and two other
+# files carried their own copies. They disagreed (the retired probe had `NKR` at 5.5 t; the
+# model-code table put `NMR` on the 7.5 t band while its own weight label read 5.5 t), so the
+# same truck could get a different weight depending on which file was opened.
+#
+# The single authored source is now `03_analytics/Isuzu/prism/data/series_to_band.csv`, read
+# through `modules/vehicle_bands.py`. This file keeps NO dictionary. To change a mapping, edit
+# the CSV - not this script.
 # ---------------------------------------------------------------------------------------------
-SERIES_ROOT = ("the manufacturer's own model names in the JP VIN register "
-               "(01_data/07_UIO/vin/model_dimension.csv)")
-
 TABLE: dict[str, tuple[str, str, str, str, str]] = {}
 
 
-def add(codes, band, label, source, quote, conf) -> None:
-    if isinstance(codes, str):
-        codes = [codes]
-    for c in codes:
-        TABLE[c.upper()] = (band, label, source, quote, conf)
+def _load_table() -> dict[str, tuple[str, str, str, str, str]]:
+    """The sourced series table, from the one canonical file."""
+    out: dict[str, tuple[str, str, str, str, str]] = {}
+    for code, r in vehicle_bands.load_map().items():
+        band = (r.get("tonnage_band") or "").strip()
+        out[code] = (
+            band or vehicle_bands.UNRESOLVED,
+            (r.get("weight_label") or "").strip(),
+            (r.get("evidence_source") or "").strip(),
+            (r.get("evidence_quote") or "").strip(),
+            (r.get("confidence") or "").strip(),
+        )
+    return out
 
 
-# ── 3.5 t: NLR, and NKR which the register calls the older N35 designation
-add(["NLR"], BAND_N35, BAND_LABEL[BAND_N35], DUNCAN,
-    "'N35.125 | NLR87 / RZ4E | 20,000 km' and 'N35.150 | NLR88 / 4JZ1 | Flexible up to 40,000 km' — "
-    "the deck places both NLR suffixes in its N35 segment by name.", "high")
-add(["NKR"], BAND_N35, BAND_LABEL[BAND_N35], VINREG,
-    "The register carries NKR at 3.5 t ('NKR55,66,69,71,77' is the same series family in the EPC). "
-    "It calls NKR the older N35 designation. No ITUK or GIDSS row names NKR, so this rests on the "
-    "register alone.", "medium")
+TABLE = _load_table()
 
-# ── 5.5 t: NMR, the middle band
-add(["NMR"], BAND_N50, BAND_LABEL[BAND_N50], RENE24 + " + " + VINREG,
-    "René N_MY24 p1 groups 'NLR88/NMR88/NPR88 models (4JZ1 engine model)' on one schedule and keeps "
-    "a separate 'NLR87 model (RZ4E engine model)' schedule — so NMR88 is not in the NLR87 group. "
-    "Neither source quotes a weight for NMR; the register does: NMR85/NMR88 sit at 5.5 t against NLR "
-    "at 3.5 t and NPR at 7.5 t. Duncan slide 14 does not carry NMR at all.", "medium")
 
-# ── 7.5 t ladder: NPR, NQR, NNR, NPS, NRR
-add(["NPR"], BAND_N75, BAND_LABEL[BAND_N75], DUNCAN + " + " + RENE24,
-    "'N75 | NPR75 / 4HK1 | 40,000 km' and 'N75 | NPR88 / 4JZ1 | 40,000 km'. René agrees on two "
-    "headers: p3 'NPR75 model (4HK1 engine model)', p1 'NLR88/NMR88/NPR88 models (4JZ1 engine "
-    "model)'.", "high")
-add(["NQR", "NQR90"], BAND_N75, BAND_LABEL[BAND_N75], DUNCAN + " and " + VINREG,
-    "The EPC never returns NQR without NPR in the same edition ('2018 NNR/NPR/NQR EURO6 RHD', "
-    "'22-NQR/NRR N/AMERICA(GAS)'). NPR is the N75 by Duncan slide 14, and the register carries NQR "
-    "at 7.5 t beside NPR at 7.5 t.", "medium")
-add(["NNR"], BAND_N75, BAND_LABEL[BAND_N75], VINREG + " and " + RENE14,
-    "model_dimension.csv: 'NNR85U-HD5AYE | NNR | 85 | 6.5' — 6.5 t, the N62/N65 rung that sits "
-    "above 5.5 t and below the 7.5 t rung, inside the same ladder. The EPC only ever returns NNR "
-    "together with NPR ('2016 NNR/NPR-LHD EURO6 EUROPE').", "medium")
-add(["NPS"], BAND_N75, BAND_LABEL[BAND_N75], ("the EPC editions for these part numbers "
-                                              "(epc_decode_batch1_20260919.json) and the parts "
-                                              "cross-reference vehicle_model"),
-    "The EPC returns '2018 NNR/NPR/NQR/NPS E5 AST/NZ' and the cross-reference carries 'NPS,NPR,NQR,"
-    "NNR' and 'NPS,N*R'. NPS is never returned with the 3.5 t NLR family in any edition.", "medium")
-add(["NRR"], BAND_N75, BAND_LABEL[BAND_N75], "the EPC editions for these part numbers",
-    "'22-NQR/NRR N/AMERICA(GAS) 22.0 -' — NRR is only ever returned tied to NQR, which is tied to "
-    "NPR. Two steps of pairing, so held at low rather than quoted as fact.", "low")
+# ── the series table now comes from the canonical map, so the per-series `add()` calls that
+#    used to sit here are gone. NLR / NKR (3.5 t), NMR (5.5 t interim, pending ruling), NPR /
+#    NQR / NNR / NPS / NRR (7.5 t) and every unresolved code all come from
+#    `03_analytics/Isuzu/prism/data/series_to_band.csv` via `_load_table()` above.
 
-# ── series named on N-series part numbers that neither authoritative source resolves
+# ── series named on N-series part numbers that neither authoritative source resolves.
+#    The notes live in the canonical CSV now; this list only says which codes are meant to be
+#    unresolved, so a code added to the CSV without a note is caught rather than assumed.
 UNRESOLVED_NOTES = {
-    "NN": "The EPC carries '15- NN/NP/NQR EURO5,5B+,6 LHD' and also the bare prefixes 'NN' and 'NP'. "
-          "The pair sits with NQR in 125 editions, but a code that appears both alone and paired "
-          "cannot be bound to one rung of the ladder.",
-    "NP": "Same as NN — paired with NQR in the EPC, carried as a bare prefix elsewhere.",
-    "NHR": "The EPC returns NHR alongside NKR ('1997.5-2007 NHR/NKR TAIWAN') and the "
-           "cross-reference carries 'NHR,NKR,NLR,NMR'. NKR is the 3.5 t rung, but the pairing is not "
-           "proof and neither Duncan nor René names NHR.",
-    "NJR": "The EPC returns 'NJR/NKR 13.0 - 14.0' and 'NJR/NKR 23.0 - 24.0' — two weight ranges, so "
-           "the pairing with NKR does not settle it.",
-    "NJS": "Appears only as 'NJS/NKS'. No source names it.",
-    "NKS": "Appears only as 'NJS/NKS'. No source names it.",
-    "NK": "Appears only as 'NJ/NK/NL/NMR-HYBRID' — grouped with NMR above it and with NJ/NL, which "
-          "have no source.",
-    "NJ": "Appears only as 'NJ/NK/NL/NMR-HYBRID'. No source names it.",
-    "NL": "Appears only as 'NJ/NK/NL/NMR-HYBRID'. No source names it.",
-    "NLS": "René N_MY14 p1 puts 'NLR85/NLS85/NMR85/NNR85/NPR85' on one schedule, which spans 3.5 t "
-           "to 7.5 t and therefore cannot separate NLS from NLR or NPR.",
-    "NMS": "Appears only as 'NLS/NMS'. No source names it.",
-    "NMS85": "The EPC returns '2012 NMR85 RHD…' beside it, so it is paired with NMR85 — but NMS "
-             "itself is named in neither source, and one pairing is not a weight.",
-    "NNS": "Appears only as 'NNS/NPS', and NPS is itself resolved only by pairing. Two pairings deep "
-           "is not evidence.",
-    "NQS": "Appears once, as '2026 NPS/NQS AUST/NZ 26.0 -'. No source names it.",
-    "NHS": "Appears as 'NHS 11.0 - 12.0' through 'NHS 25.0 -' — seven ranges across the whole weight "
-           "span, so the code does not identify one class.",
-    "NQ": "A wildcard prefix in the cross-reference ('NQ*'), not a series on its own.",
-    "PHR": "The EPC returns '2018 PHR INDONESIA 18.0 - 21.0'. An export-market code, not named in "
-           "either source.",
-    "QKR": "Appears only in cross-reference pairings ('N*R,QKR', 'NKR,QKR,TBR,TFR,TFS'). No source on "
-           "disk states what QKR is.",
-    "QLR": "The EPC returns '2021 QLR/QMR LHD 21.0 -'. No source states what QLR is.",
-    "QMR": "The EPC returns '2021 QLR/QMR LHD 21.0 -'. No source names it.",
-    "TBR": "Appears only in cross-reference pairings with TF*/PHR/QKR. Not named in either source.",
-    "NAN": "Not a series: 'NAN' is what `str()` produces from the cross-reference's own empty "
-           "vehicle_model cells (91 of 544 rows). Recorded here so the token cannot be mistaken for "
-           "a vehicle code; it is dropped before any band is read.",
+    "NN", "NP", "NHR", "NJR", "NJS", "NKS", "NK", "NJ", "NL", "NLS", "NMS", "NMS85", "NNS",
+    "NQS", "NHS", "NQ", "PHR", "QKR", "QLR", "QMR", "TBR", "NAN",
 }
-for code, why in UNRESOLVED_NOTES.items():
-    add(code, UNRESOLVED, "not stated in the two authoritative sources",
-        "no source — left blank on purpose", why, "unresolved")
 
-# ── the anchors that are on the same part numbers but are not the N-series at all
-add(["TFR", "TFS"], NOT_N, "D-Max pickup — not an N-series truck", "the EPC's own family label",
-    "The EPC files these under 'PASSENGER VEHICLE PICK UP'. TF* is the pickup wildcard — reading it "
-    "as an F-series code was the EUR 2.0M error this table exists to avoid repeating.", "high")
-add(["UCR", "UCS", "UBS", "UB"], NOT_N, "D-Max SUV — not an N-series truck",
-    "the EPC's own family label",
-    "The EPC files UCR/UCS under 'PASSENGER VEHICLE SUV'.", "high")
-add(["FRR", "FSR", "FRS", "FSS", "FTS", "FTR", "FVR", "FVM", "FVZ", "FXM", "FXR", "FXZ", "FYH",
-     "GSR", "GVR", "GVZ", "GXZ"], NOT_N,
-    "F&G series medium / heavy — outside the N-series", "the EPC's own family label",
-    "The EPC files these under 'TRUCKS F&G'. Recorded so a reader can see where the F-series sits "
-    "rather than inferring it from a substring.", "medium")
+
+# ── the anchors that are on the same part numbers but are not a rung of the N-series ladder.
+#    The D-Max pickup/SUV and the F&G heavy range are vehicle groups in their own right, not
+#    tonnage rungs, and the canonical map is where that is recorded now. The old `not_n_series`
+#    label is kept as an alias so nothing that reads it breaks.
+NOT_N = "not_n_series"
+
+
+def _check_canonical() -> None:
+    """Fail loudly if the canonical map drifts from what this build assumes."""
+    missing = UNRESOLVED_NOTES - set(TABLE)
+    if missing:
+        raise SystemExit(f"canonical map is missing unresolved codes: {sorted(missing)}")
+    for code in ("NLR", "NKR", "NPR", "NMR", "NNR"):
+        if not TABLE.get(code):
+            raise SystemExit(f"canonical map has no row for {code}")
+    for code in ("NMR",):
+        if not vehicle_bands.is_pending_ruling(code):
+            print(f"  NOTE: {code} is no longer marked pending_ruling in the canonical map.")
+
+
+_check_canonical()
 
 
 # ── the registry supplement inside the cross-reference file. 27 of the 544 pairs carry a
@@ -342,16 +335,20 @@ def read_billing() -> tuple[pd.DataFrame, str]:
 
 
 def main() -> int:
-    # ── 1. the series table
+    # ── 1. the series table. Written FROM the canonical map, not from anything held here.
     rows = []
     for code, (band, label, source, quote, conf) in sorted(TABLE.items()):
         rows.append({"series": code, "tonnage_band": band, "weight_label": label,
                      "evidence_source": source, "evidence_quote": quote, "confidence": conf})
     pd.DataFrame(rows).to_csv(OUT_SERIES, index=False)
-    print(f"series table  : {len(rows)} series -> {OUT_SERIES.name}")
+    print(f"series table  : {len(rows)} series -> {OUT_SERIES.name} "
+          f"(from {vehicle_bands.MAP_CSV.name})")
     print(f"  resolved    : {sum(1 for r in rows if r['tonnage_band'] in BANDS)}   "
           f"unresolved: {sum(1 for r in rows if r['tonnage_band'] == UNRESOLVED)}   "
           f"not N-series: {sum(1 for r in rows if r['tonnage_band'] == NOT_N)}")
+    pend = vehicle_bands.pending_ruling_codes()
+    if pend:
+        print(f"  PENDING RULING (interim band, do not quote as settled): {pend}")
 
     # ── 2. band every N-series part number
     bands_tbl = pd.read_csv(DER / "vehicle_family_bands.csv", dtype=str, low_memory=False)
@@ -419,6 +416,11 @@ def main() -> int:
     sf = sf[sf.distributor_code.isin(book)].copy()
     sf["pn"] = sf.pn.astype(str)
     billed_years = sorted(int(y) for y in sf.y.dropna().unique())
+    billed_months = sorted({(int(y), int(m)) for y, m in zip(sf.y.dropna(), sf.m.dropna())})
+    billing_through = (f"{billed_months[-1][0]}-{billed_months[-1][1]:02d}"
+                       if billed_months else "")
+    print(f"billing window: {billed_years[0] if billed_years else '-'} to {billing_through} "
+          f"({len(billed_months)} months, {len(billed_years)} calendar years)")
 
     by_pn_year = (sf.groupby(["pn", "y"], dropna=True)
                   .agg(eur=("net_sales_value", "sum"), units=("billed_qty", "sum"))
@@ -670,7 +672,12 @@ def main() -> int:
     unres_eur = float(banded.loc[banded.band_status == "series_unresolved", "eur_all_years"].sum())
 
     meta = {
-        "snapshot": SNAPSHOT,
+        # the decode date, deliberately kept so nothing downstream breaks; see the definition above
+        "snapshot": DECODE_SNAPSHOT,
+        "snapshot_field_meaning": (
+            "decode_snapshot -- the date the EPC decode and the series-to-tonnage mapping behind "
+            "this file were taken. It is NOT the billing window; read `billing_through` for that."),
+        "decode_snapshot": DECODE_SNAPSHOT,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "generated_by": "03_analytics/Isuzu/prism/scripts/build_nseries_tonnage_bands.py",
         "outputs": {"series_to_tonnage": str(OUT_SERIES), "banded": str(OUT_BANDED),
@@ -678,6 +685,10 @@ def main() -> int:
         "bands": BANDS,
         "groups": GROUP_ORDER,
         "billing_source": billing_source,
+        "billing_through": billing_through,
+        "billing_window": (
+            f"{billed_years[0] if billed_years else ''}-01 to {billing_through}"
+            if billing_through else ""),
         "book_markets": book,
         "billed_years": billed_years,
         "clock_definition": {

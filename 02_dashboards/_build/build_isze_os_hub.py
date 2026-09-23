@@ -115,17 +115,29 @@ gps25 = [r for r in gps_rows if r["year"] == "2025"]
 gps26 = [r for r in gps_rows if r["year"] == "2026"]
 with_spu = [r for r in gps25 if r["spend_per_unit_eur"].strip()]
 no_spu = [r for r in gps25 if not r["spend_per_unit_eur"].strip()]
-uio_net = sum(fnum(r["uio_units"]) for r in with_spu)
 sales_net = sum(fnum(r["total_sales_eur"]) for r in with_spu)
-spu_net = sales_net / uio_net
-spu_vals = sorted(fnum(r["spend_per_unit_eur"]) for r in with_spu)
-_n = len(spu_vals)
-spu_median = (spu_vals[_n // 2] if _n % 2 else 0.5 * (spu_vals[_n // 2 - 1] + spu_vals[_n // 2]))
-spu_max = max(spu_vals)
 
 # --- target spend ceiling, captured, uncaptured (CY2025)
+# Fleet denominator: worksheet base from wallet_waterfall (163,198). D08.
+# The ceiling file was corrected on 2026-09-22: six markets now carry the measured 3.5 t
+# share their light-truck row was missing, so the ceiling is EUR 54,375,729 and cover 56.6%.
+# Read from the file, never typed in.
 wal = read_csv(os.path.join(DERIVED, "wallet_waterfall.csv"))
 w25 = [r for r in wal if r["year"] == "2025"]
+wal_uio = {r["distributor_code"]: fnum(r["uio_units"]) for r in w25 if fnum(r["uio_units"]) > 0}
+# Overlay worksheet fleet onto GPS spend rows for per-market SPU display
+for r in with_spu:
+    code = r["distributor_code"]
+    if code in wal_uio:
+        r["uio_units"] = str(wal_uio[code])
+        billed = fnum(r["total_sales_eur"])
+        r["spend_per_unit_eur"] = str(round(billed / wal_uio[code], 2)) if wal_uio[code] else ""
+uio_net = sum(wal_uio.values())
+spu_net = sales_net / uio_net if uio_net else 0.0
+spu_vals = sorted(fnum(r["spend_per_unit_eur"]) for r in with_spu if r["spend_per_unit_eur"].strip())
+_n = len(spu_vals)
+spu_median = (spu_vals[_n // 2] if _n % 2 else 0.5 * (spu_vals[_n // 2 - 1] + spu_vals[_n // 2]))
+spu_max = max(spu_vals) if spu_vals else 0.0
 ceiling = sum(fnum(r["theoretical_wallet_eur"]) for r in w25)
 captured = sum(fnum(r["captured_total_eur"]) for r in w25)
 uncaptured = sum(fnum(r["uncaptured_eur"]) for r in w25)

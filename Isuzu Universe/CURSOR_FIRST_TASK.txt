@@ -1,0 +1,70 @@
+Implement a correctness-and-continuity revision of the existing ISZE AIM Pricing Decisions
+component. Do not create a replacement application, rebrand Universe, rebuild Atlas, change
+SAP prices, publish a site, send files or purchase services.
+
+Read ENGINE_REVIEW.txt and the B01-B18 mapping in ROADMAP_RESPONSIBILITIES.txt. The supplied
+v03 artifact is the reference for reproduction, not proof of an accepted source build.
+Before using the full HTML with AI, verify the permitted handling: it embeds business data
+and restricted supplier costs, not just code. Use an approved environment, sanitised fixtures
+and code-only working files. Privacy Mode and ignore files do not establish company approval.
+
+First locate the maintained source, build process and tests. The delivery ZIP names
+validate_v03.py and paint_seq.py but does not contain them. Reuse those files if they are
+actually present in the repository. Do not claim they were rerun unless executed. If only
+the HTML exists, preserve it as the reference and explain the source extraction needed.
+Use version control and small reviewable changes; do not overwrite the only working copy.
+Do not silently convert a generated distribution file into the sole maintained source.
+
+Run the supplied independent engine and browser checks before edits. Record which failures
+reproduce in the actual environment and which are environment-dependent. They are intended
+to fail on v03. Do not relax assertions or replace source values to make them pass.
+
+The first implementation increment must fix the numerical and continuity defects:
+- Fix the scoped formatter call that prevents ITUK-TURBO / Two objectives from rendering.
+  A rendering error must not leave a previous screen beneath a new active tab.
+- Create one calculation path and one versioned Scenario object consumed by manual price
+  testing, objective rankings, internal action, save/reopen and export. Preserve selected
+  alternative, inputs, quantity label, offer date, evidence dates, sources and both results.
+- Calculate combined offer margin from its reported gross profit and revenue. Preserve the
+  declared parts-purchase-cost measure; distinguish any support/contribution measure clearly.
+- Use eligibility-specific revenue and gross-profit break-even formulas. Existing units keep
+  their current price in an incremental-only scenario. Test fixed support and pack rounding.
+- Use one common baseline and cost-effective date across comparable alternatives. An explicit
+  supplier-cost change must be a separate documented assumption, not a different hidden date.
+- Reject invalid, negative or non-finite proposed quantities and invalid support. Keep zero,
+  unknown, returns and invalid inputs separate. Missing costs do not suppress valid revenue.
+- Use the same volume normalisation in v03rank and v03both (or their replacements).
+- Preserve exact recorded billing, separately from rounded prices used in a forward scenario.
+  Show historical evidence period and offer-effective date as separate, explicit fields.
+- Treat a proposed Genuine/BVP migration as unresolved until both product lines, transferred
+  quantity, applicable prices and costs are supplied. Never return a fabricated zero benefit.
+- Replace generic sensitive-field stripping with recipient-specific permitted schemas.
+  Existing internal exports remain internal. Do not present the combined HTML as external-safe.
+- Update old version/cost/price-conflict wording from the same accepted state; do not copy
+  stale prose or declare a source approved merely because a row exists.
+- Declare the candidate reporting basis; keep row counts distinct from unique parts and
+  cost/list completeness distinct from approval. Do not guess the missing candidate period.
+
+Retain the current visual direction and exact-part evidence. React, Django, a hosted
+portal and AI-generated recommendations are not prerequisites for this correction.
+Keep any still-missing source or commercial approval explicitly unresolved. You may narrow
+an unsupported calculation without disabling a valid purchasing observation.
+
+Acceptance for this increment:
+The applicable independent checks pass, or a remaining failure is explicitly explained and
+the affected feature remains unaccepted. Add a real cross-view scenario test: select a
+ranked option, inspect inputs, change the objective, save, export and reopen. Inputs and
+both results must match; changing the objective changes ordering only. Test all five cases,
+all six tabs, both objectives, missing costs, incremental support, invalid dates and a
+correction. Run actual file/localhost storage tests on the authorised machine; the review's
+in-memory browser run did not accept those. Test exports as actual bytes, not only UI labels.
+
+Return: changed source files or a reviewable diff; reproducible build/start/test commands;
+actual test results with tested version/checksum; concise before/after defect record;
+remaining unresolved source/approval items; and the next bounded task. Do not return only
+screenshots or a statement that everything passed. Do not include raw billing, full price
+lists, credentials or private source-cost tables in a distributable handover.
+
+After this increment is accepted, proceed to the durable case service under B06, scoped
+imports under B11 and controlled outputs/access under B08/B10. Human IT, technical,
+commercial and independent-review approvals are not replaced by generated code.

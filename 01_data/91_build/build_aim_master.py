@@ -100,7 +100,10 @@ def main() -> int:
              .drop_duplicates("pn"))
     desc_by_pn = dict(zip(grp["pn"], grp["desc_key"]))
     sf["d"] = pd.to_datetime(sf["billing_date"], errors="coerce")
-    win = sf[sf["d"] >= "2025-01-01"]
+    # l12m_billed_eur is an 18-month AUDIT window, 2025-01-01 to 2026-06-30, not twelve
+    # months; the column name is a legacy abbreviation that was never corrected. The end
+    # date is explicit so the figure cannot stretch if sales_fact.parquet is refreshed.
+    win = sf[(sf["d"] >= "2025-01-01") & (sf["d"] <= "2026-06-30")]
     eur_by_pn = win.groupby("pn")["net_sales_value"].sum().to_dict()
 
     # ---------------------------------------------------------------- ambiguous descriptions

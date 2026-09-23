@@ -105,8 +105,9 @@ for host in hosts:
 print(f"  chart hosts found: {sum(1 for h in hosts if f'id=\"{h}\"' in txt)} of {len(hosts)}")
 print(f"  key() calls in the page script: {len(re.findall(r'key[(]', txt))}")
 print(f"  axisLabel() calls in the page script: {len(re.findall(r'axisLabel[(]', txt))}")
-for need in ["uncaptured spend still to win", "over-bought against the fleet model",
-             "sales lost against the previous year", "sales gained against the previous year",
+for need in ["modelled opportunity (expected-demand share)", "over-bought against the fleet model",
+             "billed parts fell against the previous year",
+             "billed parts rose against the previous year",
              "above the competing price", "at or below it",
              "parts billed per vehicle in service — all parts"]:
     if need not in txt:
@@ -127,6 +128,10 @@ if fails:
     for f in fails:
         print(f"  FAIL {f}")
     print(f"LABEL CHECK FAIL ({len(fails)})")
+    # Exit non-zero. Before 2026-09-22 this script printed FAIL and fell off the end with status
+    # 0, so it could never fail a gate. A check that reports a failure and returns success is
+    # worse than no check: the gate reads green.
+    sys.exit(1)
 else:
     print("  LABEL CHECK PASS: every chart has a written key, every period names its months,")
     print("  the pickup is named as a pickup, and no internal schedule name is printed")

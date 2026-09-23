@@ -142,4 +142,6 @@ foreach ($target in $Targets) {
 Write-Host ""
 Write-Host "Done."
 Write-Host "  GitHub Pages : cd '07_deploy\Master Dashboard' ; bash deploy.sh"
-Write-Host "  Netlify      : drag '07_deploy\publish-site' folder to app.netlify.com/drop"
+Write-Host "  Not published: '07_deploy\publish-site' holds dealer-level data. Putting it on a public"
+Write-Host "                 host makes it readable by anyone, with no login. Publishing needs"
+Write-Host "                 Jerome's explicit decision - do not upload this folder."

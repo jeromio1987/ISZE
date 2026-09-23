@@ -1,0 +1,44 @@
+﻿python : C:\Users\jerom\AppData\Roaming\Python\Python314\site-packages\openpyxl\reader\drawings.py:33: UserWarning: Dra
+wingML support is incomplete and limited to charts and images only. Shapes and drawings will be lost.
+At C:\Users\jerom\AppData\Local\Temp\ps-script-fe9c6d77-7c51-44d7-a552-3acd89217e25.ps1:114 char:58
++ ... p\claude\ISZE\06_uio\_Scripts"; python _b_imit_xcheck.py 2>&1 | Out-F ...
++                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\Users\jerom\...s will be lost.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  warn("DrawingML support is incomplete and limited to charts and images only. Shapes and drawings will be lost.")
+IMIT 'ISZE' sheet years -> cols: {2019: 2, 2020: 3, 2021: 4, 2022: 5, 2023: 6, 2024: 7, 2025: 8, 2026: 9, 2027: 10, 2028: 11}
+IMIT distributors captured: 43
+   IMOTORS Portugal                         {2019: 3122.7, 2020: 2965.53, 2021: 3011.74, 2022: 3282.66, 2023: 3866.3, 2024: 4454.46, 2025: 4734.76, 2026: 5148.46, 2027: 5545.53, 2028: 5892.3}
+   LOUTSIOS A & SONS LTD Cyprus             {2019: 1562.01, 2020: 1272.86, 2021: 1146.44, 2022: 1238.71, 2023: 1461.45, 2024: 1616.53, 2025: 1830.62, 2026: 2024.41, 2027: 2245.34, 2028: 2433.18}
+   PETROS Greece                            {2019: 2338.85, 2020: 1824.69, 2021: 1729.41, 2022: 1817.38, 2023: 2140.43, 2024: 2715.7, 2025: 3272.75, 2026: 3626.68, 2027: 3986.1, 2028: 4335.32}
+
+====================================================================================================
+r90  CYPRUS LCV (Loutsios & Sons)   vs IMIT 'LOUTSIOS A & SONS LTD Cyprus'
+  year         IMIT        V19     cand a     cand b |   b-IMIT %   a-IMIT %
+  2025         1831       2105       2105       2105 |     +15.0%     +15.0%
+  2026         2024       2402       2238       3252 |     +60.6%     +10.6%
+  2027         2245       2730       2339       3506 |     +56.1%      +4.2%
+  2028         2433       3008       2445       3708 |     +52.4%      +0.5%
+  2029            -       3278       2521       3811 |          -          -
+  2030            -       3540       2614       3868 |          -          -
+
+====================================================================================================
+r54  PORTUGL LCV (Imotors)   vs IMIT 'IMOTORS Portugal'
+  year         IMIT        V19     cand a     cand b |   b-IMIT %   a-IMIT %
+  2025         4735       4733       4733       4733 |      -0.0%      -0.0%
+  2026         5148       5491       5109       5022 |      -2.5%      -0.8%
+  2027         5546       6226       5425       5438 |      -1.9%      -2.2%
+  2028         5892       6879       5709       5976 |      +1.4%      -3.1%
+  2029            -       7513       5967       6384 |          -          -
+  2030            -       8128       6251       6691 |          -          -
+
+====================================================================================================
+r81  GREECE LCV (Petros Petropoulos)   vs IMIT 'PETROS Greece'
+  year         IMIT        V19     cand a     cand b |   b-IMIT %   a-IMIT %
+  2025         3273       3705       3705       3705 |     +13.2%     +13.2%
+  2026         3627       4224       3979       3979 |      +9.7%      +9.7%
+  2027         3986       4727       4226       4226 |      +6.0%      +6.0%
+  2028         4335       5215       4552       4552 |      +5.0%      +5.0%
+  2029            -       5689       4863       4863 |          -          -
+  2030            -       6148       5133       5133 |          -          -

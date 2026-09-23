@@ -1,5 +1,11 @@
 # DB→DLR commercial stack (internal)
 
+> **2026-09-22 — the ambition question is CLOSED, permanently.** Jerome, verbatim: *"delete price
+> ambition I will come when it's done for now do a simulation on 5% increase and than never ask
+> again."* Any "still blocked without ambition" wording below is stale as a *question*; nothing was
+> rebuilt. **Do not ask him to choose an ambition value.** Record:
+> [`00_docs/PRICE_AMBITION_CLOSED_2026-09-22.md`](../../00_docs/PRICE_AMBITION_CLOSED_2026-09-22.md).
+
 **Builder:** `01_data/91_build/build_db_dlr_commercial_stack.py`  
 **Rebuild:** `python 01_data/91_build/build_db_dlr_commercial_stack.py`  
 **As of:** 2026-08-19 · **No +3% alloc run** — revision queue uses planned SP % from `pricing_sim_pr00_l12m` only.

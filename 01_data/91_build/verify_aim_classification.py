@@ -16,6 +16,7 @@ that are quietly ignored: a FAIL is a FAIL.
 """
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import sys
@@ -30,9 +31,45 @@ CLASS_V1 = DERIVED / "aim_pn_classification.csv"
 SALES = DERIVED / "sales_fact.parquet"
 OUT_JSON = DERIVED / "aim_classification_gate.json"
 
+# --- optional: check a different classification file without touching the live report ---
+#   python verify_aim_classification.py --file <path.csv>
+# Writes <path>.gate.json beside that file instead of overwriting the live gate report,
+# so a candidate build can be verified without the live gate losing its history.
+# With no arguments the behaviour is exactly as before.
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(add_help=True, description="Classification safety gate.")
+    p.add_argument("--file", default=None,
+                   help="classification CSV to check (default: the live v2 file)")
+    p.add_argument("--out", default=None,
+                   help="gate report to write (default: the live gate JSON, "
+                        "or <file>.gate.json when --file is given)")
+    p.add_argument("--baseline", default=None,
+                   help="gate report to compare drift against (default: the live "
+                        "aim_classification_gate.json, so a candidate is compared with "
+                        "the published baseline rather than with its own last run)")
+    return p.parse_args()
+
 # ---------------------------------------------------------------- expectations
 # Axis A (identity) = catalog_l1/l2/l3. Axis B = commercial score beside that —
 # never the hang-from parent. Locked DECISIONS.md 2026-09-17.
+
+# Approved Axis A leaf counts. These live in aim_classification_leaf_baseline.json so a new
+# baseline is an explicit, dated act rather than an edit to this file. Update that record when
+# adding real L2/L3 homes (not when only patching part numbers into existing leaves).
+# Drift on these two checks compares to this baseline, not to the previous run's count — so a
+# deliberate leaf-add is not a silent 1% fail, and an unapproved jump still fails.
+_LEAF_BASELINE = ISZE / "01_data" / "00_derived" / "aim_classification_leaf_baseline.json"
+_L2_APPROVED, _L3_APPROVED = 27, 176
+_LEAF_REV = "leaf_add_battery_tools_20260918"
+if _LEAF_BASELINE.is_file():
+    try:
+        _b = json.loads(_LEAF_BASELINE.read_text(encoding="utf-8"))
+        _L2_APPROVED = int(_b.get("axis_a_l2_approved", _L2_APPROVED))
+        _L3_APPROVED = int(_b.get("axis_a_l3_approved", _L3_APPROVED))
+        _LEAF_REV = str(_b.get("revision", _LEAF_REV))
+    except Exception:
+        pass
+
 EXPECT = {
     "axis_a_l1_values": {
         "Competitive parts",
@@ -48,13 +85,9 @@ EXPECT = {
     "axis_a_l2_max": 40,
     "axis_a_l3_min": 100,
     "axis_a_l3_max": 300,
-    # Approved leaf counts after intentional Axis A taxonomy edits.
-    # Update when adding real L2/L3 homes (not when only patching PNs into existing leaves).
-    # Drift on these two checks compares to this baseline, not to the previous run's count —
-    # so a deliberate leaf-add is not a silent 1% fail, and an unapproved jump still fails.
-    "axis_a_l2_approved": 27,            # leaf_add_battery_tools_20260918 (+Battery, +Special tools)
-    "axis_a_l3_approved": 176,           # +High-voltage battery, +12V battery, +Jack, +Hand tools
-    "axis_a_leaf_revision": "leaf_add_battery_tools_20260918",
+    "axis_a_l2_approved": _L2_APPROVED,  # see aim_classification_leaf_baseline.json
+    "axis_a_l3_approved": _L3_APPROVED,  # see aim_classification_leaf_baseline.json
+    "axis_a_leaf_revision": _LEAF_REV,
     "catalogue_match_pct_min": 99.0,     # v2 catalogue cols must tie to PR00 (copy integrity)
     "hs6_coherence_min_pct": 55.0,       # independent: majority L2 of own HS6 (audit ~62.7%)
     "figure_purity_min_pct": 65.0,       # independent: majority L2 of own figure (audit ~71.4%)
@@ -75,6 +108,16 @@ def load_rows(path: Path) -> list[dict]:
 
 
 def main() -> int:
+    global CLASS_V2, OUT_JSON
+    args = parse_args()
+    if args.file:
+        CLASS_V2 = Path(args.file)
+        OUT_JSON = Path(args.out) if args.out else CLASS_V2.with_suffix(".gate.json")
+    elif args.out:
+        OUT_JSON = Path(args.out)
+    baseline_json = Path(args.baseline) if args.baseline else (DERIVED / "aim_classification_gate.json")
+    print(f"checking {CLASS_V2.name}  ->  {OUT_JSON.name}   (drift baseline: {baseline_json.name})")
+
     checks: list[dict] = []
 
     def rec(cid: str, ok: bool, measured, expected, note: str = "") -> None:
@@ -100,8 +143,25 @@ def main() -> int:
     keys = [r["part_number"] for r in rows]
     dupes = n - len(set(keys))
     rec("duplicate_keys", dupes <= EXPECT["duplicate_keys_max"], dupes, EXPECT["duplicate_keys_max"])
-    bad_len = sum(1 for k in keys if len(k) != EXPECT["key_length"])
-    rec("key_length", bad_len == 0, bad_len, 0, "all part numbers 10 chars")
+    # Key length applies to PARTS. Non-part lines (freight, rebate, service fee, demurrage,
+    # merchandising, core deposits) sit in the source as placeholder keys by design, so
+    # requiring 10 characters on them would fail a correct file. The file tags them
+    # line_kind != 'part'; when that column is absent every row counts as a part and the
+    # check is exactly as strict as before.
+    has_kind = "line_kind" in (rows[0].keys() if rows else ())
+    bad_len = sum(
+        1 for r in rows
+        if len(r["part_number"]) != EXPECT["key_length"]
+        and (not has_kind or (r.get("line_kind") or "part") == "part")
+    )
+    rec(
+        "key_length",
+        bad_len == 0,
+        bad_len,
+        0,
+        f"every part_number {EXPECT['key_length']} chars; non-part rows (line_kind != 'part') exempt by identity, not by length"
+        + ("" if has_kind else " [no line_kind column: all rows treated as parts]"),
+    )
 
     # ---- Axis A (identity) vocabulary — existing three levels only
     l1 = Counter((r["catalog_l1"] or "").strip() for r in rows)
@@ -374,9 +434,9 @@ def main() -> int:
                 f"({EXPECT['axis_a_leaf_revision']})"
             )
 
-    if OUT_JSON.is_file():
+    if baseline_json.is_file():
         try:
-            prev = json.loads(OUT_JSON.read_text(encoding="utf-8"))
+            prev = json.loads(baseline_json.read_text(encoding="utf-8"))
             pmap = {c["id"]: c for c in prev.get("checks", [])}
             drifts = []
             for c in checks:

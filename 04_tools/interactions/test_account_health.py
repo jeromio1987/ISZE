@@ -16,6 +16,8 @@ from build_account_health import (
     commitment_rates,
     escalation,
     latency_hours,
+    mail_lag_exceeds_guard,
+    order_coverage,
     route_alerts,
     shannon_norm,
     signal_to_order,
@@ -122,6 +124,79 @@ def test_signal_to_order_uses_mention_in_window():
     assert out["n_pn_mentions"].iloc[0] == 12
     assert pd.notna(out["signal_to_order_days"].iloc[0])
     assert out["signal_to_order_days"].iloc[0] == 4.0
+
+
+def test_order_coverage_clips_future_dated_period_end():
+    """A partial month must not look for orders after the month's as_of."""
+    as_of = pd.Timestamp("2026-08-12", tz="UTC")
+    orders = pd.DataFrame({
+        "db_code": ["ITUK", "ITUK"],
+        "part_number": ["ABC", "ABC"],
+        "billing_date": [pd.Timestamp("2023-01-03", tz="UTC"), pd.Timestamp("2026-08-31", tz="UTC")],
+    })
+    lo, hi = order_coverage(orders, as_of)
+    assert lo == pd.Timestamp("2023-01-03", tz="UTC")
+    assert hi == as_of  # 2026-08-31 is after as_of, so clipped
+
+
+def test_signal_to_order_never_uses_billing_after_as_of():
+    """p4-v1 had no upper bound, so orders billed after a month could join it."""
+    as_of = pd.Timestamp("2026-06-30", tz="UTC")
+    idf = pd.DataFrame({
+        "db_code": ["ITUK"] * 12,
+        "occurred_at": [as_of - pd.Timedelta(days=5)] * 12,
+        "thread_id": ["t"] * 12,
+        "direction": ["in"] * 12,
+        "part_numbers": ["ABC"] * 12,
+        "n_part_numbers": [1] * 12,
+        "n_cc": [0] * 12,
+        "topics": [""] * 12,
+        "stakeholder_id": ["s"] * 12,
+    })
+    orders = pd.DataFrame({
+        "db_code": ["ITUK"],
+        "part_number": ["ABC"],
+        "billing_date": [pd.Timestamp("2026-08-31", tz="UTC")],
+    })
+    # The only order is billed after as_of, so nothing can join.
+    assert pd.isna(signal_to_order(idf, as_of, orders)["signal_to_order_days"].iloc[0])
+    # And it stays NULL when coverage is supplied too.
+    cov = (pd.Timestamp("2023-01-03", tz="UTC"), pd.Timestamp("2026-08-31", tz="UTC"))
+    assert pd.isna(signal_to_order(idf, as_of, orders, coverage=cov)["signal_to_order_days"].iloc[0])
+
+
+def test_signal_to_order_coverage_lower_bound_excludes_early_billing():
+    """Orders billed before the file's coverage cannot be trusted either."""
+    as_of = pd.Timestamp("2026-06-30", tz="UTC")
+    idf = pd.DataFrame({
+        "db_code": ["ITUK"] * 12,
+        "occurred_at": [as_of - pd.Timedelta(days=40)] * 12,
+        "thread_id": ["t"] * 12,
+        "direction": ["in"] * 12,
+        "part_numbers": ["ABC"] * 12,
+        "n_part_numbers": [1] * 12,
+        "n_cc": [0] * 12,
+        "topics": [""] * 12,
+        "stakeholder_id": ["s"] * 12,
+    })
+    orders = pd.DataFrame({
+        "db_code": ["ITUK"],
+        "part_number": ["ABC"],
+        "billing_date": [as_of - pd.Timedelta(days=30)],
+    })
+    cov = (as_of - pd.Timedelta(days=20), as_of)  # coverage starts after that billing
+    assert pd.isna(signal_to_order(idf, as_of, orders, coverage=cov)["signal_to_order_days"].iloc[0])
+    assert pd.notna(signal_to_order(idf, as_of, orders)["signal_to_order_days"].iloc[0])
+
+
+def test_mail_lag_guard_fires_and_clears():
+    bill = pd.Timestamp("2026-08-31", tz="UTC")
+    assert mail_lag_exceeds_guard(bill, pd.Timestamp("2026-08-12", tz="UTC")) is True   # 19d
+    assert mail_lag_exceeds_guard(bill, pd.Timestamp("2026-08-20", tz="UTC")) is False  # 11d
+    assert mail_lag_exceeds_guard(bill, pd.Timestamp("2026-08-17", tz="UTC")) is False  # 14d is not > 14
+    # Unknown input must never be silent.
+    assert mail_lag_exceeds_guard(bill, None) is True
+    assert mail_lag_exceeds_guard(None, bill) is True
 
 
 def test_signal_to_order_null_below_evidence():

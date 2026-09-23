@@ -1,9 +1,12 @@
 # `01_data/17_interactions/` — local interaction layer (G0a)
 
 **Gate:** [`00_docs/G0A_LOCAL_MAIL_SCOPE.md`](../../00_docs/G0A_LOCAL_MAIL_SCOPE.md)  
+**G0b drafts (not signed):** [`00_docs/governance/mail/`](../../00_docs/governance/mail/00_README_GOVERNANCE_PACK.md)  
 **DSAR / erasure (2a.6):** [`00_docs/DSAR_ERASURE_RUNBOOK.md`](../../00_docs/DSAR_ERASURE_RUNBOOK.md)  
 **Collector:** [`04_tools/interactions/collect_mapi.py`](../../04_tools/interactions/collect_mapi.py)  
 **Allow-list:** [`04_tools/interactions/db_domains.yaml`](../../04_tools/interactions/db_domains.yaml)
+
+> **Staleness (checked 2026-09-22):** the three P2a tables are **41 days old** (last written 2026-08-12, newest message 2026-08-12), while `01_data/00_derived/sales_fact.parquet` was rebuilt 2026-09-21 and bills through 2026-08-31. Refresh commands + a known `sales_fact` window defect: [`01_data/90_INBOX/MAIL_NEXT_STEP_2026-09-22.md`](../90_INBOX/MAIL_NEXT_STEP_2026-09-22.md) PART 3.
 
 ## What lives here
 

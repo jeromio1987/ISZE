@@ -65,7 +65,19 @@ TABLE_CSV = PRISM_DATA / "model_code_to_tonnage.csv"
 TABLE_META = PRISM_DATA / "model_code_to_tonnage.meta.json"
 BANDED_CSV = DERIVED / "epc_decode_batch1_banded_20260919.csv"
 
-BANDS = ["LCV_D-Max", "3.5t_N35", "7.5t_N50_N62_N75", "F_series_MD_heavy", "other"]
+sys.path.insert(0, str(ROOT / "03_analytics" / "Isuzu" / "prism"))
+from modules import vehicle_bands  # noqa: E402
+
+# The bands this table is allowed to write. Derived from the one authored map
+# (`data/series_to_band.csv`, read through `modules/vehicle_bands.py`) instead of being typed
+# out here, so this list cannot drift away from the map again. `"other"` is added explicitly
+# because it is this file's own name for a code the map marks `not_in_scope` — see
+# `_load_table` — and the map holds no band by that name.
+BANDS = [vehicle_bands.BAND_LCV, vehicle_bands.BAND_N35, vehicle_bands.BAND_N50,
+         vehicle_bands.BAND_N75, vehicle_bands.BAND_F, "other"]
+BANDS_FILE = "03_analytics/Isuzu/prism/scripts/build_model_code_to_tonnage.py"
+VOCABULARY_FILE = "03_analytics/Isuzu/prism/modules/vehicle_bands.py " \
+                  "(from 03_analytics/Isuzu/prism/data/series_to_band.csv)"
 
 # Evidence strings, kept once so the CSV rows stay short and consistent.
 DUNCAN = "Duncan Young / ITUK PMS brake deck, slide 14 'Appendix: Service Intervals' — pptx_dump.txt"
@@ -88,110 +100,79 @@ F_LABEL = "F&G series medium / heavy"
 LCV_LABEL = "LCV — D-Max class pickup / SUV"
 OTHER_LABEL = "outside the four ISZE bands (bus, heavy C&E, industrial or export-only name)"
 
+# ---------------------------------------------------------------------------------------------
+# The table is NO LONGER held here.
+#
+# Until 2026-09-23 this file carried its own `TABLE` of model code -> band, which disagreed with
+# the N-series bander's table: this one put `NMR` on the 7.5 t band while its own weight label on
+# the same row read 5.5 t, and it put `NKR` at 3.5 t where the retired probe put it at 5.5 t.
+#
+# The single authored source is now `03_analytics/Isuzu/prism/data/series_to_band.csv`, read
+# through `modules/vehicle_bands.py`. This file keeps NO dictionary. To change a mapping, edit the
+# CSV - not this script.
+# ---------------------------------------------------------------------------------------------
+N35_LABEL = "3.5 t GVW (N35 Grafter)"
+N75_LABEL = "7.5 t class (N50 / N55 / N62 / N65 / N75 ladder)"
+F_LABEL = "F&G series medium / heavy"
+LCV_LABEL = "LCV - D-Max class pickup / SUV"
+OTHER_LABEL = "outside the four ISZE bands (bus, heavy C&E, industrial or export-only name)"
+
 TABLE: dict[str, tuple[str, str, str, str, str]] = {}
 
 
-def add(codes: str | list[str], band: str, label: str, source: str, quote: str, conf: str) -> None:
-    if isinstance(codes, str):
-        codes = [c.strip() for c in codes.split(",") if c.strip()]
-    for c in codes:
-        TABLE[c.upper()] = (band, label, source, quote, conf)
+def _load_table() -> dict[str, tuple[str, str, str, str, str]]:
+    """Every code the canonical map knows, in this file's own column order."""
+    out: dict[str, tuple[str, str, str, str, str]] = {}
+    for code, r in vehicle_bands.load_map().items():
+        band = (r.get("tonnage_band") or "").strip()
+        if band == vehicle_bands.UNRESOLVED:
+            band = ""
+        elif band == vehicle_bands.NOT_IN_SCOPE:
+            band = "other"
+        out[code] = (
+            band,
+            (r.get("weight_label") or "").strip(),
+            (r.get("evidence_source") or "").strip(),
+            (r.get("evidence_quote") or "").strip(),
+            (r.get("confidence") or "").strip(),
+        )
+    return out
 
 
-# ---------------------------------------------------------------- LCV / D-Max
-add(["TFR"], "LCV_D-Max", LCV_LABEL, EPC + " + " + REGISTER,
-    "EPC family 'PASSENGER VEHICLE PICK UP' for '2020 TFR/TFS(RHD)EUROPE 20.0 - 21.0'. "
-    "TFR is the pickup platform; no LCV-band vehicle is above 3.5 t.", "high")
-add(["TFS"], "LCV_D-Max", LCV_LABEL, EPC + " + " + REGISTER,
-    "EPC family 'PASSENGER VEHICLE PICK UP' for '2025 TFS EV LHD EUROPE/ISRAEL 25.0 - 25.0'. "
-    "TFS is the 4x4 twin of TFR.", "high")
-add(["UCR", "UCS"], "LCV_D-Max", LCV_LABEL, EPC,
-    "EPC family 'PASSENGER VEHICLE SUV' for '2021 UCR/UCS(RHD)EXP 21.0 - 21.0'; UCR/UCS is the "
-    "SUV body on the same pickup platform as TFR/TFS, which the EPC returns in the same editions.",
-    "high")
-add(["UBS"], "LCV_D-Max", LCV_LABEL, XREF,
-    "crossref vehicle_model 'TF*,UBS,UC*' groups UBS with the pickup and SUV codes.", "medium")
-add(["UB"], "LCV_D-Max", LCV_LABEL, XREF,
-    "crossref vehicle_model 'UB*' — the SUV code family; only ever one row, so held at low.", "low")
+TABLE = _load_table()
 
-# ---------------------------------------------------------------- 3.5 t (N35)
-add(["NLR"], "3.5t_N35", N35_LABEL, DUNCAN,
-    "'N35.125 | NLR87 / RZ4E | 20,000 km' and 'N35.150 | NLR88 / 4JZ1 | Flexible up to 40,000 km'. "
-    "Both suffixes of the NLR series are placed in the N35 segment by name.", "high")
-add(["NKR"], "3.5t_N35", N35_LABEL, REGISTER,
-    "build_vin_register.py SERIES_GVW_T: \"NKR\": 3.5,  # older N35 designation. "
-    "model_dimension.csv carries NKR at 3.5 t.", "medium")
 
-# ---------------------------------------------------------------- 7.5 t ladder
-add(["NPR"], "7.5t_N50_N62_N75", N75_LABEL, DUNCAN,
-    "'N75 | NPR75 / 4HK1 | 40,000 km' and 'N75 | NPR88 / 4JZ1 | 40,000 km'. "
-    "René N_MY24 p3 header 'NPR75 model (4HK1 engine model)' and p1 'NLR88/NMR88/NPR88 models "
-    "(4JZ1 engine model)' agree.", "high")
-add(["NMR", "NMR85"], "7.5t_N50_N62_N75", "5.5 t GVW (N50 / N55 ladder)",
-    RENE_N24 + " + " + REGISTER,
-    "René N_MY24 p1 groups 'NLR88/NMR88/NPR88 models (4JZ1 engine model)' on one schedule and keeps "
-    "a separate 'NLR87 model (RZ4E engine model)' schedule — so NMR88 is NOT in the NLR87/N35 group. "
-    "NMR appears in none of Duncan slide 14's four rows. The 5.5 t figure itself is measured, not "
-    "quoted: model_dimension.csv has NMR85/NMR88 at 5.5 t against NLR at 3.5 t. The 9.5 t claim is "
-    "not supported by anything on disk.", "medium")
-add(["NNR"], "7.5t_N50_N62_N75", "6.5 t GVW (N62 / N65 ladder)", REGISTER + " + " + RENE_N14,
-    "model_dimension.csv: 'NNR85U-HD5AYE | NNR | 85 | 6.5'. René N_MY14 p1 puts "
-    "'NLR85/NLS85/NMR85/NNR85/NPR85' on one schedule, which spans 3.5–7.5 t and therefore cannot "
-    "separate them; the register value is what sets 6.5 t.", "medium")
-add(["NQR", "NQR90", "NRR"], "7.5t_N50_N62_N75", N75_LABEL, EPC + " + " + REGISTER,
-    "EPC returns '2018 NNR/NPR/NQR EURO6 RHD 18.0 - 20.0' and '22-NQR/NRR N/AMERICA(GAS) 22.0 -', "
-    "tying NQR and NRR to NPR in every edition; NPR is the N75 (7.5 t) by Duncan slide 14.", "medium")
-add(["NPS"], "7.5t_N50_N62_N75", N75_LABEL, EPC + " + " + XREF,
-    "EPC '2018 NNR/NPR/NQR/NPS E5 AST/NZ 18.0 - 20.0'; crossref 'NPS,NPR,NQR,NNR'. Always returned "
-    "with the 7.5 t NPR family, never with the 3.5 t NLR family.", "medium")
+def _assert_bands_in_vocabulary() -> None:
+    """Fail loudly if the map can produce a band this file's own list cannot name.
 
-# ---------------------------------------------------------------- F & G series
-add(["FRR"], "F_series_MD_heavy", "11–12 t GVW (F110 / F120)", REGISTER + " + " + V20,
-    "model_dimension.csv: 'FRR90SL-HAEH | FRR | 90 | 11.0'. V20_SPEC §Problem 6: 'FRR | F110 / F120 "
-    "| 11–12 t'. KS catalogue files 'FORWARD FRR F110 4HK1-TCS' under 'Isuzu 9-11 TONNE'.", "medium")
-add(["FSR"], "F_series_MD_heavy", "13.5 t GVW (F135)", REGISTER + " + " + KS,
-    "model_dimension.csv: 'FSR90VL-LAEH | FSR | 90 | 13.5'. V20_SPEC §Problem 6: 'FSR | F135 | "
-    "13.5 t'. KS catalogue carries a separate 'Isuzu 13.5 TONNE' page.", "medium")
-add(["FRS"], "F_series_MD_heavy", F_LABEL, EPC,
-    "EPC returns 'FRS/FSS 11.0 - 14.0' — an F-series code sold in the same editions as FSS/FTS, "
-    "which the EPC files under the F&G family.", "medium")
-add(["FSS", "FTS"], "F_series_MD_heavy", F_LABEL, EPC,
-    "EPC family 'TRUCKS F&G' for '2022 FSS/FTS(AUST/NZ) 22.0 - 24.0' and "
-    "'2011- FSS(AUST/NZ) EURO5 11.0 -'.", "medium")
-add(["FTR", "FVR"], "F_series_MD_heavy", F_LABEL, EPC,
-    "EPC family 'TRUCKS F&G' for '2019- FTR/FVR(LHD)EURO2/3/4/5' and '190 FVR(LHD) EURO6 19.0 -'. "
-    "The F-series band is the medium/heavy F&G band.", "medium")
-add(["FVM", "FVZ"], "F_series_MD_heavy", F_LABEL, EPC,
-    "EPC family 'TRUCKS F&G' for '2013 FVM CNG(THAILAND) 13.0 -' and '2022 FVM/FVR/FVZ VIETNAM'.",
-    "medium")
-add(["FXM", "FXR", "FXZ", "FYH"], "F_series_MD_heavy", F_LABEL + " (heaviest subclass)", EPC,
-    "EPC family 'TRUCKS F&G' for '2025- FXZ (AUSTRALIA) 25.0 -' and '2026- FYH(RHD)EURO6 26.0 -'. "
-    "These are the heaviest F&G codes; the four ISZE bands hold no >20 t band, so they land in the "
-    "F-series band or nowhere. Banded here at low confidence, stated rather than hidden.", "low")
-add(["GSR", "GVR", "GVZ", "GXZ"], "F_series_MD_heavy", F_LABEL + " (G-series)", EPC,
-    "EPC family 'TRUCKS F&G' for '220 FVZ/GVZ INDONESIA 22.0 -' and '180-GXZ INDONESIA 18.0 - 21.0'. "
-    "G-series is the heavy 6-cylinder F&G range; no matching ISZE band exists above F-series. "
-    "Banded here at low confidence.", "low")
+    The failure this guards against was silent: the file wrote a `tonnage_band` value that was
+    not in its own declared list, and nothing complained. A build that stops is worth more than
+    a build that quietly invents a rung, so this raises rather than warning.
+    """
+    missing = sorted({row[0] for row in TABLE.values() if row[0] and row[0] not in BANDS})
+    if not missing:
+        return
+    offending = [(c, row[0]) for c, row in sorted(TABLE.items()) if row[0] in missing]
+    lines = "\n".join(f"    {c} -> {b!r}" for c, b in offending[:20])
+    if len(offending) > 20:
+        lines += f"\n    ... and {len(offending) - 20} more"
+    raise RuntimeError(
+        "tonnage_band vocabulary mismatch.\n"
+        f"The map names band(s) {missing!r}, which this file's declared vocabulary cannot "
+        f"express.\n"
+        f"Codes and bands that would have been written:\n{lines}\n"
+        f"The vocabulary is declared as BANDS in {BANDS_FILE} and comes from "
+        f"{VOCABULARY_FILE}.\n"
+        "Add the missing band there (or to the authored map if the map itself is wrong) "
+        "before this table is written; do not let it be filed onto a rung that does exist."
+    )
 
-# ---------------------------------------------------------------- outside the four bands
-add(["CVR", "CXE", "CXG", "CXH", "CXJ", "CXM", "CXY", "CXZ", "CYE", "CYG", "CYH", "CYJ",
-     "CYL", "CYM", "CYY", "CYZ", "CZH", "EXD", "EXR", "EXY", "EXZ"],
-    "other", OTHER_LABEL, EPC + " + " + "pms_tonnage_model.meta.json",
-    "EPC family 'TRUCKS C&E' (e.g. 'CVR 20.0 - 21.0', '2016-CYH(RHD)EURO6 16.0 -'). ISZE's four "
-    "bands are LCV_D-Max / 3.5t_N35 / 7.5t_N50_N62_N75 / F_series_MD_heavy, so the C&E range has no "
-    "band; 'other' records that it is out of scope rather than guessing a weight.", "medium")
-add(["LR", "LR4", "LV280", "LV290"], "other", OTHER_LABEL, EPC,
-    "EPC family 'BUSES LR' for '19-LR4(FRAME BUS) LHD EURO4/6 19.0 -' and 'BUSES LT, LV' for "
-    "'LV290 15.5 - 22.0'.", "medium")
-# Bus platforms. The EPC groups every one of them under the two bus families, so they are bussed
-# out of the four tonnage bands rather than assigned a truck weight.
-add(["LT", "LV", "MR", "GR", "LF"], "other", OTHER_LABEL, EPC,
-    "EPC family 'BUSES LT, LV' and 'BUSES GR, MR'. These are bus platform codes; ISZE's four bands "
-    "are truck and pickup bands, so a bus falls outside them.", "medium")
-add(["ELF100", "ELF200", "ELF300", "ELF350", "ELF400", "ELF500", "ELF600"], "other", OTHER_LABEL, EPC,
-    "EPC returns '2024 ELF400/500/600/BUS MEXICO 24.0 -' and '2021 ELF100,200,300 MEXICO 21.0 -'. "
-    "ELF is the overseas-market name for the N-series light truck but the code carries no series "
-    "letter, so no band can be read off it.", "low")
+
+_assert_bands_in_vocabulary()
+
+# The per-code `add()` calls that used to sit here are gone. The table is built from the
+# canonical map in `modules/vehicle_bands.py` (`data/series_to_band.csv`), so this file holds
+# no dictionary of its own. Edit the CSV to change a mapping.
 
 # ---------------------------------------------------------------- deliberately unresolved
 UNRESOLVED_NOTES = {
@@ -316,7 +297,7 @@ def parse_codes(text: str) -> list[str]:
 
 
 def band_for(code: str) -> tuple[str, str, str, str, str]:
-    """(band, label, source, quote, confidence) — unresolved when the table is silent."""
+    """(band, label, source, quote, confidence) — unresolved when the canonical map is silent."""
     row = TABLE.get(code)
     if row:
         return row
@@ -373,6 +354,22 @@ def write_table() -> dict:
             resolved_codes.append(c)
         rows.append({"model_code": c, "tonnage_band": band, "weight_class_label": label,
                      "evidence_source": source, "evidence_quote": quote, "confidence": conf})
+    # The guard above checks the map; this checks the rows actually about to be written, which
+    # is the same question asked one step later and costs nothing. It has to run BEFORE the
+    # file is opened, or a build that raises would still have half-written its own output.
+    # A build that stops is worth more than a build that quietly invents a rung.
+    stray = sorted({r["tonnage_band"] for r in rows
+                    if r["tonnage_band"] and r["tonnage_band"] not in BANDS})
+    if stray:
+        names = ", ".join(f"{r['model_code']} -> {r['tonnage_band']!r}"
+                          for r in rows if r["tonnage_band"] in stray)
+        raise RuntimeError(
+            f"refusing to write {TABLE_CSV.name}: the table would carry tonnage_band "
+            f"{stray!r}, which is not in this file's declared vocabulary.\n"
+            f"{names}\n"
+            f"The vocabulary is declared as BANDS in {BANDS_FILE} and comes from "
+            f"{VOCABULARY_FILE}."
+        )
     with open(TABLE_CSV, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=["model_code", "tonnage_band", "weight_class_label",
                                           "evidence_source", "evidence_quote", "confidence"])

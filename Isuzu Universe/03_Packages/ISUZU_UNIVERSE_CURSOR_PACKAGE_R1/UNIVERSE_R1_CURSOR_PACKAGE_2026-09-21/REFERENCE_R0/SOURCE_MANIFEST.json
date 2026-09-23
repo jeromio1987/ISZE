@@ -1,0 +1,384 @@
+{
+  "work_order": "R0",
+  "inspected_at": "2026-09-21T06:43:45Z",
+  "sources": [
+    {
+      "source_id": "strategy_paper_reviewed_v2",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\Isuzu_Universe_Strategy_Paper_Reviewed_v2.pdf",
+      "kind": "documentation",
+      "version": "Reviewed edition 2",
+      "sha256": "082d74df8895278ee2de778f5ddb639e24eab70ee77ba126bd7bc0affae3cf66",
+      "modified_at": "2026-09-21T05:23:36Z",
+      "commercial_level": "documentation",
+      "row_grain": "document",
+      "period_start": "2026-09-21",
+      "period_end": "2026-09-21",
+      "reporting_clock": "document_date",
+      "row_count": null,
+      "schema": [
+        "pdf"
+      ],
+      "value_basis": "n/a",
+      "supersedes": null,
+      "status": "inspected",
+      "limitations": "Internal strategy discussion PDF. Copied to ORIGINALS for R0. Not a data feed.",
+      "evidence_refs": [
+        "ORIGINALS/Isuzu_Universe_Strategy_Paper_Reviewed_v2.pdf"
+      ]
+    },
+    {
+      "source_id": "critique_2026_09_21",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\UNIVERSE_STRATEGY_REVIEW_CRITIQUE_2026-09-21.md",
+      "kind": "documentation",
+      "version": "2026-09-21T05:51:27Z",
+      "sha256": "afd1ca2753edc3f247ef6b9efb9a59a6ac9bd84faa0999f9aaa27368043f9f7b",
+      "modified_at": "2026-09-21T05:51:27Z",
+      "commercial_level": "documentation",
+      "row_grain": "document",
+      "period_start": "2026-09-21",
+      "period_end": "2026-09-21",
+      "reporting_clock": "document_date",
+      "row_count": null,
+      "schema": [
+        "markdown"
+      ],
+      "value_basis": "n/a",
+      "supersedes": null,
+      "status": "inspected",
+      "limitations": "Jerome operating directions locked in header. Copied to ORIGINALS.",
+      "evidence_refs": [
+        "ORIGINALS/UNIVERSE_STRATEGY_REVIEW_CRITIQUE_2026-09-21.md",
+        "EVIDENCE/CRITIQUE_INDEX.md"
+      ]
+    },
+    {
+      "source_id": "ituk_pack_start",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\ITUK_dealer_sales_and_PRISM_2026-09-21\\00_START_HERE.md",
+      "kind": "pack_documentation",
+      "version": "2026-09-20T22:24:34Z",
+      "sha256": "7e00a5bed2fe667d3dd25a523ed735f0c6bbaed9e5fe25d7727620fd1d9facf1",
+      "modified_at": "2026-09-20T22:24:34Z",
+      "commercial_level": "documentation",
+      "row_grain": "document",
+      "period_start": "2026-09-21",
+      "period_end": "2026-09-21",
+      "reporting_clock": "pack_build_date",
+      "row_count": null,
+      "schema": [
+        "markdown"
+      ],
+      "value_basis": "n/a",
+      "supersedes": null,
+      "status": "inspected",
+      "limitations": "Pack documentation only. Dealer-named CSVs deliberately not copied into R0 ZIP.",
+      "evidence_refs": [
+        "EVIDENCE/PACK_STATUS.md"
+      ]
+    },
+    {
+      "source_id": "ituk_pack_notes",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\ITUK_dealer_sales_and_PRISM_2026-09-21\\07_ITUK_sales_to_dealer_NOTES.md",
+      "kind": "pack_documentation",
+      "version": "2026-09-20T22:22:20Z",
+      "sha256": "82f9e5a9ebf5ea77c216199f7db431a47560b13f4486ecb2d8166d396e874cee",
+      "modified_at": "2026-09-20T22:22:20Z",
+      "commercial_level": "documentation",
+      "row_grain": "document",
+      "period_start": "2026-09-21",
+      "period_end": "2026-09-21",
+      "reporting_clock": "pack_build_date",
+      "row_count": null,
+      "schema": [
+        "markdown"
+      ],
+      "value_basis": "n/a",
+      "supersedes": null,
+      "status": "inspected",
+      "limitations": "Pack documentation only. Dealer-named CSVs deliberately not copied into R0 ZIP.",
+      "evidence_refs": [
+        "EVIDENCE/PACK_STATUS.md"
+      ]
+    },
+    {
+      "source_id": "ituk_pack_manifest",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\ITUK_dealer_sales_and_PRISM_2026-09-21\\19_MANIFEST.md",
+      "kind": "pack_documentation",
+      "version": "2026-09-20T22:24:35Z",
+      "sha256": "16b27f160f3f93ee6f0d6222869ec2f748b8fc1dfa177f314cbccfbeb808f520",
+      "modified_at": "2026-09-20T22:24:35Z",
+      "commercial_level": "documentation",
+      "row_grain": "document",
+      "period_start": "2026-09-21",
+      "period_end": "2026-09-21",
+      "reporting_clock": "pack_build_date",
+      "row_count": null,
+      "schema": [
+        "markdown"
+      ],
+      "value_basis": "n/a",
+      "supersedes": null,
+      "status": "inspected",
+      "limitations": "Pack documentation only. Dealer-named CSVs deliberately not copied into R0 ZIP.",
+      "evidence_refs": [
+        "EVIDENCE/PACK_STATUS.md"
+      ]
+    },
+    {
+      "source_id": "ituk_dealer_totals_aggregate",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\ITUK_dealer_sales_and_PRISM_2026-09-21\\03_ITUK_dealer_totals.csv",
+      "kind": "derived_aggregate",
+      "version": "2026-09-20T22:15:51Z",
+      "sha256": "f23dd640e77c4da44c27fff87aa05fd85795bb6b1100318809f88a5f621640e7",
+      "modified_at": "2026-09-20T22:15:51Z",
+      "commercial_level": "distributor_to_dealer",
+      "row_grain": "dealer",
+      "period_start": "2025-01",
+      "period_end": "2025-12",
+      "reporting_clock": "calendar",
+      "row_count": 64,
+      "schema": [
+        "rank_by_qty",
+        "dealer_name",
+        "total_qty_cy2025",
+        "share_of_ituk_total_pct",
+        "distinct_part_numbers",
+        "active_months",
+        "first_period",
+        "last_period",
+        "total_qty_from_month_rows",
+        "avg_qty_per_active_month",
+        "year_vs_month_qty_match"
+      ],
+      "value_basis": "quantity_and_activity_counts_no_euro",
+      "supersedes": null,
+      "status": "inspected",
+      "limitations": "64 dealers. Aggregate only; included schema+count. Full named detail file not exported to return ZIP.",
+      "evidence_refs": [
+        "EVIDENCE/PACK_STATUS.md"
+      ]
+    },
+    {
+      "source_id": "ituk_dealer_euro_context",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\ITUK_dealer_sales_and_PRISM_2026-09-21\\06_ITUK_dealer_euro_and_context.csv",
+      "kind": "derived_aggregate",
+      "version": "2026-09-20T22:15:51Z",
+      "sha256": "3b88329670aafc4d689c7e02f28c12f5d0055656bba40a3cbe4311997ef11887",
+      "modified_at": "2026-09-20T22:15:51Z",
+      "commercial_level": "distributor_to_dealer",
+      "row_grain": "dealer",
+      "period_start": "2025-01",
+      "period_end": "2025-12",
+      "reporting_clock": "calendar",
+      "row_count": 64,
+      "schema": [
+        "dealer_name",
+        "total_qty_cy2025",
+        "share_of_ituk_total_pct",
+        "bvp_eur",
+        "genuine_contested_eur",
+        "genuine_only_eur",
+        "total_eur",
+        "bvp_pct",
+        "genuine_contested_pct",
+        "genuine_only_pct",
+        "contested_bvp_capture",
+        "qty_year",
+        "qty_unvalued_share",
+        "uio_units",
+        "sellout_spu_eur",
+        "share_of_network",
+        "eur_match",
+        "eur_basis"
+      ],
+      "value_basis": "reference_price_valuation_from_isze_average_not_invoiced_dealer_money",
+      "supersedes": null,
+      "status": "inspected",
+      "limitations": "Pack notes: euro is valuation at billed average price, not invoiced money. Named dealers \u2014 aggregate file not bulk-copied into ZIP.",
+      "evidence_refs": [
+        "EVIDENCE/PACK_STATUS.md"
+      ]
+    },
+    {
+      "source_id": "ituk_sales_to_dealer_cy2025_detail",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\ITUK_dealer_sales_and_PRISM_2026-09-21\\01_ITUK_sales_to_dealer_CY2025.csv",
+      "kind": "derived_detail",
+      "version": "pack_copy_of_dealer_sellout_long_ITUK_CY2025",
+      "sha256": "df0764a2d9d1125878989c3dc7b519fe789ad06806ee70771d82b96f7c3effc3",
+      "modified_at": "2026-08-26T15:57:05Z",
+      "commercial_level": "distributor_to_dealer",
+      "row_grain": "dealer_x_part_number_x_month",
+      "period_start": "2025-01",
+      "period_end": "2025-12",
+      "reporting_clock": "calendar",
+      "row_count": 101341,
+      "schema": [
+        "distributor_code",
+        "source_file",
+        "grain",
+        "year",
+        "period",
+        "period_grain",
+        "part_number",
+        "part_number_raw",
+        "description",
+        "qty",
+        "dealer_name",
+        "vehicle_scope",
+        "flags"
+      ],
+      "value_basis": "quantity_primary_euro_may_be_reference_valued",
+      "supersedes": null,
+      "status": "inspected_path_only",
+      "limitations": "Row count from pack START_HERE (101,341). File contains real dealer names \u2014 NOT copied into R0 ZIP. Schema header read only.",
+      "evidence_refs": [
+        "EVIDENCE/PACK_STATUS.md"
+      ]
+    },
+    {
+      "source_id": "tonnage_v2_readme",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\GPT_tonnage_pack_20260920\\00_READ_ME_FIRST.md",
+      "kind": "pack_documentation",
+      "version": "v2",
+      "sha256": "e5b8750d753aea6f309385571025fcf6c38f652b71e72096ae57b751ed414c2a",
+      "modified_at": "2026-09-21T05:32:02Z",
+      "commercial_level": "part_applicability",
+      "row_grain": "document",
+      "period_start": "2026-09-20",
+      "period_end": "2026-09-21",
+      "reporting_clock": "pack_date",
+      "row_count": null,
+      "schema": [
+        "markdown"
+      ],
+      "value_basis": "mixed_documented_in_pack",
+      "supersedes": "tonnage_v1_feedback_pack",
+      "status": "inspected",
+      "limitations": "Corrected tonnage pack v2 entry.",
+      "evidence_refs": [
+        "EVIDENCE/PACK_STATUS.md"
+      ]
+    },
+    {
+      "source_id": "tonnage_v2_correction_log",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\GPT_tonnage_pack_20260920\\02_CORRECTION_LOG.md",
+      "kind": "pack_documentation",
+      "version": "v2",
+      "sha256": "f26ba089b113016707e516a660637c2db47f2d0bfedcd21ec0a7e165a8c291ad",
+      "modified_at": "2026-09-21T05:32:02Z",
+      "commercial_level": "part_applicability",
+      "row_grain": "document",
+      "period_start": "2026-09-20",
+      "period_end": "2026-09-21",
+      "reporting_clock": "pack_date",
+      "row_count": null,
+      "schema": [
+        "markdown"
+      ],
+      "value_basis": "mixed_documented_in_pack",
+      "supersedes": "tonnage_v1_feedback_pack",
+      "status": "inspected",
+      "limitations": "Read first per work order. Records v1 errors and pipeline warn/fail history.",
+      "evidence_refs": [
+        "EVIDENCE/PACK_STATUS.md"
+      ]
+    },
+    {
+      "source_id": "tonnage_v2_correction_evidence",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\90_INBOX\\GPT_tonnage_pack_20260920\\03_EVIDENCE_OF_CORRECTION.md",
+      "kind": "pack_documentation",
+      "version": "v2",
+      "sha256": "751f334243573d954d6d85a5cd2bffa8d3e6b9cc8639f5504107cf9c6ea17f46",
+      "modified_at": "2026-09-21T05:32:02Z",
+      "commercial_level": "part_applicability",
+      "row_grain": "document",
+      "period_start": "2026-09-20",
+      "period_end": "2026-09-21",
+      "reporting_clock": "pack_date",
+      "row_count": null,
+      "schema": [
+        "markdown"
+      ],
+      "value_basis": "mixed_documented_in_pack",
+      "supersedes": "tonnage_v1_feedback_pack",
+      "status": "inspected",
+      "limitations": "Includes blocked tests; do not treat all as passed.",
+      "evidence_refs": [
+        "EVIDENCE/PACK_STATUS.md"
+      ]
+    },
+    {
+      "source_id": "aim_figkey_export_20260921",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\AIM_Master_PN_Categories_Figkey_20260921.csv",
+      "kind": "derived_classification",
+      "version": "20260921",
+      "sha256": "5ababec1c7a1c14bfabbee074974fd69703a80aac6187e3c58331a3cb9ed939f",
+      "modified_at": "2026-09-21T05:55:29Z",
+      "commercial_level": "mixed_or_unknown",
+      "row_grain": "part_number",
+      "period_start": null,
+      "period_end": null,
+      "reporting_clock": "as_of_file_date",
+      "row_count": 165213,
+      "schema": [
+        "part_number",
+        "description",
+        "description_source",
+        "aim_level_1",
+        "aim_level_2",
+        "aim_level_3",
+        "figure_key",
+        "figure_no",
+        "key_no",
+        "figure_key_label",
+        "line_kind",
+        "aim_source",
+        "l12m_billed_eur"
+      ],
+      "value_basis": "l12m_billed_eur_is_isze_to_distributor_where_present",
+      "supersedes": "AIM_Master_PN_Categories_Figkey_20260920.xlsx",
+      "status": "inspected",
+      "limitations": "PBI-oriented flat table. Classification labels overlaid from aim_pn_classification_20260920 where present. Not raw billing.",
+      "evidence_refs": [
+        "EVIDENCE/PACK_STATUS.md"
+      ]
+    },
+    {
+      "source_id": "pipeline_verification_report",
+      "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_verification_report.json",
+      "kind": "verification",
+      "version": "2026-09-20T22:32:56Z",
+      "sha256": "9f1e95cf744609ba8dfed206c5470b441a3d59d4e2dd341283d9ef0ec6c979d5",
+      "modified_at": "2026-09-20T22:32:56Z",
+      "commercial_level": "mixed_or_unknown",
+      "row_grain": "check",
+      "period_start": null,
+      "period_end": null,
+      "reporting_clock": "generated_at_in_file",
+      "row_count": null,
+      "schema": [
+        "json"
+      ],
+      "value_basis": "n/a",
+      "supersedes": null,
+      "status": "inspected",
+      "limitations": "Summary on disk: pass=153 warn=2 fail=0 ok=True generated 2026-09-20T22:31:53Z. Not re-executed in R0.",
+      "evidence_refs": [
+        "EVIDENCE/BASELINE_TEST_REPORT.md"
+      ]
+    }
+  ],
+  "missing_inputs": [
+    {
+      "input": "universe_application_root",
+      "searched": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\UNIVERSE",
+      "status": "missing",
+      "note": "Work order starting path not present. No alternate folder titled UNIVERSE found under Isuzu Universe."
+    },
+    {
+      "input": "universe_build_label_v2.2",
+      "searched": "Isuzu Universe/** and package STRATEGY text",
+      "status": "unverified",
+      "note": "Cited in roadmap rewrite as working reference only."
+    }
+  ]
+}

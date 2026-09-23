@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-19T13:00:24Z",
+  "generated_at": "2026-09-22T19:43:13Z",
   "data_root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data",
   "summary": {
-    "pass": 153,
+    "pass": 164,
     "warn": 1,
     "fail": 0,
     "ok": true
@@ -477,10 +477,10 @@
     {
       "id": "sales_fact.row_count",
       "status": "pass",
-      "message": "Row count 514,037 (expected ~514,037, \u0394 0.00%)",
+      "message": "Row count 538,346 (expected ~538,346, \u0394 0.00%)",
       "detail": {
-        "actual": 514037,
-        "expected": 514037
+        "actual": 538346,
+        "expected": 538346
       }
     },
     {
@@ -505,17 +505,17 @@
     {
       "id": "sales_fact.saty",
       "status": "pass",
-      "message": "SaTy populated on 92.9% of rows (min 92.0%)",
+      "message": "SaTy populated on 93.2% of rows (min 92.0%)",
       "detail": {
-        "non_null_pct": 92.89311858873972
+        "non_null_pct": 93.2140296389311
       }
     },
     {
       "id": "sales_fact.fig_key",
       "status": "pass",
-      "message": "fig_key populated on 98.6% of rows (min 90.0%)",
+      "message": "fig_key populated on 99.0% of rows (min 90.0%)",
       "detail": {
-        "non_null_pct": 98.6012680021088
+        "non_null_pct": 98.96460640554588
       }
     },
     {
@@ -580,9 +580,9 @@
     {
       "id": "bvp_addr.rows",
       "status": "pass",
-      "message": "Addressable basket 2,272 rows",
+      "message": "Addressable basket 2,342 rows",
       "detail": {
-        "rows": 2272
+        "rows": 2342
       }
     },
     {
@@ -610,10 +610,10 @@
     {
       "id": "bvp_addr.ituk_penetration",
       "status": "pass",
-      "message": "ITUK BVP penetration 73/134 (54%)",
+      "message": "ITUK BVP penetration 75/135 (56%)",
       "detail": {
-        "selling": 73,
-        "addressable": 134
+        "selling": 75,
+        "addressable": 135
       }
     },
     {
@@ -762,9 +762,9 @@
     {
       "id": "contract10.rows",
       "status": "pass",
-      "message": "Network percentile 409 rows",
+      "message": "Network percentile 408 rows",
       "detail": {
-        "rows": 409
+        "rows": 408
       }
     },
     {
@@ -796,9 +796,9 @@
     {
       "id": "contract16.rows",
       "status": "pass",
-      "message": "ITUK PMS PN audit 274 rows",
+      "message": "ITUK PMS PN audit 302 rows",
       "detail": {
-        "rows": 274
+        "rows": 302
       }
     },
     {
@@ -840,9 +840,9 @@
     {
       "id": "contract16.oil_filter.2026",
       "status": "pass",
-      "message": "ITUK oil_filter 2026: 6 PNs (min 3)",
+      "message": "ITUK oil_filter 2026: 10 PNs (min 3)",
       "detail": {
-        "pns": 6
+        "pns": 10
       }
     },
     {
@@ -868,21 +868,21 @@
     {
       "id": "figkey.sales.rows",
       "status": "pass",
-      "message": "sales_by_db_fig_key_year 75,781 rows",
+      "message": "sales_by_db_fig_key_year 82,295 rows",
       "detail": {
-        "rows": 75781
+        "rows": 82295
       }
     },
     {
       "id": "figkey.sales.mapped",
       "status": "pass",
-      "message": "Mapped fig_key rows: 75316 (min 10)",
+      "message": "Mapped fig_key rows: 81795 (min 10)",
       "detail": {}
     },
     {
       "id": "aim_gps.rows",
       "status": "pass",
-      "message": "AIM\u00d7GPS matrix 89 rows",
+      "message": "AIM\u00d7GPS matrix 88 rows",
       "detail": {}
     },
     {
@@ -902,33 +902,33 @@
     {
       "id": "contract.vor_seasonality",
       "status": "pass",
-      "message": "vor_seasonality 3,367 rows",
+      "message": "vor_seasonality 3,523 rows",
       "detail": {
-        "rows": 3367
+        "rows": 3523
       }
     },
     {
       "id": "contract.vor_profile",
       "status": "pass",
-      "message": "vor_profile 248 rows",
+      "message": "vor_profile 250 rows",
       "detail": {
-        "rows": 248
+        "rows": 250
       }
     },
     {
       "id": "contract.capture_trajectory",
       "status": "pass",
-      "message": "capture_trajectory 1,460 rows",
+      "message": "capture_trajectory 1,454 rows",
       "detail": {
-        "rows": 1460
+        "rows": 1454
       }
     },
     {
       "id": "contract.part_lifecycle",
       "status": "pass",
-      "message": "part_lifecycle 513 rows",
+      "message": "part_lifecycle 515 rows",
       "detail": {
-        "rows": 513
+        "rows": 515
       }
     },
     {
@@ -950,17 +950,17 @@
     {
       "id": "contract.price_premium",
       "status": "pass",
-      "message": "price_premium 448 rows",
+      "message": "price_premium 457 rows",
       "detail": {
-        "rows": 448
+        "rows": 457
       }
     },
     {
       "id": "contract.basket_correlation",
       "status": "pass",
-      "message": "basket_correlation 2,403 rows",
+      "message": "basket_correlation 2,500 rows",
       "detail": {
-        "rows": 2403
+        "rows": 2500
       }
     },
     {
@@ -982,9 +982,9 @@
     {
       "id": "contract.lost_sales_model",
       "status": "pass",
-      "message": "lost_sales_model 4,245 rows",
+      "message": "lost_sales_model 4,111 rows",
       "detail": {
-        "rows": 4245
+        "rows": 4111
       }
     },
     {
@@ -1014,7 +1014,7 @@
     {
       "id": "contract.distributor_geo",
       "status": "pass",
-      "message": "distributor_geo 23 rows",
+      "message": "distributor_geo 22 rows",
       "detail": {
         "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\03_analytics\\Isuzu\\prism\\data\\distributor_geo.csv"
       }
@@ -1022,9 +1022,18 @@
     {
       "id": "lost_sales.billed_ties_to_parts_base",
       "status": "pass",
-      "message": "billed EUR 112,089,306.89 vs parts base EUR 112,089,306.89 (delta 0.00)",
+      "message": "billed EUR 117,600,501.42 ties the parts base to the cent at the 2026-08-31 cut-off (verification_fixtures.yaml)",
       "detail": {
-        "delta_eur": 0.0
+        "delta_eur": 0.0,
+        "cutoff": "2026-08-31"
+      }
+    },
+    {
+      "id": "lost_sales.model_is_current",
+      "status": "pass",
+      "message": "the model covers the whole billing horizon (2026-08-31)",
+      "detail": {
+        "model_cutoff": "2026-08-31"
       }
     },
     {
@@ -1036,7 +1045,7 @@
     {
       "id": "lost_sales.price_split_closes",
       "status": "pass",
-      "message": "max residual EUR 0.01 over 2,162 rows",
+      "message": "max residual EUR 0.01 over 2,069 rows",
       "detail": {
         "max_residual_eur": 0.01
       }
@@ -1044,9 +1053,9 @@
     {
       "id": "lost_sales.mix_term_is_not_degenerate",
       "status": "pass",
-      "message": "65.0% of split rows carry a non-zero mix effect",
+      "message": "63.6% of split rows carry a non-zero mix effect",
       "detail": {
-        "mix_nonzero_share": 0.6503
+        "mix_nonzero_share": 0.6356
       }
     },
     {
@@ -1073,9 +1082,9 @@
     {
       "id": "lost_sales.pms_category_coverage_bounded",
       "status": "pass",
-      "message": "service-axis coverage 20.77% of billed euro",
+      "message": "service-axis coverage 20.81% of billed euro",
       "detail": {
-        "coverage_pct": 20.77
+        "coverage_pct": 20.81
       }
     },
     {
@@ -1136,7 +1145,7 @@
     {
       "id": "lost_sales_competitor.coverage_is_partial",
       "status": "pass",
-      "message": "largest source covers 8.01% of billed euro (must read as partial, not whole)",
+      "message": "largest source covers 7.95% of billed euro (must read as partial, not whole)",
       "detail": {}
     },
     {
@@ -1187,17 +1196,17 @@
     {
       "id": "action_ledger.nonempty",
       "status": "pass",
-      "message": "ledger rows=23236",
+      "message": "ledger rows=23763",
       "detail": {
-        "n": 23236
+        "n": 23763
       }
     },
     {
       "id": "action_ledger.lineage",
       "status": "pass",
-      "message": "monetary rows with full lineage: 3507",
+      "message": "monetary rows with full lineage: 3859",
       "detail": {
-        "monetary": 3507
+        "monetary": 3859
       }
     },
     {
@@ -1228,9 +1237,264 @@
       "message": "BVP dashboard bundle ready",
       "detail": {
         "pms_rows": 1512,
-        "mix_subgroup": 1504,
-        "mix_pms": 1504
+        "mix_subgroup": 1575,
+        "mix_pms": 1575
       }
+    },
+    {
+      "id": "freshness.no_stale_derived",
+      "status": "pass",
+      "message": "28 declared input(s) checked; every derived file is at least as new as its input",
+      "detail": {}
+    },
+    {
+      "id": "schema.gps_spu_by_distributor.csv",
+      "status": "pass",
+      "message": "gps_spu_by_distributor.csv: all 10 declared column(s) present (21 in the file); 11 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "country",
+          "region",
+          "warranty_parts_eur",
+          "sales_ex_warranty_eur",
+          "spend_per_unit_ex_warranty_eur",
+          "uio_proxy",
+          "uio_source",
+          "traffic_light",
+          "warranty_data_gap",
+          "gps_capture_ex_warranty_vs_max",
+          "traffic_light_v9_ex_warranty"
+        ]
+      }
+    },
+    {
+      "id": "schema.lost_sales_model.csv",
+      "status": "pass",
+      "message": "lost_sales_model.csv: all 18 declared column(s) present (86 in the file); 68 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "aim_l1",
+          "family_7",
+          "billed_qty",
+          "distinct_pns",
+          "genuine_eur",
+          "bvp_eur",
+          "genuine_qty",
+          "bvp_qty",
+          "asp_eur",
+          "bvp_share_units",
+          "mix_tagged_share_eur",
+          "pms_expected_qty",
+          "pms_actual_qty",
+          "pms_actual_rev_eur",
+          "pms_capture_rate",
+          "pms_avg_sp_eur",
+          "pms_gap_eur_modelled",
+          "scope",
+          "gap_units_if_below_expected",
+          "gap_type_year",
+          "gap_type_bvp_share",
+          "avg_sp_genuine_eur",
+          "avg_sp_bvp_eur",
+          "uio_units",
+          "captured_total_eur",
+          "uncaptured_eur",
+          "gps_pct",
+          "bvp_share_of_captured_pct",
+          "assumption_note",
+          "is_partial_year_ceiling",
+          "gps_pct_whole",
+          "realisation_pct_avg",
+          "actionable_gap_eur",
+          "unrecoverable_at_90pct_cover_eur",
+          "price_adjuster",
+          "spend_per_unit_eur",
+          "max_spend_eur",
+          "gps_source_year_verified",
+          "capture_slope_pp_per_year",
+          "capture_trend_r2",
+          "capture_declining",
+          "billed_base_eur",
+          "billed_end_eur",
+          "yoy_eur",
+          "yoy_pct",
+          "basis_x",
+          "revenue_base_eur",
+          "qty_base",
+          "qty_end",
+          "residual_eur",
+          "year_from",
+          "basis_y",
+          "delta_total_eur_h1",
+          "delta_volume_eur_h1",
+          "delta_price_eur_h1",
+          "delta_mix_eur_h1",
+          "revenue_base_eur_h1",
+          "qty_base_h1",
+          "qty_end_h1",
+          "residual_eur_h1",
+          "year_from_h1",
+          "bvp_unit_share_latest",
+          "bvp_share_change_pp",
+          "total_units_first_bvp_year",
+          "total_units_latest_year",
+          "bvp_first_billing_year",
+          "verdict_basis",
+          "gap_type_applies_to_year"
+        ]
+      }
+    },
+    {
+      "id": "schema.nseries_tonnage_evolution.csv",
+      "status": "pass",
+      "message": "nseries_tonnage_evolution.csv: all 11 declared column(s) present (24 in the file); 13 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "period_label",
+          "months_in_period",
+          "period_is_complete",
+          "band_label",
+          "distinct_pns",
+          "prev_period",
+          "prev_period_label",
+          "prev_billed_eur",
+          "prev_units",
+          "delta_eur",
+          "delta_pct",
+          "delta_units",
+          "delta_units_pct"
+        ]
+      }
+    },
+    {
+      "id": "schema.epc_decode_nseries_banded.csv",
+      "status": "pass",
+      "message": "epc_decode_nseries_banded.csv: all 9 declared column(s) present (26 in the file); 17 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "family",
+          "family_resolution",
+          "pms_category",
+          "series_from_epc",
+          "series_from_crossref",
+          "registry_model_band",
+          "in_epc_decode",
+          "band_count",
+          "eur_all_years",
+          "units_all_years",
+          "months_with_billing",
+          "eur_2023",
+          "units_2023",
+          "eur_2024",
+          "units_2024",
+          "units_2025",
+          "units_2026"
+        ]
+      }
+    },
+    {
+      "id": "schema.pms_capture_by_db_year.csv",
+      "status": "pass",
+      "message": "pms_capture_by_db_year.csv: all 10 declared column(s) present (16 in the file); 6 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "category_label",
+          "uio_proxy_used",
+          "uio_source",
+          "actual_rev_eur",
+          "avg_sp_eur",
+          "scope"
+        ]
+      }
+    },
+    {
+      "id": "schema.metrics_snapshot.json",
+      "status": "pass",
+      "message": "metrics_snapshot.json: all 11 declared column(s) present (55 in the file); 44 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "sales_fact.raw_total_eur",
+          "sales.gps_facing_all_lines_eur",
+          "sales.parts_base_through_prior_quarter_eur",
+          "ituk.oil_filter.2023.genuine.capture_uncapped_pct",
+          "ituk.oil_filter.2023.genuine.actual_qty",
+          "ituk.oil_filter.2023.genuine.revenue_eur",
+          "ituk.oil_filter.2023.bvp.capture_uncapped_pct",
+          "ituk.oil_filter.2023.bvp.actual_qty",
+          "ituk.oil_filter.2023.bvp.revenue_eur",
+          "ituk.oil_filter.2023.total.capture_uncapped_pct",
+          "ituk.oil_filter.2023.total.actual_qty",
+          "ituk.oil_filter.2023.total.revenue_eur",
+          "ituk.oil_filter.2024.genuine.capture_uncapped_pct",
+          "ituk.oil_filter.2024.genuine.actual_qty",
+          "ituk.oil_filter.2024.genuine.revenue_eur",
+          "ituk.oil_filter.2024.bvp.capture_uncapped_pct",
+          "ituk.oil_filter.2024.bvp.actual_qty",
+          "ituk.oil_filter.2024.bvp.revenue_eur",
+          "ituk.oil_filter.2024.total.capture_uncapped_pct",
+          "ituk.oil_filter.2024.total.actual_qty",
+          "ituk.oil_filter.2024.total.revenue_eur",
+          "ituk.oil_filter.2025.genuine.capture_uncapped_pct",
+          "ituk.oil_filter.2025.genuine.actual_qty",
+          "ituk.oil_filter.2025.genuine.revenue_eur",
+          "ituk.oil_filter.2025.bvp.capture_uncapped_pct",
+          "ituk.oil_filter.2025.bvp.actual_qty",
+          "ituk.oil_filter.2025.bvp.revenue_eur",
+          "ituk.oil_filter.2025.total.capture_uncapped_pct",
+          "ituk.oil_filter.2025.total.actual_qty",
+          "ituk.oil_filter.2025.total.revenue_eur",
+          "ituk.oil_filter.2026.genuine.capture_uncapped_pct",
+          "ituk.oil_filter.2026.genuine.actual_qty",
+          "ituk.oil_filter.2026.genuine.revenue_eur",
+          "ituk.oil_filter.2026.bvp.capture_uncapped_pct",
+          "ituk.oil_filter.2026.bvp.actual_qty",
+          "ituk.oil_filter.2026.bvp.revenue_eur",
+          "ituk.oil_filter.2026.total.capture_uncapped_pct",
+          "ituk.oil_filter.2026.total.actual_qty",
+          "ituk.oil_filter.2026.total.revenue_eur",
+          "mix.ITUK.genuine_share_eur_pct_2025",
+          "mix.UTI.genuine_share_eur_pct_2025",
+          "runway.network.wallet_eur_2030",
+          "defection.active_alerts",
+          "leakage.ituk.benchmark_gap_eur"
+        ]
+      }
+    },
+    {
+      "id": "schema.network_percentile.csv",
+      "status": "pass",
+      "message": "network_percentile.csv: all 8 declared column(s) present (8 in the file)",
+      "detail": {
+        "added": []
+      }
+    },
+    {
+      "id": "schema.bvp_pn_dimension.csv",
+      "status": "pass",
+      "message": "bvp_pn_dimension.csv: all 3 declared column(s) present (16 in the file); 13 new column(s) reported, not a defect",
+      "detail": {
+        "added": [
+          "product_family",
+          "product_subgroup",
+          "sheet_source",
+          "in_bvp_catalog",
+          "pms_category",
+          "category_label",
+          "product_group",
+          "dashboard_scope",
+          "product_group_label",
+          "subgroup_label",
+          "filter_part_role",
+          "pms_capture_eligible",
+          "mix_subgroup"
+        ]
+      }
+    },
+    {
+      "id": "schema.no_column_lost_vs_git_head",
+      "status": "pass",
+      "message": "no declared file has lost a column against its committed version",
+      "detail": {}
     }
   ]
 }

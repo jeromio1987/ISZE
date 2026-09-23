@@ -1,6 +1,8 @@
 {
   "snapshot": "2026-09-19",
-  "generated_at": "2026-09-19T08:46:15+00:00",
+  "snapshot_field_meaning": "decode_snapshot -- the date the EPC decode and the series-to-tonnage mapping behind this file were taken. It is NOT the billing window; read `billing_through` for that.",
+  "decode_snapshot": "2026-09-19",
+  "generated_at": "2026-09-23T03:31:01+00:00",
   "generated_by": "03_analytics/Isuzu/prism/scripts/build_nseries_tonnage_bands.py",
   "outputs": {
     "series_to_tonnage": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\series_to_tonnage.csv",
@@ -20,6 +22,8 @@
     "unresolved_series"
   ],
   "billing_source": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_build\\_deep_billing_cache.parquet",
+  "billing_through": "2026-08",
+  "billing_window": "2023-01 to 2026-08",
   "book_markets": [
     "BELGIUM",
     "CYPRUS",
@@ -60,50 +64,50 @@
   "by_status": {
     "no_series_found": {
       "part_numbers": 32,
-      "eur_all_years": 206138.62
+      "eur_all_years": 220164.1
     },
     "series_unresolved": {
       "part_numbers": 4,
-      "eur_all_years": 116097.15
+      "eur_all_years": 122961.91
     },
     "shared_across_bands": {
       "part_numbers": 118,
-      "eur_all_years": 3010701.0
+      "eur_all_years": 3229689.74
     },
     "single_band": {
       "part_numbers": 81,
-      "eur_all_years": 1714404.89
+      "eur_all_years": 1789999.63
     }
   },
   "band_split_single_versus_shared": {
     "3.5t_N35": {
       "label": "3.5 t (N35 Grafter)",
       "single_band_pns": 10,
-      "single_band_eur": 13803.84,
+      "single_band_eur": 14198.1,
       "shared_pns_that_also_fit": 40,
-      "shared_eur_that_also_fits": 2693336.21
+      "shared_eur_that_also_fits": 2818146.52
     },
     "5.5t_N50_N55": {
       "label": "5.5 t (N50 / N55)",
       "single_band_pns": 0,
       "single_band_eur": 0,
       "shared_pns_that_also_fit": 33,
-      "shared_eur_that_also_fits": 2658877.51
+      "shared_eur_that_also_fits": 2782168.09
     },
     "7.5t_N50_N62_N75": {
       "label": "7.5 t (N50 / N62 / N75)",
       "single_band_pns": 34,
-      "single_band_eur": 1275957.82,
+      "single_band_eur": 1325815.84,
       "shared_pns_that_also_fit": 26,
-      "shared_eur_that_also_fits": 2582156.19
+      "shared_eur_that_also_fits": 2700199.74
     }
   },
-  "n_series_total_eur_all_years": 4305333.64,
-  "shared_across_bands_eur": 3010701.0,
-  "series_unresolved_eur": 116097.15,
+  "n_series_total_eur_all_years": 4501286.47,
+  "shared_across_bands_eur": 3229689.74,
+  "series_unresolved_eur": 122961.91,
   "tie_out": {
-    "bands_plus_shared_plus_unresolved_eur": 4305333.64,
-    "tagged_n_series_billing_eur": 4305333.64,
+    "bands_plus_shared_plus_unresolved_eur": 4501286.47,
+    "tagged_n_series_billing_eur": 4501286.47,
     "delta_eur": 0.0
   },
   "rules": [

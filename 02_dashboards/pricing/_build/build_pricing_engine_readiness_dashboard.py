@@ -192,7 +192,7 @@ def build_why_engine(d: pd.DataFrame, base: float, eng_rev: float, redistributed
         "bullets": [
             "Same +3.0000% weighted index — solver hits the target exactly under constant prior-year units.",
             "Wallet zones (raise / contested / defend from PMS total capture) plus street evidence gates decide who funds vs who is cut.",
-            "Reason codes on every cell; caps (+8%, tighter on top-50) and floors; θ_parc with street veto.",
+            "Reason codes on every cell; floors still apply; per-line % ceilings removed 2026-09-20.",
             "Trusted premium basis required for position moves (oem_benchmark / iam_derived); hold-when-blind on NO_EVIDENCE.",
             "Brand-quality ceiling ladder (+30/+60/+150/+250) in policy; run registry and alloc detail for every logged move.",
         ],
@@ -1123,7 +1123,7 @@ def svg_launch_compare(L: dict) -> str:
 
 def svg_caps_strip(caps: dict) -> str:
     items = [
-        ("At +8% cap", caps["n_capped"], "#c0552d"),
+        ("At former cap (retired)", caps["n_capped"], "#c0552d"),
         ("θ street-vetoed", caps["n_theta_vetoed"], "#eda100"),
         ("At floor −12%", caps["n_at_floor"], "#8a9bb0"),
     ]
@@ -1593,7 +1593,7 @@ svg.ch .ax{{font-size:11px;fill:#444}}
 
 <section id="we-hist">
   <h3 class="sub">5 · Caps, floors, reason codes — Δ distribution</h3>
-  <p class="lead">Under a flat +3%, every euro of weight sits in one bin. Under the engine, weight spreads across cuts, holds, raises, and the +8% cap.</p>
+  <p class="lead">Under a flat +3%, every euro of weight sits in one bin. Under the engine, weight spreads across cuts, holds, and raises (no binding per-line % ceiling).</p>
   <div class="card">
     <h3>Histogram of engine deltas (€ weight)</h3>
     {hist_svg}

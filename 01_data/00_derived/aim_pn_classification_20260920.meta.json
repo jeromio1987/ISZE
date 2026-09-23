@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-20T14:34:48.309397+00:00",
+  "generated": "2026-09-20T18:46:19.799164+00:00",
   "built_by": "01_data/91_build/build_aim_classification_20260920.py",
   "purpose": "Two-axes lock 2026-09-17: Axis A = catalog_l1/l2/l3 identity (catalogue, from the declared upstream pr00_classification.csv); Axis B = commercial score beside Axis A (contested per part per market) - not built as scored columns here yet. legacy workbook_l* is context only. Do not invent a fourth layer.",
   "supersedes_for_rebuild": "aim_pn_classification_v2.csv (18 Sep) - read-only, not replaced",
@@ -18,7 +18,6 @@
       "TRANSPORT": "freight",
       "REBATE": "rebate",
       "LATEPAYMENTINTEREST": "finance",
-      "DISRACK01": "adjustment",
       "5874123810": "tool",
       "5874123811": "tool",
       "5874123812": "tool",
@@ -26,12 +25,24 @@
       "SERVICEFEEOUTSIDEEUROPE": "service_fee",
       "SERVICEFEEWITHINEEUROPE": "service_fee",
       "COSTDEMURRAGE": "demurrage",
-      "COMPENSATIONSSALEE-CREDIT": "e_credit"
+      "COMPENSATIONSSALEE-CREDIT": "e_credit",
+      "20MTGKIT": "marketing_item",
+      "60MTGKIT": "marketing_item",
+      "BOXES_ASC": "merchandise",
+      "TOWEL_ASC": "merchandise",
+      "BACKPACK": "merchandise",
+      "NOTEBOOK": "merchandise",
+      "PEN": "merchandise",
+      "DISRACK01": "display",
+      "CORE_7.5": "core_deposit",
+      "CORE_9": "core_deposit",
+      "CORE_9.5": "core_deposit"
     },
     "additions_not_in_source": [
       "SERVICEFEEWITHINEEUROPE"
     ],
-    "matching": "normalised: uppercase, spaces removed, leading zeros stripped (the master carries REBATE and 0000REBATE, and LATEPAYMENTINTEREST and 'LATE PAYMENT INTEREST', for the same entities)",
+    "matching": "exact normalised key (uppercase, spaces removed). Leading zeros are NOT stripped: padding rows such as 0000REBATE / 000SERVICE are zero-euro placeholders, not the billed line, and the billed entities match on their own key.",
+    "unnamed_fallback": "a non-empty key that does not start with a digit is tagged non_part_unnamed - that is the identity test for a non-part, not a length test",
     "effect": "tags line_kind; rows are kept, never dropped. Consumers that want parts revenue filter line_kind=='part'."
   },
   "rows": 164907,
@@ -50,8 +61,8 @@
     "description_present": 27207,
     "catalog_l2_count": 27,
     "catalog_l3_count": 177,
-    "non_part_rows": 13,
-    "non_part_l12m_eur": 1807550.4
+    "non_part_rows": 191,
+    "non_part_l12m_eur": 2551569.78
   },
   "gate_expectations": {
     "axis_a_l2_approved": 27,

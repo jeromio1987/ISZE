@@ -1,0 +1,17 @@
+﻿### CANDIDATE : rows all-integer 82 ; fractional 2 ; no numeric 0
+    r22  U KING    [23209.928, 24336.225, 25293.781, 26145.631, 26923.435]
+    r24  U KING    [963.225, 1055.276, 1141.034, 1217.808, 1285.757]
+    rows with fractional historical values 2014-2025: 2
+    grand total 2026 = 252218.15391716975 ; row2 formula? 
+### V19 : rows all-integer 37 ; fractional 2 ; no numeric 45
+    r22  U KING    [23209.928, 24336.225, 25293.781, 26145.631, 26923.435]
+    r24  U KING    [963.225, 1055.276, 1141.034, 1217.808, 1285.757]
+    rows with fractional historical values 2014-2025: 2
+    grand total 2026 = 269314.1539171698 ; row2 formula? 
+formula B2 = None
+formula G2 = '=SUMPRODUCT(G7:G90*((($F$7:$F$90<>"MIDI Europe")+($B$4="Include"))>0))'
+formula AQ2 = '=SUMPRODUCT(AQ7:AQ90*((($F$7:$F$90<>"MIDI Europe")+($B$4="Include"))>0))'
+formula AQ26 = 921
+formula AQ79 = 51
+formula AQ33 = 137
+row 2 label: GRAND TOTAL | row3: Growth Rate Y-o-Y | row4: MIDI Filter:

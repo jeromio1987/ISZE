@@ -79,6 +79,15 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | CY2024-2025.XLSX | `01_data/` (root, wired) | ⚙ more-complete 2025 re-export (supersedes CY2025 in pipeline) |
 | Extra ad-hoc billing extracts | `01_data/04_sales/` | topic drop (not `12_raw/sales/`) |
 
+### 04b · Orders (create / SaTy — not billing) → `12_raw/orders/`
+| File | Path | Flag |
+|------|------|------|
+| `Order_Detail_CY2025_2026YTD_Aug.xlsx` | `01_data/12_raw/orders/` | ★ network order lines · Created on 2025-01-01 → 2026-08-31 · SaTy SOR/VOR/RUSH… · filed 2026-09-22 |
+| `IBX_order_2026YTD.xlsx` | `01_data/12_raw/orders/` | Benelux (sold-to 90) slice · into Sep 2026 |
+| `SOURCE.md` | `01_data/12_raw/orders/` | intake note |
+| `order_headers_from_Order_Detail.csv` | `01_data/00_derived/` | ⚙ one row per Sales Doc. |
+| `order_sor_week_spread_2026W32.csv` · `order_sor_customer_size_spread_CY2026YTD.csv` · `order_sor_spread_summary_20260922.json` | `01_data/00_derived/` | ⚙ SOR value-spread cuts |
+
 ### 05 · Dealer sell-out / sales-to-dealer → `05_Dealer_sellout/` + `12_raw/dealer_sales/`
 | File | Path | Flag |
 |------|------|------|
@@ -181,7 +190,7 @@ Static HTML twins of pages 20–23 (self-contained, no CDN) live in `02_dashboar
 | 08 | `08_Distributor/` | Per-DB distributor docs + studies |
 | 10 | `10_Tender/` | Tender strategy briefs |
 | 11 | `11_planning/` | KPI Master, VPACC action plan, PL plan, reviewed BP |
-| 12 | `12_raw/` | Immutable billing (`sales/`), dealer sell-out, reference catalog |
+| 12 | `12_raw/` | Immutable billing (`sales/`), dealer sell-out, orders (`orders/`), reference catalog |
 | 13 | `13_models/` | Phase 1–3 Excel living models |
 | 14 | `14_dashboards/` | `isze_data.json`, `tender_data.json`, **`kosha/`** — alias junction `dashboards/` (§6) |
 | 15 | `15_gpt_safe/` | Small MD/CSV only — the **only** source for GPT uploads |

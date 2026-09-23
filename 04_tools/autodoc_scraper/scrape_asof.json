@@ -1,33 +1,10 @@
-﻿{
-    "generated_at":  "2026-07-26T20:06:34.6784887Z",
-    "refresh_status":  "done_2026-07-26",
-    "sources":  {
-                    "ks_results.csv":  {
-                                           "mtime_utc":  "2026-07-26T19:50:45.1922942Z",
-                                           "bytes":  62315,
-                                           "mtime_local":  "2026-07-26T21:50:45"
-                                       },
-                    "tmc_results.csv":  {
-                                            "mtime_utc":  "2026-07-26T19:50:58.7717769Z",
-                                            "bytes":  5125,
-                                            "mtime_local":  "2026-07-26T21:50:58"
-                                        },
-                    "tranzparts_results.csv":  {
-                                                   "mtime_utc":  "2026-07-26T19:50:47.4022174Z",
-                                                   "bytes":  2955,
-                                                   "mtime_local":  "2026-07-26T21:50:47"
-                                               },
-                    "mekonomen_results.csv":  {
-                                                  "mtime_utc":  "2026-07-16T15:10:43.8270296Z",
-                                                  "bytes":  11301,
-                                                  "mtime_local":  "2026-07-16T17:10:43"
-                                              },
-                    "auto365_results.csv":  {
-                                                "mtime_utc":  "2026-07-26T19:52:25.3936222Z",
-                                                "bytes":  61893,
-                                                "mtime_local":  "2026-07-26T21:52:25"
-                                            }
-                },
-    "refresh_log":  "_logs/refresh_manual_2026-07-26_2128.log",
-    "notes":  "mekonomen produced 0 rows — previous CSV restored from .pre_reset.bak; KS/TMC/Auto365 refreshed; tranzparts present if in log"
+{
+  "as_of": "2026-09-22",
+  "sources": {
+    "ks": "2026-09-22 top300 refresh + BFS deepen",
+    "tranzparts": "2026-09-22",
+    "tmc": "2026-09-22",
+    "mekonomen": "skipped robots disallow (evidence in internet_scrape_2026-09-22)",
+    "auto365": "skipped robots disallow (evidence in internet_scrape_2026-09-22)"
+  }
 }

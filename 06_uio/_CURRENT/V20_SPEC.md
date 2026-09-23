@@ -404,11 +404,39 @@ have three different weights. The real ladder for Europe is:
 
 Confirmed against Isuzu Ireland's own published range (3.5 t, 7.5 t, 11 t) and the P700 launch classes
 (3.5, 6.5, 7.5, 13.5 t). Across the 3,238 trucks in the VIN file this makes the fleet look like 26,689
-tonnes when it is really 19,687 — an average of 8.24 t per truck instead of 6.08 t.
+tonnes when it is really **19,545** — an average of 8.24 t per truck instead of **6.036 t**.
+
+*(Corrected 2026-09-22 — an earlier revision of this spec read 19,687 t / 6.08 t. That figure priced the
+284 FRR units at 11.5 t, the midpoint of the "11–12 t" range. The shipped register prices them at
+11.0 t, the lower bound, which is what `gvw_t` and `gvw_t_source = series` actually hold. The two differ
+by exactly 142 t = 284 × 0.5 t. Both sit inside the real FRR range; 11.0 t is the shipped value and is
+what every downstream number uses. Quote **19,545 t / 6.036 t** when reading the register; 11.0 vs 11.5
+for FRR remains a deliberate choice, and the spec's own fix line above still says "11–12".)*
 
 **Fix in `build_vin_register.py`:** replace the `GVW_FROM_CODE` lookup, which reads the chassis code as
 tonnage, with a series-to-GVW map (NLR 3.5, NMR 5.5, NNR 6.5, NPR 7.5, FRR 11–12, FSR 13.5). The current
 map is right for NPR75 by coincidence and wrong for everything else.
+
+### Correction 2 — 2026-09-22: a 5.5 t NMR was priced at the 3.5 t rate
+
+`prism/modules/gps_model_targets.py` grouped **`NMR` with `NLR`** in the N35 Grafter branch, so a 5.5 t
+N50 / N55 truck (register: NMR85 / NMR88 at 5.5 t; `scripts/build_nseries_tonnage_bands.py`: "NMR85/NMR88
+sit at 5.5 t against NLR at 3.5 t") was charged the **€296** 3.5 t wallet. NMR now maps to the
+N75 / N50 / N62 group at **€739**. Population is small — the register holds 149 NMR units, of which
+Malta 48 and Germany 81 — so the euro effect is modest, but it was wrong on the facts and would have
+grown as the tonnage work expanded. Verified after the change: `N35 / NLR / NLR88 → €296`,
+`NMR / NMR85 / NMR88 / NNR / NPR75 / LD → €739`, `D-MAX → €250`, `F110 → €887`.
+
+**A worse version of the same fault still sits one layer down, in the GPS v9 build, and is NOT yet
+fixed.** `01_data/91_build/gps_v9_loaders.py` defines the rates and then **never applies N35 to a
+non-ITUK market**: `max_spend_from_buckets()` charges `buckets["LD"] * RATE_N75` (€739) for every
+distributor except ITUK, and `RATE_N35` appears only in the ITUK branch. So for Portugal, Germany,
+Ireland, Belgium, Malta and Cyprus — the six markets the 18 September split work was done for — the
+target spend still prices the whole LD block at the 7.5 t rate. Portugal's LD block is **~68 % 3.5 t**,
+which is the largest single distortion in the table. The signed key `uio_v19_gps.json` already carries
+`rates.N35 = 296` and the Prism mapper is correct, so the two GPS paths genuinely disagree; the v9 build
+is the one that feeds the published GPS figures. **Not changed in this pass** — it moves a published
+ceiling and belongs behind a deliberate decision, not a side edit.
 
 ### Why this hits GPS
 
@@ -426,10 +454,15 @@ The car park file has no model split for these markets — the model column just
 N-series truck. The mapper (`prism/modules/gps_model_targets.py`) sees "LD" and returns
 N75 / N50 / N62. **So a 3.5-tonne Grafter is charged €739 of parts wallet a year instead of €296.**
 
-Two things follow. First, the N35 Grafter row in the targets file is **dead configuration** — no code
-path can ever return it, and even the branch that looks for "NLR" or "N35" routes to LCV / D-Max at
-€250, not to the €296 Grafter rate. Second, the size of the distortion depends entirely on how many
-3.5-tonne trucks a market runs, and that varies enormously:
+Two things follow. First, **the last clause above is stale and has been corrected (2026-09-22).** The
+claim that the "NLR" / "N35" branch "routes to LCV / D-Max at €250" was true before the 2026-09-17
+mapper fix and is no longer true: in the current code an explicit `N35`, `GRAFTER` or `NLR` row returns
+the €296 N35_Grafter group, so the Grafter row is live configuration, not dead. What *was* wrong, and is
+now fixed, is the opposite direction on one series: **`NMR`** (a 5.5 t N50/N55 truck) used to fall into
+the same branch as NLR and was priced at the 3.5 t rate; it now maps to the N75/N50/N62 group at €739,
+matching the 5.5 t evidence in the VIN register and in `scripts/build_nseries_tonnage_bands.py`.
+Second, the size of the original distortion depends entirely on how many 3.5-tonne trucks a market runs,
+and that varies enormously:
 
 | Market | Share of N-series that is 3.5 t | Effect on the whole distributor's target wallet | Multiply current GPS % by |
 |---|---:|---:|---:|

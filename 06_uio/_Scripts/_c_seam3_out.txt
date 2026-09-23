@@ -1,0 +1,154 @@
+﻿==================================================================================================================================
+RECIPE TABLE ÔÇö "reconstruct from the seam year forward and scale to the seam level"
+k_t = (UIO_t - regs_t) / UIO_{t-1}   [scale-invariant, so it is the same for scaled and unscaled series]
+==================================================================================================================================
+
+##################################################################################################################################
+r26  IRELAND   LD     2025 level = 731   curve life = 9.85 yr
+    V19 2010-2025: [3766, 3303, 2848, 2390, 12, 190, 359, 498, 706, 820, 731, 718, 718, 713, 749, 731]
+    back-solve from 1990 -> negative implied cohorts: [(2014, -1921.7), (2020, -15.7), (2021, -59.0), (2022, -47.1), (2023, -127.7), (2024, -39.1)]
+    seam=none  negatives after seam: [(2014, -1921.7), (2020, -15  post-seam 2025 stock=   1299.0  scale to 2025=0.563
+              forecast = [1515, 1514, 1508, 1632, 1734]
+              k (disclosed regs) = --,0.857,0.854,0.939,0.930
+              k (V19-implied regs)= --,0.857,0.854,0.939,0.930   no flags
+    seam=2005  negatives after seam: [(2009, -402.0), (2010, -402  post-seam 2025 stock=   1479.0  scale to 2025=0.494
+              forecast = [1695, 1698, 1710, 1841, 1922]
+              k (disclosed regs) = --,0.874,0.880,0.950,0.927
+              k (V19-implied regs)= --,0.874,0.880,0.950,0.927   no flags
+    seam=2013  negatives after seam: [(2014, -2354.1), (2024, -4.  post-seam 2025 stock=   1089.7  scale to 2025=0.671
+              forecast = [1306, 1376, 1317, 1506, 1580]
+              k (disclosed regs) = --,0.889,0.800,0.979,0.906
+              k (V19-implied regs)= --,0.889,0.800,0.979,0.906   no flags
+    seam=2014  negatives after seam: [(2020, -80.1)]               post-seam 2025 stock=    705.1  scale to 2025=1.037
+              forecast = [921, 1106, 1284, 1472, 1643]
+              k (disclosed regs) = --,0.966,0.965,0.978,0.970
+              k (V19-implied regs)= --,0.966,0.965,0.978,0.970   no flags
+    seam=2015  negatives after seam: [(2020, -80.6)]               post-seam 2025 stock=    705.5  scale to 2025=1.036
+              forecast = [921, 1106, 1284, 1472, 1643]
+              k (disclosed regs) = --,0.966,0.965,0.979,0.969
+              k (V19-implied regs)= --,0.966,0.965,0.979,0.969   no flags
+    seam=2019  negatives after seam: [(2020, -80.8), (2021, -5.6)  post-seam 2025 stock=    730.4  scale to 2025=1.001
+              forecast = [946, 1133, 1270, 1440, 1641]
+              k (disclosed regs) = --,0.970,0.929,0.964,0.989
+              k (V19-implied regs)= --,0.970,0.929,0.964,0.989   no flags
+
+##################################################################################################################################
+r29  IRELAND   LCV    2025 level = 1338   curve life = 8.13 yr
+    V19 2010-2025: [5836, 4736, 3795, 3060, 2472, 2097, 1817, 1620, 1435, 870, 884, 916, 1004, 1018, 1135, 1338]
+    back-solve from 1990 -> negative implied cohorts: [(2012, -19.0), (2014, -53.9), (2019, -317.7)]
+    seam=none  negatives after seam: [(2012, -19.0), (2014, -53.9  post-seam 2025 stock=   1411.6  scale to 2025=0.948
+              forecast = [1842, 2160, 2472, 2836, 3128]
+              k (disclosed regs) = --,0.940,0.945,0.973,0.951
+              k (V19-implied regs)= --,0.940,0.945,0.973,0.951   no flags
+    seam=2005  negatives after seam: [(2006, -634.3), (2007, -456  post-seam 2025 stock=   2141.1  scale to 2025=0.625
+              forecast = [2571, 2944, 3249, 3245, 3232]
+              k (disclosed regs) = --,0.978,0.958,0.866,0.864
+              k (V19-implied regs)= --,0.978,0.958,0.866,0.864   no flags
+    seam=2013  negatives after seam: [(2014, -526.8), (2015, -293  post-seam 2025 stock=   1906.1  scale to 2025=0.702
+              forecast = [2336, 2476, 2647, 2898, 3056]
+              k (disclosed regs) = --,0.876,0.895,0.932,0.906
+              k (V19-implied regs)= --,0.876,0.895,0.932,0.906   no flags
+    seam=2014  negatives after seam: [(2015, -325.6), (2016, -212  post-seam 2025 stock=   1946.8  scale to 2025=0.687
+              forecast = [2377, 2533, 2711, 2920, 3129]
+              k (disclosed regs) = --,0.885,0.900,0.918,0.924
+              k (V19-implied regs)= --,0.885,0.900,0.918,0.924   no flags
+    seam=2015  negatives after seam: [(2016, -238.1), (2017, -138  post-seam 2025 stock=   1535.4  scale to 2025=0.871
+              forecast = [1965, 2579, 2768, 2980, 3151]
+              k (disclosed regs) = --,1.094,0.906,0.921,0.913
+              k (V19-implied regs)= --,1.094,0.906,0.921,0.913   no flags
+    seam=2019  negatives after seam: none                          post-seam 2025 stock=   1188.5  scale to 2025=1.126
+              forecast = [1619, 1990, 2389, 2639, 2969]
+              k (disclosed regs) = --,0.964,0.984,0.925,0.962
+              k (V19-implied regs)= --,0.964,0.984,0.925,0.962   no flags
+
+##################################################################################################################################
+r51  PORTUGL   LD     2025 level = 2206   curve life = 9.85 yr
+    V19 2010-2025: [16964, 17320, 17166, 16605, 23, 96, 323, 619, 909, 1502, 1554, 1742, 1922, 2127, 2239, 2206]
+    back-solve from 1990 -> negative implied cohorts: [(2014, -14813.5), (2023, -736.6), (2024, -822.8), (2025, -60.8)]
+    seam=none  negatives after seam: [(2014, -14813.5), (2023, -7  post-seam 2025 stock=   6751.0  scale to 2025=0.327
+              forecast = [7207, 6171, 5102, 4895, 4655]
+              k (disclosed regs) = --,0.793,0.753,0.870,0.858
+              k (V19-implied regs)= --,0.793,0.753,0.870,0.858   no flags
+    seam=2005  negatives after seam: [(2009, -117.1), (2014, -143  post-seam 2025 stock=   6955.4  scale to 2025=0.317
+              forecast = [7412, 6377, 5355, 5176, 4923]
+              k (disclosed regs) = --,0.799,0.768,0.881,0.863
+              k (V19-implied regs)= --,0.799,0.768,0.881,0.863   no flags
+    seam=2013  negatives after seam: [(2014, -16416.0), (2024, -5  post-seam 2025 stock=   5729.6  scale to 2025=0.385
+              forecast = [6186, 5693, 4386, 4654, 4228]
+              k (disclosed regs) = --,0.847,0.690,0.957,0.811
+              k (V19-implied regs)= --,0.847,0.690,0.957,0.811   no flags
+    seam=2014  negatives after seam: none                          post-seam 2025 stock=   2013.9  scale to 2025=1.095
+              forecast = [2470, 2839, 3178, 3533, 3893]
+              k (disclosed regs) = --,0.965,0.959,0.968,0.973
+              k (V19-implied regs)= --,0.965,0.959,0.968,0.973   no flags
+    seam=2015  negatives after seam: none                          post-seam 2025 stock=   2014.0  scale to 2025=1.095
+              forecast = [2470, 2839, 3177, 3533, 3892]
+              k (disclosed regs) = --,0.965,0.958,0.968,0.973
+              k (V19-implied regs)= --,0.965,0.958,0.968,0.973   no flags
+    seam=2019  negatives after seam: none                          post-seam 2025 stock=   2044.3  scale to 2025=1.079
+              forecast = [2501, 2873, 3153, 3491, 3889]
+              k (disclosed regs) = --,0.967,0.939,0.963,0.983
+              k (V19-implied regs)= --,0.967,0.939,0.963,0.983   no flags
+
+##################################################################################################################################
+r54  PORTUGL   LCV    2025 level = 4733   curve life = 8.13 yr
+    V19 2010-2025: [1521, 1342, 1003, 900, 1049, 1236, 1555, 2186, 2635, 3253, 3267, 3313, 3418, 3766, 4410, 4733]
+    back-solve from 1990 -> negative implied cohorts: [(2005, -14.6), (2006, -132.7), (2012, -34.0)]
+    seam=none  negatives after seam: [(2005, -14.6), (2006, -132.  post-seam 2025 stock=   4209.4  scale to 2025=1.124
+              forecast = [5109, 5818, 6470, 7106, 7753]
+              k (disclosed regs) = --,0.963,0.968,0.968,0.973
+              k (V19-implied regs)= --,0.963,0.968,0.968,0.973   no flags
+    seam=2005  negatives after seam: [(2006, -1032.6), (2007, -89  post-seam 2025 stock=   4122.3  scale to 2025=1.148
+              forecast = [5022, 5917, 6724, 7260, 7787]
+              k (disclosed regs) = --,0.999,0.994,0.955,0.957
+              k (V19-implied regs)= --,0.999,0.994,0.955,0.957   no flags
+    seam=2013  negatives after seam: none                          post-seam 2025 stock=   4260.2  scale to 2025=1.111
+              forecast = [5160, 5859, 6507, 7145, 7758]
+              k (disclosed regs) = --,0.961,0.967,0.969,0.968
+              k (V19-implied regs)= --,0.961,0.967,0.969,0.968   no flags
+    seam=2014  negatives after seam: none                          post-seam 2025 stock=   4267.1  scale to 2025=1.109
+              forecast = [5167, 5872, 6525, 7153, 7779]
+              k (disclosed regs) = --,0.962,0.968,0.967,0.970
+              k (V19-implied regs)= --,0.962,0.968,0.967,0.970   no flags
+    seam=2015  negatives after seam: none                          post-seam 2025 stock=   4075.2  scale to 2025=1.161
+              forecast = [4975, 5880, 6540, 7175, 7789]
+              k (disclosed regs) = --,1.001,0.969,0.968,0.968
+              k (V19-implied regs)= --,1.001,0.969,0.968,0.968   no flags
+    seam=2019  negatives after seam: none                          post-seam 2025 stock=   4179.9  scale to 2025=1.132
+              forecast = [5080, 5795, 6570, 6831, 7371]
+              k (disclosed regs) = --,0.964,0.989,0.912,0.956
+              k (V19-implied regs)= --,0.964,0.989,0.912,0.956   no flags
+
+##################################################################################################################################
+r90  CYPRUS    LCV    2025 level = 2105   curve life = 8.13 yr
+    V19 2010-2025: [8450, 7261, 6175, 5236, 4417, 3721, 3168, 2740, 2347, 2197, 1829, 1603, 1601, 1734, 1859, 2105]
+    back-solve from 1990 -> negative implied cohorts: [(2014, -137.6)]
+    seam=none  negatives after seam: [(2014, -137.6)]              post-seam 2025 stock=   1858.9  scale to 2025=1.132
+              forecast = [2238, 2500, 2827, 3069, 3349]
+              k (disclosed regs) = --,0.951,0.982,0.959,0.974
+              k (V19-implied regs)= --,0.938,0.987,0.958,0.974   no flags
+    seam=2005  negatives after seam: [(2006, -1363.5), (2007, -50  post-seam 2025 stock=   2811.7  scale to 2025=0.749
+              forecast = [3190, 3559, 3865, 3671, 3583]
+              k (disclosed regs) = --,0.999,0.981,0.857,0.878
+              k (V19-implied regs)= --,0.990,0.985,0.857,0.878   no flags
+    seam=2013  negatives after seam: [(2014, -714.3), (2015, -553  post-seam 2025 stock=   2626.7  scale to 2025=0.801
+              forecast = [3005, 2994, 3083, 3207, 3310]
+              k (disclosed regs) = --,0.872,0.905,0.924,0.920
+              k (V19-implied regs)= --,0.863,0.909,0.923,0.920   no flags
+    seam=2014  negatives after seam: [(2015, -607.7), (2016, -432  post-seam 2025 stock=   2873.1  scale to 2025=0.733
+              forecast = [3252, 3229, 3291, 3313, 3450]
+              k (disclosed regs) = --,0.879,0.904,0.898,0.933
+              k (V19-implied regs)= --,0.870,0.908,0.897,0.933   no flags
+    seam=2015  negatives after seam: [(2016, -478.6), (2017, -325  post-seam 2025 stock=   2199.4  scale to 2025=0.957
+              forecast = [2578, 3377, 3446, 3464, 3533]
+              k (disclosed regs) = --,1.166,0.910,0.901,0.916
+              k (V19-implied regs)= --,1.155,0.914,0.901,0.916   no flags
+    seam=2019  negatives after seam: [(2020, -324.1), (2021, -166  post-seam 2025 stock=   2175.6  scale to 2025=0.968
+              forecast = [2554, 2807, 3167, 3114, 3283]
+              k (disclosed regs) = --,0.953,0.996,0.870,0.939
+              k (V19-implied regs)= --,0.942,1.000,0.870,0.938   no flags
+
+==================================================================================================================================
+CANDIDATE c AS SHIPPED BY THE SIBLING PASS ÔÇö what is on disk now
+==================================================================================================================================
+r54 forecast = see _c_cache (c not cached) ; r90 forecast = 

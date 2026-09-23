@@ -73,8 +73,10 @@ formula:
 # ---------------------------------------------------------------- allocation
 allocation:
   target: 0.03                  # weighted increase on net-to-DB
-  cap: 0.08                     # per-line ceiling
-  cap_top50: 0.05               # tighter ceiling inside a DB's top-50 basket
+  # Per-line % ceilings REMOVED 2026-09-20 — Jerome: not binding; delete everywhere.
+  # null = no upper clip in the engine (floor still applies).
+  cap: null
+  cap_top50: null
   floor: -0.12
 
   # Target genuine position vs the benchmark brand — IN PERCENT, then stored

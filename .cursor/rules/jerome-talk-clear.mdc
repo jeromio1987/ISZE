@@ -57,6 +57,38 @@ happened. No "let me check", no "I will now run", no "first I'll look at".
 Answer it. Not the adjacent question you would rather answer. If he asks whether something can be
 done, say yes or no first, then how. If he asks why, explain why, not what you did about it.
 
+## The words that actually leak (added 2026-09-20)
+
+**He asked a third time:** *"Can we add a rule that you talk plain english to me? I dont
+understand everything."* The tone ban above was not enough, because what leaks is not tone. It is
+**data and pipeline words** that only mean something inside this workspace.
+
+These slipped past every rule while I was obeying the tone rules. Banned unless explained in the
+same sentence, in six words or less:
+
+| leaked | say instead |
+|---|---|
+| upstream / downstream | the file it is copied from / the packs that read it |
+| baseline | the last approved version |
+| the gate / gate report | the check, and what it returned |
+| flag / tag / keyed on / marker | say what it decides, then the word once |
+| contract | what the file promises the things that read it |
+| residual | the not-yet-sorted pile |
+| spine / master | the main table |
+| a column name (`line_kind`, `cat_pms_flag`) | what it means first, the name second |
+| attribution | why the numbers differ |
+| drift | how far it has moved |
+| green / landed / shipped / verified | say what a person would see |
+| catalogue / taxonomy | the parts tree / the list of families |
+
+## The test, before sending
+
+Pick the three least obvious words in the reply. For each: **would he know what I mean without
+asking?** If not, replace it, or explain it in one short clause and move on.
+
+If a term must appear because it is on a file he will open, name it once and say what it is:
+"a column called `line_kind`, which marks the lines that are not parts."
+
 ## Related
 
 - `~/.cursor/rules/jerome-english-plain.mdc` — the cross-workspace version.

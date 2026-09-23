@@ -51,8 +51,12 @@ from isze_core_v3 import (
     cpv_is_excluded,
     extract_fleet_size,
     extract_text,
+    is_panel_van_purchase_not_for_us,
+    is_postal_courier_not_for_us,
+    lifecycle_from_notice_type,
     normalize_raw_row,
     parse_number,
+    passes_isuzu_selection_gate,
     row_passes_isuzu_selection_gate,
     score_legacy,
 )
@@ -63,6 +67,9 @@ from source_health import (
     record_source_status,
     validate_feed,
 )
+from national_fetchers_de import fetch_germany_ov as _fetch_germany_ov_mod
+from national_fetchers_es import fetch_spain_placsp as _fetch_spain_placsp_mod
+from national_fetchers_it import fetch_italy_pncp as _fetch_italy_pncp_mod
 
 LOOKBACK_DAYS = 30
 _SCRIPT_DIR = Path(__file__).resolve().parent
@@ -279,6 +286,108 @@ def flatten_for_export(row: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+# ---------------------------------------------------------------------------
+# Filter audit — why did the gates drop a notice?
+# ---------------------------------------------------------------------------
+# OFF by default: a normal weekly run prints nothing extra. Turn on with
+#   set ISZE_TENDER_FILTER_AUDIT=1
+# Writes filter_audit_<date>.json next to the script and prints a per-source
+# summary, so a gate that is too broad becomes visible instead of silently
+# emptying the desk. Read-only — it never changes what is scraped or kept.
+FILTER_AUDIT = _env_bool("ISZE_TENDER_FILTER_AUDIT", False)
+# Cap on stored samples per (source, reason). High enough to judge a gate that
+# is too broad; keeps the audit JSON to a few hundred KB on a normal run.
+_AUDIT_SAMPLE_CAP = int(os.environ.get("ISZE_TENDER_FILTER_AUDIT_CAP") or "3000")
+# Identity for the reject log. A rejection record without a notice identity cannot
+# be re-reviewed later — the 2026-09-20 audit kept title/buyer but no notice ID or
+# URL, so its 1,127 rows cannot be traced back to a source notice.
+RUN_ID = f"run-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
+RULE_VERSION = "gate-2026-09-20"
+_AUDIT_REASONS: Dict[str, Dict[str, int]] = {}
+_AUDIT_SAMPLES: Dict[str, List[Dict[str, str]]] = {}
+
+
+def record_drop(source: str, reason: str, row: Dict[str, Any]) -> None:
+    """Count and record a row the gates are about to discard.
+
+    Retains the source notice identity so a rejection can be re-reviewed against
+    its original notice. A rejection record without an ID or URL is not auditable.
+    """
+    if not FILTER_AUDIT:
+        return
+    bucket = _AUDIT_REASONS.setdefault(source, {})
+    bucket[reason] = bucket.get(reason, 0) + 1
+    samples = _AUDIT_SAMPLES.setdefault(f"{source}|{reason}", [])
+    if len(samples) < _AUDIT_SAMPLE_CAP:
+        samples.append(
+            {
+                "run_id": RUN_ID,
+                "rule_id": reason,
+                "rule_version": RULE_VERSION,
+                "source": source,
+                "source_notice_id": str(
+                    row.get("Source Notice ID") or row.get("source_notice_id") or ""
+                ),
+                "source_url": str(row.get("URL") or row.get("url") or ""),
+                "title": str(row.get("Title") or row.get("title") or "")[:300],
+                "desc": str(row.get("Description") or row.get("description") or "")[:300],
+                "cpv": str(row.get("CPV Code") or row.get("cpv") or ""),
+                "cpv_desc": str(row.get("CPV Desc") or row.get("cpv_desc") or "")[:120],
+                "buyer": str(row.get("Buyer") or row.get("buyer") or "")[:120],
+                "notice_type": str(row.get("Notice Type") or row.get("notice_type") or ""),
+            }
+        )
+
+
+def write_filter_audit(output_path: str) -> None:
+    """Persist the audit next to the workbook and print the summary."""
+    if not FILTER_AUDIT:
+        return
+    payload = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "run_id": RUN_ID,
+        "rule_version": RULE_VERSION,
+        "note": (
+            "Drops recorded in normalize_batch (CPV exclusion) and in "
+            "row_passes_isuzu_selection_gate (noise / no LCV signal). "
+            "Each record carries source notice id and URL where the source provided "
+            "them, so a rejection can be re-reviewed against its original notice. "
+            "Nothing here changes what is kept."
+        ),
+        "workbook": output_path,
+        "drops_by_source_and_reason": _AUDIT_REASONS,
+        "samples": _AUDIT_SAMPLES,
+    }
+    audit_path = _SCRIPT_DIR / f"filter_audit_{datetime.now(timezone.utc):%Y-%m-%d}.json"
+    try:
+        audit_path.write_text(json.dumps(payload, indent=1, ensure_ascii=False), encoding="utf-8")
+    except OSError as exc:
+        print(f"  [audit] could not write {audit_path}: {exc}")
+        return
+    print("\n" + "=" * 60)
+    print(f"FILTER AUDIT (run {RUN_ID}, rules {RULE_VERSION})")
+    missing_identity = 0
+    total_rejected = 0
+    for source in sorted(_AUDIT_REASONS):
+        reasons = _AUDIT_REASONS[source]
+        total = sum(reasons.values())
+        total_rejected += total
+        detail = ", ".join(f"{k}={v}" for k, v in sorted(reasons.items(), key=lambda x: -x[1]))
+        print(f"  {source:<20} dropped {total:>5}  ({detail})")
+    for rows in _AUDIT_SAMPLES.values():
+        for r in rows:
+            if not r.get("source_notice_id") and not r.get("source_url"):
+                missing_identity += 1
+    print(f"  total rejected: {total_rejected}")
+    print(f"  records without notice id or URL (not traceable): {missing_identity}")
+    print(f"  Audit JSON: {audit_path}")
+    print("=" * 60)
+
+
+# ---------------------------------------------------------------------------
+# UK (unchanged logic, import from v3 core)
+# ---------------------------------------------------------------------------
+
 def normalize_batch(rows: List[Dict[str, Any]], source_label: str) -> List[Dict[str, Any]]:
     out: List[Dict[str, Any]] = []
     for row in rows:
@@ -286,9 +395,23 @@ def normalize_batch(rows: List[Dict[str, Any]], source_label: str) -> List[Dict[
         # v3: skip before scoring if CPV is in exclusion list
         cpv = str(row.get("CPV Code", "") or "")
         if cpv_is_excluded(cpv):
+            record_drop(source_label, "cpv_excluded", row)
             continue
         # v4: Isuzu commercial gate (LCV / core CPV; drop SEND/passenger/transport noise)
         if not row_passes_isuzu_selection_gate(row):
+            title = str(row.get("Title") or "")
+            desc = str(row.get("Description") or "")
+            buyer = str(row.get("Buyer") or "")
+            cpv_desc = str(row.get("CPV Desc") or "")
+            if is_postal_courier_not_for_us(title, desc, buyer):
+                reason = "postal_courier_buyer"
+            elif is_panel_van_purchase_not_for_us(title, desc):
+                reason = "panel_van_purchase"
+            elif not passes_isuzu_selection_gate(title, desc, cpv, cpv_desc):
+                reason = "no_isuzu_lcv_signal"
+            else:
+                reason = "other_not_for_us"
+            record_drop(source_label, reason, row)
             continue
         norm = normalize_raw_row(row, source_label)
         out.append(flatten_for_export(norm))
@@ -2264,302 +2387,11 @@ def fetch_germany(session: requests.Session, from_dt: datetime) -> List[Dict[str
 
 
 # ---------------------------------------------------------------------------
-# Germany oeffentlichevergabe.de Open Data (BKMS / Bekanntmachungsservice)
+# Germany oeffentlichevergabe.de Open Data — delegated to national_fetchers_de
 # ---------------------------------------------------------------------------
-DE_OV_EXPORT_URL = "https://oeffentlichevergabe.de/api/notice-exports"
-DE_OV_NOTICE_URL = "https://oeffentlichevergabe.de/ui/de/notice/{nid}"
-# Strong vehicle stems — bare construction "Fahrzeug*" noise still hits Isuzu gate downstream.
-DE_OV_VEHICLE_STEMS = (
-    "fahrzeug",
-    "fuhrpark",
-    "nutzfahrzeug",
-    "pritschen",
-    "flotten",
-    "lieferwagen",
-    "transporter",
-    "bestelwagen",
-    "pickup",
-    "pick-up",
-    "chassis",
-    "isuzu",
-    "d-max",
-    "lkw",
-    "nkw",
-    "kfz-",
-    "kastenwagen",
-    "kipper",
-    "abrollkipper",
-    "sattelzug",
-    "lastkraft",
-)
-# CPV prefixes beyond surgical list — goods transport / LCV / fleet R&M (not 34144 fire/refuse parent).
-DE_OV_CPV_PREFIXES = (
-    "3413",  # goods vehicles / pickups / tippers / vans
-    "34113",  # 4WD
-    "34136",  # vans
-    "5011",  # motor vehicle repair / fleet R&M
-)
-
-
-def _de_ov_cpv_hit(code: str) -> bool:
-    code = (code or "").strip()
-    # eForms CSV sometimes emits "34130000-7" / truncated "45"
-    if "-" in code:
-        code = code.split("-", 1)[0].strip()
-    if not code or not code[0].isdigit() or len(code) < 4:
-        return False
-    if code in CPV_CODES:
-        return True
-    for c in CPV_CODES:
-        if len(c) >= 6 and code.startswith(c[:6]):
-            return True
-    return any(code.startswith(p) for p in DE_OV_CPV_PREFIXES)
-
-
-def _de_ov_norm_cpv(code: str) -> str:
-    code = (code or "").strip()
-    if "-" in code:
-        code = code.split("-", 1)[0].strip()
-    m = re.match(r"^(\d{8})", code)
-    return m.group(1) if m else code
-
-
-def _de_ov_read_csv_table(zf: zipfile.ZipFile, name: str) -> List[Dict[str, str]]:
-    if name not in zf.namelist():
-        return []
-    text = zf.read(name).decode("utf-8-sig", errors="replace")
-    return list(csv.DictReader(io.StringIO(text)))
-
-
-def _de_ov_months_covering(from_dt: datetime, now: datetime) -> List[str]:
-    """YYYY-MM months that may contain notices published on/after from_dt (Berlin days)."""
-    months: List[str] = []
-    # Export excludes today — walk calendar months from from_dt through yesterday.
-    end = (now - timedelta(days=1)).date()
-    cur = from_dt.date().replace(day=1)
-    while cur <= end:
-        months.append(cur.strftime("%Y-%m"))
-        if cur.month == 12:
-            cur = cur.replace(year=cur.year + 1, month=1)
-        else:
-            cur = cur.replace(month=cur.month + 1)
-    return months
-
-
-def _de_ov_parse_csv_zip(
-    body: bytes,
-    *,
-    cutoff: str,
-    seen: Set[str],
-) -> Tuple[List[Dict[str, Any]], int, int]:
-    """Parse one OV csv.zip into pre-gate rows. Returns (rows, notices_scanned, vehicle_hits)."""
-    results: List[Dict[str, Any]] = []
-    with zipfile.ZipFile(io.BytesIO(body)) as zf:
-        notices = {
-            (r["noticeIdentifier"], r["noticeVersion"]): r
-            for r in _de_ov_read_csv_table(zf, "notice.csv")
-            if r.get("noticeIdentifier")
-        }
-        purpose_rows = _de_ov_read_csv_table(zf, "purpose.csv")
-        class_rows = _de_ov_read_csv_table(zf, "classification.csv")
-        org_rows = _de_ov_read_csv_table(zf, "organisation.csv")
-        result_rows = _de_ov_read_csv_table(zf, "noticeResult.csv")
-
-    # Best title/desc/value per notice (prefer notice-level purpose, else first lot).
-    purpose_by: Dict[Tuple[str, str], Dict[str, str]] = {}
-    for p in purpose_rows:
-        key = (p.get("noticeIdentifier") or "", p.get("noticeVersion") or "")
-        if not key[0]:
-            continue
-        lot = (p.get("lotIdentifier") or "").strip()
-        existing = purpose_by.get(key)
-        if existing and existing.get("_lot") == "" and lot:
-            continue  # keep notice-level
-        if existing and existing.get("_lot") != "" and lot and existing.get("title"):
-            continue
-        purpose_by[key] = {
-            "title": (p.get("title") or "").strip(),
-            "description": (p.get("description") or "").strip(),
-            "value": (p.get("estimatedValue") or "").strip(),
-            "currency": (p.get("estimatedValueCurrency") or "EUR").strip(),
-            "_lot": lot,
-        }
-
-    cpv_by: Dict[Tuple[str, str], str] = {}
-    cpv_hit_keys: Set[Tuple[str, str]] = set()
-    for c in class_rows:
-        key = (c.get("noticeIdentifier") or "", c.get("noticeVersion") or "")
-        if not key[0]:
-            continue
-        codes = [c.get("mainClassificationCode") or ""]
-        add = c.get("additionalClassificationCodes") or ""
-        if add:
-            codes.extend(re.split(r"[;,\s]+", add))
-        for code in codes:
-            code = _de_ov_norm_cpv(code or "")
-            if not code:
-                continue
-            if key not in cpv_by:
-                cpv_by[key] = code
-            if _de_ov_cpv_hit(code):
-                cpv_hit_keys.add(key)
-                cpv_by[key] = code
-                break
-
-    buyer_by: Dict[Tuple[str, str], str] = {}
-    for o in org_rows:
-        key = (o.get("noticeIdentifier") or "", o.get("noticeVersion") or "")
-        if not key[0] or key in buyer_by:
-            continue
-        role = (o.get("organisationRole") or "").lower()
-        name = (o.get("organisationName") or "").strip()
-        if not name:
-            continue
-        if "buyer" in role or "buyer" in (o.get("organisationRole") or "") or role in ("", "buyer"):
-            buyer_by[key] = name
-        elif key not in buyer_by:
-            buyer_by[key] = name
-
-    value_by: Dict[Tuple[str, str], Tuple[str, str]] = {}
-    for nr in result_rows:
-        key = (nr.get("noticeIdentifier") or "", nr.get("noticeVersion") or "")
-        val = (nr.get("noticeValue") or nr.get("noticeFrameworkValue") or "").strip()
-        cur = (
-            nr.get("noticeValueCurrency")
-            or nr.get("noticeFrameworkValueCurrency")
-            or "EUR"
-        ).strip()
-        if key[0] and val:
-            value_by[key] = (val, cur)
-
-    kw_list = KEYWORDS_DE + GERMANY_SEARCH_TERMS_DE + KEYWORDS
-    scanned = 0
-    for key, notice in notices.items():
-        scanned += 1
-        nid, ver = key
-        pub = str(notice.get("publicationDate") or "")
-        pub_day = pub[:10]
-        if pub_day and pub_day < cutoff:
-            continue
-        purpose = purpose_by.get(key) or {}
-        title = purpose.get("title") or ""
-        desc = purpose.get("description") or ""
-        blob = f"{title} {desc}".lower()
-        cpv_code = cpv_by.get(key, "")
-        cpv_ok = key in cpv_hit_keys
-        stem_ok = any(s in blob for s in DE_OV_VEHICLE_STEMS)
-        kw_ok = stem_ok and match_keywords(blob, kw_list)
-        # Keyword-only keep only when CPV is missing or already vehicle-family (34*/501*).
-        # Drops education/research/construction that mention "Fahrzeug*" in prose.
-        cpv_family_ok = bool(cpv_code) and (
-            cpv_code.startswith("34") or cpv_code.startswith("501")
-        )
-        if not cpv_ok and not (kw_ok and (not cpv_code or cpv_family_ok)):
-            continue
-        if nid in seen:
-            continue
-        seen.add(nid)
-
-        value = purpose.get("value") or ""
-        currency = purpose.get("currency") or "EUR"
-        if not value and key in value_by:
-            value, currency = value_by[key]
-
-        ntype = notice.get("noticeType") or notice.get("formType") or ""
-        results.append(
-            {
-                "Source": "🇩🇪 DE-OV",
-                "Source Notice ID": nid,
-                "Lifecycle": "",
-                "Notice Type": ntype,
-                "Procedure Type": "",
-                "Buyer Type": "",
-                "Score": "",
-                "FleetSize": "",
-                "Title": title or nid,
-                "Buyer": buyer_by.get(key, ""),
-                "Country": "Germany",
-                "Country Code": "DEU",
-                "Published": pub_day,
-                "Deadline": "",
-                "Value": value,
-                "Currency": currency,
-                "CPV Code": _de_ov_norm_cpv(cpv_by.get(key, "")),
-                "CPV Desc": "",
-                "URL": DE_OV_NOTICE_URL.format(nid=nid),
-                "Description": (desc or title)[:2000],
-                "Fit Score": "",
-                "Win Score": "",
-                "Econ Score": "",
-                "Decision": "",
-                "Evidence Score": "",
-                "Evidence Label": "",
-                "Suggested Owner": "",
-                "Suggested Status": "",
-                "Days to Deadline": "",
-                "Urgency": "",
-                "Reasons": f"ov_ver={ver}; cpv_hit={cpv_ok}; kw_hit={kw_ok}",
-            }
-        )
-    return results, scanned, len(results)
-
-
 def fetch_germany_ov(session: requests.Session, from_dt: datetime) -> List[Dict[str, Any]]:
-    """National DE notices via oeffentlichevergabe Bekanntmachungsservice Open Data CSV ZIPs.
-
-    Endpoint: GET /api/notice-exports?pubMonth=YYYY-MM&format=csv.zip
-    (pubDay also works; today/future days are rejected by the API.)
-    """
-    print("\n[DE OV] Fetching oeffentlichevergabe Open Data (csv.zip, vehicle CPV/keyword)...")
-    results: List[Dict[str, Any]] = []
-    seen: Set[str] = set()
-    now = datetime.now(timezone.utc)
-    cutoff = from_dt.strftime("%Y-%m-%d")
-    months = _de_ov_months_covering(from_dt, now)
-    LAST_FETCH_ERRORS["Germany oeffentlichevergabe"] = None
-    headers = {
-        "User-Agent": "Mozilla/5.0 (compatible; ISZE-TenderMonitor/3.0)",
-        "Accept": "application/vnd.bekanntmachungsservice.csv.zip+zip, application/zip, */*",
-    }
-    total_scanned = 0
-    try:
-        if not months:
-            LAST_FETCH_ERRORS["Germany oeffentlichevergabe"] = "no exportable months in lookback"
-            print("  [DE OV] no months to fetch")
-            return []
-        for month in months:
-            params = {"pubMonth": month, "format": "csv.zip"}
-            try:
-                resp = session.get(DE_OV_EXPORT_URL, params=params, headers=headers, timeout=180)
-            except Exception as exc:
-                LAST_FETCH_ERRORS["Germany oeffentlichevergabe"] = str(exc)
-                print(f"  [DE OV] {month}: {exc}")
-                continue
-            body = resp.content or b""
-            if resp.status_code != 200:
-                msg = f"HTTP {resp.status_code} month={month}"
-                LAST_FETCH_ERRORS["Germany oeffentlichevergabe"] = msg
-                print(f"  [DE OV] {month}: {msg} {(body[:120] or b'').decode('utf-8', errors='replace')}")
-                continue
-            if body[:2] != b"PK":
-                LAST_FETCH_ERRORS["Germany oeffentlichevergabe"] = (
-                    f"non-ZIP response month={month} ({len(body)} bytes)"
-                )
-                print(f"  [DE OV] {month}: non-ZIP body")
-                continue
-            rows, scanned, hits = _de_ov_parse_csv_zip(body, cutoff=cutoff, seen=seen)
-            total_scanned += scanned
-            results.extend(rows)
-            print(f"  [DE OV] {month}: scanned≈{scanned} vehicle-ish +{hits} (zip {len(body)} bytes)")
-            LAST_FETCH_ERRORS["Germany oeffentlichevergabe"] = None
-        print(f"[DE OV] Unique matches: {len(results)} (scanned≈{total_scanned} across {months})")
-        if not results and not LAST_FETCH_ERRORS.get("Germany oeffentlichevergabe"):
-            # Feed OK, zero vehicle hits this window — still OK health.
-            LAST_FETCH_ERRORS["Germany oeffentlichevergabe"] = None
-    except Exception as exc:
-        LAST_FETCH_ERRORS["Germany oeffentlichevergabe"] = str(exc)
-        print(f"  [DE OV] exception: {exc}")
-    return results
+    """National DE notices via oeffentlichevergabe Open Data CSV ZIPs."""
+    return _fetch_germany_ov_mod(session, from_dt, errors=LAST_FETCH_ERRORS)
 
 
 # ---------------------------------------------------------------------------
@@ -2717,239 +2549,26 @@ def fetch_poland_bzp(session: requests.Session, from_dt: datetime, page_size: in
 
 
 # ---------------------------------------------------------------------------
-# Spain PLACSP (below-threshold national) — Atom / open-data syndication
+# Spain PLACSP — delegated to national_fetchers_es (Atom + rel=next)
 # ---------------------------------------------------------------------------
-# Official Atom + monthly ZIP paths (Hacienda / OpenPLACSP docs). This runner's
-# egress is WAF-denied on contrataciondelestado.es / contrataciondelsectorpublico.gob.es
-# (Atom + ZIP + datosabiertos) — keep CODE_READY until a session/IP path works.
-ES_PLACSP_ATOM_URLS = [
-    "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom",
-    "https://contrataciondelestado.es/sindicacion/sindicacion_643/licitacionesPerfilesContratanteCompleto3.atom",
-    "https://contrataciondelsectorpublico.gob.es/sindicacion/sindicacion_1044/PlataformasAgregadasSinMenores.atom",
-]
 KEYWORDS_ES = [
-    "vehiculo", "vehículo", "vehiculos", "vehículos", "camion", "camión", "camiones",
-    "furgon", "furgón", "furgoneta", "pickup", "pick-up", "pick up", "todoterreno",
-    "4x4", "chasis", "chassis", "caja abierta", "volquete", "flota", "parque movil",
-    "parque móvil", "isuzu", "d-max", "d max", "utilitario", "comerciales",
-    "mantenimiento de vehiculos", "mantenimiento de vehículos", "taller",
+    "vehiculo", "vehículo", "camion", "camión", "furgon", "furgoneta",
+    "pickup", "pick-up", "chasis", "chassis", "flota", "parque móvil", "isuzu",
 ]
-
-
-def _placsp_waf_body(body: bytes) -> bool:
-    head = (body or b"")[:800].lower()
-    return (
-        b"web application firewall" in head
-        or b"has denied your transaction" in head
-        or (b"<html" in head and b"denied" in head)
-    )
 
 
 def fetch_spain_placsp(session: requests.Session, from_dt: datetime) -> List[Dict[str, Any]]:
-    """National ES notices via PLACSP Atom syndication (vehicle keyword gate).
-
-    Returns rows when Atom XML is reachable. On WAF deny, records CODE_READY and [].
-    """
-    print("\n[ES PLACSP] Fetching Atom syndication (vehicle keyword filter)...")
-    results: List[Dict[str, Any]] = []
-    last_err: Optional[str] = None
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-            "(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
-        ),
-        "Accept": "application/atom+xml, application/xml, text/xml, */*",
-        "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
-        "Referer": (
-            "https://www.hacienda.gob.es/es-ES/GobiernoAbierto/"
-            "Datos%20Abiertos/Paginas/LicitacionesAgregacion.aspx"
-        ),
-    }
-    try:
-        for url in ES_PLACSP_ATOM_URLS:
-            try:
-                resp = session.get(url, headers=headers, timeout=45)
-            except Exception as exc:
-                last_err = str(exc)
-                print(f"  [ES PLACSP] {url.split('/')[-1]}: {exc}")
-                continue
-            body = resp.content or b""
-            if _placsp_waf_body(body):
-                last_err = (
-                    "WAF_BLOCKED — PLACSP Atom/ZIP denied from this runner "
-                    "(contrataciondelestado.es / contrataciondelsectorpublico.gob.es); "
-                    "official syndication still documented — CODE_READY"
-                )
-                print(f"  [ES PLACSP] {url.split('/')[-1]}: WAF deny (HTTP {resp.status_code})")
-                continue
-            err = validate_feed("Spain PLACSP", resp, expect_feed=True, min_bytes=200)
-            if err:
-                last_err = err
-                print(f"  [ES PLACSP] {url.split('/')[-1]}: {err}")
-                continue
-            rows = _parse_procurement_rss(
-                resp.text,
-                source_label="🇪🇸 ES-PLACSP",
-                country="Spain",
-                country_code="ESP",
-                extra_keywords=KEYWORDS_ES,
-            )
-            # Lookback filter on published when parseable
-            cutoff = from_dt.strftime("%Y-%m-%d")
-            kept = []
-            for r in rows:
-                pub = str(r.get("Published") or "")[:10]
-                if pub and pub < cutoff:
-                    continue
-                kept.append(r)
-            print(f"  [ES PLACSP] {url.split('/')[-1]}: {len(kept)} keyword matches")
-            results.extend(kept)
-            if kept:
-                break  # one live feed is enough
-            last_err = None
-        if results:
-            LAST_FETCH_ERRORS["Spain PLACSP"] = None
-        else:
-            LAST_FETCH_ERRORS["Spain PLACSP"] = last_err or "zero vehicle-ish Atom rows"
-        print(f"[ES PLACSP] Matches: {len(results)}")
-    except Exception as exc:
-        LAST_FETCH_ERRORS["Spain PLACSP"] = str(exc)
-        print(f"  [ES PLACSP] exception: {exc}")
-    return results
+    """National ES notices via PLACSP Atom syndication (vehicle stem/CPV gate)."""
+    return _fetch_spain_placsp_mod(session, from_dt, errors=LAST_FETCH_ERRORS)
 
 
 # ---------------------------------------------------------------------------
-# Italy PNCP / Pubblicità a valore legale (below-threshold national)
+# Italy PNCP — delegated to national_fetchers_it
 # ---------------------------------------------------------------------------
-IT_PNCP_AVVISI_URL = "https://pubblicitalegale.anticorruzione.it/api/v0/avvisi"
-# Bandi / avvisi di indizione sheet codes used by the SPA home counters.
-IT_PNCP_CODICE_SCHEDA = "1,3,5a,5b,6,8b,10"
 KEYWORDS_IT = [
-    "autocarro", "autocarri", "automezzo", "automezzi", "autoveicol",
-    "camion", "furgone", "furgoni", "pickup", "pick-up", "pick up",
-    "veicoli commerciali", "veicolo commerciale", "veicoli", "veicolo",
-    "parco auto", "parco mezzi", "parco automezzi", "parco autovetture",
-    "noleggio veicoli", "noleggio auto", "noleggio automez",
-    "chassis", "cassone", "cabina", "isuzu", "d-max", "d max",
-    "manutenzione", "riparazione", "officina", "flotta",
+    "autocarro", "automezzo", "camion", "furgone", "pickup", "veicoli",
+    "parco mezzi", "isuzu", "d-max", "manutenzione", "flotta",
 ]
-# High-noise Italian terms that match KEYWORDS_IT substrings but are not CV buys.
-IT_PNCP_NOISE = [
-    "telaio pieghevole", "carrozzina", "studio del traffico", "fluidificazione del traffic",
-    "autorimessa", "strati bituminosi", "pneumatici", "ventilatore",
-]
-
-
-def _it_pncp_walk_text(obj: Any, out: List[str], depth: int = 0) -> None:
-    if depth > 8:
-        return
-    if isinstance(obj, dict):
-        for k, v in obj.items():
-            lk = str(k).lower()
-            if isinstance(v, (str, int, float)) and any(
-                x in lk
-                for x in (
-                    "titolo",
-                    "descr",
-                    "oggetto",
-                    "cpv",
-                    "cig",
-                    "denominazione",
-                    "valore",
-                    "importo",
-                )
-            ):
-                out.append(str(v))
-            else:
-                _it_pncp_walk_text(v, out, depth + 1)
-    elif isinstance(obj, list):
-        for item in obj[:40]:
-            _it_pncp_walk_text(item, out, depth + 1)
-
-
-def _it_pncp_extract_list_fields(row: Dict[str, Any]) -> Dict[str, str]:
-    title = ""
-    desc = ""
-    buyer = ""
-    cpv = ""
-    value = ""
-    url = ""
-    for t in row.get("templates") or []:
-        tmpl = (t.get("template") or {}) if isinstance(t, dict) else {}
-        meta = tmpl.get("metadata") or {}
-        if meta.get("titolo"):
-            title = str(meta.get("titolo") or "")
-        if meta.get("descrizione"):
-            desc = str(meta.get("descrizione") or "")
-        for sec in tmpl.get("sections") or []:
-            fields = (sec.get("fields") or {}) if isinstance(sec, dict) else {}
-            for sa in fields.get("soggetti_sa") or []:
-                if isinstance(sa, dict) and sa.get("denominazione_amministrazione"):
-                    buyer = str(sa.get("denominazione_amministrazione") or buyer)
-            for item in sec.get("items") or []:
-                if not isinstance(item, dict):
-                    continue
-                if item.get("cpv") and not cpv:
-                    raw = str(item.get("cpv") or "")
-                    m = re.search(r"\b([0-9]{8})\b", raw)
-                    cpv = m.group(1) if m else raw[:80]
-                if item.get("valore_complessivo_stimato") not in (None, "") and not value:
-                    value = str(item.get("valore_complessivo_stimato"))
-                if item.get("descrizione") and not title:
-                    title = str(item.get("descrizione") or "")
-    blob_parts: List[str] = []
-    _it_pncp_walk_text(row, blob_parts)
-    blob = " ".join(blob_parts)
-    if not title:
-        title = (desc or blob)[:240]
-    return {
-        "title": title.strip(),
-        "description": (desc or title).strip(),
-        "buyer": buyer.strip(),
-        "cpv": cpv.strip(),
-        "value": value.strip(),
-        "url": url,
-        "blob": blob.lower(),
-    }
-
-
-def _it_pncp_enrich_detail(session: requests.Session, nid: str) -> Dict[str, str]:
-    """Optional detail fetch for numeric CPV + procedure URL."""
-    out = {"cpv": "", "url": "", "buyer": "", "value": ""}
-    try:
-        resp = session.get(
-            f"{IT_PNCP_AVVISI_URL}/{nid}",
-            headers={
-                "Accept": "application/json",
-                "Referer": "https://pubblicitalegale.anticorruzione.it/",
-                "User-Agent": "Mozilla/5.0 (compatible; ISZE-TenderMonitor/3.0)",
-            },
-            timeout=30,
-        )
-        if resp.status_code != 200 or not (resp.content or b"").startswith((b"{", b"[")):
-            return out
-        data = resp.json() or {}
-        fields = _it_pncp_extract_list_fields(data)
-        out["cpv"] = fields["cpv"]
-        out["buyer"] = fields["buyer"]
-        out["value"] = fields["value"]
-        # Prefer first https link in detail JSON (often buyer platform notice).
-        for m in re.finditer(r"https?://[^\s\"'\\]+", json.dumps(data, ensure_ascii=False)):
-            link = m.group(0).rstrip(".,);")
-            if "anticorruzione" in link:
-                continue
-            out["url"] = link
-            break
-        if not out["url"]:
-            out["url"] = f"https://pubblicitalegale.anticorruzione.it/dettaglio-avviso/{nid}"
-        # Numeric CPV from full detail dump if list field was descriptive only.
-        if out["cpv"] and not re.fullmatch(r"[0-9]{8}", out["cpv"]):
-            nums = re.findall(r"\b(34[0-9]{6}|50[0-9]{6})\b", json.dumps(data))
-            if nums:
-                out["cpv"] = nums[0]
-    except Exception:
-        pass
-    return out
 
 
 def fetch_italy_pncp(
@@ -2960,116 +2579,9 @@ def fetch_italy_pncp(
     max_pages: int = 20,
 ) -> List[Dict[str, Any]]:
     """National IT notices via PNCP Pubblicità a valore legale public JSON API."""
-    print("\n[IT PNCP] Fetching pubblicitalegale avvisi (vehicle keyword filter)...")
-    results: List[Dict[str, Any]] = []
-    seen: set = set()
-    date_from = from_dt.strftime("%d/%m/%Y")
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-            "(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
-        ),
-        "Accept": "application/json",
-        "Referer": "https://pubblicitalegale.anticorruzione.it/",
-        "Origin": "https://pubblicitalegale.anticorruzione.it",
-    }
-    try:
-        total_scanned = 0
-        for page in range(max_pages):
-            params = {
-                "dataPubblicazioneStart": date_from,
-                "page": page,
-                "size": page_size,
-                "codiceScheda": IT_PNCP_CODICE_SCHEDA,
-                "sortField": "dataPubblicazione",
-                "sortDirection": "DESC",
-            }
-            resp = session.get(IT_PNCP_AVVISI_URL, params=params, headers=headers, timeout=45)
-            if resp.status_code != 200:
-                msg = f"HTTP {resp.status_code}"
-                LAST_FETCH_ERRORS["Italy PNCP"] = msg
-                print(f"  [IT PNCP] page {page}: {msg}")
-                break
-            if not (resp.content or b"").startswith((b"{", b"[")):
-                LAST_FETCH_ERRORS["Italy PNCP"] = "non-JSON response (portal/WAF?)"
-                print("  [IT PNCP] non-JSON response")
-                break
-            data = resp.json() or {}
-            content = data.get("content") or []
-            if page == 0:
-                print(f"  [IT PNCP] API totalElements≈{data.get('totalElements')}")
-            if not content:
-                break
-            total_scanned += len(content)
-            page_hits = 0
-            for row in content:
-                nid = str(row.get("idAvviso") or "")
-                if not nid or nid in seen:
-                    continue
-                fields = _it_pncp_extract_list_fields(row)
-                blob = f"{fields['title']} {fields['description']} {fields['blob']}".lower()
-                if any(n in blob for n in IT_PNCP_NOISE):
-                    continue
-                if not match_keywords(blob, KEYWORDS_IT + KEYWORDS):
-                    continue
-                # Require a vehicle-ish stem so broad 'manutenzione' alone does not pass.
-                vehicle_stems = (
-                    "autocar", "automez", "autoveicol", "camion", "furgon", "pickup",
-                    "pick-up", "pick up", "veicol", "parco auto", "parco mezzi",
-                    "parco automez", "noleggio auto", "noleggio veicol", "isuzu",
-                    "d-max", "chassis", "cassone", "4x4",
-                )
-                if not any(s in blob for s in vehicle_stems):
-                    continue
-                seen.add(nid)
-                page_hits += 1
-                detail = _it_pncp_enrich_detail(session, nid)
-                cpv = detail.get("cpv") or fields["cpv"]
-                buyer = detail.get("buyer") or fields["buyer"]
-                value = detail.get("value") or fields["value"]
-                url = detail.get("url") or (
-                    f"https://pubblicitalegale.anticorruzione.it/dettaglio-avviso/{nid}"
-                )
-                title = fields["title"] or fields["description"][:200]
-                pub = str(row.get("dataPubblicazione") or "")[:10]
-                deadline = str(row.get("dataScadenza") or "")
-                results.append(
-                    {
-                        "Source": "🇮🇹 IT-PNCP",
-                        "Source Notice ID": nid,
-                        "Lifecycle": classify_lifecycle(title, str(row.get("tipologia") or "")),
-                        "Notice Type": str(row.get("tipologia") or ""),
-                        "Procedure Type": str(row.get("codiceScheda") or ""),
-                        "Buyer Type": "",
-                        "Score": score_legacy(title),
-                        "FleetSize": extract_fleet_size(title + " " + fields["description"]),
-                        "Title": title,
-                        "Buyer": buyer,
-                        "CPV Code": cpv if re.fullmatch(r"[0-9]{8}", cpv or "") else "",
-                        "CPV Desc": "" if re.fullmatch(r"[0-9]{8}", cpv or "") else (cpv or ""),
-                        "Description": fields["description"][:500],
-                        "Est. Value": value,
-                        "Currency": "EUR",
-                        "Published": pub,
-                        "Deadline": deadline,
-                        "Country": "Italy",
-                        "Country Code": "ITA",
-                        "URL": url,
-                    }
-                )
-                time.sleep(0.15)
-            print(f"  [IT PNCP] page {page}: scanned={len(content)} hits+={page_hits}")
-            if data.get("last"):
-                break
-            time.sleep(0.25)
-        LAST_FETCH_ERRORS["Italy PNCP"] = (
-            None if results else f"zero vehicle-ish rows in {total_scanned} scanned notices"
-        )
-        print(f"[IT PNCP] Unique matches: {len(results)} (scanned≈{total_scanned})")
-    except Exception as exc:
-        LAST_FETCH_ERRORS["Italy PNCP"] = str(exc)
-        print(f"  [IT PNCP] exception: {exc}")
-    return results
+    return _fetch_italy_pncp_mod(
+        session, from_dt, page_size=page_size, max_pages=max_pages, errors=LAST_FETCH_ERRORS
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -4044,6 +3556,10 @@ def main() -> None:
                 )
             else:
                 record_source_result(health, "Spain PLACSP", len(es_rows), es_err)
+                if not es_err and health.get("Spain PLACSP"):
+                    health["Spain PLACSP"]["note"] = (
+                        "Atom syndication LIVE (rel=next walk); vehicle stem/CPV client filter"
+                    )
 
         if run_it:
             it_rows = fetch_italy_pncp(session, from_dt)
@@ -4142,6 +3658,7 @@ def main() -> None:
             at_rows=at_rows,
             pt_rows=pt_rows,
         )
+    write_filter_audit(OUTPUT_FILE)
     persist_and_report(health)
     print("\nDone.")
     print("=" * 60)

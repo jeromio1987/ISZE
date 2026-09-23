@@ -164,7 +164,7 @@ reported separately as a decision and not as evidence.
 payload stores the same fact as a fraction (`0.2` for the UK, `0.23` for
 Portugal) and nothing on the row says which unit it used. Handing the fraction
 straight to the rule removes 0.2% of tax instead of 20%, which is a 19.8% error on
-the AUTODOC UK price for the pad case.
+the UK tax-inclusive retail observation for the pad case.
 
 That is a live defect in a file this view does not own, and another agent is
 correcting it at its source right now. So this screen does the only thing it can

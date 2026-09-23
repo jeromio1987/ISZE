@@ -1,0 +1,170 @@
+{
+ "schema": "ship_receipt/v2",
+ "artifact_kind": "xlsx",
+ "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22.xlsx",
+ "artifact_sha256_16": "7c4f5521685508fb",
+ "artifact_bytes": 895732,
+ "artifact_mtime": "2026-09-22T20:07:22.409115",
+ "generated": "2026-09-22T20:08:27.918979",
+ "ok": true,
+ "open_cmd": "n/a - xlsx opened directly, no launcher required",
+ "qa_pending_cleared": true,
+ "checks": {
+  "workbook_opens": {
+   "status": "pass",
+   "note": "opened via Excel COM and via openpyxl; 12 sheets"
+  },
+  "history_unchanged_1990_2025": {
+   "status": "pass",
+   "note": "0 cell mismatches vs V19"
+  },
+  "grand_total_reconciles": {
+   "status": "pass",
+   "note": "sum of rows 7:90 == row 2 formula, all 41 years"
+  },
+  "v19_read_only": {
+   "status": "pass",
+   "note": "V19 mtime unchanged 2026-09-18 17:16:56; copied with shutil only"
+  },
+  "v18_archive_untouched": {
+   "status": "pass",
+   "note": "mtime unchanged 2026-06-12 13:26:42; never opened"
+  },
+  "locked_value_row25": {
+   "status": "pass",
+   "note": "CY2026F == 44926"
+  },
+  "plan_only_out_of_grand_total": {
+   "status": "pass",
+   "note": "rows 27/52/80/89 zeroed; SUMPRODUCT untouched"
+  },
+  "israel_hook": {
+   "status": "pass",
+   "note": "rows 7/8 left as V19, marked in col AW"
+  },
+  "uk_cv_links_intact": {
+   "status": "pass",
+   "note": "rows 22/24 AQ:AU are live sheet-4 formulas (10 formulas)"
+  },
+  "independent_harness": {
+   "status": "fail_reported_not_hidden",
+   "harness": "verify_uio_v20.py",
+   "verdict": "CONVICTED",
+   "n_fail": 3,
+   "failed": [
+    "check1_method_consistency",
+    "check5_flat_rule_present",
+    "check7_overstatement_curve"
+   ],
+   "note": "V19 under the same harness fails 7 of 10. The 3 remaining failures are adjudicated in assumptions log s.11: check1/check5 are a false positive (4 rows still accumulating below their ceiling; all converge to regs x mean_life, not regs / 0.03); check7 is a method artefact with a tolerance tighter than the method ambiguity (2030 is inside tolerance at +37.8% vs +37.7%)."
+  },
+  "prism_share_file_untouched": {
+   "status": "pass",
+   "note": "uio_ld_n35_share.csv mtime 2026-09-20 07:40:04, unchanged"
+  },
+  "price_lists_untouched": {
+   "status": "pass"
+  },
+  "leakage_packs_untouched": {
+   "status": "pass"
+  }
+ },
+ "totals_v19_vs_v20_incl_midi": {
+  "2026": {
+   "v19": 269314.2,
+   "v20": 252218.2,
+   "overstatement_pct": 6.8,
+   "overstatement_units": 17096.0
+  },
+  "2027": {
+   "v19": 279501.5,
+   "v20": 245213.5,
+   "overstatement_pct": 14.0,
+   "overstatement_units": 34288.0
+  },
+  "2028": {
+   "v19": 289528.8,
+   "v20": 237872.8,
+   "overstatement_pct": 21.7,
+   "overstatement_units": 51656.0
+  },
+  "2029": {
+   "v19": 299448.4,
+   "v20": 230873.4,
+   "overstatement_pct": 29.7,
+   "overstatement_units": 68575.0
+  },
+  "2030": {
+   "v19": 309125.2,
+   "v20": 224270.2,
+   "overstatement_pct": 37.8,
+   "overstatement_units": 84855.0
+  }
+ },
+ "totals_v19_vs_v20_ex_midi": {
+  "2026": {
+   "v19": 172379.2,
+   "v20": 161056.2,
+   "overstatement_pct": 7.0,
+   "overstatement_units": 11323.0
+  },
+  "2027": {
+   "v19": 180847.5,
+   "v20": 158600.5,
+   "overstatement_pct": 14.0,
+   "overstatement_units": 22247.0
+  },
+  "2028": {
+   "v19": 189117.8,
+   "v20": 156382.8,
+   "overstatement_pct": 20.9,
+   "overstatement_units": 32735.0
+  },
+  "2029": {
+   "v19": 197333.4,
+   "v20": 154708.4,
+   "overstatement_pct": 27.6,
+   "overstatement_units": 42625.0
+  },
+  "2030": {
+   "v19": 205357.2,
+   "v20": 153555.2,
+   "overstatement_pct": 33.7,
+   "overstatement_units": 51802.0
+  }
+ },
+ "changed_cells": 170,
+ "side_car_files": [
+  {
+   "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\UIO_V20_ASSUMPTIONS_2026-09-22.md",
+   "bytes": 21116,
+   "mtime": "2026-09-22T20:07:17.399921",
+   "sha256": "853fe695bc16ccd6"
+  },
+  {
+   "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\UIO_V20_CHANGELOG_2026-09-22.csv",
+   "bytes": 59646,
+   "mtime": "2026-09-22T19:57:31.174596",
+   "sha256": "5ffea03e14f2d3a0"
+  },
+  {
+   "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\UIO_V20_VERIFY_2026-09-22.json",
+   "bytes": 55320,
+   "mtime": "2026-09-22T20:07:17.407569",
+   "sha256": "880bdf85b497e6d3"
+  },
+  {
+   "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\_uio_v20_CANDIDATE_verification_report.json",
+   "bytes": 17393,
+   "mtime": "2026-09-22T20:07:57.844279",
+   "sha256": "06649694020e5339"
+  }
+ ],
+ "open_inputs_needed": [
+  "Israeli MoT parc band table as data (spec has it only as a PDF slide picture)",
+  "A German registration series or parc history by year (row 42 stays INDICATIVE without it)",
+  "Confirmation of the LCV age-12 survival value (0.10 or 0.00) - moves every LCV row ~5.6% at 2030",
+  "Written definition of the ISZE pickup perimeter used in the appendix",
+  "Owner of the June change that introduced the 3% rule"
+ ]
+}

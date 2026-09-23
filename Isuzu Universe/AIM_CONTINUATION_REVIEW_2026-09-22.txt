@@ -1,0 +1,197 @@
+AIM UNIVERSE | CONTINUATION REVIEW AND PATCH RESULTS
+22 September 2026 | Patch AIM-CONTINUATION-20260922-01
+==================================================
+
+EXECUTIVE JUDGMENT
+
+The earlier corrections are a useful foundation, but the handover's passing
+counts were not enough to establish that all input paths and financial boundary
+cases were safe. I reproduced the core 60-check regression, then constructed
+additional synthetic cases against the same engine. The new finance tests found
+31 failing checks out of 36 before this patch. All 36 pass after it. The new
+build tests found nine failing/erroring checks out of ten before the patch;
+all ten pass after it. These are test counts, not counts of distinct defects.
+
+This delivery modifies two implementation files and adds three test/runner files.
+It does not replace the existing application, choose a backend, invent a business
+input or claim human acceptance. The original progress records remain untouched.
+
+WHAT WAS FOUND AND REPAIRED
+
+Invalid inputs were still being converted to valid assumptions.
+
+The direct calculator correctly rejected many malformed quantities, but the
+ranking helpers first ran them through quantityAfter(). A nonblank invalid input
+became null. The calculator interprets null as 'not supplied', so it restored the
+starting volume and returned a valid-looking result. This was observable through
+both rankAlternatives() and bothObjectives(). Similar fallback paths existed for
+invalid volume assumptions, price movements, support values and explicit zero
+pack sizes.
+
+The patch preserves invalidity until the calculation boundary refuses the input.
+Legitimate blank fields retain their existing meaning. Numeric text still works.
+Symbols are refused rather than throwing, and BigInts are not silently narrowed.
+The engine's public result field set and legacy aliases are unchanged.
+
+Incremental profit-loss tolerance reused the all-volume formula.
+
+Synthetic example only: 100 existing units at a price of 100 and cost of 60;
+20 additional units at 110; support of 500. Existing contribution is 4,000.
+Each additional unit contributes 50, so ten additional units recover the support.
+The profit-preserving total is 110, not 90.
+
+From the assumed 120 units, the profit loss allowance is 10/120, or 8.33%.
+The old code reported 25% for the profit-specific allowance and 16.67% for the
+combined revenue/profit allowance. The corrected outputs are 8.33% and 8.33%.
+The patch reuses the scope-specific break-even quantity already calculated by
+the engine. A parameterized check replays the threshold through forward profit
+calculations across 240 synthetic scenarios. This is arithmetic, not a demand
+forecast or evidence that a distributor will accept a price rise.
+
+A populated migration could invent baseline profit or exceed its source volume.
+
+The original 'missing migration inputs' guard was not enough. Once both product
+lines were populated, a missing envelope cost left gp_before as null. JavaScript
+then added the contribution change to null as though the starting profit were
+zero, producing an accepted total despite the missing baseline. The code also
+accepted a transferred quantity greater than the source quantity and allowed
+negative product-line prices or costs.
+
+The bounded one-for-one migration now requires a known baseline cost, positive
+selling prices, non-negative costs, a positive transferred quantity no greater
+than the source population, and source price/cost consistent with the baseline.
+It refuses simultaneous incremental-volume or changed-total assumptions. Valid
+zero costs remain values. Unresolved migrations retain no invented after-profit
+or benefit figure. Existing valid two-line migration controls still pass.
+
+This is not the multi-product range engine. It does not certify fitment, equivalent
+pack contents, product interchangeability, the relevant selling-price approval or
+actual transfers. In particular, it does not close the supplied oil migration's
+missing commercial inputs.
+
+Finite inputs could still yield infinite or NaN results.
+
+Finite numeric inputs can overflow during multiplication or subsequent percentage
+calculations. The handed-over engine could return ok:true with Infinity and NaN
+in its financial fields; JSON would then make those numbers look like nulls.
+The patch checks every computed result path, including migration and an unresolved
+migration with an overflowing baseline. Out-of-range arithmetic returns a refused
+result with no non-finite values and a stated reason. This is not a new commercial
+cap or an invented acceptable input range.
+
+Overlapping forward cost windows were resolved by array order.
+
+basisForDate() previously stopped at the first matching forward window. Two
+simultaneously applicable windows could therefore produce different cost-basis
+choices when the source rows were reordered. The patch refuses multiple matches
+and names the ambiguous basis IDs. A single supported window still resolves.
+An explicit approved priority rule would require its own input and tests; none
+has been invented here.
+
+The build was not enforcing everything its documentation claimed.
+
+A JSON script block is still parsed by an HTML parser. An unescaped closing-script
+sequence in source text could end the data block. Payload version text was also
+inserted into HTML without escaping, and replacement-string backslashes had their
+own interpretation. These paths are now escaped while preserving decoded JSON
+content exactly. Tests use harmless marker strings, not real business data.
+
+The retained shell already contained its opening body tag, but the builder added
+another and omitted an explicit closing head tag. It now emits one body and the
+closing head. The structural test parses HTML tags; it does not count lookalike
+text inside JavaScript export templates.
+
+The existing banned-label rule previously collected findings, wrote artifacts,
+and returned success. It now refuses the build before writing artifacts or the
+build report. A test confirms an existing good artifact and report are unchanged
+when a later build is refused. The original label policy is enforced, not silently
+broadened or removed. Local testing must establish whether the renewed payload
+contains a policy conflict; this patch cannot answer that without the source.
+
+Non-standard/non-finite JSON numeric values are refused before output. The build
+report now separately records the exact opened payload bytes, the compact JSON
+serialization and the HTML-embedded text. The legacy payload_sha256 field keeps
+its prior serialized meaning for compatibility, with that meaning made explicit.
+The field named canonical means this builder's compact, insertion-order-preserving
+serialization, not an external canonical-JSON standard.
+
+A digest pins the bytes read. It does not prove that the commercial source is true,
+complete, authorised or current, nor validate an upstream provenance declaration.
+
+WHAT WAS ACTUALLY RUN
+
+Focused repeatable command, explicit synthetic fixture:
+
+    python tools/continuation_check.py
+
+    New finance tests           36 pass /  0 fail /  0 skip
+    New build tests             10 pass /  0 fail /  0 skip
+    Original core regression    60 pass /  0 fail /  0 skip
+    Original finance suite      47 pass /  0 fail / 11 skip
+
+The build tests use a minimal temporary synthetic shell. They exercise the real
+build function and maintained modules but do not substitute for the excluded
+retained shell, launch the actual dashboard or visually inspect any page.
+
+Thirteen inherited source/test entry points were also run before and after the
+patch. Both runs used the intended component staging: component_root/.gitignore
+and README.md were placed at their expected root locations. All suite exit states
+and failed-check lists were unchanged. Ten entry points returned zero; three did
+not:
+
+    tests/ux_flow.test.mjs       2 pass / 12 fail
+    tests/ux_market.test.mjs     3 pass /  9 fail
+    tests/case_build_wiring.cjs  3 pass /  1 fail
+
+The UI fixture is not sufficient for the current UI: some expected case fields
+are missing and several render paths fail. Other assertions rely on the excluded
+live cases or on a candidate population larger than the three-row fixture.
+The wiring failure asks for assembled HTML, which the handover deliberately omits.
+These are real unresolved reproducibility/coverage limits, not all 'environmental
+noise'. They existed before the patch and remain visible after it.
+
+Some inherited data/market tests simply return when the authorised payload is
+absent. A raw green count from those suites does not mean the restricted source
+checks ran. The source-suite comparison deliberately does not present their
+combined pass total as a product-readiness score.
+
+EVIDENCE AND REPRODUCTION
+
+The evidence directory includes the two new suites run against the original
+source, the focused command's patched logs, its source SHA-256 pins, and the
+13-suite before/after comparison. The original tests were not rewritten to make
+them pass. Only the new tests and runner are delivered alongside the two source
+replacements. The patch installer checks the recorded implementation/test context
+and refuses drift instead of overwriting another working copy silently.
+
+The root README in the handover is stale about which case modules are assembled.
+Also, PUBLISHED_BY is a literal mapping in build.py, not runtime automatic discovery
+of all exported names. The current wiring checks validate the listed names; this
+patch does not redesign that guard or close the separate module-audit residual.
+
+STILL NOT CLOSED
+
+The original retained shell, the renewed live payload and the real-data/browser
+acceptance runs are absent here. No layout or clipping claim is made.
+Candidate reporting periods and distributor identities must come from their source.
+Comparable offers still require documented contents and matching/price bases.
+The oil migration still requires its real transferred quantity and applicable
+selling price; no suggested price is inferred from this patch.
+Cost-basis disagreements in source records remain data-owner work.
+The shared case backend, production identity, tenancy, attachment storage,
+authorised roles and cross-user isolation still need approved infrastructure.
+Client-side controls and safer HTML embedding are not substitutes for those.
+
+No production branch was updated, no commit or push was made, no pricing or SPA
+decision was approved, and no roadmap task was marked human accepted.
+
+NEXT BOUNDED STEP
+
+Apply or merge this patch locally, then rerun the real build and acceptance suite
+against one explicitly pinned renewed payload and the retained shell. In parallel,
+repair the synthetic UI fixture so each shipped view and its failure state can be
+exercised without restricted data. Retain the frozen v03 baseline failures and
+unresolved R27 source-period finding honestly. Only then expand range scenarios
+or connect IDS, PRISM and tenders to supported actions. The accompanying Cursor
+brief supplies the local integration instructions without requesting an upload
+of the restricted payload.

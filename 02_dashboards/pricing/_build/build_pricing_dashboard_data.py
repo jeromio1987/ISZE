@@ -58,6 +58,7 @@ def main() -> int:
     cnames, cname_i = pool(lines["customer_name"])
 
     pr = lines[lines["priced_both"]].copy()
+    pr["pn"] = pr["part_number"].astype(str)
 
     def agg_priced(frame: pd.DataFrame, keys: list[str]) -> pd.DataFrame:
         return frame.groupby(keys, dropna=False).agg(
@@ -197,6 +198,65 @@ def main() -> int:
                  round(float(r.prior), 2), round(float(r.new), 2), round(float(r.step), 4),
                  round(float(r.qty), 2)] for r in net_src.itertuples(index=False)]
 
+    # ---- brake deep dive -----------------------------------------------------
+    # The level-1 chart shows "Brakes" as one bar among twenty-three, so a level-2
+    # cut and the part numbers behind the biggest moves are carried here instead.
+    # Part numbers come from the priced book only: every line in a step has both
+    # base prices, so a part number added up across slices still ties to the
+    # level-2 and family totals on the page.
+    brake_lines = pr[pr["aim_l1"] == "Brakes"].copy()
+    bp = (brake_lines
+          .groupby(["db", "source", "aim_l2", "pn"], dropna=False)
+          .agg(prior_jpy=("prior_base_jpy", "first"),
+               new_jpy=("new_base_jpy", "first"),
+               qty=("qty", "sum"), billed=("billed_eur", "sum"),
+               step=("step_eur", "sum"))
+          .reset_index())
+    brake_pn = [[
+        db_i[r.db], src_i[r.source], l2_i[r.aim_l2], pn_i[r.pn],
+        round(float(r.prior_jpy), 1), round(float(r.new_jpy), 1),
+        round(float(r.qty), 2), round(float(r.billed), 2),
+        round(float(r.step), 4),
+    ] for r in bp.itertuples(index=False)]
+
+    # ---- step concentration --------------------------------------------------
+    # How few part numbers carry the increase. Parts that fell in price (a small
+    # number) keep the total at the family figure; parts that did not move are
+    # left out so the curve is not padded with zeros that carry no step.
+    def concentration(vals, head: int = 40, points: int = 110) -> dict:
+        v = np.sort(np.asarray(vals, dtype=float))[::-1]
+        if not len(v) or v.sum() <= 0:
+            return {"n": 0, "total": 0.0, "positive": 0, "half": None,
+                    "eighty": None, "curve": []}
+        cum = np.cumsum(v)
+        n = len(v)
+        total = float(v.sum())
+        ranks = list(range(1, min(head, n) + 1))
+        if n > head:
+            ranks += [int(x) for x in np.unique(
+                np.linspace(head + 1, n, points - head).astype(int))]
+        curve = [[r, round(100 * float(cum[r - 1]) / total, 3)] for r in ranks]
+        return {
+            "n": n,
+            "total": round(total, 2),
+            "positive": int((v > 0).sum()),
+            "half": int(np.argmax(cum >= 0.5 * total) + 1),
+            "eighty": int(np.argmax(cum >= 0.8 * total) + 1),
+            "curve": curve,
+        }
+
+    step_pos = pr[pr["step_eur"] > 0]
+    conc_all, conc_brake = {}, {}
+    for db, sub in step_pos.groupby("db"):
+        conc_all[db] = concentration(sub.groupby("pn")["step_eur"].sum().values)
+    for db, sub in step_pos[step_pos["aim_l1"] == "Brakes"].groupby("db"):
+        conc_brake[db] = concentration(sub.groupby("pn")["step_eur"].sum().values)
+    conc_all["__net__"] = concentration(
+        step_pos.groupby("pn")["step_eur"].sum().values)
+    conc_brake["__net__"] = concentration(
+        step_pos[step_pos["aim_l1"] == "Brakes"]
+        .groupby("pn")["step_eur"].sum().values)
+
     net = lines[lines["priced_both"]]
     totals = {
         "billed": round(float(lines["billed_eur"].sum()), 2),  # full in-scope
@@ -277,6 +337,9 @@ def main() -> int:
         "cust_pn": cust_pn,
         "db_pn": db_pn,
         "db_rows": db_rows,
+        "brake_pn": brake_pn,
+        "conc_all": conc_all,
+        "conc_brake": conc_brake,
         "net_l1": net_rows,
         "net_src": src_rows,
         "movers": movers,
@@ -294,6 +357,11 @@ def main() -> int:
     print(f"cust_l3       {len(cust_l3):,}")
     print(f"cust_pn       {len(cust_pn):,}")
     print(f"db_pn         {len(db_pn):,}")
+    print(f"brake_pn      {len(brake_pn):,}")
+    print(f"conc_all      {len(conc_all)} curves; network half "
+          f"{conc_all['__net__']['half']} / eighty {conc_all['__net__']['eighty']}")
+    print(f"conc_brake    {len(conc_brake)} curves; network half "
+          f"{conc_brake['__net__']['half']} / eighty {conc_brake['__net__']['eighty']}")
     print(f"db_rows       {len(db_rows):,}")
     print(f"net_l1        {len(net_rows):,}")
     print(f"movers        {len(movers):,}")

@@ -1,10 +1,60 @@
 # GPS dashboard — roadmap
 
-**Last updated:** 2026-08-26
+**Last updated:** 2026-09-22
 **Hub:** [`ISZE_ROADMAP.md`](../ISZE_ROADMAP.md) — open items also appear in the hub queue (§1 items 5–8)
 **Live app:** PRISM `pages/2_GPS.py` (port 8503, canonical) · `03_analytics/Isuzu/gps_dashboard/` legacy Dash — **frozen, do not build on it**
 
 **Open here:** fig-key V2 remainder (hub item 8) · interval-aware air factor still provisional (hub item 5) · LCV generation split blocked on chassis/reg-year cutoffs (hub item 7).
+
+---
+
+## UIO V21 — spend-per-unit data quality (HOLD — Jerome 2026-09-22)
+
+**Decision:** Jerome chose to **hold V21 until UIO V20 is promoted** — one thing at a time. Do not start the
+V21 spec, do not rebuild the GPS denominator, and do not re-point `gps_spu_by_distributor.csv` until V20 is
+the live workbook. This section exists so the findings are not rediscovered.
+
+**Why V21 is needed at all (Jerome's own read, 2026-09-22):** *"I think we need better spend per unit data."*
+Confirmed — the measure is currently weaker than its name.
+
+### What the live measure actually is
+
+`spend_per_unit_eur = total_sales_eur ÷ uio_units` in
+[`01_data/00_derived/gps_spu_by_distributor.csv`](../../01_data/00_derived/gps_spu_by_distributor.csv) —
+**what ISZE invoices the distributor**, not what the market spent per truck. True market spend needs dealer
+sell-out, and the workspace holds that for **UTI only** (`01_data/05_Dealer_sellout/UTIPartSalesCY2024.xlsx`,
+`CY2025.xlsx`). The label promises more than the numerator supports.
+
+### Five defects proven on 2026-09-22 (parent check, not a subagent claim)
+
+| # | Defect | Evidence |
+|---|---|---|
+| 1 | Fleet is **v18**-era, not current | `uio_source` on the 88 rows: **68 `v18_actual`, 16 `v18_proxy_2025`, 4 `ituk_dvla_2026`** |
+| 2 | The **proxy flag is inert/false** | `uio_proxy` is **False on all 88 rows** while 16 carry source `v18_proxy_2025` — the flag cannot be trusted to separate measured from proxied |
+| 3 | **Two published fleets disagree per market** | 2025 GPS vs wallet: **IRELAND 3,056 vs 2,161 = +41.4%**, PORTUGAL +13.4%, GERMANY −6.7%; network totals (163,459 vs 163,198) hide it. Ireland is the known 2013/14 splice (row drops 2,390 → 12 → 190) |
+| 4 | **Four markets bill parts with zero fleet** | UKRAINE, ARMENIA, KAZAKHSTAN, PALESTINE — `uio_units = 0`, `traffic_light = unknown`; any €/truck for them would be invented |
+| 5 | **The 3.5 t rate is never applied outside ITUK** | `01_data/91_build/gps_v9_loaders.py::max_spend_from_buckets()` returns `buckets["LD"] * RATE_N75` for every non-ITUK market; `RATE_N35` appears only in the ITUK branch. `uio_v19_gps.json` already carries `rates.N35 = 296`, so the two GPS paths disagree. **Not fixed — it moves a published ceiling** |
+
+### Where the accuracy actually is
+
+Not in new sources — in the **band mix**. Wallet rates span 3× (€296 / €739 / €887) and the 3.5 t share of a
+market runs **22% (Germany) to 63.6% (Portugal)**, so a whole per-truck figure moves **20–30%** on the mix alone.
+The rate is currently applied to a lumped `LD` row, so the mix is an assumption. The four-band set is now locked
+(see `STATE_PACKET.md`), which makes per-band denominators buildable for the first time.
+
+### Draft V21 scope (recorded, NOT authorised)
+
+1. Rename or re-scope the measure — "parts billed by us per truck" is honest; "market spend per truck" needs sell-out we do not have.
+2. One fleet, one source: bind GPS and wallet to a single per-market fleet table with a vintage stamp, plus a gate that fails when the two disagree beyond tolerance.
+3. Per-band denominators, using the locked four bands.
+4. Per-market coverage flags — measured / estimated / no denominator — reusing `01_data/90_INBOX/UIO_DATA_INVENTORY_*`.
+5. State the warranty position (both columns exist; pick the headline).
+6. Explicit exclusions: MIDI, the four zero-fleet markets, credit notes, and the service-fee / demurrage leak closed 2026-09-03.
+7. Do not treat 2025 as a baseline — it is the P700 changeover trough, and shipments lag registrations by ~2 years.
+
+**Dependency:** all seven ride on the V20 denominator. Building them on the current fleet would move the error,
+not reduce it. Also useful before V21: the Irish 2013/14 splice needs a decision, since it is the largest
+single per-market denominator defect.
 
 ---
 

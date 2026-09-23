@@ -1,11 +1,11 @@
 # ISZE derived pipeline verification
 
-**Generated:** 2026-09-19T13:00:24Z
+**Generated:** 2026-09-22T19:43:13Z
 **Data root:** `C:\Users\jerom\Desktop\claude\ISZE\01_data`
 
 | Pass | Warn | Fail |
 |------|------|------|
-| 153 | 1 | 0 |
+| 164 | 1 | 0 |
 
 ## Checks
 
@@ -66,11 +66,11 @@
 - ✅ **uio_year.is_forecast** — is_forecast agrees with the year on every row
 - ✅ **uio_year.basis_values** — basis values ['actual', 'estimate', 'forecast']
 - ✅ **uio_year.defect_notes** — The LD-label note is carried on the LD rows rather than dropped
-- ✅ **sales_fact.row_count** — Row count 514,037 (expected ~514,037, Δ 0.00%)
+- ✅ **sales_fact.row_count** — Row count 538,346 (expected ~538,346, Δ 0.00%)
 - ✅ **sales_fact.schema** — Schema OK
 - ✅ **sales_fact.years** — Years present: [2023, 2024, 2025, 2026]
-- ✅ **sales_fact.saty** — SaTy populated on 92.9% of rows (min 92.0%)
-- ✅ **sales_fact.fig_key** — fig_key populated on 98.6% of rows (min 90.0%)
+- ✅ **sales_fact.saty** — SaTy populated on 93.2% of rows (min 92.0%)
+- ✅ **sales_fact.fig_key** — fig_key populated on 99.0% of rows (min 90.0%)
 - ✅ **sales_fact.unmapped** — UNMAPPED 0 (0.00%) after distributor map
 - ✅ **p0.rows** — Dimension 919 PNs
 - ✅ **p0.pms_flagged** — PMS-flagged 496
@@ -79,11 +79,11 @@
 - ✅ **p0b.pair_source** — pair_source OK
 - ✅ **p0b.catalog_pairs** — Catalog-derived pairs 517
 - ✅ **p0b.unique_pairs** — Duplicate (genuine,bvp) keys: 0
-- ✅ **bvp_addr.rows** — Addressable basket 2,272 rows
+- ✅ **bvp_addr.rows** — Addressable basket 2,342 rows
 - ✅ **bvp_addr.schema** — Schema OK
 - ✅ **bvp_addr.distributors** — 22 distributors (min 20)
 - ✅ **bvp_addr.subgroups** — 29 product subgroups (min 22)
-- ✅ **bvp_addr.ituk_penetration** — ITUK BVP penetration 73/134 (54%)
+- ✅ **bvp_addr.ituk_penetration** — ITUK BVP penetration 75/135 (56%)
 - ✅ **p1.rows** — PMS capture 3,024 rows
 - ✅ **p1.schema** — Schema OK
 - ✅ **p1.line_type** — line_type OK
@@ -103,66 +103,77 @@
 - ✅ **contract3.schema** — Schema OK
 - ✅ **contract3.capture_cap** — All capture_rate_total ≤ 10.0
 - ✅ **contract3.tam_eur** — tam_eur ≥ 1.0 where avg_sp_eur > 0
-- ✅ **contract10.rows** — Network percentile 409 rows
+- ✅ **contract10.rows** — Network percentile 408 rows
 - ✅ **contract10.schema** — Schema OK
 - ✅ **contract10.metrics** — All metrics present
 - ✅ **contract10.percentile_range** — percentile_rank in [0, 100] (actual 0.0–100.0)
-- ✅ **contract16.rows** — ITUK PMS PN audit 274 rows
+- ✅ **contract16.rows** — ITUK PMS PN audit 302 rows
 - ✅ **contract16.schema** — Schema OK
 - ✅ **contract16.distributor** — All rows ITUK
 - ✅ **contract16.oil_filter.2023** — ITUK oil_filter 2023: 11 PNs (min 3)
 - ✅ **contract16.oil_filter.2024** — ITUK oil_filter 2024: 10 PNs (min 3)
 - ✅ **contract16.oil_filter.2025** — ITUK oil_filter 2025: 7 PNs (min 3)
-- ✅ **contract16.oil_filter.2026** — ITUK oil_filter 2026: 6 PNs (min 3)
+- ✅ **contract16.oil_filter.2026** — ITUK oil_filter 2026: 10 PNs (min 3)
 - ✅ **figkey.catalog.rows** — parts_catalog_dimension 164,969 rows
 - ✅ **figkey.catalog.coverage** — PNs with fig_key: 161,191 (97.7%, min 95%)
 - ✅ **figkey.catalog.registry_fig** — Registry PNs with fig_key: 65 (min 35)
-- ✅ **figkey.sales.rows** — sales_by_db_fig_key_year 75,781 rows
-- ✅ **figkey.sales.mapped** — Mapped fig_key rows: 75316 (min 10)
-- ✅ **aim_gps.rows** — AIM×GPS matrix 89 rows
+- ✅ **figkey.sales.rows** — sales_by_db_fig_key_year 82,295 rows
+- ✅ **figkey.sales.mapped** — Mapped fig_key rows: 81795 (min 10)
+- ✅ **aim_gps.rows** — AIM×GPS matrix 88 rows
 - ✅ **aim_gps.quadrants** — Quadrant values OK
 - ✅ **contract.vor_airfreight_risk** — vor_airfreight_risk 508 rows
-- ✅ **contract.vor_seasonality** — vor_seasonality 3,367 rows
-- ✅ **contract.vor_profile** — vor_profile 248 rows
-- ✅ **contract.capture_trajectory** — capture_trajectory 1,460 rows
-- ✅ **contract.part_lifecycle** — part_lifecycle 513 rows
+- ✅ **contract.vor_seasonality** — vor_seasonality 3,523 rows
+- ✅ **contract.vor_profile** — vor_profile 250 rows
+- ✅ **contract.capture_trajectory** — capture_trajectory 1,454 rows
+- ✅ **contract.part_lifecycle** — part_lifecycle 515 rows
 - ✅ **contract.revenue_concentration** — revenue_concentration 260 rows
 - ✅ **contract.revenue_waterfall** — revenue_waterfall 228 rows
-- ✅ **contract.price_premium** — price_premium 448 rows
-- ✅ **contract.basket_correlation** — basket_correlation 2,403 rows
+- ✅ **contract.price_premium** — price_premium 457 rows
+- ✅ **contract.basket_correlation** — basket_correlation 2,500 rows
 - ✅ **contract.substitution_timeline** — substitution_timeline 508 rows
 - ✅ **contract.capture_recovery_model** — capture_recovery_model 252 rows
-- ✅ **contract.lost_sales_model** — lost_sales_model 4,245 rows
+- ✅ **contract.lost_sales_model** — lost_sales_model 4,111 rows
 - ✅ **contract.lost_sales_market** — lost_sales_market 54 rows
 - ✅ **contract.lost_sales_competitor_coverage** — lost_sales_competitor_coverage 2 rows
 - ✅ **contract.lost_sales_pn_action** — lost_sales_pn_action 78 rows
-- ✅ **contract.distributor_geo** — distributor_geo 23 rows
-- ✅ **lost_sales.billed_ties_to_parts_base** — billed EUR 112,089,306.89 vs parts base EUR 112,089,306.89 (delta 0.00)
+- ✅ **contract.distributor_geo** — distributor_geo 22 rows
+- ✅ **lost_sales.billed_ties_to_parts_base** — billed EUR 117,600,501.42 ties the parts base to the cent at the 2026-08-31 cut-off (verification_fixtures.yaml)
+- ✅ **lost_sales.model_is_current** — the model covers the whole billing horizon (2026-08-31)
 - ✅ **lost_sales.price_split_blanks_the_part_year** — 0 part-year rows carry a full-year price split
-- ✅ **lost_sales.price_split_closes** — max residual EUR 0.01 over 2,162 rows
-- ✅ **lost_sales.mix_term_is_not_degenerate** — 65.0% of split rows carry a non-zero mix effect
+- ✅ **lost_sales.price_split_closes** — max residual EUR 0.01 over 2,069 rows
+- ✅ **lost_sales.mix_term_is_not_degenerate** — 63.6% of split rows carry a non-zero mix effect
 - ✅ **lost_sales.distributors** — 22 distributors
 - ✅ **lost_sales.years** — years present [2023, 2024, 2025, 2026]
-- ✅ **lost_sales.pms_category_coverage_bounded** — service-axis coverage 20.77% of billed euro
+- ✅ **lost_sales.pms_category_coverage_bounded** — service-axis coverage 20.81% of billed euro
 - ✅ **lost_sales.ceiling_rows_are_labelled** — 0 rows carry a ceiling without the market-level label
 - ✅ **lost_sales.gap_types_present** — gap types present ['catalog_gap', 'substitution', 'under_service']
 - ✅ **lost_sales.down_trade_verdicts_documented** — verdicts ['bvp_share_up_volume_held', 'bvp_share_up_volume_lost', 'no_bvp_in_market', 'pre_bvp_entry', 'stable']
 - ✅ **lost_sales.partial_year_momentum_is_like_for_like** — 0 part-year rows are not on a same-months basis
 - ✅ **lost_sales_competitor.sources_named** — sources ['KS trade (GBP to EUR)', 'multi-brand bridge']
 - ✅ **lost_sales_competitor.median_index_bounded** — median index range 1.61–2.52
-- ✅ **lost_sales_competitor.coverage_is_partial** — largest source covers 8.01% of billed euro (must read as partial, not whole)
+- ✅ **lost_sales_competitor.coverage_is_partial** — largest source covers 7.95% of billed euro (must read as partial, not whole)
 - ✅ **lost_sales_pn_action.levers_documented** — levers ['below_margin_floor', 'insufficient_pricing_data', 'landed_cost_not_price', 'price_or_incentive_actionable']
 - ✅ **lost_sales_pn_action.actionable_rows_have_cost_and_price** — 20 actionable rows, 0 of them missing cost or competitor price
 - ✅ **lost_sales_pn_action.landed_cost_verdict_matches_the_numbers** — 0 rows call it a landed-cost problem without the competitor below cost
 - ✅ **lost_sales_pn_action.actionable_rows_have_a_floor_price** — 20 actionable rows, 20 with a positive dealer price at the floor
 - ✅ **lost_sales_pn_action.actionable_set_is_not_empty** — 20 part numbers are actionable on price or incentive, 24 need a landed-cost answer
 - ✅ **action_ledger.artefacts** — P8 artefacts present
-- ✅ **action_ledger.nonempty** — ledger rows=23236
-- ✅ **action_ledger.lineage** — monetary rows with full lineage: 3507
+- ✅ **action_ledger.nonempty** — ledger rows=23763
+- ✅ **action_ledger.lineage** — monetary rows with full lineage: 3859
 - ✅ **action_ledger.rejects** — rejects.csv rows=0 has_reason=True
 - ✅ **action_ledger.language** — co-movement wording only
 - ✅ **action_ledger.html** — dashboard HTML at ISZE_Action_Ledger.html
 - ✅ **prism.bvp_bundle** — BVP dashboard bundle ready
+- ✅ **freshness.no_stale_derived** — 28 declared input(s) checked; every derived file is at least as new as its input
+- ✅ **schema.gps_spu_by_distributor.csv** — gps_spu_by_distributor.csv: all 10 declared column(s) present (21 in the file); 11 new column(s) reported, not a defect
+- ✅ **schema.lost_sales_model.csv** — lost_sales_model.csv: all 18 declared column(s) present (86 in the file); 68 new column(s) reported, not a defect
+- ✅ **schema.nseries_tonnage_evolution.csv** — nseries_tonnage_evolution.csv: all 11 declared column(s) present (24 in the file); 13 new column(s) reported, not a defect
+- ✅ **schema.epc_decode_nseries_banded.csv** — epc_decode_nseries_banded.csv: all 9 declared column(s) present (26 in the file); 17 new column(s) reported, not a defect
+- ✅ **schema.pms_capture_by_db_year.csv** — pms_capture_by_db_year.csv: all 10 declared column(s) present (16 in the file); 6 new column(s) reported, not a defect
+- ✅ **schema.metrics_snapshot.json** — metrics_snapshot.json: all 11 declared column(s) present (55 in the file); 44 new column(s) reported, not a defect
+- ✅ **schema.network_percentile.csv** — network_percentile.csv: all 8 declared column(s) present (8 in the file)
+- ✅ **schema.bvp_pn_dimension.csv** — bvp_pn_dimension.csv: all 3 declared column(s) present (16 in the file); 13 new column(s) reported, not a defect
+- ✅ **schema.no_column_lost_vs_git_head** — no declared file has lost a column against its committed version
 
 ## Claude / Cursor workflow
 

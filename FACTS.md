@@ -92,31 +92,51 @@ Capture = `actual_qty ÷ expected_qty` (CSV uncapped; headline tiles cap at 100%
 - `bvp_share_units` = bvp_qty ÷ (genuine_qty + bvp_qty); `bvp_share_eur` analogous. BVP has **no** capture rate.
 - GPS `spend_per_unit_eur` = net parts sales ÷ uio_units. Traffic light: green ≥ €150, amber €50–150, red < €50.
 
-## 4. Revenue base (sales_fact, 2026-08-25)
+## 4. Revenue base (sales_fact, 2026-09-20)
 
 | Figure | Value | Note |
 |--------|-------|------|
-| Raw `sales_fact.parquet` total | €117,536,189 | **514,037** rows, 2023-01-03 → **2026-06-30** (2026 = Jan–Jun; Apr–Jun from `Q1FY2027.XLSX`); includes internal/excluded codes and credit notes/returns |
-| GPS-facing, all lines | €113.64M | after distributor exclusion, **ex-credit-notes/returns** (snapshot 2026-08-25) |
-| GPS-facing, parts only | **€112.09M** | use this as the parts base (snapshot 2026-08-25; prior €103.57M was through 2026-03-31 only) |
+| Raw `sales_fact.parquet` total | €123,327,056 | **538,346** rows, 2023-01-03 → **2026-08-31** (2026 = Jan–Aug; Apr–Jun from `Q1FY2027.XLSX`, Jul–Aug from `CY2025till31082026.XLSX`); includes internal/excluded codes and credit notes/returns |
+| GPS-facing, all lines | **€119,222,616** | after distributor exclusion, **ex-credit-notes/returns** (recomputed 2026-09-20) |
+| GPS-facing, parts only | **€117,600,501** | use this as the parts base (recomputed 2026-09-20; prior €112,089,307 was through 2026-06-30 only) |
 
-### 4.1 Parts base bridge — two published values, one method
+### 4.1 Parts base bridge — three published values, one method
 
-`€103.57M` and `€112.09M` are **the same series at two cut-off dates**, not two
-competing definitions. Both are reproduced by the pipeline on 2026-09-17:
+`€103,573,715` / `€112,089,307` / `€117,600,501` are **the same series at three
+cut-off dates**, not competing definitions. All three are reproduced by the pipeline:
 
 | Step | € | Rows | Basis |
 |------|---|------|-------|
 | Parts base through **2026-03-31** | **103,573,715** | 465,343 | published 2026-07-03 |
 | + 2026 Apr–Jun billing (`Q1FY2027.XLSX`, wired 2026-08-25) | +8,515,592 | 35,550 | |
 | = Parts base through **2026-06-30** | **112,089,307** | 500,893 | published 2026-08-25 |
+| + 2026 Jul–Aug billing (`CY2025till31082026.XLSX`, wired 2026-09-20) | +5,511,195 | 23,776 | Jul 2,959,698 + Aug 2,551,497 |
+| = Parts base through **2026-08-31** | **117,600,501** | 524,669 | published 2026-09-20 |
+
+**The 2026-09-20 move is a billing-horizon move and nothing else.** No fleet number, no
+target-spend rate and no ceiling moved with it. The CY2025 rows of `wallet_waterfall.csv`
+and the 55.7% coverage figure are **unchanged** — the coverage denominator is
+vehicles-in-service × a target rate per truck and contains no billing at all, so a new
+2026 billing month cannot move it. The ceiling rebuild is separately held by decision **D24**
+(the Portugal/Malta light-vs-heavy truck shares) and was not run.
 
 Both figures are now **derived, not recalled**: `sales.parts_base_eur` carries
 `sales.parts_base_data_through`, and `sales.parts_base_through_prior_quarter_eur`
 is the same method cut at the prior quarter end. A period movement therefore can
 no longer be read as a method movement.
 
-**Defect found and fixed 2026-09-17 (the €180,715 leak).** Between the two
+**Open check after the 2026-09-20 load — read this before the next publish.**
+`lost_sales.billed_ties_to_parts_base` now fails: the lost-sales model still shows
+€112,089,306.89 billed against a parts base of €117,600,501.42, a delta of exactly the
+two new months. That model's billed figure was already stale by the same €5.51M **before**
+this load (it stood at the 2026-06-30 cut while the base had moved to the live one), and
+rebuilding it is not billing-only work: `lost_sales_model.csv` is built on
+`wallet_waterfall.csv` and carries the ceiling at market level
+(`ceilings_are_market_level=True`). It is therefore held with the ceiling under D24 and was
+deliberately **not** rebuilt. Until D24 is answered, that one verification failure stands and
+is a known, explained gap rather than a regression.
+
+**Defect found and fixed 2026-09-17 (the €180,715 leak).** Between two
 publications a third, undocumented movement occurred. On 2026-09-03
 `sap_sold_to_mapping.csv` remapped four non-part entities from `UNMAPPED` to a new
 code `NON_PARTS`, which was **not** in `EXCLUDED_CODES`. Nine rows / **€180,715.11**

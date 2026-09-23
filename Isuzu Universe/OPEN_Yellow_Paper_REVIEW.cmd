@@ -1,0 +1,2 @@
+@echo off
+start "" "%~dp0Universe_Yellow_Paper_v0.2_REDTEAM_REVIEW_2026-09-22.md"

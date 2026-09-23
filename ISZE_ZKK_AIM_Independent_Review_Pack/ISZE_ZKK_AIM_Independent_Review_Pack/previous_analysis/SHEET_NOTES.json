@@ -1,0 +1,121 @@
+[
+  {
+    "sheet": "Summary",
+    "data_rows": 9,
+    "title": "ISZE | L12 sales and classification comparison",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Status: billing arithmetic reconciles internally; supplied aggregate totals and ZKK/AIM classifications are NOT fully reconciled."
+  },
+  {
+    "sheet": "Distributors",
+    "data_rows": 22,
+    "title": "Distributor performance | one common basis",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Source: 01_all_sales_isze_to_distributor.csv; aggregated from dated records. 22 mapped distributors; numeric materials; positive values; CR/RE excluded. See Method and Scope."
+  },
+  {
+    "sheet": "Monthly",
+    "data_rows": 12,
+    "title": "Monthly comparison | matching calendar months",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Source: 01_all_sales_isze_to_distributor.csv; aggregated from dated records. 22 mapped distributors; numeric materials; positive values; CR/RE excluded. See Method and Scope."
+  },
+  {
+    "sheet": "Sales_Bridge",
+    "data_rows": 22,
+    "title": "Sales movement | quantities, realised prices and purchasing continuity",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Source: 01_all_sales_isze_to_distributor.csv; aggregated from dated records. 22 mapped distributors; numeric materials; positive values; CR/RE excluded. See Method and Scope. Counterfactual is an analytical valuation, not actual revenue or a demand model."
+  },
+  {
+    "sheet": "Catalogue_Keys",
+    "data_rows": 5241,
+    "title": "Catalogue figure keys | NOT labelled ZKK or AIM",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Source: 01_all_sales_isze_to_distributor.csv; aggregated from dated records. 22 mapped distributors; numeric materials; positive values; CR/RE excluded. See Method and Scope. Key taken directly from source; description is the highest-value historical description in that key, not a validated family label."
+  },
+  {
+    "sheet": "Distributor_Drivers",
+    "data_rows": 264,
+    "title": "Largest part movements | 12 per distributor",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Source: 01_all_sales_isze_to_distributor.csv; aggregated from dated records. 22 mapped distributors; numeric materials; positive values; CR/RE excluded. See Method and Scope."
+  },
+  {
+    "sheet": "Part_Comparisons",
+    "data_rows": 20639,
+    "title": "All part-number comparisons | aggregated billing only",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Source: 01_all_sales_isze_to_distributor.csv; aggregated from dated records. 22 mapped distributors; numeric materials; positive values; CR/RE excluded. See Method and Scope."
+  },
+  {
+    "sheet": "ITUK_Sales_to_Dealer",
+    "data_rows": 7342,
+    "title": "ITUK | billing and sales to dealer are different measures",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Source: 01_all_sales_isze_to_distributor.csv; aggregated from dated records. 22 mapped distributors; numeric materials; positive values; CR/RE excluded. See Method and Scope. Downstream: 03_all_sales_to_dealer.csv; ITUK network monthly source only. Year snapshots, alternative named-dealer file and non-numeric surcharge references excluded. Downstream quantities retain reported returns; do not infer stock changes mechanically."
+  },
+  {
+    "sheet": "Coverage",
+    "data_rows": 22,
+    "title": "Coverage before conclusions | absence of files is not zero demand",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Sources: dated billing; 03_all_sales_to_dealer.csv; 02_spend_per_truck_by_market.csv (year=2025). ITUK fleet context uses the DVLA March 2026 basis carried by that file. No fleet forecast used."
+  },
+  {
+    "sheet": "Scope",
+    "data_rows": 12,
+    "title": "From source extract to analytical parts-billed base",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Sequential, non-overlapping exclusions from the raw source; source totals and excluded amounts are NOT revenue. Repeated records retained because invoice/line identifiers are absent."
+  },
+  {
+    "sheet": "Reconciliation",
+    "data_rows": 89,
+    "title": "Supplied summaries do not fully reconcile | do not overwrite official totals",
+    "period_label": "Calendar-year reconciliation only | 2023-2025 full years; 2026 Jan-Jun | This sheet is not the L12 comparison",
+    "basis_note": "Sources: raw dated billing under this workbook method vs 02_spend_per_truck_by_market.csv. 2026 is Jan-Jun only in both labels, but the aggregate file does not consistently reflect Apr-Jun billing. Unknown entities remain separate."
+  },
+  {
+    "sheet": "Historical_Mix",
+    "data_rows": 22,
+    "title": "Original versus value parts | supplied selected-family context",
+    "period_label": "SEPARATE CONTEXT: calendar 2025 versus calendar 2024 | Not L12, not the full parts book, not market share",
+    "basis_note": "Source: 04_original_vs_value_parts_mix.csv. Preserve its seven supplied product-family groupings. This aggregated file cannot classify the L12 transactions."
+  },
+  {
+    "sheet": "Historical_Mix_Families",
+    "data_rows": 259,
+    "title": "Original versus value parts | supplied family detail",
+    "period_label": "SEPARATE CONTEXT: calendar 2024 and 2025 | Not L12 | No reclassification performed",
+    "basis_note": "Source: 04_original_vs_value_parts_mix.csv; summed by distributor, supplied product-group label and calendar year."
+  },
+  {
+    "sheet": "Framework_Status",
+    "data_rows": 12,
+    "title": "Comparable framework | what is completed and what is not",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Assessment of the attached source fields and calculated results, as of 20 September 2026."
+  },
+  {
+    "sheet": "Actions",
+    "data_rows": 8,
+    "title": "Commercial actions | validation first, no invented opportunity values",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Calculated from the L12 billing and, for ITUK only, matched monthly sales-to-dealer data. Movements are NOT recoverable-revenue estimates."
+  },
+  {
+    "sheet": "Method",
+    "data_rows": 23,
+    "title": "Method, definitions and sources",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Internal analytical documentation. All value, percentage and month comparisons have the same basis unless a sheet is explicitly marked historical context."
+  },
+  {
+    "sheet": "Checks",
+    "data_rows": 15,
+    "title": "Validation results | arithmetic passed; source and mapping limits remain",
+    "period_label": "L12: 1 Jul 2025 - 30 Jun 2026 | Previous L12: 1 Jul 2024 - 30 Jun 2025 | Provisional billing-only analysis",
+    "basis_note": "Automated checks run during this analysis; not a replacement for the original ISZE verification suite."
+  }
+]

@@ -1,0 +1,438 @@
+{
+  "built_utc": "2026-09-22T18:00:12Z",
+  "stamp": "2026-09-22",
+  "status": "SIMULATION ONLY - nothing published, nothing mailed, no live price list, price file or pricing configuration touched",
+  "basis": {
+    "source": "01_data/00_derived/price_bp_weighted_compare_pn.csv",
+    "filter": "in_scope == True",
+    "window": "2025-07-01 .. 2026-06-30",
+    "lines": 48653,
+    "part_numbers": 15872,
+    "billed_eur": 34993609.39,
+    "source_file_mtime": "2026-09-17T13:03:10Z"
+  },
+  "headline": {
+    "rate_under_review_pct": 5.0,
+    "step_5pct_on_movable_eur": 1629792.63,
+    "step_5pct_on_all_in_scope_eur": 1749680.47,
+    "euro_weighted_move_pct": 5.0,
+    "primary_label": "Value of a flat +5% on the in-scope base",
+    "collectable_label": "Collectable once lines with no move available are excluded",
+    "note": "Both figures are reported with equal weight. A single flat rate makes the euro-weighted move equal the rate itself. The collectable figure is the one that lands as money; the larger figure is the arithmetic on the whole in-scope base and must not be quoted as cash."
+  },
+  "movability": {
+    "mask": "bp_new_jpy.notna() AND bp_prior_revised.notna()",
+    "mask_note": "A line can take a new price only if it already carries a price on both sides of the revision. This is the same mask the pricing policy paper uses when it states 47,617 lines / EUR 32,595,852.63 / 93.15% of billed.",
+    "movable_lines": 47617,
+    "movable_billed_eur": 32595852.63,
+    "movable_share_pct": 93.15,
+    "immovable_lines": 1036,
+    "immovable_billed_eur": 2397756.76,
+    "immovable_share_pct": 6.85,
+    "immovable_step_5pct_if_it_could_move_eur": 119887.84,
+    "immovable_composition": [
+      {
+        "reason": "no_price_on_one_side",
+        "lines": 1010,
+        "billed_eur": 1110782.49,
+        "share_of_in_scope_billed_pct": 3.17,
+        "step_5pct_eur_if_it_could_move": 55539.12
+      },
+      {
+        "reason": "rebate_or_non_part_admin",
+        "lines": 19,
+        "billed_eur": 781252.09,
+        "share_of_in_scope_billed_pct": 2.23,
+        "step_5pct_eur_if_it_could_move": 39062.6
+      },
+      {
+        "reason": "lubricant_no_pr00_in_sap",
+        "lines": 7,
+        "billed_eur": 505722.18,
+        "share_of_in_scope_billed_pct": 1.45,
+        "step_5pct_eur_if_it_could_move": 25286.11
+      }
+    ],
+    "immovable_sub_masks": [
+      {
+        "sub_reason": "Has a new price but no prior price",
+        "lines": 631,
+        "billed_eur": 333869.8
+      },
+      {
+        "sub_reason": "Has a prior price but no new price",
+        "lines": 140,
+        "billed_eur": 167156.29
+      },
+      {
+        "sub_reason": "No price on either side",
+        "lines": 265,
+        "billed_eur": 1896730.67
+      }
+    ],
+    "why_not_the_1647_reading": "The 2026-09-17 page recorded '1,647 lines / EUR 4.48M / 12.81%' as the lines that cannot move, using `value_eur_step != 0` as the test. That mask is wrong. 611 of those lines carry a base price on both sides and simply did not move in the filed revision (EUR 2,085,484.90 billed); a new flat +5% WOULD move them, so they are movable. The 611 lines sit today on exactly the three reasons in `immovable_composition` (lubricant_no_pr00_in_sap, rebate_or_non_part_admin, no_price_on_one_side), which is why the two readings land on the same order of magnitude while disagreeing on every count. Corrected on 2026-09-17 and reproduced here: 1,036 lines / EUR 2,397,756.76 / 6.85%.",
+    "not_a_no_list_claim": "This is not the CY2025 no-list gap of 522 part numbers / EUR 4.96M that the pricing policy paper records. That figure is a different window and a different mask, and it is not used anywhere on this page."
+  },
+  "versus_filed_revision": {
+    "step_filed_eur": 1652140.71,
+    "rate_filed_published_pct": 5.9616,
+    "index_reproduced_pct": 5.961599,
+    "step_tie_out": "exact",
+    "difference_filed_minus_flat_eur": 22348.08,
+    "difference_filed_minus_flat_on_all_lines_eur": -97539.76,
+    "same_basis": false,
+    "note": "Both are measured on the same in-scope L12M base. The filed revision is the published, quantity-weighted price move. The +5% flat is a proposal and does not exist. They are two separate readings of one base, never two components of one increase, and are never summed.",
+    "rate_bases_on_movable_set": {
+      "published_headline": {
+        "value_pct": 5.9616,
+        "basis": "quantity-weighted base-price move on the movable set"
+      },
+      "simulation_quantity": {
+        "value_pct": 6.0652,
+        "basis": "weighted on the simulation's own quantity"
+      },
+      "euro_weighted": {
+        "value_pct": 6.0064,
+        "basis": "each line's move weighted by the euro it billed"
+      },
+      "step_on_priced_volume": {
+        "value_pct": 5.0686,
+        "basis": "value_eur_step divided by billed euro on the movable set"
+      }
+    }
+  },
+  "by_market": [
+    {
+      "lines": 33067,
+      "part_numbers": 11388,
+      "billed_eur": 13771026.21,
+      "step_filed_eur": 617618.61,
+      "movable_lines": 32434,
+      "movable_billed_eur": 12831245.78,
+      "immovable_lines": 633,
+      "immovable_billed_eur": 939780.43,
+      "step_5pct_movable_eur": 641562.29,
+      "step_5pct_all_lines_eur": 688551.31,
+      "filed_weighted_pct": 5.9211,
+      "market": "PR00",
+      "note": "Main EU distributor list (WEST / SOUTH / EAST / NORDICS / MIDDLE_EAST regions).",
+      "share_of_billed_pct": 39.35
+    },
+    {
+      "lines": 1902,
+      "part_numbers": 1902,
+      "billed_eur": 3475697.94,
+      "step_filed_eur": 180312.25,
+      "movable_lines": 1869,
+      "movable_billed_eur": 3400405.39,
+      "immovable_lines": 33,
+      "immovable_billed_eur": 75292.55,
+      "step_5pct_movable_eur": 170020.27,
+      "step_5pct_all_lines_eur": 173784.9,
+      "filed_weighted_pct": 5.5808,
+      "market": "UTI",
+      "note": "Israel, sold-to 1799. Never combined with UMI.",
+      "share_of_billed_pct": 9.93
+    },
+    {
+      "lines": 2568,
+      "part_numbers": 2568,
+      "billed_eur": 3080200.59,
+      "step_filed_eur": 124532.59,
+      "movable_lines": 2428,
+      "movable_billed_eur": 2429159.96,
+      "immovable_lines": 140,
+      "immovable_billed_eur": 651040.63,
+      "step_5pct_movable_eur": 121458.0,
+      "step_5pct_all_lines_eur": 154010.03,
+      "filed_weighted_pct": 5.637,
+      "market": "UMI",
+      "note": "Israel, sold-to 1797. Never combined with UTI.",
+      "share_of_billed_pct": 8.8
+    },
+    {
+      "lines": 3101,
+      "part_numbers": 2685,
+      "billed_eur": 1497192.55,
+      "step_filed_eur": 57082.38,
+      "movable_lines": 3090,
+      "movable_billed_eur": 1455811.07,
+      "immovable_lines": 11,
+      "immovable_billed_eur": 41381.48,
+      "step_5pct_movable_eur": 72790.55,
+      "step_5pct_all_lines_eur": 74859.63,
+      "filed_weighted_pct": 4.8455,
+      "market": "CIS",
+      "note": "GA Armenia and CBC Kazakhstan.",
+      "share_of_billed_pct": 4.28
+    },
+    {
+      "lines": 8015,
+      "part_numbers": 7673,
+      "billed_eur": 13169492.1,
+      "step_filed_eur": 672594.87,
+      "movable_lines": 7796,
+      "movable_billed_eur": 12479230.43,
+      "immovable_lines": 219,
+      "immovable_billed_eur": 690261.67,
+      "step_5pct_movable_eur": 623961.52,
+      "step_5pct_all_lines_eur": 658474.6,
+      "filed_weighted_pct": 6.3071,
+      "market": "UK (ITUK + IUK)",
+      "note": "The UK carries no PR00 / UTI / UMI / CIS code, so it is not inside any of the four market codes the published per-market figures use. It is ISZE's largest single trading block by billed value and it is shown as its own row so the table sums to the whole in-scope book.",
+      "share_of_billed_pct": 37.63
+    }
+  ],
+  "by_source": [
+    {
+      "lines": 22838,
+      "part_numbers": 9491,
+      "billed_eur": 15481529.91,
+      "step_filed_eur": 820859.47,
+      "movable_lines": 22731,
+      "movable_billed_eur": 15401370.75,
+      "immovable_lines": 107,
+      "immovable_billed_eur": 80159.16,
+      "step_5pct_movable_eur": 770068.54,
+      "step_5pct_all_lines_eur": 774076.5,
+      "filed_weighted_pct": 6.2081,
+      "source": "Japan (IML)",
+      "share_of_billed_pct": 44.24
+    },
+    {
+      "lines": 23106,
+      "part_numbers": 5201,
+      "billed_eur": 14320479.98,
+      "step_filed_eur": 753198.18,
+      "movable_lines": 23085,
+      "movable_billed_eur": 14252360.9,
+      "immovable_lines": 21,
+      "immovable_billed_eur": 68119.08,
+      "step_5pct_movable_eur": 712618.05,
+      "step_5pct_all_lines_eur": 716024.0,
+      "filed_weighted_pct": 6.3088,
+      "source": "Thailand (IMIT)",
+      "share_of_billed_pct": 40.92
+    },
+    {
+      "lines": 2709,
+      "part_numbers": 1180,
+      "billed_eur": 5191599.5,
+      "step_filed_eur": 78083.06,
+      "movable_lines": 1801,
+      "movable_billed_eur": 2942120.98,
+      "immovable_lines": 908,
+      "immovable_billed_eur": 2249478.52,
+      "step_5pct_movable_eur": 147106.05,
+      "step_5pct_all_lines_eur": 259579.98,
+      "filed_weighted_pct": 3.0601,
+      "source": "No source label",
+      "share_of_billed_pct": 14.84
+    }
+  ],
+  "by_market_source": [
+    {
+      "market": "PR00",
+      "source": "Japan (IML)",
+      "movable_lines": 13345,
+      "billed_eur": 3586722.92,
+      "filed_weighted_pct": 6.3925,
+      "step_5pct_eur": 179336.15
+    },
+    {
+      "market": "PR00",
+      "source": "Thailand (IMIT)",
+      "movable_lines": 17896,
+      "billed_eur": 7777202.64,
+      "filed_weighted_pct": 6.4001,
+      "step_5pct_eur": 388860.13
+    },
+    {
+      "market": "PR00",
+      "source": "No source label",
+      "movable_lines": 1193,
+      "billed_eur": 1467320.22,
+      "filed_weighted_pct": 2.4088,
+      "step_5pct_eur": 73366.01
+    },
+    {
+      "market": "UTI",
+      "source": "Japan (IML)",
+      "movable_lines": 1790,
+      "billed_eur": 3246001.06,
+      "filed_weighted_pct": 5.6312,
+      "step_5pct_eur": 162300.05
+    },
+    {
+      "market": "UTI",
+      "source": "Thailand (IMIT)",
+      "movable_lines": 3,
+      "billed_eur": 2563.65,
+      "filed_weighted_pct": 9.2395,
+      "step_5pct_eur": 128.18
+    },
+    {
+      "market": "UTI",
+      "source": "No source label",
+      "movable_lines": 76,
+      "billed_eur": 151840.68,
+      "filed_weighted_pct": 4.4611,
+      "step_5pct_eur": 7592.03
+    },
+    {
+      "market": "UMI",
+      "source": "Japan (IML)",
+      "movable_lines": 609,
+      "billed_eur": 444445.61,
+      "filed_weighted_pct": 6.214,
+      "step_5pct_eur": 22222.28
+    },
+    {
+      "market": "UMI",
+      "source": "Thailand (IMIT)",
+      "movable_lines": 1725,
+      "billed_eur": 1640047.49,
+      "filed_weighted_pct": 6.2725,
+      "step_5pct_eur": 82002.37
+    },
+    {
+      "market": "UMI",
+      "source": "No source label",
+      "movable_lines": 94,
+      "billed_eur": 344666.86,
+      "filed_weighted_pct": 2.0115,
+      "step_5pct_eur": 17233.34
+    },
+    {
+      "market": "CIS",
+      "source": "Japan (IML)",
+      "movable_lines": 2238,
+      "billed_eur": 1220344.33,
+      "filed_weighted_pct": 4.6445,
+      "step_5pct_eur": 61017.22
+    },
+    {
+      "market": "CIS",
+      "source": "Thailand (IMIT)",
+      "movable_lines": 734,
+      "billed_eur": 184886.69,
+      "filed_weighted_pct": 6.3769,
+      "step_5pct_eur": 9244.33
+    },
+    {
+      "market": "CIS",
+      "source": "No source label",
+      "movable_lines": 118,
+      "billed_eur": 50580.05,
+      "filed_weighted_pct": 4.4633,
+      "step_5pct_eur": 2529.0
+    },
+    {
+      "market": "UK (ITUK + IUK)",
+      "source": "Japan (IML)",
+      "movable_lines": 4749,
+      "billed_eur": 6903856.83,
+      "filed_weighted_pct": 6.6877,
+      "step_5pct_eur": 345192.84
+    },
+    {
+      "market": "UK (ITUK + IUK)",
+      "source": "Thailand (IMIT)",
+      "movable_lines": 2727,
+      "billed_eur": 4647660.43,
+      "filed_weighted_pct": 6.1755,
+      "step_5pct_eur": 232383.02
+    },
+    {
+      "market": "UK (ITUK + IUK)",
+      "source": "No source label",
+      "movable_lines": 320,
+      "billed_eur": 927713.17,
+      "filed_weighted_pct": 4.1803,
+      "step_5pct_eur": 46385.66
+    }
+  ],
+  "refresh_vs_2026_09_17": {
+    "prior_run": "2026-09-17",
+    "note": "Comparison is recomputed, not quoted. 'delta' is this run minus 17 Sep.",
+    "fields": [
+      {
+        "field": "in-scope lines",
+        "prior": 48653,
+        "now": 48653,
+        "delta": 0
+      },
+      {
+        "field": "part numbers",
+        "prior": 15872,
+        "now": 15872,
+        "delta": 0
+      },
+      {
+        "field": "billed EUR",
+        "prior": 34993609.39,
+        "now": 34993609.39,
+        "delta": 0.0
+      },
+      {
+        "field": "+5% on all in-scope lines EUR",
+        "prior": 1749680.47,
+        "now": 1749680.47,
+        "delta": -0.0
+      },
+      {
+        "field": "+5% collectable EUR",
+        "prior": 1629792.63,
+        "now": 1629792.63,
+        "delta": 0.0
+      },
+      {
+        "field": "filed revision step EUR",
+        "prior": 1652140.71,
+        "now": 1652140.71,
+        "delta": -0.0
+      },
+      {
+        "field": "movable lines",
+        "prior": 47617,
+        "now": 47617,
+        "delta": 0
+      },
+      {
+        "field": "movable billed EUR",
+        "prior": 32595852.63,
+        "now": 32595852.63,
+        "delta": -0.0
+      },
+      {
+        "field": "immovable lines",
+        "prior": 1036,
+        "now": 1036,
+        "delta": 0
+      },
+      {
+        "field": "immovable billed EUR",
+        "prior": 2397756.76,
+        "now": 2397756.76,
+        "delta": 0.0
+      }
+    ],
+    "verdict": "The base file has not moved since 2026-09-17, so every figure reproduces to the cent and the deltas are zero."
+  },
+  "concentration_share_of_step_pct": {
+    "top_10": 7.6,
+    "top_100": 25.6,
+    "top_250": 37.9,
+    "top_1000": 59.0
+  },
+  "caveats": [
+    "SIMULATION ONLY. Nothing was published, nothing was mailed, and no live price list, price file or pricing configuration was touched.",
+    "No volume response is modelled. No elasticity coefficient exists in this workspace, and none is invented.",
+    "The billing extract carries net value only - no gross, discount or condition, so the step is stated on net billed value, not on list value.",
+    "AIM level 1 covers less than the whole book; the remainder is labelled, never dropped.",
+    "Lines with no base price on one side cannot take a new price, so their euro is not collectable by pricing. They are counted and labelled, never dropped.",
+    "The +5% flat proposal and the filed +5.9616% revision are two separate readings of the same base. They are never added together.",
+    "The four market codes do not cover the whole in-scope book. The UK (ITUK and IUK, EUR 13.17M billed) sits outside them and is shown as its own row so the table sums to the total.",
+    "The CY2025 no-list gap of 522 part numbers / EUR 4.96M is a different window and is not used anywhere on this page."
+  ]
+}

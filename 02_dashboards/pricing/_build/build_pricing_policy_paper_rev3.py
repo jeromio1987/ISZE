@@ -106,8 +106,9 @@ CAP_STATS = {
     "by_tier": {TIER_LABEL[t]: int(v) for t, v in
                 above["tier"].value_counts().items()},
 }
-say(f"  cap: {CAP_STATS['above']:,} of {CAP_STATS['priced_lines']:,} lines above "
-    f"+{CAP:.0f}% ({CAP_STATS['above_pct']}%), worst {CAP_STATS['worst']}%")
+say(f"  hist: {CAP_STATS['above']:,} of {CAP_STATS['priced_lines']:,} lines move "
+    f">+{CAP:.0f}% under the dial (former illustration only; no binding "
+    f"per-line ceiling since 2026-09-20), worst {CAP_STATS['worst']}%")
 
 # ---- lighting: the movement at 0.90 against 0.80 ----------------------------
 UTI_LIGHT_NODES = ["Headlamp", "Tail / combination lamp", "Marker / signal lamp",
@@ -520,7 +521,7 @@ new Chart($('#c-hist'),{type:'bar',
   plugins:{legend:{display:false},
    tooltip:{callbacks:{label:c=>' '+c.parsed.y.toLocaleString()+' lines move '+
      D.hist[c.dataIndex].bucket.toFixed(2)+'%'+
-     (D.hist[c.dataIndex].bucket>8?' \\u2014 above the engine\\u2019s own +8% ceiling':'')}}},
+     (D.hist[c.dataIndex].bucket>8?' \\u2014 above former +8% illustration (removed)':'')}}},
   scales:{x:{title:{display:true,text:'applied movement on the line, %',font:{size:10.5}},
     ticks:{maxTicksLimit:12,font:{size:9}},grid:{display:false}},
    y:{title:{display:true,text:'priced lines',font:{size:10.5}},
@@ -531,7 +532,7 @@ new Chart($('#c-light'),{type:'bar',
  data:{labels:['Today\\n0.90','Proposed\\n0.80'],datasets:[
   {label:'applied increase on a UTI lighting line at a 5% dial',data:[D.light.now,D.light.prop],
    backgroundColor:[C.terra,C.good],borderRadius:3,barPercentage:.5},
-  {type:'line',label:'the +8% per-line ceiling the engine sets',data:[8,8],
+  {type:'line',label:'former +8% illustration (removed)',data:[8,8],
    borderColor:C.navy,borderDash:[6,4],borderWidth:1.8,pointRadius:0,fill:false}]},
  options:{maintainAspectRatio:false,
   plugins:{legend:{labels:{boxWidth:11,font:{size:10.5}}},
@@ -801,13 +802,13 @@ def html() -> str:
       <div class="v">{DATA['light']['prop']:.2f}%</div>
       <div class="s">from {DATA['light']['now']:.2f}%, to clear the engine's own ceiling</div>
       <div class="tip">At a 5% dial, lighting's current share puts every lamp line at 8.07%, above
-      the +8% per-line ceiling the price engine itself sets. Moving the share from 0.90 to 0.80
+      any former per-line percentage ceiling (removed 2026-09-20). Moving the share from 0.90 to 0.80
       lands at 7.17%. The break-even share is 0.8921. This is the one rate in the system that
       follows from a mechanical constraint rather than a preference.</div></div>
     <div class="kpi"><div class="l">Lines above that ceiling</div>
       <div class="v">{DATA['cap']['above']:,}</div>
       <div class="s">of {DATA['cap']['priced_lines']:,} priced, worst {DATA['cap']['worst']}%</div>
-      <div class="tip">The system does not enforce its own +8% per-line ceiling. This is a defect
+      <div class="tip">There is no binding per-line percentage ceiling (removed 2026-09-20). Note
       in the system as built, stated plainly on page 12 rather than hidden. Whether the system
       should respect the cap or the cap should be revised is a decision for management.</div></div>
   </div>
@@ -823,7 +824,7 @@ def html() -> str:
       cannot answer a price move by buying something else.</div></div>
     <div class="cb"><div class="q">Is the increase landing inside the engine's own ceiling?</div>
       <div class="sub">Every priced line by the movement it carries. Terracotta is
-      <b>above</b> the +8% ceiling the price engine itself sets.</div>
+      <b>above</b> what the former +8% illustration would have allowed (ceiling removed).</div>
       <div class="hold tall"><canvas id="c-hist"></canvas></div>
       <div class="small" style="margin-top:6px"><b>{DATA['cap']['above']:,} lines
       ({DATA['cap']['above_pct']}%) sit above the ceiling, the worst at
@@ -867,7 +868,7 @@ def html() -> str:
       <td>section 8</td></tr>
     <tr class="hi"><td>The policy described a method</td>
       <td>The policy <b>states the proposed movements</b>, each with its reason, and
-      <b>discloses a defect in the system as built</b>: it does not enforce its own +8% per-line
+      <b>records that the former +8% per-line
       cap, and {DATA['cap']['above']:,} of {DATA['cap']['priced_lines']:,} priced lines sit above
       it</td><td>sections 10 and 11</td></tr>
   </table>
@@ -1056,13 +1057,13 @@ def html() -> str:
 
   <p class="lede">This is the one rate in the whole system that follows from a mechanical
   constraint rather than from a preference. The engine that applies the increase sets its own
-  <b>+8% per-line ceiling</b>. At a 5% dial, lighting's current share of <b>0.90 puts every
+  <b>No binding per-line % ceiling</b> (removed 2026-09-20). At a 5% dial, lighting's current share of <b>0.90 puts every
   lighting line at 8.07% &mdash; above the ceiling the engine itself sets.</b> A share of
   <b>0.80 lands at 7.17%</b>, inside it. The break-even share is <b>0.8921</b>.</p>
 
   <div class="cb"><div class="q">Does lighting clear the ceiling the engine itself sets?</div>
     <div class="sub">The applied increase on a UTI lighting line at a 5% dial. The dashed line is
-    the +8% per-line ceiling.</div>
+    any per-line % ceiling (none is binding).</div>
     <div class="hold"><canvas id="c-light"></canvas></div>
     <div class="small" style="margin-top:6px">Of UTI's {DATA['light']['lines']} lighting lines,
     <b>{DATA['light']['with_move']} carry a movement and {DATA['light']['above']} sit above the
@@ -1104,7 +1105,7 @@ def html() -> str:
   <h2><span class="sec-n">section five</span>The system does not enforce its own ceiling</h2>
 
   <div class="defect"><div class="h">Stated plainly, because it should not be glossed</div>
-  The price engine sets a <b>+8% per-line ceiling</b>. The two-tier system, as built, does not
+  There is <b>no binding per-line % ceiling</b> (Jerome 2026-09-20). The two-tier system
   enforce it. <b>{DATA['cap']['above']:,} of {DATA['cap']['priced_lines']:,} priced lines sit above
   the ceiling &mdash; {DATA['cap']['above_pct']}% of the book &mdash; and the worst line in the book
   moves {DATA['cap']['worst']}%.</b> This is a defect in the system as built, not a design
@@ -1136,7 +1137,7 @@ def html() -> str:
   </div>
 
   <div class="call amber" style="margin-top:10px"><div class="h">What is not defensible</div>
-  <b>Shipping the current state without saying so.</b> A reader who takes the +8% per-line ceiling
+  <b>Shipping the current state without saying so.</b> A reader who expects a binding per-line % ceiling
   as binding and reads the tier table beside it would draw a false conclusion about what the system
   does. That is why this page exists in a policy paper rather than in a build note.</div>
 
@@ -1509,7 +1510,7 @@ def html() -> str:
     <tr class="hi"><td><b>Lighting share 0.90 &rarr; 0.80</b></td>
       <td class="n">{DATA['light']['lines']} UTI lines</td>
       <td class="n">{DATA['light']['now']}% &rarr; <b>{DATA['light']['prop']}%</b></td>
-      <td><b>0.90 breaches the engine's own +8% per-line ceiling; 0.80 does not.</b> It answers the
+      <td><b>0.90 vs 0.80 was previously discussed against a removed +8% illustration; that ceiling is gone.</b> It answers the
       distributor's complaint without yielding on the insurance mechanism.
       {DATA['light']['above']} lines come back inside the ceiling.</td>
       <td><span class="grade g-m">measured</span> the arithmetic<br><span class="grade g-i">inference</span> the choice</td></tr>
@@ -1566,7 +1567,7 @@ def html() -> str:
     <tr><th class="n">#</th><th>Decision</th><th>Why it comes here</th></tr>
     <tr class="hi"><td class="n">1</td><td><b>Adopt the two-tier system &mdash; and decide the cap
       question with it</b></td>
-      <td>The system is built and it does not enforce its own +8% per-line ceiling. Either the
+      <td>No binding +8% per-line ceiling remains. Either the
       system respects the cap or the cap is revised, and either answer requires a re-run.
       <b>This is first because it determines every number after it.</b></td></tr>
     <tr class="hi"><td class="n">2</td><td><b>Set the dial</b></td>

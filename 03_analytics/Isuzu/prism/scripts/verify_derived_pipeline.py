@@ -96,6 +96,28 @@ def _chk(
     report.add(Check(cid, status, msg, detail))
 
 
+def _billing_cutoff(cfg: dict[str, Any], sales: pd.DataFrame) -> tuple[pd.Timestamp, str]:
+    """The billing cut-off a tie-out must be measured at, and where it was declared.
+
+    Three sources, in order: the fixture (frozen on purpose, so a period movement cannot be
+    mistaken for a method movement), metrics_snapshot.json (the workspace's own published
+    "billing horizon behind the parts base"), and failing both, the data's own last month-end.
+    """
+    fx_cut = cfg.get("billing_cutoff")
+    if fx_cut:
+        return pd.Timestamp(fx_cut) + pd.offsets.MonthEnd(0), "verification_fixtures.yaml"
+    try:
+        snap = json.loads(
+            (DERIVED_DIR / "metrics_snapshot.json").read_text(encoding="utf-8")
+        )
+        declared = (snap.get("sales.parts_base_data_through") or {}).get("value")
+        if declared:
+            return pd.Timestamp(declared), "metrics_snapshot.json"
+    except Exception:  # noqa: BLE001 - snapshot is optional context, never a hard dependency
+        pass
+    return pd.Timestamp(sales["billing_date"].max()) + pd.offsets.MonthEnd(0), "max billing_date"
+
+
 def check_raw_files(report: Report, fx: dict[str, Any]) -> None:
     # Fixture paths use the legacy "raw/" prefix; resolve through config so the
     # check works on numbered folders (12_raw) after legacy junction removal.
@@ -630,8 +652,17 @@ def check_lost_sales_model(report: Report, fx: dict[str, Any]) -> None:
         return
     df = pd.read_csv(path, low_memory=False)
 
-    # 1. Billed euro must equal the parts base, to the cent. A family that fails to classify is
-    #    still a row (unclassified_pn), so nothing may fall out of this sum.
+    # 1. Billed euro must equal the parts base, to the cent, for the same billing period.
+    #    A family that fails to classify is still a row (unclassified_pn), so nothing may fall
+    #    out of this sum.
+    #
+    #    Period awareness (added 2026-09-21). This check used to compare the model against *all*
+    #    billing on file, so a model built last month looked like a broken tie-out the moment the
+    #    next monthly billing landed. On 2026-09-21 it read a EUR 5,511,194.53 "delta" that was
+    #    exactly the Jul-Aug 2026 billing the model predated. The tolerance stays at zero - the
+    #    model must still equal the base to the cent - but it is now compared at a declared
+    #    cut-off, and having been built behind that cut-off is reported as staleness, naming the
+    #    builder to run, rather than as an arithmetic failure.
     from modules.data_prep import load_distributor_mapping
     from modules.sales_loader import load_prism_sales
     from config import resolve_mapping_path
@@ -641,16 +672,89 @@ def check_lost_sales_model(report: Report, fx: dict[str, Any]) -> None:
     if "line_kind" in sales.columns:
         sales = sales[sales["line_kind"] == "part"]
     sales = sales[~sales["is_credit_note"]]
-    base_eur = float(sales["net_sales_value"].sum())
+    sales = sales.copy()
+    sales["billing_date"] = pd.to_datetime(sales["billing_date"], errors="coerce")
     model_eur = float(df["net_sales_eur"].sum())
+    tol = float(cfg.get("max_billed_delta_eur", 1.0))
+
+    cutoff, cutoff_src = _billing_cutoff(cfg, sales)
+    base_eur = float(sales.loc[sales["billing_date"] <= cutoff, "net_sales_value"].sum())
     delta = abs(model_eur - base_eur)
-    _chk(
-        report,
-        "lost_sales.billed_ties_to_parts_base",
-        delta <= float(cfg.get("max_billed_delta_eur", 1.0)),
-        f"billed EUR {model_eur:,.2f} vs parts base EUR {base_eur:,.2f} (delta {delta:,.2f})",
-        delta_eur=round(delta, 2),
-    )
+
+    if delta <= tol:
+        _chk(
+            report,
+            "lost_sales.billed_ties_to_parts_base",
+            True,
+            f"billed EUR {model_eur:,.2f} ties the parts base to the cent "
+            f"at the {cutoff.date()} cut-off ({cutoff_src})",
+            delta_eur=round(delta, 2),
+            cutoff=str(cutoff.date()),
+        )
+        # Tying the base is not the same as being current. Report the second fact separately so
+        # a pass on the tie-out can never read as "the model is up to date".
+        data_max = sales["billing_date"].max()
+        if pd.notna(data_max) and data_max > cutoff + pd.Timedelta(days=1):
+            behind = sales.loc[sales["billing_date"] > cutoff, "net_sales_value"].sum()
+            _chk(
+                report,
+                "lost_sales.model_is_current",
+                False,
+                f"the model is CURRENT to {cutoff.date()} but the billing runs to "
+                f"{data_max.date()}: EUR {behind:,.2f} of later billing is not in it. "
+                f"Run scripts/build_lost_sales_model.py to bring it current, then move "
+                f"billing_cutoff (verification_fixtures.yaml) and metrics_snapshot together.",
+                warn=True,
+                model_cutoff=str(cutoff.date()),
+                billing_horizon=str(data_max.date()),
+                billing_behind_eur=round(float(behind), 2),
+            )
+        else:
+            _chk(
+                report,
+                "lost_sales.model_is_current",
+                True,
+                f"the model covers the whole billing horizon ({data_max.date()})",
+                model_cutoff=str(cutoff.date()),
+            )
+    else:
+        # Which month-end does the model actually sit on? If it ties an earlier one, the model is
+        # stale rather than wrong - say so and name the rebuild.
+        implied = None
+        for back in range(1, 25):
+            m_end = (cutoff - pd.offsets.MonthEnd(0)) - pd.DateOffset(months=back - 1)
+            m_end = m_end + pd.offsets.MonthEnd(0)
+            cand = float(sales.loc[sales["billing_date"] <= m_end, "net_sales_value"].sum())
+            if abs(model_eur - cand) <= tol:
+                implied = m_end
+                break
+        data_max = sales["billing_date"].max()
+        if implied is not None and bool(cfg.get("stale_billing_is_warn", True)):
+            _chk(
+                report,
+                "lost_sales.billed_ties_to_parts_base",
+                False,
+                f"STALE, not broken: the model ties the parts base at its own last billing "
+                f"month ({implied.date()}) but is EUR {delta:,.2f} behind the {cutoff.date()} "
+                f"cut-off, which is the {implied.date() + pd.offsets.MonthBegin(1)} to "
+                f"{data_max.date()} billing it predates. Run "
+                f"scripts/build_lost_sales_model.py to bring it current.",
+                warn=True,
+                delta_eur=round(delta, 2),
+                model_implied_cutoff=str(implied.date()),
+                declared_cutoff=str(cutoff.date()),
+                billing_horizon=str(data_max.date()),
+            )
+        else:
+            _chk(
+                report,
+                "lost_sales.billed_ties_to_parts_base",
+                False,
+                f"billed EUR {model_eur:,.2f} vs parts base EUR {base_eur:,.2f} at the "
+                f"{cutoff.date()} cut-off (delta {delta:,.2f}) - and the model does not tie any "
+                f"earlier month-end either, so this is a real tie-out break",
+                delta_eur=round(delta, 2),
+            )
 
     # 2. The price split must close. A non-zero residual means the three-way decomposition is
     #    arithmetically broken, which is exactly the defect it exists to fix elsewhere.
@@ -1377,6 +1481,16 @@ def main() -> int:
     check_lost_sales_pn_action(report, fx)
     check_action_ledger(report)
     check_prism_bundle(report)
+    # Freshness last: it reports on files every other check has just read.
+    from modules.freshness import check as check_freshness  # noqa: PLC0415
+
+    check_freshness(report, fx, DERIVED_DIR, _chk)
+    # Schema guard next to freshness: freshness asks whether a file is current, the guard asks
+    # whether it still carries the columns it is supposed to. A column that has disappeared is a
+    # fail, not a warn - it is never deliberate.
+    from modules.schema_guard import check as check_schema  # noqa: PLC0415
+
+    check_schema(report, fx, DERIVED_DIR, _chk)
     write_reports(report)
 
     print(f"Verification: {report.passed} pass, {report.warned} warn, {report.failed} fail")
@@ -1391,3 +1505,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Data integrity — who to contact</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Segoe UI",Helvetica,Arial,sans-serif;color:#222;background:#f7f4ee;font-size:14px;line-height:1.45}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:#1a2b4a;margin:0;font-weight:400}
+.hero{background:linear-gradient(155deg,#15233c 0%,#203759 55%,#2b4a78 100%);color:#eef1f6;padding:32px 24px 26px}
+.hero-inner{max-width:1100px;margin:0 auto}
+.brand{font-family:Georgia,serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#c9d4e6;margin-bottom:12px}
+.hero h1{color:#fff;font-size:30px;line-height:1.15;margin:0 0 10px}
+.hero .rule{width:64px;height:3px;background:#c0552d;margin:0 0 14px}
+.hero .lead{max-width:820px;font-size:15px;color:#d5dce8;margin:0 0 18px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.hk{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);padding:12px 13px}
+.hk .v{font-size:24px;font-weight:700;color:#fff;line-height:1.1}
+.hk .l{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#aeb9cb;margin-top:5px}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 24px 64px}
+h2{font-size:20px;margin:4px 0 6px;padding-bottom:7px;border-bottom:2px solid #1a2b4a}
+h2 .n{color:#c0552d}
+.sub{color:#5d564b;margin:0 0 16px;max-width:900px}
+section{margin-bottom:36px}
+.person{background:#fff;border:1px solid #d9d3c8;border-top:3px solid #1a2b4a;padding:16px 18px;margin:0 0 14px}
+.person.you{border-top-color:#c0552d}
+.person.internal{border-top-color:#6b6256}
+.ph{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px;margin-bottom:8px}
+.ph h3{font-size:18px;color:#15233c}
+.role{font-size:12.5px;color:#5d564b}
+.mail{font-size:13px;color:#1a4a7a;font-family:Consolas,monospace}
+.ask{margin:10px 0 0;padding:12px 14px;background:#eef3f9;border-left:3px solid #c0552d}
+.ask b{display:block;font-family:Georgia,serif;font-size:14px;color:#15233c;margin-bottom:4px}
+.ask p{margin:0;color:#33302a;font-size:13.5px}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pill{display:inline-block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;background:#15233c;color:#f7f4ee}
+.pill.open{background:#c0552d}
+.pill.draft{background:#8a6500}
+.pill.self{background:#1a4a7a}
+.why{font-size:13px;color:#5d564b;margin:10px 0 0}
+.ids{font-size:12px;color:#6b6256;margin-top:6px;font-family:Consolas,monospace}
+.foot{font-size:12px;color:#6b6256;margin-top:8px;padding-top:12px;border-top:1px solid #e4ddd2}
+.foot code{font-size:11.5px;background:#efece5;padding:1px 5px}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #d9d3c8}
+th{background:#15233c;color:#f7f4ee;text-align:left;padding:9px 11px;font-size:12px;font-weight:600;letter-spacing:.03em}
+td{padding:9px 11px;border-top:1px solid #e4ddd2;vertical-align:top;font-size:13px}
+tr:nth-child(even) td{background:#faf8f4}
+td.who{font-weight:600;color:#15233c;white-space:nowrap}
+.note{background:#fff;border:1px solid #d9d3c8;padding:12px 14px;font-size:13px;color:#4a453d;margin:0 0 16px}
+.note strong{color:#15233c}
+@media (max-width:800px){
+  .kpis{grid-template-columns:1fr 1fr}
+  .hero h1{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="brand">ISZE · Internal · 22 Sep 2026</div>
+    <h1>Data integrity — who to contact</h1>
+    <div class="rule"></div>
+    <p class="lead">Open source gaps only. For each gap: the person to ask, what to ask for, and why it still blocks a number. Pipeline checks are green; these are missing inputs, not build failures.</p>
+    <div class="kpis">
+      <div class="hk"><div class="v">5</div><div class="l">External people / teams</div></div>
+      <div class="hk"><div class="v">1</div><div class="l">Draft mail ready (Duncan)</div></div>
+      <div class="hk"><div class="v">4</div><div class="l">Asks you own / send</div></div>
+      <div class="hk"><div class="v">3</div><div class="l">Internal wiring only</div></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section>
+  <h2><span class="n">1.</span> Call or mail first</h2>
+  <p class="sub">Named people already on the file. Highest impact first.</p>
+
+  <article class="person">
+    <div class="ph">
+      <h3>Duncan Young</h3>
+      <span class="role">Parts Director · Isuzu Truck UK (ITUK)</span>
+    </div>
+    <div class="meta">
+      <span class="pill open">Open</span>
+      <span class="pill draft">Draft ready — not sent</span>
+    </div>
+    <div class="ask">
+      <b>Ask for</b>
+      <p>Average annual mileage of the UK N-series fleet, split by N35 and N75 if he has it. Even a rough figure from service records is enough.</p>
+    </div>
+    <p class="why">The model still uses 50,000 km/yr. Warranty odometers read about 16,700 km/yr all classes and 35,500 for N75. That swing moves UK oil-filter cover by roughly 35 percentage points. His VIN list (29,935) has no mileage column.</p>
+    <p class="ids">ITUK-MILEAGE · VIN-ITUK</p>
+    <p class="foot">Draft: <code>09_meetings\ITUK_MILEAGE_QUESTION_2026-09-18.md</code> — you send from Outlook.</p>
+  </article>
+
+  <article class="person">
+    <div class="ph">
+      <h3>Georg Fischer</h3>
+      <span class="role">Aftersales Service Specialist · Isuzu Motors Germany</span>
+      <span class="mail">georg.fischer@isuzu.de</span>
+    </div>
+    <div class="meta">
+      <span class="pill open">Open</span>
+      <span class="pill">Cc: Hadewijch Tibos · René Paul</span>
+    </div>
+    <div class="ask">
+      <b>Ask for</b>
+      <p>Next LCV claim-assessment export from <strong>May 2026 onward</strong> (same ExportClaimAssessment format as before).</p>
+    </div>
+    <p class="why">He already sent Oct–Dec 2025 and Jan–Apr 2026. Do <strong>not</strong> re-ask December 2025. The named GPS file <code>Warranty_LCV_2025.xlsx</code> still ends Nov 2025 — wiring the sister files is internal; the next gap on his side is May 2026+.</p>
+    <p class="ids">LCV-DEC (workbook) · next extract May 2026+</p>
+    <p class="foot">Draft pack: <code>09_meetings\WARRANTY_DATA_ASKS_2026-08-18.md</code></p>
+  </article>
+
+  <article class="person">
+    <div class="ph">
+      <h3>René Paul</h3>
+      <span class="role">CV (truck) warranty · Isuzu Motors Germany</span>
+      <span class="mail">rene.paul@isuzu.de</span>
+    </div>
+    <div class="meta">
+      <span class="pill">Standing contact</span>
+    </div>
+    <div class="ask">
+      <b>Ask for</b>
+      <p>Only when a CV claim question needs the source owner. Currency rules for the CV file are already corrected on our side. For part-number coverage by market (Czech 95% blank PN vs Israel 23%), he is the natural owner to ask why the export differs.</p>
+    </div>
+    <p class="why">Part-number rankings from claims are weakest in German-owned markets until coverage is explained or disclosed on every use.</p>
+    <p class="ids">WARR-SAMPLE · CV claim owner</p>
+  </article>
+
+  <article class="person">
+    <div class="ph">
+      <h3>UTI — Israel</h3>
+      <span class="role">Your UTI contact for vehicle identity</span>
+    </div>
+    <div class="meta">
+      <span class="pill open">Open</span>
+      <span class="pill self">You pick the person</span>
+    </div>
+    <div class="ask">
+      <b>Ask for</b>
+      <p>Israel VIN pack (chassis / model / registration) so Israel can join the VIN register. Without it there is no safe vehicle-age or model mix for Israel.</p>
+    </div>
+    <p class="why">The JP VIN register holds 3,238 VINs in seven small markets and deliberately excludes Israel and the UK — the two largest aftersales books.</p>
+    <p class="ids">VIN-IL</p>
+  </article>
+
+  <article class="person">
+    <div class="ph">
+      <h3>Distributors (start: UMI + UTI Israel)</h3>
+      <span class="role">Order desk / parts planning per market</span>
+    </div>
+    <div class="meta">
+      <span class="pill open">Open</span>
+      <span class="pill self">You collect</span>
+    </div>
+    <div class="ask">
+      <b>Ask for</b>
+      <p>Each distributor’s stock-order cut-off weekday (and local week definition / timezone). Israel first: UMI 1797 and UTI 1799.</p>
+    </div>
+    <p class="why">We have SAP order create dates and can score mix and irregularity, but without the cut-off we cannot mark on-time vs late. Israel may place several stock orders in one week — that is allowed; score against their cut-off, not document count.</p>
+    <p class="ids">ORDER-CUTOFF</p>
+  </article>
+</section>
+
+<section>
+  <h2><span class="n">2.</span> Internal — no external mail needed</h2>
+  <p class="sub">These wait on a rebuild, a better extract, or a decision you already own.</p>
+
+  <article class="person internal">
+    <div class="ph">
+      <h3>SAP sales extract owner</h3>
+      <span class="role">Next billing extract that includes the SaTy column</span>
+    </div>
+    <div class="ask">
+      <b>Need</b>
+      <p>Apr–Jun 2026 credit/return netting is sign-based only because that quarter’s file had no SaTy column. Next extract with SaTy closes the unverifiable hole.</p>
+    </div>
+    <p class="ids">CR/RE-FY26</p>
+  </article>
+
+  <article class="person internal">
+    <div class="ph">
+      <h3>UIO model owner</h3>
+      <span class="role">Trucks-in-service forecast 2026–2030</span>
+    </div>
+    <div class="ask">
+      <b>Need</b>
+      <p>Rebuild the 2026–2030 forecast (survival curve mismatch; Israel CV understated). Do not quote 2026–2030 trucks-in-service to anyone until that rebuild lands. Spec: <code>06_uio\_CURRENT\V20_SPEC.md</code>.</p>
+    </div>
+    <p class="ids">UIO-FCAST</p>
+  </article>
+
+  <article class="person internal">
+    <div class="ph">
+      <h3>ISZE pipeline (you / build)</h3>
+      <span class="role">Partial-year GPS rows · LCV workbook wiring</span>
+    </div>
+    <div class="ask">
+      <b>Need</b>
+      <p>Rebuild 2026 spend-per-unit rows from a dated extract (or drop 2026 from that file). Wire Georg’s Oct–Dec 2025 sister file into the named LCV workbook path so CY2025 is complete without re-asking him.</p>
+    </div>
+    <p class="ids">SPU-PARTIAL · LCV-DEC wiring</p>
+  </article>
+</section>
+
+<section>
+  <h2><span class="n">3.</span> You decide whether to chase</h2>
+  <div class="note">
+    <strong>Warranty claims will never give service intervals.</strong> Oil filters, air elements and brake pads almost never appear as claims (scheduled work is not a defect). If you want measured replacement intervals, the contact is a distributor with dealer repair-order data or a parts basket by part number — not the claim team again.
+  </div>
+  <article class="person you">
+    <div class="ph">
+      <h3>You — optional source hunt</h3>
+      <span class="role">Only if measured intervals are worth the chase</span>
+    </div>
+    <div class="ask">
+      <b>Ask a distributor / dealer group for</b>
+      <p>Repair-order lines or a parts-sales basket by part number for oil / air / fuel / brakes. Until then, keep air and brake factors labelled provisional.</p>
+    </div>
+    <p class="ids">WARR-NO-MAINT · provisional air / brake factors</p>
+  </article>
+</section>
+
+<section>
+  <h2><span class="n">4.</span> Quick map</h2>
+  <table>
+    <thead>
+      <tr><th>Contact</th><th>Issue</th><th>What you need</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="who">Duncan Young</td><td>UK mileage</td><td>Avg km/yr N35 / N75</td><td>Draft ready</td></tr>
+      <tr><td class="who">Georg Fischer</td><td>LCV claims</td><td>Export May 2026+</td><td>Draft ready</td></tr>
+      <tr><td class="who">René Paul</td><td>CV claim coverage</td><td>Why PN blank rates differ</td><td>When needed</td></tr>
+      <tr><td class="who">UTI Israel</td><td>VIN pack</td><td>Chassis + model + reg date</td><td>You pick person</td></tr>
+      <tr><td class="who">UMI + UTI</td><td>Order cut-off</td><td>Weekday + local week</td><td>You collect</td></tr>
+      <tr><td class="who">SAP extract</td><td>Credits Apr–Jun 2026</td><td>SaTy column back</td><td>Next extract</td></tr>
+      <tr><td class="who">UIO owner</td><td>2026–2030 forecast</td><td>V20 rebuild</td><td>Do not quote</td></tr>
+      <tr><td class="who">You / build</td><td>Partial 2026 GPS · LCV wire</td><td>Dated rebuild + file join</td><td>Internal</td></tr>
+    </tbody>
+  </table>
+  <p class="foot" style="border:0;padding-top:14px">Source list: <code>01_data\00_derived\_data_integrity_open_issues.md</code> (updated 2026-09-22). This page is internal.</p>
+</section>
+
+</main>
+</body>
+</html>

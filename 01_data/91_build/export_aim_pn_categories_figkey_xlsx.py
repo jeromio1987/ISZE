@@ -1,20 +1,43 @@
-"""Export AIM master Excel with descriptions filled from best available sources.
+"""Export AIM + figure-key table for Power BI (and Excel browse).
 
-Jerome rejected the first cut: Description column was mostly empty because
-aim_master_v2.description is blank for ~84% of catalogue PNs. This rebuild
-coalesces description from billing, APL, price compare, EQ overnight, and EPC.
+Primary deliverable for BVDV / Power BI: flat UTF-8 CSV, one row per part number.
+Excel twin is the same table (one sheet) plus a short Coverage sheet.
+
+Spine = aim_master_v2 (full catalogue). AIM labels prefer the latest
+aim_pn_classification_20260920 overlay where the part is present.
 """
 from __future__ import annotations
 
+from datetime import date
 from pathlib import Path
 
 import pandas as pd
 
 ROOT = Path(r"C:\Users\jerom\Desktop\claude\ISZE")
 DER = ROOT / "01_data" / "00_derived"
-SRC = DER / "aim_master_v2.csv"
-OUT = DER / "AIM_Master_PN_Categories_Figkey_20260920.xlsx"
-CMD = DER / "OPEN_AIM_Master_PN_Categories_Figkey_20260920.cmd"
+STAMP = date.today().strftime("%Y%m%d")
+SRC_MASTER = DER / "aim_master_v2.csv"
+SRC_CLASS = DER / "aim_pn_classification_20260920.csv"
+OUT_XLSX = DER / f"AIM_Master_PN_Categories_Figkey_{STAMP}.xlsx"
+OUT_CSV = DER / f"AIM_Master_PN_Categories_Figkey_{STAMP}.csv"
+CMD = DER / f"OPEN_AIM_Master_PN_Categories_Figkey_{STAMP}.cmd"
+
+# Stable names for Power BI relationships / DAX (no spaces).
+COLS = [
+    "part_number",
+    "description",
+    "description_source",
+    "aim_level_1",
+    "aim_level_2",
+    "aim_level_3",
+    "figure_key",
+    "figure_no",
+    "key_no",
+    "figure_key_label",
+    "line_kind",
+    "aim_source",
+    "l12m_billed_eur",
+]
 
 
 def clean(s: pd.Series) -> pd.Series:
@@ -94,7 +117,6 @@ def load_eq_desc() -> pd.Series:
     if "pn" not in d.columns:
         return pd.Series(dtype=str)
     d["pn"] = pn_key(d["pn"])
-    # prefer EQ part name, else description from queue if present
     part = clean(d["eq_part_name"]) if "eq_part_name" in d.columns else pd.Series([""] * len(d))
     desc = clean(d["description"]) if "description" in d.columns else pd.Series([""] * len(d))
     d["description"] = part.where(part != "", desc)
@@ -109,6 +131,18 @@ def load_epc_heavy_desc() -> pd.Series:
     d = pd.read_csv(p, usecols=["part_number", "part_name"], dtype=str, low_memory=False)
     d["pn"] = pn_key(d["part_number"])
     d["description"] = clean(d["part_name"])
+    d = d[d["description"] != ""].drop_duplicates("pn", keep="first")
+    return d.set_index("pn")["description"]
+
+
+def load_classification_norm_desc() -> pd.Series:
+    """Normalised descriptions from the classification overlay."""
+    p = SRC_CLASS
+    if not p.exists():
+        return pd.Series(dtype=str)
+    d = pd.read_csv(p, usecols=["part_number", "description_norm"], dtype=str, low_memory=False)
+    d["pn"] = pn_key(d["part_number"])
+    d["description"] = clean(d["description_norm"])
     d = d[d["description"] != ""].drop_duplicates("pn", keep="first")
     return d.set_index("pn")["description"]
 
@@ -131,8 +165,8 @@ def coalesce_desc(
 
 
 def main() -> None:
-    df = pd.read_csv(SRC, low_memory=False, dtype=str)
-    pn = pn_key(df["part_number"])
+    master = pd.read_csv(SRC_MASTER, low_memory=False, dtype=str)
+    pn = pn_key(master["part_number"])
 
     maps = [
         ("sales_fact_euro_top", load_sales_desc()),
@@ -140,88 +174,149 @@ def main() -> None:
         ("price_revision_billed", load_price_desc()),
         ("eq_session_20260919", load_eq_desc()),
         ("epc_heavy", load_epc_heavy_desc()),
+        ("classification_norm", load_classification_norm_desc()),
     ]
     for label, m in maps:
         print(f"source {label}: {len(m)} PNs")
 
-    description, desc_source = coalesce_desc(df["description"], pn, maps)
+    description, desc_source = coalesce_desc(master["description"], pn, maps)
 
-    # fig key label from catalogue dimension
-    fig_label = pd.Series([""] * len(df))
+    cls = pd.DataFrame()
+    if SRC_CLASS.exists():
+        cls = pd.read_csv(SRC_CLASS, dtype=str, low_memory=False)
+        cls["pn"] = pn_key(cls["part_number"])
+        cls = cls.drop_duplicates("pn", keep="first").set_index("pn")
+
+    aim_l1 = prefer(
+        master.get("aim_l1_fixed", pd.Series([""] * len(master))), master["aim_l1"]
+    )
+    aim_l2 = prefer(master.get("aim_l2_fixed", pd.Series([""] * len(master))), master["aim_l2"])
+    aim_l3 = clean(master["aim_l3"])
+    fig_key = clean(master["fig_key"])
+    line_kind = pd.Series(["part"] * len(master), dtype=object)
+    aim_source = clean(master.get("aim_source", pd.Series([""] * len(master))))
+    l12m = pd.to_numeric(master.get("l12m_billed_eur"), errors="coerce")
+
+    if not cls.empty:
+        if "aim_l1_fixed" in cls.columns:
+            got = clean(pn.map(cls["aim_l1_fixed"]).fillna(""))
+            aim_l1 = got.where(got != "", aim_l1)
+        if "aim_l2_fixed" in cls.columns:
+            got = clean(pn.map(cls["aim_l2_fixed"]).fillna(""))
+            aim_l2 = got.where(got != "", aim_l2)
+        if "aim_l3_fixed" in cls.columns:
+            got = clean(pn.map(cls["aim_l3_fixed"]).fillna(""))
+            aim_l3 = got.where(got != "", aim_l3)
+        if "fig_key" in cls.columns:
+            got = clean(pn.map(cls["fig_key"]).fillna(""))
+            fig_key = fig_key.where(fig_key != "", got)
+        if "line_kind" in cls.columns:
+            got = clean(pn.map(cls["line_kind"]).fillna(""))
+            line_kind = got.where(got != "", line_kind)
+        if "aim_source" in cls.columns:
+            got = clean(pn.map(cls["aim_source"]).fillna(""))
+            aim_source = got.where(got != "", aim_source)
+        if "l12m_billed_eur" in cls.columns:
+            got = pd.to_numeric(pn.map(cls["l12m_billed_eur"]), errors="coerce")
+            l12m = l12m.where(l12m.notna(), got)
+
+    # Figure-key label, looked up by part number from the catalogue dimension.
+    # The dimension's own labels were corrected on 2026-09-21 (key 873-042 said
+    # "Urea (AdBlue) filter" for a cabin blower filter key). On top of that, a row
+    # whose OWN figure key is a curated taxonomy key may never wear another key's
+    # label — see modules_figkey_labels.py for why this override stays narrow.
+    from modules_figkey_labels import label_for_own_fig_key  # noqa: E402
+
+    fig_label = pd.Series([""] * len(master), dtype=object)
     cat = DER / "parts_catalog_dimension.csv"
     if cat.exists():
         c = pd.read_csv(cat, usecols=["part_number", "fig_key_label"], dtype=str, low_memory=False)
         c["pn"] = pn_key(c["part_number"])
         c = c.drop_duplicates("pn", keep="first")
-        fig_label = clean(pn.map(c.set_index("pn")["fig_key_label"]))
+        dim_label = clean(pn.map(c.set_index("pn")["fig_key_label"]))
+        fig_label = label_for_own_fig_key(clean(master["part_number"]), fig_key, dim_label)
 
     out_df = pd.DataFrame(
         {
-            "Part number": clean(df["part_number"]),
-            "Description": description,
-            "Description source": desc_source,
-            "AIM level 1": prefer(df["aim_l1_fixed"], df["aim_l1"]),
-            "AIM level 2": prefer(df["aim_l2_fixed"], df["aim_l2"]),
-            "AIM level 3": clean(df["aim_l3"]),
-            "Figure key": clean(df["fig_key"]),
-            "Figure no": clean(df["fig_no"]),
-            "Key no": clean(df["key_no"]),
-            "Figure key label": fig_label,
-            "L12M billed EUR": pd.to_numeric(df.get("l12m_billed_eur"), errors="coerce"),
+            "part_number": clean(master["part_number"]),
+            "description": description,
+            "description_source": desc_source,
+            "aim_level_1": aim_l1,
+            "aim_level_2": aim_l2,
+            "aim_level_3": aim_l3,
+            "figure_key": fig_key,
+            "figure_no": clean(master["fig_no"]),
+            "key_no": clean(master["key_no"]),
+            "figure_key_label": fig_label,
+            "line_kind": line_kind,
+            "aim_source": aim_source,
+            "l12m_billed_eur": l12m,
         }
-    )
+    )[COLS]
 
-    # Sort: described + euro first so the file is usable top-down
-    out_df["_has_desc"] = (out_df["Description"] != "").astype(int)
+    out_df["_has_desc"] = (out_df["description"] != "").astype(int)
     out_df = out_df.sort_values(
-        ["_has_desc", "L12M billed EUR"], ascending=[False, False]
+        ["_has_desc", "l12m_billed_eur"], ascending=[False, False]
     ).drop(columns=["_has_desc"])
 
-    with pd.ExcelWriter(OUT, engine="openpyxl") as writer:
-        out_df.to_excel(writer, sheet_name="AIM PN", index=False)
-        ws = writer.sheets["AIM PN"]
+    # CSV first — this is what Power BI should load.
+    out_df.to_csv(OUT_CSV, index=False, encoding="utf-8-sig")
+
+    with pd.ExcelWriter(OUT_XLSX, engine="openpyxl") as writer:
+        out_df.to_excel(writer, sheet_name="AIM_PN", index=False)
+        ws = writer.sheets["AIM_PN"]
         ws.freeze_panes = "A2"
         ws.auto_filter.ref = ws.dimensions
 
-        # Coverage sheet so blank catalogue PNs are explained, not hidden
         n = len(out_df)
-        n_desc = int((out_df["Description"] != "").sum())
+        n_desc = int((out_df["description"] != "").sum())
+        n_fig = int((out_df["figure_key"] != "").sum())
+        n_aim = int((out_df["aim_level_1"] != "").sum())
         cov = pd.DataFrame(
             {
-                "Metric": [
-                    "Part numbers in file",
-                    "With description",
-                    "Without description",
-                    "Share with description %",
-                    "Note",
+                "metric": [
+                    "as_of",
+                    "part_numbers",
+                    "with_description",
+                    "without_description",
+                    "with_figure_key",
+                    "with_aim_level_1",
+                    "power_bi_file",
+                    "note",
                 ],
-                "Value": [
+                "value": [
+                    STAMP,
                     n,
                     n_desc,
                     n - n_desc,
-                    round(100 * n_desc / n, 1),
-                    "Descriptions come from billing / APL / price revision / EQ / EPC where we have them. "
-                    "Most catalogue-only PNs were never billed and have no English description in the warehouse.",
+                    n_fig,
+                    n_aim,
+                    OUT_CSV.name,
+                    "Load the CSV into Power BI (Get data > Text/CSV). "
+                    "One row = one part number. Filter line_kind = part to drop fees/tools. "
+                    "Excel is the same table for browsing only.",
                 ],
             }
         )
         cov.to_excel(writer, sheet_name="Coverage", index=False)
 
-        # Source mix
         mix = (
-            out_df.loc[out_df["Description"] != "", "Description source"]
+            out_df.loc[out_df["description"] != "", "description_source"]
             .value_counts()
-            .rename_axis("Description source")
-            .reset_index(name="Part numbers")
+            .rename_axis("description_source")
+            .reset_index(name="part_numbers")
         )
-        mix.to_excel(writer, sheet_name="Description sources", index=False)
+        mix.to_excel(writer, sheet_name="Description_sources", index=False)
 
     CMD.write_bytes(
-        b'@echo off\r\nstart "" "%~dp0AIM_Master_PN_Categories_Figkey_20260920.xlsx"\r\n'
+        (
+            "@echo off\r\n"
+            f'start "" "%~dp0{OUT_XLSX.name}"\r\n'
+        ).encode("ascii")
     )
-    print(f"rows={n} with_desc={n_desc} blank={n - n_desc}")
-    print(f"out={OUT}")
-    print(f"size_mb={OUT.stat().st_size / 1e6:.2f}")
+    print(f"rows={n} with_desc={n_desc} with_fig={n_fig} with_aim={n_aim}")
+    print(f"csv={OUT_CSV} size_mb={OUT_CSV.stat().st_size / 1e6:.2f}")
+    print(f"xlsx={OUT_XLSX} size_mb={OUT_XLSX.stat().st_size / 1e6:.2f}")
 
 
 if __name__ == "__main__":

@@ -35,10 +35,19 @@ DIM_SRC = os.path.join(DERIVED, "distributor_dimension.csv")
 OUT_PARQUET = os.path.join(IN_DIR, "account_health.parquet")
 OUT_META = os.path.join(IN_DIR, "account_health.meta.json")
 
-BUILDER_VERSION = "p4-v1"
+BUILDER_VERSION = "p4-v2"
 MIN_LATENCY_REPLIES = 10
 MIN_PN_MENTIONS = 10
 ACTIVE_DAYS = 90
+
+# Staleness guard: if the newest message in interaction_fact is more than this
+# many days older than the newest usable billing_date, the meta gets
+# inputs_stale = true. 14 days is a convention, not a calibrated number: the
+# mail layer is refreshed by hand, and a monthly refresh keeps the newest
+# message within a few days of the newest billing month. 14 days absorbs a
+# collector run in the first half of the following month, and fires once a whole
+# refresh cycle has been skipped. Override with ISZE_MAIL_LAG_GUARD_DAYS.
+MAIL_LAG_GUARD_DAYS = int(os.environ.get("ISZE_MAIL_LAG_GUARD_DAYS", "14"))
 
 # Draft — 00_docs/P4_DETERMINISTIC_SIGNALS.md §2. Not calibrated.
 THRESHOLDS = {
@@ -55,6 +64,31 @@ THRESHOLDS = {
 
 def _ts(s: pd.Series) -> pd.Series:
     return pd.to_datetime(s, utc=True, errors="coerce")
+
+
+def order_coverage(orders: pd.DataFrame | None, as_of: pd.Timestamp) -> tuple[pd.Timestamp, pd.Timestamp] | None:
+    """Usable billing coverage for an as_of month, derived from the order table.
+
+    Billing is monthly: `billing_date` is materialised as the period end. For a
+    partial month (as_of before that period end) the file's max date would sit in
+    the future and nothing could join, so the upper bound is clipped to as_of.
+    """
+    if orders is None or orders.empty or "billing_date" not in orders.columns:
+        return None
+    b = pd.to_datetime(orders["billing_date"], utc=True, errors="coerce").dropna()
+    if b.empty:
+        return None
+    return b.min(), min(b.max(), as_of)
+
+
+def mail_lag_exceeds_guard(bill_max, mail_max, guard_days: int = MAIL_LAG_GUARD_DAYS) -> bool:
+    """True when the mail layer is stale relative to the billing layer.
+
+    Missing either date counts as stale: an unknown input must never be silent.
+    """
+    if bill_max is None or mail_max is None or pd.isna(bill_max) or pd.isna(mail_max):
+        return True
+    return bool((pd.Timestamp(bill_max) - pd.Timestamp(mail_max)).days > guard_days)
 
 
 def _window(df: pd.DataFrame, as_of: pd.Timestamp, days: int, col: str = "occurred_at") -> pd.DataFrame:
@@ -247,10 +281,18 @@ def signal_to_order(
     idf: pd.DataFrame,
     as_of: pd.Timestamp,
     orders: pd.DataFrame | None,
+    coverage: tuple[pd.Timestamp, pd.Timestamp] | None = None,
 ) -> pd.DataFrame:
     """Median days from first mail PN mention to first later ISZE billing, 90d.
 
-    NULL unless ≥ MIN_PN_MENTIONS interactions with a PN in the window.
+    NULL unless >= MIN_PN_MENTIONS interactions with a PN in the window.
+
+    ``coverage`` is the billing coverage of the order table as (min, max). The
+    90-day window becomes [max(as_of - 90d, cov_min), min(as_of, cov_max)], so it
+    never reaches past the last month the file actually bills. The upper bound is
+    clipped to ``as_of`` even when coverage is None: a month's metric must not see
+    billing dated after the month it is measuring (the p4-v1 code had no upper
+    bound at all, which let later orders join an earlier month).
     """
     w = _window(idf, as_of, 90)
     n_pn = (
@@ -278,7 +320,20 @@ def signal_to_order(
     o["billing_date"] = pd.to_datetime(o["billing_date"], utc=True, errors="coerce")
     o = o.dropna(subset=["billing_date", "pn", "db_code"])
     start = as_of - pd.Timedelta(days=90)
-    o = o[(o["billing_date"] >= start) & (o["db_code"].isin(mail["db_code"].unique()))]
+    end = as_of
+    if coverage is not None:
+        # Use the file's real coverage instead of a hardcoded belief about it.
+        start = max(start, coverage[0])
+        end = min(as_of, coverage[1])
+    if start >= end:
+        out = n_pn.reset_index()
+        out["signal_to_order_days"] = np.nan
+        return out
+    o = o[
+        (o["billing_date"] >= start)
+        & (o["billing_date"] <= end)
+        & (o["db_code"].isin(mail["db_code"].unique()))
+    ]
     # First mention *in this window*, then first ISZE billing at/after that mail.
     joined = first_mail.reset_index().merge(o, on=["db_code", "pn"], how="inner")
     joined = joined[joined["billing_date"] >= joined["first_mail"]]
@@ -436,7 +491,11 @@ def month_ends(idf: pd.DataFrame) -> list[tuple[str, pd.Timestamp, bool]]:
     return out
 
 
-def build(idf: pd.DataFrame, cdf: pd.DataFrame, orders: pd.DataFrame | None) -> pd.DataFrame:
+def build(
+    idf: pd.DataFrame,
+    cdf: pd.DataFrame,
+    orders: pd.DataFrame | None,
+) -> pd.DataFrame:
     dbs = sorted(idf["db_code"].dropna().unique().tolist())
     rows = []
     extractor = ""
@@ -445,20 +504,22 @@ def build(idf: pd.DataFrame, cdf: pd.DataFrame, orders: pd.DataFrame | None) -> 
     produced = datetime.now(timezone.utc)
 
     for year_month, as_of, partial in month_ends(idf):
+        # Billing coverage clipped to this month, so a partial month cannot look
+        # for orders after the last date it is allowed to see.
+        cov = order_coverage(orders, as_of)
         lat = latency_hours(idf, as_of)
         com = commitment_rates(cdf, idf, as_of)
         chu = stakeholder_churn(idf, as_of)
         esc = escalation(idf, as_of)
         ent = topic_entropy_by_db(idf, as_of)
         act = activity(idf, as_of)
-        s2o = signal_to_order(idf, as_of, orders)
+        s2o = signal_to_order(idf, as_of, orders, cov)
 
         # 6-month baseline for signal→order lift (complete prior months only)
         base_end = as_of - pd.Timedelta(days=30)
-        base_start = as_of - pd.Timedelta(days=180)
         hist = None
         if orders is not None and not orders.empty:
-            hist = signal_to_order(idf, base_end, orders)
+            hist = signal_to_order(idf, base_end, orders, order_coverage(orders, base_end))
             hist = hist.rename(columns={"signal_to_order_days": "s2o_baseline", "n_pn_mentions": "n_pn_base"})
 
         pieces = [lat, com, chu, esc, ent, act, s2o]
@@ -532,10 +593,24 @@ def main() -> int:
 
     print("loading ISZE billing for mail-to-order (PN + date + sold-to only)...")
     orders = load_orders()
+    mail_max = _ts(idf["occurred_at"]).max()
     if orders is None:
         print("sales_fact or distributor_dimension missing - mail-to-order will be NULL")
+        coverage = None
+        bill_min = bill_max = None
+        stale = True
+        lag_days = None
     else:
         print(f"order rows mapped to a network DB: {len(orders):,}")
+        b = pd.to_datetime(orders["billing_date"], utc=True, errors="coerce").dropna()
+        bill_min, bill_max = b.min(), b.max()
+        coverage = (bill_min, bill_max)
+        # Guard: mail older than billing by more than MAIL_LAG_GUARD_DAYS.
+        lag_days = int((bill_max - mail_max).days) if pd.notna(mail_max) else None
+        stale = mail_lag_exceeds_guard(bill_max, mail_max)
+        print(f"billing coverage {bill_min.date()} .. {bill_max.date()} | "
+              f"newest mail {mail_max.date() if pd.notna(mail_max) else 'n/a'} | "
+              f"mail lag {lag_days}d (guard {MAIL_LAG_GUARD_DAYS}d) -> inputs_stale={stale}")
 
     out = build(idf, cdf, orders)
     if out.empty:
@@ -559,15 +634,49 @@ def main() -> int:
         "commitment_side": "owner_side=db (db→ISZE promises) for met-rate",
         "overdue_definition": "db-side missed with due_date in last 30d (state machine has no open+overdue)",
         "latency_alert_unit": "spec §2 is days; observed p50 is hours so latency rarely trips until 4.9",
-        "sales_fact_note": "sales_fact billing ends 2026-03-31; mail-to-order is NULL when the 90d window sits after that",
+        "billing_coverage_note": "derived at build time from sales_fact.parquet billing_date; the 90d mail-to-order window is intersected with this range",
+        "sales_fact_note_removed": "p4-v1 claimed billing ends 2026-03-31. That was false and was never implemented in the windowing code; see P4_TIMESTAMP_FIX_2026-09-22.md",
         "uti_umi": "separate rows, never blended",
         "mailbox_scope": "G0a own mailbox only",
         "contains_message_content": False,
-        "mode_a": False,
+        "inputs_stale": stale,
+        "internal_only": True,
         "note": "Draft thresholds. Do not treat RED as a validated KPI. Early Warning remains the sales call list.",
+    }
+    if orders is not None and bill_min is not None:
+        meta["billing_coverage"] = {
+            "min": bill_min.date().isoformat(),
+            "max": bill_max.date().isoformat(),
+            "source": "01_data/00_derived/sales_fact.parquet",
+            "derived": True,
+        }
+        meta["billing_window_guard"] = {
+            "rule": "signal_to_order 90d window is intersected with billing coverage",
+            "lower_bound": "max(as_of - 90d, billing min)",
+            "upper_bound": "min(as_of, billing max)",
+        }
+    meta["mail_coverage"] = {
+        "min": mail_max.date().isoformat() if pd.notna(mail_max) else None,
+        "max": mail_max.date().isoformat() if pd.notna(mail_max) else None,
+        "newest_message": mail_max.isoformat() if pd.notna(mail_max) else None,
+        "source": "01_data/17_interactions/interaction_fact.parquet",
+        "derived": True,
+    }
+    meta["mail_vs_billing_lag_days"] = lag_days
+    meta["staleness_guard"] = {
+        "rule": "inputs_stale = newest mail older than newest billing by more than the guard window",
+        "guard_days": MAIL_LAG_GUARD_DAYS,
+        "override_env": "ISZE_MAIL_LAG_GUARD_DAYS",
+        "why": "14 days is a convention: the mail layer is refreshed by hand and a monthly refresh keeps the newest message within days of the newest billing month. 14 days absorbs a run in the first half of the following month and fires once a full refresh cycle is skipped.",
+        "refresh_command": "python -u %ISZE_ROOT%\\04_tools\\interactions\\collect_mapi.py --since 2024-08-01 --folders inbox,sent --dry-run  (then without --dry-run; mailbox must be open in the agent browser), then build_commitment_status.py, build_stakeholder_dim.py, build_account_health.py",
     }
     with open(OUT_META, "w", encoding="utf-8") as fh:
         json.dump(meta, fh, indent=2)
+
+    if stale:
+        print(f"\n** INPUT STALE: newest mail {meta['mail_coverage']['max']} vs newest billing "
+              f"{meta['billing_coverage']['max'] if 'billing_coverage' in meta else 'n/a'} "
+              f"(lag {lag_days}d > guard {MAIL_LAG_GUARD_DAYS}d). See meta.inputs_stale **")
 
     print(f"\nwrote {OUT_PARQUET} ({len(out):,} rows)")
     print(f"latest {latest}  partial={bool(snap['is_partial_month'].iloc[0])}")

@@ -1,0 +1,2318 @@
+ISZE UNIVERSE - ACCELERATED WORK PLAN
+22 September 2026 | Proposed tasks, not completed application work
+
+This expands the original roadmap, not the number of features required before any useful
+internal result can be released. Reuse the current application and existing source methods.
+Each task has two dependency lists: work may begin after its small shared-contract
+prerequisites; integration acceptance waits for the listed actual dependencies. Synthetic
+fixtures allow early development, but never establish commercial source or live-user proof.
+Keep the original B01-B18 and A01-A20 references for traceability, not task-count arithmetic.
+A task is not a day, a quotation, a fixed effort estimate or a percentage-complete measure.
+
+
+FOUNDATION AND SAFE PARALLEL WORK
+=================================
+
+BASE-01 | Identify and preserve the actual working version
+Target: R1 | Proposed owner: Integration owner
+Roadmap: B01, B04, B09 | Acceptance: A12
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: No task dependency; use the approved working area.
+Integrate after: The start prerequisites and the task checks.
+
+BUILD
+Inspect the maintained repository and the uploaded v03 ZIP. Identify source versus generated files,
+build commands, source owners and the existing backend, if any. Preserve checksums and an untouched
+reference. Locate validate_v03.py and paint_seq.py only if they actually exist. Do not overwrite
+uncommitted user work or change a remote repository.
+
+REQUIRED EVIDENCE
+1. A short inventory identifies the exact HTML and executable calculation functions, including
+   v03run, v03rank, v03both and the legacy scenario route.
+2. The current version can be returned to without losing unrelated user changes; absent original
+   scripts are reported as absent, not rerun.
+
+HUMAN / LIVE-USE CONDITION
+Use the already approved working area. A genuinely ambiguous authoritative repository/version needs
+an owner decision, not a guessed replacement.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+BASE-02 | Separate code-only development from restricted inputs
+Target: R1 | Proposed owner: Integration owner
+Roadmap: B01, B04, B09 | Acceptance: A16, A17
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-01
+Integrate after: The start prerequisites and the task checks.
+
+BUILD
+Keep restricted billing, full price lists, supplier-cost series and the combined embedded-data HTML
+in the authorised local area. Prepare synthetic fixtures and explicit local read-only input paths.
+Review what is already tracked before copying, committing or creating remote work. Ignore files
+supplement, but do not replace, this separation.
+
+REQUIRED EVIDENCE
+1. The proposed shareable source/test package contains no raw billing, full price list, secrets or
+   embedded business-data blob.
+2. A synthetic development run starts without opening a private source; any real-data run requires
+   an explicit authorised local path.
+
+HUMAN / LIVE-USE CONDITION
+Existing company handling rules apply. No new cloud processing, external upload or purchase is
+authorised.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+BASE-03 | Agree one small set of shared records
+Target: R1 | Proposed owner: Integration owner
+Roadmap: B01, B04, B09 | Acceptance: A02, A03, A09, A12, A13
+Existing finding: F01, F04, F09, F12
+Can start after: BASE-01
+Integrate after: The start prerequisites and the task checks.
+
+BUILD
+Define versioned Context, Scenario, CalculationResult, EvidenceReference, Case and RecipientBrief
+contracts in the existing language. Include original part, entity, account/national scope, history
+period, offer date, source/cost versions, volume basis, eligibility, optional support and missing-
+input states. Record the few interface decisions once and assign one contract owner.
+
+REQUIRED EVIDENCE
+1. Synthetic valid and invalid examples exercise the contracts, including unknown costs and
+   national-only scope.
+2. All builders use the same contract version; breaking field changes require an explicit change and
+   migration, not a private copy.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+BASE-04 | Create maintainable modules without changing the product
+Target: R1 | Proposed owner: Integration owner
+Roadmap: B01, B04, B09 | Acceptance: A05, A12
+Existing finding: F01, F12
+Can start after: BASE-02, BASE-03
+Integrate after: The start prerequisites and the task checks.
+
+BUILD
+Reuse existing modules where present. Otherwise extract calculation, input normalisation, scenario
+state, views and serializers from the generated HTML into maintainable code-only files. Retain the
+current visual direction and support a generated INTERNAL HTML when useful. Give each concurrent
+writer distinct files. Do not force React, Django or a replacement data estate.
+
+REQUIRED EVIDENCE
+1. Generated and maintained sources are identified and linked by a reproducible build.
+2. Unchanged supported observations match the v03 reference; the generated HTML is not edited
+   concurrently by several workers.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+BASE-05 | Make the old and new checks executable
+Target: R1 | Proposed owner: Verification reviewer
+Roadmap: B01, B04, B09 | Acceptance: A11, A12
+Existing finding: F01, F02, F03, F04, F05, F06, F07, F08, F09
+Can start after: BASE-02
+Integrate after: The start prerequisites and the task checks.
+
+BUILD
+Install the supplied independent review tests in the existing test setup, preserving their
+expectations. Run an initial baseline on the authorised copy and on synthetic arithmetic. Separate
+genuine product failures from missing runtime/browser support. Translate wrappers after
+modularisation without changing the expected commercial meaning.
+
+REQUIRED EVIDENCE
+1. Baseline results name the tested checksum, command, environment and actual pass/fail/blocked
+   result.
+2. The test suite is runnable by another developer; historical reports are not represented as new
+   execution.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+BASE-06 | Fix the turbo view and prevent stale-page errors
+Target: R1 | Proposed owner: Experience developer
+Roadmap: B01, B04, B09 | Acceptance: A12, A19
+Existing finding: F05
+Can start after: BASE-02
+Integrate after: The start prerequisites and the task checks.
+
+BUILD
+Correct the scoped formatter reference in the ITUK turbo objectives view. Replace stale prior-view
+content with a clear current-context error when rendering fails. Keep the fix narrow enough to apply
+before a full refactor, with only one writer on the existing HTML.
+
+REQUIRED EVIDENCE
+1. ITUK turbo / Two objectives renders for both objective choices.
+2. An injected render failure does not leave a different case or tab visible under the new
+   selection.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+BASE-07 | Provide repeatable start, build and test commands
+Target: R1 | Proposed owner: Integration owner
+Roadmap: B01, B04, B09 | Acceptance: A12, A17
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-04
+Integrate after: BASE-05
+
+BUILD
+Reuse the existing package manager and supported runtimes. Pin necessary dependencies; provide safe
+local start/build/test commands, including Windows instructions. Do not bind a confidential
+development service to the public network. Restore or report missing build steps rather than hand-
+edit every output.
+
+REQUIRED EVIDENCE
+1. A clean authorised development copy starts from documented commands with no embedded credentials.
+2. The build identifies input and source versions; the same commands work after a restart.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+BASE-08 | Keep a single progress and integration record
+Target: R1 | Proposed owner: Integration owner
+Roadmap: B01, B04, B09 | Acceptance: A14
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-01
+Integrate after: The start prerequisites and the task checks.
+
+BUILD
+Use the supplied task IDs and progress.json, or map them once into the existing issue tracker.
+Record task state, branch, changed files, tested version, evidence, blockers and the next ready
+task. One integrator owns shared contracts, root build files and merges. No new project-management
+application is required.
+
+REQUIRED EVIDENCE
+1. A resumed session can identify completed, unverified and blocked work without asking the owner to
+   repeat known facts.
+2. No task is marked verified from code existence alone, and no release is marked accepted by a
+   developer test result.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+PRICING MATHEMATICS AND RANKING
+===============================
+
+FIN-01 | Reject invalid pricing inputs at every entry point
+Target: R1 | Proposed owner: Pricing developer
+Roadmap: B07 | Acceptance: A04, A11
+Existing finding: F06
+Can start after: BASE-03
+Integrate after: BASE-04
+
+BUILD
+Create shared finite-number validation for quantities, prices, costs, support, percentages and
+dates. Treat zero, missing and invalid values distinctly. Define how returns are excluded or
+represented. Reject incompatible incremental-only quantity reductions rather than silently clamping
+them. Preserve valid revenue-only analysis when cost is missing.
+
+REQUIRED EVIDENCE
+1. Negative, NaN, infinite and malformed proposed quantities and support cannot return a successful
+   monetary calculation.
+2. Zero revenue yields a labelled undefined margin rather than infinity; missing cost leaves profit
+   unknown, not zero.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+FIN-02 | Use an explicit offer date and one comparable baseline
+Target: R1 | Proposed owner: Pricing developer
+Roadmap: B07 | Acceptance: A02, A09, A11
+Existing finding: F04, F11
+Can start after: BASE-03
+Integrate after: FIN-01
+
+BUILD
+Resolve costs from the stated offer-effective date and accepted validity window. Remove default
+fallback to an arbitrary month. Use the same unchanged-offer baseline across comparable alternatives
+and main cards. Keep exact historical billing separate from forward quantities multiplied by rounded
+prices. A supplier-cost change is an explicit separate assumption.
+
+REQUIRED EVIDENCE
+1. Invalid dates, gaps and overlapping/ambiguous cost windows block only the affected calculation.
+2. Every comparable alternative has the same baseline and cost basis; the original historical billed
+   amount is preserved exactly.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+FIN-03 | Calculate total revenue, profit and margin correctly
+Target: R1 | Proposed owner: Pricing developer
+Roadmap: B07 | Acceptance: A11
+Existing finding: F02, F03
+Can start after: BASE-03
+Integrate after: FIN-01, FIN-02
+
+BUILD
+Use separate all-volume and incremental-only equations. For incremental-only offers retain the
+baseline price for baseline quantity. Calculate combined margin from the displayed profit and
+revenue, not just the discounted unit margin. Retain the declared parts-purchase-cost scope and
+label every profit measure.
+
+REQUIRED EVIDENCE
+1. Synthetic baseline 100 units at EUR 100 plus 20 at EUR 80, cost EUR 60 per unit, gives revenue
+   EUR 11,600 and pre-support gross profit EUR 4,400; combined margin is 37.931034 percent.
+2. A revenue-increasing/profit-decreasing result remains visible as a trade-off rather than being
+   declared universally better.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+FIN-04 | Apply support once and reconcile the profit bridge
+Target: R1 | Proposed owner: Pricing developer
+Roadmap: B07 | Acceptance: A11
+Existing finding: F02, F03
+Can start after: BASE-03
+Integrate after: FIN-01, FIN-03
+
+BUILD
+Record whether a concession is already in net price. Show purchase-cost gross profit, any additional
+eligible support and the resulting comparison profit/contribution explicitly. Preserve the declared
+objective and label its support treatment consistently across all views. Do not introduce freight,
+overhead, duty or kickback into the existing purchase-cost measure without a separately accepted
+definition.
+
+REQUIRED EVIDENCE
+1. EUR 500 additional support on EUR 10,000 revenue and EUR 4,000 pre-support profit produces EUR
+   3,500 after-support profit and a 35 percent after-support ratio.
+2. A credit already reflected in net price is not deducted again; empty support and an invalid
+   support entry differ.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+FIN-05 | Fix break-even quantities for each eligibility rule
+Target: R1 | Proposed owner: Pricing developer
+Roadmap: B07 | Acceptance: A11
+Existing finding: F03
+Can start after: BASE-03
+Integrate after: FIN-03, FIN-04
+
+BUILD
+Compute quantities to preserve revenue, preserve the stated profit measure and exceed each measure
+separately. Apply all-volume and incremental-only equations, support and changed cost assumptions
+explicitly. Return unresolved or unattainable where the supported arithmetic does not yield an
+ordinary nonnegative solution. Do not turn a threshold into a volume forecast.
+
+REQUIRED EVIDENCE
+1. With unchanged 100 baseline units at EUR 100 and EUR 60 cost, additional units at EUR 80 and EUR
+   200 support need 10 additional units, total 110, to preserve EUR 4,000 profit.
+2. Zero/negative marginal contribution, equality versus strict improvement and a price increase are
+   covered by independent examples.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+FIN-06 | Use consistent precision and discrete pack quantities
+Target: R1 | Proposed owner: Pricing developer
+Roadmap: B07 | Acceptance: A09, A11
+Existing finding: F03, F04
+Can start after: BASE-03
+Integrate after: FIN-05
+
+BUILD
+Calculate at documented source precision; round only at defined price, currency and display
+boundaries. Preserve original billed totals. Round required discrete quantities up to valid packs
+and distinguish equality from the smallest allowed improvement. Keep unit conversion separate from
+discretionary rounding.
+
+REQUIRED EVIDENCE
+1. A break-even that falls between packs rounds up; an exact break-even requires another allowed
+   pack for strict improvement.
+2. Displayed values reconcile within the documented tolerance; rounding an average price does not
+   rewrite historical billing.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+FIN-07 | Normalise volume assumptions identically everywhere
+Target: R1 | Proposed owner: Pricing developer
+Roadmap: B07 | Acceptance: A11, A12
+Existing finding: F09, F01
+Can start after: BASE-03
+Integrate after: FIN-01, FIN-03, FIN-04
+
+BUILD
+Replace independent normalisation in v03rank and v03both with one input preparation and calculation
+path. Record whether quantity is total, additional, committed or a user scenario. Expose defaults
+and preserve explicit zero. Changing an objective reorders results, not quantities or costs.
+
+REQUIRED EVIDENCE
+1. The same alternative produces identical inputs and results through both legacy adapters and the
+   canonical calculation.
+2. An explicit override, an alternative default and a missing assumption are each exercised,
+   including the PADS-VOL regression.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+FIN-08 | Rank valid alternatives without manufacturing advice
+Target: R1 | Proposed owner: Pricing developer
+Roadmap: B07 | Acceptance: A04, A10, A11
+Existing finding: F01, F07, F09, F10, F11
+Can start after: BASE-03
+Integrate after: FIN-02, FIN-04, FIN-06, FIN-07
+
+BUILD
+Keep revenue and profit objectives distinct. Rank only comparable supported results; show excluded
+alternatives and missing reasons. Do not rank unknown profit as zero or describe cost/list coverage
+as decision approval. Retain no-action, supply investigation and evidence-request alternatives.
+Until the two-product calculation exists, mark migration economics unresolved.
+
+REQUIRED EVIDENCE
+1. Sorting objective changes ordering only and leaves the selected scenario unchanged.
+2. Missing cost, unmatched application and incomplete migration cannot generate an approved price
+   recommendation or fabricated zero benefit.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+SOURCE MEANING AND REPEATABLE UPDATES
+=====================================
+
+DATA-01 | Attach a source manifest to every analytical input
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B03, B11 | Acceptance: A02, A03, A09
+Existing finding: F04, F10, F11
+Can start after: BASE-03
+Integrate after: BASE-04
+
+BUILD
+Capture supplying entity, source meaning, included period, generated date, version, unit, currency
+if present, coverage, exclusions, controls and permitted use. Locate the candidate-list basis from
+its real producing source; leave it unresolved if absent. Do not infer a period from similar totals
+or silently update the approved numerical context.
+
+REQUIRED EVIDENCE
+1. A candidate source without a known period can be inspected as unvalidated data but cannot support
+   a dated change claim.
+2. Source generation date, observation period and offer date remain separate.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+DATA-02 | Keep distributors, purchasing accounts and sites distinct
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B03, B11 | Acceptance: A01, A03, A05
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-01
+
+BUILD
+Implement stable source entity/account identifiers and explicit effective-dated site links. Preserve
+combined accounts and unmatched names. Keep ITUK/IUK and UMI/UTI separate. Portugal national
+information never acquires synthetic dealers. Reuse validated relationships already held.
+
+REQUIRED EVIDENCE
+1. Cross-country/shared-name fixtures cannot silently merge distinct entities.
+2. An account covering multiple sites remains combined until a genuine split is supported; national
+   plus included dealer records cannot be added.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+DATA-03 | Preserve original references and versioned part relationships
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B03, B11 | Acceptance: A05, A10, A14
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-01
+
+BUILD
+Store original transacted references as text, including leading characters and zeros. Add
+classification, successor and candidate BVP links as separate typed relationships with
+source/version/effective dates. Do not silently replace historical transaction identities. Preserve
+unclassified references.
+
+REQUIRED EVIDENCE
+1. Leading-zero and nonnumeric reference tests round-trip unchanged.
+2. A classification or successor update creates a new relationship version without rewriting a saved
+   decision.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+DATA-04 | Enforce period, sales-stage and unit compatibility
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B03, B11 | Acceptance: A02, A03, A06, A09
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-01
+
+BUILD
+Validate calendar versus fiscal periods, actual coverage, monthly/annual aggregation, quantities and
+transaction meaning before comparisons. Keep ISZE billing, sales to dealer, workshop use and
+customer sales distinct. Permit quantity-only analysis without inventing actual downstream euro.
+
+REQUIRED EVIDENCE
+1. Half-year/full-year growth, mixed reporting clocks and incompatible units are rejected or
+   narrowed explicitly.
+2. Annual controls are not added to months; a dated reference valuation is not labelled actual sales
+   to dealer revenue.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+DATA-05 | Make repeat imports safe without deleting genuine transactions
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B03, B11 | Acceptance: A07, A08
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-01, DATA-04
+
+BUILD
+Adapt the existing selected import routines. Reprocessing the same submitted version adds no
+activity. Use authentic line IDs when supplied; use declared aggregate keys for aggregate sources.
+Do not deduplicate distinct transactions merely because their visible values match.
+
+REQUIRED EVIDENCE
+1. Identical submission twice produces the same accepted totals and version count under the declared
+   rule.
+2. Two genuine transactions with different original IDs but identical amounts remain two
+   transactions.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+DATA-06 | Implement declared corrections and affected-result tracing
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B03, B11 | Acceptance: A07, A14
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-05
+
+BUILD
+A corrected submission names the version/scope it replaces. Validate and accept it transactionally,
+preserving predecessor and reasons. Identify affected reviews and cases; do not mutate their earlier
+decision evidence. Offer an explicit restated comparison.
+
+REQUIRED EVIDENCE
+1. A corrected month replaces only that month/version and does not duplicate the prior data.
+2. Affected saved reviews are flagged, with original and restated bases accessible separately.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+DATA-07 | Reconcile joins and keep the unclassified remainder visible
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B03, B11 | Acceptance: A05, A10
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-02, DATA-03, DATA-04
+
+BUILD
+Add control checks before/after source joins. Retain unmatched accounts and parts in appropriate
+totals and expose mapping exceptions. Detect many-to-many multiplication, non-additive class
+applicability and repeated market totals. Use the existing approved analytical definitions, not a
+new model.
+
+REQUIRED EVIDENCE
+1. A duplicate classification mapping cannot inflate quantity or euro.
+2. Matched plus unmatched totals reconcile to the same permitted source scope.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+DATA-08 | Stage failures and preserve the last accepted view
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B03, B11 | Acceptance: A04, A07, A17
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-06, DATA-07
+
+BUILD
+Keep received, validated and accepted inputs separate. Reject affected mandatory failures with
+specific correction guidance. Missing optional fields narrow output rather than failing unrelated
+work. Commit a refresh only after checks pass; show last accepted date when a later import fails.
+
+REQUIRED EVIDENCE
+1. An interrupted/rejected refresh cannot partly overwrite accepted totals.
+2. Removing optional competitor or IDS input preserves the correctly dated purchasing review.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+COMMERCIAL DISCOVERY AND EXACT-PART REVIEW
+==========================================
+
+REVIEW-01 | Search and paginate the entire candidate set
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B04, B05 | Acceptance: A02, A03, A05, A09
+Existing finding: F10
+Can start after: BASE-03
+Integrate after: BASE-04, DATA-01
+
+BUILD
+Replace first-300-only rendering with complete filtered search and paging or equivalent accessible
+navigation. Search original part, description, account and family. Display total records versus
+distinct parts accurately. Do not load another organisation's data merely to filter it in the
+browser.
+
+REQUIRED EVIDENCE
+1. A supported candidate beyond the former 300-row cutoff can be found and opened.
+2. Filtered/page totals match the supplied permitted dataset; empty searches have a useful state.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+REVIEW-02 | Separate commercial priority from evidence completeness
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B04, B05 | Acceptance: A02, A03, A05, A09
+Existing finding: F10
+Can start after: BASE-03
+Integrate after: REVIEW-01, DATA-04
+
+BUILD
+Offer explainable sorting by supported billed change or other stated quantity/value basis, with a
+separate evidence status. Provide filters for missing cost, unresolved application, dated competitor
+evidence, Genuine/BVP and action type. Do not introduce a new 0-100 score or call completeness
+approval.
+
+REQUIRED EVIDENCE
+1. A high-value question with incomplete evidence remains visible as a question.
+2. A fully documented small case is not automatically labelled the largest opportunity; no new
+   universal score is generated.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+REVIEW-03 | Make the actual comparison selectable and visible
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B04, B05 | Acceptance: A02, A03, A05, A09
+Existing finding: F01, F04
+Can start after: BASE-03
+Integrate after: DATA-04, UX-01
+
+BUILD
+Carry the selected compatible history period into candidate, review and original-part views. Keep
+history independent from the offer-effective date. Remove hidden hardcoded half-year defaults when
+the user selects another supported comparison. Unsupported comparisons remain visibly unavailable.
+
+REQUIRED EVIDENCE
+1. Changing period updates the observed comparison but never silently changes offer-date
+   assumptions.
+2. No case exports a different comparison from the one selected.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+REVIEW-04 | Explain the exact parts behind a purchasing movement
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B04, B05 | Acceptance: A02, A03, A05, A09
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-07, REVIEW-03
+
+BUILD
+Show original references contributing to the selected account/family movement with quantity, euro
+basis where supported, period and reconciliation remainder. Preserve Genuine/BVP lines and source
+classifications. Do not describe the full source-category summary as newly certified AIM membership.
+
+REQUIRED EVIDENCE
+1. Displayed contributors plus stated remainder reproduce the selected movement.
+2. Quantity-only sources stay quantity-only or explicitly reference-valued; a descriptive change is
+   not labelled proven lost sales.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+REVIEW-05 | Separate price, quantity and mix effects where supported
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B04, B05 | Acceptance: A02, A03, A05, A09
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: REVIEW-04, DATA-04
+
+BUILD
+Implement a documented mathematical decomposition only on compatible original references and
+price/quantity data. Keep new/discontinued references and returns separate, and show any residual.
+An average unit-revenue change is not automatically a like-for-like price change or elasticity.
+
+REQUIRED EVIDENCE
+1. A pure mix-shift fixture is not reported as a list-price increase.
+2. Components reconcile to the observed revenue change under the documented method, with a stated
+   residual if necessary.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+REVIEW-06 | Identify recurrence, interruption and new purchasing
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B04, B05 | Acceptance: A02, A03, A05, A09
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-03, DATA-04, REVIEW-03
+
+BUILD
+Use covered monthly activity to describe regular, intermittent, new or lapsed purchasing on a stated
+rule. Mark missing months and number changes explicitly. Use approved account-health rules where
+they exist; absent policy leaves descriptive flags, not automatic performance ratings.
+
+REQUIRED EVIDENCE
+1. A missing month cannot create a lapsed-customer flag.
+2. A supersession or combined-account change cannot create a false lost/new pair without
+   explanation.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+REVIEW-07 | Turn each question into the appropriate next action
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B04, B05 | Acceptance: A02, A03, A05, A09
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: REVIEW-04, FIN-08
+
+BUILD
+Provide price assessment, BVP/application check, supply/timing check, evidence request and justified
+no-action routes. Retain competing explanations and unknown. Show why a recommended investigation is
+relevant; never allocate a precise family decline to a reason without linked evidence.
+
+REQUIRED EVIDENCE
+1. A supply explanation does not generate an automatic discount.
+2. An unresolved price comparison still permits a scoped application or purchasing review.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+REVIEW-08 | Create supported new reviews beyond the five examples
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B04, B05 | Acceptance: A02, A03, A05, A09
+Existing finding: F10
+Can start after: BASE-03
+Integrate after: REVIEW-01, REVIEW-04, REVIEW-07, CASE-01
+
+BUILD
+Open any candidate whose source basis supports a review using the same template as the original
+cases. Carry exact identity, coverage, facts and missing inputs into a draft. Retain the five cases
+as regression examples; do not limit the product to them or manufacture evidence for arbitrary
+parts.
+
+REQUIRED EVIDENCE
+1. A supported part outside the five worked examples opens a review and then a linked draft case.
+2. An incomplete candidate opens a visibly narrower review rather than borrowing another case's
+   cost, fleet or competitors.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+ONE COHERENT WORKING EXPERIENCE
+===============================
+
+UX-01 | Use one context across every working view
+Target: R1 | Proposed owner: Experience developer
+Roadmap: B04, B05, B06, B08 | Acceptance: A12, A19
+Existing finding: F01
+Can start after: BASE-03
+Integrate after: BASE-04
+
+BUILD
+Connect distributor, purchasing account/national scope, original part, family, source version and
+selected period to one state record. Navigation changes must be deliberate. Keep private state out
+of shareable links; links must be re-authorised on retrieval.
+
+REQUIRED EVIDENCE
+1. Review, evidence, financial test and case show the same context after forward/back navigation.
+2. A national Portuguese review never inherits an ITUK dealer selector or fleet denominator.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+UX-02 | Select an alternative and edit that exact scenario
+Target: R1 | Proposed owner: Experience developer
+Roadmap: B04, B05, B06, B08 | Acceptance: A12, A19
+Existing finding: F01, F09
+Can start after: BASE-03
+Integrate after: UX-01, FIN-07, FIN-08
+
+BUILD
+Connect ranked alternatives to the common Scenario record. Price & profit test, Two objectives and
+Internal action consume its current version. Remove or adapt old calculation routes rather than
+leaving competing hidden states. Preserve the alternative label and any subsequent manual edits.
+
+REQUIRED EVIDENCE
+1. Selecting an alternative populates the manual form with its exact inputs and both results.
+2. Changing objective does not erase edits or select a different scenario automatically.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+UX-03 | Make assumptions explicit and quick to change
+Target: R1 | Proposed owner: Experience developer
+Roadmap: B04, B05, B06, B08 | Acceptance: A12, A19
+Existing finding: F06
+Can start after: BASE-03
+Integrate after: UX-02, FIN-01
+
+BUILD
+Show baseline and proposed price, total/additional quantity, offer date, cost basis, eligibility and
+support treatment clearly. Distinguish a manual scenario from an actual commitment. Provide
+undo/reset to the identified baseline without silently resetting unrelated source context.
+
+REQUIRED EVIDENCE
+1. Each visible financial result can be traced to the exact edited inputs.
+2. Invalid inputs have field-specific errors; zero, blank and unknown have different behaviour.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+UX-04 | Visualise revenue, profit and break-even without a forecast claim
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B04, B05, B06, B08 | Acceptance: A12, A19
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: UX-03, FIN-05, FIN-06
+
+BUILD
+Add a useful sensitivity view driven by the same calculation engine, showing the trade-off between
+proposed prices, explicit quantities and both objectives. Show baseline and break-even labels and an
+accessible numeric table. Use the existing house style; do not invent elasticity, confidence bands
+or a best-price prediction.
+
+REQUIRED EVIDENCE
+1. Each plotted point matches the calculation for its stated synthetic or user-supplied assumptions.
+2. Missing costs suppress only profit-based output; revenue and the reason for the narrower view
+   remain usable.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+UX-05 | Show a clear decision summary with deeper evidence underneath
+Target: R1 | Proposed owner: Experience developer
+Roadmap: B04, B05, B06, B08 | Acceptance: A12, A19
+Existing finding: F11, F10
+Can start after: BASE-03
+Integrate after: UX-01, FIN-02
+
+BUILD
+Present question, recorded change, known evidence, decisive unknowns and next action before detailed
+tables. Derive version, cost/price status and conflict wording from actual state. Remove stale v02
+prose only where the underlying evidence supports replacement; never replace unresolved with
+verified just because a row exists.
+
+REQUIRED EVIDENCE
+1. The turbo header, cost panels, scenario and export use consistent current metadata.
+2. The reader can distinguish evidence completeness, technical authority and commercial approval.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+UX-06 | Make partial, failed and empty states recoverable
+Target: R1 | Proposed owner: Experience developer
+Roadmap: B04, B05, B06, B08 | Acceptance: A12, A19
+Existing finding: F05, F06
+Can start after: BASE-03
+Integrate after: UX-01, BASE-06
+
+BUILD
+Use distinct wording for missing, out of date, not applicable, unmatched, under review and confirmed
+zero. Keep entered values through errors. Display the failed operation and a retry/correction route
+rather than another tab's stale content. Do not block unrelated supported work.
+
+REQUIRED EVIDENCE
+1. Removing an optional source leaves a correctly labelled narrower review.
+2. A save failure preserves the unsaved form and never displays a false saved confirmation.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+UX-07 | Make the complete task work on keyboard and small screens
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B04, B05, B06, B08 | Acceptance: A12, A19
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: UX-03, UX-05, UX-06
+
+BUILD
+Retain the chosen house style while fixing focus order, labels, contrast, readable tables, keyboard
+access and responsive layout. Ensure evidence is not conveyed by colour alone. Maps and imagery are
+optional routes, not mandatory obstacles. Test actual task completion, not only screenshots.
+
+REQUIRED EVIDENCE
+1. The selected question can be reviewed and a draft saved using the keyboard.
+2. On the agreed small-screen layout, prices, units, scope and limitations remain readable without
+   hidden essential controls.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+UX-08 | Make save, export and reopen preserve one decision
+Target: R1 | Proposed owner: Experience developer
+Roadmap: B04, B05, B06, B08 | Acceptance: A12, A19
+Existing finding: F01, F12
+Can start after: BASE-03
+Integrate after: UX-02, UX-03, SAFE-04
+
+BUILD
+Serialize the actual selected scenario and context with schema/calculation/source versions. Reopen
+that stored snapshot rather than rebuilding it from current defaults. Warn when newer source
+versions exist and allow explicit recalculation as a new version. Initially retain the correctly
+labelled internal local route; a later shared backend uses the same contract.
+
+REQUIRED EVIDENCE
+1. Select, edit, save, export, restart and reopen preserves the same assumptions, amounts and dates.
+2. Older local notes migrate with an explicit legacy basis or remain view-only; missing fields are
+   not invented.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+DURABLE QUESTIONS, DECISIONS AND FOLLOW-THROUGH
+===============================================
+
+CASE-01 | Implement a durable case repository behind the shared contract
+Target: R2 | Proposed owner: Workflow developer
+Roadmap: B06 | Acceptance: A12
+Existing finding: F12
+Can start after: BASE-03
+Integrate after: BASE-04
+
+BUILD
+Create or reuse a persistence adapter for cases, context and frozen scenario versions. Develop
+against a real disposable local store first, not only an in-memory mock. Keep it internal-only.
+Discover/reuse a suitable existing backend before introducing a new framework; expose the same
+repository contract for later shared access.
+
+REQUIRED EVIDENCE
+1. A created draft survives process restart in the selected local development store.
+2. A saved case refers to one identified source/scenario version; browser localStorage is not
+   presented as a shared service.
+
+HUMAN / LIVE-USE CONDITION
+Approve the actual internal storage location before storing restricted real cases; shared access
+requires the later access and operating checks.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CASE-02 | Separate case, evidence, support and outcome states
+Target: R2 | Proposed owner: Workflow developer
+Roadmap: B06 | Acceptance: A13, A14
+Existing finding: F12
+Can start after: BASE-03
+Integrate after: CASE-01
+
+BUILD
+Implement explicit valid transitions for draft, submitted, assessment, awaiting input, response
+issued, action agreed, resolved, withdrawn and closed with outcome unknown. Evidence, support and
+customer outcome are separate fields with an append-only change history. Do not treat the log as
+tamper-proof certification.
+
+REQUIRED EVIDENCE
+1. Issuing a response or closing a case does not create delivered support, a won outcome or a
+   monetary benefit.
+2. Invalid transitions are rejected with the current state retained; all valid transitions have
+   dated attribution.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CASE-03 | Record who owes the next action and when
+Target: R2 | Proposed owner: Workflow developer
+Roadmap: B06 | Acceptance: A13, A19
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: CASE-02
+
+BUILD
+Store case owner, responding function, deputy or escalation route and actual next-update date.
+Separate dealer commitments from ISZE/distributor support. Reassignment records the change without
+resetting total waiting time. Do not invent a network-wide service guarantee.
+
+REQUIRED EVIDENCE
+1. A dealer awaiting ISZE guidance is shown as awaiting that guidance, not inactive or at fault.
+2. Submitted, assigned, acknowledged, substantively answered and resolved timestamps remain
+   separate.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CASE-04 | Version proposals and preserve the established approval route
+Target: R2 | Proposed owner: Workflow developer
+Roadmap: B06 | Acceptance: A11, A13, A14
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: CASE-02, FIN-08
+
+BUILD
+Store proposed terms, eligible references/quantities, dates, conditions, currency and the genuine
+approval reference when supplied. Preserve amendments and expiry. Do not set live prices, auto-
+approve or impersonate an approver. A local simulated approval is clearly synthetic.
+
+REQUIRED EVIDENCE
+1. An amended offer retains the former terms; expired support is not presented as available.
+2. A draft scenario cannot become approved merely by saving it or choosing the highest-ranked row.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CASE-05 | Link delivered support and outcomes without double counting
+Target: R2 | Proposed owner: Workflow developer
+Roadmap: B06 | Acceptance: A13, A14
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: CASE-02, CASE-04
+
+BUILD
+Record supported order/credit/delivery links, beneficiary, comparison, period, support already in
+net terms and outcome evidence. Keep purchase-cost difference, gross profit, capacity released and
+programme expenditure distinct. Add a stable action identifier so one result is not counted
+separately under AIM, IDS, PRISM and SPA.
+
+REQUIRED EVIDENCE
+1. A paid credit does not automatically create incremental profit or a won quotation.
+2. One action used by several modules appears once in any accepted benefit account; unknown outcomes
+   stay unknown.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CASE-06 | Preserve explanations and corrections as separate evidence
+Target: R2 | Proposed owner: Workflow developer
+Roadmap: B06 | Acceptance: A14
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: CASE-01, DATA-06
+
+BUILD
+Store the contributor's words, scope, reported period, recorded date, source and audience. Allow
+several factors, unknown and no action. Distinguish a source correction, later recollection and
+disagreement with interpretation. A restated case links to the original decision instead of silently
+rewriting it.
+
+REQUIRED EVIDENCE
+1. Adding a reported availability reason does not allocate the entire family decline to supply.
+2. A corrected source can be compared with the original saved evidence and identifies affected
+   decisions.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CASE-07 | Prevent duplicate submissions and lost concurrent edits
+Target: R2 | Proposed owner: Workflow developer
+Roadmap: B06 | Acceptance: A14
+Existing finding: F12
+Can start after: BASE-03
+Integrate after: CASE-01, CASE-02
+
+BUILD
+Use an expected record version for edits and a request identifier for repeated creates/actions.
+Reject stale updates with a reviewable difference. Enforce transition and input validation in the
+persistence/service layer, not only browser forms.
+
+REQUIRED EVIDENCE
+1. Two users editing the same version cannot silently overwrite each other.
+2. Retrying a timed-out case submission creates one case/event; a different legitimate action is not
+   deduplicated.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CASE-08 | Provide an actionable internal queue and reusable history
+Target: R2 | Proposed owner: Workflow developer
+Roadmap: B06 | Acceptance: A12, A16, A19
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: CASE-03, CASE-06, CASE-07
+
+BUILD
+Add scoped search/filtering for questions awaiting an answer, owner, next update, source change and
+outcome. Open the exact saved context. Search only records the current user may receive in shared
+mode. Return an existing approved answer when it suffices, without forcing a duplicate new case.
+
+REQUIRED EVIDENCE
+1. A due item opens its exact case and outstanding obligation.
+2. Searching a part does not reveal restricted cases or count another organisation's private
+   records.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+COMPARABLE COMPETITOR EVIDENCE
+==============================
+
+MARKET-01 | Store dated competitor observations as evidence, not truth
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B05, B07 | Acceptance: A04, A09, A10, A15
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-01
+
+BUILD
+Adapt existing authorised competitor data to a record containing source, observed date,
+original/alternative reference, seller, market, currency, tax, pack, channel and availability
+meaning. Keep unknown fields explicit. Do not rebuild scraping or start new automated collection to
+complete this task.
+
+REQUIRED EVIDENCE
+1. An observation retains source and date through a review and saved case.
+2. A missing currency or reference remains missing instead of borrowing the previous row's values.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+MARKET-02 | Record product equivalence separately from lexical similarity
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B05, B07 | Acceptance: A04, A09, A10, A15
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: MARKET-01, DATA-03
+
+BUILD
+Represent exact match, documented candidate, rejected match and unresolved application separately,
+with reviewer/source/conditions. A shared family or similar description can create a candidate to
+inspect but cannot establish comparable products or approved fitment.
+
+REQUIRED EVIDENCE
+1. A housing and element, or incomplete kit and full kit, do not form an accepted price comparison.
+2. Rejected and unresolved evidence stays traceable and is excluded from the eligible comparison.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+MARKET-03 | Normalise packs and kit contents only when supported
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B05, B07 | Acceptance: A04, A09, A10, A15
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: MARKET-01, MARKET-02
+
+BUILD
+Keep quoted price per pack and original unit intact. Compute a comparable unit price only with a
+known conversion and equivalent contents. Show both original and normalised bases. Avoid comparing
+per-axle, per-kit and per-piece prices as if identical.
+
+REQUIRED EVIDENCE
+1. A synthetic pack of four and one piece compare correctly when equivalence is accepted.
+2. Unknown pack contents prevent the derived comparable unit price, not retention of the original
+   observation.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+MARKET-04 | Make currency, tax and delivery adjustments auditable
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B05, B07 | Acceptance: A04, A09, A10, A15
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: MARKET-01, MARKET-03
+
+BUILD
+Use dated, permitted currency/tax/delivery inputs appropriate to the comparison. Preserve the
+original quote and each adjustment. No current FX retrieval or assumed tax rate is necessary for
+synthetic development. Actual unknown inputs leave comparison unresolved.
+
+REQUIRED EVIDENCE
+1. A converted observation can be reproduced from the retained original and dated inputs.
+2. Unknown tax or delivery treatment is not silently assumed equal between offers.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+MARKET-05 | Keep different commercial price levels separate
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B05, B07 | Acceptance: A04, A09, A10, A15
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: MARKET-04, DATA-04
+
+BUILD
+Distinguish ISZE net distributor price, reference dealer price, distributor/dealer transaction
+prices if permitted and public advertised retail. A comparison must name a like-for-like level or
+the supported bridge. Do not use an online retail price as direct proof that ISZE net terms are too
+high.
+
+REQUIRED EVIDENCE
+1. An ISZE-net-versus-retail fixture is excluded from a direct price index unless an accepted bridge
+   is explicitly supplied.
+2. A reference valuation cannot be displayed as actual downstream revenue or dealer margin.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+MARKET-06 | Make outdated and conflicting observations visible
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B05, B07 | Acceptance: A04, A09, A10, A15
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: MARKET-01
+
+BUILD
+Retain multiple dated observations and source conflicts. Show age and known validity; apply only a
+recorded freshness policy for decision eligibility. Until a policy is approved, show dates and
+request review rather than inventing a universal expiry. Superseded observations remain part of
+earlier cases.
+
+REQUIRED EVIDENCE
+1. A newer price does not silently rewrite an earlier saved comparison.
+2. Conflicting sources remain visible with their scope and dates; the cheapest observation is not
+   automatically chosen.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+MARKET-07 | Build a comparable-price panel with clear exclusions
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B05, B07 | Acceptance: A04, A09, A10, A15
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: MARKET-02, MARKET-03, MARKET-04, MARKET-05, MARKET-06, FIN-08
+
+BUILD
+Show eligible observations, the selected comparison basis and explicit exclusions. Use an approved
+aggregation rule if summarising; otherwise display individual comparable offers. Show purchasing
+movement alongside price positioning as separate evidence, not causal proof. Link only the supported
+comparison into the scenario.
+
+REQUIRED EVIDENCE
+1. Removing an ineligible pack/market/price-level observation does not alter the raw evidence
+   record.
+2. No price action is certified from an index alone; missing like-for-like evidence remains
+   explicit.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+MARKET-08 | Ask only for the missing comparison evidence
+Target: R2 | Proposed owner: Data developer
+Roadmap: B02, B05, B07 | Acceptance: A04, A09, A10, A15
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: MARKET-07, CASE-01
+
+BUILD
+Prepare a case-specific request identifying the smallest missing detail, use, audience and response
+offered. Reuse existing part/context data. A draft is not sent automatically. Declining optional
+competitor data leaves the core review and unrelated support available.
+
+REQUIRED EVIDENCE
+1. The request does not ask for full resale-price files, customer databases or another distributor's
+   confidential terms.
+2. Declining the request removes only the unsupported price conclusion; the current purchasing task
+   remains available.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+GENUINE/BVP AND APPLICATION EVIDENCE
+====================================
+
+RANGE-01 | Represent pairing, supersession and fitment as different relationships
+Target: R2 | Proposed owner: Data developer
+Roadmap: B03, B05, B07, B17 | Acceptance: A10, A11
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-03
+
+BUILD
+Reuse accepted catalogue/classification sources with typed relationship, part pair, source, version,
+application conditions and authority. Keep commercial grouping separate from technical suitability.
+Do not infer a missing BVP range from the absence of one pair.
+
+REQUIRED EVIDENCE
+1. A successor link cannot automatically become an interchangeable Genuine/BVP pair.
+2. An unapproved relationship remains a candidate even when price and cost are present.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RANGE-02 | Create an exact Genuine/BVP comparison view
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B03, B05, B07, B17 | Acceptance: A10, A11
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: RANGE-01, UX-01
+
+BUILD
+Show both original references, descriptions, known kit contents, relationship status, dated
+reference price and permitted product information. Show cost only to the internal authorised
+audience. Preserve the route to application/supply/quotation requests without retyping.
+
+REQUIRED EVIDENCE
+1. The comparison always names two distinct actual references or explicitly states that the
+   counterpart is unresolved.
+2. Reference prices, actual prices and application status cannot be confused by styling or labels.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RANGE-03 | Support a genuine multi-part financial scenario
+Target: R2 | Proposed owner: Pricing developer
+Roadmap: B03, B05, B07, B17 | Acceptance: A10, A11
+Existing finding: F07
+Can start after: BASE-03
+Integrate after: FIN-03, FIN-04, FIN-06, RANGE-01
+
+BUILD
+Calculate an explicit basket with each line's original reference, quantity, price, cost basis and
+eligibility. Sum compatible revenue/profit only on the declared scope and currency. Missing line
+inputs produce partial/unresolved results, not silently complete basket totals.
+
+REQUIRED EVIDENCE
+1. The basket result reconciles exactly to its eligible line results.
+2. A missing cost on one material line prevents a complete basket profit claim while preserving
+   known line facts.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RANGE-04 | Separate transferred business from new BVP business
+Target: R2 | Proposed owner: Pricing developer
+Roadmap: B03, B05, B07, B17 | Acceptance: A10, A11
+Existing finding: F07
+Can start after: BASE-03
+Integrate after: RANGE-03
+
+BUILD
+Record baseline and proposed quantities for both product lines, explicitly transferred units and
+independently assumed new units. Compute combined contribution, including the contribution displaced
+from the original offer. Do not infer real customer migration from aggregate purchasing.
+
+REQUIRED EVIDENCE
+1. A pure one-for-one transfer is not counted as new units or new gross revenue equal to the
+   receiving line's full sales.
+2. The same displaced contribution is not deducted twice after the baseline-versus-proposal basket
+   calculation.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RANGE-05 | Keep unsupported alternatives financially unresolved
+Target: R2 | Proposed owner: Pricing developer
+Roadmap: B03, B05, B07, B17 | Acceptance: A10, A11
+Existing finding: F07
+Can start after: BASE-03
+Integrate after: FIN-08, RANGE-01
+
+BUILD
+Block a claimed migration benefit when the counterpart, relevant prices/costs, transferred quantity
+or application evidence required for that claim is missing. Permit an explicitly hypothetical
+sensitivity exercise with synthetic inputs in development, clearly separated from an eligible
+commercial recommendation.
+
+REQUIRED EVIDENCE
+1. The original IMOTORS-OIL migration no longer returns a misleading single-product no-change
+   result.
+2. Unknown benefit is labelled unknown; no zero saving or imagined counterpart is generated.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RANGE-06 | Support both price-up and price-down investigations
+Target: R2 | Proposed owner: Pricing developer
+Roadmap: B03, B05, B07, B17 | Acceptance: A10, A11
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: FIN-05, FIN-08, MARKET-07, RANGE-03
+
+BUILD
+Provide candidate actions for either direction where comparable evidence and scope support review.
+Show tolerable quantity loss or required additional volume as arithmetic thresholds. Supply,
+contract terms, competing offers and authority remain separate. Do not force five price actions or
+invent underpricing when evidence is absent.
+
+REQUIRED EVIDENCE
+1. A price increase can improve unit profit while total profit falls under the stated quantity
+   scenario.
+2. No unsupported part is labelled underpriced merely to populate a price-up example.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RANGE-07 | Use authentic, permitted product images with a clear fallback
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B03, B05, B07, B17 | Acceptance: A10, A11
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: RANGE-01, RANGE-02
+
+BUILD
+Create a small image reference index using approved existing assets, part associations and
+usage/source information. Reuse genuine product imagery when available; use a neutral no-image state
+otherwise. Do not generate an invented product image and label it the actual part, or infer fitment
+from the picture.
+
+REQUIRED EVIDENCE
+1. A missing image does not break identification or the case workflow.
+2. An image points to its known source/reference and cannot silently be copied to a different part.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RANGE-08 | Propagate relationship corrections without rewriting history
+Target: R2 | Proposed owner: Experience developer
+Roadmap: B03, B05, B07, B17 | Acceptance: A10, A11
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: RANGE-01, CASE-06
+
+BUILD
+Identify cases and current comparison views relying on a withdrawn or revised relationship. Keep the
+earlier version with the historical decision, add a visible correction and require fresh review for
+a new action. Preserve original references and the role of the technical authority.
+
+REQUIRED EVIDENCE
+1. Withdrawing a pairing flags affected active cases but preserves the original saved evidence.
+2. New scenarios cannot silently reuse the withdrawn application approval.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+EXISTING IDS, PRISM, SUPPLY AND TENDER SERVICES
+===============================================
+
+CONNECT-01 | Read IDS evidence through validated identities
+Target: R4 | Proposed owner: Data developer
+Roadmap: B03, B04, B17 | Acceptance: A01, A03, A13
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-02, DATA-03, DATA-04
+
+BUILD
+Reuse existing IDS records and accepted account/site relationships. Retain original question text,
+scoped question ID, questionnaire version, recorded answer and available date/round. Keep missing,
+not applicable and unanswered distinct. Do not infer site responsibility from country or cohort.
+
+REQUIRED EVIDENCE
+1. A repeated local question code in different questionnaires does not collide.
+2. UTI is not included in the 2026 IDS population; no distributor audit score is created.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CONNECT-02 | Connect an IDS answer to a separate improvement action
+Target: R4 | Proposed owner: Experience developer
+Roadmap: B03, B04, B17 | Acceptance: A13, A15
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: CONNECT-01, CASE-02, CASE-03, CASE-06
+
+BUILD
+Allow a relevant recorded self-assessment answer to open an agreed action in the same case record.
+Keep dealer work separate from support owed by others. Completion records evidence without changing
+the assessment. Do not claim that the answer caused a historical purchasing movement.
+
+REQUIRED EVIDENCE
+1. Closing an improvement leaves the original answer and score unchanged.
+2. An unresolved IDS link does not disable the purchasing review; new action work can remain
+   independent.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CONNECT-03 | Add read-only PRISM context at its actual market level
+Target: R4 | Proposed owner: Data developer
+Roadmap: B03, B04, B17 | Acceptance: A02, A03, A09, A10
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-01, DATA-02, DATA-04, UX-01
+
+BUILD
+Consume existing accepted PRISM outputs rather than rebuild its methods. Display historical trucks
+in service, measured spend and modelled target context with source, period and population. Keep
+intentionally different denominator versions separate and do not allocate a national fleet to
+dealers.
+
+REQUIRED EVIDENCE
+1. A dealer review cannot acquire a per-truck performance rate from a national total.
+2. The unusable fleet forecast beyond 2025 is excluded; each historical measure retains its own
+   accepted basis.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CONNECT-04 | Enforce service-demand and shared-applicability boundaries
+Target: R4 | Proposed owner: Data developer
+Roadmap: B03, B04, B17 | Acceptance: A05, A10, A16
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: CONNECT-03, DATA-07, SAFE-04
+
+BUILD
+Reuse accepted service-demand results with separate external/internal methods, assumptions and
+applicability. Keep recorded exclusive-applicability purchasing, modelled demand and market actuals
+separate. Shared parts stay pooled; repeated market actuals are not summed by band. Restrict
+externally prohibited euro aggregates.
+
+REQUIRED EVIDENCE
+1. Changing from internal to external service basis changes the labelled method rather than
+   averaging them.
+2. No band-level service cover is derived by dividing repeated market purchasing by a band
+   expectation.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CONNECT-05 | Create a dated availability question and response
+Target: R4 | Proposed owner: Experience developer
+Roadmap: B03, B04, B17 | Acceptance: A13, A19
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: CASE-02, CASE-03, UX-01
+
+BUILD
+Carry selected part, application where established, quantity and required date into a supply
+question through the distributor. Store source, observation time and meaning of any response.
+Separate estimated date, confirmed commitment, allocated, dispatched and delivered. Existing urgent
+procedures remain unchanged.
+
+REQUIRED EVIDENCE
+1. A historical purchase cannot be displayed as current stock availability.
+2. A response without confirmation is labelled an estimate and retains the next-update obligation.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CONNECT-06 | Accept a small optional stock snapshot for a defined case
+Target: R4 | Proposed owner: Experience developer
+Roadmap: B03, B04, B17 | Acceptance: A04, A09, A15
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: CONNECT-05, DATA-01, DATA-04, SAFE-06
+
+BUILD
+Support a scoped, permitted observation with known part, date, on-hand/reserved/available
+definitions and source. Keep it case-specific unless a separate recurring agreement exists. Do not
+reconstruct inventory by subtracting sales to dealer from ISZE billing. A missing snapshot leaves
+the narrower review usable.
+
+REQUIRED EVIDENCE
+1. Unknown reserved stock cannot become available stock through a default zero.
+2. Declining a stock contribution does not close an unrelated commercial or application request.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CONNECT-07 | Connect the existing tender feed to an owned investigation
+Target: R4 | Proposed owner: Data developer
+Roadmap: B03, B04, B17 | Acceptance: A13, A14
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-01, CASE-02, CASE-03
+
+BUILD
+Read the authorised existing tender output with source, date, known deadline and relevance. Reuse
+completed tender keys; do not reopen the closed Nordics work or rebuild collection. Link reviewed,
+pursue/decline, support requested/decided, bid submitted and known outcome to a case. Do not
+translate notice value into Isuzu parts revenue.
+
+REQUIRED EVIDENCE
+1. An expired/cancelled notice cannot be shown as a current actionable deadline.
+2. An award cannot automatically create billing, gross profit or a won parts quotation.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+CONNECT-08 | Enable each service only when it returns supported work
+Target: R4 | Proposed owner: Experience developer
+Roadmap: B03, B04, B17 | Acceptance: A12, A15, A20
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: UX-01, CASE-01, CONNECT-01, CONNECT-03, CONNECT-05, CONNECT-07
+
+BUILD
+Implement a capability registry that distinguishes unavailable, source-limited, internally usable
+and approved participant-facing services. Carry the same case/context across enabled services.
+Develop adapters with labelled synthetic fixtures now; do not show connected badges or empty enabled
+tabs as completed integration. AI is not a prerequisite.
+
+REQUIRED EVIDENCE
+1. Missing optional IDS, fleet, stock or tender input does not break the working pricing/case
+   journey.
+2. Each enabled service shows its real source and response route; a test adapter is visibly
+   development-only.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+PERMISSIONS, PROTECTED OUTPUTS AND ATTACHMENTS
+==============================================
+
+SAFE-01 | Connect approved identity with an explicit development-only mode
+Target: R3 | Proposed owner: Workflow developer
+Roadmap: B08, B10, B13 | Acceptance: A16, A17
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: RUN-01
+
+BUILD
+Reuse the approved identity provider/integration where present. Implement authenticated user
+resolution and a strictly separate synthetic development identity. Production configuration must
+refuse test users. Do not create a custom password system or use a selected distributor filter as
+authentication.
+
+REQUIRED EVIDENCE
+1. Shared-mode startup rejects development identity and missing approved identity configuration.
+2. A user identity is established outside client-controlled organisation fields.
+
+HUMAN / LIVE-USE CONDITION
+Actual identity-provider and tenant configuration requires the authorised IT owner. Test identity is
+synthetic-only and never external.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+SAFE-02 | Enforce organisation, account and case permissions on the server
+Target: R3 | Proposed owner: Workflow developer
+Roadmap: B08, B10, B13 | Acceptance: A16
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: SAFE-01, CASE-01, DATA-02
+
+BUILD
+Derive authorised scope from validated user membership and relationships. Apply checks to individual
+records, queries, counts, search, updates, exports and direct links. Deny unrecognised scope by
+default. Client filters are presentation only; they cannot grant access.
+
+REQUIRED EVIDENCE
+1. Changing a distributor/account/case identifier in a request cannot return another participant's
+   records or counts.
+2. Permissions are tested on direct service requests, not only on hidden menu options.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+SAFE-03 | Exclude private fields before data reaches a participant
+Target: R3 | Proposed owner: Workflow developer
+Roadmap: B08, B10, B13 | Acceptance: A16
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: SAFE-02
+
+BUILD
+Create authorised response shapes for internal commercial reviewers, distributors, dealers and
+technical responders. Exclude internal cost/terms, other dealers' records and restricted notes
+before returning data. Review derived values for disclosure risk; a hidden column is not removal.
+
+REQUIRED EVIDENCE
+1. Network responses to a dealer contain no ISZE cost fields or reconstructable private calculation
+   record.
+2. Technical context can be shared without exposing an unrelated commercial quotation.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+SAFE-04 | Build separate internal and permitted recipient exports
+Target: R1 | Proposed owner: Workflow developer
+Roadmap: B08, B10, B13 | Acceptance: A12, A16
+Existing finding: F08, F01
+Can start after: BASE-03
+Integrate after: BASE-04
+
+BUILD
+Replace key blacklists with explicit allowed output structures. Select only the approved facts and
+case response for the audience, including source dates and scope. Internal exports remain clearly
+internal. Do not assume arbitrary free text or an attachment becomes shareable through a field
+allowlist; include a review/restriction state.
+
+REQUIRED EVIDENCE
+1. A nested cost field or new internal property never appears automatically in a recipient export.
+2. An internal snapshot preserves the active scenario; a recipient brief contains only its allowed
+   content and is not a copy of the full HTML.
+
+HUMAN / LIVE-USE CONDITION
+Generation in development is not permission to send. Actual recipients/content need the established
+audience approval.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+SAFE-05 | Test actual exported bytes and download paths
+Target: R1 | Proposed owner: Verification reviewer
+Roadmap: B08, B10, B13 | Acceptance: A16
+Existing finding: F08
+Can start after: BASE-03
+Integrate after: SAFE-04
+
+BUILD
+Exercise every export button and service route, including nested data, free text, attachments,
+embedded scripts and metadata. Use synthetic secret markers to detect disclosure. Inspect the actual
+downloaded files, not just an on-screen audience label. Avoid new file formats unless they solve a
+real need.
+
+REQUIRED EVIDENCE
+1. Synthetic private markers never appear in participant bytes, metadata or downloadable attachment
+   references.
+2. Internal and participant exports show their real source and scenario version, with protected
+   output still restricted.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+SAFE-06 | Protect attachments throughout upload, storage and access
+Target: R3 | Proposed owner: Workflow developer
+Roadmap: B08, B10, B13 | Acceptance: A16, A17
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: SAFE-02, CASE-01
+
+BUILD
+Implement file-type/size limits, private storage, explicit case/audience association and safe
+rendering. Use approved scanning where available; otherwise keep unscanned material quarantined and
+do not claim scanning passed. Reject path traversal and executable content. Do not auto-forward an
+original document when sharing a short response.
+
+REQUIRED EVIDENCE
+1. A case attachment cannot be fetched through an unauthorised direct link or reused in another case
+   by guessing its identifier.
+2. Disallowed or unscanned files remain unavailable for wider use; failure does not erase the saved
+   case.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+SAFE-07 | Implement role changes, departure and record-use decisions
+Target: R3 | Proposed owner: Workflow developer
+Roadmap: B08, B10, B13 | Acceptance: A17
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: SAFE-02, SAFE-03, SAFE-06
+
+BUILD
+Apply the approved effect of user removal, role/account changes and optional-feed cessation. Check
+existing sessions, saved links and export access. Record applicable retention/deletion/export policy
+without inventing a universal period. Do not claim that downloaded copies can be remotely recalled.
+
+REQUIRED EVIDENCE
+1. Revoked users cannot retrieve protected records through an old link or active session beyond the
+   accepted policy.
+2. Stopping an optional feed does not silently delete unrelated permitted historical responses.
+
+HUMAN / LIVE-USE CONDITION
+Retention and revocation policy come from the responsible owner; tests do not establish a new legal
+entitlement or retention period.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+SAFE-08 | Provide independent access and untrusted-content tests
+Target: R3 | Proposed owner: Verification reviewer
+Roadmap: B08, B10, B13 | Acceptance: A16, A17, A20
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: SAFE-02, SAFE-03, SAFE-05, SAFE-06, SAFE-07
+
+BUILD
+Build adversarial fixtures covering cross-account access, nested private fields, role changes,
+injected text and export/attachment routes. Keep essential work non-AI. When AI is absent, mark AI-
+only checks not applicable and keep integration disabled; when it is later added, permissions must
+be enforced outside generated text.
+
+REQUIRED EVIDENCE
+1. Changing account, URL, request body or retrieved instructions cannot extend access or approve
+   support.
+2. Tests report actual environment/version and remaining restrictions; generated code is not called
+   independent production certification.
+
+HUMAN / LIVE-USE CONDITION
+A reviewer independent of implementation must accept the actual intended external-use scope before
+external operation.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+SHARED OPERATION, RECOVERY AND MAINTAINABILITY
+==============================================
+
+RUN-01 | Choose and prepare the smallest reusable shared backend
+Target: R2 | Proposed owner: Workflow developer
+Roadmap: B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: BASE-04
+
+BUILD
+First inspect the working project for an existing suitable backend/database. Reuse it. If absent,
+implement the minimal case service against the agreed contracts in an authorised local development
+environment with repeatable migrations and synthetic seed data. Record the choice and reason; no
+framework conversion or new paid hosting is automatic.
+
+REQUIRED EVIDENCE
+1. The selected service starts from clean disposable storage and applies migrations reproducibly.
+2. There is one owner of cases and one pricing implementation/contract; no second inconsistent
+   financial engine is introduced.
+
+HUMAN / LIVE-USE CONDITION
+Reuse existing approved tools. New services, costs or architecture outside the agreed local scope
+need the responsible owner, but contract tests can proceed.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RUN-02 | Connect cases and scenarios to the maintained application
+Target: R2 | Proposed owner: Workflow developer
+Roadmap: B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: RUN-01, CASE-01, CASE-07, UX-08, FIN-08
+
+BUILD
+Wire the UI to the reusable case service with loading/error/retry behaviour. Persist the canonical
+snapshot and validate or recompute the financial result in the trusted internal service before
+accepting a consequential record. Keep historical snapshots immutable and authoritative actuals
+untouched. Use parity tests if the runtime requires a second language implementation.
+
+REQUIRED EVIDENCE
+1. UI save/reopen matches the identified engine version, exact inputs and stored result.
+2. Tampering with a client-submitted profit/result does not create an accepted server-side record.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RUN-03 | Run selected refresh jobs without duplication or partial state
+Target: R3 | Proposed owner: Workflow developer
+Roadmap: B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-08, RUN-01
+
+BUILD
+Integrate the existing approved source refresh with locks, explicit versions, retry limits and
+failure records. A schedule is configured only for an accepted source/calendar; manual execution
+remains available. Do not replace the existing billing pipeline or treat a new dealer file as a
+refresh of every source.
+
+REQUIRED EVIDENCE
+1. Two simultaneous runs do not accept duplicate activity.
+2. An interrupted job retains the last accepted source and displays what failed; unrelated evidence
+   keeps its own date.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RUN-04 | Separate configuration, secrets and restricted working files
+Target: R3 | Proposed owner: Workflow developer
+Roadmap: B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: RUN-01, BASE-02
+
+BUILD
+Keep real secrets out of code, tests, logs, exports and documentation. Use approved environment
+configuration and least-privilege source access. Fail closed on missing production settings. Keep
+synthetic development separate from actual participant data and do not migrate real records
+implicitly.
+
+REQUIRED EVIDENCE
+1. A clean code package and diagnostic log contain no credentials or private data tables.
+2. Missing identity/storage configuration cannot start a seemingly live external service with
+   permissive defaults.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RUN-05 | Show due actions without automatically sending messages
+Target: R3 | Proposed owner: Workflow developer
+Roadmap: B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: CASE-03, CASE-08, SAFE-02
+
+BUILD
+Provide an in-application due/overdue view tied to the responsible person and next update. Prepare
+optional draft summaries, with audience-appropriate content and exact case links. External mail,
+messaging integrations and schedules remain off until separately authorised. Reassignment must not
+reset waiting age.
+
+REQUIRED EVIDENCE
+1. A due item identifies the unresolved obligation and opens the correct permitted case.
+2. No email or external notification is sent during development or a test run.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RUN-06 | Record operational failures and useful-work measurements
+Target: R3 | Proposed owner: Workflow developer
+Roadmap: B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: RUN-02, RUN-03, CASE-05
+
+BUILD
+Log versioned errors, failed saves/imports, response stages and task effort without copying
+confidential case contents. Measure actual timing rather than inventing performance claims. Separate
+preparation, correction, review and follow-through; visits and login counts are not usefulness or
+financial benefit.
+
+REQUIRED EVIDENCE
+1. A failed import or save can be investigated from its safe error reference and tested build.
+2. Acknowledgement, substantive response, resolution and participant-confirmed usefulness are
+   separate measurements.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RUN-07 | Back up and restore the full permitted working record
+Target: R3 | Proposed owner: Workflow developer
+Roadmap: B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: RUN-02, SAFE-06, RUN-04
+
+BUILD
+Define backup scope for database, allowed evidence attachments, configuration references and
+application versions. Implement and exercise restore into an isolated environment using synthetic
+data first. Keep actual recovery requirements and real backup destination subject to the operator's
+approval.
+
+REQUIRED EVIDENCE
+1. A restored case includes its evidence, original scenario/version and change history, not just a
+   database row.
+2. Recovery tests record actual steps/results; an untested provider backup feature is not marked
+   recovery accepted.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+RUN-08 | Package an internal release and a recoverable deployment route
+Target: R2 | Proposed owner: Workflow developer
+Roadmap: B01, B11, B12, B16 | Acceptance: A07, A12, A17, A18
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: BASE-07, UX-08
+
+BUILD
+Provide versioned local build/start/test instructions, release notes of actual changes, dependency
+lock, rollback and troubleshooting. Reuse approved delivery infrastructure. Keep external deployment
+disabled pending access, recovery and audience acceptance. Do not call the supplied new task plan a
+completed release.
+
+REQUIRED EVIDENCE
+1. A second developer can start the release candidate and reproduce the selected internal journey
+   from the instructions.
+2. The delivered source package omits private data and identifies unverified/live-use restrictions;
+   no public publishing occurs.
+
+HUMAN / LIVE-USE CONDITION
+An operator accepts any actual shared deployment; an internal release does not grant external
+access.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+INDEPENDENT VERIFICATION AND REAL PILOT EVIDENCE
+================================================
+
+ACCEPT-01 | Independently verify the corrected financial engine
+Target: R1 | Proposed owner: Verification reviewer
+Roadmap: B07, B09 | Acceptance: A11
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: BASE-05, FIN-08, RANGE-05
+
+BUILD
+Extend the supplied regression checks with all-volume, incremental-only, support, cost dates,
+missing inputs, zero/nonpositive contribution, pack rounding and basket cases. Compute expectations
+independently. Preserve regression intent while adapting calls to the canonical implementation. Test
+algebraic invariants and equivalence across entry points.
+
+REQUIRED EVIDENCE
+1. Each applicable v03 defect is closed by reproducible evidence or remains explicitly
+   failing/unaccepted.
+2. No assertion, fixture value or measurement label is weakened merely to make a green report.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+ACCEPT-02 | Test the complete browser journey, not only isolated screens
+Target: R1 | Proposed owner: Verification reviewer
+Roadmap: B04, B06, B07, B08, B09 | Acceptance: A12, A19
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: BASE-05, BASE-06, UX-08
+
+BUILD
+Run all existing cases/tabs and both objectives, retaining the existing case scope for this first
+verification. A new supported candidate is tested separately under REVIEW-08 and ACCEPT-05. Exercise
+select/edit/save/export/restart/reopen, missing input, failed render and invalid date. Test real
+file/localhost behaviour on the authorised machine; retain a separate account of in-memory browser
+tests.
+
+REQUIRED EVIDENCE
+1. All claimed working routes complete with the same context and result at each step.
+2. A blocked browser environment is reported as untested, not converted into a passed
+   restart/persistence test.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+ACCEPT-03 | Prove source conservation and correction behaviour
+Target: R2 | Proposed owner: Verification reviewer
+Roadmap: B02, B03, B11 | Acceptance: A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A14
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: DATA-08
+
+BUILD
+Execute the period/entity/scope/control/duplicate/revision tests against synthetic difficult inputs
+and the accepted local source where permitted. Keep each source's horizon separate. Verify optional-
+source failure does not disable valid work and identify restated cases after corrections.
+
+REQUIRED EVIDENCE
+1. Half-year, national/dealer, annual/monthly and shared-applicability fixtures cannot inflate or
+   mislabel results.
+2. Identical re-import, declared replacement and two genuine same-value transactions behave
+   differently and correctly.
+
+HUMAN / LIVE-USE CONDITION
+Business/source acceptance is separate from developer verification; no external release is
+authorised by this task.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+ACCEPT-04 | Examine the actual participant-facing release candidate
+Target: R3 | Proposed owner: Verification reviewer
+Roadmap: B08, B10, B12, B13 | Acceptance: A16, A17
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: SAFE-08, RUN-04, RUN-07
+
+BUILD
+Repeat cross-organisation access, field minimisation, attachment, revocation and actual-download
+tests against the configured release candidate, not just mock serializers. Record exact audience and
+remaining restrictions. Independent formal review is distinct from this development verification.
+
+REQUIRED EVIDENCE
+1. Screens, requests, counts, searches and exported bytes contain only the permitted information.
+2. An unresolved restriction prevents only the affected external use and is not described as a
+   blanket certification.
+
+HUMAN / LIVE-USE CONDITION
+A responsible independent reviewer approves the tested external-use scope; neither coding tool
+provides organisational approval.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+ACCEPT-05 | Demonstrate a useful end-to-end internal decision
+Target: R2 | Proposed owner: Verification reviewer
+Roadmap: B05, B06, B07, B08, B09 | Acceptance: A09, A11, A12, A13, A14, A15, A19
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: ACCEPT-01, ACCEPT-02, REVIEW-08, RUN-02, CASE-05
+
+BUILD
+Run a real permitted internal question from selected purchasing evidence to exact parts, supported
+alternatives, scenario, attributed explanation, owner and next action. Include a no-action result
+and a missing-evidence result. Record total effort and the business reviewer's interpretation, not
+just successful clicks.
+
+REQUIRED EVIDENCE
+1. The reviewer explains what is observed, what is assumed, which decision is available and what
+   remains unknown.
+2. The saved brief reproduces the decision and no support has been approved or sent automatically.
+
+HUMAN / LIVE-USE CONDITION
+The product/source reviewer must observe and accept the task. A developer walkthrough alone is not
+business acceptance.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+ACCEPT-06 | Prepare and observe the two different participant tasks
+Target: R3 | Proposed owner: Verification reviewer
+Roadmap: B14 | Acceptance: A03, A15, A19
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: ACCEPT-05, SAFE-05
+
+BUILD
+Prepare a supported ITUK account review and a Portugal national review plus a dealer-chosen
+parts/improvement task. The distributor validates the question and audience, and a responder accepts
+the work. A restricted document route is valid before a portal exists. Prepare scripts now; record
+actual participant observations only when performed.
+
+REQUIRED EVIDENCE
+1. ITUK and Portugal receive returns at their real supported levels, with no invented Portuguese
+   purchasing or dealer fleet.
+2. Actual next update, substantive response, contribution effort and participant-confirmed
+   usefulness are separately recorded.
+
+HUMAN / LIVE-USE CONDITION
+Real distributor/participant availability, approved audience and responding capacity are required.
+Portal use additionally requires ACCEPT-04; no contact or sending is authorised by this plan.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+ACCEPT-07 | Prove a later exchange and review evidenced outcomes
+Target: R4 | Proposed owner: Verification reviewer
+Roadmap: B15 | Acceptance: A07, A20
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: ACCEPT-03, ACCEPT-06, RUN-03, CASE-05
+
+BUILD
+Prepare the later-cycle test now, including correction and stale-source handling. Execute only when
+a genuinely later compatible source and eligible task occur. Compare effort and non-overlapping
+supported results, with unknown outcomes retained. Do not simulate repeat participation or infer
+attribution from a later invoice.
+
+REQUIRED EVIDENCE
+1. The evidence includes an actual later source/version and a repeated eligible interaction, not
+   regenerated historical files.
+2. Observed change, reported effect, support cost, displacement and any supported causal claim
+   remain separate.
+
+HUMAN / LIVE-USE CONDITION
+A genuinely later compatible source and real participant behaviour are external prerequisites that
+code cannot create.
+
+STATE: Not started. No acceptance or deployment is asserted.
+
+ACCEPT-08 | Transfer operation and decide the next justified scope
+Target: R4 | Proposed owner: Verification reviewer
+Roadmap: B16, B18 | Acceptance: A18, A19, A20
+Existing finding: New implementation detail derived from the roadmap/papers.
+Can start after: BASE-03
+Integrate after: RUN-07, RUN-08, ACCEPT-07
+
+BUILD
+Prepare handover and a continue/narrow/stop/expand review. A second authorised operator runs and
+restores the accepted version. Record unresolved defects, cost owner, absence arrangements, actual
+usefulness/effort and the source-specific next service. Budget or task completion alone does not
+justify expansion.
+
+REQUIRED EVIDENCE
+1. A second operator reproduces the selected result and restoration with a recorded actual test.
+2. The owner's next-scope decision is supported by the observed evidence and does not automatically
+   release funds or enable every module.
+
+HUMAN / LIVE-USE CONDITION
+Second-person execution and the owner's actual scope/spending decision remain human acceptance
+requirements.
+
+STATE: Not started. No acceptance or deployment is asserted.

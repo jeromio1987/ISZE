@@ -1,0 +1,145 @@
+==============================================================================
+1  THE SCOPE BOUNDARY: WORD COUNTS IN EACH PAPER
+==============================================================================
+80-pager pages: 80      33-pager pages: 33
+
+term              80-pager  33-pager
+routine                  0        14
+day to day               0         0
+day-to-day               0         5
+help desk                0         2
+support ticket           0         1
+
+deal of the day                   36         0
+aim commercial atlas               0         3
+ids development studio             0         3
+range & campaign planner           0         4
+pricing & margin lab               0         3
+prism market intelligence          0         3
+
+==============================================================================
+2  STRUCTURE: WHERE DEAL OF THE DAY FIRST APPEARS
+==============================================================================
+first body heading appearance: page 2 of 80
+reading guide (page 4) lists:
+   ISUZU / UNIVERSE
+   COMMERCIAL VISION / 3.0
+   22 SEPTEMBER 2026  /  CONCEPT AND APPLICATION EXAMPLES
+   04 / 80
+   P
+   READING THE PAPER
+   From insight to commercial
+   development
+   The full argument, the application examples and the operating reference are designed
+   to be read at different depths.
+   The first chapters explain why the programme belongs together and what participants receive. The
+   middle develops the analytical foundations and three concrete application examples. The final chapters
+   explain how participation, investment and repeatable operation could work, followed by practical
+   reference material.
+   Historical observations retain their original source periods. Application designs, participant journeys
+   and feedback diagrams are proposals as of 22 September 2026. Numerical scenarios are explicitly
+   hypothetical; they illustrate the economics of a choice rather than forecast demand or report an
+   achieved result.
+   Section
+   Pages
+   The commercial proposition and connected model
+   5-10
+   AIM and the Commercial Atlas
+   11-21
+   IDS and visible development progress
+   22-30
+   PRISM and coordinated tenders
+   31-41
+   Deal of the Day
+   42-54
+   Participation, economics and delivery
+   55-70
+   Methods, working records and sources
+   71-80
+
+==============================================================================
+3  PICTURE INVENTORY
+==============================================================================
+  'proposed sequence' caption:            27
+  'illustrative design' caption:          19
+  'proposed feedback mechanism' caption:  5
+  'no measured causal effect is implied': 5
+  80-pager text blocks 1563, of which caption-like 383
+  33-pager text blocks 552, of which caption-like 166
+
+==============================================================================
+4  CHART PAGES
+==============================================================================
+  80-pager: busiest pages by numeric axis text -> p16(61 numbers), p14(60 numbers), p49(57 numbers), p63(53 numbers), p15(38 numbers), p50(37 numbers)
+  33-pager: busiest pages by numeric axis text -> p28(59 numbers), p13(59 numbers), p9(53 numbers), p33(35 numbers), p15(33 numbers), p2(26 numbers)
+
+==============================================================================
+5  THE ECONOMICS
+==============================================================================
+  gps_spu_by_distributor.csv columns: ['year', 'distributor_code', 'country', 'region', 'total_sales_eur', 'warranty_parts_eur', 'sales_ex_warranty_eur', 'uio_units', 'spend_per_unit_eur', 'spend_per_unit_ex_warranty_eur', 'uio_proxy', 'uio_source', 'traffic_light', 'warranty_data_gap', 'max_spend_eur', 'gps_capture_vs_max', 'traffic_light_v9', 'gps_capture_ex_warranty_vs_max', 'traffic_light_v9_ex_warranty', 'period_basis', 'coverage_note']
+  2025 rows 22; rows carrying a euro figure 22
+  network parts billed 2025: EUR 32,381,311.55
+  EUR 100,000 as share: 0.31%
+  EUR 300,000 as share: 0.93%
+  rows with a uio_units figure: 22; their billed total EUR 32,381,311.55
+
+  ids_dealer_network_cleaned_2026-09-20.csv columns: ['ids_tab', 'rank', 'dealer_name', 'points_pct', 'city', 'address', 'source_file']
+  dealer rows: 519
+  rows with a points_pct: 334, min 0, max 100, average 77.5
+  EUR 15,000 / 519 rows = EUR 28.90
+  EUR 100,000 / EUR 2,500 = 40 qualifying actions
+  EUR 300,000 / EUR 2,500 = 120 qualifying actions
+  EUR 120,000 x 5% = EUR 6,000
+  20 units x EUR 30 gross profit x 5% = EUR 30.00
+
+==============================================================================
+6  THE COMPANION DECK
+==============================================================================
+  ISUZU_UNIVERSE_COMMERCIAL_VISION_3_0.pptx exists: True (237,858 bytes)
+  slides 49  words 4315  autoshapes 1472  charts 0  images 0  tables 0
+
+==============================================================================
+7  LAUNCHERS AND CHECK FILES
+==============================================================================
+  ISUZU_UNIVERSE_3_0_2026-09-23.pdf                    OPEN_<stem>.cmd: False   loose .cmd matches: []
+  ISUZU_UNIVERSE_COMMERCIAL_VISION_3_0.pdf             OPEN_<stem>.cmd: False   loose .cmd matches: ['OPEN_AIM_Pricing_Decisions_v03.cmd', 'OPEN_ISUZU_UNIVERSE_3_0.cmd', 'OPEN_Universe_Yellow_Paper_v0.5.cmd']
+  ISUZU_UNIVERSE_COMMERCIAL_TOOLS_WHITE_PAPER.pdf      OPEN_<stem>.cmd: False   loose .cmd matches: []
+  Universe_Yellow_Paper_v0.5_2026-09-22.pdf            OPEN_<stem>.cmd: False   loose .cmd matches: []
+  Universe_Opportunity_Page.html                       OPEN_<stem>.cmd: True   loose .cmd matches: ['OPEN_Universe_Opportunity_Page.cmd']
+  every OPEN_*.cmd in the folder:
+     OPEN_AIM_Pricing_Decisions_v03.cmd
+     OPEN_BPR_AIM_Edition_v2.1.cmd
+     OPEN_ISUZU_UNIVERSE_3_0.cmd
+     OPEN_THE_MAP.cmd
+     OPEN_Universe_Opportunity_Page.cmd
+     OPEN_Universe_Yellow_Paper_v0.5.cmd
+     OPEN_Yellow_Paper_REVIEW.cmd
+
+==============================================================================
+8  MEASURED PRICE RESPONSE FILE
+==============================================================================
+  columns: ['family', 'n_pairs', 'n_pns', 'n_distributors', 'median_pct_price_yoy', 'median_pct_qty_yoy', 'std_dlnp', 'beta_identified', 'beta_elasticity', 'se_beta', 'r2', 'low_power', 'eur_billed_2024', 'eur_billed_2025', 'eur_volume_impact', 'eur_sensitive_price_up_vol_down', 'eur_passed_price_up_vol_up', 'eur_leak_price_flat_vol_down', 'share_zpr1_pairs', 'reading', 'method_note']
+  family=brake_shoe | n_pairs=25 | n_pns=4 | n_distributors=16 | median_pct_price_yoy=0.0 | median_pct_qty_yoy=-15.38 | std_dlnp=0.00611 | beta_identified=True | beta_elasticity=-17.76 | se_beta=34.55 | r2=0.279 | low_power=True | eur_billed_2024=139830.86 | eur_billed_2025=141597.35 | eur_volume_impact=-8682.16 | eur_sensitive_price_up_vol_down=0.0 | eur_passed_price_up_vol_up=0.0 | eur_leak_price_flat_vol_down=-39011.0 | share_zpr1_pairs=0.16 | reading=negative beta but noisy (se large - direction only) | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=AIM: Maintenance Service | n_pairs=230 | n_pns=86 | n_distributors=19 | median_pct_price_yoy=0.0 | median_pct_qty_yoy=-4.88 | std_dlnp=0.00634 | beta_identified=True | beta_elasticity=-11.51 | se_beta=5.77 | r2=0.005 | low_power=False | eur_billed_2024=883651.95 | eur_billed_2025=942503.5 | eur_volume_impact=6558.85 | eur_sensitive_price_up_vol_down=-56584.27 | eur_passed_price_up_vol_up=34592.83 | eur_leak_price_flat_vol_down=-75179.43 | share_zpr1_pairs=0.178 | reading=price-sensitive (stocking response) | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=clutch_kit | n_pairs=16 | n_pns=10 | n_distributors=8 | median_pct_price_yoy=0.0 | median_pct_qty_yoy=-2.75 | std_dlnp=0.03034 | beta_identified=True | beta_elasticity=-2.59 | se_beta=1.49 | r2=0.132 | low_power=True | eur_billed_2024=149324.12 | eur_billed_2025=149187.19 | eur_volume_impact=-10180.28 | eur_sensitive_price_up_vol_down=0.0 | eur_passed_price_up_vol_up=0.0 | eur_leak_price_flat_vol_down=-19852.88 | share_zpr1_pairs=0.125 | reading=negative beta but noisy (se large - direction only) | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=AIM: Brakes | n_pairs=290 | n_pns=110 | n_distributors=20 | median_pct_price_yoy=1.41 | median_pct_qty_yoy=-10.17 | std_dlnp=0.00788 | beta_identified=True | beta_elasticity=1.2 | se_beta=3.82 | r2=0.117 | low_power=False | eur_billed_2024=2468464.84 | eur_billed_2025=2278550.62 | eur_volume_impact=-246733.52 | eur_sensitive_price_up_vol_down=-233442.48 | eur_passed_price_up_vol_up=172330.47 | eur_leak_price_flat_vol_down=-335218.11 | share_zpr1_pairs=0.145 | reading=positive/flat beta but noisy (se large - inconclusive) | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=AIM: Lubrication | n_pairs=79 | n_pns=27 | n_distributors=18 | median_pct_price_yoy=1.45 | median_pct_qty_yoy=17.14 | std_dlnp=0.00422 | beta_identified=False | beta_elasticity= | se_beta= | r2= | low_power=True | eur_billed_2024=40057.18 | eur_billed_2025=36093.79 | eur_volume_impact=-4508.83 | eur_sensitive_price_up_vol_down=-11021.47 | eur_passed_price_up_vol_up=6516.14 | eur_leak_price_flat_vol_down=-3.5 | share_zpr1_pairs=0.101 | reading=beta not identified — list price move nearly uniform across pairs (std log-price 0.0042); use quadrant / median qty instead | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=air_filter | n_pairs=71 | n_pns=15 | n_distributors=20 | median_pct_price_yoy=0.0 | median_pct_qty_yoy=3.26 | std_dlnp=0.0 | beta_identified=False | beta_elasticity= | se_beta= | r2= | low_power=True | eur_billed_2024=483712.89 | eur_billed_2025=568914.58 | eur_volume_impact=88494.14 | eur_sensitive_price_up_vol_down=0.0 | eur_passed_price_up_vol_up=0.0 | eur_leak_price_flat_vol_down=-58533.76 | share_zpr1_pairs=0.042 | reading=beta not identified — list price move nearly uniform across pairs (std log-price 0.0000); use quadrant / median qty instead | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=blower_filter | n_pairs=45 | n_pns=6 | n_distributors=17 | median_pct_price_yoy=1.03 | median_pct_qty_yoy=11.27 | std_dlnp=0.00015 | beta_identified=False | beta_elasticity= | se_beta= | r2= | low_power=True | eur_billed_2024=419854.92 | eur_billed_2025=351783.03 | eur_volume_impact=-83074.97 | eur_sensitive_price_up_vol_down=-62491.72 | eur_passed_price_up_vol_up=77660.13 | eur_leak_price_flat_vol_down=-103202.9 | share_zpr1_pairs=0.044 | reading=beta not identified — list price move nearly uniform across pairs (std log-price 0.0002); use quadrant / median qty instead | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=brake_pad | n_pairs=25 | n_pns=6 | n_distributors=14 | median_pct_price_yoy=0.0 | median_pct_qty_yoy=-21.4 | std_dlnp=0.0 | beta_identified=False | beta_elasticity= | se_beta= | r2= | low_power=True | eur_billed_2024=246530.08 | eur_billed_2025=204969.04 | eur_volume_impact=-47777.92 | eur_sensitive_price_up_vol_down=0.0 | eur_passed_price_up_vol_up=0.0 | eur_leak_price_flat_vol_down=-87953.27 | share_zpr1_pairs=0.04 | reading=beta not identified — list price move nearly uniform across pairs (std log-price 0.0000); use quadrant / median qty instead | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=clutch_disc | n_pairs=13 | n_pns=7 | n_distributors=8 | median_pct_price_yoy=0.0 | median_pct_qty_yoy=-27.12 | std_dlnp=0.0 | beta_identified=False | beta_elasticity= | se_beta= | r2= | low_power=True | eur_billed_2024=30432.16 | eur_billed_2025=26198.9 | eur_volume_impact=-7637.3 | eur_sensitive_price_up_vol_down=0.0 | eur_passed_price_up_vol_up=0.0 | eur_leak_price_flat_vol_down=-12075.8 | share_zpr1_pairs=0.154 | reading=beta not identified — list price move nearly uniform across pairs (std log-price 0.0000); use quadrant / median qty instead | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=clutch_pressure_plate | n_pairs=18 | n_pns=8 | n_distributors=9 | median_pct_price_yoy=0.0 | median_pct_qty_yoy=-28.15 | std_dlnp=0.0 | beta_identified=False | beta_elasticity= | se_beta= | r2= | low_power=True | eur_billed_2024=48084.5 | eur_billed_2025=37411.98 | eur_volume_impact=-11610.58 | eur_sensitive_price_up_vol_down=0.0 | eur_passed_price_up_vol_up=0.0 | eur_leak_price_flat_vol_down=-15851.86 | share_zpr1_pairs=0.111 | reading=beta not identified — list price move nearly uniform across pairs (std log-price 0.0000); use quadrant / median qty instead | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=fuel_filter | n_pairs=100 | n_pns=28 | n_distributors=22 | median_pct_price_yoy=0.0 | median_pct_qty_yoy=7.52 | std_dlnp=4e-05 | beta_identified=False | beta_elasticity= | se_beta= | r2= | low_power=True | eur_billed_2024=628505.34 | eur_billed_2025=675048.65 | eur_volume_impact=-48012.99 | eur_sensitive_price_up_vol_down=-2230.71 | eur_passed_price_up_vol_up=0.0 | eur_leak_price_flat_vol_down=-150176.9 | share_zpr1_pairs=0.08 | reading=beta not identified — list price move nearly uniform across pairs (std log-price 0.0000); use quadrant / median qty instead | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=oil_filter | n_pairs=97 | n_pns=20 | n_distributors=21 | median_pct_price_yoy=0.0 | median_pct_qty_yoy=-4.95 | std_dlnp=0.0 | beta_identified=False | beta_elasticity= | se_beta= | r2= | low_power=True | eur_billed_2024=537931.84 | eur_billed_2025=372964.96 | eur_volume_impact=-171410.84 | eur_sensitive_price_up_vol_down=-47038.97 | eur_passed_price_up_vol_up=0.0 | eur_leak_price_flat_vol_down=-172277.08 | share_zpr1_pairs=0.093 | reading=beta not identified — list price move nearly uniform across pairs (std log-price 0.0000); use quadrant / median qty instead | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=pilot_bearing | n_pairs=11 | n_pns=4 | n_distributors=8 | median_pct_price_yoy=0.54 | median_pct_qty_yoy=-5.56 | std_dlnp=0.00064 | beta_identified=False | beta_elasticity= | se_beta= | r2= | low_power=True | eur_billed_2024=3029.88 | eur_billed_2025=3784.5 | eur_volume_impact=743.82 | eur_sensitive_price_up_vol_down=0.0 | eur_passed_price_up_vol_up=0.0 | eur_leak_price_flat_vol_down=-435.68 | share_zpr1_pairs=0.091 | reading=beta not identified — list price move nearly uniform across pairs (std log-price 0.0006); use quadrant / median qty instead | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+  family=release_bearing | n_pairs=31 | n_pns=10 | n_distributors=13 | median_pct_price_yoy=0.5 | median_pct_qty_yoy=-16.67 | std_dlnp=9e-05 | beta_identified=False | beta_elasticity= | se_beta= | r2= | low_power=True | eur_billed_2024=59083.34 | eur_billed_2025=50631.37 | eur_volume_impact=-9260.4 | eur_sensitive_price_up_vol_down=0.0 | eur_passed_price_up_vol_up=0.0 | eur_leak_price_flat_vol_down=-14861.32 | share_zpr1_pairs=0.097 | reading=beta not identified — list price move nearly uniform across pairs (std log-price 0.0001); use quadrant / median qty instead | method_note=qty-weighted WLS on YoY log deltas CY2024→CY2025 at PN×sold-to; list price ZPR1 where present else PR00 IE40; stocking-side ISZE→DB NOT dealer-market elasticity; beta only when within-family std(dlnP) >= 0.005; LOW POWER — direction + rough magnitude; demand shocks uncontrolled
+
+==============================================================================
+9  ARITHMETIC RE-CHECK ON THE FLAGGED FIGURES
+==============================================================================
+  120 units: 3000/25 = 120 units; baseline 100 at 30 = EUR 3,000, 120 units at 25 = EUR 3,000
+  20 additional units at 25 = EUR 500 + 100 baseline at 30 = EUR 3,500
+  45023.33 / 47068.77 = 95.7%
+  Portugal 1742.60 / 29959.87 = 5.8%
+  ITUK (347389.58-302366.25)/347389.58 = 13.0%
+  ITUK qty (4562-3402)/4562 = 25.4%

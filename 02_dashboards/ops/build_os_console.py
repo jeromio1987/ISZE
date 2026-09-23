@@ -26,34 +26,38 @@ SNAPSHOT = "2026-09-16"
 # DATA — every value below is re-derived from the file named in its tooltip.
 # ---------------------------------------------------------------------------
 
-# gps_spu_by_distributor.csv, 2025 rows with a vehicle-in-service basis, 18 markets.
+# CY2025 spend league: billed from gps_spu_by_distributor.csv; fleet from
+# wallet_waterfall.csv (worksheet base 163,198 — D08). Five markets differ from the
+# July GPS extract (ITUK, Germany, Ireland, Portugal, Belgium). Network average is
+# the matched pair EUR 30,756,772 / 163,198 = EUR 188.46. Sorted by spend per vehicle.
 SPU_2025 = [
-    ("IRELAND", 388.57, 3056, 1187459.0, 1391176.0),
-    ("UTI", 322.32, 10336, 3331512.0, 8271300.0),
-    ("ITUK", 248.54, 22389, 5564544.0, 11835911.0),
-    ("FINLAND", 230.83, 1204, 277921.0, 301000.0),
-    ("BELGIUM", 219.86, 9594, 2109332.0, 2454394.0),
-    ("ICELAND", 210.05, 406, 85282.0, 101500.0),
-    ("PORTUGAL", 209.12, 8176, 1709794.0, 3494069.0),
-    ("MALTA", 198.56, 1040, 206502.0, 378827.0),
-    ("GERMANY", 197.27, 12855, 2535932.0, 3412284.0),
-    ("CYPRUS", 185.63, 2308, 428443.0, 676267.0),
-    ("UMI", 179.02, 18542, 3319344.0, 4635500.0),
-    ("NORWAY", 178.65, 7929, 1416552.0, 1982250.0),
-    ("DENMARK", 174.17, 851, 148221.0, 213239.0),
-    ("ROMANIA", 163.60, 1071, 175218.0, 267750.0),
-    ("SWEDEN", 151.42, 8443, 1278462.0, 2110750.0),
-    ("GREECE", 139.04, 3742, 520304.0, 953593.0),
-    ("IUK", 128.33, 47783, 6131920.0, 11945750.0),
-    ("HUNGARY", 88.39, 3734, 330031.0, 933500.0),
+    ("IRELAND", 549.49, 2161, 1187458.6, 1391176.0),
+    ("UTI", 322.32, 10336, 3331511.9, 8271300.0),
+    ("ITUK", 241.23, 23067, 5564543.9, 11835911.0),
+    ("PORTUGAL", 237.21, 7208, 1709794.0, 3494069.0),
+    ("FINLAND", 230.83, 1204, 277920.6, 301000.0),
+    ("BELGIUM", 219.88, 9593, 2109331.6, 2454394.0),
+    ("ICELAND", 210.05, 406, 85281.6, 101500.0),
+    ("MALTA", 198.56, 1040, 206502.3, 378827.0),
+    ("CYPRUS", 185.63, 2308, 428443.1, 676267.0),
+    ("GERMANY", 184.03, 13780, 2535931.8, 3412284.0),
+    ("UMI", 179.02, 18542, 3319344.2, 4635500.0),
+    ("NORWAY", 178.65, 7929, 1416551.9, 1982250.0),
+    ("DENMARK", 174.17, 851, 148220.5, 213239.0),
+    ("ROMANIA", 163.60, 1071, 175218.4, 267750.0),
+    ("SWEDEN", 151.42, 8443, 1278462.2, 2110750.0),
+    ("GREECE", 139.04, 3742, 520303.9, 953593.0),
+    ("IUK", 128.33, 47783, 6131920.4, 11945750.0),
+    ("HUNGARY", 88.39, 3734, 330030.6, 933500.0),
 ]
-SPU_AVG = 188.16
+SPU_AVG = 188.46
 BILLED_2025 = 30756772.0
-UIO_2025 = 163459
-# Derived 2026-09-17 from wallet_waterfall.csv after the N35/N75 split. These were literal
-# (60,217,570 / 51.1 / 29,691,944) and went stale the moment the split landed. The split cut
-# the ITUK ceiling from EUR 17.18M to EUR 12.21M, so the network wallet fell and the same billed
-# book now reads 55.7%. Values below are read from the CSV, not typed.
+UIO_2025 = 163198
+# Ceiling / cover / uncaptured: read from wallet_waterfall.csv at build time.
+# That file was corrected on 2026-09-22 (the measured 3.5 t share for the six markets whose
+# light-truck row was still priced entirely at the heavier band), so the ceiling is now
+# EUR 54,375,729 and cover 56.6%. Nothing here is typed in: re-running this builder picks
+# up whatever the file holds.
 import csv as _csv  # noqa: E402
 import os as _os  # noqa: E402
 
@@ -402,21 +406,21 @@ def build() -> str:
          "gps_spu_by_distributor.csv, 2025 rows, 18 of 22 distributors · snapshot 2026-09-16",
          "Four markets that bill parts but have no vehicle count, and Palestine. Credit-note and return lines excluded."),
         ("€" + eur(SPU_AVG, 2), "Spend per vehicle (GPS)", "Network average, CY2025",
-         "€30,756,772 ÷ 163,459 vehicles in service.",
-         "gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16",
-         "Not the fleet-wide base: only the 18 markets with a vehicle count. Warranty parts are included in this figure."),
+         f"€{BILLED_2025:,.0f} ÷ {UIO_2025:,} vehicles in service (worksheet fleet).",
+         "billed: gps_spu 18-market CY2025 · fleet: wallet_waterfall worksheet base · D08 2026-09-22",
+         "Matched rate on the target-spend fleet (163,198), not the July GPS extract (163,459). Warranty included."),
         (eur(UIO_2025), "Vehicles in service (UIO)", "18 markets, CY2025",
-         "Sum of the vehicle-in-service column on the 2025 rows with a count.",
-         "gps_spu_by_distributor.csv, 2025 · snapshot 2026-09-16",
+         "Sum of uio_units on the 2025 target-spend (wallet) rows — worksheet base.",
+         "wallet_waterfall.csv, 2025 · D08 rebuild 2026-09-22",
          "Ukraine, Armenia, Kazakhstan and Palestine bill parts with no count and are outside it."),
         (pct(CAPTURE_2025) + "%", "Cover of target spend",
          f"€{BILLED_2025 / 1e6:.2f}M of a €{CEILING_2025 / 1e6:.2f}M ceiling",
-         "Billed parts ÷ modelled target spend per vehicle. €30,756,772 ÷ €60,217,570.",
-         "wallet_waterfall.csv, 2025 rows, 18 distributors · snapshot 2026-09-16",
-         "37.0% of the ceiling is one flat €250 per vehicle, so this is a direction, not a precision. Warranty is a separate lane."),
+         f"Billed parts ÷ modelled target spend. €{BILLED_2025:,.0f} ÷ €{CEILING_2025:,.0f}.",
+         "wallet_waterfall.csv, 2025 · ceiling re-derived 2026-09-22",
+         f"{FLAT_SHARE_CEILING}% of the ceiling is one flat €250 per vehicle, so this is a direction, not a precision. Warranty is a separate lane."),
         ("€" + eur(UNCAPTURED), "Uncaptured spend value", "€22.28M of it is a flat placeholder",
-         "Ceiling minus billed parts across the 18 markets, floored at zero per market. €60,217,570 − €30,756,772.",
-         "wallet_waterfall.csv, addressable uncaptured, 2025 · snapshot 2026-09-16",
+         f"Ceiling minus billed across 18 markets, floored at zero per market. €{CEILING_2025:,.0f} − €{BILLED_2025:,.0f}.",
+         "wallet_waterfall.csv, addressable uncaptured, 2025 · ceiling re-derived 2026-09-22",
          "Not a forecast and not cash. It moves with the ceiling assumption: €22.28M of that ceiling is one flat rate."),
         (pct(SPLIT_NOT_BOUGHT_PCT) + "%", "Service parts not bought", "714,094 of 996,890 expected units",
          "Expected units minus genuine and best-value units actually sold, 14 categories, 18 distributors. 996,890 − (197,666 + 85,130) = 714,094.",
@@ -433,7 +437,7 @@ def build() -> str:
     # ---- sensor cards with breaks
     sensors = [
         ("01", "Car park &amp; vehicle identity", "UIO",
-         "163,459 vehicles in service · 18 of 22 markets",
+         "163,198 vehicles in service · 18 of 22 markets",
          "Feeds the loop with the denominator: how many vehicles exist to spend money on them at all.",
          [("Break — no vehicle count", "Ukraine, Armenia, Kazakhstan and Palestine bill parts but have no target-spend basis. Any spend-per-vehicle figure for them would be invented."),
           ("Break — no identity", "Israel and the UK are excluded from the VIN register by design. The register holds 3,238 vehicles in 7 markets (PT 2,111 · IE 647 · DE 183 · MT 130 · CY 114 · BE 49 · GR 4). The UK mail extract of 29,935 VINs is not loaded."),
@@ -494,7 +498,7 @@ def build() -> str:
     spu_max = 400.0
     c1 = bar_rows(
         [(m, v) for m, v, _, _, _ in SPU_2025], spu_max, lambda v: "€%.2f" % v,
-        avg=SPU_AVG, avg_label="Network average €188.16 (dashed line)",
+        avg=SPU_AVG, avg_label="Network average €188.46 (dashed line)",
         tipf=lambda m, v: (
             "Spend per vehicle, %s" % m,
             "Parts billed ÷ vehicles in service, %s: €%s ÷ %s vehicles." % (
@@ -880,7 +884,7 @@ ul.breaks li{font-size:12px;color:#33302a;margin-bottom:4px}
     <rect x="16" y="40" width="330" height="140" fill="#fff" stroke="#d9d3c8"/>
     <rect x="16" y="40" width="4" height="140" fill="#1a2b4a"/>
     <text x="32" y="64" font-size="13" fill="#15233c" font-weight="700">Car park &amp; vehicle identity</text>
-    <text x="32" y="84" font-size="12" fill="#33302a">163,459 vehicles in service</text>
+    <text x="32" y="84" font-size="12" fill="#33302a">163,198 vehicles in service</text>
     <text x="32" y="102" font-size="12" fill="#33302a">18 of 22 markets have a count</text>
     <text x="32" y="126" font-size="11" fill="#c0552d">Break 1 — no count: 4 markets bill, no denominator</text>
     <text x="32" y="144" font-size="11" fill="#c0552d">Break 2 — no identity: Israel + UK out of the register</text>
@@ -1088,8 +1092,8 @@ ul.breaks li{font-size:12px;color:#33302a;margin-bottom:4px}
     </div>
     <div class="card">
       <h3>Where this page's figures sit</h3>
-      <div class="staterow"><span class="chip measured">Measured</span><p>Parts billed €30.76M · vehicles 163,459 · spend
-      per vehicle €188.16 · the 18-market spend league · 54.4% sales-to-dealer visibility · 23,236 ledger rows.</p></div>
+      <div class="staterow"><span class="chip measured">Measured</span><p>Parts billed €30.76M · vehicles 163,198 · spend
+      per vehicle €188.46 · the 18-market spend league · 54.4% sales-to-dealer visibility · 23,236 ledger rows.</p></div>
       <div class="staterow"><span class="chip modelled">Modelled</span><p>The {CEILING} target-spend ceiling and everything
       derived from it ({COVER} cover, {UNCAP} uncaptured) · the 996,890 expected service units · category gaps at average
       selling price.</p></div>

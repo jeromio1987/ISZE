@@ -106,9 +106,9 @@ table{border-collapse:collapse;width:100%;font-size:13px}
 th{background:var(--navy);color:var(--paper);text-align:left;padding:8px 9px;
   font-weight:600;font-size:11.5px;letter-spacing:.4px;text-transform:uppercase;
   position:sticky;top:0;white-space:nowrap}
-#cust-pn th{cursor:pointer;user-select:none}
-#cust-pn th .sortmark{opacity:.45;font-size:10px;margin-left:4px;font-weight:400}
-#cust-pn th.on .sortmark{opacity:1;color:#f0b49a}
+#cust-pn th,#brake-pn th{cursor:pointer;user-select:none}
+#cust-pn th .sortmark,#brake-pn th .sortmark{opacity:.45;font-size:10px;margin-left:4px;font-weight:400}
+#cust-pn th.on .sortmark,#brake-pn th.on .sortmark{opacity:1;color:#f0b49a}
 th.n,td.n{text-align:right;font-variant-numeric:tabular-nums}
 td{padding:6px 9px;border-bottom:1px solid var(--line)}
 tbody tr:nth-child(even){background:var(--band)}
@@ -129,6 +129,15 @@ tbody tr.sel{background:#f6e3da!important;box-shadow:inset 3px 0 0 var(--terra)}
 .crumb{font-size:12.5px;color:var(--muted);margin-bottom:9px}
 .crumb b{color:var(--navy)}
 .crumb span{cursor:pointer;color:var(--terra);text-decoration:underline}
+
+/* the few-figures band used by the brake and concentration sections */
+.figs{display:flex;flex-wrap:wrap;gap:22px;margin:2px 0 14px}
+.fig{min-width:186px}
+.fig .fv{font-size:21px;font-weight:600;color:var(--navy);font-variant-numeric:tabular-nums;
+  display:flex;align-items:center;gap:5px}
+.fig.t .fv{color:var(--terra)}
+.fig .fl{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.fig .fn{font-size:12px;color:var(--muted);margin-top:2px}
 </style>
 </head>
 <body>
@@ -164,6 +173,13 @@ tbody tr.sel{background:#f6e3da!important;box-shadow:inset 3px 0 0 var(--terra)}
   <div class="ctrl">
     <label for="src">Source of supply</label>
     <select id="src"></select>
+  </div>
+  <div class="ctrl">
+    <label for="concscope">Concentration view</label>
+    <select id="concscope">
+      <option value="all">All families</option>
+      <option value="brake">Brakes only</option>
+    </select>
   </div>
   <div class="ctrl">
     <label>Include</label>
@@ -243,10 +259,24 @@ tbody tr.sel{background:#f6e3da!important;box-shadow:inset 3px 0 0 var(--terra)}
 
 <div class="grid g1">
   <div class="card">
-    <h2>The accounts, as billed</h2>
-    <div class="q">The 25 in-scope sold-to accounts. Germany trades through 2516 and 601, Portugal
-      through 519 and 92; those stay apart here and roll up in the distributor view.</div>
-    <div class="tblwrap" style="max-height:380px"><table id="custs"><thead></thead><tbody></tbody></table></div>
+    <h2 id="t-conc">How few part numbers carry the increase?</h2>
+    <div class="q" id="q-conc"></div>
+    <div class="figs" id="conc-figs"></div>
+    <div class="chartbox short"><canvas id="c-conc"></canvas></div>
+  </div>
+</div>
+
+<div class="grid g1">
+  <div class="card">
+    <h2 id="t-brake">Inside brakes: which sub-group and which part number?</h2>
+    <div class="q" id="q-brake"></div>
+    <div class="figs" id="brake-figs"></div>
+    <div class="chartbox short"><canvas id="c-brake"></canvas></div>
+    <div class="tblwrap" style="max-height:300px" id="brake-l2wrap">
+      <table id="brake-l2"><thead></thead><tbody></tbody></table>
+    </div>
+    <div class="crumb" id="brake-crumb" style="margin-top:12px"></div>
+    <div class="tblwrap" style="max-height:340px"><table id="brake-pn"><thead></thead><tbody></tbody></table></div>
   </div>
 </div>
 
@@ -280,7 +310,8 @@ function esc(s){ return String(s).replace(/[&<>"]/g,function(c){
 
 /* ---------- state ---------- */
 var state = { db:-1, src:-1, metric:'pct', l1:-1, l2:-1, l3:-1, cust:-1, custL1:-1, custL2:null, custL3:null, custOther:null,
-  custPnSort:{ key:'step', dir:-1 }, drillPnSort:{ key:'step', dir:-1 } };
+  custPnSort:{ key:'step', dir:-1 }, drillPnSort:{ key:'step', dir:-1 },
+  brakeL2:null, brakePnSort:{ key:'step', dir:-1 } };
 window.state = state;
 
 var srcPill = function(i){
@@ -508,6 +539,7 @@ function rollupCustL3(opts){
 
 function setCustL1(i){
   state.custL1 = i; state.custL2 = null; state.custL3 = null; state.custOther = null;
+  state.brakeL2 = null;
   render();
 }
 function setCustL2(i){
@@ -924,6 +956,338 @@ function drawCustPn(){
   }).join('');
 }
 
+/* ---------- brake deep dive ---------- */
+var BRAKE = 'Brakes', BRAKE_L1 = -1;
+function brakeL1Index(){
+  if(BRAKE_L1 < 0) BRAKE_L1 = P.l1.indexOf(BRAKE);
+  return BRAKE_L1;
+}
+function brakeConc(){
+  var c = D.conc_brake || {};
+  var key = state.db < 0 ? '__net__' : P.db[state.db];
+  return c[key] || null;
+}
+/* Sum the level 2 groups for the current distributor and source, from groups. */
+function brakeL2Rows(){
+  var l1 = brakeL1Index();
+  if(l1 < 0) return [];
+  return rollup([1,2], {l1:l1}).map(function(r){
+    return {l2:r.kk[1], pn:r.pn, rows:r.rows, qty:r.qty, billed:r.billed,
+      prior:r.prior, new:r.new, step:r.step, all:r.all, pct:r.pct};
+  });
+}
+function brakeTotals(){ return sumMetricRows(brakeL2Rows()); }
+/* brake_pn: [db,src,l2,pn,prior_jpy,new_jpy,qty,billed,step] */
+function brakePnRows(){
+  var l1 = brakeL1Index();
+  if(l1 < 0) return [];
+  var rows = D.brake_pn || [], out = [];
+  for(var i=0;i<rows.length;i++){
+    var r = rows[i];
+    if(state.db>=0 && r[0]!==state.db) continue;
+    if(state.src>=0 && r[1]!==state.src) continue;
+    if(state.brakeL2!==null && state.brakeL2!==undefined && r[2]!==state.brakeL2) continue;
+    out.push(r);
+  }
+  return out;
+}
+function brakeSliceLabel(){
+  var s = (state.db<0 ? 'the network' : P.db[state.db]);
+  if(state.src>=0) s += ' / ' + P.src[state.src];
+  if(state.brakeL2!==null && state.brakeL2!==undefined) s += ' · ' + P.l2[state.brakeL2];
+  return s;
+}
+function drawBrake(){
+  var l1 = brakeL1Index();
+  if(l1 < 0) return;
+  var slice = brakeSliceLabel();
+  var rows = brakeL2Rows();
+  var t = sumMetricRows(rows);
+  var conc = brakeConc();
+  var ituk = (state.db>=0 && P.db[state.db]==='ITUK');
+
+  document.getElementById('t-brake').textContent = 'Inside brakes: which sub-group and which part number?'
+    + (ituk ? ' (ITUK)' : '');
+  document.getElementById('q-brake').textContent =
+    'Brakes is one bar in the family league, so it is opened here: the level 2 groups first, then the '
+    + 'part numbers behind the biggest moves. Scope is ' + slice + '. The euro step and the weighted '
+    + 'move are both on the level 2 lines, so a sub-group that adds a lot of cash and one that moves a '
+    + 'small base by a large percentage cannot be confused.';
+
+  var figs = '';
+  figs += '<div class="fig t"><div class="fv">'+fmtPct(t.pct)
+    +'<span class="info" tabindex="0">i<span class="tip">Sum of units x new base divided by sum of '
+    +'units x prior base, minus one, across every priced brake line in this scope. Only lines carrying '
+    +'a price on both sides.</span></span></div>'
+    +'<div class="fl">Brake family, weighted move</div>'
+    +'<div class="fn">'+esc(slice)+'</div></div>';
+  figs += '<div class="fig"><div class="fv">'+fmtEur(t.step)
+    +'<span class="info" tabindex="0">i<span class="tip">Units x (new base - prior base) at '
+    +D.fx+' JPY per EUR, summed over the brake family for this scope.</span></span></div>'
+    +'<div class="fl">Brake step euro</div>'
+    +'<div class="fn">'+fmtNum(t.rows)+' priced lines · '+fmtNum(t.pn)+' part numbers</div></div>';
+  figs += '<div class="fig"><div class="fv">'+fmtEur(t.prior)
+    +'</div><div class="fl">Prior base</div>'
+    +'<div class="fn">the base the move is measured against</div></div>';
+  figs += '<div class="fig"><div class="fv">'+fmtEur(t.all)
+    +'<span class="info" tabindex="0">i<span class="tip">Every brake line in scope, priced or not. '
+    +'The weighted move uses only lines priced on both sides.</span></span></div>'
+    +'<div class="fl">Brake parts billed</div>'
+    +'<div class="fn">all in scope, priced or not</div></div>';
+  if(conc && conc.half){
+    figs += '<div class="fig t"><div class="fv">'+fmtNum(conc.half)
+      +'<span class="info" tabindex="0">i<span class="tip">Brake part numbers counted from the largest '
+      +'step down until half of the brake step euro is reached. Part numbers that did not move are '
+      +'left out of the count.</span></span></div>'
+      +'<div class="fl">Carry half the brake step</div>'
+      +'<div class="fn">of '+fmtNum(conc.n)+' brake part numbers</div></div>';
+  }
+  document.getElementById('brake-figs').innerHTML = figs;
+  drawBrakeL2(rows, t);
+  drawBrakePn();
+  drawBrakeChart(rows);
+}
+function drawBrakeL2(rows, t){
+  rows.sort(function(a,b){ return b.step-a.step; });
+  document.querySelector('#brake-l2 thead').innerHTML =
+    '<tr><th>AIM level 2 inside Brakes</th><th class="n">Part numbers</th>'
+    +'<th class="n">Lines</th><th class="n">Parts billed</th><th class="n">Prior base</th>'
+    +'<th class="n">New base</th><th class="n">Step €</th><th class="n">Weighted</th>'
+    +'<th class="n">Share of brake step</th></tr>';
+  var tb = document.querySelector('#brake-l2 tbody');
+  if(!rows.length){
+    tb.innerHTML = '<tr><td colspan="9" class="muted">No priced brake lines for this selection.</td></tr>';
+    return;
+  }  tb.innerHTML = rows.map(function(r){
+    var sel = (state.brakeL2===r.l2);
+    var share = t.step>0 ? 100*r.step/t.step : null;
+    return '<tr class="clickable'+(sel?' sel':'')+'" data-l2="'+r.l2+'">'
+      +'<td>'+esc(P.l2[r.l2] || '')+'</td>'
+      +'<td class="n">'+fmtNum(r.pn)+'</td>'
+      +'<td class="n">'+fmtNum(r.rows)+'</td>'
+      +'<td class="n">'+fmtEur(r.all)+'</td>'
+      +'<td class="n">'+fmtEur(r.prior)+'</td>'
+      +'<td class="n">'+fmtEur(r.new)+'</td>'
+      +'<td class="n">'+fmtEur(r.step)+'</td>'
+      +'<td class="n">'+fmtPct(r.pct)+'</td>'
+      +'<td class="n">'+fmtPct(share,1)+'</td></tr>';
+  }).join('');
+  Array.prototype.forEach.call(tb.querySelectorAll('tr'), function(tr){
+    tr.addEventListener('click', function(){
+      var l2 = Number(tr.getAttribute('data-l2'));
+      state.brakeL2 = (state.brakeL2 === l2) ? null : l2;
+      render();
+    });
+  });
+}
+/* Part numbers behind the biggest brake moves: those of the level 2 group
+   selected in the table above, or the whole brake family when none is selected. */
+function drawBrakePn(){
+  document.getElementById('brake-crumb').innerHTML =
+    '<b>Part numbers: ' + ((state.brakeL2===null||state.brakeL2===undefined)
+      ? 'all brake groups'
+      : '<span id="brake-back">'+esc(P.l2[state.brakeL2])
+        +' — click to go back to all groups</span>')
+    + '</b>';
+  var backEl = document.getElementById('brake-back');
+  if(backEl) backEl.addEventListener('click', function(){ state.brakeL2 = null; render(); });
+  var pns = brakePnRows();
+  /* One row per part number for the scope, not one per distributor: the same pad
+     kit is billed in thirteen markets and must not appear thirteen times in a
+     ranking. Base prices sit on the part number, so they are taken as-is; units,
+     euro and step are added up across the distributors that carry it. */
+  var byPn = {}, order = [];
+  for(var i=0;i<pns.length;i++){
+    var r = pns[i];
+    var o = byPn[r[3]];
+    if(!o){
+      o = {pn:r[3], l2:r[2], prior:r[4], new:r[5], qty:0, billed:0, step:0,
+           dbs:{}, dbN:0};
+      byPn[r[3]] = o; order.push(o);
+    }
+    o.qty += r[6]; o.billed += r[7]; o.step += r[8];
+    if(!o.dbs[r[0]]){ o.dbs[r[0]] = 1; o.dbN += 1; }
+  }
+  pns = order;
+  var sk = state.brakePnSort.key, sd = state.brakePnSort.dir;
+  function val(r, key){
+    if(key==='pn') return P.pn[r.pn] || '';
+    if(key==='desc') return P.desc[r.pn] || '';
+    if(key==='l2') return P.l2[r.l2] || '';
+    if(key==='units') return r.qty;
+    if(key==='billed') return r.billed;
+    if(key==='prior') return r.prior;
+    if(key==='new') return r.new;
+    if(key==='dbs') return r.dbN;
+    if(key==='pct') return r.prior>0 ? 100*(r.new/r.prior-1) : null;
+    return r.step;
+  }
+  pns.sort(function(a,b){
+    var av = val(a,sk), bv = val(b,sk);
+    if(av===null||av===undefined) av = (typeof bv==='string' ? '' : -1e99);
+    if(bv===null||bv===undefined) bv = (typeof av==='string' ? '' : -1e99);
+    if(typeof av==='string'){
+      var cmp = String(av).localeCompare(String(bv), undefined, {sensitivity:'base'});
+      return sd<0 ? -cmp : cmp;
+    }
+    if(av===bv) return b.step-a.step;
+    return sd<0 ? (bv-av) : (av-bv);
+  });
+  drawBrakePnHead(sk, sd);
+  Array.prototype.forEach.call(
+    document.querySelectorAll('#brake-pn thead th[data-sort]'), function(el){
+    el.addEventListener('click', function(){
+      var key = el.getAttribute('data-sort');
+      if(state.brakePnSort.key===key) state.brakePnSort.dir *= -1;
+      else {
+        state.brakePnSort.key = key;
+        state.brakePnSort.dir = (key==='pn'||key==='desc'||key==='l2') ? 1 : -1;
+      }
+      drawBrakePn();
+    });
+  });
+  document.querySelector('#brake-pn tbody').innerHTML = pns.length ? pns.map(function(r){
+    var pct = r.prior>0 ? 100*(r.new/r.prior-1) : null;
+    return '<tr><td>'+esc(P.pn[r.pn])+'</td><td>'+esc(P.desc[r.pn]||'')+'</td>'
+      +'<td>'+esc(P.l2[r.l2]||'')+'</td>'
+      +'<td class="n">'+fmtNum(Math.round(r.qty))+'</td>'
+      +'<td class="n">'+fmtEur(r.billed)+'</td>'
+      +'<td class="n">'+fmtNum(r.prior)+'</td>'
+      +'<td class="n">'+fmtNum(r.new)+'</td>'
+      +'<td class="n">'+fmtEur(r.step)+'</td>'
+      +'<td class="n">'+fmtPct(pct)+'</td>'
+      +'<td class="n">'+fmtNum(r.dbN)+'</td></tr>';
+  }).join('') : '<tr><td colspan="10" class="muted">No priced brake part numbers for this selection.</td></tr>';
+}
+function drawBrakePnHead(sk, sd){
+  document.querySelector('#brake-pn thead').innerHTML = '<tr>' + [
+    ['pn','Part number',false],['desc','Description as billed',false],['l2','AIM level 2',false],
+    ['units','Units',true],['billed','Parts billed',true],['prior','Prior base JPY',true],
+    ['new','New base JPY',true],['step','Step €',true],['pct','Weighted',true],
+    ['dbs','Distributors',true]
+  ].map(function(c){
+    var key=c[0], label=c[1], num=c[2];
+    var on = sk===key, cls = [];
+    if(num) cls.push('n');
+    if(on) cls.push('on');
+    var mark = on ? (sd<0 ? ' ↓' : ' ↑') : '';
+    return '<th'+(cls.length?' class="'+cls.join(' ')+'"':'')+' data-sort="'+key+'">'
+      +label+'<span class="sortmark">'+mark+'</span></th>';
+  }).join('') + '</tr>';
+}
+function drawBrakeChart(rows){
+  /* Part-to-whole of the brake step across the level 2 groups. Three named groups
+     plus a combined remainder stays inside the four-segment limit; the ranking is
+     left to the table above, which carries all eight groups. */
+  var named = rows.slice(0,3);
+  var restE = rows.slice(3).reduce(function(s,r){ return s+r.step; },0);
+  var labels = named.map(function(r){ return P.l2[r.l2]; });
+  var vals = named.map(function(r){ return r.step; });
+  if(restE>0){ labels.push('All other groups'); vals.push(restE); }
+  if(!vals.length){ labels = ['No priced brake lines']; vals = [1]; }
+  var tot = vals.reduce(function(a,b){ return a+b; },0);
+  chart('c-brake', {
+    type:'doughnut',
+    data:{ labels:labels, datasets:[{ data:vals,
+      backgroundColor:[NAVY,TERRA,SAND,GREY], borderColor:'#fff', borderWidth:2 }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'52%',
+      plugins:{ legend:{position:'bottom',labels:{font:{size:12},boxWidth:12,padding:12}},
+        tooltip:{callbacks:{ label:function(c){
+          return c.label + ': ' + fmtEur(c.raw) + ' (' + fmtPct(100*c.raw/tot,1)
+            + ' of the brake step)'; }}} } },
+    plugins:[{ id:'brakeCentre', afterDraw:function(ch){
+      var g=ch.ctx; g.save(); g.textAlign='center'; g.textBaseline='middle';
+      var x=(ch.chartArea.left+ch.chartArea.right)/2, y=(ch.chartArea.top+ch.chartArea.bottom)/2-6;
+      g.fillStyle=NAVY; g.font='600 17px Georgia, serif';
+      g.fillText(fmtEur(tot), x, y);
+      g.fillStyle='#6b6459'; g.font='11px sans-serif';
+      g.fillText('brake step', x, y+17); g.restore();
+    }}]
+  });
+}
+/* ---------- step concentration ---------- */
+var concScope = 'all';
+function concNow(){
+  var set = (/brake/.test(concScope) ? (D.conc_brake||{}) : (D.conc_all||{}));
+  var key = state.db < 0 ? '__net__' : P.db[state.db];
+  return { c: set[key] || null, key: key };
+}
+function drawConc(){
+  var got = concNow(), c = got.c;
+  var isBrake = /brake/.test(concScope);
+  var named = (got.key === '__net__') ? 'the network' : got.key;
+  document.getElementById('t-conc').textContent = isBrake
+    ? 'How few brake part numbers carry the increase?'
+    : 'How few part numbers carry the increase?';
+  document.getElementById('q-conc').textContent =
+    'Every priced part number for ' + named + (isBrake ? ', brake family only,' : '')
+    + ' ranked by its euro step and added up from the largest down. The curve is the share of the '
+    + 'total step the biggest part numbers carry; the two figures are where half and eighty per cent '
+    + 'of the step is reached. Part numbers that did not move carry no step and are left out of the '
+    + 'count, so they do not pad it.';
+
+  var figs = '';
+  if(!c || !c.n){
+    figs = '<div class="fig"><div class="fv">—</div>'
+      +'<div class="fl">No priced step for this selection</div></div>';
+    document.getElementById('conc-figs').innerHTML = figs;
+    return;
+  }
+  figs += '<div class="fig t"><div class="fv">'+fmtNum(c.half)
+    +'<span class="info" tabindex="0">i<span class="tip">Counted from the largest step down until '
+    +'half of the total step euro is reached. Part numbers that did not move are not counted.</span>'
+    +'</span></div>'
+    +'<div class="fl">Part numbers carry half of the step</div>'
+    +'<div class="fn">half of '+fmtEur(c.total)+'</div></div>';
+  figs += '<div class="fig t"><div class="fv">'+fmtNum(c.eighty)
+    +'<span class="info" tabindex="0">i<span class="tip">Counted from the largest step down until '
+    +'eighty per cent of the total step euro is reached.</span></span></div>'
+    +'<div class="fl">Part numbers carry eighty per cent</div>'
+    +'<div class="fn">of '+fmtEur(c.total)+'</div></div>';
+  figs += '<div class="fig"><div class="fv">'+fmtNum(c.positive)
+    +'</div><div class="fl">Part numbers moved up</div>'
+    +'<div class="fn">of '+fmtNum(c.n)+' carrying a step</div></div>';
+  figs += '<div class="fig"><div class="fv">'+fmtEur(c.total)
+    +'</div><div class="fl">Total step</div>'
+    +'<div class="fn">'+esc(named)+(isBrake?' · brakes':' · all families')+'</div></div>';
+  document.getElementById('conc-figs').innerHTML = figs;
+
+  var pts = c.curve || [];
+  var labels = pts.map(function(p){ return p[0]; });
+  var vals = pts.map(function(p){ return p[1]; });
+  chart('c-conc', {
+    type:'line',
+    data:{ labels:labels, datasets:[
+      { label:'Share of the total step carried', data:vals, borderColor:TERRA,
+        backgroundColor:'rgba(192,85,45,.16)', fill:true, tension:.25,
+        pointRadius:pts.map(function(p){ return p[0]<=12 ? 3 : 0; }),
+        pointBackgroundColor:TERRA, borderWidth:2, pointHoverRadius:4 },
+      { label:'Half of the step', data:labels.map(function(){ return 50; }),
+        borderColor:NAVY, borderDash:[6,4], borderWidth:1.5, pointRadius:0, fill:false },
+      { label:'Eighty per cent', data:labels.map(function(){ return 80; }),
+        borderColor:GREY, borderDash:[3,3], borderWidth:1.5, pointRadius:0, fill:false }
+    ] },
+    options:{ responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index', intersect:false},
+      plugins:{ legend:{position:'bottom',labels:{font:{size:12},boxWidth:12}},
+        tooltip:{callbacks:{
+          title:function(items){ return fmtNum(items[0].label) + ' part numbers in'; },
+          label:function(ctx){
+            if(ctx.datasetIndex===0) return fmtPct(ctx.raw,1) + ' of the total step';
+            return ctx.dataset.label;
+          }}}},
+      scales:{
+        x:{ grid:{display:false},
+            title:{display:true, text:'Part numbers, largest step first',
+              font:{size:11}, color:'#6b6459'},
+            ticks:{font:{size:11}, maxRotation:0, autoSkip:true, maxTicksLimit:14} },
+        y:{ beginAtZero:true, suggestedMax:100, grid:{color:'#eceae4'},
+            title:{display:true, text:'Cumulative share of the step',
+              font:{size:11}, color:'#6b6459'},
+            ticks:{callback:function(v){ return v+'%'; },font:{size:11}} } },
+      animation:{duration:250} }
+  });
+}
 /* ---------- KPI chips ---------- */
 function kpis(t){
   var scope;
@@ -1342,34 +1706,14 @@ function drawMovers(){
   }).join('') : '<tr><td colspan="10" class="muted">No part number above the cut for this selection.</td></tr>';
 }
 
-/* ---------- customers ---------- */
-function drawCusts(){
-  var rows = rollupCustomers([0,1,2,3]);
-  rows.sort(function(a,b){ return metricOf(b)-metricOf(a); });
-  document.querySelector('#custs thead').innerHTML =
-    '<tr><th>Code</th><th>Account</th><th>Distributor</th><th>Source</th>'
-    +'<th class="n">Part numbers</th><th class="n">Units</th><th class="n">Parts billed</th>'
-    +'<th class="n">Lines not priced</th><th class="n">Unpriced €</th>'
-    +'<th class="n">Step €</th><th class="n">Weighted</th></tr>';
-  document.querySelector('#custs tbody').innerHTML = rows.map(function(r){
-    return '<tr><td>'+esc(P.cust[r.kk[0]])+'</td><td>'+esc(P.cname[r.kk[1]])+'</td>'
-      +'<td>'+esc(P.db[r.kk[2]])+'</td><td>'+srcPill(r.kk[3])+'</td>'
-      +'<td class="n">'+fmtNum(r.pn)+'</td><td class="n">'+fmtNum(Math.round(r.qty))+'</td>'
-      +'<td class="n">'+fmtEur(r.all)+'</td>'
-      +'<td class="n"'+(r.unpricedN>0?' style="color:#a8721f;font-weight:600"':'')+'>'
-        +fmtNum(r.unpricedN)+'</td>'
-      +'<td class="n">'+fmtEur(r.unpriced)+'</td>'
-      +'<td class="n">'+fmtEur(r.step)+'</td><td class="n">'+fmtPct(r.pct)+'</td></tr>';
-  }).join('');
-}
-
 /* ---------- page ---------- */
 function render(){
   try{
     var t = totalsNow();
     kpis(t);
   }catch(e){ window.__err.push('kpis: '+e.message); }
-  [drawCustMix, drawCustPn, drawLeague, drawL1, drawMix, drawSrc, drawDrill, drawMovers, drawCusts].forEach(function(fn){
+  [drawCustMix, drawCustPn, drawLeague, drawL1, drawMix, drawSrc, drawDrill, drawMovers,
+   drawConc, drawBrake].forEach(function(fn){
     try{ fn(); }catch(e){ window.__err.push(fn.name + ': ' + e.message); }
   });
   document.getElementById('errbar').style.display = window.__err.length ? 'block' : 'none';
@@ -1391,6 +1735,7 @@ function setCust(i){
   state.custL2 = null;
   state.custL3 = null;
   state.custOther = null;
+  state.brakeL2 = null;
   if(state.cust >= 0){
     var dbi = custDb(state.cust);
     if(dbi >= 0){ state.db = dbi; state.l1 = -1; state.l2 = -1; state.l3 = -1; }
@@ -1404,6 +1749,7 @@ function setCust(i){
 function setDb(i){
   state.db = coerceIdx(i);
   state.l1 = -1; state.l2 = -1; state.l3 = -1;
+  state.brakeL2 = null;
   state.custL1 = -1; state.custL2 = null; state.custL3 = null; state.custOther = null;
   /* Clearing the distributor also clears a customer focus that belonged to another DB. */
   if(state.cust >= 0 && state.db >= 0 && custDb(state.cust) !== state.db){
@@ -1475,6 +1821,11 @@ function init(){
 
   dbSel.addEventListener('change', function(){ setDb(coerceIdx(this.value)); });
   srcSel.addEventListener('change', function(){ setSrc(coerceIdx(this.value)); });
+  var concSel = document.getElementById('concscope');
+  concSel.addEventListener('change', function(){
+    concScope = (/brake/.test(this.value) ? 'brake' : 'all');
+    drawConc();
+  });
   Array.prototype.forEach.call(document.querySelectorAll('#meas button'), function(b){
     b.addEventListener('click', function(){
       setMetric(b.getAttribute('data-m'));
@@ -1487,6 +1838,10 @@ function init(){
     state.db=-1; state.src=-1; state.l1=-1; state.l2=-1; state.l3=-1; state.metric='pct';
     state.cust=-1; state.custL1=-1; state.custL2=null; state.custL3=null; state.custOther=null;
     state.custPnSort = { key:'step', dir:-1 };
+    state.brakeL2 = null; state.brakePnSort = { key:'step', dir:-1 };
+    concScope = 'all';
+    var cs = document.getElementById('concscope');
+    if(cs) cs.value = 'all';
     document.getElementById('db').value='-1';
     document.getElementById('src').value='-1';
     Array.prototype.forEach.call(document.querySelectorAll('#meas button'), function(x){
@@ -1506,7 +1861,15 @@ function init(){
         function(e){ return e.textContent; }),
       drill: document.querySelectorAll('#drill tbody tr').length,
       movers: document.querySelectorAll('#movers tbody tr').length,
-      custs: document.querySelectorAll('#custs tbody tr').length,
+      brakeL2: document.querySelectorAll('#brake-l2 tbody tr').length,
+      brakePn: document.querySelectorAll('#brake-pn tbody tr').length,
+      brakeL2Sel: state.brakeL2,
+      brakeFigs: Array.prototype.map.call(document.querySelectorAll('#brake-figs .fv'),
+        function(e){ return e.textContent; }),
+      concFigs: Array.prototype.map.call(document.querySelectorAll('#conc-figs .fv'),
+        function(e){ return e.textContent; }),
+      concScope: concScope,
+      accounts: document.getElementById('custs') === null ? 'removed' : 'present',
       custPn: document.querySelectorAll('#cust-pn tbody tr').length,
       custPnSort: state.custPnSort,
       cust: state.cust,
@@ -1515,7 +1878,7 @@ function init(){
       custL3: state.custL3,
       crumb: document.getElementById('crumb').textContent,
       custCrumb: document.getElementById('cust-crumb').textContent,
-      charts: ['c-cust-mix','c-league','c-l1','c-mix','c-src'].map(function(id){
+      charts: ['c-cust-mix','c-league','c-l1','c-mix','c-src','c-brake','c-conc'].map(function(id){
         var el = document.getElementById(id);
         var ch = el && window.Chart.getChart(el);
         return { id:id, type: ch? ch.config.type : null,
@@ -1566,6 +1929,10 @@ function init(){
     + '. The remainder appears as its own row or its own filter value and stays inside every euro total. '
     + 'Israel is UMI and UTI as two separate distributors, never one blended figure. Price classes '
     + '(C, D, F, J, M, P, T, V) are IML-owned and are not a lever here. '
+    + '<br><br><b>Brakes and the concentration curves.</b> Families follow the corrected AIM taxonomy, '
+    + 'the same one used in every other panel on this page. The brake view and the concentration curves '
+    + 'count part numbers that moved up; part numbers that did not move carry no step and are left out, '
+    + 'so the counts are not padded with rows that add nothing. '
     + '<br><br><b>Not modelled.</b> No elasticity, no revenue, margin or customer-behaviour response. '
     + 'The weighted percentage is a base-price move on prior billing quantities.';
 

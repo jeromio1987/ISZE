@@ -22,6 +22,35 @@ Other fixes in the same pass:
     invented a 100%-risk "priority target" out of the UNMAPPED row.
   * Each row carries `year_coverage_pct` / `is_partial_year` so downstream
     consumers can refuse to read a part-year absolute as a full-year number.
+
+Part-year re-check 2026-09-22 (SPU-PARTIAL follow-up)
+----------------------------------------------------
+This file was re-examined because `gps_spu_by_distributor.csv` was found to pair a
+part-year numerator with a full-year target. **The 2026 quadrant LABELS are not
+misleading and are unchanged.** Established, not assumed:
+
+  * Both axes are a value against a **within-year** median, so every distributor is
+    truncated by the same window and the comparison is internally fair. That is the
+    same principle the pipeline applies elsewhere.
+  * Scaling the GPS axis - alone, not just both axes together - by 8/12 or 12/8
+    changes **no** 2026 quadrant. The six 2026 `priority_target` markets
+    (GREECE, HUNGARY, IUK, NORWAY, SWEDEN, UMI) sit in two tight groups,
+    58.0-142.8 below the 119.997 median and 174.1-248.1 above it, so the bands are
+    wide enough to absorb a 50% axis move.
+  * Those six are also `priority_target` in 2024 and 2025 on the same method, so
+    the 2026 labels are not an artefact of the partial year.
+
+What **is** easy to misread, and why this note exists: `gps_spu_eur` is a **rate for
+the eight months the row covers**, not a full-year rate, and `capture_axis` is an
+eight-month numerator over a **full-year** `expected_qty` (that denominator is
+identical in 2023, 2024, 2025 and 2026 - it is fleet x services/year). Both are
+correctly computed for what they are. A reader who treats the column as a €/truck
+rate comparable with 2025 will be wrong; the row's own `is_partial_year` and
+`year_coverage_pct` are the guard. **Do not "fix" this by blanking the quadrant or
+the rate - the ranking is sound and blanking it would lose the only spread the
+matrix has.** Residual risk, stated plainly: the two-group structure is what makes
+the ranking scale-robust, and if the fleet moves so that a market sits near the
+median, that market's quadrant would become scale-sensitive.
 """
 
 from __future__ import annotations
@@ -114,7 +143,6 @@ def main() -> int:
         if not p.exists():
             print(f"Missing {p.name} -- run build_bvp_p4_p5.py / P0-P1 first", flush=True)
             return 1
-
     gps = pd.read_csv(GPS_SPU_BY_DB_CSV)
     aim = pd.read_csv(AIM_EXPOSURE_BY_DB_CSV)
 
