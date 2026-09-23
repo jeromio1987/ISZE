@@ -1,0 +1,190 @@
+﻿AFTER 2026-09-21T21:52:28.2610226+02:00
+TOTAL=188
+ M .cursor/hooks/.decisions-awaiting-announced.json
+ M .cursor/rules/jerome-talk-clear.mdc
+ M 00_docs/agent/STATE_PACKET.md
+ M 00_docs/roadmaps/pricing.md
+ M 01_data/00_derived/HANDOFF_AIR_FILTER_AND_FOCUS_CUT.md
+ M 01_data/00_derived/_verification_report.json
+ M 01_data/00_derived/_verification_report.md
+ M 01_data/00_derived/aim_bvp_family_risk.csv
+ M 01_data/00_derived/aim_exposure_by_db_year.csv
+ M 01_data/00_derived/aim_gps_matrix.csv
+ M 01_data/00_derived/aim_gps_matrix.parquet
+ M 01_data/00_derived/aim_pn_classification.csv
+ M 01_data/00_derived/aim_pn_classification_20260920.meta.json
+ M 01_data/00_derived/aim_pn_classification_v2.csv
+ M 01_data/00_derived/basket_correlation.csv
+ M 01_data/00_derived/bvp_addressable_basket.csv
+ M 01_data/00_derived/bvp_pn_dimension.csv
+ M 01_data/00_derived/bvp_pn_dimension.parquet
+ M 01_data/00_derived/capture_recovery_model.csv
+ M 01_data/00_derived/capture_trajectory.csv
+ M 01_data/00_derived/db_benchmark_mix.csv
+ M 01_data/00_derived/db_benchmark_mix_group.csv
+ M 01_data/00_derived/db_benchmark_mix_subgroup.csv
+ M 01_data/00_derived/gps_spu_by_distributor.csv
+ M 01_data/00_derived/gps_spu_by_family.csv
+ M 01_data/00_derived/gps_spu_pms.csv
+ M 01_data/00_derived/ituk_pms_pn_audit.csv
+ M 01_data/00_derived/mislabelled_sku_audit.csv
+ M 01_data/00_derived/mix_genuine_bvp_by_family.csv
+ M 01_data/00_derived/mix_genuine_bvp_by_group.csv
+ M 01_data/00_derived/mix_genuine_bvp_by_subgroup.csv
+ M 01_data/00_derived/mix_genuine_bvp_pms.csv
+ M 01_data/00_derived/network_percentile.csv
+ M 01_data/00_derived/part_lifecycle.csv
+ M 01_data/00_derived/parts_catalog_dimension.csv
+ M 01_data/00_derived/parts_catalog_dimension.parquet
+ M 01_data/00_derived/pms_capture_by_db_year.csv
+ M 01_data/00_derived/pms_capture_by_db_year.parquet
+ M 01_data/00_derived/pms_capture_by_family.csv
+ M 01_data/00_derived/pms_capture_by_family.meta.json
+ M 01_data/00_derived/pms_family_evolution_both_clocks.csv
+ M 01_data/00_derived/pms_opportunity_matrix.csv
+ M 01_data/00_derived/pms_summary_by_db.csv
+ M 01_data/00_derived/pr00_classification.csv
+ M 01_data/00_derived/price_premium.csv
+ M 01_data/00_derived/pricing_aim_source_cube.csv
+ M 01_data/00_derived/pricing_aim_source_lines.parquet
+ M 01_data/00_derived/pricing_aim_source_meta.json
+ M 01_data/00_derived/pricing_stack_simulation_2026-09-19.json
+ M 01_data/00_derived/revenue_concentration.csv
+ M 01_data/00_derived/sales_by_db_fig_key_year.csv
+ M 01_data/00_derived/sales_fact.parquet
+ M 01_data/00_derived/sales_with_crossref.parquet
+ M 01_data/00_derived/substitution_by_db_year.csv
+ M 01_data/00_derived/substitution_by_pair_year.csv
+ M 01_data/00_derived/substitution_timeline.csv
+ M 01_data/00_derived/vor_airfreight_risk.csv
+ M 01_data/00_derived/vor_profile.csv
+ M 01_data/00_derived/vor_seasonality.csv
+ M 01_data/14_dashboards/tender_data.json
+ M 01_data/91_build/build_aim_classification_20260920.py
+ M 01_data/91_build/build_aim_master.py
+ M 01_data/91_build/export_aim_pn_categories_figkey_xlsx.py
+ M 01_data/91_build/rebuild_aim_classification_paper.py
+ M 01_data/91_build/verify_aim_classification.py
+ D 02_dashboards/_build/_tmp_covcheck.py
+ D 02_dashboards/_build/_tmp_de_subst.py
+ D 02_dashboards/_build/_tmp_leak_probe.py
+ D 02_dashboards/_build/_tmp_leakage_probe.py
+ D 02_dashboards/_build/_tmp_repcheck.py
+ M 02_dashboards/_build/build_exec_aftersales_paper.py
+ M 02_dashboards/ids/IDS_2026_Portugal_dealer_map.html
+ M 02_dashboards/ids/IDS_2026_dealer_compare_Portugal.html
+ M 02_dashboards/ids/IDS_all_dashboards_2026-08-19/02_country/IDS_2026_dealer_compare_Portugal.html
+ M 02_dashboards/pricing/ISZE_AIM_Repertoire_Map_2026-09-17.html
+ M 02_dashboards/pricing/ISZE_AIM_Repertoire_Spider_2026-09-17.html
+ M 02_dashboards/pricing/ISZE_Price_Increase_5pct_Flat_REVIEW_2026-09-17.html
+ M 02_dashboards/pricing/ISZE_Pricing_Policy_Paper.html
+ M 02_dashboards/pricing/ISZE_Pricing_Policy_Paper_REV3.html
+ M 02_dashboards/pricing/ISZE_Pricing_Revision_AIM_FX_20261001.html
+ M 02_dashboards/pricing/ISZE_Pricing_Revision_AIM_Source.html
+ M 02_dashboards/pricing/ISZE_Pricing_Revision_AIM_Source_PROTOTYPE_AllDB.html
+ M 02_dashboards/pricing/ISZE_Pricing_Revision_AIM_Source_PROTOTYPE_NordicsCust.html
+ M 02_dashboards/pricing/OPEN_Pricing_Revision_AIM_Source_PROTOTYPE_NordicsCust.cmd
+ M 02_dashboards/pricing/_build/_fx_overlay_20261001_meta.json
+ M 02_dashboards/pricing/_build/_spec_basis_meta.json
+ M 02_dashboards/pricing/_build/aim_repertoire_map_2026-09-17/build_aim_repertoire_payload.py
+ M 02_dashboards/pricing/_build/aim_repertoire_map_2026-09-17/payload.json
+ M 02_dashboards/pricing/_build/build_pricing_engine_readiness_dashboard.py
+ M 02_dashboards/pricing/_build/build_pricing_policy_paper.py
+ M 02_dashboards/pricing/_build/build_pricing_policy_paper_rev3.py
+ M 02_dashboards/pricing/_build/build_pricing_simulation_spec_basis.py
+ M 02_dashboards/pricing/_build/price_5pct_review_2026-09-17/price_increase_5pct_summary.json
+ M 02_dashboards/pricing/_build/pricing_dashboard_data.json
+ M 02_dashboards/sales/ISZE_AIM_Classification_Paper.html
+ M 02_dashboards/sales/ISZE_PMS_Family_Evolution_v2.SHIP_RECEIPT.json
+ M 02_dashboards/sales/ISZE_PMS_Family_Evolution_v2.html
+ M 02_dashboards/sales/_build/_syntax_check_v2.js
+ M 02_dashboards/sales/_build/build_family_evolution_v2.py
+ M 02_dashboards/sales/_build/qa_family_evolution_v2.py
+ M 02_dashboards/sales/_qa_v2/qa_stats.json
+ M 02_dashboards/sync_to_deploys.ps1
+ M 03_analytics/Isuzu/prism/data/facts_anchor.yaml
+ M 03_analytics/Isuzu/prism/data/fig_key_taxonomy.yaml
+ M 03_analytics/Isuzu/prism/data/verification_fixtures.yaml
+ M 03_analytics/Isuzu/prism/modules/aim_pn_classifier.py
+ M 03_analytics/Isuzu/prism/scripts/build_sales_fact_from_cy.py
+ M 03_analytics/Isuzu/prism/scripts/verify_derived_pipeline.py
+ M 03_analytics/isze_pricing/config.yaml
+ M 03_analytics/isze_pricing/engine.py
+ M 04_tools/ISZE_Tender_Monitor_Install/_source_health.json
+ M 04_tools/ISZE_Tender_Monitor_Install/build_dashboard_v2.py
+ M 04_tools/ISZE_Tender_Monitor_Install/isze_core_v3.py
+ M 04_tools/ISZE_Tender_Monitor_Install/isze_dashboard_v2.html
+ M 04_tools/ISZE_Tender_Monitor_Install/isze_dashboard_v4_data.json
+ M 04_tools/ISZE_Tender_Monitor_Install/isze_dashboard_v4_opportunity.html
+ M 04_tools/ISZE_Tender_Monitor_Install/tender_monitor_log.txt
+ M 04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py
+ M 04_tools/autodoc_scraper/_html_previews/isze_executive_dashboard.html
+ M 04_tools/autodoc_scraper/_html_previews/isze_executive_iam.html
+ M 04_tools/autodoc_scraper/_html_previews/isze_executive_pms.html
+ M 04_tools/autodoc_scraper/_html_previews/isze_iam_drift_trend.html
+ M 04_tools/autodoc_scraper/_html_previews/isze_pms_iam_bridge.html
+ M 04_tools/autodoc_scraper/_snapshots/drift_history.csv
+ M 04_tools/spa_application/build_spa_application.py
+ M 09_meetings/IDS_2026_Country_Packs_v1.4/Portugal/IDS_2026_dealer_compare_Portugal.html
+ M 09_meetings/Imotors_Portugal_IDS_2026/IDS_2026_Portugal_dealer_map.html
+ M 09_meetings/Imotors_Portugal_IDS_2026/IDS_2026_dealer_compare_Portugal.html
+ M CHANGELOG.md
+ M DECISIONS.md
+ M FACTS.md
+?? 00_docs/agent/VERIFICATION_PACK_20260921.md
+?? 01_data/00_derived/AIM_Master_PN_Categories_Figkey_20260921.csv
+?? 01_data/00_derived/OPEN_AIM_Master_PN_Categories_Figkey_20260921.cmd
+?? 01_data/00_derived/_tmp_head_dim_20260921.csv
+?? 01_data/00_derived/aim_classification_leaf_baseline.json
+?? 01_data/00_derived/aim_pn_classification_20260920.csv
+?? 01_data/00_derived/aim_pn_classification_20260920.gate.json
+?? 01_data/00_derived/bp_missing_complete_for_simulation_20260920.csv
+?? 01_data/00_derived/bp_missing_new_for_simulation_20260920.csv
+?? 01_data/00_derived/bp_missing_old_for_simulation_20260920.csv
+?? 01_data/00_derived/ids_dealer_network_cleaned_2026-09-20.csv
+?? 01_data/01_Pricing/OPEN_BP_missing_for_price_simulation_20260920.cmd
+?? 01_data/01_Pricing/OPEN_PACK_AIM_Pricing_7d.cmd
+?? 01_data/01_Pricing/_PACK_AIM_Pricing_7d_20260914_20260920/
+?? 01_data/15_gpt_safe/gpt_review_3_big_2026-09-20/
+?? 01_data/18_CORRECTION_LOG.md
+?? 01_data/91_build/assemble_aim_pricing_7d_pack_20260920.ps1
+?? 01_data/91_build/build_bp_missing_for_simulation_20260920.py
+?? 01_data/91_build/build_gpt_review_3_big_hours_20260920.py
+?? 01_data/91_build/classification_framework_review_20260920.py
+?? 01_data/91_build/clean_versioned_deliverables.py
+?? 01_data/91_build/fix_gpt_review_04_upload_20260920.py
+?? 01_data/91_build/migrate_off_versioned_names.py
+?? 01_data/91_build/modules_figkey_labels.py
+?? 01_data/91_build/zkk_vs_aim_pack_population_20260920.py
+?? 01_data/AIM_Photo_Completion_for_Cursor_2026-09-20/
+?? 01_data/CURSOR_AIM_BVP_VISUAL_DIRECTION.md
+?? 01_data/CURSOR_FILES_NEEDED_FOR_AIM_BVP.md
+?? 01_data/CURSOR_TONNAGE_FEEDBACK_2026-09-20.md
+?? 01_data/ISUZU_Atlas_v0_2_Review_and_Handoff.md
+?? 01_data/ISUZU_Network_Atlas_v0_2.html
+?? 02_dashboards/AIM_Parts_Atlas_v1.0.html
+?? 02_dashboards/AIM_Parts_Atlas_v1.1.html
+?? 02_dashboards/AIM_Parts_Atlas_v2.0.html
+?? 02_dashboards/ids/IDS_2026_atlas0.1.html
+?? 02_dashboards/ids/ISZE_AIM_Text_Checked_2026-09-20.pptx
+?? 03_nseries_band_evolution.meta.json
+?? 04_tools/ISZE_Tender_Monitor_Install/filter_audit_2026-09-20.json
+?? 04_tools/ISZE_Tender_Monitor_Install/tests/
+?? 04_tools/_shared/classification_paths.py
+?? 04_tools/ids_dealer_ranking/draft_yoshimoto_portugal_visit.py
+?? 04_tools/ids_dealer_ranking/inline_leaflet_portugal.py
+?? 04_tools/workspace/INSTALL_daily_brief.cmd
+?? 04_tools/workspace/ISZE_Daily_BriefTask.xml
+?? 04_tools/workspace/isze_daily_agent.py
+?? 04_tools/workspace/isze_daily_check.py
+?? 04_tools/workspace/run_daily_check.cmd
+?? 05_memory/briefs/automation_drift_2026-09-21.md
+?? 05_memory/briefs/daily_agent_report_2026-09-20.md
+?? 05_memory/briefs/daily_brief_2026-09-20.md
+?? 05_memory/briefs/daily_brief_LATEST.md
+?? 09_meetings/ISZE_PMS_Coverage_2026-09-21.SHIP_RECEIPT.json
+?? 09_meetings/OPEN_ISZE_PMS_Coverage_2026-09-21.cmd
+?? 09_meetings/_build/
+?? ISZE_ZKK_AIM_Independent_Review_Pack/
+?? "Isuzu Universe/"
+?? "Pricing revision/"
