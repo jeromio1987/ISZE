@@ -217,12 +217,14 @@ function render(){
       +'</div><div class="l">'+x.l+'</div></div>';
   }).join('');
 
-  /* fleet mix donut (<=4 segments, one customer) */
-  var fl=bands.map(function(b){return {band:b.label,uio:b.uio};});
+  /* fleet mix donut (<=5 segments, one customer). One fixed colour per band, so a band keeps its
+     colour from customer to customer instead of taking whatever position it lands in. */
+  var BANDCOL={'LCV_D-Max':GREEN,'3.5t_N35':NAVY,'5.5t_N50_N55':AMBER,'7.5t_N50_N62_N75':TERRA,'F_series_MD_heavy':'#7a8ba6'};
+  var fl=bands.map(function(b){return {band:b.label,uio:b.uio,col:BANDCOL[b.band]||MUTED};});
   mk('c_fleet',{type:'doughnut',
     data:{labels:fl.map(function(x){return x.band;}),
       datasets:[{data:fl.map(function(x){return x.uio;}),
-        backgroundColor:[NAVY,TERRA,'#7a8ba6',GREEN],borderColor:'#fff',borderWidth:2}]},
+        backgroundColor:fl.map(function(x){return x.col;}),borderColor:'#fff',borderWidth:2}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
       plugins:{legend:{display:false},
         tooltip:{backgroundColor:NAVY,titleColor:'#ffd9c4',bodyColor:PAPER,padding:10,
@@ -233,7 +235,7 @@ function render(){
     var tot=fl.reduce(function(a,b){return a+b.uio;},0);
     return '<span data-tip="Fleet in this band, from the derived band model.<br>'
       +'Share of this customer total fleet. Snapshot '+D.snapshot+'.">'
-      +'<i style="background:'+[NAVY,TERRA,'#7a8ba6',GREEN][i]+'"></i>'+x.band
+      +'<i style="background:'+x.col+'"></i>'+x.band
       +' — '+num(x.uio)+' ('+(100*x.uio/tot).toFixed(0)+'%)</span>';
   }).join('');
 

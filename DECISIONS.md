@@ -1297,3 +1297,26 @@ finish. No new dependency (API key) introduced. If this still isn't reliable eno
 after a few weekly runs, the API-key option is still on the table.
 **Docs updated:** `04_tools/manual_review_required.md` Item 4,
 `04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py`.
+
+## 2026-09-23 — NMR / NMR85 ruled onto the 5.5 t rung (European N55 class); 5.5 t rung stays published
+
+**Status:** Accepted (Jerome)
+**Context:** `NMR` and `NMR85` were parked `pending_ruling` in `03_analytics/Isuzu/prism/data/series_to_band.csv`
+(5.5 t or 7.5 t). The 7.5 t reading came from a band list with no 5.5 t entry; no source states 7,500 kg for any NMR.
+Isuzu Sales Deutschland's N55 data sheet (`MODELL NMR88L`, 5.500 kg, Druckstand August 2022) and range page
+(N55/NMR 5,5 t, N75/NPR 7,5 t) were re-read live on 2026-09-23.
+**Decision:** `NMR` and `NMR85` resolve to `5.5t_N50_N55`, scoped to the European N55 class (confidence high / medium).
+The 5.5 t rung stays published (not dropped; dropping it would have moved the exclusive share to 32.39%).
+**Consequences:** Rebuilt the same day: `epc_decode_nseries_banded.csv`, `nseries_tonnage_evolution.csv`,
+`vehicle_band_applicability.csv`, `tonnage_capable_part_numbers.csv`, `ISZE_PMS_Family_Evolution_v2.html`.
+Exclusive share 29.7108% (was 29.7696%; the move is the separate `5878320470` separator fix, not the ruling).
+Outside Europe the same letters are 5.1-6.5 t, so the ruling does not transfer to non-European work.
+**Docs updated:** `01_data/90_INBOX/TONNAGE_FINISH_REPORT_2026-09-23.md`, `TONNAGE_FINISH_CORRECTION_LOG_2026-09-23.md`.
+
+## 2026-09-24 — Malta and Cyprus 3.5 t shares set to 0; FACTS re-anchored
+
+**Status:** Accepted (Jerome: "correct everything, everything should be aligned and corrected")
+**Context:** After the NMR ruling (entry above), Malta's 0.369 and Cyprus's 0.053 "3.5 t share" in `03_analytics/Isuzu/prism/data/uio_ld_n35_share.csv` were shown to be their NMR counts read as N35 (JP register: zero NLR in both).
+**Decision:** Both set to 0; their NMR sit on the 5.5 t rung. Full P0–P5 pipeline re-run (except the `sales_fact` rebuild), FACTS.md and `facts_anchor.yaml` reconciled, including two anchors that had drifted since 2026-09-22 for unrelated reasons (ITUK oil-filter PRISM lane, prior-quarter parts base).
+**Consequences:** Network GPS CY2025 56.6% → 56.5%; Malta GPS 60.9% → 54.5%, Cyprus 63.8% → 63.4%. ITUK oil-filter PRISM-lane capture restated (2025: 79%; 2023 not stated as a rate). Verify 164 pass / 1 warn / 0 fail; facts-drift aligned.
+**Docs updated:** FACTS.md, facts_anchor.yaml, `01_data/90_INBOX/TONNAGE_FINISH_REPORT_2026-09-23.md` (Addendum 4).

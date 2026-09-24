@@ -122,7 +122,7 @@ from the number alone. Corrected figures:
 > so Ireland's true move is **+6.5%**, not +1.3%. **PORTUGAL 62.0% → 69.0%** (1,299 of 1,883
 > N-series, not of all 2,111 register rows) → +12.8%. **BELGIUM 91.8% → 85.7%** (NLR 42 of 49) →
 > +0.5%. **MALTA and CYPRUS are now marked `unmeasured` with their rate held** — both rested on
-> reading NMR88 as an N35, and NMR88 is a 9.5 t truck; Cyprus holds zero 3.5 t in the register.
+> reading NMR88 as an N35, and NMR88 is a 9.5 t truck; Cyprus holds zero 3.5 t in the register. *[Corrected 2026-09-24: NMR / NMR88 is the 5.5 t European N55 (ruled 2026-09-23, DECISIONS.md); no source ever stated 9.5 t. Malta and Cyprus 3.5 t shares are now 0, their NMR sit on the 5.5 t rung.]*
 > Germany (153/697), ITUK and UTI confirmed unchanged. The whole-figure scaling bug this section
 > describes did **not** recur. See `01_data/00_derived/n35_share_audit_20260918.csv`.
 

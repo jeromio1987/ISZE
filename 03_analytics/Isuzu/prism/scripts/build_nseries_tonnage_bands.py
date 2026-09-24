@@ -143,8 +143,12 @@ GROUP_LABEL = {
     GROUP_UNRESOLVED: "Tonnage not stated by the sources",
 }
 
-DUNCAN = ("Duncan Young / ITUK PMS brake deck, slide 14 'Appendix: Service Intervals' — "
-          "01_data/90_INBOX/_ituk_brake_spa_20260915/pptx_dump.txt")
+# The extract this used to cite (01_data/90_INBOX/_ituk_brake_spa_20260915/pptx_dump.txt) is gone
+# from disk (checked 2026-09-23); the same four interval rows survive verbatim in the April deck text.
+DUNCAN = ("Duncan Young / ITUK PMS brake deck, slide 14 'Appendix: Service Intervals' — the same four "
+          "interval rows, verbatim, in the Isuzu Truck UK 'PMS Project Feedback 27 April 2026' deck "
+          "text, table 'Maintenance Interval Implications' — "
+          "09_meetings/Preparation Meetings/IML_ITUK_PMS/feedback_deck_text.txt lines 17-22")
 RENE24 = ("René Paul / GIDSS workshop-manual print GIDSS_maint_N_MY24.pdf — "
           "01_data/03_PMS/service_schedules/")
 RENE14 = ("René Paul / GIDSS workshop-manual print GIDSS_maint_N_MY14.pdf — "
@@ -277,7 +281,10 @@ def tokens_from_model_codes(value: str) -> tuple[list[str], list[str]]:
 
 def tokens_from_crossref(value: str) -> tuple[list[str], list[str]]:
     out, wild = [], []
-    for raw in re.split(r"[,\s]+", str(value or "").upper()):
+    # '、' and '，' are list separators too: the cross-reference writes 'NKR、NMR,NLR' for
+    # 5878320470, and splitting on ',' alone left 'NKR、NMR' as one unmatched token, so the part
+    # read as NLR-only and landed in the 3.5 t exclusive set (EUR 2,645.43; corrected 2026-09-23).
+    for raw in re.split(r"[,\s、，]+", str(value or "").upper()):
         t = raw.strip().strip("()[]{}").strip()
         if not t:
             continue
@@ -711,8 +718,19 @@ def main() -> int:
         "shared_across_bands_eur": round(shared_eur, 2),
         "series_unresolved_eur": round(unres_eur, 2),
         "tie_out": {
+            # Kept under its old name so nothing that reads it breaks. It is the WHOLE in-family
+            # total, i.e. all four band_status buckets below, not three of them: read literally,
+            # "bands + shared + unresolved" leaves out `no_series_found` (corrected 2026-09-23).
             "bands_plus_shared_plus_unresolved_eur": round(
                 float(banded.loc[banded.in_n_series_family == "yes", "eur_all_years"].sum()), 2),
+            "components_in_family": {
+                st: {"part_numbers": int(len(g)), "eur_all_years": round(float(g.eur_all_years.sum()), 2)}
+                for st, g in banded[banded.in_n_series_family == "yes"].groupby("band_status")},
+            "components_note": (
+                "single_band + shared_across_bands + series_unresolved + no_series_found = the "
+                "in-family total. The evolution file files the last two together as one "
+                "`series_unresolved` membership, so its unresolved euro equals the band file's "
+                "series_unresolved plus no_series_found."),
             "tagged_n_series_billing_eur": round(ns_total, 2),
             "delta_eur": round(abs(ns_total - fam_total), 2),
         },
@@ -727,7 +745,10 @@ def main() -> int:
             "vehicle part) is not put in a band: it belongs to the pooled family row of the parent "
             "page, and banding it here would double-count it.",
             "The three bands plus the pool plus the unresolved group sum to the tagged N-series "
-            "billing, asserted at build time.",
+            "billing, asserted at build time. 'The unresolved group' means both band_status "
+            "buckets with no band - series_unresolved (a series is named but none resolves) and "
+            "no_series_found (no series named at all); the evolution file carries the two as one "
+            "`series_unresolved` membership. Without no_series_found the sum falls short.",
         ],
         "sources": [DUNCAN, RENE24, RENE14, VINREG,
                     "the cross-reference file's registry_model column — "

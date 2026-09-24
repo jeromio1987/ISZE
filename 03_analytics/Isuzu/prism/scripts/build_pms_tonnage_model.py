@@ -50,19 +50,22 @@ META_JSON = DERIVED_DIR / "pms_tonnage_model.meta.json"
 
 norm = lambda x: (str(x).strip().lstrip("0") or "0")  # noqa: E731
 
-# Band definitions. The three tonnage bands plus LCV, which is a separate vehicle class.
-BAND_ORDER = ["LCV_D-Max", "3.5t_N35", "7.5t_N50_N62_N75", "F_series_MD_heavy"]
+# Band definitions. The three N-series rungs plus LCV and F-series, which are vehicle classes.
+# The 5.5 t rung was added 2026-09-23 after the NMR ruling (NMR = the European N55, 5.5 t); before
+# that the model had no 5.5 t band and NMR trucks sat inside the 7.5 t band.
+BAND_ORDER = ["LCV_D-Max", "3.5t_N35", "5.5t_N50_N55", "7.5t_N50_N62_N75", "F_series_MD_heavy"]
 BAND_LABEL = {
     "LCV_D-Max": "LCV / D-Max",
     "3.5t_N35": "3.5 t (N35 Grafter)",
+    "5.5t_N50_N55": "5.5 t (N50 / N55)",
     "7.5t_N50_N62_N75": "7.5 t (N75 / N50 / N62)",
     "F_series_MD_heavy": "F-series / MD (heavy)",
 }
-# Visits a year per band, PRISM lane. cv_std covers both truck bands.
-SVC_PRISM = {"LCV_D-Max": 1.0, "3.5t_N35": 0.5, "7.5t_N50_N62_N75": 0.5,
+# Visits a year per band, PRISM lane. cv_std covers all three truck rungs.
+SVC_PRISM = {"LCV_D-Max": 1.0, "3.5t_N35": 0.5, "5.5t_N50_N55": 0.5, "7.5t_N50_N62_N75": 0.5,
              "F_series_MD_heavy": 0.6667}
 # ITUK's IML v7 lane: filters 1.25, clutch and brake 0.5.
-SVC_IML = {"LCV_D-Max": 1.0, "3.5t_N35": 0.5, "7.5t_N50_N62_N75": 0.5,
+SVC_IML = {"LCV_D-Max": 1.0, "3.5t_N35": 0.5, "5.5t_N50_N55": 0.5, "7.5t_N50_N62_N75": 0.5,
            "F_series_MD_heavy": 0.6667}
 IML_FILTER_CATS = {"oil_filter", "fuel_filter", "air_filter"}
 IML_VISITS_FILTER = 1.25
@@ -85,6 +88,12 @@ def build_band_expected() -> pd.DataFrame:
     buckets = pd.read_csv(PRISM_DATA_DIR / "uio_by_model_bucket.csv").set_index("distributor_code")
     sh = pd.read_csv(PRISM_DATA_DIR / "uio_ld_n35_share.csv")
     n35_share = dict(zip(sh.distributor_code, sh.n35_share))
+    # The 5.5 t share, and which side of the 3.5 t split it is carved from: `n75` for most markets,
+    # `n35` where the recorded 3.5 t share is itself the NMR count (Malta, Cyprus), so no NMR truck
+    # is counted on two rungs. See the evidence_note column of the file.
+    s55 = pd.read_csv(PRISM_DATA_DIR / "uio_n55_share.csv")
+    n55_share = dict(zip(s55.distributor_code, s55.n55_share))
+    n55_from = dict(zip(s55.distributor_code, s55.taken_from))
     cons, wear, country, lcv_override = load_factors()
     factors = {**cons, **wear}
 
@@ -95,9 +104,19 @@ def build_band_expected() -> pd.DataFrame:
         fs = float(b["f_series_uio"])
         lcv = float(b["lcv_uio"])
         s = float(n35_share.get(db, 0.0))
+        s55 = float(n55_share.get(db, 0.0))
+        if n55_from.get(db, "n75") == "n35":
+            if s55 > s + 1e-9:
+                raise SystemExit(f"{db}: 5.5 t share {s55} carved from a 3.5 t share of only {s}")
+            s35, s75 = s - s55, 1 - s
+        else:
+            if s + s55 > 1 + 1e-9:
+                raise SystemExit(f"{db}: 3.5 t {s} + 5.5 t {s55} exceed the N-series fleet")
+            s35, s75 = s, 1 - s - s55
         uio = {
-            "3.5t_N35": cv * s,
-            "7.5t_N50_N62_N75": cv * (1 - s),
+            "3.5t_N35": cv * s35,
+            "5.5t_N50_N55": cv * s55,
+            "7.5t_N50_N62_N75": cv * s75,
             "F_series_MD_heavy": fs,
             "LCV_D-Max": lcv,
         }
@@ -132,7 +151,8 @@ def build_band_expected() -> pd.DataFrame:
     out = pd.DataFrame(rows)
     # Share of the market's expected demand that sits in each band.
     tot = out.groupby(["distributor_code", "pms_category"])["expected_qty_per_year"].transform("sum")
-    out["share_of_market_category_pct"] = (100 * out["expected_qty_per_year"] / tot).round(2)
+    out["_share_raw"] = out["expected_qty_per_year"] / tot
+    out["share_of_market_category_pct"] = (100 * out["_share_raw"]).round(2)
     return out
 
 
@@ -210,9 +230,10 @@ def main() -> int:
     joined = band.merge(actuals, on=["distributor_code", "pms_category"], how="inner")
     joined["actual_is_market_level"] = True
     joined["expected_share_of_market_pct"] = joined["share_of_market_category_pct"]
-    joined["gap_eur_band_share"] = (
-        joined["market_gap_eur"] * joined["share_of_market_category_pct"] / 100
-    ).round(2)
+    # From the unrounded share, so a market's band gaps add back to its market gap to the cent
+    # (the rounded 2-decimal share left up to EUR 141 per market adrift; fixed 2026-09-23).
+    joined["gap_eur_band_share"] = (joined["market_gap_eur"] * joined["_share_raw"]).round(2)
+    joined = joined.drop(columns="_share_raw")
 
     DERIVED_DIR.mkdir(parents=True, exist_ok=True)
     joined.to_csv(BANDS_CSV, index=False)
@@ -240,6 +261,11 @@ def main() -> int:
             "1,238 vehicles in total. It carries an expected demand but almost no attributable "
             "billing, because the billing has no vehicle.",
             "UTI has no 3.5 t band at all: 2,360 CV warranty VINs show no NLR/NMR/NKR.",
+            "The 5.5 t rung (NMR, the European N55) is split out of the N-series fleet with the "
+            "per-market share in prism/data/uio_n55_share.csv: measured parc for Germany, "
+            "registrations for Portugal and the ITUK VIN list, JP shipments elsewhere. Where the "
+            "recorded 3.5 t share is itself the NMR count (Malta, Cyprus) the 5.5 t fleet is carved "
+            "out of it; everywhere else out of the 7.5 t side. Total N-series fleet is unchanged.",
             "The ITUK lane is the IML v7 schedule and is not comparable with the PRISM lane. "
             "Never average or sum the two.",
             "AIM level 1 resolves on 99.3% of billed euro; level 2 on a little less. The "

@@ -1,16 +1,17 @@
 {
-  "generated_at": "2026-09-22T16:21:56+00:00",
+  "generated_at": "2026-09-24T05:53:53+00:00",
   "generated_by": "scripts/build_pms_tonnage_model.py",
   "band_model": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\pms_tonnage_model.csv",
   "aim_model": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_evolution_model.csv",
   "bands": [
     "LCV_D-Max",
     "3.5t_N35",
+    "5.5t_N50_N55",
     "7.5t_N50_N62_N75",
     "F_series_MD_heavy"
   ],
   "rows": {
-    "band_model": 2016,
+    "band_model": 2296,
     "aim_model": 18865
   },
   "lanes": {
@@ -22,6 +23,7 @@
     "The fleet vintage is 2025E for every year, so expected demand is flat over time by construction. Only the billing and the capture move.",
     "F-series exists as a fleet in three markets only (ITUK, Portugal, Ireland) and is 1,238 vehicles in total. It carries an expected demand but almost no attributable billing, because the billing has no vehicle.",
     "UTI has no 3.5 t band at all: 2,360 CV warranty VINs show no NLR/NMR/NKR.",
+    "The 5.5 t rung (NMR, the European N55) is split out of the N-series fleet with the per-market share in prism/data/uio_n55_share.csv: measured parc for Germany, registrations for Portugal and the ITUK VIN list, JP shipments elsewhere. Where the recorded 3.5 t share is itself the NMR count (Malta, Cyprus) the 5.5 t fleet is carved out of it; everywhere else out of the 7.5 t side. Total N-series fleet is unchanged.",
     "The ITUK lane is the IML v7 schedule and is not comparable with the PRISM lane. Never average or sum the two.",
     "AIM level 1 resolves on 99.3% of billed euro; level 2 on a little less. The remainder is reported as Unclassified rather than dropped."
   ]

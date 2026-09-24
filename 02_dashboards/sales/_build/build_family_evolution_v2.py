@@ -2777,8 +2777,8 @@ function renderStatic(pr, lvl){
     +'No source on disk names a vehicle for these, so they appear as their own row rather than being '
     +'spread across the vehicle types.');
   var we=D.weightEvidence||{};
-  lim.push('<b>The tonnage weights come from two sources that agree</b> &mdash; '
-    +'the maintenance schedules and the interval table both place NLR at 3.5 t, NMR at 5.5 t and NPR '
+  lim.push('<b>The tonnage weights</b> &mdash; '
+    +'NLR at 3.5 t, NMR at 5.5 t (the European N55 class, per Isuzu\'s own data sheet) and NPR '
     +'and NNR at 7.5 t. '+(we.unresolvedCodesCount? we.unresolvedCodesCount+' chassis codes are not '
       +'weights at all: '+we.unresolvedCodes.slice(0,8).join(', ')
       +(we.unresolvedCodesCount>8?' and others':'')+' are wildcard fragments from the cross-reference, '
@@ -2825,7 +2825,14 @@ function renderStatic(pr, lvl){
     +D.bands.slice(0,3).map(function(b){
       var rows=D.weightEvidence.settled.filter(function(s){ return s.band===b.key; });
       if(!rows.length) return '';
-      return '<tr><td><b>'+b.label+'</b></td><td>'+rows.map(function(r){ return r.series; }).join(', ')
+      /* The evidence rows carry their own label, and for a band whose weight is not settled that
+         label says so ("... - INTERIM, NOT SETTLED"). Render the row's own wording where the rows
+         agree on it, so the interim qualifier reaches the reader instead of being replaced by the
+         band's clean label. Falls back to the band label when the rows do not agree. */
+      var labs=rows.map(function(r){ return r.label; }).filter(function(v,i,a){
+        return v && a.indexOf(v)===i; });
+      var shown=(labs.length===1? labs[0] : b.label);
+      return '<tr><td><b>'+shown+'</b></td><td>'+rows.map(function(r){ return r.series; }).join(', ')
         +'</td><td>'+rows.map(function(r){ return r.confidence; }).join(', ')
         +'</td><td>'+(D.weightEvidence.sources||[]).slice(0,2).join(' | ')+'</td></tr>';
     }).join('')+'</tbody></table>'

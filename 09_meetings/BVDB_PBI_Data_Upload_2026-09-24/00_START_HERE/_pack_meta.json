@@ -1,0 +1,38 @@
+{
+  "as_of": "2026-09-24",
+  "meeting": "2026-09-23",
+  "folder": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\BVDB_PBI_Data_Upload_2026-09-24",
+  "zip": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\BVDB_PBI_Data_Upload_2026-09-24.zip",
+  "zip_kb": 402.2,
+  "files": 28,
+  "excluded": [
+    "sales_fact / line billing",
+    "order detail",
+    "AIM master PN (~12MB)",
+    "pricing / BP simulation CSVs"
+  ],
+  "data_files_in_manifest": 23,
+  "archive_members": 28,
+  "exchanges": [
+    "The original BVDB_PBI_Data_Upload_2026-09-23.zip is kept unchanged; this corrected archive is a new file beside it."
+  ],
+  "corrected_2026_09_22": [
+    "02_GPS/gps_spu_by_distributor.csv re-annotated: 21 columns including period_basis and coverage_note; 2026 capture % and traffic light left empty/unknown on part-year rows (a part-year numerator over a full-year target is not a capture rate).",
+    "00_START_HERE/HOW_TO.md carries the part-year caveat and the non-parts exclusion note."
+  ],
+  "handover_archive": [
+    "This is the archive to hand over. It is a new file; no earlier archive was overwritten.",
+    "Supersedes BVDB_PBI_Data_Upload_2026-09-23.zip and BVDB_PBI_Data_Upload_2026-09-23_corrected_20260922.zip (the latter renamed to BVDB_PBI_Data_Upload_2026-09-23_corrected_GPS-PARTIAL-YEAR_ONLY_superseded_20260922.zip, which describes what it actually contains)."
+  ],
+  "ceiling_correction_2026_09_22": [
+    "02_GPS/target_spend_waterfall.csv rebuilt from the corrected ceiling: six markets (Portugal, Ireland, Germany, Belgium, Malta, Cyprus) re-derived with the measured 3.5 t share applied. Network ceiling 55,253,312 -> 54,375,729. Parts billed unchanged.",
+    "ceiling_basis and ceiling_as_of columns added so the basis and the date are on the face of the table rather than in a covering note.",
+    "00_START_HERE/HOW_TO.md section 5 now states the ceiling's basis, its as-of date and what moved."
+  ],
+  "correction_2026_09_24": [
+    "Malta and Cyprus 3.5 t share 0.369 / 0.053 -> 0: the old values were the NMR (5.5 t N55) count read as N35; zero NLR in both markets.",
+    "Six files changed, Malta and Cyprus rows only: uio_ld_n35_share, uio_ld_n35_share_notes_optional, target_spend_waterfall, pms_capture_by_db_year, pms_opportunity_matrix, pms_summary_by_db.",
+    "Network ceiling 2025 54,375,729 -> 54,420,472; parts billed unchanged.",
+    "The 2026-09-23 folder and its archives are kept unchanged; this is a new version beside them."
+  ]
+}

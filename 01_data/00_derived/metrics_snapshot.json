@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-09-22T19:42:18Z",
+  "as_of": "2026-09-24T06:00:26Z",
   "generator": "scripts/build_metrics_snapshot.py",
   "metrics": {
     "sales_fact.rows": {
@@ -220,7 +220,7 @@
     "ituk.oil_filter.expected_qty": {
       "value": 17285.6,
       "source": "pms_capture_by_db_year.csv",
-      "note": "23068 bucket UIO x 0.5 svc/yr x 100% addressable"
+      "note": "23068 bucket UIO; cv_std at 0.5 x (1 + N35 share) svc/yr (N35 on the 20,000 km interval), F-series 0.667; 100% addressable"
     },
     "mix.ITUK.genuine_share_eur_pct_2025": {
       "value": 97.3,
@@ -233,7 +233,7 @@
       "note": "overall parts mix, EUR basis"
     },
     "waterfall.network.wallet_eur_2025": {
-      "value": 54375729.0,
+      "value": 54420472.0,
       "source": "wallet_waterfall.csv",
       "note": "GPS max-spend ceiling"
     },
@@ -243,7 +243,7 @@
       "note": ""
     },
     "waterfall.network.gps_pct_2025": {
-      "value": 56.6,
+      "value": 56.5,
       "source": "wallet_waterfall.csv",
       "note": ""
     },
@@ -253,9 +253,9 @@
       "note": "age-flat wallet, UIO v17 projection"
     },
     "defection.active_alerts": {
-      "value": 25,
+      "value": 29,
       "source": "defection_alerts.csv",
-      "note": "data horizon 2026-03"
+      "note": "data horizon 2026-08"
     },
     "leakage.ituk.benchmark_gap_eur": {
       "value": 79118.0,
@@ -263,7 +263,7 @@
       "note": "relative benchmark vs network-median dealer mix"
     },
     "verify.pass": {
-      "value": 164,
+      "value": 163,
       "source": "_verification_report.json",
       "note": ""
     },
@@ -273,7 +273,7 @@
       "note": ""
     },
     "verify.generated": {
-      "value": "2026-09-22T19:35:23Z",
+      "value": "2026-09-24T05:58:51Z",
       "source": "_verification_report.json",
       "note": ""
     }

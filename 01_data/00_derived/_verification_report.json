@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T19:43:13Z",
+  "generated_at": "2026-09-24T06:04:18Z",
   "data_root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data",
   "summary": {
     "pass": 164,
@@ -856,7 +856,7 @@
     {
       "id": "figkey.catalog.coverage",
       "status": "pass",
-      "message": "PNs with fig_key: 161,191 (97.7%, min 95%)",
+      "message": "PNs with fig_key: 161,335 (97.8%, min 95%)",
       "detail": {}
     },
     {
@@ -868,15 +868,15 @@
     {
       "id": "figkey.sales.rows",
       "status": "pass",
-      "message": "sales_by_db_fig_key_year 82,295 rows",
+      "message": "sales_by_db_fig_key_year 82,009 rows",
       "detail": {
-        "rows": 82295
+        "rows": 82009
       }
     },
     {
       "id": "figkey.sales.mapped",
       "status": "pass",
-      "message": "Mapped fig_key rows: 81795 (min 10)",
+      "message": "Mapped fig_key rows: 81544 (min 10)",
       "detail": {}
     },
     {
@@ -982,9 +982,9 @@
     {
       "id": "contract.lost_sales_model",
       "status": "pass",
-      "message": "lost_sales_model 4,111 rows",
+      "message": "lost_sales_model 4,099 rows",
       "detail": {
-        "rows": 4111
+        "rows": 4099
       }
     },
     {
@@ -1045,7 +1045,7 @@
     {
       "id": "lost_sales.price_split_closes",
       "status": "pass",
-      "message": "max residual EUR 0.01 over 2,069 rows",
+      "message": "max residual EUR 0.01 over 2,064 rows",
       "detail": {
         "max_residual_eur": 0.01
       }
@@ -1053,9 +1053,9 @@
     {
       "id": "lost_sales.mix_term_is_not_degenerate",
       "status": "pass",
-      "message": "63.6% of split rows carry a non-zero mix effect",
+      "message": "63.5% of split rows carry a non-zero mix effect",
       "detail": {
-        "mix_nonzero_share": 0.6356
+        "mix_nonzero_share": 0.6347
       }
     },
     {
@@ -1082,9 +1082,9 @@
     {
       "id": "lost_sales.pms_category_coverage_bounded",
       "status": "pass",
-      "message": "service-axis coverage 20.81% of billed euro",
+      "message": "service-axis coverage 20.76% of billed euro",
       "detail": {
-        "coverage_pct": 20.81
+        "coverage_pct": 20.76
       }
     },
     {
@@ -1244,7 +1244,7 @@
     {
       "id": "freshness.no_stale_derived",
       "status": "pass",
-      "message": "28 declared input(s) checked; every derived file is at least as new as its input",
+      "message": "41 declared input(s) checked; every derived file is at least as new as its input",
       "detail": {}
     },
     {

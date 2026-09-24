@@ -588,7 +588,7 @@ but carried the JP VIN register number (36/570). The SIMI parc basis is **464 of
 flow basis 663/1,963 = 0.3377. **BELGIUM 0.918 → 0.8571** (NLR 42 of 49). **PORTUGAL 0.620 →
 0.6899** (1,299 of 1,883 N-series; the old row divided by all 2,111 rows). **MALTA and CYPRUS marked
 `unmeasured`, rates held** — both rested on reading NMR88 as an N35, but NMR88 is 9.5 t and Cyprus
-holds zero 3.5 t. Germany, Greece, ITUK and UTI confirmed. Target wallet (computed, waterfall **not**
+holds zero 3.5 t. *[Corrected 2026-09-24: NMR / NMR88 is the 5.5 t European N55 (ruled 2026-09-23, DECISIONS.md); no source ever stated 9.5 t. Malta and Cyprus 3.5 t shares are now 0, their NMR sit on the 5.5 t rung.]* Germany, Greece, ITUK and UTI confirmed. Target wallet (computed, waterfall **not**
 rebuilt because it is locked): Ireland €935,912 → €856,281, Portugal €2,446,187 → €2,377,877,
 network −0.46%. Verifier 143 pass / 0 fail. Audit: `01_data/00_derived/n35_share_audit_20260918.csv`.
 

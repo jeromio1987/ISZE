@@ -18,10 +18,11 @@ Vocabulary
 a vehicle we model, but it is not a rung on the truck tonnage ladder, so it must never be
 written as one.
 
-Two codes are deliberately not settled and are marked `pending_ruling`:
-`NMR` (5.5 t or 7.5 t - evidence note in `01_data/90_INBOX/`) and nothing else. The interim
-band is whatever the shipped pipeline already used, so a build does not move a number before
-the ruling. `band_for()` returns it; `is_pending_ruling()` tells a caller that it is interim.
+A code whose weight is not settled is marked `pending_ruling` and carries an interim band;
+`band_for()` returns it and `is_pending_ruling()` tells a caller that it is interim. `NMR` and
+`NMR85` were the pending codes until 2026-09-23, when Jerome ruled them onto the 5.5 t rung for
+the European N55 class (evidence in the map rows and in
+`01_data/90_INBOX/TONNAGE_FINISH_REPORT_2026-09-23.md`). No code is pending after that ruling.
 """
 from __future__ import annotations
 

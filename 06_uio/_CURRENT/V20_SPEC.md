@@ -655,7 +655,7 @@ forecast would simply give the error more keys.
 - **The band edges differ by source** (Helwig stops at 12.00 t; I-Motors says `14 Ton`; UTI says
   `12 TON`). The six-band set is a reconciliation, not a measurement, and the reconciliation rule is
   written above rather than verified against a truck.
-- **`9.5 t` has no home.** The NMR88 is described as a 9.5 t truck in
+- **RESOLVED 2026-09-24 - `9.5 t` retired.** NMR / NMR88 is the 5.5 t European N55 (ruled 2026-09-23, DECISIONS.md; Isuzu Sales Deutschland data sheet NMR88L 5,500 kg). Malta's 48 and Cyprus's 6 NMR now sit on the 5.5 t rung (`03_analytics/Isuzu/prism/data/uio_n55_share.csv`) and both markets' 3.5 t share is 0. Original item, kept for the record: The NMR88 is described as a 9.5 t truck in
   `uio_ld_n35_share.csv`'s Malta note while `SERIES_GVW_T` maps NMR to 5.5 t. Malta carries 48 NMR and
   Cyprus 6. Until that is resolved, those units cannot be placed in a band honestly.
 - **The 3.5 t Norway / Sweden question is unverified.** The JP register does not cover those markets.

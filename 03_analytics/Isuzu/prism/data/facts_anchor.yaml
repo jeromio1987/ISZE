@@ -31,10 +31,12 @@ anchors:
     tol_pct: 0.5
     facts_ref: "FACTS.md section 4 - parts base (2023–2026-08, ex-credit-notes/returns)"
 
+  # 2026-09-24: 103,573,715 -> 112,089,307. The key is 'through the prior quarter end', which rolled from
+  # 2026-03-31 to 2026-06-30 once billing reached August. Both values are in FACTS §4.1; nothing was restated.
   - key: sales.parts_base_through_prior_quarter_eur
-    facts_value: 103573715
+    facts_value: 112089307
     tol_pct: 0.5
-    facts_ref: "FACTS.md section 4.1 - same method cut at 2026-03-31 (the prior published value)"
+    facts_ref: "FACTS.md section 4.1 - same method cut at the prior quarter end (2026-06-30 as of 2026-09-24)"
 
   # 2026-07-15: PRISM lane re-based on the real per-distributor UIO bucket
   # split (cv_std/f_series/lcv) instead of the old hardcoded 2-market N75/LCV
@@ -44,28 +46,30 @@ anchors:
   # 22,389 DVLA figure that was previously (coincidentally) shared with the
   # unrelated §1 IML headline. Section 1 (IML v7 Model B, 35.1%/UIO 22,389) is
   # a separate source (iml_v7_ituk_cy2025.yaml) and is NOT affected by this fix.
+  # 2023 total is a raw ratio kept for drift only: billed exceeds modelled demand, so FACTS §1b does not
+  # state it as a capture rate (basis short for that year). Do not quote.
   - key: ituk.oil_filter.2023.total.capture_uncapped_pct
-    facts_value: 154.4
+    facts_value: 104.3
     tol_pct: 1.0
     facts_ref: "FACTS.md section 1b - PRISM lane 2023 (100% addressable)"
 
   - key: ituk.oil_filter.2024.total.capture_uncapped_pct
-    facts_value: 83.5
+    facts_value: 56.4
     tol_pct: 1.0
     facts_ref: "FACTS.md section 1b - PRISM lane 2024 (100% addressable)"
 
   - key: ituk.oil_filter.2025.total.capture_uncapped_pct
-    facts_value: 116.4
+    facts_value: 78.7
     tol_pct: 1.0
     facts_ref: "FACTS.md section 1b - PRISM lane 2025 (100% addressable)"
 
   - key: ituk.oil_filter.2024.genuine.capture_uncapped_pct
-    facts_value: 62.1
+    facts_value: 42.0
     tol_pct: 1.0
     facts_ref: "FACTS.md section 1b - genuine 2024"
 
   - key: ituk.oil_filter.2025.genuine.capture_uncapped_pct
-    facts_value: 87.6
+    facts_value: 59.2
     tol_pct: 1.0
     facts_ref: "FACTS.md section 1b - genuine 2025"
 
@@ -74,8 +78,10 @@ anchors:
     tol_pct: 0.0
     facts_ref: "FACTS.md section 1b - PRISM lane bucketed UIO (NOT the section 1 IML constant)"
 
+  # 2026-09-24: the whole ITUK oil-filter block re-anchored to the 2026-09-19 N35 interval rule
+  # (cv_std rate 0.5 x (1 + 0.5051) = 0.7526): expected 11,680.2 -> 17,285.6; FACTS §1b rewritten.
   - key: ituk.oil_filter.expected_qty
-    facts_value: 11680.2
+    facts_value: 17285.6
     tol_pct: 0.1
     facts_ref: "FACTS.md section 1b - expected qty (100% addressable)"
 
@@ -112,8 +118,11 @@ anchors:
   # Parts billed did not move (EUR 30,756,771.61 on both bases - it is a measured book), so cover
   # RISES. Verified: 30,756,771.61 / 54,375,729 = 56.56%. Stale, not wrong: no market was an
   # arithmetic error against the code of 2026-09-17.
+  # 2026-09-24: 56.6 -> 56.5. Malta and Cyprus 3.5 t shares corrected to 0 (their NMR is the 5.5 t N55, not an
+  # N35), so their trucks are priced at the EUR 739 rate: wallet 54,375,729 -> 54,420,472 (+39,870 Malta,
+  # +4,873 Cyprus). Parts billed unchanged. Verified: 30,756,771.61 / 54,420,472 = 56.52%.
   - key: waterfall.network.gps_pct_2025
-    facts_value: 56.6
+    facts_value: 56.5
     tol_pct: 0.5
     facts_ref: "GPS - network CY2025 (ex-MIDI, ex-credit-notes/returns; N35/N75 split for all measured markets 2026-09-22)"
 

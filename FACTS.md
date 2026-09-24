@@ -4,7 +4,7 @@
 
 **Role:** This is the **one authoritative source** for ISZE headline figures. When a number here conflicts with anything in a deck, email, GPT knowledge file, or memory note, **this file wins** — fix the other copy, not this one.
 
-**Last verified:** 2026-09-19 (green `00_derived/_verification_report.json`)
+**Last verified:** 2026-09-24 (green `00_derived/_verification_report.json`, 164 pass / 1 warn / 0 fail; facts-drift aligned)
 **Drift enforcement:** `03_analytics\Isuzu\prism\scripts\verify_facts_drift.py` checks this file's headline figures (pinned in `03_analytics\Isuzu\prism\data\facts_anchor.yaml`) against `01_data\00_derived\metrics_snapshot.json` on every run. When the pipeline legitimately changes a number, update this file AND the anchor together.
 **Stores that must reconcile to this file:**
 - `05_memory\`
@@ -67,13 +67,17 @@ Canonical constants: `03_analytics\Isuzu\prism\data\iml_v7_ituk_cy2025.yaml`
 
 **Re-based 2026-07-15** — PRISM's ITUK expected demand now uses the real per-distributor UIO split across cv_std/f_series/lcv buckets (`data/uio_by_model_bucket.csv`), fixing a hardcoded 2-market allowlist (`LCV_DISTRIBUTORS`/`CV_TRUCK_DISTRIBUTORS` in `modules/pms_engine.py`) that had silently mis-scoped 14 of 18 distributors — ITUK's own numbers shift too, since its N75 truck fleet is now split into real cv_std (22,190.9) + f_series (877.0) buckets instead of one flat N75 figure. `scripts/build_bvp_p0_p1.py` now calls `expected_by_category_bucketed()`.
 
-Source: `pms_capture_by_db_year.csv` · bucketed UIO split (`uio_source=model_bucket_split`) × **100% addressable** → expected **11,680.2/yr** (bucketed UIO 23,068 = cv_std 22,190.9 + f_series 877.0).
+Source: `pms_capture_by_db_year.csv` · bucketed UIO split (`uio_source=model_bucket_split`) × **100% addressable** → expected **17,285.6/yr** (bucketed UIO 23,068 = cv_std 22,190.9 + f_series 877.0; the cv_std rate is **0.5 × (1 + 0.5051) = 0.7526** visits a year because the ITUK N35 share runs the 20,000 km interval — rule in `modules/pms_capture_config.py` since 2026-09-19; F-series 0.667).
+
+**Re-anchored 2026-09-24** — the figures below were on the 0.5 flat rate (expected 11,680.2) until this date. The pipeline had moved to the N35 interval rule on 2026-09-19 and FACTS had not followed; the drift gate flagged it on every run since 2026-09-22. **Any ITUK oil-filter capture quoted from the old table is superseded.**
 
 | Year | Actual total | Uncapped | Total capture (cap 100%) | Genuine | BVP | Revenue (total) |
 |------|-------------|----------|--------------------------|---------|-----|-----------------|
-| 2023 | 18,030 | 154% | **100%** | 74% | 81% | €138,257 |
-| 2024 | 9,750 | 84% | **84%** | **62%** | 21% | €62,384 |
-| 2025 | 13,599 | 116% | **100%** | **88%** | 29% | €96,024 |
+| 2023 | 18,030 | not stated as a rate | not stated as a rate | 50% | 54% | €138,257 |
+| 2024 | 9,750 | 56% | **56%** | **42%** | 14% | €62,384 |
+| 2025 | 13,599 | 79% | **79%** | **59%** | 19% | €96,024 |
+
+**2023 is not given as a capture rate:** billed 18,030 exceeds the modelled 17,285.6, which says the fleet or interval basis is short for that year, not that capture beat demand. The machine anchor `ituk.oil_filter.2023.total.capture_uncapped_pct` still tracks the raw ratio for drift only; do not quote it.
 
 **Not the IML v7 headline** (that uses 1.25×/yr filter intervals and a separate 22,389 DVLA UIO from `iml_v7_ituk_cy2025.yaml` — unaffected by this re-base — see §1). Retained for PRISM dashboard and network league. See `isze_data.json` → `pms.ituk_prism_lane`.
 
@@ -190,6 +194,22 @@ Any ITUK oil-filter capture under ~50% is a red flag — re-derive from the CSV.
 ---
 
 ## Change log
+- **2026-09-24** — **NMR ruled 5.5 t; Malta and Cyprus 3.5 t shares corrected to 0; FACTS re-anchored to the pipeline.**
+  Jerome ruled `NMR` / `NMR85` onto the 5.5 t rung for the European N55 class on 2026-09-23 (DECISIONS.md;
+  Isuzu Sales Deutschland data sheet NMR88L 5,500 kg). The Malta (0.369) and Cyprus (0.053) "3.5 t shares" in
+  `uio_ld_n35_share.csv` were their NMR counts read as N35 (JP VIN register: zero NLR in either market) and are now
+  **0**; their NMR sit on the 5.5 t rung (`uio_n55_share.csv`). The 2026-09-18 entry's "NMR88 is a 9.5 t truck" is
+  retired — no source ever stated it. Pipeline re-run (all P0–P5 steps except the `sales_fact` rebuild, which the
+  change does not touch): **verify 164 pass / 1 warn (Denmark 2012-13 workbook holes, pre-existing) / 0 fail**. Moved, and only in these two markets: 2025 target wallet
+  **Malta €338,957 → €378,827** (GPS 60.9% → 54.5%), **Cyprus €671,394 → €676,267** (63.8% → 63.4%); network wallet
+  €54,375,729 → **€54,420,472**, parts billed unchanged €30,756,771.61, **network GPS 56.56% → 56.52% (56.5%)**.
+  PMS capture moved for Malta and Cyprus only (lower expected truck demand: the 3.5 t interval doubling no longer
+  applies). Two anchors had been drifting since 2026-09-22 for reasons unrelated to this change and are re-anchored in
+  the same pass: **ITUK oil-filter PRISM lane** (§1b, expected 11,680.2 → 17,285.6 under the 2026-09-19 N35 interval
+  rule; 2025 capture now 79%) and **parts base through the prior quarter** (€103,573,715 → **€112,089,307**, the
+  prior quarter end having rolled from 2026-03-31 to 2026-06-30 — both values were already in §4.1). Tonnage band
+  files, both PMS pages and the modelled 5.5 t band rebuilt the same day; see
+  `01_data/90_INBOX/TONNAGE_FINISH_REPORT_2026-09-23.md`.
 - **2026-09-18** — **Warranty commercial datasets published, and a currency error in the same day's
   note corrected.** New: `01_data/00_derived/warranty_commercial/` — 13 CSVs plus a 13-sheet
   workbook, one file per commercial question with every market inside the file, regenerable from
@@ -210,7 +230,7 @@ Any ITUK oil-filter capture under ~50% is a red flag — re-derive from the CSV.
   663/1,963 = 0.3377 for reference. **BELGIUM 0.918 → 0.8571** (NLR 42 of 49, not 45). **PORTUGAL
   0.620 → 0.6899** (1,299 of 1,883 **N-series**; the old row divided by all 2,111 rows including 228
   F-series). **MALTA and CYPRUS → `unmeasured`, rates held**: both rested on reading **NMR88 as an
-  N35**, but NMR88 is a 9.5 t truck and Cyprus holds zero 3.5 t in the register. GERMANY (153/697 =
+  N35**, but NMR88 is a 9.5 t truck and Cyprus holds zero 3.5 t in the register. *[Corrected 2026-09-24: NMR / NMR88 is the 5.5 t European N55 (ruled 2026-09-23, DECISIONS.md); no source ever stated 9.5 t. Malta and Cyprus 3.5 t shares are now 0, their NMR sit on the 5.5 t rung.]* GERMANY (153/697 =
   0.2195), GREECE (no 3.5 t), ITUK (live workbook 10,900/21,584) and UTI (zero NLR in 2,360 claim
   VINs) all confirmed sound. Expected-demand effect on the cv slice only: ITUK unchanged, **Ireland
   +6.5%**, Portugal +12.8%, Malta +4.9%, Belgium +0.5% — the whole-figure scaling bug did not

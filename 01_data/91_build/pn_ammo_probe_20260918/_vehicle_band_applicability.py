@@ -69,6 +69,7 @@ from modules.vehicle_bands import (  # noqa: E402
     group_for,
     is_pending_ruling,
     load_map,
+    pending_ruling_codes,
 )
 
 norm = lambda x: (str(x).strip().lstrip("0") or "0")  # noqa: E731
@@ -99,7 +100,10 @@ def tokens_from_text(text: str) -> tuple[list[str], list[str]]:
     out: list[str] = []
     wild: list[str] = []
     raw = str(text or "").upper()
-    for tok in re.split(r"[,\s/;]+", raw):
+    # '-', '、' and '，' split too (2026-09-23): the EPC writes 'NLR/NMR-LHD' and 'NNR/NPR-RHD', and
+    # the cross-reference writes 'NKR、NMR,NLR'; without them the glued code never matched a map key
+    # and ten part numbers carried NMR without recording it as parked. Still whole tokens only.
+    for tok in re.split(r"[,\s/;\-、，]+", raw):
         t = tok.strip().strip("()[]{}").strip()
         if not t:
             continue
@@ -109,6 +113,68 @@ def tokens_from_text(text: str) -> tuple[list[str], list[str]]:
         if t in known:
             out.append(t)
     return out, wild
+
+
+def pending_codes_in_text(text: str) -> list[str]:
+    """Codes the authored map marks `pending_ruling` that this text names as whole words.
+
+    This exists because the exact-token split above cannot see the way the EPC and the
+    cross-reference actually write a quarantined code:
+
+        '2016 NLR/NMR-LHD EURO6 EUROPE 16.0 - 17.0'  -> split on [,\\s/;]+ gives
+                                                        ['2016 NLR', 'NMR-LHD EURO6 ...']
+        'NKR、NMR,NLR'                                -> the '、' is not in the split set
+
+    so `NMR` is glued to `-LHD` (or preceded by a non-ASCII separator) and never matches a map key.
+    The result was that twelve part numbers whose only 5.5 t evidence is NMR were never *recorded*
+    as parked: `parked_codes` came out empty, so the pre-2026-09-23 statement "a parked code
+    contributes its interim band" had nothing to act on, the NMR rung was silently dropped from
+    `n_series_bands`, and those rows lost their 5.5 t band on the 2026-09-23 re-base.
+
+    Deliberately limited to the codes the map already marks `pending_ruling`. Widening whole-word
+    detection to every code would reintroduce the documented `F*` vs `TF*` error, where a pickup
+    was read as a heavy truck; for a quarantined code, over-naming is the safe direction because
+    the answer is carried forward rather than recomputed.
+    """
+    raw = str(text or "").upper()
+    return sorted({c for c in pending_ruling_codes()
+                   if re.search(rf"(?<![A-Z0-9]){re.escape(c)}(?![A-Z0-9])", raw)})
+
+
+def _pending_codes_from_raw_evidence(pns: set[str]) -> dict[str, list[str]]:
+    """{part number: quarantined codes named anywhere in its raw evidence}.
+
+    Reads the same two sources the evidence stage reads (the EPC decode and the cross-reference)
+    and applies `pending_codes_in_text` to each string. Used by the legacy re-base so a
+    quarantined row can be recognised even though the token split missed it. It is a local read
+    for the legacy file only: the neutral table is left exactly as it was built.
+    """
+    out: dict[str, list[str]] = {}
+    for f in ("epc_decode_batch1_20260919.json", "epc_decode_batch2_20260919.json"):
+        path = DER / f
+        if not path.is_file():
+            continue
+        for r in json.loads(path.read_text(encoding="utf-8")):
+            if not isinstance(r, dict):
+                continue
+            pn = norm(r.get("pn"))
+            if pn not in pns:
+                continue
+            txt = " ".join(r.get("models") or []) + " " + " ".join(r.get("families") or [])
+            found = pending_codes_in_text(txt)
+            if found:
+                out[pn] = sorted(set(out.get(pn, [])) | set(found))
+    xref = pd.read_csv(DER / "genuine_bvp_crossref.csv", dtype=str, low_memory=False)
+    for r in xref.itertuples():
+        for col in ("genuine_pn", "bvp_pn"):
+            pn = norm(getattr(r, col))
+            if pn not in pns:
+                continue
+            for c in ("vehicle_model", "registry_model"):
+                found = pending_codes_in_text(getattr(r, c))
+                if found:
+                    out[pn] = sorted(set(out.get(pn, [])) | set(found))
+    return out
 
 
 def collect_evidence() -> pd.DataFrame:
@@ -256,24 +322,19 @@ def build() -> pd.DataFrame:
     # ── the legacy view. `tonnage_capable_part_numbers.csv` is read by the shipped
     #    family-evolution page (`02_dashboards/sales/_build/build_family_evolution_v2.py`) for:
     #    how many bands a part number fits, which part numbers fit exactly one, and per PMS
-    #    category whether any part number fits one band only. Re-basing it on the corrected map
-    #    moves all three (297 -> 322 rows, 143 -> 230 "fits one band", and three PMS categories
-    #    flip to placeable), because the old probe's `NKR -> 5.5t` is what made those part
-    #    numbers look shared. That is a real correction, but it changes what a SHIPPED page
-    #    tells a reader, so it is not made here as a side effect of a schema fix.
-    #
-    #    So the legacy file's band values are FROZEN at what the page reads today, and only new
-    #    columns are added. The corrected mapping lives in `vehicle_band_applicability.csv`.
-    #    Rebasing the page is a separate, flagged decision - see the reconciliation note.
+    #    category whether any part number fits one band only. All three are read off the legacy
+    #    columns, so those columns have to carry the same answer the page is being asked to
+    #    publish. They were frozen on 2026-09-23 while the mapping underneath was being fixed,
+    #    because re-basing them moves what a SHIPPED page tells a reader; that re-base was
+    #    ruled on and is made here, in the builder, once, rather than by editing the CSV.
     LEGACY_BASELINE = ROOT / "01_data" / "91_build" / "_legacy_baseline_tonnage_capable.csv"
     if LEGACY_BASELINE.is_file():
         base = pd.read_csv(LEGACY_BASELINE, dtype=str, low_memory=False).fillna("")
         base["_k"] = base.pn.map(norm)
 
-        # ── the one thing the brief asks for on the legacy file itself: the seven brake rotors
-        #    it already carried were never tagged with their PMS category, because the old probe
-        #    read the category from a dimension file those part numbers are absent from. The
-        #    category is filled from the worklist, which does carry it. Bands are untouched.
+        # ── the category fill the earlier pass asked for: rows the old probe left untagged
+        #    (BRAKE ROTOR and FUEL FILTER hardware among them, because it read the category from
+        #    a dimension file those part numbers are absent from) are tagged from the worklist.
         cat_fill = {norm(k): v for k, v in cat.items() if str(v).strip()}
         before_blank = base.category.map(lambda s: not str(s).strip()).sum()
         base["category"] = [cat_fill.get(k, c) for k, c in zip(base._k, base.category)]
@@ -281,17 +342,113 @@ def build() -> pd.DataFrame:
         gained = sorted(set(base.loc[base.category.astype(str).str.strip() != "", "category"]
                             .dropna()) - {"nan"})
         print(f"legacy file   : category tagged on {before_blank - after_blank} previously blank "
-              f"rows (the brake rotors); categories now present: {len(gained)}")
+              f"rows; categories now present: {len(gained)}")
 
-        add = out[["pn", "vehicle_type", "vehicle_groups", "vehicle_bands", "exclusive_band",
-                   "band_count", "parked_codes", "exclusivity_established"]].copy()
-        add["_k"] = add.pn.map(norm)
-        legacy = base.merge(add.drop(columns=["pn"]), on="_k", how="left").drop(columns=["_k"])
-        legacy["frozen_note"] = ("band values frozen at the pre-2026-09-23 basis; see "
-                                 "vehicle_band_applicability.csv for the corrected mapping")
+        # ── RE-BASED 2026-09-23, ruled on by Jerome. The three legacy columns are written from
+        #    the corrected mapping, in the legacy three-rung vocabulary only (`3.5t` / `5.5t` /
+        #    `7.5t`). They are NOT read from `out`'s own `n_bands` / `band_list` / `bands`:
+        #    those are the settled-codes-only answer, which is a different question from the one
+        #    ruled. This block recomputes the three rungs with the ruled rule applied.
+        #
+        #    A quarantined code contributes its interim band. That is the ruling and it is the
+        #    only rule whose answer cannot move when the ruling on it lands: a part number that
+        #    fits a quarantined code and something else is shared whether that code settles on
+        #    5.5 t or 7.5 t. Excluding it would assert that it contributes no rung at all, which
+        #    is itself a claim about it that nobody has established, and it would inflate the
+        #    exclusive count by discarding evidence rather than by adding it.
+        #
+        #    RE-BASED 2026-09-23, SECOND PASS. The first pass broke that rule without noticing
+        #    on twelve rows. An interim band is a value someone has NOT settled, so recomputing
+        #    it from `band_for()` re-decides it: where `band_for` no longer returns the band the
+        #    row previously carried, the rung silently disappears. That is exactly what happened -
+        #    the EPC writes NMR glued to a suffix (`NMR-LHD`) and after a non-ASCII separator
+        #    (`NKR、NMR,NLR`), which the exact-token split cannot see, so ten rows were never
+        #    tagged as parked, `parked_codes` came out empty, and their 5.5 t rung was dropped as
+        #    though NMR were not on them at all. Ten rows lost 5.5 t and two more moved the other
+        #    way (`8981868281` gained 7.5 t, `8983615742` lost 5.5 t).
+        #
+        #    So for a row that names a quarantined code, the band is now CARRIED FORWARD from the
+        #    pre-change file rather than recomputed. That is the structural guard: an unsettled
+        #    value cannot be moved by a build, and the guard is silent on every row where no
+        #    quarantined code is named. The quarantined code is now also recorded as parked at the
+        #    evidence stage (`pending_codes_in_text`), so `parked_codes` and
+        #    `exclusivity_established` tell the truth about these rows too.
+        #
+        #    The row set is the part numbers this rule can place on the ladder at all: one that
+        #    no code places, and whose only evidence was a wildcard fragment read as a series,
+        #    leaves the file rather than sitting in it with a stale rung. Measured before this
+        #    write: 297 rows / 143 fit one band  ->  324 rows / 180 fit one band. An earlier
+        #    count of 230 was wrong - it came from dropping the quarantined band, not from the
+        #    map.
+        #
+        #    The four-group columns (`vehicle_bands`, `exclusive_band`, `band_count`) and the
+        #    tag on a quarantined row stay as `out` computed them, a copy of the neutral table,
+        #    so this file cannot disagree with `vehicle_band_applicability.csv` about them.
+        cols = ["pn", "band_list", "n_bands", "category", "bands", "eur", "vehicle_type",
+                "vehicle_groups", "vehicle_bands", "exclusive_band", "band_count", "parked_codes",
+                "exclusivity_established", "frozen_note"]
+        note = ("re-based 2026-09-23 on the authored series-to-band map; a quarantined code "
+                "contributes its interim band, carried forward from this file's previous revision "
+                "rather than recomputed")
+        # ── the pre-change three-rung list per part number, for the guard below
+        base_rungs = {k: [b for b in str(v).split("+") if b]
+                      for k, v in zip(base._k, base.bands)}
+        # ── quarantined codes named in the RAW evidence, recovered here rather than at the
+        #    evidence stage, because adding them there would change `vehicle_band_applicability
+        #    .csv` (parked_codes, n_series_bands and the row set) and that table is not this
+        #    repair's to move. See `pending_codes_in_text` for why the token split cannot see
+        #    them. This touches the legacy file only.
+        pending_by_pn = _pending_codes_from_raw_evidence(set(out.pn.map(norm)))
+        carried = 0
+        legacy_rows = []
+        for r in out.itertuples():
+            rungs = {b for b in str(r.n_series_bands).split("|") if b}
+            for c in str(r.parked_codes).split(";"):
+                c = c.strip()
+                b = band_for(c) if c else UNRESOLVED
+                if b in N_SERIES_BANDS:
+                    rungs.add(b)
+            if not rungs:
+                continue
+            ordered = [b for b in N_SERIES_BANDS if b in rungs]
+            # ── THE GUARD. A code the map marks `pending_ruling` has an interim band: a value
+            #    nobody has settled. Recomputing it here is what re-decided it and dropped the
+            #    rung from twelve rows. So where this row names a quarantined code and the file
+            #    already carried a band list, that list is kept. Silent on every other row.
+            named = pending_by_pn.get(norm(r.pn), [])
+            if named and norm(r.pn) in base_rungs:
+                kept = base_rungs[norm(r.pn)]
+                guard = [b for b in N_SERIES_BANDS if SHORT[b] in kept]
+                if guard and guard != ordered:
+                    ordered = guard
+                    carried += 1
+            if not ordered:
+                continue
+            legacy_rows.append({
+                "pn": r.pn,
+                # the two band spellings are kept exactly as this column has always carried
+                # them: `band_list` as a Python-list literal (the page parses it with json.loads
+                # after swapping the quotes) and `bands` as `+`-joined short rungs
+                "band_list": "[" + ", ".join("'%s'" % SHORT[b] for b in ordered) + "]",
+                "n_bands": len(ordered),
+                "category": cat_fill.get(norm(r.pn), r.pms_category),
+                "bands": "+".join(SHORT[b] for b in ordered),
+                "eur": r.eur,
+                "vehicle_type": r.vehicle_type,
+                "vehicle_groups": r.vehicle_groups,
+                "vehicle_bands": r.vehicle_bands,
+                "exclusive_band": r.exclusive_band,
+                "band_count": r.band_count,
+                "parked_codes": r.parked_codes,
+                "exclusivity_established": r.exclusivity_established,
+                "frozen_note": note,
+            })
+        legacy = pd.DataFrame(legacy_rows, columns=cols)
         legacy.to_csv(OUT_LEGACY, index=False)
-        print(f"legacy file   : FROZEN at the page's current basis, {len(legacy):,} rows "
-              f"(+ {len(add.columns) - 1} new columns)")
+        single = int((legacy.n_bands == 1).sum())
+        print(f"legacy file   : RE-BASED on the authored map, {len(legacy):,} rows, "
+              f"{single} fit one band (was 297 rows / 143 fit one band); "
+              f"{carried} row(s) on a quarantined code kept the band this file already carried")
     else:
         print(f"legacy file   : baseline {LEGACY_BASELINE.name} not found - NOT written, "
               f"so a shipped page cannot change by accident")

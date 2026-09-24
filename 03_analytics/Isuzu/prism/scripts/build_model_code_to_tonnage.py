@@ -24,8 +24,10 @@ Outputs
 
 Sources, and how confidence is set
 ----------------------------------
-* **Duncan Young / ITUK PMS brake deck**, slide 14 "Appendix: Service Intervals" —
-  `01_data/90_INBOX/_ituk_brake_spa_20260915/pptx_dump.txt`.
+* **Duncan Young / ITUK PMS brake deck**, slide 14 "Appendix: Service Intervals" — the extract
+  once cited here (`01_data/90_INBOX/_ituk_brake_spa_20260915/pptx_dump.txt`) is gone from disk
+  (checked 2026-09-23); the same four interval rows survive verbatim in
+  `09_meetings/Preparation Meetings/IML_ITUK_PMS/feedback_deck_text.txt` lines 17-22.
 * **René Paul / GIDSS workshop-manual prints** —
   `01_data/03_PMS/service_schedules/GIDSS_maint_{N,F}_MY{14,24}.pdf`.
   Jerome's rule (2026-09-18): René's files are the reference unless a distributor says different.
@@ -40,7 +42,9 @@ Sources, and how confidence is set
   unresolved the sources do not say. The band is left blank on purpose — no guess.
 
 Reads : 01_data/00_derived/epc_decode_batch1_20260919.json
-        01_data/00_derived/epc_decode_worklist.csv      (billed euro per part number)
+        01_data/00_derived/sales_fact.parquet           (billed euro and units per part number,
+                                                         all markets, all years - the same basis as
+                                                         vehicle_band_applicability.csv)
 Writes: the three files above.
 
 Run: python 03_analytics/Isuzu/prism/scripts/build_model_code_to_tonnage.py
@@ -73,8 +77,22 @@ from modules import vehicle_bands  # noqa: E402
 # out here, so this list cannot drift away from the map again. `"other"` is added explicitly
 # because it is this file's own name for a code the map marks `not_in_scope` — see
 # `_load_table` — and the map holds no band by that name.
-BANDS = [vehicle_bands.BAND_LCV, vehicle_bands.BAND_N35, vehicle_bands.BAND_N50,
-         vehicle_bands.BAND_N75, vehicle_bands.BAND_F, "other"]
+#
+# The map's *candidate* bands for a code still awaiting a ruling are added as well. They are not
+# bands this table invents: the map already carries them for that code, and `_load_table` holds
+# a quarantined code's band at whatever this file last wrote, so the vocabulary has to be able
+# to name it. Without this, holding a pending band would trip the guard below.
+def _vocabulary() -> list[str]:
+    out = [vehicle_bands.BAND_LCV, vehicle_bands.BAND_N35, vehicle_bands.BAND_N50,
+           vehicle_bands.BAND_N75, vehicle_bands.BAND_F, "other"]
+    for code in vehicle_bands.pending_ruling_codes():
+        for band in vehicle_bands.quarantine_candidates(code):
+            if band not in out:
+                out.append(band)
+    return out
+
+
+BANDS = _vocabulary()
 BANDS_FILE = "03_analytics/Isuzu/prism/scripts/build_model_code_to_tonnage.py"
 VOCABULARY_FILE = "03_analytics/Isuzu/prism/modules/vehicle_bands.py " \
                   "(from 03_analytics/Isuzu/prism/data/series_to_band.csv)"
@@ -140,6 +158,70 @@ def _load_table() -> dict[str, tuple[str, str, str, str, str]]:
 
 
 TABLE = _load_table()
+
+
+# ---------------------------------------------------------------- the pending-ruling hold
+# A code the map marks `pending_ruling` has no settled band. Its map band is an interim value,
+# and this table must not move it: writing a band onto a row that carries a code awaiting a
+# ruling *is* the ruling, taken as a side effect of a rebuild. So for those codes the values this
+# file already carries are held unchanged, and the label says the value is interim.
+#
+# What is held, and what is not:
+#   band, confidence   held from the previous build. Both are statements about where the code
+#                      currently sits and how well that is sourced; neither may move for a parked
+#                      code. Confidence is held for the same reason as the band - it was
+#                      `unresolved` in the map only *because* the map's band was unresolved, and
+#                      carrying it forward is what stops the row reading "band 7.5 t, unresolved".
+#   label              regenerated from the held band, not held. The original defect was a row
+#                      whose band column and weight label told different stories; rebuilding both
+#                      from the held value means they cannot disagree again.
+#   source, quote      taken from the map and stamped with the quarantine note, so the evidence
+#                      stays current and a reader cannot miss that the value is not settled.
+#
+# The two files deliberately disagree for `NMR` and `NMR85`: the map holds the European interim
+# value the shipped pipeline uses (5.5 t for `NMR`, 7.5 t for `NMR85`), while this table keeps the
+# 7.5 t it has always written for both. That divergence is the point - the map must not be moved
+# to match this table either, because downstream band files read the map and would shift with it.
+# Do not reconcile them by editing either file; reconcile them by ruling on `NMR`.
+def _apply_pending_hold(tbl: dict[str, tuple[str, str, str, str, str]]) -> dict[str, tuple[str, str, str, str, str]]:
+    """Keep each pending-ruling code's existing band and confidence, whatever the map now says."""
+    held: dict[str, tuple[str, str, str, str, str]] = {}
+    pending = [c for c in vehicle_bands.pending_ruling_codes() if c in tbl]
+    if not pending or not TABLE_CSV.is_file():
+        return tbl
+    try:
+        with open(TABLE_CSV, encoding="utf-8-sig", newline="") as fh:
+            previous = {r["model_code"]: r for r in csv.DictReader(fh)}
+    except (OSError, KeyError):
+        return tbl
+    notes = []
+    for code in sorted(pending):
+        prev = previous.get(code)
+        if not prev:
+            continue
+        prev_band = (prev.get("tonnage_band") or "").strip()
+        prev_conf = (prev.get("confidence") or "").strip()
+        band, _label, source, quote, conf = tbl[code]
+        if prev_band == band and prev_conf == conf:
+            continue
+        held_label = (vehicle_bands.BAND_LABEL.get(prev_band, prev_band) if prev_band
+                      else "no band - awaiting ruling")
+        cands = " | ".join(vehicle_bands.quarantine_candidates(code)) or "(none recorded)"
+        note = (f"PENDING RULING: this table keeps the band it already carried "
+                f"({prev_band or 'none'}) because {code} awaits a ruling; the canonical map's "
+                f"interim value is {band or 'none'}. Candidates: {cands}.")
+        held[code] = (prev_band, f"{held_label} — INTERIM, PENDING RULING",
+                      source, f"{quote} || {note}".strip(" |"), prev_conf)
+        notes.append(f"{code}: held at band {prev_band or 'none'} / confidence "
+                     f"{prev_conf or 'none'} (map says {band or 'none'} / {conf or 'none'})")
+    if notes:
+        print("  pending-ruling hold:")
+        for n in notes:
+            print(f"    {n}")
+    return {**tbl, **held}
+
+
+TABLE = _apply_pending_hold(TABLE)
 
 
 def _assert_bands_in_vocabulary() -> None:
@@ -414,11 +496,15 @@ def write_table() -> dict:
 def write_banded() -> dict:
     """Apply the table to every part number in the batch-1 decode."""
     dec = json.load(open(DECODE, encoding="utf-8"))
-    wl = list(csv.DictReader(open(WORKLIST, encoding="utf-8")))
-    euro = {}
-    for r in wl:
-        pn = str(r["part_number"]).strip().lstrip("0") or "0"
-        euro[pn] = (float(r["eur_all"] or 0), float(r["units_all"] or 0))
+    # Euro and units from the billing of record, not from the worklist. The worklist was rebuilt on
+    # 2026-09-19 for a different part-number universe and matches only 30 of the 260 batch-1 records,
+    # so reading it zeroed the euro on 222 rows (found 2026-09-23).
+    import pandas as pd  # noqa: PLC0415
+    sf = pd.read_parquet(DERIVED / "sales_fact.parquet", columns=["part_number", "net_sales_value",
+                                                                     "billed_qty"])
+    sf["pn"] = sf.part_number.map(lambda x: str(x).strip().lstrip("0") or "0")
+    g = sf.groupby("pn").agg(e=("net_sales_value", "sum"), u=("billed_qty", "sum"))
+    euro = {pn: (float(r.e), float(r.u)) for pn, r in g.iterrows()}
 
     rows = []
     unresolved_counter: Counter = Counter()

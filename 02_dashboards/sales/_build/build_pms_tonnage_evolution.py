@@ -33,10 +33,11 @@ OUT_HTML = OUT_DIR / "ISZE_PMS_Tonnage_Evolution.html"
 OUT_CMD = OUT_DIR / "OPEN_ISZE_PMS_Tonnage_Evolution.cmd"
 CHARTJS = ROOT / "02_dashboards" / "_ui" / "chart.umd.min.js"
 
-BAND_ORDER = ["LCV_D-Max", "3.5t_N35", "7.5t_N50_N62_N75", "F_series_MD_heavy"]
+BAND_ORDER = ["LCV_D-Max", "3.5t_N35", "5.5t_N50_N55", "7.5t_N50_N62_N75", "F_series_MD_heavy"]
 BAND_SHORT = {
     "LCV_D-Max": "LCV / D-Max",
     "3.5t_N35": "3.5 t (N35 Grafter)",
+    "5.5t_N50_N55": "5.5 t (N50 / N55)",
     "7.5t_N50_N62_N75": "7.5 t (N75 / N50 / N62)",
     "F_series_MD_heavy": "F-series / MD (heavy)",
 }
@@ -48,7 +49,13 @@ CAT_LABEL = {
     "oil_filter": "Oil filter", "pilot_bearing": "Pilot bearing",
     "release_bearing": "Release bearing", "urea_filter": "Urea (AdBlue) filter",
 }
-SNAPSHOT = "2026-09-18"
+# The snapshot and the "billed through" date are read from the billing of record at build time.
+# Until 2026-09-23 both were typed in ("2026-09-18", "30 June 2026") and went stale while the
+# billing underneath had already moved to August.
+_BILLED_THROUGH = pd.to_datetime(pd.read_parquet(DER / "sales_fact.parquet",
+                                                 columns=["billing_date"]).billing_date).max()
+SNAPSHOT = _BILLED_THROUGH.strftime("%Y-%m-%d")
+BILLED_THROUGH_TEXT = f"{_BILLED_THROUGH.day} {_BILLED_THROUGH:%B %Y}"
 
 
 def die(msg: str) -> None:
@@ -233,8 +240,11 @@ for m in markets:
     ]
 
 COMP_VINTAGE = str(comp.vintage.mode().iloc[0]) if len(comp) else "n/a"
-NET_GAP_2025 = round(float(sum(CAP[m][2025]["gap_eur"] for m in markets if 2025 in CAP[m])))
-NET_ACT_2025 = round(float(sum(CAP[m][2025]["actual_eur"] for m in markets if 2025 in CAP[m])))
+# Summed from the unrounded source, then rounded once: adding the per-market rounded figures left
+# the network total EUR 1 off the source on both lines (fixed 2026-09-23).
+_c25 = cap[(cap.line_type == "total") & (cap.year == 2025) & cap.distributor_code.isin(markets)]
+NET_GAP_2025 = round(float(_c25.revenue_gap_eur.sum()))
+NET_ACT_2025 = round(float(_c25.actual_rev_eur.sum()))
 
 # Scope disclosure: the billing extract carries markets the service model does not cover.
 BASE = set(markets)
@@ -377,7 +387,7 @@ footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--rule);font-si
 <div class="wrap">
 
   <div class="basis-strip">
-    <div><b>Observed</b> — Parts billed through 30 June 2026 (market level only)</div>
+    <div><b>Observed</b> — Parts billed through __BILLED_THROUGH__ (market level only)</div>
     <div><b>Modelled</b> — Target spend / service demand by tonnage band (allocated by expected-demand
     shares; not observed at band)</div>
     <div><b>Fleet</b> — Historical fleet basis only; no forward forecast quoted</div>
@@ -723,12 +733,14 @@ function render(){
       +'</div><div class="l">'+x.l+'</div></div>';
   }).join('');
 
-  /* fleet mix donut (<=4 segments, one customer) */
-  var fl=bands.map(function(b){return {band:b.label,uio:b.uio};});
+  /* fleet mix donut (<=5 segments, one customer). One fixed colour per band, so a band keeps its
+     colour from customer to customer instead of taking whatever position it lands in. */
+  var BANDCOL={'LCV_D-Max':GREEN,'3.5t_N35':NAVY,'5.5t_N50_N55':AMBER,'7.5t_N50_N62_N75':TERRA,'F_series_MD_heavy':'#7a8ba6'};
+  var fl=bands.map(function(b){return {band:b.label,uio:b.uio,col:BANDCOL[b.band]||MUTED};});
   mk('c_fleet',{type:'doughnut',
     data:{labels:fl.map(function(x){return x.band;}),
       datasets:[{data:fl.map(function(x){return x.uio;}),
-        backgroundColor:[NAVY,TERRA,'#7a8ba6',GREEN],borderColor:'#fff',borderWidth:2}]},
+        backgroundColor:fl.map(function(x){return x.col;}),borderColor:'#fff',borderWidth:2}]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
       plugins:{legend:{display:false},
         tooltip:{backgroundColor:NAVY,titleColor:'#ffd9c4',bodyColor:PAPER,padding:10,
@@ -739,7 +751,7 @@ function render(){
     var tot=fl.reduce(function(a,b){return a+b.uio;},0);
     return '<span data-tip="Fleet in this band, from the derived band model.<br>'
       +'Share of this customer total fleet. Snapshot '+D.snapshot+'.">'
-      +'<i style="background:'+[NAVY,TERRA,'#7a8ba6',GREEN][i]+'"></i>'+x.band
+      +'<i style="background:'+x.col+'"></i>'+x.band
       +' — '+num(x.uio)+' ('+(100*x.uio/tot).toFixed(0)+'%)</span>';
   }).join('');
 
@@ -1054,7 +1066,8 @@ render();
 
 html = (TEMPLATE.replace("__CHARTJS__", chart_js)
                 .replace("__PAYLOAD__", body)
-                .replace("__SNAPSHOT__", SNAPSHOT))
+                .replace("__SNAPSHOT__", SNAPSHOT)
+                .replace("__BILLED_THROUGH__", BILLED_THROUGH_TEXT))
 
 # ── guard: the inline script must parse. A single unbalanced quote kills the whole page
 # silently — the containers render empty and the file still looks fine on disk.

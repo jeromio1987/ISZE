@@ -191,7 +191,7 @@
     {
       "id": "tonnage-band-must-be-sourced",
       "title": "A model code to tonnage band mapping must come from the sourced table, not a regex dictionary",
-      "statement": "The tonnage band for a model code comes from 03_analytics/Isuzu/prism/data/model_code_to_tonnage.csv, built by build_model_code_to_tonnage.py from named sources, with model_code_to_tonnage.meta.json recording which codes were resolved and which were left unresolved. A code the sources do not name must be left with an empty band. The numeric suffix (75 / 85 / 87 / 88 / 90) is a generation code, not a weight. In particular NMR88 is a 9.5-tonne truck and must never be read as a 3.5-tonne N35.",
+      "statement": "The tonnage band for a model code comes from the one authored map 03_analytics/Isuzu/prism/data/series_to_band.csv, read through modules/vehicle_bands.py (model_code_to_tonnage.csv is a table built from it by build_model_code_to_tonnage.py). A code the sources do not name must be left with an empty band. The numeric suffix (75 / 85 / 87 / 88 / 90) is a generation code, not a weight. In particular NMR88 is a 5.5-tonne truck (the European N55, ruled 2026-09-23) and must never be read as a 3.5-tonne N35.",
       "why_it_was_added": "Register error E13 (High, raised 28 times): the tonnage band rested on SERIES_TO_GVW in parse_epc_results.py, a regex dictionary with no source, so Malta and Cyprus both sat on NMR88 read as a 3.5-tonne truck. Counter measure CM08: the model-code to tonnage band comes from a sourced table with its own metadata.",
       "source": [
         {
@@ -221,11 +221,11 @@
         "must_not_contain": [
             {
             "pattern": "(?i)NMR\\s?88[^.]{0,80}\\b3\\.?5\\s*(?:t|tonne|ton)\\b",
-            "message": "NMR88 is being read as a 3.5-tonne N35. NMR88 is a 9.5-tonne truck; the 88 is a generation code, not a weight."
+            "message": "NMR88 is being read as a 3.5-tonne N35. NMR88 is a 5.5-tonne truck (European N55); the 88 is a generation code, not a weight."
           },
           {
             "pattern": "(?i)\\b3\\.?5\\s*(?:t|tonne|ton)\\b[^.]{0,80}NMR\\s?88",
-            "message": "NMR88 is being read as a 3.5-tonne N35. NMR88 is a 9.5-tonne truck."
+            "message": "NMR88 is being read as a 3.5-tonne N35. NMR88 is a 5.5-tonne truck (European N55)."
           }
         ],
         "fail_patterns": [

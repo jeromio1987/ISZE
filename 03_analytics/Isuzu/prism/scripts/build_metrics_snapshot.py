@@ -105,7 +105,7 @@ def main() -> int:
             PMS_CAPTURE_BY_DB_CSV.name, "model_bucket_split: cv_std 22,190.9 + f_series 877.0")
         put("ituk.oil_filter.expected_qty", round(float(m["expected_qty"].iloc[0]), 1),
             PMS_CAPTURE_BY_DB_CSV.name,
-            "23068 bucket UIO x 0.5 svc/yr x 100% addressable")
+            "23068 bucket UIO; cv_std at 0.5 x (1 + N35 share) svc/yr (N35 on the 20,000 km interval), F-series 0.667; 100% addressable")
 
     # --- overall genuine/BVP mix CY2025 (crossref-authoritative) -------------
     xref = pd.read_csv(GENUINE_BVP_CROSSREF_CSV, dtype={"genuine_pn": str, "bvp_pn": str})
