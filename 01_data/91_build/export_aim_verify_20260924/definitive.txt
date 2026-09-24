@@ -1,0 +1,57 @@
+=== FINAL ROUTE TABLE (distinct part numbers on the 1,303) ===
+placed: 1224   placed value: 115978 EUR
+
+    980 parts        65806 EUR   wording rule on the EPC figure name
+    181 parts        33579 EUR   description route (own figure name agrees)
+     38 parts         2461 EUR   figure key, unanimous on the master
+     25 parts        14133 EUR   description route (no figure name of its own)
+   1224 parts       115978 EUR   TOTAL
+
+parts with a recorded EPC figure name: 1161 ; without: 63
+
+=== is the rule-on-name consistent with the master for the description-route parts? ===
+  description-route parts where the figure name agrees at Level 1: 181
+  description-route parts where it does not: 0
+  description-route parts with no figure name: 25
+  their value: 14133 EUR
+
+=== where does the fastener share land ===
+  443 of 1224 = 36.2% ; 12389 EUR = 10.7% of placed value
+
+=== the CONNECTOR rule support, measured narrowly ===
+  master parts on the Connector leaf: 258
+  of those, description starts CONNECTOR: 50
+       14  'CONNECTOR'
+        6  'CONNECTOR; HTR & COOLER HOSE'
+        5  'CONNECTOR; GLOW PLUG'
+        4  'CONNECTOR; OIL PUMP'
+        3  'CONNECTOR; JOINT'
+        2  'CONNECTOR; QUICK RELEASE VLV'
+        2  'CONNECTOR; AIR VLV'
+        2  'CONNECTOR; NYLON TUBE'
+        1  'CONNECTOR; BRK VALVE'
+        1  'CONNECTOR; OIL COOLER'
+        1  'CONNECTOR; HARNESS (2P MAIL)'
+        1  'CONNECTOR; FUEL FILTER'
+        1  'CONNECTOR; HARNESS'
+        1  'CONNECTOR; 3WAY'
+        1  'CONNECTOR KIT; INLET PUMP,DEF'
+        1  'CONNECTOR KIT; OUTLET PUMP,DEF'
+        1  'CONNECTOR; HOSE'
+        1  'CONNECTOR; SHORT CIRCUIT'
+        1  'CONNECTOR HTR'
+        1  'CONNECTOR; PIPE,AIR DRYER'
+  exact-ish siblings for the three parts: CONNECTOR; HARNESS* = 2 ; CONNECTOR; HEAD LAMP* = 0
+
+=== the 7 extract part numbers never queued, described properly ===
+  280512450         0.94 EUR  fixed='Chassis Frame'  published=real family
+  280558110         1.19 EUR  fixed='Chassis Frame'  published=real family
+  440110350         0.83 EUR  fixed='Intake Exhaust Emission'  published=real family
+  5852530011       50.42 EUR  fixed='Unknown'  published=OPEN
+  8981333500        2.30 EUR  fixed='Intake Exhaust Emission'  published=real family
+  8982909802     2105.81 EUR  fixed='Engine'  published=real family
+  903016100         1.09 EUR  fixed='Fluids Chemicals'  published=real family
+  total 2163 EUR
+
+=== Value vs Price ===
+  lines where Value < Price: 136 of 1318

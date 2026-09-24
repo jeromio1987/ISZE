@@ -1,0 +1,41 @@
+price lines in classified.csv: 1318
+distinct part numbers (Newest P/N): 1310
+total list value over those: 131223 EUR
+
+distinct part numbers in queue.csv: 1303
+in the price extract but never queued: 7  ['280512450', '280558110', '440110350', '5852530011', '8981333500', '8982909802', '903016100']
+
+==============================================================================
+STEP 7 - WHAT A FRESH EPC LOOKUP WOULD STILL BE NEEDED FOR
+==============================================================================
+part numbers where the EPC returned nothing (NOT_FOUND or no record): 81
+part numbers where the lookup errored: 1
+of those, now carrying a family (so the label came from something other than an EPC name): 32
+their list value: 11440 EUR
+
+the errored one: ['7552357310']
+   description: Unknown ; master: Unknown
+FOUND but with no figure name recorded: 60
+   placed anyway (figure key or description): 31
+   still open: 29
+
+parts placed TODAY but with NO EPC figure name of their own:
+   placed today: 1224 ; of those with their own EPC figure name: 1161
+   placed today WITHOUT a figure name: 63
+   their list value: 16593 EUR
+
+==============================================================================
+HEADLINE NUMBERS
+==============================================================================
+price-list part numbers          : 1303
+  real family                    : 1224
+  Unknown marker                 : 45
+  blank family                   : 23
+  no master row                  : 11
+  sum                            : 1303
+
+total list value of the 1,303   : 129060 EUR
+on parts with a real family     : 115978 EUR (89.9%)
+on open parts                   : 13082 EUR (10.1%)
+
+largest open part: 7553266960 7603 EUR

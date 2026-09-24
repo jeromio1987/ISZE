@@ -1,0 +1,34 @@
+master rows: 165257
+distinct master wordings with a usable path: 3989
+marker rows on the master for this list: 845
+of those, also carrying a marker in the classification overlay: 819
+in the master marker set but with NO overlay row: 26
+
+MEASURED, strict rule as the two earlier write-backs describe it
+  would be placed : 104
+  left unplaced   : 741
+
+  of the placed, on a residual bucket the rule normally refuses: 0
+  of the placed, on a wording the tiering study held back: 0
+  of the placed, in the overlay marker subset: 102
+
+  support distribution: {3: 19, 4: 10, 5: 2, 6: 5, 7: 3, 8: 4, 9: 2, 10: 3, 11: 2, 12: 54}
+
+  chosen families:
+       16  Accident & Body
+       14  Cooling
+       13  Cabin Interior
+       10  Engine
+        9  Intake Exhaust Emission
+        9  Suspension
+        7  Brakes
+        6  Electrical
+        6  Fuel System
+        4  Clutch
+        4  Chassis Frame
+        3  Steering
+        2  Driveline Axle
+        1  Transmission
+
+  unplaced reasons:
+      741  wording does not resolve to one path with 3+ master parts

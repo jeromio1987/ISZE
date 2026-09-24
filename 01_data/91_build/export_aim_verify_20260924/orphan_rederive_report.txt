@@ -1,0 +1,34 @@
+orphans: 43   re-derived by a rule (route a): 32
+no rule match (should be the 11 unplaced): 11
+
+=== re-derived rule vs what is on the master now ===
+  exact match (raw rule triple == master triple): 32 of 32
+
+=== re-derived rule vs what classified.csv recorded ===
+  raw rule triple == classified triple      : 32 of 32
+  aligned rule triple == classified triple  : 32 of 32
+
+=== rule triples where alignment changed the Level 3 ===
+
+=== contested figure names (more than one rule matched; first wins) ===
+  8975480980 TRANSMISSION ASM; MANUAL     '2-20 - MANUAL TRANSMISSION ASM AND CASE' -> 'MANUAL TRANSMISSION ASM'
+  7552062110 FILTER ASM; OIL              '0-50 - OIL COOLER AND OIL FILTER' -> 'OIL COOLER'
+  8983700410 FILTER ASM; FUEL             '0-41 - FUEL FILTER AND BRACKET' -> 'FUEL FILTER'
+  5872218030 RUBBER; ENG FOOT,FRT         '0-22 - ENGINE MOUNTING' -> 'ENGINE MOUNTING'
+  5872216470 RUBBER; ENG FOOT,FRT         '0-22 - ENGINE MOUNTING' -> 'ENGINE MOUNTING'
+  8974210030 TRAY; INST                   '7-40 - INSTRUMENT PANEL AND BOX' -> 'INSTRUMENT PANEL'
+  8980376041 INHIBITOR                    '2-20A - MANUAL TRANSMISSION ASM AND CASE M/T' -> 'MANUAL TRANSMISSION ASM'
+  8973628520 SPRING; INHIBITOR            '2-20A - MANUAL TRANSMISSION ASM AND CASE M/T' -> 'MANUAL TRANSMISSION ASM'
+
+=== unplaced (no rule match) ===
+  5876102381 PAD KIT; CALIPER, DISC BRK, FR     src='figure key, unanimous on the master'      fig_name='' master=''
+  7553266960 CAB ASM; SERVICE,W/ELECT           src='figure key, unanimous on the master'      fig_name='' master=''
+  1884053370 LLC;200L TYPE E                    src=''                                         fig_name='' master=''
+  7552598420 CIRCUIT; PRINTED,BATTERY           src=''                                         fig_name='' master=''
+  7552126065 BRACKET; MOTOR BATTERY             src='figure key, unanimous on the master'      fig_name='' master=''
+  7553196060 GUIDE; HARNESS                     src=''                                         fig_name='' master=''
+  8943633640 CONNECTOR; HARNESS (2P FEMAIL)     src=''                                         fig_name='' master=''
+  7552360101 BASE; FUSE CABLE                   src=''                                         fig_name='' master=''
+  7552347140 COVER; FUSE CABLE                  src=''                                         fig_name='' master=''
+  8980626220 CONNECTOR; HEAD LAMP               src=''                                         fig_name='' master=''
+  8980680830 CONNECTOR; HEAD LAMP               src=''                                         fig_name='' master=''

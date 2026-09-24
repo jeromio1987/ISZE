@@ -1,0 +1,159 @@
+==============================================================================
+STEP 1 AGAIN - EURO ON THE PRICE LIST (correct parser)
+==============================================================================
+price-list part numbers: 1310
+total list value of the price list: 131223 EUR
+
+group               parts       list EUR
+real family          1230         118091
+no master row          11           8740
+Unknown marker         46           3160
+blank family           23           1232
+
+==============================================================================
+STEP 6 - FAMILY VIEW
+==============================================================================
+family (Level 1)          parts       list EUR  how placed
+Accident & Body             203           8919  rule 187 | key 16 | desc 0 | not today 0
+Cabin Interior              142          10802  rule 140 | key 2 | desc 0 | not today 0
+Electrical                  135          21531  rule 125 | key 10 | desc 0 | not today 0
+Transmission                112          16184  rule 108 | key 4 | desc 0 | not today 0
+Engine                      102          16844  rule 97 | key 4 | desc 1 | not today 0
+Brakes                       99           7919  rule 97 | key 2 | desc 0 | not today 0
+Intake Exhaust Emission      93           5948  rule 89 | key 4 | desc 0 | not today 0
+Cooling                      64           3633  rule 64 | key 0 | desc 0 | not today 0
+Steering                     63           3468  rule 62 | key 1 | desc 0 | not today 0
+Driveline Axle               53           8898  rule 53 | key 0 | desc 0 | not today 0
+Suspension                   44           6722  rule 40 | key 4 | desc 0 | not today 0
+Clutch                       34           1654  rule 33 | key 1 | desc 0 | not today 0
+Chassis Frame                34           1498  rule 23 | key 11 | desc 0 | not today 0
+Fuel System                  29           2914  rule 28 | key 1 | desc 0 | not today 0
+Wheels Hub                    8            590  rule 7 | key 1 | desc 0 | not today 0
+Maintenance Service           7            380  rule 2 | key 5 | desc 0 | not today 0
+Tools Equipment               4             77  rule 4 | key 0 | desc 0 | not today 0
+Fluids Chemicals              2            106  rule 0 | key 2 | desc 0 | not today 0
+Lubrication                   2              5  rule 2 | key 0 | desc 0 | not today 0
+
+--- biggest five by list value ---
+  Electrical                        21531 EUR over 135 parts   (rule 125 | key 10 | desc 0 | not today 0)
+  Engine                            16844 EUR over 102 parts   (rule 97 | key 4 | desc 1 | not today 0)
+  Transmission                      16184 EUR over 112 parts   (rule 108 | key 4 | desc 0 | not today 0)
+  Cabin Interior                    10802 EUR over 142 parts   (rule 140 | key 2 | desc 0 | not today 0)
+  Accident & Body                    8919 EUR over 203 parts   (rule 187 | key 16 | desc 0 | not today 0)
+
+--- the same five, split by whether the label was written today ---
+  Electrical               135 of 135 carry a label written today
+  Engine                   102 of 102 carry a label written today
+  Transmission             112 of 112 carry a label written today
+  Cabin Interior           142 of 142 carry a label written today
+  Accident & Body          203 of 203 carry a label written today
+
+--- provenance of every part named today (%d parts) ---
+parts carrying a today stamp: 1230
+    1161  wording rule on the EPC figure name
+      68  figure key unanimous on the master
+       1  description agreement on the master
+
+           99385 EUR  wording rule on the EPC figure name
+           10012 EUR  figure key unanimous on the master
+            8693 EUR  description agreement on the master
+
+--- the 1,161 parts the EPC named, by route ---
+parts with a recorded EPC figure name: 1161
+  of those, the figure name is an EPC name that the rules convert: 1161
+parts with NO EPC figure name recorded: 149
+      80  not placed today
+      68  figure key unanimous on the master
+       1  description agreement on the master
+
+==============================================================================
+STEP 7 - WHAT COULD NOT BE CHECKED WITHOUT THE EPC, IN PARTS AND EUROS
+==============================================================================
+placed                           1230         118091 EUR
+no master row (never placed)       11           8740 EUR
+open (marker or blank)             69           4392 EUR
+
+open parts: 80
+open list value: 13132 EUR  (10.0% of the list)
+
+named open parts:
+    7553266960     7603.44 EUR                                     no master row
+    7552357310     1177.96 EUR                                     marker
+    8982324801      860.85 EUR                                     marker
+    1884053370      810.46 EUR                                     no master row
+    8976652600      425.81 EUR                                     blank
+    5884023600      303.48 EUR                                     blank
+    8973613450      223.06 EUR                                     blank
+    5884032930      177.06 EUR                                     marker
+    8942493673      151.21 EUR                                     marker
+    8983528290      148.19 EUR                                     marker
+    7552598420      116.68 EUR                                     no master row
+    8970391966       92.45 EUR                                     marker
+    7552126065       91.46 EUR                                     no master row
+    8978980700       82.06 EUR                                     marker
+    8971349242       68.36 EUR                                     blank
+    8980678540       64.26 EUR                                     blank
+    8982419710       62.02 EUR                                     marker
+    5876102381       52.99 EUR                                     no master row
+    8972161792       52.66 EUR                                     marker
+    5852530011       50.42 EUR                                     marker
+    8982726981       47.74 EUR                                     marker
+    7553196060       46.85 EUR                                     no master row
+    8972316792       37.49 EUR                                     marker
+    8971028411       30.78 EUR                                     marker
+    8943588540       29.91 EUR                                     marker
+    47503000         29.55 EUR                                     blank
+    8971348301       27.64 EUR                                     marker
+    35663000         27.40 EUR                                     marker
+    5876101950       24.98 EUR                                     marker
+    8944003700       22.50 EUR                                     marker
+    8970125392       19.43 EUR                                     blank
+    8104571530       15.43 EUR                                     blank
+    8980690630       13.15 EUR                                     marker
+    5874122510       11.89 EUR                                     blank
+    8971868730       10.23 EUR                                     blank
+    8971868740       10.23 EUR                                     blank
+    8971868700       10.23 EUR                                     blank
+    8971133250        8.26 EUR                                     blank
+    7552360101        7.57 EUR                                     no master row
+    8980440600        7.43 EUR                                     blank
+    8971849470        6.35 EUR                                     blank
+    8980504520        6.29 EUR                                     marker
+    1822900110        5.64 EUR                                     blank
+    8971865141        5.49 EUR                                     marker
+    8104675460        4.87 EUR                                     blank
+    8982395230        4.74 EUR                                     marker
+    8980626220        3.85 EUR                                     no master row
+    8944232863        3.64 EUR                                     blank
+    8971865152        3.51 EUR                                     marker
+    8943325800        3.51 EUR                                     marker
+    8981489962        3.36 EUR                                     marker
+    8980680830        2.83 EUR                                     no master row
+    7552347140        2.48 EUR                                     no master row
+    840008150         1.96 EUR                                     marker
+    8978052400        1.77 EUR                                     marker
+    8943633640        1.57 EUR                                     no master row
+    8975412300        1.57 EUR                                     blank
+    8981584590        1.28 EUR                                     marker
+    952073100         0.96 EUR                                     marker
+    440110280         0.81 EUR                                     marker
+    410108200         0.79 EUR                                     marker
+    410108350         0.79 EUR                                     marker
+    952350320         0.79 EUR                                     blank
+    741605140         0.74 EUR                                     marker
+    410106250         0.74 EUR                                     marker
+    811250450         0.70 EUR                                     marker
+    741655160         0.70 EUR                                     marker
+    916105140         0.70 EUR                                     marker
+    721805120         0.62 EUR                                     marker
+    362306250         0.62 EUR                                     marker
+    915108140         0.55 EUR                                     marker
+    915108120         0.55 EUR                                     marker
+    811240400         0.55 EUR                                     marker
+    362104120         0.55 EUR                                     blank
+    811230280         0.51 EUR                                     marker
+    915412160         0.51 EUR                                     marker
+    811240250         0.51 EUR                                     blank
+    915105080         0.47 EUR                                     marker
+    8979239200        0.43 EUR                                     blank
+    918055090         0.21 EUR                                     marker

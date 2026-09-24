@@ -1,0 +1,48 @@
+==============================================================================
+PARTS WHOSE LABEL DEPENDS ON A LENGTH TIE (document order decides)
+==============================================================================
+parts affected: 18
+
+--- tie: 'OIL COOLER' (doc#70 -> Cooling > Radiator > Radiator Assembly)  vs  'OIL FILTER' (doc#172 -> Maintenance Service > Oil Filter > Oil Filter Element)
+    9 parts on the price list fall on a figure name carrying both
+      7552062110   FILTER ASM; OIL                    fig=0-50 - OIL COOLER AND OIL FILTER           now Cooling > Radiator > Radiator Assembly
+      8971690431   COOLER ASM; OIL                    fig=0-50 - OIL COOLER AND OIL FILTER           now Cooling > Radiator > Radiator Assembly
+      8973852006   COOLER ASM; OIL                    fig=0-50 - OIL COOLER AND OIL FILTER           now Cooling > Radiator > Radiator Assembly
+      8978298810   GASKET; OIL COOLER                 fig=0-50 - OIL COOLER AND OIL FILTER           now Cooling > Radiator > Radiator Assembly
+      8978298830   GASKET; OIL COOLER TO C/BL         fig=0-50 - OIL COOLER AND OIL FILTER           now Cooling > Radiator > Radiator Assembly
+      8980853126   COOLER ASM; OIL                    fig=0-50 - OIL COOLER AND OIL FILTER           now Cooling > Radiator > Radiator Assembly
+      8982014821   COOLER ASM; OIL                    fig=0-50 - OIL COOLER AND OIL FILTER           now Cooling > Radiator > Radiator Assembly
+      8982014930   COOLER ASM; OIL                    fig=0-50 - OIL COOLER AND OIL FILTER           now Cooling > Radiator > Radiator Assembly
+      8983453790   THERMOSTAT; OIL COOLER             fig=0-50 - OIL COOLER AND OIL FILTER           now Cooling > Radiator > Radiator Assembly
+
+--- tie: 'SWITCH AND RELAY' (doc#116 -> Electrical > Switch Relay Fuse > Switch)  vs  'INSTRUMENT PANEL' (doc#137 -> Cabin Interior > Dashboard & Controls > Knob)
+    8 parts on the price list fall on a figure name carrying both
+      8972658350   SWITCH; PTO                        fig=8-25 - SWITCH AND RELAY; INSTRUMENT PANEL  now Electrical > Switch Relay Fuse > Switch
+      8974720342   COVER; SW                          fig=8-25 - SWITCH AND RELAY; INSTRUMENT PANEL  now Electrical > Switch Relay Fuse > Switch
+      8977939480   SWITCH; CLU                        fig=8-25 - SWITCH AND RELAY; INSTRUMENT PANEL  now Electrical > Switch Relay Fuse > Switch
+      8980763330   ANTENNA; KEYLESS ENTRY             fig=8-25 - SWITCH AND RELAY; INSTRUMENT PANEL  now Electrical > Switch Relay Fuse > Switch
+      8981335712   ANTENNA; KEYLESS ENTRY             fig=8-25 - SWITCH AND RELAY; INSTRUMENT PANEL  now Electrical > Switch Relay Fuse > Switch
+      8981538410   COVER; SW                          fig=8-25 - SWITCH AND RELAY; INSTRUMENT PANEL  now Electrical > Switch Relay Fuse > Switch
+      8982348941   SWITCH ASM; DIFF LK                fig=8-25 - SWITCH AND RELAY; INSTRUMENT PANEL  now Electrical > Switch Relay Fuse > Switch
+      8982437570   SWITCH; COMB                       fig=8-25 - SWITCH AND RELAY; INSTRUMENT PANEL  now Electrical > Switch Relay Fuse > Switch
+
+--- tie: 'FRAME' (doc#166 -> Chassis Frame > Side Rail & Crossmember > Frame)  vs  'WHEEL' (doc#171 -> Wheels Hub > Wheel Rim > Wheel)
+    1 parts on the price list fall on a figure name carrying both
+      1533590431   SHIM; RR SPR                       fig=5-01B - FRAME AND OTHER PARTS WHEEL BASE 6 now Chassis Frame > Side Rail & Crossmember > Frame
+
+
+every part on figure name containing 'INSTRUMENT PANEL' and its leaf:
+      21  Cabin Interior > Dashboard & Controls > Knob
+       8  Electrical > Switch Relay Fuse > Switch
+
+every part on figure name containing 'OIL COOLER' and its leaf:
+      11  Cooling > Radiator > Radiator Assembly
+
+every part on figure name containing 'FUEL FILTER' and its leaf:
+       2  Maintenance Service > Fuel Filter > Fuel Filter Element
+
+every part on figure name containing 'DEF TANK' and its leaf:
+      14  Intake Exhaust Emission > DEF System > DEF Tank
+
+8974210030 now: Cabin Interior > Dashboard & Controls > Knob
+parts on Cabin Interior > Dashboard & Controls > Knob: 90

@@ -1,0 +1,110 @@
+==============================================================================
+STEP 3 - THE THREE ARGUABLE PLACEMENTS
+==============================================================================
+
+### (1) 7552062110  FILTER ASM; OIL  -> written Cooling > Radiator > Radiator Assembly
+--- 7552062110
+    figure name: '0-50 - OIL COOLER AND OIL FILTER'
+      rule 'OIL COOLER'               len 10  doc#70   -> Cooling > Radiator > Radiator Assembly
+      rule 'OIL FILTER'               len 10  doc#172  -> Maintenance Service > Oil Filter > Oil Filter Element
+      rule 'FILTER'                   len 6   doc#174  -> Maintenance Service > Filters > Filter
+      longest phrase length: 10 ; rules at that length: 2 TIE - document order decides
+
+    master parts with description 'FILTER ASM; OIL': 11
+          10  Maintenance Service > Filters (unspecified) > Filter Assembly
+           1  Cooling > Radiator > Radiator Assembly
+    master parts on Cooling > Radiator > Radiator Assembly: 161
+    master parts on Maintenance Service > Oil Filter > Oil Filter Element: 56
+    master parts on Maintenance Service > Filters > Filter: 1
+    master parts whose description starts 'FILTER ASM; OIL': 11
+          10  Maintenance Service > Filters (unspecified) > Filter Assembly
+           1  Cooling > Radiator > Radiator Assembly
+
+### (2) 7552710010  PUMP KIT  -> written Intake Exhaust Emission > DEF System > DEF Tank
+--- 7552710010
+    figure name: '1-46 - DEF TANK AND PIPING'
+      rule 'DEF TANK'                 len 8   doc#60   -> Intake Exhaust Emission > DEF System > DEF Tank
+      longest phrase length: 8 ; rules at that length: 1 
+
+    master parts with description 'PUMP KIT': 3
+           2  Fuel System > Injection Pump > Fuel Pump
+           1  Intake Exhaust Emission > DEF System > DEF Tank
+    master parts on Intake Exhaust Emission > DEF System > DEF Tank: 100
+    master parts on Fuel System > Injection Pump > Fuel Pump: 193
+    master parts on Fuel System > Fuel Pump > Fuel Pump: 23
+
+### (3) 8974210030  TRAY; INST  -> written Cabin Interior > Dashboard & Controls > Knob
+--- 8974210030
+    figure name: '7-40 - INSTRUMENT PANEL AND BOX'
+      rule 'INSTRUMENT PANEL'         len 16  doc#137  -> Cabin Interior > Dashboard & Controls > Knob
+      rule 'PANEL'                    len 5   doc#164  -> Accident & Body > Panels > Panel
+      longest phrase length: 16 ; rules at that length: 1 
+
+    master parts with description 'TRAY; INST': 2
+           2  Cabin Interior > Dashboard & Controls > Knob
+    master parts on Cabin Interior > Dashboard & Controls > Knob: 90
+    master parts with description starting 'TRAY': 40
+           7  Electrical > Charging > Battery Accessory
+           2  Cabin Interior > Dashboard & Controls > Knob
+           1  Accident & Body > Panels > Door
+           1  Cabin Interior > Trim > Trim
+           1  Cabin Interior > Interior Trim > Sun Visor
+           1  Accident & Body > Trim > Trim
+           1  Electrical > Charging > Alternator/Generator
+
+--- how crowded these three figure names are on the whole price list ---
+    0-50 - OIL COOLER AND OIL FILTER       9 price lines
+    1-46 - DEF TANK AND PIPING             14 price lines
+    7-40 - INSTRUMENT PANEL AND BOX        21 price lines
+
+==============================================================================
+STEP 4 - THE THREE CONNECTORS AND THE FIGURE-KEY CLAIM
+==============================================================================
+
+--- what the master holds for their figure keys ---
+    816-002 : 0 master rows
+    816-090 : 2 master rows
+        8971709780                                      family=(blank)
+        8972002010                                      family=(blank)
+
+--- every master row whose figure number is 816 ---
+    7 rows
+           5  (blank)
+           1  Electrical > Harness & Connectors > Connector
+           1  Electrical > Harness & Connectors > Terminal
+    distinct families among them: 2
+
+--- what a whole-figure-number grouping would say (816 alone) ---
+    families present: ['Electrical > Harness & Connectors > Connector', 'Electrical > Harness & Connectors > Terminal']
+
+--- would a bare CONNECTOR wording rule place them? ---
+    master parts whose description starts CONNECTOR: 71
+          50  Electrical > Harness & Connectors > Connector
+           7  (blank)
+           4  Brakes > Booster & Control > Brake Valve
+           4  Brakes > Hydraulic > Brake Pipe
+           3  Intake Exhaust Emission > Turbo > Turbocharger
+           1  Electrical > Switch Relay Fuse > Relay
+           1  Brakes > Hydraulic > Brake Hose
+           1  Fuel System > Fuel Control > Injector
+    -> on Electrical > Harness & Connectors > Connector: 50
+
+    the two exact texts, and what the master holds for each:
+      'CONNECTOR; HEAD LAMP'           0 master parts {}
+      'CONNECTOR; HARNESS (2P FEMAIL)' 0 master parts {}
+
+    every master row with description CONNECTOR; HEAD LAMP (any family state):
+
+--- the rule table itself ---
+    rules containing 'CONNECT': []
+    rules containing 'HARNESS': ['WIRING HARNESS', 'HARNESS']
+    the HARNESS rule maps figure names that contain HARNESS to Electrical > Harness & Connectors > Terminal
+
+--- what the EPC returned for the three ---
+    8943633640  {'pn': '8943633640', 'eq_status': 'FOUND', 'eq_fig_name': ''}
+    8980626220  {'pn': '8980626220', 'eq_status': 'FOUND', 'eq_fig_name': ''}
+    8980680830  {'pn': '8980680830', 'eq_status': 'FOUND', 'eq_fig_name': ''}
+
+--- master parts with description starting 'CONNECTOR; HARNESS' that carry a family ---
+    8943633630   CONNECTOR; HARNESS (2P MAIL)       Electrical > Harness & Connectors > Connector
+    8973645310   CONNECTOR; HARNESS                 Electrical > Harness & Connectors > Connector

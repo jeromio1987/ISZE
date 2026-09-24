@@ -1,0 +1,52 @@
+open part numbers from open_parts_classified.csv: 1097 distinct: 1097
+group counts there: {'BLOCKED_UNKNOWN_MARKER': 845, 'DATA_CARVED_OUT_BY_HAND': 11, 'DATA_FAMILY_ONE_LEAF_SPLIT': 2, 'DATA_FIGURE_KEY_CONTRADICTS': 1, 'DATA_FIGURE_KEY_MULTI_FAMILY': 4, 'DATA_NOT_IN_MASTER': 43, 'DATA_RESIDUAL_FAMILY_REFUSED': 6, 'DATA_WORDING_SPLIT_ACROSS_FAMILIES': 8, 'DATA_WORDING_TOO_FEW_PARTS': 31, 'DATA_WORDING_UNKNOWN_TO_MASTER': 146}
+
+master rows: 165257
+master columns: 32 ['part_number', 'description', 'aim_l1', 'aim_l2', 'aim_l3', 'aim_demand_type', 'aim_core_noncore', 'cat_l1', 'cat_l2', 'cat_l3', 'cat_pms_flag', 'fig_key', 'fig_no', 'key_no', 'price_class_iml', 'aim_source', 'has_aim', 'has_catalogue_node', 'desc_ambiguous', 'l12m_billed_eur', 'eur', 'aim_l1_fixed', 'aim_l2_fixed', 'aim_changed', 'jp_zkk', 'jp_zuk', 'jp_hkk', 'jp_eple', 'jp_fig_key', 'jp_class_new', 'jp_class_current', 'jp_code_source']
+distinct master part numbers: 165257
+of the open set, on the master: 1054 | not: 43
+
+CANDIDATE DEFINITIONS on the 1,097 open part numbers
+  aim_l1 is a marker                                      845
+  aim_l1_fixed is a marker                                845
+  aim_l1 AND aim_l1_fixed are markers                     845
+  aim_l1 OR aim_l1_fixed is a marker                      845
+  any of l1/l2/l3/l1f/l2f is a marker                     845
+  aim_l1 OR aim_l2 OR aim_l3 is a marker                  845
+  aim_l1_fixed OR aim_l2_fixed is a marker                845
+
+EXACT MARKER STRINGS SEEN (open set, master row)
+   aim_l1 = 'Unknown' -> 699
+   aim_l1 = 'Unknown Review' -> 146
+   aim_l1_fixed = 'Unknown' -> 699
+   aim_l1_fixed = 'Unknown Review' -> 146
+   aim_l2 = 'Unclassified' -> 146
+   aim_l2 = 'Unknown' -> 699
+   aim_l2_fixed = 'Unclassified' -> 146
+   aim_l2_fixed = 'Unknown' -> 699
+   aim_l3 = 'To Review' -> 146
+   aim_l3 = 'Unknown' -> 699
+
+overlay rows (distinct part numbers): 164907
+overlay columns: 27
+overlay carries aim_l1_fixed: True | aim_l2_fixed: True | aim_l3_fixed: True
+open parts whose OVERLAY carries a marker in aim_l*_fixed: 819
+  of those with no master row: 0
+   overlay aim_l1_fixed = 'Unknown' -> 675
+   overlay aim_l1_fixed = 'Unknown Review' -> 144
+   overlay aim_l2_fixed = 'Unclassified' -> 144
+   overlay aim_l2_fixed = 'Unknown' -> 675
+   overlay aim_l3_fixed = 'To Review' -> 144
+   overlay aim_l3_fixed = 'Unknown' -> 675
+
+RECONCILIATION ATTEMPTS
+  master l1 AND l1_fixed marker: 845
+  master l1 OR l1_fixed marker : 845
+  union(master both, overlay marker): 845
+  overlay marker but not master-both: 0
+
+THE BRIEF'S THREE-WAY SPLIT, MEASURED
+  819-style (marker in the AIM columns): 845
+  master row but no marker at all  : 209
+  no master row                    : 43
+  sum                              : 1097

@@ -1,0 +1,18 @@
+=== master rows with description exactly 'CONNECTOR' ===
+-- BEFORE today's run : 14 rows, 14 placed
+        14  Electrical > Harness & Connectors > Connector
+-- NOW : 18 rows, 18 placed
+        14  Electrical > Harness & Connectors > Connector
+         4  Brakes > Hydraulic > Brake Pipe
+
+=== the parts labelled TODAY (any description) whose text is exactly 'CONNECTOR' ===
+    5872210960   Brakes > Hydraulic > Brake Pipe                [export_pr00_20260924|export_aim_eq_20260924]
+    5872211080   Brakes > Hydraulic > Brake Pipe                [export_pr00_20260924|export_aim_eq_20260924]
+    5872211130   Brakes > Hydraulic > Brake Pipe                [export_pr00_20260924|export_aim_eq_20260924]
+    5872211300   Brakes > Hydraulic > Brake Pipe                [export_pr00_20260924|export_aim_eq_20260924]
+
+=== what the classified.csv route said for those ===
+    5872210960   src='EPC figure name'                        note='3-77 - BRAKE PIPING; AIR,REAR'    classified=Brakes > Hydraulic > Brake Pipe
+    5872211080   src='EPC figure name'                        note='3-77 - BRAKE PIPING; AIR,REAR'    classified=Brakes > Hydraulic > Brake Pipe
+    5872211130   src='EPC figure name'                        note='3-77 - BRAKE PIPING; AIR,REAR'    classified=Brakes > Hydraulic > Brake Pipe
+    5872211300   src='EPC figure name'                        note='3-77 - BRAKE PIPING; AIR,REAR'    classified=Brakes > Hydraulic > Brake Pipe

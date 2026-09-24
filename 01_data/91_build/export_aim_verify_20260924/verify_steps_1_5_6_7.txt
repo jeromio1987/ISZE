@@ -1,0 +1,180 @@
+==============================================================================
+STEP 1 - THE POSITION ON DISK (re-measured, not read from a report)
+==============================================================================
+price-list part numbers          : 1303
+  carry a real AIM family        : 1224
+  open                           : 79
+    - 'Unknown' marker           : 45
+    - master row, blank family   : 23
+    - no master row at all       : 11
+  sum check                      : 1303
+
+duplicate part numbers on the master: 0
+master rows total                : 165289
+master rows that are one of the 1,303: 1292
+
+==============================================================================
+STEP 7 BASIS - what the EPC actually returned
+==============================================================================
+lookups: FOUND 1221 | NOT_FOUND 81 | ERROR 1  (of 1303 part numbers)
+FOUND but NO figure name recorded : 60
+  of those, placed by something else (figure key): 46
+  of those, still open                          : 14
+      1822900110  REFLECTOR; REFLEX,SIDE GATE,MIDD fig 803-045
+      8943633640  CONNECTOR; HARNESS (2P FEMAIL)   fig 816-002
+      8970125392  RAIL; FRT GUIDE                  fig 631-078
+      8971133250  INSULATOR; RR SPR UPR            fig 460-172
+      8971349242  GUARD; UNDER,FRT                 fig 545-005
+      8971849470  ADJUSTER; VALVE GAP              fig 014-074
+      8971868700  ADJUSTER; VALVE GAP              fig 014-074
+      8971868730  ADJUSTER; VALVE GAP              fig 014-074
+      8971868740  ADJUSTER; VALVE GAP              fig 014-074
+      8973613450  SHAFT ASM; FRT DRIVE             fig 412-001
+      8975412300  INDICATOR; TIRE PRESSURE         fig 480-044
+      8980626220  CONNECTOR; HEAD LAMP             fig 816-090
+      8980678540  COVER; OIL PAN                   fig 013-108
+      8980680830  CONNECTOR; HEAD LAMP             fig 816-090
+
+==============================================================================
+STEP 6 - WHAT A PERSON SEES FILTERING BY FAMILY
+==============================================================================
+family (Level 1)            parts   rule  other       list EUR
+Accident & Body               203    187     16         154497
+Cabin Interior                142    140      2          10802
+Electrical                    135    125     10         780592
+Transmission                  112    108      4         973860
+Engine                        101     97      4         875376
+Brakes                         99     97      2         124308
+Intake Exhaust Emission        91     89      2         119670
+Cooling                        64     64      0           3633
+Steering                       63     62      1           3468
+Driveline Axle                 53     53      0         478694
+Suspension                     44     40      4           6722
+Clutch                         34     33      1           1654
+Chassis Frame                  32     23      9           1496
+Fuel System                    29     28      1           2914
+Wheels Hub                      8      7      1            590
+Maintenance Service             7      2      5            380
+Tools Equipment                 4      4      0             77
+Lubrication                     2      2      0              5
+Fluids Chemicals                1      0      1            104
+
+--- provenance behind the same families (master aim_source stamp) ---
+Accident & Body:
+       135  aim_workbook|export_aim_eq_20260924
+        43  export_pr00_20260924|export_aim_eq_20260924
+        23  not_classified|export_aim_eq_20260924
+         2  export_aim_eq_20260924
+Cabin Interior:
+       107  aim_workbook|export_aim_eq_20260924
+        16  not_classified|export_aim_eq_20260924
+        16  export_pr00_20260924|export_aim_eq_20260924
+         3  export_aim_eq_20260924
+Electrical:
+        76  aim_workbook|export_aim_eq_20260924
+        41  export_pr00_20260924|export_aim_eq_20260924
+        12  not_classified|export_aim_eq_20260924
+         6  export_aim_eq_20260924
+Transmission:
+        68  aim_workbook|export_aim_eq_20260924
+        30  not_classified|export_aim_eq_20260924
+        10  export_pr00_20260924|export_aim_eq_20260924
+         4  export_aim_eq_20260924
+Engine:
+        59  aim_workbook|export_aim_eq_20260924
+        21  not_classified|export_aim_eq_20260924
+        18  export_pr00_20260924|export_aim_eq_20260924
+         2  export_aim_eq_20260924
+         1  export_pr00_20260924
+Brakes:
+        67  aim_workbook|export_aim_eq_20260924
+        21  not_classified|export_aim_eq_20260924
+         8  export_pr00_20260924|export_aim_eq_20260924
+         3  export_aim_eq_20260924
+Intake Exhaust Emission:
+        61  aim_workbook|export_aim_eq_20260924
+        16  export_pr00_20260924|export_aim_eq_20260924
+        11  not_classified|export_aim_eq_20260924
+         3  export_aim_eq_20260924
+Cooling:
+        53  aim_workbook|export_aim_eq_20260924
+         6  export_pr00_20260924|export_aim_eq_20260924
+         4  not_classified|export_aim_eq_20260924
+         1  export_aim_eq_20260924
+Steering:
+        45  aim_workbook|export_aim_eq_20260924
+         9  not_classified|export_aim_eq_20260924
+         8  export_pr00_20260924|export_aim_eq_20260924
+         1  export_aim_eq_20260924
+Driveline Axle:
+        36  aim_workbook|export_aim_eq_20260924
+        10  not_classified|export_aim_eq_20260924
+         6  export_pr00_20260924|export_aim_eq_20260924
+         1  export_aim_eq_20260924
+
+--- the five families by list-price total (Price column, EUR) ---
+  Transmission                       973860 EUR   over 112 parts
+  Engine                             875376 EUR   over 101 parts
+  Electrical                         780592 EUR   over 135 parts
+  Driveline Axle                     478694 EUR   over 53 parts
+  Accident & Body                    154497 EUR   over 203 parts
+  TOTAL placed                      3538842 EUR   over 1224 parts
+
+--- provenance of the parts placed TODAY (stamp export_aim_eq_20260924) ---
+parts carrying today's stamp: 1223
+==============================================================================
+STEP 5 - STRATIFIED SAMPLE, RULE REPRODUCED vs FAMILY ON THE MASTER
+==============================================================================
+placed parts to sample from: 1224
+sample size: 45 parts
+
+part         description                  list EUR  family now on the master                       verdict
+8981422000   ENGINE ASM                   869331.0  Engine > Complete Assembly > Engine Assembly   placed WITHOUT a rule (EPC name / key)
+8976646550   TRANSMISSION ASM; MANUAL     511202.0  Transmission > Case > Case Cover               AGREE (rule)
+7552029255   MOTOR ASM; REAR DRIVE        332050.0  Driveline Axle > Axle Shaft > Axle Shaft       AGREE (rule)
+7551810370   BODY ASM; REAR               147048.0  Accident & Body > Panels > Panel               AGREE (rule)
+8976746621   HARNESS; FRAME,FRT           122674.0  Electrical > Harness & Connectors > Terminal   AGREE (rule)
+8974848540   HYDRAULIC UNIT; ANTI LOCK BR 117565.0  Brakes > Hydraulic > Brake Pipe                AGREE (rule)
+8975270373   TURBOCHARGER ASM             114874.0  Intake Exhaust Emission > Turbo > Turbocharger AGREE (rule)
+8976725370   HYDRAULIC UNIT; ANTI LOCK BR 550.65    Brakes > Hydraulic > Brake Pipe                AGREE (rule)
+7552928450   BOX ASM; SHIFT CONT          550.35    Transmission > Shift Mechanism > Shift Fork    AGREE (rule)
+8983930170   CASE; FRT AXLE               289.51    Driveline Axle > Axle Shaft > Drive Shaft      AGREE (rule)
+8982047290   CHAMBER SUB ASM; MIXER       246.26    Intake Exhaust Emission > Exhaust > Exhaust Pi AGREE (rule)
+8974269813   AIR BAG UNIT                 234.66    Electrical > Control Units > Control Module    AGREE (rule)
+8974718931   WHEEL; STRG                  216.94    Steering > Column > Steering Shaft             AGREE (rule)
+7552297660   WHEEL; DISC,AL               210.59    Wheels Hub > Wheel Rim > Wheel                 AGREE (rule)
+8980107565   MEMBER; CAB MTG RR           200.74    Chassis Frame > Crossmember & Brackets > Brack AGREE (rule)
+8974695311   BACK ASM; SEAT               194.51    Cabin Interior > Seat > Seat Cushion           AGREE (rule)
+8943254481   CAGE; DIFF                   193.52    Driveline Axle > Final Drive > Final Drive Asm AGREE (rule)
+8980332531   ARM; UPR CONT                175.79    Suspension > Suspension Arm > Ball Joint       AGREE (rule)
+8970340244   BRAKE UNIT; EXH              120.62    Intake Exhaust Emission > Exhaust > Exhaust Pi AGREE (rule)
+5872225770   BRACKET; ENG MTG,RR          102.57    Chassis Frame > Crossmember & Brackets > Brack placed WITHOUT a rule (EPC name / key)
+8980422840   COVER; FRT                   94.15     Engine > Timing Drive > Timing Gear            AGREE (rule)
+8983100420   HOSE; FLEX,P/S CONT VLV      60.72     Steering > Gear > Steering Gear                AGREE (rule)
+8976568410   CABLE; SHIFT,TRANS CONT      53.55     Transmission > Shift Mechanism > Shift Fork    AGREE (rule)
+8942720796   PANEL; FRONT,SIDE            44.64     Accident & Body > Panels > Panel               placed WITHOUT a rule (EPC name / key)
+8979030400   TRAY; HEADER ROOF            30.62     Cabin Interior > Interior Trim > Sun Visor     AGREE (rule)
+8979445150   BOOT KIT; STRG HSG           18.85     Steering > Gear > Steering Gear                AGREE (rule)
+8974185343   CLUSTER ASM; METER           18.57     Electrical > Instruments > Instrument Cluster  AGREE (rule)
+8980813740   SPRING; LEAF,NO 5,FRT        18.16     Suspension > Leaf Springs > Leaf Spring Asm    AGREE (rule)
+8982032160   BEARING; RR OUTPUT SHAFT,FRT 13.2      Transmission > Geartrain > Gear                AGREE (rule)
+1474590132   CONNECTOR; AIR TANK          12.32     Brakes > Hydraulic > Brake Hose                AGREE (rule)
+8982035990   ELEMENT; FUEL FILTER         10.17     Fuel System > Filtration > Sedimenter          AGREE (rule)
+8972556890   BEARING; THRUST              9.39      Clutch > Clutch Kit > Clutch Kit               AGREE (rule)
+8973167340   HOSE; FLEX,FRT BRK           8.88      Brakes > Hydraulic > Brake Pipe                AGREE (rule)
+8974767171   LID; OIL TANK                7.81      Cabin Interior > Dashboard & Controls > Knob   AGREE (rule)
+8971207470   COVER; BATTERY               7.06      Electrical > Starting & Charging > Battery Cab AGREE (rule)
+8983304020   BOLT; ADJUST                 2.23      Chassis Frame > Crossmember & Brackets > Brack AGREE (rule)
+8981158070   CLIP; FILLER HOSE            0.89      Fuel System > Tank & Supply > Fuel Tank        AGREE (rule)
+8982869730   DOWEL; CYL HEAD              0.85      Engine > Cylinder Head > Head Cover            AGREE (rule)
+8974034110   RETAINER; CARPET             0.38      Accident & Body > Panels > Panel               AGREE (rule)
+8975480980   TRANSMISSION ASM; MANUAL     237990.0  Transmission > Case > Case Cover               AGREE (rule)
+7551846330   TRANSFER ASM                 218158.0  Transmission > Case > Case Cover               AGREE (rule)
+7552319201   DISPLAY; MULTI               147215.0  Electrical > Audio > Radio                     AGREE (rule)
+7552319211   DISPLAY; MULTI               147214.0  Electrical > Audio > Radio                     AGREE (rule)
+7552440900   CASE; RR AXLE                142492.0  Driveline Axle > Axle Shaft > Axle Shaft       AGREE (rule)
+8975027141   CONTROLLER; ABS              117906.0  Electrical > Control Units > Control Unit      AGREE (rule)
+
+rule reproduced and agreed with the master : 42
+rule reproduced and disagreed              : 0
+placed from an EPC-name/key route, counted separately: 3

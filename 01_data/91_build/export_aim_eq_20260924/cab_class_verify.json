@@ -1,0 +1,94 @@
+{
+  "checks": [
+    {
+      "name": "a1_header_identical",
+      "ok": true,
+      "detail": "32 cols"
+    },
+    {
+      "name": "a2_row_count_plus_1",
+      "ok": true,
+      "detail": "165289 -> 165290"
+    },
+    {
+      "name": "a3_no_duplicate_pn",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "a4_sorted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "b1_only_intended_cells_changed",
+      "ok": true,
+      "detail": "19 rows, 116 cells, cols={'aim_l2': 19, 'aim_l3': 19, 'aim_source': 19, 'aim_l2_fixed': 19, 'aim_changed': 19, 'aim_l1': 7, 'has_aim': 7, 'aim_l1_fixed': 7}; unexpected=0"
+    },
+    {
+      "name": "c1_all_placed_read_new_class",
+      "ok": true,
+      "detail": "19/19"
+    },
+    {
+      "name": "c2_all_placed_fixed_cols",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "c3_all_placed_stamped",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "d1_added_row_exists_with_class",
+      "ok": true,
+      "detail": "'CAB ASM; SERVICE,W/ELECT' Accident & Body|Complete Assembly|Cab Assembly"
+    },
+    {
+      "name": "e1_pair_row_count",
+      "ok": true,
+      "detail": "165290 rows"
+    },
+    {
+      "name": "e2_pair_csv_shows_class_on_all_20",
+      "ok": true,
+      "detail": "20/20 read Cab Assembly"
+    },
+    {
+      "name": "e3_pair_xlsx_shows_class_on_all_20",
+      "ok": true,
+      "detail": "20/20 read Cab Assembly"
+    },
+    {
+      "name": "f1_20260921_pair_unchanged",
+      "ok": true,
+      "detail": "hashes match: True"
+    },
+    {
+      "name": "g1_launcher_points_at_20260924_xlsx",
+      "ok": true,
+      "detail": "74 bytes"
+    },
+    {
+      "name": "g2_launcher_is_crlf",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "h1_class_holds_20_rows",
+      "ok": true,
+      "detail": "20 rows"
+    }
+  ],
+  "open_count": {
+    "parts": 1303,
+    "blank": 33,
+    "unknown": 31,
+    "unknown_review": 14,
+    "open": 78,
+    "before": 79
+  },
+  "master_sha256": "8add555669baf1f75b3bb2d203d58960fff7596b26ec5d8645d7ffee45604acf",
+  "backup": "aim_master_v2.csv.bak_pre_cab_class_20260924_191700"
+}

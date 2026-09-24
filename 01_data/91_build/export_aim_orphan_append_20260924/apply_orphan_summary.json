@@ -1,0 +1,427 @@
+{
+  "as_of": "2026-09-24T17:01:54",
+  "rows_before": 165257,
+  "rows_after": 165289,
+  "rows_added": 32,
+  "unplaced": [
+    "5876102381",
+    "7553266960",
+    "1884053370",
+    "7552598420",
+    "7552126065",
+    "7553196060",
+    "8943633640",
+    "7552360101",
+    "7552347140",
+    "8980626220",
+    "8980680830"
+  ],
+  "master": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_master_v2.csv",
+  "backup": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_master_v2.csv.bak_pre_orphan_append_20260924_170151",
+  "sha256_before": "1870dc2ac08e8128c9323a5da14ad46742bb1200f24d3d6faa3ed53576b74af4",
+  "sha256_after": "eaeb51bea3fe61b3af3ca7d0290f2e071bb480053c76b76198b26451b5a30283",
+  "bytes_before": 28606117,
+  "bytes_after": 28611807,
+  "checks": {
+    "header_identical": true,
+    "columns_identical": true,
+    "row_count_plus_n": true,
+    "every_preexisting_row_unchanged": true,
+    "no_aim_column_changed_on_preexisting_rows": true,
+    "no_duplicate_part_numbers": true,
+    "sorted_ascending": true,
+    "new_rows_carry_levels_and_stamp": true,
+    "untouched_sets_unchanged": true,
+    "marker_and_blank_rows_unchanged": true,
+    "no_overlap_with_marker_or_blank_rows": true,
+    "no_bom": true,
+    "crlf_only": true
+  },
+  "gate_pass": true,
+  "placed": [
+    {
+      "pn": "7552029255",
+      "description": "MOTOR ASM; REAR DRIVE",
+      "aim": [
+        "Driveline Axle",
+        "Axle Shaft",
+        "Axle Shaft"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '4-20 - REAR AXLE CASE AND SHAFT' -> rule 'REAR AXLE' -> Driveline Axle > Axle Shaft > Axle Shaft"
+    },
+    {
+      "pn": "8975480980",
+      "description": "TRANSMISSION ASM; MANUAL",
+      "aim": [
+        "Transmission",
+        "Case",
+        "Case Cover"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '2-20 - MANUAL TRANSMISSION ASM AND CASE' -> rule 'MANUAL TRANSMISSION ASM' -> Transmission > Case > Case Cover"
+    },
+    {
+      "pn": "8975447350",
+      "description": "DISC; CLUTCH",
+      "aim": [
+        "Clutch",
+        "Clutch Kit",
+        "Clutch Kit"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '2-01 - CLUTCH' -> rule 'CLUTCH' -> Clutch > Clutch Kit > Clutch Kit"
+    },
+    {
+      "pn": "8972785820",
+      "description": "LAMP ASM; RR COMB",
+      "aim": [
+        "Electrical",
+        "Lighting",
+        "Lamp"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '8-03 - LAMP; REAR AND REAR SIDE' -> rule 'LAMP' -> Electrical > Lighting > Lamp"
+    },
+    {
+      "pn": "8972785810",
+      "description": "LAMP ASM; RR COMB",
+      "aim": [
+        "Electrical",
+        "Lighting",
+        "Lamp"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '8-03 - LAMP; REAR AND REAR SIDE' -> rule 'LAMP' -> Electrical > Lighting > Lamp"
+    },
+    {
+      "pn": "7552062110",
+      "description": "FILTER ASM; OIL",
+      "aim": [
+        "Cooling",
+        "Radiator",
+        "Radiator Assembly"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '0-50 - OIL COOLER AND OIL FILTER' -> rule 'OIL COOLER' -> Cooling > Radiator > Radiator Assembly"
+    },
+    {
+      "pn": "8975120512",
+      "description": "CLUTCH; MAGNET,A/C",
+      "aim": [
+        "Cabin Interior",
+        "HVAC Filters",
+        "HVAC"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '8-71 - COMPRESSOR; AIR CONDITIONING' -> rule 'AIR CONDITION' -> Cabin Interior > HVAC Filters > HVAC"
+    },
+    {
+      "pn": "8983700410",
+      "description": "FILTER ASM; FUEL",
+      "aim": [
+        "Maintenance Service",
+        "Fuel Filter",
+        "Fuel Filter Element"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '0-41 - FUEL FILTER AND BRACKET' -> rule 'FUEL FILTER' -> Maintenance Service > Fuel Filter > Fuel Filter Element"
+    },
+    {
+      "pn": "8978410221",
+      "description": "LAMP ASM; HEAD",
+      "aim": [
+        "Electrical",
+        "Lighting",
+        "Lamp"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '8-01 - LAMP; FRONT AND FRONT SIDE' -> rule 'LAMP' -> Electrical > Lighting > Lamp"
+    },
+    {
+      "pn": "8978410231",
+      "description": "LAMP ASM; HEAD",
+      "aim": [
+        "Electrical",
+        "Lighting",
+        "Lamp"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '8-01 - LAMP; FRONT AND FRONT SIDE' -> rule 'LAMP' -> Electrical > Lighting > Lamp"
+    },
+    {
+      "pn": "8976725370",
+      "description": "HYDRAULIC UNIT; ANTI LOCK BRK",
+      "aim": [
+        "Brakes",
+        "Hydraulic",
+        "Brake Pipe"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '3-50 - BRAKE PIPING; OIL,MASTER CYLINDER' -> rule 'MASTER CYLINDER' -> Brakes > Hydraulic > Brake Pipe"
+    },
+    {
+      "pn": "5872218030",
+      "description": "RUBBER; ENG FOOT,FRT",
+      "aim": [
+        "Engine",
+        "Mounting",
+        "Engine Mount"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '0-22 - ENGINE MOUNTING' -> rule 'ENGINE MOUNTING' -> Engine > Mounting > Engine Mount"
+    },
+    {
+      "pn": "5872216470",
+      "description": "RUBBER; ENG FOOT,FRT",
+      "aim": [
+        "Engine",
+        "Mounting",
+        "Engine Mount"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '0-22 - ENGINE MOUNTING' -> rule 'ENGINE MOUNTING' -> Engine > Mounting > Engine Mount"
+    },
+    {
+      "pn": "7552710010",
+      "description": "PUMP KIT",
+      "aim": [
+        "Intake Exhaust Emission",
+        "DEF System",
+        "DEF Tank"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '1-46 - DEF TANK AND PIPING' -> rule 'DEF TANK' -> Intake Exhaust Emission > DEF System > DEF Tank"
+    },
+    {
+      "pn": "8982409962",
+      "description": "BOX ASM; SHIFT CONT",
+      "aim": [
+        "Transmission",
+        "Shift Mechanism",
+        "Shift Fork"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '2-30 - GEAR SHIFTER AND QUADRANT BOX' -> rule 'GEAR SHIFTER' -> Transmission > Shift Mechanism > Shift Fork"
+    },
+    {
+      "pn": "8975592990",
+      "description": "SLIDER; CUSHION",
+      "aim": [
+        "Cabin Interior",
+        "Seat",
+        "Seat Cushion"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '7-50 - FRONT SEAT' -> rule 'FRONT SEAT' -> Cabin Interior > Seat > Seat Cushion"
+    },
+    {
+      "pn": "8981751121",
+      "description": "COOLER ASM; FUEL",
+      "aim": [
+        "Fuel System",
+        "Fuel Lines & Hoses",
+        "Fuel Pipe"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '1-41 - FUEL PIPING; CHASSIS' -> rule 'FUEL PIPING' -> Fuel System > Fuel Lines & Hoses > Fuel Pipe"
+    },
+    {
+      "pn": "8983899750",
+      "description": "ABSORBER ASM; SHOCK,FRT",
+      "aim": [
+        "Suspension",
+        "Suspension Arm",
+        "Ball Joint"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '4-50 - FRONT SUSPENSION' -> rule 'FRONT SUSPENSION' -> Suspension > Suspension Arm > Ball Joint"
+    },
+    {
+      "pn": "7551940990",
+      "description": "STIFFENER; PANEL",
+      "aim": [
+        "Accident & Body",
+        "Panels",
+        "Panel"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '6-05 - FRONT PANEL' -> rule 'FRONT PANEL' -> Accident & Body > Panels > Panel"
+    },
+    {
+      "pn": "5872211540",
+      "description": "U-BOLT; FRT SPR",
+      "aim": [
+        "Suspension",
+        "Suspension Arm",
+        "Ball Joint"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '4-50 - FRONT SUSPENSION' -> rule 'FRONT SUSPENSION' -> Suspension > Suspension Arm > Ball Joint"
+    },
+    {
+      "pn": "7552752950",
+      "description": "ADAPTER; EXH PIPE",
+      "aim": [
+        "Intake Exhaust Emission",
+        "Exhaust",
+        "Exhaust Pipe"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '1-50 - EXHAUST PIPE AND SILENCER' -> rule 'EXHAUST' -> Intake Exhaust Emission > Exhaust > Exhaust Pipe"
+    },
+    {
+      "pn": "8974210030",
+      "description": "TRAY; INST",
+      "aim": [
+        "Cabin Interior",
+        "Dashboard & Controls",
+        "Knob"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '7-40 - INSTRUMENT PANEL AND BOX' -> rule 'INSTRUMENT PANEL' -> Cabin Interior > Dashboard & Controls > Knob"
+    },
+    {
+      "pn": "5872213430",
+      "description": "HOSE; FLEX",
+      "aim": [
+        "Brakes",
+        "Hydraulic",
+        "Brake Pipe"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '3-77 - BRAKE PIPING; AIR,REAR' -> rule 'BRAKE PIPING' -> Brakes > Hydraulic > Brake Pipe"
+    },
+    {
+      "pn": "8983943812",
+      "description": "HOSE; CONN",
+      "aim": [
+        "Intake Exhaust Emission",
+        "Air Intake",
+        "Air Duct"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '1-31 - AIR DUCT' -> rule 'AIR DUCT' -> Intake Exhaust Emission > Air Intake > Air Duct"
+    },
+    {
+      "pn": "5872215520",
+      "description": "NUT; U BOLT",
+      "aim": [
+        "Suspension",
+        "Suspension Arm",
+        "Ball Joint"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '4-50 - FRONT SUSPENSION' -> rule 'FRONT SUSPENSION' -> Suspension > Suspension Arm > Ball Joint"
+    },
+    {
+      "pn": "7552956550",
+      "description": "HOSE; FLEX,FRT",
+      "aim": [
+        "Brakes",
+        "Hydraulic",
+        "Brake Pipe"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '3-75 - BRAKE PIPING; AIR,FRONT' -> rule 'BRAKE PIPING' -> Brakes > Hydraulic > Brake Pipe"
+    },
+    {
+      "pn": "7552389220",
+      "description": "BRACKET; REFLECTOR",
+      "aim": [
+        "Electrical",
+        "Lighting",
+        "Lamp"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '8-03 - LAMP; REAR AND REAR SIDE' -> rule 'LAMP' -> Electrical > Lighting > Lamp"
+    },
+    {
+      "pn": "8974855450",
+      "description": "HARNESS; TACHOGRAPH",
+      "aim": [
+        "Electrical",
+        "Instruments",
+        "Instrument Cluster"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '8-21 - METER ASM' -> rule 'METER' -> Electrical > Instruments > Instrument Cluster"
+    },
+    {
+      "pn": "1571810036",
+      "description": "HOOK",
+      "aim": [
+        "Accident & Body",
+        "Bumpers",
+        "Bumper Assembly"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '6-90 - REAR BUMPER' -> rule 'REAR BUMPER' -> Accident & Body > Bumpers > Bumper Assembly"
+    },
+    {
+      "pn": "8980376041",
+      "description": "INHIBITOR",
+      "aim": [
+        "Transmission",
+        "Case",
+        "Case Cover"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '2-20A - MANUAL TRANSMISSION ASM AND CASE M/T' -> rule 'MANUAL TRANSMISSION ASM' -> Transmission > Case > Case Cover"
+    },
+    {
+      "pn": "8943796470",
+      "description": "GASKET; OIL PUMP",
+      "aim": [
+        "Steering",
+        "Gear",
+        "Steering Gear"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '4-42 - POWER STEERING OIL PUMP' -> rule 'POWER STEERING OIL PUMP' -> Steering > Gear > Steering Gear"
+    },
+    {
+      "pn": "8973628520",
+      "description": "SPRING; INHIBITOR",
+      "aim": [
+        "Transmission",
+        "Case",
+        "Case Cover"
+      ],
+      "route": "a",
+      "stamp": "export_aim_eq_20260924",
+      "evidence": "EPC figure name '2-20A - MANUAL TRANSMISSION ASM AND CASE M/T' -> rule 'MANUAL TRANSMISSION ASM' -> Transmission > Case > Case Cover"
+    }
+  ]
+}

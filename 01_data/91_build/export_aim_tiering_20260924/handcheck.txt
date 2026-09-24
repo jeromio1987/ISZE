@@ -1,0 +1,132 @@
+==============================================================================
+1. THE 'ENGINE ASM' ROW JEROME NAMED
+  queue rows named ENGINE ASM: 1
+    pn=8981422000 fk=001-HAA list=8,693.31 pr00=8,467.28
+      d_l1=Engine (master parts=27.0)  f_l1=nan (parts=nan)
+      strict Tier A = False
+  master rows with that exact description: 27
+    their aim_l1: {'Engine': np.int64(27)}
+    their fig_keys: {}
+      8975293220  ENGINE ASM                 -> Engine > Complete Assembly > Engine Assembly  src=aim_workbook
+      8975293230  ENGINE ASM                 -> Engine > Complete Assembly > Engine Assembly  src=aim_workbook
+      8975293300  ENGINE ASM                 -> Engine > Complete Assembly > Engine Assembly  src=aim_workbook
+      8975450620  ENGINE ASM                 -> Engine > Complete Assembly > Engine Assembly  src=aim_workbook
+      8976485430  ENGINE ASM                 -> Engine > Complete Assembly > Engine Assembly  src=aim_workbook
+      8976615990  ENGINE ASM                 -> Engine > Complete Assembly > Engine Assembly  src=aim_workbook
+
+==============================================================================
+2. CONTRADICTION SCAN INSIDE STRICT TIER A
+  strict Tier A rows: 300
+  rows where a system word points at a different family: 48
+  euro on those rows: PR00 12,247.01  list 6,693.88
+    7551846330  TRANSFER ASM                           fk=260-001   -> Driveline Axle         (word 'TRANS' implies Transmission) list= 2,181.58 pr00= 4,341.71
+    8972755513  TRANSMITTER; DOOR LOCK                 fk=730-068   -> Accident & Body        (word 'TRANS' implies Transmission) list=    57.91 pr00= 1,186.60
+    7475422131  COVER; TRIM,FRT SEAT,CUSHION           fk=750-013   -> Wheels Hub             (word 'SEAT' implies Cabin Interior) list=   249.36 pr00=   563.67
+    8974776264  COVER; TRIM,FRT SEAT,CUSHION           fk=750-013   -> Wheels Hub             (word 'SEAT' implies Cabin Interior) list=   250.30 pr00=   500.60
+    8983641423  PUMP ASM; OIL,P/S                      fk=436-001   -> Fuel System            (word 'OIL' implies Engine / Lubrication / Maintenance Service) list=   405.06 pr00=   417.21
+    8979466262  CYLINDER ASM; CLUTCH MASTER            fk=208-001   -> Brakes                 (word 'CLU' implies Clutch) list=    36.31 pr00=   391.89
+    8976617671  METER COMPL; CLUSTER                   fk=821-001   -> Electrical             (word 'CLU' implies Clutch) list=   314.81 pr00=   387.37
+    7552714620  CONTROL UNIT; DEF DCM                  fk=060-995   -> Electrical             (word 'DEF' implies Intake Exhaust Emission) list=   190.00 pr00=   375.67
+    7552325061  CAMERA; REAR                           fk=826-580   -> Electrical             (word 'CAM' implies Engine) list=   182.31 pr00=   375.56
+    8983940751  SPRING; COIL,FRT SUSP                  fk=450-047   -> Suspension             (word 'OIL' implies Engine / Lubrication / Maintenance Service) list=    38.64 pr00=   363.93
+    8974718931  WHEEL; STRG                            fk=430-003   -> Wheels Hub             (word 'STRG' implies Steering) list=   216.94 pr00=   266.94
+    8944320762  KNUCKLE; FRT AXLE                      fk=410-002   -> Steering               (word 'AXLE' implies Chassis Frame / Driveline Axle) list=   248.47 pr00=   265.86
+    8972775611  PUMP ASM; OIL                          fk=051-001   -> Fuel System            (word 'OIL' implies Engine / Lubrication / Maintenance Service) list=   140.09 pr00=   241.04
+    8976617301  METER COMPL; CLUSTER                   fk=821-001   -> Electrical             (word 'CLU' implies Clutch) list=   223.06 pr00=   223.06
+    8983706120  METER COMPL; CLUSTER                   fk=821-001   -> Electrical             (word 'CLU' implies Clutch) list=   178.51 pr00=   219.66
+    8983860001  LID ASM; FUEL FILLER,RR BODY           fk=933-129   -> Accident & Body        (word 'FUEL' implies Fuel System) list=    20.02 pr00=   174.98
+    7551894393  CYLINDER SET; CAR LOCK                 fk=730-001   -> Accident & Body        (word 'CYL' implies Engine) list=   157.13 pr00=   168.13
+    8983944961  LOCK ASM; STRG                         fk=431-102   -> Accident & Body        (word 'STRG' implies Steering) list=    53.40 pr00=   159.82
+    8978744842  BRACKET ASM; DEF TANK                  fk=146-014   -> Chassis Frame          (word 'DEF' implies Intake Exhaust Emission) list=   175.11 pr00=   150.66
+    7552973320  INJECTOR ASM; DEF DCM                  fk=146-020   -> Fuel System            (word 'DEF' implies Intake Exhaust Emission) list=   150.10 pr00=   150.10
+    8979444290  PUMP ASM; OIL                          fk=051-001   -> Fuel System            (word 'OIL' implies Engine / Lubrication / Maintenance Service) list=   125.19 pr00=   133.95
+    8972788680  BRACKET ASM; DEF TANK                  fk=146-014   -> Chassis Frame          (word 'DEF' implies Intake Exhaust Emission) list=   155.43 pr00=   133.72
+    8970390340  CLUTCH; COOLING FAN                    fk=033-008   -> Cooling                (word 'CLU' implies Clutch) list=   123.19 pr00=   131.81
+    8970340244  BRAKE UNIT; EXH                        fk=156-001   -> Brakes                 (word 'EXH' implies Intake Exhaust Emission) list=   120.62 pr00=   129.06
+    8979043883  WHEEL; STRG                            fk=430-003   -> Wheels Hub             (word 'STRG' implies Steering) list=   113.31 pr00=   113.31
+    1476011690  CYLINDER; WHEEL,RR BRK                 fk=305-094   -> Wheels Hub             (word 'BRK' implies Brakes) list=    79.07 pr00=    84.60
+    8974663612  WHEEL; STRG                            fk=430-003   -> Wheels Hub             (word 'STRG' implies Steering) list=    59.43 pr00=    59.43
+    8981234892  CABLE; SELECT,TRANS CONT               fk=236-003   -> Cabin Interior         (word 'TRANS' implies Transmission) list=    66.49 pr00=    57.21
+    8976568410  CABLE; SHIFT,TRANS CONT                fk=236-001   -> Cabin Interior         (word 'TRANS' implies Transmission) list=    53.55 pr00=    55.16
+    8976568430  CABLE; SELECT,TRANS CONT               fk=236-003   -> Cabin Interior         (word 'TRANS' implies Transmission) list=    53.55 pr00=    55.16
+    8983940762  SPRING; COIL,FRT SUSP                  fk=450-047   -> Suspension             (word 'OIL' implies Engine / Lubrication / Maintenance Service) list=    38.64 pr00=    47.55
+    7551883850  GASKET; EXH MANIF TO HD                fk=027-002   -> Transmission           (word 'EXH' implies Intake Exhaust Emission) list=     4.52 pr00=    44.90
+    8971058720  GASKET; CYL HD                         fk=011-002   -> Transmission           (word 'CYL' implies Engine) list=    39.12 pr00=    41.86
+    8974918054  HARNESS; RR DOOR                       fk=810-226   -> Accident & Body        (word 'HARNESS' implies Electrical) list=    25.02 pr00=    30.78
+    8982348941  SWITCH ASM; DIFF LK                    fk=825-360   -> Electrical             (word 'DIFF' implies Driveline Axle) list=    14.17 pr00=    29.54
+    8970397041  CYLINDER; SLAVE,CLU                    fk=206-001   -> Clutch                 (word 'CYL' implies Engine) list=    28.13 pr00=    28.13
+    8978052141  EMBLEM; RAD GRILLE                     fk=701-004   -> Accident & Body        (word 'RAD' implies Cooling) list=    25.40 pr00=    25.40
+    8974917962  HARNESS; RR DOOR                       fk=810-226   -> Accident & Body        (word 'HARNESS' implies Electrical) list=    25.02 pr00=    25.10
+    8974970410  PROTECTOR; HEAT,DPD                    fk=150-589   -> Chassis Frame          (word 'DPD' implies Intake Exhaust Emission) list=    20.00 pr00=    20.84
+    8974970400  PROTECTOR; HEAT,DPD                    fk=150-589   -> Chassis Frame          (word 'DPD' implies Intake Exhaust Emission) list=    18.17 pr00=    18.93
+    7552961720  MOLDING; RAD GRILLE,LWR                fk=603-183   -> Accident & Body        (word 'RAD' implies Cooling) list=     5.98 pr00=    12.32
+    7552961660  MOLDING; RAD GRILLE,LWR                fk=603-183   -> Accident & Body        (word 'RAD' implies Cooling) list=     5.48 pr00=    11.28
+    8978298830  GASKET; OIL COOLER TO C/BL             fk=050-469   -> Lubrication            (word 'COOL' implies Cooling) list=     2.43 pr00=     9.48
+    8984831950  HOSE; WATER,TURBOCHARGER               fk=036-119   -> Intake Exhaust Emissio (word 'WATER' implies Cooling) list=     6.57 pr00=     6.77
+    8979477690  ROD; PUSH,SLAVE CYL                    fk=206-003   -> Clutch                 (word 'CYL' implies Engine) list=     6.68 pr00=     6.62
+    8941248682  LEVER; PARKING BRK,WHEEL BRK           fk=305-022   -> Wheels Hub             (word 'BRK' implies Brakes) list=     5.43 pr00=     5.43
+    8942270481  SEAL; OIL,FRT HUB                      fk=411-028   -> Wheels Hub             (word 'OIL' implies Engine / Lubrication / Maintenance Service) list=     3.09 pr00=     3.09
+    36091500  HOSE; WATER,TURBOCHARGER               fk=036-119   -> Intake Exhaust Emissio (word 'WATER' implies Cooling) list=     1.09 pr00=     1.12
+
+==============================================================================
+3. TWENTY STRICT TIER A ROWS CHECKED BY HAND
+   1. 8982185992  LAMP ASM; FOG                     
+      queue says list EUR 76.72, PR00 value EUR 5,096.94, fig key 801-032
+      rule assigns Electrical   (master: 35 parts share this exact description, 35 sit on this fig key, all the same family)
+   2. 7553116080  HEAD ASM; CYL                     
+      queue says list EUR 953.72, PR00 value EUR 4,644.60, fig key 011-001
+      rule assigns Engine   (master: 12 parts share this exact description, 12 sit on this fig key, all the same family)
+   3. 8975270373  TURBOCHARGER ASM                  
+      queue says list EUR 1,148.74, PR00 value EUR 4,475.48, fig key 036-001
+      rule assigns Intake Exhaust Emission   (master: 38 parts share this exact description, 37 sit on this fig key, all the same family)
+   4. 7551846330  TRANSFER ASM                      
+      queue says list EUR 2,181.58, PR00 value EUR 4,341.71, fig key 260-001
+      rule assigns Driveline Axle   (master: 9 parts share this exact description, 9 sit on this fig key, all the same family)
+   5. 7552319201  DISPLAY; MULTI                    
+      queue says list EUR 1,472.15, PR00 value EUR 3,091.51, fig key 890-299
+      rule assigns Electrical   (master: 15 parts share this exact description, 14 sit on this fig key, all the same family)
+   6. 8981049502  GEAR SET; FINAL DRIVE,FRT         
+      queue says list EUR 296.00, PR00 value EUR 2,134.16, fig key 415-021
+      rule assigns Transmission   (master: 7 parts share this exact description, 9 sit on this fig key, all the same family)
+   7. 7552658820  CONTROL UNIT; ENG                 
+      queue says list EUR 633.04, PR00 value EUR 1,851.30, fig key 060-613
+      rule assigns Electrical   (master: 131 parts share this exact description, 130 sit on this fig key, all the same family)
+   8. 8982703783  HEAD ASM; CYL                     
+      queue says list EUR 871.69, PR00 value EUR 1,746.87, fig key 011-001
+      rule assigns Engine   (master: 12 parts share this exact description, 12 sit on this fig key, all the same family)
+   9. 7552319211  DISPLAY; MULTI                    
+      queue says list EUR 1,472.14, PR00 value EUR 1,575.19, fig key 890-299
+      rule assigns Electrical   (master: 15 parts share this exact description, 14 sit on this fig key, all the same family)
+  10. 8981415211  AXLE; FRT                         
+      queue says list EUR 701.50, PR00 value EUR 1,403.00, fig key 410-001
+      rule assigns Driveline Axle   (master: 4 parts share this exact description, 4 sit on this fig key, all the same family)
+  11. 7475007370  BACK ASM; SEAT                    
+      queue says list EUR 152.89, PR00 value EUR 126.16, fig key 750-001
+      rule assigns Cabin Interior   (master: 31 parts share this exact description, 30 sit on this fig key, all the same family)
+  12. 8983964220  GUIDE; AIR                        
+      queue says list EUR 8.34, PR00 value EUR 125.60, fig key 603-138
+      rule assigns Cooling   (master: 3 parts share this exact description, 3 sit on this fig key, all the same family)
+  13. 8975066905  GUIDE; AIR                        
+      queue says list EUR 62.57, PR00 value EUR 125.14, fig key 603-138
+      rule assigns Cooling   (master: 3 parts share this exact description, 3 sit on this fig key, all the same family)
+  14. 5876150850  BLADE; WIPER                      
+      queue says list EUR 9.05, PR00 value EUR 121.08, fig key 880-007
+      rule assigns Accident & Body   (master: 32 parts share this exact description, 32 sit on this fig key, all the same family)
+  15. 8975524093  MIRROR ASM; DOOR                  
+      queue says list EUR 61.03, PR00 value EUR 118.88, fig key 720-007
+      rule assigns Accident & Body   (master: 171 parts share this exact description, 171 sit on this fig key, all the same family)
+  16. 7551970830  SEAL; OIL,FRT COVER,T/M           
+      queue says list EUR 2.18, PR00 value EUR 2.17, fig key 220-033
+      rule assigns Engine   (master: 15 parts share this exact description, 10 sit on this fig key, all the same family)
+  17. 280510800  BOLT; ENG FOOT                    
+      queue says list EUR 1.40, PR00 value EUR 1.50, fig key 022-020
+      rule assigns Chassis Frame   (master: 8 parts share this exact description, 8 sit on this fig key, all the same family)
+  18. 8972547380  RING; SNAP,COUNTER FRT BRG        
+      queue says list EUR 1.33, PR00 value EUR 1.30, fig key 226-093
+      rule assigns Transmission   (master: 3 parts share this exact description, 3 sit on this fig key, all the same family)
+  19. 36091500  HOSE; WATER,TURBOCHARGER          
+      queue says list EUR 1.09, PR00 value EUR 1.12, fig key 036-119
+      rule assigns Intake Exhaust Emission   (master: 12 parts share this exact description, 12 sit on this fig key, all the same family)
+  20. 8944584741  BOLT; INL MANIF                   
+      queue says list EUR 1.09, PR00 value EUR 1.01, fig key 025-013
+      rule assigns Chassis Frame   (master: 4 parts share this exact description, 3 sit on this fig key, all the same family)
