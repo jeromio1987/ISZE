@@ -1522,8 +1522,7 @@ def html() -> str:
         <tr><td>eucon_crossref_iam</td><td>The licensed half of the bridge</td></tr>
       </table>
       <div class="small">All under 01_data/00_derived/ except the Eucon cross-reference, which
-      sits under 02_dashboards/Data/01_Pricing/_raw/. Rebuilt by four scripts in 01_data/91_build/
-      and 02_dashboards/pricing/_build/.</div>
+      sits under 02_dashboards/Data/01_Pricing/_raw/.</div>
     </div>
   </div>
 

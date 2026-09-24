@@ -1021,12 +1021,19 @@ GAP_ROWS = """
         <td>Spend per unit, capture and traffic lights for 2026</td>
         <td>Only full-year rows are used. The 2026 rows are excluded from every figure and from both bar
         charts on this page.</td></tr>
-      <tr><td><code>LCV-DEC</code></td>
+      <tr><td><code>LCV-DEC</code> <span class="chip excluded">closed</span></td>
         <td>The pickup warranty file ends in November 2025, so a full calendar-year pickup figure drawn from
         that file is one month short.</td>
-        <td>Pickup capture and warranty for CY2025</td>
-        <td>The two UK books, trucks and pickups, are shown as separate rows and are never merged into one
-        figure.</td></tr>
+        <td>&mdash;</td>
+        <td>Closed 24 September 2026: a newer network-wide claim export covers to August 2026 and its
+        overlap ties to the old file to the euro. The two UK books, trucks and pickups, stay separate rows
+        and are never merged into one figure.</td></tr>
+      <tr><td><code>LCV-EXT</code></td>
+        <td>Pickup claim detail now runs four months past anything that is read &mdash; 5,048 claim lines and
+        EUR 1.08M for May to August 2026 sit in the new export and in nothing else.</td>
+        <td>Pickup warranty after April 2026</td>
+        <td>Nothing published shows a pickup warranty figure for those four months. The months already held
+        are not re-read from the new file, so no month is counted twice.</td></tr>
       <tr><td><code>UMI-WARR</code> <span class="chip excluded">closed</span></td>
         <td>Israeli pickups looked absent from the pickup warranty file.</td>
         <td>&mdash;</td><td>Closed 3 July 2026: they have their own file and the year is complete. Treated as

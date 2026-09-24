@@ -1,18 +1,51 @@
 {
-  "ok": true,
+  "schema": "ship_receipt/v2",
   "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_PMS_Price_Response_Brief_2026-09-22.html",
-  "mtime": 1790108080.0645263,
-  "size_bytes": 788148,
-  "checks": {
-    "click_to_pn": true,
-    "drawer": true,
-    "aim_to_pn": true,
-    "oil_filter_parts": 40,
-    "pn_pairs": 500,
-    "screenshots_taken": 3,
-    "screenshots_read": 3,
-    "read_by": "parent",
-    "launcher": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\OPEN_PMS_Price_Response_Brief_2026-09-22.cmd"
-  },
-  "built": "2026-09-22"
+  "artifact_mtime_ms": 1790271611080,
+  "written_at": "2026-09-24T17:52:31.065Z",
+  "ok": true,
+  "screenshots_taken": 2,
+  "screenshots_read": 2,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\pricing\\ISZE_PMS_Price_Response_Brief_2026-09-22.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "788149 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN_PMS_Price_Response_Brief_2026-09-22.cmd opens ISZE_PMS_Price_Response_Brief_2026-09-22.html (CRLF ok)"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "screenshots_taken 2, screenshots_read 2 (2 path(s) passed)"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_build\\_aim_refresh2\\_qa\\02_dashboards__pricing__ISZE_PMS_Price_Response_Brief_2026-09-22.png",
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_build\\_aim_refresh2\\_qa\\02_dashboards__pricing__ISZE_PMS_Price_Response_Brief_2026-09-22__bottom.png"
+  ],
+  "notes": "Second AIM refresh pass 2026-09-24 19:xx: same builder, same arguments, re-read from the settled AIM master after the cab class was added."
 }

@@ -33,6 +33,23 @@ STREET = 1.40 * 1.275  # = 1.785
 YEAR = 2025
 RAISE_SCENARIO = 0.05  # +5% list scenario, labelled as scenario in UI
 
+# ---------------------------------------------------------------------------
+# Mekonomen RETIRED 2026-09-24 (Jerome's go, card 0.4/C3) — see mekonomen_filtered().
+# The seven PNs below were all false: the site's part-number search echoes the query
+# and serves an unrelated in-stock item. Re-enable only with a real product page
+# showing the part number and a price together.
+# ---------------------------------------------------------------------------
+MEKONOMEN_RETIRED = True
+MEKONOMEN_FALSE_PNS = frozenset({
+    "8975056801",  # PAD KIT; CALIPER,DISC BRK,FRT -> returned a Kilen coil spring, 957 SEK
+    "8983373180",  # SENSOR ASM; DEF TANK
+    "8982932120",  # DRIVE ASM; FINAL,RR
+    "8982924321",  # SENSOR; SPD,FRT WHEEL
+    "8983937793",  # SUPPORT; RR BUMPER
+    "8983288004",  # LAMP ASM; RR COMB
+    "8982606011",  # DOOR ASM; FRT,WO/TRIM
+})
+
 CAT_LABEL = {
     "oil_filter": "Oil filter", "fuel_filter": "Fuel filter", "air_filter": "Air filter",
     "blower_filter": "Cabin/blower filter", "urea_filter": "Urea filter",
@@ -123,7 +140,22 @@ def coarse_scrapers() -> pd.DataFrame:
 
 
 def mekonomen_filtered() -> pd.DataFrame:
+    """RETIRED 2026-09-24 — Mekonomen's part-number search returns unrelated items.
+
+    Asking for 8975056801 "PAD KIT; CALIPER,DISC BRK,FRT" returned a Kilen coil spring
+    at 957 SEK; every part number returned exactly one unrelated item on every snapshot
+    from 2026-07-09 to 2026-09-22. All seven rows were false. The earlier artifact guard
+    below (identical price on >=3 unrelated PNs) did NOT catch them, because each one
+    carried a different price — so it is not a usable guard for this failure.
+
+    Returns an empty frame. The seven PNs are named so they can never re-enter, and the
+    scraper is out of the weekly run (see autodoc_scraper/refresh_and_check_drift.py).
+    """
+    if MEKONOMEN_RETIRED:
+        print("  Mekonomen: RETIRED — source not read; no price evidence from it")
+        return pd.DataFrame(columns=["PN", "suspect"])
     mek = pd.read_csv(SCRAPE / "mekonomen_results.csv", dtype={"PN": str})
+    mek = mek[~mek["PN"].isin(MEKONOMEN_FALSE_PNS)]
     hit = mek.dropna(subset=["MEK_AM_MinPrice_SEK"]).copy()
     # page-artifact guard: identical min price on >=3 unrelated PNs = search-page chrome, not a part price
     counts = hit.MEK_AM_MinPrice_SEK.value_counts()
@@ -213,7 +245,7 @@ def main() -> None:
                 "ks": f"KS International UK, scraped {ks_date}"
                       + (" (stale flag)" if ks_date < "2026-07-01" else ""),
                 "coarse": "Tranzparts/TMC (UK), Auto365 (IL), scraped 2026-07-13",
-                "mekonomen": "Mekonomen SE scraped 2026-07-13 — artifact-filtered",
+                "mekonomen": "RETIRED 2026-09-24 — search returned unrelated items; no price evidence used",
             },
         },
         "cells": rows,
@@ -222,9 +254,9 @@ def main() -> None:
         "coarse_street": coarse.to_dict("records"),
         "eucon_top": top_eucon.round(2).to_dict("records"),
         "mekonomen": {
-            "clean": mek_clean[["PN", "Description", "PR00_EUR", "Rev_CY2025_EUR",
-                                "MEK_AM_MinPrice_SEK"]].to_dict("records"),
-            "suspect_n": int(mek.suspect.sum()),
+            "retired": True,
+            "clean": [],   # no row is usable — every one of the seven was a false match
+            "suspect_n": 0,
         },
     }
     def denan(o):

@@ -158,6 +158,36 @@ def rd(name: str) -> pd.DataFrame:
     return pd.read_csv(p, low_memory=False)
 
 
+def series_evidence_table() -> pd.DataFrame:
+    """The series -> band evidence table, read from the ONE authored map.
+
+    `01_data/00_derived/series_to_tonnage.csv` is a generated copy of
+    `03_analytics/Isuzu/prism/data/series_to_band.csv`: `build_nseries_tonnage_bands.py` writes it
+    from that map, so it cannot disagree with it at build time - but it is a file on disk, so
+    between an edit of the map and the next run it silently holds the older answer. That already
+    happened once: the copy was written at 05:31 and the map was rewritten at 07:00, leaving its
+    `NMR85` row reading `unresolved` while the map had moved on.
+
+    Reading the map itself removes that window, and it is the same read `build_family_evolution_v2
+    .py` already uses for the page that ships. The columns and their order are the ones the copy
+    carries, so nothing downstream sees a different shape.
+    """
+    sys.path.insert(0, str(PDATA.parent))
+    from modules import vehicle_bands  # noqa: PLC0415
+
+    rows = []
+    for code, r in sorted(vehicle_bands.load_map().items()):
+        rows.append({
+            "series": code,
+            "tonnage_band": (r.get("tonnage_band") or "").strip() or vehicle_bands.UNRESOLVED,
+            "weight_label": (r.get("weight_label") or "").strip(),
+            "evidence_source": (r.get("evidence_source") or "").strip(),
+            "evidence_quote": (r.get("evidence_quote") or "").strip(),
+            "confidence": (r.get("confidence") or "").strip(),
+        })
+    return pd.DataFrame(rows)
+
+
 def main() -> int:
     refresh = "--refresh" in sys.argv
 
@@ -166,7 +196,7 @@ def main() -> int:
     evo = rd("nseries_tonnage_evolution.csv")
     bands_dim = rd("vehicle_family_bands.csv").fillna("")
     nb = rd("epc_decode_nseries_banded.csv").fillna("")
-    series_bands = rd("series_to_tonnage.csv").fillna("")
+    series_bands = series_evidence_table().fillna("")
     uio = rd("uio_by_market_type_year.csv")
     cap = rd("tonnage_capable_part_numbers.csv")
     buckets = pd.read_csv(PDATA / "uio_by_model_bucket.csv")

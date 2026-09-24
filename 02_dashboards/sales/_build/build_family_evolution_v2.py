@@ -298,12 +298,25 @@ def main() -> int:
     cap["pnk"] = cap.pn.map(norm)
     cap = cap.drop_duplicates("pnk")
     PN_NBANDS = dict(zip(cap.pnk, cap.n_bands.astype(int)))
-    SINGLE_BAND = {p for p, n in PN_NBANDS.items() if n == 1}
+
+    # ── WHO IS EXCLUSIVE TO ONE BAND ────────────────────────────────────────────────────────────
+    # Re-based 2026-09-24 onto the exclusivity column, because that is the column that ANSWERS the
+    # question. The page used to key on `n_bands == 1`, which is a count of bands read: a part
+    # number can count one band and still not be exclusive, if it also names a code no source
+    # places. That is the shape that made the band file contradict itself on 5876100771 and that
+    # the 2026-09-24 re-base withdrew on thirty part numbers. Asking the count made the page
+    # immune to that re-base and kept it printing an exclusivity the tables no longer support.
+    # The band values are not touched by this; only the exclusivity verdict is.
+    EXCLUSIVE = {p for p, b in zip(cap.pnk, cap.exclusive_band.fillna("")) if str(b).strip()}
+    SINGLE_BAND = EXCLUSIVE
     degree = {}
     for cat, g in cap.groupby("category"):
-        degree[cat] = {"pns": int(len(g)), "singleBand": int((g.n_bands == 1).sum()),
-                       "multiBand": int((g.n_bands > 1).sum()),
-                       "placeable": bool((g.n_bands == 1).any())}
+        deg = g.pnk.isin(EXCLUSIVE)
+        degree[cat] = {"pns": int(len(g)), "singleBand": int(deg.sum()),
+                       "multiBand": int((~deg).sum()),
+                       "placeable": bool(deg.any())}
+    print(f"exclusive to one band, read off the exclusivity column: {len(EXCLUSIVE)} part numbers "
+          f"(the band-count column would say {sum(1 for v in PN_NBANDS.values() if v == 1)})")
 
     def band_members(pn: str) -> list[str]:
         """Every tonnage bucket a part number belongs to. Never more than one exclusive one."""

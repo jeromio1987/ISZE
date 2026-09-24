@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "generated": "2026-09-22T19:40:39Z",
+    "generated": "2026-09-24T17:41:06Z",
     "year": 2025,
     "verification_ok": true,
     "sources": [
@@ -16,27 +16,27 @@
     ]
   },
   "headline": {
-    "addressable_gap_eur": 23950221.0,
+    "addressable_gap_eur": 23994964.0,
     "network_gps_pct": 54.6,
-    "active_defection_alerts": 24,
+    "active_defection_alerts": 28,
     "substitution_families_at_risk": 7,
     "grow_capture_count": 0,
     "defend_count": 5,
     "competitive_pn_tracked": 12,
     "tender_pipeline_90d": 30,
-    "tender_stale_days": 0
+    "tender_stale_days": 2
   },
   "wallet": {
     "year": 2025,
-    "theoretical_wallet_eur": 54375729.0,
+    "theoretical_wallet_eur": 54420472.0,
     "captured_genuine_eur": 29692068.0,
     "captured_bvp_eur": 1064704.0,
-    "addressable_uncaptured_eur": 23950221.0,
+    "addressable_uncaptured_eur": 23994964.0,
     "gps_pct": 54.6,
     "waterfall": [
       {
         "label": "Theoretical wallet",
-        "value": 54375729.0,
+        "value": 54420472.0,
         "type": "total"
       },
       {
@@ -51,7 +51,7 @@
       },
       {
         "label": "Addressable gap",
-        "value": 23950221.0,
+        "value": 23994964.0,
         "type": "remainder"
       }
     ],
@@ -107,11 +107,39 @@
     ]
   },
   "defection": {
-    "active_distributor_alerts": 24,
-    "distributors_flagged": 13,
+    "active_distributor_alerts": 28,
+    "distributors_flagged": 15,
     "top": [
       {
         "distributor_code": "FINLAND",
+        "alert_count": 4,
+        "categories": [
+          "clutch_kit",
+          "clutch_pressure_plate",
+          "release_bearing",
+          "brake_shoe"
+        ]
+      },
+      {
+        "distributor_code": "ICELAND",
+        "alert_count": 3,
+        "categories": [
+          "clutch_pressure_plate",
+          "pilot_bearing",
+          "release_bearing"
+        ]
+      },
+      {
+        "distributor_code": "GERMANY",
+        "alert_count": 3,
+        "categories": [
+          "clutch_disc",
+          "clutch_kit",
+          "clutch_pressure_plate"
+        ]
+      },
+      {
+        "distributor_code": "ROMANIA",
         "alert_count": 3,
         "categories": [
           "clutch_kit",
@@ -120,20 +148,10 @@
         ]
       },
       {
-        "distributor_code": "GREECE",
-        "alert_count": 3,
+        "distributor_code": "HUNGARY",
+        "alert_count": 2,
         "categories": [
-          "clutch_kit",
           "pilot_bearing",
-          "brake_pad"
-        ]
-      },
-      {
-        "distributor_code": "ICELAND",
-        "alert_count": 3,
-        "categories": [
-          "clutch_pressure_plate",
-          "release_bearing",
           "brake_pad"
         ]
       },
@@ -154,38 +172,22 @@
         ]
       },
       {
-        "distributor_code": "UMI",
+        "distributor_code": "IUK",
         "alert_count": 2,
         "categories": [
           "clutch_kit",
-          "brake_shoe"
+          "clutch_pressure_plate"
         ]
       },
       {
-        "distributor_code": "ROMANIA",
-        "alert_count": 2,
-        "categories": [
-          "clutch_pressure_plate",
-          "release_bearing"
-        ]
-      },
-      {
-        "distributor_code": "UKRAINE",
-        "alert_count": 2,
-        "categories": [
-          "air_filter",
-          "clutch_disc"
-        ]
-      },
-      {
-        "distributor_code": "GERMANY",
+        "distributor_code": "CYPRUS",
         "alert_count": 1,
         "categories": [
-          "clutch_disc"
+          "clutch_kit"
         ]
       },
       {
-        "distributor_code": "HUNGARY",
+        "distributor_code": "GREECE",
         "alert_count": 1,
         "categories": [
           "pilot_bearing"
@@ -704,7 +706,7 @@
     "available": true,
     "autodoc_scraped_at": "2026-05-30 11:52:00",
     "ks_scraped_at": "2026-09-22 19:30:09",
-    "scrape_stale_days": 115,
+    "scrape_stale_days": 117,
     "gbp_eur": 1.17,
     "bogus_filter_gbp": 3.05,
     "items": [
@@ -857,7 +859,7 @@
   "tender_horizon": {
     "available": true,
     "generated_at": "2026-09-22",
-    "stale_days": 0,
+    "stale_days": 2,
     "stats": {
       "opportunities": 619,
       "attack": 2,
@@ -1419,8 +1421,8 @@
               },
               {
                 "year": 2024,
-                "percentile": 35.3,
-                "rank": 66
+                "percentile": 41.2,
+                "rank": 60
               },
               {
                 "year": 2025,
@@ -1479,8 +1481,8 @@
               },
               {
                 "year": 2024,
-                "percentile": 41.2,
-                "rank": 60
+                "percentile": 35.3,
+                "rank": 66
               },
               {
                 "year": 2025,

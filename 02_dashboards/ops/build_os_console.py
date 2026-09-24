@@ -161,13 +161,18 @@ FULL_BASE_PCT = 14.9
 QUEUE = [
     dict(
         n=1,
-        data="<b>Warranty_LCV_2025.xlsx</b> ends November 2025. Full-year light-commercial warranty from this file is one month short; CY2025 spend per unit was built on it as-is.",
-        decision="Publish CY2025 light-commercial cover as eleven months with the hole named, or hold the market until the December file lands.",
-        owner="Warranty team → ISZE",
-        blocked="Next light-commercial claim export (December 2025 onward)",
-        due="2026-09-30",
+        data="<b>Pickup warranty is only read to April 2026.</b> A new network-wide claim export runs to "
+             "<b>August 2026</b> and its overlap ties to this file to the euro, but nothing published reads "
+             "the last four months: <b>5,048 claim lines, EUR 1,078,462</b> (May 218,099 · Jun 276,570 · "
+             "Jul 316,477 · Aug 267,317). The older gap it closes is already settled: the November-2025 end "
+             "of the pickup file is no longer the edge.",
+        decision="Wire the four new months into the pickup claim data and refresh the pages that show a "
+                 "pickup warranty figure, or leave the last four months unread.",
+        owner="ISZE",
+        blocked="Nothing — the file is on disk. It is a choice about scope.",
+        due="2026-10-01",
         state="judgement",
-        src="01_data/00_derived/_data_integrity_open_issues.md · LCV-DEC",
+        src="01_data/00_derived/_data_integrity_open_issues.md · LCV-EXT · LCV-DEC",
     ),
     dict(
         n=2,

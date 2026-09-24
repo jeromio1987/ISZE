@@ -1,9 +1,11 @@
 {
-  "schema": "ship_receipt/v1",
+  "schema": "ship_receipt/v2",
   "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_PMS_Family_Compare.html",
-  "artifact_mtime_ms": 1789585252042,
-  "written_at": "2026-09-16T19:01:11.964Z",
+  "artifact_mtime_ms": 1790271154741,
+  "written_at": "2026-09-24T17:52:29.798Z",
   "ok": true,
+  "screenshots_taken": 1,
+  "screenshots_read": 1,
   "checks": [
     {
       "id": "exists",
@@ -13,7 +15,7 @@
     {
       "id": "min_size",
       "ok": true,
-      "detail": "294322 bytes"
+      "detail": "294904 bytes"
     },
     {
       "id": "no_cdn",
@@ -33,24 +35,16 @@
     {
       "id": "open_cmd",
       "ok": true,
-      "detail": "OPEN cmd present (OPEN_Aftermarket_BI_Command_Center.cmd, OPEN_DB_DLR_Replenishment.cmd, OPEN_Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.cmd)"
-    },
-    {
-      "id": "ship_gate",
-      "ok": true,
-      "detail": "ship_gate_check.ps1 exit 0"
+      "detail": "OPEN_ISZE_PMS_Family_Compare.cmd opens ISZE_PMS_Family_Compare.html (CRLF ok)"
     },
     {
       "id": "visual_screenshots",
       "ok": true,
-      "detail": "4 PNG(s) — agent must have image-Read before shipping"
+      "detail": "screenshots_taken 1, screenshots_read 1 (1 path(s) passed)"
     }
   ],
   "screenshots": [
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa\\pms_family_compare\\q_bvp_subst_net_cy.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa\\pms_family_compare\\q_bvp_subst_ituk_cy.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa\\pms_family_compare\\q_bvp_subst_ituk_fy.png",
-    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa\\pms_family_compare\\q_bvp_subst_net_fy.png"
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\_build\\_aim_refresh2\\_qa\\02_dashboards__sales__ISZE_PMS_Family_Compare.png"
   ],
-  "notes": "bvp_subst: distributor dropdown + calendar/fiscal period. FY Apr-Mar from sales_with_crossref, incomplete FYs excluded."
+  "notes": "Second AIM refresh pass 2026-09-24 19:xx: same builder, same arguments, re-read from the settled AIM master after the cab class was added."
 }

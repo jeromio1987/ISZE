@@ -137,7 +137,7 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
       <li><b>ITUK has two published lanes:</b> this page uses the network (PRISM) lane so all 18 markets are comparable. The official ITUK external numbers (IML v7 schedule: weighted cover 35.9%, €2.04M gap across 5 categories) use different intervals and UIO — directionally the same story, different absolutes. Don't mix the two in one document.</li>
       <li><b>Air-filter capture</b> rests on a provisional every-2nd-service interval assumption, not yet confirmed by IML.</li>
       <li><b>Price samples are thin</b> (Eucon 44 PNs, UK shop 39–42 PNs, scraped 9 May; UK/IL category scrapes 13 Jul). Premium medians are direction, not calibration.</li>
-      <li><b>Sweden:</b> 5 of 6 aftermarket price hits from the Swedish chain scrape were page artifacts (identical price on unrelated parts) and were excluded; Sweden has no usable local price evidence this cycle.</li>
+      <li><b>Sweden:</b> the Swedish chain scrape is retired (24 Sep 2026). Every one of its part-number hits was a false match — the site's search does not search by part number and returned an unrelated item each time, including a coil spring in place of a brake pad kit. Its prices are removed from this page and from the file behind it. Sweden has no usable local price evidence this cycle.</li>
     </ul>
   </div>
 
@@ -308,7 +308,7 @@ const ACTS = [
  ['verify','<b>Clutch price anomaly: genuine street below aftermarket (n=3).</b> Commission a fuller Eucon pull on clutch before any repricing — if confirmed, clutch list can carry +10% without touching the capture problem (which is availability-driven).'],
  ['verify','<b>Air filter: don\'t reprice yet.</b> Capture looks healthy only under the provisional every-2nd-service interval; the official ITUK lane still shows a €736K air-filter gap. Get IML to confirm the interval ratio first — it flips air filter between "raise" and "defend".'],
  ['verify','<b>Germany + Norway street-price audit: €382K / €373K of revenue sits on Eucon-undercut part numbers.</b> Check actual distributor counter prices against the ×1.785 assumption — if their real markup is higher, we are pricing ourselves out with our own channel.'],
- ['fix','<b>Price-evidence pipeline repaired 16 Jul</b> (UK PN-level scraper restored after the 13 Jul crash; Swedish page-artifact guard in place — 4 clean Swedish price points now on file). One step left: kick a fresh UK PN-level run this week — genuine-vs-IAM evidence is still the 9 May scrape and it is the only source that sees both sides of the counter. Confirm the Sunday scheduled run lands before any repricing decision.'],
+ ['fix','<b>Price-evidence pipeline repaired 16 Jul</b> (UK PN-level scraper restored after the 13 Jul crash). <b>One source retired 24 Sep 2026:</b> the Swedish chain — its part-number search returned an unrelated item every time, so none of its prices is used. One step left: kick a fresh UK PN-level run this week — genuine-vs-IAM evidence is still the 9 May scrape and it is the only source that sees both sides of the counter. Confirm the Sunday scheduled run lands before any repricing decision.'],
 ];
 document.getElementById('acts').innerHTML = ACTS.map(a=>
   '<li><span class="tag '+a[0]+'">'+(a[0]==='raise'?'Raise':a[0]==='defend'?'Win back':a[0]==='verify'?'Verify':'Fix')+'</span> '+a[1]+'</li>').join('');
@@ -316,7 +316,7 @@ document.getElementById('acts').innerHTML = ACTS.map(a=>
 /* ---- sources foot ---- */
 document.getElementById('src').innerHTML =
  '<b>Sources & method.</b> Capture and € gaps: verified sales pipeline (SAP billing 2023–2026, credit notes/returns and non-part lines excluded; pipeline verification green, 106 checks, 6 Jul 2026) against UIO-implied demand per model bucket. '+
- 'Price benchmarks: Eucon competitor panel (44 part numbers, brands incl. Blue Print, Febi, Delphi, Textar — OE/mid-tier, not budget) grossed to street ×1.785; UK trade shop scrape 9 May 2026 (genuine vs IAM listings, same shop); UK & Israel category scrapes 13 Jul 2026; Swedish chain scrape 13 Jul 2026 (artifact-filtered). '+
+ 'Price benchmarks: Eucon competitor panel (44 part numbers, brands incl. Blue Print, Febi, Delphi, Textar — OE/mid-tier, not budget) grossed to street ×1.785; UK trade shop scrape 9 May 2026 (genuine vs IAM listings, same shop); UK & Israel category scrapes 13 Jul 2026. The Swedish chain scrape is retired (24 Sep 2026) — its search returned unrelated items, so no Swedish price is used. '+
  'Whole-base captive split: AIM classification (93.5% of revenue classified, Mar 2026). Channel markups (+40% / +27.5%) are working assumptions — replace with confirmed distributor margins when available. '+
  'Built ' + D.meta.built + ' · CY2025 · MIDI and Turkey excluded by policy (not ISZE-direct customers).';
 </script>

@@ -4,9 +4,9 @@
     "generated": "2026-04-17",
     "source_excel": "ISUZU_UIO_Overview_2026_v17.xlsx",
     "description": "ISZE dashboard data — auto-extracted 17 Apr 2026",
-    "pms_refreshed": "2026-09-22T19:40:37Z",
+    "pms_refreshed": "2026-09-24T17:41:06Z",
     "pms_source": "build_isze_dashboard_json.py",
-    "prism_refreshed": "2026-09-22T19:40:37Z"
+    "prism_refreshed": "2026-09-24T17:41:06Z"
   },
   "aim": {
     "kpis": {
@@ -1402,10 +1402,10 @@
         "distributor_code": "CYPRUS",
         "country": "nan",
         "uio_units": 2308,
-        "capture_rate_total_wtd_pct": 50.3,
+        "capture_rate_total_wtd_pct": 50.4,
         "capture_rate_genuine_wtd_pct": 27.0,
-        "revenue_gap_eur_sum": 370874.0,
-        "oil_filter_capture_pct": 91.0,
+        "revenue_gap_eur_sum": 369976.0,
+        "oil_filter_capture_pct": 91.2,
         "top_gap_categories": [
           "urea_filter",
           "clutch_disc",
@@ -1444,21 +1444,6 @@
       },
       {
         "year": 2025,
-        "distributor_code": "MALTA",
-        "country": "nan",
-        "uio_units": 1040,
-        "capture_rate_total_wtd_pct": 32.0,
-        "capture_rate_genuine_wtd_pct": 31.9,
-        "revenue_gap_eur_sum": 118969.0,
-        "oil_filter_capture_pct": 86.3,
-        "top_gap_categories": [
-          "clutch_disc",
-          "brake_pad",
-          "blower_filter"
-        ]
-      },
-      {
-        "year": 2025,
         "distributor_code": "ROMANIA",
         "country": "nan",
         "uio_units": 1071,
@@ -1470,6 +1455,21 @@
           "brake_pad",
           "clutch_disc",
           "brake_rotor"
+        ]
+      },
+      {
+        "year": 2025,
+        "distributor_code": "MALTA",
+        "country": "nan",
+        "uio_units": 1040,
+        "capture_rate_total_wtd_pct": 33.5,
+        "capture_rate_genuine_wtd_pct": 33.3,
+        "revenue_gap_eur_sum": 111380.0,
+        "oil_filter_capture_pct": 90.5,
+        "top_gap_categories": [
+          "clutch_disc",
+          "brake_pad",
+          "brake_shoe"
         ]
       },
       {
@@ -2069,14 +2069,14 @@
     }
   },
   "risk_cockpit": {
-    "addressable_gap_eur": 23950221.0,
+    "addressable_gap_eur": 23994964.0,
     "network_gps_pct": 54.6,
-    "active_defection_alerts": 24,
+    "active_defection_alerts": 28,
     "substitution_families_at_risk": 7,
     "grow_capture_count": 0,
     "defend_count": 5,
     "competitive_pn_tracked": 12,
     "tender_pipeline_90d": 30,
-    "tender_stale_days": 0
+    "tender_stale_days": 2
   }
 }

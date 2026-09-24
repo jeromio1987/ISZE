@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Putting the parts classification into Power BI &mdash; implementation guide</title>
+<style>
+  :root{
+    --navy:#15233c; --terracotta:#c0552d; --paper:#f7f4ee;
+    --ink:#22252b; --muted:#5d6470; --line:#d9d2c6; --track:rgba(21,35,60,.09);
+    --blue:#4a6189; --green:#2f6b4f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font:15px/1.65 "Segoe UI",-apple-system,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 26px 72px}
+  header{background:var(--navy);color:var(--paper);padding:42px 0 36px;margin-bottom:32px}
+  header .wrap{padding-bottom:0;padding-top:0}
+  .kicker{font:600 11.5px/1 "Segoe UI",Arial,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#c9b9a4;margin:0 0 14px}
+  h1{font:400 34px/1.22 Georgia,"Times New Roman",serif;margin:0 0 14px;color:#fff;max-width:920px}
+  .meta{font-size:13px;color:#b9c2d1;margin:0}
+  .meta b{color:#e8e2d8;font-weight:600}
+  h2{font:400 26px/1.25 Georgia,"Times New Roman",serif;color:var(--navy);margin:48px 0 14px;padding-top:24px;border-top:2px solid var(--navy)}
+  h2:first-of-type{border-top:0;padding-top:0;margin-top:8px}
+  h3{font:600 15px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);margin:30px 0 8px}
+  h4{font:600 13.5px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);margin:20px 0 6px;letter-spacing:.01em}
+  p{margin:0 0 14px;max-width:900px}
+  .lede{font-size:16.5px;color:var(--navy)}
+  ul,ol{margin:0 0 16px;padding-left:22px;max-width:900px}
+  li{margin:0 0 8px}
+  code{font:12.8px/1.5 "Cascadia Mono",Consolas,monospace;background:rgba(21,35,60,.07);padding:1px 5px;border-radius:3px}
+  pre{margin:0 0 16px;background:#101a2b;color:#e6ecf5;padding:14px 16px;border-radius:4px;overflow-x:auto}
+  pre code{background:none;color:inherit;font-size:12.6px;padding:0;line-height:1.6}
+  .scroll{overflow-x:auto;margin:18px 0 10px}
+  table{border-collapse:collapse;width:100%;background:#fff;font-size:13.3px;table-layout:fixed}
+  caption{caption-side:top;text-align:left;font:600 13.5px/1.4 "Segoe UI",Arial,sans-serif;color:var(--navy);padding:0 0 9px}
+  th,td{padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top;overflow-wrap:break-word}
+  thead th{background:var(--navy);color:var(--paper);font-weight:600;text-align:left;border-bottom:0}
+  thead th.n,td.n{text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:normal;word-break:keep-all;white-space:nowrap}
+  tbody tr:nth-child(even){background:#fdfcfa}
+  tbody tr.key{background:#fbf1ea}
+  tbody tr.key td{font-weight:600}
+  tbody tr.total td{border-top:2px solid var(--navy);font-weight:700;background:#f2ede3}
+  .neg{color:var(--terracotta)}
+  .sm{font-size:12.1px;color:var(--muted)}
+  td .sm{display:block;font-weight:400}
+  .call{border-left:4px solid var(--terracotta);background:#fff;padding:16px 20px;margin:22px 0;max-width:960px}
+  .call p:last-child{margin-bottom:0}
+  .call .tag{font:600 11.5px/1 "Segoe UI",Arial,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:var(--terracotta);display:block;margin-bottom:9px}
+  .ok{border-left-color:var(--green)} .ok .tag{color:var(--green)}
+  .navy{border-left-color:var(--navy)} .navy .tag{color:var(--navy)}
+  .step{display:grid;grid-template-columns:44px 1fr;gap:16px;margin:24px 0;align-items:start}
+  .step .num{background:var(--navy);color:var(--paper);width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;font:600 15px/1 "Segoe UI",Arial,sans-serif}
+  .step .body>h4:first-child{margin-top:4px}
+  .foot{font-size:12.4px;color:var(--muted);margin-top:14px;max-width:960px}
+  .foot b{color:var(--navy);font-weight:600}
+  footer{margin-top:52px;padding-top:20px;border-top:1px solid var(--line);font-size:12.4px;color:var(--muted)}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin:18px 0}
+  .box{background:#fff;border:1px solid var(--line);padding:16px 18px}
+  .box h4{margin-top:0}
+  @media print{
+    body{background:#fff}
+    header{background:#15233c !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    pre{background:#f2f2f2 !important;color:#111 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    h2{page-break-after:avoid} table,.call,.step,.box{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="kicker">Handover &middot; Power BI implementation</p>
+    <h1>Putting the parts classification into Power BI</h1>
+    <p class="meta"><b>22 September 2026</b> &middot; for the meeting of 23 September &middot; the classification file is <code>ISZE_Parts_Classification_for_PBI_20260922.csv</code>, 164,904 rows, one row per part number</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<h2>What this is, in one paragraph</h2>
+
+<p class="lede">A single file, one row per part number, giving every part a place in one three-level family tree. Load it into Power BI as a dimension table, join it to the sales or order fact table on the part number, and the existing pages can be cut by part family without any new measures.</p>
+
+<p>The three levels are <b>one tree, not three views</b>. Level 1 is the family, level 2 the group inside it, level 3 the specific type. Every part has exactly one path, and the same path applies to every market &mdash; there is no country or customer column in the file, so there is nothing to disagree about between markets. That is the point of it.</p>
+
+<div class="call navy">
+  <span class="tag">The one decision to make in the meeting</span>
+  <p>Our own working file currently carries <b>two</b> competing level-1 vocabularies &mdash; a 23-value one and a 7-value one &mdash; and they agree on <b>0% of rows</b>. This handover file resolves that by shipping <b>one</b> tree. Whoever builds must not load both, or you get exactly the confusion you are trying to remove.</p>
+</div>
+
+<h2>The file</h2>
+
+<div class="scroll">
+<table>
+<caption>Columns in <code>ISZE_Parts_Classification_for_PBI_20260922.csv</code></caption>
+<thead><tr><th style="width:19%">Column</th><th style="width:13%">Used as</th><th>What it holds</th></tr></thead>
+<tbody>
+<tr class="key"><td><code>part_key</code></td><td>Join key</td><td>10-character part number, zero-padded on the left. This is the key on both sides. Text, never number.</td></tr>
+<tr><td><code>level_1</code></td><td>The family</td><td>18 product families plus one unclassified value. This is the axis for a chart.</td></tr>
+<tr><td><code>level_2</code></td><td>The group</td><td>115 groups, each inside one family. Use when a family is too coarse.</td></tr>
+<tr><td><code>level_3</code></td><td>The type</td><td>239 types, each inside one group. Reserved for investigation, not for a page face.</td></tr>
+<tr class="key"><td><code>is_part</code></td><td>Filter</td><td>TRUE for a part, FALSE for a line that is not a part. Filter to TRUE for a parts view.</td></tr>
+<tr><td><code>not_part_type</code></td><td>Filter / label</td><td>Why a line is not a part: lubricant, logistics, literature, or the review queue.</td></tr>
+<tr><td><code>brand_programme</code></td><td>Attribute</td><td>Which brand range a lubricant belongs to, so Shell can be read separately.</td></tr>
+<tr><td><code>legacy_aim_l1/2/3</code></td><td>Audit only</td><td>The values as they stood before renaming. Keep them for traceability, hide from report view.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>How it lands on the book</h2>
+
+<p>Tested on the full export &mdash; every market, April to October, both years. The file matches <b>100% of the rows and 100% of the euro</b>, so nothing is dropped.</p>
+
+<div class="scroll">
+<table>
+<caption>Every part in the book, by family, using the export's own value</caption>
+<thead><tr><th style="width:30%">Family</th><th class="n">Parts</th><th class="n">Value</th><th class="n">Share</th><th class="n">Value per piece</th></tr></thead>
+<tbody>
+<tr><td colspan="5" class="sm" style="background:#f2ede3"><b>Parts</b> &mdash; 96.6% of the book, 17,836 part numbers</td></tr>
+<tr class="key"><td>Accident &amp; Body</td><td class="n">3,116</td><td class="n">&euro;3,138,948</td><td class="n">16.6%</td><td class="n">&euro;39.3</td></tr>
+<tr class="key"><td>Intake, Exhaust &amp; Emission</td><td class="n">728</td><td class="n">&euro;3,047,091</td><td class="n">16.1%</td><td class="n">&euro;157.7</td></tr>
+<tr><td>Brakes</td><td class="n">534</td><td class="n">&euro;1,902,365</td><td class="n">10.1%</td><td class="n">&euro;61.3</td></tr>
+<tr><td>Maintenance Service</td><td class="n">424</td><td class="n">&euro;1,861,890</td><td class="n">9.8%</td><td class="n">&euro;13.3</td></tr>
+<tr><td>Electrical</td><td class="n">1,836</td><td class="n">&euro;1,634,895</td><td class="n">8.6%</td><td class="n">&euro;43.9</td></tr>
+<tr><td>Fuel System</td><td class="n">700</td><td class="n">&euro;1,121,234</td><td class="n">5.9%</td><td class="n">&euro;43.4</td></tr>
+<tr><td>Steering</td><td class="n">388</td><td class="n">&euro;1,052,131</td><td class="n">5.6%</td><td class="n">&euro;78.4</td></tr>
+<tr><td>Wheels &amp; Hub</td><td class="n">741</td><td class="n">&euro;633,511</td><td class="n">3.3%</td><td class="n">&euro;10.0</td></tr>
+<tr><td>Engine</td><td class="n">861</td><td class="n">&euro;564,497</td><td class="n">3.0%</td><td class="n">&euro;9.9</td></tr>
+<tr><td>Driveline &amp; Axle</td><td class="n">335</td><td class="n">&euro;559,228</td><td class="n">3.0%</td><td class="n">&euro;69.9</td></tr>
+<tr class="key"><td>Unclassified <span class="sm">named, not hidden</span></td><td class="n">3,609</td><td class="n">&euro;489,290</td><td class="n">2.6%</td><td class="n">&euro;18.6</td></tr>
+<tr><td>Suspension</td><td class="n">515</td><td class="n">&euro;425,075</td><td class="n">2.2%</td><td class="n">&euro;15.5</td></tr>
+<tr><td>Cabin Interior</td><td class="n">789</td><td class="n">&euro;414,267</td><td class="n">2.2%</td><td class="n">&euro;24.0</td></tr>
+<tr><td>Transmission</td><td class="n">972</td><td class="n">&euro;385,148</td><td class="n">2.0%</td><td class="n">&euro;5.4</td></tr>
+<tr><td>Clutch</td><td class="n">203</td><td class="n">&euro;376,705</td><td class="n">2.0%</td><td class="n">&euro;64.9</td></tr>
+<tr><td>Cooling</td><td class="n">401</td><td class="n">&euro;357,550</td><td class="n">1.9%</td><td class="n">&euro;32.3</td></tr>
+<tr><td>Chassis &amp; Frame</td><td class="n">1,607</td><td class="n">&euro;252,558</td><td class="n">1.3%</td><td class="n">&euro;4.0</td></tr>
+<tr><td>Workshop Tools</td><td class="n">77</td><td class="n">&euro;53,658</td><td class="n">0.3%</td><td class="n">&euro;115.4</td></tr>
+<tr><td colspan="5" class="sm" style="background:#f2ede3"><b>Not parts</b> &mdash; 3.4% of the book, 120 part numbers</td></tr>
+<tr class="key"><td>Lubricants &amp; Chemicals <span class="sm">of which Shell &euro;258,522</span></td><td class="n">91</td><td class="n">&euro;371,237</td><td class="n">2.0%</td><td class="n">&euro;47.1</td></tr>
+<tr><td>Logistics &amp; Packaging</td><td class="n">13</td><td class="n">&euro;179,911</td><td class="n">1.0%</td><td class="n">&euro;267.7</td></tr>
+<tr><td>Literature &amp; Marketing</td><td class="n">16</td><td class="n">&euro;95,133</td><td class="n">0.5%</td><td class="n">&euro;3,280</td></tr>
+<tr class="total"><td>Total</td><td class="n">17,956</td><td class="n">&euro;18,916,321</td><td class="n">100%</td><td class="n">&euro;26.8</td></tr>
+</tbody>
+</table>
+</div>
+
+<p class="foot">One caution on the column: <b>Isuzu Genuine versus BVP is not in this file.</b> It is a separate attribute and we have not joined it here. If he wants value-versus-competitor split in the same view, that is a second column to add and I can supply it.</p>
+
+<h2>The implementation, step by step</h2>
+
+<div class="step">
+  <div class="num">1</div>
+  <div class="body">
+    <h4>Load the file as a dimension table</h4>
+    <p>Get Data &rarr; Text/CSV &rarr; the file &rarr; <b>Transform Data</b>, not Load. In Power Query:</p>
+    <ul>
+      <li>Set the data type of <code>part_key</code> to <b>Text</b>, not Whole Number.</li>
+      <li>Set <code>is_part</code> to <b>True/False</b>.</li>
+      <li>Rename the query to <code>Parts Classification</code>. Do not call it &ldquo;AIM&rdquo; or a market name. It is not market-specific.</li>
+    </ul>
+    <div class="call">
+      <span class="tag">Do not skip this</span>
+      <p>If <code>part_key</code> loads as a number, Power BI will silently drop the leading zeros and the join will fail on every part number that starts with 0. That is several thousand parts. Type it as Text in Power Query <b>before</b> it reaches the model.</p>
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <div class="num">2</div>
+  <div class="body">
+    <h4>Build the matching key on the fact table</h4>
+    <p>The fact table holds the material number in whatever format the source gives. Add a calculated column there, not in the dimension, so the dimension stays a clean lookup:</p>
+    <pre><code>Part Key =
+VAR Raw = TRIM ( 'Fact'[MATERIAL] )
+VAR Padded = REPT ( "0", 10 - LEN ( Raw ) ) &amp; Raw
+RETURN
+    RIGHT ( Padded, 10 )</code></pre>
+    <p>The <code>RIGHT(…, 10)</code> matters. Some source rows already run past ten characters; without it the padding produces a key of the wrong length and those rows fall out of the join silently.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="num">3</div>
+  <div class="body">
+    <h4>Relate the two tables</h4>
+    <p>Model view &rarr; drag <code>part_key</code> onto <code>Part Key</code>. Then:</p>
+    <ul>
+      <li>Cardinality: <b>one to many</b> (one classification row to many fact rows).</li>
+      <li>Cross-filter direction: <b>single</b>. Not both. Both creates ambiguity and Power BI will mark the relationship as inactive.</li>
+      <li>Mark it as active if it is the only join on this key.</li>
+    </ul>
+    <p>Check the model view afterwards: the relationship line must be solid, not dotted. A dotted line means Power BI has deactivated it.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="num">4</div>
+  <div class="body">
+    <h4>Hide what should not be in the field list</h4>
+    <p>Right-click and <b>Hide in report view</b> on: <code>part_key</code>, and the three <code>legacy_aim_*</code> columns. Leave <code>level_1</code>, <code>level_2</code>, <code>level_3</code>, <code>is_part</code>, <code>not_part_type</code> and <code>brand_programme</code> visible.</p>
+  </div>
+</div>
+
+<div class="step">
+  <div class="num">5</div>
+  <div class="body">
+    <h4>Order the levels so they sort sensibly</h4>
+    <p>Power BI sorts text alphabetically, which puts &ldquo;Transmission&rdquo; between &ldquo;Steering&rdquo; and &ldquo;Wheels&rdquo;. To control it, in the dimension table create <b>Sort by column</b> pairs:</p>
+    <ul>
+      <li>Add a <code>level_1_order</code> column (1 to 18, by value descending) and set <code>level_1</code> to sort by it.</li>
+      <li>Do the same for <code>level_2</code> and <code>level_3</code> if the axes come out jumbled.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="step">
+  <div class="num">6</div>
+  <div class="body">
+    <h4>Add the two flags as slicers, and default them</h4>
+    <p>On any page where the classification appears:</p>
+    <ul>
+      <li><code>is_part</code> &rarr; slicer or page filter, defaulted to <b>TRUE</b>. Lubricants, logistics and literature then stay out of a parts view unless someone asks for them.</li>
+      <li><code>brand_programme</code> &rarr; slicer. This is what lets Shell be read on its own.</li>
+    </ul>
+    <p>Add <b>&ldquo;Unclassified&rdquo;</b> as a visible value, not a filter-out. It has to stay on the page so the review queue stays honest.</p>
+  </div>
+</div>
+
+<h2>Where to use it on the existing pages</h2>
+
+<div class="scroll">
+<table>
+<caption>The pages it changes, and what it gives each one</caption>
+<thead><tr><th style="width:26%">Page</th><th style="width:37%">What it shows today</th><th>What the classification adds</th></tr></thead>
+<tbody>
+<tr class="key"><td><b>ORDER</b></td><td>A part-level table &mdash; MATERIAL, DESCRIPTION, QTY, EUR AMOUNT, AMOUNT% &mdash; and its top rows are whatever happens to be biggest: steering units, PM sensors, brake rotors, NOx sensors.</td><td>Three columns on that same table, and a family slicer above it. It becomes &ldquo;what did we sell, by family&rdquo; instead of a list of part numbers.</td></tr>
+<tr><td><b>SALES</b></td><td>The billing view.</td><td>The same cut on the revenue side, so order intake and billing can be compared family by family.</td></tr>
+<tr><td><b>ORDER PATTERN</b></td><td>Fill rate by FAST / MEDIUM / SLOW / NONE mover.</td><td>Family &times; movement class. This is where it earns its keep: a brake pad at 86% fill and a windscreen at 86% fill are different problems, and today the page cannot tell them apart.</td></tr>
+<tr><td><b>INDIVIDUAL FILL RATE</b></td><td>One line per market (IBX, 85&ndash;94%).</td><td>Which family is hurting service level in which market.</td></tr>
+<tr><td><b>SALES HISTORY BY CAT.</b></td><td>The Japanese catalogue categories &mdash; the eight headings and their sections.</td><td>Keep it. Put the family tree <b>beside</b> it and the two can be cross-checked. Never replace one with the other.</td></tr>
+<tr><td><b>MASTER DATA</b></td><td>Already has a CATEGORY slicer and a FIG KEY CLASSIFICATION slicer.</td><td><b>This is where the file belongs first.</b> It is already a part-number table, so the lookup is a one-field addition and it makes the master browsable by family immediately.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="call ok">
+  <span class="tag">Start here, not at the top</span>
+  <p>Do MASTER DATA first. It is the smallest change with a visible result, it proves the join on the live data, and it gives him something to look at the same day. The ORDER and fill-rate pages come after the join is proven.</p>
+</div>
+
+<h2>Lubricants: yes, separate them &mdash; and Shell separately again</h2>
+
+<p>You asked whether to split Shell out. The data says yes, and cleanly.</p>
+
+<p>Lubricants and chemicals are <b>2.0% of the book</b> at &euro;371,237, across 91 part numbers. Of that, the Shell range is <b>&euro;258,522</b> on seven part numbers. And the fourth-largest single line in the whole order book is one lubricant: <code>0550047337</code>, engine oil, at &euro;187,849.</p>
+
+<p>So a lubricant is not a rounding error in a parts table. It is big enough to top a page, which is exactly why it should not be allowed to.</p>
+
+<h4>The rule that catches Shell</h4>
+
+<p>Shell lubricants sit on the <b>5500*</b> part-number range. There is one trap in it, and it caught me while building this file:</p>
+
+<pre><code>-- WRONG: after padding to 10 digits, every part becomes 0-prefixed
+-- 0550047337 starts with "0550", so this matches nothing
+LEFT ( [part_key], 4 ) = "5500"
+
+-- RIGHT: test the SHORT form, the way the rule is actually written
+LEFT ( TRIM ( [part_key] ), 4 ) = "5500"</code></pre>
+
+<p>In Power Query this is the same idea, on the un-padded value:</p>
+
+<pre><code>Is Shell = Text.StartsWith ( Text.Trim ( [MATERIAL] ), "5500" )</code></pre>
+
+<p>And the design decision: <b>do not make Shell a family.</b> Make it a second dimension so the two questions stay separable:</p>
+
+<div class="cols">
+  <div class="box">
+    <h4>Family (level 1)</h4>
+    <p style="margin-bottom:0"><b>Lubricants &amp; Chemicals</b> &mdash; one family, so &ldquo;how big is our non-parts business&rdquo; has a single answer.</p>
+  </div>
+  <div class="box">
+    <h4>Brand programme (attribute)</h4>
+    <p style="margin-bottom:0"><b>Shell</b> vs <b>Isuzu or other</b> &mdash; so Shell can be sliced out of it in one click, without a fourth level.</p>
+  </div>
+</div>
+
+<p>This way the family tree stays clean and three levels deep, and the Shell question is answered by a filter. If you put Shell in as a family instead, you break the tree: Shell oil is a lubricant, and it would be both.</p>
+
+<p>The same flag marks what the classification deliberately leaves out. In the file, <code>is_part = FALSE</code> covers lubricants, logistics and literature &mdash; and separately, the 4,933 rows in the review queue keep their <code>Unclassified</code> label rather than being forced into a family that isn't right.</p>
+
+<h2>Engines and cabs</h2>
+
+<p>These are the two you asked about, and they behave very differently. I would <b>not</b> give either one its own family.</p>
+
+<h3>Engines: already a family, and the interesting part is what happens to a whole engine</h3>
+
+<p>Engine is a level-1 family at <b>&euro;564,497</b> in the period. Two things about it are worth knowing:</p>
+
+<p><b>The engine business is dominated by a handful of very expensive parts.</b> The single largest is a partial engine at &euro;86,020 &mdash; six pieces at <b>&euro;14,337 each</b>. The second is &euro;28,392 for two pieces at &euro;14,196 each. In a family where the average piece is worth &euro;9.90, one part can move the whole month.</p>
+
+<p>That is an argument for reading engines at <b>level 3</b>, not level 1. At level 1 a single engine swap looks like a trend in the engine business.</p>
+
+<p><b>And there is a clean-up to agree before he builds.</b> Our existing tree has a leaf called <b>&ldquo;Lubrication&rdquo;</b> which contains no lubricant at all &mdash; it holds drain-plug gaskets, drain plugs and oil-cooler cores. Oil-system hardware, not oil. In the file I built for him I folded it into <b>Engine</b>, because that is what it physically is. If he disagrees, it is a one-line change; but it should not stay labelled &ldquo;Lubrication&rdquo; next to a genuine lubricant family, or the two will be confused forever.</p>
+
+<h3>Cabs: not a family, and for a good reason</h3>
+
+<p>There is no cab family today, and I would not add one. Here is why, and he should hear it in these terms.</p>
+
+<p>Cab content is <b>&euro;509,375</b> across 988 part numbers, but it is <b>97% structure and trim, not a product line</b>. Look where it actually sits:</p>
+
+<div class="scroll">
+<table>
+<caption>What &ldquo;cab&rdquo; content really is, by the family it belongs in</caption>
+<thead><tr><th style="width:52%">What the part is</th><th class="n">Parts</th><th class="n">Value</th></tr></thead>
+<tbody>
+<tr class="key"><td>Blower units and heaters &mdash; cabin air</td><td class="n">48</td><td class="n">&euro;197,881</td></tr>
+<tr><td>Seats, sun visors, trim, harness</td><td class="n">~250</td><td class="n">&euro;~120,000</td></tr>
+<tr><td>Cab mounts and brackets</td><td class="n">102</td><td class="n">&euro;13,044</td></tr>
+<tr class="key"><td>Cab shell itself &mdash; a &#39;cab assembly&#39;</td><td class="n">9</td><td class="n">&euro;66,679</td></tr>
+<tr><td>Everything else (mirrors, glass, locks, wipers)</td><td class="n">~580</td><td class="n">&euro;~112,000</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>If you make a cab family, then a blower unit belongs to both Cabin Air and Cab, a seat belongs to both Cabin Interior and Cab, and a cab mount belongs to both Chassis and Cab. You get a part in two families and a double count the first time anyone adds a column up &mdash; which is precisely the defect his own catalogue tree has today, where one section name appears under several headings.</p>
+
+<p><b>What he actually needs is one thing, and it is much smaller than a family:</b> the nine cab-assembly part numbers at <b>&euro;66,679</b>. A complete cab shell is a different commercial animal from a cab mount. So add a flag, not a family:</p>
+
+<pre><code>-- one flag, no new level
+is_major_assembly = TRUE for a cab assembly, and later for engine,
+                    transmission and axle assemblies
+</code></pre>
+
+<p>Then &ldquo;are we selling whole assemblies or only repair parts&rdquo; is a filter, and nothing is counted twice. This is the general rule I would give him: <b>if a value is a property of a part rather than a place to put it, make it a flag.</b> Families partition; flags annotate. Mix the two and the tree stops reconciling.</p>
+
+<h2>Things that will go wrong, and the answer to each</h2>
+
+<div class="scroll">
+<table>
+<caption>Failure modes, in the order they usually appear</caption>
+<thead><tr><th style="width:31%">What happens</th><th style="width:31%">Why</th><th>The fix</th></tr></thead>
+<tbody>
+<tr class="key"><td>Most rows show as blank, or the relationship will not activate</td><td><code>part_key</code> loaded as a number and lost its leading zeros</td><td>Retype <code>part_key</code> to Text in Power Query and refresh</td></tr>
+<tr><td>A part appears twice in a family total</td><td>Two classification rows share a key after zero-stripping</td><td>The file has one row per key already, 164,904 rows and 164,904 keys. If you build your own lookup, dedupe it the same way</td></tr>
+<tr><td>Totals are higher than the report&rsquo;s own total</td><td>Family totals are being added across levels &mdash; level 1 plus level 2 is double counting</td><td>Never put two levels of the same tree on one axis. One tree, one axis, drilled</td></tr>
+<tr><td>The family list looks familiar but wrong</td><td>Two level-1 vocabularies loaded at once</td><td>Load this file only. Retire the old one from the model</td></tr>
+<tr><td>Lubricants show up inside a parts number</td><td><code>is_part</code> not filtered</td><td>Default the <code>is_part</code> slicer to TRUE on parts pages</td></tr>
+<tr><td>&ldquo;Unclassified&rdquo; is missing from the page</td><td>It was filtered out because it looked like a gap</td><td>Keep it visible. It is 2.6% of the book and it is the work queue, not noise</td></tr>
+<tr><td>Numbers do not match a report built on the Japanese categories</td><td>Different axis, not an error</td><td>Both are correct. State which axis every page uses. They are not substitutes</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>What I would say to him, in order</h2>
+
+<ol>
+  <li><b>It is one tree, and it is already the same for every market.</b> Three levels, one parent chain, no country dimension. Nothing to reconcile between countries.</li>
+  <li><b>It is a dimension table, joined on the part number.</b> No new measures, no new logic in the existing pages &mdash; the pages keep their numbers and gain a family slicer.</li>
+  <li><b>Start on MASTER DATA</b>, because it is already a part-number table. Then ORDER, then the fill-rate pages.</li>
+  <li><b>Parts and non-parts are separated in the data</b>, not by convention. Lubricants, logistics and literature carry <code>is_part = FALSE</code>, and Shell is a brand attribute on top of that.</li>
+  <li><b>Engines and cabs are not new families.</b> Engines already is one and should be read at level 3; a cab shell is an assembly flag, not a family, or you double count.</li>
+  <li><b>Two things are deliberately not in this file</b> and he should know: Isuzu Genuine versus BVP, and covered by that, whether we can say anything about value-parts mix on the same page. Both are available; they are a second and third column and I can add them.</li>
+  <li><b>The one decision that is his:</b> confirm the renamed level 1 as the standard, so the old vocabulary gets retired rather than run alongside.</li>
+</ol>
+
+<h2>The handover files</h2>
+
+<p class="foot">
+<b>The classification file:</b> <code>ISZE\02_dashboards\pbi_handover\ISZE_Parts_Classification_for_PBI_20260922.csv</code> &mdash; 164,904 rows, 11 columns, UTF-8 with byte-order mark, comma separated.<br>
+<b>A 200-row sample</b> for a first look without loading the whole file: <code>ISZE\01_data\90_INBOX\ISZE_Parts_Classification_for_PBI_SAMPLE.csv</code>.<br>
+<b>Tested on:</b> the full Power BI export for all markets, April&ndash;October, both years. It matches 100% of rows and 100% of value, so nothing is orphaned by the join.<br>
+<b>Not in the file, by choice:</b> the Japanese catalogue and figure-key columns. Those belong on a different axis and are already in the report. Keeping them out is what stops the two trees being mixed.<br>
+<b>Nothing was changed in the existing report.</b> This is a new file built from our master; the master and the report are untouched.
+</p>
+
+<footer>
+  Internal handover prepared 22 September 2026 &middot; contains internal part taxonomy and our billed values &middot; not for distribution outside ISZE.
+</footer>
+
+</div>
+</body>
+</html>
