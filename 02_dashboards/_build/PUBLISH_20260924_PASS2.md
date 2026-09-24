@@ -355,6 +355,14 @@ disk.
 | `c9055ee3` | Add the read-only probes and the render check used for the second publish pass | 19 |
 | `94227882` | Publish pass 24 September 2026, second part: record the repoint, its figures and what was left | 8 |
 | `69a95a25` | Record the four commits, the push output and the two files left untracked | 1 |
+| `fd3cf919` | Correct the report: five commits and both push outputs, with the tip as checked | 1 |
+
+The last three are this report correcting itself as its own hashes moved; each one only edits this
+file. **The branch tip when this section was last written is
+`fd3cf919a16334a221d39fe3e0e2ed207f5e88f7`**, and the commit that carries this very paragraph
+follows it. That is the honest way to state a hash in a file that a commit keeps moving: the four
+work commits are `776e44c4`, `56dcdcd5`, `c9055ee3` and `94227882`, and everything after them is
+this report.
 
 **Push — the real output, both pushes:**
 
@@ -362,15 +370,13 @@ disk.
 To https://github.com/jeromio1987/ISZE.git
    1a5c5dd3..94227882  cursor/isze-exec-sales-paper-prompt-8dc1 -> cursor/isze-exec-sales-paper-prompt-8dc1
    94227882..69a95a25  cursor/isze-exec-sales-paper-prompt-8dc1 -> cursor/isze-exec-sales-paper-prompt-8dc1
+   69a95a25..fd3cf919  cursor/isze-exec-sales-paper-prompt-8dc1 -> cursor/isze-exec-sales-paper-prompt-8dc1
 ```
 
-The chain is `1a5c5dd3` → `776e44c4` → `56dcdcd5` → `c9055ee3` → `94227882` → `69a95a25`, each an
-ancestor of the next. **The tip at the last check** is
-`69a95a25cb524988186df0cafcba0090f646f6af`, with `git rev-parse HEAD` and
-`git rev-parse origin/cursor/isze-exec-sales-paper-prompt-8dc1` returning the same value and
-`git diff HEAD origin/...` empty. Any further commit would move it, so that hash describes the
-branch as checked, not as permanently frozen. **No force push, no merge to main, no history
-rewrite.**
+The chain runs `1a5c5dd3` → `776e44c4` → `56dcdcd5` → `c9055ee3` → `94227882` → `69a95a25` →
+`fd3cf919`, each an ancestor of the next, verified with `git rev-parse HEAD` and
+`git rev-parse origin/cursor/isze-exec-sales-paper-prompt-8dc1` returning the same value at each
+step. **No force push, no merge to main, no history rewrite.**
 
 **Left untracked in the working tree, deliberately:**
 
