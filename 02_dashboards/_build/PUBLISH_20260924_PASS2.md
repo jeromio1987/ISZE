@@ -346,13 +346,36 @@ not name, and it is **not** ignored by `.gitignore`, so it was available to be s
 unstaged by not being added. It is a deliberate colleague pack, not raw billing, and it stays on
 disk.
 
-**Three commits, factual messages, no internal shorthand, no billing figures:**
+**Four commits, factual messages, no internal shorthand, no billing figures:**
 
-| commit | subject |
-|---|---|
-| `776e44c4` | Point the AIM deep dive and comparison builders at the 2026-09-24 export pair |
-| `56dcdcd5` | Rebuild the AIM deep dive and comparison pages on the 2026-09-24 classification |
-| `c9055ee3` | Add the read-only probes and the render check used for the second publish pass |
+| commit | subject | files |
+|---|---|---:|
+| `776e44c4` | Point the AIM deep dive and comparison builders at the 2026-09-24 export pair | 2 |
+| `56dcdcd5` | Rebuild the AIM deep dive and comparison pages on the 2026-09-24 classification | 20 |
+| `c9055ee3` | Add the read-only probes and the render check used for the second publish pass | 19 |
+| `94227882` | Publish pass 24 September 2026, second part: record the repoint, its figures and what was left | 8 |
+
+**Push — the real output:**
+
+```
+To https://github.com/jeromio1987/ISZE.git
+   1a5c5dd3..94227882  cursor/isze-exec-sales-paper-prompt-8dc1 -> cursor/isze-exec-sales-paper-prompt-8dc1
+```
+
+`git rev-parse HEAD` and `git rev-parse origin/cursor/isze-exec-sales-paper-prompt-8dc1` both return
+**`942278825e67afc4e23d7769b029f27534367acb`**, checked again after a fetch, and `git diff HEAD
+origin/cursor/isze-exec-sales-paper-prompt-8dc1` is empty, so local and remote are the same commit.
+`1a5c5dd3`, the tip the earlier pass pushed, is an ancestor. **No force push, no merge to main, no
+history rewrite.**
+
+**Left untracked in the working tree, deliberately:**
+
+- `01_data\15_gpt_safe\Sales_to_Dealer_colleagues_20260924\Sales_to_Dealer_merged.csv` — the 57.41 MB
+  colleague pack described above.
+- The four `before_*.html` copies under `02_dashboards\_build\_aim_pass2\` — 19 MB of byte copies of
+  the pages as they stood before the repoint, kept on disk as the evidence for the before column in
+  section 2 but not worth carrying in the repository. The screenshots beside them stay local under
+  an existing ignore rule.
 
 ---
 
