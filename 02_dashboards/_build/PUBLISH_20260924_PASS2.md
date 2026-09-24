@@ -354,19 +354,23 @@ disk.
 | `56dcdcd5` | Rebuild the AIM deep dive and comparison pages on the 2026-09-24 classification | 20 |
 | `c9055ee3` | Add the read-only probes and the render check used for the second publish pass | 19 |
 | `94227882` | Publish pass 24 September 2026, second part: record the repoint, its figures and what was left | 8 |
+| `69a95a25` | Record the four commits, the push output and the two files left untracked | 1 |
 
-**Push — the real output:**
+**Push — the real output, both pushes:**
 
 ```
 To https://github.com/jeromio1987/ISZE.git
    1a5c5dd3..94227882  cursor/isze-exec-sales-paper-prompt-8dc1 -> cursor/isze-exec-sales-paper-prompt-8dc1
+   94227882..69a95a25  cursor/isze-exec-sales-paper-prompt-8dc1 -> cursor/isze-exec-sales-paper-prompt-8dc1
 ```
 
-`git rev-parse HEAD` and `git rev-parse origin/cursor/isze-exec-sales-paper-prompt-8dc1` both return
-**`942278825e67afc4e23d7769b029f27534367acb`**, checked again after a fetch, and `git diff HEAD
-origin/cursor/isze-exec-sales-paper-prompt-8dc1` is empty, so local and remote are the same commit.
-`1a5c5dd3`, the tip the earlier pass pushed, is an ancestor. **No force push, no merge to main, no
-history rewrite.**
+The chain is `1a5c5dd3` → `776e44c4` → `56dcdcd5` → `c9055ee3` → `94227882` → `69a95a25`, each an
+ancestor of the next. **The tip at the last check** is
+`69a95a25cb524988186df0cafcba0090f646f6af`, with `git rev-parse HEAD` and
+`git rev-parse origin/cursor/isze-exec-sales-paper-prompt-8dc1` returning the same value and
+`git diff HEAD origin/...` empty. Any further commit would move it, so that hash describes the
+branch as checked, not as permanently frozen. **No force push, no merge to main, no history
+rewrite.**
 
 **Left untracked in the working tree, deliberately:**
 
