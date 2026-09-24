@@ -36,7 +36,7 @@ UI = ISZE / "02_dashboards" / "_ui"
 TEMPLATE = TOOL / "aim_cmp_template.html"
 CHART_JS = UI / "chart.umd.min.js"          # Chart.js 4.4.1, inlined so the page opens offline
 
-AIM_FILE = DER / "AIM_Master_PN_Categories_Figkey_20260921.csv"
+AIM_FILE = DER / "AIM_Master_PN_Categories_Figkey_20260924.csv"
 PARTS_FILE = DER / "parts_catalog_dimension.csv"
 PRICE_FILE = DER / "pricing_pr00_ie40.parquet"
 BVP_FILE = DER / "bvp_pn_dimension.csv"
@@ -818,7 +818,7 @@ SOURCES = [
      "note": "credit notes, returns, debit notes and free deliveries excluded; 3 January 2023 to "
              "31 August 2026"},
     {"what": "AIM product tree",
-     "path": r"01_data\00_derived\AIM_Master_PN_Categories_Figkey_20260921.csv",
+     "path": r"01_data\00_derived\AIM_Master_PN_Categories_Figkey_20260924.csv",
      "note": "165,213 rows, about 24,756 with an AIM level; a part number with no level sits in a "
              "bucket called Not classified in AIM at all three levels"},
     {"what": "PMS family per part number",

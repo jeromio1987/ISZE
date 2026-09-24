@@ -42,7 +42,7 @@ CHART_JS = UI / "chart.umd.min.js"          # Chart.js 4.4.1, inlined so the pag
 
 REFERENCE = Path(r"C:\Users\jerom\Desktop\ISZE_Pricing_Revision_AIM_Source.html")
 
-AIM_FILE = DER / "AIM_Master_PN_Categories_Figkey_20260921.csv"
+AIM_FILE = DER / "AIM_Master_PN_Categories_Figkey_20260924.csv"
 PARTS_FILE = DER / "parts_catalog_dimension.csv"
 DEMAND_FILE = DER / "pms_capture_by_db_year.csv"
 PRICE_FILE = DER / "pricing_pr00_ie40.parquet"
@@ -1134,7 +1134,7 @@ SOURCES = [
      "path": r"01_data\00_derived\dealer_sellout_long_<DISTRIBUTOR>_<PERIOD>.csv",
      "note": "month rows only; the year and YTD rows in the same files are totals and are dropped"},
     {"what": "AIM tree (levels 1, 2, 3)",
-     "path": r"01_data\00_derived\AIM_Master_PN_Categories_Figkey_20260921.csv",
+     "path": r"01_data\00_derived\AIM_Master_PN_Categories_Figkey_20260924.csv",
      "note": f"part numbers with no AIM level sit in '{AIM_NA}'; its share of units and euros is "
              f"on the KPI strip"},
     {"what": "PMS family per part number",
