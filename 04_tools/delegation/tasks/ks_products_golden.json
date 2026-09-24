@@ -1,0 +1,14 @@
+{
+  "task": "ks_products_golden",
+  "card": "0.3 (golden test for DeepSeek before Phases 1-3)",
+  "model": "deepseek-v4-flash",
+  "temperature": 0.0,
+  "max_tokens": 1500,
+  "sleep_s": 0.2,
+  "allowed_fields": ["site", "text"],
+  "required_keys": ["item_id", "products", "price_texts"],
+  "verbatim_fields": ["price_texts"],
+  "price_fields": [],
+  "placeholder_max": 2.34,
+  "system_prompt": "You split one product-listing string from a parts web shop into separate products. Output JSON only, no prose, no code fences.\nProducts are separated by '|'. Each product looks like TITLE()=£PRICE and may end with [OOS] meaning out of stock.\nSchema: {\"item_id\": <copy exactly>, \"products\": [{\"title\": <exact title text before '()', trimmed>, \"price\": <number>, \"is_genuine\": <true if the title contains (GENUINE), else false>, \"in_stock\": <false if [OOS] follows, else true>}], \"price_texts\": [<each price exactly as written, e.g. \"£30.00\">]}\nKeep products in the order given. Never guess. Never convert currency."
+}

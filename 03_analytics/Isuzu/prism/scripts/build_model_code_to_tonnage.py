@@ -4,19 +4,31 @@ Model code -> tonnage band, and the banded EPC decode.
 
 Why
 ---
-`03_analytics/Isuzu/pms-pilot/parse_epc_results.py` carries `SERIES_TO_GVW`, an unsourced regex
-dictionary that turns a model code into a weight class. It is where the Malta / Cyprus NMR88 error
-came from (NMR88 read as a 3.5 t N35), and one of its entries is provably wrong: `'NMR': 'LCV 5.5t'`
-sits beside `'NLR': 'LCV 3.5t'`, yet the ITUK UIO lookup labels NLR/NMR 3.5 t and the N35 fix itself
-says the opposite. So the tonnage band for a part number is currently an inference.
+Until 2026-09-23 the tonnage band for a part number was an inference. Two hand-typed dictionaries
+answered "what does this code weigh?" with no source behind them, and they disagreed with each
+other: `03_analytics/Isuzu/pms-pilot/parse_epc_results.py` held its own `SERIES_TO_GVW`, and this
+file held its own `TABLE`. The Malta / Cyprus error came from that era (NMR88 read as a 3.5 t N35,
+which is the N35 Grafter rung and not the truck in question).
 
-This script replaces that inference with a sourced table.
+Both dictionaries are gone. `parse_epc_results.py` was changed on 2026-09-24 to read the authored
+map like this script does, and this script reads it directly. What each file used to assert is
+recorded in its own history, not restated here, because the answers have since changed.
+
+One correction worth keeping, because it is easy to get backwards: an old `'NMR': 'LCV 5.5t'` entry
+is *not* an example of a wrong weight. `NMR` was ruled onto the 5.5 t band on 2026-09-23, so that
+value agrees with the ruling. What was wrong about both dictionaries was that their values were
+typed in rather than sourced, which is why two files could disagree about the same code at all.
+
+This script replaces that inference with a table sourced from the authored map.
 
 Outputs
 -------
 1. `03_analytics/Isuzu/prism/data/model_code_to_tonnage.csv`
       one row per model code: band, weight label, source, quote, confidence.
-      Bands are exactly: LCV_D-Max | 3.5t_N35 | 7.5t_N50_N62_N75 | F_series_MD_heavy | other.
+      Bands are those `_vocabulary()` allows: the five the workspace ships (LCV_D-Max | 3.5t_N35 |
+      5.5t_N50_N55 | 7.5t_N50_N62_N75 | F_series_MD_heavy), plus `other` for a code the map marks
+      out of scope, plus any candidate band the map records for a code currently awaiting a ruling
+      -- none at present. `BANDS` is the live list; read it rather than this paraphrase.
 2. `03_analytics/Isuzu/prism/data/model_code_to_tonnage.meta.json`
       counts + the list of unresolved codes, so the coverage number is reproducible.
 3. `01_data/00_derived/epc_decode_batch1_banded_20260919.csv`
@@ -82,6 +94,9 @@ from modules import vehicle_bands  # noqa: E402
 # bands this table invents: the map already carries them for that code, and `_load_table` holds
 # a quarantined code's band at whatever this file last wrote, so the vocabulary has to be able
 # to name it. Without this, holding a pending band would trip the guard below.
+#
+# No code carries that status right now (`NMR` was ruled onto 5.5 t on 2026-09-23), so this loop
+# adds nothing today. It stays because the shape of the problem returns the moment a code is parked.
 def _vocabulary() -> list[str]:
     out = [vehicle_bands.BAND_LCV, vehicle_bands.BAND_N35, vehicle_bands.BAND_N50,
            vehicle_bands.BAND_N75, vehicle_bands.BAND_F, "other"]
@@ -102,6 +117,9 @@ DUNCAN = "Duncan Young / ITUK PMS brake deck, slide 14 'Appendix: Service Interv
 RENE_N24 = "René Paul / GIDSS GIDSS_maint_N_MY24.pdf (01_data/03_PMS/service_schedules/)"
 RENE_N14 = "René Paul / GIDSS GIDSS_maint_N_MY14.pdf"
 RENE_F24 = "René Paul / GIDSS GIDSS_maint_F_MY24.pdf"
+# The register path is given as it was when these values were recorded. The name `SERIES_GVW_T` is
+# still in `build_vin_register.py`, but it is no longer a hand-typed dictionary: it is read from the
+# same authored map this file reads, so the two cannot disagree about a code's weight any more.
 REGISTER = "JP VIN register series -> GVW map — 01_data/07_UIO/vin/build_vin_register.py (SERIES_GVW_T), model_dimension.csv"
 EPC = "EPC decode — the model string the EPC returns for this part number (epc_decode_batch1_20260919.json)"
 XREF = "Isuzu genuine/BVP cross-reference vehicle_model column — 01_data/00_derived/genuine_bvp_crossref.csv"
@@ -178,11 +196,21 @@ TABLE = _load_table()
 #   source, quote      taken from the map and stamped with the quarantine note, so the evidence
 #                      stays current and a reader cannot miss that the value is not settled.
 #
-# The two files deliberately disagree for `NMR` and `NMR85`: the map holds the European interim
-# value the shipped pipeline uses (5.5 t for `NMR`, 7.5 t for `NMR85`), while this table keeps the
-# 7.5 t it has always written for both. That divergence is the point - the map must not be moved
-# to match this table either, because downstream band files read the map and would shift with it.
-# Do not reconcile them by editing either file; reconcile them by ruling on `NMR`.
+# A divergence between this table and the map once existed, and a ruling resolved it.
+#
+# Until 2026-09-23 the map and this table deliberately disagreed for `NMR` and `NMR85`: the map
+# held the European interim value the shipped pipeline used (5.5 t for `NMR`, 7.5 t for `NMR85`),
+# while this table kept the 7.5 t it had always written for both. That was left in place on purpose
+# rather than reconciled by hand, because moving either file would have moved a band before the
+# question was settled. The question was settled on 2026-09-23: `NMR` was ruled onto the 5.5 t
+# band, the map now reads `5.5t_N50_N55` for both codes with `status = resolved` and no candidates
+# recorded, and this table agrees. There is nothing left to reconcile, and any instruction to keep
+# the two apart is spent.
+#
+# The hold below is therefore inert today: `vehicle_bands.pending_ruling_codes()` returns an empty
+# list, so there is no code for it to act on. It is kept because the reasoning it encodes is still
+# sound and would apply again the moment a code is parked: a rebuild must not settle a weight as a
+# side effect, and a code with no settled band must keep the band it already has.
 def _apply_pending_hold(tbl: dict[str, tuple[str, str, str, str, str]]) -> dict[str, tuple[str, str, str, str, str]]:
     """Keep each pending-ruling code's existing band and confidence, whatever the map now says."""
     held: dict[str, tuple[str, str, str, str, str]] = {}

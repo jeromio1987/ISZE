@@ -644,7 +644,7 @@ section h3 {{ font-size:0.9rem; margin:0.5rem 0; color:var(--muted); }}
   <section><h2>Top parts — contested genuine</h2>{gen_top}</section>
 </div>
 <footer class="muted" style="text-align:center;padding:1rem;font-size:0.75rem">
-  Rebuild: prism/scripts/build_dealer_sellout_aim_gps.py · 01_data/00_derived/sellout_aim_* · second layer
+  Reported quantities are the distributors' own sales to their dealers; ISZE euro is our invoiced price to the distributor.
 </footer>
 </body>
 </html>"""

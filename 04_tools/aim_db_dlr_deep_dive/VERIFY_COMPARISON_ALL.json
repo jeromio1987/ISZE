@@ -1,0 +1,1413 @@
+{
+  "run": "ALL",
+  "built": "2026-09-24T15:52:37+00:00",
+  "passed": 61,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "month rows equal the total row: dealer_sellout_long_GREECE_CY2025.csv",
+      "expected": 24777.0,
+      "actual": 24777.0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "month rows equal the total row: dealer_sellout_long_IRELAND_CY2025.csv",
+      "expected": 53328.0,
+      "actual": 53328.0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "month rows equal the total row: dealer_sellout_long_IRELAND_CY2026YTD.csv",
+      "expected": 25986.0,
+      "actual": 25986.0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "month rows equal the total row: dealer_sellout_long_ITUK_CY2023.csv",
+      "expected": 219061.0,
+      "actual": 219061.0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "month rows equal the total row: dealer_sellout_long_ITUK_CY2024.csv",
+      "expected": 230586.0,
+      "actual": 230586.0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "month rows equal the total row: dealer_sellout_long_ITUK_CY2026YTD.csv",
+      "expected": 155974.0,
+      "actual": 155974.0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "month rows equal the total row: dealer_sellout_long_ITUK_network_CY2025.csv",
+      "expected": 224587.0,
+      "actual": 224587.0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "month rows equal the total row: dealer_sellout_long_IUK_CY2025.csv",
+      "expected": 248638.0,
+      "actual": 248638.0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "month rows equal the total row: dealer_sellout_long_IUK_CY2026YTD.csv",
+      "expected": 142040.0,
+      "actual": 142040.0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "month rows equal the total row: dealer_sellout_long_PORTUGAL_CY2025.csv",
+      "expected": 51363.0,
+      "actual": 51363.0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "month rows equal the total row: dealer_sellout_long_PORTUGAL_CY2026YTD.csv",
+      "expected": 39790.0,
+      "actual": 39790.0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "month rows against the total row: dealer_sellout_long_UTI_CY2025.csv",
+      "expected": 92660.0,
+      "actual": 55570.0,
+      "pass": true,
+      "note": "the brief names this file: its year row holds the whole year (92,660) while the month rows cover January and August to December only (55,570), because February to July 2025 are genuinely absent. Only the month rows are used, and the missing months are reported."
+    },
+    {
+      "name": "month rows against the total row: dealer_sellout_long_UTI_CY2026YTD.csv",
+      "expected": "no total row in the file",
+      "actual": 61833.0,
+      "pass": true,
+      "note": "the file carries month rows only"
+    },
+    {
+      "name": "UTI 2025: year row 92,660 against month rows 55,570",
+      "expected": 92660.0,
+      "actual": 92660.0,
+      "pass": true,
+      "note": "month rows 55,570; the brief states 55,570, measured 55,570"
+    },
+    {
+      "name": "longest unbroken sales-to-dealer run: GREECE",
+      "expected": "reported, not a gate",
+      "actual": "12 months, 2025-01 to 2025-12, longest equal split 6 against 6",
+      "pass": true,
+      "note": "reported, not a gate"
+    },
+    {
+      "name": "longest unbroken sales-to-dealer run: IRELAND",
+      "expected": "reported, not a gate",
+      "actual": "19 months, 2025-01 to 2026-07, longest equal split 9 against 9",
+      "pass": true,
+      "note": "reported, not a gate"
+    },
+    {
+      "name": "longest unbroken sales-to-dealer run: ITUK",
+      "expected": "reported, not a gate",
+      "actual": "44 months, 2023-01 to 2026-08, longest equal split 22 against 22",
+      "pass": true,
+      "note": "reported, not a gate"
+    },
+    {
+      "name": "longest unbroken sales-to-dealer run: IUK",
+      "expected": "reported, not a gate",
+      "actual": "19 months, 2025-01 to 2026-07, longest equal split 9 against 9",
+      "pass": true,
+      "note": "reported, not a gate"
+    },
+    {
+      "name": "longest unbroken sales-to-dealer run: PORTUGAL",
+      "expected": "reported, not a gate",
+      "actual": "20 months, 2025-01 to 2026-08, longest equal split 10 against 10",
+      "pass": true,
+      "note": "reported, not a gate"
+    },
+    {
+      "name": "longest unbroken sales-to-dealer run: UTI",
+      "expected": "reported, not a gate",
+      "actual": "11 months, 2025-08 to 2026-06, longest equal split 5 against 5",
+      "pass": true,
+      "note": "reported, not a gate"
+    },
+    {
+      "name": "longest unbroken both-stage run (ISZE billing and sales to dealer together): GREECE",
+      "expected": "reported, not a gate",
+      "actual": "12 months, 2025-01 to 2025-12, longest equal split 6 against 6",
+      "pass": true,
+      "note": "reported, not a gate. The ranking basis is sales to dealer, so the billing gaps of April to June 2026 do not decide the period pair; they only shorten this second run"
+    },
+    {
+      "name": "longest unbroken both-stage run (ISZE billing and sales to dealer together): IRELAND",
+      "expected": "reported, not a gate",
+      "actual": "15 months, 2025-01 to 2026-03, longest equal split 7 against 7",
+      "pass": true,
+      "note": "reported, not a gate. The ranking basis is sales to dealer, so the billing gaps of April to June 2026 do not decide the period pair; they only shorten this second run"
+    },
+    {
+      "name": "longest unbroken both-stage run (ISZE billing and sales to dealer together): ITUK",
+      "expected": "reported, not a gate",
+      "actual": "39 months, 2023-01 to 2026-03, longest equal split 19 against 19",
+      "pass": true,
+      "note": "reported, not a gate. The ranking basis is sales to dealer, so the billing gaps of April to June 2026 do not decide the period pair; they only shorten this second run"
+    },
+    {
+      "name": "longest unbroken both-stage run (ISZE billing and sales to dealer together): IUK",
+      "expected": "reported, not a gate",
+      "actual": "15 months, 2025-01 to 2026-03, longest equal split 7 against 7",
+      "pass": true,
+      "note": "reported, not a gate. The ranking basis is sales to dealer, so the billing gaps of April to June 2026 do not decide the period pair; they only shorten this second run"
+    },
+    {
+      "name": "longest unbroken both-stage run (ISZE billing and sales to dealer together): PORTUGAL",
+      "expected": "reported, not a gate",
+      "actual": "15 months, 2025-01 to 2026-03, longest equal split 7 against 7",
+      "pass": true,
+      "note": "reported, not a gate. The ranking basis is sales to dealer, so the billing gaps of April to June 2026 do not decide the period pair; they only shorten this second run"
+    },
+    {
+      "name": "longest unbroken both-stage run (ISZE billing and sales to dealer together): UTI",
+      "expected": "reported, not a gate",
+      "actual": "8 months, 2025-08 to 2026-03, longest equal split 4 against 4",
+      "pass": true,
+      "note": "reported, not a gate. The ranking basis is sales to dealer, so the billing gaps of April to June 2026 do not decide the period pair; they only shorten this second run"
+    },
+    {
+      "name": "pair is carried by 2N contiguous months: GREECE 2025-01..2025-12",
+      "expected": "2N contiguous months present",
+      "actual": "12 months",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "pair is carried by 2N contiguous months: IRELAND 2025-01..2025-12",
+      "expected": "2N contiguous months present",
+      "actual": "12 months",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "pair is carried by 2N contiguous months: ITUK 2025-01..2025-12",
+      "expected": "2N contiguous months present",
+      "actual": "12 months",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "pair is carried by 2N contiguous months: IUK 2025-01..2025-12",
+      "expected": "2N contiguous months present",
+      "actual": "12 months",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "pair is carried by 2N contiguous months: PORTUGAL 2025-01..2025-12",
+      "expected": "2N contiguous months present",
+      "actual": "12 months",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "pair is carried by 2N contiguous months: GREECE 2025-03..2025-12",
+      "expected": "2N contiguous months present",
+      "actual": "10 months",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "pair is carried by 2N contiguous months: IRELAND 2025-03..2025-12",
+      "expected": "2N contiguous months present",
+      "actual": "10 months",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "pair is carried by 2N contiguous months: ITUK 2025-03..2025-12",
+      "expected": "2N contiguous months present",
+      "actual": "10 months",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "pair is carried by 2N contiguous months: IUK 2025-03..2025-12",
+      "expected": "2N contiguous months present",
+      "actual": "10 months",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "pair is carried by 2N contiguous months: PORTUGAL 2025-03..2025-12",
+      "expected": "2N contiguous months present",
+      "actual": "10 months",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "pair is carried by 2N contiguous months: ITUK 2023-01..2026-08",
+      "expected": "2N contiguous months present",
+      "actual": "44 months",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "units reconcile to the sales-to-dealer rows: GREECE 2025-01..2025-12",
+      "expected": 24777.0,
+      "actual": 24777.0,
+      "pass": true,
+      "note": "on the page 24,762.0 units + 15.0 units dropped by the scope rule (non-part lines and lubricants) = 24,777.0 source units"
+    },
+    {
+      "name": "units reconcile to the sales-to-dealer rows: IRELAND 2025-01..2025-12",
+      "expected": 53328.0,
+      "actual": 53328.0,
+      "pass": true,
+      "note": "on the page 53,267.0 units + 61.0 units dropped by the scope rule (non-part lines and lubricants) = 53,328.0 source units"
+    },
+    {
+      "name": "units reconcile to the sales-to-dealer rows: ITUK 2025-01..2025-12",
+      "expected": 224587.0,
+      "actual": 224587.0,
+      "pass": true,
+      "note": "on the page 223,717.0 units + 870.0 units dropped by the scope rule (non-part lines and lubricants) = 224,587.0 source units"
+    },
+    {
+      "name": "units reconcile to the sales-to-dealer rows: IUK 2025-01..2025-12",
+      "expected": 248638.0,
+      "actual": 248638.0,
+      "pass": true,
+      "note": "on the page 248,242.0 units + 396.0 units dropped by the scope rule (non-part lines and lubricants) = 248,638.0 source units. IUK reports part of its sales to dealer in half units; they are kept as reported rather than rounded, so the figures still sum to the source"
+    },
+    {
+      "name": "units reconcile to the sales-to-dealer rows: PORTUGAL 2025-01..2025-12",
+      "expected": 51363.0,
+      "actual": 51363.0,
+      "pass": true,
+      "note": "on the page 50,750.0 units + 613.0 units dropped by the scope rule (non-part lines and lubricants) = 51,363.0 source units"
+    },
+    {
+      "name": "sales to dealer, period A: units not classified in AIM",
+      "expected": "reported, not a gate",
+      "actual": "7.07% of 320,786 units",
+      "pass": true,
+      "note": "reported, not a gate"
+    },
+    {
+      "name": "sales to dealer, period A: units with no price on the list",
+      "expected": "reported, not a gate",
+      "actual": "1.59% of 320,786 units",
+      "pass": true,
+      "note": "reported, not a gate"
+    },
+    {
+      "name": "sales to dealer, period B: units not classified in AIM",
+      "expected": "reported, not a gate",
+      "actual": "4.77% of 336,574 units",
+      "pass": true,
+      "note": "reported, not a gate"
+    },
+    {
+      "name": "sales to dealer, period B: units with no price on the list",
+      "expected": "reported, not a gate",
+      "actual": "1.11% of 336,574 units",
+      "pass": true,
+      "note": "reported, not a gate"
+    },
+    {
+      "name": "the growth and decline euro sums back to the movement between the two period totals",
+      "expected": 757313.53,
+      "actual": 757313.52,
+      "pass": true,
+      "note": "2,411,643.49 up and -1,654,329.97 down across 20,048 priced part numbers. The right-hand figure is the difference between the two period totals read straight from the periods, so nothing is lost between the two ranked lists. The tolerance is five cents, which is the rounding the page carries at this size"
+    },
+    {
+      "name": "the drill conserves the euro: AIM level 1 group against its level 2 groups",
+      "expected": 0.0,
+      "actual": 0.0,
+      "pass": true,
+      "note": "opening a bar must not lose or double count any euro; the largest gap found across all groups is 0.0000 euro (in group 0)"
+    },
+    {
+      "name": "the drill conserves the euro: level 2 group against its level 3 groups",
+      "expected": 0.0,
+      "actual": 0.0,
+      "pass": true,
+      "note": "opening a bar must not lose or double count any euro; the largest gap found across all groups is 0.0000 euro (in group 0)"
+    },
+    {
+      "name": "the drill conserves the euro: level 3 group against its part numbers",
+      "expected": 0.0,
+      "actual": 0.0,
+      "pass": true,
+      "note": "opening a bar must not lose or double count any euro; the largest gap found across all groups is 0.0000 euro"
+    },
+    {
+      "name": "no NaN or infinity in the embedded rows",
+      "expected": 0,
+      "actual": 0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "no NaN or infinity in the part-number dimension: a1",
+      "expected": 0,
+      "actual": 0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "no NaN or infinity in the part-number dimension: sp",
+      "expected": 0,
+      "actual": 0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "no NaN or infinity in the part-number dimension: fam",
+      "expected": 0,
+      "actual": 0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "no NaN or infinity in the part-number dimension: bvp",
+      "expected": 0,
+      "actual": 0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "no NaN or infinity in the part-number dimension: src",
+      "expected": 0,
+      "actual": 0,
+      "pass": true,
+      "note": ""
+    },
+    {
+      "name": "ISZE billing euro excluded by document type",
+      "expected": "reported, not a gate",
+      "actual": 5848908.52,
+      "pass": true,
+      "note": "17,403 rows, saty in CR, RE, DR, ZDR, FD or blank"
+    },
+    {
+      "name": "sales to dealer reported in half units",
+      "expected": "reported, not a gate",
+      "actual": "90 rows",
+      "pass": true,
+      "note": "IUK is the only distributor that reports part of its sales to dealer in half units, and they are kept as reported so the figures still sum to the source. By distributor: IUK: 90"
+    },
+    {
+      "name": "sales to dealer units dropped by the scope rule (lubricants and non-part lines)",
+      "expected": "reported, not a gate",
+      "actual": 5149.0,
+      "pass": true,
+      "note": "lubricant (Fluids Chemicals): 5,120; not a part line: 29"
+    },
+    {
+      "name": "ISZE billing euro dropped by the scope rule",
+      "expected": "reported, not a gate",
+      "actual": 349625.38,
+      "pass": true,
+      "note": "lubricant (Fluids Chemicals): 200,530.27; not a part line: 149,095.11"
+    },
+    {
+      "name": "HTML file size",
+      "expected": "under 15 MB",
+      "actual": 8.19,
+      "pass": true,
+      "note": "MB; self-contained, data and Chart.js inline, no server and no internet"
+    }
+  ],
+  "default_pair": {
+    "n": 6,
+    "a_from": "2025-01",
+    "a_to": "2025-06",
+    "b_from": "2025-07",
+    "b_to": "2025-12",
+    "dbs": [
+      "GREECE",
+      "IRELAND",
+      "ITUK",
+      "IUK",
+      "PORTUGAL"
+    ],
+    "n_dbs": 5,
+    "months_a": [
+      "2025-01",
+      "2025-02",
+      "2025-03",
+      "2025-04",
+      "2025-05",
+      "2025-06"
+    ],
+    "months_b": [
+      "2025-07",
+      "2025-08",
+      "2025-09",
+      "2025-10",
+      "2025-11",
+      "2025-12"
+    ]
+  },
+  "pairs_offered": {
+    "ALL": [
+      {
+        "n": 6,
+        "a_from": "2025-01",
+        "a_to": "2025-06",
+        "b_from": "2025-07",
+        "b_to": "2025-12",
+        "dbs": [
+          "GREECE",
+          "IRELAND",
+          "ITUK",
+          "IUK",
+          "PORTUGAL"
+        ],
+        "n_dbs": 5,
+        "months_a": [
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06"
+        ],
+        "months_b": [
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12"
+        ]
+      },
+      {
+        "n": 5,
+        "a_from": "2025-03",
+        "a_to": "2025-07",
+        "b_from": "2025-08",
+        "b_to": "2025-12",
+        "dbs": [
+          "GREECE",
+          "IRELAND",
+          "ITUK",
+          "IUK",
+          "PORTUGAL"
+        ],
+        "n_dbs": 5,
+        "months_a": [
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07"
+        ],
+        "months_b": [
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12"
+        ]
+      },
+      {
+        "n": 22,
+        "a_from": "2023-01",
+        "a_to": "2024-10",
+        "b_from": "2024-11",
+        "b_to": "2026-08",
+        "dbs": [
+          "ITUK"
+        ],
+        "n_dbs": 1,
+        "months_a": [
+          "2023-01",
+          "2023-02",
+          "2023-03",
+          "2023-04",
+          "2023-05",
+          "2023-06",
+          "2023-07",
+          "2023-08",
+          "2023-09",
+          "2023-10",
+          "2023-11",
+          "2023-12",
+          "2024-01",
+          "2024-02",
+          "2024-03",
+          "2024-04",
+          "2024-05",
+          "2024-06",
+          "2024-07",
+          "2024-08",
+          "2024-09",
+          "2024-10"
+        ],
+        "months_b": [
+          "2024-11",
+          "2024-12",
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07",
+          "2026-08"
+        ]
+      }
+    ],
+    "GREECE": [
+      {
+        "n": 6,
+        "a_from": "2025-01",
+        "a_to": "2025-06",
+        "b_from": "2025-07",
+        "b_to": "2025-12",
+        "dbs": [
+          "GREECE"
+        ],
+        "n_dbs": 1,
+        "months_a": [
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06"
+        ],
+        "months_b": [
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12"
+        ]
+      }
+    ],
+    "IRELAND": [
+      {
+        "n": 9,
+        "a_from": "2025-02",
+        "a_to": "2025-10",
+        "b_from": "2025-11",
+        "b_to": "2026-07",
+        "dbs": [
+          "IRELAND"
+        ],
+        "n_dbs": 1,
+        "months_a": [
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10"
+        ],
+        "months_b": [
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07"
+        ]
+      },
+      {
+        "n": 9,
+        "a_from": "2025-01",
+        "a_to": "2025-09",
+        "b_from": "2025-10",
+        "b_to": "2026-06",
+        "dbs": [
+          "IRELAND"
+        ],
+        "n_dbs": 1,
+        "months_a": [
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09"
+        ],
+        "months_b": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06"
+        ]
+      }
+    ],
+    "ITUK": [
+      {
+        "n": 22,
+        "a_from": "2023-01",
+        "a_to": "2024-10",
+        "b_from": "2024-11",
+        "b_to": "2026-08",
+        "dbs": [
+          "ITUK"
+        ],
+        "n_dbs": 1,
+        "months_a": [
+          "2023-01",
+          "2023-02",
+          "2023-03",
+          "2023-04",
+          "2023-05",
+          "2023-06",
+          "2023-07",
+          "2023-08",
+          "2023-09",
+          "2023-10",
+          "2023-11",
+          "2023-12",
+          "2024-01",
+          "2024-02",
+          "2024-03",
+          "2024-04",
+          "2024-05",
+          "2024-06",
+          "2024-07",
+          "2024-08",
+          "2024-09",
+          "2024-10"
+        ],
+        "months_b": [
+          "2024-11",
+          "2024-12",
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07",
+          "2026-08"
+        ]
+      }
+    ],
+    "IUK": [
+      {
+        "n": 9,
+        "a_from": "2025-02",
+        "a_to": "2025-10",
+        "b_from": "2025-11",
+        "b_to": "2026-07",
+        "dbs": [
+          "IUK"
+        ],
+        "n_dbs": 1,
+        "months_a": [
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10"
+        ],
+        "months_b": [
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07"
+        ]
+      },
+      {
+        "n": 9,
+        "a_from": "2025-01",
+        "a_to": "2025-09",
+        "b_from": "2025-10",
+        "b_to": "2026-06",
+        "dbs": [
+          "IUK"
+        ],
+        "n_dbs": 1,
+        "months_a": [
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09"
+        ],
+        "months_b": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06"
+        ]
+      }
+    ],
+    "PORTUGAL": [
+      {
+        "n": 10,
+        "a_from": "2025-01",
+        "a_to": "2025-10",
+        "b_from": "2025-11",
+        "b_to": "2026-08",
+        "dbs": [
+          "PORTUGAL"
+        ],
+        "n_dbs": 1,
+        "months_a": [
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10"
+        ],
+        "months_b": [
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07",
+          "2026-08"
+        ]
+      }
+    ],
+    "UTI": [
+      {
+        "n": 5,
+        "a_from": "2025-09",
+        "a_to": "2026-01",
+        "b_from": "2026-02",
+        "b_to": "2026-06",
+        "dbs": [
+          "UTI"
+        ],
+        "n_dbs": 1,
+        "months_a": [
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01"
+        ],
+        "months_b": [
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06"
+        ]
+      },
+      {
+        "n": 5,
+        "a_from": "2025-08",
+        "a_to": "2025-12",
+        "b_from": "2026-01",
+        "b_to": "2026-05",
+        "dbs": [
+          "UTI"
+        ],
+        "n_dbs": 1,
+        "months_a": [
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12"
+        ],
+        "months_b": [
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05"
+        ]
+      }
+    ]
+  },
+  "coverage": [
+    {
+      "db": "GREECE",
+      "label": "RSA",
+      "scope": "MIXED",
+      "sold_scope": "D-MAX",
+      "sold_scope_note": "D-Max only, calendar 2025 only",
+      "sold_months": 12,
+      "billed_months": 41,
+      "run_months": 12,
+      "run_span": "2025-01 to 2025-12",
+      "max_n": 6,
+      "offers": true,
+      "longest_pair_n": 6,
+      "sold_missing_where_billed": [
+        "2023-01",
+        "2023-02",
+        "2023-03",
+        "2023-04",
+        "2023-05",
+        "2023-06",
+        "2023-07",
+        "2023-08",
+        "2023-09",
+        "2023-10",
+        "2023-11",
+        "2023-12",
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06",
+        "2024-07",
+        "2024-08",
+        "2024-09",
+        "2024-10",
+        "2024-11",
+        "2024-12",
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-07",
+        "2026-08"
+      ]
+    },
+    {
+      "db": "IRELAND",
+      "label": "Ireland",
+      "scope": "MIXED",
+      "sold_scope": "MIXED",
+      "sold_scope_note": "network level, all families",
+      "sold_months": 19,
+      "billed_months": 41,
+      "run_months": 19,
+      "run_span": "2025-01 to 2026-07",
+      "max_n": 9,
+      "offers": true,
+      "longest_pair_n": 9,
+      "sold_missing_where_billed": [
+        "2023-01",
+        "2023-02",
+        "2023-03",
+        "2023-04",
+        "2023-05",
+        "2023-06",
+        "2023-07",
+        "2023-08",
+        "2023-09",
+        "2023-10",
+        "2023-11",
+        "2023-12",
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06",
+        "2024-07",
+        "2024-08",
+        "2024-09",
+        "2024-10",
+        "2024-11",
+        "2024-12",
+        "2026-08"
+      ]
+    },
+    {
+      "db": "ITUK",
+      "label": "ITUK",
+      "scope": "CV",
+      "sold_scope": "CV",
+      "sold_scope_note": "commercial vehicles only (CV)",
+      "sold_months": 44,
+      "billed_months": 41,
+      "run_months": 44,
+      "run_span": "2023-01 to 2026-08",
+      "max_n": 22,
+      "offers": true,
+      "longest_pair_n": 22,
+      "sold_missing_where_billed": []
+    },
+    {
+      "db": "IUK",
+      "label": "IUK",
+      "scope": "LCV",
+      "sold_scope": "D-MAX",
+      "sold_scope_note": "D-Max only",
+      "sold_months": 19,
+      "billed_months": 41,
+      "run_months": 19,
+      "run_span": "2025-01 to 2026-07",
+      "max_n": 9,
+      "offers": true,
+      "longest_pair_n": 9,
+      "sold_missing_where_billed": [
+        "2023-01",
+        "2023-02",
+        "2023-03",
+        "2023-04",
+        "2023-05",
+        "2023-06",
+        "2023-07",
+        "2023-08",
+        "2023-09",
+        "2023-10",
+        "2023-11",
+        "2023-12",
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06",
+        "2024-07",
+        "2024-08",
+        "2024-09",
+        "2024-10",
+        "2024-11",
+        "2024-12",
+        "2026-08"
+      ]
+    },
+    {
+      "db": "PORTUGAL",
+      "label": "Imotors",
+      "scope": "MIXED",
+      "sold_scope": "MIXED",
+      "sold_scope_note": "network level, all families",
+      "sold_months": 20,
+      "billed_months": 41,
+      "run_months": 20,
+      "run_span": "2025-01 to 2026-08",
+      "max_n": 10,
+      "offers": true,
+      "longest_pair_n": 10,
+      "sold_missing_where_billed": [
+        "2023-01",
+        "2023-02",
+        "2023-03",
+        "2023-04",
+        "2023-05",
+        "2023-06",
+        "2023-07",
+        "2023-08",
+        "2023-09",
+        "2023-10",
+        "2023-11",
+        "2023-12",
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06",
+        "2024-07",
+        "2024-08",
+        "2024-09",
+        "2024-10",
+        "2024-11",
+        "2024-12"
+      ]
+    },
+    {
+      "db": "UTI",
+      "label": "UTI",
+      "scope": "CV",
+      "sold_scope": "MIXED",
+      "sold_scope_note": "network level; Feb-Jul 2025 absent",
+      "sold_months": 12,
+      "billed_months": 41,
+      "run_months": 11,
+      "run_span": "2025-08 to 2026-06",
+      "max_n": 5,
+      "offers": true,
+      "longest_pair_n": 5,
+      "sold_missing_where_billed": [
+        "2023-01",
+        "2023-02",
+        "2023-03",
+        "2023-04",
+        "2023-05",
+        "2023-06",
+        "2023-07",
+        "2023-08",
+        "2023-09",
+        "2023-10",
+        "2023-11",
+        "2023-12",
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06",
+        "2024-07",
+        "2024-08",
+        "2024-09",
+        "2024-10",
+        "2024-11",
+        "2024-12",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2026-07",
+        "2026-08"
+      ]
+    }
+  ],
+  "reconciliation_month_rows_vs_total_rows": {
+    "dealer_sellout_long_GREECE_CY2025.csv": {
+      "distributor": "GREECE",
+      "month_rows": 5673,
+      "month_rows_qty": 24777.0,
+      "total_row_qty": 24777.0,
+      "total_row_periods": [
+        "2025"
+      ],
+      "month_periods": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11",
+        "2025-12"
+      ]
+    },
+    "dealer_sellout_long_IRELAND_CY2025.csv": {
+      "distributor": "IRELAND",
+      "month_rows": 13743,
+      "month_rows_qty": 53328.0,
+      "total_row_qty": 53328.0,
+      "total_row_periods": [
+        "2025"
+      ],
+      "month_periods": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11",
+        "2025-12"
+      ]
+    },
+    "dealer_sellout_long_IRELAND_CY2026YTD.csv": {
+      "distributor": "IRELAND",
+      "month_rows": 6909,
+      "month_rows_qty": 25986.0,
+      "total_row_qty": 25986.0,
+      "total_row_periods": [
+        "2026-YTD"
+      ],
+      "month_periods": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07"
+      ]
+    },
+    "dealer_sellout_long_ITUK_CY2023.csv": {
+      "distributor": "ITUK",
+      "month_rows": 22213,
+      "month_rows_qty": 219061.0,
+      "total_row_qty": 219061.0,
+      "total_row_periods": [
+        "2023"
+      ],
+      "month_periods": [
+        "2023-01",
+        "2023-02",
+        "2023-03",
+        "2023-04",
+        "2023-05",
+        "2023-06",
+        "2023-07",
+        "2023-08",
+        "2023-09",
+        "2023-10",
+        "2023-11",
+        "2023-12"
+      ]
+    },
+    "dealer_sellout_long_ITUK_CY2024.csv": {
+      "distributor": "ITUK",
+      "month_rows": 23006,
+      "month_rows_qty": 230586.0,
+      "total_row_qty": 230586.0,
+      "total_row_periods": [
+        "2024"
+      ],
+      "month_periods": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06",
+        "2024-07",
+        "2024-08",
+        "2024-09",
+        "2024-10",
+        "2024-11",
+        "2024-12"
+      ]
+    },
+    "dealer_sellout_long_ITUK_network_CY2025.csv": {
+      "distributor": "ITUK",
+      "month_rows": 22905,
+      "month_rows_qty": 224587.0,
+      "total_row_qty": 224587.0,
+      "total_row_periods": [
+        "2025"
+      ],
+      "month_periods": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11",
+        "2025-12"
+      ]
+    },
+    "dealer_sellout_long_ITUK_CY2026YTD.csv": {
+      "distributor": "ITUK",
+      "month_rows": 16145,
+      "month_rows_qty": 155974.0,
+      "total_row_qty": 155974.0,
+      "total_row_periods": [
+        "2026"
+      ],
+      "month_periods": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08"
+      ]
+    },
+    "dealer_sellout_long_IUK_CY2025.csv": {
+      "distributor": "IUK",
+      "month_rows": 20112,
+      "month_rows_qty": 248638.0,
+      "total_row_qty": 248638.0,
+      "total_row_periods": [
+        "2025"
+      ],
+      "month_periods": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11",
+        "2025-12"
+      ]
+    },
+    "dealer_sellout_long_IUK_CY2026YTD.csv": {
+      "distributor": "IUK",
+      "month_rows": 11704,
+      "month_rows_qty": 142040.0,
+      "total_row_qty": 142040.0,
+      "total_row_periods": [
+        "2026-YTD"
+      ],
+      "month_periods": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07"
+      ]
+    },
+    "dealer_sellout_long_PORTUGAL_CY2025.csv": {
+      "distributor": "PORTUGAL",
+      "month_rows": 15924,
+      "month_rows_qty": 51363.0,
+      "total_row_qty": 51363.0,
+      "total_row_periods": [
+        "2025"
+      ],
+      "month_periods": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11",
+        "2025-12"
+      ]
+    },
+    "dealer_sellout_long_PORTUGAL_CY2026YTD.csv": {
+      "distributor": "PORTUGAL",
+      "month_rows": 11042,
+      "month_rows_qty": 39790.0,
+      "total_row_qty": 39790.0,
+      "total_row_periods": [
+        "2026-YTD"
+      ],
+      "month_periods": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08"
+      ]
+    },
+    "dealer_sellout_long_UTI_CY2025.csv": {
+      "distributor": "UTI",
+      "month_rows": 4681,
+      "month_rows_qty": 55570.0,
+      "total_row_qty": 92660.0,
+      "total_row_periods": [
+        "2025"
+      ],
+      "month_periods": [
+        "2025-01",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11",
+        "2025-12"
+      ]
+    },
+    "dealer_sellout_long_UTI_CY2026YTD.csv": {
+      "distributor": "UTI",
+      "month_rows": 5489,
+      "month_rows_qty": 61833.0,
+      "total_row_qty": 0.0,
+      "total_row_periods": [],
+      "month_periods": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06"
+      ]
+    }
+  },
+  "open_questions": [
+    "The 35% gross margin on sales to dealer is an assumption supplied by Jerome, applied as list / 0.65 because margin is measured on the selling price. If he meant margin on cost (list x 1.35) the figure is about 14% lower. It is a modelled dealer price, not the distributor's turnover, its revenue, or an actual dealer purchase price.",
+    "The shortest window per side the page will draw at all is three months. That floor is a judgement made in this build. If a shorter window should be allowed, it changes only which pairs appear in the control; the default pair, which is always the longest equal split, would not move.",
+    "For the all-distributors view the default pair is the one that covers the most distributors, and ties are broken toward the longer window and then the more recent one. The other candidate pairs are in the control.",
+    "Sales to dealer has no price of its own. Both periods are valued on the same ISZE price list of 10 Aug 2026, so a price change inside the comparison window is not visible in it.",
+    "ITUK's sales-to-dealer history starts in January 2023, so its longest equal split is twenty-two months against twenty-two. If a shorter window is wanted for ITUK, the pair control allows it.",
+    "In the all-distributors view the scopes differ between distributors: ITUK is commercial vehicles only, IUK and Greece are D-Max only, and the rest are the whole network. Adding them together mixes those scopes, which the page states rather than hides."
+  ]
+}

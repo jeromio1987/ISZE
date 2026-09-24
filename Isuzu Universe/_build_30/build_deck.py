@@ -356,8 +356,9 @@ def build():
         "The dealer's first session must be its own data.",
         "f15_ids_scores.png",
         "Figure 15 of the paper. Dealer network file, 20 September 2026. Measured.",
-        "334 of the 519 dealers in our network file already carry a recorded IDS score, minimum zero, "
-        "maximum 100, average 77.5. That is two-thirds of the known estate with an individual result "
+        "490 of the 519 dealers in our network file carry a recorded Dealer Standards score, minimum "
+        "above zero, maximum 100, average 79.3. A further 29 recorded no answers at all and are held "
+        "apart from the distribution, because no score exists for them. That is almost all of the known "
         "already on file, and it is the only place in this programme where ISZE holds something a "
         "dealer will want to look at and cannot easily assemble itself. So the IDS profile should be "
         "the opening offer, not a later step. Right now the design brings a review to the dealer "

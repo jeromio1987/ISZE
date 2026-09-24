@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Universe Success Framework</title>
+<style>
+:root{--char:#24282C;--char2:#2E3338;--red:#D71920;--mid:#6B7078;--light:#B9BDC3;--grid:#E4E5E7;--paper:#F5F5F4;--ink:#1E2124;--green:#2E7D54;--amber:#B7791F}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);background:#fff;font-size:14px;line-height:1.5}
+header{background:var(--char);color:#E9EAEC;padding:34px 40px 30px}
+header .k{font-size:11px;letter-spacing:.22em;color:#A9AEB5;font-weight:bold}
+header h1{margin:8px 0 6px;font-size:34px;color:#fff}
+header p{margin:0;max-width:900px;color:#D9DBDE;font-size:15px}
+.rule{width:120px;height:3px;background:var(--red);margin:16px 0 0}
+main{max-width:1180px;margin:0 auto;padding:26px 40px 60px}
+h2{font-size:21px;margin:34px 0 10px;color:var(--char)}
+h2 .n{color:var(--red);margin-right:8px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:6px 0 10px}
+.kpi{background:var(--paper);border-top:3px solid var(--char);padding:14px 16px}
+.kpi.r{border-top-color:var(--red)}
+.kpi .v{font-size:30px;font-weight:bold;color:var(--char);line-height:1.1}
+.kpi.r .v{color:var(--red)}
+.kpi .l{font-size:12px;color:var(--mid);margin-top:4px}
+.verdict{border-left:3px solid var(--red);background:var(--paper);padding:14px 18px;margin:14px 0}
+.verdict p{margin:0 0 8px}.verdict p:last-child{margin:0}
+.dims{display:grid;grid-template-columns:260px 1fr 70px 70px;gap:6px 14px;align-items:center;margin-top:8px}
+.dims .h{font-size:11px;color:var(--mid);font-weight:bold;letter-spacing:.05em;text-transform:uppercase}
+.bar{position:relative;height:22px;background:var(--grid);border-radius:2px}
+.bar .t{position:absolute;left:0;top:0;bottom:0;background:var(--light);border-radius:2px}
+.bar .c{position:absolute;left:0;top:5px;bottom:5px;background:var(--char);border-radius:2px}
+.bar .c.low{background:var(--red)}
+.bar .tick{position:absolute;top:-3px;bottom:-3px;width:1px;background:#fff}
+.num{font-weight:bold;text-align:right}
+.num.t{color:var(--mid)}
+.legend{font-size:12px;color:var(--mid);margin-top:8px}
+.legend span{display:inline-block;width:12px;height:12px;vertical-align:-2px;margin:0 4px 0 12px}
+table{width:100%;border-collapse:collapse;margin:8px 0 6px;font-size:13px}
+th{background:var(--char);color:#fff;text-align:left;padding:8px 9px;font-size:11px;letter-spacing:.04em;text-transform:uppercase;position:sticky;top:0}
+td{padding:8px 9px;border-bottom:1px solid var(--grid);vertical-align:top}
+tr.dimrow td{background:var(--char2);color:#fff;font-weight:bold;padding:9px}
+tr.dimrow td .w{font-weight:normal;color:#A9AEB5;margin-left:8px;font-size:12px}
+td.id{color:var(--mid);white-space:nowrap;font-size:12px}
+td.st b{color:var(--char)}
+.ko{display:inline-block;font-size:10px;font-weight:bold;background:var(--red);color:#fff;padding:1px 5px;border-radius:3px;margin-left:6px;vertical-align:1px}
+.chip{display:inline-block;min-width:26px;text-align:center;font-weight:bold;border-radius:3px;padding:2px 6px;color:#fff}
+.s1{background:var(--red)}.s2{background:#E0645F}.s3{background:var(--amber)}.s4{background:#5E8F6E}.s5{background:var(--green)}
+select{font:inherit;font-weight:bold;padding:2px 4px;border:1px solid var(--light);border-radius:3px;background:#fff}
+td.ev{color:#3E434A;font-size:12.5px}
+td.lv{font-size:12.5px}
+.eff{font-size:11px;font-weight:bold;color:var(--mid);white-space:nowrap}
+.moves{counter-reset:m;list-style:none;padding:0;margin:8px 0}
+.moves li{counter-increment:m;position:relative;padding:10px 12px 10px 48px;border-bottom:1px solid var(--grid)}
+.moves li::before{content:counter(m);position:absolute;left:8px;top:10px;width:26px;height:26px;border-radius:50%;background:var(--red);color:#fff;font-weight:bold;text-align:center;line-height:26px}
+.moves .g{color:var(--mid);font-size:12.5px}
+.scale{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:8px 0}
+.scale div{background:var(--paper);padding:8px 10px;font-size:12.5px}
+.scale b{display:block;margin-bottom:2px}
+.btns{margin:10px 0}
+button{font:inherit;font-size:13px;padding:6px 12px;border:1px solid var(--char);background:#fff;cursor:pointer;border-radius:3px;margin-right:6px}
+button.p{background:var(--char);color:#fff}
+.foot{font-size:12px;color:var(--mid);margin-top:30px;border-top:1px solid var(--grid);padding-top:10px}
+@media print{th{position:static}.btns{display:none}select{border:none;appearance:none}}
+@media (max-width:760px){main,header{padding-left:16px;padding-right:16px}.kpis{grid-template-columns:1fr 1fr}.dims{grid-template-columns:120px 1fr 44px 44px}table{font-size:12px}td.ev,th.ev{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="k">ISUZU UNIVERSE · SUCCESS FRAMEWORK</div>
+  <h1>Will Universe succeed?</h1>
+  <p>45 statements across nine dimensions. Each is scored on how true it is today, with the evidence behind the score, the move that would raise it, and the score that move should reach. You can change any "now" score and the totals update.</p>
+  <div class="rule"></div>
+</header>
+<main>
+
+<h2><span class="n">1</span>The answer</h2>
+<div class="kpis">
+  <div class="kpi r"><div class="v" id="kNow">–</div><div class="l">Weighted score today, out of 5</div></div>
+  <div class="kpi"><div class="v" id="kTgt">–</div><div class="l">Weighted score after the moves below, out of 5</div></div>
+  <div class="kpi r"><div class="v" id="kKo">–</div><div class="l">Knock-out statements still at 1 or 2</div></div>
+  <div class="kpi"><div class="v" id="kBand">–</div><div class="l">Band today (a knock-out below 3 caps the band)</div></div>
+</div>
+<div class="verdict">
+<p><b>My view, as judgement, not measurement.</b> As the programme stands today I give it roughly a one-in-four chance of becoming something distributors and dealers use without being pushed. The idea is strong. The problem is real and measurable, the tools can be built quickly, and there is already an incentive to re-point. What holds it down is not the concept. It is four things that have nothing to do with software: nobody owns the answers the tools will raise, the programme depends on one person, no distributor has yet been asked whether it wants the dealer scorecard, and nothing is recorded that could prove a return.</p>
+<p><b>With the ten moves in section 4, done in the next two quarters, I would put it at better than even odds.</b> Most of those moves are cheap: a named owner, three distributor conversations, a mock scorecard on Isuzu Truck UK's 64 dealers, a written tier definition for the rebate, and an outcome line on every credit note. The expensive parts (a production system, the Deal of the Day money) only matter once those are done.</p>
+</div>
+
+<h2><span class="n">2</span>Score by dimension</h2>
+<div class="dims" id="dims">
+  <div class="h">Dimension (weight)</div><div class="h">Today (bar) against after the moves (grey)</div><div class="h" style="text-align:right">Now</div><div class="h" style="text-align:right">After</div>
+</div>
+<div class="legend"><span style="background:var(--char)"></span>today <span style="background:var(--red)"></span>today, below 2.5 <span style="background:var(--light)"></span>after the moves</div>
+
+<h2><span class="n">3</span>The statements</h2>
+<div class="scale">
+  <div><b><span class="chip s1">1</span> Not true</b>Evidence against, or nothing in place</div>
+  <div><b><span class="chip s2">2</span> Mostly not</b>An intention or a single case, nothing that holds</div>
+  <div><b><span class="chip s3">3</span> Partly</b>Some evidence; could go either way</div>
+  <div><b><span class="chip s4">4</span> Mostly true</b>Evidence supports it, with gaps</div>
+  <div><b><span class="chip s5">5</span> True</b>Measured or demonstrated</div>
+</div>
+<p class="legend" style="margin-left:0"><span class="ko" style="margin-left:0">KNOCK-OUT</span> Below 3 on any of these and the programme fails regardless of the rest. Scores are my judgement on the evidence listed; where the evidence is thin, the score says so.</p>
+<div class="btns"><button class="p" onclick="resetNow()">Reset to my scores</button><button onclick="window.print()">Print</button></div>
+<table>
+  <thead><tr><th>#</th><th>Statement</th><th>Now</th><th class="ev">Why this score</th><th>Move that raises it</th><th>After</th><th>Effort</th></tr></thead>
+  <tbody id="tb"></tbody>
+</table>
+
+<h2><span class="n">4</span>The ten moves that raise the score most</h2>
+<p>Ranked by weighted score gain, with knock-outs first. Most cost time, not money.</p>
+<ol class="moves" id="moves"></ol>
+
+<p class="foot">Scores are a structured judgement on 23 September 2026, based on the evidence in the Isuzu Universe white paper (edition 2) and the ISZE records behind it. They are not a measurement and not a forecast. Measured facts cited: 22 distributors, €32.4M billed in 2025; 6 sent any 2025 sales-to-dealer data (57.0% of billing), one by named dealer (17.2%); 519 dealers in Isuzu Dealer Standards, 490 scored; €90,000 of Don't Lose the Deal credits with zero recorded cases; 619 tender opportunities with zero recorded outcomes; 20% of the normal distributor rebate linked to KPI reporting since 2025. Your changes to the "now" scores are kept in this browser only.</p>
+</main>
+
+<script>
+var DIMS=[
+ {k:"A",n:"The problem is real and felt",w:1.0},
+ {k:"B",n:"Distributors get real value",w:1.5},
+ {k:"C",n:"Dealers get real value",w:1.2},
+ {k:"D",n:"The data can actually be produced",w:1.4},
+ {k:"E",n:"Incentives and economics work",w:1.2},
+ {k:"F",n:"We can build and run the tools",w:1.0},
+ {k:"G",n:"Ownership and organisation",w:1.5},
+ {k:"H",n:"Trust, legal and privacy",w:1.0},
+ {k:"I",n:"We can prove it worked",w:1.2}
+];
+// id, dim, statement, now, target, evidence, move, effort, knockout
+var S=[
+["A1","A","ISZE cannot see its aftermarket below the distributor's invoice.",5,5,"Measured: 17.2% of 2025 billing can be followed to a named dealer; 15 of 22 distributors send nothing below the invoice.","Keep the visibility chart at the front of every conversation.","–",0],
+["A2","A","ISZE management treats this blindness as a business problem, not a data wish.",3,4,"The 20% KPI rebate link shows intent. No budget line or management KPI for dealer visibility exists yet.","Put named-dealer visibility (17.2% today) on the management scorecard as a tracked KPI.","Low",0],
+["A3","A","Distributors feel the same blindness about their own dealers.",2,4,"Unverified. Only one distributor sends named-dealer data; nobody has asked the others whether they want dealer-level insight.","Three 30-minute director conversations: show the Isuzu Truck UK dealer spread and ask 'would you use this for your dealers?'","Low",1],
+["A4","A","The maintenance-parts leakage is big enough to matter commercially.",4,4,"Modelled: ISZE supplies about 19% of modelled maintenance-parts need; one capture point ≈ €249k revenue a year. Model-based, with some markets unreliable.","Validate the model on the pilot dealers' workshop data.","Medium",0],
+["A5","A","The problem can be shown to a distributor director in one chart.",4,5,"The visibility ladder and oil-filter capture charts exist.","Make a one-page version per distributor with its own numbers.","Low",0],
+
+["B1","B","A distributor would use the dealer maintenance scorecard in its own dealer meetings.",2,4,"Not built and not tested. It needs trucks sold per dealer, which no distributor sends today.","Build a mock on Isuzu Truck UK's 64 dealers and test it in one real dealer review with the distributor.","Medium",1],
+["B2","B","The Parts Atlas shows a distributor something it cannot see in its own systems.",4,5,"Brake-pad and Portugal clutch-kit examples change the decision. Prototype exists.","Fix the classification release, then show each pilot distributor its own top three movements.","Medium",0],
+["B3","B","The distributor sees Universe as serving its interest, not ISZE's.",2,4,"Years of data requests with little visible return; the default reading will be 'another ISZE data grab'.","Lead with the distributor's own dealer development; deliver the first review before asking anything.","Low",1],
+["B4","B","Deal of the Day is attractive enough to open doors.",4,4,"Money plus preparation; deep concession already exists in several markets, so offers are familiar.","Name the first Deal of the Day with a real distributor.","Medium",0],
+["B5","B","The monthly brief saves the distributor time rather than costing it.",3,4,"Plausible but unbuilt. Depends on data arriving on time.","Pilot the brief with one distributor for three months; ask what they forwarded internally.","Medium",0],
+
+["C1","C","Dealers want to see their own Dealer Standards profile.",4,5,"Reported: the in-house compare tool is used in feedback meetings and well received; 490 dealers have a score.","Open every dealer journey with the profile; add the action coach.","Medium",0],
+["C2","C","Dealers will share workshop exports every month.",2,3,"Done once, with one dealer. No dealer has been asked at scale.","Funded €600 setup with ten pilot dealers; measure month-2 and month-3 continuation.","Medium",1],
+["C3","C","The service-due list gives the dealer bookable work.",3,4,"Logically strong, not built.","Build it on the one workshop book already held and show it to that dealer.","Medium",0],
+["C4","C","Dealers trust data flowing through the distributor to ISZE.",2,3,"'My supplier's supplier is looking at my book' is the natural reaction. Nothing tested.","Dealer sees its data first and controls what goes further; write this into the invitation.","Low",0],
+["C5","C","The dealer's time cost is low enough to fit around the counter.",3,4,"The design is ten minutes and no forms; the export connection still takes effort.","Measure actual minutes in the ten-dealer sample.","Low",0],
+
+["D1","D","Distributors that send national data can move to monthly part × dealer data.",3,4,"Isuzu Truck UK did it for 2025. The others have not been asked for this grain.","Re-point the rebate tier 2 to exactly this standard.","Medium",0],
+["D2","D","Distributors that do not track sales to dealer can start.",2,3,"Reported: some do not track it at all.","Intake assistant plus funded setup; start with a simple template.","Medium",0],
+["D3","D","Trucks sold per dealer can be obtained.",2,4,"Unknown. Distributors hold vehicle sales, but nobody has asked for it by dealer.","Ask the two pilot distributors for five years of vehicle sales by selling dealer.","Low",1],
+["D4","D","The parts classification is fixed to one release.",2,5,"Not pinned; candidate versions give different answers for the same part.","Name one release with version and build date. A one-page decision.","Low",1],
+["D5","D","The fleet model is reliable enough per market.",3,4,"In 12 market-family combinations the model expects less than was actually sold, so its base there is wrong; 40% of the target-spend ceiling rests on a flat €250 per truck.","Replace placeholders with registration data in the pilot markets; recalibrate on workshop data.","High",0],
+["D6","D","Dealer identities match across sales, workshop and Dealer Standards files.",3,4,"One exact match proven (one dealer); no master dealer list exists.","Build a dealer master for the two pilot distributors.","Medium",0],
+
+["E1","E","The 20% KPI rebate share can be re-pointed to a data standard.",3,4,"The link exists since 2025. Re-pointing needs commercial agreement and legal review.","Write the three tier definitions and get them reviewed.","Low",0],
+["E2","E","The Deal of the Day money is available.",3,4,"The €100,000 planning route exists; the Deal of the Day line is not approved.","Ask for the named €60–90k line with the €150k floor.","Low",0],
+["E3","E","Enough Deals of the Day clear the €150k floor.",2,3,"Unknown rate; the highest concession sits in small markets.","List candidate Deals of the Day per pilot distributor before approval; pool families where needed.","Low",0],
+["E4","E","The return can be shown within two quarters.",2,3,"Capture takes time to move; only Deal of the Day contribution is fast.","Report Deal of the Day contribution at 90 days; capture at 180 days against comparable dealers.","Medium",0],
+["E5","E","The payback bar is low enough to be credible.",4,4,"Illustrative: 1.3 capture points at a 30% margin pays back the €100k route.","Replace the illustrative margin with ISZE's actual margin.","Low",0],
+["E6","E","We know what the current incentive costs.",1,4,"The euro value of the 20% rebate share is not stated anywhere in the material.","Get the figure from finance.","Low",0],
+
+["F1","F","The tools can be built quickly in-house with AI.",4,5,"The Dealer Standards compare tool, Parts Atlas and network atlas prototypes already exist.","Build the scorecard and intake assistant next.","Medium",0],
+["F2","F","A production system with real access control exists.",1,3,"None: no shared identity, storage or access isolation.","Scope a small hosted service with IT; until then share documents via the distributor.","High",0],
+["F3","F","Tools work in each market's language.",4,5,"AI translation is cheap; the compare tool is already per country.","Translate the dealer-facing screens for the pilot markets.","Low",0],
+["F4","F","The scope boundary holds (no support desk creeps in).",4,4,"Written into both papers.","Keep the one-page boundary in every distributor pack.","Low",0],
+["F5","F","The tools can be maintained after they are built.",2,3,"Single builder; no handover or run budget.","Document and hand over each tool; name a second person.","Medium",0],
+
+["G1","G","Somebody is named to answer the questions the tools raise.",1,4,"Nobody is named, given hours or funded. The paper says this is the unowned half.","Name an owner with a stated share of their week before the first invitation.","Low",1],
+["G2","G","The programme survives if Jérôme is unavailable.",1,3,"The concept, the data and the tools currently sit with one person.","Name a deputy; write the run-book; keep builds reproducible.","Medium",1],
+["G3","G","ISZE's field team can carry the story to distributors.",2,4,"Not briefed; the story is new.","A one-page pitch and one practice meeting per account manager.","Low",0],
+["G4","G","Headquarters in Japan supports the programme.",2,3,"Unknown. Don't Lose the Deal already runs through a Japan-side sign-off.","Present the visibility chart and the pilot in the next Japan review.","Medium",0],
+["G5","G","The Dealer Standards organisation will count data use in the next round.",2,3,"A proposal only; the standards are owned elsewhere.","Put the proposal to the Dealer Standards owners with one concrete question wording.","Low",0],
+
+["H1","H","The design has passed a competition-law review.",1,4,"Not reviewed. Block exemption regime runs to May 2028.","Send the three standing rules and the rebate tiers to legal.","Low",1],
+["H2","H","Workshop data handling meets privacy rules.",2,4,"Designed pseudonymised, without customer names; not reviewed.","Privacy review of the maintenance record before the first export.","Low",0],
+["H3","H","Participants believe there will be no league table.",3,4,"Written as a rule; compare tool uses anonymous averages.","Show a real screen where only the dealer's own name appears.","Low",0],
+["H4","H","Ordinary service stays unconditional.",4,5,"A standing rule in the paper.","Say it in the first sentence of every invitation.","Low",0],
+
+["I1","I","Outcomes of supported deals and tenders are recorded.",1,4,"Zero cases across €90k of Don't Lose the Deal credits; zero tender outcomes.","One outcome line on every credit note from next month.","Low",1],
+["I2","I","Capture gains can be compared against dealers outside the pilot.",2,4,"Only possible where dealer-level data exists (one market today).","Choose pilot and comparison dealers inside Isuzu Truck UK before starting.","Low",0],
+["I3","I","Price response can be measured at dealer level.",1,3,"Only ISZE-to-distributor stocking is measurable today.","Falls out of monthly part × dealer data after two quarters.","Medium",0],
+["I4","I","A stop condition is agreed up front.",3,5,"Written in the paper; not agreed by management.","Get the go / no-go / stop wording signed off with the budget.","Low",0],
+["I5","I","Engagement is tracked by use, not by logins.",2,4,"No tracking exists yet.","Track decisions named, data months received and continuation per participant.","Low",0]
+];
+var DEF=S.map(function(s){return s[3]});
+var KEY="universe_success_now_v1";
+try{var saved=JSON.parse(localStorage.getItem(KEY)||"null");if(saved&&saved.length===S.length){saved.forEach(function(v,i){S[i][3]=v})}}catch(e){}
+
+function esc(t){return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;")}
+function dimAvg(k,idx){var a=S.filter(function(s){return s[1]===k});return a.reduce(function(t,s){return t+s[idx]},0)/a.length}
+function weighted(idx){var n=0,d=0;DIMS.forEach(function(D){n+=dimAvg(D.k,idx)*D.w;d+=D.w});return n/d}
+function band(v,ko){if(ko>0&&v>=2.5)return "Capped";if(v<2.5)return "Unlikely";if(v<3.5)return "Possible";return "Likely"}
+
+function render(){
+  var tb=document.getElementById("tb");tb.innerHTML="";
+  DIMS.forEach(function(D){
+    var tr=document.createElement("tr");tr.className="dimrow";
+    tr.innerHTML='<td colspan="7">'+D.k+' · '+esc(D.n)+'<span class="w">weight '+D.w+' · now '+dimAvg(D.k,3).toFixed(1)+' · after '+dimAvg(D.k,4).toFixed(1)+'</span></td>';
+    tb.appendChild(tr);
+    S.forEach(function(s,i){
+      if(s[1]!==D.k)return;
+      var r=document.createElement("tr");
+      var opts=[1,2,3,4,5].map(function(v){return '<option'+(v===s[3]?' selected':'')+'>'+v+'</option>'}).join("");
+      r.innerHTML='<td class="id">'+s[0]+'</td><td class="st"><b>'+esc(s[2])+'</b>'+(s[8]?'<span class="ko">KNOCK-OUT</span>':'')+'</td>'+
+        '<td><select data-i="'+i+'" class="s'+s[3]+'" style="color:#fff">'+opts+'</select></td>'+
+        '<td class="ev">'+esc(s[5])+'</td><td class="lv">'+esc(s[6])+'</td>'+
+        '<td><span class="chip s'+s[4]+'">'+s[4]+'</span></td><td class="eff">'+s[7]+'</td>';
+      tb.appendChild(r);
+    });
+  });
+  tb.querySelectorAll("select").forEach(function(el){
+    var i=+el.getAttribute("data-i");
+    el.className="chip s"+S[i][3];
+    el.addEventListener("change",function(){S[i][3]=+el.value;try{localStorage.setItem(KEY,JSON.stringify(S.map(function(s){return s[3]})))}catch(e){}render()});
+  });
+  // dimension bars
+  var d=document.getElementById("dims");
+  d.querySelectorAll(".row").forEach(function(x){x.remove()});
+  DIMS.forEach(function(D){
+    var n=dimAvg(D.k,3),t=dimAvg(D.k,4);
+    var html='<div class="row" style="font-weight:bold">'+D.k+' · '+esc(D.n)+' <span style="color:var(--mid);font-weight:normal">('+D.w+')</span></div>'+
+      '<div class="row bar"><div class="t" style="width:'+(t/5*100)+'%"></div><div class="c'+(n<2.5?' low':'')+'" style="width:'+(n/5*100)+'%"></div>'+
+      [1,2,3,4].map(function(v){return '<div class="tick" style="left:'+(v*20)+'%"></div>'}).join("")+'</div>'+
+      '<div class="row num"'+(n<2.5?' style="color:var(--red)"':'')+'>'+n.toFixed(1)+'</div><div class="row num t">'+t.toFixed(1)+'</div>';
+    d.insertAdjacentHTML("beforeend",html);
+  });
+  var now=weighted(3),tgt=weighted(4);
+  var ko=S.filter(function(s){return s[8]&&s[3]<3}).length;
+  var koT=S.filter(function(s){return s[8]&&s[4]<3}).length;
+  document.getElementById("kNow").textContent=now.toFixed(2);
+  document.getElementById("kTgt").textContent=tgt.toFixed(2);
+  document.getElementById("kKo").textContent=ko+" of "+S.filter(function(s){return s[8]}).length;
+  document.getElementById("kBand").textContent=band(now,ko)+" → "+band(tgt,koT);
+  // moves
+  var totW=DIMS.reduce(function(t,D){return t+D.w},0);
+  var cnt={};S.forEach(function(s){cnt[s[1]]=(cnt[s[1]]||0)+1});
+  var wOf={};DIMS.forEach(function(D){wOf[D.k]=D.w});
+  var gains=S.map(function(s){return {s:s,g:(s[4]-s[3])*wOf[s[1]]/cnt[s[1]]/totW}}).filter(function(x){return x.g>0});
+  gains.sort(function(a,b){var ka=a.s[8]&&a.s[3]<3?1:0,kb=b.s[8]&&b.s[3]<3?1:0;if(ka!==kb)return kb-ka;return b.g-a.g});
+  document.getElementById("moves").innerHTML=gains.slice(0,10).map(function(x){var s=x.s;
+    return '<li><b>'+esc(s[6])+'</b>'+(s[8]&&s[3]<3?'<span class="ko">KNOCK-OUT</span>':'')+'<br><span class="g">'+s[0]+' · '+esc(s[2])+' · '+s[3]+' → '+s[4]+' · +'+x.g.toFixed(3)+' on the total · effort '+s[7]+'</span></li>'}).join("");
+}
+function resetNow(){DEF.forEach(function(v,i){S[i][3]=v});try{localStorage.removeItem(KEY)}catch(e){}render()}
+render();
+</script>
+</body>
+</html>

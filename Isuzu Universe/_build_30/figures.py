@@ -414,20 +414,57 @@ def fig14_dealer_join():
 
 
 def fig15_ids_scores():
+    """The recorded Dealer Standards scores, with the never-assessed dealers held apart.
+
+    A score of zero in the source means the 195-question assessment was never carried out, not that
+    the dealer performed badly: every one of those records shows 0% of items scored. They are
+    therefore drawn as their own labelled band, severed from the score axis, so a reader cannot
+    read them as the weakest dealers in the network.
+    """
     rows = [r for r in ids_rows() if r["points_pct"].strip()]
-    vals = [float(r["points_pct"]) for r in rows]
-    fig, ax = plt.subplots(figsize=(W, 3.5))
+    assessed = [float(r["points_pct"]) for r in rows if float(r["points_pct"]) > 0]
+    unassessed = [r for r in rows if float(r["points_pct"]) == 0]
+    avg = sum(assessed) / len(assessed)
+
+    fig, (ax, band) = plt.subplots(
+        1, 2, figsize=(W, 3.5),
+        gridspec_kw={"width_ratios": [7, 1], "wspace": 0.04},
+    )
+
     bins = list(range(0, 101, 10))
-    ax.hist(vals, bins=bins, color=NAVY, edgecolor="white", linewidth=0.8)
-    ax.axvline(sum(vals) / len(vals), color=TERR, lw=2.2, linestyle="--")
-    ax.text(sum(vals) / len(vals) + 1.5, ax.get_ylim()[1] * 0.9,
-            f"average {sum(vals) / len(vals):.1f}", color=TERR, fontsize=10.5,
-            fontweight="bold")
-    ax.set_xlabel("Recorded IDS score (%)")
+    ax.hist(assessed, bins=bins, color=NAVY, edgecolor="white", linewidth=0.8)
+    top = ax.get_ylim()[1] * 1.2
+    ax.set_ylim(0, top)
+    ax.set_xlim(0, 100)
+    ax.axvline(avg, color=TERR, lw=2.2, linestyle="--")
+    ax.text(avg + 2.0, top * 0.96, f"average {avg:.1f}", color=TERR, fontsize=10.5,
+            fontweight="bold", va="top")
+    ax.set_xlabel("Recorded Dealer Standards score (%)")
     ax.set_ylabel("Dealers")
     _clean(ax)
-    ax.set_title(f"{len(vals)} dealers carry a recorded score today, out of 519 in the network file",
-                 fontsize=11.5, pad=10, loc="left")
+
+    # The band: a full-height strip in its own axes, deliberately off the score scale, so its height
+    # means nothing and cannot be compared with a bar.
+    band.set_xlim(0, 1)
+    band.set_ylim(0, top)
+    band.add_patch(Rectangle((0.06, 0), 0.88, top * 0.86, facecolor="#EDE9E1",
+                             edgecolor=LINE, linewidth=1.0))
+    band.text(0.5, top * 0.86, "not assessed", ha="center", va="bottom",
+              fontsize=8.6, color=GREY)
+    band.text(0.5, top * 0.50, f"{len(unassessed)}", ha="center", va="center",
+              fontsize=16, color=NAVY, fontweight="bold")
+    band.text(0.5, top * 0.40, "dealers", ha="center", va="top", fontsize=8.6, color=GREY)
+    band.text(0.5, top * 0.30, "no answers recorded", ha="center", va="top",
+              fontsize=7.6, color=GREY)
+    band.set_xticks([])
+    band.set_yticks([])
+    for s in ("top", "right", "left", "bottom"):
+        band.spines[s].set_visible(False)
+
+    ax.set_title(
+        f"{len(assessed)} of {len(rows)} dealers carry a recorded score. "
+        f"{len(unassessed)} have no answers recorded and are shown separately.",
+        fontsize=11.5, pad=10, loc="left")
     return save(fig, "f15_ids_scores.png")
 
 
@@ -590,7 +627,7 @@ FIGURES = [
     (14, "how the dealer joins", fig14_dealer_join,
      "Proposed participant journey. No dealer has been invited and no access has been accepted."),
     (15, "the recorded IDS scores behind the opening offer", fig15_ids_scores,
-     "Dealer network file of 20 September 2026: 519 rows across 19 networks, of which 334 carry a score. Measured."),
+     "Dealer network file of 20 September 2026: 519 rows across 19 networks. 490 carry a recorded score, mean 79.3; the remaining 29 recorded no answers at all and are held apart. Measured."),
     (16, "the exchange, and what each side puts in", fig16_exchange,
      "Proposed participation design. Payment for data volume is excluded and ordinary service is never conditional on a contribution."),
     (17, "the collaboration, and who owns which part", fig17_tender_parties,

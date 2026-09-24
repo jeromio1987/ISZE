@@ -233,6 +233,97 @@ _check_canonical()
 REGISTRY_PREFIX_BAND = {"N35": BAND_N35, "N50": BAND_N50, "N55": BAND_N50,
                         "N62": BAND_N75, "N65": BAND_N75, "N75": BAND_N75}
 
+# ── THE COUNT/STATUS INVARIANT, AND THE ONE DOCUMENTED EXCEPTION TO IT -------------------------
+#
+# `band_count` is `len(bands)` and `tonnage_band` is the join of the same `bands`, but the STATUS is
+# decided by a separate chain that tests `all_tokens` - the series the EPC and the cross-reference
+# NAME - on its first line, before it ever looks at `bands`. The registry-model route can add a band
+# `bands` without adding anything to `all_tokens`. On one part number those two facts meet: the
+# registry tag names a band, no series is named, so the `no_series_found` branch fires and blanks
+# `tonnage_band` while `band_count` has already been fixed at 1. The row then contradicts itself,
+# and because `band_count` is the cheaper column to read, anyone counting "how much of the book sits
+# on exactly one band" from it counts a part number that has no band at all.
+#
+# That shape must not be writable again. The four rules below are the whole invariant:
+#
+#     band_count    == the number of bands listed in tonnage_band
+#     status        == single_band            <-> exactly one band listed
+#     status        == shared_across_bands    <-> two or more bands listed
+#     status        == series_unresolved | no_series_found  <-> no band listed
+#
+# A row that breaks any of them stops the build with the offending rows named, rather than being
+# written. This is deliberately an assertion and NOT a derivation: deriving `band_count` from
+# `tonnage_band` (or the reverse) would silently pick one of the two columns as the truth, and on
+# this part number which of them is the truth is an open evidence question with an owner, not a
+# build question. A build must not decide it either way.
+#
+# One row is exempt, by name, with its ticket. The exemption exists so the answer stays with the
+# person who owns it; it is not a licence for the same shape to reappear, because a second row
+# would not be in this dictionary and would fail the build.
+
+PARKED_COUNT_STATUS_EXCEPTIONS: dict[str, tuple[str, str]] = {
+    "5876100771": (
+        "parked 2026-09-24 pending an EPC fitment answer (Rene Paul / Isuzu Germany): the registry "
+        "route reads one band (7.5 t, tag N75_4JZ1) while no vehicle series is named at all, and "
+        "the catalogue route names only the wildcards N*R,N*S. Which of the two columns is wrong "
+        "cannot be settled from what is on disk, so a build must not settle it.",
+        "01_data/00_derived/_data_integrity_open_issues.md (CLUTCH-771)",
+    ),
+}
+
+
+def assert_count_status_agree(banded: pd.DataFrame) -> None:
+    """Stop the build if a row's band count contradicts its own band columns.
+
+    The invariant, in full:
+
+        band_count == the number of bands listed in tonnage_band
+        single_band                              <-> exactly one band listed
+        series_unresolved | no_series_found      <-> no band listed
+        shared_across_bands                      <-> two or more bands listed, OR one band listed
+                                                      while `series_unresolved` names a code no
+                                                      source places (the widened shape: the row is
+                                                      not exclusive, but a second band cannot be
+                                                      named because the unplaced code may sit at any
+                                                      rung)
+
+    That last clause is the only legal way a `shared_across_bands` row may list a single band. It is
+    a real shape, not a hole: a row reaches it only by naming an unplaced code, so a row that merely
+    miscounts its own bands still fails. The parked part number below is printed on every build and
+    written unchanged; every other disagreeing row fails the build.
+    """
+    listed = banded.tonnage_band.fillna("").map(lambda s: len([x for x in str(s).split("|") if x]))
+    count = pd.to_numeric(banded.band_count, errors="coerce").fillna(0).astype("int64")
+    status = banded.band_status.fillna("")
+    unresolved = (banded.series_unresolved.fillna("") if "series_unresolved" in banded.columns
+                  else pd.Series([""] * len(banded), index=banded.index))
+
+    widened_shape = (status == "shared_across_bands") & (listed == 1) & (unresolved != "")
+    list_vs_status = (
+        ((status == "single_band") & (listed != 1))
+        | ((status == "shared_across_bands") & (listed < 2) & ~widened_shape)
+        | (status.isin(["series_unresolved", "no_series_found"]) & (listed != 0))
+    )
+    broken = banded[(count != listed) | list_vs_status]
+    parked = broken[broken.pn.isin(PARKED_COUNT_STATUS_EXCEPTIONS)]
+    fresh = broken[~broken.pn.isin(PARKED_COUNT_STATUS_EXCEPTIONS)]
+
+    for r in parked.itertuples():
+        why, where = PARKED_COUNT_STATUS_EXCEPTIONS[r.pn]
+        print(f"  PARKED count/status contradiction, written unchanged and NOT resolved by this "
+              f"build: pn {r.pn} band_count={r.band_count} tonnage_band='{r.tonnage_band}' "
+              f"band_status={r.band_status}")
+        print(f"    {why}")
+        print(f"    tracked in {where}")
+
+    if not fresh.empty:
+        detail = fresh[["pn", "band_count", "tonnage_band", "band_status"]].head(8).to_dict("records")
+        raise SystemExit(
+            f"BUILD FAIL: {len(fresh)} banded row(s) carry a band count that contradicts their own "
+            f"band columns; fix the mapping or park the row by name in "
+            f"PARKED_COUNT_STATUS_EXCEPTIONS. Offending rows: {detail}"
+        )
+
 
 def band_from_registry_model(value: str) -> tuple[str, str, str]:
     """(band, quote, confidence) from a `registry_model` tag such as N75_4JZ1. Empty when absent."""
@@ -447,13 +538,23 @@ def main() -> int:
         b_epc, u_epc = bands_for(s_epc)
         b_xr, u_xr = bands_for(s_xr)
         reg = sorted(xr_regband.get(pn, set()))
-        # a band only counts if a *named* series carries it; an unresolved series can widen the
-        # shared set but can never be the sole reason a band is claimed
-        named, _un = bands_for([t for t in all_tokens if tbl(t)[0] != UNRESOLVED])
+        # a band only counts if a *named* series carries it; a code the sources do not resolve can
+        # widen the shared set but can never be the sole reason a band is claimed.
+        #
+        # The "widen" half of that rule is the condition below. `u_epc` and `u_xr` are the codes
+        # each route handed back with NO band - they are the same list `unresolved_named` is built
+        # from, and they were already being computed here. Until 2026-09-24 the condition instead
+        # read the unknown half off a list that had already been filtered down to the codes that DO
+        # resolve, so it was empty by construction and this branch could never run. The effect was
+        # that a part number naming NPR (7.5 t) AND NN (placed by no source) came out `single_band`,
+        # i.e. exclusive, on the strength of the codes we can read and in silence about the one we
+        # cannot. Six part numbers sat in that state, carrying EUR 370,967.20 of the EUR 1,337,368.51
+        # exclusive numerator. The rule is now read from the codes themselves.
+        unresolved_named = sorted(set(u_epc) | set(u_xr))
+        named, _named_unresolved = bands_for([t for t in all_tokens if tbl(t)[0] != UNRESOLVED])
         believed = sorted(set(b_epc) | set(b_xr) | set(reg))
-        widened = bool(_un) and bool(named)
+        widened = bool(unresolved_named) and bool(named)
         bands = sorted(set(named) | set(reg))
-        unresolved_named = sorted(set([t for t in all_tokens if tbl(t)[0] == UNRESOLVED]))
         if not all_tokens:
             status, band_str = "no_series_found", ""
             reason = ("The EPC found no vehicle for this part number and the cross-reference names "
@@ -461,11 +562,12 @@ def main() -> int:
         elif widened:
             status = "shared_across_bands"
             band_str = "|".join(believed)
-            reason = ("Fits more than one band, from the series named on this part number: "
-                      + ", ".join(all_tokens) + ". The band set is widened rather than decided by "
-                      "the series the sources do not resolve (" + ", ".join(unresolved_named)
-                      + "), because a code that sits at more than one rung of the ladder cannot "
-                      "narrow a part to one. Pooled — never apportioned.")
+            reason = ("Fits " + ("more than one band" if len(believed) > 1 else "one readable band")
+                      + ", from the series named on this part number: " + ", ".join(all_tokens)
+                      + ". The band set is widened rather than decided by the series the sources do "
+                      "not resolve (" + ", ".join(unresolved_named) + "), because a code that sits "
+                      "at more than one rung of the ladder cannot narrow a part to one. Pooled — "
+                      "never apportioned.")
         elif len(bands) == 1:
             status, band_str = "single_band", bands[0]
             reason = ("One band from the series named on this part number: "
@@ -515,6 +617,8 @@ def main() -> int:
         band_rows.append(row)
     banded = pd.DataFrame(band_rows).sort_values(
         ["band_status", "eur_all_years"], ascending=[True, False])
+    # the invariant, asserted before anything is written from this frame
+    assert_count_status_agree(banded)
     banded.to_csv(OUT_BANDED, index=False)
 
     fam_rows = banded[banded.in_n_series_family == "yes"]
@@ -534,7 +638,10 @@ def main() -> int:
     #   single_band_only    fits this band and nothing else — the only band euro that is exclusive
     #   also_fits_band      fits this band AND at least one other — reported per band, so the three
     #                       band views overlap and must never be summed together
-    #   pooled_all_bands    the whole shared set once, so the overlap is visible rather than hidden
+    #   pooled_all_bands    the whole shared set once, so the overlap is visible rather than hidden.
+    #                       A row that names a code no source places is filed here even when only
+    #                       one band can be named for it: it is not exclusive, and its bands are its
+    #                       whole set, so it must not also appear as an overlapping band line.
     #   series_unresolved   a series the sources do not resolve
     #   sums_to_n_series_total is written per row so a reader (or a script) cannot sum the wrong one.
     fam_pn = dict(zip(bands_tbl.pn, bands_tbl.family))
@@ -544,9 +651,18 @@ def main() -> int:
             continue
         band_sets[r.pn] = set(str(r.tonnage_band).split("|")) if r.tonnage_band else set()
 
+    # The band status is what decides the membership, not the width of the band set, because a row
+    # that names a code no source places carries `shared_across_bands` with only the bands it can
+    # read. It is not exclusive, and those bands are its whole set, so it is filed once as the pool
+    # and never also as an overlapping `also_fits_band` line.
+    reason_of = dict(zip(banded.pn, banded.band_status))
     member_rows: list[tuple[str, str, bool]] = []
     for pn, bs in band_sets.items():
-        if len(bs) == 1:
+        if reason_of.get(pn) == "shared_across_bands":
+            for b in sorted(bs):
+                member_rows.append((pn, b, False))
+            member_rows.append((pn, GROUP_SHARED, True))            # pooled_all_bands — once
+        elif len(bs) == 1:
             member_rows.append((pn, next(iter(bs)), True))          # single_band_only
         elif len(bs) > 1:
             for b in sorted(bs):
@@ -739,6 +855,26 @@ def main() -> int:
             "are recorded and never converted into a band.",
             "A part number that fits more than one band is pooled as shared_across_bands and is "
             "never apportioned across the bands it fits.",
+            "A part number that names both a series the sources resolve and one they do not is "
+            "pooled, never called exclusive: the unreadable code may sit at any rung, so the "
+            "readable ones cannot narrow the part to a single band. `widened` tests that directly, "
+            "off the codes each route handed back with no band, and `believed` is then the widest "
+            "honest band set for the row. Until 2026-09-24 the test read the unknown half off a "
+            "list already filtered to the codes that DO resolve, so it was empty and the branch "
+            "never ran; six part numbers were being reported as exclusive to one band on the "
+            "strength of the codes we can read, and in silence about the ones we cannot.",
+            "band_count is the number of bands listed in tonnage_band, and band_status says the "
+            "same thing: single_band means exactly one, shared_across_bands means two or more, "
+            "series_unresolved and no_series_found mean none. The two columns are asserted against "
+            "each other before this file is written, so a row that counts a band it does not carry "
+            "- the shape that sat in this file for three revisions on part number 5876100771 - "
+            "stops the build instead of being written. One legal shape lists a single band beside a "
+            "shared status: a row that names an unplaced code, where the band it can read is "
+            "written down but a second band cannot be named. That shape is recognised only when "
+            "series_unresolved is non-empty, so a row that merely miscounts its own bands still "
+            "fails. That one part number is exempt by name while an EPC fitment answer is "
+            "outstanding; it is printed on every build and written unchanged, and it is an "
+            "exception to be closed, not a precedent.",
             "A series neither authorised source names leaves the band blank, with the reason "
             "written in band_reason.",
             "A part number outside the N-series family (EPC 'TRUCKS N' but also a heavy or light "

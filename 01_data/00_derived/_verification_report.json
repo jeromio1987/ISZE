@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-24T06:04:18Z",
+  "generated_at": "2026-09-24T17:46:23Z",
   "data_root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data",
   "summary": {
-    "pass": 164,
-    "warn": 1,
+    "pass": 163,
+    "warn": 2,
     "fail": 0,
     "ok": true
   },
@@ -982,9 +982,9 @@
     {
       "id": "contract.lost_sales_model",
       "status": "pass",
-      "message": "lost_sales_model 4,099 rows",
+      "message": "lost_sales_model 4,122 rows",
       "detail": {
-        "rows": 4099
+        "rows": 4122
       }
     },
     {
@@ -1045,7 +1045,7 @@
     {
       "id": "lost_sales.price_split_closes",
       "status": "pass",
-      "message": "max residual EUR 0.01 over 2,064 rows",
+      "message": "max residual EUR 0.01 over 2,081 rows",
       "detail": {
         "max_residual_eur": 0.01
       }
@@ -1053,9 +1053,9 @@
     {
       "id": "lost_sales.mix_term_is_not_degenerate",
       "status": "pass",
-      "message": "63.5% of split rows carry a non-zero mix effect",
+      "message": "63.7% of split rows carry a non-zero mix effect",
       "detail": {
-        "mix_nonzero_share": 0.6347
+        "mix_nonzero_share": 0.6367
       }
     },
     {
@@ -1243,9 +1243,14 @@
     },
     {
       "id": "freshness.no_stale_derived",
-      "status": "pass",
-      "message": "41 declared input(s) checked; every derived file is at least as new as its input",
-      "detail": {}
+      "status": "warn",
+      "message": "1 derived file(s) sit behind their own input: nseries_tonnage_evolution.csv is 0.1 day(s) older than pms_tonnage_model.csv (rebuild with prism/scripts/build_nseries_tonnage_bands.py)",
+      "detail": {
+        "stale": [
+          "nseries_tonnage_evolution.csv is 0.1 day(s) older than pms_tonnage_model.csv (rebuild with prism/scripts/build_nseries_tonnage_bands.py)"
+        ],
+        "inputs_checked": 41
+      }
     },
     {
       "id": "schema.gps_spu_by_distributor.csv",

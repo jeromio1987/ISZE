@@ -181,8 +181,10 @@ def load_scraped_prices() -> pd.DataFrame:
     files = [
         ("AD_UK", "autodoc_results.csv",   "Autodoc_AllPrices_GBP", "Autodoc_MinPrice_GBP",
          "Autodoc_CheapestBrand", "Autodoc_URL", GBP_EUR),
-        ("MEK",   "mekonomen_results.csv", None, "MEK_AM_MinPrice_SEK",
-         "MEK_AM_Brands", "MEK_URL", SEK_EUR),
+        # ("MEK", "mekonomen_results.csv", ...) RETIRED 2026-09-24 — its part-number search
+        # returns an unrelated item (a Kilen coil spring for a brake pad kit), so every one of
+        # its rows was a false match. Do not re-enable without a real product page. See
+        # autodoc_scraper/refresh_and_check_drift.py JOBS and the CURSOR_REPORT for 2026-09-24.
         ("KS_AM", "ks_results.csv",        None, "KS_AM_MinPrice_GBP",
          "KS_AM_SKUs", "KS_URL", GBP_EUR),
         ("KS_GEN","ks_results.csv",        None, "KS_GEN_MinPrice_GBP",

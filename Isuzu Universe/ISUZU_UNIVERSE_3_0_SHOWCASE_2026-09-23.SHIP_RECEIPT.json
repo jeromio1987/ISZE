@@ -1,11 +1,11 @@
 {
   "schema": "ship_receipt/v2",
   "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\ISUZU_UNIVERSE_3_0_SHOWCASE_2026-09-23.html",
-  "artifact_mtime_ms": 1790138711859,
-  "written_at": "2026-09-23T04:46:47Z",
+  "artifact_mtime_ms": 1790269346272,
+  "written_at": "2026-09-24T17:07:09.525Z",
   "ok": true,
-  "screenshots_taken": 3,
-  "screenshots_read": 3,
+  "screenshots_taken": 1,
+  "screenshots_read": 1,
   "checks": [
     {
       "id": "exists",
@@ -13,56 +13,38 @@
       "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\ISUZU_UNIVERSE_3_0_SHOWCASE_2026-09-23.html"
     },
     {
+      "id": "min_size",
+      "ok": true,
+      "detail": "571128 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
       "id": "open_cmd",
       "ok": true,
-      "detail": "OPEN_ISUZU_UNIVERSE_3_0_SHOWCASE.cmd opens the showcase"
-    },
-    {
-      "id": "no_stale_80_page",
-      "ok": true,
-      "detail": "no '80-page' label and no hardcoded '/ 80' left in the file"
-    },
-    {
-      "id": "paper_mirror_is_current",
-      "ok": true,
-      "detail": "embedded paper rebuilt from the 23 September markdown: 16 sections, 8 with the new charts"
-    },
-    {
-      "id": "counters_dynamic",
-      "ok": true,
-      "detail": "page counters and jump targets read from the data, not typed in"
-    },
-    {
-      "id": "tool_refs_in_range",
-      "ok": true,
-      "detail": "atlas V:7, ids V:8, range/pricing/market V:9, tenders V:4, deal V:6"
-    },
-    {
-      "id": "demo_buttons_remapped",
-      "ok": true,
-      "detail": "the in-page examples no longer test page ranges of the withdrawn edition"
-    },
-    {
-      "id": "no_stale_copy",
-      "ok": true,
-      "detail": "the plain filename was refreshed too, so no filename shows the old paper"
-    },
-    {
-      "id": "paints_over_http",
-      "ok": true,
-      "detail": "opened over localhost and the cover, the paper index and a page with a figure all rendered"
+      "detail": "OPEN_ISUZU_UNIVERSE_3_0_SHOWCASE.cmd opens ISUZU_UNIVERSE_3_0_SHOWCASE_2026-09-23.html (CRLF ok)"
     },
     {
       "id": "visual_screenshots",
       "ok": true,
-      "detail": "screenshots_taken 3, screenshots_read 3 - cover, index and page view read"
+      "detail": "screenshots_taken 1, screenshots_read 1 (1 path(s) passed)"
     }
   ],
   "screenshots": [
-    "_build_30\\_showcase\\shot1.png",
-    "_build_30\\_showcase\\shot_index.png",
-    "_build_30\\_showcase\\shot_page3.png"
+    "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\ids\\_qa_dealer_compare_20260924\\universe_showcase_check.png"
   ],
-  "notes": "The showcase was opened in headless Chrome over a local server and three screenshots were read: the cover, the paper index and a paper page with its chart. Text renders, the new chart files load, and the index reports 16 sections.",
-  "superseded": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\ISUZU_UNIVERSE_3_0_SHOWCASE_SUPERSEDED_2026-09-22.html"
+  "notes": ""
 }

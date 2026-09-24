@@ -191,7 +191,14 @@ def merge(*maps: dict[str, dict[int, float]]) -> dict[str, dict[int, float]]:
     return out
 
 
-def build() -> dict[str, tuple[int, int, int]]:
+def build_all() -> tuple[dict[str, tuple[int, int, int]], dict[str, int]]:
+    """Return (FY2024–FY2026 per DB, FY2027 per DB).
+
+    FY2027 is carried separately on purpose. Every reader of this file reads the
+    three FY2024–FY2026 columns by name, so the new column is appended and never
+    re-orders them. FY2027 is a part-year (Apr 2026 – Aug 2026 at most) and must
+    not be put in a chart beside a full year without saying so.
+    """
     cv = load_cv_warranty()
     grain = load_grain_warranty()
     jsplit = load_json_split()
@@ -207,24 +214,33 @@ def build() -> dict[str, tuple[int, int, int]]:
         combined["MIDI"] = defaultdict(float, cv["MIDI"])
 
     result: dict[str, tuple[int, int, int]] = {}
-    for db in GPS_DBS:
+    fy27: dict[str, int] = {}
+    dbs = list(GPS_DBS)
+    if "MIDI" in cv or "MIDI" in combined:
+        dbs.append("MIDI")
+    for db in dbs:
         d = combined.get(db, {})
         result[db] = (round(d.get(2024, 0)), round(d.get(2025, 0)), round(d.get(2026, 0)))
-    if "MIDI" in cv or "MIDI" in combined:
-        d = combined.get("MIDI", {})
-        result["MIDI"] = (round(d.get(2024, 0)), round(d.get(2025, 0)), round(d.get(2026, 0)))
-    return result
+        fy27[db] = round(d.get(2027, 0))
+    return result, fy27
+
+
+def build() -> dict[str, tuple[int, int, int]]:
+    """Backwards-compatible: the FY2024–FY2026 triple only."""
+    return build_all()[0]
 
 
 def main() -> None:
-    warr = build()
+    warr, fy27 = build_all()
     notes = {
         "RSA": "=Norway distributor",
         "Greece": "=Petros Petropoulos",
         "MIDI": "MIDI Europe group; JPY-converted; non-GPS channel",
     }
-    rows = [["db", "warr_FY2024", "warr_FY2025", "warr_FY2026", "note"]]
-    rows += [[db, a, b, c, notes.get(db, "")] for db, (a, b, c) in warr.items()]
+    # Column order is fixed: the three readers of this file read FY2024-FY2026 by
+    # name. FY2027 is appended and empty (0) wherever no claim line exists yet.
+    rows = [["db", "warr_FY2024", "warr_FY2025", "warr_FY2026", "warr_FY2027_partial", "note"]]
+    rows += [[db, a, b, c, fy27.get(db, 0), notes.get(db, "")] for db, (a, b, c) in warr.items()]
     for path in (OUT, OUT_LEGACY):
         with open(path, "w", newline="", encoding="utf-8") as f:
             csv.writer(f).writerows(rows)
@@ -232,10 +248,12 @@ def main() -> None:
     t24 = sum(v[0] for v in warr.values())
     t25 = sum(v[1] for v in warr.values())
     t26 = sum(v[2] for v in warr.values())
+    t27 = sum(fy27.values())
     print(f"Saved -> {OUT}  (+ legacy alias {OUT_LEGACY.name})  ({len(warr)} DBs)")
     print(f"Network warranty (fiscal FY): FY2024 EUR{t24/1e6:.2f}M  FY2025 EUR{t25/1e6:.2f}M  FY2026 EUR{t26/1e6:.2f}M")
+    print(f"FY2027 part-year (Apr-Aug 2026 only, pickup claims): EUR{t27/1e3:.0f}k — do not chart beside a full year")
     for db in ("ITUK", "UTI", "IUK", "UMI", "ISD"):
-        print(f"  {db:6} {warr[db]}")
+        print(f"  {db:6} {warr[db]}  FY27p {fy27.get(db, 0):,}")
 
 
 if __name__ == "__main__":

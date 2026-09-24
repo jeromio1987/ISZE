@@ -9,8 +9,11 @@ _Last validated: 2026-08-17 (v19 canonical — `06_uio/_CURRENT/ISUZU_UIO_Overvi
 `06_uio/_CURRENT/V20_SPEC.md` (drafted 27 Jul 2026, amended 30 Jul 2026) documents a forecast-methodology
 defect in the current v19 2026–2030 columns (flat 3% scrap assumption vs the ~10–12% the file's own
 survival curves and VIN-shipment data imply) — Grand Total overstated 7.8% (2026) rising to 37.7% (2030).
-**Rebuild status: draft, nothing built yet** — this is a flagged risk on the 2026–2030 columns, not a
-v19 replacement.
+**Rebuild status (updated 2026-09-23): candidate workbooks built, NOT promoted.** Three dated candidates
+exist in `06_uio/_CURRENT/` — `ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22.xlsx` (a), `…-22b.xlsx`,
+`…-22c.xlsx` (latest, retention-safety pass) — each with `UIO_V20_ASSUMPTIONS_*.md`, `UIO_V20_CHANGELOG_*.csv`
+and `UIO_V20_VERIFY_*.json`. Ship receipt for 22c: *"CANDIDATE - not promoted. V19 remains canonical."*
+This is still a flagged risk on the 2026–2030 columns, not a v19 replacement.
 
 **One figure is LOCKED (Jerome, 30 Jul 2026):** IUK LCV (sheet 1 row 25 — hardcoded, separate from the
 ITUK CV cohort model below, rows 22/24) CY2026F = **44,926** (was V19's 49,280 — confirmed wrong-direction,

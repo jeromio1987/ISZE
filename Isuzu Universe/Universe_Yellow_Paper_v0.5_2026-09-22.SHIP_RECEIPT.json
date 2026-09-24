@@ -1,11 +1,42 @@
 {
   "schema": "ship_receipt/v2",
   "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\Isuzu Universe\\Universe_Yellow_Paper_v0.5_2026-09-22.pdf",
-  "artifact_mtime_ms": 1790052299800,
-  "written_at": "2026-09-22T04:46:00.221Z",
+  "artifact_mtime_ms": 1790140699395,
+  "artifact_mtime_iso_utc": "2026-09-23T05:18:19Z",
+  "artifact_bytes": 612194,
+  "artifact_sha256": "898F35256CD1CFFD9B30D999C5ABA2B0E3669F694DF06A5923896CE9559CA279",
+  "written_at": "2026-09-23T05:18:19.395Z",
   "ok": true,
   "screenshots_taken": 23,
   "screenshots_read": 23,
+  "correction": {
+    "prior_receipt_was_invalid": true,
+    "what_happened": "The paper that this receipt originally described was OVERWRITTEN on 2026-09-22 at 21:24:29 local. A write intended for a .csv filename landed on the paper's .pdf filename instead. The file on disk from 2026-09-22 21:24:29 until 2026-09-23 07:05 was 282,128 bytes of comma-separated text (an AIM genuine/BVP product-family dataset), not a PDF. The original 612,197-byte render was destroyed.",
+    "prior_recorded_mtime_ms": 1790052299800,
+    "prior_recorded_mtime_iso_utc": "2026-09-22T04:44:59Z",
+    "prior_recorded_size_bytes": 612197,
+    "why_the_prior_receipt_misled": "It asserted ok:true with 23 screenshots read, while its recorded artifact_mtime_ms (1790052299800, = 2026-09-22 04:44:59Z) covered the ORIGINAL 612,197-byte render. That file no longer existed when the receipt was read, so a verified-looking paper pointed at a billing extract.",
+    "remediation": "The stray CSV was moved out intact to 01_data\\90_INBOX\\AIM_genuine_bvp_family_mix_by_distributor_year_2026-09-22.csv (1,504 data rows, byte-identical to the copy held at 01_data\\90_INBOX\\PPT_GPT_10csv_2026-09-19\\04_original_vs_value_parts_mix.csv). The paper was then REBUILT FROM ITS SURVIVING SOURCE - no wording, figure, page or version changed - via _build_v05\\build_v05.py, which needed no path or interpreter change. The rebuild reproduced the source HTML byte-identically (sha256 3EA84BF3DDA41D79D865CBE5095DF95BD781B09102493B6A9E4CD78710D6F4C3) and the final PDF at 612,197 bytes.",
+    "artifact_mtime_ms_above_covers": "the RESTORED file on disk now, re-derived 2026-09-23"
+  },
+  "contrast_correction": {
+    "what_was_wrong": "A table-header contrast defect was PRESENT in the original 22 September build and survived the restoration, because the restoration deliberately reproduced the previous render byte-for-byte and therefore also reproduced the defect. In header cell 3 of the v0.5 gate table on page 15 (the table headed 'Gate | Passes when | Does not pass'), the word 'not' rendered in house navy (21,35,60) on the house navy header fill (21,35,60) - a contrast ratio of 1.00, i.e. invisible. Cause: the markdown header row is '| Gate | Passes when | Does **not** pass |', so the renderer emits <strong>not</strong> inside the <th>; the stylesheet rule 'strong { color:#15233c; }' then set the text navy while the header fill stayed navy.",
+    "what_it_was_NOT": "The defect was NOT the one described in the briefing. It was reported that the unscoped rule 'tr:nth-child(even) td { background:#faf8f3; }' was overriding the header background, turning header cells after the first one pale under paper-coloured text (white-on-pale). That was tested directly and does not occur in this paper, for two independent reasons, both verified with headless Chrome. First, the selector's subject is 'td', and the renderer emits header cells as 'th', so the rule cannot match a header cell at all. Second, no table in this paper has an even-numbered header row: all 15 tables have exactly one <tr> inside <thead>, and it is nth-child(1) of thead in every case, so 'tr:nth-child(even) th' matches 0 elements. Measurement of the restored render found 0 white-on-pale spans and 53 of 53 header bands on the house navy. The white-on-pale rule was nevertheless applied as asked, because it is correct defensive styling.",
+    "what_was_changed": "In _build_v05\\build_v05.py only. No markdown was touched. Three edits: (1) the header rule scoped from 'th' to the house pattern 'table thead th'; (2) the zebra rule scoped from 'tr:nth-child(even) td' to 'table tbody tr:nth-child(even) td' and given an explicit colour, so it can never reach a header; (3) a new rule 'table thead th strong, table thead th em, table thead th code { color:#f7f4ee; }' added, which is what actually removes the page-15 defect. The pale zebra band was NOT darkened and the striping was NOT removed - 215 pale body-row bands still paint.",
+    "standing_check_added": "_build_v05\\build_v05.py now runs check_contrast() as the last step of the page check and exits non-zero on any finding. It detects, on every rendered page: text that is white or near-white on a pale background; any dark table-header band whose fill is not the house navy; and any span below the WCAG AA contrast ratio for its size (so a dark-on-dark pair cannot hide by being neither of the first two). Verified against the unfixed render, where it failed with 1 finding (page 15, ratio 1.00, 'not').",
+    "markdown_untouched": {
+      "sha256_before": "FA82FEDA21724B674574BE6F1514461A6E633C07798A13736D012CC9809D242A",
+      "sha256_after": "FA82FEDA21724B674574BE6F1514461A6E633C07798A13736D012CC9809D242A",
+      "bytes_before": 56434,
+      "bytes_after": 56434,
+      "identical": true
+    },
+    "version_unchanged": "v0.5. This is a rendering correction, not a content revision and not a new version.",
+    "page_count_unchanged": 23,
+    "text_layer_characters_unchanged": 55396,
+    "bookmarks_unchanged": 56,
+    "size_delta": "612,197 -> 612,194 bytes (-3), from the CSS edit only"
+  },
   "checks": [
     {
       "id": "exists",
@@ -15,24 +46,98 @@
     {
       "id": "min_size",
       "ok": true,
-      "detail": "612197 bytes"
+      "detail": "612194 bytes"
+    },
+    {
+      "id": "is_actually_a_pdf",
+      "ok": true,
+      "detail": "magic bytes %PDF-1.4, 23 pages"
+    },
+    {
+      "id": "source_markdown_not_modified",
+      "ok": true,
+      "detail": "01_Strategy\\Universe_Yellow_Paper_v0.5_2026-09-22.md sha256 FA82FEDA21724B674574BE6F1514461A6E633C07798A13736D012CC9809D242A, 56434 bytes, identical before and after this render"
+    },
+    {
+      "id": "build_page_check",
+      "ok": true,
+      "detail": "pages=23 chars=55396 bookmarks=56; near-blank pages none; blocks touching edge none; markdown artefacts none; pages missing running header none"
+    },
+    {
+      "id": "contrast_check",
+      "ok": true,
+      "detail": "spans examined 1500; white or near-white on a pale background 0; table header bands 53, none off the house navy; spans below WCAG AA 0. CONTRAST_CHECK_OK. Exit code 0."
+    },
+    {
+      "id": "contrast_check_negative_control",
+      "ok": true,
+      "detail": "Run against the pre-fix render the same gate returned CONTRAST_CHECK_FAIL with 1 finding: page 15, ratio 1.00, size 8.6, fg (21,35,60) bg (21,35,60), text 'not'. Proves the gate detects the defect rather than passing vacuously."
+    },
+    {
+      "id": "coverage_check",
+      "ok": true,
+      "detail": "_build_v05\\check_coverage.py: 31 landed, 0 missing; banned language none found"
+    },
+    {
+      "id": "zebra_striping_preserved",
+      "ok": true,
+      "detail": "215 pale (#faf8f3) body-row bands painted in the corrected PDF. The striping was scoped, not removed."
+    },
+    {
+      "id": "header_bands_all_navy",
+      "ok": true,
+      "detail": "53 dark table-header bands, every one rgb (21,35,60). No band on any other colour."
+    },
+    {
+      "id": "defect_cell_fixed",
+      "ok": true,
+      "detail": "page 15 header cell 3 now reads 'Does not pass' with the word 'not' at fg (247,244,238) on bg (21,35,60), font SegoeUIBlack - paper-white on navy, ratio 13.1. Before the fix it was (21,35,60) on (21,35,60), ratio 1.00."
     },
     {
       "id": "open_cmd",
       "ok": true,
-      "detail": "OPEN_Universe_Yellow_Paper_v0.5.cmd opens Universe_Yellow_Paper_v0.5_2026-09-22.pdf (CRLF ok)"
+      "detail": "OPEN_Universe_Yellow_Paper_v0.5.cmd opens Universe_Yellow_Paper_v0.5_2026-09-22.pdf; target name matches; CRLF ok (2 CR / 2 LF, 70 bytes); NOT launched during this work"
     },
     {
       "id": "has_content_markers",
       "ok": true,
-      "detail": "size ok"
+      "detail": "23 pages of prose, headings, tables and furniture; not a dataset"
     },
     {
       "id": "visual_screenshots",
       "ok": true,
-      "detail": "screenshots_taken 23, screenshots_read 23 (0 path(s) passed)"
+      "detail": "screenshots_taken 23, screenshots_read 23. Every page rendered at 150 dpi to _qa_pdf\\contrast_20260923\\corrected\\corrected_pageNN.png and read one at a time at full resolution by the agent that made this receipt. Header bands confirmed navy on all table-bearing pages (3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20,21,22); page 15 checked against the pre-fix crop."
     }
   ],
-  "screenshots": [],
-  "notes": ""
+  "screenshots": [
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page01.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page02.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page03.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page04.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page05.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page06.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page07.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page08.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page09.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page10.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page11.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page12.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page13.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page14.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page15.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page16.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page17.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page18.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page19.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page20.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page21.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page22.png",
+    "_qa_pdf\\contrast_20260923\\corrected\\corrected_page23.png"
+  ],
+  "contrast_evidence": {
+    "before_crop": "_qa_pdf\\contrast_20260923\\before_p15_header_cell3.png",
+    "after_crop": "_qa_pdf\\contrast_20260923\\after_p15_header_cell3.png",
+    "side_by_side": "_qa_pdf\\contrast_20260923\\p15_header_before_after.png"
+  },
+  "notes": "Correction performed 2026-09-23 at the request of Jerome. Version stays v0.5. The paper's content, figures, page breaks and version label are unchanged from the v0.5 source; nothing was re-worded, re-styled or re-versioned. Only the stylesheet in _build_v05\\build_v05.py was edited, plus a new contrast gate wired into the build. Both correction blocks are retained: the overwrite of 2026-09-22 and this table-header contrast correction. Adobe Acrobat did not hold the PDF open, so the write succeeded."
 }

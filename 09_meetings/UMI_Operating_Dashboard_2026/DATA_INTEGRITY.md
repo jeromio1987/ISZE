@@ -185,9 +185,11 @@ files. Actual state:
 - **Revenue-weighted, UMI is +38.0% — i.e. ISZE is *cheaper* than the aftermarket average** on
   its covered revenue. Only €81,984 of UMI revenue sits on PNs where ISZE is above market.
   Sign convention: positive = ISZE cheaper = good. Inverting it inverts the section.
-- **Live scrapers:** 5 sources refreshed 2026-08-03, weekly task, 300/300 PNs, 0 errors —
-  including **Auto 365 (Israel)**. Hit rates are low though: autodoc 143/300, KS 64/300,
-  mekonomen 7/200.
+- **Live scrapers:** the weekly task ran 5 sources until 24 Sep 2026. **Three are now retired:**
+  the Swedish chain (its part-number search returned an unrelated item every time — including a
+  coil spring in place of a brake pad kit; all seven of its rows were false), Auto 365 (no OEM part
+  number anywhere, and it asks crawlers away), and Tranzparts (no Isuzu). Remaining sources: KS
+  International and T&M Commercials. Hit rates are low: KS 64/300.
 
 **BLACKLISTED: `01_data\00_derived\competitiveness_autodoc_risk.csv`.** All 298 rows carry
 `autodoc_min_eur ≤ 2.34`, median exactly 2.34 — the £2.00 "no results" placeholder converted to

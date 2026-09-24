@@ -1,0 +1,38 @@
+{
+ "schema": "ship_receipt/v2",
+ "artifact_kind": "html",
+ "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\ISZE_UIO_V19_vs_V20.html",
+ "artifact_sha256_16": "b7c92d86a0f1f227",
+ "artifact_bytes": 95351,
+ "generated": "2026-09-24T16:39:45",
+ "ok": true,
+ "open_cmd": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\OPEN_UIO_V19_vs_V20.cmd",
+ "screenshots_taken": 10,
+ "screenshots_read": 10,
+ "screenshots": [
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\_qa\\slide1.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\_qa\\slide2.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\_qa\\slide3.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\_qa\\slide4.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\_qa\\slide5.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\_qa\\slide6.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\_qa\\slide7.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\_qa\\slide8.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\_qa\\slide9.png",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\09_meetings\\UIO_V19_vs_V20\\_qa\\slide10.png"
+ ],
+ "checks": {
+  "renders_10_slides": "pass - headless Chrome 1280x720, every slide screenshotted and inspected",
+  "interaction": "pass - hover tooltip and crosshair on slide 4, arrow-key navigation, no console errors",
+  "history_identical_assert": "pass - build asserts V19 == V20 for 1990-2025 Grand Total",
+  "numbers_computed_not_typed": "all market figures computed from the two workbooks by _build/extract_uio_v19_v20.py; verification counts (7/10, 3/11) from the reports of 22 Sep 2026",
+  "internal_wording_sweep": "pass - no candidate/harness/script/file names in the deck",
+  "palette": "grey vs red CVD separation pass; grey/amber outside lightness band -> V19 dashed + direct labels as secondary encoding"
+ },
+ "sources": [
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\ISUZU_UIO_Overview_2026.xlsx",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22c.xlsx",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\08_Distributor\\Imotors_Portugal_UIO_GPS_PMS_Study.xlsx",
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\I_Motors_FY2027_Business_Performance_Review_CHARCOAL.pptx (style and logo)"
+ ]
+}

@@ -2,9 +2,9 @@
  "schema": "ship_receipt/v2",
  "artifact_kind": "xlsx",
  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\06_uio\\_CURRENT\\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22c.xlsx",
- "artifact_sha256_16": "f3a1a03d80b255d7",
- "artifact_bytes": 914148,
- "artifact_mtime": "2026-09-22T22:05:04.565577",
+ "artifact_sha256_16": "bc96b9172d57d3f0",
+ "artifact_bytes": 914792,
+ "artifact_mtime": "2026-09-23T22:10:49.938976",
  "generated": "2026-09-22T22:09:46.534082",
  "ok": true,
  "open_cmd": "n/a - xlsx opened directly, no launcher required",
@@ -14,7 +14,7 @@
  "checks": {
   "workbook_opens": {
    "status": "pass",
-   "note": "opened via openpyxl (13 sheets) and via Excel COM for recalculation; sheets: Cover, 1.UIO Overview, 2. Vehicle Volume, 3. UIO Calculation, 4. ITUK UIO Projection, Charts, Assumptions & Mapping, Data Sources, Changelog, V20 ASSUMPTIONS, V20 REGS USED, V20 PLAN ONLY, V20 CHANGE LOG"
+   "note": "opened via openpyxl (14 sheets) and via Excel COM for recalculation; sheets: Cover, 1.UIO Overview, 2. Vehicle Volume, 3. UIO Calculation, 4. ITUK UIO Projection, Charts, Assumptions & Mapping, Data Sources, Changelog, V20 ASSUMPTIONS, V20 REGS USED, V20 RETENTION AUDIT, V20 PLAN ONLY, V20 CHANGE LOG"
   },
   "history_unchanged_1990_2025": {
    "status": "pass",
@@ -22,7 +22,7 @@
   },
   "grand_total_reconciles": {
    "status": "pass",
-   "note": "sum of rows 7:90 == row 2 formula, all five forecast years (2026 252131.15 ... 2030 224710.19)"
+   "note": "sum of rows 7:90 == row 2 formula, all five forecast years (2026 252124.15, 2027 245134.50, 2028 237812.81, 2029 230830.44, 2030 224238.19)"
   },
   "v19_read_only": {
    "status": "pass",
@@ -417,5 +417,18 @@
   },
   "status": "all three unchanged this pass (copied from, never written)"
  },
- "notes": "UIO V20 candidate 2026-09-22c - retention-safety pass. NOT PROMOTED; V19 remains canonical. Verification for an xlsx (no screenshots applicable): reopened with openpyxl, read every touched cell, the retention audit sheet, the AV flags, the row-22/24 sheet-4 formulas and the Grand Total SUMPRODUCT; recalculated via Excel COM CalculateFullRebuild and read the cached Grand Total back; ran the hardened harness (v1.1.0) on candidates a, b and c."
+ "notes": "UIO V20 candidate 2026-09-22c - retention-safety pass. NOT PROMOTED; V19 remains canonical. Verification for an xlsx (no screenshots applicable): reopened with openpyxl, read every touched cell, the retention audit sheet, the AV flags, the row-22/24 sheet-4 formulas and the Grand Total SUMPRODUCT; recalculated via Excel COM CalculateFullRebuild and read the cached Grand Total back; ran the hardened harness (v1.1.0) on candidates a, b and c.",
+ "doc_correction_pass": {
+  "date": "2026-09-23T22:12:01.657343",
+  "scope": "documentation only - no value or formula changed",
+  "previous_artifact_sha256_16": "f3a1a03d80b255d7",
+  "previous_artifact_bytes": 914148,
+  "workbook_cells_changed": "V20 ASSUMPTIONS A2, A3, A28, A30, A48 (relabelled); A70:A79 added (candidate c harness result). Diff vs pre-pass copy across all 14 sheets (values and formulas): only these 15 cells differ.",
+  "receipt_fixes": [
+   "grand_total_reconciles note carried 2026 252131.15 / 2030 224710.19; the workbook row 2 holds 252124.15 / 224238.19",
+   "workbook_opens listed 13 sheets and omitted V20 RETENTION AUDIT"
+  ],
+  "assumptions_md": "UIO_V20_ASSUMPTIONS_2026-09-22c.md header now names candidate c; b-era statements in sections 3, 4.8, 6, 7, 12.1, 12.4 marked inline; section 'Independent verification of candidate c' appended",
+  "open_items_not_resolved": "r54/r90 check1/check5 fails awaiting Jerome's decision; r69/r88 out-of-brief changes awaiting review; harness v1.1.0 changed in the build session"
+ }
 }

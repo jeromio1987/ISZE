@@ -84,12 +84,20 @@ SUBPROC_ENV = {**os.environ, "PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"}
 # overwrite every run (no resume state), so they don't need this.
 # Mekonomen gets 5400s: Playwright + per-PN waits run ~24s/PN, so 200 PNs need
 # ~4800s — the old blanket 1800s cut the 2026-07-13 run off at PN 75/200.
+# 2026-09-24 (Jerome's go — card 0.4 / C3): Mekonomen, Auto365 and Tranzparts are RETIRED
+# from the schedule. Only the calling stops; the scripts and their CSVs stay on disk.
+#   Mekonomen  — its search ignores the part number and returns a live but UNRELATED item,
+#                which the scraper then prices as if it were the part. Verified 2026-09-24:
+#                8975056801 "PAD KIT; CALIPER,DISC BRK,FRT" came back as a Kilen coil spring,
+#                957 SEK. All 7 of its "hits" are this shape, unchanged since at least 24 Aug.
+#                False positives, not misses — and 7 rows already reached a UMI pricing pack.
+#   Auto365    — no OEM part number anywhere on its pages (internal Hebrew SKU only), so it
+#                cannot answer a PN question; also robots.txt disallows every agent.
+#   Tranzparts — carries no Isuzu; every 8-digit handle on it is Volvo, Iveco or DAF.
+# Re-plug any of them here only if someone re-verifies it with a real product page.
 JOBS = [
     ("ks_scraper.py", "ks_results.csv", ["PN"], "KS_AM_MinPrice_GBP", True, 1800),
-    ("tranzparts_scraper.py", "tranzparts_results.csv", ["PMS_Category"], "Price_EUR", False, 1800),
     ("tmc_scraper.py", "tmc_results.csv", ["PMS_Category"], "Price_EUR", False, 1800),
-    ("mekonomen_scraper.py", "mekonomen_results.csv", ["PN"], "MEK_AM_MinPrice_SEK", True, 5400),
-    ("auto365_scraper.py", "auto365_results.csv", ["PMS_Category"], "Price_EUR", False, 1800),
 ]
 
 

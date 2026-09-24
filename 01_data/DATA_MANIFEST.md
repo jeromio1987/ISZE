@@ -109,7 +109,8 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 |------|------|------|
 | Warranty_CV_2025.xlsx · Warranty_LCV_2025.xlsx | `01_data/06_Warranty/` (+ root wired copies) | ⚙ `extract_*`, `build_gps_v8.py` |
 | ExportClaimAssessment*.xlsx | `01_data/` (root, wired) | ⚙ `extract_warranty_all.py` |
-| UMI warranty data 202301 - 202605 (1).xlsx | `01_data/` (root, wired) | ⚙ `extract_warranty_all.py` — the "(1)" is the current working copy |
+| **WArranty Data LCV_102025_082026.xlsx** | `01_data/` (root, wired) | ★⚙ **added 2026-09-24** — network-wide pickup claim export, sheet `WA Data 102026-082026`, 30,680 lines, AssessMonth **202510–202608**, 29 countries, **no Israel rows**. Source of the only four months no other file holds (**202605–202608**). The 202510–202604 months overlap the two `ExportClaimAssessment` samples below and are **not** re-read (`extract_warranty_all.py` takes a month from one source only) |
+| UMI warranty data 202301 - 202605 (1).xlsx | `01_data/` (root, wired) | ⚙ `extract_warranty_all.py` — the "(1)" is the current working copy · Israel pickup warranty lives here, **not** in the network export |
 | Final_Complete_Warranty_Pricing_2026.xlsx | `01_data/` (root, wired) | ⚙ UTI dashboard build |
 | DISTRIBUTOR_WARRANTY_EXPENSE.md · Warranty_CY2025_by_DB.md | `01_data/06_Warranty/` | 📄 method |
 
@@ -158,6 +159,7 @@ This is the **data map**. Each subject has a numbered folder under `01_data/` �
 | Action plan FY2027 VPACC_April update.xlsx · ISZE_DB_KPI_Targets_FY2627_v1.xlsx | `01_data/11_planning/` | prior monthly / KPI targets |
 | `11_planning/README.md` | `01_data/11_planning/` | 📄 VPACC folder map |
 | ISZE PL Plan FY2026 2027 2028 20260205_2.xlsx | `01_data/11_planning/` | ★ ("- Copy" archived 2026-07-16) |
+| **Full Package Plan VP+ACC FY2027-28 BP 5+7 HT2 (acc split).xlsx** | `01_data/11_planning/` | ★ **newest BP per DB** (filed 2026-09-24): sheet `VP FY27-28` holds FY27 revised 3+9, FY27 revised 5+7 (Apr–Aug actual) and BP FY28; `ACC FY27-28` accessories. Original FY27 BP stays `FY2027  BP VP&ACC.xlsx` |
 
 ---
 

@@ -1,0 +1,29 @@
+{
+  "status": "Calculation checks passed against local source files; two limitations remain open (AC-04 concession rates withheld pending a frozen classification release, AC-05 ledger gap)",
+  "computed_case_ids": [
+    "AC-01",
+    "AC-02",
+    "AC-03",
+    "AC-06"
+  ],
+  "secondary_or_missing_case_ids": [
+    "AC-04",
+    "AC-05"
+  ],
+  "checks": [
+    "Six cases, all initially unassigned and undated.",
+    "All monetary and percentage headlines derived from local source rows named in each case's references.",
+    "Genuine plus BVP reconciles to total on both selected mix rows (AC-01, AC-03).",
+    "Full calendar 2024 and 2025 used throughout; no partial-2026 growth comparisons.",
+    "ITUK and IUK remain separate; no cross-distributor dealer view.",
+    "Germany service rate uses its own expected units; fleet bases (service-model vs spend-model) are not blended.",
+    "Out-of-range service percentages are withheld, not capped.",
+    "No dealer coverage, dealer year-on-year attribution or price causality inferred.",
+    "AC-04: family concession rates (front brake pads, blower filters) withheld on orchestrator instruction because the parts classification release is not frozen; no rate appears in the page, the sources register or the export JSON.",
+    "AC-05: billing-search total is not promoted to a verified programme total; the gap to the paper figure is stated, not resolved.",
+    "AC-06: computed directly from tender_data.json; 14-day countdown not recomputed against today's date.",
+    "Portugal clutch case excluded from all cases and charts.",
+    "No raw billing lines, full price list or source PDF reproduced in the output; only selected/aggregated rows."
+  ],
+  "pdf_extraction_errors": []
+}

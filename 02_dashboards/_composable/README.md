@@ -65,9 +65,12 @@ Monthly data is rolled up client-side; the total is invariant across every rollu
 **Granularity mismatch is reported, never fabricated.** Ask for quarters from a
 year-grain source and the module says so and shows the year.
 
-**Gaps in the source are reported.** `warranty_fy26_monthly.csv` is missing Dec-2025
-(11 of 12 months); the dashboard states this above the chart instead of presenting
-11 months as a full year.
+**Gaps in the source are reported.** `warranty_fy26_monthly.csv` runs April 2025 to
+August 2026 with no month missing; the dashboard still checks and states any gap above the
+chart instead of presenting a part year as a full one. The source changes what it counts
+from Dec-2025 onward (earlier months count only claim lines with a part number, later
+months count every claim line), and the module says so on the page — parts USD is
+unaffected, the claim count and total USD are not.
 
 ### 3. Internal vs customer is a BUILD choice, not a client-side toggle
 

@@ -61,16 +61,33 @@ from modules.vehicle_bands import (  # noqa: E402
     BAND_N75,
     BAND_ORDER,
     GROUP_UNRESOLVED,
+    MAP_CSV,
     N_SERIES_BANDS,
     NOT_IN_SCOPE,
+    OUTCOME_NO_SOURCE,
+    OUTCOME_ORDER,
+    OUTCOME_WILDCARD_FRAGMENT,
     PENDING_RULING,
     UNRESOLVED,
     band_for,
     group_for,
     is_pending_ruling,
+    is_wildcard_token,
     load_map,
+    outcome_counts,
+    outcome_for,
     pending_ruling_codes,
 )
+
+
+def _sha256(path: Path) -> str:
+    import hashlib  # noqa: PLC0415
+
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 norm = lambda x: (str(x).strip().lstrip("0") or "0")  # noqa: E731
 
@@ -84,7 +101,26 @@ OUT_LEGACY = DER / "tonnage_capable_part_numbers.csv"
 OUT_CATS = DER / "tonnage_capable_categories.csv"
 OUT_META = DER / "vehicle_band_applicability.meta.json"
 
-WILDCARD_RE = re.compile(r"^[A-Z]{1,4}\d{0,3}\*$")
+# ── a wildcard series token. Two shapes occur in the evidence and both are wildcards:
+#
+#     prefix form   TF*   F*   N*   NQ*     the asterisk closes the token
+#     infix form    N*R   N*S   F*R   C*Z    the asterisk stands inside it, the letters after
+#                                            it being the suffix the family shares
+#
+# The prefix pattern alone missed the infix form, so a part number whose only vehicle evidence
+# was `N*R` came out with an empty `wildcards_named` AND no band - indistinguishable from
+# `no_vehicle_reference`, where genuinely nothing is known. That is what this pattern fixes.
+#
+# The recogniser itself lives in `modules/vehicle_bands.is_wildcard_token`, so the tokeniser and
+# the row assembly below ask the question the same way and cannot disagree about a token.
+WILDCARD_RE = re.compile(r"^[A-Z]{1,4}\d{0,3}\*[A-Z]{0,4}$")
+
+
+# ── the machine-readable record on a wildcard. One value, and it says the two things a reader
+#    needs at once: this was a wildcard, and it was deliberately not converted into a band.
+#    Before the infix pattern below, a `N*R` token was recorded nowhere at all, so a row whose
+#    only vehicle evidence was that wildcard looked identical to a row where nothing was found.
+WILDCARD_RECORDED = "wildcard_token_deliberately_not_converted"
 
 
 def _known_codes() -> set[str]:
@@ -101,19 +137,19 @@ def tokens_from_text(text: str) -> tuple[list[str], list[str]]:
     wild: list[str] = []
     raw = str(text or "").upper()
     # '-', '、' and '，' split too (2026-09-23): the EPC writes 'NLR/NMR-LHD' and 'NNR/NPR-RHD', and
-    # the cross-reference writes 'NKR、NMR,NLR'; without them the glued code never matched a map key
-    # and ten part numbers carried NMR without recording it as parked. Still whole tokens only.
+    # the cross-reference writes 'NKR、NMR,NLR'; without them the glued code never matched a map key,
+    # so the code was not recorded on the row at all and its band silently dropped. Still whole
+    # tokens only.
     for tok in re.split(r"[,\s/;\-、，]+", raw):
         t = tok.strip().strip("()[]{}").strip()
         if not t:
             continue
-        if WILDCARD_RE.match(t) or t.endswith("*"):
+        if is_wildcard_token(t):
             wild.append(t)
             continue
         if t in known:
             out.append(t)
     return out, wild
-
 
 def pending_codes_in_text(text: str) -> list[str]:
     """Codes the authored map marks `pending_ruling` that this text names as whole words.
@@ -181,6 +217,15 @@ def collect_evidence() -> pd.DataFrame:
     """One row per (part number, code, source) - the raw evidence, before any band is read."""
     rows: list[dict[str, str]] = []
 
+    def emit(pn: str, code: str, source: str, wildcard: bool) -> None:
+        rows.append({
+            "pn": pn,
+            "code": code,
+            "source": source,
+            "wildcard": "yes" if wildcard else "",
+            "wildcard_recorded": WILDCARD_RECORDED if wildcard else "",
+        })
+
     xref = pd.read_csv(DER / "genuine_bvp_crossref.csv", dtype=str, low_memory=False)
     for _, r in xref.iterrows():
         for col in ("genuine_pn", "bvp_pn"):
@@ -191,9 +236,9 @@ def collect_evidence() -> pd.DataFrame:
                              ("crossref_registry_model", r.get("registry_model"))):
                 codes, wild = tokens_from_text(txt)
                 for c in codes:
-                    rows.append({"pn": pn, "code": c, "source": src, "wildcard": ""})
+                    emit(pn, c, src, False)
                 for w in wild:
-                    rows.append({"pn": pn, "code": w, "source": src, "wildcard": "yes"})
+                    emit(pn, w, src, True)
 
     for f in ("epc_decode_batch1_20260919.json", "epc_decode_batch2_20260919.json"):
         path = DER / f
@@ -209,12 +254,12 @@ def collect_evidence() -> pd.DataFrame:
             txt = " ".join(r.get("models") or []) + " " + " ".join(r.get("families") or [])
             codes, wild = tokens_from_text(txt)
             for c in codes:
-                rows.append({"pn": pn, "code": c, "source": "epc_decode", "wildcard": ""})
+                emit(pn, c, "epc_decode", False)
             for w in wild:
-                rows.append({"pn": pn, "code": w, "source": "epc_decode", "wildcard": "yes"})
+                emit(pn, w, "epc_decode", True)
 
     return pd.DataFrame(rows).drop_duplicates() if rows else pd.DataFrame(
-        columns=["pn", "code", "source", "wildcard"])
+        columns=["pn", "code", "source", "wildcard", "wildcard_recorded"])
 
 
 def build() -> pd.DataFrame:
@@ -250,8 +295,12 @@ def build() -> pd.DataFrame:
     rows = []
     for pn in universe:
         codes = sorted(set(ev.loc[ev.pn == pn, "code"])) if len(ev) else []
-        real = [c for c in codes if not c.endswith("*")]
-        wild = [c for c in codes if c.endswith("*")]
+        # The split between a code and a wildcard is the SAME question the tokeniser answers,
+        # so it is asked the same way. The prefix test alone (`endswith('*')`) put `N*R` on the
+        # code side: it then read as a code that no source names, which is the wrong record and
+        # is what made these rows look like `no_vehicle_reference`.
+        real = [c for c in codes if not is_wildcard_token(c)]
+        wild = [c for c in codes if is_wildcard_token(c)]
         vehicle_type = pn_family.get(pn, "")
 
         # Codes that name a truck with no settled weight. The bands they could sit on are NOT
@@ -270,6 +319,15 @@ def build() -> pd.DataFrame:
         groups = sorted({group_for(c) for c in settled} - {GROUP_UNRESOLVED})
         unresolved = sorted({c for c in settled if band_for(c) == UNRESOLVED})
 
+        # ── the composition of the unresolved list, machine-readable. `unresolved_codes` says
+        #    WHICH codes carry no band; these say WHY, split the two ways that used to need the
+        #    evidence sentence read by eye: a `CODE*` stem that is part of a name, against a whole
+        #    code no source has spoken for. A reader can now recompute the split without prose.
+        ur_outcome = sorted({outcome_for(c) for c in unresolved if outcome_for(c) != ""})
+        unresolved_ns = sorted(c for c in unresolved if outcome_for(c) == OUTCOME_NO_SOURCE)
+        unresolved_wf = sorted(c for c in unresolved
+                               if outcome_for(c) == OUTCOME_WILDCARD_FRAGMENT)
+
         e = float(money.get(pn, 0.0) or 0.0)
         q = float(qty.get(pn, 0.0) or 0.0)
 
@@ -281,7 +339,11 @@ def build() -> pd.DataFrame:
             "vehicle_type_label": pn_fam_label.get(pn, ""),
             "codes_named": ";".join(real),
             "wildcards_named": ";".join(wild),
+            "wildcard_recorded": (WILDCARD_RECORDED if wild else ""),
             "unresolved_codes": ";".join(unresolved),
+            "unresolved_outcome": ";".join(ur_outcome),
+            "unresolved_no_source_codes": ";".join(unresolved_ns),
+            "wildcard_fragment_codes": ";".join(unresolved_wf),
             "parked_codes": ";".join(parked),
             "vehicle_groups": "|".join(groups),
             "vehicle_bands": "|".join(n_bands),
@@ -317,6 +379,57 @@ def build() -> pd.DataFrame:
         })
 
     out = pd.DataFrame(rows)
+
+    # ── THE WIDENED-ROW RE-BASE, ADDED 2026-09-24 ───────────────────────────────────────────────
+    #
+    # `band_for()` places a code or it does not. This script reads that answer, and reads nothing
+    # else, so a part number that names BOTH a code the map places and a code it does not comes out
+    # with one band from the placed code and a clean `single_band` / `exclusive_band` verdict - it
+    # looks exclusive to one band while a code nobody has placed is sitting on the same part number.
+    # That is the same defect the band builder had, in this re-implementation.
+    #
+    # The band builder now calls such a row `shared_across_bands` while writing down the one band it
+    # can read, because a second band cannot be named for a code that may sit at any rung (ruled by
+    # Jerome, 2026-09-24). This table has to carry the same answer or the two disagree, so the band
+    # builder's own file is read here as the second opinion, and the rule below is applied.
+    #
+    # WHAT MOVES: the exclusivity claim only - `exclusive_band` is blanked, `band_status` and
+    # `exclusivity_established` are rewritten to say why.
+    #
+    # WHAT DOES NOT MOVE: every band, and every count. `n_bands`, `n_series_bands`,
+    # `vehicle_bands`, `band_count` and the legacy `band_list` / `bands` keep the values this
+    # script computed, and `band_reason` keeps its text, because a band may not be invented for a
+    # code no source places and a band that was read stays read. The widened row's band list is
+    # correct: it is the whole set that can be read. Widening `n_bands` to 2 while `band_list` still
+    # lists one band would put the same contradiction into this table that the band file had, so it
+    # is deliberately NOT done; exclusivity is carried by `exclusive_band`, which is the column that
+    # answers the question.
+    #
+    # The test is the band file's, not a re-derivation: its `band_status` is `shared_across_bands`
+    # while its `tonnage_band` lists exactly one band. That is the only shape it produces that way,
+    # and it is keyed to the unplaced codes it recorded.
+    banded_path = DER / "epc_decode_nseries_banded.csv"
+    widened_pns: set[str] = set()
+    if banded_path.is_file():
+        bd = pd.read_csv(banded_path, dtype=str, low_memory=False)
+        listed = bd.tonnage_band.fillna("").map(lambda s: len([x for x in str(s).split("|") if x]))
+        widened_pns = set(bd.loc[(bd.band_status == "shared_across_bands") & (listed == 1),
+                                 "pn"].map(norm))
+        WIDENED_NOTE = ("; a code on this part number is one the sources do not place, so it cannot "
+                        "be exclusive to one band - see series_to_band.csv for the code's outcome")
+        hit = out.pn.map(norm).isin(widened_pns)
+        out.loc[hit, "exclusive_band"] = ""
+        out.loc[hit, "band_status"] = "shared_across_bands"
+        out.loc[hit, "band_reason"] = out.loc[hit, "band_reason"].astype(str) + WIDENED_NOTE
+        out.loc[hit, "exclusivity_established"] = (
+            "no - a code on this part number is one the sources do not place")
+        print(f"widened re-base: {int(hit.sum())} part number(s) carry a code no source places, so "
+              f"their single-band verdict is withdrawn and their bands are left as read "
+              f"(EUR {float(pd.to_numeric(out.loc[hit, 'eur'], errors='coerce').fillna(0).sum()):,.2f})")
+    else:
+        print(f"widened re-base: {banded_path.name} not found - NOT applied, so no exclusivity "
+              f"verdict is withdrawn this run")
+
     out.to_csv(OUT_APPLICABILITY, index=False)
 
     # ── the legacy view. `tonnage_capable_part_numbers.csv` is read by the shipped
@@ -472,6 +585,23 @@ def build() -> pd.DataFrame:
                  "with its own group and never as a rung of the N-series ladder."),
         "routes": ["epc_decode", "crossref_vehicle_model", "crossref_registry_model"],
         "wildcards_are_never_converted": True,
+        # ── the map this file was built from, so a reader can tell whether the two agree.
+        #    `series_to_tonnage.csv` is the other copy of the same mapping; it carries the same
+        #    fields, so the two hashes can be compared directly.
+        "mapping_fingerprint": {
+            "path": str(MAP_CSV),
+            "sha256": _sha256(MAP_CSV),
+            "bytes": MAP_CSV.stat().st_size,
+            "map_row_count": len(load_map()),
+        },
+        # ── how the map's codes come out. The unresolved list is split so a reader does not
+        #    have to read evidence sentences to telling a wildcard fragment from a code no
+        #    source names. `pending_ruling` is kept in the vocabulary and is currently empty.
+        "code_outcomes": outcome_counts(),
+        "outcome_note": ("`outcome` on the map row and `unresolved_outcome` on a part-number row "
+                         "say why a code carries no band. `pending_ruling` is currently empty - "
+                         "NMR and NMR85 were ruled onto the 5.5 t band on 2026-09-23 - but is "
+                         "kept because a future code can be parked."),
     }
     OUT_META.write_text(json.dumps(meta, indent=2), encoding="utf-8")
     return out
@@ -508,6 +638,12 @@ def main() -> int:
     print("part numbers whose only evidence is a wildcard (recorded, never converted):")
     wonly = out[(out.band_count == 0) & (out.wildcards_named != "")]
     print(f"  {len(wonly):,} PNs   EUR {wonly.eur.sum():,.0f}")
+    print()
+    print("why a code on these rows carries no band (the map's own outcomes):")
+    for o in OUTCOME_ORDER:
+        n = int(out.unresolved_outcome.fillna("").str.contains(o, regex=False).sum())
+        print(f"  {o:22s} codes in the map: {outcome_counts().get(o, 0):3d}   "
+              f"part numbers naming one: {n:4,d}")
     print()
     print(f"written -> {OUT_APPLICABILITY.name}, {OUT_LEGACY.name}, {OUT_CATS.name}, "
           f"{OUT_META.name}")

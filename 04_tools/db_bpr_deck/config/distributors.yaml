@@ -1,0 +1,212 @@
+# ISZE BPR deck generator - per-distributor overlay
+#
+# This file does NOT replace 04_tools/db_sales_review/db_profiles.yaml. That file is the
+# main registry (sold-to codes, PMS code, plan tab, caveats) and is read as-is.
+# This file adds only what this deck needs on top of it:
+#
+#   kpi_name     the distributor's own label in 01_data/KPI Master File.xlsx, sheet 'Parts Handling'
+#   sellout_dir  folder under 01_data/12_raw/dealer_sales/ holding their sales-to-dealer files
+#                (null = they do not send one; the bought-against-sold block is then unavailable)
+#   sellout_kind which shape their file is in. Read by inputs/sellout.py.
+#                line_level      invoice-level rows with a date column
+#                month_pivot     one column per month, header row at row 0
+#                month_files     one workbook per calendar month
+#                network_pivot   a pivot with year and month on two header rows
+#   fleet_source where vehicles-in-service come from. Read by inputs/fleet.py.
+#                registration    a vehicle-level registration file (best)
+#                band_counts     vehicles grouped by weight band (01_data/00_derived)
+#                shipment_proxy  shipments standing in for the fleet (weakest; labelled on the slide)
+#   blocks_off   blocks to leave out by default even though data exists (per-DB judgement)
+#
+# Keys must match db_profiles.yaml. To add a distributor, copy a block and fill it in,
+# then run: python build_bpr.py --db <KEY> --check
+
+defaults:
+  # Shown on the slide whenever a block cannot be filled, instead of a blank panel.
+  unavailable_banner: "DATA UNAVAILABLE"
+  # Never build a deck that quotes parts billed or service cover while the shared numbers
+  # are not verified. Set false only to look at layout, never to present.
+  require_verified_numbers: true
+
+distributors:
+
+  PORTUGAL:
+    kpi_name: "Imotors"
+    sellout_dir: "PORTUGAL"
+    sellout_kind: "line_level"
+    sellout_normalizer: "normalize_dealer_sellout_portugal.py"
+    fleet_source: "registration"
+    fleet_file: "01_data/07_UIO/Matriculas Isuzu SAP.xlsx"
+    blocks_off: []
+
+  IUK:
+    kpi_name: "IUK"
+    sellout_dir: "IUK"
+    sellout_kind: "month_pivot"
+    sellout_normalizer: "normalize_dealer_sellout_iuk.py"
+    fleet_source: "band_counts"
+    blocks_off: []
+
+  # UK, the truck side. A separate distributor from IUK: separate billing code (2575 against 2574)
+  # and a separate KPI row. Never blended with IUK on any page.
+  # This block is complete on its own because ITUK has no entry in the main registry, which this
+  # tool reads but never writes.
+  ITUK:
+    name: "Isuzu Truck (UK) Limited"
+    country: "United Kingdom"
+    display: "ITUK"
+    segment: "CV"
+    kpi_name: "ITUK"
+    sellout_dir: "ITUK"
+    sellout_kind: "network_pivot"
+    # The dealer-grain file is present on disk, but the network companion
+    # (dealer_sellout_long_ITUK_network_CY2025.csv, flags=duncan_network_companion) carries the
+    # same vehicles on a different grain. The reader excludes any file whose name or flags say
+    # companion, so summing the two can never happen: 2023-2026 dealer rows are used, and 2025
+    # falls back to the companion only because a dealer-grain 2025 file is not on disk.
+    sellout_normalizer: "normalize_dealer_sellout_ituk_duncan.py"
+    fleet_source: "band_counts"
+    blocks_off: []
+
+  IRELAND:
+    kpi_name: "Isuzu Ireland"
+    sellout_dir: "IRELAND"
+    sellout_kind: "line_level"
+    sellout_normalizer: "normalize_dealer_sellout_ireland.py"
+    fleet_source: "band_counts"
+    blocks_off: ["gps"]        # GPS target is above theoretical max spend; the % is not quotable
+
+  UTI:
+    kpi_name: "UTI"
+    sellout_dir: "UTI"
+    sellout_kind: "month_files"
+    # No normaliser exists for UTI: one workbook per month is already the shape we need, so the
+    # raw files are read directly every build. There is no normalised file to go stale.
+    sellout_normalizer: null
+    fleet_source: "band_counts"
+    blocks_off: []
+
+  PETROS:
+    kpi_name: "Petros Petropoulos"
+    billing_codes: "GREECE"
+    sellout_dir: "GREECE"
+    sellout_kind: "month_pivot"
+    sellout_normalizer: "normalize_dealer_sellout_petros.py"
+    fleet_source: "band_counts"
+    blocks_off: ["avail"]      # KPI reporting stale since Jun 2025
+
+  ROMANIA:
+    kpi_name: "Isuzu Rom Auto"
+    sellout_dir: "ROMANIA"
+    sellout_kind: "month_files"
+    sellout_normalizer: "normalize_dealer_sellout_romania.py"
+    fleet_source: "band_counts"
+    blocks_off: []
+
+  # ---- no sales-to-dealer file. Everything except stock movement is still buildable. ----
+
+  ISD:
+    kpi_name: "ISD"
+    kpi_names: ["ISD", "Isuzu Sales Deutschland"]
+    billing_codes: "GERMANY"       # billing is split: GERMANY (601, 2516) and GERMANY_SERVICE (105)
+    sellout_dir: null
+    sellout_kind: null
+    sellout_normalizer: null
+    fleet_source: "band_counts"
+    blocks_off: ["s2d", "avail"]   # KPI DB-to-DLR reporting stopped Mar 2025
+
+  IBX:
+    kpi_name: "IBX (BENELUX)"
+    kpi_names: ["IBX (BENELUX)", "IBX (BE LUX)", "IBX (NL)"]
+    billing_codes: "BELGIUM"       # the billing map and fleet file call Benelux BELGIUM
+    gps_code: "BELGIUM"
+    sellout_dir: null
+    sellout_kind: null
+    fleet_source: "band_counts"
+    blocks_off: ["s2d", "stock"]
+
+  UMI:
+    kpi_name: "UMI"
+    sellout_dir: null
+    sellout_kind: null
+    sellout_normalizer: null
+    fleet_source: "band_counts"
+    blocks_off: ["s2d", "stock"]
+
+  # Israel, the truck side. A separate distributor from UMI: separate billing codes (1799 against
+  # 1797), separate PMS row. Never blended with UMI on any page (see isze-israel-uti-umi).
+  # This block is complete on its own because UTI has no entry in the main registry, which this
+  # tool reads but never writes.
+  UTI:
+    name: "Universal Trucks Israel"
+    country: "Israel"
+    display: "UTI"
+    segment: "CV"
+    kpi_name: "UTI"
+    sellout_dir: "UTI"
+    sellout_kind: "month_files"
+    # No normaliser exists for UTI: one workbook per month is already the shape we need, so the
+    # raw files are read directly on every build. There is no normalised file to go stale.
+    sellout_normalizer: null
+    fleet_source: "band_counts"
+    blocks_off: []
+
+  NORWAY:
+    kpi_name: "RSA"
+    sellout_dir: null
+    sellout_kind: null
+    sellout_normalizer: null
+    fleet_source: "band_counts"
+    blocks_off: ["s2d", "stock"]
+
+  SWEDEN:
+    kpi_name: "Isuzu Sverige"
+    sellout_dir: null
+    sellout_kind: null
+    sellout_normalizer: null
+    fleet_source: "band_counts"
+    blocks_off: ["s2d", "stock"]
+
+  HUNGARY:
+    kpi_name: "AW Distribution"
+    sellout_dir: null
+    sellout_kind: null
+    sellout_normalizer: null
+    fleet_source: "band_counts"
+    blocks_off: ["s2d", "stock"]
+
+  FINLAND:
+    kpi_name: "IMF"
+    sellout_dir: null
+    sellout_kind: null
+    sellout_normalizer: null
+    fleet_source: "shipment_proxy"
+    blocks_off: ["s2d", "stock", "gps"]   # GPS % over 100%: denominator not quotable
+
+  DENMARK:
+    kpi_name: "Isuzu Danmark"
+    sellout_dir: null
+    sellout_kind: null
+    fleet_source: "band_counts"
+    blocks_off: ["s2d", "stock"]
+
+  ICELAND:
+    kpi_name: "BL ehf"
+    sellout_dir: null
+    sellout_kind: null
+    fleet_source: "band_counts"
+    blocks_off: ["s2d", "stock", "gps"]   # GPS % over 100%: denominator not quotable
+
+  CYPRUS:
+    kpi_name: "Loutsios Group"
+    sellout_dir: null
+    sellout_kind: null
+    fleet_source: "shipment_proxy"
+    blocks_off: ["s2d", "stock"]
+
+  MALTA:
+    kpi_name: "GasanZammit"
+    sellout_dir: null
+    sellout_kind: null
+    fleet_source: "shipment_proxy"
+    blocks_off: ["s2d", "stock"]

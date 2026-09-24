@@ -194,13 +194,13 @@ capabilities:
         source_entity: "ISZE"
       - id: lcv_warranty_dec2025
         name: LCV claim extract after November 2025
-        status: need
-        period: December 2025 (and later) — Warranty_LCV_2025.xlsx ends Nov 2025
-        integrity: IUK LCV claims in that file run 2024-11 → 2025-11; Portugal LCV 2025-01 → 2025-11. No sister LCV fill for December 2025 was named in the 27 Jul 2026 sanity check. GPS CY2025 used this extract as-is.
-        owner: Warranty team
-        ask: Next LCV claim-assessment export covering December 2025 onward.
-        artefact: 01_data/06_Warranty/Warranty_LCV_2025.xlsx
-        grain: "One row per LCV warranty claim line (repair order x operation x part) in the ExportClaimAssessment export."
+        status: closed
+        period: Resolved 2026-09-24 — new network-wide export covers AssessMonth 202510–202608
+        integrity: Closed 2026-09-24. WArranty Data LCV_102025_082026.xlsx (01_data root, 30,680 lines, 29 countries, no Israel rows) settles the December-2025 hole and runs to August 2026. Its overlap with the old ExportClaimAssessment samples ties to the euro. 202605–202608 are the only months no other file holds (5,048 lines / EUR 1,078,462) and they belong to fiscal FY2027. Israel pickup warranty stays on its own dedicated file — this export has no Israel rows.
+        owner: —
+        ask: null
+        artefact: 01_data/WArranty Data LCV_102025_082026.xlsx
+        grain: "One row per LCV warranty claim line (repair order x operation x part) in the ExportClaimAssessment / WA Data export."
         market_key: "CountryCode"
         geo: "none"
         source_entity: "IMG / ISD"
@@ -796,8 +796,9 @@ asks:
     ask: LCV chassis or registration-year cutoffs (SCR vs non-SCR) so the parc can be weighted 15k vs 20k.
   - rank: 4
     item: lcv_warranty_dec2025
-    who: Warranty team
-    ask: Next LCV claim-assessment export covering December 2025 (Warranty_LCV_2025.xlsx ends Nov 2025).
+    who: —
+    ask: null
+    note: Closed 2026-09-24 — new network-wide LCV export covers to August 2026. Do not re-ask.
   - rank: 5
     item: dealer_sellout_coverage
     who: Distributors
@@ -852,8 +853,8 @@ integrity:
       note: SaTy CR/RE on positive-value lines excluded. Not ERP-confirmed. Reversible. Do not wait on SAP.
     - id: LCV-DEC
       title: LCV claim file ends November 2025
-      severity: source-gap
-      note: Period hole is December 2025 onward in Warranty_LCV_2025.xlsx. Not a mid-year blackout. GPS CY2025 used this extract. UMI CY2025 is complete on the dedicated file.
+      severity: closed
+      note: CLOSED 2026-09-24. The December-2025 hole is filled by WArranty Data LCV_102025_082026.xlsx, which covers AssessMonth 202510–202608. Its overlap with the older exports ties to the euro, and 202605–202608 (5,048 lines / EUR 1,078,462) are months no other file holds. UMI CY2025 stays complete on the dedicated file, and the new export has no Israel rows. What remains open is narrower and is logged as LCV-EXT in 01_data/00_derived/_data_integrity_open_issues.md — nothing published yet reads the last four months.
   fragments:
     - name: PRISM Data Integrity page
       role: Pipeline pass/warn/fail, distributor-code reconcile, mislabelled SKU audit. IA demotes this to Tools.
@@ -861,8 +862,8 @@ integrity:
     - name: Integrity flag list (28 May 2026)
       role: What is safe to quote. A/B/D/E/F/G closed; C and H still guarded.
       path: 03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md
-    - name: Open source-gap note (updated 2026-08-18)
-      role: LCV-DEC is the open source gap (Warranty_LCV_2025.xlsx ends Nov 2025). UMI-WARR and CV-BLANK closed per 27 Jul 2026 warranty sanity. Page 10 DI-2/DI-8 refreshed 2026-08-18.
+    - name: Open source-gap note (updated 2026-09-24)
+      role: LCV-DEC is CLOSED as of 2026-09-24 — the new network-wide LCV export covers to August 2026. What replaced it is LCV-EXT (the last four months are not yet read by anything published) plus LCV-CURRENCY-RULE and MIDI-WARR, both needing a call from Jerome. UMI-WARR and CV-BLANK closed per 27 Jul 2026 warranty sanity.
       path: 01_data/00_derived/_data_integrity_open_issues.md
     - name: Evidence integrity board
       role: UIO coverage and GPS warranty sanity (internal SQL).

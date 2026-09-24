@@ -1,0 +1,72 @@
+{
+ "schema": "ship_receipt/v2",
+ "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_PMS_Tonnage_Evolution.html",
+ "artifact_mtime_ms": 1790194608859,
+ "artifact_bytes": 962494,
+ "artifact_sha256": "38a1e5eb2fe64219d8f36c322f7c1cffcdb63b1f9f3e66df148b57d032003021",
+ "written_at": "2026-09-23T21:41:14+00:00",
+ "ok": true,
+ "screenshots_taken": 1,
+ "screenshots_read": 1,
+ "checks": [
+  {
+   "id": "exists",
+   "ok": true,
+   "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\ISZE_PMS_Tonnage_Evolution.html"
+  },
+  {
+   "id": "size_and_hash",
+   "ok": true,
+   "detail": "962,494 bytes, sha256 38a1e5eb2fe64219d8f36c322f7c1cffcdb63b1f9f3e66df148b57d032003021"
+  },
+  {
+   "id": "no_cdn",
+   "ok": true,
+   "detail": "0 off-site script/link references"
+  },
+  {
+   "id": "visual_screenshots",
+   "ok": true,
+   "detail": "headless Chrome, file://, no server: 1 taken (ISZE_PMS_Tonnage_Evolution_n55_1440x1600.png); 1 read by eye (the 1440x3200 full-page shot): charts painted, tables filled, no blank panel"
+  },
+  {
+   "id": "language_gate",
+   "ok": true,
+   "detail": "04_tools/workspace/check_spoken_labels.ps1 on the page: 0 violations, 0 advisories, CLEAN"
+  },
+  {
+   "id": "backup_taken_before_overwrite",
+   "ok": true,
+   "detail": "01_data\\91_build\\_backsafe_20260923_n55_before (page, receipt, model, builders)"
+  },
+  {
+   "id": "page_gate",
+   "ok": true,
+   "detail": "qa_pms_tonnage_evolution.py exit 0: network gap 2025 page 20,136,134 = source MATCH; network billed 5,769,755 = source MATCH (both were EUR 1 off before this build); CY/FY billed tie within EUR 1; band fleet sums possible; LABEL CHECK PASS"
+  },
+  {
+   "id": "five_bands",
+   "ok": true,
+   "detail": "5.5 t (N50 / N55) band added from prism/data/uio_n55_share.csv; per-market N-series fleet and 2025 expected jobs unchanged (36,793 trucks, 872,251 jobs); band gaps add to each market gap within EUR 0.04"
+  },
+  {
+   "id": "header_dates",
+   "ok": true,
+   "detail": "billed-through and snapshot read from sales_fact.parquet at build time: 31 August 2026 / 2026-08-31 (were typed '30 June 2026' / '2026-09-18')"
+  },
+  {
+   "id": "screenshot_read",
+   "ok": true,
+   "detail": "_qa_ship_20260923/ISZE_PMS_Tonnage_Evolution_n55_1440x1600.png read: header dates correct, 5.5 t shown in donut (fixed amber) and band bar, charts painted"
+  }
+ ],
+ "screenshots": [
+  "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\02_dashboards\\sales\\_qa_ship_20260923\\ISZE_PMS_Tonnage_Evolution_n55_1440x1600.png"
+ ],
+ "notes": [
+  "Rebuilt 2026-09-23 23:4x after the NMR ruling: 5.5 t band added to the modelled tonnage split. Report: 01_data/90_INBOX/TONNAGE_FINISH_REPORT_2026-09-23.md (Addendum 3)."
+ ],
+ "not_done": [
+  "deploy sync (04_tools sync_to_deploys.ps1) NOT run: it copies into 07_deploy / publish-site, which is a publish step and was not asked for. The 07_deploy copies are therefore older than this page."
+ ]
+}

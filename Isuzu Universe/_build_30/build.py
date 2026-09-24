@@ -53,7 +53,7 @@ FIGS = [
     (14, "how the dealer joins",
      "Proposed participant journey. No dealer has been invited and no access has been accepted."),
     (15, "the recorded IDS scores behind the opening offer",
-     "Dealer network file of 20 September 2026: 519 rows across 19 networks, of which 334 carry a score. Measured."),
+     "Dealer network file of 20 September 2026: 519 rows across 19 networks. 490 carry a recorded score, mean 79.3; the remaining 29 recorded no answers at all and are held apart. Measured."),
     (16, "the exchange, and what each side puts in",
      "Proposed participation design. Payment for data volume is excluded and ordinary service is never conditional on a contribution."),
 ]
@@ -133,11 +133,13 @@ def main():
 
     lay = res["layout"]
     print("--- layout ---")
-    print(f"headings stranded at the foot of a page: "
-          f"{lay['stranded_headings'] or 'none'}")
-    print(f"figures parted from their caption:       "
-          f"{lay['figure_caption_splits'] or 'none'}")
-    print(f"pages mostly whitespace:                 {lay['whitespace_pages'] or 'none'}")
+    print(f"chapter page breaks inserted:            {res['chapter_breaks'] or 'none'}")
+    print(f"headings stranded at the foot of a page: {lay['stranded_headings'] or 'none'}")
+    print(f"figures parted from their caption:       {lay['figure_caption_splits'] or 'none'}")
+    print(f"tables split from their introduction:    {lay['table_splits'] or 'none'}")
+    print(f"figure pages left mostly empty:          {lay['figure_tails'] or 'none'}")
+    print(f"chapters that could open fresh:          "
+          f"{lay['chapters_that_could_open_fresh'] or 'none'}")
     print("--- reading guide ---")
     for title_txt, pages, _purpose in res["guide_rows"]:
         print(f"  {pages:<10} {title_txt}")

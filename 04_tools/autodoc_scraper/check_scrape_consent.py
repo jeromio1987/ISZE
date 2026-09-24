@@ -46,6 +46,14 @@ TARGETS = [
     ("-- new --", "https://giltechparts.com", "/?s=8973656540"),
     ("-- new --", "https://mekster.no", "/sok?q=8982705240"),
     ("-- new --", "https://geparden.no", "/produkt/ISU5876150000"),
+    # 2026-09-24 (card C5): targets whose parsers are being written in
+    # 04_tools/delegation/parsers/price_parsers.py. Listed here so no future fetch can
+    # open a connection without the consent gate having been asked first.
+    ("parsers/amayama", "https://www.amayama.com", "/en/part/isuzu/8974995480"),
+    # Omega's real domain is omegaspareparts.com (verified in the 2026-09-18 UK/Ireland
+    # research). Path = HTML search, NOT /wp-json/ — robots disallows /wp-json/.
+    ("parsers/omega", "https://omegaspareparts.com", "/?s=8970622940&post_type=product"),
+    ("parsers/tungen", "https://www.tungen-bil.no", "/nettbutikk/eldre-originale-bildeler/isuzu/isuzu-eldre-originale-deler/"),
 ]
 
 

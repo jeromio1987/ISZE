@@ -1,11 +1,11 @@
 # ISZE derived pipeline verification
 
-**Generated:** 2026-09-24T06:04:18Z
+**Generated:** 2026-09-24T17:46:23Z
 **Data root:** `C:\Users\jerom\Desktop\claude\ISZE\01_data`
 
 | Pass | Warn | Fail |
 |------|------|------|
-| 164 | 1 | 0 |
+| 163 | 2 | 0 |
 
 ## Checks
 
@@ -132,7 +132,7 @@
 - ✅ **contract.basket_correlation** — basket_correlation 2,500 rows
 - ✅ **contract.substitution_timeline** — substitution_timeline 508 rows
 - ✅ **contract.capture_recovery_model** — capture_recovery_model 252 rows
-- ✅ **contract.lost_sales_model** — lost_sales_model 4,099 rows
+- ✅ **contract.lost_sales_model** — lost_sales_model 4,122 rows
 - ✅ **contract.lost_sales_market** — lost_sales_market 54 rows
 - ✅ **contract.lost_sales_competitor_coverage** — lost_sales_competitor_coverage 2 rows
 - ✅ **contract.lost_sales_pn_action** — lost_sales_pn_action 78 rows
@@ -140,8 +140,8 @@
 - ✅ **lost_sales.billed_ties_to_parts_base** — billed EUR 117,600,501.42 ties the parts base to the cent at the 2026-08-31 cut-off (verification_fixtures.yaml)
 - ✅ **lost_sales.model_is_current** — the model covers the whole billing horizon (2026-08-31)
 - ✅ **lost_sales.price_split_blanks_the_part_year** — 0 part-year rows carry a full-year price split
-- ✅ **lost_sales.price_split_closes** — max residual EUR 0.01 over 2,064 rows
-- ✅ **lost_sales.mix_term_is_not_degenerate** — 63.5% of split rows carry a non-zero mix effect
+- ✅ **lost_sales.price_split_closes** — max residual EUR 0.01 over 2,081 rows
+- ✅ **lost_sales.mix_term_is_not_degenerate** — 63.7% of split rows carry a non-zero mix effect
 - ✅ **lost_sales.distributors** — 22 distributors
 - ✅ **lost_sales.years** — years present [2023, 2024, 2025, 2026]
 - ✅ **lost_sales.pms_category_coverage_bounded** — service-axis coverage 20.76% of billed euro
@@ -164,7 +164,7 @@
 - ✅ **action_ledger.language** — co-movement wording only
 - ✅ **action_ledger.html** — dashboard HTML at ISZE_Action_Ledger.html
 - ✅ **prism.bvp_bundle** — BVP dashboard bundle ready
-- ✅ **freshness.no_stale_derived** — 41 declared input(s) checked; every derived file is at least as new as its input
+- ⚠️ **freshness.no_stale_derived** — 1 derived file(s) sit behind their own input: nseries_tonnage_evolution.csv is 0.1 day(s) older than pms_tonnage_model.csv (rebuild with prism/scripts/build_nseries_tonnage_bands.py)
 - ✅ **schema.gps_spu_by_distributor.csv** — gps_spu_by_distributor.csv: all 10 declared column(s) present (21 in the file); 11 new column(s) reported, not a defect
 - ✅ **schema.lost_sales_model.csv** — lost_sales_model.csv: all 18 declared column(s) present (86 in the file); 68 new column(s) reported, not a defect
 - ✅ **schema.nseries_tonnage_evolution.csv** — nseries_tonnage_evolution.csv: all 11 declared column(s) present (24 in the file); 13 new column(s) reported, not a defect

@@ -1,7 +1,7 @@
 # UIO V20 — what needs to change and why
 
 **Status:** draft, nothing built yet — IUK LCV (row 25) CY2026F **locked** 30 July 2026
-**Written:** 27 July 2026 (Jérôme Van der Pluym / Claude); **amended** 30 July 2026 (IUK LCV decision)
+**Written:** 27 July 2026 (Jérôme Van der Pluym / Claude); **amended** 30 July 2026 (IUK LCV decision); **amended** 24 September 2026 (review of candidate c — see *Review of candidate c — decisions 24 September 2026*)
 **File it applies to:** `C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026.xlsx` (V19, dated 18 June 2026)
 
 ---
@@ -661,6 +661,129 @@ forecast would simply give the error more keys.
 - **The 3.5 t Norway / Sweden question is unverified.** The JP register does not cover those markets.
   Measured distance (under-built by about 17 % vs the manufacturer 20,000 km, which would fit a 3.5 t)
   is **not** model identification and is not used here.
+
+---
+
+## Review of candidate c — decisions 24 September 2026
+
+Candidate reviewed: `C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22c.xlsx`.
+Nothing below has been built into a workbook yet. The decided items go into the next draft together, on
+Jerome's go.
+
+### Standing rule — every changed row must be traceable
+
+Jerome, 24 Sep 2026: *"we need to be able to trace it, if you can't we need to leave it."* A row's value
+is accepted only if it can be reproduced from stated inputs by a script saved in the workspace. A change
+that cannot be reproduced is not taken over, however small.
+
+### D1 — Portugal (rows 51 LD, 53 F-Series, 54 pickups): rebuild from registrations — DECIDED
+
+- **Source:** `C:\Users\jerom\Desktop\claude\ISZE\01_data\07_UIO\Matriculas Isuzu SAP.xlsx` tab `SUM` —
+  Portugal new registrations per year by model, 2005–2026. It is a registration series (the candidate
+  b/c logs called it "vehicle-level, not registrations"; that was wrong). Mapping as in
+  `C:\Users\jerom\Desktop\claude\ISZE\01_data\08_Distributor\Imotors_Portugal_UIO_GPS_PMS_Study.xlsx`
+  sheet `SAP_Raw_Registrations`: LD = N-Series 3.5 t + 5 t + 7.5 t; F-Series = 11 t + 14 t; pickups = D-Max.
+- **Method:** the same survival curves as the rest of V20 (sheet `3. UIO Calculation`; pickups with age 12 = 0).
+- **2026–2030 new registrations: the current forecast plan** (Jerome, 24 Sep 2026) — the input V20 already
+  carries: LD ≈ 456/yr, F-Series 0, pickups 900 / 880 / 860 / 840 / 840.
+- **Script:** `C:\Users\jerom\Desktop\claude\ISZE\06_uio\_Scripts\spec_20260924_pt_from_registrations.py`
+
+| Row | | 2025 | 2026 | 2027 | 2028 | 2029 | 2030 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| 51 LD | V19 | 2,206 | 2,596 | 2,974 | 3,341 | 3,697 | 4,042 |
+| | V20 c | 2,206 | 2,470 | 2,714 | 2,921 | 3,117 | 3,318 |
+| | **Registrations + plan** | **2,390** | **2,676** | **2,939** | **3,167** | **3,371** | **3,554** |
+| 53 F-Series | V19 | 269 | 261 | 253 | 245 | 238 | 231 |
+| | V20 c | 269 | 255 | 238 | 218 | 197 | 173 |
+| | **Registrations + plan** | **283** | **268** | **251** | **231** | **209** | **184** |
+| 54 pickups | V19 | 4,733 | 5,491 | 6,226 | 6,879 | 7,513 | 8,128 |
+| | V20 c | 4,733 | 5,109 | 5,425 | 5,709 | 5,967 | 6,251 |
+| | **Registrations + plan** | **4,548** | **4,978** | **5,358** | **5,692** | **5,970** | **6,256** |
+
+For the record: the plan carries 0 F-Series for Portugal; registrations show 69 (2024), 29 (2025) and
+16 (2026 to date). Row 54 is one of the two rows the harness convicted on candidate c (check1 / check5);
+this rebuild replaces those values.
+
+### D2 — Portugal history 1990–2025: what replaces what — OPEN, awaiting Jerome
+
+The registrations start in 2005, so they describe the whole fleet only once every pre-2005 vehicle has
+reached zero survival: **trucks from 2019** (16-year curve), **pickups from 2015** (12-year curve).
+Earlier years from registrations are floors, not full fleets.
+
+| Year | 2012 | 2013 | 2014 | 2015 | 2016 | 2017 | 2018 | 2019 | 2021 | 2023 | 2025 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| LD — V19 | 17,166 | 16,605 | 23 | 96 | 323 | 619 | 909 | 1,502 | 1,742 | 2,127 | 2,206 |
+| LD — registrations | 687* | 736* | 766* | 810* | 928* | 1,064* | 1,245* | 1,480 | 1,813 | 2,266 | 2,390 |
+| F-Series — V19 | 0 | 0 | 3 | 27 | 27 | 41 | 82 | 105 | 134 | 161 | 269 |
+| F-Series — registrations | 2* | 9* | 13* | 20* | 40* | 52* | 82* | 107 | 138 | 206 | 283 |
+| Pickups — V19 | 1,003 | 900 | 1,049 | 1,236 | 1,555 | 2,186 | 2,635 | 3,253 | 3,313 | 3,766 | 4,733 |
+| Pickups — registrations | 2,803* | 2,760* | 2,700* | 2,647 | 2,642 | 2,649 | 2,797 | 3,100 | 3,136 | 3,619 | 4,548 |
+
+\* floor — vehicles registered before 2005 are not in the source.
+
+What this shows about V19's history:
+- **LD:** V19 drops from 16,605 (2013) to 23 (2014) — the IML backbone to cohort-model seam (§6 of the
+  candidate logs). From 2014 V19 counts only trucks registered from 2014 on, so 2014–2018 is short by
+  about 340–740 trucks against the registrations floor.
+- **Pickups:** V19 is ~1,400 short in 2015 and still ~160 short in 2018. The IML source has zero
+  Portugal pickups for 2003–2009, while SAP shows 101–814 a year in 2005–2009.
+- **2019–2025** V19 and the registrations are close: LD within 1.5–8.4 %, pickups within 3–5 %.
+
+**Proposal:** replace from the first fully covered year — pickups 2015–2025, trucks (LD and F-Series)
+2019–2025 — and keep V19 for earlier years, flagged. The alternative is to replace 2005 onward and mark
+the pre-coverage years as floors. **Jerome to choose.** This affects past years only; 2026–2030 (D1) is the
+same either way, because the forecast runs on the registration cohorts.
+
+### D3 — Poland pickups (row 69): traced rebuild replaces candidate c — DECIDED
+
+Candidate c's values (23 / 19 / 15 / 11 / 8, scale factor 0.3768) could not be reproduced. Jerome accepted
+the traced rebuild, on the condition that there is a logic behind it:
+
+1. Take V19's history 1990–2025 (263 in 2019 … 27 in 2024, 28 in 2025).
+2. Work back the new registrations it implies each year using the pickup survival curve.
+3. Set the implied negatives to zero (2023 −29, 2024 −22; small ones in 2005–2008). V19's Poland history
+   falls faster than vehicles wear out, so it is not a real fleet history.
+4. Scale all cohorts by 0.361 so 2025 lands on V19's 28.
+5. No new pickups 2026–2030: V19 implies negative sales, there is no plan volume, and there is no Polish
+   registration source on disk.
+
+**Result: 24 / 19 / 15 / 11 / 8.** Flag: *no Polish source — zero new pickups assumed.* If IBX does sell
+pickups in Poland, the row is too low (V19's pace would give about 19 in 2030).
+Script: `C:\Users\jerom\Desktop\claude\ISZE\06_uio\_Scripts\spec_20260924_r69_r88_trace.py`
+
+### D4 — Cyprus trucks (row 88): candidate c kept — DECIDED
+
+Independently reproduced: 205 / 208 / 210 / 214 / 220, scale factor 0.7582, registration input about
+30/yr. Same script as D3.
+
+### D5 — Cyprus pickups (row 90) — OPEN
+
+Still on candidate a's values (2,238 … 2,614) and still convicted by the harness on check1. No Cyprus
+pickup registrations after 2014 on disk. Not decided.
+
+### D6 — The checker: no reset needed — DECIDED
+
+`verify_uio_v20.py` went from v1.0.0 to v1.1.0 during the candidate c build: added `check10_retention_sanity`
+(no row may keep more than 100 % of its fleet), a loader for `V20 REGS USED`, and reworded the
+self-certification note. The v1.0.0 source was never committed (git holds v1.1.0 only). Its compiled copy
+(`03_analytics\Isuzu\prism\scripts\__pycache__\verify_uio_v20.cpython-314.pyc`, 22 Sep 20:38) was re-run on
+24 Sep: **candidate b 1 fail (as its original report), candidate c 3 fails — the same three as v1.1.0.**
+The change did not produce candidate c's verdict. Keep v1.1.0.
+
+### D7 — Italy (MIDI Europe, rows 58–60) — PARKED
+
+V20 has almost no new registrations for Italy LD 2026–2030, so the row ages from 58,690 to 31,641 and
+drives most of the V20 decline. The zero comes from the mid-term plan
+(`C:\Users\jerom\Desktop\claude\ISZE\91_legacy\Isuzu\UIO\Script\ISZE CV_FY2025-FY2030_mid-term plan & 12RS.xlsx`:
+MIDI Europe LD 408 in FY25, 0 in FY26–FY30). Jerome: there should be MIDI forecast figures; not found on
+disk yet. Not important for now. MIDI Europe is not an ISZE distributor and stays out of GPS / PMS / KPI
+work; the Italy question affects only the MIDI-inclusive Grand Total (row 2), not the ex-MIDI view.
+
+### Documentation fixes already applied (23 September 2026)
+
+Candidate c's ship receipts, `UIO_V20_ASSUMPTIONS_2026-09-22c.md` and the in-workbook `V20 ASSUMPTIONS`
+sheet now match the workbook (Grand Total, sheet list, candidate c's 3-of-11 harness result). No value
+changed.
 
 ---
 

@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>ISUZU UNIVERSE | Internal Action Centre</title>
+<style>
+:root{color-scheme:dark;--bg:#091526;--side:#07111f;--panel:#102137;--panel2:#142840;--border:#283b53;--text:#f1f5fb;--muted:#a8b8ce;--dim:#8095b1;--red:#ed3545;--redbg:#372235;--teal:#70d8bd;--amber:#f4c27a;--purple:#b8acf1;--white:#fff;--shadow:0 22px 80px #0005}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 "Segoe UI",Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}button,a,input,select,textarea{outline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--teal)}button{color:inherit}button:disabled{cursor:not-allowed;opacity:.6}svg{vertical-align:middle;flex-shrink:0}h1,h2,h3,h4,p{margin:0}h1{font-size:39px;font-weight:650;line-height:1.18;letter-spacing:-1.2px}h2{font-size:24px;line-height:1.25;letter-spacing:-.4px}h3{font-size:19px;line-height:1.35;font-weight:600}h4{font-size:14px;font-weight:650}small{font-size:12px}strong{font-weight:650}.muted{color:var(--muted)}.tiny{font-size:11px}.mono{font-family:Consolas,monospace;font-size:11px;overflow-wrap:anywhere}.eyebrow{text-transform:uppercase;letter-spacing:1.6px;font-size:10px;color:var(--dim);font-weight:650}.spacer{flex:1}.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border:1px solid var(--border);border-radius:5px;font-size:10px;font-weight:650;white-space:nowrap;letter-spacing:.3px}.tag.measured{color:var(--teal);background:#14332f;border-color:#275247}.tag.partial{color:var(--amber);background:#342d25;border-color:#574533}.tag.missing{color:#b5bed1;background:#252c3d;border-color:#46506a}.tag.reported{color:var(--purple);background:#292840;border-color:#464368}.tag.internal{color:var(--muted);background:transparent}.dot{width:5px;height:5px;border-radius:100%;background:currentColor}.pill{display:inline-flex;gap:7px;align-items:center;border-radius:20px;padding:5px 11px;background:#172a40;color:var(--muted);font-size:11px}
+.sidebar{position:fixed;inset:0 auto 0 0;width:212px;background:var(--side);border-right:1px solid #1b2c42;padding:28px 18px;display:flex;flex-direction:column;z-index:10}.brand{padding:0 11px 28px}.wordmark{font-size:27px;color:var(--red);font-weight:850;letter-spacing:1.4px;line-height:1.1}.brand-sub{font-size:11px;letter-spacing:4px;font-weight:600;margin-top:9px;color:#d7e1ef}.nav-title{font-size:10px;color:var(--dim);letter-spacing:1.7px;padding:19px 11px 10px}.nav-item{width:100%;display:flex;align-items:center;gap:10px;background:none;border:1px solid transparent;padding:13px 11px;margin-bottom:8px;border-radius:8px;text-align:left;color:var(--muted);font-size:13px;transition:background .15s}.nav-item:hover{background:#122339;color:#fff}.nav-item.active{background:#192b43;border-color:#2b405c;color:#fff}.nav-step{width:25px;height:25px;display:grid;place-items:center;background:#26344a;border-radius:6px;font-size:10px;color:var(--muted)}.nav-item.active .nav-step{background:var(--red);color:white}.nav-item span:last-child{line-height:1.2}.nav-item em{display:block;font-style:normal;font-size:10px;color:var(--dim);margin-top:5px;letter-spacing:.5px}.sidebar-foot{padding:18px 10px 0;border-top:1px solid #24354a;display:grid;gap:11px}.sidebar-foot input{width:100%;font-size:12px}.local-indicator{font-size:10px;display:flex;gap:7px;align-items:center;color:var(--teal)}.sidebar-foot .caption{font-size:10px;color:var(--dim);line-height:1.6}
+.shell{margin-left:212px;min-height:100vh}.topbar{height:68px;border-bottom:1px solid #25374e;display:flex;align-items:center;gap:14px;padding:0 34px;background:#0b182a}.topbar .top-title{font-size:12px;color:var(--muted)}.top-actions{display:flex;gap:8px}.btn{border:1px solid var(--border);background:#182b42;border-radius:6px;padding:9px 13px;font-size:12px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1.4}.btn:hover{background:#213954}.btn.primary{background:var(--red);border-color:var(--red);color:white}.btn.primary:hover{background:#d72839}.btn.ghost{background:transparent}.btn.danger{color:#ffa3ad}.btn.small{font-size:11px;padding:6px 10px}.icon-btn{display:grid;place-items:center;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--muted);height:33px;width:33px}.icon-btn:hover{background:var(--panel2)}
+.main{max-width:1536px;margin:auto;padding:34px}.hero{display:flex;gap:20px;justify-content:space-between;align-items:flex-start;margin-bottom:22px}.hero .eyebrow{margin-bottom:11px}.hero p{color:var(--muted);font-size:14px;margin-top:12px;max-width:710px}.hero-right{display:grid;justify-items:end;gap:9px;margin-top:5px}.summary-bar{display:flex;align-items:center;gap:0;border:1px solid var(--border);border-radius:9px;background:var(--panel);margin-bottom:19px;overflow:hidden}.summary-cell{padding:15px 22px;display:flex;align-items:baseline;gap:9px;border-right:1px solid var(--border)}.summary-cell b{font-size:24px;font-weight:600;line-height:1}.summary-cell span{color:var(--muted);font-size:12px}.summary-cell.unowned b{color:var(--amber)}.summary-note{color:var(--dim);font-size:11px;padding:14px 20px;margin-left:auto;max-width:330px}.notice{display:flex;align-items:flex-start;gap:11px;border-radius:7px;background:#17273b;border:1px solid #344861;padding:12px 15px;color:#c1ccdd;font-size:12px;margin-bottom:23px}.notice svg{margin-top:2px;color:var(--amber)}.notice.warning{border-color:#65513b;background:#2a282a;color:#efd8b6}.notice.neutral{background:#122238;border-color:#2e425b}.toolbar{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:21px;flex-wrap:wrap}.filters{display:flex;gap:6px;flex-wrap:wrap}.filter{background:transparent;border:1px solid var(--border);border-radius:6px;color:var(--muted);font-size:11px;padding:7px 11px}.filter.active{background:#dce6f5;border-color:#dce6f5;color:#102238;font-weight:650}.inputs{display:flex;gap:8px}.searchbox{position:relative}.searchbox svg{position:absolute;left:11px;top:10px;color:var(--dim)}.searchbox input{padding-left:33px;width:196px}input,select,textarea{background:#0b1b2e;border:1px solid #34475f;border-radius:6px;color:var(--text);padding:9px 11px;min-width:0;font-size:12px}input::placeholder,textarea::placeholder{color:#8294ad}input[type=date]{padding:7px 9px}textarea{resize:vertical;min-height:90px;width:100%;line-height:1.65}select{cursor:pointer}.card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}.case-card{border:1px solid var(--border);border-radius:11px;background:linear-gradient(145deg,#14263d,#0f2035);display:flex;flex-direction:column;min-width:0;transition:transform .15s,border-color .15s;overflow:hidden}.case-card:hover{transform:translateY(-2px);border-color:#55718f}.card-content{padding:21px 21px 17px;flex:1}.card-meta{display:flex;align-items:center;gap:8px;justify-content:space-between;margin-bottom:17px}.case-id{font-size:10px;letter-spacing:1.1px;color:var(--dim);font-weight:600}.card-market{font-size:10px;color:var(--muted);letter-spacing:.55px;text-transform:uppercase;margin-bottom:5px}.case-card h3{font-size:18px;min-height:25px;margin-bottom:20px}.card-number{font-size:29px;letter-spacing:-.6px;font-weight:600;line-height:1.2;margin-bottom:5px}.card-number.text-value{font-size:24px;color:#dfc19d}.card-number.negative{color:#ffa5ae}.card-label{font-size:11px;color:var(--muted);margin-bottom:17px;line-height:1.5}.card-summary{font-size:12px;line-height:1.7;color:#c0cddd;min-height:61px;margin-bottom:15px}.card-period{font-size:10px;color:var(--dim);line-height:1.5}.card-snapshot{font-size:11px;color:var(--amber);margin-bottom:11px}.card-bottom{border-top:1px solid var(--border);background:#0d1d31;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;gap:8px}.owner{font-size:10px;color:var(--amber);display:inline-flex;align-items:center;gap:6px;min-width:0;overflow-wrap:anywhere}.owner.assigned{color:var(--teal)}.card-status{font-size:10px;color:var(--dim);margin-top:4px}.empty{border:1px dashed #38516c;border-radius:10px;text-align:center;padding:50px 20px;color:var(--muted)}.main-foot{display:flex;justify-content:space-between;gap:16px;border-top:1px solid #24354c;margin-top:28px;padding-top:17px;font-size:10px;color:var(--dim)}
+.section-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin:18px 0}.panel{background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:22px;min-width:0}.panel h3{margin-bottom:11px}.panel p{font-size:12px;color:var(--muted);line-height:1.7}.panel .big-stat{font-size:31px;color:var(--text);margin:5px 0}.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:9px;background:var(--panel)}table{border-collapse:collapse;width:100%;font-size:12px;text-align:left}th{font-size:10px;letter-spacing:.65px;text-transform:uppercase;background:#182c45;color:var(--muted);padding:13px 17px;font-weight:600}td{padding:15px 17px;border-top:1px solid var(--border);vertical-align:top;line-height:1.6}td .sub{font-size:10px;color:var(--dim);margin-top:4px}tr:hover td{background:#172a40}.table-link{border:none;padding:0;background:none;color:#dce7f8;text-align:left;font-weight:600}.table-link:hover{text-decoration:underline}.source-list{display:grid;gap:12px}.source-row{border:1px solid var(--border);background:var(--panel);border-radius:8px;padding:17px 19px}.source-row-top{display:flex;gap:15px;justify-content:space-between;align-items:flex-start}.source-name{font-size:12px;overflow-wrap:anywhere;font-weight:600}.source-role{font-size:10px;letter-spacing:.5px;color:var(--dim);margin-top:4px}.source-row p{font-size:12px;color:var(--muted);margin:9px 0}.source-row details{font-size:11px;color:var(--dim);margin-top:10px}.source-row summary{cursor:pointer;color:#b2c2d9}.source-row .mono{margin-top:8px}.check-line{padding:10px 0;border-bottom:1px solid var(--border);color:var(--muted);font-size:12px;display:flex;gap:9px}.check-line:last-child{border-bottom:0}.check-line svg{color:var(--teal);margin-top:3px}.results-empty{padding:42px 28px;border:1px solid var(--border);background:var(--panel);border-radius:10px}.results-empty h3{margin-bottom:12px}.results-empty p{max-width:730px;color:var(--muted);font-size:13px;line-height:1.8}.source-controls{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.dialog{color:var(--text);background:var(--bg);border:1px solid #405976;border-radius:13px;padding:0;width:min(1160px,94vw);max-height:92vh;box-shadow:var(--shadow)}.dialog::backdrop{background:#000a;backdrop-filter:blur(5px)}.dialog-header{padding:23px 28px 18px;border-bottom:1px solid var(--border);background:#102138}.dialog-header .row{display:flex;align-items:flex-start;gap:12px;justify-content:space-between}.dialog-header h2{font-size:25px;margin:8px 0}.dialog-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:11px}.dialog-subtitle{font-size:12px;color:var(--muted)}.tabs{display:flex;align-items:center;gap:4px;padding:0 25px;background:#0c1c30;border-bottom:1px solid var(--border)}.tab{background:none;border:0;border-bottom:2px solid transparent;padding:14px 17px;color:var(--muted);font-size:12px}.tab.active{color:#fff;border-bottom-color:var(--red)}.dialog-body{padding:24px 28px 28px}.tab-panel[hidden]{display:none}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}.metric{border:1px solid var(--border);background:#12263e;border-radius:8px;padding:15px}.metric-label{font-size:10px;color:var(--muted);margin-bottom:7px;min-height:28px;line-height:1.5}.metric-value{font-size:23px;font-weight:600;letter-spacing:-.4px;margin-bottom:6px}.metric-basis{font-size:10px;color:var(--dim);line-height:1.6}.metric-kind{display:inline-block;margin-top:8px;font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--teal)}.metric-kind.modelled{color:var(--amber)}.metric-kind.reported{color:var(--purple)}.evidence-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:20px}.evidence-main,.evidence-side{min-width:0}.evidence-side .panel{margin-bottom:14px}.evidence-side h4{margin-bottom:8px}.evidence-side p{font-size:12px;line-height:1.8;color:#bfcede}.evidence-main .panel{margin-bottom:15px}.facts p{font-size:12px;color:var(--muted);padding:11px 0;border-bottom:1px solid var(--border);line-height:1.8}.facts p:last-child{border:0;padding-bottom:0}.facts p:first-child{padding-top:0}.next-panel{border-left:3px solid var(--red);background:#172a43}.next-panel .btn{margin-top:15px}.chart{background:#112238;border:1px solid var(--border);border-radius:8px;padding:21px;margin-bottom:16px}.chart h4{margin-bottom:20px}.bar-line{margin:16px 0}.bar-label{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:11px;margin-bottom:7px;gap:10px}.bar-label strong{color:var(--text);font-size:12px}.bar-track{height:24px;background:#1c324d;border-radius:3px;overflow:hidden;display:flex}.bar-fill{background:#758db0;min-width:0}.bar-fill.recent{background:var(--red)}.bar-fill.bvp{background:var(--teal)}.bar-fill.genuine{background:#8198bc}.legend{display:flex;gap:17px;margin-bottom:13px;font-size:10px;color:var(--muted)}.legend span{display:flex;align-items:center;gap:7px}.swatch{width:8px;height:8px;border-radius:2px;background:#8198bc}.swatch.bvp{background:var(--teal)}.chart-caption{margin-top:17px;font-size:10px;line-height:1.7;color:var(--dim)}.coverage-number{font-size:34px;font-weight:600;margin-bottom:15px}.refbox{margin-top:20px;border:1px solid var(--border);border-radius:8px;padding:15px 17px;background:#0c1c2f}.refbox summary{cursor:pointer;font-size:12px;font-weight:600;color:#d5dfed}.reference{padding:13px 0;border-bottom:1px solid var(--border)}.reference:last-child{border:0;padding-bottom:0}.reference-title{font-size:11px;font-weight:600;overflow-wrap:anywhere}.reference p{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.7}.form-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.8fr);gap:24px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:flex;flex-direction:column;gap:7px;min-width:0;margin-bottom:16px}.field label{font-size:11px;color:#c7d3e3;font-weight:600}.field .hint{font-size:10px;color:var(--dim);line-height:1.65}.field input,.field select{width:100%}.full{grid-column:1/-1}.form-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:3px}.saved-status{font-size:11px;color:var(--teal)}.form-error{padding:11px 13px;background:#422937;border:1px solid #724351;color:#ffb9c0;font-size:12px;border-radius:6px;margin-bottom:14px}.check-item{display:flex;gap:11px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--muted);line-height:1.7}.check-item input{accent-color:var(--teal);margin:5px 0 0;flex-shrink:0}.check-item:last-child{border-bottom:0}.activity-entry{border-left:1px solid #496480;padding:0 0 15px 14px;font-size:11px;color:var(--muted)}.activity-entry time{display:block;font-size:10px;color:var(--dim);margin-bottom:4px}.toast{position:fixed;bottom:25px;left:calc(50% + 105px);transform:translateX(-50%);background:#234137;border:1px solid #427462;color:#d7ffef;border-radius:8px;padding:13px 20px;font-size:12px;box-shadow:var(--shadow);z-index:100;max-width:90vw}.toast.error{background:#492936;border-color:#754252;color:#ffcfda}.toast[hidden]{display:none}.skip{position:fixed;left:10px;top:-60px;background:#fff;color:#000;padding:10px;z-index:200}.skip:focus{top:10px}noscript{display:block;padding:40px;color:#fff;background:#452833}
+@media(min-width:1700px){.card-grid{gap:21px}.case-card h3{font-size:20px}.card-content{padding:24px}.card-summary{font-size:13px}}
+@media(max-width:1240px){.card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero-right{display:none}.summary-cell{padding:14px 16px}.summary-note{max-width:260px}.topbar{padding:0 26px}.main{padding:28px}.top-title{display:none}}
+@media(max-width:850px){.sidebar{width:74px;padding:22px 9px}.brand{padding:0 0 22px;text-align:center}.wordmark{font-size:15px;letter-spacing:0}.brand-sub,.nav-title,.nav-item span:last-child,.sidebar-foot{display:none}.nav-item{padding:10px;justify-content:center}.nav-step{width:30px;height:30px}.shell{margin-left:74px}.main{padding:23px}.topbar{padding:0 23px}.summary-note{display:none}.dialog{width:96vw;max-height:95vh}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.evidence-layout,.form-layout{grid-template-columns:1fr}.hero h1{font-size:34px}.toast{left:calc(50% + 37px)}}
+@media(max-width:580px){.sidebar{position:static;width:100%;height:auto;flex-direction:row;align-items:center;gap:6px;padding:9px 13px;border-bottom:1px solid var(--border);border-right:0}.brand{padding:0 13px 0 0}.wordmark{font-size:18px}.sidebar nav{display:flex;gap:1px}.nav-item{width:auto;margin:0;padding:5px}.nav-step{width:28px;height:28px}.sidebar>.spacer{display:none}.shell{margin-left:0}.topbar{height:auto;min-height:57px;padding:11px 17px;flex-wrap:wrap;gap:9px}.topbar .tag{font-size:9px}.top-actions{margin-left:auto}.top-actions .btn{padding:6px 8px;font-size:10px}.main{padding:22px 17px}.card-grid{grid-template-columns:1fr}.summary-bar{flex-wrap:wrap}.summary-cell{padding:12px 13px;flex:1}.summary-cell b{font-size:20px}.summary-cell span{font-size:10px}.summary-cell:last-of-type{border-right:none}.hero h1{font-size:33px}.hero p{font-size:12px}.inputs{width:100%}.inputs select{max-width:47%}.searchbox{flex:1}.searchbox input{width:100%}.toolbar{gap:12px}.notice{font-size:11px}.main-foot{display:block}.main-foot span{display:block;margin:5px 0}.dialog-header{padding:19px}.dialog-body{padding:19px}.dialog-header h2{font-size:22px}.tabs{padding:0 8px}.metrics{gap:9px}.metric{padding:12px}.metric-value{font-size:21px}.metric-basis{font-size:9px}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.section-grid{grid-template-columns:1fr}.source-row-top{gap:10px}.source-name{font-size:11px}.toast{left:50%}.card-summary{min-height:0}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<aside class="sidebar" aria-label="Main navigation">
+ <div class="brand"><div class="wordmark">ISUZU</div><div class="brand-sub">UNIVERSE</div></div>
+ <div class="nav-title">COMMERCIAL REVIEW</div>
+ <nav>
+  <button class="nav-item active" data-view="centre" aria-label="Act: Action Centre"><span class="nav-step">A</span><span>Action Centre<em>ACT</em></span></button>
+  <button class="nav-item" data-view="sources" aria-label="Understand: Sources and limits"><span class="nav-step">U</span><span>Sources &amp; limits<em>UNDERSTAND</em></span></button>
+  <button class="nav-item" data-view="actions" aria-label="Do: Action register"><span class="nav-step">D</span><span>Action register<em>DO</em></span></button>
+  <button class="nav-item" data-view="results" aria-label="Learn: Results"><span class="nav-step">L</span><span>Results<em>LEARN</em></span></button>
+ </nav>
+ <div class="spacer"></div>
+ <div class="sidebar-foot">
+  <label class="eyebrow" for="review-date">Review date</label><input id="review-date" type="date" aria-label="Review date for due-date checks">
+  <div class="local-indicator" id="storage-indicator"><span class="dot"></span>Local browser storage</div>
+  <p class="caption">Internal ISZE mock.<br>No live data connection.<br>No distributor access control.</p>
+ </div>
+</aside>
+<div class="shell">
+ <header class="topbar">
+  <span class="top-title">Isuzu Motors Europe</span><span class="tag internal" id="scope-tag">INTERNAL MOCK &middot; NOT ACCESS-CONTROLLED</span>
+  <div class="spacer"></div>
+  <div class="top-actions"><button class="btn ghost" id="restore-btn">Restore review</button><button class="btn" id="export-btn">Export case file <span aria-hidden="true">&darr;</span></button></div>
+ </header>
+ <main class="main" id="main" tabindex="-1"></main>
+</div>
+<dialog class="dialog" id="case-dialog" aria-labelledby="dialog-title"></dialog>
+<div class="toast" role="status" id="toast" hidden></div>
+<input type="file" id="restore-input" accept="application/json,.json" hidden>
+<noscript>This internal mock needs JavaScript to display the case evidence and store review decisions. No network connection is needed.</noscript>
+<script id="case-data" type="application/json">{
+  "schema_version": 1,
+  "app_version": "1.0-review",
+  "created_at": "2026-09-23",
+  "title": "ISUZU UNIVERSE | Internal Action Centre",
+  "scope": "Internal ISZE review mock. No production authentication or distributor sharing.",
+  "source_policy": "Metrics are calculated from explicitly selected attached extracts. Unavailable workstation sources stay listed as missing. Secondary document values are labelled, not promoted to verified measurements.",
+  "sources": [
+    {
+      "id": "requested_service",
+      "name": "pms_capture_by_db_year.csv",
+      "role": "Requested calculation source",
+      "available": false,
+      "note": "Not directly available from the Windows path. The attached presentation extract is explicitly identified below.",
+      "period": "",
+      "snapshot_date": null,
+      "sha256": null,
+      "requested_workstation_source": true
+    },
+    {
+      "id": "requested_spend",
+      "name": "gps_spu_by_distributor.csv",
+      "role": "Requested fleet comparison source",
+      "available": false,
+      "note": "Not directly available from the Windows path. The attached spend-per-truck extract is used only for the separate fleet-basis check.",
+      "period": "",
+      "snapshot_date": null,
+      "sha256": null,
+      "requested_workstation_source": true
+    },
+    {
+      "id": "requested_mix",
+      "name": "pms_genuine_bvp_vs_price_2024_2025.csv",
+      "role": "Requested Genuine/BVP source",
+      "available": false,
+      "note": "Not supplied here. The attached product-mix extract is the selected scope; it is not blended with a concession scope.",
+      "period": "",
+      "snapshot_date": null,
+      "sha256": null,
+      "requested_workstation_source": true
+    },
+    {
+      "id": "requested_concession",
+      "name": "pms_campaign_suspect_by_db_family_2024_2025.csv",
+      "role": "Required concession source",
+      "available": false,
+      "note": "Not supplied. No concession rate or family-level price conclusion is published.",
+      "period": "",
+      "snapshot_date": null,
+      "sha256": null,
+      "requested_workstation_source": true
+    },
+    {
+      "id": "requested_tender",
+      "name": "tender_data.json",
+      "role": "Required current tender feed",
+      "available": false,
+      "note": "Not supplied. The paper snapshot cannot be refreshed or treated as a current opportunity list.",
+      "period": "",
+      "snapshot_date": null,
+      "sha256": null,
+      "requested_workstation_source": true
+    },
+    {
+      "id": "business_context",
+      "name": "01_ISUZU_AND_ISZE_BUSINESS.md",
+      "role": "Account mapping reference",
+      "available": true,
+      "note": "Germany sold-to mapping is the basis for the account-routing validation task; it is not evidence that both accounts are covered in a selected extract.",
+      "period": "Business structure as of 19 September 2026",
+      "snapshot_date": "2026-09-19",
+      "sha256": "6e5cb467450f091c0a807d880de608299227c82171dba7d56178e5e061af0dcb",
+      "requested_workstation_source": false
+    },
+    {
+      "id": "mix_extract",
+      "name": "04_original_vs_value_parts_mix.csv",
+      "role": "Selected attached extract",
+      "available": true,
+      "note": "ISZE-to-distributor purchasing by product subgroup. Full calendar 2024 and 2025 only are selected. BVP means Best Value Parts.",
+      "period": "Calendar 2024 and 2025",
+      "snapshot_date": "2026-09-19",
+      "sha256": "7d65231d58a82633815f3c3b879c2dbb02af907950846ef4f7030a8542d7af4c",
+      "requested_workstation_source": false
+    },
+    {
+      "id": "service_extract",
+      "name": "03_service_capture_by_market_family.csv",
+      "role": "Selected attached extract",
+      "available": true,
+      "note": "Germany oil filters: total line, calendar 2025. Measured purchasing is compared with modelled expected units; no percentage above 100 is displayed.",
+      "period": "Calendar 2025",
+      "snapshot_date": "2026-09-19",
+      "sha256": "c63785e50e21ff04d66f92fb6a1a27672d5acd2129affb2e1d2ac3bd82f46af0",
+      "requested_workstation_source": false
+    },
+    {
+      "id": "spend_extract",
+      "name": "02_spend_per_truck_by_market.csv",
+      "role": "Fleet-basis check only",
+      "available": true,
+      "note": "A separate fleet basis is retained as a separate fact. It does not replace the service-demand denominator.",
+      "period": "Calendar 2025",
+      "snapshot_date": "2026-09-19",
+      "sha256": "e355c516a7099efdc08a8ffb57294cf08fca5b2efd1971db982a9a391fbc326c",
+      "requested_workstation_source": false
+    },
+    {
+      "id": "dealer_summary",
+      "name": "sales_to_dealer_by_dealer_year.csv",
+      "role": "Dealer coverage check only",
+      "available": true,
+      "note": "Counts named dealers and available years; no dealer fleet denominator or dealer year-on-year change is inferred.",
+      "period": "Calendar 2025",
+      "snapshot_date": null,
+      "sha256": "6c824edfd2d4d491fadced3d4c6d439117683cb6021a6e80a4e5e168bea39066",
+      "requested_workstation_source": false
+    },
+    {
+      "id": "paper",
+      "name": "ISUZU_UNIVERSE_WHITE_PAPER_FINAL_v2_2026-09-23.pdf",
+      "role": "Secondary document only",
+      "available": true,
+      "note": "Pages 21-22 are used only for paper-reported programme and tender snapshots. They are not a substitute for a credit ledger or live tender feed.",
+      "period": "Programme: June 2023-March 2026; tender snapshot: 22 September 2026",
+      "snapshot_date": "2026-09-23",
+      "sha256": "de57054202c4cce508c5ae721a840a9f579e82c57c3726cc5cd7f72f9274c938",
+      "requested_workstation_source": false
+    },
+    {
+      "id": "older_tenders",
+      "name": "10_gaps_accounts_tenders.csv",
+      "role": "Older extract, NOT selected for the tender card",
+      "available": true,
+      "note": "A different, older opportunity population. It is not substituted for the requested 22 September feed.",
+      "period": "Older snapshot in the 19 September pack",
+      "snapshot_date": "2026-09-19",
+      "sha256": "d834185b20e9538b098d55d766b411d6b9257c99eef607e0ab77704f48ce7e10",
+      "requested_workstation_source": false
+    },
+    {
+      "id": "credit_ledger",
+      "name": "Programme credit ledger and case register",
+      "role": "Required primary evidence",
+      "available": false,
+      "note": "No identifiable programme credit/case ledger was supplied. Missing records are not counted as zero.",
+      "period": "June 2023-March 2026",
+      "snapshot_date": null,
+      "sha256": null,
+      "requested_workstation_source": false
+    },
+    {
+      "id": "classification",
+      "name": "Validated part-to-family membership",
+      "role": "Required classification check",
+      "available": false,
+      "note": "The reviewed release and membership for front brake pads and blower filters are not attached. Family rates remain withheld.",
+      "period": null,
+      "snapshot_date": null,
+      "sha256": null,
+      "requested_workstation_source": false
+    }
+  ],
+  "cases": [
+    {
+      "id": "AC-01",
+      "title": "Brake pads",
+      "market": "ITUK | UK trucks",
+      "case_type": "Commercial signal",
+      "evidence": "measured",
+      "readiness": "Review now",
+      "period": "Full calendar 2025 vs 2024",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Change in parts billed",
+        "value": -45023.33,
+        "format": "eur_signed",
+        "basis": "ISZE to Isuzu Truck UK; selected brake-pad subgroup",
+        "kind": "measured"
+      },
+      "summary": "Unit purchasing fell faster than billed value. Start with a distributor review, not a claim about dealer losses.",
+      "context_line": "Relevant dealer fleet: not supplied",
+      "basis_label": "Measured purchasing | selected attached extract",
+      "metrics": [
+        {
+          "label": "Parts billed, 2024",
+          "value": 347389.58,
+          "format": "eur",
+          "basis": "Calendar 2024; selected subgroup",
+          "kind": "measured"
+        },
+        {
+          "label": "Parts billed, 2025",
+          "value": 302366.25,
+          "format": "eur",
+          "basis": "Calendar 2025; selected subgroup",
+          "kind": "measured"
+        },
+        {
+          "label": "Value change",
+          "value": -12.96047221681203,
+          "format": "pct_signed",
+          "basis": "2025 against 2024",
+          "kind": "measured"
+        },
+        {
+          "label": "Unit change",
+          "value": -25.427444103463394,
+          "format": "pct_signed",
+          "basis": "2025 against 2024",
+          "kind": "measured"
+        }
+      ],
+      "chart": {
+        "type": "comparison",
+        "series": [
+          {
+            "label": "2024",
+            "value": 347389.58
+          },
+          {
+            "label": "2025",
+            "value": 302366.25
+          }
+        ],
+        "title": "Parts billed to Isuzu Truck UK",
+        "format": "eur",
+        "caption": "Full calendar years; same selected subgroup. Not sales to end customers."
+      },
+      "facts": [
+        "4,562 units in 2024 and 3,402 in 2025, on the selected product-mix scope.",
+        "The attached dealer summary has 64 named dealers, in 2025 only. It cannot explain a dealer year-on-year decline.",
+        "Relevant fleet by dealer and validated brake-pad applicability are not supplied. No dealer service-demand rate is calculated."
+      ],
+      "interpretation": "The selected subgroup has a measured purchasing decline. A lower share of brake pads in a dealer's own 2025 parts purchases would be a mix signal, not proof of lost maintenance business.",
+      "limitation": "No dealer-year comparison, causal price effect or unusually low dealer performance is established. A validated part mapping is still needed before a dealer-mix signal is scored.",
+      "next_action": "Review the distributor decline. Then compare each dealer's brake-pad share of its own 2025 purchases with the ITUK network share, using one validated part set and one valuation basis.",
+      "checks": [
+        "Confirm the selected brake-pad membership before any product-specific intervention.",
+        "Keep 2025 dealer snapshots separate from distributor 2024-2025 change.",
+        "Treat mix differences as questions, not service-demand gaps."
+      ],
+      "references": [
+        {
+          "source_id": "mix_extract",
+          "rows": [
+            712,
+            713
+          ],
+          "selection": "ITUK; product_subgroup=brake_pad; years 2024 and 2025",
+          "method": "Change = 2025 total_eur minus 2024 total_eur. Percentage change = (2025 / 2024 - 1) x 100."
+        },
+        {
+          "source_id": "dealer_summary",
+          "rows": [],
+          "selection": "ITUK; distinct dealer_name and year",
+          "method": "Count unique dealer names; inspect available calendar years."
+        }
+      ],
+      "raw_facts": {
+        "value_2024": 347389.58,
+        "value_2025": 302366.25,
+        "units_2024": 4562.0,
+        "units_2025": 3402.0,
+        "named_dealers": 64,
+        "dealer_years": [
+          2025
+        ]
+      }
+    },
+    {
+      "id": "AC-02",
+      "title": "Oil filters",
+      "market": "Germany | ISD",
+      "case_type": "Data and model validation",
+      "evidence": "partial",
+      "readiness": "Validate basis",
+      "period": "Calendar 2025",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Of modelled service need supplied",
+        "value": 15.03575530771796,
+        "format": "pct",
+        "basis": "Measured units divided by modelled expected units",
+        "kind": "modelled"
+      },
+      "summary": "Check the fleet denominator and supply accounts before using this as a distributor performance example.",
+      "context_line": "10,746 EUR parts billed | 13,780 modelled vehicles",
+      "basis_label": "Modelled expectation + measured purchasing | basis unresolved",
+      "metrics": [
+        {
+          "label": "Parts billed",
+          "value": 10746.16,
+          "format": "eur",
+          "basis": "Germany oil filters; calendar 2025",
+          "kind": "measured"
+        },
+        {
+          "label": "Service-model fleet",
+          "value": 13780.0,
+          "format": "integer",
+          "basis": "Service model, split by vehicle group; 2025",
+          "kind": "modelled"
+        },
+        {
+          "label": "Separate spend-model fleet",
+          "value": 12855.0,
+          "format": "integer",
+          "basis": "Historical fleet used for spend per truck; 2025",
+          "kind": "modelled"
+        },
+        {
+          "label": "Modelled value difference",
+          "value": 60724.65,
+          "format": "eur",
+          "basis": "Source-reported service gap; not recoverable sales",
+          "kind": "modelled"
+        }
+      ],
+      "chart": {
+        "type": "coverage",
+        "value": 15.03575530771796,
+        "title": "Purchasing against modelled oil-filter need",
+        "caption": "Calendar 2025. The unfilled share is a model difference, not proven competitor sales."
+      },
+      "facts": [
+        "Measured oil-filter units: 2,029; modelled expected units: 13,494.5.",
+        "The card uses the service-model fleet and expected units exactly as supplied. The spend-model fleet is shown separately, not substituted or averaged.",
+        "The business-context account mapping names German sold-to accounts 93 and 2516. Their coverage and any indirect supply require a separate check."
+      ],
+      "interpretation": "Purchasing is below the selected model expectation. Both fleet-basis disagreement and possible account routing need checking before assigning a commercial cause.",
+      "limitation": "No German dealer attribution, end-customer demand or alternate supplier is measured. The modelled value difference is not an expected sales gain.",
+      "next_action": "Confirm German supply routing and both sold-to accounts, reconcile the fleet basis, then request sales-to-dealer information for the same scope.",
+      "checks": [
+        "Confirm both German sold-to accounts and any indirect supply routes.",
+        "Document why the two fleet bases differ.",
+        "Request dealer-level purchases only after agreeing the comparison scope."
+      ],
+      "references": [
+        {
+          "source_id": "service_extract",
+          "rows": [
+            1684
+          ],
+          "selection": "GERMANY; year=2025; service_family=oil_filter; line_type=total",
+          "method": "Displayed percentage = actual_units / expected_units x 100. The stored rounded rate is not the calculation input. Rates outside 0-100 are withheld, never capped."
+        },
+        {
+          "source_id": "spend_extract",
+          "rows": [
+            55
+          ],
+          "selection": "GERMANY; year=2025",
+          "method": "Fleet basis comparison only; not used in service-demand coverage."
+        },
+        {
+          "source_id": "business_context",
+          "rows": [],
+          "selection": "Market mapping: ISD / Germany",
+          "method": "Sold-to 93 and 2516 are mapping references, not a verification of supply coverage."
+        }
+      ],
+      "raw_facts": {
+        "actual_units": 2029.0,
+        "expected_units": 13494.5,
+        "service_fleet": 13780.0,
+        "spend_fleet": 12855.0,
+        "actual_revenue": 10746.16,
+        "source_revenue_gap": 60724.65,
+        "source_gap_quotable": true
+      }
+    },
+    {
+      "id": "AC-03",
+      "title": "Air filters",
+      "market": "IUK | UK light commercial",
+      "case_type": "Avoid premature price action",
+      "evidence": "measured",
+      "readiness": "Review now",
+      "period": "Full calendar 2025 vs 2024",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Parts billed in the selected 2025 scope",
+        "value": 106007.31,
+        "format": "eur",
+        "basis": "Genuine + BVP; attached product-mix extract",
+        "kind": "measured"
+      },
+      "summary": "BVP enters the selected scope in 2025. Separate the mix change from any pricing conclusion.",
+      "basis_label": "Measured purchasing mix | concession source missing",
+      "metrics": [
+        {
+          "label": "Parts billed, 2024",
+          "value": 74730.38,
+          "format": "eur",
+          "basis": "Same selected subgroup; full calendar year",
+          "kind": "measured"
+        },
+        {
+          "label": "BVP entry, 2025",
+          "value": 16618.6,
+          "format": "eur",
+          "basis": "BVP = Best Value Parts; zero in this 2024 scope",
+          "kind": "measured"
+        },
+        {
+          "label": "Total value change",
+          "value": 41.853032193868145,
+          "format": "pct_signed",
+          "basis": "2025 against 2024",
+          "kind": "measured"
+        },
+        {
+          "label": "Total unit change",
+          "value": 49.070171088519714,
+          "format": "pct_signed",
+          "basis": "2025 against 2024",
+          "kind": "measured"
+        }
+      ],
+      "chart": {
+        "type": "stacked",
+        "series": [
+          {
+            "label": "2024",
+            "genuine": 74730.38,
+            "bvp": 0.0
+          },
+          {
+            "label": "2025",
+            "genuine": 89388.71,
+            "bvp": 16618.6
+          }
+        ],
+        "title": "Genuine and BVP, one source scope",
+        "format": "eur",
+        "caption": "ISZE to IUK; full calendar years. BVP = Best Value Parts. No concession-scope values are mixed into these bars."
+      },
+      "facts": [
+        "Genuine parts billed rise within the selected scope; BVP adds a separate new contribution. BVP accounts for 53.1% of the increase in billed value.",
+        "The selected extract contains 4,033 units in 2024 and 6,012 in 2025.",
+        "Market fleet context: 47,783 vehicles in the 2025 spend-per-truck extract. This is not a dealer fleet denominator."
+      ],
+      "interpretation": "No immediate price action is indicated by this purchasing evidence alone. The BVP entry is part of the observed growth; it is not evidence of a price-response relationship.",
+      "limitation": "The requested concession file is absent. The separate concession-scope total and the falling-concession claim are not used here. No competitor retail price is compared with a dealer reference price.",
+      "next_action": "Review the Genuine/BVP change on this one scope. Obtain the concession source and reconcile its membership before adding any concession trend or price recommendation.",
+      "checks": [
+        "Keep Genuine and BVP visible on the same scope.",
+        "Do not blend the product-mix and concession totals.",
+        "Any later competitor comparison needs matched tax, channel, pack and applicability."
+      ],
+      "references": [
+        {
+          "source_id": "mix_extract",
+          "rows": [
+            854,
+            855
+          ],
+          "selection": "IUK; product_subgroup=air_filter; years 2024 and 2025",
+          "method": "Total = original_eur + value_parts_eur. BVP contribution to growth = change in BVP euro / change in total euro. Full-year comparison only."
+        },
+        {
+          "source_id": "spend_extract",
+          "rows": [
+            62
+          ],
+          "selection": "IUK; year=2025",
+          "method": "Market fleet context only."
+        },
+        {
+          "source_id": "requested_concession",
+          "rows": [],
+          "selection": "Not available",
+          "method": "No concession percentage is computed."
+        }
+      ],
+      "raw_facts": {
+        "value_2024": 74730.38,
+        "value_2025": 106007.31,
+        "genuine_2024": 74730.38,
+        "genuine_2025": 89388.71,
+        "bvp_2024": 0.0,
+        "bvp_2025": 16618.6,
+        "units_2024": 4033.0,
+        "units_2025": 6012.0
+      }
+    },
+    {
+      "id": "AC-04",
+      "title": "Front brake pads / blower filters",
+      "market": "ISZE | family review",
+      "case_type": "Classification before concession review",
+      "evidence": "missing",
+      "readiness": "Hold family rates",
+      "period": "Intended comparison: calendar 2024-2025",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Concession review",
+        "value": null,
+        "format": "text",
+        "basis": "Classification and concession source required",
+        "kind": "measured"
+      },
+      "headline_text": "Validation required",
+      "summary": "Confirm what these families contain before interpreting discounts. Rates remain withheld.",
+      "basis_label": "Missing primary source + unvalidated family membership",
+      "metrics": [],
+      "chart": null,
+      "facts": [
+        "The requested concession extract is not attached.",
+        "The reviewer reported a tagging defect elsewhere in the classification. This is a reason to check membership, not proof that these two families are wrong.",
+        "No euro opportunity, concession share or dealer performance score is published for these unvalidated categories."
+      ],
+      "interpretation": "This is a validation task, not a finding that pricing is too high or that support is unjustified.",
+      "limitation": "Neither category contents nor concession concentration can be recomputed from the files supplied here.",
+      "next_action": "Validate the part membership for each family, obtain the concession extract, then review whether discounted billing is concentrated in justified cases or repeated across ordinary business.",
+      "checks": [
+        "Record the reviewed classification release and family membership.",
+        "Check the dated reference-price basis before interpreting concessions.",
+        "Keep front brake pads separate from the broader brake-pad group."
+      ],
+      "references": [
+        {
+          "source_id": "classification",
+          "rows": [],
+          "selection": "Front brake pads and blower filters",
+          "method": "Membership check outstanding."
+        },
+        {
+          "source_id": "requested_concession",
+          "rows": [],
+          "selection": "Calendar 2024 and 2025",
+          "method": "No rate displayed before primary evidence is available."
+        }
+      ],
+      "raw_facts": {}
+    },
+    {
+      "id": "AC-05",
+      "title": "Don't Lose the Deal",
+      "market": "ITUK | programme review",
+      "case_type": "Missing programme evidence",
+      "evidence": "partial",
+      "readiness": "Reconcile ledger",
+      "period": "Credits reported for 2023, 2025 and 2026",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Credits reported in the white paper",
+        "value": 90000,
+        "format": "eur",
+        "basis": "Secondary document only; not independently reconciled",
+        "kind": "reported"
+      },
+      "summary": "Reconcile the programme credits and their case records. The earlier credit labels remain an open question.",
+      "basis_label": "Paper-reported amount | ledger and case register missing",
+      "metrics": [],
+      "chart": null,
+      "facts": [
+        "The white paper reports the programme amount on page 21. The credit ledger and case register needed to verify it are absent.",
+        "The reviewer notes that the 2023 credits carry a different label. Confirm with Isuzu Truck UK whether they belong to this programme.",
+        "The paper reports no structured cases. This mock does not convert an absent case register into a verified zero."
+      ],
+      "interpretation": "The next task is to reconcile the payment basis and document what the support funded. No return on the programme is established.",
+      "limitation": "The amount is extracted from a secondary document, not calculated from credit lines. Annual allocation, the 2023 label and outcome coverage remain unresolved.",
+      "next_action": "Ask Isuzu Truck UK to reconcile the differently labelled 2023 credits, identify the related parts/dealers, and provide support decisions, order references and outcomes.",
+      "checks": [
+        "Confirm whether the 2023-labelled credits belong to this programme.",
+        "Reconcile all credits to the ledger before treating the reported total as verified.",
+        "Collect part, dealer, dated competitor evidence, support granted and the outcome."
+      ],
+      "references": [
+        {
+          "source_id": "paper",
+          "rows": [],
+          "selection": "Page 21, section 6.4",
+          "method": "Extract the reported amount from the document text. Status remains paper-reported, not ledger-verified."
+        },
+        {
+          "source_id": "credit_ledger",
+          "rows": [],
+          "selection": "Programme credits and corresponding supported cases",
+          "method": "Not supplied; no zero-case calculation is made."
+        }
+      ],
+      "raw_facts": {
+        "paper_reported_credit_eur": 90000,
+        "ledger_verified_credit_eur": null,
+        "verified_case_count": null
+      }
+    },
+    {
+      "id": "AC-06",
+      "title": "Tender deadlines and outcomes",
+      "market": "ISZE | tender review",
+      "case_type": "Time-sensitive source refresh",
+      "evidence": "partial",
+      "readiness": "Refresh source",
+      "period": "Historical snapshot: 22 September 2026",
+      "initial_owner": null,
+      "initial_due_date": null,
+      "initial_outcome": null,
+      "initial_status": "Not started",
+      "commercial_clearance": false,
+      "headline": {
+        "label": "Current time-critical opportunities",
+        "value": null,
+        "format": "text",
+        "basis": "Current feed is not attached",
+        "kind": "measured"
+      },
+      "headline_text": "Refresh required",
+      "summary": "The paper snapshot is dated. Refresh the feed before assigning opportunities or quoting a current deadline count.",
+      "basis_label": "Historical paper snapshot | current feed missing",
+      "metrics": [
+        {
+          "label": "Due within 14 days in the snapshot",
+          "value": 45,
+          "format": "integer",
+          "basis": "22 September 2026; paper page 22",
+          "kind": "reported"
+        },
+        {
+          "label": "Distinct opportunities in the snapshot",
+          "value": 619,
+          "format": "integer",
+          "basis": "22 September 2026; paper page 22",
+          "kind": "reported"
+        }
+      ],
+      "chart": null,
+      "facts": [
+        "The snapshot is not a live queue. Its deadline count does not automatically remain valid on later review dates.",
+        "A different, older attached tender extract is registered in Sources but is not substituted for the requested population.",
+        "No fleet make, truck count, tender value or maintenance-part demand is inferred. Missing tender value is not zero value."
+      ],
+      "interpretation": "Refresh and qualify the dated opportunities before allocating effort. Record a pursuit decision and a closure outcome for each supported opportunity.",
+      "limitation": "The primary tender_data.json feed is absent. The paper's reported outcome count cannot establish the current state of the tender register.",
+      "next_action": "Obtain a fresh tender feed, recalculate deadlines against the review date, assign relevant opportunities, and record won, lost or declined when each closes.",
+      "checks": [
+        "Load a dated current feed; do not treat the old countdown as current.",
+        "Check aftersales relevance without assuming Isuzu fleet make.",
+        "Record owner, pursuit decision and closure outcome separately."
+      ],
+      "references": [
+        {
+          "source_id": "paper",
+          "rows": [],
+          "selection": "Page 22, section 6.5; snapshot 22 September 2026",
+          "method": "Extract reported snapshot counts; do not refresh them by changing the display date."
+        },
+        {
+          "source_id": "requested_tender",
+          "rows": [],
+          "selection": "Current feed",
+          "method": "Missing; live deadline and outcome counts remain unavailable."
+        },
+        {
+          "source_id": "older_tenders",
+          "rows": [],
+          "selection": "dataset=tender",
+          "method": "Different older population; excluded from the case headline."
+        }
+      ],
+      "raw_facts": {
+        "paper_snapshot_date": "2026-09-22",
+        "paper_snapshot": {
+          "notices": 689,
+          "opportunities": 619,
+          "aftersales": 286,
+          "queue": 199,
+          "due_14_days": 45,
+          "outcomes": 0
+        },
+        "older_attached_population": 376,
+        "current_due_count": null,
+        "current_outcome_count": null
+      }
+    }
+  ],
+  "validation": {
+    "status": "Calculation checks passed; source limitations remain open",
+    "computed_case_ids": [
+      "AC-01",
+      "AC-02",
+      "AC-03"
+    ],
+    "secondary_or_missing_case_ids": [
+      "AC-04",
+      "AC-05",
+      "AC-06"
+    ],
+    "checks": [
+      "Six cases, all initially unassigned and undated.",
+      "All monetary headlines in computed cases derived from selected source rows.",
+      "Genuine plus BVP reconciles to total on all selected mix rows.",
+      "Full calendar 2024 and 2025 used; no partial-2026 growth comparisons.",
+      "ITUK and IUK remain separate; no cross-distributor dealer view.",
+      "Germany service rate uses its own expected units; fleet bases are not blended.",
+      "Out-of-range service percentages are withheld, not capped.",
+      "No dealer coverage, dealer year-on-year attribution or price causality inferred.",
+      "No primary-ledger zero or current tender count inferred from missing files.",
+      "Portugal clutch case excluded; no unvalidated family concession rates published.",
+      "No raw billing lines, full price list or source PDFs included in the output."
+    ],
+    "pdf_extraction_errors": []
+  }
+}</script>
+<script>
+'use strict';
+const DATA = JSON.parse(document.getElementById('case-data').textContent);
+const CASES = DATA.cases;
+const SOURCE = Object.fromEntries(DATA.sources.map(s=>[s.id,s]));
+const KEY = 'isuzu-universe-action-centre-v1-review';
+const REVIEW_KEY = KEY+'-date';
+const IDS = new Set(CASES.map(c=>c.id));
+const FINGERPRINT = DATA.sources.filter(s=>s.sha256).map(s=>s.sha256).join('|');
+const STATUSES=['Not started','In review','Waiting for evidence','Action in progress','Closed'];
+const OUTCOMES=['No action after review','Evidence received','Action completed - impact not measured','Inconclusive','Measured change recorded','Tender won','Tender lost','Tender declined'];
+let currentView='centre', evidenceFilter='all', marketFilter='all', searchTerm='', activeId=null, activeTab='evidence';
+let persistent=true, reviewState={}, reviewDate=DATA.created_at;
+let toastTimer;
+const $=(q,root=document)=>root.querySelector(q);
+const $$=(q,root=document)=>[...root.querySelectorAll(q)];
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function icon(name,size=16){const paths={info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/>',search:'<circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/>',check:'<path d="m5 12 4 4L19 6"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>',arrow:'<path d="M4 12h15M13 6l6 6-6 6"/>',person:'<circle cx="12" cy="8" r="3"/><path d="M5 21v-3a7 7 0 0 1 14 0v3"/>'};return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths[name]||paths.info}</svg>`;}
+function format(v,kind='eur',digits){
+ if(v===null||v===undefined||!Number.isFinite(Number(v)))return 'Not available';
+ const n=Number(v), d=digits===undefined?(kind.startsWith('pct')?1:0):digits;
+ const abs=new Intl.NumberFormat('en-GB',{minimumFractionDigits:d,maximumFractionDigits:d}).format(Math.abs(n));
+ if(kind==='eur')return (n<0?'\u2212':'')+'\u20ac'+abs;
+ if(kind==='eur_signed')return (n<0?'\u2212':n>0?'+':'')+'\u20ac'+abs;
+ if(kind==='pct'||kind==='pct_signed')return (n<0?'\u2212':n>0&&kind==='pct_signed'?'+':'')+abs+'%';
+ return new Intl.NumberFormat('en-GB',{maximumFractionDigits:d}).format(n);
+}
+function dateLabel(v){if(!v)return 'Not set';const d=new Date(v+'T12:00:00');return Number.isNaN(d.valueOf())?v:d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
+function validDate(v){if(!/^\d{4}-\d{2}-\d{2}$/.test(v))return false;const d=new Date(v+'T12:00:00Z');return Number.isFinite(d.valueOf())&&d.toISOString().slice(0,10)===v;}
+function defaultRecord(c){return {owner:'',due_date:'',status:'Not started',action:c.next_action,notes:'',checks:Array(c.checks.length).fill(false),outcome:null,activity:[]};}
+function record(c){return {...defaultRecord(c),...(reviewState[c.id]||{})};}
+function isOverdue(c){const r=record(c);return !!r.owner.trim()&&!!r.due_date&&r.due_date<reviewDate&&r.status!=='Closed';}
+function ownerCount(){return CASES.filter(c=>record(c).owner.trim()).length;}
+function outcomeCount(){return CASES.filter(c=>record(c).outcome).length;}
+function badge(e){const names={measured:'MEASURED',partial:'MODELLED / PARTIAL',missing:'MISSING'};return `<span class="tag ${e}"><span class="dot"></span>${names[e]}</span>`;}
+function note(text,kind='neutral'){return `<div class="notice ${kind}">${icon('info')}<span>${text}</span></div>`;}
+function snapshotLine(c){const v=c.raw_facts?.paper_snapshot?.due_14_days;return c.id==='AC-06'&&v!==undefined?`<div class="card-snapshot">${format(v,'integer')} due within 14 days in the ${dateLabel(c.raw_facts.paper_snapshot_date)} snapshot.</div>`:'';}
+function toast(message,error=false){const e=$('#toast');e.textContent=message;e.classList.toggle('error',error);e.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.hidden=true,5000);}
+function storageNotice(){const e=$('#storage-indicator');e.innerHTML=`<span class="dot"></span>${persistent?'Local browser storage':'Session only - export to keep'}`;e.style.color=persistent?'var(--teal)':'var(--amber)';}
+function saveState(){try{localStorage.setItem(KEY,JSON.stringify({fingerprint:FINGERPRINT,state:reviewState}));localStorage.setItem(REVIEW_KEY,reviewDate);}catch(e){persistent=false;storageNotice();}}
+function sanitizeState(input){
+ if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Invalid review-state object.');
+ const out={};
+ for(const [id,r] of Object.entries(input)){
+  if(!IDS.has(id)||!r||typeof r!=='object'||Array.isArray(r))throw Error('Unrecognised case in review file.');
+  const c=CASES.find(c=>c.id===id);const a=defaultRecord(c);
+  for(const k of ['owner','due_date','status','action','notes']){
+   if(r[k]!==undefined){if(typeof r[k]!=='string'||r[k].length>10000)throw Error('Invalid '+k+' field.');a[k]=r[k];}
+  }
+  if(!STATUSES.includes(a.status))throw Error('Invalid case status.');
+  if(a.due_date&&!validDate(a.due_date))throw Error('Invalid due date.');
+  if(a.status!=='Not started'&&!a.owner.trim())throw Error('An active case needs an owner.');
+  if(Array.isArray(r.checks))a.checks=c.checks.map((_,i)=>r.checks[i]===true);
+  if(r.outcome){
+   const o=r.outcome;if(typeof o!=='object'||!OUTCOMES.includes(o.type))throw Error('Invalid outcome.');
+   a.outcome={};for(const k of ['type','summary','source','period','amount','saved_at']){if(o[k]!==undefined&&typeof o[k]!=='string')throw Error('Invalid outcome field.');a.outcome[k]=String(o[k]||'').slice(0,10000);}
+   if(!a.outcome.summary.trim())throw Error('An outcome needs an explanation.');
+   if(a.outcome.type==='Measured change recorded'&&(!a.outcome.source.trim()||!a.outcome.period.trim()))throw Error('A measured change needs its source and scope.');
+   if(a.outcome.amount!==''&&(!Number.isFinite(Number(a.outcome.amount))||!a.outcome.source.trim()||!a.outcome.period.trim()))throw Error('A euro amount needs a valid number, source and scope.');
+   if(!a.owner.trim())throw Error('An outcome needs an assigned owner.');
+  }
+  if(a.status==='Closed'&&!a.outcome)throw Error('A closed case needs an outcome.');
+  if(Array.isArray(r.activity))a.activity=r.activity.slice(-100).map(x=>({at:String(x.at||'').slice(0,40),text:String(x.text||'').slice(0,1000)}));
+  out[id]=a;
+ }
+ return out;
+}
+try{
+ const saved=localStorage.getItem(KEY);if(saved){const x=JSON.parse(saved);if(x.fingerprint===FINGERPRINT)reviewState=sanitizeState(x.state);}
+ const d=localStorage.getItem(REVIEW_KEY);if(d&&validDate(d))reviewDate=d;
+ const test=KEY+'-probe';localStorage.setItem(test,'1');localStorage.removeItem(test);
+}catch(e){persistent=false;reviewState={};}
+$('#review-date').value=reviewDate;storageNotice();
+$('#review-date').addEventListener('change',e=>{if(validDate(e.target.value)){reviewDate=e.target.value;saveState();render();}});
+function footer(){return `<footer class="main-foot"><span>ISUZU UNIVERSE &nbsp;/&nbsp; INTERNAL ISZE REVIEW &nbsp;/&nbsp; ${esc(DATA.app_version)}</span><span>Created ${dateLabel(DATA.created_at)}. Sources keep their own dates. No live refresh.</span></footer>`;}
+function hero(title,subtitle,eyebrow='Isuzu Motors Europe / Parts intelligence'){return `<div class="hero"><div><div class="eyebrow">${eyebrow}</div><h1>${title}</h1><p>${subtitle}</p></div><div class="hero-right"><span class="pill">${dateLabel(DATA.created_at)} edition</span><span class="tiny muted">A working review, not a forecast</span></div></div>`;}
+function counters(){const due=CASES.filter(isOverdue).length;return `<div class="summary-bar"><div class="summary-cell"><b>${CASES.length}</b><span>cases</span></div><div class="summary-cell unowned"><b>${ownerCount()}</b><span>owners assigned</span></div><div class="summary-cell"><b>${outcomeCount()}</b><span>outcomes in this mock</span></div>${due?`<div class="summary-cell unowned"><b>${due}</b><span>overdue at review date</span></div>`:''}<div class="summary-note">Ownership is intentionally empty on first use. Assign it before work starts.</div></div>`;}
+function card(c){const r=record(c),value=c.headline_text||format(c.headline.value,c.headline.format),neg=typeof c.headline.value==='number'&&c.headline.value<0;
+ return `<article class="case-card" data-id="${c.id}"><div class="card-content"><div class="card-meta"><span class="case-id">${c.id}</span>${badge(c.evidence)}</div><div class="card-market">${esc(c.market)}</div><h3>${esc(c.title)}</h3><div class="card-number ${c.headline_text?'text-value':''} ${neg?'negative':''}">${esc(value)}</div><div class="card-label">${esc(c.headline.label)}${c.headline.kind==='reported'?' &middot; paper only':''}</div>${snapshotLine(c)}<p class="card-summary">${esc(c.summary)}</p><div class="card-period">${esc(c.period)}${c.context_line?'<br>'+esc(c.context_line):''}</div></div><div class="card-bottom"><div><div class="owner ${r.owner.trim()?'assigned':''}">${icon('person',12)}${esc(r.owner.trim()||'Owner unassigned')}</div><div class="card-status">${esc(isOverdue(c)?'Overdue at review date':r.status)}</div></div><button class="btn small ghost open-case" data-id="${c.id}" aria-label="Open ${esc(c.title)} review">Review ${icon('arrow',13)}</button></div></article>`;
+}
+function selectedCases(){const query=searchTerm.toLowerCase().trim();return CASES.filter(c=>(evidenceFilter==='all'||c.evidence===evidenceFilter)&&(marketFilter==='all'||c.market===marketFilter)&&(!query||[c.title,c.market,c.summary,c.case_type,c.id].join(' ').toLowerCase().includes(query)));}
+function renderCards(){const e=$('#cards');if(!e)return;const arr=selectedCases();e.innerHTML=arr.length?arr.map(card).join(''):`<div class="empty" style="grid-column:1/-1">No cases match these filters. Clear the search or change the evidence filter.</div>`;bindOpen(e);const count=$('#shown-count');if(count)count.textContent=arr.length+' of '+CASES.length+' cases';}
+function renderCentre(){
+ const markets=[...new Set(CASES.map(c=>c.market))];
+ $('#main').innerHTML=hero('Action Centre','Decide what happens next. Open the evidence, assign an owner and record the result.')+counters()+
+ note(`<strong>${DATA.validation.computed_case_ids.length} cases are calculated from attached extracts.</strong> Concession evidence, the programme ledger and the current tender feed are missing. Their cards stay open as validation tasks. <button class="table-link" data-jump="sources">See sources &amp; limits &rarr;</button>`)+
+ `<div class="toolbar"><div class="filters" aria-label="Evidence filters">${[['all','All cases'],['measured','Measured'],['partial','Modelled / partial'],['missing','Missing']].map(([k,t])=>`<button class="filter ${evidenceFilter===k?'active':''}" data-filter="${k}" aria-pressed="${evidenceFilter===k}">${t}</button>`).join('')}</div><div class="inputs"><select id="market-filter" aria-label="Filter by distributor or scope"><option value="all">All internal scopes</option>${markets.map(m=>`<option value="${esc(m)}" ${marketFilter===m?'selected':''}>${esc(m)}</option>`).join('')}</select><div class="searchbox">${icon('search')}<input id="case-search" type="search" placeholder="Search cases" value="${esc(searchTerm)}" aria-label="Search cases"></div></div></div><div class="card-grid" id="cards"></div><p id="shown-count" class="tiny muted" style="margin-top:14px"></p>`+footer();
+ renderCards();$$('[data-filter]').forEach(b=>b.addEventListener('click',()=>{evidenceFilter=b.dataset.filter;renderCentre();}));$('#market-filter').addEventListener('change',e=>{marketFilter=e.target.value;renderCards();});$('#case-search').addEventListener('input',e=>{searchTerm=e.target.value;renderCards();});bindJumps();
+}
+function renderSources(){
+ const computed=DATA.validation.computed_case_ids.length,blocked=DATA.validation.secondary_or_missing_case_ids.length;
+ $('#main').innerHTML=hero('Sources &amp; limits','Every headline has a source, a scope and a boundary. Unavailable files stay visible.','Understand / provenance and calculation')+
+ note('This HTML file contains internal multi-market information. It has no authentication or access-control layer. A market filter is not a permission boundary. Do not circulate it to distributors.','warning')+
+ `<div class="section-grid"><div class="panel"><div class="eyebrow">Recomputed from selected extracts</div><div class="big-stat">${computed} cases</div><p>ITUK brake pads, Germany oil filters and IUK air-filter mix. These calculations do not validate dealer demand, account routing or price causality.</p></div><div class="panel"><div class="eyebrow">Primary evidence still missing</div><div class="big-stat">${blocked} cases</div><p>Concession review, programme credits and tenders. Document-reported values are explicitly labelled. Blank evidence is never turned into a zero.</p></div></div>`+
+ `<div class="notice neutral"><span><strong>Evidence labels describe the displayed facts, not permission to act.</strong> MEASURED means purchasing computed from the selected extract. MODELLED / PARTIAL covers a modelled denominator, a secondary document or an unresolved basis. MISSING means a required source is not supplied. None automatically authorises a price change.</span></div>`+
+ `<h3 style="margin:24px 0 13px">Source register</h3><div class="source-list">${DATA.sources.map(s=>`<article class="source-row"><div class="source-row-top"><div><div class="source-name">${esc(s.name)}</div><div class="source-role">${esc(s.role)}</div></div><span class="tag ${s.available?'measured':'missing'}">${s.available?'ATTACHED':'NOT SUPPLIED'}</span></div><p>${esc(s.note)}</p>${s.period?`<div class="tiny muted">Scope: ${esc(s.period)}${s.snapshot_date?' &middot; snapshot '+dateLabel(s.snapshot_date):''}</div>`:''}${s.sha256?`<details><summary>File fingerprint for reproducibility</summary><div class="mono">SHA-256: ${s.sha256}</div></details>`:''}</article>`).join('')}</div>`+
+ `<h3 style="margin:27px 0 13px">Calculation checks</h3><div class="panel">${DATA.validation.checks.map(t=>`<div class="check-line">${icon('check',14)}<span>${esc(t)}</span></div>`).join('')}</div>`+
+ `<div class="source-controls"><button class="btn" id="export-source">Export case file</button><button class="btn ghost danger" id="clear-review">Clear local decisions</button></div>`+footer();
+ $('#export-source').addEventListener('click',exportFile);$('#clear-review').addEventListener('click',()=>{if(confirm('Clear owners, dates, notes and outcomes stored by this mock? Source facts will not change.')){reviewState={};saveState();render();toast('Local decisions cleared. Source facts are unchanged.');}});
+}
+function renderActions(){
+ $('#main').innerHTML=hero('Action register','Ownership is the next decision. No names or due dates have been invented.','Do / responsibility and follow-through')+counters()+
+ note(`Due-date checks use the review date: <strong>${dateLabel(reviewDate)}</strong>. An action is overdue only when an owner and a due date are recorded. This file does not send reminders or contact distributors.`)+
+ `<div class="table-wrap"><table><thead><tr><th>Case / scope</th><th>Next action</th><th>Owner</th><th>Due date</th><th>Status</th><th></th></tr></thead><tbody>${CASES.map(c=>{const r=record(c);return `<tr><td style="min-width:160px"><button class="table-link open-case" data-id="${c.id}">${esc(c.title)}</button><div class="sub">${c.id} &middot; ${esc(c.market)}</div></td><td style="min-width:230px;max-width:420px">${esc(r.action)}</td><td style="min-width:120px"><span class="owner ${r.owner.trim()?'assigned':''}">${esc(r.owner||'Unassigned')}</span></td><td style="min-width:105px">${r.due_date?dateLabel(r.due_date):'<span class="muted">Not set</span>'}${isOverdue(c)?'<div class="sub" style="color:var(--amber)">Overdue</div>':''}</td><td style="min-width:120px">${esc(r.status)}</td><td><button class="btn small open-case" data-id="${c.id}" data-tab="action">Assign / edit</button></td></tr>`;}).join('')}</tbody></table></div>`+footer();bindOpen();
+}
+function renderResults(){const done=CASES.filter(c=>record(c).outcome);
+ $('#main').innerHTML=hero('Results','Record what changed, what did not, and what remains unknown.','Learn / outcomes before claims')+
+ note('Results entered here are reviewer records, not independently verified measurements. A before-and-after increase is not automatically caused by an intervention. No financial return is summed across these cases.')+
+ (done.length?`<div class="table-wrap"><table><thead><tr><th>Case</th><th>Recorded outcome</th><th>Explanation</th><th>Evidence / scope</th><th></th></tr></thead><tbody>${done.map(c=>{const o=record(c).outcome;return `<tr><td>${esc(c.title)}<div class="sub">${esc(c.market)}</div></td><td>${esc(o.type)}<div class="sub">Reviewer-recorded</div></td><td style="max-width:350px">${esc(o.summary)}${o.amount!==''?`<div class="sub">Entered amount: ${format(Number(o.amount),'eur_signed')} &middot; not independently verified</div>`:''}</td><td>${esc(o.source||'No source reference entered')}<div class="sub">${esc(o.period||'No comparison period entered')}</div></td><td><button class="btn small open-case" data-id="${c.id}" data-tab="outcome">Review</button></td></tr>`;}).join('')}</tbody></table></div>`:
+ `<div class="results-empty"><div class="eyebrow" style="margin-bottom:13px">No outcomes recorded in this mock</div><h3>An empty result is not a failed campaign.</h3><p>No intervention has been completed or evaluated in this file yet. The result can be a measured change, a completed evidence request, an inconclusive review, or a decision not to act. Record the basis before closing a case.</p><button class="btn" data-jump="actions" style="margin-top:21px">Open action register ${icon('arrow',14)}</button></div>`)+footer();bindOpen();bindJumps();}
+function render(){const fn={centre:renderCentre,sources:renderSources,actions:renderActions,results:renderResults};fn[currentView]();$$('.nav-item').forEach(b=>{b.classList.toggle('active',b.dataset.view===currentView);b.setAttribute('aria-current',b.dataset.view===currentView?'page':'false');});}
+function navigate(v){currentView=v;render();window.scrollTo(0,0);}
+function bindJumps(root=document){$$('[data-jump]',root).forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.jump)));}
+function bindOpen(root=document){$$('.open-case',root).forEach(b=>b.addEventListener('click',()=>openCase(b.dataset.id,b.dataset.tab||'evidence')));}
+$$('.nav-item').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.view)));
+function metricBox(m){return `<div class="metric"><div class="metric-label">${esc(m.label)}</div><div class="metric-value">${format(m.value,m.format)}</div><div class="metric-basis">${esc(m.basis)}</div><div class="metric-kind ${m.kind}">${esc(m.kind==='reported'?'Paper-reported':m.kind==='modelled'?'Modelled':'Measured in selected extract')}</div></div>`;}
+function chartHtml(c){const x=c.chart;if(!x)return '';let content='';if(x.type==='comparison'){
+ const max=Math.max(...x.series.map(s=>s.value),1);content=x.series.map((s,i)=>`<div class="bar-line"><div class="bar-label"><span>${esc(s.label)}</span><strong>${format(s.value,x.format)}</strong></div><div class="bar-track"><div class="bar-fill ${i?'recent':''}" style="width:${s.value/max*100}%"></div></div></div>`).join('');
+ }else if(x.type==='stacked'){
+ const max=Math.max(...x.series.map(s=>s.genuine+s.bvp),1);content='<div class="legend"><span><i class="swatch"></i>Genuine</span><span><i class="swatch bvp"></i>BVP</span></div>'+x.series.map(s=>`<div class="bar-line"><div class="bar-label"><span>${esc(s.label)}</span><strong>${format(s.genuine+s.bvp,x.format)}</strong></div><div class="bar-track"><div class="bar-fill genuine" style="width:${s.genuine/max*100}%" title="Genuine ${format(s.genuine)}"></div><div class="bar-fill bvp" style="width:${s.bvp/max*100}%" title="BVP ${format(s.bvp)}"></div></div><div class="bar-label" style="margin-top:6px;font-size:10px"><span>Genuine ${format(s.genuine)}</span><span>BVP ${format(s.bvp)}</span></div></div>`).join('');
+ }else if(x.type==='coverage'){
+ content=x.value===null?'<p class="muted">Rate withheld: the denominator requires review.</p>':`<div class="coverage-number">${format(x.value,'pct')}</div><div class="bar-track"><div class="bar-fill bvp" style="width:${x.value}%"></div></div><div class="bar-label" style="margin-top:9px"><span>Measured purchasing</span><span>Modelled expectation</span></div>`;
+ }return `<section class="chart" aria-label="${esc(x.title)}"><h4>${esc(x.title)}</h4>${content}<p class="chart-caption">${esc(x.caption)}</p></section>`;
+}
+function refs(c){return `<details class="refbox"><summary>Source rows and calculation method</summary>${c.references.map(r=>{const s=SOURCE[r.source_id];return `<div class="reference"><div class="reference-title">${esc(s?.name||r.source_id)} ${s?.available?'':'<span class="tag missing">NOT SUPPLIED</span>'}</div><p>${esc(r.selection)}${r.rows.length?' &middot; CSV rows '+r.rows.join(', ')+' (header is row 1)':''}</p><p>${esc(r.method)}</p></div>`;}).join('')}</details>`;}
+function evidencePanel(c){
+ const auditOnly=['AC-04','AC-05','AC-06'].includes(c.id);
+ return `${auditOnly?note(c.id==='AC-04'?'This card is a validation task. No concession rates are released.':c.id==='AC-05'?'The credit amount is paper-reported. The ledger is missing; the amount and case count have not been independently reconciled.':'This is the 22 September 2026 paper snapshot, not a refreshed tender feed. Current counts are unavailable.','warning'):''}`+
+ (c.metrics.length?`<div class="metrics">${c.metrics.map(metricBox).join('')}</div>`:'')+
+ `<div class="evidence-layout"><div class="evidence-main">${chartHtml(c)}<section class="panel"><h4 style="margin-bottom:14px">What the evidence supports</h4><div class="facts">${c.facts.map(p=>`<p>${esc(p)}</p>`).join('')}</div></section>${refs(c)}</div><div class="evidence-side"><section class="panel"><h4>Interpretation</h4><p>${esc(c.interpretation)}</p></section><section class="panel"><h4 style="color:var(--amber)">Not established</h4><p>${esc(c.limitation)}</p></section><section class="panel next-panel"><div class="eyebrow" style="margin-bottom:8px">Next action</div><p>${esc(record(c).action)}</p><button class="btn primary" id="evidence-to-action">Assign owner ${icon('arrow',14)}</button></section></div></div>`;
+}
+function activityHtml(r){if(!r.activity.length)return '<p class="muted tiny">No review activity recorded yet.</p>';return r.activity.slice(-6).reverse().map(a=>`<div class="activity-entry"><time>${esc(new Date(a.at).toLocaleString('en-GB'))}</time>${esc(a.text)}</div>`).join('');}
+function actionPanel(c){const r=record(c);return `<div class="form-layout"><form id="action-form"><div id="action-error" class="form-error" hidden></div><div class="form-grid"><div class="field"><label for="owner">Owner</label><input id="owner" name="owner" placeholder="Assign a person or role" value="${esc(r.owner)}" maxlength="200"><span class="hint">No owner has been assigned automatically.</span></div><div class="field"><label for="due-date">Due date</label><input id="due-date" name="due" type="date" value="${esc(r.due_date)}"><span class="hint">No deadline is assumed.</span></div></div><div class="field"><label for="case-status">Review status</label><select id="case-status">${STATUSES.map(s=>`<option ${r.status===s?'selected':''}>${esc(s)}</option>`).join('')}</select><span class="hint">Starting work requires an owner. Closing requires a recorded outcome.</span></div><div class="field"><label for="next-action">Next action</label><textarea id="next-action" rows="4" maxlength="10000">${esc(r.action)}</textarea></div><div class="field"><label for="action-notes">Review notes</label><textarea id="action-notes" rows="3" placeholder="Record what was agreed, not what the data cannot prove." maxlength="10000">${esc(r.notes)}</textarea></div><div class="form-actions"><button class="btn primary" type="submit">Save action</button><button class="btn ghost" type="button" id="action-to-outcome">Record outcome ${icon('arrow',13)}</button><span id="action-saved" class="saved-status" aria-live="polite"></span></div><p class="tiny muted" style="margin-top:15px">Edits remain local to this browser. Export the case file to preserve or transfer the review. No email is sent.</p></form><aside><section class="panel"><h4>Evidence checklist</h4><p class="tiny muted" style="margin:8px 0">These are reviewer confirmations. Ticking a box does not validate or recalculate source metrics.</p>${c.checks.map((v,i)=>`<label class="check-item"><input type="checkbox" class="review-check" data-index="${i}" ${r.checks[i]?'checked':''}><span>${esc(v)}</span></label>`).join('')}</section><section class="panel" style="margin-top:16px"><h4 style="margin-bottom:15px">Activity in this mock</h4>${activityHtml(r)}</section></aside></div>`;}
+function outcomePanel(c){const r=record(c),o=r.outcome||{type:'',summary:'',source:'',period:'',amount:''};const options=c.id==='AC-06'?OUTCOMES:OUTCOMES.filter(v=>!v.startsWith('Tender'));
+ return note('An outcome is a reviewer record. A measured change needs a dated source and a like-for-like comparison scope. It is not automatically an incremental profit claim.')+
+ `<div class="form-layout"><form id="outcome-form"><div id="outcome-error" class="form-error" hidden></div><div class="field"><label for="outcome-type">Outcome</label><select id="outcome-type" required><option value="">Select an outcome</option>${options.map(v=>`<option ${v===o.type?'selected':''}>${esc(v)}</option>`).join('')}</select></div><div class="field"><label for="outcome-summary">What happened, and what decision changed?</label><textarea id="outcome-summary" rows="4" required maxlength="10000" placeholder="A decision not to lower price is a valid result. State the evidence.">${esc(o.summary)}</textarea></div><div class="field"><label for="outcome-source">Evidence reference</label><input id="outcome-source" maxlength="1000" placeholder="Source file / case / dated confirmation" value="${esc(o.source)}"><span class="hint">Required for a measured change. This is a reference, not a file upload.</span></div><div class="form-grid"><div class="field"><label for="outcome-period">Period and comparison scope</label><input id="outcome-period" maxlength="1000" placeholder="Same families, channel and periods" value="${esc(o.period)}"></div><div class="field"><label for="outcome-amount">Documented euro change (optional)</label><input id="outcome-amount" type="number" step="0.01" placeholder="Leave blank unless documented" value="${esc(o.amount)}"><span class="hint">Not automatically labelled revenue, profit or causal return.</span></div></div><label class="check-item" style="border:0;margin-bottom:12px"><input id="close-after-save" type="checkbox" ${r.status==='Closed'?'checked':''}><span>Close the case after recording this outcome.</span></label><div class="form-actions"><button class="btn primary" type="submit">Save outcome</button><span id="outcome-saved" class="saved-status" aria-live="polite"></span></div></form><aside><section class="panel"><h4>Keep the distinction</h4><p style="margin-top:12px"><strong>Observed change</strong> tells us what moved.</p><p style="margin-top:12px"><strong>Incremental effect</strong> needs a defensible baseline, comparable periods and adjustment for other changes.</p><p style="margin-top:12px"><strong>Programme return</strong> needs the associated costs and support, without counting the same gain twice.</p></section><section class="panel" style="margin-top:16px"><h4>Current responsibility</h4><p style="margin-top:10px">Owner: <strong>${esc(r.owner||'Unassigned')}</strong><br>Status: ${esc(r.status)}</p>${!r.owner?'<button class="btn" id="outcome-to-action" style="margin-top:15px">Assign owner first</button>':''}</section></aside></div>`;
+}
+function openCase(id,tab='evidence'){
+ const c=CASES.find(c=>c.id===id);if(!c)return;activeId=id;activeTab=tab;const d=$('#case-dialog');
+ d.innerHTML=`<div class="dialog-header"><div class="row"><div><div class="eyebrow">${c.id} / ${esc(c.market)}</div><h2 id="dialog-title">${esc(c.title)}</h2><p class="dialog-subtitle">${esc(c.period)} &middot; ${esc(c.case_type)}</p></div><button class="icon-btn" id="close-dialog" aria-label="Close case review">${icon('close',18)}</button></div><div class="dialog-meta">${badge(c.evidence)}<span class="tiny muted">${esc(c.basis_label)}</span></div></div><div class="tabs" role="tablist" aria-label="Case review stages">${[['evidence','Understand the evidence'],['action','Assign & act'],['outcome','Record result']].map(([key,label])=>`<button class="tab ${tab===key?'active':''}" role="tab" id="tab-${key}" aria-controls="panel-${key}" aria-selected="${tab===key}" data-tab="${key}">${label}</button>`).join('')}</div><div class="dialog-body"><section class="tab-panel" id="panel-evidence" role="tabpanel" aria-labelledby="tab-evidence" ${tab==='evidence'?'':'hidden'}>${evidencePanel(c)}</section><section class="tab-panel" id="panel-action" role="tabpanel" aria-labelledby="tab-action" ${tab==='action'?'':'hidden'}>${actionPanel(c)}</section><section class="tab-panel" id="panel-outcome" role="tabpanel" aria-labelledby="tab-outcome" ${tab==='outcome'?'':'hidden'}>${outcomePanel(c)}</section></div>`;
+ $('#close-dialog').addEventListener('click',()=>d.close());$$('.tab',d).forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.tab)));
+ $('#evidence-to-action')?.addEventListener('click',()=>switchTab('action'));
+ $('#action-to-outcome').addEventListener('click',()=>switchTab('outcome'));
+ $('#outcome-to-action')?.addEventListener('click',()=>switchTab('action'));
+ $('#action-form').addEventListener('submit',e=>{e.preventDefault();saveAction(c);});
+ $('#outcome-form').addEventListener('submit',e=>{e.preventDefault();saveOutcome(c);});
+ if(!d.open)d.showModal();d.scrollTop=0;$('#close-dialog').focus({preventScroll:true});
+}
+function switchTab(tab){activeTab=tab;$$('.tab',$('#case-dialog')).forEach(b=>{b.classList.toggle('active',b.dataset.tab===tab);b.setAttribute('aria-selected',b.dataset.tab===tab);});$$('.tab-panel',$('#case-dialog')).forEach(p=>p.hidden=p.id!=='panel-'+tab);$('#case-dialog').scrollTop=0;}
+function setError(kind,msg){const e=$('#'+kind+'-error');e.textContent=msg;e.hidden=false;e.scrollIntoView({block:'nearest'});}
+function saveAction(c){const owner=$('#owner').value.trim(),due=$('#due-date').value,status=$('#case-status').value,action=$('#next-action').value.trim(),notes=$('#action-notes').value.trim();const old=record(c);
+ if(status!=='Not started'&&!owner)return setError('action','Assign an owner before starting or closing the review.');
+ if(status==='Closed'&&!old.outcome)return setError('action','Record an outcome before closing this case.');
+ if(due&&!validDate(due))return setError('action','Enter a valid due date.');
+ if(!action)return setError('action','Enter the next action.');
+ reviewState[c.id]={...old,owner,due_date:due,status,action,notes,checks:$$('.review-check').map(x=>x.checked),activity:[...old.activity,{at:new Date().toISOString(),text:'Action saved'+(owner?' - owner: '+owner:' - owner still unassigned')}].slice(-100)};
+ saveState();render();openCase(c.id,'action');$('#action-saved').textContent=persistent?'Saved locally':'Saved for this session; export to keep';toast('Action saved. No message or assignment was sent externally.');
+}
+function saveOutcome(c){const r=record(c);if(!r.owner.trim())return setError('outcome','Assign and save an owner in the action tab before recording an outcome.');
+ const type=$('#outcome-type').value,summary=$('#outcome-summary').value.trim(),source=$('#outcome-source').value.trim(),period=$('#outcome-period').value.trim(),amount=$('#outcome-amount').value,close=$('#close-after-save').checked;
+ if(!type||!summary)return setError('outcome','Select an outcome and explain what happened.');
+ if(type==='Measured change recorded'&&(!source||!period))return setError('outcome','A measured change requires both an evidence reference and a comparison period/scope.');
+ if(amount!==''&&(!Number.isFinite(Number(amount))||!source||!period))return setError('outcome','A euro amount requires a valid number, a source and a comparison scope.');
+ const outcome={type,summary,source,period,amount,saved_at:new Date().toISOString()};
+ reviewState[c.id]={...r,outcome,status:close?'Closed':r.status,activity:[...r.activity,{at:new Date().toISOString(),text:'Outcome recorded: '+type+(close?' - case closed':'')}].slice(-100)};
+ saveState();render();openCase(c.id,'outcome');$('#outcome-saved').textContent='Reviewer outcome saved locally';toast('Outcome recorded. Source measurements remain unchanged.');
+}
+$('#case-dialog').addEventListener('click',e=>{if(e.target===e.currentTarget){const r=e.currentTarget.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)e.currentTarget.close();}});
+function exportFile(){const payload={...DATA,dataset_fingerprint:FINGERPRINT,review_date:reviewDate,exported_at:new Date().toISOString(),review_state:reviewState};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='ISUZU_UNIVERSE_case_review_'+reviewDate+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('Case facts and local review records exported. No raw billing is included.');}
+$('#export-btn').addEventListener('click',exportFile);
+$('#restore-btn').addEventListener('click',()=>$('#restore-input').click());
+$('#restore-input').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>2000000)throw Error('Review file is too large.');const x=JSON.parse(await file.text());if(x.schema_version!==DATA.schema_version||x.dataset_fingerprint!==FINGERPRINT)throw Error('This review belongs to a different source dataset. Restore into the matching HTML edition.');const s=sanitizeState(x.review_state);if(!confirm('Replace the local review with the owners, dates, notes and outcomes in this file? Source values will stay unchanged.'))return;reviewState=s;if(x.review_date&&validDate(x.review_date)){reviewDate=x.review_date;$('#review-date').value=reviewDate;}saveState();render();toast('Review restored. Source values are unchanged.');}catch(err){toast('Restore failed: '+err.message,true);}finally{e.target.value='';}});
+render();
+</script>
+</body>
+</html>

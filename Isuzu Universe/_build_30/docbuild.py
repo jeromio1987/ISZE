@@ -18,6 +18,7 @@ CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 NAVY = (0.082, 0.137, 0.235)
 GREY = (0.36, 0.39, 0.45)
 TERR = (0.753, 0.333, 0.176)
+CHARCOAL = (0.141, 0.157, 0.173)      # #24282C, the 80-pager's page colour
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -44,28 +45,118 @@ def headings(src):
     return out
 
 
-def keep_together(els):
-    """Wrap a section heading and the first thing under it in one unbreakable block.
+def _est_height_mm(el):
+    """Rough printed height of one rendered element, in millimetres.
+
+    Only used to stop a keep block growing taller than a page; being approximate is fine,
+    because the block is checked against a limit well inside the page height.
+    """
+    if el.startswith("<figure"):
+        return 85.0                      # a full-width chart plus its caption (measured 70-103 mm)
+    if el.startswith("<table"):
+        rows = el.count("<tr>")
+        # A table of nine rows or fewer is kept unbreakable by CSS, so the estimate has to match
+        # what CSS will actually do. A longer table flows across pages; estimate it as one that
+        # can break, so wrapping it in an unbreakable block cannot force a blank page.
+        if rows > 9:
+            return 34.0
+        return 6.0 + rows * 5.6
+    text = re.sub(r"<[^>]+>", " ", el)
+    text = re.sub(r"\s+", " ", text).strip()
+    bullets = el.count("<li>")
+    if bullets:
+        return 6.0 + bullets * 5.0
+    if el.startswith("<h"):
+        return 9.0
+    per_line = 108                       # about 108 characters per line at 10.1pt on 180mm
+    return max(1, -(-len(text) // per_line)) * 4.6 + 2.5
+
+
+def keep_together(els, max_block_mm=165.0, fill_mm=225.0):
+    """Wrap a heading and the material under it in one unbreakable block.
 
     A heading left alone at the foot of a page, and a table or figure parted from the sentence
-    that introduces it, are the two layout faults this prevents. Only h3 and h4 are wrapped:
-    h2 starts a new page anyway, so there is nothing to keep it with.
+    that introduces it, are the layout faults this prevents. A level-2 chapter heading is
+    wrapped with its first paragraph or figure too, so the heading cannot be the last thing on a
+    page. A block is never allowed to grow beyond max_block_mm, because an over-tall unbreakable
+    block forces a near-empty page. Returns (heading-text-or-None, html) pairs so the caller can
+    insert page breaks.
     """
     out, i = [], 0
     nxt_flow = re.compile(r"^(<p>|<figure>|<table>|<ul>|<ol>|<blockquote>)")
+
+    def wrap(items, plain):
+        # A table long enough to break across pages carries class tbl-flow, and CSS gives it
+        # page-break-inside:auto. Wrapping it in an unbreakable div would cap it at one page and
+        # can push it onto a fresh sheet, leaving the previous page blank. So a flowing table is
+        # emitted bare and its companions get their own unbreakable blocks. Every element is
+        # emitted exactly once.
+        if any(re.match(r'^<table class="tbl-flow">', x) for x in items):
+            html = []
+            for x in items:
+                if re.match(r'^<table class="tbl-flow">', x):
+                    html.append(x)
+                else:
+                    html.append('<div class="keep">' + x + "</div>")
+            return (plain, "\n".join(html))
+        return (plain, '<div class="keep">' + "\n".join(items) + "</div>")
+
     while i < len(els):
         e = els[i]
-        m = re.match(r"^<(h[34])>", e)
-        if m and i + 1 < len(els) and nxt_flow.match(els[i + 1]):
-            out.append(f'<div class="keep">{e}\n{els[i + 1]}</div>')
-            i += 2
+        m = re.match(r"^<h([234])>(.*?)</h\1>$", e)
+        if not m:
+            # a paragraph and the table it introduces must not be parted by a page break
+            if (re.match(r"^<(p|ul|ol|blockquote)>", e) and i + 1 < len(els)
+                    and re.match(r"^<table>", els[i + 1])):
+                inner = [e, els[i + 1]]
+                i += 2
+                # keep a short closing paragraph with the table it comments on
+                while (i < len(els) and re.match(r"^<p>", els[i])
+                       and _est_height_mm("".join(inner)) + _est_height_mm(els[i])
+                       <= max_block_mm * 0.90
+                       and len([x for x in inner if x.startswith("<p")]) < 2):
+                    inner.append(els[i])
+                    i += 1
+                out.append(wrap(inner, None))
+                continue
+            out.append((None, e))
+            i += 1
             continue
-        out.append(e)
+        plain = re.sub(r"<[^>]+>", "", m.group(2)).strip()
+        if i + 1 < len(els) and nxt_flow.match(els[i + 1]):
+            inner = [e, els[i + 1]]
+            used = _est_height_mm(e) + _est_height_mm(els[i + 1])
+            is_figure = els[i + 1].startswith("<figure")
+            i += 2
+            # take one more short paragraph, so a heading is never the last thing on a page
+            while (i < len(els) and re.match(r"^<p>", els[i])
+                   and used + _est_height_mm(els[i]) <= max_block_mm * 0.75
+                   and len([x for x in inner if x.startswith("<p")]) < 2):
+                inner.append(els[i])
+                used += _est_height_mm(els[i])
+                i += 1
+            # and the table those sentences introduce, so it is never parted from them
+            if (i < len(els) and re.match(r"^<table>", els[i])
+                    and re.match(r"^<p>", inner[-1])
+                    and used + _est_height_mm(els[i]) <= max_block_mm):
+                inner.append(els[i])
+                i += 1
+            # a chapter that opens with a figure keeps the next sub-heading and its paragraph
+            # too, so the page carries the chart and the first idea rather than the chart alone
+            if is_figure and m.group(1) == "2" and i + 1 < len(els):
+                if (re.match(r"^<h[34]>", els[i]) and re.match(r"^<p>", els[i + 1])
+                        and used + _est_height_mm(els[i]) + _est_height_mm(els[i + 1])
+                        <= max_block_mm * 0.90):
+                    inner.extend([els[i], els[i + 1]])
+                    i += 2
+            out.append(wrap(inner, plain))
+            continue
+        out.append((plain, e))
         i += 1
     return out
 
 
-def markdown_to_html(src, figdir, figcaps):
+def markdown_to_html(src, figdir, figcaps, breaks=()):
     lines = src.split("\n")
     out, i = [], 0
     while i < len(lines):
@@ -104,12 +195,14 @@ def markdown_to_html(src, figdir, figcaps):
             rows = [[c.strip() for c in r.strip("|").split("|")] for r in block]
             rows = [r for r in rows if not all(re.fullmatch(r":?-{2,}:?", c or "-") for c in r)]
             head, body = rows[0], rows[1:]
-            out.append("<table><thead><tr>"
-                       + "".join(f"<th>{inline(c)}</th>" for c in head)
-                       + "</tr></thead><tbody>")
+            # one element for the whole table, so nothing can break the block it belongs to
+            tbl = ["<table><thead><tr>"
+                   + "".join(f"<th>{inline(c)}</th>" for c in head)
+                   + "</tr></thead><tbody>"]
             for r in body:
-                out.append("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>")
-            out.append("</tbody></table>")
+                tbl.append("<tr>" + "".join(f"<td>{inline(c)}</td>" for c in r) + "</tr>")
+            tbl.append("</tbody></table>")
+            out.append("".join(tbl))
             continue
 
         m = re.match(r"^(#{1,4})\s+(.*)$", ln)
@@ -134,12 +227,20 @@ def markdown_to_html(src, figdir, figcaps):
 
         if re.match(r"^\s*[-*]\s+", ln) or re.match(r"^\s*\d+\.\s+", ln):
             tag = "ol" if re.match(r"^\s*\d+\.\s+", ln) else "ul"
-            out.append(f"<{tag}>")
-            while i < len(lines) and (re.match(r"^\s*[-*]\s+", lines[i])
-                                      or re.match(r"^\s*\d+\.\s+", lines[i])):
-                out.append(f"<li>{inline(re.sub(r'^\s*(?:[-*]|\d+\.)\s+', '', lines[i]))}</li>")
-                i += 1
-            out.append(f"</{tag}>")
+            items = []
+            while i < len(lines):
+                if re.match(r"^\s*(?:[-*]|\d+\.)\s+", lines[i]):
+                    items.append(re.sub(r"^\s*(?:[-*]|\d+\.)\s+", "", lines[i]).strip())
+                    i += 1
+                elif (items and lines[i].strip() and lines[i].startswith(("  ", "\t"))
+                      and not re.match(r"^\s*(?:[-*]|\d+\.)\s+", lines[i])):
+                    items[-1] += " " + lines[i].strip()      # a wrapped continuation line
+                    i += 1
+                else:
+                    break
+            out.append(f"<{tag}>"
+                       + "".join(f"<li>{inline(x)}</li>" for x in items)
+                       + f"</{tag}>")
             continue
 
         buf = [ln]
@@ -151,12 +252,25 @@ def markdown_to_html(src, figdir, figcaps):
             buf.append(lines[i])
             i += 1
         out.append("<p>" + inline(" ".join(b.strip() for b in buf)) + "</p>")
-    return "\n".join(keep_together(out))
+
+    want = {b.strip() for b in breaks}
+    html = []
+    for plain, el in keep_together(out):
+        if plain in want:
+            # a rule sitting immediately before a forced chapter break is stranded on the page
+            # by itself: the break moves the chapter, and the rule is left behind on a blank sheet
+            while html and html[-1] in ("<hr>", '<div class="pagebreak"></div>'):
+                html.pop()
+            html.append('<div class="chapter-start"></div>')
+        # mark a long table so it may flow across pages with its header repeated
+        el = el.replace("<table>", '<table class="tbl-flow">') if el.count("<tr>") > 9 else el
+        html.append(el)
+    return "\n".join(html)
 
 
 CSS = """
 @page { size: A4; margin: 19mm 15mm 16mm 15mm; }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 body { font: 10.1pt/1.5 "Segoe UI", Helvetica, Arial, sans-serif; color:#222; margin:0; }
 h1,h2,h3,h4 { font-family: Georgia, "Times New Roman", serif; color:#15233c; }
 h1 { font-size: 24pt; line-height:1.14; margin: 0 0 5mm 0; }
@@ -172,6 +286,10 @@ code { font-family: Consolas, "Courier New", monospace; font-size: 9pt;
        background:#f2efe9; padding: 0 .6mm; }
 table { width:100%; border-collapse: collapse; font-size: 8.9pt; margin: 2mm 0 4mm;
         page-break-inside: avoid; }
+/* a long table may flow across pages, with its header repeated and its rows intact */
+table.tbl-flow { page-break-inside: auto; }
+table.tbl-flow thead { display: table-header-group; }
+table.tbl-flow tr { page-break-inside: avoid; }
 th { background:#15233c; color:#f7f4ee; text-align:left; padding: 1.6mm 2mm;
      font-weight:600; font-size:8.5pt; }
 td { padding: 1.4mm 2mm; border-bottom: .6pt solid #ddd7cc; vertical-align: top; }
@@ -186,19 +304,30 @@ figcaption { font-size: 8.2pt; color:#5b6472; text-align:left; margin-top: 1.8mm
             line-height:1.42; }
 figcaption b { color:#15233c; }
 .pagebreak { page-break-after: always; height:0; }
-.keep { page-break-inside: avoid; }
+.keep { page-break-inside: avoid; break-inside: avoid; }
+/* never leave a heading's paragraph as a two-line orphan at the foot of a page */
+p { orphans: 3; widows: 2; }
+li, td { orphans: 2; widows: 2; }
 /* a chapter opens a fresh page */
 .chapter-start { page-break-before: always; height:0; }
 /* the reading guide: chapter, pages, what it decides */
 .guide { width:100%; border-collapse: collapse; font-size: 9.2pt; margin: 3mm 0 4mm; }
+/* keep the page range on one line: "12-15", never "12-" and then "15" */
+.guide td.pg { white-space: nowrap; }
 
 /* ------------------------------------------------------------------ charcoal pack
    Used only by the critique pack that goes to the other tool: the 80-pager's own palette. */
-.charcoal body { background:#24282C; color:#E0E5E8; }
+.charcoal { background:#24282C; }
+.charcoal body { background:#24282C; color:#E0E5E8;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; }
 .charcoal .sheet { background:#24282C; }
+/* Chrome will not paint an element's background over a printed page unless the document asks it
+   to; without this the whole charcoal pack prints white with pale text on it. */
+@media print {
+  html.charcoal, html.charcoal body { background:#24282C !important; }
+}
 .charcoal h1, .charcoal h2, .charcoal h3, .charcoal h4 {
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; color:#F5F6F7; }
-.charcoal h2 { border-bottom: 1.8pt solid #D71920; }
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; color:#F5F6F7; }.charcoal h2 { border-bottom: 1.8pt solid #D71920; }
 .charcoal h3 { color:#F5F6F7; }
 .charcoal h4 { color:#FF686D; }
 .charcoal p, .charcoal li, .charcoal td { color:#E0E5E8; }
@@ -215,6 +344,7 @@ figcaption b { color:#15233c; }
 .charcoal figcaption { color:#C2C8CC; }
 .charcoal figcaption b { color:#FF686D; }
 .charcoal .keep { }
+.charcoal .cover-page { background:#24282C; }
 .charcoal .cover-page .org { color:#F5F6F7; }
 .charcoal .cover-page .family { color:#FF686D; }
 .charcoal .cover-page .rule { border-top:3pt solid #D71920; }
@@ -285,112 +415,71 @@ def guide_table(rows, head=("Chapter", "Pages", "What it decides")):
     """The reading-guide table. rows = [(chapter title, page range, one-line purpose)]."""
     th = "".join(f"<th>{inline(h)}</th>" for h in head)
     trs = "".join(
-        "<tr>" + f"<td>{inline(a)}</td><td>{inline(b)}</td><td>{inline(c)}</td>" + "</tr>"
+        "<tr>" + f"<td>{inline(a)}</td>"
+        + f'<td class="pg">{inline(b)}</td>'
+        + f"<td>{inline(c)}</td>" + "</tr>"
         for a, b, c in rows)
     return f'<table class="guide"><thead><tr>{th}</tr></thead><tbody>{trs}</tbody></table>'
 
 
 def heading_pages(doc, hs):
-    """Map every heading to the 0-based page it first appears on."""
+    """Map every heading to the 0-based page it first appears on.
+
+    Matched on rendered heading spans, not on raw page text: once a reading guide lists the
+    chapter titles, the plain-text search finds every chapter on the guide page.
+    """
     n = doc.page_count
+    # page -> the heading-like lines rendered on it
+    rendered = []
+    for i in range(n):
+        lines = []
+        for blk in doc[i].get_text("dict")["blocks"]:
+            for line in blk.get("lines", []):
+                for sp in line["spans"]:
+                    face = ("Georgia" in sp["font"] or "Times" in sp["font"]
+                            or "Arial" in sp["font"] or "Helvetica" in sp["font"])
+                    if face and sp["text"].strip() and sp["size"] >= 10.4:
+                        lines.append(sp["text"].strip())
+        rendered.append(" \u00b7 ".join(lines))
+
+    def norm(t):
+        return re.sub(r"[^a-z0-9]+", " ", t.lower()).strip()
+
     page_of = {}
     for lvl, text in hs:
-        needle = text[:46]
-        for i in range(n):
-            if needle and needle in doc[i].get_text():
+        needle = norm(text)[:44]
+        if not needle:
+            continue
+        # start at page 2: page 1 is the cover, and its strapline or focus bullets can repeat a
+        # heading's exact wording, which would pull the bookmark onto the cover
+        for i in range(1, n):
+            if needle in norm(rendered[i]):
                 page_of[text] = i
                 break
     return page_of
 
 
-def layout_report(doc, content_top=40.0, content_bot=798.0, head_band=0.80):
-    """The five layout faults, measured on the rendered pages.
-
-    Returns a dict of lists. Empty lists mean the fault is absent.
-    """
-    H = re.compile(r"^(?:ISUZU / UNIVERSE[^a-z]*)$")
-
-    def blocks(page):
-        out = []
-        for b in page.get_text("blocks"):
-            x0, y0, x1, y1, txt = b[0], b[1], b[2], b[3], b[4]
-            if y1 < content_top or y0 > content_bot or not txt.strip():
-                continue
-            out.append({"y0": y0, "y1": y1, "text": txt.strip()})
-        return sorted(out, key=lambda b: b["y0"])
-
-    def heads(page):
-        found = []
-        for blk in page.get_text("dict")["blocks"]:
-            for line in blk.get("lines", []):
-                for sp in line["spans"]:
-                    if ("Georgia" in sp["font"] or "Times" in sp["font"]
-                            or "Arial" in sp["font"]):
-                        if sp["text"].strip() and sp["size"] >= 11.0:
-                            found.append({"y1": line["bbox"][3], "size": sp["size"],
-                                          "text": sp["text"].strip(),
-                                          "x0": line["bbox"][0]})
-        return found
-
-    stranded, cap_split, tbl_split, whitespace = [], [], [], []
-    col_h = content_bot - content_top
-    for i, page in enumerate(doc):
-        if i == 0:
-            continue
-        bl = blocks(page)
-        if not bl:
-            continue
-        hs = heads(page)
-        if hs:
-            lowest = max(h["y1"] for h in hs)
-            after = [b for b in bl if b["y0"] > lowest + 2]
-            lines_after = sum(len(b["text"].split("\n")) for b in after)
-            pos = (lowest - content_top) / col_h
-            if pos > head_band and lines_after < 3:
-                stranded.append({"page": i + 1,
-                                 "heading": [h for h in hs if h["y1"] == lowest][0]["text"],
-                                 "at": round(pos, 2), "lines_after": lines_after})
-        imgs = [b for b in page.get_image_info() if content_top < b["bbox"][1] < content_bot]
-        cap = [b for b in bl if re.match(r"^Figure \d+\.", b["text"])]
-        if imgs and not cap:
-            cap_split.append({"page": i + 1, "why": "figure with no caption on the page"})
-        elif imgs and cap:
-            gap = min(c["y0"] for c in cap) - max(im["bbox"][3] for im in imgs)
-            if gap > 60:
-                cap_split.append({"page": i + 1, "why": f"caption {round(gap)} pt below figure"})
-            elif gap < -4:
-                cap_split.append({"page": i + 1, "why": "caption above the figure"})
-        low = max(b["y1"] for b in bl)
-        tail = content_bot - low
-        if tail > col_h * 0.42:
-            whitespace.append({"page": i + 1, "empty_pt": round(tail),
-                               "pct": round(tail / col_h * 100)})
-    return {"stranded_headings": stranded, "figure_caption_splits": cap_split,
-            "whitespace_pages": whitespace}
-
-
 def build(md, html_out, pdf_out, qa_dir, title, cover, figdir, figcaps,
           footer, closing="", theme="navy", chapters_fresh_page=False,
-          reading_guide=None, guide_heading="How to read this",
-          guide_intro="", guide_head=("Chapter", "Pages", "What it decides")):
+          reading_guide=None, guide_heading="", guide_intro="",
+          guide_head=("Chapter", "Pages", "What it decides"), layout_qa=True):
     """Build one document. Returns the QA result dict.
 
     theme               "navy" (house palette) or "charcoal" (the 80-pager's own look)
-    chapters_fresh_page put a page break before every level-2 heading
-    reading_guide       list of (chapter title, purpose) - renders a guide page near the front
-                        with the real page numbers, in a second pass
+    chapters_fresh_page put every level-2 heading on a fresh page; when layout_qa is on, only
+                        the chapters that would otherwise start low on a full page get one
+    reading_guide       list of (chapter title, one-line purpose). A guide page is rendered
+                        near the front with the real page numbers, decided in a second pass.
+    layout_qa           measure the five layout faults on the rendered PDF and return them
     """
     import fitz
+    import layoutqa
 
     src = open(md, encoding="utf-8").read()
     hs = headings(src)
 
-    base = markdown_to_html(src, figdir, figcaps)
-    body_one = base
-    if chapters_fresh_page:
-        body_one = "\n".join(
-            '<div class="chapter-start"></div>' + e if e.startswith("<h2>") else e
-            for e in base.split("\n") if e.strip())
+    def body_with(breaks):
+        return markdown_to_html(src, figdir, figcaps, breaks=breaks)
 
     def assemble(body, rows=None):
         guide_html = ""
@@ -409,9 +498,10 @@ def build(md, html_out, pdf_out, qa_dir, title, cover, figdir, figcaps,
 {closing}
 </body></html>"""
 
-    def render(html, out_path):
+    def render(html, tag):
         open(html_out, "w", encoding="utf-8").write(html)
-        raw = os.path.join(os.path.dirname(html_out), "_raw_" + os.path.basename(out_path))
+        raw = os.path.join(os.path.dirname(html_out), "_raw_" + tag + "_" +
+                           os.path.basename(pdf_out))
         uri = "file:///" + html_out.replace("\\", "/")
         subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
                         "--print-to-pdf=" + raw, "--virtual-time-budget=12000", uri],
@@ -419,40 +509,68 @@ def build(md, html_out, pdf_out, qa_dir, title, cover, figdir, figcaps,
                        timeout=300)
         return raw
 
+    # The guide is inserted before the breaks are decided, because its own height moves the
+    # pagination. The placeholder rows have the final width, so the page positions found here are
+    # the page positions of the finished document. Every pass below uses the same guide.
+    stub = [(t, "00-00", p) for t, p in reading_guide] if reading_guide is not None else None
+
+    def paginated(html_tag, with_breaks):
+        # Renders the body with the guide in place; `with_breaks` is spliced in as the break list.
+        return assemble(body_with(with_breaks), stub)
+
+    breaks = []
+    if chapters_fresh_page:
+        if layout_qa:
+            # The rule is not a fixed point: adding a break moves the headings after it, so the
+            # answer to "which chapters start low" changes with the answer itself. Two passes are
+            # enough. Ask once on the natural flow, ask again with that first answer applied, and
+            # take the union - a chapter that reads badly under either pagination gets its own
+            # page. Deterministic, and the same on every rebuild.
+            wanted = []
+            for it in range(2):
+                da = fitz.open(render(paginated(None, wanted), "passA%d" % it))
+                got = layoutqa.chapter_breaks(da)
+                n_pages = da.page_count
+                da.close()
+                print(f"    chapter-break pass {it}: {n_pages} pages, {len(got)} wanted")
+                for t in got:
+                    if t not in wanted:
+                        wanted.append(t)
+            breaks = wanted
+        else:
+            breaks = [t for lvl, t in hs if lvl == 2]
+    body_one = body_with(breaks)
+
     guide_rows = []
     if reading_guide is not None:
-        # Pass one: learn the page count with the guide absent.
-        raw1 = render(assemble(body_one, None), "_pass1_" + os.path.basename(pdf_out))
-        d1 = fitz.open(raw1)
-        pages_no_guide = d1.page_count
-        d1.close()
-
-        # Pass two: the guide is present with placeholder numbers of the same width, so the
-        # page positions in this pass are the final ones. The numbers are read from here.
-        placeholders = [(t, "00-00", p) for t, p in reading_guide]
-        raw2 = render(assemble(body_one, placeholders), "_pass2_" + os.path.basename(pdf_out))
+        # Pass two: the guide present with placeholder numbers of the same width, so the page
+        # positions in this pass are the final ones. The real numbers are read from here.
+        raw2 = render(assemble(body_one, stub), "pass2")
         d2 = fitz.open(raw2)
-        pg2 = heading_pages(d2, hs)
+        h2 = heading_pages(d2, hs)
         total2 = d2.page_count
         d2.close()
 
-        # Map every reading-guide entry to the heading it names, in document order.
+        # A reading-guide entry names any heading level, so match on the text itself, not the
+        # level. Search longest title first so "12. Reference: measures" does not shadow a
+        # longer relative.
         located = []
         for ch_title, purpose in reading_guide:
+            key = re.sub(r"[^a-z0-9]+", " ", ch_title.lower()).strip()
             hit = None
-            for lvl, text in hs:
-                if lvl == 1 and ch_title.lower()[:30] in text.lower():
+            for lvl, text in sorted(hs, key=lambda x: -len(x[1])):
+                if key and key[:30] in re.sub(r"[^a-z0-9]+", " ", text.lower()):
                     hit = text
                     break
-            if hit is not None and hit in pg2:
-                located.append((ch_title, pg2[hit] + 1, purpose))
+            if hit is not None and hit in h2:
+                located.append((ch_title, h2[hit] + 1, purpose))
         located.sort(key=lambda r: r[1])
         for k, (ch_title, start, purpose) in enumerate(located):
             end = located[k + 1][1] - 1 if k + 1 < len(located) else total2
             span = f"{start}-{end}" if end > start else str(start)
             guide_rows.append((ch_title, span, purpose))
 
-    raw = render(assemble(body_one, guide_rows if reading_guide is not None else None), pdf_out)
+    raw = render(assemble(body_one, guide_rows if reading_guide is not None else None), "final")
 
     d = fitz.open(raw)
     n = d.page_count
@@ -466,22 +584,34 @@ def build(md, html_out, pdf_out, qa_dir, title, cover, figdir, figcaps,
                 best = text
         return best
 
+    # On the dark pack the running head and footer must be legible against the charcoal page, so
+    # the stamp colours come from the theme. The light house palette is unchanged.
+    if theme == "charcoal":
+        ink, accent, rule = (0.96, 0.97, 0.97), (1.0, 0.41, 0.43), (0.33, 0.38, 0.41)
+    else:
+        ink, accent, rule = GREY, TERR, (0.85, 0.83, 0.79)
+
     for i in range(n):
         page = d[i]
+        if theme == "charcoal":
+            # Chrome paints an element background only inside the printable box, which leaves the
+            # margins white. Drawing the plate into the page's own content stream, underneath the
+            # text (overlay=False), gives the full-bleed charcoal without touching the pagination.
+            page.draw_rect(page.rect, color=None, fill=CHARCOAL, overlay=False)
         if i > 0:
             sec = section_for(i)
-            page.insert_text((42, 29), title, fontname="helv", fontsize=6.6, color=GREY)
+            page.insert_text((42, 29), title, fontname="helv", fontsize=6.6, color=ink)
             if sec:
                 label = sec.upper()[:58]
                 tw = fitz.get_text_length(label, fontname="hebo", fontsize=6.6)
                 page.insert_text((W - 42 - tw, 29), label, fontname="hebo", fontsize=6.6,
-                                 color=TERR)
+                                 color=accent)
             page.draw_line(fitz.Point(42, 35), fitz.Point(W - 42, 35),
-                           color=(0.85, 0.83, 0.79), width=0.5)
+                           color=rule, width=0.5)
         f = footer.format(i=i + 1, n=n)
         tw = fitz.get_text_length(f, fontname="helv", fontsize=6.6)
         page.insert_text((W - 42 - tw, page.rect.height - 25), f, fontname="helv",
-                         fontsize=6.6, color=GREY)
+                         fontsize=6.6, color=ink)
 
     d.set_toc([[lvl, t, page_of.get(t, 1) + 1] for lvl, t in hs if lvl <= 2])
     d.set_metadata({"title": title, "author": "ISZE / Parts Europe",
@@ -496,7 +626,18 @@ def build(md, html_out, pdf_out, qa_dir, title, cover, figdir, figcaps,
     blank, bleed, artefacts, nofurn = [], [], [], []
     for i, page in enumerate(d):
         t = page.get_text()
-        if len(" ".join(t.split())) < 60:
+        words = len(t.split())
+        # The running header and footer are stamped after the fact, so a page whose only content is
+        # the furniture scores around 85 characters and slips past a plain character count. Measure
+        # the body instead: strip the header line, the footer line and the page number, and a page
+        # with no argument on it is caught.
+        body = " ".join(t.split())
+        body = body.replace(title, "")
+        for w in (footer.split("{i}")[0].strip(), footer.split("{n}")[-1].strip()):
+            body = body.replace(w, "")
+        body = re.sub(r"\b\d{1,3}\s+of\s+\d{1,3}\b", "", body)
+        body = re.sub(r"^[\s\d.,·]+$", "", body)
+        if len(body.split()) < 30:
             blank.append(i + 1)
         if i > 0 and title not in t:
             nofurn.append(i + 1)
@@ -513,8 +654,8 @@ def build(md, html_out, pdf_out, qa_dir, title, cover, figdir, figcaps,
            "bookmarks": len(d.get_toc()), "blank": sorted(set(blank)),
            "edges": sorted(set(bleed)), "artefacts": artefacts,
            "missing_header": sorted(set(nofurn)), "pdf_bytes": os.path.getsize(pdf_out),
-           "guide_rows": guide_rows}
-    res["layout"] = layout_report(d)
+           "guide_rows": guide_rows, "chapter_breaks": breaks}
+    res["layout"] = layoutqa.analyse(d, md_path=md) if layout_qa else {}
     res["page_of"] = page_of
     d.close()
     return res

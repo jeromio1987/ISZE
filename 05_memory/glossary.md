@@ -84,7 +84,7 @@ flagged in memory_review_W30_2026.txt through memory_review_W34_2026.txt)_
 | PR00 | Standard European selling price list (SAP) |
 | ZPR1 | Israel price list condition type (SAP) |
 | CIS | Price list for Armenia (GA) and Kazakhstan (CBC) |
-| Source J | Japan/IML sourced — discount factor 0.62 |
+| Source J | Japan/IML sourced — discount factor **0.673** effective 2026-01-05 (was 0.620; per `03_analytics/isze_pricing/config.yaml` + DECISIONS.md 2026-09-19) |
 | Source T | Thailand/IMIT sourced — discount factor 0.611 |
 | BP | Base Price in JPY (from IML) |
 | FOB | Free On Board price in EUR = BP_JPY / FX × source_discount |
@@ -161,7 +161,7 @@ IML (Isuzu Motors Limited — Japan HQ)
 
 ISZE (PR00) → DB (÷0.60, ~40% margin) → DLR/Fleet (÷0.75, ~25% margin)
 
-Source J discount 0.62 · Source T discount 0.611 · SP = FOB / class_factor
+Source J discount 0.673 (from 2026-01-05; was 0.62) · Source T discount 0.611 · SP = FOB / class_factor · live FX 178.5 JPY/EUR (1 Oct 2026–31 Mar 2027, both sources)
 
 ## FY calendar
 

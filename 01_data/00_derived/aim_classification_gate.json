@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-09-20T07:24:18.397000+00:00",
+  "run_at": "2026-09-24T17:23:26.166959+00:00",
   "classifier_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_pn_classification_v2.csv",
   "checks": [
     {
@@ -21,7 +21,7 @@
       "ok": true,
       "measured": 0,
       "expected": 0,
-      "note": "all part numbers 10 chars"
+      "note": "every part_number 10 chars; non-part rows (line_kind != 'part') exempt by identity, not by length [no line_kind column: all rows treated as parts]"
     },
     {
       "id": "axis_a_l1_vocabulary",
@@ -35,14 +35,14 @@
       "ok": true,
       "measured": 27,
       "expected": "20-40",
-      "note": "approved baseline 27 (leaf_add_battery_tools_20260918)"
+      "note": "approved baseline 27 (catalog_symbolic_leaf_20260920)"
     },
     {
       "id": "axis_a_l3_count",
       "ok": true,
       "measured": 176,
       "expected": "100-300",
-      "note": "approved baseline 176 (leaf_add_battery_tools_20260918)"
+      "note": "approved baseline 177 (catalog_symbolic_leaf_20260920)"
     },
     {
       "id": "hierarchy_orphans",
@@ -126,14 +126,16 @@
     },
     {
       "id": "drift_vs_previous_run",
-      "ok": true,
-      "measured": "within tolerance",
-      "expected": "< 1.0% per check; L2/L3=leaf_add_battery_tools_20260918",
+      "ok": false,
+      "measured": [
+        "leaf_baseline: L2=27 (approved 27), L3=176 (approved 177) \u2014 update EXPECT axis_a_l*_approved when adding leaves"
+      ],
+      "expected": "< 1.0% per check; L2/L3 must match approved baseline",
       "note": ""
     }
   ],
-  "failed": 0,
-  "passed": 18,
-  "verdict": "PASS",
+  "failed": 1,
+  "passed": 17,
+  "verdict": "FAIL",
   "note": ""
 }

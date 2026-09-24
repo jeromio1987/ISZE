@@ -1,9 +1,11 @@
 # UIO V20 — assumptions log
 
-**Candidate:** `C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22b.xlsx`  
-**Generated:** 2026-09-22 (fix pass b)  
-**Supersedes:** `C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22.xlsx` (kept intact)  
+**Candidate:** `C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22c.xlsx`  
+**Generated:** 2026-09-22 (candidate c, retention-safety pass)  
+**Supersedes:** `C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\ISUZU_UIO_Overview_2026_V20_CANDIDATE_2026-09-22b.xlsx` (kept intact)  
 **Applies to:** `ISUZU_UIO_Overview_2026.xlsx` (V19, 18 Jun 2026) — read-only reference, not modified
+
+> **How to read this log.** §1–§12 were written for fix pass b and are kept as the build record. Candidate c changes four rows (r54, r69, r88, r90) and its harness result differs from b's. Where §4.8, §6, §7 and §12 quote r54 / r90 values or b's harness result, those statements describe **candidate b**, not this file; each is marked inline. The sections that apply to this file are the final two: **Retention-safety pass (2026-09-22) - candidate c** and **Independent verification of candidate c**.
 
 ## 1. Purpose and authority
 
@@ -44,7 +46,8 @@ UIO(t) = SUM_v [ R_v × S(t − v + 1) ]  +  R_t × S(1)
 | Row 25 — UK LCV | **Rebuilt** on the locked arithmetic. | Task item 4 |
 | Rows 27, 52, 80, 89 — IE/PT/GR/CY medium duty | **Plan only.** Set to zero, out of the Grand Total. | Task item 6 |
 | Row 42 — Germany LD | Rebuilt, **marked indicative**. | Task item 7 |
-| Rows 54, 79, 90 — PT LCV / GR LD / CY LCV | **Repaired** in this pass and marked `INPUT DERIVED`. | §4.7, §4.8 — adjudicated defects |
+| Rows 54, 79, 90 — PT LCV / GR LD / CY LCV | **Repaired** in pass b and marked `INPUT DERIVED`. **Candidate c: r54 and r90 reverted to candidate a** (final section); r79 unchanged from b. | §4.7, §4.8 — adjudicated defects |
+| Rows 69, 88 — PL LCV / CY LD | **Candidate c only:** changed by the retention-safety pass, outside the original brief. | Final section |
 | All other rows with a V19 forecast | Rebuilt on the survival curve. | Task item 2 |
 | Rows with no V19 forecast (empty markets) | Untouched. | Nothing to change |
 
@@ -118,6 +121,8 @@ Belgium, Cyprus, Malta and Greece are built from the IML backbone, not registrat
 **The honest limit of this fix, stated as a number.** The scattered input differs from the flat 20/yr plan by at most **0.1 units in any year (0.4 % of the five-year total)**, so on a 43-unit fleet whose annual attrition is under one unit the *printed* row is still indistinguishable from a straight line. **The arithmetic is now real; the source is not.** Greece CV LD has **no registration series anywhere on disk** — `IML calculation (1).xlsx` sheet `6.CV Vol` country 230 GREECE is zero in every year 1990–2026 except 2024 (1 unit) — so the row's 2025 level (`37`) is a single point inherited from V19 with no cohort decomposition behind it, and the 20/yr is V19's own plan re-derived through the 3 % rule. The row is flagged `INPUT DERIVED` and the gap is item 6 in §8. Fixing the arithmetic does not create the missing source.
 
 ### 4.8 FIX 3 — r54 PORTUGAL LCV and r90 CYPRUS LCV, and the seam that never fired
+
+> **Superseded in candidate c.** FIX 3 was reverted on both rows; r54 and r90 carry candidate a's values again. See the final section. The text below is b's record.
 
 **The finding.** Inverting these two rows' 2026-2030 values under the LCV curve returns **negative registrations** in the pre-2013 history: Portugal 2005 (`−14.6`), 2006 (`−132.7`), 2012 (`−34.0`); Cyprus 2014 (`−137.6`). A negative registration is not a vehicle, so the series is not a cohort history in those years — it is the methodology seam §6 describes, made visible.
 
@@ -194,8 +199,8 @@ What changes is only the annual profile. Individual years in the VIN file swing 
 | 51 | Portugal CV LD | 2014 | IML 1990–2013, I-Motors cohort model 2014+ | Same |
 | 88 | Cyprus CV LD | 2020 | backbone then scrap-adjusted model | Same |
 | 29 | Ireland LCV | 2012 | IML then SIMI D-Max cohorts | Same |
-| 54 | **Portugal LCV** | **2005** | IML backbone, no real-registration cohort model named | Same — added in this pass (was missing) |
-| 90 | **Cyprus LCV** | **2014** | IML backbone, no real-registration cohort model named | Same — added in this pass (was missing) |
+| 54 | **Portugal LCV** | **2005** | IML backbone, no real-registration cohort model named | Candidate b: re-based at the seam. **Candidate c: reverted to candidate a; flagged SEAM - NOT RECONSTRUCTABLE** |
+| 90 | **Cyprus LCV** | **2014** | IML backbone, no real-registration cohort model named | Candidate b: re-based at the seam. **Candidate c: reverted to candidate a; flagged SEAM - NOT RECONSTRUCTABLE** |
 
 The state still carries the legacy block's surviving units in the years before the seam, so pre-seam years are unchanged, but the block is **not** allowed to be added a second time from the seam onwards — which is what V19 implicitly already assumes. The seam years themselves cannot be reconstructed from any source on disk (§4.8, §4.9).
 
@@ -208,8 +213,10 @@ The state still carries the legacy block's surviving units in the years before t
 | Ireland LCV 2030 | V20 **2499** vs V19 3174 |
 | IUK LCV 2026 | V20 **44926** = the locked 44,926 (V19 was 49,280) |
 | r79 Greece LD 2026-2030 | **[51, 65, 79, 93, 108]** — input now **[19.9262, 20.0347, 19.9179, 20.1148, 20.0464]**, not a flat 20.0 |
-| r54 Portugal LCV 2026-2030 | **[5022, 5438, 5976, 6384, 6691]** — seam 2005, all three negative cohorts retired |
-| r90 Cyprus LCV 2026-2030 | **[3252, 3506, 3708, 3811, 3868]** — seam 2014, the negative cohort retired |
+| r54 Portugal LCV 2026-2030 | Candidate b: [5022, 5438, 5976, 6384, 6691]. **Candidate c: [5109, 5425, 5709, 5967, 6251]** (candidate a values, reverted) |
+| r90 Cyprus LCV 2026-2030 | Candidate b: [3252, 3506, 3708, 3811, 3868]. **Candidate c: [2238, 2339, 2445, 2521, 2614]** (candidate a values, reverted) |
+| r69 Poland LCV 2026-2030 | **Candidate c: [23, 19, 15, 11, 8]** (b: [61, 49, 37, 26, 16]) — outside the original brief |
+| r88 Cyprus CV LD 2026-2030 | **Candidate c: [205, 208, 210, 214, 220]** (b: [261, 256, 249, 245, 244]) — outside the original brief |
 | Pickup fleet 2030 vs 2025 | Falls — falling registrations can no longer grow a fleet |
 | Medium-duty in Grand Total | Zero |
 | Locked IUK row 25 value | 44,926 — unchanged |
@@ -284,7 +291,9 @@ Result table and the per-check adjudication are filled in by `finalize_v20b.py` 
 
 
 
-### 12.1 Harness result on this candidate
+### 12.1 Harness result on candidate b
+
+> **Candidate b's result, not this file's.** Candidate c: CONVICTED, 3 of 11 fail — see the final section.
 
 **Same harness, same machine. Live V19: 7 of 10 FAIL. Candidate a: 3 of 10 FAIL. This candidate: 1 of 10 FAIL.** Full report: `C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\_uio_v20_B_verification_report.json`.
 
@@ -323,7 +332,7 @@ Max |delta| is **2.26 pp** against the harness's ±1.5 pp band. **Two of the fiv
 
 Identical to candidate a and to any V20 candidate: the VIN register on disk was rebuilt 2026-09-18, after the spec was written, and no longer reproduces the spec's shipment totals (Ireland 523 vs 451, Portugal 1,583 vs 1,427). Measured scrappage is 15.1 % / 9.1 %, far from the 3 % rule — which is the claim that matters. **Not a candidate defect; an open input** (§8 item 9).
 
-### 12.4 Grand Total 2026-2030 — three-way
+### 12.4 Grand Total 2026-2030 — three-way (as of candidate b; candidate c figures in the final section)
 
 | Year | V19 | Candidate a | **This candidate (b)** | b - a | b - a % | V19 over b |
 |---|---|---|---|---|---|---|
@@ -386,3 +395,41 @@ promotion rather than presented as settled.
 The answer for r54, r90 and r69: the sources on disk (IML backbone pre-seam, no Cyprus LCV
 history after 2014, no Polish LCV series at all) cannot supply a registration figure. No
 positive-number guess was made.
+
+---
+
+## Independent verification of candidate c
+
+Harness: `03_analytics/Isuzu/prism/scripts/verify_uio_v20.py` **v1.1.0**. Full report: `C:\Users\jerom\Desktop\claude\ISZE\06_uio\_CURRENT\_uio_v20_C_verification_report.json`.
+
+**Independence caveat.** The harness was changed in the same session that built candidate c (v1.0.0 → v1.1.0: `check10_retention_sanity` added, plus its input loader and the self-cert guard wording). No existing threshold was altered, but the harness is no longer fully independent of this build: the new check convicts candidate b and clears candidate c.
+
+**Verdict: CONVICTED — 3 of 11 checks fail** (candidate b: 1 of 10; candidate a: 3 of 10; live V19: 7 of 10).
+
+| Check | Candidate b | **Candidate c** | Detail (candidate c) |
+|---|---|---|---|
+| `check1_method_consistency` | PASS | **FAIL** | 2 rows: r54 PORTUGL LCV (forecast diff ratio 0.969), r90 CYPRUS LCV (0.997) |
+| `check2` / `check2b` Ireland | PASS | PASS | |
+| `check3_steady_state` | PASS | PASS | |
+| `check4_vin_scrappage` | WARN | WARN | Ireland 15.1 % / Portugal 9.1 % measured |
+| `check5_flat_rule_present` | PASS | **FAIL** | 1 row: r54 PORTUGL LCV, retained 0.9693 (scrap 3.07 %/yr). Near-miss: r59, r75, r90 |
+| `check6_totals_identity` | PASS | PASS | |
+| `check7_overstatement_curve` | FAIL | **FAIL** | V19 over c: 6.8 / 14.0 / 21.7 / 29.7 / 37.9 % vs spec 7.8 / 15.6 / 23.2 / 30.6 / 37.7 %; 2027 and 2028 outside the 1.5 pp band |
+| `check8_locked_values` | PASS | PASS | row 25 = 44,926 |
+| `check9_self_cert_guard` | PASS | PASS | |
+| `check10_retention_sanity` | n/a (added in v1.1.0) | PASS | 0 of 81 rows outside 0 ≤ k ≤ 1 |
+
+**Open, awaiting decision — not settled by this log.** The check1 / check5 fails sit on r54 and r90, the two rows restored to candidate a's values. FIX 3 (§4.8) was adjudicated as a defect on those same rows. The builder's view that the r54 flags are not genuine 3 %-rule hits is a builder argument, not a harness result. Whether to accept candidate a's values as "not reconstructable from the sources on disk", or keep both rows open, is Jerome's decision before promotion. r69 and r88 were changed outside the original brief and also need his review.
+
+### Grand Total 2026-2030 — candidate c
+
+| Year | V19 | Candidate a | Candidate b | **Candidate c** | c − b |
+|---|---|---|---|---|---|
+| 2026 | 269314 | 252218 | 253145 | **252124** | −1021 |
+| 2027 | 279502 | 245214 | 246393 | **245135** | −1258 |
+| 2028 | 289529 | 237873 | 239404 | **237813** | −1591 |
+| 2029 | 299448 | 230873 | 232583 | **230830** | −1753 |
+| 2030 | 309125 | 224270 | 225964 | **224238** | −1726 |
+| 2026-2030 sum | 1446918 | 1190448 | 1197489 | **1190140** | −7349 |
+
+c − b is fully explained by the four changed rows (2026: r54 +87, r90 −1014, r69 −38, r88 −56 = −1021; 2030: −440, −1254, −8, −24 = −1726). Candidate c is −17.75 % vs V19 over the window. Values read from the workbook's row 2 (Grand Total).

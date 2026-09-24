@@ -13,7 +13,7 @@ ROOT = os.path.dirname(HERE)
 sys.stdout.reconfigure(encoding="utf-8")
 
 MD = os.path.join(ROOT, "01_Strategy", "ISUZU_UNIVERSE_3_0_2026-09-23.md")
-PDF = os.path.join(ROOT, "ISUZU_UNIVERSE_3_0_2026-09-23.pdf")
+PDF = os.environ.get("UNIVERSE_PDF", os.path.join(ROOT, "ISUZU_UNIVERSE_3_0_2026-09-23.pdf"))
 
 md = open(MD, encoding="utf-8").read()
 # patterns must match across a line break, so compare on collapsed whitespace
@@ -34,7 +34,7 @@ CHECKS = [
     ("3  the money pages exist: the hurdle",
      ["the hurdle", "200 of them", "forty qualifying actions", "evidence, not a return"]),
     ("3  the money pages exist: the price of a dealer",
-     ["the price of a dealer", "28.90", "937.50", "519", "334"]),
+     ["the price of a dealer", "28.90", "937.50", "519"]),
     ("3  campaign support is its own funded line",
      ["named campaign-support line", "minimum campaign size", "150,000",
       "is a control and not an answer"]),

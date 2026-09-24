@@ -29,6 +29,8 @@ Read chapters 1 to 4 and you have the commercial case and the money. Read chapte
 participants will actually do. Chapters 5 to 7 are the product. Chapters 10 to 14 are method and
 reference, written so that a reader can check any number in this paper back to its source.
 
+## Chapter schedule
+
 [[READING_GUIDE]]
 
 Historical observations keep their original source period. Tool designs, journeys and participation
@@ -463,10 +465,12 @@ the dealer is being asked to spend time at a parts counter where a customer is s
 | A visible record of who owes the next step, including ISZE and the distributor | Today the dealer cannot see when it is waiting on someone else |
 
 The first two are the strongest dealer assets and they are under-used in the current design. Of the 519
-dealers in the ISZE network file, 334 carry a recorded IDS score today. Figure 15 shows their
-distribution: a minimum of 0, a maximum of 100 and an average of 77.5. That is roughly two-thirds of the
-known estate with an individual result already on file, and it is the only place in this programme where
-ISZE holds something a dealer will want to look at that it cannot easily assemble itself.
+dealers in the ISZE network file, 490 carry a recorded IDS score today. Figure 15 shows their
+distribution: a minimum above zero, a maximum of 100 and an average of 79.3. A further 29 dealers
+recorded no answers at all. They are held apart from the distribution rather than counted as low
+scorers, because no score exists for them. That is 490 dealers with an individual result already on
+file, and it is the only place in this programme where ISZE holds something a dealer will want to look
+at that it cannot easily assemble itself.
 
 [[FIG15]]
 
@@ -545,7 +549,7 @@ distributor's commercial interest rather than ISZE's.
 
 ### 8.3 The base rate, and what it means
 
-519 dealer self-assessments exist today across 19 networks. That is what this network produces when an
+519 dealer self-assessments exist today across 19 networks, 490 of them carrying a recorded score. That is what this network produces when an
 obligation is attached to a dealer-facing requirement. Anything in this programme that scores below that
 base rate needs a reason the participant can feel, and the only two reasons available are money and a
 visible improvement in its own business.
@@ -666,7 +670,7 @@ national controls are not added to their dealer detail.
 | Portugal clutch-kit billing €29,959.87 to €31,702.47 combined; Genuine €2,901.92 to €2,057.86 | Full calendar years, source category | Same |
 | Network parts billed to distributors 2025: €32,381,311.55 across 22 distributors | GPS parts billed, supplied basis | ISZE GPS distributor file, 2025 rows |
 | PMS billed €6,654,582.64 in 2025; 8.4% of euro at least 20% under reference, 2.8% at least 30% | PMS lines with a reference price, 24 distributors | ISZE campaign-suspect summary, 2025 |
-| 519 dealers with an IDS record across 19 networks; 334 scored, average 77.5 | Dealer network file | ISZE IDS dealer network file, 20 September 2026 |
+| 519 dealers with an IDS record across 19 networks; 490 scored, mean 79.3; 29 with no answers recorded | Dealer network file | ISZE IDS dealer network file, 20 September 2026 |
 
 ### 11.2 Inferred
 
@@ -758,6 +762,14 @@ rewrite a historical transaction.
 including the network concession picture, the hurdle table and the per-dealer price. The participation
 assessment and the base-rate comparison in chapter 8. The elasticity disclosure in 11.4. The stop
 condition in 9.3.
+
+**Correction, 24 September 2026.** The dealer score has been corrected. The dealer network file had been
+built with a column read by position: across France, Spain, Switzerland and Italy the recorded value was the
+dealer's own account code rather than its score, so those 192 dealers showed no usable number and 29 of them
+read as zero. The score has been rebuilt from the rankings workbook. The corrected position is 519 dealers on
+file, 490 carrying a recorded score at a mean of 79.3, and 29 that recorded no answers at all, shown separately
+because a score does not exist for them. The earlier text and Figure 15 carried 334 scored at a mean of 77.5.
+Everything else in this edition is unchanged.
 
 **Design and production.** Charcoal `#24282C`, Isuzu red `#D71920`, navy `#15233C`, terracotta `#C0552D`,
 Arial or a metrically compatible substitute. No font files, raw billing or full price lists accompany this

@@ -1,0 +1,48 @@
+{
+  "schema": "ship_receipt/v2",
+  "artifact": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\dealer_demand_ituk_20260924\\page\\Dealer_Parts_Demand_ITUK_CY2025_INTERNAL.html",
+  "artifact_mtime_ms": 1790258538354,
+  "written_at": "2026-09-24T14:04:23.988Z",
+  "ok": true,
+  "screenshots_taken": 8,
+  "screenshots_read": 8,
+  "checks": [
+    {
+      "id": "exists",
+      "ok": true,
+      "detail": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\91_build\\dealer_demand_ituk_20260924\\page\\Dealer_Parts_Demand_ITUK_CY2025_INTERNAL.html"
+    },
+    {
+      "id": "min_size",
+      "ok": true,
+      "detail": "46490 bytes"
+    },
+    {
+      "id": "no_cdn",
+      "ok": true,
+      "detail": "no chart/lib CDN"
+    },
+    {
+      "id": "no_nan_json",
+      "ok": true,
+      "detail": "no NaN literals"
+    },
+    {
+      "id": "has_content_markers",
+      "ok": true,
+      "detail": "chart=true rows=true hero=true"
+    },
+    {
+      "id": "open_cmd",
+      "ok": true,
+      "detail": "OPEN_Dealer_Parts_Demand_ITUK.cmd opens Dealer_Parts_Demand_ITUK_CY2025_INTERNAL.html (CRLF ok)"
+    },
+    {
+      "id": "visual_screenshots",
+      "ok": true,
+      "detail": "screenshots_taken 8, screenshots_read 8 (0 path(s) passed, 8 marked read)"
+    }
+  ],
+  "screenshots": [],
+  "notes": "Internal draft, not published. Own verifier 38 pass / 0 warn / 0 fail. Workspace ship_gate: language checks 0 hits on this page; the gate script itself exits 1 on a PRE-EXISTING unrelated failure (ISZE_Aftermarket_BI_Command_Center.html, mtime 19 Sep 16:47, untouched by this build). Read from the derived tables at build time."
+}

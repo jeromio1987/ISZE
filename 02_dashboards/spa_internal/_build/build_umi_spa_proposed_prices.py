@@ -35,8 +35,38 @@ CEILING = {4: 30, 3: 60, 2: 150, 1: 250}
 
 POINT_ISZE = "ISZE → DB (net, PR00 IE40)"
 POINT_KS = "IAM trade (KS International, ex-VAT)"
-POINT_MEK = "IAM retail (Mekonomen.se)"
+POINT_MEK = "IAM retail (Mekonomen.se)"  # RETIRED 2026-09-24 — kept for the audit trail only
 POINT_EUCON = "IAM list / workshop mix (Eucon 2023 survey, DE/NO)"
+
+# ---------------------------------------------------------------------------
+# Mekonomen is RETIRED as a source (2026-09-24, Jerome's go, card 0.4/C3).
+#
+# Mekonomen.se's part-number search does not search by part number: it echoes the
+# query and serves one unrelated in-stock item, which the scraper then priced as
+# if it were our part. Asking for 8975056801 "PAD KIT; CALIPER,DISC BRK,FRT"
+# returned a Kilen coil spring at 957 SEK (see
+# `autodoc_scraper/_diag/MEK_8975056801.txt`). All seven "ok" rows were this shape.
+#
+# They are false positives, so no Mekonomen price enters a proposed ISZE price and
+# none counts as coverage. All seven PNs are also blocked in
+# `04_tools/db_operating_dashboard/build_iam_street_joins.py`, which is what writes
+# `iam_mekonomen_price_gap.csv`; the hard exclude below is the second lock, so this
+# pack stays clean even if that file is regenerated from an old copy.
+#
+# To re-enable: set MEKONOMEN_RETIRED = False and require a real product page that
+# shows the part number and a price together.
+# ---------------------------------------------------------------------------
+MEKONOMEN_RETIRED = True
+MEKONOMEN_SEK_EUR = 0.089  # historical rate, kept only for the excluded rows
+MEKONOMEN_FALSE_PNS = frozenset({
+    "8975056801",  # PAD KIT; CALIPER,DISC BRK,FRT -> returned a Kilen coil spring, 957 SEK
+    "8983373180",  # SENSOR ASM; DEF TANK
+    "8982932120",  # DRIVE ASM; FINAL,RR
+    "8982924321",  # SENSOR; SPD,FRT WHEEL
+    "8983937793",  # SUPPORT; RR BUMPER
+    "8983288004",  # LAMP ASM; RR COMB
+    "8982606011",  # DOOR ASM; FRT,WO/TRIM
+})
 
 # Brand families used only to flag Mekonomen title/search noise.
 # _norm_brand("Lesjöfors") → "LESJ FORS" because ö is stripped.
@@ -283,9 +313,21 @@ def load_auto365_family() -> dict:
 def build_payload() -> dict:
     lookup = load_brand_lookup()
     ks = pd.read_csv(DERIVED / "iam_ks_price_gap.csv", dtype={"pn": str})
-    mek = pd.read_csv(DERIVED / "iam_mekonomen_price_gap.csv", dtype={"pn": str})
+    # Mekonomen RETIRED (2026-09-24) — the file may be empty or absent now, so it is
+    # not read at all while retired. Zero rows means Mekonomen can contribute no price
+    # and no coverage figure anywhere below.
+    if MEKONOMEN_RETIRED:
+        mek = pd.DataFrame(columns=[
+            "db", "pn", "description", "isze_price_eur", "isze_price_source",
+            "mek_am_min_eur", "mek_am_avg_eur", "brands_found", "competitor_count",
+            "mek_url", "scraped_at",
+        ])
+        print("  Mekonomen: RETIRED — file not read; no price and no coverage from this source")
+    else:
+        mek = pd.read_csv(DERIVED / "iam_mekonomen_price_gap.csv", dtype={"pn": str})
+        mek["pn"] = mek["pn"].map(norm_pn)
+        mek = mek[~mek["pn"].isin(MEKONOMEN_FALSE_PNS)]
     ks["pn"] = ks["pn"].map(norm_pn)
-    mek["pn"] = mek["pn"].map(norm_pn)
     ks_u = ks[ks["db"].astype(str).str.upper() == "UMI"].copy()
     mek_u = mek[mek["db"].astype(str).str.upper() == "UMI"].copy()
 
@@ -751,9 +793,9 @@ table.pns a{{color:var(--blue);text-decoration:none;border-bottom:1px solid #c5d
       <table class="pns ladder">
         <thead><tr><th>Tier</th><th>Quality</th><th>Ceiling vs IAM</th><th>On this file</th></tr></thead>
         <tbody>
-          <tr><td>T4</td><td>OE / premium IAM</td><td class="mono">+30%</td><td>Raufoss, Lesjöfors — Mekonomen hits flagged suspect</td></tr>
+          <tr><td>T4</td><td>OE / premium IAM</td><td class="mono">+30%</td><td>Bosch, Raufoss class brands — named brand required</td></tr>
           <tr><td>T3</td><td>Mainstream IAM</td><td class="mono">+60%</td><td>GSP / NTY / Borg &amp; Beck via Eucon on the driveshaft</td></tr>
-          <tr><td>T2</td><td>Budget IAM</td><td class="mono">+150%</td><td>NB Parts (Mekonomen house brand)</td></tr>
+          <tr><td>T2</td><td>Budget IAM</td><td class="mono">+150%</td><td>Budget house brands — named brand required</td></tr>
           <tr><td>T1</td><td>Unmapped / no-name</td><td class="mono">+250%</td><td>KS listings — no brand name, no auto-cut</td></tr>
         </tbody>
       </table>
@@ -762,28 +804,35 @@ table.pns a{{color:var(--blue);text-decoration:none;border-bottom:1px solid #c5d
 </section>
 
 <section class="sec">
-  <h2><span class="no">5 · </span>Auto 365 — family only, no OEM PN</h2>
-  <p class="lead">Local catalogue context for UMI. There is no OEM part-number join. Do not read these bars as a PN gap.
-  Euro converted at a 0.25 placeholder — quote shekels.</p>
+  <h2><span class="no">6 · </span>Retired sources — what was removed and why</h2>
+  <p class="lead">Three sources used to feed this workbench. They are out as of 24 Sep 2026 and none of their prices is scored or counted below. They stay listed here so an older print-out can be reconciled.</p>
   <div class="card">
-    <div class="chartbox sm"><canvas id="a365Chart" role="img" aria-label="Auto 365 catalogue average euro by part family, indicative FX">Auto 365 families</canvas></div>
+    <table class="pns ladder">
+      <thead><tr><th>Source</th><th>Status</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Mekonomen (SE)</td><td>Retired</td><td>Its part-number search does not search by part number. Asked for 8975056801 (front brake pad kit) it returned a Kilen coil spring at 957 SEK. Every part number returned exactly one unrelated item, whatever was asked. Its 7 rows were all false, so none is shown or scored.</td></tr>
+        <tr><td>Auto 365 (IL)</td><td>Retired</td><td>Publishes no Isuzu part number on any page, only its own internal numbers, so it cannot be joined to a part. Also asks crawlers away.</td></tr>
+        <tr><td>Tranzparts (UK)</td><td>Retired</td><td>Carries no Isuzu. Every part handle on it belongs to Volvo, Iveco or DAF.</td></tr>
+      </tbody>
+    </table>
+    <div class="chartbox sm"><canvas id="a365Chart" role="img" aria-label="Auto 365 catalogue average euro by part family, indicative FX, retained for reconciliation">Auto 365 families (retired — reconciliation only)</canvas></div>
     <div class="src" id="a365links"></div>
   </div>
 </section>
 
 <div class="callout">
   <b>FX and vintage.</b> KS: GBP × 1.17, ex-VAT, scrape 10 Aug 2026, rate dated 1 May 2026.
-  Mekonomen: SEK × 0.089, same rate date. Eucon is a 2023 DE/NO survey vs IE40 list — closer to list-vs-list
-  but not UMI and not current. Auto 365 ILS × 0.25 is a placeholder. KS unnamed brands stay T1.
-  Mekonomen titles that are only a kronor figure are treated as suspect search noise.
+  Eucon is a 2023 DE/NO survey vs IE40 list — closer to list-vs-list but not UMI and not current.
+  Retired as of 24 Sep 2026: Mekonomen (SEK 0.089), Auto 365 (ILS 0.25 placeholder). No price from
+  a retired source is scored or counted. KS unnamed brands stay T1.
 </div>
 
 <p class="foot">
   Internal SPA workbench for UMI (sold-to 1797). Not the customer operating dashboard.
-  Sources: KS International trade listings (10 Aug 2026); Mekonomen.se (10 Aug 2026);
+  Sources: KS International trade listings (10 Aug 2026);
   Eucon 2023 IAM survey vs IE40 list; UMI calendar-2025 billed (credits excluded);
-  Best Value crossref; Auto 365 family catalogue (no OEM PN). Brand quality from the IAM tier table.
-  FX GBP 1.17 / SEK 0.089 as of 1 May 2026. Built {meta['as_of']}.
+  Best Value crossref; Auto 365 family catalogue (no OEM PN, retired).
+  FX GBP 1.17 as of 1 May 2026. Built {meta['as_of']}.
 </p>
 </div>
 <script>{chart_js}</script>
