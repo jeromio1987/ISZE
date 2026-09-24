@@ -1,6 +1,6 @@
 # Verification - PORTUGAL
 
-Built 2026-09-24T15:52:18+00:00. 17 of 17 gating checks pass.
+Built 2026-09-24T18:17:20+00:00. 17 of 17 gating checks pass.
 
 ## All checks
 
@@ -22,9 +22,9 @@ Built 2026-09-24T15:52:18+00:00. 17 of 17 gating checks pass.
 | last-12-month window: both-stage coverage per distributor | reported, not a gate | PORTUGAL 9/12 | PASS | months of the last twelve that carry billing AND sales to dealer |
 | longest contiguous both-stage run, per distributor | reported, not a gate | PORTUGAL 15 months ending 2026-03 | PASS | contiguity is measured, not inferred; the breaks are the months whose billing rows all carry a blank document type |
 | distributors that can carry a 12-versus-12 comparison at all | reported, not a gate | none | PASS | ITUK is the only one whose unbroken both-stage run reaches 24 months; everybody else is withheld, with no shorter fallback offered |
-| billed: units not classified in AIM | None | 5.61 | reported | reported, not a gate |
+| billed: units not classified in AIM | None | 2.68 | reported | reported, not a gate |
 | billed: units with no price on the list | None | 0.03 | reported | reported, not a gate |
-| sold: units not classified in AIM | None | 9.15 | reported | reported, not a gate |
+| sold: units not classified in AIM | None | 6.28 | reported | reported, not a gate |
 | sold: units with no price on the list | None | 4.16 | reported | reported, not a gate |
 | PMS cover above 100% carries a warning in the page | every instance flagged | None | PASS | the page marks every percentage above 100% with a warning and a reason |
 | HTML file size | under 15 MB for run 2 | 1.74 | PASS | MB, self-contained: data and Chart.js inline, no treemap plugin since that chart was removed, no server and no internet needed |

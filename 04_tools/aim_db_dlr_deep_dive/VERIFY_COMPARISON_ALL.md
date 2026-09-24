@@ -1,6 +1,6 @@
 # Verification - AIM comparison, ALL
 
-Built 2026-09-24T15:52:37+00:00. 61 of 61 checks pass.
+Built 2026-09-24T18:17:43+00:00. 61 of 61 checks pass.
 
 ## All checks
 
@@ -48,9 +48,9 @@ Built 2026-09-24T15:52:37+00:00. 61 of 61 checks pass.
 | units reconcile to the sales-to-dealer rows: ITUK 2025-01..2025-12 | 224587.0 | 224587.0 | PASS | on the page 223,717.0 units + 870.0 units dropped by the scope rule (non-part lines and lubricants) = 224,587.0 source units |
 | units reconcile to the sales-to-dealer rows: IUK 2025-01..2025-12 | 248638.0 | 248638.0 | PASS | on the page 248,242.0 units + 396.0 units dropped by the scope rule (non-part lines and lubricants) = 248,638.0 source units. IUK reports part of its sales to dealer in half units; they are kept as reported rather than rounded, so the figures still sum to the source |
 | units reconcile to the sales-to-dealer rows: PORTUGAL 2025-01..2025-12 | 51363.0 | 51363.0 | PASS | on the page 50,750.0 units + 613.0 units dropped by the scope rule (non-part lines and lubricants) = 51,363.0 source units |
-| sales to dealer, period A: units not classified in AIM | reported, not a gate | 7.07% of 320,786 units | PASS | reported, not a gate |
+| sales to dealer, period A: units not classified in AIM | reported, not a gate | 4.12% of 320,786 units | PASS | reported, not a gate |
 | sales to dealer, period A: units with no price on the list | reported, not a gate | 1.59% of 320,786 units | PASS | reported, not a gate |
-| sales to dealer, period B: units not classified in AIM | reported, not a gate | 4.77% of 336,574 units | PASS | reported, not a gate |
+| sales to dealer, period B: units not classified in AIM | reported, not a gate | 2.12% of 336,574 units | PASS | reported, not a gate |
 | sales to dealer, period B: units with no price on the list | reported, not a gate | 1.11% of 336,574 units | PASS | reported, not a gate |
 | the growth and decline euro sums back to the movement between the two period totals | 757313.53 | 757313.52 | PASS | 2,411,643.49 up and -1,654,329.97 down across 20,048 priced part numbers. The right-hand figure is the difference between the two period totals read straight from the periods, so nothing is lost between the two ranked lists. The tolerance is five cents, which is the rounding the page carries at this size |
 | the drill conserves the euro: AIM level 1 group against its level 2 groups | 0.0 | 0.0 | PASS | opening a bar must not lose or double count any euro; the largest gap found across all groups is 0.0000 euro (in group 0) |

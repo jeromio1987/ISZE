@@ -1,6 +1,6 @@
 # Verification - ALL
 
-Built 2026-09-24T15:52:08+00:00. 48 of 48 gating checks pass.
+Built 2026-09-24T18:17:04+00:00. 48 of 48 gating checks pass.
 
 ## All checks
 
@@ -53,9 +53,9 @@ Built 2026-09-24T15:52:08+00:00. 48 of 48 gating checks pass.
 | last-12-month window: both-stage coverage per distributor | reported, not a gate | GREECE 4/12; IRELAND 8/12; ITUK 9/12; IUK 8/12; PORTUGAL 9/12; UTI 7/12 | PASS | months of the last twelve that carry billing AND sales to dealer |
 | longest contiguous both-stage run, per distributor | reported, not a gate | GREECE 12 months ending 2025-12; IRELAND 15 months ending 2026-03; ITUK 39 months ending 2026-03; IUK 15 months ending 2026-03; PORTUGAL 15 months ending 2026-03; UTI 8 months ending 2026-03 | PASS | contiguity is measured, not inferred; the breaks are the months whose billing rows all carry a blank document type |
 | distributors that can carry a 12-versus-12 comparison at all | reported, not a gate | ITUK | PASS | ITUK is the only one whose unbroken both-stage run reaches 24 months; everybody else is withheld, with no shorter fallback offered |
-| billed: units not classified in AIM | None | 4.78 | reported | reported, not a gate |
+| billed: units not classified in AIM | None | 1.97 | reported | reported, not a gate |
 | billed: units with no price on the list | None | 0.03 | reported | reported, not a gate |
-| sold: units not classified in AIM | None | 5.57 | reported | reported, not a gate |
+| sold: units not classified in AIM | None | 2.65 | reported | reported, not a gate |
 | sold: units with no price on the list | None | 1.03 | reported | reported, not a gate |
 | PMS cover above 100% carries a warning in the page | every instance flagged | None | PASS | the page marks every percentage above 100% with a warning and a reason |
 | HTML file size | under 15 MB for run 2 | 7.19 | PASS | MB, self-contained: data and Chart.js inline, no treemap plugin since that chart was removed, no server and no internet needed |

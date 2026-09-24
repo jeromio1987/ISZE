@@ -1,11 +1,11 @@
 # ISZE derived pipeline verification
 
-**Generated:** 2026-09-24T17:46:23Z
+**Generated:** 2026-09-24T18:26:53Z
 **Data root:** `C:\Users\jerom\Desktop\claude\ISZE\01_data`
 
 | Pass | Warn | Fail |
 |------|------|------|
-| 163 | 2 | 0 |
+| 164 | 1 | 0 |
 
 ## Checks
 
@@ -164,7 +164,7 @@
 - ✅ **action_ledger.language** — co-movement wording only
 - ✅ **action_ledger.html** — dashboard HTML at ISZE_Action_Ledger.html
 - ✅ **prism.bvp_bundle** — BVP dashboard bundle ready
-- ⚠️ **freshness.no_stale_derived** — 1 derived file(s) sit behind their own input: nseries_tonnage_evolution.csv is 0.1 day(s) older than pms_tonnage_model.csv (rebuild with prism/scripts/build_nseries_tonnage_bands.py)
+- ✅ **freshness.no_stale_derived** — 41 declared input(s) checked; every derived file is at least as new as its input
 - ✅ **schema.gps_spu_by_distributor.csv** — gps_spu_by_distributor.csv: all 10 declared column(s) present (21 in the file); 11 new column(s) reported, not a defect
 - ✅ **schema.lost_sales_model.csv** — lost_sales_model.csv: all 18 declared column(s) present (86 in the file); 68 new column(s) reported, not a defect
 - ✅ **schema.nseries_tonnage_evolution.csv** — nseries_tonnage_evolution.csv: all 11 declared column(s) present (24 in the file); 13 new column(s) reported, not a defect

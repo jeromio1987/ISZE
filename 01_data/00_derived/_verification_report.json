@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-09-24T17:46:23Z",
+  "generated_at": "2026-09-24T18:26:53Z",
   "data_root": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data",
   "summary": {
-    "pass": 163,
-    "warn": 2,
+    "pass": 164,
+    "warn": 1,
     "fail": 0,
     "ok": true
   },
@@ -1243,14 +1243,9 @@
     },
     {
       "id": "freshness.no_stale_derived",
-      "status": "warn",
-      "message": "1 derived file(s) sit behind their own input: nseries_tonnage_evolution.csv is 0.1 day(s) older than pms_tonnage_model.csv (rebuild with prism/scripts/build_nseries_tonnage_bands.py)",
-      "detail": {
-        "stale": [
-          "nseries_tonnage_evolution.csv is 0.1 day(s) older than pms_tonnage_model.csv (rebuild with prism/scripts/build_nseries_tonnage_bands.py)"
-        ],
-        "inputs_checked": 41
-      }
+      "status": "pass",
+      "message": "41 declared input(s) checked; every derived file is at least as new as its input",
+      "detail": {}
     },
     {
       "id": "schema.gps_spu_by_distributor.csv",

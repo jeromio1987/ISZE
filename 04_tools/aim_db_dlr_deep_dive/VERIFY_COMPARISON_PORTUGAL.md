@@ -1,6 +1,6 @@
 # Verification - AIM comparison, PORTUGAL
 
-Built 2026-09-24T15:52:46+00:00. 25 of 25 checks pass.
+Built 2026-09-24T18:17:57+00:00. 25 of 25 checks pass.
 
 ## All checks
 
@@ -12,9 +12,9 @@ Built 2026-09-24T15:52:46+00:00. 25 of 25 checks pass.
 | longest unbroken both-stage run (ISZE billing and sales to dealer together): PORTUGAL | reported, not a gate | 15 months, 2025-01 to 2026-03, longest equal split 7 against 7 | PASS | reported, not a gate. The ranking basis is sales to dealer, so the billing gaps of April to June 2026 do not decide the period pair; they only shorten this second run |
 | pair is carried by 2N contiguous months: PORTUGAL 2025-01..2026-08 | 2N contiguous months present | 20 months | PASS |  |
 | units reconcile to the sales-to-dealer rows: PORTUGAL 2025-01..2026-08 | 91153.0 | 91153.0 | PASS | on the page 90,002.0 units + 1,151.0 units dropped by the scope rule (non-part lines and lubricants) = 91,153.0 source units |
-| sales to dealer, period A: units not classified in AIM | reported, not a gate | 9.23% of 43,387 units | PASS | reported, not a gate |
+| sales to dealer, period A: units not classified in AIM | reported, not a gate | 6.28% of 43,387 units | PASS | reported, not a gate |
 | sales to dealer, period A: units with no price on the list | reported, not a gate | 3.90% of 43,387 units | PASS | reported, not a gate |
-| sales to dealer, period B: units not classified in AIM | reported, not a gate | 9.31% of 46,675 units | PASS | reported, not a gate |
+| sales to dealer, period B: units not classified in AIM | reported, not a gate | 6.52% of 46,675 units | PASS | reported, not a gate |
 | sales to dealer, period B: units with no price on the list | reported, not a gate | 4.64% of 46,675 units | PASS | reported, not a gate |
 | the growth and decline euro sums back to the movement between the two period totals | 190718.13 | 190718.13 | PASS | 579,380.96 up and -388,662.83 down across 9,379 priced part numbers. The right-hand figure is the difference between the two period totals read straight from the periods, so nothing is lost between the two ranked lists. The tolerance is five cents, which is the rounding the page carries at this size |
 | the drill conserves the euro: AIM level 1 group against its level 2 groups | 0.0 | 0.0 | PASS | opening a bar must not lose or double count any euro; the largest gap found across all groups is 0.0000 euro (in group 0) |
