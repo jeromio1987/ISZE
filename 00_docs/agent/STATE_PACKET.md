@@ -1,5 +1,54 @@
 # ISZE state packet
 
+**Updated:** 2026-09-25 06:50 — classification release re-tested; the gain is real, the file still needs its own release entry
+
+## Classification release — 24 September candidate re-tested (2026-09-25)
+
+**Verdict: re-freeze the candidate as a new release of its own.** Memo:
+`Isuzu Universe\01_Strategy\CLASSIFICATION_RELEASE_RETEST_2026-09-25.md` (new). Nothing approved,
+nothing edited, `RELEASES.json` untouched, read-only throughout. This closes Cursor work order
+block D, which had been parked waiting for Jerome's signal; he gave it in chat.
+
+**What changed is only the AIM family columns.** Compared row by row on all 164,907 keys, the
+catalogue tree (`catalog_l1/l2/l3`), the non-part flag and the filter role differ on **0 rows**.
+1,159 AIM rows moved, of which **1,147 went from a placeholder to a real family** and **0 fell
+back onto one**. No new top-level family; one new second level (`Disc & Drum`) and one new third
+level (`Cab Assembly`), both already present inside the file. Billing on the moved rows,
+on the file's own `l12m_billed_eur` column (a legacy name; the window is Jan 2025 – Jun 2026):
+**EUR 736,530**.
+
+**All three white-paper examples are unchanged, cell for cell.** ITUK brake pads still reproduce to
+the cent (EUR 357,044.75 → 304,257.91). Portugal clutch kits still reproduce on the Clutch kit leaf
+(EUR 8,316.87 / 62 units 2024, EUR 11,824.10 / 69 units 2025) and the wording still fails — the
+white paper's 462-to-461 figure counts all clutch components, not kits. Air filter under Air
+conditioning is **0.34%, not 0**: exactly one part, `8980913940`, EUR 2,794.95 in 2025.
+
+**Three things to know before anyone acts on this**
+
+1. **The candidate is one revision further on than the 24 September memo describes.** The file is
+   now sha `092e981518ef…`, not `e5824683…`; the cab-assembly class was applied to it at 19:21 on
+   24 September (19 rows, 135 cells). It needs a release entry with its own hash, status
+   `PENDING_APPROVAL` — and the approved 2026-09-20 entry must not be touched.
+2. **Three of the four "known faults" the decision memo assigns to this file are not in it.** There
+   are no `5500` rows and no bumper bars under leaf spring on either release; those belong to
+   `aim_master_v2.csv` and to the separate maintenance tag in `parts_catalog_dimension.csv`. The
+   guide pin `8980475290` in the brake-pad group and the 9,634-row "Other / review" bucket
+   (EUR 3,241,257) are confirmed.
+3. **The 17-of-18 gate failure is one empty row.** `Filters > Filter element` holds a single part
+   number, `5864052180`, with no description and no billing in 2023–2026. The gate result on disk
+   (`aim_pn_classification_20260920.gate.json`, 20 September 14:42 UTC) is stale: 17 passed, 1
+   failed, and the failure is that leaf baseline. Re-run it against today's file.
+
+**Count moved for the blocked-marker decision.** The candidate leaves **4,135** rows on a
+placeholder (3,604 `Unknown` + 531 `Unknown Review`), against 4,936 on the frozen file. The "92
+parts blocked" figure in the 24 September memo and in
+`00_docs\agent\OPUS55_PROMPT2_AFTERMARKET_20260924.md` was measured on the earlier revision and
+should be re-measured before anything acts on it.
+
+**Guard state, re-verified:** the frozen release returns exit 0 (`60111c104dde…` matches); the live
+file returns exit 1.
+
+---
 **Updated:** 2026-09-24 19:55 — AIM refresh finished: 17 pages rebuilt on the settled master, all signed
 
 ## AIM refresh, second pass (2026-09-24 19:00–19:55) — every page on the current classification
@@ -187,7 +236,7 @@ Inventory: `01_data/90_INBOX/UIO_DATA_INVENTORY_2026-09-22.csv` (35 sources grad
 
 **Five markets have registration-grade data, not two:** Portugal (I-Motors/SAP, 14,412 unique chassis, 2005-2026), Ireland (SIMI 2010-2025), **Israel** (MOT band flow 1994-2025 + parc 14,019 at 30/06/2026), **Germany** (Helwig parc snapshot 31/12/2025), **UK** (SMMT/DVLA via `UIO.xlsx`). The other 22 market rows have no registration-grade source.
 
-**Implied scrap where measurable:** Ireland CV 14.3% pooled → ~16.5% on 2020-24 · Portugal CV 8.3% on 2020-24 · Israel CV ~4.1% and drifting up · Irish pickups ~9.6% (last 5 yrs). **Germany and UK cannot be computed** from what we hold.
+**Implied scrap where measurable:** Ireland CV 14.3% pooled 2019-2024 (that window crosses the unrecorded 2018/19 join; its first year, 2019, is 2.4%) → ~16.5% on 2020-24 · Portugal CV 8.3% on 2020-24 · Israel CV ~4.1% and drifting up · Irish pickups ~9.6% (last 5 yrs). **Germany and UK cannot be computed** from what we hold.
 
 **Spec corrections:** §Problem 5 names the right four markets but reads the "0.3-3% scrappage" as evidence about them. It is not — a fleet carried forward on an assumed low rate measures as scrapping at that rate. Cyprus and Malta also have tiny doubling fleets where near-zero net scrappage is arithmetically normal. **Germany (7.2%, highest of the four) belongs in its own category: "current level known (Helwig), history unknown."**
 
@@ -201,7 +250,7 @@ Inventory: `01_data/90_INBOX/UIO_DATA_INVENTORY_2026-09-22.csv` (35 sources grad
 | 2015 | 190 | 96 |
 | 2016 | 359 | 323 |
 
-Both rows lose **99.5% / 99.9% in one year** — two different populations with no join. **Any scrap rate, trend, or per-truck rate computed across 2013/14 for Ireland or Portugal is meaningless**, and both are among the five A-grade markets. This also explains the Ireland GPS-vs-wallet gap (3,056 vs 2,161). **Must be resolved before any per-market scrap rate is trusted, and before V21.**
+Both rows lose **99.5% / 99.9% in one year** — two different populations with no join. **Any scrap rate, trend, or per-truck rate computed across 2013/14 for Ireland or Portugal is meaningless**, and both are among the five A-grade markets. ~~This also explains the Ireland GPS-vs-wallet gap (3,056 vs 2,161).~~ **WITHDRAWN 2026-09-24 — that was wrong, and it matters.** Both published Irish fleets carry the identical 2013/14 break and the 2025 figure does not cross it, so the splice plays no part in the gap. The real cause is that the GPS file still holds the **version 17 fleet for 2025**, from before the June 2026 rebuild: `gps_spu_by_distributor.csv` reads `uio_v18_gps.json` and `uio_v19_gps.json`, and both carry the v17 numbers even though their names say v18 and v19. Fixing the splice would not close the gap. Until the file is re-pointed (held under the UIO V21 hold, Jerome 2026-09-22), every 2025 Ireland and Portugal figure taken from it carries: *"Fleet from the superseded v17 build; the ceiling uses 2,161 (Ireland) / 7,208 (Portugal)."* The same euros read **85.4% of target in the GPS file and 138.7% in the ceiling file**, and spend per truck reads **EUR 389 in one place and EUR 549 in another** — the GPS file's own Irish series is mixed (only its 2025 row is v17), so its 2024-to-2025 fall is a denominator artefact, not a market signal. **Must be resolved before any per-market scrap rate is trusted, and before V21.**
 
 **Israel PDF is on disk in the workspace** (the spec said it was not): `01_data\מצגת לחלפים בלגיה - אפריל 2026.pdf`, 3,558,501 bytes, mtime 2026-09-19. Hebrew filename.
 
@@ -212,7 +261,7 @@ Jerome: *"for UIO V21 I think we need better spend per unit data"* — then chos
 **Five defects proven by parent check on `01_data/00_derived/gps_spu_by_distributor.csv` (88 rows):**
 1. Fleet is v18-era — `uio_source`: 68 `v18_actual`, 16 `v18_proxy_2025`, 4 `ituk_dvla_2026`.
 2. `uio_proxy` is **False on all 88 rows** while 16 carry a proxy source — the flag is inert.
-3. **Two published fleets disagree per market:** IRELAND 3,056 (GPS) vs 2,161 (wallet) = **+41.4%**, PORTUGAL +13.4%, GERMANY −6.7%; totals (163,459 vs 163,198) hide it. Ireland is the 2013/14 splice.
+3. **Two published fleets disagree per market:** IRELAND 3,056 (GPS) vs 2,161 (wallet) = **+41.4%**, PORTUGAL +13.4%, GERMANY −6.7%; totals (163,459 vs 163,198) hide it. ~~Ireland is the 2013/14 splice.~~ **WITHDRAWN 2026-09-24** — the 3,056 is the version 17 2025 fleet still sitting in the GPS file from before the June 2026 rebuild, not the splice; see the UIO data inventory section below and `00_docs/IE_PT_BREAK_2026-09-24.md`.
 4. Four markets bill parts with **zero fleet** (UKRAINE, ARMENIA, KAZAKHSTAN, PALESTINE).
 5. **`RATE_N35` is applied only to ITUK** — `gps_v9_loaders.py::max_spend_from_buckets()` prices `LD * RATE_N75` for every other market. Not fixed (moves a published ceiling).
 
@@ -224,8 +273,8 @@ Report: `01_data/90_INBOX/UIO_HISTORY_AUDIT_2026-09-22.md` (+ per-year reconcili
 
 - **Grand Total reconciles exactly in all 41 years** (max gap 5.8e-11). The spec's "~2,500/yr shortfall" is an **appendix printing omission** (22 rows printed, 39 carry inputs; true input 18,478 vs printed 15,924 in 2026). Largest omission is **UK CV row 22 at 1,685 units** — 19× the 90-unit row-25 issue the spec leads with. Row 2 has 41 live formulas; rows 7-90 have none.
 - **Perimeter rule found:** IMIT `EUROPE - ISZE Only` = 10,845 for 2026; gap decomposes exactly **495 (no pickup row: Ukraine/Armenia/Palestine) + 119 (six stale cells, UK −90)**. Four tests written: LCV/D-Max only; ISZE-served, MIDI excluded; IMIT's market list governs; take IMIT's figure.
-- **History only partly sound.** Ireland 731 rebuilds to **730.48** (via the 7.5 t band with a **2-year lag**, not the N-series total). **Portugal 2025 does NOT rebuild** (best of 84 constructions 2,123 vs 2,206) — marked "reported, not verified". Only Germany LD/MD carry the backwards 3% signature. Five rows have no history before their rebuild start; **two are spliced at 2013/2014** (Ireland, Portugal — losing 99.5% / 99.9% in one step), so Check 1 validates only the post-2014 half.
-- **Two workbook defects the spec does not mention:** (a) the MIDI subtotal row 5 ≠ the sum of `MIDI`-tagged rows (short by up to 5,500 in 2000) because France/Switzerland carry distributor `MIDI Europe` but tag `ISZE` — **the tag column is wrong, row 5 is right**; anyone filtering on the tag understates MIDI by a third. (b) The two summary tables at the foot of sheet 1 are pinned to 2020/2022/2024/2025 while row 2 runs to 2030 — from 2027 they diverge by **43,409 trucks**, and summary table 1 is not MIDI-consistent (2020 total 209,670 vs row 2's 204,155).
+- **History only partly sound.** Ireland 731 rebuilds to **730.48** (via the 7.5 t band with a **2-year lag**, not the N-series total). **Portugal 2025 does NOT rebuild** (best of 84 constructions 2,123 vs 2,206) — marked "reported, not verified". Only Germany LD/MD carry the backwards 3% signature. Five rows have no history before their rebuild start; **two are spliced at 2013/2014** (Ireland, Portugal — losing 99.5% / 99.9% in one step), so Check 1 validates only the post-2014 half. **Corrected 2026-09-24:** the post-2014 half is not safe either. 2014-2018 is an older incomplete build, not a registration fleet, and the June 2026 rebuild added an unrecorded join at 2018/19. Rows 26 (Ireland CV LD), 51 (Portugal CV LD) and 29 (Ireland pickups) are unusable as fleet levels for 1990-2018; the trusted window is 2019-2025 and the first year-on-year movement that may be used is 2019 to 2020.
+- **Two workbook defects the spec does not mention:** (a) the MIDI subtotal row 5 ≠ the sum of `MIDI`-tagged rows (short by up to 5,500 in 2000) because France/Switzerland carry distributor `MIDI Europe` but tag `ISZE` — **the tag column is wrong, row 5 is right**; anyone filtering on the tag understates MIDI by about a third in the 1990s, falling to 0.2% by 2014 and **zero from 2023** — no current figure is affected. (b) The two summary tables at the foot of sheet 1 hold no formulas and are a **frozen copy of the version 17 workbook with every column labelled one year late** — the column headed 2025 holds v17's 2024 figures and the column headed 2026 holds v17's 2025 figures (267 of table 1's 272 non-empty cells; table 2 behaves the same way, 243 matches). The earlier wording here that they were "pinned to 2020/2022/2024/2025" is **WITHDRAWN 2026-09-24**: their headers run 2020, 2022, 2024, 2025 and 2026-2030. They disagree with the main row on almost every cell — table 1 reads 254,117 under "2025" against row 2's 258,594, and 265,716 under "2030" against 309,125 — and summary table 1 is not MIDI-consistent (2020 total 209,670 vs row 2's 204,155). **Nothing should be quoted from either table.**
 - **Helwig Germany gap open:** Helwig parc 623 vs workbook Germany LD 2025 697 — 74 units unexplained. Helwig is Germany's only tonnage source; sort before any Germany rebuild.
 
 **BVDB pack is CLEAN of the MIDI tag defect.** Parent check of the shipped table `01_data/00_derived/uio_by_market_type_year.csv` (1,279 rows): **18 markets, zero MIDI / France / Switzerland / Italy rows** — the pack ships ISZE-served markets only, so the broken tag column never reaches BVDB. `band_note` carries the LD-label caveat per market.

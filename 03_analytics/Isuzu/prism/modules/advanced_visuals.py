@@ -29,6 +29,7 @@ RED = "#C62828"
 GREY = "#94A3B8"
 
 from modules.plotly_style import BASE_LAYOUT as _LAYOUT
+from modules.tender_feed import feed_date_label, load_feed as _load_tender_feed
 
 def _default_derived() -> Path:
     import os
@@ -307,53 +308,95 @@ def fig_db_parts_mix(derived_dir=None, highlight: str = "ITUK") -> go.Figure:
     return fig
 
 
-# ───────────────────────── tender pipeline (from tender_data.json) ───────────
+# ───────────────────── tender pipeline (live tender_data.json) ───────────────
+# The four charts below read the weekly tender feed directly (modules.tender_feed),
+# the same loader the Tender Pipeline page uses. The flattened
+# Data/derived/tender_pipeline.csv (last built 29 May 2026) is no longer read.
 DECISION_COLORS = {"Attack": "#E2231A", "Selective": ISZE_ORANGE, "Watch": ISZE_BLUE, "Ignore": GREY}
 DECISION_ORDER = ["Attack", "Selective", "Watch", "Ignore"]
 
 
 def _tender(derived_dir=None) -> pd.DataFrame:
-    """Tender opportunity pipeline. Qualified-pipeline only — value present on ~12
-    of 520 rows, so never chart € here, only counts and scores."""
-    d = _read(derived_dir, "tender_pipeline.csv")
-    if d["actionable"].dtype != bool:
-        d["actionable"] = d["actionable"].astype(str).str.lower().isin(["true", "1"])
+    """Live tender opportunities. Qualified-pipeline view only.
+
+    The feed arrives with almost no euro attached, so these charts count
+    opportunities and show their scores; they never chart a € pipeline.
+    """
+    d, _meta = _load_tender_feed(derived_dir)
     return d
 
 
+def _tender_meta(derived_dir=None) -> dict:
+    _d, meta = _load_tender_feed(derived_dir)
+    return meta
+
+
+def _live_label(d: pd.DataFrame, meta: dict, plotted: pd.DataFrame | None = None) -> str:
+    """Plotted row count and feed date, both read off the file — never a typed number."""
+    shown = len(d) if plotted is None else len(plotted)
+    if shown == len(d):
+        return f"{len(d):,} live opportunities, feed {feed_date_label(meta)}"
+    return f"{shown:,} of {len(d):,} live opportunities, feed {feed_date_label(meta)}"
+
+
+def _no_feed(key: str, err: Exception) -> go.Figure:
+    """A visible, honest placeholder. Nothing is drawn from a stale file."""
+    return go.Figure(layout=go.Layout(
+        title=f"{key} — unavailable ({err})", **_LAYOUT))
+
+
 def fig_tender_funnel(derived_dir=None) -> go.Figure:
-    c = _tender(derived_dir)["decision"].value_counts()
+    try:
+        d = _tender(derived_dir)
+        meta = _tender_meta(derived_dir)
+    except Exception as e:  # missing/corrupt feed must not blank the page
+        return _no_feed("Tender funnel", e)
+    c = d["decision"].value_counts()
     order = [k for k in DECISION_ORDER if k in c.index]
     vals = [int(c[k]) for k in order]
     fig = go.Figure(go.Bar(x=order, y=vals, text=vals, textposition="outside",
                            marker_color=[DECISION_COLORS[k] for k in order]))
     fig.update_layout(**_LAYOUT, height=420, yaxis=dict(title="Opportunities"),
-                      title="Tender pipeline — qualification funnel (520 scored opportunities)")
+                      title=f"Tender qualification funnel — {_live_label(d, meta)}")
     return fig
 
 
 def fig_tender_country(derived_dir=None) -> go.Figure:
-    d = _tender(derived_dir)
+    try:
+        d = _tender(derived_dir)
+        meta = _tender_meta(derived_dir)
+    except Exception as e:
+        return _no_feed("Tender by country", e)
     c = d[d["actionable"]]["country"].value_counts().head(12).sort_values()
     fig = go.Figure(go.Bar(y=c.index.tolist(), x=c.values.tolist(), orientation="h",
                            marker_color=ISZE_BLUE, text=c.values.tolist(), textposition="auto"))
-    fig.update_layout(**_LAYOUT, height=460, xaxis=dict(title="Actionable opportunities"),
-                      title="Actionable tender opportunities by country (top 12)")
+    fig.update_layout(**_LAYOUT, height=460, xaxis=dict(title="Actionable opportunities (top 12)"),
+                      title=f"Actionable tender opportunities by country — "
+                            f"{_live_label(d, meta, d[d['actionable']])}")
     return fig
 
 
 def fig_tender_owner(derived_dir=None) -> go.Figure:
-    d = _tender(derived_dir)
+    try:
+        d = _tender(derived_dir)
+        meta = _tender_meta(derived_dir)
+    except Exception as e:
+        return _no_feed("Tender by owner", e)
     c = d[d["actionable"]]["owner_suggested"].value_counts().sort_values()
     fig = go.Figure(go.Bar(y=c.index.tolist(), x=c.values.tolist(), orientation="h",
                            marker_color=ISZE_ORANGE, text=c.values.tolist(), textposition="auto"))
     fig.update_layout(**_LAYOUT, height=420, xaxis=dict(title="Actionable opportunities"),
-                      title="Actionable tender opportunities by owner")
+                      title=f"Actionable tender opportunities by owner — "
+                            f"{_live_label(d, meta, d[d['actionable']])}")
     return fig
 
 
 def fig_tender_scatter(derived_dir=None) -> go.Figure:
-    d = _tender(derived_dir)
+    try:
+        d = _tender(derived_dir)
+        meta = _tender_meta(derived_dir)
+    except Exception as e:
+        return _no_feed("Tender fit x win", e)
     d = d[(d["decision"] != "Ignore") & d["fit_score"].notna() & d["win_score"].notna()]
     fig = go.Figure()
     for dec in ["Attack", "Selective", "Watch"]:
@@ -370,7 +413,8 @@ def fig_tender_scatter(derived_dir=None) -> go.Figure:
     fig.update_layout(**_LAYOUT, height=480, xaxis=dict(title="Fit score"),
                       yaxis=dict(title="Win-probability score"),
                       legend=dict(orientation="h", y=-0.15),
-                      title="Tender qualification map — fit × win (bubble = opportunity score)")
+                      title=f"Tender qualification map — fit x win (bubble = opportunity score), "
+                            f"{_live_label(d, meta, d)}")
     return fig
 
 

@@ -7,12 +7,14 @@ REM
 REM  Order matters:
 REM    1. refresh tiers   - rank parts by billed value (trailing 12 months)
 REM    2. price triggers  - diff the price list vs its snapshot, queue checks
-REM    3. ledger          - rebuild the one price-observation table
-REM    4. parser selftest - parse the saved Amayama page; FAIL loudly if that selector breaks
-REM    4. parser selftest - parse the saved Amayama page; FAIL loudly if that selector breaks
+REM    3. scraped prices  - parse the saved web pages into candidate rows (no fetch)
+REM    4. ledger          - rebuild the one price-observation table
+REM    5. verbatim check  - every loaded price and part number must be printed on its
+REM                         source page; FAIL loudly rather than trust a parser
+REM    6. parser selftest - parse each saved page; FAIL loudly if a selector breaks
 REM
-REM  Nothing here fetches from the web. Phase 1 scraping is still gated on
-REM  Jerome's explicit go.
+REM  Nothing here fetches from the web. Step 3 reads pages already on disk; fetching
+REM  them is a separate, deliberate action that goes through check_scrape_consent.py.
 REM
 REM  Log: 04_tools\delegation\_logs\ledger_YYYY-MM-DD.log
 REM ===========================================================================
@@ -36,22 +38,32 @@ echo =================================================== >> "%LOG_FILE%"
 set FAILED=0
 
 echo. >> "%LOG_FILE%"
-echo --- 1/3 refresh tiers (billed value) --- >> "%LOG_FILE%"
+echo --- 1/6 refresh tiers (billed value) --- >> "%LOG_FILE%"
 "%PYTHON%" "%SCRIPT_DIR%build_refresh_tiers.py" >> "%LOG_FILE%" 2>&1
 if errorlevel 1 set FAILED=1
 
 echo. >> "%LOG_FILE%"
-echo --- 2/3 price-list triggers --- >> "%LOG_FILE%"
+echo --- 2/6 price-list triggers --- >> "%LOG_FILE%"
 "%PYTHON%" "%SCRIPT_DIR%price_list_triggers.py" >> "%LOG_FILE%" 2>&1
 if errorlevel 1 set FAILED=1
 
 echo. >> "%LOG_FILE%"
-echo --- 3/4 price-observation ledger --- >> "%LOG_FILE%"
+echo --- 3/6 scraped prices from the saved pages (no fetch) --- >> "%LOG_FILE%"
+"%PYTHON%" "%ROOT%\04_tools\price_ledger\build_scraped_observations.py" --emit >> "%LOG_FILE%" 2>&1
+if errorlevel 1 set FAILED=1
+
+echo. >> "%LOG_FILE%"
+echo --- 4/6 price-observation ledger --- >> "%LOG_FILE%"
 "%PYTHON%" "%ROOT%\04_tools\price_ledger\build_price_ledger.py" >> "%LOG_FILE%" 2>&1
 if errorlevel 1 set FAILED=1
 
 echo. >> "%LOG_FILE%"
-echo --- 4/4 parser selftest (saved page, no fetch) --- >> "%LOG_FILE%"
+echo --- 5/6 verbatim check: prices must be printed on their source pages --- >> "%LOG_FILE%"
+"%PYTHON%" "%ROOT%\04_tools\price_ledger\verify_scraped_observations.py" >> "%LOG_FILE%" 2>&1
+if errorlevel 1 set FAILED=1
+
+echo. >> "%LOG_FILE%"
+echo --- 6/6 parser selftest (saved pages, no fetch) --- >> "%LOG_FILE%"
 "%PYTHON%" "%SCRIPT_DIR%parsers\price_parsers.py" --selftest >> "%LOG_FILE%" 2>&1
 if errorlevel 1 set FAILED=1
 
@@ -60,5 +72,5 @@ if "%FAILED%"=="1" (
   echo EXIT 2 - at least one step failed. See the lines above. >> "%LOG_FILE%"
   exit /b 2
 )
-echo EXIT 0 - all four steps completed. >> "%LOG_FILE%"
+echo EXIT 0 - all six steps completed. >> "%LOG_FILE%"
 exit /b 0

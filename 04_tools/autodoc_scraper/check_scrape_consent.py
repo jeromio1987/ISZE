@@ -54,6 +54,26 @@ TARGETS = [
     # research). Path = HTML search, NOT /wp-json/ — robots disallows /wp-json/.
     ("parsers/omega", "https://omegaspareparts.com", "/?s=8970622940&post_type=product"),
     ("parsers/tungen", "https://www.tungen-bil.no", "/nettbutikk/eldre-originale-bildeler/isuzu/isuzu-eldre-originale-deler/"),
+    # 2026-09-24 (Phase 1 recon, scrape go). Every path below was probed with this
+    # gate before use; the disallowed ones are recorded so nobody rediscovers them
+    # by trying. Geparden and mekster are domain-allowed but search-path-disallowed,
+    # which is why they have a working path here and a note for the dead one.
+    ("parsers/geparden", "https://geparden.no", "/sitemap.xml"),
+    ("parsers/geparden", "https://geparden.no", "/sitemaps/products-1.xml"),
+    ("parsers/geparden", "https://geparden.no", "/products/<slug>-p-isu<oem>"),
+    # DISALLOWED (kept as evidence, not as a route): robots blocks /search
+    ("parsers/geparden", "https://geparden.no", "/search?q=8982705240"),
+    ("parsers/mekster", "https://mekster.no", "/"),
+    ("parsers/mekster", "https://www.mekster.no", "/media/no_products_google_sitemap_1.xml"),
+    ("parsers/mekster", "https://www.mekster.no", "/climair-vindavviser-foran-isuzu-d-max-583471.html"),
+    # DISALLOWED (kept as evidence): robots blocks */catalogsearch/; /sok 404s anyway
+    ("parsers/mekster", "https://mekster.no", "/sok?q=8982705240"),
+    ("parsers/autoline", "https://autoline.dk", "/sitemap.xml"),
+    ("parsers/autoline", "https://autoline.dk", "/-/reservedele--c456"),
+    ("parsers/autoline", "https://autoline.dk", "/-/reservedele/Isuzu--c456tm2615"),
+    # DISALLOWED (kept as evidence): robots blocks /search/ and /search.php
+    ("parsers/autoline", "https://autoline.dk", "/search/"),
+    ("parsers/tungen", "https://www.tungen-bil.no", "/nettbutikk/eldre-originale-bildeler/isuzu/isuzu-eldre-originale-deler/"),
 ]
 
 

@@ -336,4 +336,7 @@ _qa*.jpg
 01_data/14_dashboards/*.backup_*.json
 
 # --- Scratch probe scripts (DATA_MANIFEST.md §8: scratch dump, not a deliverable) ---
-01_data/91_build/_scratch/
+# Blanket rule added 2026-09-25: the same one-off check/probe/verify-script pattern was
+# found loose (and un-ignored) in 02_dashboards/_build/ and several 04_tools/ subfolders,
+# not just 01_data/91_build/ — one rule covers every _scratch/ folder anywhere in the repo.
+**/_scratch/

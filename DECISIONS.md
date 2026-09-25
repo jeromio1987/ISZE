@@ -6,6 +6,22 @@
 
 ---
 
+## 2026-09-24 — The frozen 2026-09-20 classification release is approved
+
+**Status:** Approved — Jerome, 2026-09-24. The frozen release is the one he approved. The newer candidate stays unapproved.
+
+**Decision:** The parts-classification release `2026-09-20` is **APPROVED**. It is the release the AIM pages are built from, and it is now named and approved rather than pending: hash `60111c104ddeb466e6c15f084039639d35172056b0fd2ea10225a3c50da610e0`, 164,908 rows. The hash was re-verified against the register **before** the status was changed, and the guard script (`01_data/00_derived/_releases/check_classification_release.py`) exits 0 against the frozen file and non-zero against the live one, so the two are provably different files.
+
+**What this means:** the classification the AIM pages read is now a dated, named release with a hash. A build can be pinned to it and a silent change to the classification becomes detectable, which is what the release guard exists for. It is a naming and control decision, not a data change: no classification value was touched.
+
+**Executed:** `01_data/00_derived/_releases/RELEASES.json` — the `2026-09-20` candidate's status set from `PENDING_APPROVAL` to `APPROVED`, with `approved_by: "Jerome"` and `approved_on: "2026-09-24"` added. Hash, rows and source left exactly as they were.
+
+**Not executed, deliberately:** the `2026-09-24-candidate` stays `NOT_RELEASED`. It adds the EXPORT.XLSX classifications (1,197 rows changed on 2026-09-24) and stays unapproved **pending the three white-paper re-tests**. Neither release file was deleted and no classification data was changed.
+
+**Noted, not fixed:** the AIM comparison pages on disk are built from a separately exported master (`AIM_Master_PN_Categories_Figkey_20260924.csv`, 165,290 rows), so this release is named and approved but no builder is pinned to it yet. The gate also still runs against `aim_pn_classification_v2.csv`, not the approved release. Both are recorded, neither was changed here.
+
+---
+
 ## 2026-09-22 - The price adjustment ambition is closed, permanently
 
 **Status:** Accepted - Jerome, chat, 2026-09-22, verbatim: *"delete price ambition I will come when it's done for now do a simulation on 5% increase and than never ask again."*
@@ -1320,3 +1336,11 @@ Outside Europe the same letters are 5.1-6.5 t, so the ruling does not transfer t
 **Decision:** Both set to 0; their NMR sit on the 5.5 t rung. Full P0–P5 pipeline re-run (except the `sales_fact` rebuild), FACTS.md and `facts_anchor.yaml` reconciled, including two anchors that had drifted since 2026-09-22 for unrelated reasons (ITUK oil-filter PRISM lane, prior-quarter parts base).
 **Consequences:** Network GPS CY2025 56.6% → 56.5%; Malta GPS 60.9% → 54.5%, Cyprus 63.8% → 63.4%. ITUK oil-filter PRISM-lane capture restated (2025: 79%; 2023 not stated as a rate). Verify 164 pass / 1 warn / 0 fail; facts-drift aligned.
 **Docs updated:** FACTS.md, facts_anchor.yaml, `01_data/90_INBOX/TONNAGE_FINISH_REPORT_2026-09-23.md` (Addendum 4).
+
+## 2026-09-24 — Scrape go given for all six Phase 1 platforms; Eucon-sourced numbers used before legal has cleared the licence terms
+
+**Status:** Accepted (Jerome, chat)
+**Context:** `00_docs/COVERAGE_DECISION_2026-09-24.md` recommended freezing the Eucon-based cross-reference build and testing a paid licence instead, because Eucon's PartsPool contract ended 31 July 2026 and four licence questions are open (`00_docs/EUCON_LICENCE_BRIEF_2026-09-24.md`) — can downloaded data still be used, does it cover price monitoring, can it go outside the EU, must it be deleted. Separately, live scraping of any new platform (Phase 1 of `00_docs/agent/SCRAPER_REDO_DELEGATION.md`) had been waiting on an explicit go since 2026-08-18; only KS and T&M Commercials run today.
+**Decision:** Two explicit calls, same turn. (1) Scrape go given for all six pending Phase 1 platforms (Amayama, Omega, geparden.no, mekster.no, tungen-bil.no, autoline.dk) — built and fetched in parallel, not sequenced one at a time. (2) Eucon-sourced competitor numbers (6,358 of 6,455 links in the crossref graph, 93%) may be used to drive that scrape now, ahead of legal answering the four open licence questions. Jerome was shown the specific risk (using data from an ended contract under unreviewed terms) and chose to proceed.
+**Consequences:** Phase 1 tasks 1.1–1.5 in `SCRAPER_REDO_DELEGATION.md` moved from ⛔ to unblocked. **Not changed by this go:** Eucon-sourced rows still never go to DeepSeek or any outside-EU service — that specific boundary (licence brief §"Stop until a lawyer has read the terms") was not addressed in Jerome's answer and stays in force until he says otherwise. `NOTE_Eucon.txt` (plain-text Eucon password) still needs Jerome to remove it. The four licence questions remain open and unaffected by this decision — this is a decision to accept the risk of using the downloads now, not a finding that the usage is compliant.
+**Docs updated:** `00_docs/agent/SCRAPER_REDO_DELEGATION.md` (header + Phase 1 table), `00_docs/agent/CURSOR_BRIEF_SCRAPER_REDO_20260924.md` (new task block for Cursor), `00_docs/agent/DELEGATOR_BOARD.md`.

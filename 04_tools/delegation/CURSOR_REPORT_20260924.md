@@ -259,3 +259,168 @@ them as a competitor price would be a category error.
 ## Not done
 
 C2, C4, C5, C6; the Mekonomen clean-up above.
+
+---
+
+# Phase 1 recon + parser build (this session, 2026-09-24 late)
+
+**Brief:** `00_docs/agent/SCRAPER_PARSER_BUILD_BRIEF_20260924.md`
+**Recon report:** `00_docs/agent/SCRAPER_PHASE1_REACH_RECON_20260924.md`
+
+## What this closed
+
+**The blocker that would have stopped Phase 1 dead:** the ledger could not convert NOK, DKK or USD.
+`build_price_ledger.validate()` refuses any currency missing from its inline FX table
+(`EUR`, `GBP`, `SEK`), so **five of the six Phase 1 sites could not have written a single row** — every
+Norwegian, Danish and US price would have been rejected before storage.
+
+Fixed centrally:
+- `04_tools/price_ledger/build_fx_rates.py` (new) writes `04_tools/price_ledger/fx_rates.json` from the
+  **European Central Bank's daily euro reference rates** — public, dated, citable, one run.
+- `build_price_ledger.py` reads it **additively**: EUR/GBP/SEK keep the rates the existing 1,081 rows
+  were built with, so **no stored euro value moves**. The ECB rate is added only for the missing
+  currencies.
+- Verified by `04_tools/price_ledger/_check_fx_change_20260924.py`: same 1,081 rows, **0 rows with a
+  moved `price_eur`**. The first attempt *did* move 260 euro values; that guard caught it and the
+  change was made additive.
+- The ECB also publishes a slightly different GBP (1.1630 vs the working 1.17) and SEK (0.0888 vs
+  0.089). **Rebasing those is Jerome's call and was deliberately NOT done.**
+
+## Parsers — seven sites, all self-testing against pages on disk
+
+| Site | Status | Rows from the saved page | price_types |
+|---|---|---|---|
+| amayama | working, proven | 2 | genuine_grey |
+| ks | working | 1 | genuine_grey |
+| omega | working | 2 | aftermarket_retail + dealer |
+| geparden | working | 1 | aftermarket_retail |
+| mekster | working | 1 | aftermarket_retail |
+| tungen | working | 1 | dealer |
+| autoline | working | 16 (1 priced, 15 price-on-request) | marketplace |
+
+`python 04_tools/delegation/parsers/run_probe.py` → **7/7 sites OK**, every row schema-clean.
+`python 04_tools/delegation/parsers/price_parsers.py --selftest` → **ALL SELFTESTS PASS**.
+
+Every parser raises rather than returning `[]` when it recognises a page but finds nothing — the
+Mekonomen lesson (seven false prices sat in a dashboard for six weeks because a scraper returned
+something instead of nothing).
+
+## Three things found by checking rather than assuming
+
+1. **Amayama repriced 8974995480 from 54.25 to 56.42 USD (+4.0%)** between the 18 and 24 Sep
+   snapshots. Only caught because the old selftest asserted the stale figure. Both snapshots are now
+   fixtures and the movement is asserted, so a future silent move goes red.
+
+2. **I was wrong about Omega's VAT, and the sub-agent was right.** My brief told it to record the
+   GBP 40.80 as ex-VAT; it read the page, found `"valueAddedTaxIncluded": true` and escalated instead
+   of obeying. I checked the page directly — the page wins. A GBP 40.80 recorded as ex-VAT when the
+   shop shows it incl-VAT understates the euro value by 20%. Corrected: aftermarket row `vat="incl"`,
+   and the unbased `Dealer Price: 66.86` line keeps `vat="unknown"` rather than inheriting a basis.
+
+3. **geparden's and mekster's Isuzu coverage is far thinner than the research notes implied** —
+   geparden has **7** genuine-Isuzu URLs across 85,967 products (0 in products-1.xml), and mekster has
+   **15** Isuzu mentions across 229,060 products, mostly wind deflectors and stereo adapters. Neither
+   should be presented as coverage. Recorded in each module's docstring.
+
+## Two dead routes, recorded so nobody rediscovers them by fetching
+
+- **geparden `/search` is robots-BLOCKED**, and the research note's assumed product URL shape
+  (`/produkt/ISU<n>`) is wrong on the live site — real ones are `/products/<slug>-p-isu<oem>`.
+- **mekster `/sok?q=` returns HTTP 404** (robots blocks `*/catalogsearch/` anyway) — sitemap route only.
+- **autoline's `--c6` is military vehicles, not parts.** Parts is `--c456`, Isuzu at
+  `/-/reservedele/Isuzu--c456tm2615`.
+
+## Shared layer, so parallel agents cannot collide
+
+- `fetch_polite.py` — the **only** place a Phase 1 request opens a connection: consent gate first,
+  ≥ 2.2 s per host, cache to disk so a re-parse never re-fetches.
+- `ledger_schema.py` — mirrors the ledger's `COLUMNS`/`PRICE_TYPES`/`MATCH_METHODS`, and
+  `_selftest_schema.py` asserts the two still agree. It also carries `apply_fx`, so the euro value is
+  computed once from one rate table rather than per parser.
+- `registry.py`, `run_probe.py` — discovery and the offline acceptance tool.
+- `price_parsers.py` reduced to a shim, so the existing Monday `ISZE_PriceLedger_Weekly` job keeps
+  working unchanged.
+- The consent gate now lists every Phase 1 target **and** the disallowed paths.
+
+## Still open
+
+- The **ledger loader** that reads these parsers and writes rows into
+  `price_observations.parquet`. The parsers produce rows; nothing loads them yet. That is the next
+  piece of real work.
+- Whether Jerome wants GBP/SEK rebased to the ECB figures.
+- Eucon plaintext password still to change.
+
+
+---
+
+# Phase 1 loader — the prices are in the table (2026-09-25)
+
+**What changed:** until this session the seven parsers produced rows that nothing read.
+`build_price_ledger.py` never imported one of them. That is now closed.
+
+## The flow, in one line each
+
+1. `page_manifest.csv` — the explicit list of saved pages. Hand-written, one row each. No
+   globbing, so a page cannot enter the table by accident.
+2. `build_scraped_observations.py` — parses each page with its site parser, normalises the row,
+   applies the one shared FX table, and writes `OFFERED_ROWS.csv` with a verdict per row.
+   **Offers only; loads nothing.**
+3. `build_price_ledger.py` → `load_scraped_phase1()` — loads what was offered, skipping any row
+   whose verdict starts with `reject:`.
+4. `verify_scraped_observations.py` — the plan §5.1 verbatim check, on every row.
+5. `check_loader_additive.py` — proves the local sources did not move.
+
+## Result
+
+| | before | after |
+|---|---|---|
+| rows | 1,081 | **1,109** |
+| part numbers | 113 | **131** |
+| new rows | — | 28 (13 of them with a price) |
+
+New rows by source: autoline 16 (15 price-on-request, 1 priced), amayama 4, geparden 3, omega 2,
+ks 1, mekster 1, tungen 1.
+
+## The second blocker, found the same way as the first
+
+The table refused to build **at all** once the web rows arrived:
+
+```
+REFUSED — currency without FX rate
+```
+
+Cause: autoline's 15 price-on-request listings carry no price, and therefore no currency, and
+`validate()` demanded an FX rate for every row. That is the wrong test — a rate is only meaningful
+where there is a price to convert. It now checks priced rows only. Same shape of error as the NOK
+gap: a rule written when every source had a price, meeting a source that does not.
+
+## The verbatim check, and why it took three attempts
+
+Plan §5.1 says every extracted price and part number must appear in the source text. With the pages
+now on disk this can run on **every row**, not a hand-picked sample. It passes 28/28.
+
+Proving it *can* fail took three tries, and each failure was worth more than the success:
+
+1. **First attempt:** planted false rows in `OFFERED_ROWS.csv` but never rebuilt the table. The
+   verifier reads the parquet, so it never saw them and passed. My test was broken, not the check.
+2. **Second attempt:** planted and rebuilt, but the planted rows collided with the real row on
+   `obs_id`, and the ledger **refused the build** (`REFUSED — duplicate obs_id`). That is the
+   ledger's own guard working, and worth knowing it exists, but it meant the verifier again ran
+   against the old data.
+3. **Third attempt:** gave the planted rows non-colliding ids and finally saw the real behaviour —
+   the false part number was caught, **the false price was not**.
+
+That last one was a genuine hole in my own check: a fallback that stripped every non-digit from the
+page turned 45 KB into one long digit string, in which almost any number appears by chance. It was
+removed. The fallback now applies only to 10-digit part numbers, in bounded windows, where a match
+means something — and never to prices. The planted test now shows both a fabricated price and a
+fabricated part number being rejected.
+
+## What is still not done
+
+- **Fetching is manual.** The 10 pages are hand-listed. Nothing walks a sitemap yet, so the volume
+  is 28 rows, not thousands. The runner over `seed_reach_tierA.csv` is the next piece.
+- Only **13 of the 28 rows carry a price**; the rest are match rows (autoline's
+  price-on-request listings), which is honest but thin.
+- The daily/10-minute watchdogs do not know about the new steps — only the Monday job does.
+- Eucon plaintext password still to change.

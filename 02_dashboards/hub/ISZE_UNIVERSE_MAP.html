@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The whole picture - what is built and what is next</title>
+<style>
+:root{
+  --navy:#15233c; --navy2:#1d3050; --terra:#c0552d; --paper:#f7f4ee; --card:#fff;
+  --ink:#232a35; --muted:#5f6b7a; --line:#dfd8cc;
+  --ok:#2f7d5b; --warn:#b07d1a; --todo:#9a3b3b;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"Segoe UI",-apple-system,Roboto,Arial,sans-serif;line-height:1.55;font-size:16px}
+h1,h2,h3,h4{font-family:Georgia,"Times New Roman",serif;color:var(--navy);margin:0}
+code{font-family:Consolas,"Courier New",monospace;font-size:.83em;background:#f0ece3;
+  padding:1px 5px;border-radius:3px;color:#3c4655;word-break:break-all}
+.wrap{max-width:1180px;margin:0 auto;padding:0 22px 70px}
+
+/* hero */
+.hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 100%);color:var(--paper);
+  padding:52px 22px 44px;margin-bottom:0}
+.hero .inner{max-width:1180px;margin:0 auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.19em;font-size:11.5px;color:#e8b79c;margin-bottom:12px}
+.hero h1{color:#fff;font-size:44px;line-height:1.12;letter-spacing:-.5px;margin-bottom:16px}
+.lede{font-size:18.5px;color:#dfe6ef;max-width:820px;margin:0 0 18px}
+.stamp{font-size:13px;color:#a9b8cc;border-top:1px solid #33496b;padding-top:14px;max-width:900px}
+
+/* sections */
+section{margin-top:52px}
+.shead{display:flex;align-items:baseline;gap:14px;border-bottom:2px solid var(--navy);
+  padding-bottom:9px;margin-bottom:26px}
+.shead .n{font-family:Georgia,serif;font-size:15px;color:var(--terra);font-weight:700}
+.shead h2{font-size:27px}
+.shead p{margin:0;color:var(--muted);font-size:14.5px;margin-left:auto;text-align:right;max-width:430px}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));gap:15px}
+.tile{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--navy);
+  border-radius:5px;padding:20px 20px 17px;position:relative}
+.tile.warn{border-top-color:var(--terra)}
+.tileval{font-family:Georgia,serif;font-size:31px;color:var(--navy);line-height:1.1}
+.tilelab{font-weight:600;font-size:14.5px;color:var(--terra);margin:7px 0 9px;
+  text-transform:uppercase;letter-spacing:.05em}
+.tiletip{font-size:13.5px;color:var(--muted)}
+
+/* map */
+.map{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px}
+.stage{background:var(--card);border:1px solid var(--line);border-radius:5px;padding:20px;
+  position:relative;border-left:4px solid var(--navy)}
+.stagenum{position:absolute;top:-13px;left:18px;width:27px;height:27px;border-radius:50%;
+  background:var(--navy);color:#fff;font-size:13.5px;font-weight:700;display:flex;
+  align-items:center;justify-content:center;font-family:Georgia,serif}
+.stage h3{font-size:18.5px;margin:10px 0 5px}
+.stageq{font-style:italic;color:var(--terra);font-size:14px;margin:0 0 11px}
+.stagebody{font-size:14.5px;color:#3d4757;margin:0 0 14px}
+
+/* chips */
+.chip{display:inline-block;font-size:11.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;padding:4px 10px;border-radius:11px;white-space:nowrap}
+.chip.ok{background:#e2f0e9;color:var(--ok)}
+.chip.warn{background:#f7edd6;color:var(--warn)}
+.chip.todo{background:#f6e3e2;color:var(--todo)}
+
+/* tools */
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:16px}
+.tool{background:var(--card);border:1px solid var(--line);border-radius:5px;padding:20px}
+.toolhead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+.toolhead h3{font-size:18.5px}
+.toolq{color:var(--terra);font-style:italic;font-size:14px;margin:0 0 11px}
+.toolev{font-size:14.5px;color:#3d4757;margin:0}
+.evlinks{margin:12px 0 0;padding-left:0;list-style:none;border-top:1px dashed var(--line);padding-top:11px}
+.evlinks li{margin:3px 0}
+
+/* examples */
+.examples{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.example{background:#fdfbf7;border:1px solid var(--line);border-radius:5px;padding:19px;
+  border-left:4px solid var(--terra)}
+
+/* tables */
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+  border-radius:5px;overflow:hidden;font-size:14.5px}
+th{background:var(--navy);color:#fff;text-align:left;padding:11px 14px;font-size:12.5px;
+  text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+td{padding:11px 14px;border-top:1px solid var(--line);vertical-align:top;color:#3d4757}
+td.r{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;color:var(--navy)}
+td.nowrap{white-space:nowrap}
+tbody tr:nth-child(even){background:#faf7f1}
+
+/* sequence */
+.seq{list-style:none;margin:0;padding:0;counter-reset:s}
+.seqitem{display:flex;gap:16px;background:var(--card);border:1px solid var(--line);
+  border-radius:5px;padding:18px 20px;margin-bottom:11px;position:relative}
+.seqnum{flex:0 0 34px;height:34px;border-radius:50%;background:var(--terra);color:#fff;
+  font-family:Georgia,serif;font-weight:700;display:flex;align-items:center;justify-content:center}
+.seqitem h4{font-size:17px;margin-bottom:4px}
+.seqres{margin:0 0 7px;font-size:14.5px;color:#3d4757}
+.seqev{margin:0;font-size:13.5px;color:var(--muted)}
+.seqev span{color:var(--terra);font-weight:600}
+
+/* next */
+.nexts{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.nextcard{display:block;background:var(--card);border:1px solid var(--line);border-radius:5px;
+  padding:18px;text-decoration:none;color:inherit;transition:.13s}
+.nextcard:hover{border-color:var(--terra);transform:translateY(-2px);box-shadow:0 5px 18px rgba(21,35,60,.1)}
+.nextcard h4{font-size:16.5px;margin-bottom:5px}
+.nextcard p{margin:0 0 10px;font-size:13.5px;color:var(--muted)}
+
+.note{background:#fbf6ec;border-left:4px solid var(--terra);padding:15px 18px;
+  border-radius:0 4px 4px 0;font-size:14.5px;color:#4a4132;margin-top:18px}
+.missing{font-size:13.5px;color:var(--todo)}
+footer{margin-top:60px;border-top:2px solid var(--navy);padding-top:20px;font-size:13px;color:var(--muted)}
+footer code{font-size:.85em}
+@media (max-width:640px){
+  .hero h1{font-size:31px} .shead{flex-wrap:wrap} .shead p{margin-left:0;text-align:left}
+}
+</style>
+<script src="../_ui/isze-shell.js" defer></script>
+</head>
+<body>
+
+<header class="hero"><div class="inner">
+  <div class="eyebrow">Isuzu Universe &middot; one map</div>
+  <h1>The whole picture, on one page</h1>
+  <p class="lede">What we hold, how it connects, what is actually built, and what is still only
+  a plan. Written to be read without any technical background. Every figure is read from the
+  files named beside it when this page was built.</p>
+  <div class="stamp">Built 24 September 2026, 21:05. Pipeline checks: 163 passed,
+  0 failed, last run 2026-09-24 05:58. Nothing on this page writes to any file.</div>
+</div></header>
+
+<div class="wrap">
+
+  <section id="minute">
+    <div class="shead"><span class="n">01</span><h2>The one-minute version</h2>
+      <p>Six numbers that say where the business and the data stand today.</p></div>
+    <div class="tiles">
+      <div class="tile money">
+        <div class="tileval">EUR 117.6M</div>
+        <div class="tilelab">Parts we billed</div>
+        <div class="tiletip">All Isuzu parts billed to distributors, in the 538,346 rows of sales we hold, up to 2026-08-31. Source: metrics snapshot.</div>
+      </div>
+      <div class="tile money">
+        <div class="tileval">EUR 54.4M</div>
+        <div class="tilelab">Target spend, whole network</div>
+        <div class="tiletip">What the vehicles in service would spend on parts if every one bought at the planning rate. 18 markets, calendar 2025. This is a ceiling, not a forecast.</div>
+      </div>
+      <div class="tile pct">
+        <div class="tileval">56.5%</div>
+        <div class="tilelab">Share of that ceiling we reach</div>
+        <div class="tiletip">Parts billed divided by target spend: EUR 30.8M of EUR 54.4M. The rest, EUR 24.0M, is the size of the opportunity.</div>
+      </div>
+      <div class="tile count">
+        <div class="tileval">165,290</div>
+        <div class="tilelab">Part numbers classified</div>
+        <div class="tiletip">Every part number we hold, given a family and a product form so it can be grouped. Source: the classification master.</div>
+      </div>
+      <div class="tile warn">
+        <div class="tileval">131 of 16,511</div>
+        <div class="tilelab">Part numbers with a competitor price</div>
+        <div class="tiletip">The cross-reference reaches 131 of our 16,511 part numbers, carrying EUR 5.6M of billing. The other sources are labelled below.</div>
+      </div>
+      <div class="tile count">
+        <div class="tileval">619</div>
+        <div class="tilelab">Live public tenders watched</div>
+        <div class="tiletip">Open opportunities collected 2026-09-22 from national portals and the EU-wide portal. 279 are repair-and-maintenance contracts. 0 outcomes recorded so far.</div>
+      </div></div>
+  </section>
+
+  <section id="map">
+    <div class="shead"><span class="n">02</span><h2>How it all connects</h2>
+      <p>Six steps, in the order the data actually flows. Each step feeds the next one.</p></div>
+    <div class="map">
+      <article class="stage">
+        <div class="stagenum">1</div>
+        <h3>The vehicles</h3>
+        <p class="stageq">How many are on the road?</p>
+        <p class="stagebody">The fleet each market runs, split by truck weight and pickup. This is the base every other number is divided by.</p>
+        <span class="chip ok">18 markets, calendar 2025</span>
+      </article>
+      <article class="stage">
+        <div class="stagenum">2</div>
+        <h3>What we billed</h3>
+        <p class="stageq">What did they actually buy from us?</p>
+        <p class="stagebody">Every part we invoiced a distributor, with quantity, euro and date. The part number is the thread that runs through everything.</p>
+        <span class="chip ok">EUR 117.6M to 2026-08-31</span>
+      </article>
+      <article class="stage">
+        <div class="stagenum">3</div>
+        <h3>What each part is</h3>
+        <p class="stageq">What kind of part is it, and does it fit?</p>
+        <p class="stagebody">Each part number given a family (brakes, filters, steering) and a product form (element, kit, housing), and matched to the vehicle bands it fits.</p>
+        <span class="chip ok">165,290 part numbers classified</span>
+      </article>
+      <article class="stage">
+        <div class="stagenum">4</div>
+        <h3>What the market charges</h3>
+        <p class="stageq">What does the same part cost elsewhere?</p>
+        <p class="stagebody">Competitor prices collected from public shops and catalogues, matched to our part numbers. Thin today, and the map says exactly how thin.</p>
+        <span class="chip warn">131 of 16,511 parts have a competitor price</span>
+      </article>
+      <article class="stage">
+        <div class="stagenum">5</div>
+        <h3>The decisions</h3>
+        <p class="stageq">What do we do about it?</p>
+        <p class="stagebody">Where the analysis becomes action: the price revision, price gaps per market, tenders worth bidding, and which dealer needs attention.</p>
+        <span class="chip warn">Runs, but the tender outcome half is empty</span>
+      </article>
+      <article class="stage">
+        <div class="stagenum">6</div>
+        <h3>What we hand over</h3>
+        <p class="stageq">What can someone else open?</p>
+        <p class="stagebody">The pages and packs: distributor reviews, country pages, the executive paper, the dealer standard comparisons.</p>
+        <span class="chip ok">114 live pages</span>
+      </article></div>
+    <div class="note"><strong>The thread that ties the six steps together is the part number.</strong>
+    Every step keys on it: the vehicles it fits, what we billed for it, what kind of part it is,
+    what a competitor charges for it, what we decide, and what the reader sees. Where that thread is
+    thin, the whole chain is thin at that point &mdash; and that is why step four is the weak one today.</div>
+  </section>
+
+  <section id="tools">
+    <div class="shead"><span class="n">03</span><h2>The five tools, and where each one really is</h2>
+      <p>Described in the strategy paper. This is what exists on disk, checked file by file.</p></div>
+    <div class="tools">
+      <article class="tool">
+        <div class="toolhead">
+          <h3>AIM Commercial Atlas</h3>
+          <span class="chip warn">Partly built</span>
+        </div>
+        <p class="toolq">What is really changing in my parts business, and where?</p>
+        <p class="toolev">A parts atlas page and a truck catalogue exist, sitting on the classification rebuild finished today. The classification itself is solid. What is missing is a view a distributor opens and drives himself.</p>
+        <ul class='evlinks'><li><code>Isuzu Universe/02_Atlas/AIM_Parts_Atlas_v2.0.html</code></li><li><code>02_dashboards/pricing/ISZE_AIM_Truck_Catalogue_2026-09-18.html</code></li></ul>
+      </article>
+      <article class="tool">
+        <div class="toolhead">
+          <h3>IDS Development Studio</h3>
+          <span class="chip warn">Partly built</span>
+        </div>
+        <p class="toolq">What should I improve, and what has moved?</p>
+        <p class="toolev">The assessment half is built: 25 pages, one per country, with a Portugal dealer map and a Belgium follow-up page. The second half of the name, tracking progress and evidence over time, is not built.</p>
+        <ul class='evlinks'><li><code>02_dashboards/ids/IDS_2026_dealer_compare.html</code></li><li><code>02_dashboards/ids/IDS_2026_Portugal_dealer_map.html</code></li></ul>
+      </article>
+      <article class="tool">
+        <div class="toolhead">
+          <h3>Range &amp;amp; Campaign Planner</h3>
+          <span class="chip todo">On paper</span>
+        </div>
+        <p class="toolq">Which products belong in this initiative, and for whom?</p>
+        <p class="toolev">No file for this was found on disk. It is described in the strategy paper; it has not been built.</p>
+        
+      </article>
+      <article class="tool">
+        <div class="toolhead">
+          <h3>Pricing &amp;amp; Margin Lab</h3>
+          <span class="chip warn">Partly built</span>
+        </div>
+        <p class="toolq">What does this trade-off do to revenue and margin?</p>
+        <p class="toolev">30 pricing pages exist, including the revision pack and a pricing action map. They are ISZE's own analysis. There is no shared lab where a distributor tests a trade-off himself.</p>
+        <ul class='evlinks'><li><code>02_dashboards/pricing/ISZE_Pricing_Revision_AIM_Source.html</code></li><li><code>02_dashboards/pricing/ISZE_Pricing_Action_Map.html</code></li></ul>
+      </article>
+      <article class="tool">
+        <div class="toolhead">
+          <h3>PRISM Market Intelligence</h3>
+          <span class="chip warn">Internal only</span>
+        </div>
+        <p class="toolq">Where should we concentrate effort?</p>
+        <p class="toolev">The app exists and runs internally on 19 pages. There is no version a distributor could open, no password on it, and no page for competitor prices. The strategy paper itself calls its showcase 'for reference only'.</p>
+        <ul class='evlinks'><li><code>03_analytics/Isuzu/prism/pages/</code></li></ul>
+      </article></div>
+  </section>
+
+  <section id="examples">
+    <div class="shead"><span class="n">04</span><h2>The three worked examples</h2>
+      <p>The paper's three demonstrations of the tools doing real work, and their true state.</p></div>
+    <div class="examples">
+      <article class="example">
+        <div class="toolhead"><h3>Coordinated tenders</h3><span class="chip warn">Half built</span></div>
+        <p class="toolq">A distributor spots a local opportunity; Isuzu entities put a joint vehicle and parts offer together.</p>
+        <p class="toolev">The collection works: 619 opportunities, 279 of them repair and maintenance, from 28 countries, refreshed weekly. Two pieces are missing: nothing records what happened to a tender (0 outcomes today), and nothing routes a tender to the distributor who could bid.</p>
+      </article>
+      <article class="example">
+        <div class="toolhead"><h3>IDS development progress</h3><span class="chip todo">On paper</span></div>
+        <p class="toolq">A dealer picks a development priority and records milestones with evidence, separate from its score.</p>
+        <p class="toolev">Not built. The dealer comparison pages show where a dealer stands; they do not yet track what it does next.</p>
+      </article>
+      <article class="example">
+        <div class="toolhead"><h3>Deal of the Day</h3><span class="chip todo">On paper</span></div>
+        <p class="toolq">ISZE helps a distributor prepare one specific, time-limited commercial offer.</p>
+        <p class="toolev">Not built.</p>
+      </article></div>
+  </section>
+
+  <section id="built">
+    <div class="shead"><span class="n">05</span><h2>What is built</h2>
+      <p>Pages that exist and open today, counted in their folders.</p></div>
+    <table>
+      <thead><tr><th>Folder</th><th style="text-align:right">Pages</th><th>What it holds</th></tr></thead>
+      <tbody><tr><td><code>sales</code></td><td class='r'>29</td><td>Sales and aftersales views</td></tr><tr><td><code>pricing</code></td><td class='r'>30</td><td>Price lists, price revision, scraped prices</td></tr><tr><td><code>ids</code></td><td class='r'>25</td><td>Dealer standards, one page per country</td></tr><tr><td><code>ops</code></td><td class='r'>10</td><td>Operating console and registers</td></tr><tr><td><code>hub</code></td><td class='r'>8</td><td>The hub pages that index everything</td></tr><tr><td><code>fleet</code></td><td class='r'>6</td><td>Vehicles in service</td></tr><tr><td><code>bi</code></td><td class='r'>4</td><td>Business intelligence</td></tr><tr><td><code>gps</code></td><td class='r'>1</td><td>Spend per truck</td></tr><tr><td><code>globe</code></td><td class='r'>1</td><td>Map view</td></tr></tbody>
+    </table>
+    <div class="note">These are the pages themselves. The analysis behind them lives in the
+    derived files they read, and the whole chain is checked by a pipeline check that passed
+    163 tests and failed 0 on 2026-09-24 05:58.</div>
+  </section>
+
+  <section id="open">
+    <div class="shead"><span class="n">06</span><h2>What is not finished</h2>
+      <p>The honest list. Each line is a real gap measured today, not a wish.</p></div>
+    <table>
+      <thead><tr><th>Item</th><th>State today</th><th>Why it matters</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="nowrap"><strong>Tender outcomes</strong></td>
+        <td class="nowrap">0 of 619</td>
+        <td>Nothing records whether a tender was pursued, passed, won or lost. Until that is filled in, the tender list cannot say whether it is working.</td>
+      </tr>
+      <tr>
+        <td class="nowrap"><strong>Tender detail published by the buyer</strong></td>
+        <td class="nowrap">value on 31, fleet size on 16 of 619</td>
+        <td>Most notices do not publish a value or a fleet size, and 491 publish no deadline at all.</td>
+      </tr>
+      <tr>
+        <td class="nowrap"><strong>Competitor price coverage</strong></td>
+        <td class="nowrap">131 of 16,511 part numbers</td>
+        <td>Only 69 part numbers have two or more sources, and 22 competitor numbers are confirmed by more than one independent source.</td>
+      </tr>
+      <tr>
+        <td class="nowrap"><strong>Estimating an unknown competitor price</strong></td>
+        <td class="nowrap">model is 46% off, one flat ratio is 48% off</td>
+        <td>The model that guesses a competitor price from our list price adds almost nothing over one flat number, so the part of the price list we have not matched cannot be priced by estimate.</td>
+      </tr>
+      <tr>
+        <td class="nowrap"><strong>Competitor price collection</strong></td>
+        <td class="nowrap">1 sources run weekly</td>
+        <td>Two sources are still fetched: one by part number, one by maintenance category only. Three were retired for giving false matches; two block the collector.</td>
+      </tr>
+      <tr>
+        <td class="nowrap"><strong>Price history job</strong></td>
+        <td class="nowrap">has not run yet</td>
+        <td>The weekly price-history job has never completed a run. Its first run is scheduled below.</td>
+      </tr>
+      <tr>
+        <td class="nowrap"><strong>PRISM's tender page</strong></td>
+        <td class="nowrap">reads a file from May</td>
+        <td>The page inside the app still reads an old tender file, not the live one, so its counts are out of date.</td>
+      </tr></tbody>
+    </table>
+
+    <div class="shead" style="margin-top:34px;border-bottom-width:1px"><span class="n">&middot;</span>
+      <h2 style="font-size:20px">Jobs that run without anyone watching</h2>
+      <p>Read live from the Windows task list when this page was built.</p></div>
+    <table>
+      <thead><tr><th>Job</th><th>Last ran</th><th>Next run</th></tr></thead>
+      <tbody>
+      <tr>
+        <td><code>ISZE Tender Monitor</code></td>
+        <td>21/09/2026 7:30:00</td>
+        <td>28/09/2026 7:30:00</td>
+      </tr>
+      <tr>
+        <td><code>ISZE_PriceLedger_Weekly</code></td>
+        <td>never run</td>
+        <td>28/09/2026 9:00:00</td>
+      </tr></tbody>
+    </table>
+  </section>
+
+  <section id="roadmap">
+    <div class="shead"><span class="n">07</span><h2>The roadmap, in the order it has to happen</h2>
+      <p>The strategy paper's own six stages. Each stage names the evidence that lets you move on.</p></div>
+    <ol class="seq">
+      <li class="seqitem">
+        <span class="seqnum">1</span>
+        <div>
+          <h4>Agree the scope and the tools</h4>
+          <p class="seqres">A clear five-tool portfolio, with routine services written out</p>
+          <p class="seqev"><span>Move on when:</span> This map, the strategy paper, the presentation and the showcase all say the same thing</p>
+        </div>
+      </li>
+      <li class="seqitem">
+        <span class="seqnum">2</span>
+        <div>
+          <h4>Pin the classification release</h4>
+          <p class="seqres">One named file, version and build date</p>
+          <p class="seqev"><span>Move on when:</span> Reproduce a family and product-form view from the frozen release</p>
+        </div>
+      </li>
+      <li class="seqitem">
+        <span class="seqnum">3</span>
+        <div>
+          <h4>Open two prepared views</h4>
+          <p class="seqres">One Atlas view and one dealer-standard profile, ready before anyone is invited</p>
+          <p class="seqev"><span>Move on when:</span> A participant completes a real task and finds it clearer than today's review</p>
+        </div>
+      </li>
+      <li class="seqitem">
+        <span class="seqnum">4</span>
+        <div>
+          <h4>Run the dealer sample</h4>
+          <p class="seqres">Ten dealers in two markets, including one that does not want more reporting</p>
+          <p class="seqev"><span>Move on when:</span> What they corrected, what was useful, what it cost them, and why some did not use it</p>
+        </div>
+      </li>
+      <li class="seqitem">
+        <span class="seqnum">5</span>
+        <div>
+          <h4>Run the commercial line</h4>
+          <p class="seqres">At least two offers that clear the size filter</p>
+          <p class="seqev"><span>Move on when:</span> Contribution measured on the same scope before, during and after, including returns</p>
+        </div>
+      </li>
+      <li class="seqitem">
+        <span class="seqnum">6</span>
+        <div>
+          <h4>Evaluate, then widen or stop</h4>
+          <p class="seqres">A stated result, good or bad</p>
+          <p class="seqev"><span>Move on when:</span> Real evidence and effort, not a screen that rendered</p>
+        </div>
+      </li></ol>
+    <div class="note"><strong>What it costs, and when it stops.</strong> The paper recommends starting
+    from the existing &pound;100,000 route, with an offer-support line of &pound;60,000 to &pound;90,000 inside it,
+    a minimum offer size of &pound;150,000 of eligible billing, and &pound;15,000 to &pound;25,000 of dealer
+    enablement spent as accepted tasks rather than as an entitlement. It stops if, after two eligible
+    rounds, no participant can name a decision the tool changed &mdash; and it does not pause, add a report,
+    or widen the group to find a better answer.</div>
+  </section>
+
+  <section id="next">
+    <div class="shead"><span class="n">08</span><h2>Where to look next</h2>
+      <p>Six places worth opening, and what each one is for.</p></div>
+    <div class="nexts">
+      <a class="nextcard" href="../hub/ISZE_OS_Hub.html" target="_blank" rel="noopener">
+        <h4>The hub that indexes everything</h4>
+        <p>How the layers connect, and where each one lives</p>
+        <code>02_dashboards/hub/ISZE_OS_Hub.html</code>
+      </a>
+      <a class="nextcard" href="../ops/ISZE_OS_Console.html" target="_blank" rel="noopener">
+        <h4>The operating console</h4>
+        <p>What is open, what is blocked, what needs a decision</p>
+        <code>02_dashboards/ops/ISZE_OS_Console.html</code>
+      </a>
+      <a class="nextcard" href="../sales/ISZE_Exec_Aftersales_Paper.html" target="_blank" rel="noopener">
+        <h4>The executive aftersales paper</h4>
+        <p>The opportunity case, with category gaps and margin</p>
+        <code>02_dashboards/sales/ISZE_Exec_Aftersales_Paper.html</code>
+      </a>
+      <a class="nextcard" href="../pricing/ISZE_Pricing_Revision_AIM_Source.html" target="_blank" rel="noopener">
+        <h4>The price revision pack</h4>
+        <p>The revision the price change was measured on</p>
+        <code>02_dashboards/pricing/ISZE_Pricing_Revision_AIM_Source.html</code>
+      </a>
+      <a class="nextcard" href="../ids/IDS_2026_dealer_compare.html" target="_blank" rel="noopener">
+        <h4>The dealer-standard pages</h4>
+        <p>Every country's dealer comparison</p>
+        <code>02_dashboards/ids/IDS_2026_dealer_compare.html</code>
+      </a>
+      <a class="nextcard" href="../ops/ISZE_Tender_Monitor_v2.html" target="_blank" rel="noopener">
+        <h4>The tender monitor</h4>
+        <p>The public tenders being watched, refreshed weekly</p>
+        <code>02_dashboards/ops/ISZE_Tender_Monitor_v2.html</code>
+      </a></div>
+    
+  </section>
+
+  <footer>
+    <p>Sources read when this page was built: the metrics snapshot and the sales and wallet files
+    (<code>metrics_snapshot.json</code>, <code>wallet_waterfall.csv</code>, <code>sales_fact.parquet</code>);
+    the live tender feed (<code>tender_data.json</code>, written 2026-09-22);
+    the competitor cross-reference and price-model reports
+    (<code>CROSSREF_GRAPH_REPORT.md</code>, <code>RATIO_MODEL_REPORT.md</code>);
+    the weekly price collector (<code>refresh_and_check_drift.py</code>);
+    the classification master (<code>aim_master_v2.csv</code>);
+    the Windows task list; and the strategy paper
+    (<code>Isuzu Universe/01_Strategy/ISUZU_UNIVERSE_3_0_2026-09-23.md</code>).</p>
+    <p>This page is a description. It changes nothing, publishes nothing and sends nothing.</p>
+  </footer>
+
+</div>
+</body>
+</html>

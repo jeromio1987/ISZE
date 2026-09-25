@@ -3,7 +3,8 @@
 **Written:** 2026-09-24 · internal · status **Phase 0 + 5 built 2026-09-24 (no scraping). Windows-side work: `00_docs/agent/CURSOR_BRIEF_SCRAPER_REDO_20260924.md`**
 **Parent plan:** the "match numbers first, then price" redesign (chat 2026-09-23/24). Phases 0–4 below follow it.
 **Existing plumbing reused:** `04_tools/deepseek_utils.py` (`DeepSeekClient`, `MODEL_FLASH`, `MODEL_PRO`), `04_tools/autodoc_scraper/check_scrape_consent.py`, `00_docs/agent/DELEGATOR_BOARD.md`, `00_docs/agent/AI_STACK.md`.
-**Still open from Jerome (does not block Phase 0):** (1) main purpose — ITUK defence, next price revision, or maintenance-parts campaigns; (2) budget for a TecAlliance / wider Eucon licence; (3) explicit go for any live scrape (DECISIONS 2026-08-18: "KS scrape expand" only with scrape OK).
+**Still open from Jerome (does not block Phase 0):** (1) main purpose — ITUK defence, next price revision, or maintenance-parts campaigns; (2) budget for a TecAlliance / wider Eucon licence.
+**Resolved 2026-09-24 (chat, this session):** (3) explicit go for live scrape — **given**, all six Phase 1 platforms in parallel. **Also given the same turn:** Eucon-sourced competitor numbers (93% of the match index) may be used to drive the scrape now, before legal has answered the four open questions in `00_docs/EUCON_LICENCE_BRIEF_2026-09-24.md` — Jerome's explicit choice, risk flagged and accepted. See `DECISIONS.md` 2026-09-24 entry. **Not changed:** Eucon-sourced rows still never go to DeepSeek or any outside-EU service (§3 below) — that boundary was not addressed in the go and stays as the standing rule until Jerome says otherwise.
 
 > **RECONSTRUCTION NOTE, 2026-09-24 16:55.** This file was destroyed at 16:51 by an editing mistake — a
 > script opened it for writing and then failed on an encoding error, leaving it at 0 bytes. It was
@@ -150,15 +151,15 @@ Status key: ⬜ not started · 🟨 in progress · ✅ accepted · ⛔ blocked o
 | 0.4 | Retire Mekonomen, Auto365, Tranzparts from the weekly run and the healthcheck | Claude proposes, Jerome approves | change note | Jerome yes | ✅ 2026-09-24 — removed from the weekly run; the seven false Mekonomen prices blocked at source in both builders |
 | 0.5 | GPT challenge of the whole redesign (is anything missing, what fails first) | GPT | `gpt/…_REDESIGN_PACK.md` → REPLY | Claude logs which points change the plan | 🟨 pack ready: `04_tools/delegation/gpt/2026-09-24_scraper_redesign_PACK.md`; **a second pack answering it now exists: `00_docs/agent/OPUS55_PROMPT2_AFTERMARKET_20260924.md`** |
 
-### Phase 1 — catalogue reading (needs scrape go)
+### Phase 1 — catalogue reading (scrape go given 2026-09-24 — see header)
 
 | ID | Task | Worker | Input → Output | Accept when | Status |
 |---|---|---|---|---|---|
-| 1.1 | KS sitemap → list of 6,453 Isuzu URLs, robots check | Python fetcher | sitemap → URL list | `check_scrape_consent.py` exit 0 | ⛔ |
-| 1.2 | KS product pages at ≥ 2 s spacing; selector parser; failures → 6.1 | Python + DeepSeek flash (fallback) | pages → ledger rows with OEM refs | §5 + sample; OEM refs present on ≥ 50% of rows (**estimate**, revise after first 100) | ⛔ |
-| 1.3 | Same pattern for Amayama, Omega, geparden.no, mekster.no | Claude writes parser; DeepSeek fallback | pages → ledger | §5 per site | ⛔ — **Amayama parser written and proven against a saved page 2026-09-24; Omega/geparden/tungen are stubs that throw rather than return empty** |
-| 1.4 | GPT review of each new site's terms of use (Jerome pastes terms text) | GPT | terms → verdict | Claude cross-checks against `legal_and_access.md` | ⬜ |
-| 1.5 | tungen-bil.no (Isuzu dealer price list, searchable by part no, ex. mva) and autoline.dk (part and reference numbers with EUR prices) | Claude writes parser; DeepSeek fallback | pages → ledger | §5 per site; tungen-bil tagged `price_type = dealer`, autoline tagged `marketplace` — never mixed with aftermarket | ⛔ |
+| 1.1 | KS sitemap → list of 6,453 Isuzu URLs, robots check | Python fetcher | sitemap → URL list | `check_scrape_consent.py` exit 0 | 🟨 unblocked 2026-09-24 — Cursor to run `check_scrape_consent.py` first |
+| 1.2 | KS product pages at ≥ 2 s spacing; selector parser; failures → 6.1 | Python + DeepSeek flash (fallback) | pages → ledger rows with OEM refs | §5 + sample; OEM refs present on ≥ 50% of rows (**estimate**, revise after first 100) | 🟨 unblocked 2026-09-24 |
+| 1.3 | Same pattern for Amayama, Omega, geparden.no, mekster.no | Claude writes parser; DeepSeek fallback | pages → ledger | §5 per site | 🟨 unblocked 2026-09-24 — **all six sites now in parallel (Jerome, chat, 2026-09-24), not sequenced.** Amayama parser already written and proven against a saved page; Omega/geparden/mekster.no are stubs that throw rather than return empty and need real parsers before any fetch |
+| 1.4 | GPT review of each new site's terms of use (Jerome pastes terms text) | GPT | terms → verdict | Claude cross-checks against `legal_and_access.md` | ⬜ — **should run alongside 1.3/1.5, not after**, since fetching starts on the same go |
+| 1.5 | tungen-bil.no (Isuzu dealer price list, searchable by part no, ex. mva) and autoline.dk (part and reference numbers with EUR prices) | Claude writes parser; DeepSeek fallback | pages → ledger | §5 per site; tungen-bil tagged `price_type = dealer`, autoline tagged `marketplace` — never mixed with aftermarket | 🟨 unblocked 2026-09-24 — in the same parallel batch as 1.3 |
 
 ### Phase 2 — price the aftermarket numbers
 

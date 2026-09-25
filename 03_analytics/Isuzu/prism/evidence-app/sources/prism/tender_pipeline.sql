@@ -1,1 +1,15 @@
-select * from read_csv_auto('data/derived/tender_pipeline.csv')
+-- Live tender feed, flattened for the evidence app (read-only).
+--
+-- The rows come from 01_data/14_dashboards/tender_data.json through PRISM's single
+-- feed reader, modules/tender_feed.py. scripts/sync_evidence_derived.py writes this
+-- file; this SQL never reads the JSON itself, so the numbers here and on PRISM's
+-- Tender Pipeline page cannot drift apart.
+--
+-- Superseded: data/derived/tender_pipeline.csv, a flattened table last built
+-- 29 May 2026. It is no longer read by anything. Its counts (400 actionable,
+-- 352 R&M out of 708 rows) disagree with the live feed (281 and 279 out of 619).
+--
+-- A value is published on very few rows and a deadline on under half, so the pages
+-- chart counts and scores, never a euro pipeline. Feed date is in
+-- data/derived/tender_feed.meta.json.
+select * from read_csv_auto('data/derived/tender_feed.csv')

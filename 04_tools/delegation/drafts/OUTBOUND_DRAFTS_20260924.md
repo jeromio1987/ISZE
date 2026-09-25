@@ -2,10 +2,19 @@
 
 **Status:** DRAFTS. Nothing sent. Jerome sends, edits or bins. Claude never sends.
 **Written:** 2026-09-24
+**Update 2026-09-25:** draft A (Eucon) is **HELD — do not send**; see the hold notice at the top of section A.
 
 ---
 
 ## A. Eucon — current status of the PartsPool account + a larger basket (card 3.2)
+
+> **STATUS 2026-09-25: HELD — do not send as written.**
+>
+> The premise of this mail is wrong, so it must not go out. Per `00_docs/EUCON_LICENCE_BRIEF_2026-09-24.md`, the PartsPool contract has already ended: Jerome cancelled on 6 January 2026 and Eucon confirmed on 8 January 2026 that the service ends on **31 July 2026** (PartsPool is Eucon's online parts-price service, also called Market Data Engine). There is no live account to ask about, so "is the account still live?" is already answered and neither version of this mail should be sent.
+>
+> Two standing rules travel with this hold: nobody logs in to the Eucon portal (the contract has ended), and nobody asks Eucon what the `OE RRP` column means.
+>
+> Held by cursor (doc truth repairs), 2026-09-25. **Nothing was sent and nothing was deleted.** The original text is kept in full and unedited below, so nothing is lost.
 
 **Context you should check before sending:**
 - Your calendar has "Eucon annuleren" entries on 15 Jan, 4 Feb and 3 Mar 2026. Yet the PartsPool batch search still ran on **29 Mar 2026** (basket "top 100", countries DE, DK, PT, SE, NO). I don't know whether the cancellation went through. The answer decides whether this mail is a renewal or an upgrade question.

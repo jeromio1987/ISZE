@@ -18,6 +18,10 @@ from prism.tender_pipeline
   <BigValue data={tnd_kpi} value=act fmt=num0 title="✅ Actionable" />
 </Grid>
 
+> **Superseded:** this page used to read a flattened table built on 29 May 2026. It now reads the
+> weekly live tender feed through PRISM's single reader. The old table said 400 actionable and 352
+> R&M; the live feed says 281 and 279. It and its builder are kept on disk but nothing reads them.
+
 ## Opportunities by country
 
 Most tenders list no headline value, so volume is the cleaner read; value (where published) drives the KPI above.

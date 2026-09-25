@@ -6,11 +6,13 @@
 
 ## Hard rules (repeat of the plan, not optional)
 
-- **No live scraping and no new web requests to shops** until Jerome gives an explicit scrape go. Phase 1 is still ⛔.
-- **Nothing internal goes to DeepSeek or GPT:** no price list, no billed sales, no dealer details. Queue items carry only allowlisted fields; `deepseek_batch.py` refuses anything else.
+- **UPDATE 2026-09-24 (chat, this session): Jerome gave the scrape go.** Phase 1 (all six platforms) is now unblocked — see task block C7 below. Live fetching may start, but every other rule on this list still applies unchanged.
+- **Eucon-sourced competitor numbers may be used to drive the scrape now** (Jerome's explicit call, same turn, risk accepted ahead of legal clearing the licence terms — see `DECISIONS.md` 2026-09-24 and `00_docs/EUCON_LICENCE_BRIEF_2026-09-24.md`). **This does not change the next rule.**
+- **Nothing internal goes to DeepSeek or GPT:** no price list, no billed sales, no dealer details. Queue items carry only allowlisted fields; `deepseek_batch.py` refuses anything else. **Eucon-sourced rows are additionally barred from DeepSeek specifically** (outside-EU transfer, licence terms unreviewed) — the scrape-go did not touch this boundary. Public page text and public prices you fetch from the target sites are fine for DeepSeek as before; it's the Eucon match rows (our part → competitor brand/number pairs sourced from Eucon files) that stay EU-side.
 - **Never `deepseek_agent.py --yolo`.**
 - **No deletes without Jerome's "yes" in chat.**
 - Don't edit `refresh_and_check_drift.py`, `tender_scraper_v3.py`, bat/ps1/yaml files or scheduled tasks unless Jerome approves that specific change.
+- `check_scrape_consent.py` before every new fetch, no exceptions, same as before the go. The go authorizes scraping happening, not skipping the consent/robots check.
 
 ## What Claude already built (tested in Claude's sandbox)
 
@@ -60,6 +62,28 @@ Two test leftovers from Claude's boundary test could not be deleted from the san
 ## ⚠ Security finding — for Jerome, not for Cursor to fix alone
 
 `02_dashboards\Data\90_INBOX\eucon_mail_extracts\NOTE_Eucon.txt` holds a **Eucon login in plain text**. It is gitignored and not tracked, so it isn't on GitHub. But any agent that reads that folder can read it, including DeepSeek via `deepseek_agent.py`. Recommended: Jerome changes the Eucon password, then the file is deleted (on his yes). Never print or copy the value.
+
+### C7 — Build and run all six Phase 1 platforms in parallel (scrape go given 2026-09-24) · no further approval needed for fetching itself, per Jerome's chat go
+
+Site list, worker, and where each stands today:
+
+| Site | Status today | What's needed |
+|---|---|---|
+| Amayama | Parser written, proven against a saved page | Run `check_scrape_consent.py`, then go live |
+| Omega | Stub only — throws rather than returns empty | Write real parser first |
+| geparden.no | Stub only | Write real parser first |
+| mekster.no | Stub only | Write real parser first |
+| tungen-bil.no | Not started | Parser + tag `price_type = dealer` (it's the Isuzu dealer price list, not aftermarket) |
+| autoline.dk | Not started | Parser + tag `price_type = marketplace` |
+
+Rules for this batch, all carried over from §5 of the plan and non-negotiable:
+1. `check_scrape_consent.py` exit 0 before any fetch, per site, every run.
+2. ≥ 2 s spacing per request per site (§8 of the plan). No bypassing Cloudflare or login walls.
+3. Selector-first; DeepSeek flash (prompt 6.1) only on parser failure, per the self-healing pattern in §2. Public page text only into DeepSeek — never the Eucon match rows.
+4. §5 acceptance: verbatim check, schema check, placeholder check, plausibility check on every row; then Claude samples 5% (min 20) before anything is trusted.
+5. Seed the runs from `04_tools/aftermarket_intelligence/state/reachable_pairs.csv` (the 2,812 competitor brand+number objects, Eucon-sourced included per the 2026-09-24 go) and `seed_reach_tierA.csv` for what to prioritise — Tier A first.
+6. Each site's first run is small (≤ 50 items) and reported before scaling, same discipline as the KS golden test (C1) — do not run all six at full volume on the first pass.
+7. One row per finished site on `DELEGATOR_BOARD.md`; a `CURSOR_REPORT_20260924.md` update if anything needs Claude's judgement (a site blocks with a bot check, a parser can't get selectors, price/currency ambiguity).
 
 ## Report back
 

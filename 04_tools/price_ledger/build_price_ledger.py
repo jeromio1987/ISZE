@@ -36,9 +36,65 @@ ROOT = Path(__file__).resolve().parents[2]          # ISZE root
 OUT = ROOT / "01_data" / "00_derived" / "price_observations.parquet"
 META = OUT.with_suffix(".meta.json")
 
-# FX — single source on disk: autodoc_scraper sources.yaml, as_of 2026-05-01. Not an official rate.
-FX = {"EUR": 1.0, "GBP": 1.17, "SEK": 0.089}
-FX_NOTE = "GBP 1.17 / SEK 0.089 from autodoc_scraper sources.yaml as_of 2026-05-01 (working rate, not official)"
+# FX — the rates the ledger can convert with.
+#
+# 2026-09-24: this used to be an inline working table with only EUR, GBP and SEK,
+# sourced from autodoc_scraper sources.yaml as_of 2026-05-01 and described in the
+# ledger's own meta as "not official". Every Phase 1 target except KS and Omega
+# prices in NOK, DKK or USD, so every row from those sites was refused by
+# validate() with "currency without FX rate" before it could be stored.
+#
+# The table is now read from `fx_rates.json`, written by
+# `04_tools/price_ledger/build_fx_rates.py` from the European Central Bank's daily
+# euro reference rates (dated, public, citable). If that file is missing or
+# unreadable the inline fallback below is used, so the ledger never becomes
+# dependent on a network call at build time.
+#
+# Convention is unchanged: value = EUR per one unit of the currency, i.e.
+# `price_eur = price * FX[currency]`.
+#
+# REBASED 2026-09-25 on Jerome's instruction. GBP and SEK now take the ECB rate, so the
+# whole ledger converts from one dated, citable source. Until today it mixed two: the
+# 2026-05-01 working rates for GBP/SEK (1.17 / 0.089) and ECB rates for everything else.
+#
+# The move was measured before it was made, because it restates stored euro values:
+# 263 GBP rows, EUR 55,016.40 -> EUR 54,686.30, a net EUR -330.10, the largest single
+# row moving EUR 19.30. GBP is the only affected currency - no row in the ledger is
+# priced in SEK, so the SEK rebase changes nothing today but stops the two files
+# disagreeing later.
+#
+# The fallback below is still used when fx_rates.json is missing or unreadable, so a
+# build never depends on a network call. Its values are the ECB ones now, so a fallback
+# build cannot silently produce different euro figures from a normal one.
+_FX_FALLBACK = {"EUR": 1.0, "GBP": 1.16298002, "SEK": 0.0887744685}
+FX_FILE = Path(__file__).resolve().parent / "fx_rates.json"
+
+
+def _load_fx():
+    """ECB rates for every currency the ledger can convert with. Never raises.
+
+    Since the 2026-09-25 rebase the fallback and the ECB file agree on GBP and SEK, so
+    `fx_rates.json` is simply the dated source of truth and there is nothing to keep back.
+    """
+    fx = dict(_FX_FALLBACK)
+    note = ("ECB euro reference rates (fallback: fx_rates.json not readable). "
+            "GBP 1.16298002 / SEK 0.0887744685 rebased 2026-09-25 on Jerome's instruction; "
+            "they were 1.17 / 0.089 from the 2026-05-01 working table before that.")
+    try:
+        payload = json.loads(FX_FILE.read_text(encoding="utf-8"))
+        rates = {k: float(v) for k, v in (payload.get("eur_per_unit") or {}).items()}
+        if rates.get("EUR") == 1.0:
+            fx.update(rates)
+            note = (f"ECB euro reference rates, reference date "
+                    f"{payload.get('reference_date')}. Whole ledger from one source; "
+                    f"GBP and SEK rebased 2026-09-25 (were 1.17 / 0.089 from the "
+                    f"2026-05-01 working table).")
+    except Exception:                                   # noqa: BLE001
+        pass
+    return fx, note
+
+
+FX, FX_NOTE = _load_fx()
 
 PLACEHOLDER_MAX = 2.34      # Autodoc-style 'no result' placeholder; anything <= this is refused
 
@@ -151,6 +207,46 @@ def load_category_site(fname, site):
     return rows
 
 
+def load_scraped_phase1():
+    """The Phase 1 web observations, offered by `build_scraped_observations.py`.
+
+    That script is the bridge: it reads the saved pages listed in `page_manifest.csv`,
+    parses them with the per-site parsers in `04_tools/delegation/parsers/`, applies the
+    ONE shared FX table and writes `OFFERED_ROWS.csv` with a verdict per row. This
+    function only loads what it offered — it never fetches and never parses.
+
+    Rows whose verdict starts with `reject:` are not loaded. Missing file = no rows,
+    so the ledger still builds from local sources alone if the bridge has not been run.
+    """
+    f = ROOT / "04_tools" / "price_ledger" / "OFFERED_ROWS.csv"
+    if not f.exists():
+        return []
+    d = pd.read_csv(f, dtype={"part_no": str, "competitor_pn": str, "obs_id": str})
+    if "verdict" in d.columns:
+        d = d[~d["verdict"].astype(str).str.startswith("reject:")]
+    rows = []
+    for _, r in d.iterrows():
+        price = r.get("price")
+        rows.append(dict(
+            part_no=_pn(r["part_no"]) if pd.notna(r.get("part_no")) else None,
+            match_method=r.get("match_method"),
+            competitor_brand=r.get("competitor_brand") if pd.notna(r.get("competitor_brand")) else None,
+            competitor_pn=r.get("competitor_pn") if pd.notna(r.get("competitor_pn")) else None,
+            description=r.get("description") if pd.notna(r.get("description")) else None,
+            source=r.get("source"), source_url=r.get("source_url") if pd.notna(r.get("source_url")) else None,
+            country=r.get("country"), observed_at=r.get("observed_at"), vintage=r.get("vintage"),
+            price=float(price) if pd.notna(price) else None,
+            price_avg=None,
+            currency=r.get("currency") if pd.notna(r.get("currency")) else None,
+            vat=r.get("vat") if pd.notna(r.get("vat")) else "unknown",
+            price_type=r.get("price_type"),
+            stock=r.get("stock") if pd.notna(r.get("stock")) else "unknown",
+            n_obs=int(r["n_obs"]) if pd.notna(r.get("n_obs")) else 1,
+            loader=r.get("loader") or "scrape_phase1",
+        ))
+    return rows
+
+
 def validate(df):
     errors = []
     if df["price_type"].isna().any() or not set(df["price_type"]).issubset(PRICE_TYPES):
@@ -164,8 +260,15 @@ def validate(df):
     bad_pn = df["part_no"].notna() & (df["part_no"].str.len() != 10)
     if bad_pn.any():
         errors.append(f"{int(bad_pn.sum())} part numbers not 10 digits")
-    if df["currency"].map(FX).isna().any():
-        errors.append("currency without FX rate")
+    # A rate is only needed for a row that actually carries a price. A price-on-request
+    # listing (autoline has 15) is a legitimate match row with no price and therefore no
+    # currency; demanding an FX rate for it refused the whole file. Changed 2026-09-24.
+    priced_rows = df[df["price"].notna()]
+    if priced_rows["currency"].isna().any():
+        errors.append(f"{int(priced_rows['currency'].isna().sum())} priced rows have no currency")
+    if priced_rows["currency"].map(FX).isna().any():
+        bad = sorted(set(priced_rows.loc[priced_rows["currency"].map(FX).isna(), "currency"]))
+        errors.append(f"currency without FX rate: {bad}")
     if df["obs_id"].duplicated().any():
         errors.append("duplicate obs_id")
     return errors
@@ -178,10 +281,21 @@ def main():
         "eucon_survey_2023": load_eucon_survey_2023(),
         "tmc": load_category_site("tmc_results.csv", "T&M Commercials"),
         "tranzparts": load_category_site("tranzparts_results.csv", "Tranzparts"),
+        "scrape_phase1": load_scraped_phase1(),
     }
     df = pd.DataFrame([r for rows in parts.values() for r in rows])
-    df["price_eur"] = (df["price"] * df["currency"].map(FX)).round(2)
-    df["fx_note"] = FX_NOTE
+    # Rows offered by the bridge already carry their euro value; only compute it where
+    # it is missing, so the one shared rate table is applied once, not twice.
+    fx = df["currency"].map(FX)
+    calc = (df["price"] * fx).round(2)
+    if "price_eur" in df.columns:
+        df["price_eur"] = df["price_eur"].where(df["price_eur"].notna(), calc)
+    else:
+        df["price_eur"] = calc
+    if "fx_note" in df.columns:
+        df["fx_note"] = df["fx_note"].where(df["fx_note"].notna(), FX_NOTE)
+    else:
+        df["fx_note"] = FX_NOTE
     key = df[["part_no", "competitor_brand", "competitor_pn", "source", "country", "observed_at",
               "price_type", "loader", "description", "source_url"]].astype(str).agg("|".join, axis=1)
     df["obs_id"] = key.map(lambda s: hashlib.sha1(s.encode()).hexdigest()[:16])

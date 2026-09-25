@@ -404,6 +404,8 @@ layer_links = [
         ("Part number classification (the file)", "ISZE\\01_data\\00_derived\\aim_pn_classification.csv"),
     ]),
     ("Dashboards — the ~20 views that read the layers above", [
+        ("Universe board — every pillar, its score, the roadmap and every live page", "ISZE\\02_dashboards\\hub\\ISZE_UNIVERSE_BOARD.html"),
+        ("Universe map — the whole picture, what is built and what is next", "ISZE\\02_dashboards\\hub\\ISZE_UNIVERSE_MAP.html"),
         ("Dashboard index — BI packs", "ISZE\\02_dashboards\\hub\\BI_PACKS.html"),
         ("Mission control (26 Aug, carries superseded AIM figure)", "ISZE\\02_dashboards\\hub\\MASTER_DASHBOARD.html"),
         ("Hub home", "ISZE\\02_dashboards\\hub\\index.html"),

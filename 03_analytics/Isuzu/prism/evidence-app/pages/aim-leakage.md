@@ -467,13 +467,15 @@ order by rev_eur desc
 
 ## E · Tender / R&M channel — opportunity pipeline
 
-The fourth leakage channel is fleet tender & R&M contracts (parts bundled into maintenance deals, priced outside list). **520 scored public-tender opportunities** are live in the pipeline — every one carries a decision, fit/win/econ scores, a suggested owner and parts/R&M signal.
+The fourth leakage channel is fleet tender & R&M contracts (parts bundled into maintenance deals, priced outside list). The scored public-tender opportunities below are read **live** from the weekly tender feed — every one carries a decision, fit/win/econ scores, a suggested owner and parts/R&M signal.
 
 ```sql tender_head
 select count(*)::double as total,
   sum(case when actionable then 1 else 0 end)::double as actionable,
   (sum(case when parts_signal then 1 else 0 end)::double / count(*)) as parts_share,
-  (sum(case when rm_contract then 1 else 0 end)::double / count(*)) as rm_share
+  (sum(case when rm_contract then 1 else 0 end)::double / count(*)) as rm_share,
+  sum(case when value_amount is not null and value_amount > 0 then 1 else 0 end)::double as with_value,
+  sum(case when deadline_date is not null then 1 else 0 end)::double as with_deadline
 from prism.tender_pipeline
 ```
 
@@ -485,12 +487,16 @@ from prism.tender_pipeline
 </Grid>
 
 <Alert status=info>
-This is a <b>qualified-pipeline</b> view — counts and scores are real for every row. <b>Value is present on only 12 of 520</b> opportunities and deadlines on 55, so we deliberately do <b>not</b> chart € pipeline or award prices. Awarded line items (the <code>tenders_output.xlsx</code> sheet) are still empty; when they land, win/loss-vs-aftermarket pricing slots on top of this.
+This is a <b>qualified-pipeline</b> view — counts and scores are real for every row. <b>Value is present on only <Value data={tender_head} column=with_value fmt=num0 /> of <Value data={tender_head} column=total fmt=num0 /> </b> opportunities and deadlines on <Value data={tender_head} column=with_deadline fmt=num0 />, so we deliberately do <b>not</b> chart € pipeline or award prices. Awarded line items (the <code>tenders_output.xlsx</code> sheet) are still empty; when they land, win/loss-vs-aftermarket pricing slots on top of this.
 </Alert>
+
+> **Superseded:** this section used to read a flattened table built on 29 May 2026, which said 400
+> actionable and 352 R&M. It now reads the weekly live tender feed through PRISM's single reader;
+> today that is 281 actionable and 279 R&M. The old table and its builder stay on disk, unread.
 
 ### E1 · Qualification funnel
 
-How the 520 sort out after scoring — most are noise, the work is the Attack + Selective band.
+How the live opportunities sort out after scoring — most are noise, the work is the Attack + Selective band.
 
 ```sql tender_decision
 select decision, count(*)::double as opps

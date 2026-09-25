@@ -2,13 +2,18 @@
 """
 Export the tender / R&M opportunity pipeline to Excel and PDF.
 
-Reads Data/derived/tender_pipeline.csv (built by build_tender_pipeline.py)
-and writes:
+Reads the weekly live tender feed through ``modules.tender_feed`` — the one
+reader of ``01_data/14_dashboards/tender_data.json`` — and writes:
   - PRISM_Tender_Pipeline.xlsx  (action queue + full pipeline + summary)
   - PRISM_Tender_Pipeline.pdf   (decision funnel + by-country + by-owner)
 
-Qualified-pipeline view: counts and scores only. Value is present on just
-12/520 rows and deadlines on 55/520, so NO euro pipeline is charted.
+It used to read the flattened Data/derived/tender_pipeline.csv, last built
+29 May 2026. That table is superseded and is no longer read; it and its builder
+scripts/build_tender_pipeline.py are both kept on disk.
+
+Qualified-pipeline view: counts and scores only. Almost no row carries a value
+and less than half carry a deadline, so NO euro pipeline is charted. The real
+figures are counted at run time, never typed.
 
 Output dir: Data/exports/
 """
@@ -23,9 +28,10 @@ import pandas as pd
 PRISM_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PRISM_ROOT))
 
-from config import DERIVED_DIR, EXPORTS_DIR  # noqa: E402
+from config import EXPORTS_DIR  # noqa: E402
+from modules.tender_feed import coverage, feed_date_label, feed_path, load_feed  # noqa: E402
 
-SRC = DERIVED_DIR / "tender_pipeline.csv"
+SRC = feed_path()
 EXPORT_DIR = EXPORTS_DIR
 
 DECISION_ORDER = ["Attack", "Selective", "Watch", "Ignore"]
@@ -37,11 +43,12 @@ QUEUE_COLS = ["title", "country", "owner_suggested", "opportunity_score",
 SCORE_COLS = ["fit_score", "win_score", "econ_score", "opportunity_score"]
 
 
-def _load() -> pd.DataFrame:
-    d = pd.read_csv(SRC)
-    if d["actionable"].dtype != bool:
-        d["actionable"] = d["actionable"].astype(str).str.lower().isin(["true", "1"])
-    return d
+def _load() -> tuple[pd.DataFrame, dict]:
+    """(opportunities, feed meta) from the live feed. Raises if the feed is absent."""
+    df, meta = load_feed()
+    if "actionable" not in df.columns:  # the loader always adds it; belt and braces
+        df["actionable"] = df["decision"].isin(["Attack", "Selective", "Watch"])
+    return df, meta
 
 
 def write_excel(df: pd.DataFrame, path: Path) -> None:
@@ -83,7 +90,7 @@ def write_excel(df: pd.DataFrame, path: Path) -> None:
             ws.freeze_panes(1, 0)
 
 
-def write_pdf(df: pd.DataFrame, path: Path) -> None:
+def write_pdf(df: pd.DataFrame, meta: dict, path: Path) -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -93,6 +100,7 @@ def write_pdf(df: pd.DataFrame, path: Path) -> None:
     act = df[df["actionable"]]
     by_country = act["country"].value_counts().head(12).sort_values()
     by_owner = act["owner_suggested"].value_counts().sort_values()
+    feed_date = feed_date_label(meta)
 
     with PdfPages(path) as pdf:
         # Page 1 — decision funnel
@@ -102,7 +110,8 @@ def write_pdf(df: pd.DataFrame, path: Path) -> None:
         for i, v in enumerate(funnel.values):
             ax.text(i, v + 3, f"{int(v)}", ha="center", fontweight="bold")
         ax.set_ylabel("Opportunities")
-        ax.set_title("PRISM — Tender pipeline by decision (520 scored notices)",
+        ax.set_title(f"PRISM — Tender pipeline by decision "
+                     f"({len(df):,} live opportunities, feed {feed_date})",
                      fontweight="bold")
         fig.tight_layout()
         pdf.savefig(fig)
@@ -133,11 +142,19 @@ def write_pdf(df: pd.DataFrame, path: Path) -> None:
 
 def main() -> None:
     EXPORT_DIR.mkdir(parents=True, exist_ok=True)
-    df = _load()
+    df, meta = _load()
+    cov = coverage(df)
     xlsx = EXPORT_DIR / "PRISM_Tender_Pipeline.xlsx"
     pdf = EXPORT_DIR / "PRISM_Tender_Pipeline.pdf"
     write_excel(df, xlsx)
-    write_pdf(df, pdf)
+    write_pdf(df, meta, pdf)
+    print(f"source : {SRC}")
+    print(f"feed   : {meta.get('generated_at', 'unknown')} "
+          f"({feed_date_label(meta)})")
+    print(f"rows   : {len(df):,}  actionable {int(df['actionable'].sum()):,}  "
+          f"R&M {int(df['rm_contract'].sum()):,}")
+    print(f"coverage: value {cov['value']}, deadline {cov['deadline']}, "
+          f"fleet size {cov['fleet_size']}, outcome {cov['outcome']}")
     print(f"ok: {xlsx}")
     print(f"ok: {pdf}")
 

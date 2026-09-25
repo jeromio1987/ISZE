@@ -1,30 +1,39 @@
 {
-  "built_at": "2026-09-24T10:23:02+00:00",
+  "built_at": "2026-09-25T04:36:59+00:00",
   "builder": "04_tools/price_ledger/build_price_ledger.py",
-  "rows": 1081,
+  "rows": 1109,
   "rows_by_loader": {
     "eucon_crossref": 821,
     "tandm_commercials": 91,
     "eucon_survey_2023": 68,
     "ks_gen": 41,
     "ks_am": 40,
-    "tranzparts": 20
+    "tranzparts": 20,
+    "autoline": 16,
+    "amayama": 4,
+    "geparden": 3,
+    "omega": 2,
+    "ks": 1,
+    "mekster": 1,
+    "tungen": 1
   },
   "rows_by_price_type": {
     "online_median": 821,
-    "aftermarket_retail": 111,
-    "genuine_grey": 41,
+    "aftermarket_retail": 114,
+    "genuine_grey": 48,
     "aftermarket_trade": 40,
     "survey_workshop": 34,
-    "survey_list": 34
+    "survey_list": 34,
+    "marketplace": 16,
+    "dealer": 2
   },
-  "isuzu_part_numbers_with_observation": 113,
+  "isuzu_part_numbers_with_observation": 131,
   "not_loaded": {
     "mekonomen": "RETIRED 2026-09-24 - part-number search returned an unrelated item (Kilen coil spring for brake pad kit 8975056801); all 7 rows false",
     "auto365": "retired 2026-09-24 - no OEM part number anywhere; also robots-disallowed",
     "tranzparts": "retired 2026-09-24 - carries no Isuzu (every handle is Volvo/Iveco/DAF)",
     "autodoc": "retired; placeholder prices"
   },
-  "fx": "GBP 1.17 / SEK 0.089 from autodoc_scraper sources.yaml as_of 2026-05-01 (working rate, not official)",
+  "fx": "ECB euro reference rates, reference date 2026-09-24. Whole ledger from one source; GBP and SEK rebased 2026-09-25 (were 1.17 / 0.089 from the 2026-05-01 working table).",
   "rule": "price_type and vintage required; never average across price_type"
 }

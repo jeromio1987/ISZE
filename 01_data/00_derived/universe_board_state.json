@@ -1,0 +1,266 @@
+{
+  "built_at": "2026-09-24T22:39:23",
+  "scoring": "graded: 1 met, 0.5 partial or repeated credit, 0 not met; points are halves of a condition",
+  "groundwork_pct": 48,
+  "groundwork_points": 29,
+  "groundwork_out_of": 60,
+  "headline": "0 of 5 tools a distributor can open. Roadmap: stage 1 complete.",
+  "tools_open_to_a_distributor": 0,
+  "tools_total": 5,
+  "pillars": [
+    {
+      "key": "aim",
+      "name": "AIM — what each part is",
+      "points": 6,
+      "out_of": 10,
+      "pct": 60,
+      "met": 2,
+      "half": 2,
+      "not_met": 1,
+      "conditions": [
+        {
+          "label": "Coverage on billed euro",
+          "score": 1,
+          "tests": "Over the twelve months to 2026-08-31, the share of billed parts euro sitting on a part number with a governed family is at least 98.0%, and every unclassified part number above EUR 5,000 in that window is named. Read from sales_fact.parquet joined to aim_master_v2.csv.",
+          "reason": "99.01% of the billed euro has a family (EUR 33.07M of EUR 33.40M), above the 98.0% bar, and the 9 unclassified part numbers above EUR 5,000 are printed on the memo by number, euro and description."
+        },
+        {
+          "label": "Accuracy on a sample",
+          "score": 1,
+          "tests": "Fifty classified part numbers drawn by billed euro on a fixed seed; a named reader compares each part's billed description with the family it carries; at least 90% must agree and every disagreement must be listed.",
+          "reason": "47 of 50 agree at family level (94%), above the 90% bar; the three disagreements are named with their part numbers and euro. Group agrees on 43 and leaf on 41, which is where the coarser call sits."
+        },
+        {
+          "label": "One named, approved, frozen release",
+          "score": 0.5,
+          "tests": "_releases/RELEASES.json holds exactly one candidate marked APPROVED, its recorded hash still matches the file on disk, and the gate's checks pass on the file the AIM pages are built from.",
+          "reason": "Approved 2026-09-24 by Jerome, 164,908 rows; the hash was re-verified against the register before the status was changed. Half rather than full for two reasons: the gate's own checks do not all pass (it runs against aim_pn_classification_v2.csv, not this release), and the AIM comparison pages on disk read a separately exported master (AIM_Master_PN_Categories_Figkey_20260924.csv, 165,292 rows), so the release is named and approved but no builder is pinned to it yet."
+        },
+        {
+          "label": "A distributor can open his own parts by family",
+          "score": 0.5,
+          "tests": "One page for at least one distributor that opens from Explorer with no server, carries that distributor's own part numbers grouped by the families AIM assigns with the euro beside each, states its own distributor and period, and has a launcher beside it.",
+          "reason": "Met for Portugal, one distributor of 18. The page is self-contained (its data is written into the page, no call out at open) and a launcher sits beside it. Half rather than full because one distributor is not a tool, the file list does not name it as a tool, and the page itself says it was built to be read rather than driven."
+        },
+        {
+          "label": "The safety checks pass against the file the pages are built from",
+          "score": 0,
+          "tests": "All checks in aim_classification_gate.json pass, run against the file the AIM pages are built from, with the drift rule split: no stored measure may move more than 1% between runs, and the leaf counts may change only with a named review and a written new baseline in the same run.",
+          "reason": "17 of 18 pass, so the condition is not met. The failing one is the leaf-count check (it wants 177 bottom leaves and finds 176), which is the one rule that punishes the improvement itself; the 1% drift rule is real work and should stay. The gate also runs against aim_pn_classification_v2.csv, not the approved release. Last run 2026-09-24 17:23."
+        }
+      ]
+    },
+    {
+      "key": "ids",
+      "name": "IDS — dealer standards",
+      "points": 4,
+      "out_of": 10,
+      "pct": 40,
+      "met": 1,
+      "half": 2,
+      "not_met": 2,
+      "conditions": [
+        {
+          "label": "A dealer comparison with the questions behind it",
+          "score": 1,
+          "tests": "A page that shows the dealer network's assessment results and the question list behind them, so a reader can see which questions drive a dealer's position. Read from the page itself, not from the file's presence.",
+          "reason": "The page carries the assessment sections and the question drill, so it answers the question this pillar asks. It is also a network ranking, and the strategy paper says the development studio is 'no new universal league table' - so it is credited for the analysis, not as the studio."
+        },
+        {
+          "label": "One comparison page per country",
+          "score": 0.5,
+          "tests": "Live per-country comparison pages on disk - real .html pages only, not the backup copies and receipts that sit beside them. Read from the folder listing; 19 found.",
+          "reason": "19 real pages. The earlier count of 96 came from matching the bare name: 19 pages plus 39 backups and 19 receipts. Half rather than full because these are country filters of the same single product, so the pillar is paid twice for one piece of work, and the roadmap line that used to say 21 now reads the same count as this line so it cannot drift again."
+        },
+        {
+          "label": "A dealer map for at least one market",
+          "score": 0.5,
+          "tests": "A map page that places an individual market's dealers and can be read offline - a page whose background needs an internet tile service is not a map a distributor opens without a connection.",
+          "reason": "The Portugal map is on disk and linked. It draws its background from an internet tile service, so it needs a connection to show anything, and the comparison page says its own primary map is in the dealer compare Map tab - a third credit for one product. Recorded at half: it is the same product as the two lines above."
+        },
+        {
+          "label": "Progress and evidence tracked over time, separate from the score",
+          "score": 0,
+          "tests": "A record per dealer of development milestones with evidence, shown apart from the assessment score. This is the defining feature of the studio in the strategy paper.",
+          "reason": "Not built. The comparison stands at a snapshot: where no assessment date is held it prints 'assessment date not supplied'. There is no file behind this condition, so it is recorded as untested rather than scored on something weaker."
+        },
+        {
+          "label": "Attached to a stated period",
+          "score": 0,
+          "tests": "Every dealer row carries the assessment period it belongs to.",
+          "reason": "Not met. The comparison page prints 'assessment date not supplied' where no date is held, so the reader cannot tell two rounds apart."
+        }
+      ]
+    },
+    {
+      "key": "range",
+      "name": "Range & Campaign Planner",
+      "points": 2,
+      "out_of": 10,
+      "pct": 20,
+      "met": 0,
+      "half": 2,
+      "not_met": 3,
+      "conditions": [
+        {
+          "label": "A tool that selects the range for an initiative",
+          "score": 0,
+          "tests": "A page or workbook where a range is selected for an initiative and the selection carries into the next step. Searched by name across both working trees at build time.",
+          "reason": "The name search finds 2 file(s): Sør-Varanger_Bilteknikk_AS.html, AIM_RANGE_DECISION_PROTOTYPE_2026-09-22.zip. That is a prototype and a decision record, not a tool a person selects a range in, so the condition is not met."
+        },
+        {
+          "label": "Account coverage so a campaign can be aimed",
+          "score": 0,
+          "tests": "Dealer-level account data at the level a campaign needs, counted from the onward-purchase files the workspace holds.",
+          "reason": "32 onward-purchase files exist, and the workspace's own dealer work records that only one distributor sends them broken down by named dealer while every other market collapses to a single row. One distributor's dealer list is not account coverage."
+        },
+        {
+          "label": "A stated minimum size for a campaign to qualify",
+          "score": 0.5,
+          "tests": "The strategy paper's funding table is parsed and the size filter is printed in the currency the paper writes it in.",
+          "reason": "The paper states '€150,000 eligible billing'. Half rather than full because it is one sentence in a recommendation: nothing records the rule being agreed, and the paper's own test for that stage is 'the campaign-selection rule is agreed and the first eligible campaign is named', and neither is on file. The earlier board printed this in pounds; it is euros."
+        },
+        {
+          "label": "Past campaign effect measured after the fact",
+          "score": 0.5,
+          "tests": "A review that measures a named campaign on the same scope before, during and after, returns included.",
+          "reason": "The review exists and is honest about its method: it tags a campaign as any invoice 20% or more under the reference price and reads the following month's drop as stock-building. Half rather than full because it measures purchases from ISZE, not what the dealer sold on, it names no campaign, and there is no before/during/after on one scope with returns."
+        },
+        {
+          "label": "A campaign run through the tool",
+          "score": 0,
+          "tests": "At least one campaign prepared and run end to end.",
+          "reason": "Not run."
+        }
+      ]
+    },
+    {
+      "key": "pricing",
+      "name": "Pricing & Margin Lab",
+      "points": 4,
+      "out_of": 10,
+      "pct": 40,
+      "met": 1,
+      "half": 2,
+      "not_met": 2,
+      "conditions": [
+        {
+          "label": "The price revision measured on a stated base",
+          "score": 1,
+          "tests": "The revision page states its window and its base, and carries the revision figure in its own data - not only in the prose.",
+          "reason": "The page states its base and window in its own data block (weighted by quantities billed, 1 July 2025 to 30 June 2026, lines priced on both sides, with the published figure beside it) and marks it as not a revenue, margin or demand result. The figure and its base travel together in the same file."
+        },
+        {
+          "label": "Price gaps per market and per part, ranked",
+          "score": 0.5,
+          "tests": "Gaps ranked down to the individual part number, against observed competitor prices rather than a price-list convention, with the covered part of the catalogue stated.",
+          "reason": "Ranked by family and market, not by part number, and the comparison is the standard list convention rather than observed competitor prices. The competitor panel reaches 131 of 16,511 part numbers (EUR 5.6M of billed value). Half rather than full: the ranking exists, the evidence behind it is narrower than the wording claims."
+        },
+        {
+          "label": "Customer price-response evidence",
+          "score": 0.5,
+          "tests": "A study that reads how customers responded to a price change and reports a response that can be acted on.",
+          "reason": "The brief exists and does the work; its own verdict is that the volume effect it finds is capture or stocking, not a clean response slope. Half: the evidence is there, but what it establishes is that the response cannot be read from it."
+        },
+        {
+          "label": "A lab a distributor can drive himself",
+          "score": 0,
+          "tests": "A version a distributor opens and runs his own scenario in, with access control, tested by scanning the shared pricing pages for access words.",
+          "reason": "Not built. Scanned 30 shared pricing pages for password, sign-in and permitted-audience words: 0 of them carry any, and none of the pricing pages does - and one that carries five customers' own price conditions could not be shown to another party at all."
+        },
+        {
+          "label": "A margin layer beside the revenue layer",
+          "score": 0,
+          "tests": "Margin beside the revenue figures in the shared pages, on a supplied cost basis. Scanned for a margin figure or for the stated reason there is none.",
+          "reason": "Not met. Of 30 shared pricing pages, 5 carry a gross-margin figure and 1 state that gross profit has no supplied cost basis. Recorded as a named data gap rather than a missing file, because what is missing is the cost basis, not the intent."
+        }
+      ]
+    },
+    {
+      "key": "prism",
+      "name": "PRISM — market and fleet context",
+      "points": 6,
+      "out_of": 10,
+      "pct": 60,
+      "met": 3,
+      "half": 0,
+      "not_met": 2,
+      "conditions": [
+        {
+          "label": "The application runs",
+          "score": 1,
+          "tests": "Something answers on the application's own port when this page is built, and the application's pages are present.",
+          "reason": "Port 8503 answered at build time and 19 page files are present, so this reads the running thing rather than the presence of its start file. It does not confirm which application answered."
+        },
+        {
+          "label": "Vehicles in service wired per market",
+          "score": 1,
+          "tests": "The vehicles-in-service figures exist per market in the fleet file, and the application's own decision page reads that file. Both are tested - a spreadsheet on disk is not 'wired in'.",
+          "reason": "wallet_waterfall.csv carries the fleet by market and year, and the application's decision-models page reads that file by name. 18 distributors in 16 countries - not '18 markets', because the United Kingdom and Israel each hold two - over 2023 to 2025."
+        },
+        {
+          "label": "Spend per truck and capture computed",
+          "score": 1,
+          "tests": "The capture figure is computed at build time from the sourced figures rather than read from a number typed into the page.",
+          "reason": "Computed from wallet_waterfall.csv: EUR 30.76M billed against a EUR 54.42M target-spend ceiling for 2025, which is 56.5%. The earlier board typed 56.5 into the builder and tested only that metrics_snapshot.json exists; the file's presence proves nothing about its contents."
+        },
+        {
+          "label": "A version a distributor can open, with access control",
+          "score": 0,
+          "tests": "A distributor-facing version of the application with a login.",
+          "reason": "Not built, and not something code on this PC can close: the strategy paper says there is no backend here."
+        },
+        {
+          "label": "Competitor prices inside the application",
+          "score": 0,
+          "tests": "A page inside the application on which competitor prices can be read, counted by reading the application's own page files for a competitor price source at build time.",
+          "reason": "Page files found referring to a competitor price source: 4_BVP.py, internal_shelf.py, network_intelligence.py. That is a build module, not a page, so the condition is not met. The paper's PRISM is fleet, billed parts, modelled demand and dated opportunities; competitor prices belong to the Pricing lab, so this is left at zero rather than replaced with an invented substitute."
+        }
+      ]
+    },
+    {
+      "key": "tenders",
+      "name": "Coordinated tenders",
+      "points": 7,
+      "out_of": 10,
+      "pct": 70,
+      "met": 3,
+      "half": 1,
+      "not_met": 1,
+      "conditions": [
+        {
+          "label": "A weekly collection that runs on its own",
+          "score": 1,
+          "tests": "The Windows task is read by its registered name at build time, and the condition turns on whether it has actually run.",
+          "reason": "Read live as 'ISZE Tender Monitor': last ran 21/09/2026 7:30:00, last result 0, next 28/09/2026 7:30:00. The earlier board stored the task as 'ISZE_Tender_Monitor' and looked it up as 'ISZE Tender Monitor', found nothing and printed 'Last ran ?', scoring a met condition as failed."
+        },
+        {
+          "label": "Coverage of national portals plus the EU-wide portal",
+          "score": 1,
+          "tests": "The feed's own source list is read at build time: how many named sources it carries, how many countries they cover, and that the EU-wide portal is among them with a real share of the notices.",
+          "reason": "14 named sources across 28 countries, with the EU-wide portal the largest single source. The test counts countries rather than portals, which flatters a feed where several national sources supply one or two notices each - noted, still met."
+        },
+        {
+          "label": "Repair-and-maintenance contracts identified and scored",
+          "score": 1,
+          "tests": "Every R&M notice in the feed carries a score computed by the feed, so the identification is scored rather than only flagged.",
+          "reason": "279 of 619 opportunities are R&M and each one carries a computed score in the feed. The headline is still flattered: only 29 have a deadline still ahead, so the workable set is far smaller than 279."
+        },
+        {
+          "label": "What happened to each tender recorded",
+          "score": 0,
+          "tests": "An outcome recorded against each opportunity in the live feed.",
+          "reason": "0 of 619 recorded, read from the feed's own summary block."
+        },
+        {
+          "label": "Routed to the distributor and dealer who could bid",
+          "score": 0.5,
+          "tests": "A per-distributor view of the notices that concern that distributor, and the evidence that it reached them.",
+          "reason": "The weekly R&M digest is on disk, one page per distributor, and the board links to it - so more than the earlier 'not built'. Half rather than full because nothing has been sent, it is not part of the weekly job, and 240 of 619 notices still carry no distributor."
+        }
+      ]
+    }
+  ],
+  "live_pages": 115,
+  "not_testable": []
+}
