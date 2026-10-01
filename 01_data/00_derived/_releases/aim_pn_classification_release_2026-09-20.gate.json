@@ -1,0 +1,150 @@
+{
+  "run_at": "2026-09-25T05:08:31.398846+00:00",
+  "classifier_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-09-20.csv",
+  "classifier_sha256": "60111c104ddeb466e6c15f084039639d35172056b0fd2ea10225a3c50da610e0",
+  "resolved_from": "APPROVED release in C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\RELEASES.json",
+  "approved_release": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-09-20.csv",
+  "meta_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_pn_classification_20260920.meta.json",
+  "meta_present": true,
+  "meta_resolved_as": "build record for this file",
+  "drift_baseline_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-09-20.gate.json",
+  "baseline_same_file": true,
+  "checks": [
+    {
+      "id": "file_rows",
+      "ok": true,
+      "measured": 164907,
+      "expected": "> 100000",
+      "note": ""
+    },
+    {
+      "id": "duplicate_keys",
+      "ok": true,
+      "measured": 0,
+      "expected": 0,
+      "note": ""
+    },
+    {
+      "id": "key_length",
+      "ok": true,
+      "measured": 0,
+      "expected": 0,
+      "note": "every part_number 10 chars; non-part rows (line_kind != 'part') exempt by identity, not by length"
+    },
+    {
+      "id": "axis_a_l1_vocabulary",
+      "ok": true,
+      "measured": [],
+      "expected": "no new Axis A Level-1 values",
+      "note": "Axis A = identity (catalog_l*). A new L1 is a taxonomy decision, not a data update"
+    },
+    {
+      "id": "axis_a_l2_count",
+      "ok": true,
+      "measured": 27,
+      "expected": "20-40",
+      "note": "approved baseline 27 (catalog_symbolic_leaf_20260920)"
+    },
+    {
+      "id": "axis_a_l3_count",
+      "ok": true,
+      "measured": 177,
+      "expected": "100-300",
+      "note": "approved baseline 177 (catalog_symbolic_leaf_20260920)"
+    },
+    {
+      "id": "hierarchy_orphans",
+      "ok": true,
+      "measured": 0,
+      "expected": 0,
+      "note": ""
+    },
+    {
+      "id": "pr00_copy_integrity",
+      "ok": true,
+      "measured": "UNAVAILABLE",
+      "expected": ">= 99.0%",
+      "note": "EVIDENCE UNAVAILABLE, NOT CHECKED \u2014 no copy-integrity figure exists for aim_pn_classification_release_2026-09-20.csv (no_block; meta candidate aim_pn_classification_20260920.meta.json). This is not a finding against the file, and no other file's number is substituted for it. To close it properly, write this file's own meta with a catalogue_verification_vs_pr00 block for THIS row count."
+    },
+    {
+      "id": "leading_zero_keys_present",
+      "ok": true,
+      "measured": 1606,
+      "expected": ">= 1000",
+      "note": "part numbers beginning with 0 must remain in the file after padding fix"
+    },
+    {
+      "id": "hs6_coherence",
+      "ok": true,
+      "measured": 63.0,
+      "expected": ">= 55.0%",
+      "note": "share of parts whose catalog_l2 matches the majority L2 of their own HS6 subheading"
+    },
+    {
+      "id": "figure_purity",
+      "ok": true,
+      "measured": 72.0,
+      "expected": ">= 65.0%",
+      "note": "share of parts whose catalog_l2 matches the majority L2 of their own Isuzu figure"
+    },
+    {
+      "id": "axis_conflict_share",
+      "ok": true,
+      "measured": 11.84,
+      "expected": "<= 12.0%",
+      "note": "legacy workbook system-named rows (context); must not grow"
+    },
+    {
+      "id": "axis_columns_separate",
+      "ok": true,
+      "measured": {
+        "missing_cols": [],
+        "fused_system_into_catalog_l1": 0
+      },
+      "expected": "Axis A cols present; workbook system name never equals catalog_l1 on conflict rows",
+      "note": "Two-axes lock: Axis A = catalog_l*/fig_key identity; Axis B = commercial score beside (not a Level-1 parent). Wear views hang from L2/L3 or fig_key."
+    },
+    {
+      "id": "residual_share",
+      "ok": true,
+      "measured": 5.84,
+      "expected": "<= 8.0%",
+      "note": "Other / review must be named, never presented as a family"
+    },
+    {
+      "id": "two_axes_contract",
+      "ok": true,
+      "measured": "aim_pn_classification_20260920.meta.json states the two-axes contract: axis A identity + axis B commercial + parent denied",
+      "expected": "Axis A + Axis B named; commercial not parent",
+      "note": "DECISIONS.md 2026-09-17 two-axes lock"
+    },
+    {
+      "id": "description_ambiguity",
+      "ok": true,
+      "measured": 891,
+      "expected": "< 2% of rows",
+      "note": ""
+    },
+    {
+      "id": "euro_coverage",
+      "ok": true,
+      "measured": 93.82,
+      "expected": ">= 90.0%",
+      "note": "share of billed euro in 2025-01-01..2026-06-30 on a real node"
+    },
+    {
+      "id": "drift_vs_previous_run",
+      "ok": true,
+      "measured": "within tolerance",
+      "expected": "< 1.0% per check; L2/L3=catalog_symbolic_leaf_20260920",
+      "note": ""
+    }
+  ],
+  "checks_not_checked": [
+    "pr00_copy_integrity"
+  ],
+  "failed": 0,
+  "passed": 18,
+  "verdict": "PASS",
+  "note": ""
+}

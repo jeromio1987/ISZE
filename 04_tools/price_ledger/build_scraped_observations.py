@@ -46,8 +46,9 @@ for _s in (sys.stdout, sys.stderr):
 
 HERE = Path(__file__).resolve().parent                    # 04_tools/price_ledger
 ISZE = HERE.parents[1]
-PARSERS = ISZE / "04_tools" / "delegation" / "parsers"
-PROBE = ISZE / "01_data" / "90_INBOX" / "scrape_targets" / "_probe"
+ROOT = Path(__file__).resolve().parents[2]
+PARSERS = ROOT / "04_tools" / "delegation" / "parsers"
+PROBE = ROOT / "01_data" / "90_INBOX" / "scrape_targets" / "_probe"
 MANIFEST = HERE / "page_manifest.csv"
 OFFERED = HERE / "OFFERED_ROWS.csv"
 PLACEHOLDER_MAX = 2.34          # Autodoc-style "no result" placeholder, same as the ledger
@@ -130,14 +131,42 @@ def normalise(row: dict, entry: dict, fx: dict) -> dict:
 
     key = "|".join(str(out.get(c)) for c in (
         "part_no", "competitor_brand", "competitor_pn", "source", "country",
-        "observed_at", "price_type", "loader", "description", "source_url"))
+        "observed_at", "price_type", "loader", "description", "source_url",
+        # price and currency belong in the key: Amayama quotes the SAME part from
+        # several warehouses at different prices (measured 2026-10-01: one part at
+        # 18.72 / 20.62 / 24.79 USD). Without these the rows collide on obs_id and the
+        # ledger refuses the whole file with "duplicate obs_id" — real prices rejected
+        # as if they were a data fault.
+        "price", "currency"))
     out["obs_id"] = hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
     return out
 
 
-def verdict_for(row: dict) -> str:
+def verdict_for(row: dict, page_text: str = "", queried_pn: str = "") -> str:
     """The mechanical checks (plan §5 items 2-4). Returns '' or 'reject:<reason>'."""
     problems = ledger_schema.row_problems(row)
+
+    # --- the Mekonomen guard ---------------------------------------------------
+    # When a shop was SEARCHED for our part number, the row is only trustworthy if the
+    # page actually carries that number. A shop that cannot find our part often returns
+    # its closest unrelated product instead, and a parser reading that page will happily
+    # record a price for a different article.
+    #
+    # Measured 2026-10-01 on the Tier A volume run: asking Omega for Isuzu 8981386950
+    # returned a Jeep Cherokee DOOR MIRROR COVER, and the row went in as an Isuzu air
+    # filter at GBP 51.11. Eight such rows. This is the same failure as Mekonomen in
+    # September, where seven part numbers were priced against a coil spring. Both times
+    # the wrong price had a clean audit trail.
+    if queried_pn and page_text and queried_pn not in page_text:
+        variants = [queried_pn]
+        if len(queried_pn) == 10:
+            variants += [f"{queried_pn[0]}-{queried_pn[1:6]}-{queried_pn[6:9]}-{queried_pn[9]}",
+                         f"{queried_pn[0]}-{queried_pn[1:9]}-{queried_pn[9]}",
+                         f"ISU{queried_pn}"]
+        if not any(v in page_text for v in variants):
+            return (f"reject:shop was searched for {queried_pn} but that number is not on "
+                    f"the page — the shop returned a different product")
+
     # `no part_no` on a category_only row is allowed here: the ledger stores such rows
     # and the match_method says the number is not evidenced. It is recorded, not fatal.
     soft = {"no part_no"}
@@ -192,6 +221,16 @@ def main() -> int:
             print(f"  FAIL  {site:<9} {entry['page_file']:<26} {err}")
             continue
 
+        # The page text and, where the page came from a part-number query, the number we
+        # asked for. Both are needed by the Mekonomen guard in verdict_for().
+        page_path = PROBE / entry["page_file"]
+        page_text = page_path.read_text(encoding="utf-8", errors="replace") if page_path.exists() else ""
+        queried_pn = ""
+        import re as _re
+        m = _re.search(r"[?&](?:q|s)=(\d{10})\b", entry["source_url"] or "")
+        if m:
+            queried_pn = m.group(1)
+
         priced = 0
         for r in rows:
             row = normalise(r, entry, fx)
@@ -199,7 +238,7 @@ def main() -> int:
             # a row's own source_url is often a per-item URL (autoline listings), so it
             # cannot be used to find the page the parser was given.
             row["page_file"] = entry["page_file"].strip()
-            v = verdict_for(row)
+            v = verdict_for(row, page_text=page_text, queried_pn=queried_pn)
             if v.startswith("reject:"):
                 row["verdict"] = v
                 rejected.append(row)
@@ -243,10 +282,69 @@ def main() -> int:
                   f"{r.get('currency')} — {r['verdict']}")
 
     if errors:
-        print(f"\nPAGE FAILURES ({len(errors)}):")
-        for e in errors:
-            print(f"   {e}")
+        print(f"\nPAGE NOTES ({len(errors)} page(s) produced no rows):")
 
+    # Separate a MISS from a BREAK. A page failure is not one kind of thing:
+    #
+    #   * the shop matched our query to a product that is not ours, or the number is
+    #     simply not in their catalogue -> a real answer, not a fault. Measured
+    #     2026-10-01: asking Omega for 5876150021 returned an Alfa Romeo brake disc,
+    #     and the parser refused it. That refusal is the parser working.
+    #   * the JSON-LD is gone, the page is empty, the module will not import -> the
+    #     parser is broken and must fail loudly.
+    #
+    # Treating both as one blocked the first real runner load. The distinction is carried
+    # in the message the parser raised.
+    MISS_MARKERS = (
+        "read no 10-digit Isuzu part number",   # omega: matched a different product
+        "carries 0 product cards",               # ks: search returned nothing
+        "found 0 valid data rows",                # tungen: table recognised, empty
+        "recognised the page but found no price rows",   # amayama: genuine part, no price
+        "no Isuzu part numbers in any title",     # autoline: no OEM numbers on the page
+        "found no price rows",                    # amayama: page read, but see the page test
+    )
+    # Some sites return a valid "no results" page rather than an empty product page, and
+    # the parser's message for it ("no JSON-LD Product block — the page layout has
+    # changed") reads like a fault. The page itself says which it is, so the page decides.
+    EMPTY_RESULT_MARKERS = ("you searched for", "no products were found",
+                            "nothing found", "0 results", "no results")
+    # A part that EXISTS but is out of stock has no price. That is a real answer, not a
+    # fault: Amayama shows "Out of stock" and "No deliveries to", and carries no price
+    # element at all. Found on four pages 2026-10-01 (8975546610, 8980062591, 8980139111,
+    # 8982834751) which were being reported as broken pages.
+    NO_PRICE_STATE_MARKERS = ("out-of-stock", "out of stock", "no deliveries",
+                              "currently unavailable", "discontinued")
+
+    def is_miss(err: str, page_html: str) -> bool:
+        if any(m in err for m in MISS_MARKERS):
+            return True
+        low = (page_html or "")[:20000].lower()
+        if any(m in low for m in EMPTY_RESULT_MARKERS):
+            return True
+        return any(m in low for m in NO_PRICE_STATE_MARKERS)
+
+    hard_errors, misses = [], []
+    for e in errors:
+        page_html = ""
+        for entry in entries:
+            if e.startswith(entry["page_file"]):
+                p = PROBE / entry["page_file"]
+                if p.exists():
+                    page_html = p.read_text(encoding="utf-8", errors="replace")
+                break
+        (misses if is_miss(e, page_html) else hard_errors).append(e)
+
+    if misses:
+        print(f"\nNOT THEIR PART ({len(misses)}) — a real answer, not a fault:")
+        for e in misses[:10]:
+            print(f"   {e[:150]}")
+    if hard_errors:
+        print(f"\nBROKEN PAGES ({len(hard_errors)}) — these must be fixed:")
+        for e in hard_errors[:10]:
+            print(f"   {e[:150]}")
+
+    # Write LAST, so a hard failure leaves the previous OFFERED_ROWS.csv untouched
+    # rather than rewriting it and then refusing (which is what happened on 2026-10-01).
     if a.emit:
         cols = ledger_schema.COLUMNS + ["page_file", "verdict"]
         with OFFERED.open("w", encoding="utf-8", newline="") as fh:
@@ -262,15 +360,17 @@ def main() -> int:
             "pages": len(entries),
             "offered": len(all_rows),
             "rejected": len(rejected),
+            "pages_with_no_rows": len(errors),
+            "not_their_part": len(misses),
+            "broken_pages": len(hard_errors),
             "errors": errors,
             "per_site": per_site,
         }, indent=2, ensure_ascii=False), encoding="utf-8")
         print(f"wrote {a.json}")
 
-    # A page that fails to parse is a hard stop: offering a partial set would look
-    # complete while quietly missing a source.
-    if errors:
-        print(f"\nREFUSED — {len(errors)} page(s) could not be parsed; nothing offered")
+    # Only a BROKEN page stops the run. A shop that does not carry our part is data.
+    if hard_errors:
+        print(f"\nREFUSED — {len(hard_errors)} page(s) look broken; fix them before loading")
         return 1
     return 0
 

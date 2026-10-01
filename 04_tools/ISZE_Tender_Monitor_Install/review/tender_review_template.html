@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tender review</title>
+<style>
+:root{--ink:#1d2433;--muted:#5b6475;--line:#d9dde5;--soft:#f5f6f9;--navy:#1f3a5f;--red:#c8102e;
+      --amber:#9a5b00;--amberbg:#fff4dc;--amberline:#f0c36d;--green:#1e6b3a;--greenbg:#e3f3e8;--bg:#ffffff}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--ink)}
+body{margin:0;font:14px/1.45 "Segoe UI",Arial,Helvetica,sans-serif}
+header{background:var(--navy);color:#fff;padding:16px 24px 14px}
+header h1{margin:0;font-size:20px}
+header .sub{color:#d7e0ee;font-size:13px;margin-top:4px}
+main{max-width:1180px;margin:0 auto;padding:16px 24px 40px}
+h2{font-size:17px;margin:28px 0 4px;color:var(--navy)}
+h2 .n{color:var(--muted);font-weight:400}
+p.lead{margin:0 0 12px;color:var(--muted)}
+.banner{background:var(--amberbg);border:1px solid var(--amberline);border-left:5px solid var(--amber);
+        color:#5a3a00;padding:9px 12px;margin:12px 0;border-radius:3px}
+.banner b{color:#3d2700}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+.tile{border:1px solid var(--line);border-radius:4px;padding:10px 12px;background:var(--soft)}
+.tile .v{font-size:24px;font-weight:700;color:var(--navy)}
+.tile .l{font-size:12.5px;color:var(--muted)}
+.tile[title]{cursor:help}
+.card{border:1px solid var(--line);border-left:5px solid var(--navy);border-radius:3px;margin:0 0 10px;background:#fff}
+.card.soon{border-left-color:var(--red)}
+.card .top{display:grid;grid-template-columns:34px 1fr 250px;gap:10px;padding:10px 12px}
+.num{font-weight:700;color:var(--navy);font-size:16px}
+.title{font-weight:600;font-size:14.5px}
+.meta{color:var(--muted);font-size:13px;margin-top:2px}
+.chips{margin-top:6px;display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-size:12px;padding:1px 7px;border-radius:10px;background:var(--soft);border:1px solid var(--line);color:var(--ink)}
+.chip.dl{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chip.dl.soon{background:var(--red);border-color:var(--red)}
+.chip.gap{background:var(--amberbg);border-color:var(--amberline);color:#6b4100}
+.chip.why{background:#eef2f8;border-color:#cfd8e6}
+.chip.dec-Attack{background:#fde7ea;border-color:#f3b4bd;color:#7d0a1c;font-weight:600}
+.chip.dec-Selective{background:#e8eef7;border-color:#b9c8df}
+.chip.dec-Watch{background:var(--soft)}
+.chip[title]{cursor:help}
+.answer{display:flex;flex-direction:column;gap:6px}
+.btns{display:flex;flex-wrap:wrap;gap:4px}
+button{font:inherit;font-size:12.5px;padding:4px 9px;border:1px solid #b8c0cc;background:#fff;color:var(--ink);
+       border-radius:3px;cursor:pointer}
+button:hover{background:var(--soft)}
+button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+button.on.pass{background:#5b6475;border-color:#5b6475}
+button.on.won{background:var(--green);border-color:var(--green)}
+button.on.lost{background:var(--red);border-color:var(--red)}
+button.primary{background:var(--navy);color:#fff;border-color:var(--navy);font-size:14px;padding:7px 14px}
+input.note{font:inherit;font-size:12.5px;padding:4px 6px;border:1px solid #b8c0cc;border-radius:3px;width:100%}
+.saved{font-size:12px;color:var(--muted)}
+.saved.store{color:var(--green)}
+details.more{border-top:1px solid var(--line)}
+details.more summary{cursor:pointer;padding:6px 12px;font-size:13px;color:var(--navy)}
+.detail{padding:4px 12px 12px 56px;display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;font-size:13px}
+.detail .k{color:var(--muted)}
+.full{grid-column:1/-1}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600}
+td.r,th.r{text-align:right;white-space:nowrap}
+.dash{color:var(--muted)}
+details.section>summary{cursor:pointer;font-size:17px;color:var(--navy);font-weight:600;margin:28px 0 6px}
+.twin{font-size:12.5px;color:#6b4100;margin-top:4px}
+code{background:var(--soft);padding:1px 4px;border-radius:2px;font-size:12.5px}
+.foot{margin-top:30px;padding-top:10px;border-top:1px solid var(--line);color:var(--muted);font-size:12.5px}
+.foot li{margin:3px 0}
+a{color:#1a4f9c}
+@media (max-width:820px){.card .top{grid-template-columns:28px 1fr}.answer{grid-column:1/-1}.detail{grid-template-columns:1fr;padding-left:12px}}
+@media print{.answer,details.more summary,button{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tender review &mdash; decisions for this week</h1>
+  <div class="sub" id="sub"></div>
+</header>
+<main>
+  <div id="banners"></div>
+  <div class="tiles" id="tiles"></div>
+
+  <h2>1. Decide this week <span class="n" id="q-n"></span></h2>
+  <p class="lead">Same rule as the weekly distributor list: a deadline on or after the build date, not marked Ignore by
+  our own scoring, and either repair and maintenance or a pickup or truck purchase. Sorted by deadline. The same tender
+  published twice (EU journal and national portal) is shown once.</p>
+  <div id="queue"></div>
+
+  <h2>1b. Check the vehicle list first <span class="n" id="b-n"></span></h2>
+  <p class="lead">Repair, maintenance or parts contracts for an existing fleet where the notice does not name Isuzu.
+  Whether this is our business depends on the vehicles in that fleet, and the notice does not list them: the vehicle
+  list is in the tender documents. Open the notice, check for Isuzu, then decide. Not scored as pursue or pass until then.</p>
+  <div id="brandcheck"></div>
+
+  <details class="section" id="other-wrap"><summary>2. Also live, but outside the product rule <span class="n" id="o-n"></span></summary>
+    <p class="lead">Deadline still open and not marked Ignore, but neither repair and maintenance nor a pickup or truck
+    purchase. Not on any distributor list. Shown so nothing live is hidden.</p>
+    <div id="other"></div>
+  </details>
+
+  <h2>3. What we said before <span class="n" id="a-n"></span></h2>
+  <div id="answered"></div>
+
+  <h2>4. Where the feed sizes a parts business <span class="n" id="s-n"></span></h2>
+  <p class="lead">Parts demand per year, valued at our average selling price, for the only tenders where the feed can
+  size it. Read the per-vehicle figure, not the total.</p>
+  <div id="sized"></div>
+
+  <details class="section"><summary>5. Held back: no deadline published <span class="n" id="u-n"></span></summary>
+    <p class="lead">These pass every rule except the deadline. They no longer go to distributors. Open the notice to find
+    a date; once the feed carries one, the tender moves to section 1 by itself.</p>
+    <div id="undated"></div>
+  </details>
+
+  <h2>6. Save your answers</h2>
+  <p class="lead">Answers stay in this browser until you download them. Nothing reaches the outcome store until the
+  downloaded list is loaded with the command below.</p>
+  <p><button class="primary" id="dl">Download answers (<span id="dl-n">0</span>)</button>
+     <button id="clear">Clear answers typed on this page</button></p>
+  <p class="saved">Then move the downloaded file into <code>04_tools\ISZE_Tender_Monitor_Install\review\answers\</code> and, from
+     <code>04_tools\ISZE_Tender_Monitor_Install</code>, run<br>
+     <code>python tender_outcomes.py --dry-run review\answers</code> to check, then the same without <code>--dry-run</code> to save.
+     Always point it at the folder: on a single file, today's loader ignores <code>--dry-run</code> and writes.
+     Files are dated, so a later answer replaces an earlier one. The next build of this page shows them in section 3.</p>
+
+  <div class="foot" id="foot"></div>
+</main>
+<script>
+const DATA = /*@@DATA@@*/null;
+const KEY = "isze_tender_review_answers_v1";
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const FIRST = ["pursue","pass","not decided yet"];
+const RESULT = ["won","lost","withdrawn"];
+const CANON = {"no decision":"not decided yet"};
+
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function d(s){if(!s)return null;const p=s.slice(0,10).split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
+function fmtD(s){const x=d(s);return x?`${x.getDate()} ${MON[x.getMonth()]} ${x.getFullYear()}`:"";}
+const TODAY=(()=>{const t=new Date();return new Date(t.getFullYear(),t.getMonth(),t.getDate());})();
+function daysLeft(s){const x=d(s);return x?Math.round((x-TODAY)/86400000):null;}
+function eur(v,dp){if(v==null||v==="")return null;return "€"+Number(v).toLocaleString("en-GB",{minimumFractionDigits:dp||0,maximumFractionDigits:dp||0});}
+function money(v,c){if(v==null||v==="")return null;const n=Number(v).toLocaleString("en-GB",{maximumFractionDigits:0});return c?`${c} ${n}`:`${n} (currency not published)`;}
+function dash(why){return `<span class="dash" title="${esc(why)}">&mdash; not published</span>`;}
+
+let store={};
+try{store=JSON.parse(localStorage.getItem(KEY)||"{}")||{};}catch(e){store={};}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(store));}catch(e){} countDl();}
+function countDl(){document.getElementById("dl-n").textContent=Object.keys(store).filter(k=>store[k].outcome).length;}
+
+function onFile(r){const a=r.answer||{};const s=a.status?(CANON[a.status]||a.status):"";return s;}
+
+function answerBox(r){
+  const typed=(store[r.id]||{}).outcome||"";const file=onFile(r);
+  const cur=typed||file;
+  const showResult=cur==="pursue"||RESULT.includes(cur);
+  const b=(w,cls)=>`<button data-id="${r.id}" data-w="${w}" class="${cls||""} ${cur===w?"on "+w.split(" ")[0]:""}">${w}</button>`;
+  return `<div class="answer">
+    <div class="btns">${FIRST.map(w=>b(w)).join("")}</div>
+    ${showResult?`<div class="btns"><span class="saved">Result:</span>${RESULT.map(w=>b(w)).join("")}</div>`:""}
+    <input class="note" data-id="${r.id}" placeholder="note (optional), e.g. reason for pass" value="${esc((store[r.id]||{}).note||(r.answer||{}).notes||"")}">
+    <div class="saved ${file&&!typed?"store":""}">${typed?`typed here, not saved to the store yet`:file?`on file in the outcome store: ${esc(file)}`:"no answer yet"}</div>
+  </div>`;
+}
+
+function partsBlock(r){
+  if(!r.parts||!r.parts.length){
+    return `<div class="full banner" style="margin:4px 0"><b>Parts not sized.</b> ${esc(r.parts_reason)}</div>`;
+  }
+  const fleet=Number(r.fleet)||null;
+  const tot=r.parts.reduce((a,p)=>a+(Number(p.eur)||0),0);
+  const rows=r.parts.map(p=>{
+    const cov=p.coverage==null?dash("No price comparison row for this family"):
+      `<span title="${p.rival_parts} of our ${p.our_parts} part numbers in this family carry an observed aftermarket-brand price">${p.coverage.toFixed(2)}% (${p.rival_parts} of ${p.our_parts})</span>`;
+    const rng=(p.rival_min!=null)?`${eur(p.rival_min,2)} &ndash; ${eur(p.rival_max,2)}`:dash("No observed rival price in this family");
+    return `<tr><td>${esc(p.family)}</td><td class="r" title="Expected quantity per year = fleet x quantity per vehicle for this distributor">${Number(p.qty).toLocaleString("en-GB",{maximumFractionDigits:2})}</td>
+      <td class="r" title="Quantity x our average selling price ${eur(p.asp,2)}">${eur(p.eur,0)}</td><td class="r">${cov}</td><td class="r">${rng}</td></tr>`;}).join("");
+  return `<div class="full"><b>Parts demand per year</b>: ${eur(tot,0)} across ${r.parts.length} families for ${fleet?fleet.toLocaleString("en-GB")+" vehicles":"an unstated fleet"}
+    ${fleet?` = <b title="Total divided by fleet size">${eur(tot/fleet,0)} per vehicle</b>`:""}, at our average selling price.
+    <table style="margin-top:6px"><thead><tr><th>Family</th><th class="r">Qty / yr</th><th class="r">Value / yr</th>
+    <th class="r" title="Share of our part numbers in the family that carry an observed aftermarket-brand price. Genuine Isuzu parts sold outside our network are not counted. A blank is not 'no competitor'.">Can compare to a rival</th><th class="r">Rival price range</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
+function card(r,num,twin){
+  const dl=daysLeft(r.deadline);const soon=dl!=null&&dl<=7;
+  const dlChip=r.deadline?`<span class="chip dl ${soon?"soon":""}" title="Deadline as published in the feed collected ${fmtD(DATA.feed_generated_at)}">${fmtD(r.deadline)} &middot; ${dl<0?"passed":dl===0?"closes today":dl+" days left"}</span>`
+                         :`<span class="chip gap">deadline not published</span>`;
+  const gaps=r.gaps.map(g=>`<span class="chip gap" title="The feed does not carry this for this tender">no ${esc(g)}</span>`).join("");
+  const why=r.drivers.map(x=>`<span class="chip why">${esc(x)}</span>`).join("");
+  const dist=r.distributor?esc(r.distributor):`<span class="dash">no distributor identified</span>`;
+  const twinLine=twin?`<div class="twin">Also published as a second notice${twin.deadline?`, deadline ${fmtD(twin.deadline)}`:", no deadline"} &mdash; same tender; an answer here is saved on both codes.${twin.url?` <a href="${esc(twin.url)}" target="_blank" rel="noopener">second notice</a>`:""}</div>`:"";
+  return `<div class="card ${soon?"soon":""}">
+   <div class="top">
+    <div class="num">${num}</div>
+    <div>
+      <div class="title">${esc(r.title)}</div>
+      <div class="meta">${esc(r.buyer||"buyer not published")} &middot; ${esc(r.country)} &middot; ${dist}${r.listed&&r.distributor?" &middot; on this week's list":""}</div>
+      <div class="chips">${dlChip}<span class="chip">${esc(r.kind)}</span>
+        <span class="chip dec-${esc(r.decision)}" title="Our own scoring. Score ${r.score} = weighted fit ${r.fit}, win ${r.win}, money ${r.econ} (0-100 each)">${esc(r.decision)} &middot; ${r.score}</span>${gaps}</div>
+      ${why?`<div class="chips">${why}</div>`:""}
+      ${twinLine}
+    </div>
+    ${answerBox(r)}
+   </div>
+   <details class="more"><summary>Details and parts</summary>
+    <div class="detail">
+      <div><span class="k">Scope:</span> ${esc(r.scope)||dash("No after-sales wording matched")}</div>
+      <div><span class="k">Product read as:</span> ${esc(r.segment)}</div>
+      <div><span class="k">Value:</span> ${money(r.value,r.currency)||dash("Contract value not published in the notice")}</div>
+      <div><span class="k">Fleet:</span> ${r.fleet!=null&&r.fleet!==""?Number(r.fleet).toLocaleString("en-GB")+" vehicles (as stated in the notice)":dash("Fleet size not stated in the notice")}</div>
+      <div><span class="k">Scores:</span> <span title="0-100: how well the text matches what Isuzu sells">fit ${r.fit}</span>, <span title="0-100: how winnable it looks">win ${r.win}</span>, <span title="0-100: how much money appears to be behind it">money ${r.econ}</span>; source text quality ${esc(r.evidence)}</div>
+      <div><span class="k">Suggested owner / next step:</span> ${esc(r.owner)} &middot; ${esc(r.next)||"&mdash;"}</div>
+      <div><span class="k">Nearest dealer:</span> ${r.dealer?esc(r.dealer)+(r.dealer_city?" ("+esc(r.dealer_city)+")":""):dash("Shown only when the buyer is matched to a dealer's own area; a country-level guess is not shown")}</div>
+      <div><span class="k">Published on:</span> ${r.sources.map(esc).join(", ")} &middot; ${r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">open the notice</a>`:"no link"}</div>
+      ${partsBlock(r)}
+      <div class="full saved">Code ${esc(r.id)}${twin?" and "+esc(twin.id):""}</div>
+    </div>
+   </details>
+  </div>`;
+}
+
+function renderList(rows,el,withTwins){
+  const byId={};rows.forEach(r=>byId[r.id]=r);
+  const done=new Set();let n=0;const out=[];
+  const sorted=rows.slice().sort((a,b)=>(a.deadline||"9999").localeCompare(b.deadline||"9999")||(b.score-a.score));
+  for(const r of sorted){
+    if(done.has(r.id))continue;
+    let lead=r,twin=withTwins&&r.twin?byId[r.twin]:null;
+    if(twin&&lead.sources.some(s=>s.includes("EU"))&&!twin.sources.some(s=>s.includes("EU"))){[lead,twin]=[twin,lead];}
+    done.add(lead.id);if(twin)done.add(twin.id);
+    out.push(card(lead,++n,twin));
+  }
+  el.innerHTML=out.join("")||`<div class="banner">Nothing in this section today.</div>`;
+  return n;
+}
+
+function smallTable(rows,cols){
+  if(!rows.length)return `<div class="banner">Nothing in this section.</div>`;
+  return `<table><thead><tr>${cols.map(c=>`<th class="${c.r?"r":""}">${c.h}</th>`).join("")}</tr></thead><tbody>${
+    rows.map(r=>`<tr>${cols.map(c=>`<td class="${c.r?"r":""}">${c.f(r)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
+}
+
+function render(){
+  const B=DATA.book;
+  const feedDays=Math.round((TODAY-d(DATA.feed_generated_at))/86400000);
+  document.getElementById("sub").innerHTML=`Internal &middot; built ${fmtD(DATA.built)} &middot; tenders collected ${fmtD(DATA.feed_generated_at)} &middot; ${B.opportunities} tenders in the feed`;
+  const ban=[];
+  if(feedDays>2)ban.push(`<div class="banner"><b>The tender feed is ${feedDays} days old</b> (collected ${fmtD(DATA.feed_generated_at)}). Deadlines and new tenders since then are not here; check a notice before acting on its date.</div>`);
+  if(!B.store_recorded)ban.push(`<div class="banner"><b>No answer has been recorded yet.</b> The outcome store holds 0 answers, so section 3 is empty and no win rate exists. A win rate is shown only after 20 won-or-lost results.</div>`);
+  if(DATA.store_orphans.length)ban.push(`<div class="banner"><b>${DATA.store_orphans.length} recorded answer(s) belong to tenders no longer in the feed</b>: ${DATA.store_orphans.map(esc).join(", ")}.</div>`);
+  document.getElementById("banners").innerHTML=ban.join("");
+
+  const BC=DATA.brand_check||[];
+  const qEl=document.getElementById("queue");
+  const nQ=renderList(DATA.queue,qEl,true);
+  const soon=DATA.queue.filter(r=>{const x=daysLeft(r.deadline);return x!=null&&x<=14&&!(r.twin&&r.sources.some(s=>s.includes("EU")));}).length;
+  const onList=new Set(DATA.queue.filter(r=>r.distributor).map(r=>r.twin&&r.sources.some(s=>s.includes("EU"))?r.twin:r.id)).size;
+  document.getElementById("q-n").textContent=`(${nQ} tenders)`;
+  const pctFleet=(100*B.notices_fleet_stated/B.notices).toFixed(1);
+  document.getElementById("tiles").innerHTML=[
+    [BC.length,"to check first: fleet brand not named","Section 1b. Repair or parts contracts where the notice does not say which vehicles"],
+    [nQ,"tenders need a decision this week",`${DATA.queue.length} feed rows, ${B.twin_pairs} published twice and shown once`],
+    [soon,"close within 14 days","Counted from today's date in your browser"],
+    [onList,"also on a distributor's list this week","The rest have no distributor identified"],
+    [DATA.undated.length,"held back: no deadline","Section 5"],
+    [`${B.opps_sized} of ${B.opportunities}`,"tenders with a parts demand figure",`Needs a stated fleet; only ${B.notices_fleet_stated} of ${B.notices} notices (${pctFleet}%) state one`],
+  ].map(t=>`<div class="tile" title="${esc(t[2])}"><div class="v">${t[0]}</div><div class="l">${t[1]}</div></div>`).join("");
+
+  document.getElementById("b-n").textContent=`(${BC.length} tenders)`;
+  document.getElementById("brandcheck").innerHTML=smallTable(BC,[
+    {h:"Deadline",f:r=>r.deadline?fmtD(r.deadline)+(daysLeft(r.deadline)===0?` <span class="chip dl soon">today</span>`:""):"not published"},
+    {h:"Tender",f:r=>r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:esc(r.title)},
+    {h:"Buyer",f:r=>esc(r.buyer)},{h:"Country",f:r=>esc(r.country)},
+    {h:"Fleet brand",f:r=>`<span class="chip gap">${esc(r.fleet_brand==="unknown_multi_brand"?"multi-brand, Isuzu share unknown":"not named")}</span>`},
+    {h:"Distributor",f:r=>r.distributor?esc(r.distributor):`<span class="dash">none</span>`}]);
+
+  const nO=renderList(DATA.other_live,document.getElementById("other"),false);
+  document.getElementById("o-n").textContent=`(${nO})`;
+
+  const ans=DATA.answered;
+  document.getElementById("a-n").textContent=`(${ans.length} on file)`;
+  const pursued=ans.filter(r=>onFile(r)==="pursue");
+  document.getElementById("answered").innerHTML=ans.length?(
+    (pursued.length?`<div class="banner"><b>You said pursue on ${pursued.length}; is the result known?</b> Mark won, lost or withdrawn in section 1 or below.</div>`:"")+
+    smallTable(ans,[{h:"Tender",f:r=>esc(r.title)},{h:"Country",f:r=>esc(r.country)},{h:"Answer on file",f:r=>esc(onFile(r))},
+      {h:"Date",f:r=>esc((r.answer||{}).decision_date||"")||"&mdash;"},{h:"Note",f:r=>esc((r.answer||{}).notes||"")||"&mdash;"},
+      {h:"Deadline",f:r=>r.deadline?fmtD(r.deadline):"not published"}]))
+    :`<div class="banner"><b>Nothing recorded yet.</b> Once answers are loaded, this section lists them, puts "you said pursue, is the result known?" at the top, and keeps asking until each one is won, lost or withdrawn.</div>`;
+
+  const S=DATA.sized;
+  document.getElementById("s-n").textContent=`(${S.length} of ${B.opportunities} tenders)`;
+  const tot=r=>r.parts.reduce((a,p)=>a+(Number(p.eur)||0),0);
+  document.getElementById("sized").innerHTML=smallTable(S.slice().sort((a,b)=>tot(b)-tot(a)),[
+    {h:"Tender",f:r=>esc(r.title)+(/\bSUV\b/i.test(r.title)?` <span class="chip gap" title="Read as a pickup by the feed, but the title says SUV: not an Isuzu shape">likely misread</span>`:"")},
+    {h:"Country",f:r=>esc(r.country)},{h:"Read as",f:r=>esc(r.segment)},
+    {h:"Fleet",r:1,f:r=>Number(r.fleet).toLocaleString("en-GB")},
+    {h:"Parts / yr",r:1,f:r=>`<span title="Sum over ${r.parts.length} families at our average selling price">${eur(tot(r),0)}</span>`},
+    {h:"Per vehicle / yr",r:1,f:r=>`<span title="Parts per year divided by fleet">${eur(tot(r)/Number(r.fleet),0)}</span>`},
+    {h:"Decision",f:r=>esc(r.decision)},{h:"Deadline",f:r=>r.deadline?fmtD(r.deadline):"not published"}])
+    +`<p class="saved">Families covered: filters, brakes and clutch only (14). No cab, body, electrical, engine, cooling or steering parts are modelled. Rival-price coverage per family is in each tender's details.</p>`;
+
+  document.getElementById("u-n").textContent=`(${DATA.undated.length})`;
+  const U=DATA.undated.slice().sort((a,b)=>(a.distributor||"~").localeCompare(b.distributor||"~")||(b.score-a.score));
+  document.getElementById("undated").innerHTML=smallTable(U,[
+    {h:"Tender",f:r=>r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:esc(r.title)},
+    {h:"Buyer",f:r=>esc(r.buyer)},{h:"Country",f:r=>esc(r.country)},
+    {h:"Distributor",f:r=>r.distributor?esc(r.distributor):`<span class="dash">none</span>`},
+    {h:"Type",f:r=>esc(r.kind)},{h:"Decision",r:1,f:r=>`${esc(r.decision)} &middot; ${r.score}`}]);
+
+  const sel=B.selection;
+  document.getElementById("foot").innerHTML=`<b>How this page is built</b><ul>
+   <li>Source: the live tender feed collected ${fmtD(DATA.feed_generated_at)}: ${B.opportunities} tenders (${B.notices} notices before merging copies from different portals).</li>
+   <li>Section 1 rule: ${sel.rm_or_pickup_truck} tenders are repair and maintenance or a pickup/truck purchase; ${sel.in_scope_and_actionable_decision} are not marked Ignore; ${sel.selected_dated} rows have a deadline on or after ${fmtD(DATA.built)}; ${sel.dropped_deadline_already_passed} had already closed; ${sel.undated_internal_only} have no deadline (section 5).</li>
+   <li>What the feed knows across all ${B.opportunities} tenders: deadline on ${B.opps_deadline}, contract value on ${B.opps_value}, fleet size on ${B.opps_fleet}, parts demand on ${B.opps_sized}.</li>
+   <li>"Same tender published twice": same country and buyer, one copy from the EU journal and one from a national portal, title words overlapping at least half. A matched pair shows as one card; an answer is saved on both codes.</li>
+   <li>Parts demand = fleet &times; expected quantity per vehicle per family for that distributor, valued at our average selling price. Rival comparison = share of our part numbers in the family that carry an observed aftermarket-brand price; genuine Isuzu parts sold outside our network are not counted as rivals. A blank is not "no competitor".</li>
+   <li>Days left are counted from today's date on this computer, not the build date.</li></ul>`;
+  countDl();
+}
+
+document.addEventListener("click",e=>{
+  const b=e.target.closest("button[data-w]");if(!b)return;
+  const id=b.dataset.id,w=b.dataset.w;
+  const cur=(store[id]||{}).outcome;
+  store[id]=Object.assign(store[id]||{}, {outcome:cur===w?"":w, date:new Date().toISOString().slice(0,10)});
+  if(!store[id].outcome&&!store[id].note)delete store[id];
+  save();render();
+});
+document.addEventListener("change",e=>{
+  const i=e.target.closest("input.note");if(!i)return;
+  const id=i.dataset.id;store[id]=Object.assign(store[id]||{}, {note:i.value.trim()});
+  if(!store[id].outcome&&!store[id].note)delete store[id];
+  save();
+});
+document.getElementById("clear").onclick=()=>{if(confirm("Clear every answer typed on this page? Answers already loaded into the outcome store are not affected.")){store={};save();render();}};
+document.getElementById("dl").onclick=()=>{
+  const all=[...DATA.queue,...DATA.other_live,...DATA.undated,...DATA.answered];
+  const twinOf={};all.forEach(r=>{if(r.twin)twinOf[r.id]=r.twin;});
+  const head=["opportunity_id","outcome","status","decision_date","loss_reason","competitor_if_known","actual_parts_revenue_12m","notes"];
+  const q=v=>{v=String(v==null?"":v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+  const lines=[head.join(",")];const seen=new Set();
+  for(const [id,a] of Object.entries(store)){
+    if(!a.outcome)continue;
+    for(const x of [id,twinOf[id]].filter(Boolean)){
+      if(seen.has(x))continue;seen.add(x);
+      const note=[a.note||"",x!==id?`same tender as ${id}`:""].filter(Boolean).join("; ");
+      lines.push([x,a.outcome,"",a.date,"","","",note].map(q).join(","));
+    }
+  }
+  if(lines.length===1){alert("No answer typed yet.");return;}
+  const blob=new Blob(["﻿"+lines.join("\r\n")+"\r\n"],{type:"text/csv"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="tender_review_answers_"+new Date().toISOString().slice(0,10)+".csv";
+  document.body.appendChild(a);a.click();a.remove();
+};
+render();
+</script>
+</body>
+</html>

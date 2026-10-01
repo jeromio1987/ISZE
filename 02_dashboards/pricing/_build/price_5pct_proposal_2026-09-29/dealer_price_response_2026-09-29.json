@@ -1,0 +1,275 @@
+{
+  "generated": "2026-09-29",
+  "sources": {
+    "dealer_sales": "01_data/00_derived/dealer_sellout_long_{ITUK_CY2023,ITUK_CY2024,ITUK_network_CY2025,ITUK_CY2026YTD,IUK_*,IRELAND_*,PORTUGAL_*}.csv, monthly network grain",
+    "list_prices": "01_data/00_derived/pricing_pr00_ie40_{2023,2024,2025}.parquet (year-end snapshots) + pricing_pr00_ie40.parquet (current, valid from 2026-03-13)",
+    "billing": "01_data/00_derived/sales_fact.parquet, sold-to 2575 (ITUK)",
+    "families": "01_data/00_derived/pr00_classification.csv (group)"
+  },
+  "invoice_check_ituk": {
+    "April 2026": {
+      "parts": 2160,
+      "median_list_change": 0.117,
+      "median_invoice_change": 0.1162,
+      "correlation": 0.82
+    },
+    "January 2024": {
+      "parts": 2206,
+      "median_list_change": 0.0182,
+      "median_invoice_change": 0.0182,
+      "correlation": 0.742
+    }
+  },
+  "cy2026_cd_weighted_base_price_move": {
+    "value": 0.0325,
+    "weights": "ISZE billed quantity 2024-07-01..2025-06-30, all customers",
+    "parts_with_volume": 16473,
+    "source": "01_data/00_derived/pricing_revision_cd.parquet (PRICE CD 250912)"
+  },
+  "ituk_dealer_units_by_month": {
+    "1": {
+      "2023": 17018.0,
+      "2024": 19406.0,
+      "2025": 18961.0,
+      "2026": 16920.0
+    },
+    "2": {
+      "2023": 18644.0,
+      "2024": 18344.0,
+      "2025": 18520.0,
+      "2026": 19887.0
+    },
+    "3": {
+      "2023": 18483.0,
+      "2024": 21825.0,
+      "2025": 22155.0,
+      "2026": 25258.0
+    },
+    "4": {
+      "2023": 16435.0,
+      "2024": 20475.0,
+      "2025": 18448.0,
+      "2026": 18178.0
+    },
+    "5": {
+      "2023": 18307.0,
+      "2024": 18638.0,
+      "2025": 19180.0,
+      "2026": 17969.0
+    },
+    "6": {
+      "2023": 19125.0,
+      "2024": 17734.0,
+      "2025": 17682.0,
+      "2026": 19608.0
+    },
+    "7": {
+      "2023": 19332.0,
+      "2024": 23253.0,
+      "2025": 19593.0,
+      "2026": 20468.0
+    },
+    "8": {
+      "2023": 18749.0,
+      "2024": 18114.0,
+      "2025": 17902.0,
+      "2026": 17686.0
+    },
+    "9": {
+      "2023": 17174.0,
+      "2024": 18429.0,
+      "2025": 18999.0,
+      "2026": null
+    },
+    "10": {
+      "2023": 19570.0,
+      "2024": 21844.0,
+      "2025": 20841.0,
+      "2026": null
+    },
+    "11": {
+      "2023": 20137.0,
+      "2024": 19149.0,
+      "2025": 16482.0,
+      "2026": null
+    },
+    "12": {
+      "2023": 16087.0,
+      "2024": 13375.0,
+      "2025": 15824.0,
+      "2026": null
+    }
+  },
+  "ituk_network_yoy": {
+    "Jan-Feb 2026 vs 2025": -0.018,
+    "Mar 2026 vs 2025": 0.1401,
+    "Mar-Aug 2026 vs 2025": 0.0366,
+    "Apr-Aug 2026 vs 2025": 0.0119,
+    "Apr-Aug 2025 vs 2024": -0.0551
+  },
+  "ituk_three_list_changes": {
+    "events": {
+      "January 2024": {
+        "parts": 2833,
+        "qty_weighted_list_change": 0.0161,
+        "median_list_change": 0.0183,
+        "within_family_spread_sd": 0.0374,
+        "n": 2833,
+        "beta_dlp": 0.4164,
+        "se_dlp": 0.4837,
+        "logdiff_beta": 0.3422,
+        "logdiff_se": 0.4374
+      },
+      "February 2025": {
+        "parts": 2909,
+        "qty_weighted_list_change": 0.0101,
+        "median_list_change": 0.014,
+        "within_family_spread_sd": 0.0064,
+        "n": 2909,
+        "beta_dlp": -1.9441,
+        "se_dlp": 2.1378,
+        "logdiff_beta": -4.5705,
+        "logdiff_se": 3.0922
+      },
+      "April 2026": {
+        "parts": 2076,
+        "qty_weighted_list_change": 0.0847,
+        "median_list_change": 0.117,
+        "within_family_spread_sd": 0.0473,
+        "n": 2075,
+        "beta_dlp": 0.4503,
+        "se_dlp": 0.2552,
+        "logdiff_beta": 0.8367,
+        "logdiff_se": 0.422
+      }
+    },
+    "pooled": {
+      "n": 7817,
+      "beta_dlp": 0.415,
+      "se_dlp": 0.2077
+    },
+    "pooled_excl_superseded": {
+      "n": 3428,
+      "beta_dlp": 0.0046,
+      "se_dlp": 0.2301
+    },
+    "pooled_min10_units": {
+      "n": 4051,
+      "beta_dlp": 0.4594,
+      "se_dlp": 0.2204
+    },
+    "placebo_previous_year_trend": {
+      "February 2025": {
+        "n": 2909,
+        "beta_dlp": 1.5502,
+        "se_dlp": 2.006
+      },
+      "April 2026": {
+        "n": 2076,
+        "beta_dlp": 0.5954,
+        "se_dlp": 0.3016
+      }
+    }
+  },
+  "four_markets_april_2026": {
+    "dealer_units": {
+      "ITUK (UK trucks)": {
+        "window": "2025-04..2025-08 vs 2026-04..2026-08",
+        "units_before": 92805.0,
+        "units_after": 93909.0,
+        "change": 0.0119,
+        "jan_feb_2026_vs_2025": -0.018
+      },
+      "IUK (UK D-Max)": {
+        "window": "2025-04..2025-07 vs 2026-04..2026-07",
+        "units_before": 83704.0,
+        "units_after": 78268.0,
+        "change": -0.0649,
+        "jan_feb_2026_vs_2025": -0.0406
+      },
+      "Ireland": {
+        "window": "2025-04..2025-07 vs 2026-04..2026-07",
+        "units_before": 14666.0,
+        "units_after": 15175.0,
+        "change": 0.0347,
+        "jan_feb_2026_vs_2025": -0.2583
+      },
+      "Portugal": {
+        "window": "2025-04..2025-08 vs 2026-04..2026-08",
+        "units_before": 20171.0,
+        "units_after": 24296.0,
+        "change": 0.2045,
+        "jan_feb_2026_vs_2025": 0.1204
+      }
+    },
+    "by_market": {
+      "ITUK (UK trucks)": {
+        "n": 2075,
+        "beta_dlp": 0.4503,
+        "se_dlp": 0.2552,
+        "qty_weighted_list_change": 0.0847
+      },
+      "IUK (UK D-Max)": {
+        "n": 1595,
+        "beta_dlp": -1.0805,
+        "se_dlp": 0.4586,
+        "qty_weighted_list_change": 0.0815
+      },
+      "Ireland": {
+        "n": 850,
+        "beta_dlp": 1.074,
+        "se_dlp": 0.3854,
+        "qty_weighted_list_change": 0.0647
+      },
+      "Portugal": {
+        "n": 1265,
+        "beta_dlp": -0.5921,
+        "se_dlp": 0.6358,
+        "qty_weighted_list_change": 0.0528
+      }
+    },
+    "segments": {
+      "maintenance parts (filters, brakes, clutch)": {
+        "share_of_parts": 0.019,
+        "extra_response": 0.2771,
+        "extra_response_se": 0.3934
+      },
+      "parts with a cheaper Isuzu alternative": {
+        "share_of_parts": 0.044,
+        "extra_response": 0.2411,
+        "extra_response_se": 0.399
+      },
+      "parts with a competitor price on file": {
+        "share_of_parts": 0.085,
+        "extra_response": 0.5234,
+        "extra_response_se": 0.3314
+      }
+    },
+    "pooled": {
+      "n": 5785,
+      "beta_dlp": -0.1584,
+      "se_dlp": 0.23
+    },
+    "pooled_excl_superseded": {
+      "n": 2918,
+      "beta_dlp": -0.3234,
+      "se_dlp": 0.2463
+    },
+    "pooled_min10_units": {
+      "n": 2378,
+      "beta_dlp": -0.0915,
+      "se_dlp": 0.2309
+    },
+    "placebo_jan_feb": {
+      "n": 4953,
+      "beta_dlp": -0.4161,
+      "se_dlp": 0.2993
+    }
+  },
+  "scenario_elasticities": {
+    "none": 0.0,
+    "central": -0.1584,
+    "stress": -0.81,
+    "note": "central = four-market pooled estimate; stress = the lowest 95% lower bound across the three pooled specifications. Within-family response only: a family-wide move to the aftermarket is absorbed by the fixed effects and is not measured."
+  }
+}

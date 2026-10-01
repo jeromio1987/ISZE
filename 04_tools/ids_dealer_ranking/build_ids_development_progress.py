@@ -33,6 +33,11 @@ SOURCE_HTML = REPO / "02_dashboards" / "ids" / "IDS_2026_dealer_compare.html"
 OUT_HTML = REPO / "02_dashboards" / "ids" / "IDS_2026_Development_Progress.html"
 OUT_CMD = REPO / "02_dashboards" / "ids" / "OPEN_IDS_2026_Development_Progress.cmd"
 
+# Durable on-disk milestone store (companion: append_ids_milestone.py in this
+# same folder). Read-only here -- this build never writes to it. Starts empty;
+# see 00_docs/IDS_MILESTONE_STORE.md for the format and the write-back workflow.
+MILESTONE_STORE = REPO / "01_data" / "00_derived" / "ids_milestones" / "ids_milestones_store.json"
+
 # Internal terms that must not appear on anything a distributor could see.
 # Whole-word terms first, then literal tokens that are not words.
 # A hit is dropped or renamed, never printed; the build fails if one survives.
@@ -220,12 +225,45 @@ def build_network(payload: dict) -> dict:
     }
 
 
+def load_milestones() -> dict:
+    """Dealer-keyed milestone rows from the durable store, or {} if absent/unreadable.
+
+    Never fails the build: a missing or malformed store degrades to "no
+    milestones on file" rather than blocking the page. Keys are
+    "<market>::<dealer display name>", matching how the page itself identifies
+    the selected dealer (see current() in the page script below).
+    """
+    if not MILESTONE_STORE.is_file():
+        return {}
+    try:
+        raw = json.loads(MILESTONE_STORE.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return {}
+    out: dict[str, dict] = {}
+    for key, rec in (raw.get("dealers") or {}).items():
+        if not isinstance(rec, dict):
+            continue
+        rows = [
+            {
+                "d": str(m.get("date") or ""),
+                "note": str(m.get("note") or ""),
+                "ev": str(m.get("evidence") or ""),
+                "done": bool(m.get("done")),
+            }
+            for m in (rec.get("milestones") or [])
+            if isinstance(m, dict)
+        ]
+        out[str(key)] = {"priority": rec.get("priority"), "rows": rows}
+    return out
+
+
 def build_payload() -> dict:
     payload = load_payload()
     questions, dropped = build_questions(payload)
     dealers = build_dealers(payload, questions)
     countries = build_countries(payload)
     network = build_network(payload)
+    milestones = load_milestones()
     return {
         "built": date.today().isoformat(),
         "extract": {
@@ -241,6 +279,7 @@ def build_payload() -> dict:
         "countries": countries,
         "network": network,
         "dealers": dealers,
+        "milestones": milestones,
     }
 
 
@@ -262,6 +301,8 @@ def main() -> None:
     print(f"wrote {OUT_HTML} ({OUT_HTML.stat().st_size} bytes)")
     print(f"dealers {len(data['dealers'])} markets {len(data['countries'])} "
           f"questions shown {data['extract']['questions_shown']} withheld {data['extract']['questions_withheld']}")
+    print(f"milestone store: {len(data.get('milestones') or {})} dealer(s) with saved milestones "
+          f"({MILESTONE_STORE if MILESTONE_STORE.is_file() else 'not found -- treated as empty'})")
     print(f"internal-term hits in page: {len(hits)} {' '.join(sorted(set(hits)))}")
     if hits:
         raise SystemExit("internal terms present in the built page")
@@ -434,7 +475,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
     <b>A finished milestone is not a higher score</b>
     <p>The assessment score moves only when a later assessment is recorded and scored. Completing the work agreed here does not raise it, and this page never adds one to the other. What you see below is progress on the agreed work: how many milestones were done, and when.</p>
   </div>
-  <p class="lead">Type the milestones the dealer and its distributor agree. A date, a line on what will be done, and the evidence slot for what was actually sent or seen. Leave a row blank rather than filling it with a guess.</p>
+  <p class="lead">Type the milestones the dealer and its distributor agree. A date, a line on what will be done, and the evidence slot for what was actually sent or seen. Leave a row blank rather than filling it with a guess. If this dealer already has milestones on file from an earlier session, they are loaded below automatically — nothing here is invented.</p>
   <div class="mile-actions noprint">
     <button type="button" class="primary" id="btn-add">Add milestone</button>
     <button type="button" id="btn-save">Save my plan to a file</button>
@@ -482,16 +523,16 @@ button:disabled{opacity:.45;cursor:not-allowed}
     <div class="callout">
       <b>What it does not hold</b>
       <ul class="tight">
-        <li>No milestone history. There is none in this workspace, so every milestone on this page is typed by you. Nothing is invented to fill the table.</li>
+        <li>No invented milestone history. Where nothing was ever saved for a dealer, its table starts empty; nothing is guessed or backfilled to fill it.</li>
         <li>No actions, owners or dates. Where the workspace holds no minutes, the row stays blank.</li>
         <li>No second assessment round. Section scores shown are the ones on file; a change in recorded answers appears only when a new assessment exists.</li>
-        <li>No saving anywhere. The page cannot write to a server or to a shared drive.</li>
+        <li>No live saving from this page. It cannot write to a server or a shared drive by itself while it is open.</li>
       </ul>
     </div>
   </div>
   <div class="callout navy">
     <b>How your entries survive</b>
-    <p>This page keeps your entries only in the open browser tab. To keep them, press <b>Save my plan to a file</b> — it downloads a small comma-separated text file. Next time, press <b>Load a saved plan</b> and choose that file: your browser reads it locally, which is allowed, while a page that fetches a file for itself is not. Printing works whether or not you save.</p>
+    <p>While you work, entries live in this open browser tab. Press <b>Save my plan to a file</b> to download them as a small text file — keep it, or pass it back to whoever maintains this page's shared record, so it can be folded in. Once that happens, this dealer's milestones will already be loaded the next time this page is prepared, without anyone retyping them. Until then, <b>Load a saved plan</b> brings a file back into this tab yourself. Printing works whether or not you save.</p>
   </div>
   <p class="foot" id="data-notes"></p>
 </div>
@@ -548,6 +589,26 @@ button:disabled{opacity:.45;cursor:not-allowed}
     return scored;
   }
 
+  /* ---------- milestones already on file for this dealer ---------- */
+  function storedMilestones(market, dealer) {
+    if (!market || !dealer || !DATA.milestones) { return null; }
+    return DATA.milestones[market + "::" + dealer] || null;
+  }
+
+  function applyStoredMilestones(resetPriorityWhenNone) {
+    var rec = storedMilestones(state.market, state.dealer);
+    if (rec && rec.rows && rec.rows.length) {
+      state.miles = rec.rows.map(function (r) {
+        return { d: r.d || "", note: r.note || "", ev: r.ev || "", done: !!r.done };
+      });
+      if (rec.priority) { state.priority = rec.priority; }
+      else if (resetPriorityWhenNone) { state.priority = null; }
+    } else {
+      state.miles = [];
+      if (resetPriorityWhenNone) { state.priority = null; }
+    }
+  }
+
   /* ---------- 1. pickers ---------- */
   function initPickers() {
     var mk = $("f-market");
@@ -570,14 +631,13 @@ button:disabled{opacity:.45;cursor:not-allowed}
 
     mk.addEventListener("change", function () {
       state.market = mk.value;
-      state.miles = [];
       fillDealers();
+      applyStoredMilestones(false);
       renderAll();
     });
     $("f-dealer").addEventListener("change", function () {
       state.dealer = $("f-dealer").value;
-      state.priority = null;
-      state.miles = [];
+      applyStoredMilestones(true);
       renderAll();
     });
   }
@@ -927,6 +987,7 @@ button:disabled{opacity:.45;cursor:not-allowed}
 
   /* ---------- start ---------- */
   initPickers();
+  applyStoredMilestones(true);
   renderAll();
 
   $("btn-add").addEventListener("click", function () {
@@ -944,20 +1005,24 @@ button:disabled{opacity:.45;cursor:not-allowed}
     ev.target.value = "";
   });
 
-  $("save-note").textContent = "Entries stay in this browser tab only. Save them to a file to keep them, and load that file back next time.";
+  $("save-note").textContent = "Entries stay in this browser tab, plus whatever was already on file for this dealer when the page was prepared. Save them to a file to add to that record, and load a file back any time.";
+
+  var milestoneDealerCount = DATA.milestones ? Object.keys(DATA.milestones).length : 0;
 
   $("knows").innerHTML =
     "<li>Sections A to E for all " + DATA.extract.dealers + " dealers in the assessment extract, with each market's average beside them.</li>" +
     "<li>The market average and the share of dealers counted in it, market by market.</li>" +
     "<li>The largest unfinished checklist items per dealer, with the market average on the same item.</li>" +
     "<li>Assessment dates where the extract carries one; " +
-    DATA.dealers.filter(function (d) { return !d.ads; }).length + " of " + DATA.extract.dealers + " entries carry none and are shown as not supplied.</li>";
+    DATA.dealers.filter(function (d) { return !d.ads; }).length + " of " + DATA.extract.dealers + " entries carry none and are shown as not supplied.</li>" +
+    "<li>Previously saved milestones, for the " + milestoneDealerCount + " dealer(s) that have any on file as of this page's build.</li>";
 
   $("data-notes").textContent =
     "Sources: the dealer assessment extract held in this workspace (version " + DATA.extract.version + ", " + DATA.extract.dealers +
     " dealers, " + DATA.extract.markets + " markets, read " + DATA.extract.held_on + "). Sections not assessed are labelled Not scored and never drawn as zero. " +
     DATA.extract.questions_withheld + " checklist items are not reproduced because their wording names a supplier programme. " +
-    "This page holds no milestone history: every milestone and every date in it is typed by the person using it. No figure is sent anywhere.";
+    "Milestone history is never invented: each entry shown was either typed in this session or was already saved to this dealer's record (" +
+    milestoneDealerCount + " dealer(s) network-wide as of this build) before this page was prepared. No figure is sent anywhere.";
 })();
 </script>
 </body>

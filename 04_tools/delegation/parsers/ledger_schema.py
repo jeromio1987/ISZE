@@ -29,6 +29,7 @@ COLUMNS = [
 PRICE_TYPES = {
     "aftermarket_trade", "aftermarket_retail", "genuine_grey", "online_median",
     "survey_workshop", "survey_list", "dealer", "quote", "oem_value_line", "marketplace", "estimate",
+    "aftermarket_rrp",
 }
 
 MATCH_METHODS = {"exact_oem", "crossref", "category_only"}
@@ -43,19 +44,46 @@ CURRENCIES = {"GBP", "EUR", "NOK", "SEK", "DKK", "USD", "ILS", "PLN"}
 _PN_DASHED_RE = re.compile(r"\b(?:8[- ]?)?\d{2,3}[- ]?\d{3,4}[- ]?\d{3,4}[- ]?\d?\b")
 
 
+_PN_SEPARATORS = re.compile(r"[\s\-\./]")
+_PN_KNOWN_PREFIX = re.compile(r"^(?:ISU|ISZ)", re.I)     # geparden writes `ISU` + digits
+_PN_KNOWN_SUFFIX = re.compile(r"\.(?:UMI)$", re.I)       # savion writes `<digits>.UMI`
+
+
 def normalise_pn(raw: str | None) -> str | None:
     """Any Isuzu part-number shape -> bare 10 digits, or None.
 
     Never guesses: anything that does not reduce to exactly 10 digits returns None
     rather than a padded or truncated number.
+
+    STRICT, since 2026-10-01. This used to strip *every* non-digit character, which
+    meant any competitor code that happened to leave ten digits behind became an
+    "Isuzu part number". Caught in the field: asking Omegaspareparts for our
+    0082213890 returned a **Jeep Cherokee door mirror cover** whose
+    `Part Manufacturer Number` is `00K82213890`; deleting the `K` left `0082213890`,
+    exactly ten digits. Two more the same way — VW `3B2880261D84L` -> `3288026184` and
+    VW `7E0-847-758-AA-9B9` -> `7084775899`. All three were Isuzu part numbers on paper
+    and Jeep/VW parts in reality, which is the Mekonomen failure mode again.
+
+    The rule now: remove only the separators a part number legitimately carries
+    (`-`, space, `.`, `/`) and a recognised marker prefix/suffix (`ISU`, `.UMI`).
+    **Any other letter means this is not an Isuzu number**, and it is refused.
     """
     if not raw:
         return None
-    digits = re.sub(r"\D", "", str(raw))
-    if len(digits) == 10:
-        return digits
-    if len(digits) == 11 and digits.startswith("0"):
-        return digits[1:]
+    s = str(raw).strip()
+    if not s:
+        return None
+
+    s = _PN_KNOWN_PREFIX.sub("", s)
+    s = _PN_KNOWN_SUFFIX.sub("", s)
+    s = _PN_SEPARATORS.sub("", s)
+
+    if not s.isdigit():
+        return None
+    if len(s) == 10:
+        return s
+    if len(s) == 11 and s.startswith("0"):
+        return s[1:]
     return None
 
 

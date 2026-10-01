@@ -381,3 +381,193 @@ tender digest. No classification CSV was written, deleted or replaced.
 `aim_classification_gate.json` `4adebc19720f6f13…`, `RELEASES.json` `0e45fea0141a1939…`, the frozen
 release `60111c104ddeb466…`, the live overlay `092e981518efc544…`,
 `aim_pn_classification_v2.csv` `371b6c212c69a671…`, `aim_master_v2.csv` `8add555669baf1f7…`.
+
+---
+
+## Appendix A — the gate fix, applied 2026-09-25
+
+**Agent:** cursor (gate fix). **Authorised:** one change, and one change only — make the
+classification safety gate's verdict be about the file the workspace has APPROVED, instead
+of about a file nothing else reads. Four edits, applied together. No page was repointed, no
+release was cut, `RELEASES.json` was not edited, and the leaf baseline was not touched.
+
+### A.1 What the gate read, before and after
+
+The gate is `01_data/91_build/verify_aim_classification.py`.
+
+| Run | Command | File it actually read | Verdict |
+|---|---|---|---|
+| Before 1 | `verify_aim_classification.py --file aim_pn_classification_v2.csv` (the old default file) | `aim_pn_classification_v2.csv`, 164,667 rows | **FAIL, 17 of 18** — the one failure is the leaf rule wanting 177 against the 176 that file carries |
+| Before 2 | `verify_aim_classification.py --file <the approved release>` | the release, but its evidence from v2 | **FAIL, 17 of 18** — and it printed **99.3597** for copy integrity with the note "v2 catalogue cols vs pr00_classification (164609 rows)" |
+| After 1 | `verify_aim_classification.py` (no arguments) | `_releases\aim_pn_classification_release_2026-09-20.csv`, 164,907 rows, sha256 `60111c10…` | **PASS, 18 of 18**, one check honestly recorded as not-checked |
+| After 2 | the same command again | the same file | **PASS, 18 of 18**, drift "within tolerance" |
+
+Before 2 is the fault, reproduced: a run that said it was checking the release printed a
+number that belonged to `aim_pn_classification_v2.csv`, and the note on the check said so in
+the same breath. That is the gate certifying one file using another file's evidence.
+
+After, the first lines of the run state which file it read, where that file came from, and
+which meta it read:
+
+```
+checking aim_pn_classification_release_2026-09-20.csv  ->  aim_pn_classification_release_2026-09-20.gate.json
+  file = the release marked APPROVED in ...\_releases\RELEASES.json
+  meta = aim_pn_classification_20260920.meta.json  [build record for this file]
+classification safety gate - PASS  (18/18 checks)
+  NOT CHECKED (no evidence for this file, not a pass and not a fail): pr00_copy_integrity
+```
+
+### A.2 The four edits
+
+**Edit 1 — the file (was line 29).** `CLASS_V2` no longer names a literal filename. It is
+resolved at run time to the file `_releases\RELEASES.json` marks `APPROVED`, through the
+workspace's own guard `_releases\check_classification_release.py` (`find_approved_release` +
+`resolve_release_path`), loaded by path so the guard keeps its one home. `--file` still
+overrides it. There is **no fallback filename**: if no release is approved and no `--file` is
+given, the gate exits 2 and says so, rather than quietly checking something else. A future
+approval therefore moves the gate with it.
+
+**Edit 2 — the meta (was line 201).** The meta is resolved from the file being checked, in
+order: the exact sibling `<name>.meta.json`; then the dated sibling in the same folder; then,
+for a dated file, its own build record `<name-without-dashes>.meta.json` in `00_derived`. The
+release has **no sibling meta file**; its build record is `aim_pn_classification_20260920.meta.json`,
+and its own `rows` field is 164,907, which is the release's row count, so it is accepted as
+this file's evidence. The acceptance rule is explicit: a meta whose recorded row count differs
+from the file's is **rejected** (`wrong_file`), so a build record can never be read as another
+file's number. `--file <release>` and the default run resolve the **same** meta, because
+resolution depends on the file, not on how the file was reached.
+
+**Edit 3 — the drift baseline, one report per file.** The default report is now
+`<file>.gate.json` beside the file, and the default baseline is that same file's own report.
+For the release that is `_releases\aim_pn_classification_release_2026-09-20.gate.json`, written
+by the first run. A baseline whose own `classifier_file` is a different file is **refused, not
+compared**, so the first run after the switch reports "baseline is another file; not compared"
+instead of three "drifts" that are not movements. Second run: PASS, `drift_vs_previous_run`
+measured "within tolerance".
+
+**Edit 4 — the leaf baseline.** Not touched. `aim_classification_leaf_baseline.json` still
+reads `axis_a_l3_approved: 177`, revision `catalog_symbolic_leaf_20260920`. The release carries
+177 leaves, so the check that used to fail now passes and cites its own approved baseline.
+
+### A.3 The two "failures that were not real", resolved honestly
+
+The simulation in section 8 predicted two false failures. Both are now settled without
+inventing a number:
+
+| Check | With the gate on the release (section 8) | Now |
+|---|---|---|
+| `pr00_copy_integrity` | FAIL, measured `None` — it read v2's meta by a hard-coded path, and that meta has a copy-integrity block, so it reported **99.3597** as if it were the release's | **n/a — EVIDENCE UNAVAILABLE, NOT CHECKED.** The release's own build record has no `catalogue_verification_vs_pr00` block. The check does not pass on another file's number and does not fail on an absence; it is recorded as not-checked, named in the report's `checks_not_checked`, printed on the console as `n/a` (not `ok`), and explained with a `->` line. |
+| `two_axes_contract` | FAIL, "meta lacks the axis_b wording" — it grepped for the literal string `axis_b` | **PASS.** The test now asks whether the meta states the four things the locked contract claims — identity axis named, catalogue columns named, commercial axis named, and the commercial posture explicitly denied as the parent — and returns which one was missing. It is not weakened: the denial is still required. It reads `aim_pn_classification_20260920.meta.json`, whose own `purpose` says "Axis A = catalog_l1/l2/l3 identity … Axis B = commercial score beside Axis A … not built as scored columns here yet" and "Do not invent a fourth layer". |
+| `drift_vs_previous_run` | FAIL, three "drifts" (`axis_conflict_share 9.56 -> 11.84`, `residual_share 5.74 -> 5.84`, `description_ambiguity 876 -> 891`) — every one is just the difference between two different files | **PASS.** The baseline is the release's own report, and a cross-file baseline is refused rather than compared. No measure moved, because there was never a movement. |
+
+**No check can pass or fail on v2's data any more.** Every check reads either the file being
+checked or that file's own meta. `pr00_copy_integrity` is the one place v2's number used to
+appear, and it now reads `UNAVAILABLE`.
+
+### A.4 What invokes the gate
+
+Searched the workspace (`.py`, `.ps1`, `.cmd`, `.bat`, `.md`, `.json`, `.js`, `.mjs`, `.yaml`)
+and the Windows task list:
+
+- **Nothing invokes the gate from a scheduled task or a launcher.** None of the 9 registered
+  `ISZE` tasks (`schtasks` read in full) calls it, and no `.ps1` / `.cmd` / `.bat` calls it.
+- **Two Python callers, both inert.** `01_data/91_build/migrate_off_versioned_names.py` prints
+  the command for a human to run; `01_data/91_build/build_aim_classification_20260920.py` writes
+  that string into a meta note. Neither executes the gate.
+- **One reader of the report:** `02_dashboards/_build/build_universe_board.py` reads
+  `00_derived/aim_classification_gate.json` (lines 218, 396, 1250) and prints the pass count and
+  verdict. **That file was left byte-for-byte untouched, on purpose** — the fixed gate now writes
+  to `<file>.gate.json`, so the live report path is unchanged and nothing breaks. The consequence
+  is that the board will keep quoting the stale `17 of 18, FAIL` until someone either repoints
+  that one line to the release's report **or** re-runs the gate to refresh the live JSON in place.
+  **That is a repointing decision and it is not mine to make; it is left exactly as found.**
+- **A watchdog watches the gate report for movement:** `04_tools/workspace/isze_delegator_watch.ps1`
+  (and `isze_overnight_orchestrator.ps1`) list `aim_classification_gate.json` in their watch set.
+  That task is **disabled** (confirmed in `schtasks`), so no tick was caused by this work.
+
+### A.5 Files changed, and files proven unchanged
+
+**Changed (2 paths, both mine):**
+
+| Path | Change |
+|---|---|
+| `01_data/91_build/verify_aim_classification.py` | the four edits above; UTF-8, no BOM |
+| `01_data/00_derived/_releases/aim_pn_classification_release_2026-09-20.gate.json` | new — the release's own gate report, written by the gate |
+
+**Proven unchanged** (sha256 and mtime identical before and after, held in
+`01_data/92_archive/gatefix_20260925/_gatefix_before_hashes.json` and `_gatefix_after_hashes.json`):
+
+| File | sha256 | Unchanged |
+|---|---|---|
+| `_releases\aim_pn_classification_release_2026-09-20.csv` | `60111c104ddeb466e6c15f084039639d35172056b0fd2ea10225a3c50da610e0` | yes — the required constant, and byte-identical to the pre-write backup it was frozen from |
+| `aim_classification_leaf_baseline.json` (edit 4) | `9524207d4d188127…` | yes |
+| `_releases\RELEASES.json` | `0e45fea0141a1939…` | yes |
+| `aim_pn_classification_v2.csv` | `371b6c212c69a671…` | yes |
+| `aim_classification_gate.json` (live report) | `4adebc19720f6f13…` | yes |
+| `aim_pn_classification_20260920.meta.json` | `0a8b361d94d59278…` | yes |
+| `aim_pn_classification_v2.meta.json` | `6ec46ce457fc4d27…` | yes |
+
+No classification CSV was changed. No dashboard, IDS page, PRISM file, pillar board or tender
+digest was touched. No page was repointed.
+
+### A.6 What this does not establish
+
+- **One check is now recorded as not-checked rather than passing:** `pr00_copy_integrity` for the
+  release. The release's own build record has no `catalogue_verification_vs_pr00` block, and **no
+  other file on disk carries a copy-integrity figure for this row count** — searched; only
+  `aim_pn_classification_v2.meta.json` declares that block anywhere. Writing the block for the
+  release would be honest fresh evidence about the release; it is **not** a copy of v2's number,
+  because producing it means actually comparing the release's catalogue columns against
+  `pr00_classification.csv`. That is a measurement, not a constant, so it was **not invented here**.
+  To close it: run the copy check against the release's 164,907 rows and write the result into
+  `aim_pn_classification_20260920.meta.json`. Until then the gate says plainly that it has not looked.
+- **`two_axes_contract` on a file with no meta is now a FAIL**, where before the check was
+  effectively skipped when a meta was missing. A file with no documented two-axes contract should
+  not pass a contract check, so this direction is intended — but it is a behaviour change and is
+  stated here rather than discovered later.
+- **The other readers of `aim_pn_classification_v2.csv` by name** (`04_tools/_shared/classification_paths.py`
+  and the scripts it serves, `build_ituk_price_volume_response.py`, the classification audit scripts)
+  were **not** repointed. This change is about the gate's verdict only.
+- **`build_universe_board.py` still reads the stale live report** (`17 of 18, FAIL`), as described in
+  A.4. The gate's own verdict is now correct and green; the board's copy of it is not, and that needs
+  Jerome's word.
+
+### A.7 Two further behaviours, tested rather than asserted
+
+**Fail-closed.** If no candidate in `RELEASES.json` carries status `APPROVED` and no `--file` is
+given, the gate exits **2** and prints why. It does not fall back to `aim_pn_classification_v2.csv`,
+because a fallback filename is exactly how the old fault worked. Tested in memory (guard
+monkeypatched, no file touched — `01_data/92_archive/gatefix_20260925/_gatefix_failclosed_test_20260925.py`):
+
+```
+2. nothing marked APPROVED -> None (fail closed, not a silent fallback)
+FATAL: no classification file to check.
+  No candidate carries status APPROVED in ...\_releases\RELEASES.json, and no --file was given.
+  Approve a release there, or run with --file <path.csv>.
+   main() exit code with nothing approved and no --file: 2
+```
+
+**A cross-file baseline is refused, not compared.** Passing `--baseline` at a report written about
+another file gives `drift_vs_previous_run = "baseline is another file; not compared"` and the check
+is reported on that basis; it does not silently subtract two different files' measures:
+
+```
+checking aim_pn_classification_release_2026-09-20.csv  ->  crossfile_test.json
+  [ok  ] drift_vs_previous_run  measured=baseline is another file; not compared
+```
+
+**A `--file` run with no meta at all** (`nometa_candidate.csv`) reads its own absent meta, reports
+`pr00_copy_integrity` as `n/a — UNAVAILABLE`, still checks the file it was handed, and never reaches
+for v2:
+
+```
+checking nometa_candidate.csv  ->  nometa_candidate.gate.json
+  meta = nometa_candidate.meta.json  [MISSING]
+  NOT CHECKED (no evidence for this file, not a pass and not a fail): pr00_copy_integrity
+```
+
+**The second run is stable.** Run 1 wrote the release's report (drift "no previous gate; leaf
+baseline matches"); run 2 compared against that report and returned
+`drift_vs_previous_run = within tolerance`. The 1% rule does not re-trip against the file's own
+history, which is what the per-file baseline was for.
+

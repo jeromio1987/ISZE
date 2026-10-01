@@ -32,6 +32,7 @@ COUNTRY_NAME_MAP = {
     "HRV": "Croatia",
     "HUN": "Hungary",
     "IRL": "Ireland",
+    "ISL": "Iceland",
     "ISR": "Israel",
     "ITA": "Italy",
     "LTU": "Lithuania",
@@ -62,6 +63,7 @@ COUNTRY_CLUSTER_MAP = {
     "Finland": "Nordics Lead",
     "Sweden": "Nordics Lead",
     "Denmark": "Nordics Lead",
+    "Iceland": "Nordics Lead",
     "Spain": "Iberia Lead",
     "Portugal": "Iberia Lead",
     "France": "France Lead",
@@ -84,13 +86,16 @@ COUNTRY_CLUSTER_MAP = {
 }
 
 # v3: ISZE's active markets — used for country filtering at scrape time
+# 2026-09-25: ISL (Iceland) restored — EEA/EFTA, TED-eligible like Norway, and
+# ISZE bills ~EUR 85k/year through its Iceland distributor. See same note in
+# tender_scraper_v3.py's TED_TARGET_COUNTRIES.
 ISZE_TARGET_MARKETS = {
     "GBR", "IRL", "POL", "PRT", "GRC", "ISR",
     "DEU", "FRA", "ESP", "ITA", "NLD", "BEL",
     "DNK", "SWE", "NOR", "FIN", "ROU", "HUN",
     "CZE", "SVK", "BGR", "HRV", "AUT", "LVA",
     "LTU", "EST", "SVN",
-    "CYP", "MLT",
+    "CYP", "MLT", "ISL",
 }
 
 OWNER_OPTIONS = [
@@ -154,6 +159,24 @@ SOURCE_COUNTRY_FALLBACK = {
 BRAND_TERMS = [
     "isuzu", "d-max", "d max", "dmax", "n-series", "n series", "f-series", "f series",
 ]
+
+# Strict brand match (2026-10-01). Plain substring matching of BRAND_TERMS produced only
+# false hits in the 28 Sep feed: "d max" inside "...und max..." and "d-max" inside the
+# reagent name "Bond-Max". Each term must stand alone as a word; D-Max must not be the
+# tail of a longer word.
+_BRAND_STRICT_RE = {
+    "isuzu": re.compile(r"(?i)\bisuzu\b"),
+    "d-max": re.compile(r"(?i)(?<![a-z0-9-])d-?max\b"),
+    "d max": re.compile(r"(?i)(?<![a-z0-9-])d max\b(?!\s*\d)"),
+    "n-series": re.compile(r"(?i)\bisuzu n[- ]?(series|serie|reeks)\b|\bn-series\b"),
+    "f-series": re.compile(r"(?i)\bisuzu f[- ]?(series|serie|reeks)\b"),
+}
+
+
+def brand_hits_strict(text: str) -> List[str]:
+    """Isuzu brand terms that stand alone as words in `text`."""
+    return [t for t, rx in _BRAND_STRICT_RE.items() if rx.search(text or "")]
+
 
 SERVICE_TERMS = [
     "maintenance", "service contract", "repair and maintenance", "servicing", "after-sales",
@@ -555,7 +578,9 @@ GPS_ELIGIBLE_SEGMENTS = frozenset({"pickup", "truck"})
 # Discriminating product-shape regexes (order applied in classify_product_segment).
 _PICKUP_SHAPE_RE = re.compile(
     r"(?i)("
-    r"\bpick[- ]?ups?\b|d[- ]?max|double cab|crew cab|single cab|extra cab|"
+    # 2026-10-01: d-max must stand alone; "Bond-Max" (a lab reagent) and "...und max"
+    # were read as a D-Max pickup.
+    r"\bpick[- ]?ups?\b|(?<![a-z0-9-])d-?max\b|double cab|crew cab|single cab|extra cab|"
     r"chassis\s+cab\s+pickup|4x4\s+(?:pickup|utility|pick[- ]?up)|"
     r"טנדר"
     r")"
@@ -1424,7 +1449,7 @@ def compute_scores(row: Dict[str, Any]) -> Tuple[int, int, int, List[str]]:
     ).lower()
     cpv = extract_text(row.get("CPV Code"))
 
-    brand_hits = keyword_hits(text, BRAND_TERMS)
+    brand_hits = brand_hits_strict(text)
     service_hits = keyword_hits(text, SERVICE_TERMS)
     framework_hits = keyword_hits(text, FRAMEWORK_TERMS)
     vehicle_hits = keyword_hits(text, VEHICLE_TERMS)
@@ -1565,6 +1590,142 @@ def derive_decision(fit: int, win: int, econ: int, lifecycle: str) -> str:
         return "Watch"
     return "Ignore"
 
+
+# ---------------------------------------------------------------------------
+# Fleet-brand gate (2026-10-01, Jerome: "how can you apply if you don't know
+# for which fleet brand it is?")
+#
+# A tender to SERVICE an existing fleet (repair & maintenance, parts supply,
+# no vehicle purchase) is only an Isuzu opportunity if Isuzu vehicles are in
+# that fleet. The notice text almost never says so: the vehicle list sits in
+# the tender documents. Until someone has read it, such a tender cannot be
+# Selective or Attack on keyword and CPV points alone.
+#
+# A vehicle PURCHASE tender is different: the brand is the bidder's choice,
+# so an unnamed brand is not a defect there and the gate does not apply.
+# ---------------------------------------------------------------------------
+
+MULTI_BRAND_RE = re.compile(
+    r"(?i)(multi[- ]?marques?|multi[- ]?brand|toutes marques|alle merken|merkonafhankelijk|"
+    r"mehrmarken|markenunabh[aä]ngig|verschiedene(n)? (marken|hersteller|fabrikate)|"
+    r"varie marche|diverse marche|vari(e|os) (marche|marcas)|various (makes|brands)|"
+    r"different (makes|brands)|distintas marcas|r[oó][zż]nych marek|multimarc|multimarque)"
+)
+
+# Purchase wording the shared _VEHICLE_BUY_RE does not carry. Kept local to this gate so
+# the not-for-us and segment gates are not changed by it.
+_GATE_BUY_EXTRA_RE = re.compile(
+    r"(?i)(aankoop|aankopen|aanbesteding voor de levering|levering van|beschaffung|\bkauf\b|kauf von|"
+    r"achat|acquisizione|fornitura di|compra de|adquisi[cç]|zakup|dostaw|inköp|anskaff|indkøb|hankinta|\bkjøp\b|\bkjop\b|\bkøb\b|\bköp\b|innkjøp|"
+    r"nákup|dobava|vásárl|furnizare|cump[aă]rare|προμήθεια|aquisi[cç]|fourniture|"
+    r"supply and delivery|delivery of|lastebil for)"
+)
+
+# Repair / maintenance / workshop wording. When the title carries it, a purchase word in
+# it usually buys a SERVICE ("achizitie servicii de reparare"), not a vehicle.
+_GATE_RM_WORDS_RE = re.compile(
+    r"(?i)(repair|maint|servic|workshop|entretien|r[ée]paration|reparat|onderhoud|herstel|wartung|"
+    r"instandhalt|werkstatt|revizi|[iî]ntre[tț]inere|verksted|vedlikehold|assist[eê]ncia|manuten|"
+    r"mantenim|servis|underh[aå]ll|v[aæ]rksted|piese|pi[eè]ces|onderdelen|ersatzteil)"
+)
+_GATE_BUY_VEHICLE_RE = re.compile(
+    r"(?i)\b(acquisition|achat|purchase|aankoop|aankopen|kauf|beschaffung|lieferung|livraison|"
+    r"aquisi[cç][aã]o|adquisici[oó]n|acquisto|fornitura|furnizare|achizi[tț]i[ea]|zakup|kj[oø]p|"
+    r"anskaffelse|supply)\b(?P<mid>(?:\W+\w+){0,6}?)\W+"
+    r"(camions?|trucks?|vrachtwagens?|lastebil\w*|lkw|v[ée]hicules?|vehicles?|viaturas?|ve[íi]culos?|"
+    r"pick-?ups?|autocarri|fahrzeug\w*|autovehicul\w*|ch[aâ]ssis|bestelwagens?)\b"
+)
+
+
+def _buys_a_vehicle(text: str) -> bool:
+    """Purchase word followed closely by a vehicle noun, with no service wording between."""
+    for m in _GATE_BUY_VEHICLE_RE.finditer(text or ""):
+        if not _GATE_RM_WORDS_RE.search(m.group("mid") or ""):
+            return True
+    return False
+
+
+_GATE_LEASE_RE = re.compile(
+    r"(?i)\b(lease|leasing|autolease|leasen|renting|aluguer|noleggio|alquiler|location longue)\b"
+)
+
+
+def _is_vehicle_buy(blob: str) -> bool:
+    return bool(_VEHICLE_BUY_RE.search(blob) or _GATE_BUY_EXTRA_RE.search(blob))
+
+
+FLEET_BRAND_LABELS = {
+    "isuzu_named": "Isuzu named in the notice",
+    "open_vehicle_buy": "Vehicle purchase: brand is the bidder's choice",
+    "unknown_multi_brand": "Multi-brand fleet: Isuzu share unknown, check the vehicle list",
+    "unknown": "Fleet brand unknown: check the vehicle list in the tender documents",
+}
+FLEET_BRAND_NEXT_ACTION = "Open the tender documents and check the vehicle list for Isuzu before any decision"
+
+
+def apply_fleet_brand_gate(rec: Dict[str, Any], text: str = "") -> Dict[str, Any]:
+    """Set fleet_brand / fleet_brand_label and cap the decision when the brand is unknown.
+
+    Works on a notice row (export keys) or an opportunity dict. Idempotent.
+    Also corrects a record scored before the strict brand match existed: a brand hit
+    that is not a real Isuzu word loses the +40 fit / +10 econ it was given.
+    """
+    blob = " ".join([
+        text or "",
+        str(rec.get("Title") or rec.get("title_raw") or rec.get("title") or ""),
+        str(rec.get("Description") or rec.get("description") or ""),
+    ])
+    if rec.get("brand_hits") and not brand_hits_strict(blob):
+        rec["brand_hits_rejected"] = list(rec.get("brand_hits") or [])
+        rec["brand_hits"] = []
+        for k, d in (("fit_score", 40), ("econ_score", 10)):
+            if isinstance(rec.get(k), (int, float)):
+                rec[k] = max(0, int(rec[k]) - d)
+        rec["score_drivers"] = [x for x in (rec.get("score_drivers") or []) if x != "ISZE brand signal"]
+        if all(isinstance(rec.get(k), (int, float)) for k in ("fit_score", "win_score", "econ_score")):
+            lifecycle = rec.get("Lifecycle") or rec.get("lifecycle") or ""
+            rec["decision"] = derive_decision(rec["fit_score"], rec["win_score"], rec["econ_score"], lifecycle)
+            if "opportunity_score" in rec:
+                rec["opportunity_score"] = int(round(rec["fit_score"] * 0.4 + rec["win_score"] * 0.3
+                                                     + rec["econ_score"] * 0.3))
+
+    seg = rec.get("product_segment") or ""
+    service = bool(rec.get("rm_contract") or rec.get("parts_signal") or seg == "rm_only")
+    buy = _is_vehicle_buy(blob)
+    lease = bool(_GATE_LEASE_RE.search(blob))
+    title = str(rec.get("title_raw") or rec.get("Title") or rec.get("title") or "")
+    title_rm = bool(_GATE_RM_WORDS_RE.search(title))
+    vehicle_seg = seg in ("pickup", "truck", "lcv_van")
+    if rec.get("brand_hits"):
+        status = "isuzu_named"
+    elif lease or _buys_a_vehicle(title):
+        status = "open_vehicle_buy"
+    elif buy and (vehicle_seg or not service or not title_rm):
+        status = "open_vehicle_buy"
+    elif vehicle_seg and not title_rm:
+        status = "open_vehicle_buy"
+    elif service:
+        status = "unknown"
+    else:
+        status = "open_vehicle_buy" if buy else "unknown"
+    if status == "unknown" and MULTI_BRAND_RE.search(blob):
+        status = "unknown_multi_brand"
+    rec["fleet_brand"] = status
+    rec["fleet_brand_label"] = FLEET_BRAND_LABELS[status]
+
+    if status.startswith("unknown"):
+        before = rec.get("decision")
+        if before in ("Attack", "Selective"):
+            rec["decision"] = "Watch"
+            rec.setdefault("decision_before_brand_gate", before)
+        drivers = list(rec.get("score_drivers") or [])
+        if "fleet brand unknown" not in drivers:
+            rec["score_drivers"] = ["fleet brand unknown"] + drivers[:5]
+        lifecycle = rec.get("Lifecycle") or rec.get("lifecycle") or ""
+        if lifecycle not in ("result", "cancelled", "change", "completion"):
+            rec["next_action_suggested"] = FLEET_BRAND_NEXT_ACTION
+            rec["status_suggested"] = "Enrich"
+    return rec
 
 def suggest_owner(country: str) -> str:
     return COUNTRY_CLUSTER_MAP.get(country, "Unassigned")
@@ -1711,7 +1872,7 @@ def normalize_raw_row(raw: Dict[str, Any], source_hint: str = "") -> Dict[str, A
     }
     row["opportunity_id"] = build_family_id(row["Title Compact"], buyer, country)
     _text_blob = " ".join([title, cpv_desc, description]).lower()
-    row["brand_hits"] = keyword_hits(_text_blob, BRAND_TERMS)
+    row["brand_hits"] = brand_hits_strict(_text_blob)
     row["service_hits"] = keyword_hits(_text_blob, SERVICE_TERMS)
     row["framework_hits"] = keyword_hits(_text_blob, FRAMEWORK_TERMS)
     row["vehicle_hits"] = keyword_hits(_text_blob, VEHICLE_TERMS)
@@ -1743,6 +1904,7 @@ def normalize_raw_row(raw: Dict[str, Any], source_hint: str = "") -> Dict[str, A
     row["owner_suggested"] = suggest_owner(country)
     row["status_suggested"] = suggest_status(row["decision"], urgency, lifecycle, ev_label)
     row["next_action_suggested"] = suggest_next_action(row)
+    apply_fleet_brand_gate(row)
     return row
 
 
@@ -1947,6 +2109,10 @@ def aggregate_opportunities(notices: List[Dict[str, Any]]) -> List[Dict[str, Any
             opportunity["aftersales_match_tip"] = (
                 "No service/parts/warranty language found in notice"
             )
+        apply_fleet_brand_gate(
+            opportunity,
+            " ".join(str(r.get("Title") or "") + " " + str(r.get("Description") or "") for r in items),
+        )
         opportunities.append(opportunity)
 
     opportunities.sort(

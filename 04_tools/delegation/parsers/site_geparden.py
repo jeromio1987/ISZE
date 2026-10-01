@@ -184,6 +184,10 @@ FX_NOTE_NOK = "NOK native price carried unconverted here; the euro value is appl
 
 # The genuine marker the site puts in the slug before the OEM digits.
 _SLUG_OEM_RE = re.compile(r"-p-isu(\d+)", re.I)
+# A part number as it appears inside a line of the page's OEM table (`ISUZU, 8981028240`).
+# Used to hand `normalise_pn` a NUMBER rather than a whole line, because normalise_pn is
+# deliberately strict and refuses text carrying letters it does not recognise as a marker.
+_PN_IN_LINE = re.compile(r"\b\d{7,12}\b")
 # The page's own words for "this is an Isuzu genuine part".
 _GENUINE_WORDS = ("genuine", "isuzu motors limited")
 # Slack below which two readings of the same price count as agreement.
@@ -241,7 +245,15 @@ def oem_from_table(html: str) -> list[str]:
         for line in text.split("\n"):
             if "ISUZU" not in line.upper():
                 continue
-            pn = normalise_pn(line)
+            # Pull the number out before normalising. The line reads `ISUZU, 8981028240`,
+            # and `normalise_pn` is deliberately STRICT since 2026-10-01: it refuses any
+            # input carrying letters it does not recognise as a marker, so passing the
+            # whole line returned None and this table came back empty (caught by the
+            # geparden selftest on 2026-10-01). The caller's job is to hand it a number.
+            m = _PN_IN_LINE.search(line)
+            if not m:
+                continue
+            pn = normalise_pn(m.group(0))
             if pn and pn not in seen:
                 seen.add(pn)
                 found.append(pn)

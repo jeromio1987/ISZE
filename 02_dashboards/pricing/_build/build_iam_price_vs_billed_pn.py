@@ -324,6 +324,31 @@ def load_oem_peer() -> pd.DataFrame:
     return g
 
 
+def load_competitor_margin() -> dict[str, dict]:
+    """competitor_price_panel.csv (Jerome's go, 2026-09-25) -- 43 PNs, a separate KS/AIM-based
+    competitor read (not any of the vintages above). gm_if_matched_pct is the gross margin ISZE
+    would keep if it matched that file's competitor price; cost_est in that file is 50% of list
+    (a book average, not an actual purchase cost) -- see competitor_price_panel_meta.json.
+    Returned dict is keyed by 10-digit pn; only PNs actually present in the file get an entry.
+    """
+    path = DERIVED / "competitor_price_panel.csv"
+    df = pd.read_csv(path, dtype={"pn": str}, low_memory=False)
+    out: dict[str, dict] = {}
+    for _, r in df.iterrows():
+        pn = pn10(r.get("pn"))
+        if not pn:
+            continue
+        gm = finite(r.get("gm_if_matched_pct"))
+        if gm is None:
+            continue
+        out[pn] = {
+            "gm_if_matched_pct": round(gm, 1),
+            "cpp_iam_eur": finite(r.get("iam")),
+            "cpp_cost_est_eur": finite(r.get("cost_est")),
+        }
+    return out
+
+
 def is_junk(pr00: float, shop: float) -> bool:
     if pr00 <= 0 or shop <= 0:
         return True
@@ -345,6 +370,7 @@ def build_points() -> tuple[list[dict], dict]:
     deno = load_autodoc_deno()
     auto_u, auto_junk = load_autodoc_undated()
     oem = load_oem_peer()
+    margin_map = load_competitor_margin()
 
     pr00_lookup: dict[str, float] = {}
     for frame in (ks, eu2023, deno, auto_u):
@@ -387,6 +413,7 @@ def build_points() -> tuple[list[dict], dict]:
             pms_lab = str(rowp.get("fig_key_label") or "")
         sid = str(r["source_id"])
         meta = VINTAGE_META[sid]
+        margin = margin_map.get(pn)
         points.append(
             {
                 "pn": pn,
@@ -405,6 +432,7 @@ def build_points() -> tuple[list[dict], dict]:
                 "billed_qty": round(billed_qty, 2),
                 "pms_category": pms_cat,
                 "pms_label": pms_lab,
+                "gm_if_matched_pct": margin["gm_if_matched_pct"] if margin else None,
             }
         )
 
@@ -441,9 +469,11 @@ def build_points() -> tuple[list[dict], dict]:
         )
 
     uk_points = sum(1 for p in points if p["uk_centric"])
+    n_margin_matched = len({p["pn"] for p in points if p["gm_if_matched_pct"] is not None})
     stats = {
         "n_parts": n,
         "n_points": n_points,
+        "n_margin_matched": n_margin_matched,
         "n_shop_below_reference": below,
         "median_price_index": round(float(pd.Series(indices).median()), 3) if indices else None,
         "billed_eur_on_set": round(float(billed_set), 0),
@@ -559,6 +589,12 @@ def render(points: list[dict], stats: dict, pms_rows: list[dict]) -> str:
     for p in table_pts:
         pms = esc(p["pms_category"].replace("_", " ")) if p["pms_category"] else "—"
         cls = "lo" if p["shop_below_reference"] else ""
+        gm = p.get("gm_if_matched_pct")
+        if gm is None:
+            gm_cell = "<td class='num'>—</td>"
+        else:
+            gm_cls = "gm-neg" if gm < 0 else ("gm-slim" if gm < 20 else "gm-ok")
+            gm_cell = f"<td class='num {gm_cls}'>{gm:.1f}%</td>"
         trs.append(
             "<tr class='" + cls + "'>"
             f"<td>{esc(p['pn'])}</td>"
@@ -571,9 +607,10 @@ def render(points: list[dict], stats: dict, pms_rows: list[dict]) -> str:
             f"<td class='num'>{p['billed_qty']:,.0f}</td>"
             f"<td class='num'>{fmt_eur(p['billed_eur'])}</td>"
             f"<td>{pms}</td>"
+            f"{gm_cell}"
             "</tr>"
         )
-    tbody = "\n".join(trs) or "<tr><td colspan='10'>No rows. Overlap is empty after filters.</td></tr>"
+    tbody = "\n".join(trs) or "<tr><td colspan='11'>No rows. Overlap is empty after filters.</td></tr>"
 
     pms_trs = []
     for r in pms_rows[:40]:
@@ -659,6 +696,7 @@ td{{padding:7px 9px;border-bottom:1px solid #e8e4dc;color:#222}}
 tbody tr:nth-child(even) td{{background:#faf8f4;color:#222}}
 td.num,th.num{{text-align:right;font-variant-numeric:tabular-nums}}
 tr.lo td:nth-child(7){{color:#c0552d;font-weight:700}}
+td.gm-neg{{color:#b23b3b;font-weight:700}} td.gm-slim{{color:#c0552d}} td.gm-ok{{color:#2e7d54}}
 .table-scroll{{overflow:auto;max-height:420px;border:1px solid #d9d3c8}}
 ul.src{{list-style:none;padding:0;margin:8px 0}}
 ul.src li{{margin:4px 0}}
@@ -732,6 +770,7 @@ ul.src li{{margin:4px 0}}
 
 <h2><span class="no">3 ·</span> Overlap table</h2>
 <p class="lead">Up to 80 points, largest billed € first. Price index below 1 is marked. Full scatter uses every dated quote in the embedded data.</p>
+<p class="note-bar">"Margin if matched to competitor price" (last column) comes from a separate file, <code>competitor_price_panel.csv</code> (43 PNs, a KS/AIM-based competitor read — not any of the vintages in section 2 above): the gross margin ISZE would keep if it matched THAT file's competitor price. Its cost is estimated at 50% of list (a book average, not an actual purchase cost) — see <code>competitor_price_panel_meta.json</code>. Populated for {fmt_n(stats['n_margin_matched'])} of the {fmt_n(n)} overlap parts; blank means that part has no row in the file, not a zero margin.</p>
 <div class="table-scroll">
 <table>
 <thead>
@@ -740,6 +779,7 @@ ul.src li{{margin:4px 0}}
   <th class="num">ISZE list €</th><th class="num">Reference dealer sell-out €</th>
   <th class="num">Shop / quote €</th><th class="num">Price index</th>
   <th class="num">Billed qty</th><th class="num">Billed €</th><th>PMS wear?</th>
+  <th class="num">Margin if matched (competitor)</th>
 </tr>
 </thead>
 <tbody>
@@ -886,6 +926,7 @@ def main() -> None:
     print("by_source_parts", stats["by_source_parts"])
     print("dropped_junk", stats["dropped_junk"])
     print("small_n", stats["small_n"])
+    print("n_margin_matched", stats["n_margin_matched"])
 
 
 if __name__ == "__main__":

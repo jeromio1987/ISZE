@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass, field
+from datetime import date
 from functools import lru_cache
 from pathlib import Path
 from statistics import mean
@@ -56,7 +57,113 @@ TOTAL_MAX_AE = 280.0
 
 
 # META_ROWS offset: Dealer Name (0), Evaluation Date (1), Address (2)
+ROW_EVAL_DATE = ROW_META_START + 1
 ROW_ADDRESS = ROW_META_START + 2
+
+# Plausible calendar-year bounds for a 2026-cycle IDS assessment date. Anything
+# outside this window is treated as unparseable rather than guessed at.
+_EVAL_DATE_YEAR_MIN = 2015
+_EVAL_DATE_YEAR_MAX = 2035
+
+# Evaluation-Date cells are hand-typed free text across ~20 country workbooks.
+# Month names seen in this dataset (EN/NL/FR/DE/NO/DA/IT/ES) mapped to 1-12.
+_MONTH_NAMES = {
+    "jan": 1, "january": 1, "januari": 1, "janvier": 1, "januar": 1, "gennaio": 1, "enero": 1,
+    "feb": 2, "february": 2, "februari": 2, "fevrier": 2, "février": 2, "februar": 2, "febbraio": 2, "febrero": 2,
+    "mar": 3, "march": 3, "maart": 3, "mars": 3, "märz": 3, "marz": 3, "marzo": 3,
+    "apr": 4, "april": 4, "avril": 4, "aprile": 4, "abril": 4,
+    "may": 5, "mei": 5, "mai": 5, "maggio": 5, "mayo": 5,
+    "jun": 6, "june": 6, "juni": 6, "juin": 6, "giugno": 6, "junio": 6,
+    "jul": 7, "july": 7, "juli": 7, "juillet": 7, "luglio": 7, "julio": 7,
+    "aug": 8, "august": 8, "augustus": 8, "aout": 8, "août": 8, "agosto": 8,
+    "sep": 9, "sept": 9, "september": 9, "septembre": 9, "settembre": 9, "septiembre": 9,
+    "oct": 10, "october": 10, "oktober": 10, "octobre": 10, "ottobre": 10, "octubre": 10,
+    "nov": 11, "november": 11, "novembre": 11, "noviembre": 11,
+    "dec": 12, "december": 12, "decembre": 12, "décembre": 12, "dezember": 12,
+    "desember": 12, "dicembre": 12, "diciembre": 12,
+}
+
+
+def _valid_ymd(y: int, m: int, d: int) -> bool:
+    if not (_EVAL_DATE_YEAR_MIN <= y <= _EVAL_DATE_YEAR_MAX):
+        return False
+    if not (1 <= m <= 12):
+        return False
+    if not (1 <= d <= 31):
+        return False
+    try:
+        date(y, m, d)
+    except ValueError:
+        return False
+    return True
+
+
+def _parse_assessment_date(raw: Any, datemode: int) -> str | None:
+    """Best-effort, non-guessing parse of an Evaluation-Date cell to ISO 'YYYY-MM-DD'.
+
+    Returns None (never a fabricated value) when the cell is empty or the text
+    is genuinely ambiguous/malformed (e.g. a year with a missing digit) rather
+    than attempting a guess. Only unambiguous re-formatting of digits already
+    present in the cell is performed.
+    """
+    if raw in ("", None):
+        return None
+
+    if isinstance(raw, (int, float)):
+        val = float(raw)
+        # A real Excel date serial for a 2015-2035 date (1900 date system).
+        if 42000.0 <= val <= 50000.0:
+            try:
+                d = xlrd.xldate_as_datetime(val, datemode)
+                return d.date().isoformat()
+            except Exception:
+                pass
+        # Hand-typed 8-digit ddmmyyyy with no separators (e.g. 22012026 for
+        # 22 Jan 2026) — deterministic re-read of the same digits, not a guess.
+        ival = int(val) if val == int(val) else None
+        if ival is not None and 1_010_000 <= ival <= 31_129_999:
+            s = str(ival)
+            if len(s) == 8:
+                day, month, year = int(s[0:2]), int(s[2:4]), int(s[4:8])
+                if _valid_ymd(year, month, day):
+                    return f"{year:04d}-{month:02d}-{day:02d}"
+        return None
+
+    text = str(raw).strip()
+    if not text:
+        return None
+    low = text.lower()
+
+    m = re.match(r"^(\d{4})[-./](\d{1,2})[-./](\d{1,2})$", text)
+    if m:
+        year, month, day = int(m.group(1)), int(m.group(2)), int(m.group(3))
+        if _valid_ymd(year, month, day):
+            return f"{year:04d}-{month:02d}-{day:02d}"
+        return None
+
+    m = re.match(r"^(\d{1,2})\s*[-./,]\s*(\d{1,2})\s*[-./,]\s*(\d{2,4})$", text)
+    if m:
+        day, month, year_raw = int(m.group(1)), int(m.group(2)), m.group(3)
+        if len(year_raw) == 2:
+            year = 2000 + int(year_raw)
+        elif len(year_raw) == 4:
+            year = int(year_raw)
+        else:
+            return None  # 3-digit year: a digit is missing — ambiguous, do not guess
+        if _valid_ymd(year, month, day):
+            return f"{year:04d}-{month:02d}-{day:02d}"
+        return None
+
+    m = re.match(r"^(\d{1,2})[.\s]+([a-zA-Zà-ÿ]+)[.\s]+(\d{4})$", low)
+    if m:
+        day = int(m.group(1))
+        month = _MONTH_NAMES.get(m.group(2).strip("."))
+        year = int(m.group(3))
+        if month and _valid_ymd(year, month, day):
+            return f"{year:04d}-{month:02d}-{day:02d}"
+        return None
+
+    return None
 
 
 @dataclass
@@ -72,6 +179,10 @@ class DealerRecord:
     questions: dict[str, dict[str, float | None]] = field(default_factory=dict)
     totals_only: bool = False
     address: str | None = None
+    # ISO 'YYYY-MM-DD' when the source Evaluation-Date cell parsed unambiguously.
+    # None when the cell is blank or the hand-typed text is ambiguous/malformed
+    # (never guessed — see _parse_assessment_date).
+    assessment_date: str | None = None
     # Disambiguate same company name / multi-site columns in one country report
     site_key: str | None = None
     # True when dealer is listed but excluded from country / section averages
@@ -394,6 +505,9 @@ def extract_result_report(
         total = _num(sh.cell_value(ROW_SCORE_ORIG, col))
         total_pct = _num(sh.cell_value(ROW_SCORE_PCT, col))
         address = str(sh.cell_value(ROW_ADDRESS, col) or "").strip() or None
+        assessment_date = _parse_assessment_date(
+            sh.cell_value(ROW_EVAL_DATE, col), rb.datemode
+        )
         sec_data: dict[str, dict[str, float | None]] = {}
 
         for sec, by_col in section_scores.items():
@@ -459,6 +573,7 @@ def extract_result_report(
                 questions=q_data,
                 totals_only=totals_only,
                 address=address,
+                assessment_date=assessment_date,
                 site_key=site_key,
             )
         )
@@ -661,6 +776,7 @@ def build_dashboard_payload(reports_dir: Path) -> dict[str, Any]:
                     "country": rec.country,
                     "name": rec.name,
                     "address": rec.address,
+                    "assessment_date": rec.assessment_date,
                     "total": rec.total,
                     "total_pct": rec.total_pct,
                     "total_max": rec.total_max,

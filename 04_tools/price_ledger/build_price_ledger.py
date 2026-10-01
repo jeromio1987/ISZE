@@ -11,6 +11,8 @@ Loads what is already on disk (no scraping, no web):
   - KS International         04_tools/autodoc_scraper/ks_results.csv
   - Eucon PartsPool crossref 02_dashboards/Data/01_Pricing/_raw/eucon_crossref_iam_20260329.csv
   - Eucon UK survey 2023     01_data/00_derived/eucon_uk_survey_2023_price_gap.csv
+  - Eucon online 2024-03-15  01_data/Eucon_March.xlsx, sheet 'Online 15032024'   (added 2026-10-01)
+  - Eucon online 2025-07-28  01_data/Eucon_Online28072025.xlsx, brand RRP only    (added 2026-10-01)
   - TMC, Tranzparts          04_tools/autodoc_scraper/{tmc,tranzparts}_results.csv  (category only, no Isuzu no.)
 Not loaded on purpose:
   - Mekonomen  — RETIRED 2026-09-24: its part-number search returns an unrelated item
@@ -107,6 +109,7 @@ COLUMNS = [
 PRICE_TYPES = {
     "aftermarket_trade", "aftermarket_retail", "genuine_grey", "online_median",
     "survey_workshop", "survey_list", "dealer", "quote", "oem_value_line", "marketplace", "estimate",
+    "aftermarket_rrp",      # 2026-10-01: a brand's recommended retail list price, not a street price
 }
 MATCH_METHODS = {"exact_oem", "crossref", "category_only"}
 
@@ -183,6 +186,118 @@ def load_eucon_survey_2023():
                 stock="unknown", n_obs=int(r["competitor_count"]) if pd.notna(r["competitor_count"]) else None,
                 loader="eucon_survey_2023",
             ))
+    return rows
+
+
+def _eucon_date(s):
+    """Eucon writes dates as DMMYYYY / DDMMYYYY without separators ('1072025', '15032024')."""
+    s = str(s).strip()
+    if s.endswith(".0"):
+        s = s[:-2]
+    if not s.isdigit() or len(s) not in (7, 8):
+        return None
+    s = s.zfill(8)
+    try:
+        return datetime.strptime(s, "%d%m%Y").strftime("%Y-%m-%d")
+    except ValueError:
+        return None
+
+
+# Added 2026-10-01 on Jerome's go. Eucon's own match confidence on the March 2024 web-shop
+# sheet: 822 rows 'Medium', 49 'Very Low', 23 'Unknown Part'. Only 'Medium' is loaded; a
+# low-confidence match priced as a rival is worse than no price.
+EUCON_MARCH_MATCH_OK = {"Medium"}
+
+
+def load_eucon_march_2024():
+    """Eucon_March.xlsx, sheet 'Online 15032024': one web-shop price per competitor part.
+
+    Four shops (Autodoc DE/NO, PKW Teile DE, KFZ Teile DE), all observed 15 Mar 2024.
+    `Online Price` is in EUR for the NO shop too (an oil filter at 5.45 cannot be NOK).
+    These are single shop listings, not medians, so they are `aftermarket_retail`.
+    `Online RRP` (163 rows, the shop's struck-through price) is not loaded.
+    """
+    f = ROOT / "01_data/Eucon_March.xlsx"
+    d = pd.read_excel(f, sheet_name="Online 15032024", dtype=str)
+    d = d[d["Matching Level"].isin(EUCON_MARCH_MATCH_OK)]
+    rows = []
+    for _, r in d.iterrows():
+        p = pd.to_numeric(r["Online Price"], errors="coerce")
+        if pd.isna(p) or p <= PLACEHOLDER_MAX:
+            continue
+        rows.append(dict(
+            part_no=_pn(r["Searched Part Number"]), match_method="crossref",
+            competitor_brand=r["Brand"], competitor_pn=r["Part Number"],
+            description=r.get("Description (Webshop)") if pd.notna(r.get("Description (Webshop)")) else None,
+            source=f"Eucon online 2024 ({r['Webshop']})",
+            source_url=r.get("Webshop Link") if pd.notna(r.get("Webshop Link")) else None,
+            country=r["Country"], observed_at=_eucon_date(r["Date (Webshop)"]) or "2024-03-15",
+            vintage="Eucon online 2024-03-15", price=float(p), price_avg=None, currency="EUR",
+            vat="unknown", price_type="aftermarket_retail", stock="unknown", n_obs=1,
+            loader="eucon_march_2024",
+        ))
+    return rows
+
+
+def load_eucon_online_2025():
+    """Eucon_Online28072025.xlsx: the competitor brand's own recommended retail price.
+
+    Only `RRP` is loaded, and only where `Currency (RRP)` is declared (904 of 5,081 rows,
+    all EUR). `OE RRP` is NOT loaded: it is a price for our own part number that runs
+    2.5-3.1x our list and nobody has established what it is (see
+    00_docs/agent/AFTERMARKET_INTELLIGENCE_STATE_20260924.md).
+
+    A list RRP is not a street price, so it gets its own price type, `aftermarket_rrp`.
+    The extract is dated 2025-07-28 but each RRP carries its own date, some years old;
+    that date is kept in `observed_at` so a stale list price is visible, not hidden.
+    """
+    f = ROOT / "01_data/Eucon_Online28072025.xlsx"
+    d = pd.read_excel(f, sheet_name="Fresh list_Export_28072025_0932", dtype=str)
+    d = d[d["Currency (RRP)"].notna()]
+    rows = []
+    for _, r in d.iterrows():
+        p = pd.to_numeric(r["RRP"], errors="coerce")
+        if pd.isna(p) or p <= PLACEHOLDER_MAX:
+            continue
+        rows.append(dict(
+            part_no=_pn(r["Searched Part Number"]), match_method="crossref",
+            competitor_brand=r["Brand"], competitor_pn=r["Part Number"],
+            description=r.get("Description") if pd.notna(r.get("Description")) else None,
+            source="Eucon online export 2025 (brand RRP)", source_url=None,
+            country=r["Country"], observed_at=_eucon_date(r["RRP Date"]) or "2025-07-28",
+            vintage="Eucon online export 2025-07-28", price=float(p), price_avg=None,
+            currency=r["Currency (RRP)"], vat="unknown", price_type="aftermarket_rrp",
+            stock="unknown", n_obs=1, loader="eucon_online_2025",
+        ))
+    return rows
+
+
+def load_ks_crossref():
+    """KS International prices found by searching the COMPETITOR number (added 2026-10-01).
+
+    Written by `04_tools/delegation/parsers/run_crossref_queries.py`, which accepts a KS
+    card only when the searched competitor number is printed on it. Missing file or no
+    rows = no rows, so the ledger builds without it.
+    """
+    f = ROOT / "04_tools" / "price_ledger" / "KS_CROSSREF_ROWS.csv"
+    if not f.exists() or f.stat().st_size == 0:
+        return []
+    d = pd.read_csv(f, dtype={"part_no": str, "competitor_pn": str, "competitor_brand": str})
+    rows = []
+    for _, r in d.iterrows():
+        p = r.get("price")
+        if pd.isna(p) or p <= PLACEHOLDER_MAX:
+            continue
+        rows.append(dict(
+            part_no=_pn(r["part_no"]), match_method="crossref",
+            competitor_brand=r.get("competitor_brand") if pd.notna(r.get("competitor_brand")) else None,
+            competitor_pn=r.get("competitor_pn"), description=r.get("description"),
+            source="KS International", source_url=r.get("source_url"), country="UK",
+            observed_at=r.get("observed_at"), vintage=r.get("vintage"), price=float(p),
+            price_avg=None, currency="GBP", vat="excl", price_type=r.get("price_type"),
+            stock=r.get("stock") if pd.notna(r.get("stock")) else "unknown", n_obs=1,
+            loader="ks_crossref",
+        ))
     return rows
 
 
@@ -279,6 +394,9 @@ def main():
         "ks": load_ks(),
         "eucon_crossref": load_eucon_crossref(),
         "eucon_survey_2023": load_eucon_survey_2023(),
+        "eucon_march_2024": load_eucon_march_2024(),
+        "eucon_online_2025": load_eucon_online_2025(),
+        "ks_crossref": load_ks_crossref(),
         "tmc": load_category_site("tmc_results.csv", "T&M Commercials"),
         "tranzparts": load_category_site("tranzparts_results.csv", "Tranzparts"),
         "scrape_phase1": load_scraped_phase1(),
@@ -297,8 +415,17 @@ def main():
     else:
         df["fx_note"] = FX_NOTE
     key = df[["part_no", "competitor_brand", "competitor_pn", "source", "country", "observed_at",
-              "price_type", "loader", "description", "source_url"]].astype(str).agg("|".join, axis=1)
-    df["obs_id"] = key.map(lambda s: hashlib.sha1(s.encode()).hexdigest()[:16])
+              "price_type", "loader", "description", "source_url", "price", "currency"]].astype(str).agg("|".join, axis=1)
+    # `price` and `currency` are in the key: Amayama quotes one part from several
+    # warehouses at different prices, and without them those rows collide here and the
+    # whole file is refused with "duplicate obs_id".
+    computed = key.map(lambda s: hashlib.sha1(s.encode()).hexdigest()[:16])
+    # The bridge already issued an obs_id for its rows; keep it when present so the two
+    # scripts cannot disagree.
+    if "obs_id" in df.columns:
+        df["obs_id"] = df["obs_id"].where(df["obs_id"].notna(), computed)
+    else:
+        df["obs_id"] = computed
     df = df[COLUMNS]
 
     errors = validate(df)

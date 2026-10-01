@@ -1325,3 +1325,326 @@ Wrote C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\is
   Revenue shares: FY27 BP loaded
   IDS dealer: preserved (linked)
 Done: ma 21/09/2026  7:35:13,79 
+ 
+============================================================ 
+Run started: ma 28/09/2026  7:30:00,93 
+============================================================ 
+============================================================
+  ISZE TENDER MONITOR v3
+  Last 30 days | Markets: UK, EU/TED, DE(+OV), BE, NL, FR, PL, ES, IT, RO, Norway, Finland, Israel, IEC
+  CPV codes: 10 (surgical — ISZE targets only)
+  TED country filter: 30 markets (incl. CYP, MLT)
+  TED detail fetch: OFF (cap=40, delay=0.5s; set ISZE_TED_FETCH_DETAIL=1 to enable)
+============================================================
+
+[UK] Fetching from Find a Tender...
+  [UK] API response keys: ['uri', 'version', 'extensions', 'publishedDate', 'publisher', 'license']
+  Page 1: 0 releases (total: 0)
+[UK] Zero releases on page 1 with stages filter — retrying without it...
+  [UK] Without stages filter: 100 releases
+  Page 2: 0 releases (total: 100)
+[UK] Total fetched: 100
+[UK] Matches: 37 (excluded 10 by CPV gate)
+
+[CF] Fetching from Contracts Finder (UK lower-value, OCDS API)...
+  [CF] 'vehicle maintenance': 89 new matches
+  [CF] 'fleet repair': 429 rate-limited — waiting 120s
+  [CF] 'pickup': 429 rate-limited — waiting 120s
+[CF] Total unique matches: 89
+
+[TED] Fetching from TED Europa (v3 — surgical CPV + country filter)...
+  Query: (PC=34131000 OR PC=34113000 OR PC=34136000 OR PC=34130000 OR PC=34136200 OR PC=50110000 OR PC=50112000 OR PC=50114000 OR PC=50116000 OR PC=50111000) AND (CY=GBR OR CY=IRL OR CY=POL OR CY=PRT OR CY=GRC OR CY=ISR OR CY=DEU OR CY=FRA OR CY=ESP OR CY=ITA OR CY=NLD OR CY=BEL OR CY=DNK OR CY=SWE OR CY=NOR OR CY=FIN OR CY=ROU OR CY=HUN OR CY=CZE OR CY=SVK OR CY=BGR OR CY=HRV OR CY=AUT OR CY=LVA OR CY=LTU OR CY=EST OR CY=SVN OR CY=CYP OR CY=MLT OR CY=ISL) AND PD>=20260829
+  Status: 200
+  Fetched 100 (running total: 100)
+  Status: 200
+  Fetched 100 (running total: 200)
+  Status: 200
+  Fetched 100 (running total: 300)
+  Status: 200
+  Fetched 100 (running total: 400)
+  Status: 200
+  Fetched 100 (running total: 500)
+  Status: 200
+  Fetched 100 (running total: 600)
+  Status: 200
+  Fetched 100 (running total: 700)
+  Status: 200
+  Fetched 48 (running total: 748)
+  Status: 200
+[TED] Total fetched: 748 — applying keyword + CPV exclusion filter...
+[TED] Keyword matches: 573
+  Excluded by CPV gate:   65
+  Excluded by keyword:    110
+  Detail fetch: attempted=0 ok=0 (cap=0)
+  After list(+detail): deadline=60/573 (10%) | value=0/573 (0%) | fleet=18/573 (3%)
+
+[NL] Fetching from TenderNed RSS...
+[NL] TenderNed: 25 keyword matches
+
+[DE] Fetching Germany national feed (service.bund RSS)…
+  [DE] service.bund RSS: 17 keyword matches (of feed items)
+  [DE] DTVP RSS still unavailable (HTTP 404) — RETIRED (TED-only)
+[DE] Total Germany national results: 15
+
+[DE OV] Fetching oeffentlichevergabe Open Data (csv.zip, vehicle CPV/keyword)...
+  [DE OV] 2026-08: scanned≈22892 vehicle-ish +40 (zip 16862546 bytes)
+  [DE OV] 2026-09: scanned≈21308 vehicle-ish +581 (zip 15498635 bytes)
+[DE OV] Unique matches: 621 (scanned≈44200 across ['2026-08', '2026-09'])
+
+[Doffin] Fetching from Doffin Public API (Norway)...
+  GET https://dof-notices-prod-api.azure-api.net/public/v2/search
+  [kjøretøy] page 1 – Status: 200
+  [lastebil] page 1 – Status: 200
+  [pickup] page 1 – Status: 200
+  [varebil] page 1 – Status: 200
+  [chassis] page 1 – Status: 200
+  [vedlikehold kjøretøy] page 1 – Status: 200
+  [truck] page 1 – Status: 200
+  [isuzu] page 1 – Status: 200
+[Doffin] Total unique: 63
+
+[HILMA] Fetching from HILMA AVP Search (Finland)...
+  POST https://api.hankintailmoitukset.fi/avp/eformnotices/docs/search
+  Status: 200
+[HILMA] Got 100 notices (odata.count=419)
+[HILMA] Matches: 52
+
+[BE] Fetching from publicprocurement.be SEA API…
+  [BE] CPV+deadline p1: +18 (page=21, totalCount=21)
+  [BE] term=voertuig p1: +0 (page=13, totalCount=13)
+  [BE] term=véhicule p1: +0 (page=13, totalCount=13)
+  [BE] term=vehicle p1: +0 (page=12, totalCount=12)
+  [BE] term=camion p1: +0 (page=11, totalCount=11)
+  [BE] term=bestelwagen p1: +0 (page=4, totalCount=4)
+  [BE] term=pickup p1: +0 (page=0, totalCount=0)
+[BE] Total Belgium SEA: 18
+
+[IL] Fetching Israel tenders via mr.gov.il (live)…
+  [IL] AC 'רכב': 3 new (products=4)
+  [IL] AC 'טנדר': 4 new (products=4)
+  [IL] AC 'משאית': 4 new (products=4)
+  [IL] AC 'תחזוקה': 0 new (products=4)
+  [IL] AC 'צי רכב': 3 new (products=4)
+  [IL] AC 'רכב מסחרי': 4 new (products=4)
+  [IL] HTML: 0 keyword matches (20 cards)
+  [IL] HTML: 0 keyword matches (20 cards)
+[IL] Live matches: 18 (AC=18, HTML=0)
+
+[IEC] Electric Company of Israel — domestic probe + global-iec HTML…
+  [IEC] domestic: domestic reachable (HTTP 200, 36524 bytes) but no public RSS/API; HTML scrape not wired for domestic SPA…
+  [IEC] global: 7 international tenders parsed; 0 vehicle-keyword hits → 0 rows
+  [IEC] No vehicle/fleet/leasing hits on international list (UMI chase likely on GEO_BLOCKED domestic portal).
+[IEC] Vehicle-keyword matches: 0
+
+[FR BOAMP] Fetching OpenDataSoft records (vehicle/objet filter)...
+  [FR BOAMP] API total_count≈9818 · page=80
+[FR BOAMP] Matches in lookback: 48
+
+[PL BZP] Fetching e-Zamówienia notices (CPV filter)...
+  [PL BZP] CPV 34131000: 8 rows
+  [PL BZP] CPV 34130000: 20 rows
+  [PL BZP] CPV 34136000: 5 rows
+  [PL BZP] CPV 34136200: 0 rows
+  [PL BZP] CPV 34113000: 12 rows
+  [PL BZP] CPV 50114000: 0 rows
+  [PL BZP] CPV 50110000: 2 rows
+[PL BZP] Unique matches: 43
+
+[ES PLACSP] Fetching Atom syndication (vehicle stem/CPV, follow next)...
+  [ES PLACSP] page 0: entries=82 hits+=5 url=…/licitacionesPerfilesContratanteCompleto3.atom
+  [ES PLACSP] page 1: entries=500 hits+=36 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817.ato
+  [ES PLACSP] page 2: entries=500 hits+=39 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_1.a
+  [ES PLACSP] page 3: entries=500 hits+=19 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_2.a
+  [ES PLACSP] page 4: entries=499 hits+=22 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_3.a
+  [ES PLACSP] page 5: entries=500 hits+=23 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_4.a
+  [ES PLACSP] page 6: entries=500 hits+=34 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_5.a
+  [ES PLACSP] page 7: entries=497 hits+=16 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_6.a
+  [ES PLACSP] page 8: entries=499 hits+=17 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_7.a
+  [ES PLACSP] page 9: entries=500 hits+=18 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_8.a
+  [ES PLACSP] page 10: entries=499 hits+=29 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_9.a
+  [ES PLACSP] page 11: entries=499 hits+=11 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_10.
+  [ES PLACSP] page 12: entries=499 hits+=21 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_11.
+  [ES PLACSP] page 13: entries=498 hits+=30 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_12.
+  [ES PLACSP] page 14: entries=499 hits+=31 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_13.
+  [ES PLACSP] page 15: entries=500 hits+=24 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_14.
+  [ES PLACSP] page 16: entries=500 hits+=26 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_15.
+  [ES PLACSP] page 17: entries=499 hits+=31 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_16.
+  [ES PLACSP] page 18: entries=499 hits+=29 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_17.
+  [ES PLACSP] page 19: entries=500 hits+=19 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_18.
+  [ES PLACSP] page 20: entries=500 hits+=33 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_19.
+  [ES PLACSP] page 21: entries=498 hits+=22 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_20.
+  [ES PLACSP] page 22: entries=499 hits+=22 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_21.
+  [ES PLACSP] page 23: entries=500 hits+=22 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_22.
+  [ES PLACSP] page 24: entries=498 hits+=24 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_23.
+  [ES PLACSP] page 25: entries=498 hits+=28 url=…/licitacionesPerfilesContratanteCompleto3_20260926_210817_24.
+  [ES PLACSP] page 26: entries=499 hits+=17 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136.ato
+  [ES PLACSP] page 27: entries=500 hits+=15 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_1.a
+  [ES PLACSP] page 28: entries=499 hits+=15 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_2.a
+  [ES PLACSP] page 29: entries=500 hits+=25 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_3.a
+  [ES PLACSP] page 30: entries=500 hits+=24 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_4.a
+  [ES PLACSP] page 31: entries=499 hits+=13 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_5.a
+  [ES PLACSP] page 32: entries=497 hits+=13 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_6.a
+  [ES PLACSP] page 33: entries=500 hits+=18 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_7.a
+  [ES PLACSP] page 34: entries=500 hits+=20 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_8.a
+  [ES PLACSP] page 35: entries=499 hits+=11 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_9.a
+  [ES PLACSP] page 36: entries=500 hits+=14 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_10.
+  [ES PLACSP] page 37: entries=500 hits+=11 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_11.
+  [ES PLACSP] page 38: entries=499 hits+=15 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_12.
+  [ES PLACSP] page 39: entries=499 hits+=33 url=…/licitacionesPerfilesContratanteCompleto3_20260925_211136_13.
+[ES PLACSP] Matches: 875 (pages=40 entries≈19553)
+
+[IT PNCP] Fetching pubblicitalegale avvisi (vehicle keyword filter)...
+  [IT PNCP] API totalElements≈3917
+  [IT PNCP] page 0: scanned=100 hits+=0
+  [IT PNCP] page 1: scanned=100 hits+=0
+  [IT PNCP] page 2: scanned=100 hits+=1
+  [IT PNCP] page 3: scanned=100 hits+=1
+  [IT PNCP] page 4: scanned=100 hits+=2
+  [IT PNCP] page 5: scanned=100 hits+=3
+  [IT PNCP] page 6: scanned=100 hits+=2
+  [IT PNCP] page 7: scanned=100 hits+=1
+  [IT PNCP] page 8: scanned=100 hits+=2
+  [IT PNCP] page 9: scanned=100 hits+=2
+  [IT PNCP] page 10: scanned=100 hits+=4
+  [IT PNCP] page 11: scanned=100 hits+=2
+  [IT PNCP] page 12: scanned=100 hits+=1
+  [IT PNCP] page 13: scanned=100 hits+=0
+  [IT PNCP] page 14: scanned=100 hits+=0
+  [IT PNCP] page 15: scanned=100 hits+=2
+  [IT PNCP] page 16: scanned=100 hits+=3
+  [IT PNCP] page 17: scanned=100 hits+=2
+  [IT PNCP] page 18: scanned=100 hits+=0
+  [IT PNCP] page 19: scanned=100 hits+=1
+[IT PNCP] Unique matches: 29 (scanned≈2000)
+
+[RO SEAP] Fetching e-licitatie NoticeCommon list (vehicle CPV/keyword)...
+  [RO SEAP] API total≈1922
+  [RO SEAP] page 0: scanned=100 hits+=6
+  [RO SEAP] page 1: scanned=100 hits+=7
+  [RO SEAP] page 2: scanned=100 hits+=8
+  [RO SEAP] page 3: scanned=100 hits+=9
+  [RO SEAP] page 4: scanned=100 hits+=9
+  [RO SEAP] page 5: scanned=100 hits+=9
+  [RO SEAP] page 6: scanned=100 hits+=4
+  [RO SEAP] page 7: scanned=100 hits+=4
+  [RO SEAP] page 8: scanned=100 hits+=16
+  [RO SEAP] page 9: scanned=100 hits+=9
+  [RO SEAP] page 10: scanned=100 hits+=6
+  [RO SEAP] page 11: scanned=100 hits+=4
+  [RO SEAP] page 12: scanned=100 hits+=4
+  [RO SEAP] page 13: scanned=100 hits+=6
+  [RO SEAP] page 14: scanned=100 hits+=9
+  [RO SEAP] page 15: scanned=100 hits+=8
+  [RO SEAP] page 16: scanned=100 hits+=8
+  [RO SEAP] page 17: scanned=100 hits+=6
+  [RO SEAP] page 18: scanned=100 hits+=4
+  [RO SEAP] page 19: scanned=22 hits+=1
+[RO SEAP] Unique matches: 137 (scanned≈1922)
+
+[AT USP] Fetching Ausschreibungssuche tenderlist (vehicle CPV window)...
+  [AT USP] API filtered≈24
+  [AT USP] page 0: scanned=24 hits+=15
+[AT USP] Unique matches: 15 (scanned≈24)
+
+[PT BASE] Fetching dados.gov anúncios JSON (vehicle/fleet keyword)...
+  [PT BASE] downloading anuncios2026.json …
+[PT BASE] Matches: 71 (scanned≈23610)
+
+✓ Saved: C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isuzu_tenders_v3.xlsx
+  UK (Find a Tender): 37
+  UK (Contracts Finder): 89
+  TED EU:   573
+  Germany:  15 (service.bund) + 621 (oeffentlichevergabe) + TED above-threshold
+  Norway:   63
+  Finland:  52
+  Israel:   18
+  IEC Israel: 0
+  Belgium:  18
+  Netherlands: 25
+  France BOAMP: 48
+  Poland BZP: 43
+  Spain PLACSP: 875
+  Italy PNCP: 29
+  Romania SEAP: 137
+  Austria USP: 15
+  Portugal BASE: 71
+
+============================================================
+SOURCE HEALTH: issues / non-active notes
+  [RETIRED] Belgium RSS: count=0 zero_runs=9 RETIRED — HTML SPA shell; live source is Belgium publicprocurement.be SEA
+  [BLOCKED] Estonia RHR: count=0 zero_runs=0 rhr/api/public/v1/opendata HTTP 500 — wait for ministry fix
+  [RETIRED] Germany DTVP/NRW: count=0 zero_runs=4 RETIRED — TED-only honesty for DTVP (no free feed); use TED DEU + Germany service.bund
+  [BLOCKED] Greece KIMDIS: count=0 zero_runs=0 Open-data URL is login shell; need Promitheus credentials
+  [SKIPPED] IEC iec.co.il domestic: count=0 zero_runs=0 domestic reachable (HTTP 200, 36524 bytes) but no public RSS/API; HTML scrape not wired for domestic SPA
+  [RETIRED] Israel RSS: count=0 zero_runs=5 RETIRED — HTML SPA shell, 0 <item>; live = Israel mr.gov.il
+  [SUSPECT] Israel data.gov.il: count=0 zero_runs=5 demoted — live mr.gov.il succeeded; CKAN frozen Feb 2021
+  [CODE_READY] Lithuania CVP IS: count=0 zero_runs=0 POST cft-details-export returns 401 without VPT apiKey — CODE_READY
+  [BLOCKED] Slovakia UVO: count=0 zero_runs=0 Vestnik HTML recaptcha; no free list API
+============================================================
+
+Done.
+============================================================
+Built C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v2.html
+  Raw notices: 735
+  Opportunities: 664
+  Attack targets: 6
+  Action queue: 193
+Published: C:\Users\jerom\Desktop\claude\ISZE\01_data\dashboards\tender_data.json
+  Size: 4.77 MB  Modified: 09/28/2026 07:51:58
+Built C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v2.html
+  Raw notices: 735
+  Opportunities: 664
+  Attack targets: 6
+  Action queue: 193
+Building from isuzu_tenders_v3.xlsx
+[Isuzu+not-for-us gate] filtered snapshot: notices 735->735 (-0), opportunities 664->617 (-47)
+[Aftersales] tagged 280 of 617 opportunities
+Wrote C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v4_opportunities.xlsx
+Built C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v4_opportunity.html
+Wrote C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\isze_dashboard_v4_data.json
+  Opportunities: 617
+  Sized (GPS €): 7
+  Unsized (no GPS €): 610
+  With fleet count: 23
+  No fleet in notice: 594
+  Fleet but no GPS € (map or product-fit): 16
+  Addressable GPS sum EUR: 6824.42
+  Stated fleet in captured notices (pickup/truck): 182 (13 rows) — NOT market potential
+  Stated fleet all segments: 448 (23 rows)
+  Aftersales tagged: 280 of 617
+  Product segments: lcv_van=3, pickup=109, rm_only=221, truck=175, weak=109
+  Source health: present
+  Workbook sheets: 18 from isuzu_tenders_v3.xlsx
+  Revenue shares: FY27 BP loaded
+  IDS dealer: preserved (linked)
+Run date: 2026-09-28   feed: tender_data.json   feed dated: 2026-09-28T05:51:57.598166Z
+Rows in feed: 664 | R&M contracts: 274 | actionable decision: 240 (Ignore: 34) | selected: 223 (dated 33, no deadline 190)
+Dropped, deadline already passed: 17 | unreadable deadline: 0
+
+distributor                        dated  undated  total
+ROM Auto                              10       33     43
+IBX                                    6        7     13
+RUTEBILEIERNES STANDARDISERING AS      5        3      8
+IMOTORS-Importacao e Comercio          4        7     11
+ISUZU SALES DEUTSCHLAND GMBH           1       18     19
+Ireland                                1        2      3
+AutoWallis                             0       10     10
+RSA                                    0        5      5
+ISUZU TRUCK (UK) LIMITED               0        1      1
+Sverige                                0        1      1
+UNASSIGNED (internal)                  6      103    109
+
+Banned-term scan, 10 distributor pages: total hits = 0
+  autowallis.html                        gate=0  (notice text mentions: ['RSA'])
+  ibx.html                               gate=0
+  imotors_importacao_e_comercio.html     gate=0
+  ireland.html                           gate=0
+  isuzu_sales_deutschland_gmbh.html      gate=0  (inside longer words, not a hit: {'AIM': 2, 'IML': 2})  (notice text mentions: ['RSA'])
+  isuzu_truck_uk_limited.html            gate=0  (notice text mentions: ['Ireland'])
+  rom_auto.html                          gate=0  (inside longer words, not a hit: {'UMI': 1, 'UTI': 4})
+  rsa.html                               gate=0
+  rutebileiernes_standardisering_as.html gate=0
+  sverige.html                           gate=0
+
+Output: C:\Users\jerom\Desktop\claude\ISZE\04_tools\ISZE_Tender_Monitor_Install\rm_digest\2026-09-28
+Done: ma 28/09/2026  7:52:06,21 

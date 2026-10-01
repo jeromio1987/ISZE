@@ -114,7 +114,18 @@ def main() -> int:
         return 1
     offered = pd.read_csv(OFFERED, dtype={"part_no": str, "page_file": str})
     offered = offered[offered["loader"].isin(SCRAPE_LOADERS)].copy()
+    # Rows the bridge rejected are NOT loaded on purpose (a price at the placeholder
+    # floor, a missing part number). Checking them against the ledger reports "not
+    # present" every time and buries the real failures. They are counted, then separated.
+    rejected = pd.DataFrame()
+    if "verdict" in offered.columns:
+        rej = offered["verdict"].astype(str).str.startswith("reject:")
+        rejected = offered[rej]
+        offered = offered[~rej]
     print(f"offered rows to verify : {len(offered)}")
+    if len(rejected):
+        print(f"rejected by the bridge : {len(rejected)} "
+              f"(not loaded by design — {rejected['verdict'].str.slice(7, 60).iloc[0]})")
 
     ledger = pd.read_parquet(LEDGER)
     print(f"ledger rows total      : {len(ledger):,}")

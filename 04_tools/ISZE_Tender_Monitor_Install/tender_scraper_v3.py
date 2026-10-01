@@ -160,6 +160,14 @@ TED_TARGET_COUNTRIES = [
     "CZE", "SVK", "BGR", "HRV", "AUT", "LVA",
     "LTU", "EST", "SVN",
     "CYP", "MLT",  # Phase 1: EU members previously omitted — above-threshold via TED
+    # 2026-09-25: Iceland was dropped in the v3 rewrite alongside Moldova/Serbia
+    # (see module docstring) as if all three were non-TED noise markets. Iceland
+    # is EEA/EFTA — like Norway (already in this list) — and above-threshold
+    # Icelandic public tenders are required to publish on TED. ISZE bills ~EUR
+    # 85k/year through its Iceland distributor (01_data/00_derived/
+    # gps_spu_by_distributor.csv, code ICELAND); Moldova/Serbia have no such
+    # billing and are correctly excluded. Restoring ISL only.
+    "ISL",
 ]
 
 KEYWORDS = [

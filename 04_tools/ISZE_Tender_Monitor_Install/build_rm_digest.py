@@ -10,13 +10,18 @@ Everything lands under 04_tools/ISZE_Tender_Monitor_Install/rm_digest/<run date>
 This script never writes into the outcome store (tender_outcomes.json), never
 touches run_tender_monitor.bat and never starts a browser.
 
-Selection (work order step 1):
-    rm_contract == true
-    AND decision in (Attack, Selective, Watch)
-    AND (deadline_date >= run date OR deadline_date missing)
+Selection (changed 2026-10-01 on Jerome's go; before that it also sent undated rows):
+    decision in (Attack, Selective, Watch)
+    AND (rm_contract == true OR product_segment in (pickup, truck))
+    AND deadline_date >= run date
 
-Rows with no deadline are listed in their own section, never mixed with dated
-ones. Rows with no distributor_code go to an internal "unassigned" page.
+A distributor page carries dated notices only. Rows that pass everything except the
+deadline (none published) go to an internal "undated" page, never to a distributor.
+Rows with no distributor_code go to an internal "unassigned" page.
+
+The same tender published on TED and on a national portal arrives as two opportunities.
+Where both are selected (same country, same buyer, title words overlapping >= 50%), the
+page shows one card and the CSV carries both codes with a note to give both one answer.
 
 Run:  C:\\Python314\\python.exe build_rm_digest.py
 """
@@ -45,6 +50,8 @@ BANNED_LITERALS = [".csv", ".json", ".py"]
 DUTCH_WORDS = ["goed", "slecht"]
 
 DECISIONS = ("Attack", "Selective", "Watch")
+VEHICLE_SEGMENTS = ("pickup", "truck")   # Isuzu-shaped vehicle purchases, sent beside R&M
+TWIN_TITLE_OVERLAP = 0.5
 HIGH_CONFIDENCE = 0.8          # ids_dealer_linkage.py: 0.5 = country fallback, >=0.8 = geo nearest
 
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -172,6 +179,10 @@ def visible_text(page_html: str) -> str:
 
 # --------------------------------------------------------------------------- selection
 
+def in_scope(row: dict) -> bool:
+    return is_rm(row) or clean(row.get("product_segment")) in VEHICLE_SEGMENTS
+
+
 def select_rows(payload: dict, run_date: dt.date):
     rows = payload.get("opportunities") or []
     stats = collections.OrderedDict()
@@ -180,9 +191,13 @@ def select_rows(payload: dict, run_date: dt.date):
     rm = [r for r in rows if is_rm(r)]
     stats["rm_contract_true"] = len(rm)
 
-    decided = [r for r in rm if clean(r.get("decision")) in DECISIONS]
-    stats["rm_and_actionable_decision"] = len(decided)
-    stats["rm_ignored"] = len(rm) - len(decided)
+    scoped = [r for r in rows if in_scope(r)]
+    stats["rm_or_pickup_truck"] = len(scoped)
+    stats["vehicle_purchase_not_rm"] = len(scoped) - len(rm)
+
+    decided = [r for r in scoped if clean(r.get("decision")) in DECISIONS]
+    stats["in_scope_and_actionable_decision"] = len(decided)
+    stats["in_scope_ignored"] = len(scoped) - len(decided)
 
     kept, undated, dropped_past, unparseable = [], [], 0, 0
     for row in decided:
@@ -202,15 +217,47 @@ def select_rows(payload: dict, run_date: dt.date):
 
     stats["dropped_deadline_already_passed"] = dropped_past
     stats["deadline_unreadable"] = unparseable
-    stats["selected_total"] = len(kept) + len(undated)
     stats["selected_dated"] = len(kept)
-    stats["selected_undated"] = len(undated)
+    stats["undated_internal_only"] = len(undated)
     return kept, undated, stats
 
 
-def group_rows(dated, undated, run_date: dt.date, feed_date: dt.date | None):
+def _title_words(row: dict) -> set:
+    import unicodedata
+    raw = clean(row.get("title_raw")) or clean(row.get("title"))
+    text = unicodedata.normalize("NFKD", raw).encode("ascii", "ignore").decode().lower()
+    parts = title_segments(text)
+    if len(parts) >= 3:              # TED: "Country - heading - subject"
+        text = " ".join(parts[2:])
+    return set(re.findall(r"[a-z0-9]{4,}", text))
+
+
+def _is_ted(row: dict) -> bool:
+    return any("EU" in str(s) for s in (row.get("sources") or []))
+
+
+def find_twins(rows: list[dict]) -> dict[str, str]:
+    """opportunity_id -> its twin's opportunity_id, for TED/national copies of one tender."""
+    twins: dict[str, str] = {}
+    for i, a in enumerate(rows):
+        for b in rows[i + 1:]:
+            if clean(a.get("country_code")) != clean(b.get("country_code")) or _is_ted(a) == _is_ted(b):
+                continue
+            ba = set(re.findall(r"\w{3,}", clean(a.get("buyer")).lower()))
+            bb = set(re.findall(r"\w{3,}", clean(b.get("buyer")).lower()))
+            if not ba or not bb or len(ba & bb) / len(ba | bb) < 0.8:
+                continue
+            ta, tb = _title_words(a), _title_words(b)
+            if ta and tb and len(ta & tb) / len(ta | tb) >= TWIN_TITLE_OVERLAP:
+                ida, idb = clean(a.get("opportunity_id")), clean(b.get("opportunity_id"))
+                if ida not in twins and idb not in twins:
+                    twins[ida], twins[idb] = idb, ida
+    return twins
+
+
+def group_rows(dated, run_date: dt.date, feed_date: dt.date | None):
     groups: dict[str, list[dict]] = collections.defaultdict(list)
-    for row in dated + undated:
+    for row in dated:
         code = clean(row.get("distributor_code")) or UNASSIGNED
         key = code if code else UNASSIGNED
         day = parse_date(row.get("deadline_date"))
@@ -282,7 +329,7 @@ PAGE_SHELL = """<!DOCTYPE html>
 </head>
 <body>
 <header class="bar">
-  <h1>Open fleet repair and maintenance tenders &mdash; @@DISTNAME@@</h1>
+  <h1>@@HEADING@@ &mdash; @@DISTNAME@@</h1>
   <div class="sub">@@RUNLINE@@</div>
 </header>
 <main>
@@ -295,21 +342,30 @@ PAGE_SHELL = """<!DOCTYPE html>
 """
 
 ASK_BOX = """<section class="ask">
-  <h2>Tell us which of these you will pursue: pursue / pass / already known</h2>
-  <p>Please answer with the number of the notice and one of those three words.</p>
+  <h2>Which of these will you pursue? Answer: pursue / pass / not decided yet</h2>
+  <p>Please reply with the number of the tender and one of those words.</p>
 </section>
 """
 
 INTERNAL_BOX = """<section class="ask">
   <h2>Internal page &mdash; not for a distributor</h2>
-  <p>These notices reached the list but no distributor is identified on them, so there is nobody
+  <p>These tenders reached the list but no distributor is identified on them, so there is nobody
   to send them to. They are counted in the run summary and keep an internal number here.</p>
 </section>
 """
 
+UNDATED_BOX = """<section class="ask">
+  <h2>Internal page &mdash; not for a distributor</h2>
+  <p>These tenders pass every rule except one: no deadline is published, so nobody has a moment
+  to decide. They no longer go to distributors. Open the notice to find a date; once the feed
+  carries one, the tender moves onto the distributor's list by itself.</p>
+</section>
+"""
 
-def render_card(number: int, row: dict, boilerplate: set) -> str:
+
+def render_card(number: int, row: dict, boilerplate: set, twin: dict | None = None) -> str:
     title = html_lib.escape(display_title(row, boilerplate), quote=True)
+    kind = "Repair and maintenance" if is_rm(row) else "Vehicle purchase"
     buyer = html_lib.escape(clean(row.get("buyer")) or "(buyer not published in the notice)", quote=True)
     scope = html_lib.escape(clean(row.get("aftersales_summary")) or "not published", quote=True)
     value = html_lib.escape(fmt_amount(row.get("value_amount"), row.get("currency")), quote=True)
@@ -329,24 +385,60 @@ def render_card(number: int, row: dict, boilerplate: set) -> str:
     dealer_row = (f'<li><span class="k">Nearest Isuzu dealer</span>'
                   f'<span class="v">{html_lib.escape(dealer, quote=True)}</span></li>') if dealer else ""
 
+    twin_row = ""
+    if twin:
+        tday = parse_date(twin.get("deadline_date"))
+        tdate = f"{tday.day} {MONTHS[tday.month - 1]} {tday.year}" if tday else "not published"
+        turl = clean(twin.get("url"))
+        tlink = (f' &middot; <a href="{html_lib.escape(turl, quote=True)}">open the second notice</a>'
+                 if turl else "")
+        twin_row = ('    <li><span class="k">Also published</span><span class="v">as a second notice '
+                    f'of the same tender, deadline {html_lib.escape(tdate)}. Check which date applies.'
+                    f'{tlink}</span></li>\n')
+
     return (
         '<article class="op">\n'
         f'  <h3><span class="opnum">{number}.</span>{title}{stamp}</h3>\n'
         f'  <p class="buyer">{buyer}</p>\n'
         '  <ul class="meta">\n'
+        f'    <li><span class="k">Type</span><span class="v">{kind}</span></li>\n'
         f'    <li><span class="k">Value</span><span class="v">{value}</span></li>\n'
         f'    <li><span class="k">Fleet size</span><span class="v">{fleet}</span></li>\n'
         f'    <li><span class="k">Scope</span><span class="v">{scope}</span></li>\n'
         f'{dealer_row}\n'
+        f'{twin_row}'
         '  </ul>\n'
         f'  {link}\n'
         '</article>'
     )
 
 
+def number_rows(rows: list[dict], twins: dict[str, str]) -> list[tuple[int, dict, dict | None]]:
+    """One number per tender. A TED/national pair gets one card: the national copy leads."""
+    by_id = {clean(r.get("opportunity_id")): r for r in rows}
+    out, done, number = [], set(), 0
+    for row in rows:
+        oid = clean(row.get("opportunity_id"))
+        if oid in done:
+            continue
+        twin = by_id.get(twins.get(oid, ""))
+        lead = row
+        if twin is not None and _is_ted(row) and not _is_ted(twin):
+            lead, twin = twin, row
+        done.add(clean(lead.get("opportunity_id")))
+        if twin is not None:
+            done.add(clean(twin.get("opportunity_id")))
+        number += 1
+        lead["_number"] = number
+        if twin is not None:
+            twin["_number"] = number
+        out.append((number, lead, twin))
+    return out
+
+
 def build_page(dist_name: str, rows: list[dict], run_date: dt.date,
                feed_date: dt.date | None, footnote: str, boilerplate: set,
-               internal: bool = False) -> str:
+               twins: dict[str, str], closing: str = "", heading: str = "") -> str:
     dated = [r for r in rows if r.get("_deadline")]
     undated = [r for r in rows if not r.get("_deadline")]
 
@@ -354,40 +446,38 @@ def build_page(dist_name: str, rows: list[dict], run_date: dt.date,
     undated.sort(key=lambda r: (-(r.get("opportunity_score") or 0), clean(r.get("title"))))
 
     parts: list[str] = []
-    number = 0
+    cards = number_rows(dated + undated, twins)
+    n_dated = sum(1 for _, lead, _ in cards if lead.get("_deadline"))
+    n_undated = len(cards) - n_dated
 
     parts.append('<section class="first">')
-    parts.append(f'<h2>Open notices with a published deadline ({len(dated)})</h2>')
     if dated:
-        for row in dated:
-            number += 1
-            parts.append(render_card(number, row, boilerplate))
-    else:
-        parts.append('<p class="empty">No notice with a published deadline today.</p>')
-    parts.append('</section>')
-
-    parts.append('<section>')
-    parts.append(f'<h2>Deadline not published, check the notice ({len(undated)})</h2>')
+        parts.append(f'<h2>Open tenders with a published deadline ({n_dated})</h2>')
+        for number, lead, twin in cards:
+            if lead.get("_deadline"):
+                parts.append(render_card(number, lead, boilerplate, twin))
     if undated:
-        for row in undated:
-            number += 1
-            parts.append(render_card(number, row, boilerplate))
-    else:
-        parts.append('<p class="empty">Every notice listed above carries a published deadline.</p>')
+        parts.append(f'<h2>Deadline not published, check the notice ({n_undated})</h2>')
+        for number, lead, twin in cards:
+            if not lead.get("_deadline"):
+                parts.append(render_card(number, lead, boilerplate, twin))
+    if not cards:
+        parts.append('<p class="empty">No open tender with a published deadline today.</p>')
     parts.append('</section>')
 
     run_line = f"Prepared {run_date.day} {MONTHS[run_date.month - 1]} {run_date.year}"
     if feed_date:
         run_line += f" &middot; notices collected from public tender portals on {feed_date.day} {MONTHS[feed_date.month - 1]} {feed_date.year}"
-    run_line += f" &middot; {len(dated) + len(undated)} notices in this list"
+    run_line += f" &middot; {len(cards)} tenders in this list"
 
     page = (PAGE_SHELL
             .replace("@@CSS@@", PAGE_CSS)
-            .replace("@@PAGETITLE@@", html_lib.escape(f"Open R&M tenders - {dist_name}"))
+            .replace("@@PAGETITLE@@", html_lib.escape(f"Open fleet tenders - {dist_name}"))
+            .replace("@@HEADING@@", heading or "Open fleet tenders")
             .replace("@@DISTNAME@@", html_lib.escape(dist_name))
             .replace("@@RUNLINE@@", run_line)
             .replace("@@SECTIONS@@", "\n".join(parts))
-            .replace("@@CLOSING@@", INTERNAL_BOX if internal else ASK_BOX)
+            .replace("@@CLOSING@@", closing or ASK_BOX)
             .replace("@@FOOTNOTE@@", html_lib.escape(footnote)))
     return page
 
@@ -437,12 +527,23 @@ CSV_HEADER = [
 ]
 
 
-def write_csv(path: Path, rows: list[dict]) -> None:
+def write_csv(path: Path, rows: list[dict], twins: dict[str, str] | None = None) -> None:
+    """Rows in page order. `notes` says which page number a row is, and names a twin, so the
+    reply "3 pursue" can be typed against the right code(s). The loader skips any row whose
+    outcome is empty, so these notes are never written into the store on their own."""
+    twins = twins or {}
+    ordered = sorted(rows, key=lambda r: (r.get("_number") or 0, _is_ted(r)))
     with path.open("w", encoding="utf-8", newline="") as fh:
         writer = csv.writer(fh)
         writer.writerow(CSV_HEADER)
-        for row in rows:
-            writer.writerow([clean(row.get("opportunity_id"))] + [""] * (len(CSV_HEADER) - 1))
+        for row in ordered:
+            oid = clean(row.get("opportunity_id"))
+            note = f"page number {row.get('_number')}" if row.get("_number") else ""
+            if oid in twins:
+                note += f"; same tender as {twins[oid]} - give both the same answer"
+            out = [oid] + [""] * (len(CSV_HEADER) - 1)
+            out[CSV_HEADER.index("notes")] = note
+            writer.writerow(out)
 
 
 def write_text(path: Path, body: str) -> None:
@@ -461,7 +562,7 @@ ul.notes{font-size:9.5pt}
 """
 
 
-def build_index(dist_pages: list[dict], unassigned: dict, stats: dict,
+def build_index(dist_pages: list[dict], unassigned: dict, undated: dict, stats: dict,
                 run_date: dt.date, feed_date: dt.date | None, feed_path: Path) -> str:
     rows_html = []
     for entry in dist_pages:
@@ -485,6 +586,16 @@ def build_index(dist_pages: list[dict], unassigned: dict, stats: dict,
         f'<td>{html_lib.escape(unassigned["earliest"] or "not published")}</td>'
         f'<td>no outcome list &mdash; no distributor to answer it</td></tr>'
     )
+    if undated.get("filename"):
+        rows_html.append(
+            f'<tr class="internal"><td><a href="{html_lib.escape(undated["filename"], quote=True)}">'
+            f'no deadline published &mdash; held back (internal)</a></td>'
+            f'<td class="num">0</td><td class="num">{undated["total"]}</td>'
+            f'<td class="num">{undated["total"]}</td>'
+            f'<td>{html_lib.escape(undated["decision_mix_text"])}</td>'
+            f'<td>not published</td>'
+            f'<td>not sent &mdash; no moment to decide</td></tr>'
+        )
 
     collected = (f"{feed_date.day} {MONTHS[feed_date.month - 1]} {feed_date.year}"
                  if feed_date else "date not published in the file")
@@ -493,12 +604,12 @@ def build_index(dist_pages: list[dict], unassigned: dict, stats: dict,
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>R&amp;M tender digest - index (internal)</title>
+<title>Fleet tender digest - index (internal)</title>
 <style>{INDEX_CSS}</style>
 </head>
 <body>
 <header class="bar">
-  <h1>Weekly R&amp;M tender digest &mdash; index</h1>
+  <h1>Weekly fleet tender digest &mdash; index</h1>
   <div class="sub">Internal page &mdash; not for distribution to a distributor
   &middot; run {run_date.day} {MONTHS[run_date.month - 1]} {run_date.year}
   &middot; source collected {collected}</div>
@@ -517,12 +628,14 @@ def build_index(dist_pages: list[dict], unassigned: dict, stats: dict,
   <section>
     <h2>What this run selected</h2>
     <ul class="notes">
-      <li>{stats['rows_in_feed']} opportunities in the feed; {stats['rm_contract_true']} are R&amp;M contracts.</li>
-      <li>{stats['rm_and_actionable_decision']} of those carry an actionable decision; {stats['rm_ignored']} are marked Ignore.
-          {stats['selected_total']} survive the deadline rule
-          ({stats['selected_dated']} with a published deadline, {stats['selected_undated']} without).</li>
+      <li>{stats['rows_in_feed']} opportunities in the feed; {stats['rm_or_pickup_truck']} are repair and maintenance
+          ({stats['rm_contract_true']}) or a pickup or truck purchase ({stats['vehicle_purchase_not_rm']}).</li>
+      <li>{stats['in_scope_and_actionable_decision']} of those carry an actionable decision; {stats['in_scope_ignored']} are marked Ignore.</li>
+      <li>{stats['selected_dated']} have a deadline on or after the run date and are listed
+          ({stats['twin_pairs']} of them are the same tender published twice, shown as one card).
+          {stats['undated_internal_only']} have no deadline and are held back on an internal page.</li>
       <li>{stats['dropped_deadline_already_passed']} were dropped because the deadline has already passed.</li>
-      <li>{unassigned['total']} selected rows have no distributor identified (internal page above).</li>
+      <li>{unassigned['total']} listed rows have no distributor identified (internal page above).</li>
     </ul>
   </section>
   <section>
@@ -634,8 +747,11 @@ def main(argv: list[str] | None = None) -> int:
 
     dated, undated, stats = select_rows(payload, run_date)
     stats["outcomes_recorded"] = ((payload.get("meta") or {}).get("outcomes_summary") or {}).get("recorded", 0)
-    groups = group_rows(dated, undated, run_date, feed_date)
+    groups = group_rows(dated, run_date, feed_date)
     boilerplate = boilerplate_headings(dated + undated)
+    twins = find_twins(dated)
+    stats["twin_pairs"] = len(twins) // 2
+    stats["distinct_tenders_listed"] = len(dated) - stats["twin_pairs"]
 
     out_dir = Path(args.out) if args.out else DIGEST_ROOT / run_date.isoformat()
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -686,21 +802,21 @@ def main(argv: list[str] | None = None) -> int:
             used_slugs[slug] = 1
 
         filename = f"{slug}.html"
-        page = build_page(name, items, run_date, feed_date, footnote, boilerplate,
-                          internal=is_unassigned)
+        page = build_page(name, items, run_date, feed_date, footnote, boilerplate, twins,
+                          closing=INTERNAL_BOX if is_unassigned else ASK_BOX)
         write_text(out_dir / filename, page)
 
-        n_dated = sum(1 for r in items if r.get("_deadline"))
-        n_undated = len(items) - n_dated
+        n_dated = len({r.get("_number") for r in items if r.get("_deadline")})
+        n_undated = 0
 
         if is_unassigned:
             unassigned_info = {"dated": n_dated, "undated": n_undated,
-                               "total": len(items), "filename": filename,
+                               "total": n_dated, "filename": filename,
                                "decision_mix_text": mix_text(items),
                                "earliest": earliest_deadline(items)}
             continue
 
-        write_csv(out_dir / f"{slug}.csv", items)
+        write_csv(out_dir / f"{slug}.csv", items, twins)
         scan = scan_page(page, name)
         scan["other_distributor_names_found"] = sorted(
             other_name for other_code, other_name in labels.items()
@@ -714,13 +830,30 @@ def main(argv: list[str] | None = None) -> int:
             "csv": f"{slug}.csv",
             "dated": n_dated,
             "undated": n_undated,
-            "total": len(items),
+            "total": n_dated,
+            "csv_rows": len(items),
             "decision_mix": {d: sum(1 for r in items if clean(r.get("decision")) == d)
                              for d in DECISIONS if any(clean(r.get("decision")) == d for r in items)},
             "earliest": earliest_deadline(items),
         })
 
-    write_text(out_dir / "index.html", build_index(pages, unassigned_info, stats, run_date, feed_date, feed_path))
+    # ---- undated: internal only, never on a distributor page
+    undated_rows = []
+    for row in undated:
+        entry = dict(row)
+        entry["_deadline"], entry["_days_left"] = None, None
+        undated_rows.append(entry)
+    undated_info = {"total": 0, "filename": "", "decision_mix_text": ""}
+    if undated_rows:
+        undated_info = {"total": len(undated_rows), "filename": "undated.html",
+                        "decision_mix_text": mix_text(undated_rows)}
+        page = build_page("No deadline published (internal)", undated_rows, run_date, feed_date,
+                          footnote, boilerplate, {}, closing=UNDATED_BOX,
+                          heading="Held back, no deadline")
+        write_text(out_dir / "undated.html", page)
+
+    write_text(out_dir / "index.html", build_index(pages, unassigned_info, undated_info, stats,
+                                                   run_date, feed_date, feed_path))
     write_text(out_dir / "README_IMPORT.md", build_readme(run_date, feed_path.name))
 
     launcher = out_dir / "OPEN_RM_DIGEST.cmd"
@@ -743,6 +876,8 @@ def main(argv: list[str] | None = None) -> int:
         "selection": stats,
         "distributors": pages,
         "unassigned": unassigned_info,
+        "undated_internal": undated_info,
+        "twins": twins,
         "banned_terms": {
             "gate_definition": "word-boundary, case-insensitive for AIM/PRISM/DLOD/IDS/GPS/BVP/IML/ITUK/IUK/UMI/UTI/campaign; "
                                "literal for .csv/.json/.py; word-boundary for goed/slecht. Scanned over visible page text "
@@ -758,10 +893,10 @@ def main(argv: list[str] | None = None) -> int:
 
     # ---- console summary
     print(f"Run date: {run_date.isoformat()}   feed: {feed_path.name}   feed dated: {report['feed_generated_at']}")
-    print(f"Rows in feed: {stats['rows_in_feed']} | R&M contracts: {stats['rm_contract_true']} | "
-          f"actionable decision: {stats['rm_and_actionable_decision']} (Ignore: {stats['rm_ignored']}) | "
-          f"selected: {stats['selected_total']} "
-          f"(dated {stats['selected_dated']}, no deadline {stats['selected_undated']})")
+    print(f"Rows in feed: {stats['rows_in_feed']} | R&M or pickup/truck: {stats['rm_or_pickup_truck']} | "
+          f"actionable decision: {stats['in_scope_and_actionable_decision']} (Ignore: {stats['in_scope_ignored']}) | "
+          f"listed (dated): {stats['selected_dated']} rows = {stats['distinct_tenders_listed']} tenders "
+          f"({stats['twin_pairs']} twin pairs) | held back, no deadline: {stats['undated_internal_only']}")
     print(f"Dropped, deadline already passed: {stats['dropped_deadline_already_passed']} | "
           f"unreadable deadline: {stats['deadline_unreadable']}")
     print("")

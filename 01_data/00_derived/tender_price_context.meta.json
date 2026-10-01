@@ -1,0 +1,19 @@
+{
+  "built_at": "2026-10-01T17:27:11+00:00",
+  "builder": "04_tools/aftermarket_intelligence/build_tender_price_context.py",
+  "join_key": "pms_category (tender demand -> our part numbers -> observed rival prices)",
+  "notices_total": 735,
+  "notices_with_category_demand": 13,
+  "opportunities_total": 664,
+  "opportunities_with_category_demand": 7,
+  "opportunities_blanked_by_opportunity_layer": 4,
+  "unit": "one row per opportunity x category; addressable_eur is per year at our avg selling price",
+  "rows": 98,
+  "categories_touched": 14,
+  "rows_with_any_rival_price": 70,
+  "observed_part_numbers_total": 165,
+  "rival_definition": "aftermarket-brand prices only: aftermarket_retail, aftermarket_rrp, aftermarket_trade, marketplace, online_median, quote, survey_list, survey_workshop",
+  "genuine_definition": "genuine Isuzu sold outside our network, separate columns: dealer, genuine_grey",
+  "genuine_part_numbers_total": 307,
+  "honest_note": "The tender engine values a fleet's parts demand at OUR price. This file adds the competitive side, but only where an observed rival price exists. Most categories currently show 0% coverage because the parts scraper has only covered a small number of part numbers — do not read a blank as 'no competitor'."
+}

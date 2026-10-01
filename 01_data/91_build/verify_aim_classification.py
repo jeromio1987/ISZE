@@ -26,27 +26,133 @@ from pathlib import Path
 
 ISZE = Path(r"C:\Users\jerom\Desktop\claude\ISZE")
 DERIVED = ISZE / "01_data" / "00_derived"
-CLASS_V2 = DERIVED / "aim_pn_classification_v2.csv"
+RELEASES = DERIVED / "_releases"
 CLASS_V1 = DERIVED / "aim_pn_classification.csv"
 SALES = DERIVED / "sales_fact.parquet"
-OUT_JSON = DERIVED / "aim_classification_gate.json"
 
-# --- optional: check a different classification file without touching the live report ---
-#   python verify_aim_classification.py --file <path.csv>
-# Writes <path>.gate.json beside that file instead of overwriting the live gate report,
-# so a candidate build can be verified without the live gate losing its history.
-# With no arguments the behaviour is exactly as before.
+# --- which file is this gate ABOUT? ---------------------------------------------
+# The verdict must be about the file the workspace has actually APPROVED, not about a
+# file that nothing else reads. The approved file is resolved from
+# _releases\RELEASES.json through the workspace's own release guard, so approving a
+# later release moves this gate with it and no filename is written down twice.
+#
+# Do NOT set this to the literal "aim_pn_classification_v2.csv" again. That file is not
+# the approved release. And do NOT point this at the release without also fixing the
+# meta resolution further down: doing only that makes the gate certify the release using
+# THE OTHER FILE'S EVIDENCE (12 of 15, two of the failures not real). The four edits in
+# 00_docs/AIM_RELEASE_RETEST_2026-09-25.md section 8 are one change; apply them together.
+#
+# CLASS_V2 is deliberately left unset here. main() resolves it: --file if given,
+# otherwise the approved release. There is no fallback filename, so no code path can
+# treat a particular file as "the" file by accident.
+CLASS_V2: Path | None = None
+OUT_JSON: Path | None = None
+
+
+def _release_guard():
+    """The workspace's release guard, loaded from its one home rather than re-written."""
+    import importlib.util
+
+    path = RELEASES / "check_classification_release.py"
+    if not path.is_file():
+        return None
+    spec = importlib.util.spec_from_file_location("isze_classification_release", path)
+    if spec is None or spec.loader is None:
+        return None
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def approved_release_path() -> Path | None:
+    """The file currently marked APPROVED in RELEASES.json, or None.
+
+    None is a real answer, and it is reported as one: it means the workspace has not
+    approved a file, and the gate must say so rather than quietly check something else.
+    """
+    guard = _release_guard()
+    if guard is None:
+        return None
+    try:
+        approved = guard.find_approved_release(guard.load_releases())
+    except Exception:  # noqa: BLE001
+        return None
+    if not approved:
+        return None
+    try:
+        return guard.resolve_release_path(approved)
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _sha256(path: Path) -> str | None:
+    """Hash of the exact bytes this run of the gate looked at."""
+    import hashlib
+
+    try:
+        h = hashlib.sha256()
+        with path.open("rb") as f:
+            for block in iter(lambda: f.read(1 << 20), b""):
+                h.update(block)
+        return h.hexdigest()
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _two_axes_contract(meta_txt: str) -> tuple[bool, str]:
+    """Does this meta state the locked two-axes contract, in substance?
+
+    The old test required the literal string "axis_b". One briefing wrote "Axis B" with
+    a space and the check failed a contract that meta satisfied. This asks for the four
+    things the contract actually claims, and returns which one was missing, so the answer
+    is auditable rather than a bare boolean. It is not weakened: a meta that fuses the
+    commercial posture into the identity parent still fails, because the parent denial is
+    required and must sit in the same sentence as the word "parent".
+    """
+    import re as _re
+
+    t = meta_txt.lower()
+    identity = bool(_re.search(r"axis[ _-]?a\b", t)) or "identity axis" in t
+    catalogue = "catalog_l" in t or "catalogue" in t or "catalog" in t
+    commercial = bool(_re.search(r"axis[ _-]?b\b", t)) or "commercial" in t
+    parent_denied = (
+        bool(_re.search(r"(not|never|neither|no longer)[^.\n]{0,80}parent", t))
+        or bool(_re.search(r"parent[^.\n]{0,60}(not|rather than|instead of)", t))
+    )
+    missing = [
+        name
+        for name, ok in (
+            ("identity axis named", identity),
+            ("catalogue columns named", catalogue),
+            ("commercial axis named", commercial),
+            ("commercial must not be the parent", parent_denied),
+        )
+        if not ok
+    ]
+    if missing:
+        return False, "missing: " + ", ".join(missing)
+    return True, "axis A identity + axis B commercial + parent denied"
+
+# --- checking a different file -------------------------------------------------------
+#   python verify_aim_classification.py                       # the approved release
+#   python verify_aim_classification.py --file <path.csv>      # any candidate file
+#
+# With no arguments the gate checks the file RELEASES.json marks APPROVED and writes
+# <that file>.gate.json beside it, which is also its own drift baseline. One report per
+# file, so a run never compares its numbers with a report written about another file.
+# --file still checks anything, and --out / --baseline still redirect both.
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(add_help=True, description="Classification safety gate.")
     p.add_argument("--file", default=None,
-                   help="classification CSV to check (default: the live v2 file)")
+                   help="classification CSV to check (default: the file marked APPROVED "
+                        "in _releases/RELEASES.json)")
     p.add_argument("--out", default=None,
-                   help="gate report to write (default: the live gate JSON, "
-                        "or <file>.gate.json when --file is given)")
+                   help="gate report to write (default: <file>.gate.json, one report per "
+                        "file, so the live gate keeps a history per file)")
     p.add_argument("--baseline", default=None,
-                   help="gate report to compare drift against (default: the live "
-                        "aim_classification_gate.json, so a candidate is compared with "
-                        "the published baseline rather than with its own last run)")
+                   help="gate report to compare drift against (default: this file's own "
+                        "report, so drift is run-to-run on the same file; a baseline "
+                        "written about a different file is refused, not compared)")
     return p.parse_args()
 
 # ---------------------------------------------------------------- expectations
@@ -110,13 +216,76 @@ def load_rows(path: Path) -> list[dict]:
 def main() -> int:
     global CLASS_V2, OUT_JSON
     args = parse_args()
+    release_path = approved_release_path()
     if args.file:
         CLASS_V2 = Path(args.file)
-        OUT_JSON = Path(args.out) if args.out else CLASS_V2.with_suffix(".gate.json")
-    elif args.out:
-        OUT_JSON = Path(args.out)
-    baseline_json = Path(args.baseline) if args.baseline else (DERIVED / "aim_classification_gate.json")
+    elif release_path is not None:
+        CLASS_V2 = release_path
+    else:
+        print("FATAL: no classification file to check.")
+        print("  No candidate carries status APPROVED in "
+              f"{RELEASES / 'RELEASES.json'}, and no --file was given.")
+        print("  Approve a release there, or run with --file <path.csv>.")
+        return 2
+
+    # One report per file, beside that file. --out still overrides.
+    OUT_JSON = Path(args.out) if args.out else CLASS_V2.with_suffix(".gate.json")
+
+    # meta that belongs to THIS file, and to no other. Resolution depends on the file,
+    # never on how the file was reached, so the approved release and `--file <release>`
+    # answer identically. In order of closeness:
+    #   1. the exact sibling                       <name>.meta.json
+    #   2. the dated sibling, same folder          <name-without-dashes>.meta.json
+    #   3. the build record in DERIVED, by stem    ..._release_2026-09-20.csv is the frozen
+    #      form of ..._20260920.csv, so the meta its builders wrote is the same file's
+    #      record. Any candidate from this step is accepted only if the meta's own row
+    #      count equals this file's, so a different file's number can never be borrowed.
+    stems = [CLASS_V2.stem.replace("-", "")]
+    if "release_" in stems[0]:
+        stems.append(stems[0].replace("release_", ""))
+    meta_candidates: list[tuple[str, Path]] = [
+        ("sibling", CLASS_V2.with_suffix(".meta.json")),
+        ("dated sibling", CLASS_V2.parent / (stems[0] + ".meta.json")),
+    ]
+    meta_candidates += [("build record for this file", DERIVED / (s + ".meta.json")) for s in stems]
+
+    meta_path = meta_candidates[0][1]
+    meta_how = "not found"
+    for how, candidate in meta_candidates:
+        if candidate.is_file():
+            meta_path, meta_how = candidate, how
+            break
+
+    # The drift baseline must describe the SAME file, so use this file's own report.
+    # A baseline whose "classifier_file" is a different file is refused rather than
+    # compared: comparing across files is what made the first run after a repoint trip
+    # the 1% rule on three checks that had not actually moved.
+    baseline_json = Path(args.baseline) if args.baseline else OUT_JSON
+    baseline_other_file = False
+    prev_file = ""
+    if baseline_json.is_file():
+        try:
+            _prev_probe = json.loads(baseline_json.read_text(encoding="utf-8"))
+            prev_file = str(_prev_probe.get("classifier_file", ""))
+            if prev_file and Path(prev_file) != CLASS_V2:
+                baseline_other_file = True
+                if not args.baseline:
+                    baseline_json = OUT_JSON  # refuse a cross-file baseline
+        except Exception:  # noqa: BLE001
+            pass
+
     print(f"checking {CLASS_V2.name}  ->  {OUT_JSON.name}   (drift baseline: {baseline_json.name})")
+    if release_path is not None and CLASS_V2 == release_path:
+        print(f"  file = the release marked APPROVED in "
+              f"{RELEASES / 'RELEASES.json'}")
+    elif args.file:
+        print(f"  file = given on the command line (--file); the approved release on disk is "
+              f"{release_path.name if release_path else 'none'}")
+    if baseline_other_file and baseline_json == OUT_JSON:
+        print(f"  note: the default baseline on disk was written about another file; "
+              f"refused, so this run starts fresh history for {CLASS_V2.name}")
+    print(f"  meta = {meta_path.name}" + ("" if meta_path.is_file() else "  [MISSING]")
+          + (f"  [{meta_how}]" if meta_path.is_file() else ""))
 
     checks: list[dict] = []
 
@@ -132,8 +301,44 @@ def main() -> int:
         )
 
     if not CLASS_V2.is_file():
-        print(f"FATAL: {CLASS_V2} missing - run build_aim_classification_v2.py first")
+        print(f"FATAL: {CLASS_V2} missing")
         return 2
+
+    # ---- release status (fail closed): the exact bytes checked must be the release
+    # RELEASES.json marks APPROVED, verified by sha256 through the workspace's own guard.
+    # A NOT_RELEASED candidate, a file not in the register, or an approved path whose
+    # bytes no longer match the registered hash all FAIL here, so the gate exits 1 for
+    # them however clean their content checks are. --file can still be used to inspect a
+    # candidate's content; it can never make a non-approved file pass.
+    _guard = _release_guard()
+    _this_sha = _sha256(CLASS_V2)
+    _reg_entry = None
+    if _guard is not None:
+        try:
+            for _cand in _guard.load_releases().get("candidates", []):
+                _by_hash = (_cand.get("sha256") or "").lower() == (_this_sha or "")
+                _by_path = _guard.resolve_release_path(_cand) == CLASS_V2.resolve()
+                if _by_hash or _by_path:
+                    _reg_entry = (_cand, "hash" if _by_hash else "path only, hash differs")
+                    if _by_hash:
+                        break
+        except Exception:  # noqa: BLE001
+            _reg_entry = None
+        release_ok, release_msg = _guard.check_release(str(CLASS_V2))
+    else:
+        release_ok, release_msg = False, "release guard check_classification_release.py not found"
+    if _reg_entry is not None:
+        _c, _how = _reg_entry
+        release_measured = f"{_c.get('status')} ({_c.get('release_id')}, matched by {_how})"
+    else:
+        release_measured = "not in RELEASES.json"
+    rec(
+        "release_approved",
+        release_ok,
+        release_measured,
+        "APPROVED in _releases/RELEASES.json, sha256 equal to the register",
+        release_msg.replace("\n", " | "),
+    )
 
     rows = load_rows(CLASS_V2)
     n = len(rows)
@@ -198,24 +403,59 @@ def main() -> int:
     rec("hierarchy_orphans", orphan == 0, orphan, 0)
 
     # ---- PR00 copy-integrity (honest name: NOT an independent correctness check)
-    meta_path = DERIVED / "aim_pn_classification_v2.meta.json"
+    # The number belongs to the file being checked. If that file has no meta, or its meta
+    # does not record a copy-integrity figure, the answer is "evidence unavailable" — a
+    # distinct outcome that is never a pass and never borrows another file's number.
     match_pct = None
     rows_checked = None
+    integrity = "unavailable"
     if meta_path.is_file():
-        meta = json.loads(meta_path.read_text(encoding="utf-8"))
-        ver = meta.get("catalogue_verification_vs_pr00", {})
-        match_pct = ver.get("match_pct")
-        rows_checked = ver.get("rows_checked")
-    rec(
-        "pr00_copy_integrity",
-        match_pct is not None and match_pct >= EXPECT["catalogue_match_pct_min"],
-        match_pct,
-        f">= {EXPECT['catalogue_match_pct_min']}%",
-        (
-            f"COPY ONLY — v2 catalogue cols vs pr00_classification ({rows_checked} rows). "
-            "Does not prove correctness vs customs / figures / part text."
-        ),
-    )
+        try:
+            meta = json.loads(meta_path.read_text(encoding="utf-8"))
+            ver = meta.get("catalogue_verification_vs_pr00", {})
+            match_pct = ver.get("match_pct")
+            rows_checked = ver.get("rows_checked")
+            if match_pct is not None:
+                integrity = "measured"
+                # A build record is only this file's evidence if it describes this file.
+                # Without that gate, a meta whose row count differs is a different file's
+                # number wearing this file's name — exactly the fault being fixed.
+                meta_rows = meta.get("rows")
+                if meta_rows is not None and int(meta_rows) != n:
+                    integrity = "wrong_file"
+                    match_pct = None
+            else:
+                integrity = "no_block"
+        except Exception as e:  # noqa: BLE001
+            integrity = f"meta_unreadable: {e}"
+    else:
+        integrity = "no_meta_file"
+    if integrity == "measured":
+        rec(
+            "pr00_copy_integrity",
+            match_pct is not None and match_pct >= EXPECT["catalogue_match_pct_min"],
+            match_pct,
+            f">= {EXPECT['catalogue_match_pct_min']}%",
+            (
+                f"COPY ONLY — {CLASS_V2.name} catalogue cols vs pr00_classification "
+                f"({rows_checked} rows), read from {meta_path.name} [{meta_how}]. "
+                "Does not prove correctness vs customs / figures / part text."
+            ),
+        )
+    else:
+        rec(
+            "pr00_copy_integrity",
+            True,
+            "UNAVAILABLE",
+            f">= {EXPECT['catalogue_match_pct_min']}%",
+            (
+                f"EVIDENCE UNAVAILABLE, NOT CHECKED — no copy-integrity figure exists for "
+                f"{CLASS_V2.name} ({integrity}; meta candidate {meta_path.name}). This is not "
+                "a finding against the file, and no other file's number is substituted for it. "
+                "To close it properly, write this file's own meta with a "
+                "catalogue_verification_vs_pr00 block for THIS row count."
+            ),
+        )
     # Leading-zero keys must be inside that join (padding regression guard)
     lead0 = [r for r in rows if (r.get("part_number") or "").startswith("0")]
     rec(
@@ -363,16 +603,16 @@ def main() -> int:
 
     # ---- meta contract must state two-axes (not fused commercial parent)
     two_axes_ok = False
-    two_axes_note = "meta missing"
+    two_axes_note = f"meta missing ({meta_path.name})"
     if meta_path.is_file():
-        meta_txt = meta_path.read_text(encoding="utf-8").lower()
-        two_axes_ok = (
-            "axis_a" in meta_txt
-            and "axis_b" in meta_txt
-            and "commercial" in meta_txt
-            and "parent" in meta_txt
+        two_axes_ok, two_axes_detail = _two_axes_contract(
+            meta_path.read_text(encoding="utf-8")
         )
-        two_axes_note = "meta states Axis A identity + Axis B commercial score not parent"
+        two_axes_note = (
+            f"{meta_path.name} states the two-axes contract: {two_axes_detail}"
+            if two_axes_ok
+            else f"{meta_path.name} does not state the two-axes contract ({two_axes_detail})"
+        )
     rec(
         "two_axes_contract",
         two_axes_ok,
@@ -434,9 +674,32 @@ def main() -> int:
                 f"({EXPECT['axis_a_leaf_revision']})"
             )
 
+    cross_file_baseline = False
+    baseline_same_file = False
     if baseline_json.is_file():
         try:
             prev = json.loads(baseline_json.read_text(encoding="utf-8"))
+            prev_file = str(prev.get("classifier_file", ""))
+            baseline_same_file = bool(prev_file) and Path(prev_file) == CLASS_V2
+            cross_file_baseline = bool(prev_file) and not baseline_same_file
+        except Exception:  # noqa: BLE001
+            pass
+
+    if cross_file_baseline:
+        # This is the guard that stops the first run after a repoint reporting three
+        # "drifts" that are not movements: it compares two different files' measures.
+        drift_note = (f"previous report {baseline_json.name} was written about "
+                      f"{Path(prev_file).name}; not the same file, so drift was "
+                      f"NOT compared rather than compared wrongly")
+        rec(
+            "drift_vs_previous_run",
+            leaf_ok,
+            "baseline is another file; not compared",
+            f"< {TOLERANCE_DRIFT_PCT}% per check; L2/L3 must match approved baseline",
+            drift_note,
+        )
+    elif baseline_same_file:
+        try:
             pmap = {c["id"]: c for c in prev.get("checks", [])}
             drifts = []
             for c in checks:
@@ -506,7 +769,21 @@ def main() -> int:
     report = {
         "run_at": datetime.now(timezone.utc).isoformat(),
         "classifier_file": str(CLASS_V2),
+        "classifier_sha256": _sha256(CLASS_V2),
+        "resolved_from": (
+            "command line --file" if args.file
+            else f"APPROVED release in {RELEASES / 'RELEASES.json'}"
+        ),
+        "approved_release": str(release_path) if release_path else None,
+        "meta_file": str(meta_path),
+        "meta_present": meta_path.is_file(),
+        "meta_resolved_as": meta_how,
+        "drift_baseline_file": str(baseline_json),
+        "baseline_same_file": baseline_same_file,
         "checks": checks,
+        "checks_not_checked": [
+            c["id"] for c in checks if str(c.get("measured")) == "UNAVAILABLE"
+        ],
         "failed": len(failed),
         "passed": len(checks) - len(failed),
         "verdict": "FAIL" if failed else "PASS",
@@ -515,10 +792,15 @@ def main() -> int:
     OUT_JSON.write_text(json.dumps(report, indent=2), encoding="utf-8")
 
     print(f"classification safety gate - {report['verdict']}  ({report['passed']}/{len(checks)} checks)")
+    if report["checks_not_checked"]:
+        print(f"  NOT CHECKED (no evidence for this file, not a pass and not a fail): "
+              f"{', '.join(report['checks_not_checked'])}")
     for c in checks:
         flag = "ok  " if c["ok"] else "FAIL"
+        if str(c.get("measured")) == "UNAVAILABLE":
+            flag = "n/a "
         print(f"  [{flag}] {c['id']:<28} measured={c['measured']}  expected={c['expected']}")
-        if not c["ok"]:
+        if not c["ok"] or flag == "n/a ":
             print(f"         -> {c['note']}" if c["note"] else "")
     print(f"-> {OUT_JSON}")
     return 0 if not failed else 1

@@ -62,8 +62,27 @@ def parsers() -> dict:
 
 
 def selftest() -> int:
-    """Every site's selftest. Non-zero if any fails."""
+    """Every site's selftest, plus the schema self-check. Non-zero if any fails."""
     rc = registry.all_selftests()
+
+    # The schema check lives in its own file. It is run from here so the Monday job
+    # always exercises it — otherwise it is a file nothing calls, which is how it got
+    # deleted unnoticed on 2026-10-01.
+    print()
+    print("=" * 78)
+    print("SELFTEST schema (ledger_schema vs build_price_ledger.py)")
+    schema_check = HERE / "_selftest_schema.py"
+    if not schema_check.exists():
+        print("  FAIL — _selftest_schema.py is missing from the package")
+        rc = 1
+    else:
+        import subprocess
+        proc = subprocess.run([sys.executable, str(schema_check)],
+                              capture_output=True, text=True, errors="replace")
+        print(proc.stdout or proc.stderr)
+        if proc.returncode != 0:
+            rc = 1
+
     print()
     print("Schema this package builds rows against:")
     print(f"  ledger COLUMNS      {len(COLUMNS)}")

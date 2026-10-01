@@ -1,0 +1,6 @@
+{
+  "schema": "ids_milestones_store.v1",
+  "description": "Durable on-disk store for IDS Development Progress milestones (date/note/evidence/done per dealer). Read at build time by 04_tools/ids_dealer_ranking/build_ids_development_progress.py and embedded into 02_dashboards/ids/IDS_2026_Development_Progress.html. Written by 04_tools/ids_dealer_ranking/append_ids_milestone.py. See 00_docs/IDS_MILESTONE_STORE.md for the field format, the dealer_id key convention, and a worked schema example -- no schema example is kept in this file itself so nothing here can ever be mistaken for a real logged milestone.",
+  "created": "2026-09-25",
+  "dealers": {}
+}
