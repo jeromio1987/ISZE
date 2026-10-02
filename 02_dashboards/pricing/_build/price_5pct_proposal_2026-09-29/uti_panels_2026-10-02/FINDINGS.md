@@ -42,3 +42,45 @@ Supporting tables: `t1`–`t12` CSVs and `_numbers.json` in this folder; script 
 2. Send lost jobs with part number, date and reason, plus "AM parts samples.xlsx" (local copy price vs ours) for P700 bumpers, grilles, front panel, doors.
 3. Are copy or used P700 panels on sale in Israel yet, or is genuine the only option today?
 4. If ISZE stocks UTI's P700 forecast list, does the volume come back at today's price, and will UTI commit to quantities?
+
+## Back-order trend and copy prices (added 2 Oct)
+
+**Data:** all 39 weekly UTI back-order lists WK2–WK40 2026 saved from Outlook (read only), plus Eran's annotated 9 Jun list and his 14 Jul files. Same layout every week (WK32–33 lack the "Confirmed Qty" column only); sold-to 1799 only. Sufficient for a trend. Saved in `01_data/90_INBOX/UTI_backorders_2026/` with `manifest.csv`. Script `uti_backorder_trend.py`; tables `t13_uti_bo_body_lines_wk2_wk40.csv` (tidy: week, part, description, qty, order date, order type, days open, value), `t13b` weekly summary, `t13c` recurring parts, `t13d` Eran's marked lines, `t14` copy prices.
+
+Caveats: "order date" is the list's requested-delivery date (no order-creation date in the lists); days open = list date minus that date. Value = open qty × today's price list (the lists carry no price), so it is not the price in force that week. Three body parts have no price-list price (75 of 1,415 body lines), so value is slightly understated. Check: WK27 panels (21 lines, 98 units, EUR 13,903) equals the 1 Jul snapshot above.
+
+**Panels (release Accident & Body > Panels), weekly average**
+| Weeks | Lines | Units | Value EUR (at list) | Lines open > 60 days | Urgent lines (rush + off-road) |
+|---|---|---|---|---|---|
+| WK2–13 | 22.3 | 152 | 4,000 | 5.3 | 3.8 |
+| WK14–26 | 28.8 | 121 | 6,175 | 7.6 | 8.1 |
+| WK27–40 | 18.9 | 89 | 9,516 | 4.2 | 6.7 |
+
+Peak 35 lines in WK23 (3 Jun), when Eran complained. WK40 (30 Sep): 14 lines, 79 units, EUR 9,094, median 24 days open, oldest 62 days; joint-lowest line count of the year (WK7 also 14).
+
+**All body (panels + other body + body parts the release files elsewhere, e.g. roof panel, cowl, inner lid, cab mounting members):** lines 29 → 47 → 33 per week across the three periods; value EUR 4,896 → 10,305 → 20,469 (the H2 rise is a few expensive lines: front doors 8982605971/8982606011, cab mounting members, one service cab 7552044930 at EUR 7,677). Median days open (all body lines pooled) 27 → 34 → 35. Urgent share of body lines 17% → 24% → 37%.
+
+**Recurring parts:** 116 body parts on 238 distinct order lines over the 39 weeks; 33 parts sat on 13 or more weekly lists, 9 on 20 or more. Top: air dam 8972692190 (29 weeks, 6 orders), roof panel 7552077720 (29 weeks, one off-road order, up to 202 days open), upper cowl panel 7475447681 (27 weeks), front side bumper 8978862500 (24 weeks, 4 orders, up to 166 days) and its pair 8978862770 (22 weeks), front panel 7552194470 (20 weeks, 5 orders), front inner lid 7552895450 (20 weeks, 5 orders), centre bumper 7552923240 (18 weeks, 5 orders, still open WK40). This backs Eran's "same p/n in BO every month".
+
+**Eran's 9 Jun list:** the same 167 lines as ISZE's WK24 list, with two columns added. He marked 29 lines with total weeks waiting: 4–16 weeks, median 13 (his "4 wk to 16 wk"); 18 of them panels (median 9.5 weeks), 8 lighting.
+
+**Copy prices (Eran's "AM parts samples.xlsx", 14 Jul):** UTI's sheet gives the local copy supplier price (EUR), what UTI says it pays ISZE ("Genuine fob ISZE"), and UTI's own monthly copy sales qty. Set against the price list and the reference dealer price (price list × 2.19, provisional):
+| Part | UTI desc. | Copy EUR | UTI pays ISZE (UTI's figure) | Price list | Ref. dealer price | Copy vs what UTI pays | Copy units/month |
+|---|---|---|---|---|---|---|---|
+| 8974289771 | grille | 44.00 | 122.00 | 142.21 | 311.44 | −64% | 3.7 |
+| 8981226950 | front cover | 39.71 | 190.00 | 247.82 | 542.73 | −79% | 6.0 |
+| 8980302303 | front cover | 56.78 | 308.00 | 402.52 | 881.52 | −82% | 5.0 |
+| 8974060399 | panel fr. | 38.71 | 53.00 | 70.09 | 153.50 | −27% | 6.0 |
+| 8974056285 | bumper 7.5T | 48.00 | 134.00 | 175.09 | 383.45 | −64% | 3.7 |
+| 8974259070 | bumper 10T | 102.46 | 199.76 | 260.64 | 570.80 | −49% | 13.8 |
+| 8980430610 | mirror | 8.47 | 19.60 | 22.08 | 48.36 | −57% | 35.8 |
+| 8980430601 | mirror | 26.64 | 75.93 | 85.41 | 187.05 | −65% | 13.5 |
+| 8982413230 | head lamp | 84.57 | 85.93 | 96.65 | 211.66 | −2% | 16.8 |
+| 8981554580 | lamp side | 13.70 | 26.57 | 29.42 | 64.43 | −48% | 21.8 |
+
+- On the body parts the copy sells at 27–82% below what UTI pays ISZE, and 93–94% below the reference dealer price on the two front covers. A 6.4% step on the price list does not move that gap; the price complaint is real but it is a copy-versus-genuine gap, not one the April step created.
+- Two of the three parts Eran named on 25 Feb (grille 8974289771, front panel 8981226950) are on this sheet; UTI's column "AM qty. sales per month" shows 3.7 and 6 copies a month (whose sales, UTI's or the market's, is not stated).
+- All 31 rows (incl. service parts) are in `t14`. Three rows look like a unit mismatch, not a real price: brake linings 1883113430 / 1883113850 show the copy above genuine (+260% / +138%); wiper blade 8971345612 shows UTI's genuine price at 2.1× the price list. Not used.
+- "p700 colission parts est..xlsx" is UTI's P700 collision/radar sales Jan–Jun 2026 and its year-end estimate (95 parts); it carries no prices. Saved, not analysed further.
+
+**What it says:** panel back-order lines and units peaked in May–June and have eased since July (value at list rose because the open lines are pricier), but the same body parts keep coming back and urgent orders are a growing share. Copies undercut genuine by roughly half to four-fifths on bumpers, grilles and front covers. Both points stand; neither is caused by the planned step.
