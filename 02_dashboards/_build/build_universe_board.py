@@ -687,7 +687,7 @@ def build_pillars(F: dict) -> list[dict]:
             "links": [
                 ("Price revision pack", "../pricing/ISZE_Pricing_Revision_AIM_Source.html"),
                 ("Pricing action map", "../pricing/ISZE_Pricing_Action_Map.html"),
-                ("Pricing policy paper", "../pricing/ISZE_Pricing_Policy_Paper.html"),
+                ("Pricing policy paper (2 Oct 2026)", "../pricing/ISZE_Pricing_Policy_Paper_2026-10-02.html"),
             ],
         },
         # ------------------------------------------------------------------ PRISM

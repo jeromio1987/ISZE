@@ -96,16 +96,16 @@ $items = @(
     @{ Role = "aim_class"; Sub = "05_AIM_classification"; Rel = "02_dashboards\pricing\ISZE_AIM_Repertoire_Spider_2026-09-17.html"; Name = "ISZE_AIM_Repertoire_Spider_2026-09-17.html" }
     @{ Role = "aim_class"; Sub = "05_AIM_classification"; Rel = "02_dashboards\pricing\OPEN_ISZE_AIM_Repertoire_Spider.cmd"; Name = "OPEN_ISZE_AIM_Repertoire_Spider.cmd" }
 
-    @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "02_dashboards\pricing\ISZE_Pricing_Policy_Paper_REV3.html"; Name = "ISZE_Pricing_Policy_Paper_REV3.html" }
-    @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "02_dashboards\pricing\OPEN_ISZE_Pricing_Policy_Paper_REV3.cmd"; Name = "OPEN_Policy_Paper_REV3.cmd" }
-    @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "02_dashboards\pricing\ISZE_Pricing_Policy_Paper.html"; Name = "ISZE_Pricing_Policy_Paper.html" }
-    @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "02_dashboards\pricing\OPEN_ISZE_Pricing_Policy_Paper.cmd"; Name = "OPEN_ISZE_Pricing_Policy_Paper.cmd" }
+    @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\92_archive\pricing_papers_superseded_2026-10-02\02_dashboards_pricing\ISZE_Pricing_Policy_Paper_REV3.html"; Name = "ISZE_Pricing_Policy_Paper_REV3.html" }
+    @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\92_archive\pricing_papers_superseded_2026-10-02\02_dashboards_pricing\OPEN_ISZE_Pricing_Policy_Paper_REV3.cmd"; Name = "OPEN_Policy_Paper_REV3.cmd" }
+    @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\92_archive\pricing_papers_superseded_2026-10-02\02_dashboards_pricing\ISZE_Pricing_Policy_Paper.html"; Name = "ISZE_Pricing_Policy_Paper.html" }
+    @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\92_archive\pricing_papers_superseded_2026-10-02\02_dashboards_pricing\OPEN_ISZE_Pricing_Policy_Paper.cmd"; Name = "OPEN_ISZE_Pricing_Policy_Paper.cmd" }
     @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\01_Pricing\ISZE_Pricing_Framework.xlsx"; Name = "ISZE_Pricing_Framework.xlsx" }
     @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\01_Pricing\OPEN_ISZE_Pricing_Framework.cmd"; Name = "OPEN_ISZE_Pricing_Framework.cmd" }
     @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\90_INBOX\pricing_system_by_family_2026-09-19.xlsx"; Name = "pricing_system_by_family.xlsx" }
     @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\90_INBOX\pricing_system_by_market_2026-09-19.xlsx"; Name = "pricing_system_by_market.xlsx" }
     @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\90_INBOX\pricing_system_formulas_margin_sort_2026-09-19.xlsx"; Name = "pricing_system_formulas_margin_sort.xlsx" }
-    @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\90_INBOX\ISZE_Pricing_Policy_Management_v1.4.pptx"; Name = "ISZE_Pricing_Policy_Management_v1.4.pptx" }
+    @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\92_archive\pricing_papers_superseded_2026-10-02\01_data_90_INBOX\ISZE_Pricing_Policy_Management_v1.4.pptx"; Name = "ISZE_Pricing_Policy_Management_v1.4.pptx" }
     @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\90_INBOX\OPEN_Pricing_System.cmd"; Name = "OPEN_Pricing_System.cmd" }
     @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "01_data\01_Pricing\Price_Increase_5pct_Flat_REVIEW_2026-09-17.xlsx"; Name = "Price_Increase_5pct_Flat_REVIEW.xlsx" }
     @{ Role = "policy"; Sub = "06_Policy_decks"; Rel = "02_dashboards\pricing\ISZE_Price_Increase_5pct_Flat_REVIEW_2026-09-17.html"; Name = "ISZE_Price_Increase_5pct_Flat_REVIEW.html" }

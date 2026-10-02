@@ -1,0 +1,39 @@
+{
+ "what": "Option B (captive repair + body, factory move + 5 pts ceiling, no UTI panels hold) as published, and the same with IUK free lines kept at their proposal move; SUGGESTED, NOT DECIDED",
+ "check": "B reproduced from the published scenarios CSV (solver t, uplift, parts at ceiling) before the variant ran",
+ "B_as_published": {
+  "exempt_markets": [],
+  "solver_t_pts": 0.037266,
+  "total_step_eur": 1629793.0,
+  "total_pct": 0.05,
+  "uplift_above_proposal_eur": 396568.0,
+  "uplift_on_iuk_repair_body_eur": 91065.0,
+  "uplift_service_eur": 0.0,
+  "uplift_repair_eur": 252972.0,
+  "uplift_body_eur": 143596.0,
+  "eligible_parts_with_flex_billing": 8446,
+  "parts_at_ceiling": 5,
+  "billed_at_ceiling_eur": 241951.0,
+  "median_move_flex_parts": 0.1006,
+  "uplift_on_captive_strict_pct": 1.0
+ },
+ "B_iuk_exempt": {
+  "exempt_markets": [
+   "IUK"
+  ],
+  "solver_t_pts": 0.048374,
+  "total_step_eur": 1629793.0,
+  "total_pct": 0.05,
+  "uplift_above_proposal_eur": 396568.0,
+  "uplift_on_iuk_repair_body_eur": 0.0,
+  "uplift_service_eur": 0.0,
+  "uplift_repair_eur": 252889.0,
+  "uplift_body_eur": 143679.0,
+  "eligible_parts_with_flex_billing": 8062,
+  "parts_at_ceiling": 5,
+  "billed_at_ceiling_eur": 228148.0,
+  "median_move_flex_parts": 0.1117,
+  "uplift_on_captive_strict_pct": 1.0
+ },
+ "inputs_note": "same inputs as the default run of this script; default outputs not rewritten"
+}

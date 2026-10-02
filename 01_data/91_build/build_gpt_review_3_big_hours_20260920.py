@@ -141,7 +141,7 @@ If a check is impossible from the pack, write **UNKNOWN — missing X**, not a g
 road = read("00_docs/roadmaps/pricing.md")
 idx = road.find("## 2. The decisions")
 road_tail = road[idx:] if idx >= 0 else road
-policy = read("01_data/90_INBOX/PRICING_POLICY_PAPER_2026-09-19_REV3.md")
+policy = read("01_data/92_archive/pricing_papers_superseded_2026-10-02/01_data_90_INBOX/PRICING_POLICY_PAPER_2026-09-19_REV3.md")
 
 write(
     "01_PRICING.md",

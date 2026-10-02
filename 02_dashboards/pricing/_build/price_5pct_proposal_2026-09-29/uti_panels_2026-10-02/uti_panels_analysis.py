@@ -121,7 +121,10 @@ t3.to_csv(HERE / "t3_markets_panels_vs_rest.csv", index=False)
 u["h"] = u.y.astype(str) + np.where(u.m <= 6, "-H1", "-H2")
 u["seg"] = np.where(u.grp == "Panels", "Panels", np.where(u.grp == "Lighting", "Lighting",
                     np.where(u.grp.str.startswith("Other body"), "Other body", "Not body")))
-t4 = u.groupby(["seg", "h", "saty"]).agg(eur=("net_sales_value", "sum"), lines=("pn", "size")).reset_index()
+# sales_fact carries NO order type for billing Apr-Jun 2026 (100% blank, all markets): those months are
+# excluded from the shares, so '2026-H1' below = Jan-Mar 2026 only.
+N["saty_missing_months"] = sorted(u.loc[u.saty.isna(), "billing_date"].dt.to_period("M").astype(str).unique().tolist())
+t4 = u[u.saty.notna()].groupby(["seg", "h", "saty"]).agg(eur=("net_sales_value", "sum"), lines=("pn", "size")).reset_index()
 tot4 = t4.groupby(["seg", "h"])[["eur", "lines"]].transform("sum")
 t4["eur_share"], t4["line_share"] = t4.eur / tot4.eur, t4.lines / tot4.lines
 t4.to_csv(HERE / "t4_uti_order_type_by_half.csv", index=False)
@@ -290,6 +293,43 @@ top.columns = [f"{a}_{b}" for a, b in top.columns]
 top["l3"] = R.aim_l3_fixed.reindex(top.index)
 top["eur_change"] = top.get("eur_JanAug2026", 0).fillna(0) - top.get("eur_JanAug2025", 0).fillna(0)
 top.sort_values("eur_change").to_csv(HERE / "t10_uti_panels_by_part_janaug.csv")
+
+# T11 price ledger: any non-genuine price observation on the panels UTI bought (Jul 25 - Jun 26)
+po = pd.read_parquet(D / "price_observations.parquet")
+po["pn"] = z(po.part_no.fillna("0"))
+upan = u[(u.billing_date >= "2025-07-01") & (u.billing_date <= "2026-06-30") & (u.grp == "Panels")] \
+    .groupby("pn").net_sales_value.sum()
+x = po[po.pn.isin(upan.index)]
+am = x[~x.price_type.astype(str).str.contains("genuine|dealer|oem", case=False)].copy()
+am["list_2026"] = am.pn.map(lists[2026])
+am["price_vs_list"] = am.price_eur / am.list_2026
+am[["pn", "description", "source", "country", "observed_at", "price_type", "vat", "price_eur", "list_2026",
+    "price_vs_list", "source_url"]].to_csv(HERE / "t11_ledger_nongenuine_obs_on_uti_panels.csv", index=False)
+N["ledger_on_uti_panels"] = {"uti_panel_parts_l12m": int(len(upan)), "with_any_obs": int(x.pn.nunique()),
+                             "with_nongenuine_obs": int(am.pn.nunique()),
+                             "israel_rows_in_ledger": int(po.country.astype(str).str.upper().isin(["IL", "ISRAEL"]).sum()),
+                             "median_nongenuine_price_vs_list": float(am.groupby("pn").price_vs_list.median().median())
+                             if len(am) else None}
+
+# T12 UTI's own report: P700 body parts UTI SOLD 1 Jan - 17 May 2026, sale amount vs UTI cost (UTI file, sheet 1)
+up700 = ROOT / "01_data" / "90_INBOX" / "APL_UTI_P700" / "2026-07-15_UTI_P700_body_parts_p-700.xlsx"
+ws = openpyxl.load_workbook(up700, data_only=True, read_only=True).worksheets[0]
+rows = []
+for r in ws.iter_rows(values_only=True):
+    v = [c for c in r if c is not None]
+    if len(v) == 7 and isinstance(v[2], (int, float)) and isinstance(v[0], str) and v[0][:1].isdigit():
+        rows.append({"pn": v[0].replace("-", ""), "qty": v[2], "uti_sales": v[3], "uti_cost": v[4], "uti_profit": v[5],
+                     "profit_pct_on_cost": v[6]})
+t12 = pd.DataFrame(rows)
+t12["l3"] = R.aim_l3_fixed.reindex(z(t12.pn)).values
+t12.to_csv(HERE / "t12_uti_own_p700_body_sales_jan_may2026.csv", index=False)
+pos = t12[t12.uti_cost > 0]
+N["uti_p700_body_own_report"] = {
+    "file": str(up700), "lines": int(len(t12)), "units": float(t12.qty.sum()),
+    "sales_total": float(t12.uti_sales.sum()), "cost_total": float(t12.uti_cost.sum()),
+    "cost_as_share_of_sales_lines_with_cost": float(pos.uti_cost.sum() / pos.uti_sales.sum()),
+    "median_profit_pct_on_cost": float(pos.profit_pct_on_cost.median()),
+    "currency": "not stated in the file (UTI ERP report, Hebrew headers); ratio is currency-free"}
 
 (HERE / "_numbers.json").write_text(json.dumps(N, indent=1, default=str), encoding="utf-8")
 pd.set_option("display.width", 250, "display.max_columns", 30, "display.max_rows", 300)

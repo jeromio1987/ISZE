@@ -198,7 +198,7 @@ This replaces an earlier section that proposed a "pass-through dial" for the cor
 |---|---|
 | **Blocked on** | **Jerome** — the conversation |
 | **Consequence of no answer** | The whole chain in the paper's section 4 stays arithmetic at a stated assumption |
-| **Evidence** | `01_data/90_INBOX/PRICING_POLICY_PAPER_2026-09-17_REV2.md` §11 decision 10 |
+| **Evidence** | `01_data/92_archive/pricing_papers_superseded_2026-10-02/01_data_90_INBOX/PRICING_POLICY_PAPER_2026-09-17_REV2.md` §11 decision 10 (archived 2 Oct 2026; current paper `02_dashboards/pricing/ISZE_Pricing_Policy_Paper_2026-10-02.html`) |
 
 ### 2.7 Class assignment
 
@@ -214,7 +214,7 @@ This replaces an earlier section that proposed a "pass-through dial" for the cor
 
 ### Also open from the policy paper
 
-Decisions 1–5, 7–9, 11, 12 in [`PRICING_POLICY_PAPER_2026-09-17_REV2.md`](../../01_data/90_INBOX/PRICING_POLICY_PAPER_2026-09-17_REV2.md) §11. Not repeated above because they are stated there in full. The two that most change what happens next are **decision 3** (settle the FY2027 ambition before or after the 20% distributor support payment — it flips a +4% headline to +3.2% net) and **decision 8** (top 200 part numbers by revenue against criticality and competition, which needs no new data).
+Decisions 1–5, 7–9, 11, 12 in [`PRICING_POLICY_PAPER_2026-09-17_REV2.md`](../../01_data/92_archive/pricing_papers_superseded_2026-10-02/01_data_90_INBOX/PRICING_POLICY_PAPER_2026-09-17_REV2.md) §11. Not repeated above because they are stated there in full. The two that most change what happens next are **decision 3** (settle the FY2027 ambition before or after the 20% distributor support payment — it flips a +4% headline to +3.2% net) and **decision 8** (top 200 part numbers by revenue against criticality and competition, which needs no new data).
 
 ---
 
@@ -245,7 +245,7 @@ Cheap, and each currently misleads anyone who reads it.
 |---|---|
 | [`PRICING_STACK_APPLIED_2026-09-19.md`](../../01_data/90_INBOX/PRICING_STACK_APPLIED_2026-09-19.md) | Describes a `Provenance` column and `J99`/`T99`/`X99`/`CIS` codes. Both were removed at Jerome's instruction — the workbook carries his `J`/`T` in the `Source` column. The document contradicts the workbook |
 | [`DECISIONS.md`](../../DECISIONS.md) | No entry for this session. The 2026-09-17 entry still says the exchange-rate fork "stays open" at 163.7, which is superseded |
-| [`build_pricing_policy_paper.py`](../../02_dashboards/pricing/_build/build_pricing_policy_paper.py) lines 1293–1318, 1396 | The brakes 82.6% / "311 of 334" / €2,596,458 is authored prose with no deriving source |
+| [`build_pricing_policy_paper.py`](../../01_data/92_archive/pricing_papers_superseded_2026-10-02/02_dashboards_pricing_build/build_pricing_policy_paper.py) lines 1293–1318, 1396 | The brakes 82.6% / "311 of 334" / €2,596,458 is authored prose with no deriving source |
 | [`_framework_meta.json`](../../01_data/01_Pricing/_framework_meta.json) line 97 vs the stack paper | The override share is stated catalogue-wide in one and Japan-specific in the other |
 
 ---

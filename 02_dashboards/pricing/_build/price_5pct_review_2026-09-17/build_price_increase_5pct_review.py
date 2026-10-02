@@ -305,7 +305,7 @@ def main() -> None:
                 "published_headline": {
                     "value_pct": round(rate_published_pct, 4),
                     "basis": "quantity-weighted base-price move on the movable set",
-                    "source": "01_data/90_INBOX/PRICING_POLICY_PAPER_2026-09-17.md - stated as the "
+                    "source": "01_data/92_archive/pricing_papers_superseded_2026-10-02/01_data_90_INBOX/PRICING_POLICY_PAPER_2026-09-17.md - stated as the "
                               "headline in section 1 and confirmed in the AIM priority-list handoff",
                 },
                 "simulation_quantity": {

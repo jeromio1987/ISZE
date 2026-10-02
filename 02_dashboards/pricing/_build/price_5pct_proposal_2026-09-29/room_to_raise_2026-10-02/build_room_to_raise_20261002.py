@@ -17,6 +17,9 @@ Inputs (all local, read-only):
   P700 new-only             book_b_provisional_weights.csv (bucket p700_new_only_seed)
 
 Run:  python build_room_to_raise_20261002.py
+      python build_room_to_raise_20261002.py --variant-b-iuk-exempt
+        (opt-in, added 2 Oct for the pricing paper: option B with IUK lines kept at their proposal move.
+         Writes ONLY room_to_raise_variant_B_iuk_exempt_2026-10-02.{csv,json}; every default output is left untouched.)
 """
 import json
 import sys
@@ -33,7 +36,7 @@ sys.path.insert(0, str(PROP))
 sys.path.insert(0, str(ISZE / "04_tools" / "_shared"))
 sys.path.insert(0, str(ISZE / "04_tools" / "aftermarket_intelligence"))
 from evidence_lib import attach_evidence, load_base  # noqa: E402
-from response_lib import load_family, load_ituk_monthly, load_lists, window_qty, z10  # noqa: E402
+from response_lib import load_ituk_monthly, load_lists, window_qty, z10  # noqa: E402
 from classification_paths import approved_release  # noqa: E402
 import build_parts_price_dashboard as ppd  # noqa: E402  (constants only; main() not run)
 
@@ -47,6 +50,9 @@ OUT_SCN = HERE / "room_to_raise_scenarios_2026-10-02.csv"
 OUT_SEG = HERE / "room_to_raise_scenarios_by_segment_market_2026-10-02.csv"
 OUT_LEV = HERE / "lever4_order_terms_2026-10-02.csv"
 OUT_JSON = HERE / "room_to_raise_summary_2026-10-02.json"
+VARIANT_IUK = "--variant-b-iuk-exempt" in sys.argv   # opt-in; default run unchanged
+OUT_VAR_CSV = HERE / "room_to_raise_variant_B_iuk_exempt_2026-10-02.csv"
+OUT_VAR_JSON = HERE / "room_to_raise_variant_B_iuk_exempt_2026-10-02.json"
 S = {}   # summary written at the end
 
 # ===================================================================== 0. proposal, recomputed
@@ -95,9 +101,9 @@ bvp = pd.read_csv(D / "genuine_bvp_crossref.csv", dtype=str)
 pms = set(z10(bvp.dropna(subset=["pms_category"]).genuine_pn)) | set(z10(bvp.dropna(subset=["pms_category"]).bvp_pn)) \
     | set(aimv2.index[aimv2.cat_pms_flag == "1"])
 bvp_alt = set(z10(bvp.genuine_pn.dropna()))
-P["seg"] = np.select([P.index.map(aimv2.aim_l1).astype(str) == "Accident & Body", P.index.isin(pms)],
-                     ["body", "service"], default="repair")
-L["seg"] = L.pn.map(P.seg)
+# exercise rule (aim_master_v2 family), kept only to reconcile with the published EUR 388,040
+P["seg_ex"] = np.select([P.index.map(aimv2.aim_l1).astype(str) == "Accident & Body", P.index.isin(pms)],
+                        ["body", "service"], default="repair")
 
 # approved AIM release
 rel_path, rel_entry = approved_release()
@@ -107,6 +113,14 @@ rel["pn"] = z10(rel.part_number)
 rel = rel.drop_duplicates("pn").set_index("pn")
 for col in ["catalog_l1", "catalog_l2", "aim_l1_fixed", "aim_l2_fixed", "aim_l3_fixed", "line_kind"]:
     P[col] = rel[col].reindex(P.index)
+# segment on the APPROVED release family (coordinator 2 Oct: release labels, not pr00 / master)
+P["seg"] = np.select([P.aim_l1_fixed.astype(str) == "Accident & Body", P.index.isin(pms)],
+                     ["body", "service"], default="repair")
+L["seg"] = L.pn.map(P.seg)
+L["seg_ex"] = L.pn.map(P.seg_ex)
+S["segment_rule"] = {"used": "body = release aim_l1 Accident & Body; service = BVP-crossref PMS categories + master PMS flag; repair = rest",
+                     "parts_changed_vs_exercise_rule": int((P.seg != P.seg_ex).sum()),
+                     "billed_changed_vs_exercise_rule": round(float(P.billed[P.seg != P.seg_ex].sum()), 0)}
 S["aim_release"] = {"release_id": rel_entry["release_id"], "status": rel_entry["status"], "sha256": rel_entry["sha256"],
                     "path": str(rel_path), "parts_in_base_found": int(P.catalog_l1.notna().sum())}
 
@@ -133,6 +147,8 @@ L["hold_reason"] = np.select(
     ["service hold (market exercise)", "UMI body/collision hold", "UMI lighting hold", "UTI lighting hold"], default="")
 L["hold_panel"] = (L.db == "UTI") & (L.panel == 1) & (L.hold_reason == "")
 L["step_prop"] = L.net_sales_value * L.pn.map(P.prop)
+ex_hold = (L.db.isin(held_service) & (L.seg_ex == "service")) | ((L.db == "UMI") & (L.seg_ex == "body"))     | ((L.db == "UTI") & L.pn.isin(UTI_LIGHT_PNS))
+S["holds_exercise_rule_step"] = round(float(L[ex_hold].step_prop.sum()), 2)
 hs = L[L.hold_reason != ""].groupby("hold_reason").agg(billed=("net_sales_value", "sum"), step=("step_prop", "sum"))
 S["holds"] = {"exercise_published_held_step": DEC["held_step"], "exercise_published_held_base": DEC["held_base"],
               "recomputed_here": {k_: {"billed": round(v.billed, 2), "step": round(v.step, 2)} for k_, v in hs.iterrows()},
@@ -214,7 +230,6 @@ P["captive_strict"] = ((P.captive == 1) & (P.bvp_alternative == 0) & (P.family_c
 
 # ===================================================================== 6. angle 5: dealer response per part
 lists, superseded, origin = load_lists()
-cls, _aim = load_family()
 MK = {"ITUK": (load_ituk_monthly(), ("2025-04", "2025-08"), ("2026-04", "2026-08")),
       "IUK": (["dealer_sellout_long_IUK_CY2025.csv", "dealer_sellout_long_IUK_CY2026YTD.csv"], ("2025-04", "2025-07"), ("2026-04", "2026-07")),
       "IRELAND": (["dealer_sellout_long_IRELAND_CY2025.csv", "dealer_sellout_long_IRELAND_CY2026YTD.csv"], ("2025-04", "2025-07"), ("2026-04", "2026-07")),
@@ -238,7 +253,7 @@ for name, (src, pre, post) in MK.items():
     d["market"] = name
     frames.append(d.reset_index(names="pn"))
 A = pd.concat(frames, ignore_index=True)
-A["grp"] = cls.group.reindex(A.pn).fillna("unclassified").to_numpy()
+A["grp"] = rel.aim_l2_fixed.reindex(A.pn).fillna("unclassified").to_numpy()   # release family, not pr00
 A = A[(A.q_pre >= 3) & A.dlp.notna() & (A.dlp.abs() < 0.5)].copy()
 A["chg"] = np.log((A.q_post + 0.5) / (A.q_pre + 0.5))
 A["chg_rel"] = A.chg - A.groupby(["market", "grp"]).chg.transform("median")
@@ -254,7 +269,8 @@ cat_resp = (A[A.dlp >= np.log(1.03)].assign(rel=lambda d: d.chg - d.groupby("mar
                                                median_rel_change=("rel", "median"), fell_parts=("fell", "sum")))
 cat_resp = cat_resp[cat_resp.parts >= 20].reset_index()
 cat_resp["median_rel_change_pct"] = np.exp(cat_resp.median_rel_change) - 1
-cat_resp.sort_values("median_rel_change").to_csv(HERE / "dealer_response_by_category_2026-10-02.csv", index=False)
+if not VARIANT_IUK:
+    cat_resp.sort_values("median_rel_change").to_csv(HERE / "dealer_response_by_category_2026-10-02.csv", index=False)
 
 # ===================================================================== 7. angle 6: LCV vs truck
 vfb = pd.read_csv(D / "vehicle_family_bands.csv", dtype=str)
@@ -299,8 +315,9 @@ S["p700_new_only"] = {"parts": len(p700), "with_any_billing_2023_aug2026": int(p
                       "billed_eur_l12m": round(float(w12[w12.pn.isin(p700)].net_sales_value.sum()), 2),
                       "in_proposal_base": int(P.p700_new_only.sum()),
                       "proposal_base_billed": round(float(P.billed[P.p700_new_only == 1].sum()), 2)}
-p7.assign(desc=bb.set_index("pn").description.reindex(p7.index)).reset_index(names="pn").to_csv(
-    HERE / "p700_new_only_billing_2026-10-02.csv", index=False)
+if not VARIANT_IUK:
+    p7.assign(desc=bb.set_index("pn").description.reindex(p7.index)).reset_index(names="pn").to_csv(
+        HERE / "p700_new_only_billing_2026-10-02.csv", index=False)
 umi_service = L[(L.db == "UMI") & (L.seg == "service")].groupby("pn").net_sales_value.sum()
 P["umi_service_billed"] = umi_service.reindex(P.index).fillna(0)
 P["umi_leasing_flag"] = np.where(P.umi_service_billed > 0, "depends on UMI leasing share (unknown)", "")
@@ -350,6 +367,80 @@ eligible_B = (((P.seg == "repair") | (P.seg == "body")) & (P.captive_strict == 1
 WEIGHTS = {"A flat rest of book": lambda b: b,
            "B captive repair + non-competitive body": lambda b: eligible_B,
            "C room-weighted (angles 1-5)": lambda b: P.room_score.astype(float)}
+
+
+def run_b_exempt(exempt):
+    """Option B (factory+5 ceiling, no panels hold) with the free lines of the `exempt` markets kept at their
+    proposal move (a distributor condition, like the holds); the B uplift is re-solved on the other free lines."""
+    hold = L.hold_reason != ""
+    free = ~hold & ~L.cis
+    fixed = free & L.db.isin(exempt)
+    flex = free & ~L.db.isin(exempt)
+    Wflex = L[flex].groupby("pn").net_sales_value.sum().reindex(P.index).fillna(0)
+    Wfix = L[fixed].groupby("pn").net_sales_value.sum().reindex(P.index).fillna(0)
+    cis_step = float(L[L.cis].step_prop.sum())
+    base = P.prop.where(P.padkit == 0, 0.0)
+    cap = (P.c.clip(lower=0) + 0.05).where((P.padkit == 0) & (P.lubricant == 0), 0.0)
+    v = eligible_B.copy()
+    v[(P.padkit == 1) | (P.lubricant == 1)] = 0
+    mv_fix = np.minimum(cap, base)
+    need = TGT - cis_step - float((Wfix * mv_fix).sum())
+    f = lambda t: float((Wflex * np.minimum(cap, base + t * v)).sum())
+    lo, hi = -1.0, 50.0
+    for _ in range(200):
+        mid = (lo + hi) / 2
+        lo, hi = (mid, hi) if f(mid) < need else (lo, mid)
+    t = hi
+    mv = np.minimum(cap, base + t * v)
+    line_mv = np.where(flex, L.pn.map(mv), np.where(fixed, L.pn.map(mv_fix), np.where(L.cis, L.pn.map(P.prop), 0.0)))
+    line_base = np.where(free, L.pn.map(base), 0.0)
+    line_extra = (L.net_sales_value * (line_mv - line_base)).clip(lower=0).where(free, 0.0)   # free lines only (CIS keeps its proposal move)
+    extra_p = (Wflex * (mv - base)).clip(lower=0)
+    at_cap = (mv >= cap - 1e-9) & (Wflex > 0) & (cap > 0)
+    step_line = L.net_sales_value * line_mv
+    by_mk = pd.DataFrame({"db": L.db, "b": L.net_sales_value, "s": step_line, "p": L.step_prop, "x": line_extra,
+                          "seg": L.seg}).groupby("db")
+    mk_tab = pd.DataFrame({"billed_eur": by_mk.b.sum(), "proposal_avg_move": by_mk.p.sum() / by_mk.b.sum(),
+                           "avg_move": by_mk.s.sum() / by_mk.b.sum(), "uplift_eur": by_mk.x.sum()})
+    seg_x = pd.Series(line_extra.to_numpy(), index=L.index).groupby(L.seg).sum()
+    iuk_rb = L.db.eq("IUK") & L.seg.isin(["repair", "body"])
+    return {"exempt_markets": list(exempt), "solver_t_pts": round(t, 6),
+            "total_step_eur": round(f(t) + float((Wfix * mv_fix).sum()) + cis_step, 0),
+            "total_pct": round((f(t) + float((Wfix * mv_fix).sum()) + cis_step) / TOT_BASE, 5),
+            "uplift_above_proposal_eur": round(float(line_extra.sum()), 0),
+            "uplift_on_iuk_repair_body_eur": round(float(line_extra[iuk_rb].sum()), 0),
+            **{f"uplift_{s_}_eur": round(float(seg_x.get(s_, 0)), 0) for s_ in ("service", "repair", "body")},
+            "eligible_parts_with_flex_billing": int(((v > 0) & (Wflex > 0)).sum()),
+            "parts_at_ceiling": int(at_cap.sum()), "billed_at_ceiling_eur": round(float(Wflex[at_cap].sum()), 0),
+            "median_move_flex_parts": round(float(mv[Wflex > 0].median()), 4),
+            "uplift_on_captive_strict_pct": round(float(extra_p[P.captive_strict == 1].sum() / extra_p.sum()), 4)}, mk_tab
+
+
+if VARIANT_IUK:
+    b_ref, mk_ref = run_b_exempt([])
+    pub = pd.read_csv(OUT_SCN)
+    pub = pub[(pub.scenario == "B captive repair + non-competitive body") & (~pub.uti_panels_held)
+              & (pub.ceiling == "factory+5pts")].iloc[0]
+    # the variant code must reproduce the published option B before its IUK-exempt result is used
+    assert abs(b_ref["solver_t_pts"] - pub.solver_t) < 1e-5, (b_ref["solver_t_pts"], pub.solver_t)
+    assert abs(b_ref["uplift_above_proposal_eur"] - pub.uplift_above_proposal_eur) < 2, b_ref
+    assert b_ref["parts_at_ceiling"] == pub.parts_at_ceiling, b_ref
+    b_iuk, mk_iuk = run_b_exempt(["IUK"])
+    tab = mk_ref.rename(columns={"avg_move": "B_avg_move", "uplift_eur": "B_uplift_eur"}).join(
+        mk_iuk[["avg_move", "uplift_eur"]].rename(columns={"avg_move": "B_iuk_exempt_avg_move",
+                                                           "uplift_eur": "B_iuk_exempt_uplift_eur"}))
+    tab.sort_values("billed_eur", ascending=False).round(5).to_csv(OUT_VAR_CSV, index_label="market")
+    OUT_VAR_JSON.write_text(json.dumps({
+        "what": "Option B (captive repair + body, factory move + 5 pts ceiling, no UTI panels hold) as published, "
+                "and the same with IUK free lines kept at their proposal move; SUGGESTED, NOT DECIDED",
+        "check": "B reproduced from the published scenarios CSV (solver t, uplift, parts at ceiling) before the variant ran",
+        "B_as_published": b_ref, "B_iuk_exempt": b_iuk,
+        "inputs_note": "same inputs as the default run of this script; default outputs not rewritten"},
+        indent=1, default=float), encoding="utf-8")
+    print(json.dumps({"B": b_ref, "B_iuk_exempt": b_iuk}, indent=1, default=float))
+    print(tab.sort_values("billed_eur", ascending=False).round(4).to_string())
+    sys.exit(0)
+
 rows, segrows = [], []
 L["main_mv_prop"] = np.where(L.hold_reason != "", 0.0, L.pn.map(P.prop))
 for panels in (False, True):
@@ -494,7 +585,7 @@ S["p700_new_only"]["by_year"] = {str(int(y)): round(float(v), 0) for y, v in
                                  sf[sf.pn.isin(p700)].groupby(sf.billing_date.dt.year).net_sales_value.sum().items()}
 
 # ===================================================================== 13. write per part + per part x market
-out_cols = ["desc", "seg", "catalog_l1", "catalog_l2", "aim_l1_fixed", "aim_l2_fixed", "aim_l3_fixed", "vehicle_line",
+out_cols = ["desc", "seg", "seg_ex", "catalog_l1", "catalog_l2", "aim_l1_fixed", "aim_l2_fixed", "aim_l3_fixed", "vehicle_line",
             "vehicle_line_source", "lcv_buyer_share", "billed", "qty", "lines_l12m", "months_l12m", "n_markets_l12m",
             "c", "prop", "padkit", "lubricant", "lighting", "panel", "h_lost", "zone_measured",
             "list_eur_now", "ref_dealer_price_eur", "am_idx", "am_idx_basis", "idx_street_12m", "idx_street_all",
@@ -511,7 +602,7 @@ P["held_share"] = (held_b / P.billed).round(4)
 P["cis_share"] = (L[L.cis].groupby("pn").net_sales_value.sum().reindex(P.index).fillna(0) / P.billed).round(4)
 mv_cols = [c for c in P.columns if c.startswith("mv_")]
 OUTP = P[["main_market", "markets", "held_share", "cis_share"] + out_cols + mv_cols].rename(
-    columns={"billed": "billed_eur_l12m", "c": "factory_move", "prop": "proposal_move", "seg": "segment_exercise_rule",
+    columns={"billed": "billed_eur_l12m", "c": "factory_move", "prop": "proposal_move", "seg": "segment", "seg_ex": "segment_exercise_rule",
              "am_idx": "aftermarket_index", "gg_idx": "genuine_grey_index"})
 OUTP.sort_values("billed_eur_l12m", ascending=False).to_csv(OUT_PART, index_label="pn", float_format="%.6g")
 PM = L.groupby(["pn", "db"]).agg(billed_eur=("net_sales_value", "sum"), qty=("billed_qty", "sum"),
@@ -522,6 +613,16 @@ PM["slow_in_market"] = (PM.order_lines_l12m <= 2).astype(int)
 PM["cis"] = PM.db.isin(CIS)
 PM.to_csv(OUT_PM, index=False, float_format="%.6g")
 
+import hashlib, datetime as _dt
+FP = {}
+for f in [D / "price_observations.parquet", ISZE / "04_tools/aftermarket_intelligence/state/crossref_graded.csv",
+          D / "pr00_classification.csv", D / "parts_catalog_dimension.parquet", rel_path, D / "sales_fact.parquet",
+          D / "price_bp_weighted_compare_pn.csv", D / "pricing_pr00_ie40.parquet", PROP / "market_exercise_decisions_2026-09-30.json"]:
+    f = Path(f)
+    FP[f.name] = {"sha256_12": hashlib.sha256(f.read_bytes()).hexdigest()[:12],
+                  "modified": _dt.datetime.fromtimestamp(f.stat().st_mtime).strftime("%Y-%m-%d %H:%M")}
+S["input_fingerprints"] = FP
+S["usable_edges_rows"] = int(len(use))
 S["room_score_rule"] = {"captive_strict": "+2", "aftermarket street index >= 1.0 / < 0.8": "+2 / -2",
                         "genuine grey index >= 1.0 / < 0.8": "+1 / -1", "slow mover": "+1",
                         "urgent (VOR+RUSH) share >= 50%": "+1", "fell after April 2026 rise": "-1",

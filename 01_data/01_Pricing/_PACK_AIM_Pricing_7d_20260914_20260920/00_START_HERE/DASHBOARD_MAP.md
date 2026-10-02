@@ -86,13 +86,14 @@ The pack root is
 
 | What it answers | Where it is | Double-click to open |
 |---|---|---|
-| The pricing policy paper, revision 3 (the current cut) | `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\_PACK_AIM_Pricing_7d_20260914_20260920\06_Policy_decks\ISZE_Pricing_Policy_Paper_REV3.html` | `OPEN_Policy_Paper_REV3.cmd` |
-| The earlier cut of the same paper | `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\_PACK_AIM_Pricing_7d_20260914_20260920\06_Policy_decks\ISZE_Pricing_Policy_Paper.html` | `OPEN_ISZE_Pricing_Policy_Paper.cmd` |
+| The pricing policy paper, **current: consolidated 2 Oct 2026** (supersedes everything below) | `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\ISZE_Pricing_Policy_Paper_2026-10-02.html` | `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\OPEN_ISZE_Pricing_Policy_Paper_2026-10-02.cmd` |
+| The pricing policy paper, revision 3 (superseded 2 Oct 2026, archived) | `C:\Users\jerom\Desktop\claude\ISZE\01_data\92_archive\pricing_papers_superseded_2026-10-02\02_dashboards_pricing\ISZE_Pricing_Policy_Paper_REV3.html` | `OPEN_ISZE_Pricing_Policy_Paper_REV3.cmd` (same archive folder) |
+| The earlier cut of the same paper (superseded, archived) | `C:\Users\jerom\Desktop\claude\ISZE\01_data\92_archive\pricing_papers_superseded_2026-10-02\02_dashboards_pricing\ISZE_Pricing_Policy_Paper.html` | `OPEN_ISZE_Pricing_Policy_Paper.cmd` (same archive folder) |
 | The framework workbook behind the policy | `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\_PACK_AIM_Pricing_7d_20260914_20260920\06_Policy_decks\ISZE_Pricing_Framework.xlsx` | `OPEN_ISZE_Pricing_Framework.cmd` |
 | How the current pricing system works, family by family | `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\_PACK_AIM_Pricing_7d_20260914_20260920\06_Policy_decks\pricing_system_by_family.xlsx` | `OPEN_Pricing_System.cmd` |
 | The same system by market, and the formulas sorted by margin | `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\_PACK_AIM_Pricing_7d_20260914_20260920\06_Policy_decks\pricing_system_by_market.xlsx` and `pricing_system_formulas_margin_sort.xlsx` | none — open the files |
 | What a flat 5% price increase across the book would look like | `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\_PACK_AIM_Pricing_7d_20260914_20260920\06_Policy_decks\ISZE_Price_Increase_5pct_Flat_REVIEW.html` and `Price_Increase_5pct_Flat_REVIEW.xlsx` | none — open the files |
-| The management deck on the pricing policy | `C:\Users\jerom\Desktop\claude\ISZE\01_data\01_Pricing\_PACK_AIM_Pricing_7d_20260914_20260920\06_Policy_decks\ISZE_Pricing_Policy_Management_v1.4.pptx` | none — open the file |
+| The management deck on the pricing policy (v1.4, superseded by the 2 Oct paper, archived) | `C:\Users\jerom\Desktop\claude\ISZE\01_data\92_archive\pricing_papers_superseded_2026-10-02\01_data_90_INBOX\ISZE_Pricing_Policy_Management_v1.4.pptx` | none — open the file |
 
 ## 07_Builders — the scripts that rebuild the views above
 
@@ -134,7 +135,7 @@ and each was checked on disk. None has a launcher; they are run from the command
 - **the revision split by parts family and by source of supply** — open
   `...\04_AIM_x_revision\ISZE_Pricing_Revision_AIM_Source.html` through
   `OPEN_Pricing_Revision_AIM_Source.cmd`.
-- **the pricing policy paper** — open `...\06_Policy_decks\ISZE_Pricing_Policy_Paper_REV3.html`
+- **the pricing policy paper** — open `C:\Users\jerom\Desktop\claude\ISZE\02_dashboards\pricing\ISZE_Pricing_Policy_Paper_2026-10-02.html` (consolidated 2 Oct 2026; the revision 3 shortcut in `06_Policy_decks` now points at the archived copy)
   through `OPEN_Policy_Paper_REV3.cmd`.
 - **to rerun a build** — go to `...\07_Builders` and use the script named in the table above. The
   pack's own `INDEX.md` also gives the rebuild order and the two base-price tasks that come first.

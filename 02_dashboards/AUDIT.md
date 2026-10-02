@@ -93,6 +93,8 @@
 | `ISZE_IAM_Quality_Positioning_Overview.html` | KEEP | |
 | `ISZE_IAM_Quality_Positioning_Engine*.html` (4) | KEEP | Per-DB engine twins |
 | `ISZE_Pricing_Proposal_v1.html` | MERGE | Superseded by Action Map / Full Analysis |
+| `ISZE_Pricing_Policy_Paper_2026-10-02.html` (+ `.pdf`) | KEEP | Current pricing policy paper, consolidated 2 Oct 2026 |
+| `ISZE_Pricing_Policy_Paper.html`, `ISZE_Pricing_Policy_Paper_REV3.html` (+ openers, receipts) | RETIRED 2026-10-02 | moved to `01_data/92_archive/pricing_papers_superseded_2026-10-02/`; superseded by `ISZE_Pricing_Policy_Paper_2026-10-02.html` |
 
 ### sales — billing & capture
 
