@@ -1,2 +1,5 @@
 # Force Windows launchers to keep CRLF so double-click actually runs.
 02_dashboards/sales/OPEN_ISZE_Exec_Aftersales_Paper.cmd text eol=crlf
+
+# Hash-pinned release files: never convert line endings (the gate checks their sha256).
+01_data/00_derived/_releases/** -text
