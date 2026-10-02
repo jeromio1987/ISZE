@@ -199,15 +199,23 @@ def _configure(argv=None) -> None:
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--source", choices=["release", "live"], default="release")
     ap.add_argument("--out-dir", default=None)
+    ap.add_argument("--release-id", default=None,
+                    help="build from this registered release instead of the APPROVED one "
+                         "(hash-checked against its own register entry; the sidecar records "
+                         "its real status, e.g. PENDING_APPROVAL)")
     a = ap.parse_args(argv)
     out_dir = Path(a.out_dir) if a.out_dir else DER
     out_dir.mkdir(parents=True, exist_ok=True)
     if a.source == "release":
-        from classification_paths import FIGKEY_EXPORT_PREFIX, approved_release
+        from classification_paths import (FIGKEY_EXPORT_PREFIX, approved_release,
+                                          registered_release)
 
-        SRC_CLASS, RELEASE_ENTRY = approved_release()  # raises unless APPROVED + hash ok
+        if a.release_id:
+            SRC_CLASS, RELEASE_ENTRY = registered_release(a.release_id)  # hash ok, any status
+        else:
+            SRC_CLASS, RELEASE_ENTRY = approved_release()  # raises unless APPROVED + hash ok
         base = f"{FIGKEY_EXPORT_PREFIX}{RELEASE_ENTRY['release_id']}"
-        print(f"overlay = APPROVED release {RELEASE_ENTRY['release_id']} "
+        print(f"overlay = {RELEASE_ENTRY.get('status')} release {RELEASE_ENTRY['release_id']} "
               f"({RELEASE_ENTRY['sha256'][:12]}...) {SRC_CLASS}")
     else:
         SRC_CLASS, RELEASE_ENTRY = SRC_CLASS_LIVE, None

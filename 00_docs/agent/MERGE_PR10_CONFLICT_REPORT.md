@@ -112,3 +112,32 @@ The two decisions that unblock the most, in order:
 1. **Regenerate, don't merge** the 66 generated artifacts (they are build output).
 2. **Decide the classification** for the 4 pricing-critical files — probably by re-running
    the current classifier so both sides are moot.
+
+---
+
+## 2026-10-02 resolution pass (Jerome's decisions applied)
+
+State after this pass: **63 of 79 resolved and staged, 16 left, merge NOT committed, nothing pushed.**
+"Ours" for every resolution below is the working branch tip `c58e6ec4` (newer than this worktree's HEAD `132068d1`).
+
+- **57 generated files** (41 `02_dashboards/ids/**` pages, 13 `01_data/00_derived/**` files, `01_data/14_dashboards/dealer_sellout_aim_gps.json`, `ISZE_Action_Ledger.html`, `Dealer_Sellout_AIM_GPS_ITUK_UTI_2025.html`): `git checkout c58e6ec4 -- <path>`. Taken from the working branch's committed build output, not re-run. Caveat: the IDS pages are ours' self-contained build; main's 2026-09-08 offline-basemap restyle is not in them, and if the `build_ids_country_packs_v13.py` divergence is settled for main's builder they must be regenerated again (same for the sellout files and the sellout builder).
+- **3 classification files settled from approved release 2026-10-02** in the main checkout by `01_data/91_build/settle_classification_from_release_20261002.py` (1,661 rows each; record `01_data/00_derived/_releases/settle_from_release_2026-10-02.json`), then copied here: `pr00_classification.csv`, `parts_catalog_dimension.csv`, `parts_catalog_dimension.parquet`. Staged blobs equal the main checkout's (uncommitted) files.
+- **3 docs, both sides kept:** `INDEX.md` (ours' plain wording, which main left at base, + main's Decision pack row), `00_docs/roadmaps/gps.md` (only the Last-updated line conflicted; later date kept; main's done-markings auto-merged), `03_analytics/Isuzu/prism/CHANGELOG.md` (dated entries, ours 09-18/09-17 then main's 09-14).
+
+Left (16), one-line recommendation each:
+
+| path | recommendation |
+|---|---|
+| `01_data/00_derived/sellout_aim_top_pn_2025.csv` | not settled: its AIM labels come from the sellout builder's workbook taxonomy; rewire that builder to the release and re-run it (102 of 273 rows would change label), after the builder divergence below |
+| `03_analytics/Isuzu/prism/scripts/build_dealer_sellout_aim_gps.py` | decide the builder first (chart/KPI/title differ); then regenerate the sellout family |
+| `04_tools/ids_dealer_ranking/build_ids_country_packs_v13.py` | choose self-contained online Leaflet (ours) or bundled offline grid (main); then regenerate the 41 IDS pages |
+| `04_tools/spa_application/build_spa_application.py` | take ours (2,759 lines, has `patch_form_sized`), then port main's `patch_form` if still needed |
+| `04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py` | real divergence (166 ours-only / 530 main-only lines); needs a code review |
+| `04_tools/db_sales_review/build_deck.py`, `build_full_deck.py` | take ours: the working tree's `common.py` exports `wallet_2025`, not `gps_wallet` |
+| `AGENTS.md` | hunk 1: keep both item 11s (ours series->weight band as 11, main's chat-overviews as 12); hunk 2 conflicts in substance (ours allows nicknames in agent chat, main says chat overviews follow jerome-brief-plain): Jerome's call |
+| `00_docs/ISZE_ROADMAP.md` | ours (09-19) with main's "Scraper quality V2 Done 2026-09-14" status folded into row 13; drop main's duplicate rows 13/14 |
+| `00_docs/agent/STATE_PACKET.md` | take ours (09-25 snapshot supersedes main's 09-14) |
+| `00_docs/ISZE_OS_DATA_MAP.yaml` | one item has a different ask/artefact on each side; pick one |
+| `04_tools/ISZE_Tender_Monitor_Install/_COUNTRY_TENDER_PORTALS_MAP.md` | ours (newer measured counts); keep main's "17/29" coverage wording |
+| `04_tools/ISZE_Tender_Monitor_Install/_OPEN_BACKLOG_ARRANGED.md` | ours' 09-22 status row, plus main's "next DARK without a key" pointer |
+| 3 x `IDS_2026_dealer_compare.html` delete/modify (`01_data/08_Distributor/IDS_2026/_EXPORT/`, `.../reports/dashboard/`, `02_dashboards/ids/IDS_all_dashboards_2026-08-19/01_overview/`) | unexplained deletion in `4ccae53d`; not decided |

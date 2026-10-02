@@ -93,7 +93,7 @@ QUALITY_TIERS = {3, 4}
 #     comment: genuine [channel] = list x DB margin x dealer margin
 #   ISZE\03_analytics\isze_pricing\iam_quality_premium_pct.yaml  as_of 2026-08-10
 #     street_basis: "PR00_EUR × 1.785 vs IAM retail (channel rule)"
-#   ISZE\02_dashboards\pricing\ISZE_Aftermarket_Live_Pricing_Dashboard.html
+#   ISZE\01_data\92_archive\price_pages_retired_2026-10-02\ISZE_Aftermarket_Live_Pricing_Dashboard.html (retired 2026-10-02)
 #     distributor_uplift: 1.4 / dealer_uplift: 1.275
 #   ISZE\03_analytics\isze_pricing\OEM_PEERS.md
 #     PR00 × 1.40 × 1.275 = ×1.785
@@ -111,7 +111,7 @@ CHANNEL_ORIGIN = "local_file"  # not a labelled assumption
 CHANNEL_SOURCE_FILE = r"ISZE\03_analytics\isze_pricing\config.yaml"
 CHANNEL_SOURCE_AS_OF = "config.yaml v1.0.0 · iam_quality_premium_pct.yaml as_of 2026-08-10"
 CHANNEL_CROSS_CHECK = (
-    r"ISZE\02_dashboards\pricing\ISZE_Aftermarket_Live_Pricing_Dashboard.html "
+    r"ISZE\01_data\92_archive\price_pages_retired_2026-10-02\ISZE_Aftermarket_Live_Pricing_Dashboard.html "
     "(distributor_uplift 1.4, dealer_uplift 1.275); "
     r"ISZE\03_analytics\isze_pricing\OEM_PEERS.md"
 )

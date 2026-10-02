@@ -123,13 +123,15 @@ class ParseError(RuntimeError):
     """The page was not the shape we know. Never return [] for this."""
 
 
-def parse(html: str, *, source_url: str = "", observed_at: str = "") -> list[dict]:
+def parse(html: str, *, source_url: str = "", observed_at: str = "",
+          xref: dict | None = None) -> list[dict]:
     """mekster.no product page -> one ledger row from the JSON-LD `Product` block.
 
-    `price_type = "aftermarket_retail"` and `match_method = "category_only"`: ClimAir is a real
-    aftermarket brand and the page carries no Isuzu OEM number, so the row is recorded honestly
-    with `part_no = None` rather than given a number it does not have. Never blended with a
-    genuine/grey observation.
+    `price_type = "aftermarket_retail"`. `part_no` comes only from `resolve_part()`: the brand's
+    number in the title resolved through the graded cross-reference (confirmed/likely, brand
+    agreeing) -> `match_method="crossref"`; otherwise `part_no=None`, `category_only` (the
+    ClimAir probe page). A number in the title is never itself written as an Isuzu number.
+    `xref` may be injected (selftest); default is `crossref_graded.csv`.
 
     Raises `ParseError` when the page is empty, carries no JSON-LD `Product` block, or carries a
     `Product` block with no offer to price — an empty list is never returned for a page this
@@ -155,21 +157,13 @@ def parse(html: str, *, source_url: str = "", observed_at: str = "") -> list[dic
 
     name = str(node.get("name") or "").strip()
     brand = _brand_name(node)
-    # The manufacturer code, never a substitute for an Isuzu number.
-    manufacturer_pn = str(node.get("sku") or node.get("mpn") or "").strip() or None
-
-    # Isuzu numbers only if the JSON-LD itself carries one, and only from the product
-    # TITLE — never from the marketing copy, where a random digit run could be mistaken
-    # for an OEM number. This page's title carries none, so this is None and stays None:
-    # the SKU is ClimAir's, not Isuzu's.
-    pns = find_pns(name)
-    pn = pns[0] if pns else None
+    pn, match_method, competitor_pn = resolve_part(name, brand, node, xref=xref)
 
     return [make_row(
         part_no=pn,
-        match_method="exact_oem" if pn else "category_only",
+        match_method=match_method,
         competitor_brand=brand,
-        competitor_pn=manufacturer_pn,
+        competitor_pn=competitor_pn,
         description=name or None,
         source=SOURCE,
         source_url=source_url or offer.get("url") or node.get("url") or PROBE_URL,
@@ -187,6 +181,113 @@ def parse(html: str, *, source_url: str = "", observed_at: str = "") -> list[dic
         n_obs=1,
         loader=SITE,
     )]
+
+
+# ---------------------------------------------------------------------------
+# Competitor number -> our Isuzu number (fix of 2026-10-02)
+# ---------------------------------------------------------------------------
+# BUG FIXED 2026-10-02. This parser used to run `find_pns()` over the product title and
+# write any ten-digit run as `part_no` with `match_method="exact_oem"`. On
+# `bosch-spridare-0445110980` that wrote the BOSCH injector number 0445110980 as an
+# Isuzu part number. mekster sells aftermarket brands; a number in its title is the
+# brand's number, never ours. It also wrote mekster's internal SKU (`16663589`) as
+# `competitor_pn`, so the brand number was lost from the row.
+#
+# Now:
+#   * `competitor_pn` is the brand's own number as written in the title (e.g. `0445110980`,
+#     `ADBP250064`, `0 986 424 916`, `D7033S`); the JSON-LD sku is only a fallback when the
+#     title carries no number (the ClimAir page, where sku == ClimAir's own code).
+#   * `part_no` is set ONLY by resolving that number through the graded cross-reference
+#     (`crossref_graded.csv`, tier confirmed or likely), with the brand on the page agreeing
+#     with the brand on the edge, and to exactly one Isuzu number. `match_method="crossref"`.
+#   * Anything that does not resolve stays `part_no=None`, `match_method="category_only"`:
+#     it is never offered to the ledger as an Isuzu part.
+#   * `exact_oem` is only possible when the page's brand is Isuzu itself.
+GRADED = HERE.parents[1] / "aftermarket_intelligence" / "state" / "crossref_graded.csv"
+USABLE_TIERS = ("confirmed", "likely")
+_XREF_CACHE: dict | None = None
+
+
+def _norm_key(s: str | None) -> str:
+    return re.sub(r"[^A-Z0-9]", "", str(s or "").upper())
+
+
+def load_xref(path: Path = GRADED) -> dict:
+    """{cpn_key: {(isuzu_pn, BRANDKEY), ...}} from the graded edges, confirmed/likely only."""
+    import csv
+    out: dict[str, set] = {}
+    if not path.exists():
+        return out
+    with path.open(encoding="utf-8", newline="") as fh:
+        for r in csv.DictReader(fh):
+            if (r.get("tier") or "").strip() not in USABLE_TIERS:
+                continue
+            key = _norm_key(r.get("cpn_key") or r.get("competitor_pn"))
+            pn = normalise_pn(r.get("part_no"))
+            if key and pn:
+                out.setdefault(key, set()).add((pn, _norm_key(r.get("competitor_brand"))))
+    return out
+
+
+def _xref() -> dict:
+    global _XREF_CACHE
+    if _XREF_CACHE is None:
+        _XREF_CACHE = load_xref()
+    return _XREF_CACHE
+
+
+def _brand_agrees(page_brand: str, edge_brand: str) -> bool:
+    if not page_brand or not edge_brand:
+        return False
+    return page_brand == edge_brand or page_brand in edge_brand or edge_brand in page_brand
+
+
+def _title_number(name: str) -> str | None:
+    """The trailing run of digit-bearing tokens in the title: the brand's number as written."""
+    toks = [t for t in re.split(r"[\s,;]+", name) if t]
+    tail: list[str] = []
+    for t in reversed(toks):
+        if any(c.isdigit() for c in t) and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9\-\./]*", t):
+            tail.append(t)
+        else:
+            break
+    return " ".join(reversed(tail)) or None
+
+
+def resolve_part(name: str, brand: str | None, node: dict | None = None, *,
+                 xref: dict | None = None) -> tuple[str | None, str, str | None]:
+    """(part_no, match_method, competitor_pn) for one mekster title. Never guesses."""
+    xref = _xref() if xref is None else xref
+    bkey = _norm_key(brand)
+    sku = str((node or {}).get("sku") or (node or {}).get("mpn") or "").strip() or None
+
+    # A genuine Isuzu article: only then may a number in the title be ours.
+    if bkey == "ISUZU":
+        pns = find_pns(name)
+        if len(pns) == 1:
+            return pns[0], "exact_oem", None
+
+    # Competitor number through the graded cross-reference, brand must agree.
+    toks = [t for t in re.split(r"[^A-Za-z0-9]+", name) if t]
+    for w in (4, 3, 2, 1):                       # longest written form first
+        for i in range(0, len(toks) - w + 1):
+            written = toks[i:i + w]
+            key = _norm_key("".join(written))
+            if len(key) < 5 or not any(c.isdigit() for c in key) or key not in xref:
+                continue
+            pns = {pn for pn, eb in xref[key] if _brand_agrees(bkey, eb)}
+            if len(pns) == 1:
+                return pns.pop(), "crossref", _title_written(name, written)
+            # 0 = brand disagrees, >1 = ambiguous: do not pick, keep looking / fall through
+
+    return None, "category_only", _title_number(name) or sku
+
+
+def _title_written(name: str, toks: list[str]) -> str:
+    """The matched tokens exactly as the title writes them (keeps `0 986 424 916` spacing)."""
+    pat = r"[^A-Za-z0-9]{0,3}".join(re.escape(t) for t in toks)
+    m = re.search(pat, name)
+    return m.group(0) if m else " ".join(toks)
 
 
 def map_availability(availability: object) -> str:
@@ -367,6 +468,44 @@ def selftest() -> int:
             problems.append(f"{label}: parse returned {len(got)} rows instead of raising")
         except ParseError as e:
             print(f"    {label:34s} OK — ParseError: {e}")
+
+    # --- the 0445110980 bug (2026-10-02): a competitor number is never an Isuzu number --
+    print("\n  competitor-number case (Bosch 0445110980, the bug fixed 2026-10-02):")
+    bosch = ('<script type="application/ld+json">' + json.dumps({
+        "@type": "Product", "name": "Bosch spridare 0445110980", "sku": "16663589",
+        "mpn": "16663589", "brand": {"@type": "Brand", "name": "Bosch"},
+        "offers": {"price": "4212", "priceCurrency": "NOK",
+                   "availability": "https://schema.org/InStock"}}) + "</script>"
+             + " inkl. norsk mva " + " " * 600)
+    fake_xref = {"0445110980": {("8984890190", "BOSCH")}}
+    cases = [
+        ("resolves via confirmed/likely edge", fake_xref, "8984890190", "crossref"),
+        ("no usable edge -> not an Isuzu part", {}, None, "category_only"),
+        ("edge under another brand -> refused", {"0445110980": {("8984890190", "DENSO")}},
+         None, "category_only"),
+        ("ambiguous edge (2 Isuzu numbers) -> refused",
+         {"0445110980": {("8984890190", "BOSCH"), ("8973297034", "BOSCH")}}, None, "category_only"),
+    ]
+    for label, xr, want_pn, want_mm in cases:
+        r = parse(bosch, observed_at=PROBE_DATE, xref=xr)[0]
+        ok = (r["part_no"] == want_pn and r["match_method"] == want_mm
+              and r["competitor_pn"] == "0445110980" and r["part_no"] != "0445110980")
+        print(f"    {label:44s} part_no={r['part_no']!r} match={r['match_method']} "
+              f"competitor_pn={r['competitor_pn']!r}  {'OK' if ok else 'FAIL'}")
+        if not ok:
+            problems.append(f"bosch case '{label}': got part_no={r['part_no']!r}, "
+                            f"match={r['match_method']!r}, competitor_pn={r['competitor_pn']!r}")
+    if _title_written("Bosch Bremseklosser Foran, 0 986 424 916", ["0", "986", "424", "916"]) \
+            != "0 986 424 916":
+        problems.append("spaced competitor number not kept as written")
+    # the real cached page, if the sitemap walker's cache is on disk
+    real = probe / "cache" / "www.mekster.no" / "3e9469d3d307a1ef.html"
+    if real.exists():
+        r = parse(real.read_text(encoding="utf-8", errors="replace"), observed_at=PROBE_DATE)[0]
+        print(f"    real cached page (graded file)               part_no={r['part_no']!r} "
+              f"match={r['match_method']} competitor_pn={r['competitor_pn']!r}")
+        if r["part_no"] == "0445110980" or r["competitor_pn"] != "0445110980":
+            problems.append(f"real Bosch page: part_no={r['part_no']!r}, competitor_pn={r['competitor_pn']!r}")
 
     # --- coverage reality printed, so nobody quotes 229,060 as Isuzu reach -------------
     print("\n  coverage reality (mekster.no, 2026-09-24):")

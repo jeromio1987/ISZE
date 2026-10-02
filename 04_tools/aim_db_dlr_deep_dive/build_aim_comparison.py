@@ -957,17 +957,24 @@ SUFFIX = ""  # "_staged" with --staged
 sys.path.insert(0, str(ISZE / "04_tools" / "_shared"))
 
 
-def resolve_aim_file(override=None):
-    """Set AIM_FILE (+ the SOURCES row that names it) from the approved release."""
+def resolve_aim_file(override=None, release_id=None):
+    """Set AIM_FILE (+ the SOURCES row that names it) from the approved release.
+
+    release_id names a registered release that is not (yet) APPROVED; main() allows that
+    only together with --staged, so a pending release can never reach a live page.
+    """
     global AIM_FILE, AIM_RELEASE
     if override:
         AIM_FILE, AIM_RELEASE = Path(override), None
     else:
         from classification_paths import figkey_export_for_release
         try:
-            AIM_FILE, AIM_RELEASE = figkey_export_for_release()
+            AIM_FILE, AIM_RELEASE = figkey_export_for_release(release_id)
         except Exception as exc:  # noqa: BLE001
-            raise BuildError(f"approved-release AIM tree unavailable: {exc}") from exc
+            raise BuildError(f"release AIM tree unavailable: {exc}") from exc
+        if AIM_RELEASE.get("status") != "APPROVED" and not SUFFIX:
+            raise BuildError(f"release {AIM_RELEASE['release_id']} is "
+                             f"{AIM_RELEASE.get('status')}, not APPROVED: build it --staged only")
     rel = AIM_FILE.relative_to(ISZE) if AIM_FILE.is_relative_to(ISZE) else AIM_FILE
     for s in SOURCES:
         if s.get("what", "").startswith("AIM "):
@@ -985,6 +992,7 @@ def main(argv=None) -> int:
     ap.add_argument("--db", required=True, choices=["PORTUGAL", "ALL"])
     ap.add_argument("--staged", action="store_true", help="write <page>_staged.html and VERIFY_*_staged beside the live ones; no opener; live page untouched")
     ap.add_argument("--aim-file", default=None, help="AIM tree CSV to use instead of the approved-release export (comparison runs only)")
+    ap.add_argument("--release-id", default=None, help="build from the export of this registered release (e.g. a PENDING_APPROVAL one); requires --staged unless it is APPROVED")
     ap.add_argument("--min-side", type=int, default=MIN_SIDE_MONTHS)
     args = ap.parse_args(argv)
     _set_min_side(min(args.min_side, 12))
@@ -995,7 +1003,7 @@ def main(argv=None) -> int:
     global SUFFIX
     SUFFIX = "_staged" if args.staged else ""
     try:
-        resolve_aim_file(args.aim_file)
+        resolve_aim_file(args.aim_file, args.release_id)
         _aim_counts = pd.read_csv(AIM_FILE, dtype=str, usecols=["aim_level_1"],
                                   keep_default_na=False)
         for s_ in SOURCES:

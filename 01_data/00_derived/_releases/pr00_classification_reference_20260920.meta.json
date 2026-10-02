@@ -1,0 +1,18 @@
+{
+  "file": "pr00_classification_reference_20260920.csv",
+  "sha256": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+  "rows": 164794,
+  "source_commit": "c813330f",
+  "source_commit_full": "c813330f1c08861583740e98c5f8fd5f94523129",
+  "source_path": "01_data/00_derived/pr00_classification.csv",
+  "role": "reference for gate check pr00_copy_integrity",
+  "decided_by": "Jerome",
+  "decided_on": "2026-10-02",
+  "reason": "Jerome decision 2026-10-02 (chat): copy integrity is measured against pr00_classification.csv as committed 20 Sep 2026 (git c813330f), not against today's file, because today's file carries the 21 Sep regression (1,660 rows). Pinned as a hash-recorded copy so the reference cannot move underneath the gate.",
+  "not_used_today_file": {
+    "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\pr00_classification.csv",
+    "sha256": "f1e481919a32fbd74efd5ca2e6fd832f112a5eb6c70c4977b6f287c8e5c52f80"
+  },
+  "pinned_at": "2026-10-02T07:12:32+00:00",
+  "pinned_by": "01_data/91_build/pin_pr00_reference_20260920.py"
+}

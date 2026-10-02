@@ -153,7 +153,17 @@ def parse_args() -> argparse.Namespace:
                    help="gate report to compare drift against (default: this file's own "
                         "report, so drift is run-to-run on the same file; a baseline "
                         "written about a different file is refused, not compared)")
-    return p.parse_args()
+    p.add_argument("--candidate", action="store_true",
+                   help="quality run on a release that is registered but not yet approved: "
+                        "every check runs; release_approved is reported as PENDING (not a "
+                        "pass) when the file's sha256 matches a PENDING_APPROVAL register "
+                        "entry; exit 0 only if every other check passes. Requires --file. "
+                        "A file not in the register, or registered under any other status, "
+                        "still fails release_approved.")
+    a = p.parse_args()
+    if a.candidate and not a.file:
+        p.error("--candidate requires --file <release csv>")
+    return a
 
 # ---------------------------------------------------------------- expectations
 # Axis A (identity) = catalog_l1/l2/l3. Axis B = commercial score beside that —
@@ -267,7 +277,7 @@ def main() -> int:
         try:
             _prev_probe = json.loads(baseline_json.read_text(encoding="utf-8"))
             prev_file = str(_prev_probe.get("classifier_file", ""))
-            if prev_file and Path(prev_file) != CLASS_V2:
+            if prev_file and Path(prev_file).resolve() != CLASS_V2.resolve():
                 baseline_other_file = True
                 if not args.baseline:
                     baseline_json = OUT_JSON  # refuse a cross-file baseline
@@ -332,13 +342,20 @@ def main() -> int:
         release_measured = f"{_c.get('status')} ({_c.get('release_id')}, matched by {_how})"
     else:
         release_measured = "not in RELEASES.json"
+    pending = (
+        args.candidate and not release_ok and _reg_entry is not None
+        and _reg_entry[1] == "hash" and _reg_entry[0].get("status") == "PENDING_APPROVAL"
+    )
     rec(
         "release_approved",
         release_ok,
         release_measured,
         "APPROVED in _releases/RELEASES.json, sha256 equal to the register",
-        release_msg.replace("\n", " | "),
+        ("PENDING — registered by hash, awaiting approval; not a pass. "
+         if pending else "") + release_msg.replace("\n", " | "),
     )
+    if pending:
+        checks[-1]["pending"] = True
 
     rows = load_rows(CLASS_V2)
     n = len(rows)
@@ -430,7 +447,88 @@ def main() -> int:
             integrity = f"meta_unreadable: {e}"
     else:
         integrity = "no_meta_file"
+    # ---- pinned reference (Jerome 2026-10-02). When the meta names a pinned pr00
+    # reference copy with its sha256, the gate does not take the meta's number on trust:
+    # it re-hashes the pinned copy (a moved reference FAILS the check) and re-measures the
+    # figure itself against THIS file. Today's pr00 is then not the reference.
+    pinned = None
     if integrity == "measured":
+        ver = meta.get("catalogue_verification_vs_pr00", {})
+        ref_name, ref_sha = ver.get("reference_file"), ver.get("reference_sha256")
+        if ref_name and ref_sha:
+            ref_path = (meta_path.parent / ref_name)
+            ref_meta_path = ref_path.with_suffix(".meta.json")
+            ref_meta = {}
+            if ref_meta_path.is_file():
+                try:
+                    ref_meta = json.loads(ref_meta_path.read_text(encoding="utf-8"))
+                except Exception:  # noqa: BLE001
+                    ref_meta = {}
+            got_sha = _sha256(ref_path) if ref_path.is_file() else None
+            pinned = {
+                "reference_file": str(ref_path),
+                "reference_sha256_expected": ref_sha,
+                "reference_sha256_measured": got_sha,
+                "reference_source": ver.get("reference_source"),
+                "reference_reason": ver.get("reference_reason") or ref_meta.get("reason"),
+                "meta_match_pct": match_pct,
+            }
+            if got_sha is None or got_sha != str(ref_sha).lower() or (
+                    ref_meta and str(ref_meta.get("sha256", "")).lower() != got_sha):
+                integrity = "pinned_reference_moved"
+            else:
+                pm: dict[str, tuple] = {}
+                with ref_path.open(encoding="utf-8", newline="") as f:
+                    for r in csv.DictReader(f):
+                        k = (r.get("pn_norm") or "").strip()
+                        k = k.zfill(10) if k.isdigit() else k
+                        if k:
+                            pm[k] = ((r.get("family") or "").strip(),
+                                     (r.get("group") or "").strip(),
+                                     (r.get("level3_type") or "").strip())
+                chk = okn = 0
+                for r in rows:
+                    k = (r.get("part_number") or "").strip()
+                    k = k.zfill(10) if k.isdigit() else k
+                    if k in pm:
+                        chk += 1
+                        okn += pm[k] == ((r["catalog_l1"] or "").strip(),
+                                         (r["catalog_l2"] or "").strip(),
+                                         (r["catalog_l3"] or "").strip())
+                match_pct = round(100 * okn / chk, 4) if chk else None
+                rows_checked = chk
+                pinned["gate_measured"] = {"rows_checked": chk, "rows_matching": okn,
+                                           "match_pct": match_pct}
+                pinned["agrees_with_meta"] = match_pct == pinned["meta_match_pct"]
+    if integrity == "pinned_reference_moved":
+        rec(
+            "pr00_copy_integrity",
+            False,
+            "PINNED REFERENCE MOVED",
+            f">= {EXPECT['catalogue_match_pct_min']}% vs pinned reference",
+            (f"pinned pr00 reference {pinned['reference_file']} missing or sha256 "
+             f"{pinned['reference_sha256_measured']} != recorded {pinned['reference_sha256_expected']}"),
+        )
+        checks[-1]["pinned_reference"] = pinned
+    elif integrity == "measured" and pinned is not None:
+        rec(
+            "pr00_copy_integrity",
+            match_pct is not None and match_pct >= EXPECT["catalogue_match_pct_min"]
+            and pinned["agrees_with_meta"],
+            match_pct,
+            f">= {EXPECT['catalogue_match_pct_min']}% vs pinned reference",
+            (
+                f"COPY ONLY — {CLASS_V2.name} catalogue cols vs PINNED pr00 reference "
+                f"{Path(pinned['reference_file']).name} (sha256 {pinned['reference_sha256_measured'][:12]}, "
+                f"{pinned['reference_source']}), {rows_checked} rows, re-measured by this gate"
+                f"{'' if pinned['agrees_with_meta'] else ' — DISAGREES with meta ' + str(pinned['meta_match_pct'])}. "
+                f"Reference reason: {pinned['reference_reason']} "
+                "Does not prove correctness vs customs / figures / part text."
+            ),
+        )
+        checks[-1]["reference_sha256"] = pinned["reference_sha256_measured"]
+        checks[-1]["pinned_reference"] = pinned
+    elif integrity == "measured":
         rec(
             "pr00_copy_integrity",
             match_pct is not None and match_pct >= EXPECT["catalogue_match_pct_min"],
@@ -680,7 +778,7 @@ def main() -> int:
         try:
             prev = json.loads(baseline_json.read_text(encoding="utf-8"))
             prev_file = str(prev.get("classifier_file", ""))
-            baseline_same_file = bool(prev_file) and Path(prev_file) == CLASS_V2
+            baseline_same_file = bool(prev_file) and Path(prev_file).resolve() == CLASS_V2.resolve()
             cross_file_baseline = bool(prev_file) and not baseline_same_file
         except Exception:  # noqa: BLE001
             pass
@@ -702,6 +800,7 @@ def main() -> int:
         try:
             pmap = {c["id"]: c for c in prev.get("checks", [])}
             drifts = []
+            reference_changes: list[str] = []
             for c in checks:
                 # L2/L3 counts: intentional leaf adds update axis_a_l*_approved.
                 # Do not fail drift solely because counts moved to the new approved baseline.
@@ -709,6 +808,15 @@ def main() -> int:
                     continue
                 p = pmap.get(c["id"])
                 if not p:
+                    continue
+                # A figure measured against a different reference is a different measure,
+                # not a movement: do not compare it (same rule as the cross-file baseline).
+                if p.get("reference_sha256") != c.get("reference_sha256"):
+                    reference_changes.append(
+                        f"{c['id']}: reference changed "
+                        f"({str(p.get('reference_sha256') or 'meta figure vs today pr00')[:12]} -> "
+                        f"{str(c.get('reference_sha256') or 'none')[:12]}); {p.get('measured')} -> "
+                        f"{c['measured']} not compared")
                     continue
                 a, b = c["measured"], p.get("measured")
                 if isinstance(a, (int, float)) and isinstance(b, (int, float)) and b:
@@ -726,6 +834,7 @@ def main() -> int:
                     False,
                     drifts,
                     f"< {TOLERANCE_DRIFT_PCT}% per check; L2/L3 must match approved baseline",
+                    "; ".join(reference_changes),
                 )
             else:
                 rec(
@@ -733,6 +842,7 @@ def main() -> int:
                     True,
                     "within tolerance",
                     f"< {TOLERANCE_DRIFT_PCT}% per check; L2/L3={EXPECT['axis_a_leaf_revision']}",
+                    "; ".join(reference_changes),
                 )
         except Exception:  # noqa: BLE001
             drift_note = "previous gate report unreadable; drift not compared"
@@ -765,8 +875,16 @@ def main() -> int:
             f"L2/L3 approved {EXPECT['axis_a_l2_approved']}/{EXPECT['axis_a_l3_approved']}",
         )
 
-    failed = [c for c in checks if not c["ok"]]
+    failed = [c for c in checks if not c["ok"] and not c.get("pending")]
+    pending_ids = [c["id"] for c in checks if c.get("pending")]
+    if failed:
+        verdict = "FAIL"
+    elif pending_ids:
+        verdict = "PENDING_APPROVAL"  # every quality check passed; not approved
+    else:
+        verdict = "PASS"
     report = {
+        "mode": "candidate" if args.candidate else "release",
         "run_at": datetime.now(timezone.utc).isoformat(),
         "classifier_file": str(CLASS_V2),
         "classifier_sha256": _sha256(CLASS_V2),
@@ -784,9 +902,14 @@ def main() -> int:
         "checks_not_checked": [
             c["id"] for c in checks if str(c.get("measured")) == "UNAVAILABLE"
         ],
+        "checks_pending": pending_ids,
+        "pr00_reference": next(
+            (c.get("pinned_reference") for c in checks
+             if c["id"] == "pr00_copy_integrity" and c.get("pinned_reference")),
+            "today's pr00_classification.csv via the meta's figure (no pinned reference declared)"),
         "failed": len(failed),
-        "passed": len(checks) - len(failed),
-        "verdict": "FAIL" if failed else "PASS",
+        "passed": len(checks) - len(failed) - len(pending_ids),
+        "verdict": verdict,
         "note": drift_note,
     }
     OUT_JSON.write_text(json.dumps(report, indent=2), encoding="utf-8")
@@ -795,10 +918,14 @@ def main() -> int:
     if report["checks_not_checked"]:
         print(f"  NOT CHECKED (no evidence for this file, not a pass and not a fail): "
               f"{', '.join(report['checks_not_checked'])}")
+    if pending_ids:
+        print(f"  PENDING (candidate run, not approved, not a pass): {', '.join(pending_ids)}")
     for c in checks:
         flag = "ok  " if c["ok"] else "FAIL"
         if str(c.get("measured")) == "UNAVAILABLE":
             flag = "n/a "
+        if c.get("pending"):
+            flag = "PEND"
         print(f"  [{flag}] {c['id']:<28} measured={c['measured']}  expected={c['expected']}")
         if not c["ok"] or flag == "n/a ":
             print(f"         -> {c['note']}" if c["note"] else "")

@@ -1,6 +1,6 @@
 {
   "run": "ALL",
-  "built": "2026-09-24T18:17:43+00:00",
+  "built": "2026-10-02T07:15:40+00:00",
   "passed": 61,
   "failed": 0,
   "checks": [
@@ -1409,5 +1409,27 @@
     "Sales to dealer has no price of its own. Both periods are valued on the same ISZE price list of 10 Aug 2026, so a price change inside the comparison window is not visible in it.",
     "ITUK's sales-to-dealer history starts in January 2023, so its longest equal split is twenty-two months against twenty-two. If a shorter window is wanted for ITUK, the pair control allows it.",
     "In the all-distributors view the scopes differ between distributors: ITUK is commercial vehicles only, IUK and Greece are D-Max only, and the rest are the whole network. Adding them together mixes those scopes, which the page states rather than hides."
-  ]
+  ],
+  "aim_tree": {
+    "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\AIM_Master_PN_Categories_Figkey_release_2026-10-02.csv",
+    "release": {
+      "release_id": "2026-10-02",
+      "path": "aim_pn_classification_release_2026-10-02.csv",
+      "sha256": "0ac9137903a326430c68e4d619fa4f836a796a01d9d40f6f6f1183e7d4c52360",
+      "status": "APPROVED",
+      "rows": 164916,
+      "rows_note": "data rows, header excluded (the two earlier entries record 164908 = 164,907 data rows + header)",
+      "source": "catalogue tree: aim_pn_classification_release_2026-09-20.csv; AIM labels: aim_pn_classification_20260920.csv per level, aim_master_v2.csv where blank (the live page export's rule)",
+      "recommendation": "00_docs/AIM_RELEASE_RETEST_2026-09-25.md s7 item 4; Jerome decisions 2026-10-02 (keep Filter element leaf; side sills to Panels > Panel; cut a new release)",
+      "notes": "Cut 2026-10-02 by claude-opus. Adds the 24 Sep AIM work, the side-sill decision, the 8980913940 air-filter catalogue fix and both lubricant key forms; change log aim_pn_classification_release_2026-10-02.changes.csv. Supersedes the 2026-09-24-candidate as the thing to approve. Bookkeeping: that candidate's recorded sha256 e5824683... is the hash of aim_pn_classification_20260920.csv.bak_pre_cab_class_20260924_192113, not of its recorded path (now 092e9815...); its entry was left unchanged because sha256 is the identity field the gate matches on.",
+      "approved_by": "Jerome",
+      "approved_on": "2026-10-02",
+      "approved_note": "Jerome approved release 2026-10-02 in chat on 2026-10-02. sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-02.candidate_gate_2026-10-02.json): 18 checks pass, release_approved PENDING, 0 fail, with pr00_copy_integrity measured against the pinned 20 Sep pr00 reference pr00_classification_reference_20260920.csv (git c813330f, sha256 98e64b5b...), Jerome decision 2026-10-02, because today's pr00 carries the 21 Sep regression (1,660 rows). Lubricant relabel accepted (Shell keys to Fluids Chemicals > Lubricants; 9-digit keys line_kind lubricant_or_tool). Supersedes 2026-09-20 in the same edit.",
+      "pr00_reference": {
+        "file": "pr00_classification_reference_20260920.csv",
+        "sha256": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+        "source": "git c813330f"
+      }
+    }
+  }
 }

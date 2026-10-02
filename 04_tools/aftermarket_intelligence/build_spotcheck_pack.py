@@ -35,8 +35,12 @@ edges["has_competitor_price"] = edges.has_competitor_price.astype(int)
 # rival only
 r = edges[(edges.is_our_own_line.astype(int) == 0) & (edges.is_peer_carrier.astype(int) == 0)].copy()
 
-master = pd.read_csv(ROOT / "01_data/00_derived/AIM_Master_PN_Categories_Figkey_20260924.csv",
-                     dtype=str)
+import sys as _sys
+_sys.path.insert(0, str(ROOT / "04_tools" / "_shared"))
+from classification_paths import figkey_export_for_release  # noqa: E402
+# AIM figure-key export of the APPROVED release (sidecar + sha256 checked; raises otherwise)
+FIGKEY_EXPORT, _FIGKEY_RELEASE = figkey_export_for_release()
+master = pd.read_csv(FIGKEY_EXPORT, dtype=str)
 master["part_no"] = master.part_number.astype(str).str.strip()
 master = master.drop_duplicates("part_no")
 desc = dict(zip(master.part_no, master.description))

@@ -75,7 +75,13 @@ SITES = {
     "ks": ("site_ks", "https://www.ks-international.com/catalogsearch/result/?q={pn}"),
     "amayama": ("site_amayama", "https://www.amayama.com/en/part/isuzu/{pn}"),
     "omega": ("site_omega", "https://omegaspareparts.com/?s={pn}&post_type=product"),
+    # Cross-reference source only (Jerome's go, 2026-10-02). Fetched into its own pass
+    # folder like the shops, but NEVER finalized into the price ledger: Spareto prices are
+    # retail incl. VAT at an unstated rate. Its rows feed grade_crossref_edges.py as an
+    # independent second source, via `site_spareto.py --from-pass <label>`.
+    "spareto": ("site_spareto", "https://spareto.com/oe/{pn}"),
 }
+CROSSREF_ONLY_SITES = {"spareto"}
 
 STOP_STATUSES = {403, 429}
 CHALLENGE_MARKERS = ("captcha", "cf-challenge", "challenge-platform", "are you a robot",
@@ -160,6 +166,19 @@ def pns_from_tier(tier: str) -> list[str]:
     return [p for p in out if re.fullmatch(r"\d{10}", p)]
 
 
+def pns_from_csv(path: Path) -> list[str]:
+    """Distinct 10-digit part numbers from a CSV's part_no column, in file order."""
+    with path.open(encoding="utf-8", newline="") as fh:
+        rows = list(csv.DictReader(fh))
+    out, seen = [], set()
+    for r in rows:
+        p = (r.get("part_no") or "").strip()
+        if re.fullmatch(r"\d{10}", p) and p not in seen:
+            seen.add(p)
+            out.append(p)
+    return out
+
+
 def cmd_fetch(a) -> int:
     pdir = PASSES / a.label
     cache_root = pdir / "cache"
@@ -171,8 +190,11 @@ def cmd_fetch(a) -> int:
     elif a.tier:
         pns = pns_from_tier(a.tier)
         seed_desc = f"refresh_tiers.csv tier {a.tier}"
+    elif a.pns_from_csv:
+        pns = pns_from_csv(Path(a.pns_from_csv))
+        seed_desc = f"part_no column of {a.pns_from_csv} (10-digit only)"
     else:
-        raise SystemExit("give --pns-from-run or --tier")
+        raise SystemExit("give --pns-from-run, --tier or --pns-from-csv")
     if a.limit:
         pns = pns[:a.limit]
 
@@ -279,6 +301,11 @@ def cmd_finalize(a) -> int:
     for site, (modname, _tpl) in SITES.items():
         log = pdir / f"fetch_{site}.jsonl"
         if not log.exists():
+            continue
+        if site in CROSSREF_ONLY_SITES:
+            print(f"{site:<9} SKIPPED — cross-reference source only, never loaded into the "
+                  f"price ledger (use site_spareto.py --from-pass)")
+            summary["per_site"][site] = "skipped: crossref-only source"
             continue
         mod = importlib.import_module(modname)
         entries = {}
@@ -387,6 +414,7 @@ def main() -> int:
     f.add_argument("--site", choices=list(SITES), required=True)
     f.add_argument("--pns-from-run")
     f.add_argument("--tier")
+    f.add_argument("--pns-from-csv", help="a CSV with a part_no column (e.g. seed_reach_tierA.csv)")
     f.add_argument("--limit", type=int, default=0)
     f.add_argument("--skip-uncached-in", help="amayama only: skip part numbers that have no "
                    "page in this earlier cache (the known 404s)")

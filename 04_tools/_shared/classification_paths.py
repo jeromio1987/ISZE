@@ -121,16 +121,47 @@ def approved_release() -> tuple[Path, dict]:
     return path, entry
 
 
-def figkey_export_for_release() -> tuple[Path, dict]:
+def registered_release(release_id: str) -> tuple[Path, dict]:
+    """(path, register entry) for ONE named release, whatever its status.
+
+    For staged / candidate work on a release that is registered but not yet APPROVED. The
+    file's sha256 must still equal its own register entry (raises otherwise). The returned
+    entry carries its real status, so callers can refuse to ship anything not APPROVED.
+    """
+    import hashlib
+
+    guard = _release_guard()
+    entry = next((c for c in guard.load_releases().get("candidates", [])
+                  if c.get("release_id") == release_id), None)
+    if entry is None:
+        raise RuntimeError(f"release {release_id} not in {RELEASES_DIR / 'RELEASES.json'}")
+    path = Path(guard.resolve_release_path(entry))
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(1 << 20), b""):
+            h.update(block)
+    if h.hexdigest() != str(entry.get("sha256", "")).lower():
+        raise RuntimeError(f"{path.name} sha256 {h.hexdigest()[:12]} != register "
+                           f"{str(entry.get('sha256', ''))[:12]} for release {release_id}")
+    return path, entry
+
+
+def figkey_export_for_release(release_id: str | None = None) -> tuple[Path, dict]:
     """The AIM figure-key export built FROM the approved release, verified by its sidecar.
 
     Built by 01_data/91_build/export_aim_pn_categories_figkey_xlsx.py. The sidecar
     <csv>.release.json must name the same release id and sha256 the register approves;
     otherwise this raises, so a page can never be built from an export of another file.
+
+    release_id: name a specific registered release instead of the APPROVED one (staged /
+    candidate builds only). Same sidecar and hash checks; the entry's real status is returned.
     """
     import json
 
-    _, entry = approved_release()
+    if release_id is None:
+        _, entry = approved_release()
+    else:
+        _, entry = registered_release(release_id)
     csv = DERIVED / f"{FIGKEY_EXPORT_PREFIX}{entry['release_id']}.csv"
     side = csv.with_suffix(".release.json")
     if not csv.is_file() or not side.is_file():

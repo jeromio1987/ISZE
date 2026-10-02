@@ -145,7 +145,12 @@ t["part_no"] = z(t["part_no"])
 t["billed_eur_t12m"] = pd.to_numeric(t["billed_eur_t12m"], errors="coerce")
 t = t.drop_duplicates("part_no")
 
-master = pd.read_csv(BOOK / "AIM_Master_PN_Categories_Figkey_20260924.csv", dtype=str)
+import sys as _sys
+_sys.path.insert(0, str(ROOT / "04_tools" / "_shared"))
+from classification_paths import figkey_export_for_release  # noqa: E402
+# AIM figure-key export of the APPROVED release (sidecar + sha256 checked; raises otherwise)
+FIGKEY_EXPORT, _FIGKEY_RELEASE = figkey_export_for_release()
+master = pd.read_csv(FIGKEY_EXPORT, dtype=str)
 master["part_no"] = z(master["part_number"])
 master = master.drop_duplicates("part_no")
 t = t.merge(master[["part_no", "description", "aim_level_1", "aim_level_2", "aim_level_3",

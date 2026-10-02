@@ -311,9 +311,107 @@ def _write(rows: list[dict], out: Path) -> None:
         w.writerows(rows)
 
 
+CROSSREF_STATE = ISZE / "04_tools" / "aftermarket_intelligence" / "state" / "spareto_crossref.csv"
+PASSES = ISZE / "01_data" / "90_INBOX" / "scrape_targets" / "_probe" / "passes"
+
+
+def from_pass(label: str, out: Path = CROSSREF_STATE) -> int:
+    """Parse a dated Spareto pass (run_dated_pass.py fetch --site spareto) into a STATE file.
+
+    Destination is the cross-reference grading, never the price ledger: Spareto prices are
+    retail incl. VAT at an unstated rate, so they are kept in this file for later and not
+    offered to `build_price_ledger.py`. One row per brand card, plus a `fetch_outcome` /
+    `page_result` per searched part so misses are visible rather than silent.
+    """
+    import hashlib
+    from collections import Counter
+    pdir = PASSES / label
+    log = pdir / "fetch_spareto.jsonl"
+    if not log.exists():
+        print(f"no pass log at {log}")
+        return 1
+    entries = {}
+    for ln in log.read_text(encoding="utf-8").splitlines():
+        j = json.loads(ln)
+        entries[j["pn"]] = j
+    rows, per_pn, c = [], [], Counter()
+    for pn, j in entries.items():
+        res = {"part_no": pn, "url": j["url"], "fetched_at": j["fetched_at"],
+               "fetch_outcome": j["outcome"], "status": j.get("status"), "n_cards": 0,
+               "page_result": ""}
+        if j["outcome"] not in ("ok", "cached"):
+            res["page_result"] = f"not fetched ({j['outcome']} {j.get('status')})"
+            c["not_fetched"] += 1
+            per_pn.append(res)
+            continue
+        cp = pdir / "cache" / "spareto.com" / f"{hashlib.sha256(j['url'].encode('utf-8')).hexdigest()[:16]}.html"
+        if not cp.exists():
+            res["page_result"] = "cache file missing"
+            c["cache_missing"] += 1
+            per_pn.append(res)
+            continue
+        html = cp.read_text(encoding="utf-8", errors="replace")
+        try:
+            got = parse(html, source_url=j["url"], observed_at=j["fetched_at"][:10])
+        except ParseError as e:
+            # Seen on the 2026-10-02 Tier A pass: title `<pn> -  by` (empty name, no makes)
+            # and zero brand cards. That is Spareto knowing the number but listing nothing:
+            # a miss, recorded as one. Any other parse error stays an error.
+            m_t = re.search(r"<title>\s*(.*?)\s*</title>", html, re.S)
+            if (m_t and re.fullmatch(r"[0-9A-Z\-\s]+-\s+by", m_t.group(1).strip())
+                    and "data-variant-card-gtm-item-value" not in html):
+                res["page_result"] = "no match (empty OE page: no name, no makes, 0 cards)"
+                c["no_match_empty_page"] += 1
+                per_pn.append(res)
+                continue
+            res["page_result"] = f"parse error: {e}"
+            c["parse_error"] += 1
+            per_pn.append(res)
+            continue
+        if not got:
+            res["page_result"] = "no match (Spareto: Nothing Matches)"
+            c["no_match"] += 1
+        else:
+            wrong = [r for r in got if r["part_no"] != pn]
+            if wrong:
+                res["page_result"] = f"page OE {wrong[0]['part_no']} != searched {pn}; rows dropped"
+                c["oe_mismatch"] += 1
+                per_pn.append(res)
+                continue
+            res["page_result"] = "rows"
+            res["n_cards"] = len(got)
+            c["with_rows"] += 1
+            for r in got:
+                r["page_file"] = str(cp.relative_to(ISZE))
+            rows += got
+        per_pn.append(res)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    cols = COLUMNS + ["page_file"]
+    with out.open("w", encoding="utf-8", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=cols, extrasaction="ignore")
+        w.writeheader()
+        w.writerows(rows)
+    pout = out.with_name(out.stem + "_per_part.csv")
+    with pout.open("w", encoding="utf-8", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=list(per_pn[0].keys()) if per_pn else ["part_no"])
+        w.writeheader()
+        w.writerows(per_pn)
+    summary = {"label": label, "parts_in_log": len(entries), "outcomes": dict(c),
+               "rows": len(rows),
+               "distinct_pairs": len({(r["part_no"], re.sub(r"[^A-Z0-9]", "", r["competitor_pn"].upper()))
+                                      for r in rows}),
+               "parts_with_rows": c["with_rows"],
+               "note": "Spareto prices are retail incl. VAT (rate not stated); NOT for the price ledger."}
+    out.with_suffix(".meta.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    print(json.dumps(summary, indent=2))
+    print(f"wrote {out}\nwrote {pout}")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--from-pass", help="parse a dated pass folder into the crossref state file")
     ap.add_argument("--parse-recon", action="store_true",
                     help="parse the saved recon pages (no network), write the sample CSV")
     ap.add_argument("--online", action="store_true", help="fetch live, through fetch_polite")
@@ -324,6 +422,8 @@ def main() -> int:
 
     if a.selftest:
         return selftest()
+    if a.from_pass:
+        return from_pass(a.from_pass)
     rows: list[dict] = []
     if a.parse_recon:
         for p in sorted(RECON.glob("oe_*.html")):

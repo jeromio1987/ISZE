@@ -82,6 +82,26 @@ def price_forms(price: float, currency: str | None) -> list[str]:
     return sorted(out)
 
 
+GRADED = ISZE / "04_tools" / "aftermarket_intelligence" / "state" / "crossref_graded.csv"
+_EDGES: set | None = None
+
+
+def _key(s: str) -> str:
+    return re.sub(r"[^A-Z0-9]", "", str(s or "").upper())
+
+
+def _usable_edges() -> set:
+    """{(competitor key, isuzu part_no)} for graded edges tiered confirmed or likely."""
+    global _EDGES
+    if _EDGES is None:
+        _EDGES = set()
+        if GRADED.exists():
+            g = pd.read_csv(GRADED, dtype=str)
+            g = g[g["tier"].isin(["confirmed", "likely"])]
+            _EDGES = {(_key(k), str(p)) for k, p in zip(g["cpn_key"], g["part_no"])}
+    return _EDGES
+
+
 def pn_forms(pn: str) -> list[str]:
     """Bare, dashed and prefixed ways an Isuzu number gets written.
 
@@ -166,9 +186,25 @@ def main() -> int:
             price_ok = bool(found)
 
         # --- the part number must appear, unless the row is a category row -------
+        pn_why = ""
         if pd.isna(r["part_no"]) or not str(r["part_no"]).strip():
             row["pn_found"] = "n/a (category row, no part number)"
             pn_ok = True
+        elif str(r.get("match_method")) == "crossref":
+            # A competitor's page never prints OUR number (mekster, since the 2026-10-02
+            # fix). The verbatim test is then: the competitor number is written on the page,
+            # AND a graded edge (confirmed/likely) links that number to this part_no.
+            # Not a loosening: both halves must hold, and either one failing fails the row.
+            cpn = str(r.get("competitor_pn") or "").strip()
+            on_page = bool(cpn) and cpn in text
+            edge_ok = (_key(cpn), str(r["part_no"])) in _usable_edges()
+            row["pn_found"] = (f"competitor {cpn} on page; graded edge -> {r['part_no']}"
+                               if on_page and edge_ok else "")
+            pn_ok = on_page and edge_ok
+            if not pn_ok:
+                why = [] if on_page else [f"competitor number {cpn!r} not on page"]
+                why += [] if edge_ok else [f"no confirmed/likely edge {cpn!r} -> {r['part_no']}"]
+                pn_why = "; ".join(why)
         else:
             found = [f for f in pn_forms(str(r["part_no"])) if f in text]
             row["pn_found"] = found[0] if found else ""
@@ -191,7 +227,7 @@ def main() -> int:
         if not price_ok:
             problems.append(f"price {r['price']} {r['currency']} not written on the page")
         if not pn_ok:
-            problems.append(f"part number {r['part_no']} not written on the page")
+            problems.append(pn_why or f"part number {r['part_no']} not written on the page")
         if not ledger_ok:
             problems.append("row is not present in the ledger")
         row["verdict"] = "PASS" if not problems else "FAIL:" + "; ".join(problems)

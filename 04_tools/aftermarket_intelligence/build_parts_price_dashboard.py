@@ -9,10 +9,20 @@ Autodoc) and neither reads the ledger.
 What it answers, in order:
   1. How much of our billed business can we price against a rival at all?   (coverage)
   2. Where do rivals sit against our price?                                   (position)
-  3. Which high-value parts are most exposed?                                 (exposure)
-  4. How fresh is what we know, and which sources still deliver?              (health)
-  5. Where should the next search go?                                         (hunt list)
-  6. Any part, every observation.                                             (explorer)
+  3. Same shelf: genuine against aftermarket at KS                            (channel gap)
+  4. Which high-value parts are most exposed?                                 (exposure)
+  5. How fresh is what we know, and which sources still deliver?              (health)
+  6. Where should the next search go?                                         (hunt list)
+  7. Any part, every observation.                                             (explorer)
+
+2026-10-02 consolidation (Jerome: "take the best from the older dashboards"): the two old
+pages were retired to 01_data/92_archive/price_pages_retired_2026-10-02/. Ported from them,
+recomputed on the ledger: definitions strip with hover formulas, headline median index and
+share below the comparison price, the KS same-shelf genuine vs aftermarket view, the
+fewer-than-3-parts grey rule and middle-half range on the family chart, the index per
+source and market, the worked arithmetic behind every index (hover), the rank correlation of
+billed value with index, the day-by-day source calendar, search yield, and the price-moves
+table with a 15% flag. The comparison basis stays fixed at price list x 2.19 (provisional).
 
 Comparison basis
 ----------------
@@ -69,7 +79,13 @@ CHARTJS = ISZE / "02_dashboards" / "_ui" / "chart.umd.min.js"
 OUT = ISZE / "02_dashboards" / "pricing" / "ISZE_Parts_Price_Intelligence.html"
 OPEN_CMD = OUT.parent / "OPEN_ISZE_Parts_Price_Intelligence.cmd"
 
+KS_WEEKLY = ISZE / "04_tools" / "autodoc_scraper" / "ks_results.csv"
+MANIFEST = ISZE / "04_tools" / "price_ledger" / "page_manifest.csv"
+
+# PROVISIONAL (Jerome, 2 Oct 2026: "only for now take the fixed 2,19"): one basis for every market.
+# No per-market reference dealer price until he decides otherwise.
 REF_MULTIPLE = 2.19          # D03 margins reading: 1 / (1-0.37) / (1-0.275) = 2.189
+MIN_N = 3                    # parts per family below which a family bar is shown grey, directional only
 TODAY = pd.Timestamp(datetime.now().date())
 
 # Price groups. Kept apart everywhere; never averaged across.
@@ -87,6 +103,10 @@ GROUP_LABEL = {
 }
 # Standard VAT rates, used only to strip VAT from prices the source marks VAT-inclusive.
 VAT = {"UK": 0.20, "DE": 0.19, "NO": 0.25, "SE": 0.25, "DK": 0.25, "PT": 0.23, "FI": 0.255}
+VAT_SOURCE = ("Standard national VAT rates, fixed in the page builder (not read from a data file); "
+              "checked 2 Oct 2026 against the published 2026 rates: UK 20% (HMRC), Norway 25% (Storting 2026 "
+              "VAT resolution), Germany 19%, Sweden 25%, Denmark 25%, Portugal 23% (mainland), Finland 25.5% "
+              "(since 1 Sep 2024).")
 
 # Where each loader stands today (from the ledger's own notes and the 2026-10-01 runs).
 SOURCE_STATUS = {
@@ -107,6 +127,10 @@ SOURCE_STATUS = {
     "eucon_march_2024": ("Eucon online", "file", "File of Mar 2024; web-shop prices"),
     "eucon_survey_2023": ("Eucon UK survey", "file", "2023 survey"),
 }
+
+# KS has four loaders; the calendar needs to tell them apart.
+CAL_SUFFIX = {"ks": " · part-number search", "ks_gen": " · weekly file, genuine",
+              "ks_am": " · weekly file, aftermarket", "ks_crossref": " · competitor-number search"}
 
 
 def pn10(s: pd.Series) -> pd.Series:
@@ -242,8 +266,54 @@ def main() -> int:
         })
     S.sort(key=lambda s: ({"live": 0, "file": 1, "category": 2, "thin": 3, "retired": 4}.get(s["status"], 5), -s["rows"]))
 
-    moves = pd.read_csv(MOVES, dtype={"part_no": str}).to_dict("records") if MOVES.exists() else []
-    moves = [{k: (None if (isinstance(v, float) and math.isnan(v)) else v) for k, v in m.items()} for m in moves]
+    # Re-checked prices. The movement file repeats some rows verbatim (same part, offer, dates and
+    # prices listed twice); those are counted once, as the 1 Aug page did with repeat-reported moves.
+    moves = []
+    if MOVES.exists():
+        mv = pd.read_csv(MOVES, dtype={"part_no": str})
+        keep = ["part_no", "source", "price_type", "currency", "first_date", "first_price", "last_date",
+                "last_price", "change_pct", "n_observations", "description", "offer"]
+        mv = mv[[c for c in keep if c in mv.columns]].drop_duplicates()
+        moves = [{k: (None if (isinstance(v, float) and math.isnan(v)) else v) for k, v in m.items()}
+                 for m in mv.to_dict("records")]
+
+    # Run calendar: on which days did each source write prices (last 21 days). This is what the
+    # data shows was written, not the schedule.
+    cal_from = (TODAY - pd.Timedelta(days=20)).strftime("%Y-%m-%d")
+    recent = obs[obs["observed_at"] >= cal_from]
+    calendar = {
+        "days": [(TODAY - pd.Timedelta(days=i)).strftime("%Y-%m-%d") for i in range(20, -1, -1)],
+        "rows": [{"loader": ld, "name": SOURCE_STATUS.get(ld, (ld,))[0] + CAL_SUFFIX.get(ld, ""),
+                  "by_day": {d: int(n) for d, n in gdf.groupby("observed_at").size().items()}}
+                 for ld, gdf in recent.groupby("loader")],
+    }
+    calendar["rows"].sort(key=lambda r: -sum(r["by_day"].values()))
+
+    # Search yield: how many of our part numbers were looked up per site, and how many came back priced.
+    yld = []
+    if KS_WEEKLY.exists():
+        k = pd.read_csv(KS_WEEKLY, dtype={"PN": str})
+        yld.append({"site": "KS International (weekly run file)", "searched": int(k["PN"].nunique()),
+                    "priced": int(k.loc[k["Status"] == "ok", "PN"].nunique()),
+                    "last": str(k["Scraped_At"].astype(str).str[:10].max())})
+    if MANIFEST.exists():
+        man = pd.read_csv(MANIFEST, dtype=str)
+        man["pn"] = man["source_url"].astype(str).str.extract(r"(\d{10})", expand=False)
+        for site, gdf in man.groupby("site"):
+            looked = set(gdf["pn"].dropna())
+            if not looked:
+                continue
+            priced = set(obs_pn.loc[obs_pn["loader"] == site, "part_no"]) & looked
+            yld.append({"site": f"{SOURCE_STATUS.get(site, (site,))[0]} (page runs)", "searched": len(looked),
+                        "priced": len(priced), "last": str(gdf["fetched_at"].dropna().astype(str).str[:10].max())})
+
+    # VAT: which markets have a VAT-inclusive price at all, so the page can say what the strip touches.
+    vat_use = []
+    for cty, gdf in obs.groupby("country"):
+        vc = gdf["vat"].value_counts()
+        vat_use.append({"country": str(cty), "rate": VAT.get(str(cty)), "incl": int(vc.get("incl", 0)),
+                        "excl": int(vc.get("excl", 0)), "unknown": int(vc.get("unknown", 0))})
+    vat_use.sort(key=lambda r: -(r["incl"] + r["excl"] + r["unknown"]))
 
     data = {
         "built": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
@@ -264,6 +334,12 @@ def main() -> int:
         "sources": S,
         "moves": moves,
         "fresh_cut": fresh_cut,
+        "calendar": calendar,
+        "yield": yld,
+        "vat_use": vat_use,
+        "vat_source": VAT_SOURCE,
+        "ledger_rows": int(lmeta.get("rows", 0)),
+        "min_n": MIN_N,
     }
 
     chartjs = CHARTJS.read_text(encoding="utf-8")
@@ -316,7 +392,7 @@ p.q{margin:4px 0 12px;color:var(--muted);max-width:900px}
 .tile .v{font-size:26px;font-weight:600;color:var(--navy);font-family:Georgia,serif}
 .tile .l{font-size:12.5px;color:var(--ink);margin-top:2px}
 .tile .n{font-size:11.5px;color:var(--muted);margin-top:4px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
 @media(max-width:900px){.grid2{grid-template-columns:1fr}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
 .card h3{font-size:15.5px;margin-bottom:2px}
@@ -343,6 +419,16 @@ td.r,th.r{text-align:right}
 svg text{font-family:"Segoe UI",Helvetica,Arial,sans-serif}
 footer{margin:34px 0 40px;padding-top:10px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
 a{color:var(--navy2)}
+.defs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin:6px 0 4px}
+.def{border:1px solid var(--line);border-radius:6px;padding:8px 10px;background:#fff;cursor:help}
+.def b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--navy)}
+.def .f{font-family:Consolas,monospace;font-size:11.5px;color:var(--terra);margin:2px 0}
+.def .p{font-size:11.8px;color:var(--muted)}
+table.cal td,table.cal th{padding:3px 4px;text-align:center;font-size:11px}
+table.cal th{position:static;cursor:default}
+table.cal td.nm{text-align:left;white-space:nowrap;font-size:12px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#1d9e75}
+[data-ex]{cursor:help}
 .tip{position:fixed;pointer-events:none;background:#15233c;color:#fff;font-size:12px;padding:6px 8px;border-radius:5px;max-width:320px;display:none;z-index:20}
 </style></head><body>
 
@@ -383,19 +469,34 @@ a{color:var(--navy2)}
 <section id="s2">
   <h2 class="sec"><span class="no">2</span> Where do rivals sit against our price?</h2>
   <p class="q" id="pos-q"></p>
+  <div class="defs" id="defs"></div>
+  <div class="tiles" id="posTiles"></div>
   <div class="grid2">
     <div class="card"><h3>Price index per parts family</h3><div class="h" id="fam-h"></div>
-      <div class="legend"><span><i style="background:#e24b4a"></i>rival below 80%: strong pressure</span><span><i style="background:#eda100"></i>80–100%: close</span><span><i style="background:#1d9e75"></i>above 100%: we are cheaper</span></div>
+      <div class="legend"><span><i style="background:#e24b4a"></i>rival below 80%: strong pressure</span><span><i style="background:#eda100"></i>80–100%: close</span><span><i style="background:#1d9e75"></i>above 100%: we are cheaper</span><span><i style="background:#cfccc4"></i>fewer than 3 parts: directional only</span></div>
       <div class="chart" id="famWrap"><canvas id="cFam" role="img" aria-label="Median price index per parts family"></canvas></div></div>
     <div class="card"><h3>How the index spreads, per price type</h3><div class="h" id="dist-h">Share of observations in each band. Each price type is kept apart; they are never averaged together.</div>
       <div class="chart" style="height:340px"><canvas id="cDist" role="img" aria-label="Distribution of price index per price type"></canvas></div></div>
   </div>
-  <div class="card" style="margin-top:18px"><h3>Aftermarket brands we see most</h3><div class="h" id="brand-h"></div>
-    <div class="chart" id="brandWrap"><canvas id="cBrand" role="img" aria-label="Aftermarket brands by number of our parts they cover"></canvas></div></div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card"><h3>Aftermarket brands we see most</h3><div class="h" id="brand-h"></div>
+      <div class="chart" id="brandWrap"><canvas id="cBrand" role="img" aria-label="Aftermarket brands by number of our parts they cover"></canvas></div></div>
+    <div class="card"><h3>Where each source sits</h3><div class="h" id="src-h"></div>
+      <div class="chart" id="srcWrap"><canvas id="cSrc" role="img" aria-label="Median price index per source and market"></canvas></div></div>
+  </div>
 </section>
 
 <section id="s3">
-  <h2 class="sec"><span class="no">3</span> Which high-value parts are most exposed?</h2>
+  <h2 class="sec"><span class="no">3</span> Same shelf: genuine against aftermarket at one shop</h2>
+  <p class="q">KS International (UK) lists many of our part numbers twice: a genuine Isuzu part and an aftermarket part. Putting both against our comparison price on the same shelf shows how wide the gap between the two channels is. This is genuine against aftermarket at one shop, not ISZE against KS.</p>
+  <div class="tiles" id="shelfTiles"></div>
+  <div class="card"><h3>Genuine and aftermarket on the same shelf</h3><div class="h" id="shelf-h"></div>
+    <div class="legend"><span><i style="background:#c0552d"></i>genuine at KS</span><span><i style="background:#2a78d6"></i>aftermarket at KS</span><span><i style="background:#15233c;width:2px"></i>our comparison price = 100%</span></div>
+    <div id="shelf"></div></div>
+</section>
+
+<section id="s4">
+  <h2 class="sec"><span class="no">4</span> Which high-value parts are most exposed?</h2>
   <p class="q">Each dot is one of our parts with a rival price. Right = more billed. Down = the rival is cheaper. The parts in the shaded lower-right corner carry the most business at the lowest rival price; the ten largest are ringed and listed.</p>
   <div class="grid2">
     <div class="card"><h3>Billed value against price index</h3><div class="h" id="sc-h"></div><div id="scatter"></div></div>
@@ -403,8 +504,8 @@ a{color:var(--navy2)}
   </div>
 </section>
 
-<section id="s4">
-  <h2 class="sec"><span class="no">4</span> How fresh is what we know, and which sources still deliver?</h2>
+<section id="s5">
+  <h2 class="sec"><span class="no">5</span> How fresh is what we know, and which sources still deliver?</h2>
   <p class="q">A price is only useful while it is current. Most of what we hold comes from files, not from live searching.</p>
   <div class="grid2">
     <div class="card"><h3>Observations by the year the price was dated</h3><div class="h">Brand list prices carry their own date, some of them years old</div>
@@ -412,17 +513,27 @@ a{color:var(--navy2)}
     <div class="card"><h3>Sources</h3><div class="h">Live = searched on a schedule. File = a one-off file. Thin = cannot be searched by part number.</div>
       <div class="tablewrap" style="max-height:330px"><table id="srcT"></table></div></div>
   </div>
-  <div class="callout" id="moves"></div>
+  <div class="card" style="margin-top:18px"><h3>Did each source write prices, day by day?</h3><div class="h" id="cal-h"></div>
+    <div style="overflow-x:auto"><table id="calT" class="cal"></table></div></div>
+  <div class="grid2" style="margin-top:18px">
+    <div class="card"><h3>Search yield</h3><div class="h">Of the part numbers we looked up at each site, how many came back with a price for that part</div>
+      <div class="tablewrap" style="max-height:360px"><table id="yldT"></table></div></div>
+    <div class="card"><h3>VAT applied per market</h3><div class="h" id="vat-h"></div>
+      <div class="tablewrap" style="max-height:360px"><table id="vatT"></table></div></div>
+  </div>
+  <div class="card" style="margin-top:18px"><h3>Price moves on re-checked prices</h3><div class="h" id="mv-h"></div>
+    <div class="tiles" id="mvTiles" style="margin-top:6px"></div>
+    <div class="tablewrap" style="max-height:360px"><table id="mvT"></table></div></div>
 </section>
 
-<section id="s5">
-  <h2 class="sec"><span class="no">5</span> Where should the next search go?</h2>
+<section id="s6">
+  <h2 class="sec"><span class="no">6</span> Where should the next search go?</h2>
   <p class="q" id="hunt-q"></p>
   <div class="tablewrap"><table id="huntT"></table></div>
 </section>
 
-<section id="s6">
-  <h2 class="sec"><span class="no">6</span> Any part, every observation</h2>
+<section id="s7">
+  <h2 class="sec"><span class="no">7</span> Any part, every observation</h2>
   <p class="q">Search a part number or a description. The date switch at the top applies here too. The columns Shop, Brand list, Trade and Genuine show each part's median price index against the comparison price chosen at the top. Click a row to see every price we hold for it, with its source, date and VAT basis.</p>
   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:8px">
     <input type="search" id="q" placeholder="part number or description" style="min-width:260px">
@@ -466,14 +577,14 @@ const basisLabel=()=>ST.basis==="ref"?`reference dealer price (our price list ×
 /* ── header ── */
 function header(){
   const F=DATA.funnel;const am=F[4],fr=F[5],tn=F[2];
-  document.getElementById("sub").textContent=`Internal · built ${DATA.built} · price data built ${DATA.ledger_built.slice(0,16).replace("T"," ")} UTC · billed window ${DATA.billed_window}`;
+  document.getElementById("sub").textContent=`Internal · built ${DATA.built} · price data built ${DATA.ledger_built.slice(0,16).replace("T"," ")} UTC (${DATA.ledger_rows.toLocaleString("en-GB")} rows) · billed window ${DATA.billed_window}`;
   document.getElementById("lead").innerHTML=`We hold <b>${DATA.obs.length.toLocaleString("en-GB")}</b> observed prices on <b>${DATA.parts.length}</b> of our part numbers. An aftermarket price exists for parts worth <b>${am.value_pct}%</b> of what we billed in the last 12 months, and only <b>${fr.value_pct}%</b> has one dated in the last year.`;
   const live=DATA.sources.filter(s=>s.status==="live").map(s=>s.name);
   const T=[
     [`${am.value_pct}%`,"of billed value has an aftermarket price",`${am.parts} part numbers of ${F[0].parts.toLocaleString("en-GB")} billed`,false],
     [`${fr.value_pct}%`,"has one dated in the last 12 months",`since ${fmtD(DATA.fresh_cut)}`,true],
     [`${tn.parts}`,"parts with a trusted competitor number",`${tn.value_pct}% of billed value; the base for searching by competitor number`,true],
-    [`${DATA.hunt_total}`,"Tier A parts with no aftermarket price",`${DATA.hunt_value_pct}% of billed value; section 5`,true],
+    [`${DATA.hunt_total}`,"Tier A parts with no aftermarket price",`${DATA.hunt_value_pct}% of billed value; section 6`,true],
     [`${[...new Set(live)].length}`,"sources searched live",[...new Set(live)].join(", "),false],
   ];
   document.getElementById("tiles").innerHTML=T.map(t=>`<div class="tile ${t[3]?"warn":""}"><div class="v">${t[0]}</div><div class="l">${t[1]}</div><div class="n">${esc(t[2])}</div></div>`).join("");
@@ -502,17 +613,40 @@ function s1(){
 function famRows(){
   const by={};
   DATA.parts.forEach(p=>{if(!inTier(p))return;const r=partRatio(p.pn,ST.grp);if(r==null)return;(by[p.f]=by[p.f]||[]).push(r);});
-  return Object.entries(by).filter(([f,a])=>a.length>=2).map(([f,a])=>({f,n:a.length,m:median(a)})).sort((a,b)=>a.m-b.m);
+  return Object.entries(by).map(([f,a])=>({f,n:a.length,m:median(a),q1:quant(a,.25),q3:quant(a,.75)})).sort((a,b)=>a.m-b.m);
 }
+const quant=(a,q)=>{if(!a.length)return null;const s=[...a].sort((x,y)=>x-y),i=(s.length-1)*q,lo=Math.floor(i),hi=Math.ceil(i);return s[lo]+(s[hi]-s[lo])*(i-lo);};
+function spearman(xs,ys){const n=xs.length;if(n<5)return null;const rk=a=>{const idx=a.map((v,i)=>[v,i]).sort((p,q)=>p[0]-q[0]);const r=new Array(n);let i=0;while(i<n){let j=i;while(j+1<n&&idx[j+1][0]===idx[i][0])j++;for(let k=i;k<=j;k++)r[idx[k][1]]=(i+j)/2+1;i=j+1;}return r;};
+  const rx=rk(xs),ry=rk(ys),mx=(n+1)/2;let sxy=0,sxx=0,syy=0;for(let i=0;i<n;i++){sxy+=(rx[i]-mx)*(ry[i]-mx);sxx+=(rx[i]-mx)**2;syy+=(ry[i]-mx)**2;}return sxy/Math.sqrt(sxx*syy);}
+/* worked arithmetic for one observation: what the index is made of */
+function howBuilt(o){
+  const p=PART[o[OI.pn]]||{};const c=compOf(p);const e0=o[OI.eur],e=eurOf(o);
+  const L=[`<b>How this index is built · ${esc(o[OI.pn])}</b>`];
+  L.push(`1. Our price list: ${fmtE(p.l,2)}`);
+  if(ST.basis==="ref")L.push(`2. × ${DATA.ref_multiple} = reference dealer price ${fmtE(c,2)} <span style="color:#c9d3e3">(provisional fixed basis, same for every market)</span>`);
+  else L.push(`2. Compared against the price list itself: ${fmtE(c,2)}`);
+  L.push(`3. Rival price: ${o[OI.price]} ${esc(o[OI.cur])} · ${esc(o[OI.src])}, ${esc(o[OI.cty])}, ${fmtD(o[OI.date])}`);
+  L.push(`4. In euro (dated ECB rate stored with the price): ${fmtE(e0,2)}`);
+  if(o[OI.vat]==="incl")L.push(ST.vat&&o[OI.vr]?`5. VAT-inclusive: ÷ ${(1+o[OI.vr]).toFixed(3)} (${o[OI.cty]} ${Math.round(o[OI.vr]*1000)/10}%) = ${fmtE(e,2)}`:`5. VAT-inclusive, kept as is (strip switched off or no rate for ${esc(o[OI.cty])})`);
+  else if(o[OI.vat]==="excl")L.push(`5. Price is ex VAT: nothing removed`);
+  else L.push(`5. Source does not state VAT: used as recorded`);
+  L.push(c?`6. Index = ${fmtE(e,2)} ÷ ${fmtE(c,2)} = <b>${fmtP(e/c)}</b>`:`6. No current price-list price: no index`);
+  return L.join("<br>");
+}
+function partBuilt(p,r,grp){const c=compOf(p);if(!c||r==null)return"";
+  return `<b>${esc(p.pn)} · ${esc(DATA.group_label[grp])}</b><br>1. Our price list: ${fmtE(p.l,2)}<br>`+
+    (ST.basis==="ref"?`2. × ${DATA.ref_multiple} = reference dealer price ${fmtE(c,2)}<br>`:`2. Compared against the price list itself<br>`)+
+    `3. Each rival price for this part ÷ ${fmtE(c,2)}, VAT handled per price (click the row for each one)<br>4. Median of those indexes = <b>${fmtP(r)}</b> ≈ rival ${fmtE(c*r,2)}`;}
 function s2(){
   const rows=famRows();
   document.getElementById("pos-q").innerHTML=`Price index = rival price ÷ ${basisLabel()}. Below 100% the rival is cheaper. Shown: <b>${esc(DATA.group_label[ST.grp])}</b>${ST.vat?", VAT removed where the price includes it":""}. One value per part (its median), then the median across the family's parts. Using <b>${ageLabel()}</b>.`;
-  document.getElementById("fam-h").textContent=`Families with at least 2 priced parts · ${rows.reduce((a,r)=>a+r.n,0)} parts`;
+  const MN=DATA.min_n;
+  document.getElementById("fam-h").textContent=`Every family with a priced part · ${rows.reduce((a,r)=>a+r.n,0)} parts · grey = fewer than ${MN} parts, directional only`;
   document.getElementById("famWrap").style.height=Math.max(200,rows.length*30+70)+"px";
   if(C.fam)C.fam.destroy();
   const mx=Math.max(1.2,...rows.map(r=>r.m))*1.12;
-  C.fam=new Chart(cFam,{type:"bar",data:{labels:rows.map(r=>`${r.f} (${r.n})`),datasets:[{data:rows.map(r=>+(r.m*100).toFixed(0)),backgroundColor:rows.map(r=>bandColor(r.m)),borderRadius:3,barThickness:20}]},
-    options:{indexAxis:"y",maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` median index ${c.raw}% over ${rows[c.dataIndex].n} parts`}}},
+  C.fam=new Chart(cFam,{type:"bar",data:{labels:rows.map(r=>`${r.f} (${r.n})`),datasets:[{data:rows.map(r=>+(r.m*100).toFixed(0)),backgroundColor:rows.map(r=>r.n<MN?"#cfccc4":bandColor(r.m)),borderRadius:3,barThickness:20}]},
+    options:{indexAxis:"y",maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const r=rows[c.dataIndex];return [` median index ${c.raw}% over ${r.n} part${r.n>1?"s":""}`,` middle half of parts: ${fmtP(r.q1)} to ${fmtP(r.q3)}`,r.n<MN?` fewer than ${MN} parts: directional only`:` usable sample (${MN} or more parts)`];}}}},
       scales:{x:{min:0,max:Math.ceil(mx*2)*50,ticks:{callback:v=>v+"%",stepSize:50},grid:{color:"#ece8e0"}},y:{grid:{display:false},ticks:{font:{size:11.5}}}}},
     plugins:[{id:"ref",afterDatasetsDraw(ch){const x=ch.scales.x.getPixelForValue(100),c=ch.ctx;c.save();c.strokeStyle="#15233c";c.setLineDash([4,3]);c.beginPath();c.moveTo(x,ch.chartArea.top);c.lineTo(x,ch.chartArea.bottom);c.stroke();c.restore();}}]});
 
@@ -542,7 +676,66 @@ function s2(){
     plugins:[{id:"vals",afterDatasetsDraw(ch){const c=ch.ctx;c.save();c.font="11.5px Segoe UI";c.fillStyle="#222";ch.getDatasetMeta(0).data.forEach((b,i)=>{c.fillText(fmtP(br[i].m),b.x+6,b.y+4);});c.restore();}}]});
 }
 
-/* ── section 3: SVG scatter, log axes with fixed ticks ── */
+/* ── section 2 extras: headline indexes and per-source position (ported from the 17 Sep and 1 Aug pages) ── */
+function posExtras(){
+  const per=g=>DATA.parts.filter(inTier).map(p=>partRatio(p.pn,g)).filter(x=>x!=null);
+  const a=per(ST.grp),gn=per("genuine");
+  const below=a.filter(r=>r<1).length;
+  const T=[
+    [a.length?fmtP(median(a)):"—",`median index, ${DATA.group_label[ST.grp].toLowerCase()}`,`one value per part, ${a.length} parts`],
+    [a.length?Math.round(100*below/a.length)+"%":"—","of those parts: rival below our comparison price",`${below} of ${a.length} parts`],
+    [gn.length?fmtP(median(gn)):"—","median index, genuine Isuzu outside our network",`${gn.length} parts`],
+  ];
+  document.getElementById("posTiles").innerHTML=T.map(t=>`<div class="tile"><div class="v">${t[0]}</div><div class="l">${esc(t[1])}</div><div class="n">${esc(t[2])} · ${esc(ageLabel())}</div></div>`).join("");
+  // per source + market: index per observation, then per part median, then median across parts
+  const by={};
+  DATA.obs.forEach(o=>{if(o[OI.grp]!==ST.grp||!okDate(o)||!o[OI.pn])return;const p=PART[o[OI.pn]];if(!p||!inTier(p))return;const r=ratioOf(o);if(r==null)return;
+    const k=`${o[OI.src]} · ${o[OI.cty]}`;((by[k]=by[k]||{})[o[OI.pn]]=by[k][o[OI.pn]]||[]).push(r);});
+  const rows=Object.entries(by).map(([k,v])=>{const m=Object.values(v).map(median);return{k,n:m.length,m:median(m),q1:quant(m,.25),q3:quant(m,.75)};}).sort((a,b)=>b.n-a.n).slice(0,14).sort((a,b)=>a.m-b.m);
+  document.getElementById("src-h").textContent=rows.length?`Median index per source and market · ${DATA.group_label[ST.grp]} · ${ageLabel()} · bar label = parts. Different shops carry different parts, so compare the shape, not the ranking.`:"No source holds this price type for the selection";
+  document.getElementById("srcWrap").style.height=Math.max(120,rows.length*30+60)+"px";
+  if(C.src)C.src.destroy();
+  const MN=DATA.min_n;
+  C.src=new Chart(cSrc,{type:"bar",data:{labels:rows.map(r=>r.k),datasets:[{data:rows.map(r=>+(r.m*100).toFixed(0)),backgroundColor:rows.map(r=>r.n<MN?"#cfccc4":bandColor(r.m)),borderRadius:3,barThickness:20}]},
+    options:{indexAxis:"y",maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const r=rows[c.dataIndex];return[` median index ${c.raw}% over ${r.n} parts`,` middle half: ${fmtP(r.q1)} to ${fmtP(r.q3)}`];}}}},
+      scales:{x:{min:0,grace:"12%",ticks:{callback:v=>v+"%"},grid:{color:"#ece8e0"}},y:{grid:{display:false},ticks:{font:{size:11}}}}},
+    plugins:[{id:"vals",afterDatasetsDraw(ch){const c=ch.ctx;c.save();c.font="11px Segoe UI";c.fillStyle="#222";ch.getDatasetMeta(0).data.forEach((b,i)=>{c.fillText(`${rows[i].n}`,b.x+6,b.y+4);});
+      const x=ch.scales.x.getPixelForValue(100);c.strokeStyle="#15233c";c.setLineDash([4,3]);c.beginPath();c.moveTo(x,ch.chartArea.top);c.lineTo(x,ch.chartArea.bottom);c.stroke();c.restore();}}]});
+}
+
+/* ── section 3: same shelf at KS ── */
+function shelf(){
+  const KS=new Set(["ks","ks_gen","ks_am","ks_crossref"]);
+  const rows=[];
+  DATA.parts.forEach(p=>{if(!inTier(p)||!compOf(p))return;const os=(OBS_BY.get(p.pn)||[]).filter(o=>KS.has(o[OI.loader])&&okDate(o));
+    const g=os.filter(o=>o[OI.grp]==="genuine").map(ratioOf).filter(x=>x!=null),a=os.filter(o=>o[OI.grp]==="street"||o[OI.grp]==="trade").map(ratioOf).filter(x=>x!=null);
+    if(g.length&&a.length)rows.push({p,g:median(g),a:median(a),s:median(g)-median(a)});});
+  const n=rows.length;
+  document.getElementById("shelfTiles").innerHTML=[
+    [n?fmtP(median(rows.map(r=>r.g))):"—","genuine at KS, median index",`${n} parts listed both ways`],
+    [n?fmtP(median(rows.map(r=>r.a))):"—","aftermarket at KS, median index",`same ${n} parts`],
+    [n?Math.round(100*median(rows.map(r=>r.s)))+" pts":"—","median gap between the two channels","genuine index minus aftermarket index, per part"],
+  ].map(t=>`<div class="tile"><div class="v">${t[0]}</div><div class="l">${esc(t[1])}</div><div class="n">${esc(t[2])} · against ${esc(basisLabel())}</div></div>`).join("");
+  const top=rows.sort((x,y)=>y.p.b-x.p.b).slice(0,18);
+  document.getElementById("shelf-h").textContent=n?`The ${top.length} largest by billed value of ${n} parts KS lists both genuine and aftermarket · ${ageLabel()} · log scale · hover a row for the arithmetic, click it for every price`:"No part has both a genuine and an aftermarket KS price for this selection";
+  if(!n){document.getElementById("shelf").innerHTML="";return;}
+  const W=760,L=250,R=20,T=24,rowH=24,Hh=T+top.length*rowH+30;
+  const lo=0.1,hi=4,X=v=>L+(Math.log10(Math.max(lo,Math.min(hi,v)))-Math.log10(lo))/(Math.log10(hi)-Math.log10(lo))*(W-L-R);
+  let s=`<svg viewBox="0 0 ${W} ${Hh}" width="100%" role="img" aria-label="Genuine and aftermarket index per part at KS">`;
+  top.forEach((r,i)=>{if(i%2)s+=`<rect x="0" y="${T+i*rowH}" width="${W}" height="${rowH}" fill="#fbf9f5"/>`;});
+  [0.1,0.25,0.5,1,2,4].forEach(v=>{s+=`<line x1="${X(v)}" x2="${X(v)}" y1="${T}" y2="${T+top.length*rowH}" stroke="${v===1?"#15233c":"#e2ddd3"}" ${v===1?'stroke-dasharray="4 3"':""}/><text x="${X(v)}" y="${Hh-8}" font-size="11" text-anchor="middle" fill="#52514e">${Math.round(v*100)}%</text>`;});
+  top.forEach((r,i)=>{const y=T+i*rowH+rowH/2;const lab=`${r.p.pn} ${r.p.d}`.slice(0,38);
+    const ex=esc(`<b>${r.p.pn} · same shelf at KS</b><br>Comparison price: ${fmtE(compOf(r.p),2)} (${basisLabel()})<br>Genuine at KS: index ${fmtP(r.g)} ≈ ${fmtE(compOf(r.p)*r.g,2)}<br>Aftermarket at KS: index ${fmtP(r.a)} ≈ ${fmtE(compOf(r.p)*r.a,2)}<br>Gap between channels: ${Math.round(100*r.s)} pts<br>Billed: ${fmtE(r.p.b)}`);
+    s+=`<g data-ex="${ex}" data-pn="${r.p.pn}" style="cursor:pointer"><rect x="0" y="${y-rowH/2}" width="${W}" height="${rowH}" fill="transparent"/>`+
+      `<text x="${L-8}" y="${y+4}" font-size="11" text-anchor="end" fill="#222">${esc(lab)}</text>`+
+      `<line x1="${X(r.a)}" x2="${X(r.g)}" y1="${y}" y2="${y}" stroke="#bdb8ad" stroke-width="3"/>`+
+      `<circle cx="${X(r.a)}" cy="${y}" r="6" fill="#2a78d6"/><circle cx="${X(r.g)}" cy="${y}" r="6" fill="#c0552d"/></g>`;});
+  s+=`</svg>`;
+  const el=document.getElementById("shelf");el.innerHTML=s;
+  el.querySelectorAll("g[data-pn]").forEach(g=>g.addEventListener("click",()=>drill(g.dataset.pn)));
+}
+
+/* ── section 4: SVG scatter, log axes with fixed ticks ── */
 function s3(){
   const pts=DATA.parts.filter(p=>inTier(p)&&p.b>0).map(p=>({p,r:partRatio(p.pn,ST.grp)})).filter(x=>x.r!=null);
   const W=560,Hh=380,L=56,R=16,T=14,B=44;
@@ -561,12 +754,14 @@ function s3(){
   expo.forEach((x,i)=>{s+=`<circle cx="${X(x.p.b).toFixed(1)}" cy="${Y(x.r).toFixed(1)}" r="7" fill="${bandColor(x.r)}" stroke="#c0552d" stroke-width="2.2" data-pn="${x.p.pn}"/>`;});
   s+=`</svg>`;
   document.getElementById("scatter").innerHTML=s;
-  document.getElementById("sc-h").textContent=`${pts.length} parts · ${DATA.group_label[ST.grp]} vs ${basisLabel()} · ${ageLabel()}`;
+  const rho=spearman(pts.map(x=>x.p.b),pts.map(x=>x.r));
+  document.getElementById("sc-h").textContent=`${pts.length} parts · ${DATA.group_label[ST.grp]} vs ${basisLabel()} · ${ageLabel()}`+
+    (rho==null?"":` · rank correlation of billed value with index: ${rho>=0?"+":""}${rho.toFixed(2)} (${Math.abs(rho)<0.2?"no real link: exposure is spread, not sitting on the big lines":rho<0?"bigger parts tend to face cheaper rivals":"bigger parts tend to face dearer rivals"})`);
   document.querySelectorAll("#scatter circle").forEach(c=>{c.style.cursor="pointer";
     c.addEventListener("mousemove",e=>{const p=PART[c.dataset.pn];tipShow(e,`<b>${p.pn}</b> ${esc(p.d)}<br>billed ${fmtE(p.b)} · index ${fmtP(partRatio(p.pn,ST.grp))}<br>${esc(p.f)} · tier ${p.t||"—"}`);});
     c.addEventListener("mouseleave",tipHide);c.addEventListener("click",()=>drill(c.dataset.pn));});
   document.getElementById("expo").innerHTML=expo.length?`<table><thead><tr><th>Part</th><th class="r">Billed</th><th class="r">Index</th><th class="r">${ST.basis==="ref"?"Reference dealer price":"Our list"}</th><th class="r">Rival (median)</th></tr></thead><tbody>${
-    expo.map(x=>{const c=compOf(x.p);return`<tr style="cursor:pointer" onclick="drill('${x.p.pn}')"><td><b>${x.p.pn}</b><br><span class="dash">${esc(x.p.d)}</span></td><td class="r">${fmtE(x.p.b)}</td><td class="r">${bandChip(x.r)}</td><td class="r">${fmtE(c,2)}</td><td class="r">${fmtE(c*x.r,2)}</td></tr>`;}).join("")}</tbody></table>`
+    expo.map(x=>{const c=compOf(x.p);return`<tr style="cursor:pointer" onclick="drill('${x.p.pn}')"><td><b>${x.p.pn}</b><br><span class="dash">${esc(x.p.d)}</span></td><td class="r">${fmtE(x.p.b)}</td><td class="r" data-ex="${esc(partBuilt(x.p,x.r,ST.grp))}">${bandChip(x.r)}</td><td class="r">${fmtE(c,2)}</td><td class="r">${fmtE(c*x.r,2)}</td></tr>`;}).join("")}</tbody></table>`
     :`<div class="callout">No part with a rival below 100% for this selection.</div>`;
 }
 const tip=document.getElementById("tip");
@@ -582,9 +777,35 @@ function s4(){
     options:{maintainAspectRatio:false,plugins:{legend:{position:"bottom",labels:{boxWidth:11,font:{size:11}}}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,grid:{color:"#ece8e0"},ticks:{precision:0}}}}});
   document.getElementById("srcT").innerHTML=`<thead><tr><th>Source</th><th>Status</th><th class="r">Prices</th><th class="r">Our parts</th><th>Latest</th></tr></thead><tbody>${
     DATA.sources.map(s=>`<tr title="${esc(s.note)}"><td>${esc(s.name)}<br><span class="dash" style="font-size:11.5px">${esc(s.note)}</span></td><td><span class="chip ${s.status}">${s.status}</span></td><td class="r">${s.rows.toLocaleString("en-GB")}</td><td class="r">${s.parts}</td><td>${fmtD(s.last)}</td></tr>`).join("")}</tbody>`;
-  const M=DATA.moves;const moved=M.filter(m=>m.change_pct&&Math.abs(m.change_pct)>0);
-  document.getElementById("moves").innerHTML=`<b>Price movement.</b> ${M.length} prices have been checked more than once so far, ${moved.length} moved: ${
-    moved.map(m=>`${esc(m.source)} ${esc(m.part_no)} ${m.change_pct>0?"+":""}${m.change_pct}% (${m.first_price} → ${m.last_price} ${esc(m.currency)}, ${fmtD(m.first_date)} to ${fmtD(m.last_date)})`).join("; ")||"none"}. Too few re-checks to read a trend yet.`;
+  // run calendar
+  const K=DATA.calendar;
+  document.getElementById("cal-h").textContent=`Last 21 days, ${fmtD(K.days[0])} to ${fmtD(K.days[K.days.length-1])}. A dot = that source wrote prices dated that day (hover for the count). A blank = nothing written that day. This shows what reached the price data, not the run schedule.`;
+  document.getElementById("calT").innerHTML=`<thead><tr><th style="text-align:left">Source</th>${K.days.map(d=>`<th title="${fmtD(d)}">${d.slice(8)}</th>`).join("")}</tr></thead><tbody>${
+    K.rows.map(r=>`<tr><td class="nm">${esc(r.name)}</td>${K.days.map(d=>r.by_day[d]?`<td title="${r.by_day[d]} prices on ${fmtD(d)}"><span class="dot" style="opacity:${Math.min(1,.35+Math.log10(r.by_day[d])/3).toFixed(2)}"></span></td>`:`<td class="dash">·</td>`).join("")}</tr>`).join("")||`<tr><td class="nm dash">no prices written in the last 21 days</td></tr>`}</tbody>`;
+  // search yield
+  document.getElementById("yldT").innerHTML=`<thead><tr><th>Site</th><th class="r">Part numbers looked up</th><th class="r">Came back priced</th><th class="r">Yield</th><th>Latest</th></tr></thead><tbody>${
+    DATA.yield.map(y=>`<tr><td>${esc(y.site)}</td><td class="r">${y.searched.toLocaleString("en-GB")}</td><td class="r">${y.priced.toLocaleString("en-GB")}</td><td class="r">${y.searched?Math.round(100*y.priced/y.searched)+"%":"—"}</td><td>${fmtD(y.last)}</td></tr>`).join("")}</tbody>`;
+  // VAT per market
+  document.getElementById("vat-h").textContent=DATA.vat_source+" The strip only touches prices the source marks VAT-inclusive; a market with none of those is not changed by it.";
+  document.getElementById("vatT").innerHTML=`<thead><tr><th>Market</th><th class="r">Rate used</th><th class="r">Incl. VAT (stripped)</th><th class="r">Ex VAT</th><th class="r">Not stated (as recorded)</th></tr></thead><tbody>${
+    DATA.vat_use.map(v=>`<tr><td>${esc(v.country)}</td><td class="r">${v.rate==null?`<span class="dash">none set</span>`:Math.round(v.rate*1000)/10+"%"}</td><td class="r">${v.incl.toLocaleString("en-GB")}</td><td class="r">${v.excl.toLocaleString("en-GB")}</td><td class="r">${v.unknown.toLocaleString("en-GB")}</td></tr>`).join("")}</tbody>`;
+}
+/* price moves, filtered by the date switch; ±15% flag as on the 1 Aug page */
+function moves(){
+  const M=DATA.moves.filter(m=>ST.age==="all"||String(m.last_date)>=DATA.fresh_cut);
+  const mv=M.filter(m=>m.change_pct&&Math.abs(m.change_pct)>0).sort((a,b)=>Math.abs(b.change_pct)-Math.abs(a.change_pct));
+  const big=mv.filter(m=>Math.abs(m.change_pct)>=15);
+  document.getElementById("mv-h").textContent=`Prices we have seen more than once, ${ageLabel()}. Identical repeated rows are counted once. Changes of 15% or more are flagged; smaller moves stay listed, because a small move on a big part still matters.${mv.length>300?` The 300 largest of ${mv.length} moves are listed.`:""}`+
+    (()=>{const am=mv.filter(m=>m.source==="Amayama"&&m.currency==="USD");if(am.length<10)return"";const sm=am.filter(m=>Math.abs(m.change_pct)<1).length;
+      return ` ${sm} of ${am.length} Amayama moves are under 1% and mostly the same small step across unrelated parts; Amayama quotes in US dollars, so this looks like the shop's own currency conversion rather than a price change (not confirmed).`;})();
+  document.getElementById("mvTiles").innerHTML=[
+    [M.length.toLocaleString("en-GB"),"prices re-checked",""],
+    [M.length?Math.round(100*(M.length-mv.length)/M.length)+"%":"—","did not move",`${M.length-mv.length} of ${M.length}`],
+    [String(big.length),"moved 15% or more",""],
+  ].map(t=>`<div class="tile"><div class="v">${t[0]}</div><div class="l">${t[1]}</div><div class="n">${t[2]}</div></div>`).join("");
+  document.getElementById("mvT").innerHTML=mv.length?`<thead><tr><th>Source</th><th>Part</th><th>Price type</th><th>First seen</th><th class="r">Was</th><th>Last seen</th><th class="r">Now</th><th class="r">Change</th><th>Flag</th></tr></thead><tbody>${
+    mv.slice(0,300).map(m=>`<tr style="cursor:pointer" onclick="drill('${esc(m.part_no)}')"><td>${esc(m.source)}</td><td><b>${esc(m.part_no)}</b><br><span class="dash">${esc(String(m.description||"").slice(0,70))}${m.offer&&String(m.offer).startsWith("sku:")?" · "+esc(String(m.offer).slice(4)):""}</span></td><td>${esc(DATA.group_label[{aftermarket_rrp:"rrp",genuine_grey:"genuine",aftermarket_retail:"street",aftermarket_trade:"trade",dealer:"genuine"}[m.price_type]]||m.price_type)}</td><td>${fmtD(m.first_date)}</td><td class="r">${m.first_price} ${esc(m.currency)}</td><td>${fmtD(m.last_date)}</td><td class="r">${m.last_price} ${esc(m.currency)}</td><td class="r">${m.change_pct>0?"+":""}${(+m.change_pct).toFixed(1)}%</td><td>${Math.abs(m.change_pct)>=15?`<span class="chip red">15% or more</span>`:`<span class="chip grey">below 15%</span>`}</td></tr>`).join("")}</tbody>`
+    :`<tbody><tr><td class="dash">No re-checked price moved in this window.</td></tr></tbody>`;
 }
 
 /* ── section 5 ── */
@@ -616,21 +837,37 @@ function drill(pn){
   const c=compOf(p);
   const el=document.getElementById("drill");el.classList.add("on");
   el.innerHTML=`<h3>${esc(pn)} · ${esc(p.d)}</h3><div class="h">${esc(p.f)} · tier ${p.t||"—"} · billed ${fmtE(p.b)} · our list ${fmtE(p.l,2)} · ${basisLabel()} ${fmtE(c,2)}</div>${
-    os.length?`<div class="h">Every price we hold is listed. ${ST.age==="all"?"":"Greyed rows are older than 12 months and are left out of the charts."}</div><div class="tablewrap" style="max-height:420px"><table><thead><tr><th>Date</th><th>Price type</th><th>Source</th><th>Country</th><th>Brand / number</th><th class="r">Price</th><th class="r">€${ST.vat?" ex VAT*":""}</th><th class="r">Index</th><th>VAT</th></tr></thead><tbody>${
-      os.map(o=>{const r=ratioOf(o);return`<tr style="${okDate(o)?"":"opacity:.5"}" title="${okDate(o)?"":"Older than 12 months: left out of the charts while the date switch is on last 12 months"}"><td>${fmtD(o[OI.date])}</td><td>${esc(DATA.group_label[o[OI.grp]])}</td><td>${o[OI.url]?`<a href="${esc(o[OI.url])}" target="_blank" rel="noopener">${esc(o[OI.src])}</a>`:esc(o[OI.src])}</td><td>${esc(o[OI.cty])}</td><td>${esc(o[OI.brand]||"")} ${esc(o[OI.cpn]||"")}</td><td class="r">${o[OI.price]} ${esc(o[OI.cur])}</td><td class="r">${fmtE(eurOf(o),2)}</td><td class="r">${r==null?"—":(o[OI.grp]==="genuine"?fmtP(r):bandChip(r))}</td><td>${esc(o[OI.vat])}</td></tr>`;}).join("")}</tbody></table></div>`
+    os.length?`<div class="h">Every price we hold is listed. Hover an index for the arithmetic behind it. ${ST.age==="all"?"":"Greyed rows are older than 12 months and are left out of the charts."}</div><div class="tablewrap" style="max-height:420px"><table><thead><tr><th>Date</th><th>Price type</th><th>Source</th><th>Country</th><th>Brand / number</th><th class="r">Price</th><th class="r">€${ST.vat?" ex VAT*":""}</th><th class="r">Index</th><th>VAT</th></tr></thead><tbody>${
+      os.map(o=>{const r=ratioOf(o);return`<tr style="${okDate(o)?"":"opacity:.5"}" title="${okDate(o)?"":"Older than 12 months: left out of the charts while the date switch is on last 12 months"}"><td>${fmtD(o[OI.date])}</td><td>${esc(DATA.group_label[o[OI.grp]])}</td><td>${o[OI.url]?`<a href="${esc(o[OI.url])}" target="_blank" rel="noopener">${esc(o[OI.src])}</a>`:esc(o[OI.src])}</td><td>${esc(o[OI.cty])}</td><td>${esc(o[OI.brand]||"")} ${esc(o[OI.cpn]||"")}</td><td class="r">${o[OI.price]} ${esc(o[OI.cur])}</td><td class="r">${fmtE(eurOf(o),2)}</td><td class="r" data-ex="${esc(howBuilt(o))}">${r==null?"—":(o[OI.grp]==="genuine"?fmtP(r):bandChip(r))}</td><td>${esc(o[OI.vat])}</td></tr>`;}).join("")}</tbody></table></div>`
     :`<div class="callout">No observed price for this part yet.</div>`}`;
   el.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 /* ── wiring ── */
 function seg(id,key){document.querySelectorAll(`#${id} button`).forEach(b=>b.onclick=()=>{document.querySelectorAll(`#${id} button`).forEach(x=>x.classList.toggle("on",x===b));ST[key]=b.dataset.v;refresh();});}
-function refresh(){s2();s3();s6();const d=document.getElementById("drill");if(d.classList.contains("on")){const pn=d.querySelector("h3").textContent.split(" ")[0];drill(pn);}}
+function defs(){
+  const D=[
+    ["Reference dealer price",`price list × ${DATA.ref_multiple}`,"What the part should cost at the dealer counter after distributor and dealer margins. Provisional: one fixed basis for every market for now.",
+      `Our price list × ${DATA.ref_multiple}. The margins reading decided under D03: a 37% distributor margin, then a 27.5% dealer margin (1 ÷ 0.63 ÷ 0.725 = 2.189). Provisional: the same basis is used for every market until a per-market basis is decided.`],
+    ["Price index","rival € ÷ comparison €","Below 100% the rival is cheaper. Near 100% neutral, not a target. Above 100% the rival is dearer, which can be a fair genuine premium.",
+      "Rival price in euro (VAT removed where the source shows it included and the strip is on) ÷ the comparison price chosen at the top. One value per part: the median of its prices."],
+    ["Genuine index","genuine € ÷ comparison €","A genuine Isuzu part sold outside our network. Not a rival brand; it shows where the grey channel sits.",
+      "Genuine Isuzu price seen at an outside seller ÷ comparison price."],
+    ["Channel gap","genuine index − aftermarket index","On one shop's shelf: how far the aftermarket copy sits below the genuine part (section 3).",
+      "Per part listed both ways at KS: genuine index minus aftermarket index, in percentage points. Median across parts."],
+  ];
+  document.getElementById("defs").innerHTML=D.map(d=>`<div class="def" data-ex="${esc(`<b>${d[0]}</b><br><span style='font-family:Consolas,monospace'>${d[1]}</span><br>${d[3]}`)}"><b>${esc(d[0])}</b><div class="f">${esc(d[1])}</div><div class="p">${esc(d[2])}</div></div>`).join("");
+}
+document.addEventListener("mousemove",e=>{const el=e.target.closest&&e.target.closest("[data-ex]");if(el&&el.dataset.ex){tipShow(e,el.dataset.ex);}else if(!(e.target.closest&&e.target.closest("#scatter circle")))tipHide();});
+function refresh(){s2();posExtras();shelf();s3();moves();s6();const d=document.getElementById("drill");if(d.classList.contains("on")){const pn=d.querySelector("h3").textContent.split(" ")[0];drill(pn);}}
 function foot(){
-  document.getElementById("foot").innerHTML=`<b>How to read this page.</b> Price index = rival price ÷ comparison price. The reference dealer price is our price list × ${DATA.ref_multiple}, the margins reading decided under D03 (a 37% margin, then 27.5%). Rival shop prices are end-customer prices, so the reference dealer price is the fairer comparison; the raw price list is offered for reference. Euro values use the dated ECB rates the price data stores. "Strip VAT" removes standard VAT (${Object.entries(DATA.vat).map(([k,v])=>k+" "+Math.round(v*1000)/10+"%").join(", ")}) only where the source shows a VAT-inclusive price; prices whose VAT basis the source does not state are used as recorded. Price types are never averaged together. By default the charts use only prices dated in the last 12 months (since ${fmtD(DATA.fresh_cut)}); "all dates" adds the older Eucon files (2023 survey, March 2024 web shops, brand list prices dated 2002 to 2025). Billed = parts billed ${DATA.billed_window}, credit notes and returns excluded; a ranking, not an audited figure.<br>
+  const vin=DATA.vat_use.filter(v=>v.incl>0);
+  document.getElementById("foot").innerHTML=`<b>Provisional assumption: one fixed comparison basis.</b> The reference dealer price is our price list × ${DATA.ref_multiple} for every market, the margins reading decided under D03 (a 37% distributor margin, then a 27.5% dealer margin). It is a single fixed basis for now: whether it fits every market has not been decided, and no per-market basis is applied until it is. Read every index on this page with that in mind.<br>
+  <b>How to read this page.</b> Price index = rival price ÷ comparison price. Rival shop prices are end-customer prices, so the reference dealer price is the fairer comparison; the raw price list is offered for reference. Euro values use the dated ECB rates the price data stores. "Strip VAT" removes standard VAT only where the source shows a VAT-inclusive price. Rates set: ${Object.entries(DATA.vat).map(([k,v])=>k+" "+Math.round(v*1000)/10+"%").join(", ")}. In the current price data it actually applies to ${vin.map(v=>`${esc(v.country)} (${v.rate==null?"no rate set":Math.round(v.rate*1000)/10+"%"}, ${v.incl.toLocaleString("en-GB")} prices)`).join(", ")||"no market"}. ${esc(DATA.vat_source)} Prices whose VAT basis the source does not state are used as recorded (table in section 5). Price types are never averaged together. By default the charts use only prices dated in the last 12 months (since ${fmtD(DATA.fresh_cut)}); "all dates" adds the older Eucon files (2023 survey, March 2024 web shops, brand list prices dated 2002 to 2025). Billed = parts billed ${DATA.billed_window}, credit notes and returns excluded; a ranking, not an audited figure.<br>
   <b>Sources.</b> Our price list (${esc(DATA.price_list_file)}); billed parts from the sales data; prices from Eucon files (2023 survey, Mar 2024, Jul 2025, Mar 2026), KS International, Amayama, Omega, T&amp;M Commercials and three thin Nordic sites; competitor numbers from the graded cross-reference. Eucon-derived prices stay on this machine.`;
 }
 function init(){
-  header();s1();s4();s5();
+  header();defs();s1();s4();s5();
   const fams=[...new Set(DATA.parts.map(p=>p.f))].sort();document.getElementById("famSel").innerHTML+=fams.map(f=>`<option>${esc(f)}</option>`).join("");
   seg("basis","basis");seg("grp","grp");seg("age","age");
   document.getElementById("vat").onchange=e=>{ST.vat=e.target.checked;refresh();};

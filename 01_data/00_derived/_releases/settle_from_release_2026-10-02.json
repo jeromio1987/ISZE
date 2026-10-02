@@ -1,0 +1,39 @@
+{
+  "run_at": "2026-10-02T07:22:49+00:00",
+  "by": "01_data/91_build/settle_classification_from_release_20261002.py",
+  "decision": "Jerome 2026-10-02: pricing-critical classification files settled from the approved 2026-10-02 release (PR #10 merge)",
+  "release": {
+    "id": "2026-10-02",
+    "sha256": "0ac9137903a326430c68e4d619fa4f836a796a01d9d40f6f6f1183e7d4c52360",
+    "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-10-02.csv"
+  },
+  "rows_changed": {
+    "pr00_classification.csv": 1661,
+    "parts_catalog_dimension.csv": 1661,
+    "parts_catalog_dimension.parquet (cells)": 4962
+  },
+  "cells_changed_logged": 9924,
+  "verify": {
+    "pr00_vs_release_mismatch_after": 0,
+    "pcd_vs_settled_pr00_mismatch": 0,
+    "parquet_vs_csv_rows_differing": 0
+  },
+  "sha256_before": {
+    "pr00_classification.csv": "f1e481919a32fbd74efd5ca2e6fd832f112a5eb6c70c4977b6f287c8e5c52f80",
+    "parts_catalog_dimension.csv": "02aecf7add3d8f8c699ac523084ce84e8f0b95e1e5fcd9b0eeb796ee3b0aa6ed",
+    "parts_catalog_dimension.parquet": "8cd58b8fa13c87fc38423d45fb92ba0d0662aa2f10b7e8cd934a65956910ad4d"
+  },
+  "sha256_after": {
+    "pr00_classification.csv": "020d651bd0eb738b711c4ebe7807f2c94c9cf2546dac20f4d7a3c0003325e4cf",
+    "parts_catalog_dimension.csv": "7ac01eb9af461ffad8be29ed174c58a6f5689285d73aef68401b0f7df572c9da",
+    "parts_catalog_dimension.parquet": "556eafe0f0d5c198d62aa957576e4824fef47886df9457e9d9ef76c67cd33415"
+  },
+  "backups": [
+    "pr00_classification.csv.bak_pre_release_settle_20261002",
+    "parts_catalog_dimension.csv.bak_pre_release_settle_20261002",
+    "parts_catalog_dimension.parquet.bak_pre_release_settle_20261002"
+  ],
+  "not_settled": {
+    "sellout_aim_top_pn_2025.csv": "labels come from the sellout builder's workbook taxonomy; needs that builder re-run against the release (open PR #10 source divergence)"
+  }
+}

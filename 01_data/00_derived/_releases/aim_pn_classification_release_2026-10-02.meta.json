@@ -1,0 +1,106 @@
+{
+  "generated": "2026-10-02T06:42:19+00:00",
+  "built_by": "01_data/91_build/build_aim_classification_release_20261002.py",
+  "release_id": "2026-10-02",
+  "status_at_build": "PENDING_APPROVAL (Jerome approves; this script never sets APPROVED)",
+  "purpose": "Two-axes lock 2026-09-17: Axis A = catalog_l1/l2/l3 identity (the catalogue tree of the approved 2026-09-20 release); Axis B = commercial score beside Axis A, not built as scored columns here and never the parent of the identity tree. aim_l*_fixed is the governed AIM family label. legacy workbook_l* is context only. Do not invent a fourth layer.",
+  "rows": 164916,
+  "sha256": "0ac9137903a326430c68e4d619fa4f836a796a01d9d40f6f6f1183e7d4c52360",
+  "sources": {
+    "catalogue_tree": {
+      "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-09-20.csv",
+      "sha256": "60111c104ddeb466e6c15f084039639d35172056b0fd2ea10225a3c50da610e0"
+    },
+    "aim_labels_overlay": {
+      "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_pn_classification_20260920.csv",
+      "sha256": "092e981518efc5440ac10972ed2312dcd493c851e39d3d5c278f2ad5d0c27a60",
+      "modified": "2026-09-24 19:21:14 +0200"
+    },
+    "aim_labels_master_fallback": {
+      "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\aim_master_v2.csv",
+      "sha256": "8add555669baf1f75b3bb2d203d58960fff7596b26ec5d8645d7ffee45604acf",
+      "modified": "2026-09-24 19:17:03 +0200"
+    }
+  },
+  "which_aim_state_is_current": "Neither file alone. Both were last written 24 Sep 2026 and are byte-identical to what the 25 Sep retest hashed. The live AIM pages read the figure-key export, which takes the overlay per level and the master where the overlay level is blank; this release stores exactly that resolved state, then applies the changes listed below.",
+  "changes_vs_live_state": {
+    "decision_1_keep_filter_element_leaf": "5864052180",
+    "decision_2_side_sills_to_panel": [
+      "8980554611",
+      "8980554621"
+    ],
+    "air_filter_catalogue_fix": "8980913940",
+    "lubricant_aim_fix_from_master": [
+      "0550047252",
+      "0550047337",
+      "0550065935",
+      "0550070445",
+      "0550070643",
+      "0550070645",
+      "0550071985",
+      "0550046280",
+      "0550052838"
+    ],
+    "lubricant_9_digit_keys_added": [
+      "550047252",
+      "550047337",
+      "550065935",
+      "550070445",
+      "550070643",
+      "550070645",
+      "550071985",
+      "550046280",
+      "550052838"
+    ],
+    "change_log": "aim_pn_classification_release_2026-10-02.changes.csv",
+    "change_log_rows": 105
+  },
+  "catalogue_verification_vs_pr00": {
+    "rows_checked": 164794,
+    "rows_matching": 164793,
+    "match_pct": 99.9994,
+    "reference_file": "pr00_classification_reference_20260920.csv",
+    "reference_sha256": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+    "reference_source": "git c813330f:01_data/00_derived/pr00_classification.csv (pr00 as committed 20 Sep 2026)",
+    "reference_reason": "Jerome decision 2026-10-02 (chat): copy integrity is measured against pr00_classification.csv as committed 20 Sep 2026 (git c813330f), not against today's file, because today's file carries the 21 Sep regression (1,660 rows). Pinned as a hash-recorded copy so the reference cannot move underneath the gate.",
+    "note": "COPY-INTEGRITY ONLY, measured on THIS file: catalogue columns vs the pinned 20 Sep pr00 reference on the zero-padded key (method of build_aim_classification_v2.py). The 9 lubricant 9-digit keys pad to their 10-digit twins and are counted. The single non-matching row is the deliberate 8980913940 air-filter catalogue fix. Does not prove correctness vs customs, figures or part text.",
+    "vs_pr00_today_information_only": {
+      "rows_checked": 164795,
+      "rows_matching": 163134,
+      "match_pct": 98.9921,
+      "pr00_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\pr00_classification.csv",
+      "pr00_sha256": "f1e481919a32fbd74efd5ca2e6fd832f112a5eb6c70c4977b6f287c8e5c52f80",
+      "note": "today's pr00 carries the 21 Sep regression; not the gate reference (Jerome 2026-10-02)"
+    },
+    "amended": {
+      "on": "2026-10-02T07:12:34+00:00",
+      "by": "01_data/91_build/pin_pr00_reference_20260920.py",
+      "previous_reference": "today's pr00_classification.csv (match 98.9921%)"
+    }
+  },
+  "counts": {
+    "catalog_l2_count": 27,
+    "catalog_l3_count": 177,
+    "line_kind": {
+      "part": 164716,
+      "non_part_unnamed": 153,
+      "lubricant_or_tool": 27,
+      "merchandise": 5,
+      "tool": 3,
+      "core_deposit": 3,
+      "marketing_item": 2,
+      "service_fee": 2,
+      "demurrage": 1,
+      "display": 1,
+      "finance": 1,
+      "rebate": 1,
+      "freight": 1
+    }
+  },
+  "consumer_contract": [
+    "Axis A (identity): group by catalog_l1/l2/l3; filter catalog_node_present=1.",
+    "aim_l1_fixed/aim_l2_fixed/aim_l3_fixed = the governed AIM family (what the AIM pages chart).",
+    "line_kind != 'part' marks freight / rebate / service / lubricant rows; filter line_kind=='part' for parts revenue.",
+    "Lubricants are stored under BOTH key forms (0550xxxxxx and 550xxxxxx); the billing sits on the 9-digit row, the 10-digit row carries the master's 0.0. Do not sum both without knowing that."
+  ]
+}

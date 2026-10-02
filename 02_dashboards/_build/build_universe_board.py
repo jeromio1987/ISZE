@@ -243,7 +243,12 @@ def facts() -> dict:
     paper_tools_present = {t: paper.count(t) for t, _ in TOOLS}
 
     # the file the AIM comparison pages are actually built from
-    fig = "01_data/00_derived/AIM_Master_PN_Categories_Figkey_20260924.csv"
+    # the APPROVED release's figure-key export, resolved and sha256-checked by classification_paths
+    import sys as _sys
+    _sys.path.insert(0, P("04_tools", "_shared"))
+    from classification_paths import figkey_export_for_release
+    _fig_path, _ = figkey_export_for_release()
+    fig = "01_data/00_derived/" + _fig_path.name
     fig_rows = 0
     if exists(*fig.split("/")):
         with io.open(P(*fig.split("/")), encoding="utf-8", errors="replace") as fh:

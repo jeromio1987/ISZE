@@ -397,10 +397,9 @@ layer_links = [
         ("AIM classification gap report", "ISZE\\03_analytics\\Isuzu\\prism\\docs\\aim_classification_gap_report.md"),
         ("IAM quality positioning overview", "ISZE\\02_dashboards\\pricing\\ISZE_IAM_Quality_Positioning_Overview.html"),
         ("IAM price vs billed part number", "ISZE\\02_dashboards\\pricing\\ISZE_IAM_Price_vs_Billed_PN.html"),
-        ("Aftermarket live pricing", "ISZE\\02_dashboards\\pricing\\ISZE_Aftermarket_Live_Pricing_Dashboard.html"),
+        ("Parts price intelligence (rival prices vs reference dealer price)", "ISZE\\02_dashboards\\pricing\\ISZE_Parts_Price_Intelligence.html"),
         ("Pricing action map", "ISZE\\02_dashboards\\pricing\\ISZE_Pricing_Action_Map.html"),
         ("Pricing history findings (16 Sep)", "ISZE\\02_dashboards\\pricing\\ISZE_Pricing_History_Findings_Dashboard.html"),
-        ("Scraped price intelligence", "ISZE\\02_dashboards\\pricing\\ISZE_Scraped_Price_Intelligence_Dashboard.html"),
         ("Part number classification (the file)", "ISZE\\01_data\\00_derived\\aim_pn_classification.csv"),
     ]),
     ("Dashboards — the ~20 views that read the layers above", [

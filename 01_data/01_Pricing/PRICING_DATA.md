@@ -7,7 +7,7 @@
 **Part-Groups Sales Explorer (slim hub):** `02_dashboards/sales/ISZE_PartGroups_Sales_Explorer.html` — tabs Sales / Competitive (Eucon) / GPS+PMS / Aftermarket scrape. Data: `01_data/14_dashboards/partgroups_explorer/` (+ sibling `02_dashboards/sales/partgroups_data/`). Rebuild: `python 02_dashboards/sales/_build/build_partgroups_sales_explorer.py`. HTML shell budget &lt;500 KB.
 
 - **GPS+PMS:** Ireland UIO forced to V20 carpark (`UIO_carpark_for_GPS_recalc_2026-07-30.csv` = 2,161 CY2025); pack 3,056 rejected; prefer capture-vs-wallet. PMS &gt;100% flagged as expected-qty basis breach.
-- **Aftermarket (A+B):** tab in explorer + dedicated `02_dashboards/pricing/ISZE_Aftermarket_Live_Pricing_Dashboard.html` (**self-contained — scrape JSON embedded at build**; double-click OK). Explorer needs `02_dashboards/sales/OPEN_PartGroups_Explorer.cmd` (never file:// for multi-MB JSON).
+- **Aftermarket (A+B):** tab in explorer + the price ledger page `02_dashboards/pricing/ISZE_Parts_Price_Intelligence.html` (self-contained, double-click OK; the old Aftermarket Live Pricing page was retired 2026-10-02 to `01_data/92_archive/price_pages_retired_2026-10-02/`). Explorer needs `02_dashboards/sales/OPEN_PartGroups_Explorer.cmd` (never file:// for multi-MB JSON).
 
 Raw Excel stays immutable under `_raw/`. Dated vintages also live in `history/` (see `history/README.md`). Day-to-day work uses the **parquet** tables in `01_data/00_derived/`.
 

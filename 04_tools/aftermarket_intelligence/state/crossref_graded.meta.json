@@ -1,15 +1,35 @@
 {
-  "built_at": "2026-10-01T16:34:48+00:00",
+  "built_at": "2026-10-02T07:17:31+00:00",
   "builder": "04_tools/aftermarket_intelligence/grade_crossref_edges.py",
   "rival_edges_graded": 6455,
   "tiers": {
-    "doubtful": 4902,
-    "confirmed": 1156,
-    "reject": 272,
-    "likely": 125
+    "doubtful": 4240,
+    "confirmed": 1197,
+    "likely": 855,
+    "reject": 163
   },
-  "usable_edges": 1281,
-  "usable_counterpart_numbers": 286,
+  "usable_edges": 2052,
+  "usable_counterpart_numbers": 507,
+  "second_source": {
+    "file": "04_tools\\aftermarket_intelligence\\state\\spareto_crossref.csv",
+    "spareto_pairs": 1144,
+    "pairs_matching_graph_edges": 437,
+    "edges_pair_matched": 1600,
+    "edges_pair_matched_brand_differs": 60,
+    "edges_moved": 921,
+    "pairs_key_in_graph_other_part": 94,
+    "spareto_part_numbers": 170,
+    "spareto_part_numbers_in_graph": 64,
+    "distinct_pairs_moved": 307,
+    "new_pairs_not_in_graph": 707,
+    "new_pairs_part_numbers": 145,
+    "moves": {
+      "doubtful -> likely": 771,
+      "likely -> confirmed": 41,
+      "reject -> doubtful": 109
+    },
+    "rule": "one step up (reject->doubtful->likely->confirmed) when Spareto lists the same (part_no, rival number) pair under an agreeing brand; never down. Spareto's upstream data source is not stated on its pages: independent of Eucon as a pipeline, not proven independent upstream."
+  },
   "data_boundary": "100% of rival edges are Eucon-sourced. Jerome's standing rule bars Eucon rows from DeepSeek or any outside-EU service, so the plan's original method for this card (DeepSeek pro, prompt 6.2) was NOT used. Grading is local and deterministic.",
   "method_limit": "This separates safe edges from doubtful ones. It cannot confirm a match the way a human or a language model could, and a 'confirmed' tier means corroborated by independent source files — not verified against a manufacturer catalogue."
 }
