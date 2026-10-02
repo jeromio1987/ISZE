@@ -1,0 +1,65 @@
+{
+  "run_at": "2026-10-02T07:49:00+00:00",
+  "by": "01_data/91_build/correct_pr00_from_review_20261002.py",
+  "decision": "Jerome 2026-10-02: correct pr00 per the 21 Sep review (keep 20 Sep on 1,619; keep 21 Sep on 2; proposed value on 40)",
+  "review": {
+    "file": "01_data\\91_build\\pr00_21sep_review_2026-10-02\\pr00_21sep_review_per_part.csv",
+    "sha256": "83e02102a5b25a3edd25556ea6924e18e16c6d1158c90cf22e61b38fee985959",
+    "verdicts": {
+      "keep_20sep": 1619,
+      "neither": 40,
+      "keep_21sep": 2
+    }
+  },
+  "release": {
+    "id": "2026-10-02",
+    "sha256": "0ac9137903a326430c68e4d619fa4f836a796a01d9d40f6f6f1183e7d4c52360",
+    "untouched": true
+  },
+  "pr00_rows_changed_by_verdict": {
+    "keep_20sep": 1619,
+    "neither": 40
+  },
+  "rows_changed": {
+    "pr00_classification.csv": 1659,
+    "parts_catalog_dimension.csv": 1659,
+    "parts_catalog_dimension.parquet (cells)": 4953
+  },
+  "cells_changed_logged": 9906,
+  "to_check": [
+    "8980023462",
+    "8981065790",
+    "8983941544",
+    "8983941570"
+  ],
+  "to_check_basis": "named in Jerome's brief; review CSV confidence: PLATE; SKID,RAD = low (2), ELEMENT KIT; PCV = medium (2)",
+  "next_release_proposal": {
+    "file": "01_data\\00_derived\\_releases\\next_release_proposal_2026-10-02.csv",
+    "rows": 42,
+    "differ_from_release": 42,
+    "applied": false
+  },
+  "verify": {
+    "target_mismatch_after": 0,
+    "keep_21sep_changed": 0,
+    "pr00_vs_release_diff_equals_proposal": true,
+    "rows_outside_review_unchanged": true,
+    "pcd_vs_pr00_mismatch": 0,
+    "parquet_vs_csv_rows_differing": 0
+  },
+  "sha256_before": {
+    "pr00_classification.csv": "f1e481919a32fbd74efd5ca2e6fd832f112a5eb6c70c4977b6f287c8e5c52f80",
+    "parts_catalog_dimension.csv": "02aecf7add3d8f8c699ac523084ce84e8f0b95e1e5fcd9b0eeb796ee3b0aa6ed",
+    "parts_catalog_dimension.parquet": "8cd58b8fa13c87fc38423d45fb92ba0d0662aa2f10b7e8cd934a65956910ad4d"
+  },
+  "sha256_after": {
+    "pr00_classification.csv": "cf4bc400fa3ddcff8248b1c812bb79ef15ed652d662de02f11cd2193d927546f",
+    "parts_catalog_dimension.csv": "46f95d9a171601089819061c15a846cb813f3878989db6ccd1a7b8a9db2a7593",
+    "parts_catalog_dimension.parquet": "8a9e7c9ea68f8b1a34e68179f63c5e8d9a717e7aba2df4e82c52bcd6504ebabe"
+  },
+  "backups": [
+    "pr00_classification.csv.bak_pre_pr00_correction_20261002T074858Z",
+    "parts_catalog_dimension.csv.bak_pre_pr00_correction_20261002T074858Z",
+    "parts_catalog_dimension.parquet.bak_pre_pr00_correction_20261002T074858Z"
+  ]
+}

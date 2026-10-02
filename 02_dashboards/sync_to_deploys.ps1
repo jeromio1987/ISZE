@@ -28,7 +28,8 @@ $Targets    = @(
 # Reduced copy set (consolidation 2026-08-20): skip scratch, internal SPA, and
 # the mirrored Data folder (JSON feeds are copied separately below). _composable
 # stays in the deploy set (PRISM map + master desk are still shipped).
-$SkipDirs = @('_archive', '_build', '_working', 'spa_internal', 'Data')
+# pricing is never synced: its pages carry Eucon-derived prices that must stay on this PC (Jerome, 2 Oct 2026).
+$SkipDirs = @('_archive', '_build', '_working', 'spa_internal', 'Data', 'pricing')
 
 function Convert-ToDeployHtml {
     param([string]$Content)

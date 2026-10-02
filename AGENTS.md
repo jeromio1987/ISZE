@@ -27,6 +27,7 @@
 9. **GPS / ITUK:** read `01_data/91_build/GPS_FILE_LINEAGE.md` and `.cursor/rules/isze-gps-ituk.mdc` — ITUK never on kickback or Other DBs tabs; dealer £ ≠ ISZE € wallet.
 10. **Deploy mirror:** never read or edit `07_deploy/Master Dashboard/context/` — regenerated from `00_docs/context_sync_whitelist.txt`.
 11. **Series → weight band (one authored map):** the only place an Isuzu series code (`NLR`, `NMR`, `NPR`, `NKR`, …) is turned into a weight band is `03_analytics/Isuzu/prism/data/series_to_band.csv` — one row per code, edited by hand. Read it through `03_analytics/Isuzu/prism/modules/vehicle_bands.py` (`band_for`, `group_for`, `gvw_t_for`); the neutral derived table built from it is `01_data/00_derived/vehicle_band_applicability.csv`. No script may keep its own dictionary of series codes — the retired probe `01_data/91_build/pn_ammo_probe_20260918/_tonnage_capable.py` is what that cost us, because its own copy had `NKR` on the 5.5 t band.
+12. **Chat overviews to Jerome:** `.cursor/rules/jerome-brief-plain.mdc` and `.cursor/rules/isze-spoken-labels.mdc` — his working English, no internal nicknames. Sales to dealer and %GM, not sell-out or markup factors. No agent OS, no invented List 1/2, no MIDI/Spain as his work.
 
 ## Edits & deploy
 
@@ -50,7 +51,7 @@ Shared rule: `.cursor/rules/isze-external-iml-language.mdc` — **always on**.
 **Defaults:** this chat = **internal**; `02_dashboards/`, meeting HTML, and Excel studies = **shared**.
 
 - **Shared** decks/HTML/PDF/email: never use internal nicknames (**IML v7**, **Model B**, **PRISM lane**). Say **IML service schedule** and point to the real business source (Apr 2026 PMS analysis / trip report / business case / GIDSS). No personal contact names — roles only (IML / ITUK).
-- **Internal** sparring / private notes: nicknames and blunt traps OK (`FACTS.md`, `DECISIONS.md`, memory, speaker notes, agent chat).
+- **Internal** sparring / private notes: nicknames and blunt traps OK in the notes themselves (`FACTS.md`, `DECISIONS.md`, memory, speaker notes). **Overviews, recaps, Monday notes, and decision asks in chat to Jerome still follow** `.cursor/rules/jerome-brief-plain.mdc` and `.cursor/rules/isze-spoken-labels.mdc` (his working English; no internal nicknames; no agent OS). Sparring on a point he named may use his words.
 
 ## Production — ask Jerome first
 

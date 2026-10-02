@@ -34,6 +34,7 @@ language model could. It separates the edges that are safe to act on from the on
 need eyes, which is what makes the rest of the graph usable.
 
 Run:  python 04_tools/aftermarket_intelligence/grade_crossref_edges.py
+      [--no-spareto] [--no-aliases] [--no-spareto-new] [--out <comparison csv>]
 """
 from __future__ import annotations
 
@@ -63,21 +64,54 @@ SPARETO = ROOT / "04_tools" / "aftermarket_intelligence" / "state" / "spareto_cr
 SPARETO_NEW = ROOT / "04_tools" / "aftermarket_intelligence" / "state" / "crossref_spareto_new_edges.csv"
 SPARETO_MOVES = ROOT / "04_tools" / "aftermarket_intelligence" / "state" / "crossref_spareto_moves.csv"
 STEP_UP = {"reject": "doubtful", "doubtful": "likely", "likely": "confirmed", "confirmed": "confirmed"}
+# Brand-name alias table (Jerome's go, 2026-10-02): reviewable CSV, one row per spelling that is
+# unambiguously the same brand (alias, canonical_brand, source, reason). Matched on the
+# normalised key (A-Z0-9 only). Used wherever brands are compared here: the Spareto brand check
+# and the brand-collision trap. `--no-aliases` switches it off (reproduces the pre-alias file).
+BRAND_ALIASES = ROOT / "04_tools" / "aftermarket_intelligence" / "state" / "brand_aliases.csv"
+_ALIAS: dict[str, str] = {}          # key(alias) -> canonical brand as written
 
 
 def _key(v) -> str:
     return re.sub(r"[^A-Z0-9]", "", str(v or "").upper())
 
 
-def _brand_agrees(a, b) -> bool:
-    """Normalised containment, also on a bracketed brand: `Wilmink Group (Febi)` -> FEBI."""
+def load_aliases(path: Path = BRAND_ALIASES) -> dict[str, str]:
+    if not path.exists():
+        return {}
+    a = pd.read_csv(path, dtype=str, encoding="utf-8")
+    out = {}
+    for al, can in zip(a["alias"], a["canonical_brand"]):
+        k = _key(al)
+        if k and k in out and out[k] != can:
+            raise SystemExit(f"REFUSED - alias {al!r} maps to two canonical brands")
+        if k:
+            out[k] = can
+    return out
+
+
+def canonical_brand(b) -> str:
+    """Canonical brand name if the alias table knows this spelling, else the input unchanged."""
+    return _ALIAS.get(_key(b), b)
+
+
+def _brand_agrees(a, b, use_alias: bool = True) -> bool:
+    """Normalised containment, also on a bracketed brand: `Wilmink Group (Febi)` -> FEBI.
+    With the alias table loaded, two forms also agree when they map to the same canonical
+    brand (exact key equality on the canonical name, no containment)."""
     def forms(x):
         x = str(x or "")
         return {_key(x)} | {_key(m) for m in re.findall(r"\(([^)]+)\)", x)}
-    for fa in forms(a):
-        for fb in forms(b):
+    fa_all, fb_all = forms(a), forms(b)
+    for fa in fa_all:
+        for fb in fb_all:
             if fa and fb and (fa == fb or fa in fb or fb in fa):
                 return True
+    if _ALIAS and use_alias:
+        ca = {_key(_ALIAS.get(f, f)) for f in fa_all if f}
+        cb = {_key(_ALIAS.get(f, f)) for f in fb_all if f}
+        if ca & cb:
+            return True
     return False
 
 
@@ -185,6 +219,9 @@ def apply_second_source(rival: pd.DataFrame, sp: pd.DataFrame) -> tuple[pd.DataF
         rival.at[i, "spareto_brand"] = "; ".join(bl)
         if any(_brand_agrees(b, r["competitor_brand"]) for b in bl):
             rival.at[i, "spareto_brand_agrees"] = True
+            if _ALIAS and not any(_brand_agrees(b, r["competitor_brand"], use_alias=False)
+                                  for b in bl):
+                stats["edges_brand_agrees_via_alias"] = stats.get("edges_brand_agrees_via_alias", 0) + 1
             new = STEP_UP[r["tier"]]
             if new != r["tier"]:
                 rival.at[i, "tier"] = new
@@ -213,7 +250,16 @@ def apply_second_source(rival: pd.DataFrame, sp: pd.DataFrame) -> tuple[pd.DataF
 
 
 def main() -> int:
+    global _ALIAS
     use_spareto = "--no-spareto" not in sys.argv
+    use_aliases = "--no-aliases" not in sys.argv
+    # Spareto-only pairs merged into the graded file as single-source doubtful rows
+    # (Jerome's go 2026-10-02). `--no-spareto-new` leaves them out (pre-merge file shape).
+    merge_new = use_spareto and "--no-spareto-new" not in sys.argv
+    _ALIAS = load_aliases() if use_aliases else {}
+    if use_aliases:
+        print(f"brand aliases: {len(_ALIAS)} spellings from {BRAND_ALIASES.name}"
+              if _ALIAS else f"brand aliases: no file at {BRAND_ALIASES} - none applied")
     out_path = OUT
     if "--out" in sys.argv:
         out_path = Path(sys.argv[sys.argv.index("--out") + 1])
@@ -236,6 +282,11 @@ def main() -> int:
     print(f"rival edges to grade: {len(rival):,}")
 
     # --- corroboration, per competitor number ---------------------------------
+    # brand-collision trap counts distinct brands per number; with the alias table, spellings
+    # of one brand (FEBI / FEBI BILSTEIN) count once. Raw count kept for the stat.
+    n_brands_raw = rival.groupby("cpn_key")["competitor_brand_norm"].nunique()
+    if _ALIAS:
+        rival["competitor_brand_norm"] = rival["competitor_brand_norm"].map(canonical_brand)
     g = rival.groupby("cpn_key")
     corrob = pd.DataFrame({
         "n_source_files": g["source"].nunique(),
@@ -259,6 +310,13 @@ def main() -> int:
     rival["n_source_files"] = rival["n_source_files"].fillna(1).astype(int)
     rival["n_vintages"] = rival["n_vintages"].fillna(1).astype(int)
     rival["brand_collision"] = rival["n_brands"].fillna(1).astype(int) > 1
+    alias_stats = {}
+    if _ALIAS:
+        raw_coll = rival["cpn_key"].map(n_brands_raw).fillna(1).astype(int) > 1
+        cleared = raw_coll & ~rival["brand_collision"]
+        alias_stats = {"alias_spellings": len(_ALIAS),
+                       "edges_collision_cleared_by_alias": int(cleared.sum()),
+                       "numbers_collision_cleared_by_alias": int(rival.loc[cleared, "cpn_key"].nunique())}
     rival["multi_partno"] = rival["n_part_numbers"].fillna(1).astype(int) > 1
     rival["category_conflict"] = rival["cpn_key"].isin(conflicting)
     rival["pn_shape_ok"] = rival["cpn_written"].map(plausible_part_number).fillna(False)
@@ -274,7 +332,7 @@ def main() -> int:
         print(f"Spareto pairs read: {len(sp):,} (from {SPARETO.name})" if len(sp)
               else f"Spareto: no file at {SPARETO} - Eucon-only grading")
         rival, sp_stats = apply_second_source(rival, sp)
-        if not sp.empty and out_path == OUT:
+        if not sp.empty:
             graph_pairs = set(zip(rival["part_no"], rival["cpn_key"].map(_key)))
             new_edges = sp[[(p_, k) not in graph_pairs
                             for p_, k in zip(sp["part_no"], sp["cpn_key"])]].copy()
@@ -284,22 +342,64 @@ def main() -> int:
             new_edges["source"] = "Spareto /oe/ page"
             new_edges["tier"] = "doubtful"
             new_edges["reason"] = "single source (Spareto only), not in the Eucon graph"
-            new_edges.to_csv(SPARETO_NEW, index=False)
             moves = rival[rival["tier"] != rival["tier_eucon_only"]]
-            moves[["edge_id", "part_no", "competitor_brand", "competitor_pn", "spareto_brand",
-                   "tier_eucon_only", "tier", "reason"]].to_csv(SPARETO_MOVES, index=False)
+            if out_path == OUT:
+                new_edges.to_csv(SPARETO_NEW, index=False)
+                moves[["edge_id", "part_no", "competitor_brand", "competitor_pn", "spareto_brand",
+                       "tier_eucon_only", "tier", "reason"]].to_csv(SPARETO_MOVES, index=False)
             sp_stats["new_pairs_not_in_graph"] = int(len(new_edges))
             sp_stats["new_pairs_part_numbers"] = int(new_edges["part_no"].nunique())
             sp_stats["moves"] = {f"{a} -> {b}": int(n) for (a, b), n in
                                  moves.groupby(["tier_eucon_only", "tier"]).size().items()}
         print(json.dumps(sp_stats, indent=2))
+        if merge_new and not sp.empty:
+            # Spareto-only pairs into the graded file: tier doubtful, single source. Downstream
+            # uses confirmed/likely only, so these are NOT trusted matches until a second
+            # source confirms them. Eucon corroboration above was computed before this, so
+            # these rows cannot influence any Eucon edge's tier.
+            cat_df = pd.read_csv(CATALOG, dtype=str, usecols=["part_number", "pms_category"])
+            cat_df = cat_df.dropna().drop_duplicates("part_number")
+            cat_m = dict(zip(cat_df["part_number"], cat_df["pms_category"]))
+            ne = new_edges.copy()
+            graph_keys = set(rival["cpn_key"].map(_key))
+            sp_parts_per_key = sp.groupby("cpn_key")["part_no"].nunique()
+            add = pd.DataFrame({
+                "edge_id": "spareto:" + ne["part_no"] + ":" + ne["cpn_key"],
+                "part_no": ne["part_no"],
+                "our_category": ne["part_no"].map(cat_m),
+                "competitor_brand": ne["competitor_brand"],
+                "competitor_pn": ne["competitor_pn"],
+                "cpn_key": ne["cpn_key"],
+                "source": "Spareto /oe/ page",
+                "source_vintage": "2026-10-02",
+                "n_source_files": 1, "n_vintages": 1,
+                "n_part_numbers": ne["cpn_key"].map(sp_parts_per_key).fillna(1).astype(int),
+                "brand_collision": ne["competitor_brand"].str.contains(";", regex=False),
+                "multi_partno": (ne["cpn_key"].map(sp_parts_per_key).fillna(1) > 1)
+                                | ne["cpn_key"].isin(graph_keys),
+                "category_conflict": False,
+                "pn_shape_ok": ne["competitor_pn"].map(plausible_part_number),
+                "tier": "doubtful",
+                "reason": ("single source (Spareto only), not in the Eucon graph; not a trusted "
+                           "match until a second source confirms it"),
+                "has_competitor_price": 0, "competitor_price": "", "currency": "",
+                "tier_eucon_only": "", "spareto_pair": True, "spareto_brand_agrees": True,
+                "spareto_brand": ne["competitor_brand"],
+            })
+            add["has_category"] = add["our_category"].notna()
+            rival["edge_origin"] = "eucon_graph"
+            add["edge_origin"] = "spareto_only"
+            rival = pd.concat([rival, add], ignore_index=True)
+            sp_stats["new_pairs_merged_as_doubtful"] = int(len(add))
+            print(f"Spareto-only pairs merged as doubtful rows: {len(add):,}")
 
     cols = ["edge_id", "part_no", "our_category", "competitor_brand", "competitor_pn",
             "cpn_key", "source", "source_vintage", "n_source_files", "n_vintages",
             "n_part_numbers", "brand_collision", "multi_partno", "category_conflict",
             "pn_shape_ok", "has_category", "tier", "reason",
             "has_competitor_price", "competitor_price", "currency",
-            "tier_eucon_only", "spareto_pair", "spareto_brand_agrees", "spareto_brand"]
+            "tier_eucon_only", "spareto_pair", "spareto_brand_agrees", "spareto_brand",
+            "edge_origin"]
     out = rival[[c for c in cols if c in rival.columns]]
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out.to_csv(out_path, index=False)
@@ -337,8 +437,19 @@ def main() -> int:
                                    "lists the same (part_no, rival number) pair under an agreeing "
                                    "brand; never down. Spareto's upstream data source is not stated "
                                    "on its pages: independent of Eucon as a pipeline, not proven "
-                                   "independent upstream."} if sp_stats else None),
-        "data_boundary": ("100% of rival edges are Eucon-sourced. Jerome's standing rule "
+                                   "independent upstream.",
+                           "spareto_only_rows": ("merged into this file as tier doubtful, "
+                                                 "edge_origin=spareto_only, single source; not "
+                                                 "trusted for price comparison until a second "
+                                                 "source confirms them") if merge_new else
+                                                "not merged (--no-spareto-new)"} if sp_stats else None),
+        "brand_aliases": ({"file": str(BRAND_ALIASES.relative_to(ROOT)), **alias_stats,
+                           "edges_brand_agrees_via_alias": sp_stats.get("edges_brand_agrees_via_alias", 0),
+                           "rule": "spellings in the table count as one brand in the Spareto brand "
+                                   "check and the brand-collision trap; exact canonical match, no "
+                                   "containment"} if _ALIAS else None),
+        "data_boundary": ("100% of the rival edges from the cross-reference graph are Eucon-sourced "
+                          "(rows with edge_origin=spareto_only are not). Jerome's standing rule "
                           "bars Eucon rows from DeepSeek or any outside-EU service, so the "
                           "plan's original method for this card (DeepSeek pro, prompt 6.2) "
                           "was NOT used. Grading is local and deterministic."),
@@ -362,7 +473,8 @@ def main() -> int:
         f"{usable['cpn_key'].nunique():,} counterpart numbers\n"
         f"- of the usable, carrying a price: **{len(with_price):,}**\n\n"
         "## The boundary that shaped the method\n\n"
-        "100% of the rival edges are Eucon-sourced. Jerome's standing rule bars Eucon rows "
+        "100% of the rival edges from the cross-reference graph are Eucon-sourced (the "
+        "`spareto_only` rows are not). Jerome's standing rule bars Eucon rows "
         "from DeepSeek or any outside-EU service, so the plan's original method for this card "
         "— DeepSeek pro judging (prompt 6.2) — was **not** used. Grading here is local and "
         "deterministic.\n\n"
@@ -384,8 +496,22 @@ def main() -> int:
             f"({', '.join(f'{k}: {v}' for k, v in sp_stats.get('moves', {}).items()) or 'none'})\n"
             f"- Spareto pairs not in the graph (new, single-source, doubtful): "
             f"{sp_stats.get('new_pairs_not_in_graph', 0):,} -> `{SPARETO_NEW.name}`\n\n"
-            "Spareto's own upstream source is not stated on its pages: it is independent of "
+            + (f"- Spareto-only pairs merged into this file: "
+               f"{sp_stats.get('new_pairs_merged_as_doubtful', 0):,} rows, tier doubtful, "
+               "`edge_origin = spareto_only`. Single source: not used as trusted matches "
+               "(downstream reads confirmed/likely only) until a second source confirms them.\n\n"
+               if merge_new else "")
+            + "Spareto's own upstream source is not stated on its pages: it is independent of "
             "Eucon as a pipeline, not proven independent upstream.\n\n") if sp_stats else "")
+        + (("## Brand-name aliases (added 2026-10-02)\n\n"
+            f"`{BRAND_ALIASES.name}`: {len(_ALIAS)} spellings mapped to a canonical brand, each "
+            "with a reason. Used in the Spareto brand check and the brand-collision trap.\n\n"
+            f"- Spareto-matched edges whose brand now agrees only through the table: "
+            f"{sp_stats.get('edges_brand_agrees_via_alias', 0):,}\n"
+            f"- edges whose brand-collision flag the table cleared: "
+            f"{alias_stats.get('edges_collision_cleared_by_alias', 0):,} "
+            f"({alias_stats.get('numbers_collision_cleared_by_alias', 0):,} rival numbers)\n\n")
+           if _ALIAS else "")
         + "## Limit, stated plainly\n\n"
         "This separates edges that are safe to act on from edges that need eyes. It cannot "
         "confirm a match a human could.\n",
