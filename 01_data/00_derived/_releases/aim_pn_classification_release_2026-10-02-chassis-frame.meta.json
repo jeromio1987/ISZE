@@ -1,0 +1,142 @@
+{
+  "generated": "2026-10-02T13:10:06+00:00",
+  "built_by": "01_data/91_build/build_aim_classification_release_20261002_chassis_frame.py",
+  "release_id": "2026-10-02-chassis-frame",
+  "release_id_note": "2026-10-02 and 2026-10-02-candidate are taken. The candidate file is a release file (never overwritten) and the register treats sha256 as an entry's identity, so the candidate entry's hash is not rewritten; a new id in the register's form (date + hyphen suffix) is cut. The suffix names the one difference from the candidate. No version label.",
+  "status_at_build": "PENDING_APPROVAL (approval is a separate register edit after the gate)",
+  "decisions_2026_10_02": {
+    "1_cab_mounting_members": "Jerome 2026-10-02: the cab mounting members (MEMBER; CAB MTG, figure key 510-173) go to AIM Chassis Frame > Crossmember & Brackets > Bracket (the label the release already carries on 8980107565), not Accident & Body > Panels > Panel; catalogue tree stays Accident parts > Body parts > Body structure (existing value).",
+    "2_to_check_parts": "Jerome 2026-10-02: 2x ELEMENT KIT; PCV (8981065790, 8980023462) and 2x PLATE; SKID,RAD (8983941570, 8983941544) approved as proposed. NOTE: the PCV kits should still be checked against the parts catalogue (EPC); their filing under Injectors > Injection pump is an interpretation, not confirmed in the EPC.",
+    "pcv_kits_check_against_parts_catalogue": [
+      "8980023462",
+      "8981065790"
+    ]
+  },
+  "vs_2026_10_02_candidate": {
+    "file": "aim_pn_classification_release_2026-10-02-candidate.csv",
+    "sha256": "d17bb48d9d9c5cd2f8643ea2e3515c9a1bda21c26aab657fe0a5140197c4c54e",
+    "rows_differing": 142,
+    "columns_differing": [
+      "aim_l1_fixed",
+      "aim_l2_fixed",
+      "aim_l3_fixed",
+      "aim_source"
+    ],
+    "all_on_cab_mounting_members": true
+  },
+  "purpose": "Two-axes lock 2026-09-17: Axis A = catalog_l1/l2/l3 identity (the catalogue tree of the approved 2026-09-20 release); Axis B = commercial score beside Axis A, not built as scored columns here and never the parent of the identity tree. aim_l*_fixed is the governed AIM family label. legacy workbook_l* is context only. Do not invent a fourth layer.",
+  "rows": 164919,
+  "sha256": "9bb86a9b4d89c5954cd6dd15fdc977db44e66cddaa15e3e70bd0285e3bf3e65b",
+  "base_release": {
+    "release_id": "2026-10-02",
+    "file": "aim_pn_classification_release_2026-10-02.csv",
+    "sha256": "0ac9137903a326430c68e4d619fa4f836a796a01d9d40f6f6f1183e7d4c52360",
+    "rows": 164916
+  },
+  "sources": {
+    "proposal": {
+      "file": "next_release_proposal_2026-10-02.csv",
+      "sha256": "e3dbc746fe14241cbc4c8e0d608916fba593ea50fd05f7034e61b1309627b1b6"
+    },
+    "review": "01_data/91_build/pr00_21sep_review_2026-10-02/REVIEW.md",
+    "body_findings": "02_dashboards/pricing/_build/price_5pct_proposal_2026-09-29/uti_panels_2026-10-02/FINDINGS.md (back-order trend section)",
+    "jp_codes": {
+      "file": "jp_codes_cache_20260920.csv",
+      "sha256": "2277fa0363861decdcffeb57913db1e4b1903c1e96d713bd420938771630fad5"
+    },
+    "master": {
+      "file": "aim_master_v2.csv",
+      "sha256": "8add555669baf1f75b3bb2d203d58960fff7596b26ec5d8645d7ffee45604acf"
+    },
+    "l12m_eur_in_change_log": "sales_fact.parquet net_sales_value 2025-09-01..2026-08-31, all sold-to, 10-digit padded key (the review's window)"
+  },
+  "changes_vs_base": {
+    "A_review_proposal_parts": 42,
+    "A_to_check_approved_as_proposed": [
+      "8980023462",
+      "8981065790",
+      "8983941544",
+      "8983941570"
+    ],
+    "B_body_filing_parts": 284,
+    "B_rows_added": [
+      "7475447681",
+      "7551939337",
+      "7552895450"
+    ],
+    "B_types_not_added": {
+      "roof panel": {
+        "parts_of_this_type_not_in_release_not_added": 335,
+        "billed_l12m_among_them_eur": 0.0
+      },
+      "upper cowl panel": {
+        "parts_of_this_type_not_in_release_not_added": 290,
+        "billed_l12m_among_them_eur": 0.0
+      },
+      "cab mounting member": {
+        "parts_of_this_type_not_in_release_not_added": 270,
+        "billed_l12m_among_them_eur": 0.0
+      },
+      "front inner lid": {
+        "parts_of_this_type_not_in_release_not_added": 2,
+        "billed_l12m_among_them_eur": 0.0
+      }
+    },
+    "C_wrong_in_both_parts": [
+      "5878305371",
+      "9443730060"
+    ],
+    "change_log": "aim_pn_classification_release_2026-10-02-chassis-frame.changes.csv",
+    "change_log_rows": 1116,
+    "body_filing_list": "aim_pn_classification_release_2026-10-02-chassis-frame.body_filing.csv",
+    "parts_touched": 299
+  },
+  "catalogue_verification_vs_pr00": {
+    "rows_checked": 164794,
+    "rows_matching": 164750,
+    "match_pct": 99.9733,
+    "reference_file": "pr00_classification_reference_20260920.csv",
+    "reference_sha256": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
+    "reference_source": "git c813330f:01_data/00_derived/pr00_classification.csv (pr00 as committed 20 Sep 2026)",
+    "reference_reason": "Jerome decision 2026-10-02 (chat): copy integrity is measured against pr00_classification.csv as committed 20 Sep 2026 (git c813330f), not against today's file, because today's file carries the 21 Sep regression (1,660 rows). Pinned as a hash-recorded copy so the reference cannot move underneath the gate.",
+    "non_matching_parts": 44,
+    "note": "COPY-INTEGRITY ONLY, measured on THIS file: catalogue columns vs the pinned 20 Sep pr00 reference on the zero-padded key (method of build_aim_classification_v2.py). Every non-matching row is a deliberate change listed in the change log (or the 8980913940 air-filter fix carried from 2026-10-02). Does not prove correctness vs customs, figures or part text.",
+    "vs_pr00_today_information_only": {
+      "rows_checked": 164795,
+      "rows_matching": 164793,
+      "match_pct": 99.9988,
+      "pr00_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\pr00_classification.csv",
+      "pr00_sha256": "cf4bc400fa3ddcff8248b1c812bb79ef15ed652d662de02f11cd2193d927546f",
+      "non_matching_parts": [
+        "5878305371",
+        "9443730060"
+      ],
+      "note": "today's pr00 = the 2 Oct correction; it already carries the 42 proposal values, so the remaining differences are this release's B/C catalogue changes (pr00 not edited by this script)"
+    }
+  },
+  "counts": {
+    "catalog_l2_count": 27,
+    "catalog_l3_count": 177,
+    "line_kind": {
+      "part": 164719,
+      "non_part_unnamed": 153,
+      "lubricant_or_tool": 27,
+      "merchandise": 5,
+      "tool": 3,
+      "core_deposit": 3,
+      "marketing_item": 2,
+      "service_fee": 2,
+      "demurrage": 1,
+      "display": 1,
+      "finance": 1,
+      "rebate": 1,
+      "freight": 1
+    }
+  },
+  "consumer_contract": [
+    "Axis A (identity): group by catalog_l1/l2/l3; filter catalog_node_present=1.",
+    "aim_l1_fixed/aim_l2_fixed/aim_l3_fixed = the governed AIM family (what the AIM pages chart).",
+    "line_kind != 'part' marks freight / rebate / service / lubricant rows; filter line_kind=='part' for parts revenue.",
+    "Lubricants are stored under BOTH key forms (0550xxxxxx and 550xxxxxx); the billing sits on the 9-digit row, the 10-digit row carries the master's 0.0. Do not sum both without knowing that."
+  ]
+}

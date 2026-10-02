@@ -1,6 +1,6 @@
 # Classification Release Guard
 
-**Status (2026-10-02):** release `2026-10-02` APPROVED by Jerome on 2026-10-02 (sha256 `0ac91379...`); `2026-09-20` SUPERSEDED (hash and approval record kept); `2026-09-24-candidate` NOT_RELEASED. RELEASES.json is the source of truth; the sections below describe the 24 Sep setup.
+**Status (2026-10-02, later):** release `2026-10-02-chassis-frame` APPROVED by Jerome on 2026-10-02 (sha256 `9bb86a9b...`); `2026-10-02` SUPERSEDED; `2026-10-02-candidate` NOT_RELEASED (replaced, never approved, hash kept); `2026-09-20` SUPERSEDED; `2026-09-24-candidate` NOT_RELEASED. RELEASES.json is the source of truth; the sections below describe the 24 Sep setup.
 
 **pr00 copy-integrity reference:** `pr00_classification_reference_20260920.csv` (+ `.meta.json`), the exact bytes of `pr00_classification.csv` at git c813330f (20 Sep), read-only, sha256 `98e64b5b...`. Jerome decided 2026-10-02 that the gate's `pr00_copy_integrity` measures against this pinned copy, not today's pr00, which carries the 21 Sep regression (1,660 rows). The gate re-hashes it and re-measures; a moved reference fails the check. Built by `01_data/91_build/pin_pr00_reference_20260920.py`.
 

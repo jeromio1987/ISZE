@@ -1,0 +1,39 @@
+{
+  "run_at": "2026-10-02T13:13:24+00:00",
+  "by": "01_data/91_build/settle_classification_from_release_20261002_chassis_frame.py",
+  "decision": "Jerome 2026-10-02 (approval 2 + go-live): pr00 / parts_catalog_dimension made to agree with the approved 2026-10-02-chassis-frame release where they differ",
+  "release": {
+    "id": "2026-10-02-chassis-frame",
+    "sha256": "9bb86a9b4d89c5954cd6dd15fdc977db44e66cddaa15e3e70bd0285e3bf3e65b",
+    "path": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-10-02-chassis-frame.csv"
+  },
+  "rows_changed": {
+    "pr00_classification.csv": 2,
+    "parts_catalog_dimension.csv": 2,
+    "parts_catalog_dimension.parquet (cells)": 5
+  },
+  "cells_changed_logged": 10,
+  "verify": {
+    "pr00_vs_release_mismatch_after": 0,
+    "pcd_vs_settled_pr00_mismatch": 0,
+    "parquet_vs_csv_rows_differing": 0
+  },
+  "sha256_before": {
+    "pr00_classification.csv": "cf4bc400fa3ddcff8248b1c812bb79ef15ed652d662de02f11cd2193d927546f",
+    "parts_catalog_dimension.csv": "46f95d9a171601089819061c15a846cb813f3878989db6ccd1a7b8a9db2a7593",
+    "parts_catalog_dimension.parquet": "8a9e7c9ea68f8b1a34e68179f63c5e8d9a717e7aba2df4e82c52bcd6504ebabe"
+  },
+  "sha256_after": {
+    "pr00_classification.csv": "74c080df42c3cd4bf3ee86a833f7bf9c736b86d2183f178cad92853b2179be7c",
+    "parts_catalog_dimension.csv": "4789f8a3775aa1e4a441c99fa051d70ee33d17e12e5c109abf0594ce3c57160f",
+    "parts_catalog_dimension.parquet": "54f0e0dec052f4183d7fc30575edcde76240e4f08beefe701b7ecb660bfd68b5"
+  },
+  "backups": [
+    "pr00_classification.csv.bak_pre_release_settle_20261002_chassis_frame",
+    "parts_catalog_dimension.csv.bak_pre_release_settle_20261002_chassis_frame",
+    "parts_catalog_dimension.parquet.bak_pre_release_settle_20261002_chassis_frame"
+  ],
+  "not_settled": {
+    "sellout_aim_top_pn_2025.csv": "labels come from the sellout builder's workbook taxonomy; needs that builder re-run against the release (open PR #10 source divergence)"
+  }
+}

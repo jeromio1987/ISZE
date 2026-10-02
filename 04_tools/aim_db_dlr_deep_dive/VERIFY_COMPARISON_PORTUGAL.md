@@ -1,6 +1,6 @@
 # Verification - AIM comparison, PORTUGAL
 
-Built 2026-10-02T07:15:08+00:00. 25 of 25 checks pass.
+Built 2026-10-02T13:11:43+00:00. 25 of 25 checks pass.
 
 ## All checks
 
@@ -14,7 +14,7 @@ Built 2026-10-02T07:15:08+00:00. 25 of 25 checks pass.
 | units reconcile to the sales-to-dealer rows: PORTUGAL 2025-01..2026-08 | 91153.0 | 91153.0 | PASS | on the page 90,002.0 units + 1,151.0 units dropped by the scope rule (non-part lines and lubricants) = 91,153.0 source units |
 | sales to dealer, period A: units not classified in AIM | reported, not a gate | 6.28% of 43,387 units | PASS | reported, not a gate |
 | sales to dealer, period A: units with no price on the list | reported, not a gate | 3.90% of 43,387 units | PASS | reported, not a gate |
-| sales to dealer, period B: units not classified in AIM | reported, not a gate | 6.52% of 46,675 units | PASS | reported, not a gate |
+| sales to dealer, period B: units not classified in AIM | reported, not a gate | 6.51% of 46,675 units | PASS | reported, not a gate |
 | sales to dealer, period B: units with no price on the list | reported, not a gate | 4.64% of 46,675 units | PASS | reported, not a gate |
 | the growth and decline euro sums back to the movement between the two period totals | 190718.13 | 190718.13 | PASS | 579,380.96 up and -388,662.83 down across 9,379 priced part numbers. The right-hand figure is the difference between the two period totals read straight from the periods, so nothing is lost between the two ranked lists. The tolerance is five cents, which is the rounding the page carries at this size |
 | the drill conserves the euro: AIM level 1 group against its level 2 groups | 0.0 | 0.0 | PASS | opening a bar must not lose or double count any euro; the largest gap found across all groups is 0.0000 euro (in group 0) |
@@ -229,25 +229,20 @@ Built 2026-10-02T07:15:08+00:00. 25 of 25 checks pass.
 
 ```json
 {
-  "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\AIM_Master_PN_Categories_Figkey_release_2026-10-02.csv",
+  "file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\AIM_Master_PN_Categories_Figkey_release_2026-10-02-chassis-frame.csv",
   "release": {
-    "release_id": "2026-10-02",
-    "path": "aim_pn_classification_release_2026-10-02.csv",
-    "sha256": "0ac9137903a326430c68e4d619fa4f836a796a01d9d40f6f6f1183e7d4c52360",
+    "release_id": "2026-10-02-chassis-frame",
+    "path": "aim_pn_classification_release_2026-10-02-chassis-frame.csv",
+    "sha256": "9bb86a9b4d89c5954cd6dd15fdc977db44e66cddaa15e3e70bd0285e3bf3e65b",
     "status": "APPROVED",
-    "rows": 164916,
-    "rows_note": "data rows, header excluded (the two earlier entries record 164908 = 164,907 data rows + header)",
-    "source": "catalogue tree: aim_pn_classification_release_2026-09-20.csv; AIM labels: aim_pn_classification_20260920.csv per level, aim_master_v2.csv where blank (the live page export's rule)",
-    "recommendation": "00_docs/AIM_RELEASE_RETEST_2026-09-25.md s7 item 4; Jerome decisions 2026-10-02 (keep Filter element leaf; side sills to Panels > Panel; cut a new release)",
-    "notes": "Cut 2026-10-02 by claude-opus. Adds the 24 Sep AIM work, the side-sill decision, the 8980913940 air-filter catalogue fix and both lubricant key forms; change log aim_pn_classification_release_2026-10-02.changes.csv. Supersedes the 2026-09-24-candidate as the thing to approve. Bookkeeping: that candidate's recorded sha256 e5824683... is the hash of aim_pn_classification_20260920.csv.bak_pre_cab_class_20260924_192113, not of its recorded path (now 092e9815...); its entry was left unchanged because sha256 is the identity field the gate matches on.",
+    "rows": 164919,
+    "rows_note": "data rows, header excluded (same as 2026-10-02)",
+    "source": "release 2026-10-02 (aim_pn_classification_release_2026-10-02.csv, sha256 0ac91379...) + next_release_proposal_2026-10-02.csv (42 parts) + body filing (cab mounting members on Chassis Frame) + 2 wrong-in-both fixes",
+    "recommendation": "APPROVAL_SUMMARY_2026-10-02-candidate.md; Jerome decisions 2026-10-02 (cab mounting members to Chassis Frame; 4 to-check parts as proposed)",
+    "notes": "Cut 2026-10-02 by claude-opus: the 2026-10-02-candidate with Jerome's decision (1) applied (142 cab mounting member rows differ, AIM columns only). Change log aim_pn_classification_release_2026-10-02-chassis-frame.changes.csv; body list aim_pn_classification_release_2026-10-02-chassis-frame.body_filing.csv. Release id: the candidate entry's sha256 is its identity and its file is never overwritten, so a new id in the date + hyphen suffix form; no version label. PCV kits 8981065790 / 8980023462: check against the parts catalogue (EPC).",
     "approved_by": "Jerome",
     "approved_on": "2026-10-02",
-    "approved_note": "Jerome approved release 2026-10-02 in chat on 2026-10-02. sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-02.candidate_gate_2026-10-02.json): 18 checks pass, release_approved PENDING, 0 fail, with pr00_copy_integrity measured against the pinned 20 Sep pr00 reference pr00_classification_reference_20260920.csv (git c813330f, sha256 98e64b5b...), Jerome decision 2026-10-02, because today's pr00 carries the 21 Sep regression (1,660 rows). Lubricant relabel accepted (Shell keys to Fluids Chemicals > Lubricants; 9-digit keys line_kind lubricant_or_tool). Supersedes 2026-09-20 in the same edit.",
-    "pr00_reference": {
-      "file": "pr00_classification_reference_20260920.csv",
-      "sha256": "98e64b5bdaef73819cf954ce96241f1a9b49d8fbd998d02700ae8494028bea34",
-      "source": "git c813330f"
-    }
+    "approved_note": "Jerome approved in chat on 2026-10-02 ('all yes' on APPROVAL_SUMMARY_2026-10-02-candidate.md): cab mounting members to AIM Chassis Frame > Crossmember & Brackets > Bracket (catalogue Body structure); the 4 to-check parts as proposed, PCV kits 8981065790 / 8980023462 to be checked against the parts catalogue (EPC). sha256 re-verified against this register immediately before the status change. Candidate gate (aim_pn_classification_release_2026-10-02-chassis-frame.gate.json): 18 checks pass, release_approved PENDING, 0 fail. Supersedes 2026-10-02 in the same edit; replaces the unapproved 2026-10-02-candidate."
   }
 }
 ```
