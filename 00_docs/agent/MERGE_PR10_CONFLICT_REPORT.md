@@ -141,3 +141,52 @@ Left (16), one-line recommendation each:
 | `04_tools/ISZE_Tender_Monitor_Install/_COUNTRY_TENDER_PORTALS_MAP.md` | ours (newer measured counts); keep main's "17/29" coverage wording |
 | `04_tools/ISZE_Tender_Monitor_Install/_OPEN_BACKLOG_ARRANGED.md` | ours' 09-22 status row, plus main's "next DARK without a key" pointer |
 | 3 x `IDS_2026_dealer_compare.html` delete/modify (`01_data/08_Distributor/IDS_2026/_EXPORT/`, `.../reports/dashboard/`, `02_dashboards/ids/IDS_all_dashboards_2026-08-19/01_overview/`) | unexplained deletion in `4ccae53d`; not decided |
+
+---
+
+## 2026-10-02 completion pass (Jerome's go) — all 87 resolved, merge committed, not pushed
+
+**Route chosen: redo, not patch.** The staged merge sat on `132068d1`; the PR branch had moved to
+`20b0fc90` (7 commits, incl. `dfe73041` pr00 correction). A merge commit on `132068d1` could not be
+pushed to the PR branch as a fast-forward. So: merge aborted, `merge/pr10-main-resolve` reset to
+`20b0fc90`, `origin/main` (`87c7907b`, unchanged since the first pass) merged again. Same 87
+conflicts. Earlier resolutions re-applied from the saved index; the ours-side blob was re-checked per
+file against `20b0fc90` first.
+
+**Merge commit:** `8522d55e` on `merge/pr10-main-resolve` (parents `20b0fc90`, `87c7907b`). Not pushed. PR #10 not merged.
+
+| path | resolution |
+|---|---|
+| 57 generated files (41 IDS pages, 13 derived, sellout json/page, Action Ledger) | `20b0fc90` (ours unchanged since `c58e6ec4`, so same as the first pass) |
+| `pr00_classification.csv`, `parts_catalog_dimension.csv/.parquet` | `20b0fc90` (now committed there; same blobs as the first pass) |
+| `sellout_aim_top_pn_2025.csv` | **ours, not regenerated.** The builder reads labels from the workbook taxonomy (`modules.aim_pn_classifier`), not the release; pointing it at the release is a builder change nobody approved, and re-running one file alone would split the sellout family. Still open |
+| `monday_pn_opportunity_crosswalk_20260914.csv` | ours (byte-identical both sides) |
+| `gps.md`, `scrapers.md`, prism `.gitignore`, prism `CHANGELOG.md`, `AGENTS.md` | first-pass blobs reused (ours side unchanged since). `AGENTS.md` = `20b0fc90` + main's `ISZE_BI_FRAMEWORK.md` line |
+| 3 × `02_dashboards/Data/**` | deletion kept (gitignored by rule) |
+| `INDEX.md` | redone on `20b0fc90` (ours changed): ours rows + main's Decision pack row |
+| `_source_health.json` | redone: main's structure (Ireland eTenders) + ours' Spain PLACSP count/note from `20b0fc90` |
+| `ISZE_ROADMAP.md` | ours (09-19); row 13 replaced by main's "Done 2026-09-14" text; main's duplicate 13/14 dropped |
+| `STATE_PACKET.md` | ours; main's 09-14 packet appended verbatim at the end as a dated history entry |
+| `ISZE_OS_DATA_MAP.yaml` (`residual_24pn`) | **main's ask + artefact** (`NO_PR00_HARDWARE_FY2026.md`), ours' schema fields kept. Deviates from "ours wins": the item's name/integrity already auto-merged to main's FY2026 basis (€67,318.49 / 21 parts, "Calendar-2025 24 … do not quote"), so ours' "price the 24 PNs" ask would contradict its own integrity line. `grain` text written from the artefact's content |
+| `_COUNTRY_TENDER_PORTALS_MAP.md` | ours' rows/counts; main's "17/29 ≈ 59%" coverage paragraph |
+| `_OPEN_BACKLOG_ARRANGED.md` | ours' 09-22 row + main's "next DARK without a key" pointer |
+| `tender_scraper_v3.py` | union of imports (ours' ES/IT/DE module fetchers + main's `parse_xml_root`, `retry_after_seconds`, `national_fetchers_ie`); ours' delegated ES fetcher. Main's Ireland eTenders wiring auto-merged |
+| `build_deck.py` | **not plain ours.** Main's `use_gps_master` / `skip_gps_pct` lines had auto-merged around the hunk and both flags are set in `db_profiles.yaml` (`use_gps_master` on PORTUGAL, `skip_gps_pct` on ISD, gps_key Ireland). Ours' bullet wording kept, pointed at main's `gps_wallet` / `gps_uio` locals; identical to ours when neither flag is set |
+| `build_full_deck.py` | **main's structure + ours' wording** ("target spend", "parts mix"). Plain ours would drop the Ireland >100% guard and plot a GPS % main explicitly removed |
+| `build_spa_application.py` | ours. Main's `patch_form` is defined but never called in main; ours' `patch_form_sized` already sets every cell it sets (with ours' one-column-shifted layout). Not ported |
+| `build_dealer_sellout_aim_gps.py` | ours' hunks; main's auto-merged "sales to dealer" wording kept; main's Chart.js inlining removed (ours has no charts, HTML bars) |
+| `build_ids_country_packs_v13.py` | main's map line ("bundled Leaflet + offline grid"), ours' "shared colleague pack" wording — the auto-merged template and `build_ids_dashboard.py` are main's offline-map build, so that is what the builder now produces |
+| 3 × `IDS_2026_dealer_compare.html` delete/modify | **restored from main** (deletion in `4ccae53d` has no recorded reason) |
+
+**Tests:** `py_compile` on all 32 `.py` files the merge changes vs `20b0fc90` — all pass. Tender
+`tests/test_lifecycle_and_unknowns.py` **33 passed / 0 failed**; `test_relevance_rss.py` +
+`test_national_fetchers_ie.py` 10 passed; `04_tools/_shared/tests` 17 passed. Import check OK for
+`build_deck`, `build_full_deck`, `build_ids_country_packs_v13`, `build_dealer_sellout_aim_gps`. No
+test exists for the SPA builder. Decks not rebuilt (would write to tracked `09_meetings/`).
+
+**Risks / open:**
+1. Committed IDS pages are ours' online-Leaflet build; the merged builder now emits main's offline,
+   inlined-Leaflet map. Next IDS regeneration changes the pages' map style.
+2. `sellout_aim_top_pn_2025.csv` labels still come from the workbook taxonomy, not release 2026-10-02.
+3. Deck builders now honour `use_gps_master` (Portugal) and `skip_gps_pct` (Ireland) — a rebuilt deck
+   can differ from the last committed one on the GPS slide.
