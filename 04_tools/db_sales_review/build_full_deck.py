@@ -26,15 +26,15 @@ import pandas as pd
 from pptx import Presentation
 from pptx.util import Inches
 
-ROOT = Path(r"C:\Users\jerom\Desktop\claude\ISZE")
+import common as C  # noqa: E402
+
+ROOT = C.ISZE
 TOOLS = ROOT / "04_tools" / "ppt_template_v2"
 DBSR = ROOT / "04_tools" / "db_sales_review"
 DER = ROOT / "01_data" / "00_derived"
-
 sys.path.insert(0, str(TOOLS))
 sys.path.insert(0, str(DBSR))
 
-import common as C  # noqa: E402
 import isze_chart_theme as ct  # noqa: E402
 import isze_deck_builder as db  # noqa: E402
 from build_deck import (  # noqa: E402
@@ -446,12 +446,25 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     db.bullet_list(s, bullets, Inches(0.32), Inches(1.45), Inches(12.0), Inches(4.5), size=15)
     page += 1
 
+    gps_seg = C.load_segmented_gps(profile) or {}
+    skip_gps_pct = (not gps_seg.get("show_pct", True)) or bool(
+        (profile.get("deck") or {}).get("skip_gps_pct")
+    )
+    use_gps_master = bool((profile.get("deck") or {}).get("use_gps_master"))
+    gps_agenda = (
+        "GPS — amount view (no capture percentage)"
+        if skip_gps_pct else
+        "GPS — published fiscal-year figure"
+        if use_gps_master else
+        "GPS — fiscal year (headline vs excl. warranty; max two lines)"
+    )
+
     # agenda
     s = db.build_content(prs, "Deep-dive agenda", eyebrow="Agenda", page_no=page)
     db.bullet_list(
         s,
         [
-            "GPS — fiscal year (headline vs excl. warranty; max two lines)",
+            gps_agenda,
             "FY2025 → FY2026 parts mix (Genuine / Genuine with BVP alternative / BVP)",
             "Where the money went — outside the service-parts basket (FY)",
             "Service parts: CY capture vs network + FY billing (capture % is CY-only by design)",
@@ -464,48 +477,97 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
     )
     page += 1
 
-    # GPS chart — FY only, max 2 lines
-    ginfo = gps_fy_chart(chart_dir / "modeb_gps.png", profile, display)
-    take = []
-    if ginfo.get("fy25") is not None and ginfo.get("fy26") is not None:
-        take.append(
-            f"Red = fiscal-year GPS (frozen CY2025 target spend). "
-            f"FY25 {ginfo['fy25']:.1f}% → FY26 {ginfo['fy26']:.1f}%."
+    # GPS chart — FY only, max 2 lines. Skip the % chart when capture > 100%
+    # (Ireland-class) so Mode A never plots a GPS percentage on that market.
+    ginfo: dict = {}
+    if skip_gps_pct:
+        s = db.build_content(
+            prs, "GPS — amount view", eyebrow="GPS", page_no=page,
         )
-    elif ginfo.get("fy26") is not None:
+        g26_net = gps_seg.get("net_FY2026")
+        w25 = gps_seg.get("wallet_2025")
+        uio25 = gps_seg.get("uio_2025")
+        take = [
+            "GPS compares actual parts purchases to the theoretical potential of the fleet.",
+        ]
+        if g26_net is not None:
+            take.append(f"FY2026 purchases: {eur(g26_net)}.")
+        if w25 is not None and uio25:
+            take.append(
+                f"CY2025 fleet potential: {eur(w25)} ({uio25:,.0f} vehicles)."
+            )
         take.append(
-            f"Red = fiscal-year GPS (frozen CY2025 target spend). FY26 headline "
-            f"{ginfo['fy26']:.1f}%."
+            "Purchases sit above that theoretical potential — we discuss the amount "
+            "and the per-vehicle rate, not a capture percentage."
         )
-    if ginfo.get("fy26_ex") is not None and ginfo.get("warr26"):
-        share = ginfo["warr26"] / ginfo["net26"] * 100 if ginfo["net26"] else 0
-        take.append(
-            f"Black = the same GPS after removing warranty parts (€). FY26 ≈ "
-            f"{ginfo['fy26_ex']:.1f}% "
-            f"(warranty {eur(ginfo['warr26'])} ≈ {share:.0f}% of FY26 billing)."
+        db.bullet_list(s, take[:5], Inches(0.32), Inches(1.35), Inches(11.5),
+                       Inches(4.0), size=14)
+        page += 1
+    elif use_gps_master:
+        gm = C.load_gps_master(profile)
+        g26 = gm.get("gps_pct_FY2026")
+        s = db.build_content(
+            prs, f"GPS Capture: {g26*100:.1f}%" if g26 is not None else "GPS",
+            eyebrow="GPS", page_no=page,
         )
-        take.append(
-            f"Both lines divide by the same target spend ({eur(ginfo['wallet'])}), so the gap "
-            "between them is warranty and nothing else."
+        take = [
+            "GPS measures actual parts purchases against the full potential of the fleet.",
+        ]
+        if g26 is not None:
+            take.append(
+                f"{display} today: {g26*100:.1f}% (FY2026 purchases against the CY2025 fleet potential)."
+            )
+        if gm.get("max_spend") and gm.get("uio_2025"):
+            take.append(
+                f"Fleet potential: {eur(gm['max_spend'])} on {int(gm['uio_2025']):,} vehicles."
+            )
+        take.append("This is the same GPS figure as on the GPS dashboard.")
+        db.bullet_list(s, take[:5], Inches(0.32), Inches(1.35), Inches(11.5),
+                       Inches(4.0), size=14)
+        ginfo = {"fy26": (None if g26 is None else round(g26 * 100, 1))}
+        page += 1
+    else:
+        ginfo = gps_fy_chart(chart_dir / "modeb_gps.png", profile, display)
+        take = []
+        if ginfo.get("fy25") is not None and ginfo.get("fy26") is not None:
+            take.append(
+                f"Red = fiscal-year GPS (frozen CY2025 target spend). "
+                f"FY25 {ginfo['fy25']:.1f}% → FY26 {ginfo['fy26']:.1f}%."
+            )
+        elif ginfo.get("fy26") is not None:
+            take.append(
+                f"Red = fiscal-year GPS (frozen CY2025 target spend). FY26 headline "
+                f"{ginfo['fy26']:.1f}%."
+            )
+        if ginfo.get("fy26_ex") is not None and ginfo.get("warr26"):
+            share = ginfo["warr26"] / ginfo["net26"] * 100 if ginfo["net26"] else 0
+            take.append(
+                f"Black = the same GPS after removing warranty parts (€). FY26 ≈ "
+                f"{ginfo['fy26_ex']:.1f}% "
+                f"(warranty {eur(ginfo['warr26'])} ≈ {share:.0f}% of FY26 billing)."
+            )
+            take.append(
+                f"Both lines divide by the same target spend ({eur(ginfo['wallet'])}), so the gap "
+                "between them is warranty and nothing else."
+            )
+        if ginfo.get("uio_2025") and ginfo.get("uio_2026"):
+            take.append(
+                f"Fleet {ginfo['uio_2025']:,.0f} → {ginfo['uio_2026']:,.0f} "
+                "(working year-end estimate under the FY2027 target)."
+            )
+        for w in (profile.get("watch") or [])[:1]:
+            if "GPS" in w or "gps" in w or "denominator" in w.lower():
+                take.append(w)
+                break
+        db.build_two_col(
+            prs,
+            title="GPS: fiscal year headline vs after warranty",
+            chart_path=str(chart_dir / "modeb_gps.png"),
+            eyebrow="GPS",
+            page_no=page,
+            takeaways=take or ["See chart."],
         )
-    if ginfo.get("uio_2025") and ginfo.get("uio_2026"):
-        take.append(
-            f"Fleet {ginfo['uio_2025']:,.0f} → {ginfo['uio_2026']:,.0f} "
-            "(working year-end estimate under the FY2027 target)."
-        )
-    for w in (profile.get("watch") or [])[:1]:
-        if "GPS" in w or "gps" in w or "denominator" in w.lower():
-            take.append(w)
-            break
-    db.build_two_col(
-        prs,
-        title="GPS: fiscal year headline vs after warranty",
-        chart_path=str(chart_dir / "modeb_gps.png"),
-        eyebrow="GPS",
-        page_no=page,
-        takeaways=take or ["See chart."],
-    )
-    page += 1
+        page += 1
 
     # FY wallet
     f25, f26 = fy[2025], fy[2026]
@@ -751,7 +813,7 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
             s,
             [
                 "High-risk € is catalogue AIM exposure, not proven walk-out.",
-                "Open on jobs not bought through the distributor — not a street IAM war alone.",
+                "Open on jobs not bought through the distributor — not only independent-parts competition.",
             ],
             Inches(0.32), Inches(4.1), Inches(12.5), Inches(2.0), size=14,
         )
@@ -797,8 +859,13 @@ def append_deep_dive(prs: Presentation, profile: dict, page_start: int) -> int:
         ],
         [
             "GPS looks fine / too high",
-            f"FY26 headline {ginfo.get('fy26')}%; excl. warranty ≈ {ginfo.get('fy26_ex')}%. "
-            + ("IBX: Belgium-only denominator." if key == "IBX" else ""),
+            (
+                "Purchases sit above the modelled fleet potential — talk the amount "
+                "and the per-vehicle rate, not a capture percentage."
+                if skip_gps_pct else
+                f"FY26 headline {ginfo.get('fy26')}%; excl. warranty ≈ {ginfo.get('fy26_ex')}%. "
+                + ("IBX: Belgium-only denominator." if key == "IBX" else "")
+            ),
         ],
         [
             "Service parts are fine",

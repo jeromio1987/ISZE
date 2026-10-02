@@ -68,7 +68,7 @@ CSV_FIELDS = [
     "KS_GEN_InStock_Count", "KS_GEN_SKUs",
     # All products
     "KS_AllProducts",
-    "KS_URL", "Scraped_At", "Status", "Notes",
+    "KS_URL", "Scraped_At", "Status", "Notes", "scrape_error",
 ]
 
 
@@ -273,6 +273,7 @@ def run(top_n: int, delay_min: float, delay_max: float, pn_file: str | None = No
             "KS_URL":         url,
             "Scraped_At":     ts,
             "Status":         "error",
+            "scrape_error":   "",
         })
 
         try:
@@ -308,9 +309,11 @@ def run(top_n: int, delay_min: float, delay_max: float, pn_file: str | None = No
 
             if parsed["result_count"] == 0:
                 out["Status"] = "no_results"
+                out["scrape_error"] = ""
                 print("—  no results")
             else:
                 out["Status"] = "ok"
+                out["scrape_error"] = ""
                 am_str  = f"AM: £{am['min_price']:.2f}" if am["min_price"] else "AM: none"
                 gen_str = f"  GEN: £{gen['min_price']:.2f}" if gen["min_price"] else ""
                 print(f"✅  {parsed['result_count']} results  {am_str}{gen_str}")
@@ -318,6 +321,7 @@ def run(top_n: int, delay_min: float, delay_max: float, pn_file: str | None = No
         except Exception as e:
             out["Status"] = "error"
             out["Notes"]  = str(e)[:120]
+            out["scrape_error"] = str(e)[:240]
             errors += 1
             print(f"❌  {e}")
 

@@ -4,17 +4,17 @@ globs: 02_dashboards/pricing/**,02_dashboards/sales/**,01_data/01_Pricing/**,03_
 alwaysApply: true
 ---
 
-# Pricing language — no "street"
+# Pricing language — no "street", no "sell-out"
 
-Jerome asked to **stop saying "street fills"** (and avoid "street" as the working label).
+Jerome asked to **stop saying "street fills"**. He also asked to **stop saying sell-out**. Chat and Mode A UI use **sales to dealer** and **%GM**.
 
 | Forbidden in chat + shared UI | Say instead |
 |---|---|
-| street / street fills / street € | **OEM peer retail** / **dealer sell-out price** / **reference sell-out** |
-| street index | **price index** (shop ÷ reference sell-out) |
-| undercut street | **below our reference sell-out** |
-| fill the street | **get OEM peer retail prices** / **complete peer price coverage** |
+| street / street fills / street € | **OEM peer retail** |
+| sell-out / sellout / reference sell-out / dealer sell-out | **sales to dealer** (StD) for DB→dealer volume; **%GM** for commercial terms |
+| street index | **price index** (shop ÷ our GM-grossed list, if he asked for that view) |
+| undercut street | **below the price the dealer works with** |
+| fill the street | **get OEM peer retail prices** |
+| ×1.40 × 1.275 / ×1.785 as the working label | **%GM** — do not brief him in markup factors |
 
-**Reference sell-out €** = PR00 × 1.40 × 1.275 (= ×1.785). Hover/footnote OK.
-
-JSON / code field names (`peer_street_eur`, `street_index`) may stay for pipeline compatibility — **spoken and written labels to Jerome and in dashboards must not say street**.
+JSON / code field names (`peer_street_eur`, `street_index`, `sellout_qty`) may stay for pipeline compatibility — **spoken and written labels to Jerome and in dashboards must not say street or sell-out**.

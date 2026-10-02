@@ -41,7 +41,7 @@ CSV_FIELDS = [
     "Matched_Ref", "Site",
     "Min_Price", "Currency",
     "Brands", "URL",
-    "Scraped_At", "Status",
+        "Scraped_At", "Status", "scrape_error",
 ]
 
 SITES = {
@@ -285,6 +285,7 @@ def run(delay_min: float, delay_max: float, max_refs: int) -> None:
                     "URL":         "",
                     "Scraped_At":  datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                     "Status":      "no_refs",
+                    "scrape_error": "",
                 })
             continue
 
@@ -350,6 +351,9 @@ def run(delay_min: float, delay_max: float, max_refs: int) -> None:
                 "URL":         best_url,
                 "Scraped_At":  datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "Status":      found_status,
+                "scrape_error": (
+                    "HTTP 403" if found_status == "blocked_403" else ""
+                ),
             })
 
             time.sleep(random.uniform(delay_min, delay_max))

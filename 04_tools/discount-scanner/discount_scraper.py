@@ -41,6 +41,7 @@ STORES = [
     {
         "id": "lidl",
         "name": "Lidl BE",
+        # Probed 2026-09-14: /c/a10051271 → HTTP 404. Search URL returns 200.
         "url": "https://www.lidl.be/q/search?query=aanbieding",
         "wait_ms": 4000,
         "prefer_requests": True,

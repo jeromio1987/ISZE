@@ -85,6 +85,41 @@ SOLD_TO_OVERRIDES = {
     "Forlog NV":                         "FORLOG_EXCLUDE", # micro, not a distributor
 }
 
+# SAP sold-to pt → distributor_code. Wins over the sold_to *name* column.
+# CY extracts often put a ship-to / payer short code in `sold_to` (IUK 89,
+# ITUK 2194, UTI 1797) while `sold_to_sap` is the real account (2574 / 2575 / 1799).
+# UTI 1799 rows commonly carry the UMI legal name — never map those to UMI.
+SAP_SOLD_TO_OVERRIDES: dict[int, str] = {
+    66: "GREECE",
+    76: "IRELAND",
+    86: "NORWAY",
+    88: "MIDI",
+    90: "BELGIUM",
+    105: "GERMANY_SERVICE",
+    146: "ITUK",
+    373: "IML_INTERNAL",
+    393: "CYPRUS",
+    396: "ROMANIA",
+    519: "PORTUGAL",
+    537: "HUNGARY",
+    601: "GERMANY",
+    1576: "ICELAND",
+    1759: "MALTA",
+    1797: "UMI",
+    1799: "UTI",
+    2027: "DENMARK",
+    2181: "SWEDEN",
+    2194: "MIDI",
+    2294: "UKRAINE",
+    2516: "GERMANY",
+    2574: "IUK",
+    2575: "ITUK",
+    2679: "FINLAND",
+    2733: "ARMENIA",
+    2734: "KAZAKHSTAN",
+    2751: "DENMARK",
+}
+
 # Distributor codes to EXCLUDE from all GPS/spend calculations
 EXCLUDED_CODES = {
     "GERMANY_SERVICE",  # Internal service dept, not distributor sales
@@ -524,69 +559,87 @@ def load_sap_sold_to_mapping(filepath: str | None = None) -> pd.DataFrame:
     return df
 
 
-def apply_distributor_codes(df: pd.DataFrame, df_mapping: pd.DataFrame) -> pd.DataFrame:
-    """
-    Map sold_to (legal name or SAP numeric id) → distributor_code.
-    Uses sap_sold_to_mapping.csv for CY2023-style numeric exports.
-    """
-    name_to_code = build_name_to_code_map(df_mapping)
+def _sap_to_code_lookup() -> dict[int, str]:
+    """CSV first, then hardcoded overrides (UTI 1799 / IUK 2574 / ITUK 2575)."""
+    sap_to_code: dict[int, str] = {}
     sap_df = load_sap_sold_to_mapping()
-    sap_to_code = {}
-    sap_to_name = {}
     if not sap_df.empty:
         for _, row in sap_df.iterrows():
             sap = row["sap_sold_to_pt"]
             if pd.isna(sap):
                 continue
-            sap_key = int(sap)
-            if pd.notna(row.get("distributor_code")) and str(row["distributor_code"]).strip():
-                sap_to_code[sap_key] = str(row["distributor_code"]).strip()
-            if pd.notna(row.get("sold_to_name")) and str(row["sold_to_name"]).strip():
-                sap_to_name[sap_key] = str(row["sold_to_name"]).strip()
+            code = str(row.get("distributor_code") or "").strip()
+            if code:
+                sap_to_code[int(sap)] = code
+    sap_to_code.update(SAP_SOLD_TO_OVERRIDES)
+    return sap_to_code
 
-    has_sap_col = "sold_to_sap" in df.columns
-    codes = []
-    for idx, row in df.iterrows():
-        code = None
-        sap_val = row["sold_to_sap"] if has_sap_col else None
-        if pd.notna(sap_val):
-            try:
-                sap_id = int(sap_val)
-            except (TypeError, ValueError):
-                sap_id = None
-            if sap_id is not None:
-                code = sap_to_code.get(sap_id)
-                if not code:
-                    name = sap_to_name.get(sap_id, "")
-                    if name:
-                        code = name_to_code.get(name) or name_to_code.get(name.upper())
-        if not code:
-            val = row["sold_to"]
-            key = _normalize_sold_to_key(val)
-            if key and key.lower() not in ("nan", "none", "<na>"):
-                if _is_sap_numeric(val):
-                    sap_id = int(key)
-                    code = sap_to_code.get(sap_id)
-                    if not code:
-                        name = sap_to_name.get(sap_id, "")
-                        if name:
-                            code = name_to_code.get(name) or name_to_code.get(name.upper())
-                else:
-                    code = (
-                        name_to_code.get(val)
-                        or name_to_code.get(key)
-                        or name_to_code.get(key.upper())
-                    )
-        codes.append(code)
 
-    df = df.copy()
-    df["distributor_code"] = codes
-    unmapped = df["distributor_code"].isna()
+def apply_distributor_codes(df: pd.DataFrame, df_mapping: pd.DataFrame) -> pd.DataFrame:
+    """
+    Map billing rows → distributor_code.
+
+    Order:
+      1. ``sold_to_sap`` (SAP sold-to pt) via sap_sold_to_mapping + overrides
+      2. ``sold_to`` legal name
+      3. ``sold_to`` as a SAP number **only when sold_to_sap is missing**
+
+    Never treat a ship-to / payer short code in ``sold_to`` as the account when
+    ``sold_to_sap`` is present (IUK 89 vs 2574, ITUK 2194 vs 2575, UTI 1797 vs 1799).
+    """
+    name_to_code = build_name_to_code_map(df_mapping)
+    sap_to_code = _sap_to_code_lookup()
+
+    out = df.copy()
+    codes = pd.Series(pd.NA, index=out.index, dtype="object")
+
+    sap_num = None
+    if "sold_to_sap" in out.columns:
+        sap_num = pd.to_numeric(out["sold_to_sap"], errors="coerce")
+        sap_ids = sap_num.dropna().astype(int)
+        codes.loc[sap_ids.index] = sap_ids.map(sap_to_code)
+
+    sold_keys = (
+        out["sold_to"].map(_normalize_sold_to_key)
+        if "sold_to" in out.columns
+        else pd.Series("", index=out.index)
+    )
+
+    def _name_code(key: str):
+        if not key or key.lower() in ("nan", "none", "<na>"):
+            return None
+        return name_to_code.get(key) or name_to_code.get(key.upper())
+
+    need_name = codes.isna()
+    if need_name.any():
+        codes.loc[need_name] = sold_keys.loc[need_name].map(_name_code)
+
+    # Numeric sold_to as SAP id only if sold_to_sap was blank — otherwise 89/2194/1797
+    # would steal IUK / ITUK / UTI rows.
+    need_num = codes.isna()
+    if sap_num is not None:
+        need_num = need_num & sap_num.isna()
+    is_num = sold_keys.map(_is_sap_numeric)
+    need_num = need_num & is_num
+    if need_num.any():
+        extra = pd.to_numeric(sold_keys.loc[need_num], errors="coerce").dropna().astype(int)
+        codes.loc[extra.index] = extra.map(sap_to_code)
+
+    out["distributor_code"] = codes
+    unmapped = out["distributor_code"].isna()
     if unmapped.any():
-        bad = df.loc[unmapped, "sold_to"].astype(str).unique()[:15]
-        print(f"[data_prep] WARNING: {unmapped.sum():,} rows unmapped sold_to (sample): {list(bad)}")
-        df.loc[unmapped, "distributor_code"] = "UNMAPPED"
-    return df
+        sample_sold = out.loc[unmapped, "sold_to"].astype(str).unique()[:8].tolist() if "sold_to" in out.columns else []
+        sample_sap = (
+            out.loc[unmapped, "sold_to_sap"].dropna().astype(str).unique()[:8].tolist()
+            if "sold_to_sap" in out.columns
+            else []
+        )
+        print(
+            f"[data_prep] WARNING: {unmapped.sum():,} rows unmapped "
+            f"(sold_to sample {sample_sold}; sold_to_sap sample {sample_sap})"
+        )
+        out.loc[unmapped, "distributor_code"] = "UNMAPPED"
+    return out
 
 
 def ensure_sales_part_columns(df: pd.DataFrame) -> pd.DataFrame:
@@ -680,16 +733,24 @@ def load_sales_data(filepath: str, df_mapping: pd.DataFrame) -> pd.DataFrame:
 
 
 def _get_fiscal_year(row) -> int:
-    """ISZE Fiscal Year: Apr–Mar. FY2024 = Apr 2024 – Mar 2025."""
+    """April-start integer stored on sales_fact (Apr 2025 → 2025).
+
+    GPS / Power BI name that same window FY2026. See modules.fiscal.
+    """
+    from modules.fiscal import sales_fiscal_year
+
     year = row['year']
     month = row.get('month')
     if pd.isna(month):
-        return year
-    return year if int(month) >= 4 else year - 1
+        return int(year)
+    return sales_fiscal_year(int(year), int(month))
 
 
 def get_fiscal_year_dates(fiscal_year: int) -> tuple:
-    """FY2024 → ('2024-04-01', '2025-03-31')"""
+    """Bounds for a sales_fact.fiscal_year integer (Apr 2025 integer → Apr 2025–Mar 2026).
+
+    That window is GPS/PBI FY2026. Prefer gps_fy_dates() when speaking FY to Jerome.
+    """
     return f"{fiscal_year}-04-01", f"{fiscal_year + 1}-03-31"
 
 

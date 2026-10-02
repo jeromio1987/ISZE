@@ -3,6 +3,9 @@
 Use this when building decks or comparing numbers across layers. **One green pipeline run**
 (`run_pipeline_and_verify.ps1`) is the sign-off source for all derived metrics.
 
+**Which KPI to quote** (FY first, euros first, no piece headlines, no %GM without a list):
+[`00_docs/ISZE_BI_FRAMEWORK.md`](../../../../00_docs/ISZE_BI_FRAMEWORK.md). This dictionary is formulas. The framework is the filter.
+
 ---
 
 ## Layer map

@@ -28,6 +28,21 @@ def test_ensure_header_idempotent(writer_factory, tmp_path: Path) -> None:
     assert text.count("PN,Status,Notes") == 1
 
 
+def test_ensure_columns_adds_missing_field(tmp_path: Path) -> None:
+    path = tmp_path / "out.csv"
+    path.write_text("PN,Status\n0001,ok\n", encoding="utf-8")
+    writer = IncrementalCsvWriter(path, ["PN", "Status", "scrape_error"])
+    writer.ensure_header()
+    with path.open(newline="", encoding="utf-8") as fh:
+        rows = list(csv.DictReader(fh))
+    assert rows[0]["PN"] == "0001"
+    assert rows[0]["scrape_error"] == ""
+    writer.append({"PN": "0002", "Status": "error", "scrape_error": "timeout"})
+    with path.open(newline="", encoding="utf-8") as fh:
+        rows = list(csv.DictReader(fh))
+    assert rows[1]["scrape_error"] == "timeout"
+
+
 def test_append_roundtrip(writer_factory, tmp_path: Path) -> None:
     writer = writer_factory()
     writer.ensure_header()

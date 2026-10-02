@@ -368,6 +368,14 @@ def _tender_horizon(horizon_days: int = 90, top_n: int = 30) -> dict:
     }
 
 
+def _league_rank(percentile: float, n_distributors: int) -> int:
+    """Convert a 0–100 percentile into an ordinal network rank."""
+    if n_distributors <= 1:
+        return 1
+    rank = n_distributors - round(percentile / 100.0 * (n_distributors - 1))
+    return max(1, min(n_distributors, int(rank)))
+
+
 def _network_bump(latest_year: int, top_n: int = 12) -> dict:
     df = pd.read_csv(NETWORK_PCT_CSV)
     metrics = [
@@ -397,9 +405,8 @@ def _network_bump(latest_year: int, top_n: int = 12) -> dict:
                 pct = float(row.iloc[0]["percentile_rank"])
                 if pd.isna(pct):
                     continue
-                if metric_id == "aim_risk":
-                    pct = 100.0 - pct
-                rank = int(round(100 - pct)) + 1
+                n_distributors = int(row.iloc[0]["n_distributors"])
+                rank = _league_rank(pct, n_distributors)
                 pts.append({"year": int(y), "percentile": round(pct, 1), "rank": rank})
             if pts:
                 lines.append({"distributor_code": db, "points": pts})
@@ -464,11 +471,8 @@ def build_payload(force: bool = False) -> dict:
     }
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Build risk_cockpit.json for static HTML")
-    parser.add_argument("--force", action="store_true")
-    args = parser.parse_args()
-    payload = build_payload(force=args.force)
+def write_payload(payload: dict) -> None:
+    """Write the JSON and embedded-JS variants from one serialization."""
     serialized = json.dumps(_null_nan(payload), ensure_ascii=False, indent=2, allow_nan=False)
     VIZ_DIR.mkdir(parents=True, exist_ok=True)
     OUT_JSON.write_text(serialized, encoding="utf-8")
@@ -480,6 +484,14 @@ def main() -> int:
         + ";\n",
         encoding="utf-8",
     )
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Build risk_cockpit.json for static HTML")
+    parser.add_argument("--force", action="store_true")
+    args = parser.parse_args()
+    payload = build_payload(force=args.force)
+    write_payload(payload)
     h = payload["headline"]
     print(f"Wrote {OUT_JSON}")
     print(f"Wrote {OUT_JS}")

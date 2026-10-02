@@ -16,6 +16,7 @@
 3. Fallback: **`00_docs/REFERENCE.md`** if no task key fits.
 4. **Automation / overnight cron SSOT:** `00_docs/AUTOMATION_REGISTER.md` + `Documents\Claude\Scheduled\` + latest `05_memory/briefs/automation_drift_*.md`. Do not invent a second scheduler via Cursor `/loop` alone. Workspace OS audit: `../docs/OVERNIGHT_PROCESS_AUDIT_2026-08-25.md`.
 5. **Numbers (read in order, stop when answered):**
+   - `00_docs/ISZE_BI_FRAMEWORK.md` — which KPI to quote (FY first, euros first)
    - `01_data/00_derived/_verification_report.json` — must be green (`ok`) before quoting KPIs
    - `01_data/00_derived/metrics_snapshot.json` — headline figures (~2 KB)
    - `FACTS.md` — discussion context / pinned narrative only if needed

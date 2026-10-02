@@ -9,6 +9,7 @@ tone rules; this module only implements the data side of it.
 """
 from __future__ import annotations
 
+import os
 import re
 from pathlib import Path
 
@@ -16,8 +17,25 @@ import numpy as np
 import pandas as pd
 import yaml
 
+
+def _isze_root() -> Path:
+    env = os.environ.get("ISZE_ROOT", "").strip()
+    if env:
+        candidate = Path(env).resolve()
+        if (candidate / "FACTS.md").is_file() and (candidate / "paths.yaml").is_file():
+            return candidate
+    here = Path(__file__).resolve()
+    for candidate in [here, *here.parents]:
+        if (candidate / "FACTS.md").is_file() and (candidate / "paths.yaml").is_file():
+            return candidate
+    win = Path(r"C:\Users\jerom\Desktop\claude\ISZE")
+    if (win / "FACTS.md").is_file():
+        return win
+    raise FileNotFoundError("ISZE root not found (FACTS.md + paths.yaml)")
+
+
 # --------------------------------------------------------------------- paths --
-ISZE = Path(r"C:\Users\jerom\Desktop\claude\ISZE")
+ISZE = _isze_root()
 DERIVED = ISZE / "01_data" / "00_derived"
 PRICING = ISZE / "01_data" / "01_Pricing"
 HERE = Path(__file__).resolve().parent
@@ -38,6 +56,7 @@ WARRANTY_GRAIN_DB: dict[str, list[str]] = {
     ],
     "PETROS": ["PETROS PETROPOULOS"],
     "IRELAND": ["Isuzu Ireland 2020 Unlimited Company", "IRELAND"],
+    "ITUK": ["ITUK"],
     "UMI": ["UMI"],
     "NORWAY": ["RSA"],
     "SWEDEN": ["Isuzu Sverige AB"],
@@ -73,7 +92,19 @@ IDS_FILE = (ISZE / "01_data" / "90_INBOX" / "IDS_2026" / "rankings"
             / "IDS_2026_TOTAL_ranking_all.xlsx")
 BUDGET_FILE = ISZE / "01_data" / "11_planning" / "budget_per_DB_reviewed_24042026.xlsx"
 BP_FILE = ISZE / "01_data" / "11_planning" / "FY2027  BP VP&ACC.xlsx"
-CARPARK_FILE = DERIVED / "UIO_carpark_for_GPS_recalc_2026-07-30.csv"
+def _resolve_carpark_file() -> Path:
+    """Canonical derived first; dashboard Data copy if this checkout has no 01_data file."""
+    candidates = [
+        DERIVED / "UIO_carpark_for_GPS_recalc_2026-07-30.csv",
+        ISZE / "02_dashboards" / "Data" / "00_derived" / "UIO_carpark_for_GPS_recalc_2026-07-30.csv",
+    ]
+    for path in candidates:
+        if path.exists():
+            return path
+    return candidates[0]
+
+
+CARPARK_FILE = _resolve_carpark_file()
 
 # A dealer that never returned an IDS assessment scores nothing on every item, so
 # "Items scored %" and "Points achieved %" both collapse to ~0. Those rows are
@@ -92,6 +123,7 @@ CARPARK_DB = {
     "IBX": "IBX",
     "PETROS": "Petros Petropoulos",
     "IRELAND": "Isuzu Ireland",
+    "ITUK": "ITUK",
     "UMI": "UMI",
     "NORWAY": "RSA",
     "SWEDEN": "Isuzu Sverige",
@@ -181,15 +213,19 @@ def load_sales(profile: dict) -> pd.DataFrame:
     payer = profile["payer"]
     sold_to = profile.get("sold_to")
     sold_to_s = str(int(sold_to)) if sold_to is not None else None
+    alias_set = {sold_to_s} if sold_to_s else set()
+    for extra in profile.get("sold_to_aliases") or []:
+        if extra is not None:
+            alias_set.add(str(int(extra)))
     L25, L26 = d["window_label_prior"], d["window_label_current"]
     w25, w26 = d["window_prior"], d["window_current"]
     frames = []
 
     def _filter_sold_to(df: pd.DataFrame, col: str) -> pd.DataFrame:
-        if not sold_to_s or col not in df.columns:
+        if not alias_set or col not in df.columns:
             return df
         st = df[col].astype(str).str.replace(r"\.0$", "", regex=True).str.strip()
-        return df[st == sold_to_s].copy()
+        return df[st.isin(alias_set)].copy()
 
     usecols_cur = ["Billing Date", "Payer.1", "Sold-to pt", "Material", "Material Number",
                    "Billed Quantity", "Net value", "SaTy", "BillT"]
@@ -218,7 +254,8 @@ def load_sales(profile: dict) -> pd.DataFrame:
                 usecols=["Billing Date", "Sold_to", "Material", "Material_Number",
                          "Quantity", "EUR_Amount", "SaTy", "BillT", "Payer_name"],
             )
-            exp = exp[exp["Sold_to"].astype(str).str.replace(r"\.0$", "", regex=True) == sold_to_s].copy()
+            st = exp["Sold_to"].astype(str).str.replace(r"\.0$", "", regex=True).str.strip()
+            exp = exp[st.isin(alias_set)].copy()
             if not exp.empty:
                 exp["Billing Date"] = _dates(exp["Billing Date"])
                 exp = exp[(exp["Billing Date"] >= start_q2) & (exp["Billing Date"] < w26[1])]
@@ -638,6 +675,28 @@ def quotable_pms(peers: dict) -> tuple[list[str], list[str]]:
     return keep, drop
 
 
+def _uio_from_carpark(profile: dict) -> dict | None:
+    """CY2025/CY2026 fleet from the carpark pack when the UIO workbook is absent."""
+    park = load_carpark(profile)
+    if not park or not park.get("by_segment"):
+        return None
+    out: dict[str, dict[int, int]] = {}
+    for seg, slot in park["by_segment"].items():
+        out[seg] = {
+            2025: int(slot["uio_2025"]),
+            2026: int(slot["uio_2026"]),
+        }
+    for seg, value in (profile.get("uio_2026_fixed") or {}).items():
+        if seg in out:
+            out[seg][2026] = int(value)
+    total: dict[int, int] = {}
+    for seg_vals in out.values():
+        for y, v in seg_vals.items():
+            total[y] = total.get(y, 0) + v
+    out["total"] = dict(sorted(total.items()))
+    return out
+
+
 def load_uio(profile: dict) -> dict:
     """{segment: {year: units}} straight from 06_uio/_CURRENT. Years are the
     literal header labels with the E/F suffix stripped (2025E -> 2025).
@@ -649,7 +708,17 @@ def load_uio(profile: dict) -> dict:
 
     When the 30 Jul 2026 carpark pack has a row for this DB, CY2025 and CY2026
     are taken from that pack (authoritative for GPS + fleet slides).
+
+    If the UIO workbook is not in this checkout, CY2025/CY2026 come from the
+    carpark pack only — historical years are not invented.
     """
+    if not UIO_FILE.exists():
+        derived = _uio_from_carpark(profile)
+        if derived:
+            return derived
+        raise SystemExit(
+            f"UIO workbook missing ({UIO_FILE.name}) and no carpark row for {profile['key']}"
+        )
     import openpyxl
     wb = openpyxl.load_workbook(UIO_FILE, data_only=True, read_only=True)
     ws = wb["1.UIO Overview"]
@@ -703,13 +772,48 @@ def load_uio(profile: dict) -> dict:
     return out
 
 
+def _s2d_target_from_derived(profile: dict) -> dict:
+    """Same 0.65 imputation the Dashboard path already uses when KPI S2D is blank."""
+    gm = load_gps_master(profile)
+    billing = gm.get("bill_FY2026")
+    if billing is None:
+        raise SystemExit(f"No FY2026 billing available to impute S2D for {profile['key']}")
+    s2d_fy26 = billing / 0.65
+    uio = load_uio(profile)["total"]
+    if not uio.get(2025):
+        raise SystemExit(f"No CY2025 UIO available to calculate S2D growth for {profile['key']}")
+    growth = uio.get(2026, 0) / uio[2025] - 1
+    price = 0.05
+    additional = 0.018
+    target = s2d_fy26 * (1 + growth) * (1 + price) * (1 + additional)
+    return {
+        "dashboard_key": str(profile.get("dashboard_key") or profile["fy27_tab"]).strip().upper(),
+        "fy25": None,
+        "fy26": s2d_fy26,
+        "uio_growth": growth,
+        "dashboard_uio_growth": None,
+        "price": price,
+        "additional": additional,
+        "fy27": round(target),
+        "dashboard_fy27": None,
+        "s2d_imputed": True,
+        "growth_overridden": True,
+        "billing_imputation_base": billing,
+        "source": "derived_fallback",
+    }
+
+
 def load_s2d_target(profile: dict) -> dict:
     """Load Dashboard P:U and return the locked Sales-to-Dealer target chain.
 
     FY2027 target = FY2026 S2D × (1 + UIO growth) × 1.05 × 1.018.
     When the KPI S2D base is unavailable, FY2026 ISZE billing is grossed up at
     a 65% ISZE-to-dealer factor and explicitly marked as imputed.
+    When the FY27 workbook is not in this checkout, use that same imputation
+    against gps_master + carpark — do not invent a Dashboard col-I figure.
     """
+    if not FY27_FILE.exists():
+        return _s2d_target_from_derived(profile)
     import openpyxl
     wb = openpyxl.load_workbook(FY27_FILE, data_only=True, read_only=True)
     ws = wb["Dashboard"]
@@ -787,10 +891,54 @@ _FY27_SEGMENTS = {
 }
 
 
+def _fy27_from_derived(profile: dict) -> dict:
+    """gps_master + carpark when the FY27 workbook is not in this checkout.
+
+    Does not invent a Business Plan or an Extended Target stretch. FY27 actual
+    and stretch stay blank. Sales-to-Dealer uses the existing 0.65 imputation.
+    """
+    gm = load_gps_master(profile)
+    park = load_carpark(profile) or {}
+    segs: dict[str, dict] = {}
+    for seg, slot in (park.get("by_segment") or {}).items():
+        uio26 = int(slot["uio_2026"])
+        fixed = (profile.get("uio_2026_fixed") or {}).get(seg)
+        if fixed is not None:
+            uio26 = int(fixed)
+        segs[seg] = {
+            "fy25": None,
+            "fy26": int(slot["uio_2025"]),
+            "fy27": uio26,
+        }
+    w25 = park.get("wallet_2025") or gm.get("max_spend")
+    w26 = park.get("wallet_2026") or gm.get("max_spend")
+    ext = profile.get("ext_target_v31")
+    return {
+        "tab": f"{profile['fy27_tab']} (derived — FY27 workbook not in this checkout)",
+        "segments": segs,
+        "max_spend": {"fy25": None, "fy26": w25, "fy27": w26},
+        "actual": {
+            "fy25": gm.get("bill_FY2025"),
+            "fy26": gm.get("bill_FY2026"),
+            "fy27": None,
+        },
+        "gps": {
+            "fy25": gm.get("gps_pct_FY2025"),
+            "fy26": gm.get("gps_pct_FY2026"),
+            "fy27": None,
+        },
+        "ext_target": {"fy25": None, "fy26": None, "fy27": ext},
+        "source": "derived_fallback",
+        "s2d_target": load_s2d_target(profile),
+    }
+
+
 def load_fy27(profile: dict) -> dict:
     """Read the DB's tab in ISZE_GPS_Extended_Target_FY27_V3.1.xlsx by LABEL, not
     by fixed row — the LCV-only tabs (IUK) and the mixed tabs have different
     layouts. Columns C/D/E are FY25 / FY26 / FY27 throughout."""
+    if not FY27_FILE.exists():
+        return _fy27_from_derived(profile)
     import openpyxl
     wb = openpyxl.load_workbook(FY27_FILE, data_only=True)
     tab = profile["fy27_tab"]
@@ -838,6 +986,8 @@ def load_ids(profile: dict):
     country-vs-network comparison is like-for-like.
     """
     if not profile.get("ids_code"):
+        return None
+    if not IDS_FILE.exists():
         return None
     df = pd.read_excel(IDS_FILE, sheet_name=0)
     scored = df[df["Items scored %"] >= IDS_MIN_SCORED_PCT]

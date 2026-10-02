@@ -94,6 +94,65 @@ def _safe_log_norm(series: pd.Series) -> pd.Series:
     return (l / l.max() * 100).round(1)
 
 
+def _is_scrape_error_value(val) -> bool:
+    if val is None or (isinstance(val, float) and pd.isna(val)):
+        return False
+    s = str(val).strip()
+    return bool(s) and s.lower() not in ("nan", "none")
+
+
+def mask_scrape_error_prices(df: pd.DataFrame) -> pd.DataFrame:
+    """Null AM prices on scrape failures so they are not treated as IAM gaps.
+
+    Distinct from Status=no_results (genuine empty catalogue). Error/timeout
+    and a non-empty scrape_error column are masked; no_results is left as a gap.
+    """
+    out = df.copy()
+    error_statuses = {"error", "timeout", "blocked_403", "scrape_error"}
+
+    def _mask_key(key: str) -> None:
+        err_col = f"{key}_scrape_error"
+        st_col = f"{key}_status"
+        mask = pd.Series(False, index=out.index)
+        if err_col in out.columns:
+            mask = mask | out[err_col].map(_is_scrape_error_value)
+        if st_col in out.columns:
+            mask = mask | out[st_col].astype(str).str.lower().isin(error_statuses)
+        if not mask.any():
+            return
+        for suffix in ("_min_eur", "_min_native", "_premium"):
+            col = f"{key}{suffix}"
+            if col in out.columns:
+                out.loc[mask, col] = np.nan
+
+    keys = set()
+    for col in out.columns:
+        if col.endswith("_min_eur"):
+            keys.add(col[: -len("_min_eur")])
+        elif col.endswith("_status"):
+            keys.add(col[: -len("_status")])
+        elif col.endswith("_scrape_error"):
+            keys.add(col[: -len("_scrape_error")])
+    for key in keys:
+        _mask_key(key)
+
+    if "scrape_error" in out.columns or "Status" in out.columns:
+        row_err = pd.Series(False, index=out.index)
+        if "scrape_error" in out.columns:
+            row_err = row_err | out["scrape_error"].map(_is_scrape_error_value)
+        if "Status" in out.columns:
+            row_err = row_err | out["Status"].astype(str).str.lower().isin(error_statuses)
+        if row_err.any():
+            for col in list(out.columns):
+                if col.endswith("_min_eur") or col == "best_price_eur":
+                    out.loc[row_err, col] = np.nan
+
+    eur_cols = [c for c in out.columns if c.endswith("_min_eur")]
+    if eur_cols:
+        out["best_price_eur"] = out[eur_cols].min(axis=1)
+    return out
+
+
 def compute_scores(
     merged: pd.DataFrame,
     *,
@@ -113,6 +172,7 @@ def compute_scores(
       Autodoc_ResultCount (if present), Autodoc_AllPrices_GBP (if present)
     """
     df = merged.copy()
+    df = mask_scrape_error_prices(df)
     tiers = load_brand_tiers(tier_path)
     tier_lookup = dict(zip(tiers["brand_key"], tiers["tier"]))
     oe_lookup = dict(zip(tiers["brand_key"], tiers["oe_supplier"]))

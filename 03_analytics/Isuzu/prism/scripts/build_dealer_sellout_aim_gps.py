@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-DB→DLR sell-out (second layer): network AIM + GPS-style proxy for every wired DB.
+DB→DLR sales to dealer (second layer): network AIM + GPS-style proxy for every wired DB.
 
 Native loaders: ITUK (dealer pivot), UTI (PartSales YTD).
 Canonical long CSVs: any `dealer_sellout_long_<DB>_CY{year}.csv` (IRELAND, IUK, GREECE, …).
 
-Sell-out files are qty-only. "ISZE-denominated value" = qty × median CY ISZE→DB unit
+Sales-to-dealer files are qty-only. "ISZE-denominated value" = qty × median CY ISZE→DB unit
 price for that distributor×PN — a proxy for mix/GPS-style views, NOT dealer invoice EUR.
 """
 from __future__ import annotations
@@ -164,7 +164,7 @@ def _pct(n: object) -> str:
 
 
 def _isze_denom(n: object) -> str:
-    """Format ISZE-denominated proxy (€ scale from billing ASP, not dealer sell-out)."""
+    """Format ISZE-denominated proxy (€ scale from billing ASP, not dealer invoice)."""
     if n is None or (isinstance(n, float) and math.isnan(n)):
         return "—"
     return f"€{_fmt(n)}"
@@ -757,7 +757,7 @@ def main() -> None:
     for dist in DISTS:
         sell = load_sellout_pn(dist)
         if sell.empty:
-            print(f"warn: no sell-out rows for {dist}")
+            print(f"warn: no sales-to-dealer rows for {dist}")
             continue
         sell = attach_pn_master(sell, dim, desc, xref)
         sell["aim_l1_report"] = (
@@ -998,10 +998,9 @@ def main() -> None:
             "IUK ≠ ITUK; IRELAND ≠ IUK. AIM buckets: bvp | genuine_contested | genuine_only."
         ),
         "valuation_note": (
-            "Sell-out reports are quantity only — no dealer EUR. ISZE-denominated value = "
-            f"reported qty × median CY{YEAR} ISZE→DB unit price per PN (proxy for mix; not sell-out revenue). "
-            "IUK is qty-only by design (no EUR chase). PNs with no billing price contribute qty but €0 to proxy totals. "
-            "Billing rows use actual invoice EUR and GPS."
+            "Sales to dealer is pieces only. Euro on that layer is pieces × our billed unit price for that distributor and part — a mix proxy, not their invoice. "
+            "Difference vs what we billed is stock movement. Parts with no billed price keep the pieces and show €0 on the proxy. "
+            "Billed rows use the invoice euro."
         ),
         "benchmarks": legacy,
         "benchmarks_by_dist": benchmarks_by_dist,

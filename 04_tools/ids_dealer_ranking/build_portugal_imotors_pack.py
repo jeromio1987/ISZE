@@ -22,7 +22,7 @@ from typing import Any
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 
-from build_ids_dashboard import render_html
+from build_ids_dashboard import leaflet_css_block, leaflet_js_block, render_html
 from build_ids_dealer_feedback import (
     best_questions,
     load_db_kpi_by_country,
@@ -151,12 +151,11 @@ def _leaflet_map_script(
     status_el_id: str = "pt-tile-status",
     auto_init: bool = False,
 ) -> str:
-    """Client JS: Leaflet + OSM/CARTO pins; hover shows dealer score vs Portugal national average."""
+    """Client JS: Leaflet + OpenStreetMap pins; hover shows dealer score vs Portugal national average."""
     points_json = json.dumps(points, ensure_ascii=False)
     auto_flag = "true" if auto_init else "false"
     return f"""
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+{leaflet_js_block()}
 <script>
 (function () {{
   const POINTS = {points_json};
@@ -187,36 +186,47 @@ def _leaflet_map_script(
   function initMap() {{
     if (typeof L === "undefined") {{
       if (statusEl) {{
-        statusEl.textContent = "Leaflet failed to load (check network / CDN). Other compare tabs still work.";
+        statusEl.textContent = "Leaflet failed to start from the bundled map library. Other compare tabs still work.";
         statusEl.classList.add("warn");
       }}
-      mapEl.innerHTML = "<p style='padding:1rem;color:#9a3412'>Map library unavailable offline. Open with internet access.</p>";
+      mapEl.innerHTML = "<p style='padding:1rem;color:#9a3412'>Map library unavailable. Other compare tabs still work.</p>";
       return;
     }}
     if (window.__ptMap) return;
 
     const map = L.map("{map_div_id}", {{ scrollWheelZoom: true }});
     window.__ptMap = map;
-    // CARTO Voyager (OSM data) — more reliable than raw OSM tile CDN on file://
-    const tiles = L.tileLayer("https://{{s}}.basemaps.cartocdn.com/rastertiles/voyager/{{z}}/{{x}}/{{y}}{{r}}.png", {{
-      maxZoom: 18,
-      subdomains: "abcd",
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    }});
-    let baseStatus = "Base layer: OpenStreetMap / CARTO · hover a pin for dealer score vs Portugal national average.";
-    tiles.on("load", function () {{
-      if (statusEl) {{
-        statusEl.textContent = baseStatus;
-        statusEl.classList.remove("warn");
-      }}
-    }});
-    tiles.on("tileerror", function () {{
-      if (statusEl) {{
-        statusEl.textContent = "Tile load issue — check network. Pins still show if tiles partially load.";
-        statusEl.classList.add("warn");
-      }}
-    }});
-    tiles.addTo(map);
+    const offlineLayer = L.layerGroup().addTo(map);
+    const gridStyle = {{ color: "#cdbf9f", weight: 1, opacity: 0.45, interactive: false }};
+    L.rectangle([[-85, -180], [85, 180]], {{
+      stroke: false,
+      fillColor: "#f8f5ef",
+      fillOpacity: 1,
+      interactive: false,
+    }}).addTo(offlineLayer);
+    for (let lon = -32; lon <= -5; lon += 5) {{
+      L.polyline([[32, lon], [43, lon]], gridStyle).addTo(offlineLayer);
+    }}
+    for (let lat = 33; lat <= 42; lat += 3) {{
+      L.polyline([[lat, -32], [lat, -5]], gridStyle).addTo(offlineLayer);
+    }}
+    L.rectangle([[36.8, -9.6], [42.3, -6.0]], {{
+      color: "#7f93ab",
+      weight: 1.4,
+      opacity: 0.75,
+      fillColor: "#fffdf8",
+      fillOpacity: 0.78,
+      interactive: false,
+    }}).addTo(offlineLayer);
+    L.marker([39.5, -8.0], {{
+      icon: L.divIcon({{ className: "offline-country-label", html: "Portugal", iconSize: [90, 16] }}),
+      interactive: false,
+    }}).addTo(offlineLayer);
+    map.attributionControl.setPrefix("Leaflet");
+    if (statusEl) {{
+      statusEl.textContent = "Offline basemap · no external tile service · hover a pin for dealer score vs Portugal national average.";
+      statusEl.classList.remove("warn");
+    }}
     setTimeout(function () {{ map.invalidateSize(); }}, 200);
 
     const pinIcon = function (rank) {{
@@ -254,7 +264,7 @@ def _leaflet_map_script(
       map.fitBounds(L.latLngBounds(fit), {{ padding: [36, 36], maxZoom: 9 }});
       if (mainland.length && mainland.length < latLngs.length) {{
         baseStatus =
-          "Base layer: OpenStreetMap / CARTO · mainland view; Açores pin(s) on map (zoom out / pan west). Hover a pin for score vs Portugal national average.";
+          "Offline basemap · mainland view; Açores pin(s) on map (zoom out / pan west). Hover a pin for score vs Portugal national average.";
         if (statusEl) statusEl.textContent = baseStatus;
       }}
     }} else {{
@@ -580,8 +590,7 @@ def write_map_html(
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>IDS 2026 — Portugal dealer map</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+{leaflet_css_block()}
 <style>
 :root {{ --navy:#1a2744; --terracotta:#c45c3e; --bg:#f4f6f9; --card:#fff; --muted:#6b7a90; --mid:#d4dae3; --good:#2d8a5e; --bad:#c45c3e; }}
 body {{ margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--navy); }}
@@ -593,8 +602,8 @@ main {{ max-width:1180px; margin:0 auto; padding:1rem 1.2rem 2rem; display:grid;
 .card {{ background:var(--card); border-radius:10px; padding:1rem; box-shadow:0 1px 4px rgba(26,39,68,.05); }}
 .card h2 {{ margin:0 0 .6rem; font-size:1.02rem; }}
 .hint {{ color:var(--muted); font-size:.85rem; margin:0 0 .75rem; }}
-#pt-map {{ width:100%; height:560px; border-radius:8px; border:1px solid var(--mid); background:#dce3ec; }}
-.leaflet-container {{ font: inherit; }}
+#pt-map {{ width:100%; height:560px; border-radius:8px; border:1px solid var(--mid); background:#f8f5ef; }}
+.leaflet-container {{ font: inherit; background:#f8f5ef; }}
 .rank-pin {{
   background: var(--terracotta); color:#fff; border:2px solid #fff;
   border-radius:50%; width:26px; height:26px; line-height:22px;
@@ -611,6 +620,11 @@ main {{ max-width:1180px; margin:0 auto; padding:1rem 1.2rem 2rem; display:grid;
 .map-tip-meta .neg {{ color: var(--bad); }}
 .tile-note {{ margin:.55rem 0 0; color:var(--muted); font-size:.78rem; }}
 .tile-note.warn {{ color:#9a3412; }}
+.offline-country-label {{
+  color:#1a2744; font-size:12px; font-weight:800;
+  text-shadow:0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+  white-space:nowrap; pointer-events:none;
+}}
 table {{ width:100%; border-collapse:collapse; font-size:.82rem; }}
 th,td {{ padding:.35rem .4rem; border-bottom:1px solid var(--mid); text-align:left; }}
 th {{ color:var(--muted); font-size:.72rem; text-transform:uppercase; }}
@@ -624,9 +638,9 @@ th {{ color:var(--muted); font-size:.72rem; text-transform:uppercase; }}
 <main>
   <div class="card">
     <h2>Network map</h2>
-    <p class="hint">Hover a pin for that dealer’s total score vs the Portugal national average (delta in pp). Pins are approximate city centres — not surveyed street addresses. Map tiles require an internet connection.</p>
+    <p class="hint">Hover a pin for that dealer’s total score vs the Portugal national average (delta in pp). Pins are approximate city centres — not surveyed street addresses. The map library and basemap are bundled in this file; no external map tile service is required.</p>
     <div id="pt-map" role="img" aria-label="Portugal dealer interactive map"></div>
-    <p class="tile-note" id="tile-status">Loading OpenStreetMap tiles…</p>
+    <p class="tile-note" id="tile-status">Drawing offline map…</p>
   </div>
   <div class="card">
     <h2>Ranking</h2>
@@ -786,7 +800,7 @@ Meeting pack for Imotors / Portugal. **shared** (external language).
 
 - Dealers: **{dealer_count}**
 - Approx place on map: {geo.get("geo_ok")} · without place token: {geo.get("geo_missing")}
-- Map base layer: Leaflet CDN + OpenStreetMap/CARTO tiles (needs internet when opening the HTML).
+- Map base layer: bundled Leaflet + offline grid / country label layer (no external tile service).
 - Pins: approximate city centres from dealer names and the public Isuzu Portugal dealer directory — not surveyed street addresses.
 
 ## Network average
@@ -893,7 +907,7 @@ def main() -> int:
         'data-tab="map"' in html
         and "Portugal national average" in html
         and ("window.__idsMap" in html or "function renderMap" in html)
-        and "basemaps.cartocdn.com" in html
+        and "no external tile service" in html
         and "Weak sector" not in html
         and ">Weak</text>" not in html
     )

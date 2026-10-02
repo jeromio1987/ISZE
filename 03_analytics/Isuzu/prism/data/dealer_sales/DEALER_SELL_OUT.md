@@ -42,6 +42,10 @@ Optional pairwise UTI↔ITUK deep dive (unchanged): `python scripts/build_dealer
 
 Do **not** leave a new long CSV “filed but unwired”. Deploy sync (`sync_to_deploys.ps1`) still needs an explicit ship ask.
 
+**Annual qty:** long files have a year (or YTD) total **and** monthly rows. `load_sellout_long_pn` must use the year grain only. Summing every row double-counts (IUK 2025 disc 3,821 became 7,642).
+
+**Meaning:** billed (ISZE→DB) vs sales to dealer (DB→dealer) in the same year is **stock movement**. It is not lost sales and not a price action.
+
 ---
 
 ## Folder layout (multi-DB)

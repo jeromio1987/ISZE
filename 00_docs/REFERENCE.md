@@ -17,7 +17,8 @@
 | Scheduled jobs register | `00_docs/AUTOMATION_REGISTER.md` |
 | Workspace changelog / decisions | `CHANGELOG.md`, `DECISIONS.md` |
 | GPT upload status | `08_gpt/UPLOAD_STATUS.md` |
-| PMS / GPS / BVP / UIO metrics | `03_analytics/Isuzu/prism/docs/metric_dictionary.md` |
+| **Which KPI to quote** (FY, euros, official vs GPS vs mix vs list) | `00_docs/ISZE_BI_FRAMEWORK.md` |
+| PMS / GPS / BVP / UIO formulas | `03_analytics/Isuzu/prism/docs/metric_dictionary.md` |
 | PRISM dashboard CSV contracts | `03_analytics/Isuzu/prism/docs/dashboard_contracts.md` |
 | Data integrity flags | `03_analytics/Isuzu/prism/docs/DATA_INTEGRITY_FLAGS_2026-05-28.md` |
 | **Isuzu OS data map** (capability × Have/Partial/Need/Closed) | `00_docs/ISZE_OS_DATA_MAP.yaml` · HTML `02_dashboards/ops/ISZE_OS_Data_Map.html` |
@@ -28,12 +29,13 @@
 | EU Conf 26 GPS/PMS deck + MH review | `09_meetings/EU_Conf26/MH_Remarks_Changelog.md` |
 | Pricing / IE40 | `05_memory/projects/competitiveness.md` |
 | UIO workbook logic | `05_memory/projects/uio.md`, `06_uio/_CURRENT/README.md` |
-| FY action plans | `05_memory/projects/action-plan-fy2026.md`, `action-plan-fy2027.md` |
+| FY action plans | `05_memory/projects/action-plan-fy2027.md` (FY2026 retired with the fiscal year) |
 | AIM / competitiveness / lubricants | `05_memory/projects/aftermarket-intelligence.md`, `competitiveness.md`, `lubricants.md` |
 | Terms & entities | `05_memory/glossary.md` |
 | Map registry / diagram | `00_docs/MAP_REGISTRY.yaml`, `00_docs/MAPS.md` |
 | Versioned filenames | `00_docs/CANONICAL.md` |
 | **What is open / next / closed** | `00_docs/ISZE_ROADMAP.md` — the queue. Domain depth in `00_docs/roadmaps/` |
+| **Decision pack (ticks)** | `00_docs/DECISION_PACK_20260914.md` — recommended defaults; gated productize waits |
 | AIM replacement programme | `00_docs/roadmaps/aim_prism_reinvention.md` |
 | AI sales intelligence (mail, account health, forecast) | `00_docs/roadmaps/ai_sales_intelligence.md` |
 | Aftermarket BI build menu | `00_docs/AFTERMARKET_BI_BUILD_MENU_20260819.md` |

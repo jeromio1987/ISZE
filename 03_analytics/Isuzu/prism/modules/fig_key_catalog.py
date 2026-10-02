@@ -6,10 +6,13 @@ Priority:
   2. PMS_PN_REGISTRY + category_default_fig_key
   3. bvp_pn_dimension pms_category + defaults
   4. pr00_classification.csv — fig_key from PR00 Fig No. + Key No. (~163k PNs)
+  5. pricing_pr00_ie40.parquet fig_no/key_no — fill EMPTY fig_key on existing
+     PR00 rows only (no new PNs, family/group preserved)
 """
 
 from __future__ import annotations
 
+import csv
 from pathlib import Path
 
 import pandas as pd
@@ -34,6 +37,131 @@ def load_pn_overrides(path: Path | None = None) -> pd.DataFrame:
     df = pd.read_csv(p, dtype=str)
     df["part_number"] = df["part_number"].map(normalize_pn_value)
     return df.dropna(subset=["part_number"])
+
+
+def fig_key_from_parts(fig_no, key_no) -> str | None:
+    """FIG-KEY = zero-padded Fig No. + Key No. (e.g. 050-002). Digits only."""
+    if fig_no is None or key_no is None:
+        return None
+    try:
+        if pd.isna(fig_no) or pd.isna(key_no):
+            return None
+    except (TypeError, ValueError):
+        pass
+    fs = str(fig_no).strip().replace(".0", "")
+    ks = str(key_no).strip().replace(".0", "")
+    if not fs or not ks or fs.lower() in ("nan", "none") or ks.lower() in ("nan", "none"):
+        return None
+    if not fs.isdigit() or not ks.isdigit():
+        return None
+    return f"{fs.zfill(3)}-{ks.zfill(3)}"
+
+
+def _pn_lookup_keys(pn: str) -> list[str]:
+    raw = str(pn or "").strip().upper()
+    if raw.endswith(".0") and raw[:-2].isdigit():
+        raw = raw[:-2]
+    if not raw or raw.lower() in ("nan", "none"):
+        return []
+    stripped = raw.lstrip("0") or "0"
+    keys = [raw, stripped]
+    if stripped.isdigit() and len(stripped) <= 10:
+        keys.append(stripped.zfill(10))
+    return list(dict.fromkeys(keys))
+
+
+def _default_ie40_parquet() -> Path | None:
+    try:
+        from config import PRICING_PR00_IE40_PARQUET
+    except ImportError:
+        return None
+    return PRICING_PR00_IE40_PARQUET
+
+
+def load_ie40_fig_key_lookup(parquet_path: Path | None = None) -> dict[str, dict[str, str]]:
+    """Map PN keys → {fig_key, fig_no, key_no} from IE40 PR00 parquet.
+
+    Indexes `part_number` first, then `newest_pn` only when that key is unset.
+    Non-digit Key No. values (e.g. HAA) cannot form a fig_key and are skipped.
+    """
+    path = parquet_path or _default_ie40_parquet()
+    if path is None or not Path(path).is_file():
+        return {}
+    df = pd.read_parquet(path, columns=["part_number", "newest_pn", "fig_no", "key_no"])
+    lookup: dict[str, dict[str, str]] = {}
+
+    def _put(pn, fig_no, key_no, *, overwrite: bool) -> None:
+        fk = fig_key_from_parts(fig_no, key_no)
+        if not fk:
+            return
+        rec = {
+            "fig_key": fk,
+            "fig_no": str(fig_no).strip().replace(".0", ""),
+            "key_no": str(key_no).strip().replace(".0", ""),
+        }
+        for key in _pn_lookup_keys(pn):
+            if overwrite or key not in lookup:
+                lookup[key] = rec
+
+    for _, r in df.iterrows():
+        _put(r.get("part_number"), r.get("fig_no"), r.get("key_no"), overwrite=True)
+    for _, r in df.iterrows():
+        _put(r.get("newest_pn"), r.get("fig_no"), r.get("key_no"), overwrite=False)
+    return lookup
+
+
+def lookup_ie40_fig_key(pn: str, lookup: dict[str, dict[str, str]] | None = None) -> dict[str, str] | None:
+    table = lookup if lookup is not None else load_ie40_fig_key_lookup()
+    for key in _pn_lookup_keys(pn):
+        hit = table.get(key)
+        if hit:
+            return hit
+    return None
+
+
+def fill_empty_fig_keys_in_pr00_csv(
+    pr00_csv: Path,
+    parquet_path: Path | None = None,
+) -> dict:
+    """Fill EMPTY fig_key on existing pr00_classification.csv rows from IE40 parquet.
+
+    Does not add PNs. Does not drop family/group. Returns fill stats.
+    """
+    csv_path = Path(pr00_csv)
+    stats = {"filled": 0, "already_had": 0, "still_empty": 0, "rows": 0, "added_pns": 0}
+    if not csv_path.is_file():
+        return stats
+    lookup = load_ie40_fig_key_lookup(parquet_path)
+    with csv_path.open(newline="", encoding="utf-8") as fh:
+        reader = csv.DictReader(fh)
+        fieldnames = list(reader.fieldnames or [])
+        rows = list(reader)
+    stats["rows"] = len(rows)
+    required = {"pn_norm", "family", "group", "fig_key"}
+    if not required.issubset(set(fieldnames)):
+        raise ValueError(f"pr00_classification.csv missing columns: {sorted(required - set(fieldnames))}")
+
+    for rec in rows:
+        fk = (rec.get("fig_key") or "").strip()
+        if fk:
+            stats["already_had"] += 1
+            continue
+        hit = lookup_ie40_fig_key(rec.get("pn_norm") or "", lookup)
+        if not hit:
+            stats["still_empty"] += 1
+            continue
+        rec["fig_key"] = hit["fig_key"]
+        if not (rec.get("fig_no") or "").strip() and "fig_no" in fieldnames:
+            rec["fig_no"] = hit["fig_no"]
+        if not (rec.get("key_no") or "").strip() and "key_no" in fieldnames:
+            rec["key_no"] = hit["key_no"]
+        stats["filled"] += 1
+
+    with csv_path.open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=fieldnames, lineterminator="\n")
+        writer.writeheader()
+        writer.writerows(rows)
+    return stats
 
 
 def fig_key_for_category(taxonomy: dict, pms_category: str | None) -> str | None:
@@ -86,10 +214,16 @@ def build_parts_catalog_dimension(
     bvp_dimension_csv: Path,
     taxonomy_path: Path | None = None,
     overrides_path: Path | None = None,
+    ie40_parquet: Path | None = None,
 ) -> pd.DataFrame:
-    """One row per part_number with fig_key + PR00 + PMS tags."""
+    """One row per part_number with fig_key + PR00 + PMS tags.
+
+    Empty fig_key on existing PR00 rows is filled from IE40 parquet (fig_no/key_no).
+    New PNs are not invented from the parquet.
+    """
     tax = load_taxonomy(taxonomy_path)
     pms_keys = tax.get("pms_fig_keys") or {}
+    ie40_lookup = load_ie40_fig_key_lookup(ie40_parquet)
 
     rows: dict[str, dict] = {}
 
@@ -142,6 +276,9 @@ def build_parts_catalog_dimension(
             pn = str(r.get("pn_norm", "")).strip()
             fk = r.get("fig_key")
             fk = str(fk).strip() if pd.notna(fk) and str(fk).strip() else None
+            ie40_hit = None if fk else lookup_ie40_fig_key(pn, ie40_lookup)
+            if ie40_hit:
+                fk = ie40_hit["fig_key"]
             pms_cat = None
             fig_lbl = r.get("level3_type") or r.get("group")
             if fk and fk in pms_keys:
@@ -162,7 +299,7 @@ def build_parts_catalog_dimension(
                 pr00_family=r.get("family"),
                 pr00_group=r.get("group"),
                 pr00_level3_type=r.get("level3_type"),
-                classification_source="pr00",
+                classification_source="pr00_ie40" if ie40_hit else "pr00",
             )
 
     # BVP dimension (PMS-flagged catalogue)

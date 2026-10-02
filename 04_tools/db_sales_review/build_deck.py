@@ -21,7 +21,9 @@ from pathlib import Path
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-TOOLS = r"C:\Users\jerom\Desktop\claude\ISZE\04_tools\ppt_template_v2"
+import common as C                      # noqa: E402
+
+TOOLS = str(C.ISZE / "04_tools" / "ppt_template_v2")
 sys.path.insert(0, TOOLS)
 
 import isze_chart_theme as ct          # noqa: E402
@@ -30,8 +32,6 @@ from pptx.util import Inches, Pt, Emu  # noqa: E402
 from pptx.dml.color import RGBColor    # noqa: E402
 from pptx.enum.text import PP_ALIGN    # noqa: E402
 from pptx.enum.shapes import MSO_SHAPE  # noqa: E402
-
-import common as C                      # noqa: E402
 
 ct.FONT_FAMILY = "Calibri"
 
@@ -860,11 +860,16 @@ def build(dbkey: str):
 
     # ---- GPS Capture -------------------------------------------------------
     if gps:
-        g26 = gps["gps_FY2026"]
+        use_master = bool(deck_opt.get("use_gps_master") and gps.get("gps_master_flat_FY2026") is not None)
+        g26 = gps["gps_master_flat_FY2026"] if use_master else gps["gps_FY2026"]
+        gps_wallet = gps["gps_master_max_spend"] if use_master else gps["wallet_2025"]
+        master = C.load_gps_master(p) if use_master else {}
+        gps_uio = int(master.get("uio_2025") or gps["uio_2025"]) if use_master else gps["uio_2025"]
+        show_gps_pct = (g26 is not None and 0 < g26 <= 1.0) if use_master else gps["show_pct"]
         saty = p.get("saty_note")
-        if gps["show_pct"]:
+        if show_gps_pct and not deck_opt.get("skip_gps_pct"):
             pct_lab = f"{g26 * 100:.1f}%"
-            uncap = max(0.0, float(gps["wallet_2025"]) - float(gps["net_FY2026"]))
+            uncap = max(0.0, float(gps_wallet) - float(gps["net_FY2026"]))
             cap_eur = float(gps["net_FY2026"])
             s = db.build_content(
                 prs,
@@ -872,7 +877,7 @@ def build(dbkey: str):
                 eyebrow="GPS capture", page_no=page)
             gbullets = [
                 f"Captured {eur(cap_eur, True)} · Uncaptured potential {eur(uncap, True)}.",
-                f"Fleet potential: {eur(gps['wallet_2025'], True)} on {gps['uio_2025']:,} vehicles.",
+                f"Fleet potential: {eur(gps_wallet, True)} on {gps_uio:,} vehicles.",
                 f"{disp} today: {pct_lab} (FY2026 purchases against the CY2025 fleet potential).",
             ]
             if gps.get("adder_note"):

@@ -29,6 +29,25 @@ class IncrementalCsvWriter:
         self.done_statuses = done_statuses
         self.encoding = encoding
 
+    def ensure_columns(self) -> None:
+        """Add any missing fieldnames onto an existing CSV (empty values)."""
+        if not self.path.exists():
+            return
+        with self.path.open(newline="", encoding=self.encoding) as fh:
+            reader = csv.DictReader(fh)
+            existing = list(reader.fieldnames or [])
+            rows = list(reader)
+        missing = [name for name in self.fieldnames if name not in existing]
+        if not missing:
+            return
+        union = list(dict.fromkeys([*existing, *self.fieldnames]))
+        self.fieldnames = union
+        with self.path.open("w", newline="", encoding=self.encoding) as fh:
+            writer = csv.DictWriter(fh, fieldnames=union)
+            writer.writeheader()
+            for row in rows:
+                writer.writerow({name: row.get(name, "") for name in union})
+
     @property
     def composite(self) -> bool:
         return self.key_fields is not None
@@ -50,8 +69,9 @@ class IncrementalCsvWriter:
         return status in self.done_statuses
 
     def ensure_header(self) -> None:
-        """Create file with header row if path does not exist."""
+        """Create file with header row if path does not exist; add missing columns if it does."""
         if self.path.exists():
+            self.ensure_columns()
             return
         self.path.parent.mkdir(parents=True, exist_ok=True)
         with self.path.open("w", newline="", encoding=self.encoding) as fh:

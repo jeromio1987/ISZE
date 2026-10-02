@@ -48,6 +48,7 @@ distributors:
     segment: "LCV"
     payer: "I.M. PARTS & SERVICE Limited"
     sold_to: 2574
+    # IUK = UK pickup / D-Max. ITUK (2575) is a different distributor — never blend.
     gps_key: "IUK"
     pms_code: "IUK"
     fy27_tab: "IUK"
@@ -71,13 +72,39 @@ distributors:
       - "The Apr-Jun 2026 SAP extract holds only EUR 586,024 for IUK against Power BI's EUR 1,663K (~35%). Never cut PN detail on that window for this DB."
       - "Q1 2026 carries a EUR 95,000 rebate credit memo. Signed negative by the loader; kept out of the mover lists."
 
+  ITUK:
+    name: "Isuzu Truck UK"
+    country: "United Kingdom"
+    display: "UK Truck"
+    segment: "CV"
+    payer: "ISUZU TRUCK (UK) LIMITED"
+    sold_to: 2575
+    gps_key: "ITUK"
+    pms_code: "ITUK"
+    fy27_tab: "ITUK"
+    dashboard_key: "ITUK"
+    ids_code: "UK_CV"
+    uio_rows: {ld: null, md: null, f_series: null, lcv: null}
+    uio_cy2026_method: "corrected_survival"
+    uio_2026_fixed: {ld: 22389}
+    warranty_cy2025_claim: null
+    warranty_note: "ITUK claim grain is db_name ITUK in warranty_raw_grain. Do not use IUK warranty."
+    incentive_fy27: null
+    pbi: null
+    watch:
+      - "ITUK is UK truck (sold-to 2575). IUK 2574 is pickup. Never blend the two."
+      - "No Power BI month cut in this profile — official sales-review slide is skipped until Jerome pastes Apr/May/Jun sales, budget, last year (same three columns as IUK). Do not invent it from SAP."
+      - "GPS publish on the operating dashboard is fiscal-year only. Do not invent a calendar GPS %."
+
   PORTUGAL:
     name: "I-Motors"
     country: "Portugal"
     display: "Portugal"
     segment: "mixed"
     payer: "IMOTORS - Importacao e Comercio"
-    sold_to: null
+    sold_to: 519
+    # CY2025 extract often puts ship-to 92 in Sold-to pt; 519 is the account.
+    sold_to_aliases: [92]
     gps_key: "Imotors"
     pms_code: "PORTUGAL"
     fy27_tab: "PORTUGAL"
@@ -93,7 +120,7 @@ distributors:
     pbi:
       quarter: "Q1 FY2027"
       months: ["Apr", "May", "Jun"]
-      sales: [140000, 141000, 163000]
+      sales: [140000, 151000, 153000]  # May/Jun were 141/163 (= budget); SAP Apr–Jun is 140/151/153k
       budget: [148000, 141000, 163000]
       prev_year: [116000, 140000, 169000]
       order_intake_total: null
@@ -101,6 +128,8 @@ distributors:
     watch:
       - "Portugal has a real registration file (01_data/Matriculas Isuzu SAP.xlsx). Prefer it over UIO for the fleet chart — no other DB here has an equivalent."
       - "The July 2026 deck reported H1 2026 at EUR 935,636 with a EUR 20,000 rebate credit counted as a POSITIVE. Correct figure is EUR 40,000 lower. Fix before that deck is reused."
+    deck:
+      use_gps_master: true  # meeting GPS % is gps_master (flat published). Carpark mixed-rate wallet is not the quote.
 
   ISD:
     name: "Isuzu Sales Deutschland"
@@ -222,7 +251,7 @@ distributors:
     display: "Ireland"
     segment: "mixed"
     payer: "ISUZU IRELAND"
-    sold_to: null
+    sold_to: 76
     gps_key: "Ireland"
     pms_code: "IRELAND"
     fy27_tab: "IRELAND"
@@ -234,6 +263,8 @@ distributors:
     warranty_cy2025_claim: 34857
     warranty_note: "CV EUR 3,908 is a lower bound (82% of part cells priced); LCV EUR 30,949 is clean."
     incentive_fy27: 16000
+    deck:
+      skip_gps_pct: true   # GPS > 100%; Mode A uses the amount view, never a capture %
     pbi:
       quarter: "Q1 FY2027"
       months: ["Apr", "May", "Jun"]
