@@ -1,0 +1,1820 @@
+{
+ "generated_at": "2026-10-01T20:29:38+00:00",
+ "feed": "01_data/14_dashboards/tender_data.json",
+ "feed_generated_at": "2026-09-28T05:51:57.598166Z",
+ "verdict_counts": {
+  "isuzu_in_fleet": 1,
+  "no_vehicle_list_found": 3,
+  "not_in_fleet": 11,
+  "documents_not_available": 5
+ },
+ "tenders": [
+  {
+   "opportunity_id": "992f4e916620",
+   "country": "Portugal",
+   "title": "Aquisição de serviços de assistência técnica às viaturas e máquinas pesadas do Município de Santa Cruz",
+   "deadline": "2026-10-13",
+   "decision_in_feed_when_read": "Attack",
+   "fleet_brand_in_feed_when_read": "isuzu_in_fleet_docs",
+   "verdict": "isuzu_in_fleet",
+   "label": "Isuzu in the vehicle list of the tender documents",
+   "reason": "",
+   "documents_listed": 2,
+   "documents_read": 2,
+   "documents_with_text": 1,
+   "isuzu_hits": 20,
+   "isuzu_hits_in_list": 20,
+   "brands_in_list": {
+    "Isuzu": 20,
+    "Mercedes-Benz": 17,
+    "DAF": 17,
+    "Mitsubishi": 16,
+    "Volvo": 11,
+    "Renault": 1,
+    "Iveco": 1
+   },
+   "evidence": [
+    {
+     "brand": "Isuzu",
+     "term": "ISUZU",
+     "file": "419972445/files/pecas_procedimento_7qnqKhqKPG.zip",
+     "where": "Processo Concurso/5_Anexos_Lote_2.zip > Anexo V – Lista de Viaturas – Lote 2.xlsx > sheet 'Anexo V' row 13",
+     "in_vehicle_list": true,
+     "snippet": "BQ-31-BA | ISUZU | NPR 190,75/38 | 2024-12-30 00:00:00 | JAANPR75HP71102234 | 11 000 kg | FARID | MK1 Plus 8m3"
+    },
+    {
+     "brand": "Isuzu",
+     "term": "ISUZU",
+     "file": "419972445/files/pecas_procedimento_7qnqKhqKPG.zip",
+     "where": "Processo Concurso/5_Anexos_Lote_2.zip > Anexo V – Lista de Viaturas – Lote 2.xlsx > sheet 'Anexo V' row 14",
+     "in_vehicle_list": true,
+     "snippet": "BQ-57-BA | ISUZU | NPR 190,75/38 | 2024-12-30 00:00:00 | JAANPR75HP71102241 | 11 000 kg | FARID | MK1 Plus 8m3"
+    },
+    {
+     "brand": "Isuzu",
+     "term": "ISUZU",
+     "file": "419972445/files/pecas_procedimento_7qnqKhqKPG.zip",
+     "where": "Processo Concurso/5_Anexos_Lote_2.zip > Anexo V – Lista de Viaturas – Lote 2.xlsx > sheet 'Anexo V' row 15",
+     "in_vehicle_list": true,
+     "snippet": "BQ-60-BA | ISUZU | NPR 190,75/38 | 2024-12-30 00:00:00 | JAANPR75HP71102232 | 11 000 kg | FARID | MK1 Plus 8m3"
+    },
+    {
+     "brand": "Isuzu",
+     "term": "ISUZU",
+     "file": "419972445/files/pecas_procedimento_7qnqKhqKPG.zip",
+     "where": "Processo Concurso/5_Anexos_Lote_2.zip > Anexo V – Lista de Viaturas – Lote 2.xlsx > sheet 'Anexo V' row 16",
+     "in_vehicle_list": true,
+     "snippet": "BQ-63-BA | ISUZU | NPR 190,75/38 | 2024-12-30 00:00:00 | JAANPR75HP71102265 | 11 000 kg | FARID | MK1 Plus 8m3"
+    },
+    {
+     "brand": "Isuzu",
+     "term": "ISUZU",
+     "file": "419972445/files/pecas_procedimento_7qnqKhqKPG.zip",
+     "where": "Processo Concurso/5_Anexos_Lote_2.zip > Anexo V – Lista de Viaturas – Lote 2.xlsx > sheet 'Anexo V' row 17",
+     "in_vehicle_list": true,
+     "snippet": "BQ-70-BA | ISUZU | NPR 190,75/38 | 2024-12-30 00:00:00 | JAANPR75HP71102237 | 11 000 kg | FARID | MK1 Plus 8m3"
+    },
+    {
+     "brand": "Isuzu",
+     "term": "ISUZU",
+     "file": "419972445/files/pecas_procedimento_7qnqKhqKPG.zip",
+     "where": "Processo Concurso/5_Anexos_Lote_2.zip > Anexo V – Lista de Viaturas – Lote 2.xlsx > sheet 'Anexo V' row 18",
+     "in_vehicle_list": true,
+     "snippet": "BZ-15-JT | ISUZU | NPR 190.75/38 (NPR75L-KL5VAYE) | 2025-10-17 00:00:00 | JAANPR75HR7101366 | 11 000 kg | FARID | MK1 Plus 8m"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:07+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/419972445"
+   ],
+   "notes": [],
+   "documents": [
+    {
+     "notice": "419972445",
+     "url": "https://files.diariodarepublica.pt/cp_hora/2026/09/178/419972445.pdf",
+     "status": "read",
+     "file": "419972445/files/419972445.pdf",
+     "pages": 4
+    },
+    {
+     "notice": "419972445",
+     "url": "https://www.acingov.pt/acingovprod/2/zonaPublica/zona_publica_c/donwloadProcedurePiece/MTE0MTEyMQ",
+     "status": "read",
+     "file": "419972445/files/pecas_procedimento_7qnqKhqKPG.zip"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "a12990d7346b",
+   "country": "Belgium",
+   "title": "Maintenance, réparations et dépannage de plate-formes élévatrices mobiles de personnel multi-marques montée sur un véhicule porteur",
+   "deadline": "2026-10-01",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown_multi_brand",
+   "verdict": "no_vehicle_list_found",
+   "label": "Tender documents read: no vehicle list in them",
+   "reason": "",
+   "documents_listed": 4,
+   "documents_read": 4,
+   "documents_with_text": 3,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {},
+   "evidence": [],
+   "checked_at": "2026-10-01T20:29:09+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/ACSMPEMPWA34_Avis_de_march"
+   ],
+   "notes": [
+    "BOSA workspace a991afae: 3 documents listed"
+   ],
+   "documents": [
+    {
+     "notice": "ACSMPEMPWA34_Avis_de_march",
+     "url": "https://www.publicprocurement.be/en/publication-workspaces/a991afae-38c0-4e9b-b080-488c68d36521#doc=51fd4750-69e5-4d68-a1ef-0bc0b7f26c20",
+     "status": "read",
+     "file": "ACSMPEMPWA34_Avis_de_march/files/ESPD_request_fr.pdf",
+     "pages": 27
+    },
+    {
+     "notice": "ACSMPEMPWA34_Avis_de_march",
+     "url": "https://www.publicprocurement.be/en/publication-workspaces/a991afae-38c0-4e9b-b080-488c68d36521#doc=880d3386-b1d5-4c64-929f-bccb8640517d",
+     "status": "read",
+     "file": "ACSMPEMPWA34_Avis_de_march/files/ACSMPEMPWA34_ORES - Formulaire de demande de participation.docx"
+    },
+    {
+     "notice": "ACSMPEMPWA34_Avis_de_march",
+     "url": "https://www.publicprocurement.be/en/publication-workspaces/a991afae-38c0-4e9b-b080-488c68d36521#doc=178cf3b5-7d54-4ba5-8d75-67f07d72abd4",
+     "status": "read",
+     "file": "ACSMPEMPWA34_Avis_de_march/files/ESPD_request_fr.xml"
+    },
+    {
+     "notice": "ACSMPEMPWA34_Avis_de_march",
+     "url": "https://www.publicprocurement.be/en/publication-workspaces/a991afae-38c0-4e9b-b080-488c68d36521#notice",
+     "status": "read",
+     "file": "ACSMPEMPWA34_Avis_de_march/files/BOSA_notice_a991afae.xml"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "7a368d0302e4",
+   "country": "Romania",
+   "title": "Service auto pentru autovehicule aflate in parcul auto al SC APA CANAL 2000 S.A. Pitesti - LOTUL 1",
+   "deadline": "2026-10-05",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "not_in_fleet",
+   "label": "Vehicle list found in the tender documents: no Isuzu in it",
+   "reason": "",
+   "documents_listed": 4,
+   "documents_read": 4,
+   "documents_with_text": 4,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "Dacia": 46,
+    "Ford": 1,
+    "Skoda": 1
+   },
+   "evidence": [
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "SCN1180084/files/CAIET DE SARCINI_ST_service_SEPT.2026_LOT 1_REVIZUIT-semnat.pdf.p7s",
+     "where": "p.2",
+     "in_vehicle_list": true,
+     "snippet": "ipul autovehiculului Anul fabricatiei Carburant / cilindree (cc) Kilometraj (estimat) L, AG 03 ACP Autoturism Dacia Duster 2025 Benzina L598 / electric 11700 2. AG 08 ECE Autoturism Dacia Logan 2008 Benzina 1598 247200 3. AG"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "SCN1180084/files/CAIET DE SARCINI_ST_service_SEPT.2026_LOT 1_REVIZUIT-semnat.pdf.p7s",
+     "where": "p.2",
+     "in_vehicle_list": true,
+     "snippet": "raj (estimat) L, AG 03 ACP Autoturism Dacia Duster 2025 Benzina L598 / electric 11700 2. AG 08 ECE Autoturism Dacia Logan 2008 Benzina 1598 247200 3. AG 10 ACP Autoturism Dacia Duster 202\\ Motorina 1461 105650 4. AG 10 WKK Au"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "SCN1180084/files/CAIET DE SARCINI_ST_service_SEPT.2026_LOT 1_REVIZUIT-semnat.pdf.p7s",
+     "where": "p.2",
+     "in_vehicle_list": true,
+     "snippet": "na L598 / electric 11700 2. AG 08 ECE Autoturism Dacia Logan 2008 Benzina 1598 247200 3. AG 10 ACP Autoturism Dacia Duster 202\\ Motorina 1461 105650 4. AG 10 WKK Autotu rism Skoda Octavia 2008 Motorina 1896 306200 5. AG 11. A"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "SCN1180084/files/CAIET DE SARCINI_ST_service_SEPT.2026_LOT 1_REVIZUIT-semnat.pdf.p7s",
+     "where": "p.2",
+     "in_vehicle_list": true,
+     "snippet": "08 Motorina 1896 306200 5. AG 11. ATF Autoturism Ford Focus 20LL Motorina 1560 208100 6. AG 11 KHF Autoturism Dacia Logan 2008 Benzina 1390 257100 7. AG 1i KHG Autoturism Dacia Logan 2008 Benzina 1390 248658 8. AG 12 CVU Auto"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "SCN1180084/files/CAIET DE SARCINI_ST_service_SEPT.2026_LOT 1_REVIZUIT-semnat.pdf.p7s",
+     "where": "p.2",
+     "in_vehicle_list": true,
+     "snippet": "0LL Motorina 1560 208100 6. AG 11 KHF Autoturism Dacia Logan 2008 Benzina 1390 257100 7. AG 1i KHG Autoturism Dacia Logan 2008 Benzina 1390 248658 8. AG 12 CVU Autoturism Ml. Dacia Duster 2010 Motorina 1.461. 269050 9. AG 12"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "SCN1180084/files/CAIET DE SARCINI_ST_service_SEPT.2026_LOT 1_REVIZUIT-semnat.pdf.p7s",
+     "where": "p.2",
+     "in_vehicle_list": true,
+     "snippet": "Benzina 1390 257100 7. AG 1i KHG Autoturism Dacia Logan 2008 Benzina 1390 248658 8. AG 12 CVU Autoturism Ml. Dacia Duster 2010 Motorina 1.461. 269050 9. AG 12 CVV Autoturism M1 Dacia Duster 2010 Motorina L45L 191986 10 AG 12"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:12+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/SCN1180084"
+   ],
+   "notes": [
+    "SEAP notice 100244996: 4 documentation files listed; 1 ESPD/DUAE request XML not downloaded (no vehicle data)"
+   ],
+   "documents": [
+    {
+     "notice": "SCN1180084",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100244996/view#doc=SCN1180084/00001",
+     "status": "read",
+     "file": "SCN1180084/files/CAIET DE SARCINI_ST_service_SEPT.2026_LOT 1_REVIZUIT-semnat.pdf.p7s",
+     "pages": 7
+    },
+    {
+     "notice": "SCN1180084",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100244996/view#doc=SCN1180084/00002",
+     "status": "read",
+     "file": "SCN1180084/files/Contract service auto-semnat.doc.p7s"
+    },
+    {
+     "notice": "SCN1180084",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100244996/view#doc=SCN1180084/00004",
+     "status": "read",
+     "file": "SCN1180084/files/Instructiuni_ofertanti_FisaDate_DF1280762.pdf",
+     "pages": 15
+    },
+    {
+     "notice": "SCN1180084",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100244996/view#doc=SCN1180084/00007",
+     "status": "read",
+     "file": "SCN1180084/files/FORMULARE LOT1-semnat.docx.p7s"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "a0cc28fc2f67",
+   "country": "Ireland",
+   "title": "Ireland – Fleet management, repair and maintenance services – AP - 06/26 - Fleet Management Services",
+   "deadline": "2026-10-01",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "no_vehicle_list_found",
+   "label": "Tender documents read: no vehicle list in them",
+   "reason": "",
+   "documents_listed": 4,
+   "documents_read": 4,
+   "documents_with_text": 3,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {},
+   "evidence": [],
+   "checked_at": "2026-10-01T20:29:14+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/648813-2026"
+   ],
+   "notes": [
+    "eTenders 8449092: 3 documents offered to anonymous visitors"
+   ],
+   "documents": [
+    {
+     "notice": "648813-2026",
+     "url": "https://ted.europa.eu/en/notice/648813-2026/xml",
+     "status": "read",
+     "file": "648813-2026/files/2026-OJS182-00648813.xml"
+    },
+    {
+     "notice": "648813-2026",
+     "url": "https://www.etenders.gov.ie/epps/cft/downloadContractDocument.do?documentId=9092734&resourceId=8449092",
+     "status": "read",
+     "file": "648813-2026/files/BNM IM and PQQ - RFT 8449092.pdf",
+     "pages": 42
+    },
+    {
+     "notice": "648813-2026",
+     "url": "https://www.etenders.gov.ie/epps/cft/downloadContractDocument.do?documentId=9092740&resourceId=8449092",
+     "status": "read",
+     "file": "648813-2026/files/Editable Appendices.docx"
+    },
+    {
+     "notice": "648813-2026",
+     "url": "https://www.etenders.gov.ie/epps/cft/downloadContractDocument.do?documentId=9119112&resourceId=8449092",
+     "status": "read",
+     "file": "648813-2026/files/c4t_8449092_1.xml"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "a408f82cd0b1",
+   "country": "Norway",
+   "title": "Norway – Repair and maintenance services of cars – Workshop services",
+   "deadline": "2026-10-01",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "documents_not_available",
+   "label": "Tender documents not read",
+   "reason": "needs registration: permalink.mercell.com",
+   "documents_listed": 2,
+   "documents_read": 1,
+   "documents_with_text": 0,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {},
+   "evidence": [],
+   "checked_at": "2026-10-01T20:29:17+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/603419-2026"
+   ],
+   "notes": [],
+   "documents": [
+    {
+     "notice": "603419-2026",
+     "url": "https://ted.europa.eu/en/notice/603419-2026/xml",
+     "status": "read",
+     "file": "603419-2026/files/2026-OJS169-00603419.xml"
+    },
+    {
+     "notice": "603419-2026",
+     "url": "https://permalink.mercell.com/285506675.aspx",
+     "status": "needs_registration",
+     "note": "Mercell lists the files but gives access only after 'Show interest' (supplier sign-in)"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "3ab2425715d1",
+   "country": "Romania",
+   "title": "Romania – Repair and maintenance services of motor vehicles and associated equipment – ACORD-CADRU pentru servicii de reparare și întreținere pentru vehiculele din parcul tehnic al Inspectoratului pentru Situaţii de Urgenţă ,,Iancu de Hunedoara” al Judeţului Hunedoara",
+   "deadline": "2026-10-16",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "not_in_fleet",
+   "label": "Vehicle list found in the tender documents: no Isuzu in it",
+   "reason": "",
+   "documents_listed": 8,
+   "documents_read": 8,
+   "documents_with_text": 6,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "Volkswagen": 75,
+    "Dacia": 44,
+    "Iveco": 37,
+    "Renault": 33,
+    "Mercedes-Benz": 14,
+    "MAN": 6,
+    "Nissan": 3,
+    "Scania": 2
+   },
+   "evidence": [
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "654709-2026/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "ia de folosință Denumire/Tip/ Varianta/Versiune Nr. de înregistrare Nr. de identificare An fabr. 17 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28065 UU1LSDABH35854312 2006 18 DACIA AUTOVEHICUL"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "654709-2026/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "An fabr. 17 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28065 UU1LSDABH35854312 2006 18 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28166 UU1LSDABH35825902 2006 19 DACIA AUTOVEHICUL"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "654709-2026/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "312 2006 18 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28166 UU1LSDABH35825902 2006 19 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28176 UU1LSDABH35825975 2006 20 DACIA AUTOVEHICUL"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "654709-2026/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "902 2006 19 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28176 UU1LSDABH35825975 2006 20 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28321 UU1LSDABH35826044 2006 21 CAUTIS REMORCA O1"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "654709-2026/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "WAGEN AUTOVEHICUL SPECIAL M1 TRANSPORTER/7J0/ DLY011/TRANSPORTER MAI 33200 WV1ZZZ7HZBH133784 2011 27 DACIA-OKURA AUTOVEHICUL SPECIAL M1G DUSTER/DTG/HDTGAR/ HDTGARN MAI 35046 UU1HSDARN48157895 2012 28 DACIA-O"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "654709-2026/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "DACIA-OKURA AUTOVEHICUL SPECIAL M1G DUSTER/DTG/HDTGAR/ HDTGARN MAI 35046 UU1HSDARN48157895 2012 28 DACIA-OKURA AUTOVEHICUL SPECIAL M1 SG/LGG/LLGGBS/ LLGGBSP MAI 35119 UU1LSDBSP48056953 2012 29 DACIA AUTOTU"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:20+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/662046-2026",
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/654709-2026"
+   ],
+   "notes": [
+    "generic SEAP link https://www.e-licitatie.ro (no notice id) - covered by the SEAP twin if one exists",
+    "SEAP notice 100212310: 6 documentation files listed; 2 ESPD/DUAE request XML not downloaded (no vehicle data)"
+   ],
+   "documents": [
+    {
+     "notice": "662046-2026",
+     "url": "https://ted.europa.eu/en/notice/662046-2026/xml",
+     "status": "read",
+     "file": "662046-2026/files/2026-OJS186-00662046.xml"
+    },
+    {
+     "notice": "654709-2026",
+     "url": "https://ted.europa.eu/en/notice/654709-2026/xml",
+     "status": "read",
+     "file": "654709-2026/files/2026-OJS184-00654709.xml"
+    },
+    {
+     "notice": "654709-2026",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00001",
+     "status": "read",
+     "file": "654709-2026/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "pages": 29
+    },
+    {
+     "notice": "654709-2026",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00002",
+     "status": "read",
+     "file": "654709-2026/files/Anexa Formulare-semnat.pdf",
+     "pages": 24
+    },
+    {
+     "notice": "654709-2026",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00003",
+     "status": "read",
+     "file": "654709-2026/files/anexa_Formulare editabile.doc"
+    },
+    {
+     "notice": "654709-2026",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00004",
+     "status": "read",
+     "file": "654709-2026/files/Caiet de sarcini-semnat.pdf",
+     "note": "scanned pages read by OCR: 27 of 27",
+     "pages": 27
+    },
+    {
+     "notice": "654709-2026",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00005",
+     "status": "read",
+     "file": "654709-2026/files/Declaratie functii decizie-semnat.pdf",
+     "note": "scanned pages read by OCR: 2 of 2",
+     "pages": 2
+    },
+    {
+     "notice": "654709-2026",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00007",
+     "status": "read",
+     "file": "654709-2026/files/Instructiuni_ofertanti_FisaDate_DF1280820.pdf",
+     "pages": 36
+    }
+   ]
+  },
+  {
+   "opportunity_id": "2cffebf71f31",
+   "country": "Romania",
+   "title": "Servicii de reparare, piese si accesorii pentru autoturisme - DS Timis",
+   "deadline": "2026-10-07",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "not_in_fleet",
+   "label": "Vehicle list found in the tender documents: no Isuzu in it",
+   "reason": "",
+   "documents_listed": 2,
+   "documents_read": 2,
+   "documents_with_text": 2,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "Dacia": 3,
+    "Ford": 2,
+    "Citroen": 1,
+    "Toyota": 1
+   },
+   "evidence": [
+    {
+     "brand": "Citroen",
+     "term": "CITROEN",
+     "file": "CN1096087/files/Documentatie - reparare autoturisme.pdf.p7s",
+     "where": "p.3 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "L nr. 7: Cantitate sau domeniu: Denumire/tip Denumire lot: Ocolul Silvic Lunca Timi ului DACIA TM-24-HVL FORD CITROEN TOYOTA nn-15-AXO TM40-SLT TM-21-UOR TM-37-DRM TM-16-HXR TM-16-KMS TM-16-YOZ TM-II-EXA 5 buc Denumire lot: DAC"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096087/files/Documentatie - reparare autoturisme.pdf.p7s",
+     "where": "p.2 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "CCESORII b. Cantitäti: LOTUL nr. 1: Cantitate sau domeniu: Denumire/tip Denumire lot: Ocolul Silvic Timisoara DACIA TM-16-ZER TM-25-UJl TM-90-STM TM-40-STM TM-60-STM TM-I I-YHM TM-31-FAG 7 buc FORD TM-23-ZLH 1 buc"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096087/files/Documentatie - reparare autoturisme.pdf.p7s",
+     "where": "p.3 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "iu: Denumire/tip LOTUL nr. 7: Cantitate sau domeniu: Denumire/tip Denumire lot: Ocolul Silvic Lunca Timi ului DACIA TM-24-HVL FORD CITROEN TOYOTA nn-15-AXO TM40-SLT TM-21-UOR TM-37-DRM TM-16-HXR TM-16-KMS TM-16-YOZ TM-II-EXA"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096087/files/Documentatie - reparare autoturisme.pdf.p7s",
+     "where": "p.3 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "OEN TOYOTA nn-15-AXO TM40-SLT TM-21-UOR TM-37-DRM TM-16-HXR TM-16-KMS TM-16-YOZ TM-II-EXA 5 buc Denumire lot: DACIA TM-77-BZJ TM-35-LOS TM-77 SLO 3 buc Denumire lot: DACIA TM-16-LLB TM-16-GCS TM-75-SLV TM-50-CBG 4 buc Denumir"
+    },
+    {
+     "brand": "Ford",
+     "term": "FORD",
+     "file": "CN1096087/files/Documentatie - reparare autoturisme.pdf.p7s",
+     "where": "p.2 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "t: Ocolul Silvic Timisoara DACIA TM-16-ZER TM-25-UJl TM-90-STM TM-40-STM TM-60-STM TM-I I-YHM TM-31-FAG 7 buc FORD TM-23-ZLH 1 buc"
+    },
+    {
+     "brand": "Ford",
+     "term": "FORD",
+     "file": "CN1096087/files/Documentatie - reparare autoturisme.pdf.p7s",
+     "where": "p.3 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "LOTUL nr. 7: Cantitate sau domeniu: Denumire/tip Denumire lot: Ocolul Silvic Lunca Timi ului DACIA TM-24-HVL FORD CITROEN TOYOTA nn-15-AXO TM40-SLT TM-21-UOR TM-37-DRM TM-16-HXR TM-16-KMS TM-16-YOZ TM-II-EXA 5 buc Denumire"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:21+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/CN1096087"
+   ],
+   "notes": [
+    "SEAP notice 100211675: 2 documentation files listed; 1 ESPD/DUAE request XML not downloaded (no vehicle data)"
+   ],
+   "documents": [
+    {
+     "notice": "CN1096087",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100211675/view#doc=CN1096087/00004",
+     "status": "read",
+     "file": "CN1096087/files/Instructiuni_ofertanti_FisaDate_DF1279511.pdf",
+     "pages": 18
+    },
+    {
+     "notice": "CN1096087",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100211675/view#doc=CN1096087/00005",
+     "status": "read",
+     "file": "CN1096087/files/Documentatie - reparare autoturisme.pdf.p7s",
+     "note": "scanned pages read by OCR: 168 of 168",
+     "pages": 168
+    }
+   ]
+  },
+  {
+   "opportunity_id": "727079af00b5",
+   "country": "Romania",
+   "title": "Servicii de revizii si reparatii autovehicule",
+   "deadline": "2026-10-19",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "not_in_fleet",
+   "label": "Vehicle list found in the tender documents: no Isuzu in it",
+   "reason": "",
+   "documents_listed": 5,
+   "documents_read": 5,
+   "documents_with_text": 5,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "Dacia": 34,
+    "Ford": 14,
+    "Toyota": 10
+   },
+   "evidence": [
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "CN1096367/files/Formulare revizii reparatii autovehicule 2026.docx.p7s",
+     "where": "table 2 row 2",
+     "in_vehicle_list": true,
+     "snippet": "1 | Dacia Logan 1.5 DCI - BZ 06 KTK | Direcția Silvică Buzău | 310.000 | 1 | 20 |"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "CN1096367/files/Formulare revizii reparatii autovehicule 2026.docx.p7s",
+     "where": "table 2 row 3",
+     "in_vehicle_list": true,
+     "snippet": "2 | Dacia Duster - BZ 08 UPM | Direcția Silvică Buzău | 180.000; 190.000 | 2 | 15 |"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "CN1096367/files/Formulare revizii reparatii autovehicule 2026.docx.p7s",
+     "where": "table 2 row 4",
+     "in_vehicle_list": true,
+     "snippet": "3 | Dacia Duster - BZ 11 VKM | Direcția Silvică Buzău | 90.000; 100.000 | 2 | 15 |"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "CN1096367/files/Formulare revizii reparatii autovehicule 2026.docx.p7s",
+     "where": "table 2 row 5",
+     "in_vehicle_list": true,
+     "snippet": "4 | Dacia Duster - BZ 09 NGB | Direcția Silvică Buzău | 170.000; 180.000 | 2 | 15 |"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "CN1096367/files/Formulare revizii reparatii autovehicule 2026.docx.p7s",
+     "where": "table 2 row 6",
+     "in_vehicle_list": true,
+     "snippet": "5 | Dacia Logan 1.5 DCI - BZ 07 VMJ | Ocolul Silvic Buzău | 210.000 | 1 | 20 |"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "CN1096367/files/Formulare revizii reparatii autovehicule 2026.docx.p7s",
+     "where": "table 2 row 7",
+     "in_vehicle_list": true,
+     "snippet": "6 | Dacia Duster - BZ 08 NMV | Ocolul Silvic Buzău | 160.000 | 1 | 20 |"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:23+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/CN1096367"
+   ],
+   "notes": [
+    "SEAP notice 100211985: 5 documentation files listed; 1 ESPD/DUAE request XML not downloaded (no vehicle data)"
+   ],
+   "documents": [
+    {
+     "notice": "CN1096367",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100211985/view#doc=CN1096367/00002",
+     "status": "read",
+     "file": "CN1096367/files/Instructiuni_ofertanti_FisaDate_DF1280157.pdf",
+     "pages": 15
+    },
+    {
+     "notice": "CN1096367",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100211985/view#doc=CN1096367/00004",
+     "status": "read",
+     "file": "CN1096367/files/caiet de sarcini.pdf.p7s",
+     "pages": 2
+    },
+    {
+     "notice": "CN1096367",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100211985/view#doc=CN1096367/00005",
+     "status": "read",
+     "file": "CN1096367/files/foaie de capat.pdf.p7s",
+     "pages": 1
+    },
+    {
+     "notice": "CN1096367",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100211985/view#doc=CN1096367/00006",
+     "status": "read",
+     "file": "CN1096367/files/Formulare revizii reparatii autovehicule 2026.docx.p7s"
+    },
+    {
+     "notice": "CN1096367",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100211985/view#doc=CN1096367/00007",
+     "status": "read",
+     "file": "CN1096367/files/Model contract revizii reparatii autovehicule 2026 1.docx.p7s"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "f550ca14e549",
+   "country": "France",
+   "title": "France – Repair and maintenance services of motor vehicles and associated equipment – Maintenance et réparation des Bennes à Ordures Ménagères",
+   "deadline": "2026-10-19",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "documents_not_available",
+   "label": "Tender documents not read",
+   "reason": "blocked by robots.txt: achatpublic.com",
+   "documents_listed": 2,
+   "documents_read": 1,
+   "documents_with_text": 0,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {},
+   "evidence": [],
+   "checked_at": "2026-10-01T20:29:23+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/662488-2026"
+   ],
+   "notes": [],
+   "documents": [
+    {
+     "notice": "662488-2026",
+     "url": "https://ted.europa.eu/en/notice/662488-2026/xml",
+     "status": "read",
+     "file": "662488-2026/files/2026-OJS186-00662488.xml"
+    },
+    {
+     "notice": "662488-2026",
+     "url": "https://www.achatpublic.com/sdm/ent/gen/ent_detail.do?PCSLID=CSL_2026_TD0Wk0726b",
+     "status": "blocked_robots",
+     "note": "www.achatpublic.com disallows automated access in robots.txt"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "c8b2aa0fbd81",
+   "country": "Slovenia",
+   "title": "Slovenia – Fleet management, repair and maintenance services – Servisiranje zimske in letne mehanizacije",
+   "deadline": "2026-10-14",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "no_vehicle_list_found",
+   "label": "Tender documents read: no vehicle list in them",
+   "reason": "",
+   "documents_listed": 2,
+   "documents_read": 2,
+   "documents_with_text": 1,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "Iveco": 1
+   },
+   "evidence": [
+    {
+     "brand": "Iveco",
+     "term": "IVECO",
+     "file": "660658-2026/files/RD in ESPD 188-2026.zip",
+     "where": "Poglavje 2 - Ponudbeni predracuni_188-2026_Z_.xlsx > sheet 'Sklop 3' row 29",
+     "in_vehicle_list": true,
+     "snippet": "1 | REZERVOAR ZA OLJE 3KH 110L (INOX) - IVECO DARS 2012 | 1"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:25+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/660658-2026"
+   ],
+   "notes": [],
+   "documents": [
+    {
+     "notice": "660658-2026",
+     "url": "https://ted.europa.eu/en/notice/660658-2026/xml",
+     "status": "read",
+     "file": "660658-2026/files/2026-OJS186-00660658.xml"
+    },
+    {
+     "notice": "660658-2026",
+     "url": "https://www.enarocanje.si/api/datoteka/get?id=NjM1OTMwO1JEIGluIEVTUEQgMTg4LTIwMjYuemlw",
+     "status": "read",
+     "file": "660658-2026/files/RD in ESPD 188-2026.zip"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "00edb1515d9b",
+   "country": "Norway",
+   "title": "Verkstedtjenester",
+   "deadline": "2026-10-08",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "documents_not_available",
+   "label": "Tender documents not read",
+   "reason": "needs registration: permalink.mercell.com",
+   "documents_listed": 2,
+   "documents_read": 1,
+   "documents_with_text": 0,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {},
+   "evidence": [],
+   "checked_at": "2026-10-01T20:29:27+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/2026-113809"
+   ],
+   "notes": [
+    "Doffin 2026-113809: ANNOUNCEMENT_OF_COMPETITION"
+   ],
+   "documents": [
+    {
+     "notice": "2026-113809",
+     "url": "https://api.doffin.no/webclient/api/v2/notices-api/notices/2026-113809",
+     "status": "read",
+     "file": "2026-113809/files/doffin_2026-113809.json"
+    },
+    {
+     "notice": "2026-113809",
+     "url": "https://permalink.mercell.com/285506675.aspx",
+     "status": "needs_registration",
+     "note": "Mercell lists the files but gives access only after 'Show interest' (supplier sign-in)"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "e83c518303fc",
+   "country": "France",
+   "title": "entretien et réparation de bennes ordures ménagères et entretien et réparation des châssis poids lourds",
+   "deadline": "2026-10-19",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "documents_not_available",
+   "label": "Tender documents not read",
+   "reason": "blocked by robots.txt: boamp.fr",
+   "documents_listed": 1,
+   "documents_read": 0,
+   "documents_with_text": 0,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {},
+   "evidence": [],
+   "checked_at": "2026-10-01T20:29:28+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/26-89766"
+   ],
+   "notes": [],
+   "documents": [
+    {
+     "notice": "26-89766",
+     "url": "https://www.boamp.fr/pages/avis/?q=idweb:26-89766",
+     "status": "blocked_robots",
+     "note": "BOAMP serves the notice and buyer-profile link only through /api/, which robots.txt disallows for automated agents"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "8482729981be",
+   "country": "Romania",
+   "title": "Acord cadru - Servicii de revizii si reparații autovehicule din cadrul Inspectoratului pentru Situații de Urgență  „Mr. Constantin Ene” al Județului Bacău. RELUARE LOT 3 SI 4",
+   "deadline": "2026-10-22",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "not_in_fleet",
+   "label": "Vehicle list found in the tender documents: no Isuzu in it",
+   "reason": "",
+   "documents_listed": 6,
+   "documents_read": 6,
+   "documents_with_text": 6,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "Renault": 11,
+    "MAN": 11,
+    "Dacia": 7,
+    "Iveco": 6,
+    "Volkswagen": 3,
+    "Volvo": 3,
+    "Scania": 2
+   },
+   "evidence": [
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096579/files/Caiet sarcini si anexa mentenanta auto 2027 - 2028 semnat.pdf",
+     "where": "p.15",
+     "in_vehicle_list": true,
+     "snippet": "model) Numdrul de identificare (serie tasiu) Cod motor Capacitate cilindricl An fabrica{ie Nr. inregistrare I DACIA LLGGBSP / LOGAN UU1LSDBSP48174613 K4M-F6 1 598 2012 MAI35114 2 DACIA SDHSDC5 / DUSTER UU1HSDC5G52028334 K4M-A"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096579/files/Caiet sarcini si anexa mentenanta auto 2027 - 2028 semnat.pdf",
+     "where": "p.15",
+     "in_vehicle_list": true,
+     "snippet": "indricl An fabrica{ie Nr. inregistrare I DACIA LLGGBSP / LOGAN UU1LSDBSP48174613 K4M-F6 1 598 2012 MAI35114 2 DACIA SDHSDC5 / DUSTER UU1HSDC5G52028334 K4M-A6 I 598 2014 MAr 36831 J DACIA SDHSDCs / DUSTER UU1HSDC5G52028335 K4M"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096579/files/Caiet sarcini si anexa mentenanta auto 2027 - 2028 semnat.pdf",
+     "where": "p.15",
+     "in_vehicle_list": true,
+     "snippet": "P48174613 K4M-F6 1 598 2012 MAI35114 2 DACIA SDHSDC5 / DUSTER UU1HSDC5G52028334 K4M-A6 I 598 2014 MAr 36831 J DACIA SDHSDCs / DUSTER UU1HSDC5G52028335 K4M-A6 1 598 2014 M{t36832 4 DACIA SDHSDAD / DUSTER UUlHSDAGsl I53789 K9K-"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096579/files/Caiet sarcini si anexa mentenanta auto 2027 - 2028 semnat.pdf",
+     "where": "p.15",
+     "in_vehicle_list": true,
+     "snippet": "G52028334 K4M-A6 I 598 2014 MAr 36831 J DACIA SDHSDCs / DUSTER UU1HSDC5G52028335 K4M-A6 1 598 2014 M{t36832 4 DACIA SDHSDAD / DUSTER UUlHSDAGsl I53789 K9K-R8 1461 2014 M{t37152 5 DACIA SDHSDAD / DUSTER UU 1HSDADGs28898 1 3 K9"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096579/files/Caiet sarcini si anexa mentenanta auto 2027 - 2028 semnat.pdf",
+     "where": "p.15",
+     "in_vehicle_list": true,
+     "snippet": "C5G52028335 K4M-A6 1 598 2014 M{t36832 4 DACIA SDHSDAD / DUSTER UUlHSDAGsl I53789 K9K-R8 1461 2014 M{t37152 5 DACIA SDHSDAD / DUSTER UU 1HSDADGs28898 1 3 K9K-R8 1461 20t5 MAr 38833 6. DACIA SDHSDAD / DUSTER UU IHSDADG528899O3"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096579/files/Caiet sarcini si anexa mentenanta auto 2027 - 2028 semnat.pdf",
+     "where": "p.15",
+     "in_vehicle_list": true,
+     "snippet": "I53789 K9K-R8 1461 2014 M{t37152 5 DACIA SDHSDAD / DUSTER UU 1HSDADGs28898 1 3 K9K-R8 1461 20t5 MAr 38833 6. DACIA SDHSDAD / DUSTER UU IHSDADG528899O3 K9K-R8 1461 2015 MAr 38834 7 DACIA SDHSDAD / DUSTER UU1HSDADG528899OO K9K"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:28+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/CN1096579"
+   ],
+   "notes": [
+    "SEAP notice 100212205: 6 documentation files listed; 1 ESPD/DUAE request XML not downloaded (no vehicle data)"
+   ],
+   "documents": [
+    {
+     "notice": "CN1096579",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212205/view#doc=CN1096579/00002",
+     "status": "read",
+     "file": "CN1096579/files/Documentatie de atribuire semnat.pdf",
+     "pages": 1
+    },
+    {
+     "notice": "CN1096579",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212205/view#doc=CN1096579/00003",
+     "status": "read",
+     "file": "CN1096579/files/Formulare si modelede documente semnat.pdf",
+     "pages": 10
+    },
+    {
+     "notice": "CN1096579",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212205/view#doc=CN1096579/00004",
+     "status": "read",
+     "file": "CN1096579/files/Formulare si modelede documente.doc"
+    },
+    {
+     "notice": "CN1096579",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212205/view#doc=CN1096579/00005",
+     "status": "read",
+     "file": "CN1096579/files/Model Acord-Cadru semnat.pdf",
+     "pages": 8
+    },
+    {
+     "notice": "CN1096579",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212205/view#doc=CN1096579/00007",
+     "status": "read",
+     "file": "CN1096579/files/Instructiuni_ofertanti_FisaDate_DF1280651.pdf",
+     "pages": 15
+    },
+    {
+     "notice": "CN1096579",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212205/view#doc=CN1096579/00009",
+     "status": "read",
+     "file": "CN1096579/files/Caiet sarcini si anexa mentenanta auto 2027 - 2028 semnat.pdf",
+     "pages": 19
+    }
+   ]
+  },
+  {
+   "opportunity_id": "5112e35b140e",
+   "country": "Romania",
+   "title": "ACORD CADRU PENTRU SERVICII DE REPARATII AUTOVEHICULE",
+   "deadline": "2026-10-23",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "not_in_fleet",
+   "label": "Vehicle list found in the tender documents: no Isuzu in it",
+   "reason": "",
+   "documents_listed": 6,
+   "documents_read": 6,
+   "documents_with_text": 5,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "MAN": 25,
+    "Iveco": 12,
+    "Dacia": 11,
+    "Mercedes-Benz": 8,
+    "Citroen": 6,
+    "Renault": 4,
+    "Volvo": 4,
+    "BMW": 3,
+    "Ford": 2,
+    "Opel": 2,
+    "Fiat": 2,
+    "Scania": 2
+   },
+   "evidence": [
+    {
+     "brand": "BMW",
+     "term": "BMW",
+     "file": "CN1096414/files/caiet de sarcini_semnat.pdf",
+     "where": "p.31 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "rie Sasiu 27323 Lotul 20. — Scrvicii dc revizii i re VINIERI McrAinimrHAtGCHASr aratii a motocicletelor marca BMW Nr. crt 2. Numär de inregistrare MAI 46940 MAI 46941 Tip BMW F700 GS BMW 17700 GS Serie $asiu WBIOB060XHZ9316"
+    },
+    {
+     "brand": "BMW",
+     "term": "BMW",
+     "file": "CN1096414/files/caiet de sarcini_semnat.pdf",
+     "where": "p.31 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "McrAinimrHAtGCHASr aratii a motocicletelor marca BMW Nr. crt 2. Numär de inregistrare MAI 46940 MAI 46941 Tip BMW F700 GS BMW 17700 GS Serie $asiu WBIOB060XHZ931689 WBlOB060811Z931903 An fabricatie 2017 2017 Capacitate cili"
+    },
+    {
+     "brand": "BMW",
+     "term": "BMW",
+     "file": "CN1096414/files/caiet de sarcini_semnat.pdf",
+     "where": "p.31 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "GCHASr aratii a motocicletelor marca BMW Nr. crt 2. Numär de inregistrare MAI 46940 MAI 46941 Tip BMW F700 GS BMW 17700 GS Serie $asiu WBIOB060XHZ931689 WBlOB060811Z931903 An fabricatie 2017 2017 Capacitate cilindrica 798 7"
+    },
+    {
+     "brand": "Citroen",
+     "term": "CITROEN",
+     "file": "CN1096414/files/Instructiuni_ofertanti_FisaDate_DF1280257.pdf",
+     "where": "p.1",
+     "in_vehicle_list": true,
+     "snippet": "i de reparaţie a autovehiculelor marca MERCEDES BENZ Lotul 4. – Servicii de reparații a autovehiculelor marca CITROEN Lotul 5. – Servicii de reparații a autovehiculelor marca IVECO Sistemul Electronic de Achizitii Publice Siste"
+    },
+    {
+     "brand": "Citroen",
+     "term": "CITROEN",
+     "file": "CN1096414/files/caiet de sarcini_semnat.pdf",
+     "where": "p.27 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "236 WDB906255CN517983 WDR9062551N526723 WI)B906255CN522446 WI V907153KN080411 ara • i a autovehiculelor marca CITROEN Tip CITROEN JUMPER CITROEN C-ELYSEE CITROEN C-ELYSEE CITROEN JUMPER Serie $asiu VF7YEDMFC11668362 VF7DDBHY6GJ"
+    },
+    {
+     "brand": "Citroen",
+     "term": "CITROEN",
+     "file": "CN1096414/files/caiet de sarcini_semnat.pdf",
+     "where": "p.27 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "5CN517983 WDR9062551N526723 WI)B906255CN522446 WI V907153KN080411 ara • i a autovehiculelor marca CITROEN Tip CITROEN JUMPER CITROEN C-ELYSEE CITROEN C-ELYSEE CITROEN JUMPER Serie $asiu VF7YEDMFC11668362 VF7DDBHY6GJ663152 VF7DD"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:30+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/CN1096414"
+   ],
+   "notes": [
+    "SEAP notice 100212035: 6 documentation files listed; 1 ESPD/DUAE request XML not downloaded (no vehicle data)"
+   ],
+   "documents": [
+    {
+     "notice": "CN1096414",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212035/view#doc=CN1096414/00002",
+     "status": "read",
+     "file": "CN1096414/files/Instructiuni_ofertanti_FisaDate_DF1280257.pdf",
+     "pages": 42
+    },
+    {
+     "notice": "CN1096414",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212035/view#doc=CN1096414/00005",
+     "status": "read",
+     "file": "CN1096414/files/caiet de sarcini_semnat.pdf",
+     "note": "scanned pages read by OCR: 31 of 32",
+     "pages": 32
+    },
+    {
+     "notice": "CN1096414",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212035/view#doc=CN1096414/00006",
+     "status": "read",
+     "file": "CN1096414/files/Documentatie reparatii auto 21 loturi  - prima pagina_semnat.pdf",
+     "pages": 1
+    },
+    {
+     "notice": "CN1096414",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212035/view#doc=CN1096414/00007",
+     "status": "read",
+     "file": "CN1096414/files/Proiect acord cadru reparatii auto_semnat.pdf",
+     "note": "scanned pages read by OCR: 9 of 10",
+     "pages": 10
+    },
+    {
+     "notice": "CN1096414",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212035/view#doc=CN1096414/00008",
+     "status": "read",
+     "file": "CN1096414/files/Proiect contract subsecvent reparatii auto_semnat.pdf",
+     "note": "scanned pages read by OCR: 11 of 12",
+     "pages": 12
+    },
+    {
+     "notice": "CN1096414",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212035/view#doc=CN1096414/00009",
+     "status": "read",
+     "file": "CN1096414/files/formulare reparatii auto actualizate - 2026_semnat.doc.p7s"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "4bb203d8c675",
+   "country": "Romania",
+   "title": "Acord cadru privind serviciile de reparare și întreținere, inclusiv ITP, pentru autovehiculele multimarcă din dotarea parcului auto al Curții de Conturi - Zona 2",
+   "deadline": "2026-11-10",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown_multi_brand",
+   "verdict": "not_in_fleet",
+   "label": "Vehicle list found in the tender documents: no Isuzu in it",
+   "reason": "",
+   "documents_listed": 6,
+   "documents_read": 6,
+   "documents_with_text": 6,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "Dacia": 156,
+    "Suzuki": 14,
+    "Volkswagen": 6,
+    "Audi": 6
+   },
+   "evidence": [
+    {
+     "brand": "Audi",
+     "term": "Audi",
+     "file": "CN1096675/files/Anexa 1 caiet sarcini - Zona 2 _semnat.xlsx.p7s",
+     "where": "sheet 'Anexa 1 Zona 2' row 30",
+     "in_vehicle_list": true,
+     "snippet": "24 | Călărași | B15WXA | Audi | A4 | Motorina | WAUZZZ8K2DA141690 | 2012 | 1968 | 105 | 2030 | 5 | 2026-10-03 00:00:00 | 2027-10-03 00:00:0"
+    },
+    {
+     "brand": "Audi",
+     "term": "Audi",
+     "file": "CN1096675/files/Anexa 1 caiet sarcini - Zona 2 _semnat.xlsx.p7s",
+     "where": "sheet 'Anexa 1 Zona 2' row 40",
+     "in_vehicle_list": true,
+     "snippet": "34 | Constanța | B10WXA | Audi | A4 | Motorina | WAUZZZ8K2DA153791 | 2012 | 1968 | 105 | 2030 | 5 | 2026-09-10 00:00:00 | 2027-09-10 00:00:0"
+    },
+    {
+     "brand": "Audi",
+     "term": "Audi",
+     "file": "CN1096675/files/Anexa 1 caiet sarcini - Zona 2 _semnat.xlsx.p7s",
+     "where": "sheet 'Anexa 1 Zona 2' row 48",
+     "in_vehicle_list": true,
+     "snippet": "42 | Dolj | B01WXA | Audi | A4 | Motorina | WAUZZZ8K5DA153042 | 2012 | 1968 | 105 | 2030 | 5 | 2026-09-11 00:00:00 | 2027-09-11 00:00:0"
+    },
+    {
+     "brand": "Audi",
+     "term": "Audi",
+     "file": "CN1096675/files/Anexa 1 caiet sarcini - Zona 2 _semnat.xlsx.p7s",
+     "where": "sheet 'Anexa 1 Zona 2 (2)' row 30",
+     "in_vehicle_list": true,
+     "snippet": "24 | Călărași | B15WXA | Audi | A4 | Motorina | WAUZZZ8K2DA141690 | 2012 | 1968 | 105 | 2030 | 5 | 2026-10-03 00:00:00 | 2027-10-03 00:00:0"
+    },
+    {
+     "brand": "Audi",
+     "term": "Audi",
+     "file": "CN1096675/files/Anexa 1 caiet sarcini - Zona 2 _semnat.xlsx.p7s",
+     "where": "sheet 'Anexa 1 Zona 2 (2)' row 40",
+     "in_vehicle_list": true,
+     "snippet": "34 | Constanța | B10WXA | Audi | A4 | Motorina | WAUZZZ8K2DA153791 | 2012 | 1968 | 105 | 2030 | 5 | 2026-09-10 00:00:00 | 2027-09-10 00:00:0"
+    },
+    {
+     "brand": "Audi",
+     "term": "Audi",
+     "file": "CN1096675/files/Anexa 1 caiet sarcini - Zona 2 _semnat.xlsx.p7s",
+     "where": "sheet 'Anexa 1 Zona 2 (2)' row 48",
+     "in_vehicle_list": true,
+     "snippet": "42 | Dolj | B01WXA | Audi | A4 | Motorina | WAUZZZ8K5DA153042 | 2012 | 1968 | 105 | 2030 | 5 | 2026-09-11 00:00:00 | 2027-09-11 00:00:0"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:31+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/CN1096675"
+   ],
+   "notes": [
+    "SEAP notice 100212311: 6 documentation files listed; 1 ESPD/DUAE request XML not downloaded (no vehicle data)"
+   ],
+   "documents": [
+    {
+     "notice": "CN1096675",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212311/view#doc=CN1096675/00001",
+     "status": "read",
+     "file": "CN1096675/files/CS Zona 2-conform aviz ANAP_semnat.docx.p7s"
+    },
+    {
+     "notice": "CN1096675",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212311/view#doc=CN1096675/00002",
+     "status": "read",
+     "file": "CN1096675/files/Anexa 1 caiet sarcini - Zona 2 _semnat.xlsx.p7s"
+    },
+    {
+     "notice": "CN1096675",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212311/view#doc=CN1096675/00003",
+     "status": "read",
+     "file": "CN1096675/files/Model acord-cadru servicii reparatii auto_semnat.docx.p7s"
+    },
+    {
+     "notice": "CN1096675",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212311/view#doc=CN1096675/00004",
+     "status": "read",
+     "file": "CN1096675/files/Model contract subsecvent reparatii auto_semnat.docx.p7s"
+    },
+    {
+     "notice": "CN1096675",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212311/view#doc=CN1096675/00005",
+     "status": "read",
+     "file": "CN1096675/files/Modele formulare servicii reparatii auto _semnat.doc.p7s"
+    },
+    {
+     "notice": "CN1096675",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212311/view#doc=CN1096675/00007",
+     "status": "read",
+     "file": "CN1096675/files/Instructiuni_ofertanti_FisaDate_DF1281025.pdf",
+     "pages": 20
+    }
+   ]
+  },
+  {
+   "opportunity_id": "4add5f752788",
+   "country": "Romania",
+   "title": "ACORD-CADRU pentru servicii de reparare și întreținere pentru vehiculele din parcul tehnic al Inspectoratului pentru Situaţii de Urgenţă ,,Iancu de Hunedoara” al Judeţului Hunedoara",
+   "deadline": "2026-11-05",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "not_in_fleet",
+   "label": "Vehicle list found in the tender documents: no Isuzu in it",
+   "reason": "",
+   "documents_listed": 6,
+   "documents_read": 6,
+   "documents_with_text": 6,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "Volkswagen": 75,
+    "Dacia": 44,
+    "Iveco": 37,
+    "Renault": 33,
+    "Mercedes-Benz": 14,
+    "MAN": 6,
+    "Nissan": 3,
+    "Scania": 2
+   },
+   "evidence": [
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096673/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "ia de folosință Denumire/Tip/ Varianta/Versiune Nr. de înregistrare Nr. de identificare An fabr. 17 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28065 UU1LSDABH35854312 2006 18 DACIA AUTOVEHICUL"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096673/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "An fabr. 17 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28065 UU1LSDABH35854312 2006 18 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28166 UU1LSDABH35825902 2006 19 DACIA AUTOVEHICUL"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096673/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "312 2006 18 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28166 UU1LSDABH35825902 2006 19 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28176 UU1LSDABH35825975 2006 20 DACIA AUTOVEHICUL"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096673/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "902 2006 19 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28176 UU1LSDABH35825975 2006 20 DACIA AUTOVEHICUL SPECIAL M1 LOGAN/SD/LSDAB/ LOGAN MAI 28321 UU1LSDABH35826044 2006 21 CAUTIS REMORCA O1"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096673/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "WAGEN AUTOVEHICUL SPECIAL M1 TRANSPORTER/7J0/ DLY011/TRANSPORTER MAI 33200 WV1ZZZ7HZBH133784 2011 27 DACIA-OKURA AUTOVEHICUL SPECIAL M1G DUSTER/DTG/HDTGAR/ HDTGARN MAI 35046 UU1HSDARN48157895 2012 28 DACIA-O"
+    },
+    {
+     "brand": "Dacia",
+     "term": "DACIA",
+     "file": "CN1096673/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "where": "p.5",
+     "in_vehicle_list": true,
+     "snippet": "DACIA-OKURA AUTOVEHICUL SPECIAL M1G DUSTER/DTG/HDTGAR/ HDTGARN MAI 35046 UU1HSDARN48157895 2012 28 DACIA-OKURA AUTOVEHICUL SPECIAL M1 SG/LGG/LLGGBS/ LLGGBSP MAI 35119 UU1LSDBSP48056953 2012 29 DACIA AUTOTU"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:32+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/CN1096673"
+   ],
+   "notes": [
+    "SEAP notice 100212310: 6 documentation files listed; 2 ESPD/DUAE request XML not downloaded (no vehicle data)"
+   ],
+   "documents": [
+    {
+     "notice": "CN1096673",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00001",
+     "status": "read",
+     "file": "CN1096673/files/Model Acord cadru si Contract subsecvent-semnat.pdf",
+     "pages": 29
+    },
+    {
+     "notice": "CN1096673",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00002",
+     "status": "read",
+     "file": "CN1096673/files/Anexa Formulare-semnat.pdf",
+     "pages": 24
+    },
+    {
+     "notice": "CN1096673",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00003",
+     "status": "read",
+     "file": "CN1096673/files/anexa_Formulare editabile.doc"
+    },
+    {
+     "notice": "CN1096673",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00004",
+     "status": "read",
+     "file": "CN1096673/files/Caiet de sarcini-semnat.pdf",
+     "note": "scanned pages read by OCR: 27 of 27",
+     "pages": 27
+    },
+    {
+     "notice": "CN1096673",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00005",
+     "status": "read",
+     "file": "CN1096673/files/Declaratie functii decizie-semnat.pdf",
+     "note": "scanned pages read by OCR: 2 of 2",
+     "pages": 2
+    },
+    {
+     "notice": "CN1096673",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212310/view#doc=CN1096673/00007",
+     "status": "read",
+     "file": "CN1096673/files/Instructiuni_ofertanti_FisaDate_DF1280820.pdf",
+     "pages": 36
+    }
+   ]
+  },
+  {
+   "opportunity_id": "048b0f26c909",
+   "country": "Belgium",
+   "title": "Raamovereenkomst onderhoud en herstellingen voertuigen <3,5 ton",
+   "deadline": "2026-10-21",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "not_in_fleet",
+   "label": "Vehicle list found in the tender documents: no Isuzu in it",
+   "reason": "portal not automated: cloud.3p.eu",
+   "documents_listed": 2,
+   "documents_read": 1,
+   "documents_with_text": 0,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "Ford": 2,
+    "Mercedes-Benz": 2,
+    "Volkswagen": 2,
+    "Renault": 2,
+    "Peugeot": 2,
+    "Citroen": 2,
+    "Opel": 2,
+    "Fiat": 2,
+    "Iveco": 2,
+    "Nissan": 2,
+    "Maxus": 2
+   },
+   "evidence": [
+    {
+     "brand": "Citroen",
+     "term": "Citroën",
+     "file": "PPP0IG-9386-6597-2026-9386_001/files/BOSA_notice_9868f81f.xml",
+     "where": "text",
+     "in_vehicle_list": true,
+     "snippet": "-10-21+02:00 11:00:00+02:00 false 3 false 1 none fa-wo-rc 2026/9386_10 voertuigen merk “Citroën” voertuigen merk “Citroën” services 240000.00 50100000 50112200 stad Brugge Burg 12 B"
+    },
+    {
+     "brand": "Citroen",
+     "term": "Citroën",
+     "file": "PPP0IG-9386-6597-2026-9386_001/files/BOSA_notice_9868f81f.xml",
+     "where": "text",
+     "in_vehicle_list": true,
+     "snippet": "0 false 3 false 1 none fa-wo-rc 2026/9386_10 voertuigen merk “Citroën” voertuigen merk “Citroën” services 240000.00 50100000 50112200 stad Brugge Burg 12 Brugge 8000 BE251 BEL"
+    },
+    {
+     "brand": "Fiat",
+     "term": "Fiat",
+     "file": "PPP0IG-9386-6597-2026-9386_001/files/BOSA_notice_9868f81f.xml",
+     "where": "text",
+     "in_vehicle_list": true,
+     "snippet": "6-10-21+02:00 11:00:00+02:00 false 3 false 1 none fa-wo-rc 2026/9386_2 voertuigen merk “Fiat” voertuigen merk “Fiat” services 240000.00 50100000 50112200 stad Brugge Burg 12 Brug"
+    },
+    {
+     "brand": "Fiat",
+     "term": "Fiat",
+     "file": "PPP0IG-9386-6597-2026-9386_001/files/BOSA_notice_9868f81f.xml",
+     "where": "text",
+     "in_vehicle_list": true,
+     "snippet": "02:00 false 3 false 1 none fa-wo-rc 2026/9386_2 voertuigen merk “Fiat” voertuigen merk “Fiat” services 240000.00 50100000 50112200 stad Brugge Burg 12 Brugge 8000 BE251 BEL"
+    },
+    {
+     "brand": "Ford",
+     "term": "Ford",
+     "file": "PPP0IG-9386-6597-2026-9386_001/files/BOSA_notice_9868f81f.xml",
+     "where": "text",
+     "in_vehicle_list": true,
+     "snippet": "6-10-21+02:00 11:00:00+02:00 false 3 false 1 none fa-wo-rc 2026/9386_6 voertuigen merk “Ford” voertuigen merk “Ford” services 240000.00 50100000 50112200 stad Brugge Burg 12 Brug"
+    },
+    {
+     "brand": "Ford",
+     "term": "Ford",
+     "file": "PPP0IG-9386-6597-2026-9386_001/files/BOSA_notice_9868f81f.xml",
+     "where": "text",
+     "in_vehicle_list": true,
+     "snippet": "02:00 false 3 false 1 none fa-wo-rc 2026/9386_6 voertuigen merk “Ford” voertuigen merk “Ford” services 240000.00 50100000 50112200 stad Brugge Burg 12 Brugge 8000 BE251 BEL"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:34+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/PPP0IG-9386-6597-2026-9386_001"
+   ],
+   "notes": [
+    "BOSA workspace 9868f81f: 0 documents listed; 1 generated ESPD form(s) not downloaded"
+   ],
+   "documents": [
+    {
+     "notice": "PPP0IG-9386-6597-2026-9386_001",
+     "url": "https://www.publicprocurement.be/en/publication-workspaces/9868f81f-6c6e-453d-a5a2-562ca9d059e8#notice",
+     "status": "read",
+     "file": "PPP0IG-9386-6597-2026-9386_001/files/BOSA_notice_9868f81f.xml"
+    },
+    {
+     "notice": "PPP0IG-9386-6597-2026-9386_001",
+     "url": "https://cloud.3p.eu/Downloads/1/9386/IG/2026",
+     "status": "portal_not_supported",
+     "note": "3P Cloud asks for a country choice and cookie consent before it shows documents; not automated, open by hand"
+    }
+   ]
+  },
+  {
+   "opportunity_id": "c2b513284655",
+   "country": "Romania",
+   "title": "SERVICII DE REPARATII SI  INTRETINERE PARC AUTO",
+   "deadline": "2026-10-22",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "not_in_fleet",
+   "label": "Vehicle list found in the tender documents: no Isuzu in it",
+   "reason": "",
+   "documents_listed": 6,
+   "documents_read": 6,
+   "documents_with_text": 6,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "Fiat": 6,
+    "Dacia": 4,
+    "Volkswagen": 3,
+    "Ford": 1,
+    "Mercedes-Benz": 1,
+    "Opel": 1,
+    "Hyundai": 1,
+    "Suzuki": 1,
+    "Toyota": 1
+   },
+   "evidence": [
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "CN1096601/files/Anexa lot 1 Olt-semnat.pdf.p7s",
+     "where": "p.1",
+     "in_vehicle_list": true,
+     "snippet": "2016 TSMLYE21S00212250 7 FIAT Doblo 1.6D VL 50 ABA 2013 ZFA26300009141042 8 Dacia DUSTER 1.5 dCi OT12ABA 2017 UU1HSDJ9G58856161 9 VW Amarok OT23 VMW 2017 WV1ZZZ2HZJH010127"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "CN1096601/files/Anexa lot 1 Olt-semnat.pdf.p7s",
+     "where": "p.1",
+     "in_vehicle_list": true,
+     "snippet": "OT12ABA 2017 UU1HSDJ9G58856161 9 VW Amarok OT23 VMW 2017 WV1ZZZ2HZJH010127 10 Dacia Logan 1.5 dCi OT11 WAB 2018 UU14SDKJ459433246 11 MERCEDES Vito OT 02 BTH 2011 WDF639705B3"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "CN1096601/files/Anexa lot 1 Olt-semnat.pdf.p7s",
+     "where": "p.2",
+     "in_vehicle_list": true,
+     "snippet": "uni diagnosticare Operatiuni mecanice Operatiuni electrice Operatiuni Tinichigerie si vopsitorie 12 Dacia DUSTER 1.5 dCi OT 12 XTF 2021 VF1HJD20368059654 13 Dacia DUSTER 1.5 dCi OT 02YWZ 2017 UU1"
+    },
+    {
+     "brand": "Dacia",
+     "term": "Dacia",
+     "file": "CN1096601/files/Anexa lot 1 Olt-semnat.pdf.p7s",
+     "where": "p.2",
+     "in_vehicle_list": true,
+     "snippet": "i Tinichigerie si vopsitorie 12 Dacia DUSTER 1.5 dCi OT 12 XTF 2021 VF1HJD20368059654 13 Dacia DUSTER 1.5 dCi OT 02YWZ 2017 UU1HSDJ9G58856156 14 TOYOTA Hilux OT 32VMW 2022 AHTKB3CD20264"
+    },
+    {
+     "brand": "Fiat",
+     "term": "FIAT",
+     "file": "CN1096601/files/Anexa lot 1 Olt-semnat.pdf.p7s",
+     "where": "p.1",
+     "in_vehicle_list": true,
+     "snippet": "ABA 2011 KMHSH81XCBU678735 4 Opel Movano OT 15 ABA 2011 W0LVSH4J2CB019757 5 FIAT Doblo 1.6D OT 60 ABA 2013 ZFA26300009166136 6 SUZUKI Vitara 1.6i OT 78 ABA 2016 TSMLYE21S"
+    },
+    {
+     "brand": "Fiat",
+     "term": "FIAT",
+     "file": "CN1096601/files/Anexa lot 1 Olt-semnat.pdf.p7s",
+     "where": "p.1",
+     "in_vehicle_list": true,
+     "snippet": "013 ZFA26300009166136 6 SUZUKI Vitara 1.6i OT 78 ABA 2016 TSMLYE21S00212250 7 FIAT Doblo 1.6D VL 50 ABA 2013 ZFA26300009141042 8 Dacia DUSTER 1.5 dCi OT12ABA 2017 UU1HSDJ9G"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:35+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/CN1096601"
+   ],
+   "notes": [
+    "SEAP notice 100212232: 6 documentation files listed; 1 ESPD/DUAE request XML not downloaded (no vehicle data)"
+   ],
+   "documents": [
+    {
+     "notice": "CN1096601",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212232/view#doc=CN1096601/00001",
+     "status": "read",
+     "file": "CN1096601/files/Instructiuni_ofertanti_FisaDate_DF1280656.pdf",
+     "pages": 13
+    },
+    {
+     "notice": "CN1096601",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212232/view#doc=CN1096601/00003",
+     "status": "read",
+     "file": "CN1096601/files/acord-cadru-semnat.pdf.p7s",
+     "pages": 3
+    },
+    {
+     "notice": "CN1096601",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212232/view#doc=CN1096601/00004",
+     "status": "read",
+     "file": "CN1096601/files/Anexa lot 1 Olt-semnat.pdf.p7s",
+     "pages": 3
+    },
+    {
+     "notice": "CN1096601",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212232/view#doc=CN1096601/00005",
+     "status": "read",
+     "file": "CN1096601/files/Contract subsecvent-semnat.pdf.p7s",
+     "pages": 6
+    },
+    {
+     "notice": "CN1096601",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212232/view#doc=CN1096601/00006",
+     "status": "read",
+     "file": "CN1096601/files/CS lot 1 OT-semnat.pdf.p7s",
+     "note": "scanned pages read by OCR: 9 of 9",
+     "pages": 9
+    },
+    {
+     "notice": "CN1096601",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212232/view#doc=CN1096601/00007",
+     "status": "read",
+     "file": "CN1096601/files/Formulare-semnat.pdf.p7s",
+     "pages": 11
+    }
+   ]
+  },
+  {
+   "opportunity_id": "5aeedc80049d",
+   "country": "Romania",
+   "title": "„Servicii de reparare si intretinere a autovehiculelor si echipamentelor conexe ale acestora si piese si accesorii pentru autovehicule si motoare de autovehicule.”",
+   "deadline": "2026-10-22",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "not_in_fleet",
+   "label": "Vehicle list found in the tender documents: no Isuzu in it",
+   "reason": "",
+   "documents_listed": 11,
+   "documents_read": 11,
+   "documents_with_text": 11,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {
+    "Renault": 27,
+    "Mercedes-Benz": 9,
+    "Dacia": 8,
+    "Citroen": 8,
+    "Volkswagen": 6,
+    "Fiat": 2,
+    "MAN": 2
+   },
+   "evidence": [
+    {
+     "brand": "Citroen",
+     "term": "CITROEN",
+     "file": "CN1096495/files/CAIET SARCINI- SERVICE AUTO_ SEMNAT.pdf",
+     "where": "p.5 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "146 lcmc 1875 4 AG 01 SAJ Dacia Duster 2015 SD/HSDJ9/HSDJ9G LOT 5 CITROEN MODEL 1 CITROEN JUMPER Tabel 5- LOT 5 • LISTA AUTOSANITARE Nr Crt 1 2 3 4 5 6 Numarul de inmarcuäre AG 14 AMB"
+    },
+    {
+     "brand": "Citroen",
+     "term": "CITROEN",
+     "file": "CN1096495/files/CAIET SARCINI- SERVICE AUTO_ SEMNAT.pdf",
+     "where": "p.5 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "146 lcmc 1875 4 AG 01 SAJ Dacia Duster 2015 SD/HSDJ9/HSDJ9G LOT 5 CITROEN MODEL 1 CITROEN JUMPER Tabel 5- LOT 5 • LISTA AUTOSANITARE Nr Crt 1 2 3 4 5 6 Numarul de inmarcuäre AG 14 AMB AG 21 AMB AG 86"
+    },
+    {
+     "brand": "Citroen",
+     "term": "CITROEN",
+     "file": "CN1096495/files/CAIET SARCINI- SERVICE AUTO_ SEMNAT.pdf",
+     "where": "p.5 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "AG 86 AMB AG 33 AMB AG 03 EMU AG 04 EMU Anul fab6catE 2011 2012 2012 2013 2014 2014 ttpub'rrø±eiul ambulantei CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER Capacitate 2198 2198 2198 2"
+    },
+    {
+     "brand": "Citroen",
+     "term": "CITROEN",
+     "file": "CN1096495/files/CAIET SARCINI- SERVICE AUTO_ SEMNAT.pdf",
+     "where": "p.5 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "AMB AG 03 EMU AG 04 EMU Anul fab6catE 2011 2012 2012 2013 2014 2014 ttpub'rrø±eiul ambulantei CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER Capacitate 2198 2198 2198 2198 2198 2198 M"
+    },
+    {
+     "brand": "Citroen",
+     "term": "CITROEN",
+     "file": "CN1096495/files/CAIET SARCINI- SERVICE AUTO_ SEMNAT.pdf",
+     "where": "p.5 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "AG 04 EMU Anul fab6catE 2011 2012 2012 2013 2014 2014 ttpub'rrø±eiul ambulantei CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER Capacitate 2198 2198 2198 2198 2198 2198 Masa tctala Nr,"
+    },
+    {
+     "brand": "Citroen",
+     "term": "CITROEN",
+     "file": "CN1096495/files/CAIET SARCINI- SERVICE AUTO_ SEMNAT.pdf",
+     "where": "p.5 (OCR)",
+     "in_vehicle_list": true,
+     "snippet": "fab6catE 2011 2012 2012 2013 2014 2014 ttpub'rrø±eiul ambulantei CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER CITROEN JUMPER Capacitate 2198 2198 2198 2198 2198 2198 Masa tctala Nr, maxima autonzau"
+    }
+   ],
+   "checked_at": "2026-10-01T20:29:38+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/CN1096495"
+   ],
+   "notes": [
+    "SEAP notice 100212117: 11 documentation files listed; 1 ESPD/DUAE request XML not downloaded (no vehicle data)"
+   ],
+   "documents": [
+    {
+     "notice": "CN1096495",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212117/view#doc=CN1096495/00001",
+     "status": "read",
+     "file": "CN1096495/files/Instructiuni_ofertanti_FisaDate_DF1280434.pdf",
+     "pages": 21
+    },
+    {
+     "notice": "CN1096495",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212117/view#doc=CN1096495/00004",
+     "status": "read",
+     "file": "CN1096495/files/ACORD CADRU SI CONTRACT SUBSECVENT - service auto(2)_ SEMNAT.pdf",
+     "pages": 21
+    },
+    {
+     "notice": "CN1096495",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212117/view#doc=CN1096495/00005",
+     "status": "read",
+     "file": "CN1096495/files/CAIET SARCINI- SERVICE AUTO_ SEMNAT.pdf",
+     "note": "scanned pages read by OCR: 14 of 15",
+     "pages": 15
+    },
+    {
+     "notice": "CN1096495",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212117/view#doc=CN1096495/00006",
+     "status": "read",
+     "file": "CN1096495/files/ANEXA 1 formular oferta - MERCEDES(1)_ SEMNATA.pdf",
+     "pages": 27
+    },
+    {
+     "notice": "CN1096495",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212117/view#doc=CN1096495/00007",
+     "status": "read",
+     "file": "CN1096495/files/ANEXA 2 formular de oferta - VW(1)_ SEMNATA.pdf",
+     "pages": 58
+    },
+    {
+     "notice": "CN1096495",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212117/view#doc=CN1096495/00008",
+     "status": "read",
+     "file": "CN1096495/files/ANEXA 3 formular oferta - FIAT(1)_ SEMNATA.pdf",
+     "pages": 9
+    },
+    {
+     "notice": "CN1096495",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212117/view#doc=CN1096495/00009",
+     "status": "read",
+     "file": "CN1096495/files/ANEXA 4 formular de oferta - DACIA(1)_ SEMNATA.pdf",
+     "note": "scanned pages read by OCR: 1 of 16",
+     "pages": 16
+    },
+    {
+     "notice": "CN1096495",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212117/view#doc=CN1096495/00010",
+     "status": "read",
+     "file": "CN1096495/files/ANEXA 5 formular de oferta - CITROEN(1)_ SEMNATA.pdf",
+     "pages": 9
+    },
+    {
+     "notice": "CN1096495",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212117/view#doc=CN1096495/00011",
+     "status": "read",
+     "file": "CN1096495/files/ANEXA 6 formular de oferta - RENAULT(1)_ SEMNATA.pdf",
+     "pages": 14
+    },
+    {
+     "notice": "CN1096495",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212117/view#doc=CN1096495/00012",
+     "status": "read",
+     "file": "CN1096495/files/ANEXA 7 formular de oferta - MAN_ SEMNATA.pdf",
+     "pages": 6
+    },
+    {
+     "notice": "CN1096495",
+     "url": "https://www.e-licitatie.ro/pub/notices/c-notice/100212117/view#doc=CN1096495/00013",
+     "status": "read",
+     "file": "CN1096495/files/Formulare - service auto modificat individual(1)_ SEMNATE.pdf",
+     "pages": 90
+    }
+   ]
+  },
+  {
+   "opportunity_id": "f0d3a6069c84",
+   "country": "Norway",
+   "title": "Innredning og påbygging til nyttekjøretøy",
+   "deadline": "2027-12-31",
+   "decision_in_feed_when_read": "Watch",
+   "fleet_brand_in_feed_when_read": "unknown",
+   "verdict": "documents_not_available",
+   "label": "Tender documents not read",
+   "reason": "award notice: no competition documents are published with it",
+   "documents_listed": 1,
+   "documents_read": 1,
+   "documents_with_text": 0,
+   "isuzu_hits": 0,
+   "isuzu_hits_in_list": 0,
+   "brands_in_list": {},
+   "evidence": [],
+   "checked_at": "2026-10-01T20:29:38+00:00",
+   "notice_dirs": [
+    "04_tools/ISZE_Tender_Monitor_Install/tender_docs/2026-114498"
+   ],
+   "notes": [
+    "Doffin 2026-114498: ANNOUNCEMENT_OF_CONCLUSION_OF_CONTRACT",
+    "award notice: no competition documents are published with it"
+   ],
+   "documents": [
+    {
+     "notice": "2026-114498",
+     "url": "https://api.doffin.no/webclient/api/v2/notices-api/notices/2026-114498",
+     "status": "read",
+     "file": "2026-114498/files/doffin_2026-114498.json"
+    }
+   ]
+  }
+ ],
+ "http_log": [
+  "GET 200 https://files.diariodarepublica.pt/cp_hora/2026/09/178/419972445.pdf",
+  "GET 200 https://www.publicprocurement.be/api/dos/publication-workspaces/a991afae-38c0-4e9b-b080-488c68d36521/documents",
+  "GET 200 https://www.publicprocurement.be/api/dos/publication-workspaces/a991afae-38c0-4e9b-b080-488c68d36521",
+  "GET 400 https://www.e-licitatie.ro/api-pub/NoticeCommon/GetDfNoticeSectionFiles/",
+  "GET 200 https://www.e-licitatie.ro/api-pub/NoticeCommon/GetDfNoticeSectionFiles/",
+  "GET 200 https://ted.europa.eu/en/notice/648813-2026/xml",
+  "GET 200 https://www.etenders.gov.ie/epps/cft/listContractDocuments.do?resourceId=8449092",
+  "GET 200 https://ted.europa.eu/en/notice/603419-2026/xml",
+  "GET 200 https://permalink.mercell.com/285506675.aspx",
+  "GET 200 https://ted.europa.eu/en/notice/662046-2026/xml",
+  "GET 200 https://ted.europa.eu/en/notice/654709-2026/xml",
+  "GET 200 https://www.e-licitatie.ro/api-pub/NoticeCommon/GetDfNoticeSectionFiles/",
+  "GET 200 https://www.e-licitatie.ro/api-pub/NoticeCommon/GetDfNoticeSectionFiles/",
+  "GET 200 https://www.e-licitatie.ro/api-pub/NoticeCommon/GetDfNoticeSectionFiles/",
+  "GET 200 https://ted.europa.eu/en/notice/662488-2026/xml",
+  "GET 200 https://ted.europa.eu/en/notice/660658-2026/xml",
+  "GET 200 https://api.doffin.no/webclient/api/v2/notices-api/notices/2026-113809",
+  "GET 200 https://permalink.mercell.com/285506675.aspx",
+  "GET 200 https://www.e-licitatie.ro/api-pub/NoticeCommon/GetDfNoticeSectionFiles/",
+  "GET 200 https://www.e-licitatie.ro/api-pub/NoticeCommon/GetDfNoticeSectionFiles/",
+  "GET 200 https://www.e-licitatie.ro/api-pub/NoticeCommon/GetDfNoticeSectionFiles/",
+  "GET 200 https://www.e-licitatie.ro/api-pub/NoticeCommon/GetDfNoticeSectionFiles/",
+  "GET 200 https://www.publicprocurement.be/api/dos/publication-workspaces/9868f81f-6c6e-453d-a5a2-562ca9d059e8/documents",
+  "GET 200 https://www.publicprocurement.be/api/dos/publication-workspaces/9868f81f-6c6e-453d-a5a2-562ca9d059e8",
+  "GET 200 https://www.e-licitatie.ro/api-pub/NoticeCommon/GetDfNoticeSectionFiles/",
+  "GET 200 https://www.e-licitatie.ro/api-pub/NoticeCommon/GetDfNoticeSectionFiles/",
+  "GET 200 https://api.doffin.no/webclient/api/v2/notices-api/notices/2026-114498"
+ ]
+}

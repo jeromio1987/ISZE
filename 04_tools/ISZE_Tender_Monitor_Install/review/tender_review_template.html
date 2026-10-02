@@ -92,7 +92,10 @@ a{color:#1a4f9c}
   <h2>1b. Check the vehicle list first <span class="n" id="b-n"></span></h2>
   <p class="lead">Repair, maintenance or parts contracts for an existing fleet where the notice does not name Isuzu.
   Whether this is our business depends on the vehicles in that fleet, and the notice does not list them: the vehicle
-  list is in the tender documents. Open the notice, check for Isuzu, then decide. Not scored as pursue or pass until then.</p>
+  list is in the tender documents. The publicly downloadable documents are now read by machine (no login, robots.txt
+  respected): where Isuzu is in the vehicle list the tender moves up to section 1 through the normal scoring; the rest
+  stay here with what the documents showed. "Documents not read" means a login, robots.txt or the portal stopped the
+  reader: open those by hand. Hover a result for the passage, file and page.</p>
   <div id="brandcheck"></div>
 
   <details class="section" id="other-wrap"><summary>2. Also live, but outside the product rule <span class="n" id="o-n"></span></summary>
@@ -211,6 +214,7 @@ function card(r,num,twin){
       <div><span class="k">Value:</span> ${money(r.value,r.currency)||dash("Contract value not published in the notice")}</div>
       <div><span class="k">Fleet:</span> ${r.fleet!=null&&r.fleet!==""?Number(r.fleet).toLocaleString("en-GB")+" vehicles (as stated in the notice)":dash("Fleet size not stated in the notice")}</div>
       <div><span class="k">Scores:</span> <span title="0-100: how well the text matches what Isuzu sells">fit ${r.fit}</span>, <span title="0-100: how winnable it looks">win ${r.win}</span>, <span title="0-100: how much money appears to be behind it">money ${r.econ}</span>; source text quality ${esc(r.evidence)}</div>
+      ${(r.doc_check||{}).verdict?`<div><span class="k">Vehicle list (tender documents):</span> ${docCell(r)}${(r.doc_check.evidence||[]).slice(0,2).map(e=>`<div class="dash" style="font-size:12px">${esc(e.where)}: &ldquo;${esc(e.snippet)}&rdquo;</div>`).join("")}<div class="dash" style="font-size:12px">Evidence: ${esc((r.doc_check.folders||[]).join("; "))}</div></div>`:""}
       <div><span class="k">Suggested owner / next step:</span> ${esc(r.owner)} &middot; ${esc(r.next)||"&mdash;"}</div>
       <div><span class="k">Nearest dealer:</span> ${r.dealer?esc(r.dealer)+(r.dealer_city?" ("+esc(r.dealer_city)+")":""):dash("Shown only when the buyer is matched to a dealer's own area; a country-level guess is not shown")}</div>
       <div><span class="k">Published on:</span> ${r.sources.map(esc).join(", ")} &middot; ${r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">open the notice</a>`:"no link"}</div>
@@ -234,6 +238,20 @@ function renderList(rows,el,withTwins){
   }
   el.innerHTML=out.join("")||`<div class="banner">Nothing in this section today.</div>`;
   return n;
+}
+
+const DOC_SHORT={isuzu_in_fleet:"Isuzu in the vehicle list",isuzu_mentioned_outside_list:"Isuzu named, not in a list",
+  not_in_fleet:"list found, no Isuzu",no_vehicle_list_found:"documents read, no vehicle list",documents_not_available:"documents not read"};
+function docCell(r){
+  const c=r.doc_check||{};
+  if(!c.verdict)return `<span class="chip gap">${esc(r.fleet_brand==="unknown_multi_brand"?"multi-brand, Isuzu share unknown":"not checked yet")}</span>`;
+  const brands=Object.entries(c.brands||{}).slice(0,6).map(([b,n])=>`${b} ${n}`).join(", ");
+  const ev=(c.evidence||[]).map(e=>`${e.file} · ${e.where}\n"${e.snippet}"`).join("\n\n");
+  const tip=`${c.label}${c.reason?" ("+c.reason+")":""}\nDocuments read: ${c.read} of ${c.listed}${brands?"\nMakes seen in the list (mentions): "+brands:""}${ev?"\n\nEvidence:\n"+ev:""}\n\nEvidence folder: ${(c.folders||[]).join("; ")}`;
+  const cls=c.verdict==="isuzu_in_fleet"?"dec-Attack":c.verdict==="not_in_fleet"?"why":"gap";
+  return `<span class="chip ${cls}" title="${esc(tip)}">${esc(DOC_SHORT[c.verdict]||c.verdict)}</span>`+
+    (brands?`<div class="dash" style="font-size:12px" title="Times each make appears in list rows across all documents; the same vehicle can appear in several lots, so this is not a vehicle count">mentions: ${esc(brands)}</div>`:"")+
+    (c.reason?`<div class="dash" style="font-size:12px">${esc(c.reason)}</div>`:"");
 }
 
 function smallTable(rows,cols){
@@ -273,7 +291,7 @@ function render(){
     {h:"Deadline",f:r=>r.deadline?fmtD(r.deadline)+(daysLeft(r.deadline)===0?` <span class="chip dl soon">today</span>`:""):"not published"},
     {h:"Tender",f:r=>r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:esc(r.title)},
     {h:"Buyer",f:r=>esc(r.buyer)},{h:"Country",f:r=>esc(r.country)},
-    {h:"Fleet brand",f:r=>`<span class="chip gap">${esc(r.fleet_brand==="unknown_multi_brand"?"multi-brand, Isuzu share unknown":"not named")}</span>`},
+    {h:"Vehicle list in the tender documents",f:r=>docCell(r)},
     {h:"Distributor",f:r=>r.distributor?esc(r.distributor):`<span class="dash">none</span>`}]);
 
   const nO=renderList(DATA.other_live,document.getElementById("other"),false);

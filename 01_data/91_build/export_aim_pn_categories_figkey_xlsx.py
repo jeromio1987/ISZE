@@ -3,12 +3,28 @@
 Primary deliverable for BVDV / Power BI: flat UTF-8 CSV, one row per part number.
 Excel twin is the same table (one sheet) plus a short Coverage sheet.
 
-Spine = aim_master_v2 (full catalogue). AIM labels prefer the latest
-aim_pn_classification_20260920 overlay where the part is present.
+Spine = aim_master_v2 (full catalogue). AIM labels prefer the classification overlay
+where the part is present.
+
+Overlay source (2026-10-01): by default the release that _releases/RELEASES.json marks
+APPROVED, resolved and sha256-checked through the workspace release guard (fail closed:
+no APPROVED release or a hash mismatch stops the build). Output:
+AIM_Master_PN_Categories_Figkey_release_<release_id>.csv/.xlsx plus a .release.json
+sidecar recording the release id, its sha256 and the export's own sha256; the AIM pages
+read only an export whose sidecar matches the register.
+
+    python export_aim_pn_categories_figkey_xlsx.py                 # approved release
+    python export_aim_pn_categories_figkey_xlsx.py --source live   # old behaviour: the live
+        overlay aim_pn_classification_20260920.csv, dated output name (not release-backed)
+    --out-dir <dir>  write elsewhere (e.g. a scratch comparison run)
 """
 from __future__ import annotations
 
-from datetime import date
+import argparse
+import hashlib
+import json
+import sys
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 import pandas as pd
@@ -17,10 +33,15 @@ ROOT = Path(r"C:\Users\jerom\Desktop\claude\ISZE")
 DER = ROOT / "01_data" / "00_derived"
 STAMP = date.today().strftime("%Y%m%d")
 SRC_MASTER = DER / "aim_master_v2.csv"
-SRC_CLASS = DER / "aim_pn_classification_20260920.csv"
-OUT_XLSX = DER / f"AIM_Master_PN_Categories_Figkey_{STAMP}.xlsx"
-OUT_CSV = DER / f"AIM_Master_PN_Categories_Figkey_{STAMP}.csv"
-CMD = DER / f"OPEN_AIM_Master_PN_Categories_Figkey_{STAMP}.cmd"
+SRC_CLASS_LIVE = DER / "aim_pn_classification_20260920.csv"  # NOT_RELEASED live overlay
+# Set in main(): the approved release by default, the live overlay only with --source live.
+SRC_CLASS: Path = SRC_CLASS_LIVE
+OUT_XLSX: Path
+OUT_CSV: Path
+CMD: Path
+RELEASE_ENTRY: dict | None = None
+
+sys.path.insert(0, str(ROOT / "04_tools" / "_shared"))
 
 # Stable names for Power BI relationships / DAX (no spaces).
 COLS = [
@@ -164,7 +185,41 @@ def coalesce_desc(
     return desc, src
 
 
-def main() -> None:
+def _sha256(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(1 << 20), b""):
+            h.update(block)
+    return h.hexdigest()
+
+
+def _configure(argv=None) -> None:
+    global SRC_CLASS, OUT_XLSX, OUT_CSV, CMD, RELEASE_ENTRY
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--source", choices=["release", "live"], default="release")
+    ap.add_argument("--out-dir", default=None)
+    a = ap.parse_args(argv)
+    out_dir = Path(a.out_dir) if a.out_dir else DER
+    out_dir.mkdir(parents=True, exist_ok=True)
+    if a.source == "release":
+        from classification_paths import FIGKEY_EXPORT_PREFIX, approved_release
+
+        SRC_CLASS, RELEASE_ENTRY = approved_release()  # raises unless APPROVED + hash ok
+        base = f"{FIGKEY_EXPORT_PREFIX}{RELEASE_ENTRY['release_id']}"
+        print(f"overlay = APPROVED release {RELEASE_ENTRY['release_id']} "
+              f"({RELEASE_ENTRY['sha256'][:12]}...) {SRC_CLASS}")
+    else:
+        SRC_CLASS, RELEASE_ENTRY = SRC_CLASS_LIVE, None
+        base = f"AIM_Master_PN_Categories_Figkey_{STAMP}"
+        print(f"overlay = LIVE overlay (not a release) {SRC_CLASS}")
+    OUT_CSV = out_dir / f"{base}.csv"
+    OUT_XLSX = out_dir / f"{base}.xlsx"
+    CMD = out_dir / f"OPEN_{base}.cmd"
+
+
+def main(argv=None) -> None:
+    _configure(argv)
     master = pd.read_csv(SRC_MASTER, low_memory=False, dtype=str)
     pn = pn_key(master["part_number"])
 
@@ -314,6 +369,24 @@ def main() -> None:
             f'start "" "%~dp0{OUT_XLSX.name}"\r\n'
         ).encode("ascii")
     )
+    if RELEASE_ENTRY is not None:
+        side = OUT_CSV.with_suffix(".release.json")
+        side.write_text(json.dumps({
+            "export_csv": OUT_CSV.name,
+            "export_sha256": _sha256(OUT_CSV),
+            "release_id": RELEASE_ENTRY["release_id"],
+            "release_status": RELEASE_ENTRY.get("status"),
+            "release_path": str(SRC_CLASS),
+            "release_sha256": RELEASE_ENTRY["sha256"],
+            "register": str(DER / "_releases" / "RELEASES.json"),
+            "spine": SRC_MASTER.name,
+            "spine_sha256": _sha256(SRC_MASTER),
+            "rows": n,
+            "with_aim_level_1": n_aim,
+            "built_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "builder": "01_data/91_build/export_aim_pn_categories_figkey_xlsx.py",
+        }, indent=2), encoding="utf-8")
+        print(f"sidecar={side}")
     print(f"rows={n} with_desc={n_desc} with_fig={n_fig} with_aim={n_aim}")
     print(f"csv={OUT_CSV} size_mb={OUT_CSV.stat().st_size / 1e6:.2f}")
     print(f"xlsx={OUT_XLSX} size_mb={OUT_XLSX.stat().st_size / 1e6:.2f}")

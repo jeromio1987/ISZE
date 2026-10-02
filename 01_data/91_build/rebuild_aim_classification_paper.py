@@ -2,11 +2,18 @@
 
 No historical builder existed for this hand-authored paper. This script refreshes
 the snapshot counts and dates from live derived files so the hero matches
-aim_master_v2.csv and the catalogue shape matches aim_pn_classification_20260920.csv.
+aim_master_v2.csv and the catalogue shape matches the classification release that
+_releases/RELEASES.json marks APPROVED (resolved + sha256-checked through the release
+guard; fail closed). Before 2026-10-01 it read the NOT_RELEASED live overlay
+aim_pn_classification_20260920.csv; the catalogue shape is identical in both.
+
+    python rebuild_aim_classification_paper.py            # patches the live page
+    python rebuild_aim_classification_paper.py --staged   # writes ..._staged.html, live untouched
 """
 from __future__ import annotations
 
 import csv
+import sys
 from datetime import datetime
 from pathlib import Path
 
@@ -15,7 +22,8 @@ D = ISZE / "01_data" / "00_derived"
 HTML = ISZE / "02_dashboards" / "sales" / "ISZE_AIM_Classification_Paper.html"
 OPEN = ISZE / "02_dashboards" / "sales" / "OPEN_ISZE_AIM_Classification_Paper.cmd"
 MASTER = D / "aim_master_v2.csv"
-CLASS = D / "aim_pn_classification_20260920.csv"
+CLASS: Path  # set in main(): the APPROVED release, via 04_tools/_shared/classification_paths
+sys.path.insert(0, str(ISZE / "04_tools" / "_shared"))
 
 
 def count_master() -> tuple[int, int, int, int, int]:
@@ -59,6 +67,16 @@ def count_class() -> tuple[int, int, int, int]:
 
 
 def main() -> int:
+    global CLASS
+    from classification_paths import approved_release
+
+    CLASS, _rel = approved_release()  # raises unless APPROVED and hash equals the register
+    print(f"catalogue shape from release {_rel['release_id']} {_rel['status']} "
+          f"{_rel['sha256'][:12]}: {CLASS}")
+    staged = "--staged" in sys.argv[1:]
+    # staged copy one folder down: sync_to_deploys.ps1 does not walk sales/_staged/
+    html_out = (HTML.parent / "_staged" / (HTML.stem + "_staged.html")) if staged else HTML
+    html_out.parent.mkdir(exist_ok=True)
     master_n, gap, has_aim, aim_l1n, aim_l2n = count_master()
     class_n, c_l1, c_l2, c_l3 = count_class()
     print(f"master_rows={master_n} gap_auto={gap} has_aim={has_aim} aim_L1={aim_l1n} aim_L2={aim_l2n}")
@@ -115,7 +133,13 @@ def main() -> int:
         count=1,
     )
 
-    HTML.write_text(t, encoding="utf-8", newline="\n")
+    html_out.write_text(t, encoding="utf-8", newline="\n")
+    if staged:
+        print(f"wrote {html_out} (staged; live page and opener untouched)")
+        t2 = html_out.read_text(encoding="utf-8")
+        assert f"{c_l1} / {c_l2} / {c_l3}" in t2 and f"{class_n:,} parts" in t2
+        print("SANITY_OK (staged)")
+        return 0
     OPEN.write_bytes(
         b'@echo off\r\nstart "" "%~dp0ISZE_AIM_Classification_Paper.html"\r\n'
     )

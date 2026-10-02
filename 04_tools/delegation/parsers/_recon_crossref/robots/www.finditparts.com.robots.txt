@@ -1,0 +1,66 @@
+# fetched 2026-10-01 21:45 UA=ISZE-parts-research/1.0 (+aftersales analytics; contact via IML) status=200
+Sitemap: https://www.finditparts.com/sitemap.xml
+
+User-agent: *
+# System / account / low priority pages/paths (not for indexing)
+Disallow: /search
+Disallow: /part-finder
+Disallow: /surveys
+Disallow: /orders
+Disallow: /cart
+Disallow: /vehicles/lookup
+Disallow: /bot_verifications
+Disallow: /products/*/representative_image
+Disallow: /products/*/new_review
+Disallow: /cable
+# Q&A and reviews XHR endpoints
+Disallow: /products/*/product_questions
+Disallow: /products/*/product_questions.json
+Disallow: /products/*/product_reviews
+
+# Block parameters
+Disallow: /*?*public_token=
+Disallow: /*?*aggs=
+Disallow: /*?*s=
+Disallow: /*?*per=
+Disallow: /*?*mode=
+Disallow: /*?*fg_id=
+Disallow: /*?*mid=
+Disallow: /*?*qty=
+Disallow: /*?*translate=
+Disallow: /*?*sort=
+Disallow: /*?*view-mode=
+Disallow: /*?*brand=
+Disallow: /*?*filter=
+
+# Unwanted bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: SeznamBot
+Disallow: /
+
+User-agent: dotbot
+Disallow: /
+
+User-agent: Nutch
+Disallow: /
+
+User-agent: Yandex
+Disallow: /
+
+User-agent: YandexBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+# For LLMs
+# https://www.finditparts.com/llms.txt
+# https://www.finditparts.com/llms.json

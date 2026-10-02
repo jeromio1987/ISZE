@@ -1,0 +1,76 @@
+# fetched 2026-10-01 21:45 UA=ISZE-parts-research/1.0 (+aftersales analytics; contact via IML) status=200
+# https://www.exist.ru
+
+User-Agent: *
+Allow: /Catalog/Accessory/Cars/
+Allow: /Catalog/Wheels/
+Allow: /Catalog/Goods/
+Allow: /Price/
+Allow: /Api/*
+
+Disallow: /Catalog/Goods/*/popup/*
+Disallow: /catalog/goods/*/popup/*
+Disallow: /AutoPoints
+Disallow: /Autopoints
+Disallow: /autopoints
+Disallow: /errors/
+Disallow: /job/
+Disallow: /Profile/
+Disallow: /*?SubType*
+Disallow: /*?MethodType*
+Disallow: /*?ReturnUrl*
+Disallow: /*?Year=*
+Disallow: /tests/
+Disallow: /?_openstat=
+Disallow: /WebResource.axd
+Disallow: /ScriptResource.axd
+Disallow: /*utm_source
+Disallow: /*utm_campaign
+Disallow: /resultr.asp
+Disallow: /*&all=*
+Disallow: /*login.php*
+
+Sitemap: https://www.exist.ru/sitemap.axd
+
+
+User-agent: Yandex
+Allow: /Catalog/Accessory/Cars/
+Allow: /Catalog/Wheels/
+Allow: /Catalog/Goods/
+Allow: /Price/
+Allow: /Api/*
+
+Disallow: /Catalog/Goods/*/popup/*
+Disallow: /catalog/goods/*/popup/*
+Disallow: /AutoPoints
+Disallow: /Autopoints
+Disallow: /autopoints
+Disallow: /errors/
+Disallow: /job/
+Disallow: /profile/
+Disallow: /Profile/
+Disallow: /*?SubType*
+Disallow: /*?MethodType*
+Disallow: /*?ReturnUrl*
+Disallow: /*?Year=*
+Disallow: /tests/
+Disallow: /?_openstat=
+Disallow: /WebResource.axd
+Disallow: /ScriptResource.axd
+Disallow: /resultr.asp
+Disallow: /*?MethodType
+Disallow: /*&all=*
+Disallow: /*login.php*
+
+Sitemap: https://www.exist.ru/sitemap.axd
+
+Clean-param: utm_campaign /Catalog/Global/Cars/*
+Clean-param: utm_source /Catalog/Global/Cars/*
+Clean-param: utm_medium /Catalog/Global/Cars/*
+Clean-param: utm_term /Catalog/Global/Cars/*
+Clean-param: utm_content /Catalog/Global/Cars/*
+Clean-param: sr /Price/*
+
+# Crawl-delay: 1
+
+Host: https://www.exist.ru

@@ -39,6 +39,14 @@ if errorlevel 1 (
     exit /b 1
 )
 
+echo [2b/5] Reading vehicle lists in the tender documents (fleet-brand check)...
+:: Public documents only: no login, robots.txt respected. Non-fatal: if a portal is down
+:: the feed keeps the gate result and the run continues. Evidence: tender_docs folder
+python tender_doc_reader.py --apply >> %LOGFILE% 2>&1
+if errorlevel 1 (
+    echo WARNING: tender document reader failed - feed left with the gate result. Check log: %LOGFILE%
+)
+
 echo [3/5] Rebuilding local preview HTML (v2) in this folder...
 python build_dashboard_v2.py >> %LOGFILE% 2>&1
 if errorlevel 1 (

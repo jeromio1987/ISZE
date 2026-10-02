@@ -152,6 +152,26 @@ def slim(o: dict, boiler: set, price: dict, twins: dict, store: dict, listed: se
         "parts_reason": parts_reason(o),
         "listed": oid in listed,
         "answer": (store.get(oid) or {}),
+        "doc_check": doc_check(o),
+    }
+
+
+def doc_check(o: dict) -> dict:
+    """What tender_doc_reader.py found in the tender documents (empty if not checked)."""
+    c = o.get("fleet_doc_check") or {}
+    if not c:
+        return {}
+    return {
+        "verdict": c.get("verdict"),
+        "label": clean(c.get("label")),
+        "reason": clean(c.get("reason")),
+        "read": c.get("documents_read"),
+        "listed": c.get("documents_listed"),
+        "brands": c.get("brands_in_list") or {},
+        "evidence": [{"file": clean(e.get("file")), "where": clean(e.get("where")),
+                      "snippet": clean(e.get("snippet"))[:260]} for e in (c.get("evidence") or [])[:3]],
+        "folders": [str(ROOT / Path(x)) for x in (c.get("notice_dirs") or [])],
+        "checked": str(c.get("checked_at") or "")[:10],
     }
 
 

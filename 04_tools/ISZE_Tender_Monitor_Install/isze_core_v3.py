@@ -1659,8 +1659,59 @@ FLEET_BRAND_LABELS = {
     "open_vehicle_buy": "Vehicle purchase: brand is the bidder's choice",
     "unknown_multi_brand": "Multi-brand fleet: Isuzu share unknown, check the vehicle list",
     "unknown": "Fleet brand unknown: check the vehicle list in the tender documents",
+    "isuzu_in_fleet_docs": "Isuzu in the vehicle list of the tender documents",
 }
 FLEET_BRAND_NEXT_ACTION = "Open the tender documents and check the vehicle list for Isuzu before any decision"
+
+# Result of the document reader (tender_doc_reader.py), attached as rec["fleet_doc_check"].
+# Only "isuzu_in_fleet" lifts the cap; every other verdict keeps the tender on Watch with
+# the reason the documents gave.
+FLEET_DOC_NEXT_ACTION = {
+    "isuzu_mentioned_outside_list": "Isuzu is named in the tender documents but not in a vehicle list: read the passage before deciding",
+    "not_in_fleet": "The vehicle list in the tender documents has no Isuzu: pass unless the fleet changes",
+    "no_vehicle_list_found": "The tender documents carry no vehicle list: ask the buyer for the fleet list before any decision",
+    "documents_not_available": "Tender documents not readable automatically: open them on the portal by hand",
+}
+FLEET_DOC_BRAND_FIT, FLEET_DOC_BRAND_ECON = 40, 10  # the same points compute_scores gives a brand hit
+
+
+def _num(v: Any) -> Optional[int]:
+    try:
+        return int(float(v))
+    except (TypeError, ValueError):
+        return None
+
+
+def _like(old: Any, new: int) -> Any:
+    return str(new) if isinstance(old, str) else new
+
+
+def _apply_fleet_doc_points(rec: Dict[str, Any], confirmed: bool) -> None:
+    """Add (or take back) the brand-signal points for an Isuzu-confirmed vehicle list, once,
+    then let derive_decision decide. Never sets a decision by hand."""
+    has = bool(rec.get("fleet_doc_brand_points"))
+    if confirmed == has:
+        pass
+    else:
+        sign = 1 if confirmed else -1
+        for k, d in (("fit_score", FLEET_DOC_BRAND_FIT), ("econ_score", FLEET_DOC_BRAND_ECON)):
+            v = _num(rec.get(k))
+            if v is not None:
+                rec[k] = _like(rec[k], max(0, min(100, v + sign * d)))
+        if confirmed:
+            rec["fleet_doc_brand_points"] = True
+        else:
+            rec.pop("fleet_doc_brand_points", None)
+    drivers = [x for x in (rec.get("score_drivers") or [])
+               if x not in ("fleet brand unknown", "Isuzu in tender vehicle list")]
+    if confirmed:
+        rec["score_drivers"] = ["Isuzu in tender vehicle list"] + drivers[:5]
+    fit, win, econ = (_num(rec.get(k)) for k in ("fit_score", "win_score", "econ_score"))
+    if None not in (fit, win, econ) and (confirmed or has):
+        lifecycle = rec.get("Lifecycle") or rec.get("lifecycle") or ""
+        rec["decision"] = derive_decision(fit, win, econ, lifecycle)
+        if "opportunity_score" in rec:
+            rec["opportunity_score"] = int(round(fit * 0.4 + win * 0.3 + econ * 0.3))
 
 
 def apply_fleet_brand_gate(rec: Dict[str, Any], text: str = "") -> Dict[str, Any]:
@@ -1710,8 +1761,27 @@ def apply_fleet_brand_gate(rec: Dict[str, Any], text: str = "") -> Dict[str, Any
         status = "open_vehicle_buy" if buy else "unknown"
     if status == "unknown" and MULTI_BRAND_RE.search(blob):
         status = "unknown_multi_brand"
+
+    # Document check (tender_doc_reader.py): Isuzu found in the fleet list lifts the cap and
+    # re-scores through the normal brand points; any other verdict keeps the cap with its reason.
+    doc = rec.get("fleet_doc_check") if isinstance(rec.get("fleet_doc_check"), dict) else {}
+    verdict = doc.get("verdict") or ""
+    confirmed = status.startswith("unknown") and verdict == "isuzu_in_fleet"
+    if confirmed or rec.get("fleet_doc_brand_points"):
+        _apply_fleet_doc_points(rec, confirmed)
+    if confirmed:
+        status = "isuzu_in_fleet_docs"
     rec["fleet_brand"] = status
     rec["fleet_brand_label"] = FLEET_BRAND_LABELS[status]
+    if confirmed:
+        rec.pop("decision_before_brand_gate", None)
+        lifecycle = rec.get("Lifecycle") or rec.get("lifecycle") or ""
+        if lifecycle not in ("result", "cancelled", "change", "completion"):
+            rec["next_action_suggested"] = (
+                "Isuzu is in the tender's vehicle list (see the document evidence): decide pursue or pass")
+            rec["status_suggested"] = suggest_status(
+                rec.get("decision") or "", rec.get("urgency") or "", lifecycle,
+                rec.get("evidence_label") or "")
 
     if status.startswith("unknown"):
         before = rec.get("decision")
@@ -1723,8 +1793,13 @@ def apply_fleet_brand_gate(rec: Dict[str, Any], text: str = "") -> Dict[str, Any
             rec["score_drivers"] = ["fleet brand unknown"] + drivers[:5]
         lifecycle = rec.get("Lifecycle") or rec.get("lifecycle") or ""
         if lifecycle not in ("result", "cancelled", "change", "completion"):
-            rec["next_action_suggested"] = FLEET_BRAND_NEXT_ACTION
+            rec["next_action_suggested"] = FLEET_DOC_NEXT_ACTION.get(verdict, FLEET_BRAND_NEXT_ACTION)
             rec["status_suggested"] = "Enrich"
+        if verdict in FLEET_DOC_NEXT_ACTION:
+            label = str(doc.get("label") or verdict)
+            if doc.get("reason"):
+                label += f" ({doc['reason']})"
+            rec["fleet_brand_label"] = label
     return rec
 
 def suggest_owner(country: str) -> str:

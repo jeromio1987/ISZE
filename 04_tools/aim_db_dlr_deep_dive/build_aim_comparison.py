@@ -36,7 +36,6 @@ UI = ISZE / "02_dashboards" / "_ui"
 TEMPLATE = TOOL / "aim_cmp_template.html"
 CHART_JS = UI / "chart.umd.min.js"          # Chart.js 4.4.1, inlined so the page opens offline
 
-AIM_FILE = DER / "AIM_Master_PN_Categories_Figkey_20260924.csv"
 PARTS_FILE = DER / "parts_catalog_dimension.csv"
 PRICE_FILE = DER / "pricing_pr00_ie40.parquet"
 BVP_FILE = DER / "bvp_pn_dimension.csv"
@@ -946,9 +945,46 @@ def coverage_rows(pn_dim, pres, dims, pairs):
 
 # --------------------------------------------------------------------------- main
 
+
+# AIM tree = the figure-key export built FROM the release RELEASES.json marks APPROVED
+# (resolved + sha256-checked through _releases/check_classification_release.py, and the
+# export's own sidecar must name that same release). Set in main(); fail closed.
+# The previous hard-coded input was AIM_Master_PN_Categories_Figkey_20260924.csv, built
+# from the NOT_RELEASED live overlay. --aim-file overrides for a comparison run.
+AIM_FILE = None
+AIM_RELEASE = None
+SUFFIX = ""  # "_staged" with --staged
+sys.path.insert(0, str(ISZE / "04_tools" / "_shared"))
+
+
+def resolve_aim_file(override=None):
+    """Set AIM_FILE (+ the SOURCES row that names it) from the approved release."""
+    global AIM_FILE, AIM_RELEASE
+    if override:
+        AIM_FILE, AIM_RELEASE = Path(override), None
+    else:
+        from classification_paths import figkey_export_for_release
+        try:
+            AIM_FILE, AIM_RELEASE = figkey_export_for_release()
+        except Exception as exc:  # noqa: BLE001
+            raise BuildError(f"approved-release AIM tree unavailable: {exc}") from exc
+    rel = AIM_FILE.relative_to(ISZE) if AIM_FILE.is_relative_to(ISZE) else AIM_FILE
+    for s in SOURCES:
+        if s.get("what", "").startswith("AIM "):
+            s["path"] = str(rel)
+            if AIM_RELEASE is not None:
+                s["release"] = (f"classification release {AIM_RELEASE['release_id']} "
+                                f"({AIM_RELEASE['status']}, sha256 {AIM_RELEASE['sha256'][:12]})")
+    log(f"   AIM tree: {rel}" + (f"  [release {AIM_RELEASE['release_id']} "
+                                  f"{AIM_RELEASE['status']} {AIM_RELEASE['sha256'][:12]}]"
+                                  if AIM_RELEASE else "  [--aim-file override, not release-checked]"))
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--db", required=True, choices=["PORTUGAL", "ALL"])
+    ap.add_argument("--staged", action="store_true", help="write <page>_staged.html and VERIFY_*_staged beside the live ones; no opener; live page untouched")
+    ap.add_argument("--aim-file", default=None, help="AIM tree CSV to use instead of the approved-release export (comparison runs only)")
     ap.add_argument("--min-side", type=int, default=MIN_SIDE_MONTHS)
     args = ap.parse_args(argv)
     _set_min_side(min(args.min_side, 12))
@@ -956,7 +992,18 @@ def main(argv=None) -> int:
     dbs = ["PORTUGAL"] if run == "PORTUGAL" else ALL_DBS
     log(f"== AIM comparison, run {run}, distributors: {', '.join(dbs)}")
 
+    global SUFFIX
+    SUFFIX = "_staged" if args.staged else ""
     try:
+        resolve_aim_file(args.aim_file)
+        _aim_counts = pd.read_csv(AIM_FILE, dtype=str, usecols=["aim_level_1"],
+                                  keep_default_na=False)
+        for s_ in SOURCES:
+            if s_.get("what", "").startswith("AIM "):
+                s_["note"] = (f"{len(_aim_counts):,} rows, "
+                              f"{int((_aim_counts['aim_level_1'] != '').sum()):,} with an AIM "
+                              "level; a part number with no level sits in a bucket called Not "
+                              "classified in AIM at all three levels")
         for p, what in ((AIM_FILE, "AIM tree"), (PARTS_FILE, "PMS catalog"),
                         (PRICE_FILE, "price list"), (BVP_FILE, "Genuine/BVP list"),
                         (DIM_FILE, "distributor dimension"), (SALES_FACT, "sales fact"),
@@ -1028,15 +1075,21 @@ def main(argv=None) -> int:
                                 doc_excl, OPEN_QUESTIONS, None, views,
                                 half_units=build_half_units(sellout))
         html = render_html(payload, run)
-        out = DASH / f"ISZE_AIM_Comparison_{run}.html"
+        # staged pages go one folder down (sales/_staged/): sync_to_deploys.ps1 only walks one
+        # level, so a staged page can never be flattened into the deploy mirror by accident.
+        out = (DASH / "_staged" if SUFFIX else DASH) / f"ISZE_AIM_Comparison_{run}{SUFFIX}.html"
+        out.parent.mkdir(exist_ok=True)
         out.write_text(html, encoding="utf-8")
         size = out.stat().st_size
         log(f"   wrote {out} ({size/1024/1024:.2f} MB)")
 
         cmd = DASH / f"OPEN_ISZE_AIM_Comparison_{run}.cmd"
-        cmd.write_bytes((f'@echo off\nstart "" "%~dp0{out.name}"\n').replace("\n", "\r\n")
-                        .encode("ascii"))
-        log(f"   wrote {cmd.name} (CRLF, opens {out.name})")
+        if SUFFIX:
+            log(f"   staged run: opener {cmd.name} left untouched")
+        else:
+            cmd.write_bytes((f'@echo off\nstart "" "%~dp0{out.name}"\n').replace("\n", "\r\n")
+                            .encode("ascii"))
+            log(f"   wrote {cmd.name} (CRLF, opens {out.name})")
 
         # rewrite once more so the page carries its own final size in the checks
         checks2 = build_checks(run, pn_dim, pres, recon, sellout, billing, so_out, bi_out,
@@ -1057,6 +1110,7 @@ def main(argv=None) -> int:
             "coverage": coverage,
             "reconciliation_month_rows_vs_total_rows": recon,
             "open_questions": OPEN_QUESTIONS,
+            "aim_tree": {"file": str(AIM_FILE), "release": AIM_RELEASE},
         })
         return 0
 
@@ -1071,7 +1125,7 @@ def write_verify(run, checks, extra):
     doc = {"run": run, "built": stamp, "passed": len(checks) - len(failed),
            "failed": len(failed), "checks": checks}
     doc.update(extra)
-    (TOOL / f"VERIFY_COMPARISON_{run}.json").write_text(
+    (TOOL / f"VERIFY_COMPARISON_{run}{SUFFIX}.json").write_text(
         json.dumps(doc, indent=2, default=str), encoding="utf-8")
 
     lines = [f"# Verification - AIM comparison, {run}", "",
@@ -1092,7 +1146,7 @@ def write_verify(run, checks, extra):
     lines.append("")
     for key, val in extra.items():
         lines += [f"## {key}", "", "```json", json.dumps(val, indent=2, default=str), "```", ""]
-    (TOOL / f"VERIFY_COMPARISON_{run}.md").write_text("\n".join(lines), encoding="utf-8")
+    (TOOL / f"VERIFY_COMPARISON_{run}{SUFFIX}.md").write_text("\n".join(lines), encoding="utf-8")
 
 
 if __name__ == "__main__":

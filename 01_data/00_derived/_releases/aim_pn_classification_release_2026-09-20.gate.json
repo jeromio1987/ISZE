@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-09-25T05:08:31.398846+00:00",
+  "run_at": "2026-10-01T20:00:00.605060+00:00",
   "classifier_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-09-20.csv",
   "classifier_sha256": "60111c104ddeb466e6c15f084039639d35172056b0fd2ea10225a3c50da610e0",
   "resolved_from": "APPROVED release in C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\RELEASES.json",
@@ -10,6 +10,13 @@
   "drift_baseline_file": "C:\\Users\\jerom\\Desktop\\claude\\ISZE\\01_data\\00_derived\\_releases\\aim_pn_classification_release_2026-09-20.gate.json",
   "baseline_same_file": true,
   "checks": [
+    {
+      "id": "release_approved",
+      "ok": true,
+      "measured": "APPROVED (2026-09-20, matched by hash)",
+      "expected": "APPROVED in _releases/RELEASES.json, sha256 equal to the register",
+      "note": "OK: aim_pn_classification_release_2026-09-20.csv matches approved release 2026-09-20 (60111c104dde...)"
+    },
     {
       "id": "file_rows",
       "ok": true,
@@ -144,7 +151,7 @@
     "pr00_copy_integrity"
   ],
   "failed": 0,
-  "passed": 18,
+  "passed": 19,
   "verdict": "PASS",
   "note": ""
 }

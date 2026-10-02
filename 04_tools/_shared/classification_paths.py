@@ -89,6 +89,72 @@ def gate_file() -> Path:
     return tree_file().with_suffix(".gate.json")
 
 
+RELEASES_DIR = DERIVED / "_releases"
+FIGKEY_EXPORT_PREFIX = "AIM_Master_PN_Categories_Figkey_release_"
+
+
+def _release_guard():
+    """The workspace's release guard, loaded from its one home (never re-written here)."""
+    import importlib.util
+
+    path = RELEASES_DIR / "check_classification_release.py"
+    if not path.is_file():
+        raise FileNotFoundError(f"release guard missing: {path}")
+    spec = importlib.util.spec_from_file_location("isze_classification_release", path)
+    mod = importlib.util.module_from_spec(spec)  # type: ignore[arg-type]
+    spec.loader.exec_module(mod)  # type: ignore[union-attr]
+    return mod
+
+
+def approved_release() -> tuple[Path, dict]:
+    """(path, register entry) of the release RELEASES.json marks APPROVED.
+
+    Fail closed: raises if nothing is APPROVED, or if the file's sha256 no longer equals
+    the register (assert_release). A NOT_RELEASED candidate is never returned.
+    """
+    guard = _release_guard()
+    entry = guard.find_approved_release(guard.load_releases())
+    if not entry:
+        raise RuntimeError(f"no APPROVED release in {RELEASES_DIR / 'RELEASES.json'}")
+    path = Path(guard.resolve_release_path(entry))
+    guard.assert_release(str(path))
+    return path, entry
+
+
+def figkey_export_for_release() -> tuple[Path, dict]:
+    """The AIM figure-key export built FROM the approved release, verified by its sidecar.
+
+    Built by 01_data/91_build/export_aim_pn_categories_figkey_xlsx.py. The sidecar
+    <csv>.release.json must name the same release id and sha256 the register approves;
+    otherwise this raises, so a page can never be built from an export of another file.
+    """
+    import json
+
+    _, entry = approved_release()
+    csv = DERIVED / f"{FIGKEY_EXPORT_PREFIX}{entry['release_id']}.csv"
+    side = csv.with_suffix(".release.json")
+    if not csv.is_file() or not side.is_file():
+        raise FileNotFoundError(
+            f"{csv.name} (+ .release.json) missing: run "
+            "01_data/91_build/export_aim_pn_categories_figkey_xlsx.py first")
+    rec = json.loads(side.read_text(encoding="utf-8"))
+    if (rec.get("release_id") != entry["release_id"]
+            or str(rec.get("release_sha256", "")).lower() != entry["sha256"].lower()):
+        raise RuntimeError(
+            f"{side.name} records release {rec.get('release_id')} "
+            f"{str(rec.get('release_sha256', ''))[:12]}, register approves "
+            f"{entry['release_id']} {entry['sha256'][:12]}: rebuild the export")
+    import hashlib
+
+    h = hashlib.sha256()
+    with csv.open("rb") as f:
+        for block in iter(lambda: f.read(1 << 20), b""):
+            h.update(block)
+    if h.hexdigest() != str(rec.get("export_sha256", "")).lower():
+        raise RuntimeError(f"{csv.name} bytes differ from its sidecar: rebuild the export")
+    return csv, entry
+
+
 def describe() -> str:
     """Plain-English line for a report or a console header."""
     return f"{tree_file().name} (parts tree) + {master_file().name} (master)"

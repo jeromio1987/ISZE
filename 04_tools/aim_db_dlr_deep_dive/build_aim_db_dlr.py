@@ -42,7 +42,6 @@ CHART_JS = UI / "chart.umd.min.js"          # Chart.js 4.4.1, inlined so the pag
 
 REFERENCE = Path(r"C:\Users\jerom\Desktop\ISZE_Pricing_Revision_AIM_Source.html")
 
-AIM_FILE = DER / "AIM_Master_PN_Categories_Figkey_20260924.csv"
 PARTS_FILE = DER / "parts_catalog_dimension.csv"
 DEMAND_FILE = DER / "pms_capture_by_db_year.csv"
 PRICE_FILE = DER / "pricing_pr00_ie40.parquet"
@@ -968,7 +967,7 @@ def write_verify(run, checks, extra):
     doc = {"run": run, "built": stamp, "passed": len(hard) - len(failed),
            "failed": len(failed), "checks": checks}
     doc.update(extra)
-    (TOOL / f"VERIFY_{run}.json").write_text(
+    (TOOL / f"VERIFY_{run}{SUFFIX}.json").write_text(
         json.dumps(doc, indent=2, default=str), encoding="utf-8")
 
     lines = [f"# Verification - {run}", "",
@@ -992,21 +991,61 @@ def write_verify(run, checks, extra):
     for key, val in extra.items():
         lines += [f"## {key}", "", "```json",
                   json.dumps(val, indent=2, default=str), "```", ""]
-    (TOOL / f"VERIFY_{run}.md").write_text("\n".join(lines), encoding="utf-8")
+    (TOOL / f"VERIFY_{run}{SUFFIX}.md").write_text("\n".join(lines), encoding="utf-8")
     return doc, failed
 
 
 # --------------------------------------------------------------------------- main
 
+
+# AIM tree = the figure-key export built FROM the release RELEASES.json marks APPROVED
+# (resolved + sha256-checked through _releases/check_classification_release.py, and the
+# export's own sidecar must name that same release). Set in main(); fail closed.
+# The previous hard-coded input was AIM_Master_PN_Categories_Figkey_20260924.csv, built
+# from the NOT_RELEASED live overlay. --aim-file overrides for a comparison run.
+AIM_FILE = None
+AIM_RELEASE = None
+SUFFIX = ""  # "_staged" with --staged
+sys.path.insert(0, str(ISZE / "04_tools" / "_shared"))
+
+
+def resolve_aim_file(override=None):
+    """Set AIM_FILE (+ the SOURCES row that names it) from the approved release."""
+    global AIM_FILE, AIM_RELEASE
+    if override:
+        AIM_FILE, AIM_RELEASE = Path(override), None
+    else:
+        from classification_paths import figkey_export_for_release
+        try:
+            AIM_FILE, AIM_RELEASE = figkey_export_for_release()
+        except Exception as exc:  # noqa: BLE001
+            raise BuildError(f"approved-release AIM tree unavailable: {exc}") from exc
+    rel = AIM_FILE.relative_to(ISZE) if AIM_FILE.is_relative_to(ISZE) else AIM_FILE
+    for s in SOURCES:
+        if s.get("what", "").startswith("AIM "):
+            s["path"] = str(rel)
+            if AIM_RELEASE is not None:
+                s["release"] = (f"classification release {AIM_RELEASE['release_id']} "
+                                f"({AIM_RELEASE['status']}, sha256 {AIM_RELEASE['sha256'][:12]})")
+    log(f"   AIM tree: {rel}" + (f"  [release {AIM_RELEASE['release_id']} "
+                                  f"{AIM_RELEASE['status']} {AIM_RELEASE['sha256'][:12]}]"
+                                  if AIM_RELEASE else "  [--aim-file override, not release-checked]"))
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--db", required=True, choices=["PORTUGAL", "ALL"])
+    ap.add_argument("--staged", action="store_true", help="write <page>_staged.html and VERIFY_*_staged beside the live ones; no opener; live page untouched")
+    ap.add_argument("--aim-file", default=None, help="AIM tree CSV to use instead of the approved-release export (comparison runs only)")
     args = ap.parse_args(argv)
     run = args.db
     dbs = ["PORTUGAL"] if run == "PORTUGAL" else sorted(SELLOUT.keys())
     log(f"== AIM deep dive, run {run}, distributors: {', '.join(dbs)}")
 
+    global SUFFIX
+    SUFFIX = "_staged" if args.staged else ""
     try:
+        resolve_aim_file(args.aim_file)
         for p, what in ((AIM_FILE, "AIM tree"), (PARTS_FILE, "PMS catalog"),
                         (DEMAND_FILE, "PMS demand"), (PRICE_FILE, "price list"),
                         (BVP_FILE, "Genuine/BVP list"), (DIM_FILE, "distributor dimension"),
@@ -1057,25 +1096,32 @@ def main(argv=None) -> int:
         payload = build_payload(run, dims, pn_dim, pres, demand, reg, recon, meta, dealer_cells)
 
         html = render_html(payload, run)
-        out = DASH / f"ISZE_AIM_DB_DLR_Deep_Dive_{run}.html"
+        # staged pages go one folder down (sales/_staged/): sync_to_deploys.ps1 only walks one
+        # level, so a staged page can never be flattened into the deploy mirror by accident.
+        out = (DASH / "_staged" if SUFFIX else DASH) / f"ISZE_AIM_DB_DLR_Deep_Dive_{run}{SUFFIX}.html"
+        out.parent.mkdir(exist_ok=True)
         out.write_text(html, encoding="utf-8")
         size = out.stat().st_size
         log(f"   wrote {out.name}  {size / 1024 / 1024:.2f} MB")
 
         cmd = DASH / f"OPEN_ISZE_AIM_DB_DLR_Deep_Dive_{run}.cmd"
-        cmd.write_bytes((f'@echo off\nstart "" "%~dp0{out.name}"\n')
-                        .replace("\n", "\r\n").encode("ascii"))
-        log(f"   wrote {cmd.name} (CRLF, opens {out.name})")
+        if SUFFIX:
+            log(f"   staged run: opener {cmd.name} left untouched")
+        else:
+            cmd.write_bytes((f'@echo off\nstart "" "%~dp0{out.name}"\n')
+                            .replace("\n", "\r\n").encode("ascii"))
+            log(f"   wrote {cmd.name} (CRLF, opens {out.name})")
 
         # re-run the checks now the artefact exists, so the size lands in the report
         checks = build_checks(run, facts, billing, sellout, recon, dims, doc_excl,
                               scope_drop, pn_dim, pres, html_bytes=size,
                               billing_all=billing_all, sellout_all=sellout_all)
         extra = {"coverage": coverage, "excluded": excluded,
-                 "files": {"html": str(out), "opener": str(cmd)},
+                 "files": {"html": str(out), "opener": None if SUFFIX else str(cmd)},
+                 "aim_tree": {"file": str(AIM_FILE), "release": AIM_RELEASE},
                  "html_mb": round(size / 1024 / 1024, 2)}
         doc, failed = write_verify(run, checks, extra)
-        log(f"   wrote VERIFY_{run}.md and VERIFY_{run}.json "
+        log(f"   wrote VERIFY_{run}{SUFFIX}.md and VERIFY_{run}{SUFFIX}.json "
             f"({doc['passed']} pass, {doc['failed']} fail)")
         log(f"== {run} done")
         return 0

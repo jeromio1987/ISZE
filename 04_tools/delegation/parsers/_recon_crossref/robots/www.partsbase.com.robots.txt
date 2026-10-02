@@ -1,0 +1,217 @@
+# fetched 2026-10-01 21:52 UA=ISZE-parts-research/1.0 (+aftersales analytics; contact via IML) status=200
+#robots.txt v2.1 august 2026
+# Root file for https://www.partsbase.com
+# Adds explicit AI crawler groups (AB#202858, AB#209163)
+#
+# The v2.0 (april 2026) rule set is preserved verbatim. Nothing was removed.
+# The only change is the addition of the AI crawler groups required by the PBI.
+#
+# DO NOT "SIMPLIFY" THE AI GROUPS BELOW:
+# A crawler that matches a specific "User-agent" group ignores the
+# "User-agent: *" group entirely (RFC 9309 2.2.1). Each AI group therefore
+# repeats the same rule set as "*". Collapsing a group to a bare "Allow: /"
+# would let that bot crawl the private routes (/dashboard, /user/*, ...) and
+# the duplicate-content URLs (/parts/*;*.html, /*?*, /parts/*_low.html$).
+
+User-agent: *
+Allow: *
+Allow: /parts/*.html$
+Allow: /mro/*.html$
+Disallow: /parts/*;*.html
+Disallow: /mro/*;*.html
+Disallow: /parts/*.html?*
+Disallow: /mro/*.html?*
+Disallow: /parts/*_low.html$
+Disallow: /*?*
+Disallow: /parts-sitemap-*.xml
+Disallow: /landing/training?$
+Disallow: /dashboard
+Disallow: /search
+Disallow: /searchResults
+Disallow: /buyers/*
+Disallow: /sellers/*
+Disallow: /governmentData/*
+Disallow: /ourMembers
+Disallow: /user/*
+
+
+# AI crawlers (AEO/LLMO) - AB#202858
+
+# --- OpenAI - training crawler ---
+User-agent: GPTBot
+Allow: *
+Allow: /parts/*.html$
+Allow: /mro/*.html$
+Disallow: /parts/*;*.html
+Disallow: /mro/*;*.html
+Disallow: /parts/*.html?*
+Disallow: /mro/*.html?*
+Disallow: /parts/*_low.html$
+Disallow: /*?*
+Disallow: /parts-sitemap-*.xml
+Disallow: /landing/training?$
+Disallow: /dashboard
+Disallow: /search
+Disallow: /searchResults
+Disallow: /buyers/*
+Disallow: /sellers/*
+Disallow: /governmentData/*
+Disallow: /ourMembers
+Disallow: /user/*
+
+# --- OpenAI - search index ---
+User-agent: OAI-SearchBot
+Allow: *
+Allow: /parts/*.html$
+Allow: /mro/*.html$
+Disallow: /parts/*;*.html
+Disallow: /mro/*;*.html
+Disallow: /parts/*.html?*
+Disallow: /mro/*.html?*
+Disallow: /parts/*_low.html$
+Disallow: /*?*
+Disallow: /parts-sitemap-*.xml
+Disallow: /landing/training?$
+Disallow: /dashboard
+Disallow: /search
+Disallow: /searchResults
+Disallow: /buyers/*
+Disallow: /sellers/*
+Disallow: /governmentData/*
+Disallow: /ourMembers
+Disallow: /user/*
+
+# --- OpenAI - user-initiated browsing ---
+User-agent: ChatGPT-User
+Allow: *
+Allow: /parts/*.html$
+Allow: /mro/*.html$
+Disallow: /parts/*;*.html
+Disallow: /mro/*;*.html
+Disallow: /parts/*.html?*
+Disallow: /mro/*.html?*
+Disallow: /parts/*_low.html$
+Disallow: /*?*
+Disallow: /parts-sitemap-*.xml
+Disallow: /landing/training?$
+Disallow: /dashboard
+Disallow: /search
+Disallow: /searchResults
+Disallow: /buyers/*
+Disallow: /sellers/*
+Disallow: /governmentData/*
+Disallow: /ourMembers
+Disallow: /user/*
+
+# --- Anthropic - training / index crawler ---
+User-agent: ClaudeBot
+Allow: *
+Allow: /parts/*.html$
+Allow: /mro/*.html$
+Disallow: /parts/*;*.html
+Disallow: /mro/*;*.html
+Disallow: /parts/*.html?*
+Disallow: /mro/*.html?*
+Disallow: /parts/*_low.html$
+Disallow: /*?*
+Disallow: /parts-sitemap-*.xml
+Disallow: /landing/training?$
+Disallow: /dashboard
+Disallow: /search
+Disallow: /searchResults
+Disallow: /buyers/*
+Disallow: /sellers/*
+Disallow: /governmentData/*
+Disallow: /ourMembers
+Disallow: /user/*
+
+# --- Anthropic - user-initiated browsing ---
+User-agent: Claude-User
+Allow: *
+Allow: /parts/*.html$
+Allow: /mro/*.html$
+Disallow: /parts/*;*.html
+Disallow: /mro/*;*.html
+Disallow: /parts/*.html?*
+Disallow: /mro/*.html?*
+Disallow: /parts/*_low.html$
+Disallow: /*?*
+Disallow: /parts-sitemap-*.xml
+Disallow: /landing/training?$
+Disallow: /dashboard
+Disallow: /search
+Disallow: /searchResults
+Disallow: /buyers/*
+Disallow: /sellers/*
+Disallow: /governmentData/*
+Disallow: /ourMembers
+Disallow: /user/*
+
+# --- Perplexity - search index ---
+User-agent: PerplexityBot
+Allow: *
+Allow: /parts/*.html$
+Allow: /mro/*.html$
+Disallow: /parts/*;*.html
+Disallow: /mro/*;*.html
+Disallow: /parts/*.html?*
+Disallow: /mro/*.html?*
+Disallow: /parts/*_low.html$
+Disallow: /*?*
+Disallow: /parts-sitemap-*.xml
+Disallow: /landing/training?$
+Disallow: /dashboard
+Disallow: /search
+Disallow: /searchResults
+Disallow: /buyers/*
+Disallow: /sellers/*
+Disallow: /governmentData/*
+Disallow: /ourMembers
+Disallow: /user/*
+
+# --- Google - Gemini / AI training token ---
+User-agent: Google-Extended
+Allow: *
+Allow: /parts/*.html$
+Allow: /mro/*.html$
+Disallow: /parts/*;*.html
+Disallow: /mro/*;*.html
+Disallow: /parts/*.html?*
+Disallow: /mro/*.html?*
+Disallow: /parts/*_low.html$
+Disallow: /*?*
+Disallow: /parts-sitemap-*.xml
+Disallow: /landing/training?$
+Disallow: /dashboard
+Disallow: /search
+Disallow: /searchResults
+Disallow: /buyers/*
+Disallow: /sellers/*
+Disallow: /governmentData/*
+Disallow: /ourMembers
+Disallow: /user/*
+
+# --- Apple - AI training token ---
+User-agent: Applebot-Extended
+Allow: *
+Allow: /parts/*.html$
+Allow: /mro/*.html$
+Disallow: /parts/*;*.html
+Disallow: /mro/*;*.html
+Disallow: /parts/*.html?*
+Disallow: /mro/*.html?*
+Disallow: /parts/*_low.html$
+Disallow: /*?*
+Disallow: /parts-sitemap-*.xml
+Disallow: /landing/training?$
+Disallow: /dashboard
+Disallow: /search
+Disallow: /searchResults
+Disallow: /buyers/*
+Disallow: /sellers/*
+Disallow: /governmentData/*
+Disallow: /ourMembers
+Disallow: /user/*
+
+#Sitemaps
+Sitemap: https://www.partsbase.com/sitemap.xml.gz

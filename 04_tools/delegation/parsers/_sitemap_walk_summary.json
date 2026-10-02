@@ -1,0 +1,638 @@
+{
+ "built_at": "2026-10-01T20:02:00Z",
+ "module": "04_tools/delegation/parsers/walk_sitemaps.py",
+ "bot_identity": "ISZE-parts-research/1.0 (+aftersales analytics; contact via IML)",
+ "universe": {
+  "part_numbers": 16505,
+  "seed_tierA": 487,
+  "competitor_keys": 205,
+  "sources": [
+   "04_tools\\delegation\\state\\refresh_tiers.csv",
+   "04_tools\\aftermarket_intelligence\\state\\seed_reach_tierA.csv",
+   "04_tools\\aftermarket_intelligence\\state\\crossref_graded.csv (confirmed/likely; Eucon-sourced)"
+  ]
+ },
+ "fetch": {
+  "cache_hits": 37
+ },
+ "outputs": {
+  "candidates": "04_tools\\price_ledger\\page_manifest_candidates.csv",
+  "detail": "04_tools\\delegation\\parsers\\_sitemap_walk_candidates_detail.csv",
+  "sitemap_cache": "01_data\\90_INBOX\\scrape_targets\\_probe\\sitemap_cache"
+ },
+ "sites": [
+  {
+   "site": "omega",
+   "base": "https://omegaspareparts.com",
+   "page_kind": "product",
+   "robots": "read (cache)",
+   "crawl_delay": null,
+   "interval_used_s": 5.0,
+   "sitemaps_named_in_robots": [
+    "https://omegaspareparts.com/sitemap_index.xml"
+   ],
+   "sitemaps_walked": [
+    {
+     "url": "https://omegaspareparts.com/sitemap_index.xml",
+     "kind": "index",
+     "locs": 66,
+     "via": "cache"
+    },
+    {
+     "url": "https://omegaspareparts.com/product-sitemap.xml",
+     "kind": "urlset",
+     "locs": 1001,
+     "via": "cache"
+    },
+    {
+     "url": "https://omegaspareparts.com/product-sitemap2.xml",
+     "kind": "urlset",
+     "locs": 1000,
+     "via": "cache"
+    },
+    {
+     "url": "https://omegaspareparts.com/product-sitemap3.xml",
+     "kind": "urlset",
+     "locs": 1000,
+     "via": "cache"
+    },
+    {
+     "url": "https://omegaspareparts.com/product-sitemap4.xml",
+     "kind": "urlset",
+     "locs": 763,
+     "via": "cache"
+    }
+   ],
+   "sitemaps_skipped": [
+    "https://omegaspareparts.com/post-sitemap.xml",
+    "https://omegaspareparts.com/page-sitemap.xml",
+    "https://omegaspareparts.com/attachment-sitemap.xml",
+    "https://omegaspareparts.com/attachment-sitemap2.xml",
+    "https://omegaspareparts.com/attachment-sitemap3.xml",
+    "https://omegaspareparts.com/attachment-sitemap4.xml",
+    "https://omegaspareparts.com/attachment-sitemap5.xml",
+    "https://omegaspareparts.com/attachment-sitemap6.xml",
+    "https://omegaspareparts.com/attachment-sitemap7.xml",
+    "https://omegaspareparts.com/attachment-sitemap8.xml"
+   ],
+   "sitemaps_failed": [],
+   "urls_seen": 3764,
+   "product_urls": 3763,
+   "listing_urls": 0,
+   "isuzu_keyword_urls": 3,
+   "matched_urls": 1,
+   "matched_part_numbers": 1,
+   "matched_tierA": 0,
+   "matched_in_seed_tierA": 0,
+   "match_kinds": {
+    "pn_exact": 1
+   },
+   "robots_disallowed_candidates": 0,
+   "robots_disallow_rules": 7,
+   "pn_shaped_outside_universe": 0,
+   "already_in_page_manifest": 0,
+   "notes": [],
+   "sitemaps_skipped_count": 62,
+   "walk_seconds": 0.6,
+   "prove_stats": {
+    "fetched": 0,
+    "cached": 1,
+    "refused": 0,
+    "errors": 0
+   },
+   "candidates": 1,
+   "proofs": [
+    {
+     "url": "https://omegaspareparts.com/product/8980806782-isuzu-d-max-4x4-pick-up-drive-half-axle-shaft-rear-2012-onward/",
+     "expected_part_no": "8980806782",
+     "fetched": true,
+     "rows": 2,
+     "rows_with_price": 2,
+     "expected_pn_in_rows": true,
+     "error": null
+    }
+   ]
+  },
+  {
+   "site": "geparden",
+   "base": "https://geparden.no",
+   "page_kind": "product",
+   "robots": "read (cache)",
+   "crawl_delay": null,
+   "interval_used_s": 5.0,
+   "sitemaps_named_in_robots": [
+    "https://geparden.no/sitemap.xml"
+   ],
+   "sitemaps_walked": [
+    {
+     "url": "https://geparden.no/sitemap.xml",
+     "kind": "index",
+     "locs": 48,
+     "via": "cache"
+    },
+    {
+     "url": "https://geparden.no/sitemaps/products-1.xml",
+     "kind": "urlset",
+     "locs": 20000,
+     "via": "cache"
+    },
+    {
+     "url": "https://geparden.no/sitemaps/products-2.xml",
+     "kind": "urlset",
+     "locs": 20000,
+     "via": "cache"
+    },
+    {
+     "url": "https://geparden.no/sitemaps/products-3.xml",
+     "kind": "urlset",
+     "locs": 20000,
+     "via": "cache"
+    },
+    {
+     "url": "https://geparden.no/sitemaps/products-4.xml",
+     "kind": "urlset",
+     "locs": 20000,
+     "via": "cache"
+    },
+    {
+     "url": "https://geparden.no/sitemaps/products-5.xml",
+     "kind": "urlset",
+     "locs": 8905,
+     "via": "cache"
+    }
+   ],
+   "sitemaps_skipped": [
+    "https://geparden.no/sitemaps/pages.xml",
+    "https://geparden.no/sitemaps/categories.xml",
+    "https://geparden.no/sitemaps/cars-1.xml",
+    "https://geparden.no/sitemaps/cars-2.xml",
+    "https://geparden.no/sitemaps/cars-3.xml",
+    "https://geparden.no/sitemaps/cars-4.xml",
+    "https://geparden.no/sitemaps/cars-5.xml",
+    "https://geparden.no/sitemaps/cars-6.xml",
+    "https://geparden.no/sitemaps/cars-7.xml",
+    "https://geparden.no/sitemaps/cars-8.xml"
+   ],
+   "sitemaps_failed": [],
+   "urls_seen": 88905,
+   "product_urls": 88905,
+   "listing_urls": 0,
+   "isuzu_keyword_urls": 240,
+   "matched_urls": 4,
+   "matched_part_numbers": 4,
+   "matched_tierA": 2,
+   "matched_in_seed_tierA": 2,
+   "match_kinds": {
+    "pn_slug_isu": 4
+   },
+   "robots_disallowed_candidates": 0,
+   "robots_disallow_rules": 10,
+   "pn_shaped_outside_universe": 10,
+   "already_in_page_manifest": 2,
+   "notes": [],
+   "sitemaps_skipped_count": 43,
+   "walk_seconds": 6.6,
+   "prove_stats": {
+    "fetched": 0,
+    "cached": 4,
+    "refused": 0,
+    "errors": 0
+   },
+   "candidates": 4,
+   "proofs": [
+    {
+     "url": "https://geparden.no/products/oljefilter-isuzu-d-max-ii-2-0-2-5-3-0-td-2011-2019-genuine-oil-filter-isuzu-motors-limited-p-isu5876150000",
+     "expected_part_no": "5876150000",
+     "fetched": true,
+     "rows": 1,
+     "rows_with_price": 1,
+     "expected_pn_in_rows": true,
+     "error": null
+    },
+    {
+     "url": "https://geparden.no/products/oljefilter-isuzu-d-max-iii-1-9-tdi-2019-genuine-oil-filter-isuzu-motors-limited-p-isu8982705240",
+     "expected_part_no": "8982705240",
+     "fetched": true,
+     "rows": 1,
+     "rows_with_price": 1,
+     "expected_pn_in_rows": true,
+     "error": null
+    },
+    {
+     "url": "https://geparden.no/products/giroljefilter-isuzu-d-max-ii-iii-2015-4jh1-automatic-hydraulisk-filter-genuine-automatic-ttransmission-filter-isuzu-motors-limited-p-isu8983417890",
+     "expected_part_no": "8983417890",
+     "fetched": true,
+     "rows": 1,
+     "rows_with_price": 1,
+     "expected_pn_in_rows": true,
+     "error": null
+    },
+    {
+     "url": "https://geparden.no/products/senterkopp-isuzu-d-max-1-stk-isuzu-motors-limited-p-isu8981073183",
+     "expected_part_no": "8981073183",
+     "fetched": true,
+     "rows": 1,
+     "rows_with_price": 1,
+     "expected_pn_in_rows": true,
+     "error": null
+    }
+   ]
+  },
+  {
+   "site": "mekster",
+   "base": "https://www.mekster.no",
+   "page_kind": "product",
+   "robots": "read (cache)",
+   "crawl_delay": 5.0,
+   "interval_used_s": 5.0,
+   "sitemaps_named_in_robots": [
+    "https://www.mekster.no/media/no_categories_cms_google_sitemap.xml",
+    "https://www.mekster.no/media/no_products_google_sitemap_index.xml"
+   ],
+   "sitemaps_walked": [
+    {
+     "url": "https://www.mekster.no/media/no_categories_cms_google_sitemap.xml",
+     "kind": "urlset",
+     "locs": 837,
+     "via": "cache"
+    },
+    {
+     "url": "https://www.mekster.no/media/no_products_google_sitemap_index.xml",
+     "kind": "index",
+     "locs": 5,
+     "via": "cache"
+    },
+    {
+     "url": "https://www.mekster.no/media/no_products_google_sitemap_1.xml",
+     "kind": "urlset",
+     "locs": 50000,
+     "via": "cache"
+    },
+    {
+     "url": "https://www.mekster.no/media/no_products_google_sitemap_2.xml",
+     "kind": "urlset",
+     "locs": 50000,
+     "via": "cache"
+    },
+    {
+     "url": "https://www.mekster.no/media/no_products_google_sitemap_3.xml",
+     "kind": "urlset",
+     "locs": 50000,
+     "via": "cache"
+    },
+    {
+     "url": "https://www.mekster.no/media/no_products_google_sitemap_4.xml",
+     "kind": "urlset",
+     "locs": 50000,
+     "via": "cache"
+    },
+    {
+     "url": "https://www.mekster.no/media/no_products_google_sitemap_5.xml",
+     "kind": "urlset",
+     "locs": 29058,
+     "via": "cache"
+    }
+   ],
+   "sitemaps_skipped": [],
+   "sitemaps_failed": [],
+   "urls_seen": 229895,
+   "product_urls": 229064,
+   "listing_urls": 0,
+   "isuzu_keyword_urls": 15,
+   "matched_urls": 4,
+   "matched_part_numbers": 4,
+   "matched_tierA": 3,
+   "matched_in_seed_tierA": 3,
+   "match_kinds": {
+    "crossref": 4
+   },
+   "robots_disallowed_candidates": 0,
+   "robots_disallow_rules": 6,
+   "pn_shaped_outside_universe": 0,
+   "already_in_page_manifest": 0,
+   "notes": [],
+   "sitemaps_skipped_count": 0,
+   "walk_seconds": 8.5,
+   "prove_stats": {
+    "fetched": 0,
+    "cached": 4,
+    "refused": 0,
+    "errors": 0
+   },
+   "candidates": 4,
+   "proofs": [
+    {
+     "url": "https://www.mekster.no/blueprint-kupefilter-blue-print-adbp250064-834943.html",
+     "expected_part_no": "8975554500",
+     "fetched": true,
+     "rows": 1,
+     "rows_with_price": 1,
+     "expected_pn_in_rows": false,
+     "error": null,
+     "matched_token_in_rows": true,
+     "parser_part_nos": []
+    },
+    {
+     "url": "https://www.mekster.no/bosch-spridare-0445110980-865030.html",
+     "expected_part_no": "8984890190",
+     "fetched": true,
+     "rows": 1,
+     "rows_with_price": 1,
+     "expected_pn_in_rows": false,
+     "error": null,
+     "matched_token_in_rows": true,
+     "parser_part_nos": [
+      "0445110980"
+     ]
+    },
+    {
+     "url": "https://www.mekster.no/monroe-stotdemper-gasstrykk-d7033s-826107.html",
+     "expected_part_no": "8979470163",
+     "fetched": true,
+     "rows": 1,
+     "rows_with_price": 1,
+     "expected_pn_in_rows": false,
+     "error": null,
+     "matched_token_in_rows": true,
+     "parser_part_nos": []
+    },
+    {
+     "url": "https://www.mekster.no/bosch-bremseklosser-foran-0-986-424-916-801130.html",
+     "expected_part_no": "8980791040",
+     "fetched": true,
+     "rows": 1,
+     "rows_with_price": 1,
+     "expected_pn_in_rows": false,
+     "error": null,
+     "matched_token_in_rows": true,
+     "parser_part_nos": []
+    }
+   ]
+  },
+  {
+   "site": "tungen",
+   "base": "https://www.tungen-bil.no",
+   "page_kind": "listing table",
+   "robots": "read (cache)",
+   "crawl_delay": null,
+   "interval_used_s": 5.0,
+   "sitemaps_named_in_robots": [
+    "https://www.tungen-bil.no/sitemap_index.xml"
+   ],
+   "sitemaps_walked": [
+    {
+     "url": "https://www.tungen-bil.no/sitemap_index.xml",
+     "kind": "index",
+     "locs": 6,
+     "via": "cache"
+    },
+    {
+     "url": "https://www.tungen-bil.no/product-sitemap.xml",
+     "kind": "urlset",
+     "locs": 8,
+     "via": "cache"
+    },
+    {
+     "url": "https://www.tungen-bil.no/product_cat-sitemap.xml",
+     "kind": "urlset",
+     "locs": 9,
+     "via": "cache"
+    }
+   ],
+   "sitemaps_skipped": [
+    "https://www.tungen-bil.no/post-sitemap.xml",
+    "https://www.tungen-bil.no/page-sitemap.xml",
+    "https://www.tungen-bil.no/category-sitemap.xml",
+    "https://www.tungen-bil.no/author-sitemap.xml"
+   ],
+   "sitemaps_failed": [],
+   "urls_seen": 17,
+   "product_urls": 0,
+   "listing_urls": 1,
+   "isuzu_keyword_urls": 2,
+   "matched_urls": 0,
+   "matched_part_numbers": 0,
+   "matched_tierA": 0,
+   "matched_in_seed_tierA": 0,
+   "match_kinds": {
+    "listing_page": 1
+   },
+   "robots_disallowed_candidates": 0,
+   "robots_disallow_rules": 6,
+   "pn_shaped_outside_universe": 0,
+   "already_in_page_manifest": 1,
+   "notes": [],
+   "sitemaps_skipped_count": 4,
+   "walk_seconds": 0.0,
+   "prove_stats": {
+    "fetched": 0,
+    "cached": 1,
+    "refused": 0,
+    "errors": 0
+   },
+   "candidates": 1,
+   "proofs": [
+    {
+     "url": "https://www.tungen-bil.no/nettbutikk/eldre-originale-bildeler/isuzu/isuzu-eldre-originale-deler/",
+     "expected_part_no": "",
+     "fetched": true,
+     "rows": 1,
+     "rows_with_price": 1,
+     "expected_pn_in_rows": null,
+     "error": null
+    }
+   ]
+  },
+  {
+   "site": "autoline",
+   "base": "https://autoline.dk",
+   "page_kind": "listing (JSON-LD ItemList)",
+   "robots": "read (cache)",
+   "crawl_delay": null,
+   "interval_used_s": 5.0,
+   "sitemaps_named_in_robots": [
+    "https://autoline.dk/sitemap.xml"
+   ],
+   "sitemaps_walked": [
+    {
+     "url": "https://autoline.dk/sitemap.xml",
+     "kind": "index",
+     "locs": 151,
+     "via": "cache"
+    },
+    {
+     "url": "https://autoline.dk/sitemap-advert-lists-1.xml",
+     "kind": "urlset",
+     "locs": 20001,
+     "via": "cache"
+    },
+    {
+     "url": "https://autoline.dk/sitemap-advert-lists-2.xml",
+     "kind": "urlset",
+     "locs": 20001,
+     "via": "cache"
+    },
+    {
+     "url": "https://autoline.dk/sitemap-advert-lists-3.xml",
+     "kind": "urlset",
+     "locs": 20001,
+     "via": "cache"
+    },
+    {
+     "url": "https://autoline.dk/sitemap-advert-lists-4.xml",
+     "kind": "urlset",
+     "locs": 1400,
+     "via": "cache"
+    },
+    {
+     "url": "https://autoline.dk/sitemap-adverts-1.xml",
+     "kind": "urlset",
+     "locs": 2169,
+     "via": "cache"
+    },
+    {
+     "url": "https://autoline.dk/sitemap-adverts-2.xml",
+     "kind": "urlset",
+     "locs": 1893,
+     "via": "cache"
+    }
+   ],
+   "sitemaps_skipped": [
+    "https://autoline.dk/sitemap-1.xml",
+    "https://autoline.dk/sitemap-adverts-3.xml",
+    "https://autoline.dk/sitemap-adverts-4.xml",
+    "https://autoline.dk/sitemap-adverts-5.xml",
+    "https://autoline.dk/sitemap-adverts-6.xml",
+    "https://autoline.dk/sitemap-adverts-7.xml",
+    "https://autoline.dk/sitemap-adverts-8.xml",
+    "https://autoline.dk/sitemap-adverts-9.xml",
+    "https://autoline.dk/sitemap-adverts-10.xml",
+    "https://autoline.dk/sitemap-adverts-11.xml"
+   ],
+   "sitemaps_failed": [],
+   "urls_seen": 65465,
+   "product_urls": 3689,
+   "listing_urls": 2,
+   "isuzu_keyword_urls": 109,
+   "matched_urls": 0,
+   "matched_part_numbers": 0,
+   "matched_tierA": 0,
+   "matched_in_seed_tierA": 0,
+   "match_kinds": {
+    "listing_page": 2
+   },
+   "robots_disallowed_candidates": 0,
+   "robots_disallow_rules": 99,
+   "pn_shaped_outside_universe": 0,
+   "already_in_page_manifest": 1,
+   "notes": [],
+   "sitemaps_skipped_count": 145,
+   "walk_seconds": 0.6,
+   "prove_stats": {
+    "fetched": 0,
+    "cached": 2,
+    "refused": 0,
+    "errors": 0
+   },
+   "candidates": 2,
+   "proofs": [
+    {
+     "url": "https://autoline.dk/-/reservedele-til-karrosseri/Isuzu--c466tm2615",
+     "expected_part_no": "",
+     "fetched": true,
+     "rows": 0,
+     "rows_with_price": 0,
+     "expected_pn_in_rows": null,
+     "error": "parse raised ParseError: recognised the ItemList and the listing blocks but found no Isuzu part numbers in any title"
+    },
+    {
+     "url": "https://autoline.dk/-/reservedele/Isuzu--c456tm2615",
+     "expected_part_no": "",
+     "fetched": true,
+     "rows": 10,
+     "rows_with_price": 2,
+     "expected_pn_in_rows": null,
+     "error": null
+    }
+   ]
+  },
+  {
+   "site": "amayama",
+   "base": "https://www.amayama.com",
+   "page_kind": "product",
+   "robots": "read (cache)",
+   "crawl_delay": null,
+   "interval_used_s": 5.0,
+   "sitemaps_named_in_robots": [],
+   "sitemaps_walked": [
+    {
+     "url": "https://www.amayama.com/sitemap.xml",
+     "kind": "urlset",
+     "locs": 3080,
+     "via": "cache"
+    }
+   ],
+   "sitemaps_skipped": [],
+   "sitemaps_failed": [],
+   "urls_seen": 3080,
+   "product_urls": 0,
+   "listing_urls": 0,
+   "isuzu_keyword_urls": 0,
+   "matched_urls": 0,
+   "matched_part_numbers": 0,
+   "matched_tierA": 0,
+   "matched_in_seed_tierA": 0,
+   "match_kinds": {},
+   "robots_disallowed_candidates": 0,
+   "robots_disallow_rules": 37,
+   "pn_shaped_outside_universe": 0,
+   "already_in_page_manifest": 0,
+   "notes": [
+    "robots.txt names no sitemap; tried fallback ['/sitemap.xml']"
+   ],
+   "sitemaps_skipped_count": 0,
+   "walk_seconds": 0.0,
+   "candidates": 0,
+   "proofs": []
+  },
+  {
+   "site": "ks",
+   "base": "https://www.ks-international.com",
+   "page_kind": "search results (parser reads catalogsearch cards)",
+   "robots": "read (cache)",
+   "crawl_delay": null,
+   "interval_used_s": 5.0,
+   "sitemaps_named_in_robots": [
+    "https://www.ks-international.com/sitemap.xml"
+   ],
+   "sitemaps_walked": [
+    {
+     "url": "https://www.ks-international.com/sitemap.xml",
+     "kind": "urlset",
+     "locs": 19724,
+     "via": "cache"
+    }
+   ],
+   "sitemaps_skipped": [],
+   "sitemaps_failed": [],
+   "urls_seen": 19724,
+   "product_urls": 157,
+   "listing_urls": 0,
+   "isuzu_keyword_urls": 6486,
+   "matched_urls": 0,
+   "matched_part_numbers": 0,
+   "matched_tierA": 0,
+   "matched_in_seed_tierA": 0,
+   "match_kinds": {},
+   "robots_disallowed_candidates": 0,
+   "robots_disallow_rules": 0,
+   "pn_shaped_outside_universe": 0,
+   "already_in_page_manifest": 0,
+   "notes": [],
+   "sitemaps_skipped_count": 0,
+   "walk_seconds": 0.3,
+   "candidates": 0,
+   "proofs": []
+  }
+ ]
+}

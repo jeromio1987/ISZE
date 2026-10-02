@@ -91,14 +91,40 @@ def main() -> int:
         print(f"wrote {REPORT.name}")
         return 0
 
+    # LIKE-FOR-LIKE, added 2026-10-01 (claude-opus, Tier A pass 2). One part at one
+    # source is often several different offers on the same day: Amayama quotes the same
+    # number from several warehouses (1313100120 at 123.34 / 206.43 / 269.18 USD), and a
+    # KS search returns several SKUs (an aftermarket bearing and a genuine clutch kit under
+    # one searched number). The old first-row-vs-last-row comparison would have reported
+    # the gap between two warehouses, or two different articles, as a price movement.
+    # A series is now one OFFER: the shop's own SKU when it differs from our number,
+    # otherwise the offer text with any printed price removed. A date carrying the same
+    # offer twice is ambiguous and is listed, never compared.
+    import re as _re
+
+    def offer_of(r) -> str:
+        cpn = str(r.get("competitor_pn") or "")
+        if cpn and cpn != str(r["part_no"]) and cpn.lower() not in ("none", "nan"):
+            return f"sku:{r.get('competitor_brand') or ''}:{cpn}"
+        desc = str(r.get("description") or "")
+        desc = _re.sub(r"inc-VAT\s*\S*\d[\d.,]*", "inc-VAT", desc)
+        return f"text:{desc.strip()}"
+
+    d["offer"] = d.apply(offer_of, axis=1)
+    okey = key + ["offer"]
+    ambiguous = []
     rows = []
-    for k, grp in g:
-        if len(grp) < 2:
+    for k, grp in d.groupby(okey):
+        if grp["observed_at"].nunique() < 2:
+            continue
+        per_day = grp.groupby("observed_at").size()
+        if (per_day > 1).any():
+            ambiguous.append({"part_no": k[0], "source": k[1], "price_type": k[2],
+                              "currency": k[3], "offer": k[4][:90],
+                              "dates": ";".join(f"{dt}x{n}" for dt, n in per_day.items())})
             continue
         grp = grp.sort_values("observed_at")
         first, last = grp.iloc[0], grp.iloc[-1]
-        if first["observed_at"] == last["observed_at"]:
-            continue
         if not first["price"] or first["price"] <= 0:
             continue
         pct = 100 * (last["price"] / first["price"] - 1)
@@ -116,7 +142,14 @@ def main() -> int:
             "n_observations": int(len(grp)),
             "description": (first.get("description") or "")[:90],
             "source_url": first.get("source_url"),
+            "offer": k[4][:120],
+            "last_source_url": last.get("source_url"),
         })
+    print(f"like-for-like series compared : {len(rows):,}")
+    print(f"ambiguous series (same offer twice on one date, not compared): {len(ambiguous):,}")
+    AMBIG = OUT.with_name("price_movement_ambiguous.csv")
+    pd.DataFrame(ambiguous, columns=["part_no", "source", "price_type", "currency", "offer",
+                                     "dates"]).to_csv(AMBIG, index=False)
 
     if a.min_pct:
         rows = [r for r in rows if abs(r["change_pct"]) >= a.min_pct]
