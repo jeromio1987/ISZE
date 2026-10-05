@@ -1248,8 +1248,12 @@ function viewErrorPanel(view,err){
   ${stack?`<p class="small"><button class="linkbutton" id="error-detail">Technical detail for a developer</button></p><pre class="small" id="error-detail-body" style="display:none;white-space:pre-wrap">${esc(stack)}</pre>`:''}</div>`;
 }
 function collectReview(c){
+  /* A blank next-update date is `null`, not the empty string. `''` fails the
+     record's own check ("next_update_due must be YYYY-MM-DD or null") on the
+     second save of a case with no due date, so the field is normalised here. */
+  const due=($('#a-due')?$('#a-due').value:'').trim();
   return {owner_role:$('#a-owner')?$('#a-owner').value:null,
-    next_update_due:$('#a-due')?$('#a-due').value:null,
+    next_update_due:due===''?null:due,
     state:$('#a-status')?$('#a-status').value:'draft',
     next_action:$('#a-next')?$('#a-next').value:null,
     explanation:$('#a-explanation')?$('#a-explanation').value:'',
@@ -1551,6 +1555,8 @@ window.AIMPricing={data:D,engine:E,export:X,candidates:C,cases:repo,contracts:CT
   assumptions:()=>assumptionTrace(),
   fieldIssues:()=>fieldIssues(),
   sensitivity:()=>store.sensitivity(state.caseId),
+  /* UX-08. Older local notes migrate onto an explicit legacy basis. */
+  migrateLegacyCases:()=>repo.migrateLegacyCases(),
   /* Test-only: make the tabs reachable when the shell's own tab bar is not
      rendered by the harness. It sets the one state field the router reads. */
   setView:v=>{state.view=v;},

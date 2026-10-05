@@ -389,10 +389,110 @@
       history_statement: service.history_statement,
       /* Named so a reader can see this is a facade and where the rules live. */
       authoritative_implementation: 'src/case/store.js + src/case/schema.js',
+      /* UX-08. Older local notes migrate with an explicit legacy basis, and a
+         field the older record did not carry is never invented. */
+      migrateLegacyCases: function () { return migrateLegacyCases(legacy, service); },
       _service: service,
       _adapter: adapter
     };
     return repository;
+  }
+
+  /* --------------------------------------------------------- UX-08 legacy -- */
+
+  /* The versions a current case record declares. A record written before these
+     existed is missing all three, and the migration says so rather than filling
+     them with the current values. */
+  var VERSION_FIELDS = ['schema_version', 'contract_version', 'calculation_version',
+    'source_version'];
+
+  /* Keys that only a current record may carry. Anything the older record holds
+     that is not in this list is an older field, kept under its own name and
+     reported. Nothing is dropped and nothing is renamed. */
+  var CURRENT_KEYS = [
+    'case_id', 'schema_version', 'contract_version', 'version', 'customer', 'market',
+    'part_number', 'description', 'unit', 'scope_note', 'evidence_period',
+    'offer_effective_date', 'state', 'owner_role', 'owner', 'assigned_to', 'deputy_role',
+    'escalation_route', 'next_action', 'next_update_due', 'submitted_at', 'assigned_at',
+    'acknowledged_at', 'answered_at', 'resolved_at', 'action_identifier', 'assessment',
+    'response', 'evidence_requests', 'approval_note', 'proposal', 'support', 'outcome',
+    'explanations', 'correction_of', 'scenario', 'result', 'review', 'sources', 'links',
+    'created_at', 'created_by', 'created_in', 'updated_at', 'updated_by', 'history',
+    'legacy_basis', 'legacy_keys', 'legacy_scenario_keys', 'legacy_missing_versions',
+    'legacy_basis_statement'
+  ];
+
+  /* A current record never carries these keys, so anything under one of them is
+     an older note. `legacy_note` in the fixture and any `*_note` older field are
+     reported as older notes and kept in full. */
+  function olderFieldKeys(record) {
+    var out = [];
+    Object.keys(record || {}).forEach(function (k) {
+      if (CURRENT_KEYS.indexOf(k) >= 0) return;
+      out.push(k);
+    });
+    return out.sort();
+  }
+
+  /* Migrate older local records to the current shape without inventing anything.
+     Each record is stamped with an explicit legacy basis and the list of fields
+     it did not carry; its older fields are kept under their own names. */
+  function migrateLegacyCases(legacy, service) {
+    var all = legacy.readAll();
+    var migrated = [];
+    Object.keys(all).forEach(function (id) {
+      var record = all[id];
+      if (!record || typeof record !== 'object') return;
+      var next = JSON.parse(JSON.stringify(record));
+
+      var missingVersions = VERSION_FIELDS.filter(function (k) {
+        return record[k] === undefined || record[k] === null;
+      });
+      var olderKeys = olderFieldKeys(record);
+      var olderScenarioKeys = [];
+      if (record.scenario && typeof record.scenario === 'object') {
+        olderScenarioKeys = Object.keys(record.scenario).filter(function (k) {
+          return contracts.SCENARIO_FIELDS.indexOf(k) < 0;
+        }).sort();
+      }
+
+      next.legacy_basis = true;
+      next.legacy_keys = olderKeys;
+      next.legacy_scenario_keys = olderScenarioKeys;
+      next.legacy_missing_versions = missingVersions;
+      next.legacy_basis_statement = 'This record was written before the current record shape. '
+        + 'It is kept on an explicit legacy basis rather than upgraded silently: the versions it '
+        + 'does not carry are named, and no value is invented to fill them.';
+      if (!next.updated_at) next.updated_at = record.created_at || null;
+
+      all[id] = next;
+      var preserved = olderKeys.map(function (k) {
+        return { key: k, value: record[k] };
+      }).concat(olderScenarioKeys.map(function (k) {
+        return { key: 'scenario.' + k, value: record.scenario[k] };
+      }));
+
+      migrated.push({
+        case_id: id,
+        legacy_basis: true,
+        basis_statement: next.legacy_basis_statement,
+        missing_versions: missingVersions.slice(),
+        invented: [],
+        preserved_notes: preserved,
+        legacy_keys: olderKeys,
+        previous_state: record.state || null,
+        previous_version: record.version === undefined ? null : record.version
+      });
+    });
+    legacy.writeAll(all);
+    return {
+      ok: true,
+      migrated: migrated,
+      statement: migrated.length
+        ? migrated.length + ' older local record(s) migrated onto an explicit legacy basis. '
+          + 'Missing fields are named, not invented.'
+        : 'No older local record was found; nothing to migrate.'
+    };
   }
 
   /* `CASE_STATES` is published from the shared contract, not held here. A copy
