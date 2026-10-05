@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T20:29:23Z",
+  "written_at": "2026-10-05T21:38:20Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 39,
-    "not started": 54,
+    "technically verified": 40,
+    "not started": 53,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 42,
+  "overlay_applied": 43,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -466,8 +466,12 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-02, DATA-03, DATA-04",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/data_07_reconcile.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/manifest.js:1051 (the shared bucket is disabled: if (distinct.length > 1) -> if (false), so a many-to-many row is added into every single-class total) -> DATA-07 E1: a duplicate classification mapping cannot inflate quantity or euro fails; restored -> passes",
+        "mutation src/data/manifest.js:1147 (the unmatched remainder is not counted: unmatched.rows += 1 -> += 0) -> DATA-07 E2: matched plus unmatched totals reconcile to the same permitted source scope fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
