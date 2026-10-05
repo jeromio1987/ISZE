@@ -218,7 +218,52 @@
     };
   }
 
-  var API = { makeScenarioStore: makeScenarioStore };
+  /* UX-01. One working context per view: distributor, purchasing account or
+     national scope, original part, family, source version and selected period.
+     It is built from the open case and the address only, never from the case
+     that was open before, so a national review cannot inherit a dealer selector
+     or a fleet denominator from another market. */
+  var CONTEXT_FIELDS = ['case_id', 'distributor', 'purchasing_account', 'country', 'scope',
+    'original_part', 'family', 'source_version', 'compare', 'period',
+    'dealer_selector', 'selected_dealer', 'fleet_denominator'];
+
+  function contextFor(payload, c, opts) {
+    payload = payload || {};
+    c = c || {};
+    opts = opts || {};
+    var cmp = (c.comparisons || {})[opts.compare] || null;
+    var dealerScope = c.scope === 'dealer';
+    var dealers = dealerScope && Array.isArray(c.dealers) ? c.dealers.slice() : null;
+    var hasFleet = c.fleet !== null && c.fleet !== undefined && Number.isFinite(Number(c.fleet));
+    return {
+      case_id: c.id || null,
+      distributor: c.market || null,
+      purchasing_account: c.customer || null,
+      country: c.country || null,
+      scope: dealerScope ? 'dealer' : 'national',
+      original_part: c.pn || null,
+      family: c.category || null,
+      source_version: (payload.meta && payload.meta.version) || null,
+      compare: cmp ? opts.compare : null,
+      period: cmp ? (cmp.label || null) : null,
+      dealer_selector: dealers,
+      selected_dealer: dealers && dealers.indexOf(opts.dealer) >= 0 ? opts.dealer : null,
+      fleet_denominator: hasFleet ? { value: Number(c.fleet), market: c.market || null } : null
+    };
+  }
+
+  /* One string per context, so two views can be compared for exact equality. */
+  function contextKey(ctx) {
+    ctx = ctx || {};
+    return CONTEXT_FIELDS.map(function (k) {
+      var v = ctx[k];
+      if (v === null || v === undefined) return '';
+      return typeof v === 'object' ? JSON.stringify(v) : String(v);
+    }).join('|');
+  }
+
+  var API = { makeScenarioStore: makeScenarioStore, contextFor: contextFor,
+    contextKey: contextKey, CONTEXT_FIELDS: CONTEXT_FIELDS };
   root.AIMScenario = API;
   if (typeof module === 'object' && module.exports) module.exports = API;
 })(typeof globalThis !== 'undefined' ? globalThis : this);
