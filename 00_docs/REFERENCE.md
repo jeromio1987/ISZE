@@ -43,7 +43,7 @@
 | HTML dashboard detail + inventory | `00_docs/roadmaps/html.md` |
 | Scrapers / tender programme | `00_docs/roadmaps/scrapers.md` |
 | Jarvis / tools programme | `00_docs/roadmaps/tools.md` |
-| Claude vs GPT / tier protocol | `00_docs/agent/AI_STACK.md` (full memo: `AI_Stack_Architecture_Apr2026.md`) |
+| Who does what (Claude, Cursor, ChatGPT) | `00_docs/agent/AI_STACK.md` |
 | Weekly briefs | `05_memory/briefs/` |
 | PMS pilot artefacts | `03_analytics/Isuzu/pms-pilot/` |
 | PMS OKF assessment (fig-key completeness, leakage) | `03_analytics/Isuzu/_OKF_assessment/` (moved from root 2026-07-16) |
