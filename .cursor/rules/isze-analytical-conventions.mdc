@@ -1,0 +1,47 @@
+---
+description: ISZE analysis method — executive pricing lens; margin (÷0.65) for own euros vs channel ×1.785 for aftermarket comparison only; BVP is retention, not leakage
+alwaysApply: false
+---
+
+Consolidated 2026-07-26 from three files. These are the method conventions; get one wrong and the whole analysis is rejected.
+
+## 1. Executive pricing lens — decision map, not a price table
+
+Apply BEFORE writing code or charts for any aftersales/pricing benchmark. A raw price benchmark is a thermometer; an Isuzu executive needs a pricing-action map.
+
+**The trap:** "genuine is X% more expensive than aftermarket" confirms the obvious. A relative index (Isuzu=100) has no money and no volume behind it.
+
+**The only two questions:**
+1. Where is the premium **defensible** (wide gap, customers buy genuine anyway → headroom, raise price)?
+2. Where is it **bleeding us** (gap so wide the customer defects → € at risk)?
+
+**The metric:** `price gap × demand (parts volume × UIO × service-interval frequency) × capture → € headroom / € at-risk`, per part family, per market.
+
+Design rules:
+- Offset price against volume AND capture. Fuse Eucon prices + PR00 (its "Competitive parts" flag = captive vs contested) + parts sales/R&M + UIO + service intervals.
+- Headline = decision-map quadrant, bubble = parts revenue.
+- **Quality-tier the aftermarket.** Genuine's real competitor is OE-tier (Bosch/Brembo/Textar), NOT budget (Ridex/Master Sport). Compare genuine street vs OE-tier street; report budget separately. Lumping all brands gives a meaningless ranking.
+- Per market / per distributor — pricing action happens per DB, never pan-EU blended.
+- Capture rate is the linchpin and the hardest input. Without true capture data the honest proxy is genuine-sales ÷ UIO-implied-demand, **labelled a proxy**, never invented.
+
+**Why:** Jerome rejected a v1 that ranked 155 brands on relative index — "is this what an Isuzu executive wants to see?"
+
+## 2. Channel normalization — compare at the counter
+
+ISZE list (IE40) is the **distributor invoice price**, not what the end customer pays. When comparing genuine vs aftermarket, gross genuine up through the channel to street: distributor **+40%**, then dealer **+27.5%** → **×1.785**. Always state the assumption on the chart.
+
+Markups are working assumptions — if Jerome gives updated channel margins, use those.
+
+**Do not confuse this with his other rule:** for ISZE's own € math he works with **margin, not markup** — 35% margin means divide the sales figure by 0.65. Channel ×1.785 is only for apples-to-apples aftermarket comparison. Mixing these up is a logged correction; the convention gate now flags the word "markup" for exactly this reason ([[project_claude_governance_layer]]).
+
+## 3. BVP is retention, not leakage
+
+A genuine→BVP shift is **not** a loss. BVP is Isuzu's own value line — still ISZE revenue. That sale would often otherwise leak to aftermarket (Bosch/Febi/IAM) = €0 to ISZE. BVP retention is frequently a defensive win.
+
+- The real loss metric is **aftermarket leakage = capture gap (1 − total capture), genuine+BVP combined**.
+- Never headline "grow genuine share". Headline total ISZE capture vs aftermarket, focused where capture <100%.
+- Treat genuine/BVP mix as a **GP-quality watch metric**, not a capture metric.
+- Only flag *avoidable* downtrade (BVP growth in already-saturated categories), weighing GP gained against the risk that "correcting" it pushes the customer to IAM.
+- ITUK oil filter total capture is already ~100% (capped) — there a BVP rise is not lost wallet at all.
+
+**Why:** wrongly framed rising ITUK BVP € share (genuine 81.0% in 2025, −2.6pp YoY) as a bleed to reverse. It is not.
