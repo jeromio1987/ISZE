@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T21:44:20Z",
+  "written_at": "2026-10-05T21:49:33Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 41,
-    "not started": 52,
+    "technically verified": 42,
+    "not started": 51,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 44,
+  "overlay_applied": 45,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -659,8 +659,12 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "UX-03, FIN-05, FIN-06",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/ux_04_sensitivity.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/scenario.js:288 (a point no longer calculates its stated inputs: engine.calculate(input) -> engine.calculate with price_after and quantity_after forced to the base values) -> UX-04 E1: each plotted point matches the calculation for its stated assumptions fails (point -10% price: revenue change does not match the engine); restored -> passes",
+        "mutation src/data/scenario.js:297 (a suppressed profit point reports a zero: gp_change -> 0 when the engine returned null) -> UX-04 E2: a missing cost suppresses only profit, and revenue and the reason stay usable fails (a profit figure was produced with no cost); restored -> passes"
+      ],
       "blockers": []
     },
     {
