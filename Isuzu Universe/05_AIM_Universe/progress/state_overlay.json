@@ -80,6 +80,15 @@
   ],
   "open_findings": [
     {
+      "id": "UX07-NARROW-SHELL",
+      "severity": "medium",
+      "title": "UX-07's narrow-screen requirement cannot be met from src/ui/app.js alone",
+      "finding": "UX-07 evidence 2 needs the agreed small-screen layout to keep prices, units, scope and limitations readable with no hidden essential controls. The only small-screen rules for this component are the two @media(max-width:800px) blocks in reference/ISZE_AIM_Pricing_Decisions_v03_FROZEN.html (lines 6 and 13), which tools/build.py reads as the retained shell. src/ui/app.js contains no @media query (0 occurrences), and UX-07 may change only src/ui/app.js. The frozen reference was not edited.",
+      "impact": "UX-07 stays not verified: evidence 1 (keyboard) is largely met in app.js, but evidence 2 (the painted narrow layout) cannot be met or measured without the shell stylesheet. Wave 3b records technically verified 43 (not 44), with UX-07 blocked and UX-08 finished in the same PR.",
+      "handling": "Give UX-07 access to the shell, or move the small-screen rules out of the frozen reference into a maintained shell template that tools/build.py assembles (as it already assembles the src/ modules). Then add a headless-Chrome narrow-width test in the ACCEPT-02 pattern.",
+      "owner": "integration owner (tools/build.py and the shell template)"
+    },
+    {
       "id": "F08-IDENTITY",
       "severity": "medium",
       "title": "The permission surface now ships, but a browser-side check is still not an authentication",
