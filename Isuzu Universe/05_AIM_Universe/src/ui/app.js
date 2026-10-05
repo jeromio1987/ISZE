@@ -796,12 +796,25 @@ function economicsResults(){
   <div class="panel"><h3>Stress the volume assumption</h3><div class="tablewrap"><table><thead><tr><th>Assumed volume change</th><th class="n">Revenue change</th><th class="n">Gross-profit change</th></tr></thead><tbody>${stressRows}</tbody></table></div><p class="small ruleline">The model does not predict volume. The change must come from a commitment or a stated test assumption. It does not multiply a modelled market gap by an invented recovery rate.</p></div>
   <div class="panel dark"><h3>Read this before a pricing decision</h3><p>${esc(c.recommendation)}</p><p class="small">Effective rounded price change: ${pct(r.ok?100*(r.price_after/r.price_before-1):null)}. The base covers the recorded period; it is not annualised. The default cohort is all historical units. Change the eligibility scope before treating a targeted offer as a blanket discount.</p></div>`;
 }
+/* UX-02. The price test names the ranked option it started from and the values
+   edited by hand since, so a selected option and a manual edit are one record. */
+const EDIT_LABELS={price_before:'scenario base price',price_after:'proposed net price',quantity_before:'base quantity',
+  quantity_after:'proposed quantity',quantity_label:'volume basis label',scope:'volume scope',support_eur:'one-off support cost',
+  cost_eur:'unit parts purchase cost',cost_basis_id:'supplier-cost basis',pack_size:'pack size'};
+function chosenOption(){
+  const a=store.alternativeEdits(state.caseId);
+  if(!a.selected)return '<p class="small" data-chosen-option="">No ranked option is selected. The values below are the unchanged offer or your own entries.</p>';
+  const edits=a.edited_fields===null?'Whether a value was edited after selection is not known for a reopened record.'
+    :a.edited_fields.length?'Edited by hand since selection: '+a.edited_fields.map(k=>esc(EDIT_LABELS[k]||k)).join(', ')+'.'
+    :'No value has been edited since selection.';
+  return `<div class="panel callout" data-chosen-option="${esc(a.selected)}"><span class="eyebrow">Selected option</span><p><b>${esc(a.label)}</b></p><p class="small" data-edited-fields="${esc((a.edited_fields||[]).join(','))}">${edits}</p></div>`;
+}
 function economics(c){
   const r=caseResult(),s=scenario(),e=c.packEvidence;
   const bases=basisOptions();
   const rec=s.cost_basis_id?E.costRecord(D,c.pn,s.cost_basis_id):null;
   return `<div class="inputsnote"><b>Scenario only; no automatic price move.</b> Default price and volume response are unchanged. A manual price or cost does not approve a customer quotation, cost basis or margin floor.</div>
-  <div class="split"><div class="panel scenario-controls"><h3>Define the offer being tested</h3>
+  <div class="split"><div class="panel scenario-controls"><h3>Define the offer being tested</h3>${chosenOption()}
   <div class="field"><label for="s-pn">Exact part</label><input id="s-pn" value="${esc(s.part_number)}" readonly><small>The original part reference is carried, never rewritten.</small></div>
   <div class="field"><label for="s-basis">Supplier-cost basis</label><select id="s-basis">${bases.map(b=>`<option value="${esc(b.basis_id)}" ${s.cost_basis_id===b.basis_id?'selected':''}>${esc(b.basis_id)} - ${esc(b.name)}</option>`).join('')}</select><small>${rec?`Verified parts purchase cost ${eur(rec.cost_eur,4)} per ${esc(c.unit)} on ${esc(rec.basis_id)} (${esc(rec.rate_window||'')}).`:'No verified cost is held for this part on the selected basis.'} ${esc(D.meta.confirmedRules.costTypeRequired||'')}</small></div>
   <div class="field"><label for="s-date">Offer effective date</label><input id="s-date" type="date" value="${esc(s.offer_effective_date||'')}"><small>Required. It selects the supplier-cost basis. It is kept separate from the evidence period below.</small></div>

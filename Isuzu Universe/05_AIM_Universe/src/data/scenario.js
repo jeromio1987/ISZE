@@ -18,7 +18,12 @@
 
   function makeScenarioStore(payload, engine) {
     var byCase = {};        /* case_id -> scenario */
+    var selections = {};    /* case_id -> the inputs a selected alternative wrote */
     var listeners = [];
+
+    /* UX-02. The inputs an alternative writes, compared after later edits. */
+    var SELECTION_TRACKED = ['price_before', 'price_after', 'quantity_before', 'quantity_after',
+      'quantity_label', 'scope', 'support_eur', 'cost_eur', 'cost_basis_id', 'pack_size'];
 
     function notify(caseId) {
       listeners.forEach(function (fn) { fn(caseId, byCase[caseId]); });
@@ -130,6 +135,11 @@
         selected_alternative_id: alternativeId
       });
 
+      var inputs = {};
+      SELECTION_TRACKED.forEach(function (k) { inputs[k] = result.scenario[k]; });
+      selections[caseId] = { alternative_id: alternativeId, label: alt.name || alternativeId,
+        inputs: inputs };
+
       /* A migration is carried as selected, and stays financially unresolved. */
       return {
         ok: true, scenario: result.scenario, changes: result.changes,
@@ -208,11 +218,40 @@
       };
     }
 
+    /* UX-02. Which alternative the working record started from, and which of its
+       inputs have been edited by hand since. After a reopen the selection
+       snapshot is not held, so the edits are reported as not known rather than
+       as none. */
+    function alternativeEdits(caseId) {
+      var s = get(caseId);
+      if (!s.selected_alternative_id) {
+        return { selected: null, label: null, edited_fields: [], known: true,
+          statement: 'No ranked alternative is selected.' };
+      }
+      var c = caseById(caseId);
+      var alt = (c.alternatives || []).filter(function (a) {
+        return a.alternative_id === s.selected_alternative_id;
+      })[0];
+      var label = alt ? (alt.name || alt.alternative_id) : s.selected_alternative_id;
+      var sel = selections[caseId];
+      if (!sel || sel.alternative_id !== s.selected_alternative_id) {
+        return { selected: s.selected_alternative_id, label: label, edited_fields: null, known: false,
+          statement: 'Whether a value was edited after selection is not known for this record.' };
+      }
+      var edited = SELECTION_TRACKED.filter(function (k) {
+        return JSON.stringify(sel.inputs[k]) !== JSON.stringify(s[k]);
+      });
+      return { selected: s.selected_alternative_id, label: label, edited_fields: edited, known: true,
+        statement: edited.length ? 'Edited by hand since selection: ' + edited.join(', ') + '.'
+          : 'No value has been edited since selection.' };
+    }
+
     function onChange(fn) { listeners.push(fn); }
 
     return {
       defaults: defaults, get: get, set: set, calculate: calculate,
       selectAlternative: selectAlternative, consistency: consistency,
+      alternativeEdits: alternativeEdits,
       onChange: onChange, caseById: caseById,
       _all: function () { return byCase; }
     };
