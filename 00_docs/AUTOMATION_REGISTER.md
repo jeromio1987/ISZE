@@ -2,7 +2,7 @@
 
 **Job implementations:** `C:\Users\jerom\Documents\Claude\Scheduled\<job-name>\SKILL.md`  
 **This file:** Canonical in-repo index (migrated from `00_docs/agent/NOTES.md`)  
-**Last audited:** 2026-08-25 (overnight process audit; prior full audit 2026-07-26)
+**Last audited:** 2026-10-05 (super prompts E and F, brief F1)
 **Path contract:** `$env:ISZE_ROOT` + [`paths.yaml`](../paths.yaml) · preflight policy: audit-export `scheduled-path-fix-report.md`
 
 ### Model routing (2026-07-24)
@@ -18,22 +18,21 @@ Each `SKILL.md` states `**Model tier: …**` under the frontmatter. Prefer Haiku
 
 ## ISZE active skills
 
-| Skill | Status | Cadence | Tier | Inputs | Outputs | Path Preflight | Owner Review | Notes |
-|-------|--------|---------|------|--------|---------|----------------|--------------|-------|
-| `isze-weekly-tender-scrape` | Active | Weekly | CHEAP | `04_tools/ISZE_Tender_Monitor_Install/tender_scraper_v3.py` | `01_data/dashboards/tender_data.json` | Script + `01_data/dashboards/` | Jerome | v3 scraper + publish |
-| `isze-scraper-healthcheck-autofix` | Active | Sun 22:00 | CHEAP | Tender + `autodoc_scraper/` scripts | `scraper_health_report.md`, optional diff, `applied_patches_log.md` | Tender + KS scripts + `04_tools/` | Jerome (non-allowlist) | **Allowlist auto-apply** KS/Tranzparts/TMC/Mekonomen/Auto365 URL/selector fixes; Tender propose-only ([DECISIONS.md](../DECISIONS.md) § 2026-07-24) |
-| `isze-weekly-open-loops` | Active | Monday | CHEAP | health report, memory_review_W*, briefs | `05_memory/briefs/open_loops_YYYY-MM-DD.md` | `04_tools`, `05_memory/briefs`, `02_dashboards` | Jerome | Merged digest — read existing artifacts only |
-| `isze-weekly-ks-scrape` | Superseded | — | CHEAP | — | — | — | — | Replaced by `refresh_and_check_drift.py` + live Task `ISZE_PMS_IAM_Refresh` |
-| `autodoc-monthly-refresh` | Retired | — | CHEAP | — | — | — | — | Autodoc permanently blocked |
-| `isze-dashboard-freshness-check` | Active | Monday | CHEAP | `02_dashboards/`, `01_data/dashboards/` | Report only | Both input folders | Jerome | |
-| `isze-uio-staleness-alert` | Active | Monthly | CHEAP | `06_uio/_CURRENT/…` | Report only | Canonical UIO + README | Jerome | |
-| `isze-memory-review` | Active | Weekly | CHEAP | `05_memory/projects/*.md`, glossary, verify reports | `memory_review_W*.txt`, optional `memory_applied_log.md` | Input + `05_memory/briefs/` | Jerome | May apply high-confidence factual syncs |
-| `isze-weekly-intelligence-brief` | Active | Weekly | CHEAP | WebSearch | `weekly_W*.txt` | `05_memory/briefs/` | Jerome | Never write `07_deploy/` |
-| `isze-pricing-basket-monitor` | Active | 1st of month | CHEAP | `01_data/` price lists | Report only | Memory + `01_data/` | Jerome | |
-| `isze-aim-classification-refresh` | Active | Monthly | CHEAP | AIM memory + data | Report only | All input paths | Jerome | |
-| `isze-delegator-watch` | **Disabled 2026-09-18** (task still registered) | **Every 20 min** | — (no agent) | AIM watch set (`aim_master_v2.csv`, `aim_pn_classification_v2.csv`, `aim_classification_gate.json`, `aim_master_v2.meta.json`, `price_bp_weighted_compare_pn.csv`) + every workstream discovered on disk | `00_docs/agent/DELEGATOR_STATE.json`, `OVERNIGHT_CYCLE.json`, `OVERNIGHT_ANGLE_QUEUE.json`, `OVERNIGHT_TASKS_QUEUE.md`, notes under `00_docs/agent/overnight/`, a row in `DELEGATOR_BOARD.md` per cycle, `04_tools/workspace/overnight_orchestrator.log` | `00_docs/agent/` + the watch set | Jerome | **Read-only on all deliverables.** Windows task `ISZE_DelegatorWatch_20min` → `04_tools/workspace/run_overnight_orchestrator.cmd` → `isze_overnight_orchestrator.ps1`. Inside **22:00–08:00** it checks every workstream's evidence and runs **one** audit angle from a 16-angle rotating queue; outside the window it is detect-only. Corrective work is **queued** in `OVERNIGHT_TASKS_QUEUE.md`, never applied. Angles in `_overnight_angles.py`. Self-tests: `_test_overnight_orchestrator.ps1` (26 assertions) + `_test_overnight_angles.py` (16 angles). Docs: `00_docs/agent/DELEGATOR_OVERNIGHT.md`; loop command: `DELEGATOR_LOOP_COMMAND.md`; decision: `DECISIONS.md` 2026-09-17. |
-| `isze-mailbox-intake` | **Stub** | 1st of month | CHEAP | Outlook COM (own Inbox+Sent); subjects UTIPartSales / Sales to Dealer / Business Analysis Masterdata Z2SDAB42 | Attachments → `01_data/90_INBOX/` + SCAN_LOG; never shared Sales/Parts until G0b | `90_INBOX/` + registry updates | Jerome | **Not implemented yet** — register slot from Full Project Audit 2026-08-25. Script TBD under `04_tools/interactions/` or `91_build/`. Human Save still required for Online Archive / sap4*. |
-
+| Skill | Status | Runs in | Cadence | Output | Notes |
+|---|---|---|---|---|---|
+| `isze-scraper-healthcheck-autofix` | Active | claude.ai routine (since 23 Sep) | Sun 22:00 | `04_tools/scraper_health_report.md` | Allowlist auto-apply ([DECISIONS.md](../DECISIONS.md) § 2026-07-24). Still watches the 3 scrapers retired 24 Sep. |
+| `isze-memory-review` | Active | claude.ai routine (since 23 Sep) | Mon 08:00 | `05_memory/briefs/memory_review_W*.txt`, phone push | Push carries the scorecard headline (brief E1). |
+| `isze-dashboard-freshness-check` | Paused | desktop app | Mon | chat only | Jerome 5 Oct: "stop this schedule". |
+| `isze-uio-staleness-alert` | Paused | desktop app | 1st of month | chat only | Jerome 3 Oct: "stop please". |
+| `isze-pricing-basket-monitor` | Paused | desktop app | 1st of month | chat only | Jerome 3 Oct: "stop". |
+| `isze-aim-classification-refresh` | Paused | desktop app | 1st of month | chat only | Jerome 3 Oct: "stop please". |
+| `isze-weekly-intelligence-brief` | Paused | desktop app | - | `05_memory/briefs/weekly_W*.txt` | Not run since 17 Aug (last file W34). |
+| `isze-weekly-open-loops` | Paused | desktop app | - | none | Never ran: no `open_loops_*.md` exists. |
+| `isze-weekly-tender-scrape` | Paused | desktop app | - | - | Superseded by Windows task `ISZE Tender Monitor`; last run 10 Aug. |
+| `isze-weekly-ks-scrape` | Superseded | - | - | - | Replaced by `refresh_and_check_drift.py` + Windows task `ISZE_PMS_IAM_Refresh`. |
+| `autodoc-monthly-refresh` | Retired | - | - | - | Autodoc permanently blocked; last run 1 Sep. |
+| `isze-delegator-watch` | Retired | - | - | - | Windows task disabled 18 Sep; its queue archived 5 Oct (brief A2). |
+| `isze-mailbox-intake` | Stub | - | - | - | Not implemented. |
 ---
 
 ## P8 pipelines (roadmap §17 — four fields required)
@@ -48,13 +47,12 @@ Each `SKILL.md` states `**Model tier: …**` under the frontmatter. Prefer Haiku
 
 ---
 
-## Non-ISZE / private / meta skills (2)
+## Non-ISZE / private / meta skills
 
-| Skill | Status | Cadence | Tier | Notes |
-|-------|--------|---------|------|-------|
-| `zondag-checkin-traject` | Active | Weekly (Sun) | FRONTIER | **Not ISZE** — personal recovery check-in |
-| `feedback` | Active | Ad hoc | FRONTIER | **Meta** — Claude/ISZE usage feedback |
-
+| Skill | Status | Runs in | Cadence | Notes |
+|---|---|---|---|---|
+| `zondag-checkin-traject` | Active | desktop app | Sun | **Not ISZE**, personal check-in. |
+| `feedback` | Paused | desktop app | weekly | Jerome 3 Oct: "stop this session"; each run stopped at its first check. |
 ---
 
 ## Disabled / duplicate job directories
@@ -66,17 +64,31 @@ Each `SKILL.md` states `**Model tier: …**` under the frontmatter. Prefer Haiku
 
 ---
 
-## Windows Task Scheduler — live state (verified 2026-07-16)
+## Claude Code tab and claude.ai schedules (checked 2026-10-05)
 
-| Live task name | Registered? | Cadence | Batch / script | Notes |
-|----------------|-------------|---------|----------------|-------|
-| `ISZE Tender Monitor` | ✅ registered + last result **0** (2026-07-20); next 2026-07-27 07:30 | Weekly Mon 07:30 | `run_tender_monitor.bat` | Publish step fixed (see below). |
-| `ISZE_PMS_IAM_Refresh` | ✅ live — last scheduled 2026-07-20 result **`0xC000013A` (interrupted)**; manual refresh started 2026-07-26 ~21:28 | Weekly Mon 07:00 | `04_tools/autodoc_scraper/run_refresh_scheduled.bat` | This **is** the competitive-pricing refresh (KS/Tranzparts/TMC/Mekonomen/Auto365). The spare `ISZE_ScraperRefresh_WeeklyTask.xml` is **redundant — do NOT import it** (would double-run). |
-| `ISZE_DiscountScanner_Weekly` | ✅ registered (verified 2026-08-25 overnight; personal promos, not core ISZE) | Thu 07:00 | `04_tools/run_discount_scraper.bat` | Live task name may be `ISZE_DiscountScanner_Weekly`. Not part of ISZE commercial quote gate. |
-| `ISZE_CursorWeekDigest_Weekly` | ✅ registered 2026-07-26 | Sun 20:00 | `04_tools/workspace/run_cursor_week_digest.cmd` | Cross-tool bridge: summarises the week's local Cursor sessions into `05_memory/briefs/cursor_week_*.md` so the Claude Desktop weekly review sees work done in Cursor. Output is gitignored (spans private projects). |
-| `ISZE_LiveStateAudit_Weekly` | ✅ registered 2026-07-26 | Mon 08:00 | `04_tools/workspace/run_live_state_audit.cmd` | Compares this register against Task Scheduler and the FACTS/pipeline reports; writes a numbered "waiting on Jerome" list to `05_memory/briefs/automation_drift_*.md`. Read-only — it reports drift, it never closes it. |
-| `ISZE_DelegatorWatch_20min` | ⏸️ registered 2026-09-17, **disabled 2026-09-18** on Jerome's request (last result 0 at 19:40); still registered, nothing runs | Every 20 min, daily | `04_tools/workspace/run_overnight_orchestrator.cmd` | The delegator cycle. Fingerprints the AIM set; inside 22:00–08:00 also checks every workstream's evidence and runs one audit angle from a rotating queue, writing notes to `00_docs/agent/overnight/`. **Read-only on all deliverables** — never rebuilds, publishes, syncs, mails, bumps a version or moves a price; corrective work is queued in `OVERNIGHT_TASKS_QUEUE.md` for approval. `ExecutionTimeLimit` PT10M and `MultipleInstancesPolicy` IgnoreNew so cycles cannot stack. Self-test 26/26. |
-| `ISZE_EQ_Hit_Session_20260919` | ✅ registered 2026-09-19 — **one-shot tonight only** (next 19/09/2026 23:00) | Once 23:00 local 2026-09-19 | `01_data/91_build/run_eq_hit_session_20260919.ps1` | Opens EQ pack + Snap-on URL; refreshes residual Not-on-AIM EQ queue; writes START stamp + agent wake note. **Does not patch AIM.** Full EQ scrape needs a logged-in Snap-on session. Delete task after the night if it remains. Pack: `01_data/90_INBOX/_EQ_HIT_SESSION_20260919_*`. |
+| Job | Scheduler | State | Notes |
+|---|---|---|---|
+| isze-scraper-monthly-refresh | Claude Code tab | Disabled | Ran the same script as ISZE_PMS_IAM_Refresh; the 1 Sep and 1 Oct runs did nothing. |
+| isze-facts-drift-check | Claude Code tab | Disabled since 2026-08-17 | |
+| isze-pms-facts-reconcile, vdpj-liquidation-reminder, weekly-retro-review | Claude Code tab folders | Not scheduled | Folders kept. The scorecard (brief E1) replaces weekly-retro-review. |
+| Morning brief | claude.ai routine | Disabled | Jerome 5 Oct: "stop this schdule". |
+| Techno Tokio 23-29 okt checken | claude.ai routine | One-off 2026-10-09 | Personal. |
+---
+
+## Windows Task Scheduler — live state (checked 2026-10-05)
+
+| Live task name | State | Cadence | Batch / script | Produces | Notes |
+|---|---|---|---|---|---|
+| `ISZE Tender Monitor` | Ready | Mon 07:30 | `run_tender_monitor.bat` | `01_data/14_dashboards/tender_data.json` | |
+| `ISZE_PMS_IAM_Refresh` | Ready | Mon 07:00 | `run_refresh_scheduled.bat` | KS and TMC prices, drift history, executive dashboards | Mekonomen, Auto365, Tranzparts retired 24 Sep. |
+| `ISZE_LiveStateAudit_Weekly` | Ready | Mon 08:00 | `run_live_state_audit.cmd` | `05_memory/briefs/automation_drift_*.md` | |
+| `ISZE_PriceLedger_Weekly` | Ready | Mon 09:00 | `run_price_ledger_weekly.bat` | price-observation ledger for the parts price dashboard | Added 24 Sep. |
+| `ISZE_CursorWeekDigest_Weekly` | Ready | Sun 20:00 | `run_cursor_week_digest.cmd` | Claude/Cursor scorecard `05_memory/briefs/scorecard_*.md` | Name kept; runs the scorecard since brief E1. |
+| `ISZE_DiscountScanner_Weekly` | Ready | Thu 07:00 | `run_discount_scraper.bat` | `04_tools/discount-scanner/deals_dashboard.html` | Personal, outside the audit. |
+| `ISZE_DelegatorWatch_20min` | Disabled | - | `run_overnight_orchestrator.cmd` | nothing | Off since 18 Sep; queue archived 5 Oct. |
+| `ISZE_EQ_Hit_Session_20260919` | Disabled | - | `run_eq_hit_session_20260919.ps1` | nothing | One-off of 19 Sep, exited 1. |
+| `SMID_DataFeed_0700` | Disabled | - | `Prive\investing\fetch_smid_data.py` | nothing | Personal; parked folder; exited 1. |
+| `SMID_DataFeed_1200` | Disabled | - | `Prive\investing\fetch_smid_data.py` | nothing | Personal; parked folder; exited 1. |
 
 **Decision drift (added 2026-09-16).** The same task now also runs `04_tools/workspace/check_decision_drift.ps1`, appended to the brief after the audit above. It compares `00_docs/ISZE_ROADMAP.md` §2 "Waiting on Jerome" against `DECISIONS.md` entries dated after the roadmap's own "Last updated" line, and prints a line for any item that may already be decided but still reads as waiting. Read-only, always exits 0, no second scheduled task, and it cannot change the audit's findings or exit code. Rule it serves: [`00_docs/DECISION_DISCIPLINE.md`](DECISION_DISCIPLINE.md).
 
@@ -103,22 +115,7 @@ Scrapers (`*-tender-scrape`, `*-ks-scrape`, `scraper-healthcheck-autofix`) abort
 
 ## Open items (Jerome)
 
-| Skill | Issue | Status 2026-08-25 |
-|-------|-------|-------------------|
-| `isze-weekly-intelligence-brief` | Confirm target for `latest_weekly_brief.txt` | **CLOSED** — file lives at `05_memory/briefs/latest_weekly_brief.txt` |
-| `isze-dashboard-freshness-check` | Post-reorg paths for three XLSX + UIO HTML | **RESOLVED (paths found)** — update Scheduled `SKILL.md` then drop from open-items: |
-
-**Freshness-check path map (overnight):**
-
-| Watched file | Live path | Action |
-|--------------|-----------|--------|
-| `ISZE_Parts_Sales_Classification_Mar2026_v2.xlsx` | `01_data/01_Pricing/` | Point skill here (also legacy copy under `91_legacy/`) |
-| `ISZE_FY2027_ActionPlan_v1.xlsx` | `90_archive/root_files/` only | Treat as **archived** — do not fail freshness; optional promote later |
-| `ITUK_PMS_Analysis_Apr2026_v2.xlsx` | `03_analytics/Isuzu/pms-pilot/_archive/` only | **Archived** — Model B / FACTS is SSOT; skip as live |
-| `ISUZU_UIO_Dashboard_2026_v17.html` | `02_dashboards/_archive/` | Superseded; live UIO = `06_uio/_CURRENT/` xlsx (not HTML) |
-
-Junctions for `01_data/dashboards` **restored overnight** — freshness skill parent-folder preflight should pass again.
-
+None. The two rows closed on 25 Aug and the freshness path map were removed on 2026-10-05; see git history.
 ---
 
 ## Adding a new job
