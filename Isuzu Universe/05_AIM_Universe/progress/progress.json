@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T20:23:30Z",
+  "written_at": "2026-10-05T20:25:35Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 37,
-    "not started": 56,
+    "technically verified": 38,
+    "not started": 55,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 40,
+  "overlay_applied": 41,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -404,8 +404,12 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/data_03_references.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/evidence.js:444 (the reference is trimmed and its leading zeros dropped on intake) -> DATA-03 E1: leading-zero and nonnumeric references round-trip unchanged fails; restored -> passes",
+        "mutation src/data/evidence.js:490 (an update replaces the recorded versions instead of adding one) -> DATA-03 E2: a classification or successor update creates a new relationship version without rewriting a saved decision fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
