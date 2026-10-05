@@ -51,7 +51,7 @@ ISZE network).
 **Not products, one line each.** `02_dashboards\_build\`, `_qa*`, `_audit\`, `_design\`, `_working\`,
 `_composable\`, `_ui\`, `Data\` are working folders and shared assets. `_archive\` is retired pages.
 `ids\IDS_all_dashboards_2026-08-19\` is an archived mirror of the live `ids\` pages — the same pages
-twice. `sales\_gpt_review\` holds dated review copies. There are 33 distinct receipts under
+twice. `90_archive\02_dashboards_gpt_review_2026-09-19\` (moved there 2026-10-05) holds dated review copies. There are 33 distinct receipts under
 `02_dashboards\` overall, most of them pricing.
 
 *Join keys:* the page families join on `distributor_code`, `part_number` and `fig_key`.
