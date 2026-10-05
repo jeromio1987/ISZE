@@ -146,6 +146,136 @@
     ].join(SEP);
   }
 
+  /* ------------------------------------------------- source entities (DATA-02) -- */
+
+  /* A stable identifier for a source entity: country, distributor and purchasing
+     account together. A name alone identifies nothing - the same trading name
+     and even the same account number occur in two countries - so two records
+     share an identifier only when all three agree. A source's own entity id,
+     when it states one, is carried beside the composite, never instead of it. */
+  function sourceEntityId(entity) {
+    entity = entity || {};
+    var e = normaliseEntity(entity);
+    return ['entity', firstDefined(entity.country) || '(country not stated)',
+      e.distributor || '(distributor not matched)',
+      e.purchasing_account || '(account not stated)'].join(SEP);
+  }
+
+  /* Group rows by source entity and site. Distinct entities are never added
+     together, and a row whose distributor is not matched keeps the name it
+     arrived with as its own group rather than being folded into a matched one. */
+  function combineEntities(rows) {
+    var groups = {}, order = [];
+    (rows || []).forEach(function (r) {
+      var e = normaliseEntity(r);
+      var unmatched = isBlank(e.distributor);
+      var key = sourceEntityId(r) + SEP + (e.site || '(site not stated)')
+        + (unmatched ? SEP + 'unmatched' + SEP + String(r.raw_name || r.name || '(no name)') : '');
+      if (!groups[key]) {
+        groups[key] = { entity_id: sourceEntityId(r), country: r.country || null,
+          distributor: e.distributor, purchasing_account: e.purchasing_account, site: e.site,
+          unmatched: unmatched, name_as_received: unmatched ? (r.raw_name || r.name || null) : null,
+          rows: 0, quantity: 0 };
+        order.push(key);
+      }
+      groups[key].rows += 1;
+      var q = Number(r.quantity);
+      if (Number.isFinite(q)) groups[key].quantity += q;
+    });
+    var out = order.map(function (k) { return groups[k]; });
+    return { groups: out,
+      statement: out.length + ' source entit' + (out.length === 1 ? 'y' : 'ies') + ' kept apart. '
+        + 'Records are added together only when country, distributor and purchasing account agree; '
+        + 'an unmatched name stays a row of its own.' };
+  }
+
+  /* Two entities are merged only on a stated source, and a separate-entity pair
+     is never merged even then. Sharing a name is not a reason. */
+  function canMerge(a, b, declaration) {
+    var x = normaliseEntity(a), y = normaliseEntity(b);
+    if (isSeparatePair(x.distributor, y.distributor)) {
+      return { ok: false, separate_entities: true,
+        statement: x.distributor + ' and ' + y.distributor + ' are separate entities and are not merged, '
+          + 'whatever a declaration says.' };
+    }
+    if (sourceEntityId(a) === sourceEntityId(b)) {
+      return { ok: true, separate_entities: false, statement: 'The two records are the same source entity.' };
+    }
+    if (!declaration || isBlank(declaration.source)) {
+      return { ok: false, separate_entities: false,
+        statement: entityLabel(a) + ' (' + ((a && a.country) || 'country not stated') + ') and '
+          + entityLabel(b) + ' (' + ((b && b.country) || 'country not stated') + ') are not merged: '
+          + 'no source states they are one entity. A shared name is not that statement.' };
+    }
+    return { ok: true, separate_entities: false, declared_by: declaration.source,
+      declared_on: declaration.declared_on || null,
+      statement: 'Merged on the stated source "' + declaration.source + '".' };
+  }
+
+  function linkInEffect(link, asOf) {
+    if (!link || isBlank(link.source) || isBlank(link.site)) return false;
+    if (!isBlank(link.effective_from) && (isBlank(asOf) || String(link.effective_from) > String(asOf))) return false;
+    if (!isBlank(link.effective_to) && !isBlank(asOf) && String(link.effective_to) < String(asOf)) return false;
+    return true;
+  }
+
+  /* An account covering several sites stays combined until effective-dated site
+     links, each naming its source, split it into at least two sites. A split
+     names the sites; it does not apportion the recorded quantities, because no
+     link says how the account's volume divides. */
+  function splitAccount(rows, account, links, asOf) {
+    var held = (links || []).filter(function (l) {
+      return l && String(l.purchasing_account) === String(account) && linkInEffect(l, asOf);
+    });
+    var sites = [];
+    held.forEach(function (l) { if (sites.indexOf(l.site) < 0) sites.push(l.site); });
+    if (sites.length < 2) {
+      return { ok: false, combined: true, rows: rows, sites: [],
+        statement: 'Account ' + account + ' stays combined: '
+          + (sites.length ? 'one sourced site link in effect is not a split.'
+            : 'no sourced site link in effect on ' + (asOf || 'the stated date') + ' supports a split.') };
+    }
+    return { ok: true, combined: false, rows: rows, sites: sites, quantity_apportioned: false,
+      links: held,
+      statement: 'Account ' + account + ' covers ' + sites.length + ' sites on the stated links. The recorded '
+        + 'quantities stay on the account; no link states how they divide between the sites.' };
+  }
+
+  /* A national record that includes its dealers and a dealer record inside it
+     are the same volume twice, so they are never added. */
+  function addRecords(a, b) {
+    a = a || {}; b = b || {};
+    var nat = a.scope === 'national' ? a : b.scope === 'national' ? b : null;
+    var dlr = nat === a ? b : a;
+    if (nat && dlr.scope === 'dealer' && nat.includes_dealers !== false
+      && String(nat.distributor) === String(dlr.distributor) && String(nat.country) === String(dlr.country)
+      && String(nat.period) === String(dlr.period)) {
+      return { ok: false, total: null,
+        statement: 'Not added: the national record for ' + nat.distributor + ' already includes its dealer '
+          + 'records, so adding a dealer record counts the same volume twice.' };
+    }
+    if (sourceEntityId(a) !== sourceEntityId(b) || (a.scope || null) !== (b.scope || null)) {
+      return { ok: false, total: null,
+        statement: 'Not added: the two records are different entities or different scopes.' };
+    }
+    return { ok: true, total: Number(a.quantity) + Number(b.quantity),
+      statement: 'Added: same entity, same scope.' };
+  }
+
+  /* The dealers a national record covers are only those dealer records that
+     exist. None is made up from the national figure. */
+  function dealersOf(national, dealerRecords) {
+    national = national || {};
+    var found = (dealerRecords || []).filter(function (d) {
+      return d && d.scope === 'dealer' && String(d.distributor) === String(national.distributor)
+        && String(d.country) === String(national.country);
+    });
+    return { dealers: found,
+      statement: found.length ? found.length + ' dealer record(s) are held for this national record.'
+        : 'No dealer record is held for ' + (national.distributor || 'this distributor') + ' in '
+          + (national.country || 'this country') + '. The national figure is not divided into dealers.' };
+  }
+
   /* -------------------------------------------------------------- registry -- */
 
   /* Every analytical input the component reads. `input_pointer` is where the
@@ -863,6 +993,12 @@
     isSeparatePair: isSeparatePair,
     assertNoBlend: assertNoBlend,
     campaignKey: campaignKey,
+    sourceEntityId: sourceEntityId,
+    combineEntities: combineEntities,
+    canMerge: canMerge,
+    splitAccount: splitAccount,
+    addRecords: addRecords,
+    dealersOf: dealersOf,
     knownEntities: knownEntities,
     distributorNaming: distributorNaming,
     SEP: SEP
