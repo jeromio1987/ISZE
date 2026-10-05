@@ -1,0 +1,19 @@
+/*
+   UX-07. The maintained small-screen rules for the assembled artifact.
+
+   tools/build.py reads this file and writes it into one <style id="shell-narrow">
+   block immediately before </head>, after the frozen v03 styles. A rule of equal
+   specificity here therefore overrides the frozen one. The frozen reference is
+   never edited, moved or renamed: it stays the visual starting point, and this
+   file corrects only what the narrow layout gets wrong.
+
+   It is deliberately empty in this first commit: the build, the assembly order
+   and the report field land first, so the rules that follow can be read against
+   a build that already carries the hook. Nothing below this comment has taken
+   effect yet.
+
+   When the rules land they change layout only. No colour, no type family, no
+   wording and no figure is changed, and no fact is hidden to make a check pass:
+   the narrow page must carry every price, unit, scope and limitation the wide
+   page carries.
+*/
