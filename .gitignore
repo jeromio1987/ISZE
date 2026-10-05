@@ -340,3 +340,14 @@ _qa*.jpg
 # found loose (and un-ignored) in 02_dashboards/_build/ and several 04_tools/ subfolders,
 # not just 01_data/91_build/ — one rule covers every _scratch/ folder anywhere in the repo.
 **/_scratch/
+
+# Tender monitor runtime output — stays on disk, not in git (Jerome, 2026-10-05)
+04_tools/ISZE_Tender_Monitor_Install/tender_docs/
+04_tools/ISZE_Tender_Monitor_Install/rm_digest/
+04_tools/ISZE_Tender_Monitor_Install/tender_monitor_log.txt
+04_tools/ISZE_Tender_Monitor_Install/_source_health.json
+# Safety backups — once work is committed, git history is the backup (Jerome, 2026-10-05)
+**/_backsafe_*/
+**/_bak_*/
+# Mail logs stay local
+09_meetings/_MAIL_LOG/
