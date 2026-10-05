@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T21:38:20Z",
+  "written_at": "2026-10-05T21:44:20Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 40,
-    "not started": 53,
+    "technically verified": 41,
+    "not started": 52,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 43,
+  "overlay_applied": 44,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -642,8 +642,12 @@
       "existing_finding": "F06",
       "can_start_after": "BASE-03",
       "integrate_after": "UX-02, FIN-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/ux_03_assumptions.test.mjs -> 2 pass, 0 fail",
+        "mutation src/ui/app.js:90 (the trace stops naming the exact inputs: TRACE_INPUTS.forEach(k=>{inputs[k]=(s&&s[k]!==undefined)?s[k]:null;}) -> inputs[k]=null) -> UX-03 E1: each visible financial result can be traced to the exact edited inputs fails; restored -> passes",
+        "mutation src/ui/app.js:128 (a blank cost is reported as a value: const cst=st.cost||'unknown' -> const cst='value') -> UX-03 E2: invalid inputs have field-specific errors, and zero, blank and unknown differ fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
