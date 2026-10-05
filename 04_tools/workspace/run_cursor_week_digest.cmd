@@ -11,7 +11,7 @@ if exist "C:\Program Files\nodejs\node.exe" (
 )
 
 echo [%date% %time%] start >> "%LOG%"
-"%NODE_EXE%" "%SCRIPT_DIR%cursor_week_digest.mjs" --days 7 >> "%LOG%" 2>&1
+"C:\Python314\python.exe" "%SCRIPT_DIR%collab_scorecard.py" >> "%LOG%" 2>&1
 echo [%date% %time%] exit=%ERRORLEVEL% >> "%LOG%"
 
 exit /b %ERRORLEVEL%
