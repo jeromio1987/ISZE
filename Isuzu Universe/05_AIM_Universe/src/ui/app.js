@@ -27,7 +27,7 @@ const ordered=['IMOTORS-CABIN','ITUK-TURBO','ITUK-PADS','ITUK-DISCS','IMOTORS-OI
 let state={caseId:'IMOTORS-CABIN',compare:'half',view:'objectives',objective:'revenue',market:'all',billingMetric:'billingEUR',
            candidateQuery:'',candidatePage:1,candidatePageSize:50,candidateCriteria:{},
            candidateSortKey:'observed_billing_eur',candidateSortDirection:'desc',
-           partRoute:null,offerDate:null,viewError:null};
+           partRoute:null,offerDate:null,viewError:null,dealer:null};
 
 /* ---------------------------------------------------------------- helpers */
 function current(){return D.cases.find(c=>c.id===state.caseId)||D.cases[0];}
@@ -41,6 +41,14 @@ function caseResult(){return store.calculate(state.caseId);}
 function coin(){const s=scenario();return {name:(D.meta.costBases||[]).find(b=>b.basis_id===s.cost_basis_id)||null};}
 function sourceButton(){return '<button class="sourcesbutton" data-sources>Source and calculation basis</button>';}
 function firstError(){return null;}
+/* UX-01. The one working context, read from the open case and the address. A
+   dealer selection is private working state: it is never written into the
+   address, and it is honoured only on a dealer-scope case that lists the dealer. */
+function context(){return AIMScenario.contextFor(D,current(),{compare:state.compare,dealer:state.dealer});}
+function contextStrip(x){
+  const scope=x.scope==='dealer'?'dealer scope':'national scope';
+  return `<div class="context-strip" aria-label="Working context" data-context="${esc(AIMScenario.contextKey(x))}"><span><b>Distributor</b> ${esc(x.distributor||'not stated')}</span> &middot; <span><b>Account</b> ${esc(x.purchasing_account||'not stated')}, ${scope}</span> &middot; <span><b>Original part</b> ${esc(x.original_part||'not stated')}</span> &middot; <span><b>Family</b> ${esc(x.family||'not stated')}</span> &middot; <span><b>Source version</b> ${esc(x.source_version||'not declared')}</span> &middot; <span><b>Period</b> ${esc(x.period||'not stated')}</span></div>`;
+}
 
 /* ===========================================================================
    Ported from the retired second view layer (src/ui/views.js and render.js).
@@ -953,10 +961,11 @@ function actionView(){
 }
 function render(){
   const c=current();
+  const ctx=context();
   $('#market').value=state.market;
   $('#case-list').innerHTML=ordered.map(id=>D.cases.find(x=>x.id===id)).filter(Boolean).filter(x=>state.market==='all'||x.market===state.market).map(x=>{const m=x.comparisons[x.defaultCompare];return `<button class="case-card ${c.id===x.id?'active':''}" data-case="${x.id}" aria-pressed="${c.id===x.id}"><div class="card-meta"><span>${esc(x.customer)}</span><span>${x.defaultCompare==='annual'?'Full year':'Matched H1'}</span></div><div class="case-name">${esc(x.name)}</div><div class="pn">${x.pn}</div><div class="case-amount ${color(m.revenueDelta)}">${signedEUR(m.revenueDelta)}</div><div class="case-period">ISZE billing &middot; ${esc(m.label)}</div><div class="case-direction">${x.id==='IMOTORS-OIL'?'&nearr;':'&rarr;'} ${esc(x.actionType)}</div></button>`;}).join('');
   $('#case-header').innerHTML=`<div class="head-line"><div><div class="eyebrow">${esc(c.customer)} &middot; ${esc(c.category)} &middot; ${c.pn}</div><span class="badge ${c.id==='IMOTORS-OIL'?'hold':'review'}">${esc(c.actionType)}</span></div><div class="head-right"><button class="button secondary" id="export-review">Export case review</button></div></div><h2>${esc(c.action)}</h2><p>${esc(c.verdict)}</p>`;
-  $('#scope-strip').innerHTML=`<div><span>Customer / scope</span>${esc(c.customer)} &middot; distributor, not dealer</div><div><span>Selected comparison</span>${esc(c.comparisons[state.compare].label)}</div><div><span>Basis / reporting clocks</span>ISZE net EUR; separate onward quantities</div><div><span>Historical fleet context</span>${num(c.fleet)} market ${c.market==='ITUK'?'trucks':'vehicles'}, 2025 &middot; part fleet unknown</div>`;
+  $('#scope-strip').innerHTML=`<div><span>Customer / scope</span>${esc(c.customer)} &middot; ${ctx.scope==='dealer'?`dealer scope, ${(ctx.dealer_selector||[]).length} dealer(s) listed${ctx.selected_dealer?' &middot; selected '+esc(ctx.selected_dealer):''}`:'distributor, not dealer'}</div><div><span>Selected comparison</span>${esc(c.comparisons[state.compare].label)}</div><div><span>Basis / reporting clocks</span>ISZE net EUR; separate onward quantities</div><div><span>Historical fleet context</span>${ctx.fleet_denominator?`${num(ctx.fleet_denominator.value)} market ${ctx.fleet_denominator.market==='ITUK'?'trucks':'vehicles'}, 2025 &middot; part fleet unknown`:'No fleet stated for this market'}</div>`;
   /* The status words in this strip are read from the payload and from the count
      of review findings the payload actually carries. They used to be literals,
      including a fixed "10 review findings" that no longer described the file. */
@@ -1001,6 +1010,7 @@ function render(){
       if(state.view==='case'&&!reviewing)html=html.replace(/(<button[^>]*data-open-part="[^"]*"[^>]*>[\s\S]*?<\/button>)/g,'');
       const anchor=(reviewing?state.partRoute.partNumber:c.pn)||null;
       html=partStrip(reviewing?partRouteSummary(state.partRoute.partNumber):c)+html;
+      if(!reviewing)html=contextStrip(ctx)+html;
       if(anchor&&!html.includes(anchor)){
         html=viewErrorPanel(state.view,new Error('The built view does not carry the exact part reference '+anchor+', so it is not shown.'));failed=true;
       }else{
@@ -1341,7 +1351,7 @@ window.AIMPricing={data:D,engine:E,export:X,candidates:C,cases:repo,contracts:CT
      no live input element to type into. This writes the same field the input
      handler writes; it is not a second search path. */
   setCandidateQuery:(q)=>{state.candidateQuery=String(q||'');state.candidatePage=1;render();},
-  getState:()=>({...state}),getScenario:()=>store.get(state.caseId),
+  getState:()=>({...state}),getScenario:()=>store.get(state.caseId),getContext:()=>context(),
   getResult:()=>store.calculate(state.caseId),
   selectAlternative:id=>store.selectAlternative(state.caseId,id),
   consistency:()=>store.consistency(state.caseId),

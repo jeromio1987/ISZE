@@ -1482,7 +1482,10 @@
     proposeTerms: ['case_owner'],
     expireProposal: ['case_owner', 'reviewer'],
     recordSupport: ['support_owner'],
-    recordOutcome: ['case_owner', 'reviewer']
+    recordOutcome: ['case_owner', 'reviewer'],
+    /* Anyone taking part may explain; the words are theirs, not the reviewer's. */
+    recordExplanation: ['requester', 'dealer', 'case_owner', 'reviewer', 'approver',
+      'support_owner', 'finance', 'product', 'supply']
   };
 
   function requireMoveRole(move, role) {
@@ -1781,6 +1784,160 @@
     var check = validate(next);
     if (!check.ok) return reject('WOULD_BE_INVALID', 'That outcome would leave an invalid record: ' + check.errors.join(' '));
     return { ok: true, record: next };
+  }
+
+  /* CASE-06. What a contributor said, kept in their own words and as separate
+     evidence. An explanation names one or more factors (or "unknown") and may
+     say that no action is wanted. Later evidence is one of three different
+     things, and each names the explanation it answers: a source correction (the
+     source itself was wrong), a later recollection (the person remembers it
+     differently) or a disagreement with the interpretation. None of them
+     rewrites the original; each is appended beside it. A reported reason names
+     a factor; it does not measure that factor's share of a change. */
+  var EXPLANATION_KINDS = ['explanation', 'source_correction', 'later_recollection',
+    'interpretation_disagreement'];
+  var EXPLANATION_FACTORS = ['availability', 'price', 'competition', 'demand', 'fleet',
+    'quality', 'terms', 'other', 'unknown'];
+  var EXPLANATION_COMPARED_FIELDS = ['words', 'scope', 'reported_period', 'source', 'audience',
+    'factors', 'no_action'];
+
+  function findExplanation(record, id) {
+    return ((record && record.explanations) || []).filter(function (e) {
+      return e && e.explanation_id === id;
+    })[0] || null;
+  }
+
+  function recordExplanation(record, explanation, meta) {
+    meta = meta || {};
+    if (!isPlainObject(record)) return reject('NOT_A_RECORD', 'A case record is required.');
+    var role = meta.role || (explanation && explanation.by_role);
+    var bad = requireMoveRole('recordExplanation', role);
+    if (bad) return bad;
+    explanation = explanation || {};
+    var kind = explanation.kind || 'explanation';
+    var problems = [];
+    if (EXPLANATION_KINDS.indexOf(kind) < 0) {
+      problems.push('kind must be one of: ' + EXPLANATION_KINDS.join(', ') + '.');
+    }
+    ['words', 'scope', 'source', 'audience'].forEach(function (f) {
+      if (typeof explanation[f] !== 'string' || !explanation[f].trim()) {
+        problems.push('The explanation needs ' + f + ', as the contributor gave it.');
+      }
+    });
+    var factors = Array.isArray(explanation.factors) ? explanation.factors.slice() : [];
+    if (!factors.length) problems.push('Name at least one factor, or "unknown". None is assumed.');
+    factors.forEach(function (f) {
+      if (EXPLANATION_FACTORS.indexOf(f) < 0) problems.push('"' + f + '" is not a declared factor.');
+    });
+    if (typeof explanation.no_action !== 'boolean') {
+      problems.push('State no_action as true or false.');
+    }
+    var corrects = explanation.corrects || null;
+    if (kind !== 'explanation') {
+      if (!corrects || !findExplanation(record, corrects)) {
+        problems.push('A ' + kind.replace(/_/g, ' ') + ' must name the explanation it answers, '
+          + 'by an explanation_id already on this case.');
+      }
+    } else if (corrects) {
+      problems.push('A first explanation does not correct anything. Use a correction kind.');
+    }
+    if (problems.length) return reject('MISSING_INPUT', problems.join(' '));
+
+    var at = stamp(meta.at);
+    var list = (record.explanations || []).slice();
+    var entry = {
+      explanation_id: 'EXP-' + (list.length + 1),
+      kind: kind,
+      words: explanation.words,
+      contributor_role: role,
+      contributor: meta.by || 'unspecified',
+      scope: explanation.scope,
+      reported_period: isBlankValue(explanation.reported_period) ? null : explanation.reported_period,
+      recorded_date: String(at).slice(0, 10),
+      recorded_at: at,
+      recorded_seq: record.history.length + 1,
+      source: explanation.source,
+      audience: explanation.audience,
+      factors: factors,
+      no_action: explanation.no_action,
+      corrects: corrects
+    };
+    list.push(entry);
+    var applied = appendProcess(record, 'explanation', 'record_explanation', role,
+      meta.note || ('Explanation recorded: ' + kind.replace(/_/g, ' ')),
+      { explanations: list }, at, meta.by);
+    if (!applied.ok) return applied;
+    return { ok: true, record: applied.record, explanation: entry };
+  }
+
+  function isBlankValue(v) {
+    return v === null || v === undefined || (typeof v === 'string' && !v.trim());
+  }
+
+  /* A family change set beside the reasons given for it. The reasons are listed;
+     no euro is moved onto any of them, because a reported reason is not a
+     measured share. The whole change stays unallocated until a measurement
+     supplies a share. */
+  function declineAttribution(record, change) {
+    change = change || {};
+    var total = Number(change.amount_eur);
+    var factors = [];
+    ((record && record.explanations) || []).forEach(function (e) {
+      (e.factors || []).forEach(function (f) { if (factors.indexOf(f) < 0) factors.push(f); });
+    });
+    var allocated = {};
+    factors.forEach(function (f) { allocated[f] = null; });
+    var allocatedSum = 0;
+    Object.keys(allocated).forEach(function (f) {
+      if (allocated[f] !== null) allocatedSum += allocated[f];
+    });
+    return {
+      family: change.family || null,
+      total_change_eur: Number.isFinite(total) ? total : null,
+      factors_reported: factors,
+      allocated_eur: allocated,
+      unallocated_eur: Number.isFinite(total) ? total - allocatedSum : null,
+      allocation_state: allocatedSum === 0 ? 'not allocated' : 'partly allocated',
+      statement: factors.length
+        ? 'Reported reasons: ' + factors.join(', ') + '. A reported reason does not measure its '
+          + 'share of the change, so none of it is allocated to any one factor.'
+        : 'No reason has been reported. The change is not allocated.'
+    };
+  }
+
+  /* A correction, recollection or disagreement set beside the explanation it
+     answers, with the fields that differ and the decisions recorded while the
+     original stood. */
+  function compareCorrection(record, explanationId) {
+    var later = findExplanation(record, explanationId);
+    if (!later) return reject('NO_SUCH_EXPLANATION', 'No explanation "' + explanationId + '" on this case.');
+    if (!later.corrects) {
+      return reject('NOT_A_CORRECTION', 'Explanation ' + explanationId + ' does not answer an earlier one.');
+    }
+    var original = findExplanation(record, later.corrects);
+    if (!original) return reject('ORIGINAL_MISSING', 'The explanation it answers is not on this case.');
+    var changed = EXPLANATION_COMPARED_FIELDS.filter(function (f) {
+      return JSON.stringify(original[f]) !== JSON.stringify(later[f]);
+    });
+    var affected = (record.history || []).filter(function (h) {
+      return h.seq > original.recorded_seq && h.seq < later.recorded_seq
+        && ['created', 'explanation', 'correction'].indexOf(h.kind) < 0;
+    }).map(function (h) {
+      return { seq: h.seq, kind: h.kind, action: h.action, recorded_at: h.recorded_at,
+        from_state: h.from_state, to_state: h.to_state };
+    });
+    return {
+      ok: true,
+      kind: later.kind,
+      original: clone(original),
+      corrected: clone(later),
+      changed_fields: changed,
+      affected_decisions: affected,
+      statement: affected.length
+        ? affected.length + ' decision(s) were recorded while the original evidence stood. They are '
+          + 'listed for review; none is rewritten.'
+        : 'No decision was recorded while the original evidence stood.'
+    };
   }
 
   /* A correction names the entry it replaces. It never deletes the earlier
@@ -2331,6 +2488,11 @@
     isDuplicateOf: isDuplicateOf,
     applyTransition: applyTransition,
     applyCorrection: applyCorrection,
+    recordExplanation: recordExplanation,
+    declineAttribution: declineAttribution,
+    compareCorrection: compareCorrection,
+    EXPLANATION_KINDS: EXPLANATION_KINDS,
+    EXPLANATION_FACTORS: EXPLANATION_FACTORS,
     applyLink: applyLink,
     rebuildAt: rebuildAt,
     diffFields: diffFields,
