@@ -645,6 +645,11 @@
     function recordOutcome(caseId, outcome, options2) {
       return applyMove(caseId, schema.recordOutcome, outcome, options2);
     }
+    /* CASE-06: a contributor's explanation, or a correction, recollection or
+       disagreement that answers one. Appended beside the original, never over it. */
+    function recordExplanation(caseId, explanation, options2) {
+      return applyMove(caseId, schema.recordExplanation, explanation, options2);
+    }
 
     /* ------------------------------------------------ the record this service is -- */
 
@@ -942,6 +947,7 @@
       expireProposal: expireProposal,
       recordSupport: recordSupport,
       recordOutcome: recordOutcome,
+      recordExplanation: recordExplanation,
       summarize: summarize,
       obligationStatement: obligationStatementFor,
       benefitAccount: benefitAccount,
