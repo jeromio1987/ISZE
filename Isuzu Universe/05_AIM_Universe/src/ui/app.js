@@ -24,7 +24,7 @@ const views=['decision','position','objectives','economics','candidates','case',
    panel work; pre-existing at HEAD, not introduced then. */
 const TAB_LABELS=[['decision','Sales evidence'],['position','Price position'],['objectives','Two objectives'],['economics','Price & profit test'],['candidates','Candidates'],['case','Part review'],['action','Internal action']];
 const ordered=['IMOTORS-CABIN','ITUK-TURBO','ITUK-PADS','ITUK-DISCS','IMOTORS-OIL'];
-let state={caseId:'IMOTORS-CABIN',compare:'half',view:'objectives',objective:'revenue',market:'all',billingMetric:'billingEUR',
+let state={unsavedReview:{},caseId:'IMOTORS-CABIN',compare:'half',view:'objectives',objective:'revenue',market:'all',billingMetric:'billingEUR',
            candidateQuery:'',candidatePage:1,candidatePageSize:50,candidateCriteria:{},
            candidateSortKey:'observed_billing_eur',candidateSortDirection:'desc',
            partRoute:null,offerDate:null,viewError:null,dealer:null};
@@ -156,6 +156,58 @@ function turboResolution(){
 }
 function turboFor(c){const t=turboResolution();return t&&c&&c.pn===t.part_number?t:null;}
 
+/* UX-05. One reading of the current metadata, derived from the payload and the
+   working scenario. The header, the cost results, the scenario panel, the
+   decision summary and the export all paint this block, so none of them keeps
+   its own older wording. */
+function currentMetadata(c){
+  const s=scenario(),t=turboFor(c),pe=c.packEvidence||{};
+  const applied=s.cost_eur!==null&&s.cost_eur!==undefined;
+  return {payload_version:String((D.meta&&D.meta.version)||'not declared'),
+    build_date:(D.meta&&D.meta.buildDate)||'not declared',
+    list_price_status:t?'list conflict resolved from the payload'+(t.resolved_on?' on '+t.resolved_on:'')
+      :pe.listConflict?'two recorded list amounts are held; neither is a confirmed customer net price'
+      :'list snapshots available; current customer net price not held',
+    cost_status:applied?(s.cost_basis_id?'parts purchase cost applied on basis '+s.cost_basis_id:'parts purchase cost entered by hand')
+      :pe.costRecordPresent?'parts purchase cost held, not applied to this scenario':'no parts purchase cost held',
+    cost_basis_id:s.cost_basis_id||null,
+    offer_effective_date:s.offer_effective_date||null};
+}
+function metadataLine(m){return `<p class="small meta-line" data-metadata="${esc(JSON.stringify(m))}">${esc(m.payload_version)} &middot; built ${esc(m.build_date)} &middot; list price: ${esc(m.list_price_status)} &middot; ${esc(m.cost_status)}${m.offer_effective_date?' &middot; offer from '+esc(m.offer_effective_date):''}</p>`;}
+/* UX-05. Three different questions, kept apart: is the evidence complete, has
+   a figure been technically checked, and has anyone commercially approved the
+   price. A technically checked cost does not make the evidence complete, and
+   neither of them is an approval. */
+function decisionStatus(c){
+  const pe=c.packEvidence||{},t=turboFor(c);
+  const missing=[];
+  if(!pe.costRecordPresent)missing.push('parts purchase cost');
+  if(!onwardHeld(c))missing.push('sales to dealer');
+  if(!t&&pe.listConflict)missing.push('one confirmed list price');
+  missing.push('current customer net price');
+  const acceptance=(D.packAudit||{}).acceptedStatus;
+  const rec=repo.load(c.id),st=rec&&rec.state;
+  return {
+    completeness:'Incomplete. Not held: '+missing.join(', ')+'.',
+    technical:(pe.costRecordPresent
+      ?'The parts purchase cost for '+c.pn+' is a technically checked record on the declared supplier purchase-cost basis, and the results are calculated by the checked engine.'
+      :'No technically checked parts purchase cost is held for '+c.pn+'. Revenue results are calculated by the checked engine.')
+      +' These are developer checks. '+(acceptance?'Pack acceptance: '+acceptance+'.':'No business or source acceptance is recorded.'),
+    commercial:st==='approved'
+      ?'A recorded case move puts this case at "approved". Check the move before relying on it.'
+      :'Not approved. No commercial approval is recorded for this case, and a saved revision is not an approval.'};
+}
+function decisionSummary(c){
+  const cmp=c.comparisons[state.compare],d=decisionStatus(c);
+  return `<div class="panel callout decision-summary" data-decision-summary><div class="eyebrow">Decision summary</div><h3>${esc(c.action||c.name)}</h3>
+  <div class="evidence-line"><span>Recorded change</span><b>${signedEUR(cmp.revenueDelta)} in recorded billing &middot; ${esc(cmp.label)}</b></div>
+  <div class="evidence-line" data-status="evidence-completeness"><span>Evidence completeness</span><b class="small">${esc(d.completeness)}</b></div>
+  <div class="evidence-line" data-status="technical-authority"><span>Technical authority</span><b class="small">${esc(d.technical)}</b></div>
+  <div class="evidence-line" data-status="commercial-approval"><span>Commercial approval</span><b class="small">${esc(d.commercial)}</b></div>
+  <div class="evidence-line"><span>Next action</span><b class="small">${esc(c.next)}</b></div>
+  ${metadataLine(currentMetadata(c))}</div>`;
+}
+
 /* UX-02, ported. The retired layer stated on screen that changing the objective
    re-orders the alternatives and moves nothing else. This layer showed two
    panels and let the reader infer it. Both orders are built here from two engine
@@ -188,13 +240,21 @@ function objectiveTwin(c){
 }
 
 /* ------------------------------------------------------- retained evidence */
+/* UX-06. Sales to dealer is an optional source. When no row carries it the
+   review is narrower and says so, instead of drawing an empty chart that reads
+   as zero sales to dealers. */
+function onwardHeld(c){return (c.series||[]).some(r=>r&&r.onwardQuantity!==null&&r.onwardQuantity!==undefined);}
+function onwardMissing(){return unavailableBlock({title:'No sales-to-dealer record is held for this case',
+  reason:'The distributor\'s sales to its dealers are not in the evidence for this case. That is a missing source, not zero sales to dealers.',
+  required:'monthly sales-to-dealer rows from the distributor for both periods',scope:'sales to dealer'});}
+function reviewScopeNote(c){return onwardHeld(c)?'':'<p class="small" data-review-scope="narrower">This review is narrower: it covers what ISZE billed only. Sales to dealer is not held for this case, so no comparison with the dealer flow is made.</p>';}
 function stats(c){
  const x=c.comparisons[state.compare],a=x.prior,z=x.current;
  return `<div class="stats">
  <div class="stat"><div class="label">ISZE billing change</div><strong class="${color(x.revenueDelta)}">${signedEUR(x.revenueDelta)}</strong><div class="detail">${eur(a.eur)} &rarr; ${eur(z.eur)}<br>Measured billing; not price-caused loss.</div></div>
  <div class="stat"><div class="label">Observed net unit price</div><strong>${eur(z.price,2)}</strong><div class="detail">${eur(a.price,2)} before &middot; ${pct(x.priceChangePct)}<br>Includes order and commercial-term mix.</div></div>
  <div class="stat"><div class="label">ISZE quantity change</div><strong class="${color(x.quantityChangePct)}">${pct(x.quantityChangePct)}</strong><div class="detail">${num(a.quantity)} &rarr; ${num(z.quantity)} ${esc(c.unit)}s<br>Purchases from ISZE.</div></div>
- <div class="stat"><div class="label">Sales-to-dealer change</div><strong class="${color(x.onwardChangePct)}">${x.onwardChangePct===null?'Not comparable':pct(x.onwardChangePct)}</strong><div class="detail">${num(a.salesToDealer)} &rarr; ${num(z.salesToDealer)} ${esc(c.unit)}s<br>Separate national wholesale flow.</div></div></div>`;
+ ${onwardHeld(c)?`<div class="stat"><div class="label">Sales-to-dealer change</div><strong class="${color(x.onwardChangePct)}">${x.onwardChangePct===null?'Not comparable':pct(x.onwardChangePct)}</strong><div class="detail">${num(a.salesToDealer)} &rarr; ${num(z.salesToDealer)} ${esc(c.unit)}s<br>Separate national wholesale flow.</div></div>`:`<div class="stat" data-source-missing="sales to dealer"><div class="label">Sales-to-dealer change</div><strong>Not held</strong><div class="detail">No sales-to-dealer record for this case.<br>A missing source, not a zero.</div></div>`}</div>`;
 }
 function chart(c,key,title,line=false){
  const cmp=c.comparisons[state.compare],years=[cmp.prior.year,cmp.current.year],months=cmp.current.months;
@@ -586,8 +646,8 @@ function marketView(c){
 function decision(c){
  const cmp=c.comparisons[state.compare];
  return `<div class="compare-row"><div><span class="eyebrow">Measured record</span><div class="small">${sourceButton()} &middot; no forecast or lost-sales attribution</div></div><select id="comparison" aria-label="Comparison period"><option value="half" ${state.compare==='half'?'selected':''}>January-June 2026 vs 2025</option><option value="annual" ${state.compare==='annual'?'selected':''}>Calendar 2025 vs 2024</option></select></div>
- ${stats(c)}${targetBox(c)}
- <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${chart(c,'onwardQuantity','What the distributor supplied to dealers')}</div>
+ ${decisionSummary(c)}${reviewScopeNote(c)}${stats(c)}${targetBox(c)}
+ <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${onwardHeld(c)?chart(c,'onwardQuantity','What the distributor supplied to dealers'):onwardMissing()}</div>
  <div class="grid2"><div class="panel"><span class="badge fact">Evidence supporting review</span><p style="margin-top:12px">${esc(c.reason)}</p></div><div class="panel warn"><span class="badge review">Evidence against a simple price story</span><p style="margin-top:12px">${esc(c.counter)}</p></div></div>
  <div class="grid2">${chart(c,'price','Observed ISZE unit price',true)}<div class="panel"><div class="eyebrow">Reconcile the euro change</div><h3>${signedEUR(cmp.revenueDelta)} in recorded billing</h3><div class="evidence-line"><span>Quantity effect, at prior price</span><b class="${color(cmp.volumeEffect)}">${signedEUR(cmp.volumeEffect)}</b></div><div class="evidence-line"><span>Effective price / terms effect</span><b class="${color(cmp.effectivePriceEffect)}">${signedEUR(cmp.effectivePriceEffect)}</b></div><div class="ruleline small">Exact identity: (new quantity &minus; old quantity) &times; old price + new quantity &times; (new price &minus; old price). The second term includes mix of order conditions. It is not causal price elasticity or a measured price-list effect.</div><div class="scopebox"><b>${num(c.fleet)} ${c.market==='ITUK'?'trucks':'vehicles'} &middot; 2025 market reference</b><br>${esc(c.application)} No part-level demand gap or dealer rate is computed.</div></div></div>
  ${termsTable(c)}${relatedTable(c)}<div class="panel callout"><h3>The next commercial action</h3><p>${esc(c.next)}</p><div class="rowactions"><button class="button primary" data-view="economics">Test price and gross profit</button><button class="button" data-view="action">Prepare the internal review</button></div></div>`;
@@ -618,7 +678,7 @@ function position(c){
   return `${marketView(c)}
  <div class="panel"><div class="eyebrow">Other recorded evidence, each under its own clock</div><h3>List snapshots, the archive and the earlier web pass</h3>
   <p class="small">Each block below is kept under the clock and the commercial price level its own source recorded. None of it is placed beside the comparable set above and none of it is put into one figure with it.</p></div>
- ${turboHere?`<div class="panel callout"><div class="eyebrow">Resolved before this screen</div><h3>The turbo list-price conflict is already settled. It is not a question for the reader.</h3><p>${esc(turboHere.statement)}</p><div class="evidence-line"><span>Applicable list price for billing</span><b>${eur(turboHere.resolved_billable_list,2)}</b></div><div class="evidence-line"><span>Second observation, kept as a sensitivity</span><b>${turboHere.sensitivity_range.map(v=>eur(v,2)).join(' / ')}</b></div><div class="evidence-line"><span>Resolved by</span><b class="small">${esc(turboHere.resolved_by||'not stated')}</b></div><p class="small"><b>Still open:</b> ${esc(turboHere.open_statement||'not stated')}</p></div>`:''}${snapshotPanel(c)}${leadsBlock}<details class="prior-web"><summary>Earlier web evidence, kept separate (${prior.length} records)</summary><p class="small">Retrieved for version 0.1, with the cache-age limits below. These records were not part of the accepted archive and have not been refreshed in this revision. A missing record in that archive does not erase them.</p>${prior.map(o=>`<div class="source-row"><b>${esc(o.seller)} &middot; ${esc(o.part)} &middot; ${esc(o.market)}</b><p>${o.price===null?'Reference only':`${esc(o.currency)} ${num(o.price,2)}`} &middot; VAT ${esc(o.tax)}.<br>${esc(o.match)} ${esc(o.note)}</p><p class="small">${esc(o.freshness)} ${esc(o.verification)}</p>${safeLink(o.url,'Earlier source listing')}</div>`).join('')}</details>${relatedTable(c)}<div class="panel warn"><h3>What remains unresolved for this case</h3><div class="acceptance-grid">${(e.readiness||[]).map(r=>`<div><b>${esc(r.name)}</b><p class="small">${esc(r.status)}</p></div>`).join('')}</div><p class="small">Restricted model-cost records and the source invoice line were not copied into this browser file. The former generic reference-price multiplier and automatic price ceilings have been removed. ${esc(D.meta.confirmedRules.costTypeRequired||'')}</p><button class="button primary" data-view="economics">Test a stated price, not an inferred optimum</button></div>`;
+ ${turboHere?`<div class="panel callout"><div class="eyebrow">Resolved before this screen</div><h3>The turbo list-price conflict is already settled. It is not a question for the reader.</h3><p>${esc(turboHere.statement)}</p>${metadataLine(currentMetadata(c))}<div class="evidence-line"><span>Applicable list price for billing</span><b>${eur(turboHere.resolved_billable_list,2)}</b></div><div class="evidence-line"><span>Second observation, kept as a sensitivity</span><b>${turboHere.sensitivity_range.map(v=>eur(v,2)).join(' / ')}</b></div><div class="evidence-line"><span>Resolved by</span><b class="small">${esc(turboHere.resolved_by||'not stated')}</b></div><p class="small"><b>Still open:</b> ${esc(turboHere.open_statement||'not stated')}</p></div>`:''}${snapshotPanel(c)}${leadsBlock}<details class="prior-web"><summary>Earlier web evidence, kept separate (${prior.length} records)</summary><p class="small">Retrieved for version 0.1, with the cache-age limits below. These records were not part of the accepted archive and have not been refreshed in this revision. A missing record in that archive does not erase them.</p>${prior.map(o=>`<div class="source-row"><b>${esc(o.seller)} &middot; ${esc(o.part)} &middot; ${esc(o.market)}</b><p>${o.price===null?'Reference only':`${esc(o.currency)} ${num(o.price,2)}`} &middot; VAT ${esc(o.tax)}.<br>${esc(o.match)} ${esc(o.note)}</p><p class="small">${esc(o.freshness)} ${esc(o.verification)}</p>${safeLink(o.url,'Earlier source listing')}</div>`).join('')}</details>${relatedTable(c)}<div class="panel warn"><h3>What remains unresolved for this case</h3><div class="acceptance-grid">${(e.readiness||[]).map(r=>`<div><b>${esc(r.name)}</b><p class="small">${esc(r.status)}</p></div>`).join('')}</div><p class="small">Restricted model-cost records and the source invoice line were not copied into this browser file. The former generic reference-price multiplier and automatic price ceilings have been removed. ${esc(D.meta.confirmedRules.costTypeRequired||'')}</p><button class="button primary" data-view="economics">Test a stated price, not an inferred optimum</button></div>`;
 }
 
 /* ------------------------------------------------------- corrected views */
@@ -788,7 +848,7 @@ function economicsResults(){
       scope:s.scope,support_eur:s.support_eur,cost_eur:s.cost_eur,pack_size:s.pack_size,
       quantity_label:'stated test assumption'});
     return `<tr><td>${pct(v)}</td><td class="n ${color(rr.revenue_change)}">${rr.ok?signedEUR(rr.revenue_change):'-'}</td><td class="n ${color(rr.gp_change)}">${rr.ok&&!gp?(rr.gp_change===null?'Cost required':signedEUR(rr.gp_change)):'Cost required'}</td></tr>`;}).join('');
-  return `${!r.ok?`<div class="panel warn error-msg"><b>This scenario was not calculated.</b><br>${esc(r.error)}</div>`:`<div class="grid2"><div class="panel"><div class="result-label">Revenue change in this scenario</div><div class="resultbig ${color(r.revenue_change)}">${signedEUR(r.revenue_change)}</div><div class="small">${num(r.quantity_after,1)} ${esc(c.unit)}s &middot; ${eur(r.price_after,2)} proposed net price<br>Against ${eur(r.revenue_before)} at the accepted base price of ${eur(r.price_before,2)}.</div></div><div class="panel ${gp?'warn':r.gp_change<0?'warn':'good'}"><div class="result-label">Scenario gross-profit change</div><div class="resultbig ${gp?'':color(r.gp_change)}">${gp?'Cost required':signedEUR(r.gp_change)}</div><div class="small">${gp?'No verified parts purchase cost is held for this part on the selected basis.':'Parts purchase cost only, less '+eur(r.support_eur)+' of one-off support counted once. Freight, duty, overheads and kickbacks are excluded.'}</div></div></div>`}
+  return `${metadataLine(currentMetadata(c))}${!r.ok?`<div class="panel warn error-msg"><b>This scenario was not calculated.</b><br>${esc(r.error)}</div>`:`<div class="grid2"><div class="panel"><div class="result-label">Revenue change in this scenario</div><div class="resultbig ${color(r.revenue_change)}">${signedEUR(r.revenue_change)}</div><div class="small">${num(r.quantity_after,1)} ${esc(c.unit)}s &middot; ${eur(r.price_after,2)} proposed net price<br>Against ${eur(r.revenue_before)} at the accepted base price of ${eur(r.price_before,2)}.</div></div><div class="panel ${gp?'warn':r.gp_change<0?'warn':'good'}"><div class="result-label">Scenario gross-profit change</div><div class="resultbig ${gp?'':color(r.gp_change)}">${gp?'Cost required':signedEUR(r.gp_change)}</div><div class="small">${gp?'No verified parts purchase cost is held for this part on the selected basis.':'Parts purchase cost only, less '+eur(r.support_eur)+' of one-off support counted once. Freight, duty, overheads and kickbacks are excluded.'}</div></div></div>`}
   ${resultStateTable(r,current())}
   ${gp?unavailableBlock({title:'Gross profit and gross margin are not calculated for this case',reason:(c.packEvidence.costRecordPresent?'A parts purchase cost is held for this part, but no cost is applied to this scenario yet, so gross profit and gross margin are not stated. Apply the basis or enter the cost and the figures follow. A missing cost is not zero.':'No parts purchase cost is held or entered for this exact part, so gross profit and gross margin cannot be stated. A missing cost is not zero.')+' Revenue and the revenue break-even still are. The figures are not estimated and no cost is defaulted.',required:'the parts purchase cost for '+c.pn+' per the declared supplier purchase-cost calculation, or a manually entered cost labelled as an assumption',scope:'this scenario'}):''}
   ${breakEvens(r)}
@@ -796,12 +856,25 @@ function economicsResults(){
   <div class="panel"><h3>Stress the volume assumption</h3><div class="tablewrap"><table><thead><tr><th>Assumed volume change</th><th class="n">Revenue change</th><th class="n">Gross-profit change</th></tr></thead><tbody>${stressRows}</tbody></table></div><p class="small ruleline">The model does not predict volume. The change must come from a commitment or a stated test assumption. It does not multiply a modelled market gap by an invented recovery rate.</p></div>
   <div class="panel dark"><h3>Read this before a pricing decision</h3><p>${esc(c.recommendation)}</p><p class="small">Effective rounded price change: ${pct(r.ok?100*(r.price_after/r.price_before-1):null)}. The base covers the recorded period; it is not annualised. The default cohort is all historical units. Change the eligibility scope before treating a targeted offer as a blanket discount.</p></div>`;
 }
+/* UX-02. The price test names the ranked option it started from and the values
+   edited by hand since, so a selected option and a manual edit are one record. */
+const EDIT_LABELS={price_before:'scenario base price',price_after:'proposed net price',quantity_before:'base quantity',
+  quantity_after:'proposed quantity',quantity_label:'volume basis label',scope:'volume scope',support_eur:'one-off support cost',
+  cost_eur:'unit parts purchase cost',cost_basis_id:'supplier-cost basis',pack_size:'pack size'};
+function chosenOption(){
+  const a=store.alternativeEdits(state.caseId);
+  if(!a.selected)return '<p class="small" data-chosen-option="">No ranked option is selected. The values below are the unchanged offer or your own entries.</p>';
+  const edits=a.edited_fields===null?'Whether a value was edited after selection is not known for a reopened record.'
+    :a.edited_fields.length?'Edited by hand since selection: '+a.edited_fields.map(k=>esc(EDIT_LABELS[k]||k)).join(', ')+'.'
+    :'No value has been edited since selection.';
+  return `<div class="panel callout" data-chosen-option="${esc(a.selected)}"><span class="eyebrow">Selected option</span><p><b>${esc(a.label)}</b></p><p class="small" data-edited-fields="${esc((a.edited_fields||[]).join(','))}">${edits}</p></div>`;
+}
 function economics(c){
   const r=caseResult(),s=scenario(),e=c.packEvidence;
   const bases=basisOptions();
   const rec=s.cost_basis_id?E.costRecord(D,c.pn,s.cost_basis_id):null;
   return `<div class="inputsnote"><b>Scenario only; no automatic price move.</b> Default price and volume response are unchanged. A manual price or cost does not approve a customer quotation, cost basis or margin floor.</div>
-  <div class="split"><div class="panel scenario-controls"><h3>Define the offer being tested</h3>
+  <div class="split"><div class="panel scenario-controls"><h3>Define the offer being tested</h3>${chosenOption()}
   <div class="field"><label for="s-pn">Exact part</label><input id="s-pn" value="${esc(s.part_number)}" readonly><small>The original part reference is carried, never rewritten.</small></div>
   <div class="field"><label for="s-basis">Supplier-cost basis</label><select id="s-basis">${bases.map(b=>`<option value="${esc(b.basis_id)}" ${s.cost_basis_id===b.basis_id?'selected':''}>${esc(b.basis_id)} - ${esc(b.name)}</option>`).join('')}</select><small>${rec?`Verified parts purchase cost ${eur(rec.cost_eur,4)} per ${esc(c.unit)} on ${esc(rec.basis_id)} (${esc(rec.rate_window||'')}).`:'No verified cost is held for this part on the selected basis.'} ${esc(D.meta.confirmedRules.costTypeRequired||'')}</small></div>
   <div class="field"><label for="s-date">Offer effective date</label><input id="s-date" type="date" value="${esc(s.offer_effective_date||'')}"><small>Required. It selects the supplier-cost basis. It is kept separate from the evidence period below.</small></div>
@@ -929,7 +1002,8 @@ function actionView(){
   const existing=repo.load(c.id);
   const summary=existing?repo.summarize(existing):null;
   const latest=existing?existing.revisions[existing.revisions.length-1]:null;
-  const v=(latest&&latest.record&&latest.record.review)||{};
+  const unsaved=state.unsavedReview[c.id]||null;
+  const v=unsaved||(latest&&latest.record&&latest.record.review)||{};
   const consistency=store.consistency(c.id);
   const hist=existing?repo.history(c.id):[];
   return `<div class="inputsnote"><b>A durable record, not a scratch pad.</b> A save writes a new revision. Nothing is overwritten, and a correction names the revision it replaces.</div>
@@ -943,10 +1017,10 @@ function actionView(){
   <div class="field"><label for="a-note">Proposed action and test conditions</label><textarea id="a-note">${esc(v.note||c.recommendation)}</textarea></div>
   <div class="field"><label for="a-outcome">Delivered support and outcome (recorded separately from the proposal)</label><textarea id="a-outcome" placeholder="Not yet delivered or measured. An agreed action is not a result.">${esc(v.outcome||'')}</textarea></div>
   <div class="rowactions"><button class="button primary" id="save-case">Save a new revision</button><button class="button" id="export-json">Export the internal record (JSON)</button><button class="button" id="export-member">Build a participant brief</button><button class="button" id="export-review-body">Export a readable case review</button><button class="button" id="export-bundle">Export all cases (recovery bundle)</button></div>
-  <div class="status-msg" id="save-status">${summary?`Case at revision ${summary.version}, state ${esc(summary.state)}, last saved ${esc(summary.updated_at)}.`:'No revision saved yet for this case.'}</div>
+  <div class="status-msg" id="save-status">${unsaved?`Not saved. The form holds your unsaved entries; ${summary?`the last saved revision is ${summary.version}`:'no revision is saved for this case'}. Correct the cause and save again.`:summary?`Case at revision ${summary.version}, state ${esc(summary.state)}, last saved ${esc(summary.updated_at)}.`:'No revision saved yet for this case.'}</div>
   ${repo.store.isDurable()?'':'<p class="small danger-line">This browser will not keep the record after it closes. Use the recovery bundle before closing.</p>'}</div>
   <div>
-  <div class="panel ${consistency.ok?'good':'warn'}"><h3>One scenario, checked</h3><p class="small">${esc(consistency.statement)}</p>
+  <div class="panel ${consistency.ok?'good':'warn'}"><h3>One scenario, checked</h3><p class="small">${esc(consistency.statement)}</p>${metadataLine(currentMetadata(c))}
     <div class="evidence-line"><span>Selected option</span><b>${esc(s.selected_alternative_id||'none - manual scenario')}</b></div>
     <div class="evidence-line"><span>Scenario version</span><b>${num(s.version,0)}</b></div>
     <div class="evidence-line"><span>Offer effective date</span><b>${esc(s.offer_effective_date||'not set')}</b></div>
@@ -971,17 +1045,16 @@ function render(){
      including a fixed "10 review findings" that no longer described the file. */
   const packAudit=D.packAudit||{};
   const findings=(packAudit.issues||[]).length;
-  const turboHere=turboFor(c);let listStatus;let listClass;
-  if(turboHere){listStatus='list conflict resolved from the payload';listClass='fact';}
-  else if(c.packEvidence.listConflict){listStatus='two recorded list amounts are held; neither is a confirmed customer net price';listClass='review';}
-  else{listStatus='list snapshots available; current customer net price not held';listClass='review';}
+  const turboHere=turboFor(c),meta=currentMetadata(c);
+  const listStatus=meta.list_price_status,listClass=turboHere?'fact':'review';
   $('#pack-status').innerHTML=`<span><b>${esc((D.meta&&D.meta.version)||'Version not declared')}</b> &middot; ${esc(packAudit.acceptedStatus||'acceptance state not declared')}</span>`
     +`<span class="badge ${listClass}">List: ${esc(listStatus)}</span>`
-    +`<span>Applicable net and approved cost: not held</span>`
+    +`<span>Cost: ${esc(meta.cost_status)} &middot; not approved</span>`
     +`<button class="sourcesbutton" data-sources>${findings} review finding${findings===1?'':'s'} in the payload</button>`;
   /* The payload version, exposed on a chrome element so a check can assert that
      the page and the payload agree without scraping a styled span. */
   $('#pack-status').setAttribute('data-payload-version',String((D.meta&&D.meta.version)||'not declared'));
+  $('#pack-status').setAttribute('data-metadata',JSON.stringify(meta));
   $('#tabs').innerHTML=views.map(k=>`<button class="tab ${state.view===k?'active':''}" role="tab" aria-selected="${state.view===k}" data-view="${k}">${(TAB_LABELS.find(t=>t[0]===k)||[k,k])[1]}</button>`).join('');
   /* A view that fails must never leave the previous view's content underneath a
      newly selected tab (F05). */
@@ -1070,16 +1143,21 @@ function collectReview(c){
     note:$('#a-note')?$('#a-note').value:(c?c.recommendation:''),
     outcome:$('#a-outcome')?$('#a-outcome').value:''};
 }
+/* UX-06. A refused save keeps what was typed, so a later repaint shows the
+   unsaved entries rather than the last saved revision. */
+function keepUnsaved(c,review){state.unsavedReview[c.id]=review;}
 function saveCase(){
   const c=current(),r=caseResult(),s=scenario();
   const review=collectReview(c);
   const consistency=store.consistency(c.id);
   if(!consistency.ok){
+    keepUnsaved(c,review);
     toast('Not saved: the ranked option and the working record disagree.');
     return;
   }
   const existing=repo.load(c.id);
   if(!r.ok){
+    keepUnsaved(c,review);
     toast('Not saved: the scenario is not calculated. '+r.error);
     return;
   }
@@ -1087,12 +1165,14 @@ function saveCase(){
     {expected_version:existing?existing.version:0,state:review.state,owner_role:review.owner_role,
      next_action:review.next_action,next_update_due:review.next_update_due,recorded_by:'internal user'});
   if(res.ok){
+    delete state.unsavedReview[c.id];
     $('#save-status').textContent=res.durable
       ? `Saved as revision ${res.version}. Nothing was overwritten.`
       : `Saved as revision ${res.version} for this session only. Use the recovery bundle before closing.`;
     toast(res.durable?`Revision ${res.version} saved.`:'Saved for this session only.');
     render();
   }else{
+    keepUnsaved(c,review);
     $('#save-status').textContent=res.conflict?`Not saved. ${res.error}`:`Not saved. ${res.error}`;
     toast(res.conflict?'Someone else changed this case. Reload first.':'Not saved.');
   }
@@ -1109,7 +1189,7 @@ function exportInternal(){
   const existing=repo.load(c.id);
   const review=existing?existing.revisions[existing.revisions.length-1].record.review:collectReview(c);
   const exported=X.internalRecord(caseObjectForExport(c),s,r,{exported_at:new Date().toISOString(),
-    review:review,sources:s.sources,history:existing?repo.history(c.id):[]});
+    review:review,sources:s.sources,history:existing?repo.history(c.id):[],metadata:currentMetadata(c)});
   download(`${c.customer.replaceAll(' ','_')}_${c.pn}_Internal_Record.json`,JSON.stringify(exported.payload,null,2),'application/json');
   toast('Internal record exported. Audience: ISZE internal only.');
 }

@@ -100,13 +100,20 @@
       }
     }
     function writeAll(all) {
-      memory = all;
-      if (useMemory || !available) return { ok: true, durable: false, reason: 'memory only' };
+      if (useMemory || !available) { memory = all; return { ok: true, durable: false, reason: 'memory only' }; }
       try {
         root.localStorage.setItem(KEY, JSON.stringify(all));
+        memory = all;
         return { ok: true, durable: true };
       } catch (e) {
+        /* UX-06. A refused write is not kept: the session copy goes back to what
+           storage last held, so a later screen cannot report the refused
+           revision as saved. */
         available = false;
+        try {
+          var held = root.localStorage.getItem(KEY);
+          memory = held ? JSON.parse(held) : {};
+        } catch (e2) { /* storage unreadable as well: keep the last good copy */ }
         return { ok: false, durable: false, reason: 'storage refused the write: ' + e.message };
       }
     }
@@ -320,7 +327,8 @@
           + 'not by being saved into it.');
       }
       return {
-        ok: true, version: saved.version, durable: true, warning: null,
+        ok: true, version: saved.version,
+        durable: options.adapter ? true : legacy.isDurable(), warning: null,
         notes: notes.length ? notes : null,
         changed_fields: saved.changed_fields,
         case: service.summarize(saved.record), record: asLegacyRecord(saved.record)

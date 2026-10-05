@@ -92,6 +92,13 @@
   var INTERNAL_HISTORY_FIELDS = ['revision', 'recorded_at', 'supersedes', 'recorded_by',
     'note', 'state', 'version', 'updated_at', 'outcome'];
 
+  /* UX-05. The current-metadata block of an internal record, listed key by key.
+     The interface derives it once and paints the same block on the header, the
+     cost results and the scenario panel, so the file states what the screen
+     stated when it was exported. */
+  var INTERNAL_METADATA_FIELDS = ['metadata', 'payload_version', 'build_date', 'list_price_status',
+    'cost_status', 'cost_basis_id', 'offer_effective_date'];
+
   /* Fields the member brief derives or carries that are not in the shared
      contracts. Each one is named here, so an addition to a participant brief is
      a visible change to this list rather than an accident.
@@ -122,6 +129,7 @@
       /* And the revision log's keys, so the history is written out rather than
          surviving as an array of empty objects. */
       INTERNAL_HISTORY_FIELDS.forEach(function (k) { keys[k] = true; });
+      INTERNAL_METADATA_FIELDS.forEach(function (k) { keys[k] = true; });
     } else {
       spec.leaf_fields.forEach(function (k) { keys[k] = true; });
       MEMBER_CONSTRUCTED_FIELDS.forEach(function (k) { keys[k] = true; });
@@ -419,6 +427,7 @@
          revisions existed - the record stated a history and stated none. The
          declared field is the same either way; only the source was wrong. */
       history: extra.history || caseObject.history || [],
+      metadata: extra.metadata || null,
       not_approved_statement: 'This record states a proposal and its result. Nothing in it is an '
         + 'approval and it is not safe to forward outside ISZE.',
       /* S10c. This block used to be an object, and the allowlist then dropped

@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T19:43:37Z",
+  "written_at": "2026-10-05T20:15:09Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 33,
-    "not started": 60,
+    "technically verified": 36,
+    "not started": 57,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 36,
+  "overlay_applied": 39,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -613,8 +613,12 @@
       "existing_finding": "F01, F09",
       "can_start_after": "BASE-03",
       "integrate_after": "UX-01, FIN-07, FIN-08",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/ux_02_alternative.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/scenario.js:127 (the selected alternative no longer writes its own proposed price into the form) -> UX-02 E1: selecting an alternative populates the manual form with its exact inputs and both results fails; restored -> passes",
+        "mutation src/ui/app.js:1181 (changing objective re-selects the top ranked alternative) -> UX-02 E2: changing objective does not erase edits or select a different scenario automatically fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
@@ -652,8 +656,12 @@
       "existing_finding": "F11, F10",
       "can_start_after": "BASE-03",
       "integrate_after": "UX-01, FIN-02",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/ux_05_summary.test.mjs -> 2 pass, 0 fail",
+        "mutation src/ui/app.js:1052 (the header prints its fixed cost sentence instead of the current metadata) -> UX-05 E1: the turbo header, cost panels, scenario and export use consistent current metadata fails; restored -> passes",
+        "mutation src/ui/app.js:198 (commercial approval follows the technically checked cost) -> UX-05 E2: the reader can distinguish evidence completeness, technical authority and commercial approval fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
@@ -665,8 +673,12 @@
       "existing_finding": "F05, F06",
       "can_start_after": "BASE-03",
       "integrate_after": "UX-01, BASE-06",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/ux_06_states.test.mjs -> 2 pass, 0 fail",
+        "mutation src/ui/app.js:598 (the sales-to-dealer chart is drawn even when that optional source is not held) -> UX-06 E1: removing an optional source leaves a correctly labelled narrower review fails; restored -> passes",
+        "mutation src/data/cases.js:115 (a refused write is kept in the session copy) -> UX-06 E2: a save failure preserves the unsaved form and never displays a false saved confirmation fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
