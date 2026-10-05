@@ -29,7 +29,7 @@ Banned substitute: "build succeeded" / "verify passed" without stating what pain
 
 3. **Payload sanity** — no `NaN` in embedded JSON; no JS-only first paint without SSR fallback for `file://` open.
 
-4. **Launcher** — sibling `OPEN_*.cmd` exists next to the HTML; run it in the same turn **or** state what is unverified.
+4. **Launcher** — sibling `OPEN_*.cmd` exists next to the HTML. Do not run it for him unless he says open now; check the page yourself (headless Chrome screenshot) **or** state what is unverified.
 
 5. **Chat reply** — before telling Jerome to double-click the `.cmd`, include **"What you should see"** (≤3 bullets): concrete visible evidence from step 2 (counts, labels, banners).
 

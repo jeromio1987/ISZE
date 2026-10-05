@@ -16,7 +16,7 @@ Jerome double-clicks HTML. That is `file://`. **`fetch()` of sibling JSON always
    - **Chart.js (house dashboards):** always inline `chart.umd.js` — **never CDN** (see `dashboard-contrast-kpi` / visueel-rapport).
    - **Plotly:** prefer local `_ui/plotly.min.js` only. CDN fallback is **discouraged**; if used, it is a last-resort for `file://` when the local path is broken — new shared packs should ship local Plotly or a launcher, not depend on CDN.
 5. **Rebuild gate:** after writing HTML that loads data, open it (or simulate `file://` path) and confirm first paint — or prove data is embedded / launcher exists.
-6. **Chat links are dead.** Cursor markdown `file://` does not open HTML/PDF. Ship `OPEN_*.cmd` (`start "" "%~dp0file.html"`) next to the file **and run it** in the same turn. Tell him to double-click the `.cmd`. Never leave a `file://` chat link as the open path.
+6. **Chat links are dead.** Cursor markdown `file://` does not open HTML/PDF. Ship `OPEN_*.cmd` (`start "" "%~dp0file.html"`) next to the file; do not run it unless he says open now. Tell him to double-click the `.cmd`. Never leave a `file://` chat link as the open path.
 
 ## Part-Groups / Aftermarket
 

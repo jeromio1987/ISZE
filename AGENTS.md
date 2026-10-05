@@ -7,7 +7,7 @@
 - **`paths.yaml`** is the folder contract — numbered folders (`01_data/` … `09_meetings/`). PRISM reads it via `config.py`; non-PRISM Python uses `04_tools/_shared/paths.py` or `04_tools/workspace/isze_paths.py`; PowerShell uses `04_tools/workspace/isze_root.ps1`.
 - **`$env:ISZE_ROOT`** is the standard workspace root (set in launchers/skills; do not hardcode `C:\Users\jerom\...` in new docs, skills, or code).
 - **Deploy-side compatibility paths** (`fetch('../Data/...')`, `Data/dashboards/` on GitHub Pages, deploy-side `Projects/`) are runtime URLs for published HTML — not local source paths. Local source: `01_data/`, `02_dashboards/`, `03_analytics/`.
-- **`07_deploy/`** is a generated deploy mirror — never edit manually; edit `02_dashboards/` + run `sync_to_deploys.ps1`.
+- **`07_deploy/`** is a generated deploy mirror — never edit manually; edit `02_dashboards/`; run `sync_to_deploys.ps1` only after Jerome says ship.
 
 ## Bootstrap (every session)
 
@@ -34,7 +34,7 @@
 
 | Change type | Workflow |
 |-------------|----------|
-| Static HTML | Edit `02_dashboards/` → `02_dashboards/sync_to_deploys.ps1` |
+| Static HTML | Edit `02_dashboards/` → `02_dashboards/sync_to_deploys.ps1` only after Jerome says ship |
 | Dashboard JSON | `build_isze_dashboard_json.py` → `01_data/dashboards/*.json` |
 | PRISM UI | `03_analytics/Isuzu/prism/` — `run_prism.ps1` (**8503**) |
 
