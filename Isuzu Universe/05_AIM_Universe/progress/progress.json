@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T20:09:29Z",
+  "written_at": "2026-10-05T20:15:09Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 35,
-    "not started": 58,
+    "technically verified": 36,
+    "not started": 57,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 38,
+  "overlay_applied": 39,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -656,8 +656,12 @@
       "existing_finding": "F11, F10",
       "can_start_after": "BASE-03",
       "integrate_after": "UX-01, FIN-02",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/ux_05_summary.test.mjs -> 2 pass, 0 fail",
+        "mutation src/ui/app.js:1052 (the header prints its fixed cost sentence instead of the current metadata) -> UX-05 E1: the turbo header, cost panels, scenario and export use consistent current metadata fails; restored -> passes",
+        "mutation src/ui/app.js:198 (commercial approval follows the technically checked cost) -> UX-05 E2: the reader can distinguish evidence completeness, technical authority and commercial approval fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
