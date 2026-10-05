@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T20:00:46Z",
+  "written_at": "2026-10-05T20:09:29Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 34,
-    "not started": 59,
+    "technically verified": 35,
+    "not started": 58,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 37,
+  "overlay_applied": 38,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -669,8 +669,12 @@
       "existing_finding": "F05, F06",
       "can_start_after": "BASE-03",
       "integrate_after": "UX-01, BASE-06",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/ux_06_states.test.mjs -> 2 pass, 0 fail",
+        "mutation src/ui/app.js:598 (the sales-to-dealer chart is drawn even when that optional source is not held) -> UX-06 E1: removing an optional source leaves a correctly labelled narrower review fails; restored -> passes",
+        "mutation src/data/cases.js:115 (a refused write is kept in the session copy) -> UX-06 E2: a save failure preserves the unsaved form and never displays a false saved confirmation fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
