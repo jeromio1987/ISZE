@@ -24,7 +24,7 @@ You are working in the **ISZE** analytics workspace at `C:\Users\jerom\Desktop\c
 
 **Data safety:** never open or paste line-level billing (`01_data/raw/sales/*`, `01_data/12_raw/**`) into chat. Prefer `01_data/15_gpt_safe/` for anything shared externally.
 
-**External IML / meeting language:** Mode **A** = outside/shared · Mode **B** = spar with Jerome (see `AGENTS.md`). Shared decks/HTML/PDF: never IML v7 / Model B / PRISM lane or personal contact names — use “IML service schedule” + business sources; roles only (IML / ITUK).
+**External IML / meeting language:** **Shared / external** = anything that leaves the workspace · **internal / private** = sparring with Jerome (see `AGENTS.md`). Shared decks/HTML/PDF: never IML v7 / Model B / PRISM lane or personal contact names — use “IML service schedule” + business sources; roles only (IML / ITUK).
 ---
 
 ---

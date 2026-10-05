@@ -7,7 +7,7 @@ alwaysApply: false
 # ISZE HTML dashboards
 
 - **Edit only** `02_dashboards/**/*.html` — never `07_deploy/Master Dashboard/` or `publish-site/` (overwritten on sync).
-- **Deploy:** `02_dashboards/sync_to_deploys.ps1` after HTML changes.
+- **Deploy:** `02_dashboards/sync_to_deploys.ps1` only after Jerome says ship (`AGENTS.md`, Production).
 - **JSON feeds:** `01_data/14_dashboards/isze_data.json`, `tender_data.json` (legacy alias `01_data/dashboards/` if junction exists) — build via PRISM scripts / tender publish, not HTML-side JSON.
 - **Contracts:** `03_analytics/Isuzu/prism/docs/dashboard_contracts.md` for CSV/JSON field names.
 - **Roadmap:** `00_docs/ISZE_ROADMAP.md` + `02_dashboards/ROADMAP.md`.
