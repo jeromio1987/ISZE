@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-10-05T20:15:09Z",
+  "written_at": "2026-10-05T20:29:23Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 36,
-    "not started": 57,
+    "technically verified": 39,
+    "not started": 54,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 39,
+  "overlay_applied": 42,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -387,8 +387,12 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/data_02_entities.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/manifest.js:159 (the entity identifier leaves out the country) -> DATA-02 E1: cross-country and shared-name fixtures cannot silently merge distinct entities fails; restored -> passes",
+        "mutation src/data/manifest.js:216 (a site link with no source counts toward a split) -> DATA-02 E2: an account covering several sites stays combined until a genuine split is supported, and national plus included dealer records are not added fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
@@ -400,8 +404,12 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "DATA-01",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/data_03_references.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/evidence.js:444 (the reference is trimmed and its leading zeros dropped on intake) -> DATA-03 E1: leading-zero and nonnumeric references round-trip unchanged fails; restored -> passes",
+        "mutation src/data/evidence.js:490 (an update replaces the recorded versions instead of adding one) -> DATA-03 E2: a classification or successor update creates a new relationship version without rewriting a saved decision fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
@@ -832,8 +840,13 @@
       "existing_finding": "New implementation detail derived from the roadmap/papers.",
       "can_start_after": "BASE-03",
       "integrate_after": "CASE-03, CASE-06, CASE-07",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/case_08_queue.test.mjs -> 2 pass, 0 fail",
+        "mutation src/case/store.js:342 (the queue item opens version 1 instead of the version it was listed at) -> CASE-08 E1: a due item opens its exact case and outstanding obligation fails; restored -> passes",
+        "mutation src/case/store.js:384 (the shared search no longer keeps to the asking organisation) -> CASE-08 E2: searching a part does not reveal restricted cases or count another organisation's private records fails; restored -> passes",
+        "mutation src/case/store.js:385 (the shared search no longer drops a case with a restricted source) -> CASE-08 E2: searching a part does not reveal restricted cases or count another organisation's private records fails; restored -> passes"
+      ],
       "blockers": []
     },
     {

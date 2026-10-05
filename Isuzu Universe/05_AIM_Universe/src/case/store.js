@@ -333,6 +333,81 @@
     /* Reopen the case as it was at a given version: the inputs, both results and
        what had been proposed, delivered and achieved at that point. Rebuilt from
        the log, so it is the case as it stood rather than a fresh calculation. */
+    /* A queue item opens the case it names, at the version it was listed at,
+       with the obligation that put it on the queue beside the saved context. */
+    function openQueueItem(caseId, asOfDate) {
+      var found = requireRecord(caseId);
+      if (found.error) return found.error;
+      var record = found.record;
+      var context = reopen(caseId, record.version);
+      if (context && context.ok === false) return context;
+      var work = schema.openWork(record, asOfDate) || {};
+      return {
+        ok: true,
+        case_id: record.case_id,
+        version: record.version,
+        saved_context: context,
+        obligation: {
+          statement: schema.obligationStatement(record, asOfDate),
+          next_action: record.next_action || null,
+          next_update_due: record.next_update_due || null,
+          owner_role: record.owner_role || null,
+          overdue: !!work.overdue,
+          awaiting: work.awaiting || null
+        }
+      };
+    }
+
+    var REUSABLE_STATES = ['response_issued', 'action_agreed', 'resolved'];
+
+    /* Search over case history. Internal mode reads every case on this store.
+       A shared search serves one organisation: it needs a permitted identity that
+       names its organisation, and it returns only that organisation's cases with
+       no restricted source. Its count is the rows it shows and nothing else, so
+       the existence of another organisation's record is not disclosed. */
+    function search(filter, options) {
+      var f = filter || {};
+      var o = options || {};
+      var mode = o.mode === 'shared' ? 'shared' : 'internal';
+      if (mode === 'shared') {
+        var permitted = outputModule().canRead(o.identity, 'shared_brief');
+        if (!permitted || !permitted.ok || !o.identity.tenant) {
+          return { ok: false, mode: mode, rows: [], count: 0,
+            statement: 'A shared search needs a permitted identity that names its organisation.' };
+        }
+      }
+      var rows = [];
+      adapter.readIndex().forEach(function (id) {
+        var r = adapter.load(id);
+        if (!r) return;
+        if (mode === 'shared') {
+          if (r.customer !== o.identity.tenant) return;
+          if ((r.sources || []).some(function (s) { return s && s.restricted === true; })) return;
+        }
+        if (f.part_number && String(r.part_number || '').trim().toUpperCase()
+          !== String(f.part_number).trim().toUpperCase()) return;
+        if (f.owner_role && r.owner_role !== f.owner_role) return;
+        if (f.state && r.state !== f.state) return;
+        if (f.due_by && !(r.next_update_due && r.next_update_due <= f.due_by)) return;
+        if (f.outcome && !(r.outcome && r.outcome.result === f.outcome)) return;
+        var work = schema.openWork(r, o.as_of) || {};
+        if (f.awaiting && work.awaiting !== f.awaiting) return;
+        if (f.source && !(r.sources || []).some(function (s) { return s && s.reference_id === f.source; })) return;
+        rows.push({
+          case_id: r.case_id, version: r.version, state: r.state, stage: schema.stageOf(r.state),
+          part_number: r.part_number || null, customer: r.customer || null,
+          owner_role: r.owner_role || null, awaiting: work.awaiting || null,
+          next_action: r.next_action || null, next_update_due: r.next_update_due || null,
+          reusable_answer: REUSABLE_STATES.indexOf(r.state) >= 0
+        });
+      });
+      rows.sort(function (a, b) { return String(a.case_id).localeCompare(String(b.case_id)); });
+      return { ok: true, mode: mode, rows: rows, count: rows.length,
+        statement: mode === 'shared'
+          ? 'Cases for this organisation that match the search.'
+          : 'Every case on this store that matches the search.' };
+    }
+
     function reopen(caseId, version) {
       var found = requireRecord(caseId);
       if (found.error) return found.error;
@@ -935,6 +1010,8 @@
       queue: queue,
       history: history,
       reopen: reopen,
+      openQueueItem: openQueueItem,
+      search: search,
       /* A record write, in the shape the application already calls. */
       save: saveAtCaseId,
       /* The same write, at the service's own shape, for a caller that holds a
