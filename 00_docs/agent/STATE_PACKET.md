@@ -660,7 +660,8 @@ So the base carries a margin that is not ours, and the class letter sets ours on
 sibling launcher; write-up `01_data/90_INBOX/PRICING_STACK_APPLIED_2026-09-19.md`; roadmap
 `00_docs/roadmaps/pricing.md` (hub item 16). Receipt regenerated 12:52 to cover the current file.
 
-**NOT VERIFIED:** that Excel opens it and that it scrolls. No Excel or COM on this machine. The two
+**NOT VERIFIED:** that Excel opens it and that it scrolls. (An earlier line here said there was no Excel
+or COM on this machine; that was wrong, see "Excel on this machine" below.) The two
 mechanical causes of the earlier scroll failure were removed and are asserted in the receipt.
 
 **Open from this session:** the industrial-engine discount rate (config applies the vehicle-parts rate
