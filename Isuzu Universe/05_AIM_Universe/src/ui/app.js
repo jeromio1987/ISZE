@@ -24,7 +24,7 @@ const views=['decision','position','objectives','economics','candidates','case',
    panel work; pre-existing at HEAD, not introduced then. */
 const TAB_LABELS=[['decision','Sales evidence'],['position','Price position'],['objectives','Two objectives'],['economics','Price & profit test'],['candidates','Candidates'],['case','Part review'],['action','Internal action']];
 const ordered=['IMOTORS-CABIN','ITUK-TURBO','ITUK-PADS','ITUK-DISCS','IMOTORS-OIL'];
-let state={caseId:'IMOTORS-CABIN',compare:'half',view:'objectives',objective:'revenue',market:'all',billingMetric:'billingEUR',
+let state={unsavedReview:{},caseId:'IMOTORS-CABIN',compare:'half',view:'objectives',objective:'revenue',market:'all',billingMetric:'billingEUR',
            candidateQuery:'',candidatePage:1,candidatePageSize:50,candidateCriteria:{},
            candidateSortKey:'observed_billing_eur',candidateSortDirection:'desc',
            partRoute:null,offerDate:null,viewError:null,dealer:null};
@@ -188,13 +188,21 @@ function objectiveTwin(c){
 }
 
 /* ------------------------------------------------------- retained evidence */
+/* UX-06. Sales to dealer is an optional source. When no row carries it the
+   review is narrower and says so, instead of drawing an empty chart that reads
+   as zero sales to dealers. */
+function onwardHeld(c){return (c.series||[]).some(r=>r&&r.onwardQuantity!==null&&r.onwardQuantity!==undefined);}
+function onwardMissing(){return unavailableBlock({title:'No sales-to-dealer record is held for this case',
+  reason:'The distributor\'s sales to its dealers are not in the evidence for this case. That is a missing source, not zero sales to dealers.',
+  required:'monthly sales-to-dealer rows from the distributor for both periods',scope:'sales to dealer'});}
+function reviewScopeNote(c){return onwardHeld(c)?'':'<p class="small" data-review-scope="narrower">This review is narrower: it covers what ISZE billed only. Sales to dealer is not held for this case, so no comparison with the dealer flow is made.</p>';}
 function stats(c){
  const x=c.comparisons[state.compare],a=x.prior,z=x.current;
  return `<div class="stats">
  <div class="stat"><div class="label">ISZE billing change</div><strong class="${color(x.revenueDelta)}">${signedEUR(x.revenueDelta)}</strong><div class="detail">${eur(a.eur)} &rarr; ${eur(z.eur)}<br>Measured billing; not price-caused loss.</div></div>
  <div class="stat"><div class="label">Observed net unit price</div><strong>${eur(z.price,2)}</strong><div class="detail">${eur(a.price,2)} before &middot; ${pct(x.priceChangePct)}<br>Includes order and commercial-term mix.</div></div>
  <div class="stat"><div class="label">ISZE quantity change</div><strong class="${color(x.quantityChangePct)}">${pct(x.quantityChangePct)}</strong><div class="detail">${num(a.quantity)} &rarr; ${num(z.quantity)} ${esc(c.unit)}s<br>Purchases from ISZE.</div></div>
- <div class="stat"><div class="label">Sales-to-dealer change</div><strong class="${color(x.onwardChangePct)}">${x.onwardChangePct===null?'Not comparable':pct(x.onwardChangePct)}</strong><div class="detail">${num(a.salesToDealer)} &rarr; ${num(z.salesToDealer)} ${esc(c.unit)}s<br>Separate national wholesale flow.</div></div></div>`;
+ ${onwardHeld(c)?`<div class="stat"><div class="label">Sales-to-dealer change</div><strong class="${color(x.onwardChangePct)}">${x.onwardChangePct===null?'Not comparable':pct(x.onwardChangePct)}</strong><div class="detail">${num(a.salesToDealer)} &rarr; ${num(z.salesToDealer)} ${esc(c.unit)}s<br>Separate national wholesale flow.</div></div>`:`<div class="stat" data-source-missing="sales to dealer"><div class="label">Sales-to-dealer change</div><strong>Not held</strong><div class="detail">No sales-to-dealer record for this case.<br>A missing source, not a zero.</div></div>`}</div>`;
 }
 function chart(c,key,title,line=false){
  const cmp=c.comparisons[state.compare],years=[cmp.prior.year,cmp.current.year],months=cmp.current.months;
@@ -586,8 +594,8 @@ function marketView(c){
 function decision(c){
  const cmp=c.comparisons[state.compare];
  return `<div class="compare-row"><div><span class="eyebrow">Measured record</span><div class="small">${sourceButton()} &middot; no forecast or lost-sales attribution</div></div><select id="comparison" aria-label="Comparison period"><option value="half" ${state.compare==='half'?'selected':''}>January-June 2026 vs 2025</option><option value="annual" ${state.compare==='annual'?'selected':''}>Calendar 2025 vs 2024</option></select></div>
- ${stats(c)}${targetBox(c)}
- <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${chart(c,'onwardQuantity','What the distributor supplied to dealers')}</div>
+ ${reviewScopeNote(c)}${stats(c)}${targetBox(c)}
+ <div class="grid2">${chart(c,state.billingMetric,state.billingMetric==='billingEUR'?'What ISZE billed':'What ISZE supplied')}${onwardHeld(c)?chart(c,'onwardQuantity','What the distributor supplied to dealers'):onwardMissing()}</div>
  <div class="grid2"><div class="panel"><span class="badge fact">Evidence supporting review</span><p style="margin-top:12px">${esc(c.reason)}</p></div><div class="panel warn"><span class="badge review">Evidence against a simple price story</span><p style="margin-top:12px">${esc(c.counter)}</p></div></div>
  <div class="grid2">${chart(c,'price','Observed ISZE unit price',true)}<div class="panel"><div class="eyebrow">Reconcile the euro change</div><h3>${signedEUR(cmp.revenueDelta)} in recorded billing</h3><div class="evidence-line"><span>Quantity effect, at prior price</span><b class="${color(cmp.volumeEffect)}">${signedEUR(cmp.volumeEffect)}</b></div><div class="evidence-line"><span>Effective price / terms effect</span><b class="${color(cmp.effectivePriceEffect)}">${signedEUR(cmp.effectivePriceEffect)}</b></div><div class="ruleline small">Exact identity: (new quantity &minus; old quantity) &times; old price + new quantity &times; (new price &minus; old price). The second term includes mix of order conditions. It is not causal price elasticity or a measured price-list effect.</div><div class="scopebox"><b>${num(c.fleet)} ${c.market==='ITUK'?'trucks':'vehicles'} &middot; 2025 market reference</b><br>${esc(c.application)} No part-level demand gap or dealer rate is computed.</div></div></div>
  ${termsTable(c)}${relatedTable(c)}<div class="panel callout"><h3>The next commercial action</h3><p>${esc(c.next)}</p><div class="rowactions"><button class="button primary" data-view="economics">Test price and gross profit</button><button class="button" data-view="action">Prepare the internal review</button></div></div>`;
@@ -942,7 +950,8 @@ function actionView(){
   const existing=repo.load(c.id);
   const summary=existing?repo.summarize(existing):null;
   const latest=existing?existing.revisions[existing.revisions.length-1]:null;
-  const v=(latest&&latest.record&&latest.record.review)||{};
+  const unsaved=state.unsavedReview[c.id]||null;
+  const v=unsaved||(latest&&latest.record&&latest.record.review)||{};
   const consistency=store.consistency(c.id);
   const hist=existing?repo.history(c.id):[];
   return `<div class="inputsnote"><b>A durable record, not a scratch pad.</b> A save writes a new revision. Nothing is overwritten, and a correction names the revision it replaces.</div>
@@ -956,7 +965,7 @@ function actionView(){
   <div class="field"><label for="a-note">Proposed action and test conditions</label><textarea id="a-note">${esc(v.note||c.recommendation)}</textarea></div>
   <div class="field"><label for="a-outcome">Delivered support and outcome (recorded separately from the proposal)</label><textarea id="a-outcome" placeholder="Not yet delivered or measured. An agreed action is not a result.">${esc(v.outcome||'')}</textarea></div>
   <div class="rowactions"><button class="button primary" id="save-case">Save a new revision</button><button class="button" id="export-json">Export the internal record (JSON)</button><button class="button" id="export-member">Build a participant brief</button><button class="button" id="export-review-body">Export a readable case review</button><button class="button" id="export-bundle">Export all cases (recovery bundle)</button></div>
-  <div class="status-msg" id="save-status">${summary?`Case at revision ${summary.version}, state ${esc(summary.state)}, last saved ${esc(summary.updated_at)}.`:'No revision saved yet for this case.'}</div>
+  <div class="status-msg" id="save-status">${unsaved?`Not saved. The form holds your unsaved entries; ${summary?`the last saved revision is ${summary.version}`:'no revision is saved for this case'}. Correct the cause and save again.`:summary?`Case at revision ${summary.version}, state ${esc(summary.state)}, last saved ${esc(summary.updated_at)}.`:'No revision saved yet for this case.'}</div>
   ${repo.store.isDurable()?'':'<p class="small danger-line">This browser will not keep the record after it closes. Use the recovery bundle before closing.</p>'}</div>
   <div>
   <div class="panel ${consistency.ok?'good':'warn'}"><h3>One scenario, checked</h3><p class="small">${esc(consistency.statement)}</p>
@@ -1083,16 +1092,21 @@ function collectReview(c){
     note:$('#a-note')?$('#a-note').value:(c?c.recommendation:''),
     outcome:$('#a-outcome')?$('#a-outcome').value:''};
 }
+/* UX-06. A refused save keeps what was typed, so a later repaint shows the
+   unsaved entries rather than the last saved revision. */
+function keepUnsaved(c,review){state.unsavedReview[c.id]=review;}
 function saveCase(){
   const c=current(),r=caseResult(),s=scenario();
   const review=collectReview(c);
   const consistency=store.consistency(c.id);
   if(!consistency.ok){
+    keepUnsaved(c,review);
     toast('Not saved: the ranked option and the working record disagree.');
     return;
   }
   const existing=repo.load(c.id);
   if(!r.ok){
+    keepUnsaved(c,review);
     toast('Not saved: the scenario is not calculated. '+r.error);
     return;
   }
@@ -1100,12 +1114,14 @@ function saveCase(){
     {expected_version:existing?existing.version:0,state:review.state,owner_role:review.owner_role,
      next_action:review.next_action,next_update_due:review.next_update_due,recorded_by:'internal user'});
   if(res.ok){
+    delete state.unsavedReview[c.id];
     $('#save-status').textContent=res.durable
       ? `Saved as revision ${res.version}. Nothing was overwritten.`
       : `Saved as revision ${res.version} for this session only. Use the recovery bundle before closing.`;
     toast(res.durable?`Revision ${res.version} saved.`:'Saved for this session only.');
     render();
   }else{
+    keepUnsaved(c,review);
     $('#save-status').textContent=res.conflict?`Not saved. ${res.error}`:`Not saved. ${res.error}`;
     toast(res.conflict?'Someone else changed this case. Reload first.':'Not saved.');
   }
