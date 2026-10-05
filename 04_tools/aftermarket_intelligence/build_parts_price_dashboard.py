@@ -181,7 +181,15 @@ def main() -> int:
 
     g = pd.read_csv(GRADED, dtype=str)
     usable_pn = set(g[g["tier"].isin(["confirmed", "likely"])]["part_no"])
-    any_edge_pn = set(g["part_no"])
+    # Jerome 4 Oct 2026: a number seen only on one Spareto page (edge_origin spareto_only, always
+    # graded doubtful, upstream source unstated) is not "on file" for the coverage funnel; it is
+    # counted on its own line instead, so the funnel is not inflated by single-source data.
+    if "edge_origin" in g.columns:
+        any_edge_pn = set(g[g["edge_origin"] != "spareto_only"]["part_no"])
+        spareto_only_pn = set(g[g["edge_origin"] == "spareto_only"]["part_no"]) - any_edge_pn
+    else:
+        any_edge_pn = set(g["part_no"])
+        spareto_only_pn = set()
     usable_cpn_n = g[g["tier"].isin(["confirmed", "likely"])].groupby("part_no")["competitor_pn"].nunique()
 
     lmeta = json.loads(LEDGER_META.read_text(encoding="utf-8")) if LEDGER_META.exists() else {}
@@ -221,7 +229,7 @@ def main() -> int:
             "t": tier.get(pn, ""),
             "b": r2(billed.get(pn)) or 0,
             "l": r2(list_eur.get(pn)),
-            "x": 2 if pn in usable_pn else (1 if pn in any_edge_pn else 0),
+            "x": 2 if pn in usable_pn else (1 if pn in any_edge_pn else (3 if pn in spareto_only_pn else 0)),
             "xn": int(usable_cpn_n.get(pn, 0)),
         }
 
@@ -243,6 +251,8 @@ def main() -> int:
         ("Any price observed", set(obs_pn["part_no"])),
         ("Aftermarket price observed", am_pns),
         ("Aftermarket price seen in the last 12 months", am_fresh),
+        # last on purpose: the page text reads funnel rows by position (F[3], F[4], F[5])
+        ("Memo: single-source number only (Spareto)", spareto_only_pn),
     ]
     funnel = []
     for name, S in steps:
@@ -594,7 +604,7 @@ function header(){
 function s1(){
   const F=DATA.funnel;
   document.getElementById("funnel-h").textContent=`100% = ${fmtE(DATA.billed_total)} billed across ${F[0].parts.toLocaleString("en-GB")} part numbers`;
-  const cols=["#1a2b4a","#2b4a78","#85b7eb","#888780","#2a78d6","#c0552d"];
+  const cols=["#1a2b4a","#2b4a78","#85b7eb","#888780","#2a78d6","#c0552d","#b4b2a9"];
   C.funnel=new Chart(cFunnel,{type:"bar",data:{labels:F.map(f=>f.step),datasets:[{data:F.map(f=>f.value_pct),backgroundColor:cols,borderRadius:4,barThickness:24}]},
     options:{indexAxis:"y",maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${c.raw}% of billed value · ${F[c.dataIndex].parts.toLocaleString("en-GB")} parts`}}},
       scales:{x:{min:0,max:112,afterBuildTicks:a=>{a.ticks=[0,25,50,75,100].map(v=>({value:v}));},ticks:{callback:v=>v+"%"},grid:{color:"#ece8e0"}},y:{grid:{display:false},ticks:{font:{size:11.5}}}}},
@@ -814,7 +824,7 @@ function s5(){
   document.getElementById("hunt-q").innerHTML=`${DATA.hunt_total} Tier A parts, worth ${DATA.hunt_value_pct}% of billed value, have no aftermarket price. The 60 largest are listed. The column <b>route</b> says what can find a price: a known competitor number can be searched; without one, the number has to come from a paid cross-reference first.`;
   document.getElementById("huntT").innerHTML=`<thead><tr><th>#</th><th>Part</th><th>Family</th><th class="r">Billed</th><th class="r">Our list</th><th>Route</th><th>Also seen</th></tr></thead><tbody>${
     H.map((p,i)=>`<tr style="cursor:pointer" onclick="drill('${p.pn}')"><td class="dash">${i+1}</td><td><b>${p.pn}</b><br><span class="dash">${esc(p.d)}</span></td><td>${esc(p.f)}</td><td class="r">${fmtE(p.b)}</td><td class="r">${fmtE(p.l,2)}</td><td>${
-      p.x===2?`<span class="chip green">search by competitor number (${p.xn})</span>`:p.x===1?`<span class="chip amber">competitor number unconfirmed</span>`:`<span class="chip red">no competitor number</span>`}</td><td>${p.g?`<span class="chip grey">genuine price only</span>`:`<span class="dash">nothing</span>`}</td></tr>`).join("")}</tbody>`;
+      p.x===2?`<span class="chip green">search by competitor number (${p.xn})</span>`:p.x===1?`<span class="chip amber">competitor number unconfirmed</span>`:p.x===3?`<span class="chip amber">single-source doubtful number (Spareto only)</span>`:`<span class="chip red">no competitor number</span>`}</td><td>${p.g?`<span class="chip grey">genuine price only</span>`:`<span class="dash">nothing</span>`}</td></tr>`).join("")}</tbody>`;
 }
 
 /* ── section 6 ── */
