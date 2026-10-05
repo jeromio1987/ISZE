@@ -2,7 +2,7 @@
   "record_version": 2,
   "plan_source": "TASKS_96.txt (2318 lines, 96 tasks)",
   "written_by": "integration owner (the only writer, so workers cannot overwrite it)",
-  "written_at": "2026-09-22T17:26:34Z",
+  "written_at": "2026-10-05T19:33:49Z",
   "state_vocabulary": [
     "not started",
     "in progress",
@@ -12,12 +12,12 @@
   ],
   "warning": "A state of 'technically verified' means a named command was run and its actual output recorded. It does not mean human accepted, and it confers no business, technical, privacy or spending authority. Nothing here is deployed, published or sent.",
   "counts": {
-    "technically verified": 30,
-    "not started": 63,
+    "technically verified": 31,
+    "not started": 62,
     "implemented": 3
   },
   "total_tasks": 96,
-  "overlay_applied": 33,
+  "overlay_applied": 34,
   "overlay_unknown_ids": [],
   "open_findings": [
     {
@@ -370,8 +370,12 @@
       "existing_finding": "F04, F10, F11",
       "can_start_after": "BASE-03",
       "integrate_after": "BASE-04",
-      "state": "not started",
-      "evidence": [],
+      "state": "technically verified",
+      "evidence": [
+        "node --test tests/data_01_manifest.test.mjs -> 2 pass, 0 fail",
+        "mutation src/data/manifest.js:463 (dated_change allowed whatever the period: if (declared) -> if (true)) -> DATA-01 E1: a candidate source with no known period is inspectable as unvalidated but cannot support a dated change claim fails; restored -> passes",
+        "mutation src/data/manifest.js:438 (offer clock filled from the generation date) -> DATA-01 E2: generation date, observation period and offer date stay three separate fields fails; restored -> passes"
+      ],
       "blockers": []
     },
     {
