@@ -34,7 +34,9 @@ import csv
 import hashlib
 import importlib
 import json
+import re
 import sys
+import time
 from pathlib import Path
 
 for _s in (sys.stdout, sys.stderr):
@@ -81,32 +83,42 @@ def read_manifest() -> list[dict]:
     return rows
 
 
-def parse_page(entry: dict) -> tuple[list[dict], str | None]:
-    """Parse one saved page. Returns (rows, error). Never raises."""
+_MOD_CACHE: dict[str, object] = {}
+
+
+def parse_page(entry: dict) -> tuple[list[dict], str | None, str]:
+    """Parse one saved page. Returns (rows, error, html). Never raises.
+
+    `html` is returned so the Mekonomen guard does not re-read a multi-MB Magento
+    page from disk (KS pages are ~2.3 MB each; measured 2026-10-05).
+    """
     site = entry["site"].strip()
     page_file = entry["page_file"].strip()
     module_name = SITE_MODULE.get(site)
     if module_name is None:
-        return [], f"no parser registered for site {site!r}"
+        return [], f"no parser registered for site {site!r}", ""
 
     page = PROBE / page_file
     if not page.exists():
-        return [], f"saved page missing on disk: {page}"
+        return [], f"saved page missing on disk: {page}", ""
 
     try:
-        mod = importlib.import_module(module_name)
+        mod = _MOD_CACHE.get(module_name)
+        if mod is None:
+            mod = importlib.import_module(module_name)
+            _MOD_CACHE[module_name] = mod
     except Exception as e:                                          # noqa: BLE001
-        return [], f"{module_name} failed to import: {type(e).__name__}: {e}"
+        return [], f"{module_name} failed to import: {type(e).__name__}: {e}", ""
 
     html = page.read_text(encoding="utf-8", errors="replace")
     try:
         rows = mod.parse(html, source_url=entry["source_url"].strip(),
                          observed_at=entry["fetched_at"].strip())
     except NotImplementedError as e:
-        return [], f"{site}: parser still a stub: {e}"
+        return [], f"{site}: parser still a stub: {e}", html
     except Exception as e:                                          # noqa: BLE001
-        return [], f"{site}: parse raised {type(e).__name__}: {e}"
-    return rows, None
+        return [], f"{site}: parse raised {type(e).__name__}: {e}", html
+    return rows, None, html
 
 
 def normalise(row: dict, entry: dict, fx: dict) -> dict:
@@ -209,25 +221,27 @@ def main() -> int:
     rejected: list[dict] = []
     errors: list[str] = []
     per_site: dict[str, dict] = {}
+    n_entries = len(entries)
 
-    for entry in entries:
+    t_start = time.monotonic()
+    for i, entry in enumerate(entries, 1):
+        # Progress every 100 pages so a redirected batch log is not silent for minutes.
+        if i == 1 or i % 100 == 0 or i == n_entries:
+            print(f"  ... page {i}/{n_entries}, {time.monotonic() - t_start:.0f} s", flush=True)
         site = entry["site"].strip()
-        rows, err = parse_page(entry)
+        rows, err, page_text = parse_page(entry)
         stat = per_site.setdefault(site, {"pages": 0, "rows": 0, "priced": 0, "rejected": 0})
         stat["pages"] += 1
 
         if err:
             errors.append(f"{entry['page_file']}: {err}")
-            print(f"  FAIL  {site:<9} {entry['page_file']:<26} {err}")
+            print(f"  FAIL  {site:<9} {entry['page_file']:<26} {err}", flush=True)
             continue
 
         # The page text and, where the page came from a part-number query, the number we
         # asked for. Both are needed by the Mekonomen guard in verdict_for().
-        page_path = PROBE / entry["page_file"]
-        page_text = page_path.read_text(encoding="utf-8", errors="replace") if page_path.exists() else ""
         queried_pn = ""
-        import re as _re
-        m = _re.search(r"[?&](?:q|s)=(\d{10})\b", entry["source_url"] or "")
+        m = re.search(r"[?&](?:q|s)=(\d{10})\b", entry["source_url"] or "")
         if m:
             queried_pn = m.group(1)
 
@@ -252,7 +266,7 @@ def main() -> int:
                     stat["priced"] += 1
 
         print(f"  ok    {site:<9} {entry['page_file']:<26} "
-              f"{len(rows)} row(s), {priced} priced")
+              f"{len(rows)} row(s), {priced} priced", flush=True)
 
     print()
     print("=" * 78)
