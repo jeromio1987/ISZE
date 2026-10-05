@@ -251,6 +251,7 @@
       record_kind: 'historical method record',
       period: 'Supplied context dated 19 September 2026',
       period_state: 'declared',
+      generated_date: '2026-09-19',
       basis: 'the earlier generic reference-chain convention. Removed from price targets in '
         + 'v0.2 because local resale prices, terms and a comparable quotation are not established.',
       status: 'superseded as a method, retained as context',
@@ -273,6 +274,7 @@
       record_kind: 'source constraints and product requirements',
       period: '21 September 2026',
       period_state: 'declared',
+      generated_date: '2026-09-21',
       basis: 'pages 25-31 retain context and distinguish missing states; page 41 requires dated '
         + 'seller evidence with currency, tax, pack and match status',
       status: 'instruction, not data',
@@ -295,6 +297,7 @@
       record_kind: 'source pack, accepted in part',
       period: 'Pack dated 22 September 2026; billing reference 30 June 2026',
       period_state: 'declared',
+      generated_date: '2026-09-22',
       basis: 'the pack header declares ' + '' + 'rows; the tables hold a different number. '
         + 'The variation is reported below rather than resolved by preferring one figure.',
       status: 'accepted in part for internal review; not price approval',
@@ -421,6 +424,54 @@
      disk, and how many records it holds. */
   var RESTRICTED_FILES = ['payload/*.json', 'reference/*.html'];
 
+  /* ---------------------------------------------------------------- clocks -- */
+
+  /* Three clocks, never merged: when the source was generated, which period it
+     observes, and the date an offer would take effect. A missing clock stays
+     missing; none is filled from another. */
+  function clocksFor(rec, opts) {
+    opts = opts || {};
+    return {
+      generated_date: isBlank(rec.generated_date) ? null : rec.generated_date,
+      observation_period: isBlank(rec.period) ? null : rec.period,
+      observation_period_state: rec.period_state || 'undeclared',
+      offer_date: isBlank(opts.offer_effective_date) ? null : opts.offer_effective_date,
+      statement: 'Generation date, observation period and offer date are separate. '
+        + 'A missing one is left empty and is not taken from another.'
+    };
+  }
+
+  function periodDeclared(rec) {
+    return !!rec && rec.period_state === 'declared' && !isBlank(rec.period);
+  }
+
+  /* What a manifest record may be used for. Any record can be inspected; only a
+     record with a declared period can support a dated change claim. */
+  function claimSupport(rec, claim) {
+    if (!rec) {
+      return { claim: claim, allowed: false, code: 'NO_RECORD', validation_state: null,
+        statement: 'There is no manifest record, so nothing can be claimed from it.' };
+    }
+    var declared = periodDeclared(rec);
+    var validation = declared ? 'period declared' : 'unvalidated';
+    if (claim === 'inspect') {
+      return { claim: claim, allowed: true, code: null, validation_state: validation,
+        statement: declared ? 'The source can be inspected; its period is declared.'
+          : 'The source can be inspected as unvalidated data. It states no period.' };
+    }
+    if (claim === 'dated_change') {
+      if (declared) {
+        return { claim: claim, allowed: true, code: null, validation_state: validation,
+          statement: 'The source declares its period, so it can support a dated change claim.' };
+      }
+      return { claim: claim, allowed: false, code: 'PERIOD_UNDECLARED', validation_state: validation,
+        statement: 'The source states no period, so it cannot support a dated change claim. '
+          + 'No period is inferred from similar totals.' };
+    }
+    return { claim: claim, allowed: false, code: 'UNKNOWN_CLAIM', validation_state: validation,
+      statement: 'This claim type is not one the manifest can support.' };
+  }
+
   /* ------------------------------------------------------------- reconcile -- */
 
   function build(payload, opts) {
@@ -449,6 +500,15 @@
       rec.unresolved = (base.unresolved || []).slice();
       rec.reconciliation = [];
       rec.merge_status = 'manifest only';
+      rec.generated_date = isBlank(base.generated_date) ? null : base.generated_date;
+      rec.supplying_entity = firstDefined(base.supplying_entity,
+        base.entity ? entityLabel(base.entity) : null);
+      rec.source_meaning = firstDefined(base.source_meaning, base.record_kind);
+      rec.version = firstDefined(base.version);
+      rec.coverage = firstDefined(base.coverage);
+      rec.exclusions = firstDefined(base.exclusions);
+      rec.controls = firstDefined(base.controls);
+      rec.permitted_use = firstDefined(base.permitted_use, base.status);
       return rec;
     });
 
@@ -542,6 +602,11 @@
       if (!rec) return;
       rec.record_count = pair[1];
       rec.count_state = 'counted from the payload';
+    });
+
+    records.forEach(function (r) {
+      r.validation_state = periodDeclared(r) ? 'period declared' : 'unvalidated';
+      r.clocks = clocksFor(r, opts);
     });
 
     var manifest = {
@@ -785,6 +850,8 @@
     INPUTS: INPUTS,
     build: build,
     find: find,
+    claimSupport: claimSupport,
+    clocksFor: clocksFor,
     conservation: conservation,
     restrictedRecords: restrictedRecords,
     assertShippable: assertShippable,
