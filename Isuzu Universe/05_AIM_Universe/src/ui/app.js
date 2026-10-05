@@ -50,6 +50,97 @@ function contextStrip(x){
   return `<div class="context-strip" aria-label="Working context" data-context="${esc(AIMScenario.contextKey(x))}"><span><b>Distributor</b> ${esc(x.distributor||'not stated')}</span> &middot; <span><b>Account</b> ${esc(x.purchasing_account||'not stated')}, ${scope}</span> &middot; <span><b>Original part</b> ${esc(x.original_part||'not stated')}</span> &middot; <span><b>Family</b> ${esc(x.family||'not stated')}</span> &middot; <span><b>Source version</b> ${esc(x.source_version||'not declared')}</span> &middot; <span><b>Period</b> ${esc(x.period||'not stated')}</span></div>`;
 }
 
+/* UX-03. The assumptions the visible numbers rest on, and the two questions a
+   reader is entitled to ask of them: which exact inputs produced this result,
+   and what is wrong with the field I just typed into.
+
+   Both are computed from the ONE working record and written onto the same page
+   as data-trace and as per-field data-state attributes, so the reader, the
+   export and the test all read one record rather than three copies that can
+   drift apart. */
+
+/* The inputs the visible results rest on. Every key is a declared scenario
+   field; no view state and no derived figure is in here. */
+const TRACE_INPUTS=['price_before','price_after','quantity_before','quantity_after','scope',
+  'pack_size','support_eur','cost_eur','cost_basis_id','cost_basis_source','quantity_label',
+  'evidence_period','offer_effective_date','selected_alternative_id'];
+const TRACE_LABELS={price_before:'scenario base price',price_after:'proposed net price',
+  quantity_before:'eligible base quantity',quantity_after:'proposed total quantity',scope:'volume scope',
+  pack_size:'pack size',support_eur:'one-off support',cost_eur:'unit parts purchase cost',
+  cost_basis_id:'supplier-cost basis',cost_basis_source:'cost source',quantity_label:'volume basis label',
+  evidence_period:'evidence period',offer_effective_date:'offer effective date',
+  selected_alternative_id:'selected option'};
+
+/* A small deterministic fingerprint over the traced inputs and the two results.
+   Plain arithmetic, no dependency, so it behaves the same everywhere. */
+function traceFingerprint(obj){
+  const text=JSON.stringify(obj);
+  let h1=0x811c9dc5,h2=0x1000193;
+  for(let i=0;i<text.length;i++){
+    const ch=text.charCodeAt(i);
+    h1=((h1^ch)*16777619)>>>0;
+    h2=((h2+ch*2654435761)>>>0);
+  }
+  return 'a03-'+h1.toString(16).padStart(8,'0')+h2.toString(16).padStart(8,'0');
+}
+
+function assumptionTrace(){
+  const s=scenario(),r=caseResult();
+  const inputs={};
+  TRACE_INPUTS.forEach(k=>{inputs[k]=(s&&s[k]!==undefined)?s[k]:null;});
+  const results={ok:r.ok,revenue_change:r.revenue_change,gp_change:r.gp_change,
+    margin_after_pct:r.margin_after_pct,quantity_after:r.quantity_after};
+  const fingerprint=traceFingerprint({inputs,results});
+  const label=String(s.quantity_label||'').toLowerCase();
+  const isCommitment=label.indexOf('commitment')>=0||label.indexOf('observed')>=0;
+  return {
+    case_id:state.caseId,
+    scenario_version:s.version,
+    inputs:inputs, results:results, fingerprint:fingerprint,
+    labels:TRACE_LABELS,
+    commitment:{label:s.quantity_label||null,is_commitment:isCommitment,
+      statement:isCommitment
+        ? 'The volume basis is recorded: "'+s.quantity_label+'". The result rests on that recorded basis, not on a modelled response.'
+        : 'A manual scenario on a stated assumption ("'+(s.quantity_label||'manual')+'"): the result is what the entered inputs produce, and it is not a commitment or a forecast.'},
+    statement:'Every visible result is produced by these inputs and by no other. The same fingerprint is written onto the view as data-trace, so the numbers on screen are tied to the exact record they came from.'
+  };
+}
+
+/* The per-field verdict, drawn from the engine's own validation so there is no
+   second set of rules. A blank is unknown, a zero is a stated value, and neither
+   is an error; only a real entry problem is an error. */
+function fieldIssues(){
+  const s=scenario(),v=E.validateScenario(s),st=v.states||{};
+  const field=(id,state,text)=>({field:id,state:state||'unknown',text:text});
+  const fields=[];
+  const priceText=(id,label)=>{
+    const state=st[id==='s-newP'?'price_after':id==='s-baseP'?'price_before':null]||'value';
+    if(state==='invalid')return field(id,'invalid','The '+label+' must be a number above zero. It is not, so nothing is calculated from this field.');
+    if(state==='unknown')return field(id,'unknown','The '+label+' is empty. An empty price is an unknown, not a price of zero, so the result is not calculated.');
+    return field(id,'value','A stated '+label+'. The result uses this exact value.');
+  };
+  fields.push(priceText('s-baseP','scenario base price'));
+  fields.push(priceText('s-newP','proposed net price'));
+  const qb=st.quantity_before||'value';
+  fields.push(field('s-baseQ',qb,qb==='invalid'?'The starting quantity must be a number above zero.':qb==='unknown'?'No starting quantity is stated, so there is nothing to price.':'The recorded eligible quantity this scenario rests on.'));
+  const qa=s.quantity_after===null||s.quantity_after===undefined?'unknown':(st.quantity_after||'value');
+  fields.push(field('s-qty',qa,qa==='zero'?'Zero is a full withdrawal, not a price scenario. Record it as a decision to stop supplying this part.':qa==='invalid'?'The proposed quantity is not a number. Leave it blank to keep the starting quantity.':qa==='unknown'?'Blank means the quantity does not change. That is an unknown volume, not a volume of zero.':'A stated proposed quantity; the result uses it.'));
+  const cst=st.cost||'unknown';
+  fields.push(field('s-cost',cst,cst==='zero'?'A parts cost of zero is a stated value and makes gross margin equal the price, so it is reported rather than assumed.':cst==='invalid'?'The parts cost is not a number. Leave it blank if no verified cost exists.':cst==='unknown'?'No cost is entered, so gross profit and gross margin are not calculated. A missing cost is not a cost of zero, and revenue is unaffected.':'A stated parts purchase cost; gross profit is calculated from it.'));
+  const sup=st.support||'unknown';
+  fields.push(field('s-support',sup,sup==='zero'?'Support of zero is a stated assumption, not proof that no support exists.':sup==='invalid'?'Support cannot be a negative amount.':sup==='unknown'?'No support is entered. It is treated as none for this scenario and shown as such.':'The one-off support, deducted once from gross profit.'));
+  fields.push(field('s-pack','value','Whole order increments: a required quantity rounds up to a real pack.'));
+  const bad=v.errors||[];
+  return {
+    ok:v.ok,
+    fields:fields,
+    errors:bad,
+    statement:v.ok?'Every field holds a value, a stated zero or a stated unknown. No field is in error.'
+      :bad.length+' field(s) are in error. Each is named below; the scenario is not calculated until they are corrected.'
+  };
+}
+
+
 /* ===========================================================================
    Ported from the retired second view layer (src/ui/views.js and render.js).
 
@@ -873,6 +964,7 @@ function economics(c){
   const r=caseResult(),s=scenario(),e=c.packEvidence;
   const bases=basisOptions();
   const rec=s.cost_basis_id?E.costRecord(D,c.pn,s.cost_basis_id):null;
+  const trace=assumptionTrace(),fi=fieldIssues();
   return `<div class="inputsnote"><b>Scenario only; no automatic price move.</b> Default price and volume response are unchanged. A manual price or cost does not approve a customer quotation, cost basis or margin floor.</div>
   <div class="split"><div class="panel scenario-controls"><h3>Define the offer being tested</h3>${chosenOption()}
   <div class="field"><label for="s-pn">Exact part</label><input id="s-pn" value="${esc(s.part_number)}" readonly><small>The original part reference is carried, never rewritten.</small></div>
@@ -890,6 +982,8 @@ function economics(c){
   <div class="field"><label for="s-label">Volume basis label</label><input id="s-label" value="${esc(s.quantity_label)}"><small>A movement is labelled, never predicted. Only 'observed history' and 'stated commitment' are treated as evidenced.</small></div>
   <div class="rowactions"><button class="button" id="reset-scenario">Reset to the unchanged offer</button><button class="button primary" data-view="action">Carry this scenario into the review</button></div>
   <p class="small" id="scenario-version">Scenario version ${s.version}. Every change updates this one record, which is what the ranking, the save and the exports read.</p>
+  <div class="panel" data-trace="${esc(trace.fingerprint)}"><div class="eyebrow">What this result rests on</div><p class="small">${esc(trace.statement)}</p>${TRACE_INPUTS.map(k=>`<div class="evidence-line"><span>${esc(TRACE_LABELS[k]||k)}</span><b class="small" data-input="${esc(k)}">${esc(trace.inputs[k]===null||trace.inputs[k]===undefined?'not stated':String(trace.inputs[k]))}</b></div>`).join('')}<p class="small" data-commitment="${trace.commitment.is_commitment?'commitment':'manual'}">${esc(trace.commitment.statement)}</p></div>
+  <div class="panel ${fi.ok?'':'warn'}" data-field-issues="${esc(JSON.stringify(fi.fields.map(f=>({field:f.field,state:f.state}))))}"><div class="eyebrow">What is wrong with a field, if anything</div><p class="small">${esc(fi.statement)}</p>${fi.fields.map(f=>`<div class="evidence-line"><span>${esc(f.field)}</span><b class="small" data-state="${esc(f.state)}" data-field="${esc(f.field)}">${esc(f.text)}</b></div>`).join('')}</div>
   </div><div id="economic-results">${economicsResults()}</div></div>`;
 }
 function candidateState(){
@@ -1433,6 +1527,10 @@ window.AIMPricing={data:D,engine:E,export:X,candidates:C,cases:repo,contracts:CT
   setCandidateQuery:(q)=>{state.candidateQuery=String(q||'');state.candidatePage=1;render();},
   getState:()=>({...state}),getScenario:()=>store.get(state.caseId),getContext:()=>context(),
   getResult:()=>store.calculate(state.caseId),
+  /* UX-03. The assumptions behind the visible results, and the per-field
+     verdict, both read from the one working record. */
+  assumptions:()=>assumptionTrace(),
+  fieldIssues:()=>fieldIssues(),
   selectAlternative:id=>store.selectAlternative(state.caseId,id),
   consistency:()=>store.consistency(state.caseId),
   setScenario:patch=>store.set(state.caseId,patch)};
