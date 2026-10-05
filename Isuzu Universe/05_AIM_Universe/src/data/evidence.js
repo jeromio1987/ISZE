@@ -430,6 +430,113 @@
       statement: 'The source records fitment as "' + v + '".' };
   }
 
+  /* ------------------------------------------ references and versions (DATA-03) -- */
+
+  /* A transacted part reference is text, exactly as received: leading zeros,
+     spaces, letters and separators are kept. The match key is a second field
+     for lookups (trimmed, upper case, zeros kept); it never replaces the
+     original. A value that arrived as a number has already lost any leading
+     zeros upstream, and says so. */
+  function partReference(raw) {
+    var asNumber = typeof raw === 'number';
+    var text = raw === null || raw === undefined ? '' : String(raw);
+    return {
+      original_reference: text,
+      match_key: text.trim().toUpperCase(),
+      received_as_number: asNumber,
+      statement: asNumber
+        ? 'The reference arrived as a number, so any leading zeros were lost before it reached this tool. It is kept as received.'
+        : 'Kept as text, exactly as received.'
+    };
+  }
+
+  /* Classification, successor and candidate BVP links are three typed
+     relationships, each versioned with its source and effective dates. An update
+     adds a version and marks the one it supersedes; it never edits a recorded
+     version, so a decision saved against version 1 still reads version 1. */
+  var VERSIONED_KINDS = ['classification', 'successor', 'candidate_bvp'];
+
+  function makeRelationshipLedger() {
+    var store = {}, byId = {}, seq = 0;
+    function keyOf(reference, kind) { return kind + SEP + String(reference); }
+
+    function record(input) {
+      input = input || {};
+      if (VERSIONED_KINDS.indexOf(input.kind) < 0) {
+        return { ok: false, error: 'A relationship is one of ' + VERSIONED_KINDS.join(', ') + '; "'
+          + input.kind + '" is not recorded.' };
+      }
+      if (isBlank(input.reference) || isBlank(input.source)) {
+        return { ok: false, error: 'A relationship needs the original reference and a stated source.' };
+      }
+      var key = keyOf(input.reference, input.kind);
+      var list = store[key] || (store[key] = []);
+      var prior = list.length ? list[list.length - 1] : null;
+      seq += 1;
+      var entry = {
+        relationship_id: 'REL-' + seq,
+        kind: input.kind,
+        reference: String(input.reference),
+        value: input.value === undefined ? null : input.value,
+        source: input.source,
+        source_version: input.source_version || null,
+        effective_from: input.effective_from || null,
+        effective_to: input.effective_to || null,
+        version: list.length + 1,
+        supersedes: prior ? prior.relationship_id : null,
+        superseded_by: null
+      };
+      if (prior) prior.superseded_by = entry.relationship_id;
+      list.push(entry);
+      byId[entry.relationship_id] = entry;
+      return { ok: true, relationship: JSON.parse(JSON.stringify(entry)) };
+    }
+
+    function history(reference, kind) {
+      return JSON.parse(JSON.stringify(store[keyOf(reference, kind)] || []));
+    }
+
+    function current(reference, kind, asOf) {
+      var list = store[keyOf(reference, kind)] || [];
+      var hit = null;
+      list.forEach(function (r) {
+        if (isBlank(asOf) || isBlank(r.effective_from) || String(r.effective_from) <= String(asOf)) {
+          if (isBlank(r.effective_to) || isBlank(asOf) || String(r.effective_to) >= String(asOf)) hit = r;
+        }
+      });
+      return hit ? JSON.parse(JSON.stringify(hit)) : null;
+    }
+
+    /* A saved decision is read as it was saved. Newer versions are named beside
+       it, never written into it. */
+    function decisionView(decision) {
+      decision = decision || {};
+      var used = (decision.relationships_used || []).map(function (id) {
+        return byId[id] ? JSON.parse(JSON.stringify(byId[id])) : { relationship_id: id, missing: true };
+      });
+      var newer = used.filter(function (r) { return r.superseded_by; }).map(function (r) {
+        var list = store[keyOf(r.reference, r.kind)] || [];
+        return { kind: r.kind, saved_version: r.version, latest_version: list.length,
+          latest_id: list[list.length - 1].relationship_id };
+      });
+      return { decision_id: decision.decision_id || null, part_reference: decision.part_reference || null,
+        used: used, newer_versions: newer,
+        statement: newer.length ? newer.length + ' relationship(s) used by this decision have a newer version. '
+          + 'The decision stands as saved; review it against the newer version before reusing it.'
+          : 'The relationships this decision used are still the latest versions.' };
+    }
+
+    /* References with no classification stay listed as unclassified. */
+    function unclassified(references) {
+      return (references || []).filter(function (r) {
+        return !(store[keyOf(r, 'classification')] || []).length;
+      });
+    }
+
+    return { record: record, history: history, current: current, decisionView: decisionView,
+      unclassified: unclassified, KINDS: VERSIONED_KINDS.slice() };
+  }
+
   function relationships(payload) {
     var out = [];
     (payload && payload.cases || []).forEach(function (c) {
@@ -1326,6 +1433,8 @@
     fitmentStatus: fitmentStatus,
     relationships: relationships,
     relationshipSummary: relationshipSummary,
+    partReference: partReference,
+    makeRelationshipLedger: makeRelationshipLedger,
     makeStageState: makeStageState,
     makeImportLog: makeImportLog,
     evidenceStrength: evidenceStrength,
