@@ -360,6 +360,21 @@ if ($SkipBrowser) {
         -RawFile (Join-Path $Out "accept_02_journey.json") | Out-Null
 }
 
+Write-Head "UX-07 - the agreed small-screen layout, measured on the painted page"
+if ($SkipBrowser) {
+    $script:Skipped++
+    Write-Note "skipped by -SkipBrowser" "Yellow"
+} elseif (-not (Test-Path (Join-Path $Root "dist\ISZE_AIM_Pricing_Decisions_v04_INTERNAL.html"))) {
+    $script:Skipped++
+    Write-Note "skipped: the built artifact does not exist yet" "Yellow"
+} else {
+    $narrowArgs = @((Join-Path $Accept "ux_07_narrow.py"))
+    if ($Chrome) { $narrowArgs += @("--chrome", $Chrome) }
+    Invoke-Step -Id "UX-07" -Title "prices, units, scope and limitations stay readable at 390 and 768" `
+        -Command "python" -Arguments $narrowArgs `
+        -RawFile (Join-Path $Out "ux_07_narrow.json") | Out-Null
+}
+
 Write-Head "ACCEPT-03 - source conservation and correction behaviour"
 Invoke-Step -Id "ACCEPT-03" -Title "repeat import, correction, set-aside, visible remainder" `
     -Command "node" -Arguments @((Join-Path $Accept "accept_03_conservation.cjs")) `
