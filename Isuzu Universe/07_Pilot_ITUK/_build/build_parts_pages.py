@@ -45,6 +45,11 @@ INPUT_HASH_PREFIXES = {
 MONTHS = [f"2025-{m:02d}" for m in range(1, 13)]
 MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 UNC = "Not yet classified"
+PN_TIP = "Different part numbers on this dealer's 2025 lines, including any that were only returned."
+BV_TIP = (
+    "Best Value net units divided by all net units. "
+    "Best Value means parts on Isuzu's Best Value list; everything else is Genuine."
+)
 UNC_KEYS = {"", "unknown", "unknown review"}
 
 
@@ -98,6 +103,13 @@ def fmt_share(n: float) -> str:
     return f"{n * 100:.1f}%"
 
 
+def units_label(n: float | int, net: bool = False) -> str:
+    word = "net unit" if net else "unit"
+    if abs(int(round(n))) != 1:
+        word += "s"
+    return f"{fmt_int(n)} {word}"
+
+
 def tip(text: str, tip_html: str) -> str:
     return (
         f'<span class="kpi-tip" tabindex="0">{html.escape(text)}'
@@ -133,7 +145,7 @@ def build_svg_bars(family_rows: list[tuple[str, float, float]]) -> str:
         )
         parts.append(
             f'<text x="{label_w + bw + 8:.1f}" y="{y + bar_h * 0.72}" class="bar-val">'
-            f"{fmt_eur_whole(val)} · {fmt_int(units)} units</text>"
+            f"{fmt_eur_whole(val)} · {units_label(units)}</text>"
         )
     parts.append("</svg>")
     return "\n".join(parts)
@@ -145,7 +157,7 @@ def render_page(dealer: dict, totals: dict, tree: dict, pn_rows: list[dict]) -> 
     value_tip = (
         "Each unit valued at the reference dealer price from the 2026 Isuzu price list; "
         "a reference, not your invoice; returns deducted; "
-        f"{fmt_int(no_price)} units have no list price and carry no value."
+        f"{units_label(no_price)} {'has' if no_price == 1 else 'have'} no list price and {'carries' if no_price == 1 else 'carry'} no value."
     )
     bv_share = (
         totals["best_value_units"] / totals["net_units"]
@@ -220,14 +232,14 @@ def render_page(dealer: dict, totals: dict, tree: dict, pn_rows: list[dict]) -> 
                     "<details class=\"lvl3\">"
                     f"<summary>{html.escape(l3)} "
                     f"<span class=\"sum\">{fmt_eur_whole(l3_node['value'])} · "
-                    f"{fmt_int(l3_node['net'])} net units (returns deducted)</span></summary>"
+                    f"{units_label(l3_node['net'], net=True)} (returns deducted)</span></summary>"
                     f"{table}</details>"
                 )
             l2_blocks.append(
                 "<details class=\"lvl2\">"
                 f"<summary>{html.escape(l2)} "
                 f"<span class=\"sum\">{fmt_eur_whole(l2_node['value'])} · "
-                f"{fmt_int(l2_node['net'])} net units (returns deducted)</span></summary>"
+                f"{units_label(l2_node['net'], net=True)} (returns deducted)</span></summary>"
                 + "".join(l3_blocks)
                 + "</details>"
             )
@@ -235,7 +247,7 @@ def render_page(dealer: dict, totals: dict, tree: dict, pn_rows: list[dict]) -> 
             "<details class=\"lvl1\" open>"
             f"<summary>{html.escape(l1)} "
             f"<span class=\"sum\">{fmt_eur_whole(l1_node['value'])} · "
-            f"{fmt_int(l1_node['net'])} net units (returns deducted)</span></summary>"
+            f"{units_label(l1_node['net'], net=True)} (returns deducted)</span></summary>"
             + "".join(l2_blocks)
             + "</details>"
         )
@@ -312,9 +324,9 @@ td.pn-code {{ font-family: Consolas, "Courier New", monospace; }}
 
 <section class="kpis" aria-label="Summary figures">
   <div class="kpi"><p class="label">Net units</p><p class="val">{tip(fmt_int(totals['net_units']), 'Purchases minus returns.')}</p></div>
-  <div class="kpi"><p class="label">Part numbers bought</p><p class="val">{fmt_int(totals['part_numbers'])}</p></div>
+  <div class="kpi"><p class="label">Part numbers bought</p><p class="val">{tip(fmt_int(totals['part_numbers']), html.escape(PN_TIP))}</p></div>
   <div class="kpi"><p class="label">Value at reference dealer price</p><p class="val">{tip(fmt_eur_whole(totals['value_eur']), html.escape(value_tip))}</p></div>
-  <div class="kpi"><p class="label">Best Value share of net units</p><p class="val">{fmt_share(bv_share)}</p></div>
+  <div class="kpi"><p class="label">Best Value share of net units</p><p class="val">{tip(fmt_share(bv_share), html.escape(BV_TIP))}</p></div>
 </section>
 <p class="note">Wherever a net figure is shown, returns are deducted.</p>
 

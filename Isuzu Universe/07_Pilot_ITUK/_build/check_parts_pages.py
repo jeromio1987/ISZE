@@ -118,6 +118,11 @@ def main() -> int:
             errors.append(f"{code}: pn rows {pn_rows} != {exp_pn}")
 
         vis = visible_text(raw)
+        kpi_tips = len(re.findall(r'class="kpi-tip"', raw))
+        if kpi_tips != 4:
+            errors.append(f"{code}: {kpi_tips} kpi-tip elements, expected 4")
+        if re.search(r"\b1 (net )?units\b", vis):
+            errors.append(f"{code}: plural after 1 (\"1 units\")")
         for term in BANNED:
             if term in ("IUK", "UMI", "UTI", "IDS", "GPS", "BVP", "IML", "AIM", "DLOD", "PRISM", "ITUK"):
                 # whole-word-ish for short acronyms
